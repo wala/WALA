@@ -198,6 +198,9 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
   }
 
   public void intersectWith(IntSet set) {
+    if (set == null) {
+      throw new IllegalArgumentException("null set");
+    }
     if (set instanceof SparseIntSet) {
       intersectWith((SparseIntSet) set);
     } else {
@@ -210,10 +213,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   */
   public void intersectWith(SparseIntSet set) {
-
     SparseIntSet that = set;
     if (Assertions.verifyAssertions) {
       Assertions._assert(that != null);
@@ -322,6 +322,9 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
    * @return true iff this set changes
    */
   public boolean addAll(SparseIntSet that) {
+    if (that == null) {
+      throw new IllegalArgumentException("null that");
+    }
     if (this.isEmpty()) {
       copySet(that);
       return !that.isEmpty();
@@ -409,10 +412,10 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     return (al != size);
   }
 
-  /**
-   * @param v
-   */
   public void removeAll(BitVectorIntSet v) {
+    if (v == null) {
+      throw new IllegalArgumentException("null v");
+    }
     int ai = 0;
     for (int i = 0; i < size; i++) {
       if (!v.contains(elements[i])) {

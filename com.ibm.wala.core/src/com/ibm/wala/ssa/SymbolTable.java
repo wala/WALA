@@ -183,7 +183,11 @@ public class SymbolTable {
   }
 
   public boolean isConstant(int v) {
-    return v < values.length && values[v] instanceof ConstantValue;
+    try {
+      return v < values.length && values[v] instanceof ConstantValue;
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid v: " + v);
+    }
   }
 
   public boolean isZero(int v) {
@@ -195,14 +199,19 @@ public class SymbolTable {
   }
 
   public boolean isOne(int v) {
-    if (v < 0) {
-      throw new IllegalArgumentException("Illegal v: " + v);
+    try {
+      return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).isOneConstant();
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid v: " + v);
     }
-    return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).isOneConstant();
   }
 
   public boolean isTrue(int v) {
-    return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).isTrueConstant();
+    try {
+      return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).isTrueConstant();
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid v: " + v);
+    }
   }
 
   public boolean isZeroOrFalse(int v) {
@@ -214,7 +223,11 @@ public class SymbolTable {
   }
 
   public boolean isFalse(int v) {
-    return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).isFalseConstant();
+    try {
+      return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).isFalseConstant();
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid v: " + v);
+    }
   }
 
   public boolean isBooleanOrZeroOneConstant(int v) {
@@ -222,27 +235,51 @@ public class SymbolTable {
   }
 
   public boolean isBooleanConstant(int v) {
-    return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).getValue() instanceof Boolean;
+    try {
+      return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).getValue() instanceof Boolean;
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid v: " + v);
+    }
   }
 
   public boolean isIntegerConstant(int v) {
-    return (values[v] instanceof ConstantValue) && (((ConstantValue) values[v]).getValue() instanceof Integer);
+    try {
+      return (values[v] instanceof ConstantValue) && (((ConstantValue) values[v]).getValue() instanceof Integer);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid v: " + v);
+    }
   }
 
   public boolean isLongConstant(int v) {
-    return (values[v] instanceof ConstantValue) && (((ConstantValue) values[v]).getValue() instanceof Long);
+    try {
+      return (values[v] instanceof ConstantValue) && (((ConstantValue) values[v]).getValue() instanceof Long);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid v: " + v);
+    }
   }
 
   public boolean isFloatConstant(int v) {
-    return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).getValue() instanceof Float;
+    try {
+      return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).getValue() instanceof Float;
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid v: " + v);
+    }
   }
 
   public boolean isDoubleConstant(int v) {
-    return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).getValue() instanceof Double;
+    try {
+      return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).getValue() instanceof Double;
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid v: " + v);
+    }
   }
 
   public boolean isNumberConstant(int v) {
-    return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).getValue() instanceof Number;
+    try {
+      return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).getValue() instanceof Number;
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid v: " + v);
+    }
   }
 
   public boolean isStringConstant(int v) {
@@ -254,7 +291,11 @@ public class SymbolTable {
   }
 
   public boolean isNullConstant(int v) {
-    return (values.length > v) && (values[v] instanceof ConstantValue) && (((ConstantValue) values[v]).getValue() == null);
+    try {
+      return (values.length > v) && (values[v] instanceof ConstantValue) && (((ConstantValue) values[v]).getValue() == null);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid v: " + v);
+    }
   }
 
   /**
@@ -274,6 +315,9 @@ public class SymbolTable {
    * Return the PhiValue that is associated with a given value number
    */
   public PhiValue getPhiValue(int valueNumber) {
+    if (valueNumber < 0) {
+      throw new IllegalArgumentException("invalid valueNumber: " + valueNumber);
+    }
     return (PhiValue) values[valueNumber];
   }
 
@@ -343,11 +387,8 @@ public class SymbolTable {
    * @return the Value object for given value number or null if we have no special information about the value
    */
   public Value getValue(int valueNumber) {
-    if (Assertions.verifyAssertions) {
-      if (valueNumber < 1 || valueNumber >= values.length) {
-        Assertions._assert(valueNumber >= 0, "Invalid value number " + valueNumber);
-        Assertions._assert(valueNumber < values.length, "Invalid value number " + valueNumber);
-      }
+    if (valueNumber < 1 || valueNumber >= values.length) {
+      throw new IllegalArgumentException("Invalid value number " + valueNumber);
     }
     return values[valueNumber];
   }

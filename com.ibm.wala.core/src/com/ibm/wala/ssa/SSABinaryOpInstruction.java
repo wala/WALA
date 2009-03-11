@@ -19,10 +19,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.shrike.Exceptions;
 
-/**
- * @author sfink
- * 
- */
 public class SSABinaryOpInstruction extends SSAInstruction {
 
   private final int result;
@@ -45,8 +41,11 @@ public class SSABinaryOpInstruction extends SSAInstruction {
     this.val2 = val2;
     this.operator = operator;
     this.mayBeInteger = mayBeInteger;
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(val1 != -1 && val2 != -1);
+    if (val1 <= 0) {
+      throw new IllegalArgumentException("illegal val1: " + val1);
+    }
+    if (val2 <= 0) {
+      throw new IllegalArgumentException("illegal val2: " + val2);
     }
   }
 

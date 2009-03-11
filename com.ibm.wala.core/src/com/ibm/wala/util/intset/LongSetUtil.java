@@ -118,9 +118,12 @@ public class LongSetUtil {
   /**
    * Subtract two sets, i.e. a = a \ b.
    * 
-   * @throws IllegalArgumentException  if B == null
+   * @throws IllegalArgumentException  if A == null || B == null
    */
   public static MutableLongSet removeAll(MutableLongSet A, LongSet B) throws IllegalArgumentException {
+    if (A == null) {
+      throw new IllegalArgumentException("A == null");
+    }
     if (B == null) {
       throw new IllegalArgumentException("B == null");
     }

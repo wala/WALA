@@ -238,12 +238,12 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
   /**
    * record that a particular points-to-set is represented implicitly.
-   * 
-   * @param key
    */
   public void recordImplicitPointsToSet(PointerKey key) {
+    if (key == null) {
+      throw new IllegalArgumentException("null key");
+    }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(key != null);
       if (key instanceof LocalPointerKey) {
         LocalPointerKey lpk = (LocalPointerKey) key;
         if (lpk.isParameter()) {
@@ -331,10 +331,14 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
    * @return true iff the system changes
    */
   public boolean newConstraint(PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(lhs != null);
-      Assertions._assert(op != null);
-      Assertions._assert(rhs != null);
+    if (lhs == null) {
+      throw new IllegalArgumentException("null lhs");
+    }
+    if (op == null) {
+      throw new IllegalArgumentException("op null");
+    }
+    if (rhs == null) {
+      throw new IllegalArgumentException("rhs null");
     }
     if (DEBUG) {
       System.err.println("Add constraint A: " + lhs + " " + op + " " + rhs);
@@ -585,8 +589,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   }
 
   public void newSideEffect(UnaryOperator<PointsToSetVariable> op, PointerKey arg0) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(arg0 != null);
+    if (arg0 == null) {
+      throw new IllegalArgumentException("null arg0");
     }
     if (DEBUG) {
       System.err.println("add constraint D: " + op + " " + arg0);

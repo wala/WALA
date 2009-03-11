@@ -24,8 +24,7 @@ import com.ibm.wala.util.intset.IntegerUnionFind;
 import com.ibm.wala.util.intset.MutableMapping;
 
 /**
- * An object that tracks the mapping between pointer keys and points-to set
- * variables
+ * An object that tracks the mapping between pointer keys and points-to set variables
  */
 public class PointsToMap {
 
@@ -35,13 +34,12 @@ public class PointsToMap {
   private final MutableMapping<PointerKey> pointerKeys = MutableMapping.make();
 
   /**
-   * pointsToSets[i] says something about the representation of the points-to set
-   * for the ith {@link PointerKey}, as determined by the pointerKeys mapping.
-   * pointsToSets[i] can be one of the following:
+   * pointsToSets[i] says something about the representation of the points-to set for the ith {@link PointerKey}, as determined by
+   * the pointerKeys mapping. pointsToSets[i] can be one of the following:
    * <ul>
-   * <li> a PointsToSetVariable
-   * <li> IMPLICIT
-   * <li> UNIFIED
+   * <li>a PointsToSetVariable
+   * <li>IMPLICIT
+   * <li>UNIFIED
    * </ul>
    */
   private final IVector<Object> pointsToSets = new SimpleVector<Object>();
@@ -69,10 +67,9 @@ public class PointsToMap {
   };
 
   /**
-   * Numbers of pointer keys (non locals) that are roots of transitive closure.
-   * A "root" is a points-to-set whose contents do not result from flow from
-   * other points-to-sets; these points-to-sets are the primordial assignments
-   * from which the transitive closure flows.
+   * Numbers of pointer keys (non locals) that are roots of transitive closure. A "root" is a points-to-set whose contents do not
+   * result from flow from other points-to-sets; these points-to-sets are the primordial assignments from which the transitive
+   * closure flows.
    */
   private final BitVector transitiveRoots = new BitVector();
 
@@ -87,10 +84,8 @@ public class PointsToMap {
    * If p is unified, returns the representative for p.
    */
   public PointsToSetVariable getPointsToSet(PointerKey p) {
-    if (Assertions.verifyAssertions) {
-      if (isImplicit(p)) {
-        Assertions.UNREACHABLE("unexpected: shouldn't ask a PointsToMap for an implicit points-to-set: " + p);
-      }
+    if (isImplicit(p)) {
+      throw new IllegalArgumentException("unexpected: shouldn't ask a PointsToMap for an implicit points-to-set: " + p);
     }
     int i = pointerKeys.getMappedIndex(p);
     if (i == -1) {
@@ -143,11 +138,9 @@ public class PointsToMap {
   }
 
   /**
-   * record points-to-sets that are "roots" of the transitive closure. These
-   * points-to-sets can't be thrown away for a pre-transitive solver. A "root"
-   * is a points-to-set whose contents do not result from flow from other
-   * points-to-sets; there points-to-sets are the primordial assignments from
-   * which the transitive closure flows.
+   * record points-to-sets that are "roots" of the transitive closure. These points-to-sets can't be thrown away for a
+   * pre-transitive solver. A "root" is a points-to-set whose contents do not result from flow from other points-to-sets; there
+   * points-to-sets are the primordial assignments from which the transitive closure flows.
    */
   public void recordTransitiveRoot(PointerKey key) {
     int i = findOrCreateIndex(key);
@@ -155,9 +148,8 @@ public class PointsToMap {
   }
 
   /**
-   * A "root" is a points-to-set whose contents do not result from flow from
-   * other points-to-sets; there points-to-sets are the primordial assignments
-   * from which the transitive closure flows.
+   * A "root" is a points-to-set whose contents do not result from flow from other points-to-sets; there points-to-sets are the
+   * primordial assignments from which the transitive closure flows.
    */
   boolean isTransitiveRoot(PointerKey key) {
     int i = findOrCreateIndex(key);
@@ -205,9 +197,8 @@ public class PointsToMap {
   /**
    * Unify the points-to-sets for the variables identified by the set s
    * 
-   * @param s
-   *          numbers of points-to-set variables
-   * @throws IllegalArgumentException  if s is null
+   * @param s numbers of points-to-set variables
+   * @throws IllegalArgumentException if s is null
    */
   public void unify(IntSet s) throws IllegalArgumentException {
     if (s == null) {

@@ -177,14 +177,11 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
     }
   }
 
-  /**
-   */
   public void intersectWith(SparseLongSet set) {
-
-    SparseLongSet that = set;
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(that != null);
+    if (set == null) {
+      throw new IllegalArgumentException("null set");
     }
+    SparseLongSet that = set;
     if (this.isEmpty()) {
       return;
     } else if (that.isEmpty()) {

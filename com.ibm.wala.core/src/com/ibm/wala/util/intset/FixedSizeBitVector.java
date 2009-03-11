@@ -112,7 +112,11 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
     }
     int shiftBits = bit & LOW_MASK;
     int n = subscript(bit);
-    return ((bits[n] & (1 << shiftBits)) != 0);
+    try {
+      return ((bits[n] & (1 << shiftBits)) != 0);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      return false;
+    }
   }
 
   /**
@@ -139,6 +143,9 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
    * @param set the bit set to be ANDed with
    */
   public void and(FixedSizeBitVector set) {
+    if (set == null) {
+      throw new IllegalArgumentException("null set");
+    }
     if (this == set) {
       return;
     }

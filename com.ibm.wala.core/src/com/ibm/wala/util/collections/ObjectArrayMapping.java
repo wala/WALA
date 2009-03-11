@@ -32,6 +32,9 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
   final private HashMap<T, Integer> map = HashMapFactory.make();
 
   public ObjectArrayMapping(final T[] array) {
+    if (array == null) {
+      throw new IllegalArgumentException("null array");
+    }
     this.array = array;
     for (int i = 0; i < array.length; i++) {
       map.put(array[i], Integer.valueOf(i));

@@ -40,6 +40,9 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory {
   }
 
   public MutableIntSet make(int[] set) {
+    if (set == null) {
+      throw new IllegalArgumentException("null set");
+    }
     return new DebuggingMutableIntSet(primary.make(set), secondary.make(set));
   }
 

@@ -676,8 +676,10 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     if (A == null) {
       throw new IllegalArgumentException("A is null");
     }
+    if (B == null) {
+      throw new IllegalArgumentException("B is null");
+    }
     if (A.densePart == null) {
-
       if (B.densePart == null) {
         return new SemiSparseMutableIntSet(MutableSparseIntSet.diff(A.sparsePart, B.sparsePart));
 

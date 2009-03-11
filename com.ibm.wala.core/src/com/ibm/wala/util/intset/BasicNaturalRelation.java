@@ -100,8 +100,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
         smallStore[i] = new TunedSimpleIntVector(EMPTY_CODE, 1, 1.1f);
         break;
       default:
-        Assertions.UNREACHABLE();
-        break;
+        throw new IllegalArgumentException("unsupported implementation " + implementation[i]);
       }
     }
     switch (vectorImpl) {

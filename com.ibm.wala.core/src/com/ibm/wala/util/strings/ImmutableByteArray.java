@@ -36,7 +36,11 @@ public final class ImmutableByteArray {
       throw new IllegalArgumentException("null length");
     }
     this.b = new byte[length];
-    System.arraycopy(b, start, this.b, 0, length);
+    try {
+      System.arraycopy(b, start, this.b, 0, length);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("illegal parameters " + b.length + " " + start + " " + length);
+    }
   }
 
   public int length() {
@@ -44,7 +48,7 @@ public final class ImmutableByteArray {
   }
 
   public byte get(int i) throws IllegalArgumentException {
-    if (i >= b.length) {
+    if (i < 0 || i >= b.length) {
       throw new IllegalArgumentException("index out of bounds " + b.length + " " + i);
     }
     return b[i];
@@ -53,6 +57,9 @@ public final class ImmutableByteArray {
   public byte[] substring(int i, int length) {
     if (length < 0) {
       throw new IllegalArgumentException("illegal length: " + length);
+    }
+    if (i < 0) {
+      throw new IllegalArgumentException("illegal i: " + i);
     }
     byte[] result = new byte[length];
     System.arraycopy(b, i, result, 0, length);

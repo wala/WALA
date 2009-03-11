@@ -59,6 +59,9 @@ public class ArrayIterator<T> implements Iterator<T> {
    * @param start the first array index to return 
    */
   public ArrayIterator(T[] elts, int start, int last) {
+    if (elts == null) {
+      throw new IllegalArgumentException("null elts");
+    }
     _elts = elts;
     _cnt = start;
     this.last = last;
