@@ -71,6 +71,9 @@ public class StringTable extends Table<String> implements Cloneable {
    * read from a text file obtained as a resource
    */
   public static StringTable readFromTextFile(String fileName, Character comment) throws IOException {
+    if (fileName == null) {
+      throw new IllegalArgumentException("null fileName");
+    }
     File f = FileProvider.getFile(fileName);
     return readFromTextFile(f, comment);
   }
@@ -81,6 +84,9 @@ public class StringTable extends Table<String> implements Cloneable {
    * @throws FileNotFoundException
    */
   public static StringTable readFromTextFile(File f, Character comment) throws FileNotFoundException, IOException {
+    if (f == null) {
+      throw new IllegalArgumentException("null f");
+    }
     return readFromStream(new FileInputStream(f), comment);
   }
 

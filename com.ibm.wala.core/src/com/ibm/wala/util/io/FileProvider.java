@@ -38,10 +38,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
 /**
- * 
  * This class provides files that are packaged with this plug-in
- * 
- * @author sfink
  */
 public class FileProvider {
 
@@ -91,6 +88,9 @@ public class FileProvider {
   }
 
   public static URL getResource(String fileName) throws IOException {
+    if (fileName == null) {
+      throw new IllegalArgumentException("null fileName");
+    }
     return getResource(fileName, FileProvider.class.getClassLoader());
   }
 
@@ -102,9 +102,10 @@ public class FileProvider {
         new Path(fileName), null);
   }
 
-  /**
-   */
   public static File getFile(String fileName) throws IOException {
+    if (fileName == null) {
+      throw new IllegalArgumentException("null fileName");
+    }
     return getFile(fileName, FileProvider.class.getClassLoader());
   }
 

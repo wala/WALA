@@ -160,8 +160,8 @@ public class JdtUtil {
 
   /**
    * @param typeSignature Some of the type signatures examples are "QString;" (String) and "I" (int) The type signatures may be
-   *            either unresolved (for source types) or resolved (for binary types), and either basic (for basic types) or rich (for
-   *            parameterized types). See {@link Signature} for details.
+   *          either unresolved (for source types) or resolved (for binary types), and either basic (for basic types) or rich (for
+   *          parameterized types). See {@link Signature} for details.
    */
   public static String getHumanReadableType(String typeSignature) {
     String simpleName = Signature.getSignatureSimpleName(typeSignature);
@@ -354,11 +354,15 @@ public class JdtUtil {
     if (selector == null) {
       throw new IllegalArgumentException("selector is null");
     }
-    String result = selector.substring(0, selector.indexOf('('));
-    if (result.equals("<init>")) {
-      return type.getElementName();
-    } else {
-      return result;
+    try {
+      String result = selector.substring(0, selector.indexOf('('));
+      if (result.equals("<init>")) {
+        return type.getElementName();
+      } else {
+        return result;
+      }
+    } catch (StringIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid selector: " + selector);
     }
   }
 

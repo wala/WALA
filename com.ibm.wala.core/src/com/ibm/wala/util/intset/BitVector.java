@@ -10,13 +10,12 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-
 /**
  */
 public class BitVector extends BitVectorBase<BitVector> {
 
   private static final long serialVersionUID = 9087259335807761617L;
-  
+
   private final static int MAX_BITS = Integer.MAX_VALUE / 4;
 
   public BitVector() {
@@ -29,8 +28,8 @@ public class BitVector extends BitVectorBase<BitVector> {
    * @param nbits the size of the string
    */
   public BitVector(int nbits) {
-    if (nbits > MAX_BITS) {
-      throw new IllegalArgumentException("too many bits: " + nbits);
+    if (nbits > MAX_BITS || nbits < 0) {
+      throw new IllegalArgumentException("invalid nbits: " + nbits);
     }
     bits = new int[subscript(nbits) + 1];
   }
@@ -88,6 +87,9 @@ public class BitVector extends BitVectorBase<BitVector> {
    */
   @Override
   public final void clear(int bit) {
+    if (bit < 0) {
+      throw new IllegalArgumentException("invalid bit: " + bit);
+    }
     int ss = subscript(bit);
     if (ss >= bits.length) {
       return;
@@ -130,6 +132,9 @@ public class BitVector extends BitVectorBase<BitVector> {
    */
   @Override
   public final void and(BitVector set) {
+    if (set == null) {
+      throw new IllegalArgumentException("null set");
+    }
     if (this == set) {
       return;
     }
@@ -147,6 +152,12 @@ public class BitVector extends BitVectorBase<BitVector> {
    * Return a new bit string as the AND of two others.
    */
   public static BitVector and(BitVector b1, BitVector b2) {
+    if (b1 == null) {
+      throw new IllegalArgumentException("null b1");
+    }
+    if (b2 == null) {
+      throw new IllegalArgumentException("null b2");
+    }
     BitVector b = new BitVector(b1);
     b.and(b2);
     return b;
@@ -159,6 +170,9 @@ public class BitVector extends BitVectorBase<BitVector> {
    */
   @Override
   public final void or(BitVector set) {
+    if (set == null) {
+      throw new IllegalArgumentException("null set");
+    }
     if (this == set) { // should help alias analysis
       return;
     }
@@ -211,6 +225,12 @@ public class BitVector extends BitVectorBase<BitVector> {
    * Return a new FixedSizeBitVector as the OR of two others
    */
   public static BitVector or(BitVector b1, BitVector b2) {
+    if (b1 == null) {
+      throw new IllegalArgumentException("null b1");
+    }
+    if (b2 == null) {
+      throw new IllegalArgumentException("null b2");
+    }
     BitVector b = new BitVector(b1);
     b.or(b2);
     return b;
@@ -220,6 +240,12 @@ public class BitVector extends BitVectorBase<BitVector> {
    * Return a new FixedSizeBitVector as the XOR of two others
    */
   public static BitVector xor(BitVector b1, BitVector b2) {
+    if (b1 == null) {
+      throw new IllegalArgumentException("null b1");
+    }
+    if (b2 == null) {
+      throw new IllegalArgumentException("null b2");
+    }
     BitVector b = new BitVector(b1);
     b.xor(b2);
     return b;
@@ -281,6 +307,9 @@ public class BitVector extends BitVectorBase<BitVector> {
    */
   @Override
   public final boolean sameBits(BitVector B) {
+    if (B == null) {
+      throw new IllegalArgumentException("null B");
+    }
     if (this == B) { // should help alias analysis
       return true;
     }
@@ -306,11 +335,13 @@ public class BitVector extends BitVectorBase<BitVector> {
   }
 
   /**
-   * @param other
    * @return true iff this is a subset of other
    */
   @Override
   public boolean isSubset(BitVector other) {
+    if (other == null) {
+      throw new IllegalArgumentException("null other");
+    }
     if (this == other) { // should help alias analysis
       return true;
     }
@@ -328,11 +359,11 @@ public class BitVector extends BitVectorBase<BitVector> {
     return true;
   }
 
-  /**
-   * @param vector
-   */
   @Override
   public void andNot(BitVector vector) {
+    if (vector == null) {
+      throw new IllegalArgumentException("null vector");
+    }
     int ai = 0;
     int bi = 0;
     for (ai = 0, bi = 0; ai < bits.length && bi < vector.bits.length; ai++, bi++) {

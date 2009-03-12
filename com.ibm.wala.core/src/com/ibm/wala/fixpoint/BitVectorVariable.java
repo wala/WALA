@@ -99,6 +99,9 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
    * @param b the bit to set
    */
   public void set(int b) {
+    if (b < 0) {
+      throw new IllegalArgumentException("illegal b: " + b);
+    }
     if (V == null) {
       V = new MutableSharedBitVectorIntSet();
     }

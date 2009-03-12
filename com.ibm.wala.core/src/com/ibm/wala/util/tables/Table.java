@@ -131,6 +131,9 @@ public class Table<T> {
   }
 
   public synchronized void addRow(Map<String, T> p) {
+    if (p == null) {
+      throw new IllegalArgumentException("null p " + p);
+    }
     SimpleVector<T> r = new SimpleVector<T>();
     rows.add(r);
     for (int i = 0; i < getNumberOfColumns(); i++) {

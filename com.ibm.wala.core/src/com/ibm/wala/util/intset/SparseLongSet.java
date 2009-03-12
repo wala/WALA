@@ -464,6 +464,9 @@ public class SparseLongSet implements LongSet {
    * @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet)
    */
   public boolean containsAny(LongSet set) {
+    if (set == null) {
+      throw new IllegalArgumentException("set == null");
+    }
     if (set instanceof SparseLongSet) {
       return containsAny((SparseLongSet) set);
     } else {

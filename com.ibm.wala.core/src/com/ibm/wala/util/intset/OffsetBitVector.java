@@ -101,6 +101,9 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    */
   @Override
   public final void set(int bit) {
+    if (bit < 0) {
+      throw new IllegalArgumentException("illegal bit: " + bit);
+    }
     int shiftBits;
     int subscript;
     if (bit < offset) {

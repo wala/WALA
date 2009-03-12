@@ -25,7 +25,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 public final class Atom implements Serializable {
 
   /* Serial version */
-  private static final long serialVersionUID = -3256390509887654329L;  
+  private static final long serialVersionUID = -3256390509887654329L;
 
   /**
    * Used to canonicalize Atoms, a mapping from AtomKey -> Atom. AtomKeys are not canonical, but Atoms are.
@@ -166,7 +166,7 @@ public final class Atom implements Serializable {
     return findOrCreate(sig);
   }
 
-  /**
+/**
    * Is "this" atom a reserved member name? Note: Sun has reserved all member names starting with '<' for future use. At present,
    * only <init> and <clinit> are used.
    */
@@ -241,11 +241,16 @@ public final class Atom implements Serializable {
     if (val.length == 0) {
       throw new IllegalArgumentException("empty atom is not an array");
     }
-    for (int i = 0;; ++i) {
-      if (val[i] != '[') {
-        return i;
+    try {
+      for (int i = 0;; ++i) {
+        if (val[i] != '[') {
+          return i;
+        }
       }
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalStateException("not an array: " + this);
     }
+
   }
 
   /**
@@ -255,11 +260,15 @@ public final class Atom implements Serializable {
     if (val.length == 0) {
       throw new IllegalArgumentException("empty atom is not an array");
     }
-    int i = 0;
-    while (val[i] == '[') {
-      i++;
+    try {
+      int i = 0;
+      while (val[i] == '[') {
+        i++;
+      }
+      return findOrCreate(val, i, val.length - i);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalStateException("not an array: " + this);
     }
-    return findOrCreate(val, i, val.length - i);
   }
 
   /**
@@ -393,8 +402,8 @@ public final class Atom implements Serializable {
     return b.get(0) == '[';
   }
 
-  private Object readResolve(){
+  private Object readResolve() {
     return findOrCreate(this.val);
   }
-       
+
 }

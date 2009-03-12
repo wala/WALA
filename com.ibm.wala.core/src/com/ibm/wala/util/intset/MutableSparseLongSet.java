@@ -165,6 +165,9 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
   }
 
   public void intersectWith(LongSet set) {
+    if (set == null) {
+      throw new IllegalArgumentException("null set");
+    }
     if (set instanceof SparseLongSet) {
       intersectWith((SparseLongSet) set);
     } else {
@@ -272,6 +275,9 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
    * @return true iff this set changes
    */
   public boolean addAll(SparseLongSet that) {
+    if (that == null) {
+      throw new IllegalArgumentException("null that");
+    }
     if (this.isEmpty()) {
       copySet(that);
       return !that.isEmpty();

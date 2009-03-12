@@ -150,11 +150,10 @@ public class OrdinalSet<T> implements Iterable<T> {
   }
 
   /**
-   * @param object
    * @return true iff this set contains object
    */
   public boolean contains(T object) {
-    if (this == EMPTY || S == null) {
+    if (this == EMPTY || S == null || object == null) {
       return false;
     }
     int index = mapping.getMappedIndex(object);

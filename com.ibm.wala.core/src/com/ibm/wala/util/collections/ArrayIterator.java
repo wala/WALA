@@ -65,6 +65,12 @@ public class ArrayIterator<T> implements Iterator<T> {
     if (elts == null) {
       throw new IllegalArgumentException("null elts");
     }
+    if (start < 0) {
+      throw new IllegalArgumentException("illegal start: " + start);
+    }
+    if (last < 0) {
+      throw new IllegalArgumentException("illegal last: " + last);
+    }
     _elts = elts;
     _cnt = start;
     this.last = last;

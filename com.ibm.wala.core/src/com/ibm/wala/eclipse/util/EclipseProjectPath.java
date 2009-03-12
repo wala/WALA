@@ -116,6 +116,9 @@ public class EclipseProjectPath {
   private final Collection<IClasspathEntry> alreadyResolved = HashSetFactory.make();
 
   protected EclipseProjectPath(IJavaProject project, boolean analyzeSource) throws IOException, CoreException {
+    if (project == null) {
+      throw new IllegalArgumentException("null project");
+    }
     this.project = project;
     this.analyzeSource = analyzeSource;
     assert project != null;

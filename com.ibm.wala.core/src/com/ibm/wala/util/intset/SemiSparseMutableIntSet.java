@@ -241,6 +241,9 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
    * @return true iff this set contains integer i
    */
   public boolean containsAny(IntSet set) {
+    if (set == null) {
+      throw new IllegalArgumentException("null set");
+    }
     if (!sparsePart.isEmpty() && sparsePart.containsAny(set)) {
       return true;
     } else if (densePart != null) {

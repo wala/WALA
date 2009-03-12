@@ -390,10 +390,14 @@ public class StringStuff {
     if (b == null) {
       throw new IllegalArgumentException("b == null");
     }
-    for (int i = start; i < start + length; ++i) {
-      if (b.b[i] != '[') {
-        return (short) (i - start);
+    try {
+      for (int i = start; i < start + length; ++i) {
+        if (b.b[i] != '[') {
+          return (short) (i - start);
+        }
       }
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("ill-formed array descriptor " + b);
     }
     throw new IllegalArgumentException("ill-formed array descriptor " + b);
   }
@@ -410,13 +414,17 @@ public class StringStuff {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
-    int i = start;
-    for (; i < start + length; ++i) {
-      if (b.b[i] != '[') {
-        break;
+    try {
+      int i = start;
+      for (; i < start + length; ++i) {
+        if (b.b[i] != '[') {
+          break;
+        }
       }
+      return new ImmutableByteArray(b.b, i, length - (i - start));
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid element desciptor: " + b);
     }
-    return new ImmutableByteArray(b.b, i, length - (i - start));
   }
 
   /**
@@ -435,9 +443,6 @@ public class StringStuff {
   }
 
   /**
-   * @param name
-   * @param start
-   * @param length
    * @return true iff the class returned by parseForClass is primitive
    * @throws IllegalArgumentException if name is null
    */
@@ -452,7 +457,11 @@ public class StringStuff {
     if (start >= name.b.length) {
       throw new IllegalArgumentException("ill-formed type name: " + name);
     }
-    return name.b[start] != 'L';
+    try {
+      return name.b[start] != 'L';
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException(name.toString());
+    }
   }
 
   /**
