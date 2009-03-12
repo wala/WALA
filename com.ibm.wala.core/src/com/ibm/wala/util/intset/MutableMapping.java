@@ -24,8 +24,6 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
 
   private static final int INITIAL_CAPACITY = 20;
   
-  private static final int MAX_SIZE = Integer.MAX_VALUE/4;
-
   public static <T> MutableMapping<T> make() {
     return new MutableMapping<T>();
   }
