@@ -105,8 +105,15 @@ public class SmallMap<K, V> implements Map<K, V> {
       return false;
     }
     for (int i = size(); i < keysAndValues.length; i++) {
-      if (keysAndValues[i].equals(value)) {
-        return true;
+      Object v = keysAndValues[i];
+      if (v == null) {
+        if (value == null) {
+          return true;
+        }
+      } else {
+        if (v.equals(value)) {
+          return true;
+        }
       }
     }
     return false;
