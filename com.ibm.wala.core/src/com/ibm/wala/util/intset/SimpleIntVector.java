@@ -18,6 +18,8 @@ import com.ibm.wala.util.debug.Trace;
  * simple implementation of IntVector
  */
 public class SimpleIntVector implements IntVector {
+  
+  private final static int MAX_SIZE = Integer.MAX_VALUE / 4;
 
   private final static float GROWTH_FACTOR = 1.5f;
 
@@ -72,6 +74,9 @@ public class SimpleIntVector implements IntVector {
   public void set(int x, int value) {
     if (x < 0) {
       throw new IllegalArgumentException("illegal x: " + x);
+    }
+    if (x > MAX_SIZE) {
+      throw new IllegalArgumentException("x is too big: " + x);
     }
     maxIndex = Math.max(maxIndex,x);
     if (value == defaultValue) {

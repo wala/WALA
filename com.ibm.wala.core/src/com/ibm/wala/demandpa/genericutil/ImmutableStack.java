@@ -189,7 +189,6 @@ public class ImmutableStack<T> implements Iterable<T> {
 
   @SuppressWarnings("unchecked")
   public ImmutableStack<T> popAll(ImmutableStack<T> other) {
-    // TODO Auto-generated method stub
     assert topMatches(other);
     int size = entries.length - other.entries.length;
     T[] tmpEntries = (T[]) new Object[size];

@@ -17,10 +17,10 @@ import com.ibm.wala.util.debug.Trace;
 
 /**
  * simple implementation of IVector
- * 
- * @author sfink
  */
 public class SimpleVector<T> implements IVector<T> {
+  
+  private final static int MAX_SIZE = Integer.MAX_VALUE / 4;
 
   private final static double GROWTH_FACTOR = 1.5;
 
@@ -52,6 +52,9 @@ public class SimpleVector<T> implements IVector<T> {
   public void set(int x, T value) {
     if (x < 0) {
       throw new IllegalArgumentException("illegal x value " + x);
+    }
+    if (x > MAX_SIZE) {
+      throw new IllegalArgumentException("x is too big: " + x);
     }
     maxIndex = Math.max(maxIndex,x);
     if (value == null) {

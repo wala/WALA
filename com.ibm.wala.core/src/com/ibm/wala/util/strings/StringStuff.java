@@ -450,14 +450,15 @@ public class StringStuff {
     if (name == null) {
       throw new IllegalArgumentException("name is null");
     }
-    while (length > 0 && name.b[start] == '[') {
-      start++;
-      length--;
-    }
-    if (start >= name.b.length) {
-      throw new IllegalArgumentException("ill-formed type name: " + name);
-    }
     try {
+      while (length > 0 && name.b[start] == '[') {
+        start++;
+        length--;
+      }
+      if (start >= name.b.length) {
+        throw new IllegalArgumentException("ill-formed type name: " + name);
+      }
+
       return name.b[start] != 'L';
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalArgumentException(name.toString());

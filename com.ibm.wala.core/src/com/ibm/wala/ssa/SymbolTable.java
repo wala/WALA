@@ -180,7 +180,7 @@ public class SymbolTable {
       }
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("invalid i: " + i);
-    }
+    } 
 
   }
 

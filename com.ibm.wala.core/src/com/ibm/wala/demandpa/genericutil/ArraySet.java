@@ -155,7 +155,6 @@ public class ArraySet<T> extends AbstractSet<T> {
     return false;
   }
 
-
   public void forall(ObjectVisitor<T> visitor) {
     if (visitor == null) {
       throw new IllegalArgumentException("null visitor");
@@ -189,14 +188,17 @@ public class ArraySet<T> extends AbstractSet<T> {
   }
 
   /**
-   * @param ind
-   * @return <code>true</code>
+   * @return <code>true</code> (SJF: So why return a value?)
    */
   public boolean remove(int ind) {
-    // hope i got this right...
-    System.arraycopy(_elems, ind + 1, _elems, ind, _curIndex - (ind + 1));
-    _curIndex--;
-    return true;
+    try {
+      // hope i got this right...
+      System.arraycopy(_elems, ind + 1, _elems, ind, _curIndex - (ind + 1));
+      _curIndex--;
+      return true;
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid ind: " + ind);
+    }
   }
 
   @Override

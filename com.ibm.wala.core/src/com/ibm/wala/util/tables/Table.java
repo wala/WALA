@@ -142,6 +142,9 @@ public class Table<T> {
   }
 
   public synchronized void removeRow(Map<String, T> p) {
+    if (p == null) {
+      throw new IllegalArgumentException("p is null");
+    }
     BitVector toRemove = new BitVector();
     for (int i = 0; i < rows.size(); i++) {
       Map<String, T> row = row2Map(i);
