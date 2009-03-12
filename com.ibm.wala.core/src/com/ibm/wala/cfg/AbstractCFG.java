@@ -544,15 +544,12 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
 
   /**
    * record that basic block i is a catch block
-   * 
-   * @param i
    */
   protected void setCatchBlock(int i) {
     catchBlocks.set(i);
   }
 
   /**
-   * @param i
    * @return true iff block i is a catch block
    */
   public boolean isCatchBlock(int i) {
@@ -561,8 +558,6 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
 
   /**
    * Returns the catchBlocks.
-   * 
-   * @return BitVector
    */
   public BitVector getCatchBlocks() {
     return catchBlocks;
