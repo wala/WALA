@@ -99,9 +99,6 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
   private T exit;
 
   protected AbstractCFG(IMethod method) {
-    if (method == null) {
-      throw new IllegalArgumentException("null method");
-    }
     this.method = method;
     this.catchBlocks = new BitVector(10);
   }
