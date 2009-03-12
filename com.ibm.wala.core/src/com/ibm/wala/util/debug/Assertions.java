@@ -12,9 +12,6 @@ package com.ibm.wala.util.debug;
 
 import com.ibm.wala.annotations.Internal;
 
-/**
- * @author sfink
- */
 public class Assertions {
 
   public static final boolean verifyAssertions = true;
@@ -81,13 +78,12 @@ public class Assertions {
 
   /**
    * An assertion to call when reaching a point that should not be reached.
+   * @throws UnimplementedError unconditionally
    */
-  @Internal
   public static void UNREACHABLE(String string) {
     throw new UnimplementedError(string);
   }
 
-  @Internal
   public static void UNREACHABLE(Object o) {
     throw new UnimplementedError(o == null ? "" : o.toString());
   }

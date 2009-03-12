@@ -22,9 +22,8 @@ import com.ibm.wala.util.debug.Trace;
  * 
  * A relation between non-negative integers
  * 
- * This implementation uses n IntVectors, to hold the first n y's associated
- * with each x, and then 1 extra vector of SparseIntSet to hold the remaining
- * ys.
+ * This implementation uses n IntVectors, to hold the first n y's associated with each x, and then 1 extra vector of SparseIntSet to
+ * hold the remaining ys.
  * 
  * @author sfink
  */
@@ -50,9 +49,9 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
   /**
    * smallStore[i][x] holds
    * <ul>
-   * <li> if >=0, the ith integer associated with x
-   * <li> if -2, then use the delegateStore instead of the small store
-   * <li> if -1, then R(x) is empty
+   * <li>if >=0, the ith integer associated with x
+   * <li>if -2, then use the delegateStore instead of the small store
+   * <li>if -1, then R(x) is empty
    * </ul>
    * represented.
    */
@@ -64,20 +63,14 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
   final IVector<IntSet> delegateStore;
 
   /**
-   * @param implementation
-   *          a set of codes that represent how the first n IntVectors should be
-   *          implemented.
-   * @param vectorImpl
-   *          a code that indicates how to represent the delegateStore.
+   * @param implementation a set of codes that represent how the first n IntVectors should be implemented.
+   * @param vectorImpl a code that indicates how to represent the delegateStore.
    * 
-   * For example implementation =
-   * {SIMPLE_INT_VECTOR,TWO_LEVEL_INT_VECTOR,TWO_LEVEL_INT_VECTOR} will result
-   * in an implementation where the first 3 y's associated with each x are
-   * represented in IntVectors. The IntVector for the first y will be
-   * implemented with a SimpleIntVector, and the 2nd and 3rd are implemented
-   * with TwoLevelIntVector
-   * @throws IllegalArgumentException  if implementation is null
-   * @throws IllegalArgumentException  if implementation.length == 0
+   *          For example implementation = {SIMPLE_INT_VECTOR,TWO_LEVEL_INT_VECTOR,TWO_LEVEL_INT_VECTOR} will result in an
+   *          implementation where the first 3 y's associated with each x are represented in IntVectors. The IntVector for the first
+   *          y will be implemented with a SimpleIntVector, and the 2nd and 3rd are implemented with TwoLevelIntVector
+   * @throws IllegalArgumentException if implementation is null
+   * @throws IllegalArgumentException if implementation.length == 0
    */
   public BasicNaturalRelation(byte[] implementation, byte vectorImpl) throws IllegalArgumentException {
 
@@ -111,9 +104,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
       delegateStore = new TwoLevelVector<IntSet>();
       break;
     default:
-      Assertions.UNREACHABLE();
-      delegateStore = null;
-      break;
+      throw new IllegalArgumentException("unsupported implementation " + vectorImpl);
     }
   }
 
@@ -132,8 +123,8 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
   /**
    * Add (x,y) to the relation.
    * 
-   * This is performance-critical, so the implementation looks a little ugly in
-   * order to help out the compiler with redundancy elimination.
+   * This is performance-critical, so the implementation looks a little ugly in order to help out the compiler with redundancy
+   * elimination.
    * 
    * @param x
    * @param y
@@ -168,7 +159,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
           }
         }
         if (i == ssLength) {
-          MutableIntSet s = new BimodalMutableIntSet(ssLength+1, 1.1f);
+          MutableIntSet s = new BimodalMutableIntSet(ssLength + 1, 1.1f);
           delegateStore.set(x, s);
           for (int j = 0; j < smallStore.length; j++) {
             IntVector vv = smallStore[j];
@@ -207,8 +198,8 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
     private int nextX = -1;
 
     /**
-     * the source of the next y ... an integer between 0 and smallStore.length ..
-     * nextIndex == smallStore.length means use the delegateIterator
+     * the source of the next y ... an integer between 0 and smallStore.length .. nextIndex == smallStore.length means use the
+     * delegateIterator
      */
     private int nextIndex = -1;
 
@@ -365,7 +356,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
       MutableIntSet s = (MutableIntSet) delegateStore.get(x);
       s.remove(y);
       if (s.size() == 0) {
-        delegateStore.set(x,null);
+        delegateStore.set(x, null);
         for (int i = 0; i < smallStore.length; i++) {
           smallStore[i].set(x, EMPTY_CODE);
         }

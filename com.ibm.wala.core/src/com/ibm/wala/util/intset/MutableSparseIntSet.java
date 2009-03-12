@@ -214,10 +214,10 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
   }
 
   public void intersectWith(SparseIntSet set) {
-    SparseIntSet that = set;
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(that != null);
+    if (set == null) {
+      throw new IllegalArgumentException("null set");
     }
+    SparseIntSet that = set;
     if (this.isEmpty()) {
       return;
     } else if (that.isEmpty()) {

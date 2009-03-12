@@ -62,7 +62,11 @@ public final class ImmutableByteArray {
       throw new IllegalArgumentException("illegal i: " + i);
     }
     byte[] result = new byte[length];
-    System.arraycopy(b, i, result, 0, length);
+    try {
+      System.arraycopy(b, i, result, 0, length);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("Invalid combination: " + i + " " + length);
+    }
     return result;
   }
 

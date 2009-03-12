@@ -361,10 +361,14 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   }
 
   public void newConstraint(PointerKey lhs, AbstractOperator<PointsToSetVariable> op, PointerKey rhs) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(lhs != null);
-      Assertions._assert(op != null);
-      Assertions._assert(rhs != null);
+    if (lhs == null) {
+      throw new IllegalArgumentException("lhs null");
+    }
+    if (op == null) {
+      throw new IllegalArgumentException("op null");
+    }
+    if (rhs == null) {
+      throw new IllegalArgumentException("rhs null");
     }
     if (DEBUG) {
       System.err.println("Add constraint A: " + lhs + " " + op + " " + rhs);

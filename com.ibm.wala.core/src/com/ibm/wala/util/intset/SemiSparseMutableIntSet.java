@@ -264,6 +264,9 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
    * @return a new IntSet which is the intersection of this and that
    */
   public IntSet intersection(IntSet that) {
+    if (that == null) {
+      throw new IllegalArgumentException("null that");
+    }
     SemiSparseMutableIntSet newThis = new SemiSparseMutableIntSet();
     for (IntIterator bits = intIterator(); bits.hasNext();) {
       int bit = bits.next();

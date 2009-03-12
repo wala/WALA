@@ -157,6 +157,9 @@ public class PointsToMap {
   }
 
   public boolean isUnified(PointerKey p) {
+    if (p == null) {
+      throw new IllegalArgumentException("null p");
+    }
     int i = findOrCreateIndex(p);
     return pointsToSets.get(i) == UNIFIED;
   }

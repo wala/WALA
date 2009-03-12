@@ -34,6 +34,9 @@ public class HeadlessUtil {
    * will define a property with key "foo" and value "bar"
    */
   public static Properties parseCommandLine(String[] cmdLine) {
+    if (cmdLine == null) {
+      throw new IllegalArgumentException("null cmdLine");
+    }
     Properties p = null;
     assert cmdLine[0].equals("-pdelaunch");
     String[] x = new String[cmdLine.length - 1];

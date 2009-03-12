@@ -14,7 +14,6 @@ import java.util.HashMap;
 
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * By convention, symbol numbers start at 1 ... the "this" parameter will be symbol number 1 in a virtual method.
@@ -80,27 +79,33 @@ public class SymbolTable {
   }
 
   public void setConstantValue(int vn, ConstantValue val) {
-    values[vn] = val;
+    try {
+      values[vn] = val;
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid vn: " + vn);
+    }
   }
 
   public void setDefaultValue(int vn, final Object defaultValue) {
-    Assertions._assert(values[vn] == null);
+    try {
+      Assertions._assert(values[vn] == null);
 
-    Trace.println("setting default for " + vn + " to " + defaultValue);
+      values[vn] = new Value() {
+        public boolean isStringConstant() {
+          return false;
+        }
 
-    values[vn] = new Value() {
-      public boolean isStringConstant() {
-        return false;
-      }
+        public boolean isNullConstant() {
+          return false;
+        }
 
-      public boolean isNullConstant() {
-        return false;
-      }
-
-      public int getDefaultValue(SymbolTable symtab) {
-        return findOrCreateConstant(defaultValue);
-      }
-    };
+        public int getDefaultValue(SymbolTable symtab) {
+          return findOrCreateConstant(defaultValue);
+        }
+      };
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid ivn: " + vn);
+    }
   }
 
   public int getNullConstant() {
@@ -137,10 +142,11 @@ public class SymbolTable {
    * By convention, for a non-static method, the 0th parameter is 'this'
    */
   public int getParameter(int i) throws IllegalArgumentException {
-    if (parameters.length <= i) {
-      throw new IllegalArgumentException("parameters too small for index " + i + ", length = " + parameters.length);
+    try {
+      return parameters[i];
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid i: " + i);
     }
-    return parameters[i];
   }
 
   private void expandForNewValueNumber(int vn) {
@@ -163,14 +169,19 @@ public class SymbolTable {
    * @param i a value number
    */
   public void ensureSymbol(int i) {
-    if (i != -1) {
-      if (i >= values.length || values[i] == null) {
-        if (nextFreeValueNumber <= i) {
-          nextFreeValueNumber = i + 1;
+    try {
+      if (i != -1) {
+        if (i >= values.length || values[i] == null) {
+          if (nextFreeValueNumber <= i) {
+            nextFreeValueNumber = i + 1;
+          }
+          expandForNewValueNumber(i);
         }
-        expandForNewValueNumber(i);
       }
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid i: " + i);
     }
+
   }
 
   public String getValueString(int valueNumber) {
@@ -315,10 +326,11 @@ public class SymbolTable {
    * Return the PhiValue that is associated with a given value number
    */
   public PhiValue getPhiValue(int valueNumber) {
-    if (valueNumber < 0) {
+    try {
+      return (PhiValue) values[valueNumber];
+    } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("invalid valueNumber: " + valueNumber);
     }
-    return (PhiValue) values[valueNumber];
   }
 
   public int getMaxValueNumber() {
