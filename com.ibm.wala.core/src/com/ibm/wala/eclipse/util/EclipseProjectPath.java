@@ -78,8 +78,10 @@ public class EclipseProjectPath {
   /**
    * TODO: do we really need this? Why shouldn't source files come from a "normal" class loader like any other resource?
    */
+  @Deprecated
   public static final Atom SOURCE = Atom.findOrCreateUnicodeAtom("Source");
 
+  @Deprecated
   public static final ClassLoaderReference SOURCE_REF = new ClassLoaderReference(EclipseProjectPath.SOURCE,
       ClassLoaderReference.Java);
 
@@ -108,6 +110,7 @@ public class EclipseProjectPath {
   // identityHashCode. TODO: fix this source of non-determinism?
   private final Map<Loader, List<Module>> binaryModules = new HashMap<Loader, List<Module>>();
 
+  @Deprecated
   private final Map<Loader, List<Module>> sourceModules = new HashMap<Loader, List<Module>>();
 
   private final Collection<IClasspathEntry> alreadyResolved = HashSetFactory.make();
@@ -135,6 +138,7 @@ public class EclipseProjectPath {
     return make(project, false);
   }
 
+  @Deprecated
   public static EclipseProjectPath make(IJavaProject project, boolean analyzeSource) throws IOException, CoreException {
     if (project == null) {
       throw new IllegalArgumentException("null project");
