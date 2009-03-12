@@ -123,9 +123,10 @@ public class SSAPhiInstruction extends SSAInstruction {
   }
 
   /**
-   * Only for use by SSA builder.  Should not be exposed to clients.
+   * Clients should not call this.  only for SSA builders.
+   * I hate this.
    */
-  void setValues(int[] i) {
+  public void setValues(int[] i) {
     this.params = i;
   }
 
