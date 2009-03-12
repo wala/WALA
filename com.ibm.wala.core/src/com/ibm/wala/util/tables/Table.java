@@ -85,11 +85,12 @@ public class Table<T> {
   }
 
   public synchronized T getElement(int row, int column) {
-    if (row < 0) {
-      throw new IllegalArgumentException("Invalid row : " + row);
+    try {
+      SimpleVector<T> r = rows.get(row);
+      return r.get(column);
+    } catch (IndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("row: " + row + " column: " + column);
     }
-    SimpleVector<T> r = rows.get(row);
-    return r.get(column);
   }
 
   /**

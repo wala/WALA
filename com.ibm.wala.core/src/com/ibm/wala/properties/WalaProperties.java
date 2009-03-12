@@ -64,7 +64,9 @@ public final class WalaProperties {
       Assertions.UNREACHABLE();
     }
     String dir = p.getProperty(WalaProperties.J2EE_DIR);
-    Assertions.productionAssertion(dir != null);
+    if (dir == null) {
+      throw new IllegalStateException("No J2EE directory specified");
+    }
     return getJarsInDirectory(dir);
   }
 

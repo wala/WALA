@@ -123,6 +123,9 @@ public class FileProvider {
     if (p == null) {
       throw new IllegalArgumentException("p is null");
     }
+    if (fileName == null) {
+      throw new IllegalArgumentException("null fileName");
+    }
     URL url = getFileURLFromPlugin(p, fileName);
     if (url == null) {
       throw new FileNotFoundException(fileName);
@@ -229,15 +232,20 @@ public class FileProvider {
   }
 
   /**
-   * @param fileName
    * @return the jar file packaged with this plug-in of the given name, or null if not found: wrapped as a JarFileModule
    *         or a NestedJarFileModule
    * @throws IOException
    */
   public static Module getJarFileFromClassLoader(String fileName, ClassLoader loader) throws IOException {
+    if (fileName == null) {
+      throw new IllegalArgumentException("null fileName");
+    }
+    if (loader == null) {
+      throw new IllegalArgumentException("null loader");
+    }
     URL url = loader.getResource(fileName);
     if (DEBUG_LEVEL > 0) {
-      Trace.println("FileProvider got url: " + url + " for " + fileName);
+      System.err.println("FileProvider got url: " + url + " for " + fileName);
     }
     if (url == null) {
       // couldn't load it from the class loader. try again from the

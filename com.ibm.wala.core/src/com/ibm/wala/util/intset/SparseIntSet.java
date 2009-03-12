@@ -424,6 +424,9 @@ public class SparseIntSet implements IntSet {
    * @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction)
    */
   public void foreach(IntSetAction action) {
+    if (action == null) {
+      throw new IllegalArgumentException("null action");
+    }
     for (int i = 0; i < size; i++)
       action.act(elements[i]);
   }

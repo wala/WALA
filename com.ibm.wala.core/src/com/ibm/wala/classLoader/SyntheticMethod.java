@@ -57,6 +57,9 @@ public class SyntheticMethod implements IMethod {
 
   public SyntheticMethod(IMethod method, IClass declaringClass, boolean isStatic, boolean isFactory) {
     super();
+    if (method == null) {
+      throw new IllegalArgumentException("null method");
+    }
     this.resolvedMethod = method;
     this.method = resolvedMethod.getReference();
     this.declaringClass = declaringClass;

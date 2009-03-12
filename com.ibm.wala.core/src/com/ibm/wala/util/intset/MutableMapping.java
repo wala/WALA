@@ -158,6 +158,9 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
    */
   public void put(int i, T o) {
 
+    if (i < 0) {
+      throw new IllegalArgumentException("invalid i: " + i);
+    }
     Integer I = Integer.valueOf(i);
     map.put(o, I);
     if (i >= array.length) {

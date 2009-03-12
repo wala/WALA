@@ -17,8 +17,8 @@ import com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * Note: if getUse(i) returns {@link AbstractIntStackMachine}.TOP (that is, -1), then that use represents
- * an edge in the CFG which is infeasible in verifiable bytecode.
+ * Note: if getUse(i) returns {@link AbstractIntStackMachine}.TOP (that is, -1), then that use represents an edge in the CFG which
+ * is infeasible in verifiable bytecode.
  * 
  * @author sfink
  * 
@@ -55,7 +55,6 @@ public class SSAPhiInstruction extends SSAInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-
     StringBuffer s = new StringBuffer();
 
     s.append(getValueString(symbolTable, result)).append(" = phi ");
@@ -68,8 +67,7 @@ public class SSAPhiInstruction extends SSAInstruction {
 
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   * @throws IllegalArgumentException
-   *             if v is null
+   * @throws IllegalArgumentException if v is null
    */
   @Override
   public void visit(IVisitor v) {
@@ -125,18 +123,17 @@ public class SSAPhiInstruction extends SSAInstruction {
   }
 
   /**
-   * @param i
+   * Only for use by SSA builder.  Should not be exposed to clients.
    */
-  public void setValues(int[] i) {
+  void setValues(int[] i) {
     this.params = i;
   }
 
   /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getValueString(SymbolTable,
-   *      ValueDecorator, int)
+   * @see com.ibm.wala.ssa.SSAInstruction#getValueString(SymbolTable, ValueDecorator, int)
    */
   @Override
-  protected String getValueString(SymbolTable symbolTable,int valueNumber) {
+  protected String getValueString(SymbolTable symbolTable, int valueNumber) {
     if (valueNumber == AbstractIntStackMachine.TOP) {
       return "TOP";
     } else {

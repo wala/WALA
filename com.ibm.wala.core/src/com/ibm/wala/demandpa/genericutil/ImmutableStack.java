@@ -44,8 +44,7 @@ import java.util.Iterator;
 import com.ibm.wala.util.collections.ArrayIterator;
 
 /**
- * An immutable stack of objects. The {@link #push(Object)} and {@link #pop()}
- * operations create new stacks.
+ * An immutable stack of objects. The {@link #push(Object)} and {@link #pop()} operations create new stacks.
  * 
  * @author Manu Sridharan
  * 
@@ -143,7 +142,11 @@ public class ImmutableStack<T> implements Iterable<T> {
   }
 
   public T get(int i) {
-    return entries[i];
+    try {
+      return entries[i];
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid i: " + i);
+    }
   }
 
   @Override
@@ -158,9 +161,8 @@ public class ImmutableStack<T> implements Iterable<T> {
   }
 
   /**
-   * @return <code>true</code> iff other.size() = k, k <= this.size(), and the
-   *         top k elements of this equal other
-   * @throws IllegalArgumentException  if other == null
+   * @return <code>true</code> iff other.size() = k, k <= this.size(), and the top k elements of this equal other
+   * @throws IllegalArgumentException if other == null
    */
   public boolean topMatches(ImmutableStack<T> other) throws IllegalArgumentException {
     if (other == null) {
@@ -197,7 +199,9 @@ public class ImmutableStack<T> implements Iterable<T> {
 
   @SuppressWarnings("unchecked")
   public ImmutableStack<T> pushAll(ImmutableStack<T> other) {
-    // TODO Auto-generated method stub
+    if (other == null) {
+      throw new IllegalArgumentException("null other");
+    }
     int size = entries.length + other.entries.length;
     T[] tmpEntries = null;
     if (size <= MAX_SIZE) {
@@ -219,11 +223,11 @@ public class ImmutableStack<T> implements Iterable<T> {
   public Iterator<T> iterator() {
     return new ArrayIterator<T>(entries);
   }
-  
+
   /**
    * return a new stack with the top replaced with t
    * 
-   */ 
+   */
   public ImmutableStack<T> replaceTop(T t) {
     int size = entries.length;
     T[] tmpEntries = makeInternalArray(size);

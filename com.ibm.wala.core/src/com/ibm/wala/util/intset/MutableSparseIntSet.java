@@ -461,6 +461,9 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     if (other == null) {
       throw new IllegalArgumentException("other is null");
     }
+    if (filter == null) {
+      throw new IllegalArgumentException("invalid filter");
+    }
     // a hack. TODO: better algorithm
     if (other.size() < 5) {
       boolean result = false;

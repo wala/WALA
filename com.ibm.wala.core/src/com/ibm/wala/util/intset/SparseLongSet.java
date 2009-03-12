@@ -394,6 +394,12 @@ public class SparseLongSet implements LongSet {
   }
 
   public void foreachExcluding(LongSet X, LongSetAction action) {
+    if (X == null) {
+      throw new IllegalArgumentException("null X");
+    }
+    if (action == null) {
+      throw new IllegalArgumentException("null action");
+    }
     for (int i = 0; i < size; i++) {
       if (!X.contains(elements[i])) {
         action.act(elements[i]);

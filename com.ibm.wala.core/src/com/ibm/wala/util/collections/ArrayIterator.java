@@ -49,6 +49,9 @@ public class ArrayIterator<T> implements Iterator<T> {
     if (elts == null) {
       throw new IllegalArgumentException("null elts");
     }
+    if (start < 0 || start >= elts.length) {
+      throw new IllegalArgumentException("invalid start: " + start + ", arrray length " + elts.length);
+    }
     _elts = elts;
     _cnt = start;
     last = _elts.length - 1;

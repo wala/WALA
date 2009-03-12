@@ -1140,9 +1140,11 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * @return a ClassHierarchy object representing the analysis scope
    * @throws ClassHierarchyException
-   * 
    */
   public static ClassHierarchy make(AnalysisScope scope) throws ClassHierarchyException {
+    if (scope == null) {
+      throw new IllegalArgumentException("null scope");
+    }
     return make(scope, new ClassLoaderFactoryImpl(scope.getExclusions()));
   }
 
@@ -1151,10 +1153,16 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   @Internal
   public static ClassHierarchy make(AnalysisScope scope, IProgressMonitor monitor) throws ClassHierarchyException {
+    if (scope == null) {
+      throw new IllegalArgumentException("null scope");
+    }
     return make(scope, new ClassLoaderFactoryImpl(scope.getExclusions()), monitor);
   }
 
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory) throws ClassHierarchyException {
+    if (scope == null) {
+      throw new IllegalArgumentException("null scope");
+    }
     return new ClassHierarchy(scope, factory, new NullProgressMonitor());
   }
 
@@ -1257,6 +1265,9 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   @Deprecated
   public static boolean isInnerClass(IClass klass) throws NullPointerException {
+    if (klass == null) {
+      throw new IllegalArgumentException("null klass");
+    }
     return klass.getName().toString().indexOf("$") > -1;
   }
 

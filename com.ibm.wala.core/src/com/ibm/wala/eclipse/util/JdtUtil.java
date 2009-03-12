@@ -236,6 +236,9 @@ public class JdtUtil {
   }
 
   public static IType findJavaClassInResources(String className, Collection<IResource> resources) {
+    if (resources == null) {
+      throw new IllegalArgumentException("null resources");
+    }
     Collection<IJavaProject> projects = HashSetFactory.make();
     for (IResource r : resources) {
       projects.add(JavaCore.create(r).getJavaProject());
@@ -543,6 +546,9 @@ public class JdtUtil {
    * get a {@link StructuredSelection} corresponding to the named projects
    */
   public static StructuredSelection getStructuredSelectionForProjectNames(Collection<String> projectNames) {
+    if (projectNames == null) {
+      throw new IllegalArgumentException("null projectNames");
+    }
     Object[] projects = new Object[projectNames.size()];
     int i = 0;
     for (String projectName : projectNames) {

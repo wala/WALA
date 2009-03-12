@@ -231,6 +231,9 @@ public class AnalysisScope {
    * Add all modules from another scope
    */
   public void addToScope(AnalysisScope other) {
+    if (other == null) {
+      throw new IllegalArgumentException("null other");
+    }
     for (ClassLoaderReference loader : other.getLoaders()) {
       for (Module m : other.getModules(loader)) {
         addToScope(loader, m);

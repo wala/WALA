@@ -57,6 +57,9 @@ public class ReflectionSummary {
   }
 
   public TypeAbstraction getTypeForNewInstance(int bcIndex, IClassHierarchy cha) {
+    if (cha == null) {
+      throw new IllegalArgumentException("null cha");
+    }
     Set S = map.get(new Integer(bcIndex));
     if (S == null) {
       return null;

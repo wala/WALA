@@ -19,8 +19,6 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * A Set backed by a set of integers.
- * 
- * @author sfink
  */
 public class OrdinalSet<T> implements Iterable<T> {
 
@@ -40,30 +38,25 @@ public class OrdinalSet<T> implements Iterable<T> {
     mapping = null;
   }
 
-  /**
-   */
   public OrdinalSet(IntSet S, OrdinalSetMapping<T> mapping) {
     this.S = S;
     this.mapping = mapping;
   }
 
-  /**
-   */
   public boolean containsAny(OrdinalSet<T> that) {
+    if (that == null) {
+      throw new IllegalArgumentException("null that");
+    }
     if (S == null || that.S == null) {
       return false;
     }
     return S.containsAny(that.S);
   }
 
-  /**
-   */
   public int size() {
     return (S == null) ? 0 : S.size();
   }
 
-  /**
-   */
   public Iterator<T> iterator() {
     if (S == null) {
       return EmptyIterator.instance();

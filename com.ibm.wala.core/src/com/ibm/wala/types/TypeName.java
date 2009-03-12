@@ -85,6 +85,9 @@ public final class TypeName implements Serializable {
     if (packageName == null) {
       throw new IllegalArgumentException("null packageName");
     }
+    if (className == null) {
+      throw new IllegalArgumentException("null className");
+    }
     TypeNameKey T = new TypeNameKey(packageName, className, (short) 0, false);
     return findOrCreate(T);
   }

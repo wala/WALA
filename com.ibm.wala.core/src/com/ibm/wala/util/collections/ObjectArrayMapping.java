@@ -19,8 +19,7 @@ import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 
 /**
- * A bit set mapping based on an immutable object array. This is not terribly
- * efficient, but is useful for prototyping.
+ * A bit set mapping based on an immutable object array. This is not terribly efficient, but is useful for prototyping.
  */
 public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
 
@@ -42,10 +41,11 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
   }
 
   public T getMappedObject(int n) throws NoSuchElementException {
-    if (n >= array.length) {
-      throw new NoSuchElementException("n too big: " + n);
+    try {
+      return array[n];
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid n: " + n);
     }
-    return array[n];
   }
 
   public int getMappedIndex(Object o) {
@@ -59,7 +59,6 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
     return map.get(o) != null;
   }
 
-
   public Iterator<T> iterator() {
     return map.keySet().iterator();
   }
@@ -70,7 +69,7 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
   }
 
   public int getMaximumIndex() {
-    return array.length -1;
+    return array.length - 1;
   }
 
   public int getSize() {

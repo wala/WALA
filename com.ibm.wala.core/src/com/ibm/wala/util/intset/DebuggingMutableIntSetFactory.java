@@ -76,10 +76,16 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory {
   }
 
   public void setPrimaryFactory(MutableIntSetFactory x) {
+    if (x == null) {
+      throw new IllegalArgumentException("null x");
+    }
     primary = x;
   }
 
   public void setSecondaryFactory(MutableIntSetFactory x) {
+    if (x == null) {
+      throw new IllegalArgumentException("null x");
+    }
     secondary = x;
   }
 }

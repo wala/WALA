@@ -42,8 +42,6 @@ import com.ibm.wala.util.intset.SimpleIntVector;
 
 /**
  * A graph of basic blocks.
- * 
- * @author sfink
  */
 public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements ControlFlowGraph<I, T>, Constants {
 
@@ -70,8 +68,8 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
       BasicNaturalRelation.SIMPLE);
 
   /**
-   * An object to track not-to-exit exceptional edges in this cfg, indexed by block number. exceptionalEdges[i] is a
-   * list of block numbers that are non-exit exceptional successors of block i, in order of increasing "catch scope".
+   * An object to track not-to-exit exceptional edges in this cfg, indexed by block number. exceptionalEdges[i] is a list of block
+   * numbers that are non-exit exceptional successors of block i, in order of increasing "catch scope".
    */
   final private SimpleVector<SimpleIntVector> exceptionalSuccessors = new SimpleVector<SimpleIntVector>();
 
@@ -101,6 +99,9 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
   private T exit;
 
   protected AbstractCFG(IMethod method) {
+    if (method == null) {
+      throw new IllegalArgumentException("null method");
+    }
     this.method = method;
     this.catchBlocks = new BitVector(10);
   }

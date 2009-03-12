@@ -52,15 +52,11 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
 
 /**
  * 
- * A Supergraph customized for the case when some nodes are "collapsible",
- * meaning the result for every basic block in a collapsible node is identical.
- * This graph is an InterproceduralCFG for uncollapsible nodes, hooked up to
- * collapsed nodes.
+ * A Supergraph customized for the case when some nodes are "collapsible", meaning the result for every basic block in a collapsible
+ * node is identical. This graph is an InterproceduralCFG for uncollapsible nodes, hooked up to collapsed nodes.
  * 
- * This class is deprecated.  It's quite a kludge, and likely not worth the constant-time
- * speedup for most applications.  I don't have any tests exercising this right now, so
- * it may be rotting.   Clients that use this should probably migrate to a simpler
- * supergraph.
+ * This class is deprecated. It's quite a kludge, and likely not worth the constant-time speedup for most applications. I don't have
+ * any tests exercising this right now, so it may be rotting. Clients that use this should probably migrate to a simpler supergraph.
  * 
  * @author sfink
  */
@@ -101,32 +97,29 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
       return isEntry(o);
     }
   };
-  
+
   public Graph<CGNode> getProcedureGraph() {
     return cg;
   }
 
   /**
-   * @param cg
-   *            Governing call graph
-   * @param noCollapse
-   *            set of nodes in the call graph which cannot be collapsed
+   * @param cg Governing call graph
+   * @param noCollapse set of nodes in the call graph which cannot be collapsed
    */
   public PartiallyCollapsedSupergraph(CallGraph cg, Collection<CGNode> noCollapse) {
-    this(cg, noCollapse, IndiscriminateFilter.<CGNode>singleton());
+    this(cg, noCollapse, IndiscriminateFilter.<CGNode> singleton());
   }
 
   /**
-   * @param cg
-   *            Governing call graph
-   * @param noCollapse
-   *            set of nodes in the call graph which cannot be collapsed
-   * @param relevant
-   *            set of nodes which are relevant and should be included in the
-   *            supergraph
+   * @param cg Governing call graph
+   * @param noCollapse set of nodes in the call graph which cannot be collapsed
+   * @param relevant set of nodes which are relevant and should be included in the supergraph
    */
   public PartiallyCollapsedSupergraph(CallGraph cg, Collection<CGNode> noCollapse, Filter<CGNode> relevant) {
 
+    if (cg == null) {
+      throw new IllegalArgumentException("null cg");
+    }
     this.cg = cg;
     if (DEBUG_LEVEL > 0) {
       Trace.println("Call graph \n" + cg.toString());
@@ -240,7 +233,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     return new FilterIterator<Object>(edgeManager.getSuccNodes(n), isEntry);
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getReturnSites(java.lang.Object, java.lang.Object)
    */
   @SuppressWarnings("unchecked")
@@ -253,7 +246,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getCallSites(java.lang.Object, java.lang.Object)
    */
   @SuppressWarnings("unchecked")
@@ -269,7 +262,8 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   public CGNode getProcOf(Object n) throws IllegalArgumentException {
     if (!(n instanceof com.ibm.wala.ipa.cfg.BasicBlockInContext) && n instanceof com.ibm.wala.cfg.IBasicBlock) {
       throw new IllegalArgumentException(
-        "(n instanceof com.ibm.wala.cfg.IBasicBlock) and (not ( n instanceof com.ibm.wala.ipa.cfg.BasicBlockInContext ) ): " + n + ", " + n.getClass());
+          "(n instanceof com.ibm.wala.cfg.IBasicBlock) and (not ( n instanceof com.ibm.wala.ipa.cfg.BasicBlockInContext ) ): " + n
+              + ", " + n.getClass());
     }
     if (n instanceof BasicBlockInContext) {
       return partialIPFG.getCGNode((BasicBlockInContext) n);
@@ -281,9 +275,8 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   private class EdgeManager implements NumberedEdgeManager<Object> {
 
     /**
-     * A transverse edge is an edge from an uncollapsed node to a collapsed
-     * node, or vice versa. We track these explicitly. This is a map from
-     * collapsed node entry -> Set of predecessor basic blocks
+     * A transverse edge is an edge from an uncollapsed node to a collapsed node, or vice versa. We track these explicitly. This is
+     * a map from collapsed node entry -> Set of predecessor basic blocks
      */
     private final Map<Object, Set<Object>> incomingTransverseEdges = HashMapFactory.make();
 
@@ -581,7 +574,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
 
     /*
      * This can be really slow: this will need tuning.
-     * 
      */
     @SuppressWarnings("unchecked")
     public boolean hasEdge(Object src, Object dst) {
@@ -608,8 +600,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
 
     /*
-     * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object,
-     *      java.lang.Object)
+     * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object, java.lang.Object)
      */
     public void addEdge(Object src, Object dst) {
       Assertions.UNREACHABLE();
@@ -647,9 +638,8 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   private class NodeManager implements NumberedNodeManager<Object> {
 
     /**
-     * Map: CGNode -> Integer ... the index into collapsed nodes for the
-     * collapsed entry of a CGNode. Note that if i is the index for the
-     * collapsed entry, then i+1 is the index for the collapsed exit
+     * Map: CGNode -> Integer ... the index into collapsed nodes for the collapsed entry of a CGNode. Note that if i is the index
+     * for the collapsed entry, then i+1 is the index for the collapsed exit
      */
     private final Map<CGNode, Integer> node2EntryIndex = HashMapFactory.make();
 
@@ -689,8 +679,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     /**
      * TODO: refactor to avoid allocation?
      * 
-     * @param n
-     *            a collapsible node
+     * @param n a collapsible node
      * @return an object that represents entry to this node
      */
     public CollapsedNode getCollapsedEntry(CGNode n) {
@@ -704,8 +693,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     /**
      * TODO: refactor to avoid allocation?
      * 
-     * @param n
-     *            a collapsible node
+     * @param n a collapsible node
      * @return an object that represents entry to this node
      */
     public CollapsedNode getCollapsedExit(CGNode n) {
@@ -867,8 +855,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   }
 
   /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#classifyEdge(java.lang.Object,
-   *      java.lang.Object)
+   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#classifyEdge(java.lang.Object, java.lang.Object)
    */
   public byte classifyEdge(Object src, Object dest) throws IllegalArgumentException {
 
@@ -927,8 +914,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   }
 
   /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getLocalBlock(java.lang.Object,
-   *      int)
+   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getLocalBlock(java.lang.Object, int)
    */
   public Object getLocalBlock(CGNode procedure, int i) {
     CGNode n = procedure;
@@ -970,8 +956,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   }
 
   /**
-   * We create 2 nodes for each collapsed call graph node, an entry node and an
-   * exit node.
+   * We create 2 nodes for each collapsed call graph node, an entry node and an exit node.
    */
   private final static class CollapsedNode {
     final CGNode node;

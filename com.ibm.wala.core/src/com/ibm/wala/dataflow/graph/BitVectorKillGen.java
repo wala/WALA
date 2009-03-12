@@ -40,6 +40,9 @@ public class BitVectorKillGen extends UnaryOperator<BitVectorVariable> {
     if (rhs == null) {
       throw new IllegalArgumentException("rhs == null");
     }
+    if (lhs == null) {
+      throw new IllegalArgumentException("lhs == null");
+    }
     BitVectorVariable U = new BitVectorVariable();
     BitVectorIntSet bv = new BitVectorIntSet();
     if (rhs.getValue() != null) {

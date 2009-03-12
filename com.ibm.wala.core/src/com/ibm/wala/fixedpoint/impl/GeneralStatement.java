@@ -134,6 +134,9 @@ public class GeneralStatement<T extends IVariable> extends AbstractStatement<T, 
    */
   public GeneralStatement(T lhs, AbstractOperator<T> operator, IVariable[] rhs) {
     super();
+    if (operator ==  null) {
+      throw new IllegalArgumentException("null operator");
+    }
     if (rhs == null) {
       throw new IllegalArgumentException("rhs is null");
     }

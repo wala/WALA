@@ -56,7 +56,7 @@ public class ArraySet<T> extends AbstractSet<T> {
   private static final ArraySet EMPTY = new ArraySet<Object>(0, true) {
     @Override
     public boolean add(Object obj_) {
-      throw new RuntimeException();
+      throw new UnsupportedOperationException();
     }
   };
 
@@ -72,8 +72,11 @@ public class ArraySet<T> extends AbstractSet<T> {
   private final boolean checkDupes;
 
   @SuppressWarnings("all")
-  public ArraySet(int numElems_, boolean checkDupes) {
-    _elems = (T[]) new Object[numElems_];
+  public ArraySet(int n, boolean checkDupes) {
+    if (n < 0) {
+      throw new IllegalArgumentException("invalid n: " + n);
+    }
+    _elems = (T[]) new Object[n];
     this.checkDupes = checkDupes;
   }
 
@@ -152,12 +155,13 @@ public class ArraySet<T> extends AbstractSet<T> {
     return false;
   }
 
-  /*
-   * @see AAA.util.AAASet#forall(AAA.util.ObjectVisitor)
-   */
-  public void forall(ObjectVisitor<T> visitor_) {
+
+  public void forall(ObjectVisitor<T> visitor) {
+    if (visitor == null) {
+      throw new IllegalArgumentException("null visitor");
+    }
     for (int i = 0; i < _curIndex; i++) {
-      visitor_.visit(_elems[i]);
+      visitor.visit(_elems[i]);
     }
   }
 

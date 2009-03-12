@@ -12,12 +12,12 @@ package com.ibm.wala.util.intset;
 
 
 /**
- * @author sfink
- * 
  */
 public class BitVector extends BitVectorBase<BitVector> {
 
   private static final long serialVersionUID = 9087259335807761617L;
+  
+  private final static int MAX_BITS = Integer.MAX_VALUE / 4;
 
   public BitVector() {
     this(1);
@@ -29,6 +29,9 @@ public class BitVector extends BitVectorBase<BitVector> {
    * @param nbits the size of the string
    */
   public BitVector(int nbits) {
+    if (nbits > MAX_BITS) {
+      throw new IllegalArgumentException("too many bits: " + nbits);
+    }
     bits = new int[subscript(nbits) + 1];
   }
 

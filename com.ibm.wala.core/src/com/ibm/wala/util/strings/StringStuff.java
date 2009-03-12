@@ -56,14 +56,13 @@ public class StringStuff {
   }
 
   /**
-   * Translate a type from a deployment descriptor string into the internal JVM
-   * format
+   * Translate a type from a deployment descriptor string into the internal JVM format
    * 
    * eg. [[java/lang/String
    * 
    * @param dString
    * @return String
-   * @throws IllegalArgumentException  if dString is null
+   * @throws IllegalArgumentException if dString is null
    */
   public static String deployment2CanonicalTypeString(String dString) {
     if (dString == null) {
@@ -91,14 +90,13 @@ public class StringStuff {
   }
 
   /**
-   * Translate a type from a deployment descriptor string into the type expected
-   * for use in a method descriptor
+   * Translate a type from a deployment descriptor string into the type expected for use in a method descriptor
    * 
    * eg. [[Ljava.lang.String;
    * 
    * @param dString
    * @return String
-   * @throws IllegalArgumentException  if dString is null
+   * @throws IllegalArgumentException if dString is null
    */
   public static String deployment2CanonicalDescriptorTypeString(String dString) {
     if (dString == null) {
@@ -124,19 +122,18 @@ public class StringStuff {
       }
     }
   }
-  
+
   public static final TypeName parseForReturnTypeName(String desc) throws IllegalArgumentException {
     return parseForReturnTypeName(ImmutableByteArray.make(desc));
   }
 
   /**
-   * Parse method descriptor to obtain description of method's return type.
-   * TODO: tune this .. probably combine with parseForParameters.
+   * Parse method descriptor to obtain description of method's return type. TODO: tune this .. probably combine with
+   * parseForParameters.
    * 
-   * @param b
-   *          method descriptor - something like "(III)V"
+   * @param b method descriptor - something like "(III)V"
    * @return type description
-   * @throws IllegalArgumentException  if b is null
+   * @throws IllegalArgumentException if b is null
    */
   public static final TypeName parseForReturnTypeName(ImmutableByteArray b) throws IllegalArgumentException {
 
@@ -152,8 +149,9 @@ public class StringStuff {
     }
 
     int i = 0;
-    while (b.get(i++) != ')');
-    if (b.length() < i+1) {
+    while (b.get(i++) != ')')
+      ;
+    if (b.length() < i + 1) {
       throw new IllegalArgumentException("invalid descriptor: " + b);
     }
     switch (b.get(i)) {
@@ -186,7 +184,7 @@ public class StringStuff {
       throw new IllegalArgumentException("unexpected type in descriptor " + b);
     }
   }
-  
+
   public static final TypeName[] parseForParameterNames(String descriptor) throws IllegalArgumentException {
     return parseForParameterNames(ImmutableByteArray.make(descriptor));
   }
@@ -195,7 +193,7 @@ public class StringStuff {
    * Parse method descriptor to obtain descriptions of method's parameters.
    * 
    * @return parameter descriptions, or null if there are no parameters
-   * @throws IllegalArgumentException  if b is null
+   * @throws IllegalArgumentException if b is null
    */
   public static final TypeName[] parseForParameterNames(ImmutableByteArray b) throws IllegalArgumentException {
 
@@ -287,37 +285,37 @@ public class StringStuff {
   }
 
   /**
-   * Given that name[start:start+length] is a Type name in JVM format, parse it
-   * for the package
+   * Given that name[start:start+length] is a Type name in JVM format, parse it for the package
    * 
-   * @return an ImmutableByteArray that represents the package, or null if it's
-   *         the unnamed package
-   * @throws IllegalArgumentException  if name == null
+   * @return an ImmutableByteArray that represents the package, or null if it's the unnamed package
+   * @throws IllegalArgumentException if name == null
    */
   public static ImmutableByteArray parseForPackage(ImmutableByteArray name, int start, int length) throws IllegalArgumentException {
-    if (name == null) {
-      throw new IllegalArgumentException("name == null");
-    }
-    int lastSlash = -1;
-    for (int i = start; i < start + length; i++) {
-      if (name.b[i] == '/') {
-        lastSlash = i;
+    try {
+      if (name == null) {
+        throw new IllegalArgumentException("name == null");
       }
+      int lastSlash = -1;
+      for (int i = start; i < start + length; i++) {
+        if (name.b[i] == '/') {
+          lastSlash = i;
+        }
+      }
+      if (lastSlash == -1) {
+        return null;
+      }
+      short dim = parseForArrayDimensionality(name, start, length);
+      return new ImmutableByteArray(name.b, start + 1 + dim, lastSlash - start - 1 - dim);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid name " + name + " start: " + start + " length: " + length);
     }
-    if (lastSlash == -1) {
-      return null;
-    }
-    short dim = parseForArrayDimensionality(name, start, length);
-    return new ImmutableByteArray(name.b, start + 1 + dim, lastSlash - start - 1 - dim);
   }
 
   /**
-   * Given that name[start:start+length] is a Type name in JVM format, parse it
-   * for the package
+   * Given that name[start:start+length] is a Type name in JVM format, parse it for the package
    * 
-   * @return an ImmutableByteArray that represents the package, or null if it's
-   *         the unnamed package
-   * @throws IllegalArgumentException  if name is null
+   * @return an ImmutableByteArray that represents the package, or null if it's the unnamed package
+   * @throws IllegalArgumentException if name is null
    */
   public static ImmutableByteArray parseForPackage(ImmutableByteArray name) {
     if (name == null) {
@@ -327,17 +325,15 @@ public class StringStuff {
   }
 
   /**
-   * Given that name[start:start+length] is a Type name in JVM format, strip the
-   * package and return the "package-free" class name
+   * Given that name[start:start+length] is a Type name in JVM format, strip the package and return the "package-free" class name
    * 
    * TODO: inefficient; needs tuning.
    * 
    * @param name
    * @param start
    * @param length
-   * @return an ImmutableByteArray that represents the package, or null if it's
-   *         the unnamed package
-   * @throws IllegalArgumentException  if name is null
+   * @return an ImmutableByteArray that represents the package, or null if it's the unnamed package
+   * @throws IllegalArgumentException if name is null
    */
   public static ImmutableByteArray parseForClass(ImmutableByteArray name, int start, int length) throws IllegalArgumentException {
     if (name == null) {
@@ -369,12 +365,10 @@ public class StringStuff {
   }
 
   /**
-   * Given that name[start:start+length] is a Type name in JVM format, strip the
-   * package and return the "package-free" class name
+   * Given that name[start:start+length] is a Type name in JVM format, strip the package and return the "package-free" class name
    * 
-   * @return an ImmutableByteArray that represents the package, or null if it's
-   *         the unnamed package
-   * @throws IllegalArgumentException  if name is null
+   * @return an ImmutableByteArray that represents the package, or null if it's the unnamed package
+   * @throws IllegalArgumentException if name is null
    */
   public static ImmutableByteArray parseForClass(ImmutableByteArray name) throws IllegalArgumentException {
     if (name == null) {
@@ -384,13 +378,14 @@ public class StringStuff {
   }
 
   /**
-   * Parse an array descriptor to obtain number of dimensions in corresponding
-   * array type. b: descriptor - something like "[Ljava/lang/String;" or "[[I"
+   * Parse an array descriptor to obtain number of dimensions in corresponding array type. b: descriptor - something like
+   * "[Ljava/lang/String;" or "[[I"
    * 
    * @return dimensionality - something like "1" or "2"
-   * @throws IllegalArgumentException  if b == null
+   * @throws IllegalArgumentException if b == null
    */
-  public static short parseForArrayDimensionality(ImmutableByteArray b, int start, int length) throws IllegalArgumentException, IllegalArgumentException {
+  public static short parseForArrayDimensionality(ImmutableByteArray b, int start, int length) throws IllegalArgumentException,
+      IllegalArgumentException {
 
     if (b == null) {
       throw new IllegalArgumentException("b == null");
@@ -404,12 +399,11 @@ public class StringStuff {
   }
 
   /**
-   * Parse an array descriptor to obtain number of dimensions in corresponding
-   * array type. 
-   * b: descriptor - something like "[Ljava/lang/String;" or "[[I"
+   * Parse an array descriptor to obtain number of dimensions in corresponding array type. b: descriptor - something like
+   * "[Ljava/lang/String;" or "[[I"
    * 
    * @return dimensionality - something like "Ljava/lang/String;" or "I"
-   * @throws IllegalArgumentException  if b is null
+   * @throws IllegalArgumentException if b is null
    */
   public static ImmutableByteArray parseForInnermostArrayElementDescriptor(ImmutableByteArray b, int start, int length) {
 
@@ -426,11 +420,11 @@ public class StringStuff {
   }
 
   /**
-   * Parse an array descriptor to obtain number of dimensions in corresponding
-   * array type. b: descriptor - something like "[Ljava/lang/String;" or "[[I"
+   * Parse an array descriptor to obtain number of dimensions in corresponding array type. b: descriptor - something like
+   * "[Ljava/lang/String;" or "[[I"
    * 
    * @return dimensionality - something like "Ljava/lang/String;" or "I"
-   * @throws IllegalArgumentException  if a is null
+   * @throws IllegalArgumentException if a is null
    */
   public static ImmutableByteArray parseForInnermostArrayElementDescriptor(Atom a) {
     if (a == null) {
@@ -445,7 +439,7 @@ public class StringStuff {
    * @param start
    * @param length
    * @return true iff the class returned by parseForClass is primitive
-   * @throws IllegalArgumentException  if name is null
+   * @throws IllegalArgumentException if name is null
    */
   public static boolean classIsPrimitive(ImmutableByteArray name, int start, int length) throws IllegalArgumentException {
     if (name == null) {
@@ -462,9 +456,8 @@ public class StringStuff {
   }
 
   /**
-   * @param methodSig
-   *          something like "java_cup.lexer.advance()V"
-   * @throws IllegalArgumentException  if methodSig is null
+   * @param methodSig something like "java_cup.lexer.advance()V"
+   * @throws IllegalArgumentException if methodSig is null
    */
   public static MethodReference makeMethodReference(String methodSig) throws IllegalArgumentException {
     if (methodSig == null) {
@@ -486,12 +479,11 @@ public class StringStuff {
   /**
    * Convert a JVM encoded type name to a readable type name.
    * 
-   * @param jvmType
-   *          a String containing a type name in JVM internal format.
+   * @param jvmType a String containing a type name in JVM internal format.
    * @return the same type name in readable (source code) format.
-   * @throws IllegalArgumentException  if jvmType is null
+   * @throws IllegalArgumentException if jvmType is null
    */
-  public static String jvmToReadableType(final String jvmType)throws IllegalArgumentException {
+  public static String jvmToReadableType(final String jvmType) throws IllegalArgumentException {
     if (jvmType == null) {
       throw new IllegalArgumentException("jvmType is null");
     }
@@ -501,7 +493,7 @@ public class StringStuff {
     if (jvmType.length() == 0) {
       throw new IllegalArgumentException("ill-formed type : " + jvmType);
     }
-    
+
     // cycle through prefixes of '['
     char prefix = jvmType.charAt(0);
     while (prefix == '[') {
@@ -544,17 +536,15 @@ public class StringStuff {
     }
     return readable.toString();
   }
-  
+
   /**
-   * Convert a JVM encoded type name to a binary type name.
-   * This version does not call dollarToDot.
+   * Convert a JVM encoded type name to a binary type name. This version does not call dollarToDot.
    * 
-   * @param jvmType
-   *          a String containing a type name in JVM internal format.
+   * @param jvmType a String containing a type name in JVM internal format.
    * @return the same type name in readable (source code) format.
-   * @throws IllegalArgumentException  if jvmType is null
+   * @throws IllegalArgumentException if jvmType is null
    */
-  public static String jvmToBinaryName(String jvmType)throws IllegalArgumentException {
+  public static String jvmToBinaryName(String jvmType) throws IllegalArgumentException {
     if (jvmType == null) {
       throw new IllegalArgumentException("jvmType is null");
     }
@@ -564,7 +554,7 @@ public class StringStuff {
     if (jvmType.length() == 0) {
       throw new IllegalArgumentException("ill-formed type : " + jvmType);
     }
-    
+
     // cycle through prefixes of '['
     char prefix = jvmType.charAt(0);
     while (prefix == '[') {
@@ -609,10 +599,9 @@ public class StringStuff {
 
   /**
    * Convert '/' to '.' in names.
-
-   * @return a String object obtained by replacing the forward slashes ('/') in
-   *         the String passed as argument with ('.').
-   * @throws IllegalArgumentException  if path is null
+   * 
+   * @return a String object obtained by replacing the forward slashes ('/') in the String passed as argument with ('.').
+   * @throws IllegalArgumentException if path is null
    */
   public static String slashToDot(String path) {
     if (path == null) {
@@ -631,11 +620,9 @@ public class StringStuff {
   /**
    * Convert '$' to '.' in names.
    * 
-   * @param path a string object in which dollar signs('$') must be converted to dots
-   *          ('.').
-   * @return a String object obtained by replacing the dollar signs ('S') in the
-   *         String passed as argument with ('.').
-   * @throws IllegalArgumentException  if path is null
+   * @param path a string object in which dollar signs('$') must be converted to dots ('.').
+   * @return a String object obtained by replacing the dollar signs ('S') in the String passed as argument with ('.').
+   * @throws IllegalArgumentException if path is null
    */
   public static String dollarToDot(String path) {
     if (path == null) {
@@ -650,15 +637,13 @@ public class StringStuff {
     }
     return dotForm.toString();
   }
+
   /**
    * Convert '.' to '$' in names.
    * 
-   * @param path
-   *          String object in which dollar signs('$') must be converted to dots
-   *          ('.').
-   * @return a String object obtained by replacing the dollar signs ('S') in the
-   *         String passed as argument with ('.').
-   * @throws IllegalArgumentException  if path is null
+   * @param path String object in which dollar signs('$') must be converted to dots ('.').
+   * @return a String object obtained by replacing the dollar signs ('S') in the String passed as argument with ('.').
+   * @throws IllegalArgumentException if path is null
    */
   public static String dotToDollar(String path) {
     if (path == null) {
@@ -673,6 +658,5 @@ public class StringStuff {
     }
     return dotForm.toString();
   }
-
 
 }
