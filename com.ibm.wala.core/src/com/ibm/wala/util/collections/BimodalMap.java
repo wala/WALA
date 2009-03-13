@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * 
@@ -119,8 +120,8 @@ public class BimodalMap<K, V> implements Map<K, V> {
     }
   }
 
-  /*
-   * @see java.util.Map#remove(java.lang.Object)
+  /**
+   * @throws UnsupportedOperationException if the backingStore doesn't support remove
    */
   public V remove(Object key) {
     return (backingStore == null) ? null : backingStore.remove(key);
@@ -185,8 +186,8 @@ public class BimodalMap<K, V> implements Map<K, V> {
     return (Collection<V>) ((backingStore == null) ? Collections.emptySet() : backingStore.values());
   }
 
-  /*
-   * @see java.util.Map#entrySet()
+  /**
+   * @throws UnimplementedError if the backingStore implementation does
    */
   @SuppressWarnings("unchecked")
   public Set<Map.Entry<K, V>> entrySet() {

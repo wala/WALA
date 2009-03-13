@@ -14,16 +14,12 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- *
  * A singleton iterator for an object which is guaranteed to be not-null.  Exploiting this invariant
  * allows this class to be slightly more efficient than Collections.iterator()
- * 
- * @author sfink
  */
 public class NonNullSingletonIterator<T> implements Iterator<T> {
 
   private T it;
-
 
   /**
    * @param o the single object in this collection, must be non-null

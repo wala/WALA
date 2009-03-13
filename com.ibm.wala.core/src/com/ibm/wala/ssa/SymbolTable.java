@@ -335,6 +335,8 @@ public class SymbolTable {
       return (PhiValue) values[valueNumber];
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("invalid valueNumber: " + valueNumber);
+    } catch (ClassCastException e) {
+      throw new IllegalArgumentException("invalid valueNumber: " + valueNumber);
     }
   }
 

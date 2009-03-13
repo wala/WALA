@@ -124,9 +124,12 @@ public class SSAPhiInstruction extends SSAInstruction {
 
   /**
    * Clients should not call this.  only for SSA builders.
-   * I hate this.
+   * I hate this. Nuke it someday.
    */
   public void setValues(int[] i) {
+    if (i == null || i.length < 1) {
+      throw new IllegalArgumentException("illegal i: " + i);
+    }
     this.params = i;
   }
 

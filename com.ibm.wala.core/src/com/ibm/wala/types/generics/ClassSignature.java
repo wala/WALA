@@ -38,6 +38,9 @@ public class ClassSignature extends Signature {
   }
 
   public static ClassSignature make(String sig) {
+    if (sig == null || sig.length() == 0) {
+      throw new IllegalArgumentException("empty or null sig");
+    }
     return new ClassSignature(sig);
   }
 

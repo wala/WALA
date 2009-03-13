@@ -69,12 +69,13 @@ public class ViewIRAction extends Action {
     setText("View IR");
   }
 
-  /*
+  /**
    * @see org.eclipse.jface.action.IAction#run()
+   * 
+   * @throws IllegalStateException if the viewer is not running
    */
   @Override
   public void run() {
-
     IR ir = getIRForSelection();
     // spawn the viewer
     System.err.println("Spawn IR Viewer for " + ir.getMethod());
@@ -85,6 +86,9 @@ public class ViewIRAction extends Action {
     }
   }
 
+  /**
+   * @throws IllegalStateException if the viewer is not running
+   */
   protected IR getIRForSelection() {
     // we assume the tree viewer's current selection is a CGNode
     IStructuredSelection selection = viewer.getSelection();

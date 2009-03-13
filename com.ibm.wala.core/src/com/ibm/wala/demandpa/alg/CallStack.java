@@ -45,7 +45,6 @@ import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
  * Representation for a calling context.
  * 
  * @author Manu Sridharan
- *
  */
 public class CallStack extends ImmutableStack<CallSiteAndCGNode> implements State {
 

@@ -51,8 +51,13 @@ public class LongSetUtil {
    * 
    * @param set
    * @return a new MutableLongSet object with the same value as set
-   * @throws UnimplementedError  if (not ( set instanceof com.ibm.wala.util.intset.SparseLongSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.BitVectorLongSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.BimodalMutableLongSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.DebuggingMutableLongSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.SemiSparseMutableLongSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.MutableSharedBitVectorLongSet ) )
-   * @throws IllegalArgumentException  if set == null
+   * @throws UnimplementedError if (not ( set instanceof com.ibm.wala.util.intset.SparseLongSet ) ) and (not ( set instanceof
+   *           com.ibm.wala.util.intset.BitVectorLongSet ) ) and (not ( set instanceof
+   *           com.ibm.wala.util.intset.BimodalMutableLongSet ) ) and (not ( set instanceof
+   *           com.ibm.wala.util.intset.DebuggingMutableLongSet ) ) and (not ( set instanceof
+   *           com.ibm.wala.util.intset.SemiSparseMutableLongSet ) ) and (not ( set instanceof
+   *           com.ibm.wala.util.intset.MutableSharedBitVectorLongSet ) )
+   * @throws IllegalArgumentException if set == null
    */
   public static MutableLongSet makeMutableCopy(LongSet set) throws IllegalArgumentException, UnimplementedError {
     if (set == null) {
@@ -118,7 +123,7 @@ public class LongSetUtil {
   /**
    * Subtract two sets, i.e. a = a \ b.
    * 
-   * @throws IllegalArgumentException  if A == null || B == null
+   * @throws IllegalArgumentException if A == null || B == null
    */
   public static MutableLongSet removeAll(MutableLongSet A, LongSet B) throws IllegalArgumentException {
     if (A == null) {
@@ -153,8 +158,8 @@ public class LongSetUtil {
     if (low <= high && (low < 0 || high < 0)) {
       throw new IllegalArgumentException("can't search negative indices");
     }
-    if (high > data.length -1 ) {
-      high = data.length -1;
+    if (high > data.length - 1) {
+      high = data.length - 1;
     }
     if (low <= high) {
       int mid = (low + high) / 2;
@@ -171,24 +176,20 @@ public class LongSetUtil {
     }
   }
 
-  /**
-   * @return Returns the defaultLongSetFactory.
-   */
   public static MutableLongSetFactory getDefaultLongSetFactory() {
     return defaultLongSetFactory;
   }
 
-  /**
-   * @param defaultLongSetFactory
-   *          The defaultLongSetFactory to set.
-   */
   public static void setDefaultLongSetFactory(MutableLongSetFactory defaultLongSetFactory) {
+    if (defaultLongSetFactory == null) {
+      throw new IllegalArgumentException("null defaultLongSetFactory");
+    }
     LongSetUtil.defaultLongSetFactory = defaultLongSetFactory;
   }
 
   /**
    * @return a new sparse int set which adds j to s
-   * @throws IllegalArgumentException  if s == null
+   * @throws IllegalArgumentException if s == null
    */
   public static LongSet add(LongSet s, int j) throws IllegalArgumentException {
     if (s == null) {
@@ -198,7 +199,7 @@ public class LongSetUtil {
       SparseLongSet sis = (SparseLongSet) s;
       return SparseLongSet.add(sis, j);
     } else {
-      // really slow.  optimize as needed.
+      // really slow. optimize as needed.
       MutableSparseLongSet result = MutableSparseLongSet.make(s);
       result.add(j);
       return result;

@@ -79,12 +79,18 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory {
     if (x == null) {
       throw new IllegalArgumentException("null x");
     }
+    if (x == this) {
+      throw new IllegalArgumentException("bad recursion");
+    }
     primary = x;
   }
 
   public void setSecondaryFactory(MutableIntSetFactory x) {
     if (x == null) {
       throw new IllegalArgumentException("null x");
+    }
+    if (x == this) {
+      throw new IllegalArgumentException("bad recursion");
     }
     secondary = x;
   }

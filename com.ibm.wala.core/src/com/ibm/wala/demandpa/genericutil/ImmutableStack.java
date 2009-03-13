@@ -126,7 +126,9 @@ public class ImmutableStack<T> implements Iterable<T> {
   }
 
   public ImmutableStack<T> pop() {
-    assert entries.length != 0;
+    if (entries.length == 0) {
+      throw new IllegalStateException("can't pop empty stack");
+    }
     int size = entries.length - 1;
     T[] tmpEntries = makeInternalArray(size);
     System.arraycopy(entries, 0, tmpEntries, 0, size);

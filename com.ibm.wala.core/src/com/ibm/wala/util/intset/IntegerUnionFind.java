@@ -15,9 +15,10 @@ package com.ibm.wala.util.intset;
  * An implementation of Tarjan's union-find, using path compression and balancing, for non-negative integers
  */
 public class IntegerUnionFind {
+  
+  private final static int MAX_VALUE = Integer.MAX_VALUE / 4;
 
   final private static int DEFAULT_SIZE = 100;
-
   /**
    * 
    * parent[i+1] =
@@ -54,10 +55,10 @@ public class IntegerUnionFind {
     if (y < 0) {
       throw new IllegalArgumentException("invalid y: " + y);
     }
-    if (x > Integer.MAX_VALUE / 2) {
+    if (x > MAX_VALUE) {
       throw new IllegalArgumentException("x is too big: " + x);
     }
-    if (y > Integer.MAX_VALUE / 2) {
+    if (y > MAX_VALUE) {
       throw new IllegalArgumentException("y is too big: " + y);
     }
     if (x >= size() || y >= size()) {

@@ -148,9 +148,6 @@ public class JavaLauncher extends Launcher {
 
   /**
    * Launch the java process.
-   * 
-   * @throws IOException
-   * @throws IllegalArgumentException
    */
   public Process start() throws IllegalArgumentException, IOException {
     String cp = makeClasspath();
@@ -184,6 +181,9 @@ public class JavaLauncher extends Launcher {
    * Wait for the spawned process to terminate.
    */
   public void join() {
+    if (stdOutDrain == null || stdErrDrain == null) {
+      throw new IllegalStateException("process not started.  illegal to join()");
+    }
     try {
       stdOutDrain.join();
       stdErrDrain.join();

@@ -222,8 +222,8 @@ public class SmallMap<K, V> implements Map<K, V> {
     return result;
   }
 
-  /*
-   * @see java.util.Map#entrySet()
+  /**
+   * @throws UnimplementedError 
    */
   public Set<Map.Entry<K, V>> entrySet() throws UnimplementedError {
     Assertions.UNREACHABLE("must implement entrySet");
