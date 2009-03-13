@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -23,6 +22,7 @@ import java.util.zip.ZipEntry;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.io.FileUtil;
 import com.ibm.wala.util.ref.CacheReference;
 
 /**
@@ -99,14 +99,7 @@ public class JarFileModule implements Module {
 
     try {
       InputStream s = file.getInputStream(entry);
-      ByteArrayOutputStream out = new ByteArrayOutputStream();
-      b = new byte[1024];
-      int n = s.read(b);
-      while (n != -1) {
-        out.write(b, 0, n);
-        n = s.read(b);
-      }
-      byte[] bb = out.toByteArray();
+      byte[] bb = FileUtil.readBytes(s);
       cache.put(entry, CacheReference.make(bb));
       s.close();
       return bb;

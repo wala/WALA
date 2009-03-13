@@ -9,11 +9,13 @@
  *******************************************************************************/
 package com.ibm.wala.util.io;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Collection;
@@ -157,5 +159,18 @@ public class FileUtil {
       throw new IOException("failed to create " + f);
     }
     return new FileOutputStream(f);
+  }
+
+  public static byte[] readBytes(InputStream s) throws IOException {
+    byte[] b;
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    b = new byte[1024];
+    int n = s.read(b);
+    while (n != -1) {
+      out.write(b, 0, n);
+      n = s.read(b);
+    }
+    byte[] bb = out.toByteArray();
+    return bb;
   }
 }
