@@ -11,6 +11,7 @@
 package com.ibm.wala.ipa.summaries;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -178,5 +179,10 @@ public class BypassSyntheticClassLoader implements IClassLoader {
       IClass klass = it.next();
       syntheticClasses.remove(klass.getName());
     }
+  }
+
+  @Override
+  public InputStream getSource(IClass klass) {
+    return null;
   }
 }

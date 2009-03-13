@@ -1,5 +1,6 @@
 package com.ibm.wala.cast.loader;
 
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -68,6 +69,10 @@ public abstract class CAstAbstractLoader implements IClassLoader {
 
   public String getSourceFileName(IClass klass) {
     return klass.getSourceFileName();
+  }
+  
+  public InputStream getSource(IClass klass) {
+    return null;
   }
 
   public IClassLoader getParent() {

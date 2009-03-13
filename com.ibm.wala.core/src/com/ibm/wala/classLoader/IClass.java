@@ -11,6 +11,7 @@
 
 package com.ibm.wala.classLoader;
 
+import java.io.InputStream;
 import java.util.Collection;
 
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -21,11 +22,8 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- *
  * Basic interface for an object that represents a single Java class
  * for analysis purposes, including array classes.
- * 
- * @author sfink
  */
 public interface IClass extends IClassHierarchyDweller {
 
@@ -106,6 +104,11 @@ public interface IClass extends IClassHierarchyDweller {
    */
   String getSourceFileName();
 
+  /**
+   * @return String representing the source file holding this class, or null if not found
+   */
+  InputStream getSource();
+  
   /**
    * @return the method that is this class's initializer, or null if none
    */

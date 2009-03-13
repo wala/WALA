@@ -322,12 +322,18 @@ public class EclipseProjectPath {
       }
 
       if (includeSource) {
-        File src = makeAbsolute(project.getJavaProject().getPath()).toFile();
-        if (!src.isDirectory()) {
-          System.err.println("PANIC: project output location is not a directory: " + dir);
-        } else {
-          l.add(new SourceDirectoryTreeModule(src));
+        for (IClasspathEntry e : project.getRawClasspath()) {
+          if (e.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+            File src = makeAbsolute(e.getPath()).toFile();
+            l.add(new SourceDirectoryTreeModule(src));
+          }
         }
+        // File src = makeAbsolute(project.getJavaProject().getPath()).toFile();
+        // if (!src.isDirectory()) {
+        // System.err.println("PANIC: project output location is not a directory: " + dir);
+        // } else {
+        // l.add(new SourceDirectoryTreeModule(src));
+        // }
       }
 
       for (Loader loader : Loader.values()) {

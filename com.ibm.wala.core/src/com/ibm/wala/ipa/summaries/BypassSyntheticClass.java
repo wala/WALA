@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.summaries;
 
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -30,16 +31,13 @@ import com.ibm.wala.util.strings.Atom;
 
 /**
  * A synthetic implementation of a class
- * 
- * @author Julian Dolby
  */
 public class BypassSyntheticClass extends SyntheticClass {
 
   /**
-   * @param T
-   *          a type reference
+   * @param T a type reference
    * @return a synthetic class name to represent the synthetic form of this type
-   * @throws IllegalArgumentException  if T is null
+   * @throws IllegalArgumentException if T is null
    */
   public static TypeName getName(TypeReference T) {
     if (T == null) {
@@ -56,7 +54,8 @@ public class BypassSyntheticClass extends SyntheticClass {
 
   private final IClassLoader loader;
 
-  public BypassSyntheticClass(IClass realType, IClassLoader loader, IClassHierarchy cha) throws NullPointerException, NullPointerException {
+  public BypassSyntheticClass(IClass realType, IClassLoader loader, IClassHierarchy cha) throws NullPointerException,
+      NullPointerException {
     super(TypeReference.findOrCreate(loader.getReference(), getName(realType.getReference())), cha);
     this.loader = loader;
     this.realType = realType;
@@ -211,7 +210,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   public Collection<IField> getAllInstanceFields() throws ClassHierarchyException {
     return realType.getAllInstanceFields();
   }
-  
+
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllStaticFields()
    */
@@ -219,22 +218,27 @@ public class BypassSyntheticClass extends SyntheticClass {
     return realType.getAllStaticFields();
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.classLoader.IClass#getAllMethods()
    */
   public Collection<IMethod> getAllMethods() throws ClassHierarchyException {
-	return realType.getAllMethods();
+    return realType.getAllMethods();
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.classLoader.IClass#getAllFields()
    */
   public Collection<IField> getAllFields() throws ClassHierarchyException {
-	return realType.getAllFields();
+    return realType.getAllFields();
   }
 
   public boolean isPublic() {
     return realType.isPublic();
   }
-  
+
+  @Override
+  public InputStream getSource() {
+    return null;
+  }
+
 }

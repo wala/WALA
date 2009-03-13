@@ -12,6 +12,7 @@ package com.ibm.wala.classLoader;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -60,7 +61,7 @@ public class ClassLoaderImpl implements IClassLoader {
   /**
    * A mapping from class name (TypeName) to String (source file name)
    */
-  private final Map<TypeName, String> sourceMap = HashMapFactory.make();
+  private final Map<TypeName, ModuleEntry> sourceMap = HashMapFactory.make();
 
   /**
    * Parent classloader
@@ -172,9 +173,6 @@ public class ClassLoaderImpl implements IClassLoader {
 
   /**
    * Remove from s any class file module entries which already are in t
-   * 
-   * @param s
-   * @param t
    */
   private void removeClassFiles(Set<ModuleEntry> s, Set<ModuleEntry> t) {
     Set<String> old = HashSetFactory.make();
@@ -304,7 +302,6 @@ public class ClassLoaderImpl implements IClassLoader {
    * Set up mapping from type name to Module Entry
    */
   protected void loadAllSources(Set<ModuleEntry> sourceModules) {
-
     for (Iterator<ModuleEntry> it = sourceModules.iterator(); it.hasNext();) {
       ModuleEntry entry = it.next();
       String className = entry.getClassName().replace('.', '/');
@@ -314,14 +311,13 @@ public class ClassLoaderImpl implements IClassLoader {
       if (DEBUG_LEVEL > 0) {
         System.err.println("adding to source map: " + T + " -> " + entry.getName());
       }
-      sourceMap.put(T, entry.getName());
+      sourceMap.put(T, entry);
     }
   }
 
   /**
    * Initialize internal data structures
    * 
-   * @throws IOException
    * @throws IllegalArgumentException if modules is null
    */
   public void init(List<Module> modules) throws IOException {
@@ -410,9 +406,6 @@ public class ClassLoaderImpl implements IClassLoader {
     return Language.JAVA;
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return getName().toString();
@@ -444,7 +437,16 @@ public class ClassLoaderImpl implements IClassLoader {
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");
     }
-    return sourceMap.get(klass.getName());
+    ModuleEntry e = sourceMap.get(klass.getName());
+    return e == null ? null : e.getName();
+  }
+  
+  public InputStream getSource(IClass klass) {
+    if (klass == null) {
+      throw new IllegalArgumentException("klass is null");
+    }
+    ModuleEntry e = sourceMap.get(klass.getName());
+    return e == null ? null : e.getInputStream();
   }
 
   /*

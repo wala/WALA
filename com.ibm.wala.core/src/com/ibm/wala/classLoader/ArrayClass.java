@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -30,9 +31,6 @@ import com.ibm.wala.util.strings.Atom;
  * Implementation of {@link IClass} for array classes.  Such classes would be
  * best called 'broken covariant array types', since that is the semantics that
  * they implement.
- * 
- * @author Alan Donovan
- * @author sfink
  */
 public class ArrayClass implements IClass, Constants {
 
@@ -322,6 +320,11 @@ public class ArrayClass implements IClass, Constants {
 
   public boolean isPublic() {
     return true;
+  }
+
+  @Override
+  public InputStream getSource() {
+    return null;
   }
 
 }

@@ -14,11 +14,8 @@ package com.ibm.wala.classLoader;
 import java.io.InputStream;
 
 /**
- *
  * A ModuleEntry represents a wrapper around a file representation
  * in a Module.
- * 
- * @author sfink
  */
 public interface ModuleEntry {
 
@@ -38,6 +35,9 @@ public interface ModuleEntry {
    */
   boolean isSourceFile();
 
+  /**
+   * @return an InputStream which provides the contents of this logical file.
+   */
   InputStream getInputStream();
 
   /**

@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.loader;
 
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
@@ -127,6 +128,10 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
 
   public String getSourceFileName() {
     return sourcePosition.getURL().getFile();
+  }
+  
+  public InputStream getSource() {
+    return null;
   }
 
   public IMethod getClassInitializer() {

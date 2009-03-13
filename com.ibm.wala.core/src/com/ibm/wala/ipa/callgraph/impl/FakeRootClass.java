@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.impl;
 
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -231,5 +232,10 @@ public class FakeRootClass extends SyntheticClass {
 
   public boolean isPublic() {
     return false;
+  }
+
+  @Override
+  public InputStream getSource() {
+    return null;
   }
 }
