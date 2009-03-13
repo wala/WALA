@@ -308,7 +308,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
           if (ss1 == EMPTY_CODE) {
             return SparseIntSet.singleton(ss0);
           } else {
-            MutableSparseIntSet result = new MutableSparseIntSet(ssLength);
+            MutableSparseIntSet result = MutableSparseIntSet.createMutableSparseIntSet(ssLength);
             for (int i = 0; i < smallStore.length; i++) {
               if (smallStore[i].get(x) == EMPTY_CODE) {
                 break;

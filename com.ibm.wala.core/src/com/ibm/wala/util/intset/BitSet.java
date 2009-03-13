@@ -17,8 +17,6 @@ import com.ibm.wala.util.debug.Assertions;
 /** 
  * A bit set is a set of elements, each of which corresponds to a unique
  * integer from [0,MAX].  
- *
- * @author by Stephen Fink
  */
 public final class BitSet<T> {
 
@@ -45,7 +43,15 @@ public final class BitSet<T> {
     this.map = map;
   }
 
-  public BitSet(BitSet<T> B){
+
+  public static <T> BitSet<T> createBitSet(BitSet<T> B) {
+    if (B == null) {
+      throw new IllegalArgumentException("null B");
+    }
+    return new BitSet<T>(B);
+  }
+  
+  private BitSet(BitSet<T> B){
     this(B.map);
     addAll(B);
   }

@@ -64,7 +64,7 @@ public class AnalysisScopeReader {
       }
 
       if (exclusionsFile != null) {
-        scope.setExclusions(new FileOfClasses(exclusionsFile));
+        scope.setExclusions(FileOfClasses.createFileOfClasses(exclusionsFile));
       }
 
     } catch (IOException e) {

@@ -72,7 +72,7 @@ public class J2EEAnalysisScope extends AnalysisScope {
       }
     }
     if (exclusionsFile != null) {
-      FileOfClasses file = new FileOfClasses(exclusionsFile);
+      FileOfClasses file = FileOfClasses.createFileOfClasses(exclusionsFile);
       setExclusions(file);
     }
     this.lifecycleEntrypoints = lifecycleEntrypoints;

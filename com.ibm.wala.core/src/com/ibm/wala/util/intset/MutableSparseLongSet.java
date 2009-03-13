@@ -45,6 +45,13 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
     return new MutableSparseLongSet(set);
   }
 
+  public static MutableSparseLongSet createMutableSparseLongSet(int initialCapacity) {
+    if (initialCapacity < 0) {
+      throw new IllegalArgumentException("illegal initialCapacity: " + initialCapacity);
+    }
+    return new MutableSparseLongSet(initialCapacity);
+  }
+
   private MutableSparseLongSet(LongSet set) {
     super();
     copySet(set);
@@ -57,7 +64,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
   /**
    * Create an empty set with a non-zero capacity
    */
-  public MutableSparseLongSet(int initialCapacity) {
+  private MutableSparseLongSet(int initialCapacity) {
     super(new long[initialCapacity]);
     size = 0;
   }

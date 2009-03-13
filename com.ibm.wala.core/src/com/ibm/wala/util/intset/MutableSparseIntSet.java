@@ -50,10 +50,8 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 
   /**
    * Create an empty set with a non-zero capacity
-   * 
-   * @param initialCapacity
    */
-  public MutableSparseIntSet(int initialCapacity) throws IllegalArgumentException {
+  private MutableSparseIntSet(int initialCapacity) throws IllegalArgumentException {
     super(new int[initialCapacity]);
     size = 0;
     if (initialCapacity <= 0) {
@@ -500,6 +498,13 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 
   public static MutableSparseIntSet makeEmpty() {
     return new MutableSparseIntSet();
+  }
+
+  public static MutableSparseIntSet createMutableSparseIntSet(int initialCapacity) throws IllegalArgumentException {
+    if (initialCapacity < 0) {
+      throw new IllegalArgumentException("illegal initialCapacity: " + initialCapacity);
+    }
+    return new MutableSparseIntSet(initialCapacity);
   }
 
 }

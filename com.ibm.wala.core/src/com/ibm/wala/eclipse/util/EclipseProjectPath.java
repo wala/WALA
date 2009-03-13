@@ -172,7 +172,7 @@ public class EclipseProjectPath {
           assert file.toString().startsWith(dir.toString()) : file + " " + dir + " " + relDir;
           file = new File(file.toString().substring(dir.toString().length()));
           IFile f = project.getProject().getFile(relDir.toString() + file.toString());
-          return new EclipseSourceFileModule(f);
+          return EclipseSourceFileModule.createEclipseSourceFileModule(f);
         }
       });
       if (e.getOutputLocation() != null) {

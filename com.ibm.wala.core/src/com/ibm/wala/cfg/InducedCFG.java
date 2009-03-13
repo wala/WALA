@@ -73,6 +73,9 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     if (instructions == null) {
       throw new IllegalArgumentException("instructions is null");
     }
+    if (method == null) {
+      throw new IllegalArgumentException("method is null");
+    }
     this.context = context;
     this.instructions = instructions;
     if (DEBUG) {

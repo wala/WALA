@@ -37,14 +37,23 @@ public class FileOfClasses extends SetOfClasses implements Serializable {
 
   private static final boolean DEBUG = false;
 
+
+
   private Pattern pattern = null;
 
   private String regex = null;
 
   private boolean needsCompile = false;
 
-  public FileOfClasses(File textFile) throws IOException {
+  private FileOfClasses(File textFile) throws IOException {
     this(new FileInputStream(textFile));
+  }
+  
+  public static FileOfClasses createFileOfClasses(File textFile) throws IOException {
+    if (textFile == null) {
+      throw new IllegalArgumentException("null textFile");
+    }
+    return new FileOfClasses(textFile);
   }
   
   public FileOfClasses(InputStream input) throws IOException {

@@ -69,7 +69,7 @@ public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
   @Override
   public void add(int b) {
     if (PARANOID) {
-      MutableSparseIntSet m = new MutableSparseIntSet(1);
+      MutableSparseIntSet m = MutableSparseIntSet.createMutableSparseIntSet(1);
       m.add(b);
       checkTypes(m);
     }

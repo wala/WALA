@@ -24,6 +24,8 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
 
   private static final int INITIAL_CAPACITY = 20;
   
+  private final static int MAX_SIZE = Integer.MAX_VALUE / 4;
+  
   public static <T> MutableMapping<T> make() {
     return new MutableMapping<T>();
   }
@@ -158,7 +160,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
    */
   public void put(int i, T o) {
 
-    if (i < 0) {
+    if (i < 0 || i > MAX_SIZE) {
       throw new IllegalArgumentException("invalid i: " + i);
     }
     Integer I = Integer.valueOf(i);

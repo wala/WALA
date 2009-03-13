@@ -19,6 +19,8 @@ import com.ibm.wala.util.debug.Assertions;
  * By convention, symbol numbers start at 1 ... the "this" parameter will be symbol number 1 in a virtual method.
  */
 public class SymbolTable {
+  
+  private final static int MAX_VALUE_NUMBER = Integer.MAX_VALUE/4;
 
   /**
    * value numbers for parameters to this method
@@ -169,6 +171,9 @@ public class SymbolTable {
    * @param i a value number
    */
   public void ensureSymbol(int i) {
+    if (i < 0 || i > MAX_VALUE_NUMBER) {
+      throw new IllegalArgumentException("Illegal i: " + i);
+    }
     try {
       if (i != -1) {
         if (i >= values.length || values[i] == null) {
