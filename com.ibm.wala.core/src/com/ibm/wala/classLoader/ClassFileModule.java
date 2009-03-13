@@ -19,10 +19,7 @@ import com.ibm.wala.util.shrike.ShrikeClassReaderHandle;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 
 /**
- *
  * A module which is a wrapper around a .class file
- * 
- * @author sfink
  */
 public class ClassFileModule extends FileModule implements Module, ModuleEntry {
 

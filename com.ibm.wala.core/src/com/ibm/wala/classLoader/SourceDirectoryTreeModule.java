@@ -19,16 +19,15 @@ import com.ibm.wala.util.debug.Assertions;
  * 
  * @author julian dolby (?)
  * @author smarkstr (added file extension)
- *
+ * 
  */
 public class SourceDirectoryTreeModule extends DirectoryTreeModule {
 
   /**
-   * file extension of source files in directory tree
-   * (defaults to "java" for Java source files)
+   * file extension of source files in directory tree (defaults to "java" for Java source files)
    */
   String fileExt = "java";
-  
+
   public SourceDirectoryTreeModule(File root) {
     super(root);
   }
@@ -47,7 +46,7 @@ public class SourceDirectoryTreeModule extends DirectoryTreeModule {
   @Override
   protected FileModule makeFile(File file) {
     String rootPath = root.getAbsolutePath();
-    if (! rootPath.endsWith(File.separator)) {
+    if (!rootPath.endsWith(File.separator)) {
       rootPath = rootPath + File.separator;
     }
 
@@ -56,6 +55,11 @@ public class SourceDirectoryTreeModule extends DirectoryTreeModule {
     Assertions._assert(filePath.startsWith(rootPath));
 
     return new SourceFileModule(file, filePath.substring(rootPath.length()));
+  }
+  
+  @Override
+  public String toString() {
+    return "SourceDirectoryTreeModule:" + getPath();
   }
 
 }

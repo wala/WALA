@@ -58,6 +58,10 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
    * Compute an analysis scope for the current selection
    */
   public static AnalysisScope computeScope(IStructuredSelection selection) throws IOException {
+    return computeScope(selection, false);
+  }
+
+  public static AnalysisScope computeScope(IStructuredSelection selection, boolean includeSource) throws IOException {
     Collection<EclipseProjectPath> projectPaths = new LinkedList<EclipseProjectPath>();
     for (Iterator it = selection.iterator(); it.hasNext();) {
       Object object = it.next();
@@ -65,7 +69,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
         IJavaElement e = (IJavaElement) object;
         IJavaProject jp = e.getJavaProject();
         try {
-          projectPaths.add(EclipseProjectPath.make(jp));
+          projectPaths.add(EclipseProjectPath.make(jp, includeSource));
         } catch (CoreException e1) {
           e1.printStackTrace();
           // skip and continue
@@ -103,7 +107,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
    */
   private static AnalysisScope mergeProjectPaths(Collection<EclipseProjectPath> projectPaths) {
     AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
-    
+
     Collection<Module> seen = HashSetFactory.make();
     // to avoid duplicates, we first add all application modules, then extension
     // modules, then primordial
@@ -116,7 +120,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
   private static void buildScope(ClassLoaderReference loader, Collection<EclipseProjectPath> projectPaths, AnalysisScope scope,
       Collection<Module> seen) {
     for (EclipseProjectPath path : projectPaths) {
-      AnalysisScope pScope = path.toAnalysisScope((File)null);
+      AnalysisScope pScope = path.toAnalysisScope((File) null);
       for (Module m : pScope.getModules(loader)) {
         if (!seen.contains(m)) {
           seen.add(m);
