@@ -109,7 +109,7 @@ public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
     scope = makeSourceAnalysisScope();
 
     if (getExclusionsFile() != null) {
-      scope.setExclusions(new FileOfClasses(new File(getExclusionsFile())));
+      scope.setExclusions(FileOfClasses.createFileOfClasses(new File(getExclusionsFile())));
     }
 
     for (Module M : this.systemEntries) {

@@ -409,7 +409,7 @@ public abstract class IRTests extends WalaTestCase {
       if (w != null) {
         IFile file = project.getProject().getFile(srcFilePath);
         try {
-          engine.addSourceModule(new EclipseSourceFileModule(file));
+          engine.addSourceModule(EclipseSourceFileModule.createEclipseSourceFileModule(file));
         } catch (IllegalArgumentException e) {
           assertTrue(e.getMessage(), false);
         }
