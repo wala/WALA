@@ -46,19 +46,12 @@ import com.ibm.wala.util.strings.Atom;
 
 /**
  * A synthetic class that models aspects of the J2EE Container.
- * 
- * @author Julian Dolby
- * @author Stephen Fink
  */
 class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJBConstants {
 
   private final static Atom syntheticLoaderName = Atom.findOrCreateUnicodeAtom("Synthetic");
 
-  private final static Atom extensionLoaderName = Atom.findOrCreateUnicodeAtom("Extension");
-
-  private final static ClassLoaderReference syntheticLoaderRef = new ClassLoaderReference(syntheticLoaderName, ClassLoaderReference.Java);
-
-  private final static ClassLoaderReference extensionLoaderRef = new ClassLoaderReference(extensionLoaderName, ClassLoaderReference.Java);
+  private final static ClassLoaderReference syntheticLoaderRef = new ClassLoaderReference(syntheticLoaderName, ClassLoaderReference.Java, ClassLoaderReference.Application);
 
   public static final TypeName containerModelName = TypeName.string2TypeName("L$ContainerModel");
 
@@ -76,17 +69,17 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
 
   public static final TypeReference containerModelRef = TypeReference.findOrCreate(syntheticLoaderRef, containerModelName);
 
-  public static final TypeReference entityBeanRef = TypeReference.findOrCreate(extensionLoaderRef, entityBeanName);
+  public static final TypeReference entityBeanRef = TypeReference.findOrCreate(ClassLoaderReference.Extension, entityBeanName);
 
-  public static final TypeReference entityContextRef = TypeReference.findOrCreate(extensionLoaderRef, entityContextName);
+  public static final TypeReference entityContextRef = TypeReference.findOrCreate(ClassLoaderReference.Extension, entityContextName);
 
-  public static final TypeReference sessionBeanRef = TypeReference.findOrCreate(extensionLoaderRef, sessionBeanName);
+  public static final TypeReference sessionBeanRef = TypeReference.findOrCreate(ClassLoaderReference.Extension, sessionBeanName);
 
-  public static final TypeReference sessionContextRef = TypeReference.findOrCreate(extensionLoaderRef, sessionContextName);
+  public static final TypeReference sessionContextRef = TypeReference.findOrCreate(ClassLoaderReference.Extension, sessionContextName);
 
-  public static final TypeReference messageBeanRef = TypeReference.findOrCreate(extensionLoaderRef, messageBeanName);
+  public static final TypeReference messageBeanRef = TypeReference.findOrCreate(ClassLoaderReference.Extension, messageBeanName);
 
-  public static final TypeReference messageContextRef = TypeReference.findOrCreate(extensionLoaderRef, messageContextName);
+  public static final TypeReference messageContextRef = TypeReference.findOrCreate(ClassLoaderReference.Extension, messageContextName);
 
   public static final Descriptor setEntityContextDescriptor = Descriptor.findOrCreate(new TypeName[] { entityContextName },
       TypeReference.VoidName);

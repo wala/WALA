@@ -48,7 +48,6 @@ public class AnalysisScopeReader {
   
   private static AnalysisScope readJavaScope(String scopeFileName, File exclusionsFile, ClassLoader javaLoader, Plugin plugIn) {
     AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
-
     return read(scope, scopeFileName, exclusionsFile, javaLoader, plugIn);
   }
 
@@ -92,11 +91,11 @@ public class AnalysisScopeReader {
     if (!toks.hasMoreTokens()) {
       return;
     }
-    
     Atom loaderName = Atom.findOrCreateUnicodeAtom(toks.nextToken());
-    Atom languageName = Atom.findOrCreateUnicodeAtom(toks.nextToken());
-    ClassLoaderReference walaLoader = new ClassLoaderReference(loaderName, languageName);
+    ClassLoaderReference walaLoader = scope.getLoader(loaderName);
 
+    @SuppressWarnings("unused")
+    String language = toks.nextToken();
     String entryType = toks.nextToken();
     String entryPathname = toks.nextToken();
     if ("classFile".equals(entryType)) {

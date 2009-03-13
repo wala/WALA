@@ -117,7 +117,7 @@ public interface IClassHierarchy extends Iterable<IClass> {
    */
   public IClass lookupClass(TypeReference A);
 
-  public boolean isSyntheticClass(IClass c);
+//  public boolean isSyntheticClass(IClass c);
 
   public boolean isInterface(TypeReference type);
 

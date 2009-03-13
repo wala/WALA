@@ -39,10 +39,10 @@ package com.ibm.wala.cast.java.translator.jdt;
 
 import java.io.IOException;
 
+import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.ClassLoaderImpl;
 import com.ibm.wala.classLoader.IClassLoader;
-import com.ibm.wala.eclipse.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -62,7 +62,7 @@ public class JDTClassLoaderFactory extends ClassLoaderFactoryImpl {
 
   protected IClassLoader makeNewClassLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, IClassLoader parent,
       AnalysisScope scope) throws IOException {
-    if (classLoaderReference.equals(EclipseProjectPath.SOURCE_REF)) {
+    if (classLoaderReference.equals(JavaSourceAnalysisScope.SOURCE)) {
       ClassLoaderImpl cl = new JDTSourceLoaderImpl(classLoaderReference, parent, getExclusions(), cha);
       cl.init(scope.getModules(classLoaderReference));
       return cl;

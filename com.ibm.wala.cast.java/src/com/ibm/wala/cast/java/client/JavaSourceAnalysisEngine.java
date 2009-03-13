@@ -20,7 +20,6 @@ import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.client.AbstractAnalysisEngine;
-import com.ibm.wala.eclipse.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -142,7 +141,7 @@ public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
   }
 
   protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
-    return Util.makeMainEntrypoints(EclipseProjectPath.SOURCE_REF, cha);
+    return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha);
   }
 
   @Override

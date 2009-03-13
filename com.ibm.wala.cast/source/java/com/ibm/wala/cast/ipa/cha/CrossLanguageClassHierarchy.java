@@ -160,9 +160,9 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
     return getHierarchy(A).lookupClass(A);
   }
 
-  public boolean isSyntheticClass(IClass c) {
-    return getHierarchy(c).isSyntheticClass(c);
-  }
+//  public boolean isSyntheticClass(IClass c) {
+//    return getHierarchy(c).isSyntheticClass(c);
+//  }
 
   public boolean isInterface(TypeReference type) {
     return getHierarchy(type).isInterface(type);

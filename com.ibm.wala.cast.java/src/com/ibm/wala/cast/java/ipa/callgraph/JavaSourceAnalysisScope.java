@@ -17,11 +17,16 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.ibm.wala.classLoader.Language;
-import com.ibm.wala.eclipse.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.util.strings.Atom;
 
 public class JavaSourceAnalysisScope extends AnalysisScope {
+
+  public final static ClassLoaderReference SOURCE = new ClassLoaderReference(Atom.findOrCreateAsciiAtom("Source"), Atom
+      .findOrCreateAsciiAtom("Java"), ClassLoaderReference.Application);
+  private final static ClassLoaderReference SYNTH_SOURCE = new ClassLoaderReference(Atom.findOrCreateAsciiAtom("Synthetic_Source"), Atom
+      .findOrCreateAsciiAtom("Java"), SOURCE);
 
   public JavaSourceAnalysisScope() {
     this(Collections.singleton(Language.JAVA));
@@ -30,16 +35,14 @@ public class JavaSourceAnalysisScope extends AnalysisScope {
   public JavaSourceAnalysisScope(Collection<Language> languages) {
     super(languages);
     initForJava();
-    EclipseProjectPath.SOURCE_REF.setParent(getLoader(APPLICATION));
-    getLoader(SYNTHETIC).setParent(EclipseProjectPath.SOURCE_REF);
 
-    loadersByName.put(EclipseProjectPath.SOURCE, EclipseProjectPath.SOURCE_REF);
+    loadersByName.put(SOURCE.getName(),SOURCE);
 
-    setLoaderImpl(getLoader(SYNTHETIC), "com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader");
-    setLoaderImpl(EclipseProjectPath.SOURCE_REF, "com.ibm.wala.cast.java.translator.polyglot.PolyglotSourceLoaderImpl");
+    setLoaderImpl(getLoader(SYNTH_SOURCE.getName()), "com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader");
+    setLoaderImpl(SOURCE, "com.ibm.wala.cast.java.translator.polyglot.PolyglotSourceLoaderImpl");
   }
 
   public ClassLoaderReference getSourceLoader() {
-    return getLoader(EclipseProjectPath.SOURCE);
+    return SOURCE;
   }
 }

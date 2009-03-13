@@ -51,7 +51,7 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
       // loader name, loader language, classname, method name, method descr
       case 5: {
         MethodReference ref = MethodReference.findOrCreate(TypeReference.findOrCreate(new ClassLoaderReference(Atom
-            .findOrCreateUnicodeAtom(descr[0]), Atom.findOrCreateUnicodeAtom(descr[1])), TypeName.string2TypeName(descr[2])), Atom
+            .findOrCreateUnicodeAtom(descr[0]), Atom.findOrCreateUnicodeAtom(descr[1]), null), TypeName.string2TypeName(descr[2])), Atom
             .findOrCreateUnicodeAtom(descr[3]), Descriptor.findOrCreateUTF8(descr[4]));
 
         if (cha.resolveMethod(ref) != null) {
@@ -64,8 +64,7 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
 
         // classname, method name, method descr
       case 3: {
-        MethodReference ref = MethodReference.findOrCreate(TypeReference.findOrCreate(new ClassLoaderReference(Atom
-            .findOrCreateUnicodeAtom("Application"), ClassLoaderReference.Java), TypeName.string2TypeName(descr[0])), Atom
+        MethodReference ref = MethodReference.findOrCreate(TypeReference.findOrCreate(ClassLoaderReference.Application, TypeName.string2TypeName(descr[0])), Atom
             .findOrCreateUnicodeAtom(descr[1]), Descriptor.findOrCreateUTF8(descr[2]));
 
         methodsToSpecialize.add(cha.resolveMethod(ref).getReference());
@@ -75,7 +74,7 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
         // loader name, classname, meaning all methods of that class
       case 2: {
         IClass klass = cha.lookupClass(TypeReference.findOrCreate(new ClassLoaderReference(Atom.findOrCreateUnicodeAtom(descr[0]),
-            ClassLoaderReference.Java), TypeName.string2TypeName(descr[1])));
+            ClassLoaderReference.Java, null), TypeName.string2TypeName(descr[1])));
 
         for (Iterator M = klass.getDeclaredMethods().iterator(); M.hasNext();) {
           methodsToSpecialize.add(((IMethod) M.next()).getReference());
@@ -86,8 +85,7 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
 
         // classname, meaning all methods of that class
       case 1: {
-        IClass klass = cha.lookupClass(TypeReference.findOrCreate(new ClassLoaderReference(Atom
-            .findOrCreateUnicodeAtom("Application"), ClassLoaderReference.Java), TypeName.string2TypeName(descr[0])));
+        IClass klass = cha.lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Application, TypeName.string2TypeName(descr[0])));
 
         for (Iterator M = klass.getDeclaredMethods().iterator(); M.hasNext();) {
           methodsToSpecialize.add(((IMethod) M.next()).getReference());

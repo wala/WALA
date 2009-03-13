@@ -833,18 +833,6 @@ public class ClassHierarchy implements IClassHierarchy {
       }
   }
 
-  private final static Atom syntheticLoaderName = Atom.findOrCreateUnicodeAtom("Synthetic");
-
-  private final static ClassLoaderReference syntheticLoaderRef = new ClassLoaderReference(syntheticLoaderName, Language.JAVA
-      .getName());
-
-  public boolean isSyntheticClass(IClass c) {
-    if (c == null) {
-      throw new IllegalArgumentException("c is null");
-    }
-    return c.getClassLoader() == getLoader(syntheticLoaderRef);
-  }
-
   /**
    * Is c a subclass of T?
    * 

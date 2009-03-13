@@ -54,7 +54,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.strings.Atom;
 
 /**
  * Representation of an analysis scope from an Eclipse project.
@@ -75,19 +74,9 @@ import com.ibm.wala.util.strings.Atom;
 @SuppressWarnings("restriction")
 public class EclipseProjectPath {
 
-  /**
-   * TODO: do we really need this? Why shouldn't source files come from a "normal" class loader like any other resource?
-   */
-  @Deprecated
-  public static final Atom SOURCE = Atom.findOrCreateUnicodeAtom("Source");
-
-  @Deprecated
-  public static final ClassLoaderReference SOURCE_REF = new ClassLoaderReference(EclipseProjectPath.SOURCE,
-      ClassLoaderReference.Java);
-
   public enum Loader {
     APPLICATION(ClassLoaderReference.Application), EXTENSION(ClassLoaderReference.Extension), PRIMORDIAL(
-        ClassLoaderReference.Primordial), SOURCE(SOURCE_REF);
+        ClassLoaderReference.Primordial);
 
     private ClassLoaderReference ref;
 
@@ -101,17 +90,12 @@ public class EclipseProjectPath {
    */
   private final IJavaProject project;
 
-  private final boolean analyzeSource;
-
   // names of OSGi bundles already processed.
   private final Set<String> bundlesProcessed = HashSetFactory.make();
 
   // SJF: Intentionally do not use HashMapFactory, since the Loader keys in the following must use
   // identityHashCode. TODO: fix this source of non-determinism?
-  private final Map<Loader, List<Module>> binaryModules = new HashMap<Loader, List<Module>>();
-
-  @Deprecated
-  private final Map<Loader, List<Module>> sourceModules = new HashMap<Loader, List<Module>>();
+  private final Map<Loader, List<Module>> modules = new HashMap<Loader, List<Module>>();
 
   private final Collection<IClasspathEntry> alreadyResolved = HashSetFactory.make();
 
@@ -120,11 +104,9 @@ public class EclipseProjectPath {
       throw new IllegalArgumentException("null project");
     }
     this.project = project;
-    this.analyzeSource = analyzeSource;
     assert project != null;
     for (Loader loader : Loader.values()) {
-      MapUtil.findOrCreateList(binaryModules, loader);
-      MapUtil.findOrCreateList(sourceModules, loader);
+      MapUtil.findOrCreateList(modules, loader);
     }
     resolveProjectClasspathEntries();
     if (isPluginProject(project)) {
@@ -177,13 +159,13 @@ public class EclipseProjectPath {
         return;
       }
       if (isPrimordialJarFile(j)) {
-        List<Module> s = MapUtil.findOrCreateList(binaryModules, loader);
+        List<Module> s = MapUtil.findOrCreateList(modules, loader);
         s.add(file.isDirectory() ? (Module) new BinaryDirectoryTreeModule(file) : (Module) new JarFileModule(j));
       }
     } else if (e.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
       final File dir = makeAbsolute(e.getPath()).toFile();
       final File relDir = e.getPath().removeFirstSegments(1).toFile();
-      List<Module> s = MapUtil.findOrCreateList(sourceModules, Loader.SOURCE);
+      List<Module> s = MapUtil.findOrCreateList(modules, loader);
       s.add(new SourceDirectoryTreeModule(dir) {
         @Override
         protected FileModule makeFile(File file) {
@@ -193,9 +175,9 @@ public class EclipseProjectPath {
           return new EclipseSourceFileModule(f);
         }
       });
-      if (!analyzeSource && e.getOutputLocation() != null) {
+      if (e.getOutputLocation() != null) {
         File output = makeAbsolute(e.getOutputLocation()).toFile();
-        s = MapUtil.findOrCreateList(binaryModules, loader);
+        s = MapUtil.findOrCreateList(modules, loader);
         s.add(new BinaryDirectoryTreeModule(output));
       }
     } else if (e.getEntryKind() == IClasspathEntry.CPE_PROJECT) {
@@ -210,11 +192,9 @@ public class EclipseProjectPath {
             resolvePluginClassPath(javaProject.getProject());
           }
           resolveClasspathEntries(javaProject.getRawClasspath(), loader);
-          if (!analyzeSource) {
-            File output = makeAbsolute(javaProject.getOutputLocation()).toFile();
-            List<Module> s = MapUtil.findOrCreateList(binaryModules, loader);
-            s.add(new BinaryDirectoryTreeModule(output));
-          }
+          File output = makeAbsolute(javaProject.getOutputLocation()).toFile();
+          List<Module> s = MapUtil.findOrCreateList(modules, loader);
+          s.add(new BinaryDirectoryTreeModule(output));
         }
       } catch (CoreException e1) {
         e1.printStackTrace();
@@ -326,21 +306,16 @@ public class EclipseProjectPath {
 
   public AnalysisScope toAnalysisScope(AnalysisScope scope) {
     try {
-      List<Module> l = MapUtil.findOrCreateList(binaryModules, Loader.APPLICATION);
-      if (!analyzeSource) {
-        File dir = makeAbsolute(project.getOutputLocation()).toFile();
-        if (!dir.isDirectory()) {
-          System.err.println("PANIC: project output location is not a directory: " + dir);
-        } else {
-          l.add(new BinaryDirectoryTreeModule(dir));
-        }
+      List<Module> l = MapUtil.findOrCreateList(modules, Loader.APPLICATION);
+      File dir = makeAbsolute(project.getOutputLocation()).toFile();
+      if (!dir.isDirectory()) {
+        System.err.println("PANIC: project output location is not a directory: " + dir);
+      } else {
+        l.add(new BinaryDirectoryTreeModule(dir));
       }
 
       for (Loader loader : Loader.values()) {
-        for (Module m : binaryModules.get(loader)) {
-          scope.addToScope(loader.ref, m);
-        }
-        for (Module m : sourceModules.get(loader)) {
+        for (Module m : modules.get(loader)) {
           scope.addToScope(loader.ref, m);
         }
       }
@@ -361,11 +336,7 @@ public class EclipseProjectPath {
   }
 
   public Collection<Module> getModules(Loader loader, boolean binary) {
-    if (binary) {
-      return Collections.unmodifiableCollection(binaryModules.get(loader));
-    } else {
-      return Collections.unmodifiableCollection(sourceModules.get(loader));
-    }
+    return Collections.unmodifiableCollection(modules.get(loader));
   }
 
   @Override

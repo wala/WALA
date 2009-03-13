@@ -22,13 +22,13 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.java.ipa.slicer.AstJavaSlicer;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.tests.slicer.SlicerTest;
 import com.ibm.wala.eclipse.util.CancelException;
-import com.ibm.wala.eclipse.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -568,7 +568,7 @@ public abstract class JavaIRTests extends IRTests {
 
   private MethodReference getSliceRootReference(String className, String methodName, String methodDescriptor) {
     TypeName clsName = TypeName.string2TypeName("L" + className.replace('.', '/'));
-    TypeReference clsRef = TypeReference.findOrCreate(EclipseProjectPath.SOURCE_REF, clsName);
+    TypeReference clsRef = TypeReference.findOrCreate(JavaSourceAnalysisScope.SOURCE, clsName);
 
     Atom nameAtom = Atom.findOrCreateUnicodeAtom(methodName);
     Descriptor descr = Descriptor.findOrCreateUTF8(methodDescriptor);

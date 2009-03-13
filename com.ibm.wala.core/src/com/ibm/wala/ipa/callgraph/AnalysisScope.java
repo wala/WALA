@@ -79,13 +79,10 @@ public class AnalysisScope {
   }
    
   protected void initForJava() {
-    ClassLoaderReference primordial = new ClassLoaderReference(PRIMORDIAL, ClassLoaderReference.Java);
-    ClassLoaderReference extension = new ClassLoaderReference(EXTENSION, ClassLoaderReference.Java);
-    ClassLoaderReference application = new ClassLoaderReference(APPLICATION, ClassLoaderReference.Java);
-    ClassLoaderReference synthetic = new ClassLoaderReference(SYNTHETIC, ClassLoaderReference.Java);
-    extension.setParent(primordial);
-    application.setParent(extension);
-    synthetic.setParent(application);
+    ClassLoaderReference primordial = new ClassLoaderReference(PRIMORDIAL, ClassLoaderReference.Java, null);
+    ClassLoaderReference extension = new ClassLoaderReference(EXTENSION, ClassLoaderReference.Java, primordial);
+    ClassLoaderReference application = new ClassLoaderReference(APPLICATION, ClassLoaderReference.Java, extension);
+    ClassLoaderReference synthetic = new ClassLoaderReference(SYNTHETIC, ClassLoaderReference.Java, application);
 
     setLoaderImpl(synthetic, "com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader");
 
@@ -193,9 +190,6 @@ public class AnalysisScope {
 
   /**
    * Add a class file to the scope for a loader
-   * 
-   * @param loader
-   * @param file
    */
   public void addClassFileToScope(ClassLoaderReference loader, File file) throws IllegalArgumentException {
     List<Module> s = MapUtil.findOrCreateList(moduleMap, loader);

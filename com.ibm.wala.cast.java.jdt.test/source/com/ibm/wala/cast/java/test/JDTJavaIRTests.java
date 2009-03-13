@@ -44,11 +44,11 @@ import junit.framework.Assert;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
+import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.java.translator.jdt.JDTJavaSourceAnalysisEngine;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.plugin.CoreTestsPlugin;
 import com.ibm.wala.core.tests.util.EclipseTestUtil;
-import com.ibm.wala.eclipse.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
@@ -75,7 +75,7 @@ public class JDTJavaIRTests extends JavaIRTests {
   protected JavaSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors) {
     JavaSourceAnalysisEngine engine = new JDTJavaSourceAnalysisEngine() {
       protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
-        return Util.makeMainEntrypoints(EclipseProjectPath.SOURCE_REF, cha, mainClassDescriptors);
+        return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
       }
     };
        
