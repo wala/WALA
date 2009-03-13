@@ -22,8 +22,6 @@ import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * A module which is a wrapper around a file in the filesystem
- * 
- * @author sfink
  */
 public abstract class FileModule implements Module, ModuleEntry {
 

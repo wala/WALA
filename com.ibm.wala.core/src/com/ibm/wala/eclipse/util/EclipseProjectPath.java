@@ -23,7 +23,6 @@ import java.util.Set;
 import java.util.jar.JarFile;
 import java.util.zip.ZipException;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -42,11 +41,8 @@ import org.eclipse.pde.internal.core.PDECore;
 import org.eclipse.pde.internal.core.PDEStateHelper;
 
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
-import com.ibm.wala.classLoader.EclipseSourceFileModule;
-import com.ibm.wala.classLoader.FileModule;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
-import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -163,18 +159,18 @@ public class EclipseProjectPath {
         s.add(file.isDirectory() ? (Module) new BinaryDirectoryTreeModule(file) : (Module) new JarFileModule(j));
       }
     } else if (e.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
-      final File dir = makeAbsolute(e.getPath()).toFile();
-      final File relDir = e.getPath().removeFirstSegments(1).toFile();
+      // final File dir = makeAbsolute(e.getPath()).toFile();
+      // final File relDir = e.getPath().removeFirstSegments(1).toFile();
       List<Module> s = MapUtil.findOrCreateList(modules, loader);
-      s.add(new SourceDirectoryTreeModule(dir) {
-        @Override
-        protected FileModule makeFile(File file) {
-          assert file.toString().startsWith(dir.toString()) : file + " " + dir + " " + relDir;
-          file = new File(file.toString().substring(dir.toString().length()));
-          IFile f = project.getProject().getFile(relDir.toString() + file.toString());
-          return EclipseSourceFileModule.createEclipseSourceFileModule(f);
-        }
-      });
+      // s.add(new SourceDirectoryTreeModule(dir) {
+      // @Override
+      // protected FileModule makeFile(File file) {
+      // assert file.toString().startsWith(dir.toString()) : file + " " + dir + " " + relDir;
+      // file = new File(file.toString().substring(dir.toString().length()));
+      // IFile f = project.getProject().getFile(relDir.toString() + file.toString());
+      // return new EclipseSourceFileModule(f);
+      // }
+      // });
       if (e.getOutputLocation() != null) {
         File output = makeAbsolute(e.getOutputLocation()).toFile();
         s = MapUtil.findOrCreateList(modules, loader);
