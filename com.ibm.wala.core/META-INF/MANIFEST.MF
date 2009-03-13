@@ -14,7 +14,6 @@ Require-Bundle: com.ibm.wala.shrike;visibility:=reexport,
  org.eclipse.pde.ui
 Bundle-ActivationPolicy: lazy
 Export-Package: .,
- com.ibm.wala.accessPath,
  com.ibm.wala.analysis.pointers,
  com.ibm.wala.analysis.reflection,
  com.ibm.wala.analysis.stackMachine,
