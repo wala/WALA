@@ -322,7 +322,6 @@ public class ArrayClass implements IClass, Constants {
     return true;
   }
 
-  @Override
   public InputStream getSource() {
     return null;
   }

@@ -181,7 +181,6 @@ public class BypassSyntheticClassLoader implements IClassLoader {
     }
   }
 
-  @Override
   public InputStream getSource(IClass klass) {
     return null;
   }
