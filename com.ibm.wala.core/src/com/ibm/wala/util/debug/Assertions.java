@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.util.debug;
 
-import com.ibm.wala.annotations.Internal;
 
 public class Assertions {
 
