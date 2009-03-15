@@ -30,7 +30,6 @@ import com.ibm.wala.util.collections.HashCodeComparator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
-import com.ibm.wala.util.collections.ToStringComparator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.shrike.ShrikeClassReaderHandle;
 import com.ibm.wala.util.strings.Atom;
@@ -325,20 +324,16 @@ public class ClassLoaderImpl implements IClassLoader {
     if (modules == null) {
       throw new IllegalArgumentException("modules is null");
     }
-    // use tree set to keep things sorted ... for deterministic class loading
-    TreeSet<Module> archives = new TreeSet<Module>(ToStringComparator.instance());
-    for (Iterator i = modules.iterator(); i.hasNext();) {
-      Module M = (Module) i.next();
-      if (DEBUG_LEVEL > 0) {
-        System.err.println("add archive: " + M);
-      }
-      archives.add(M);
-    }
+
+    // module are loaded according to the given order (same as in Java VM)
     Set<ModuleEntry> classModuleEntries = HashSetFactory.make();
     Set<ModuleEntry> sourceModuleEntries = HashSetFactory.make();
-    for (Iterator<Module> it = archives.iterator(); it.hasNext();) {
+    for (Iterator<Module> it = modules.iterator(); it.hasNext();) {
       Module archive = it.next();
       Set<ModuleEntry> classFiles = getClassFiles(archive);
+      if (DEBUG_LEVEL > 0) {
+        System.err.println("add archive: " + archive);
+      }
       removeClassFiles(classFiles, classModuleEntries);
       for (Iterator<ModuleEntry> it2 = classFiles.iterator(); it2.hasNext();) {
         ModuleEntry file = it2.next();
