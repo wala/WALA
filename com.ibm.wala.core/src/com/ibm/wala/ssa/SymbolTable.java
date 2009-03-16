@@ -13,7 +13,6 @@ package com.ibm.wala.ssa;
 import java.util.HashMap;
 
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * By convention, symbol numbers start at 1 ... the "this" parameter will be symbol number 1 in a virtual method.
