@@ -43,6 +43,7 @@ import java.util.EmptyStackException;
 import java.util.Iterator;
 
 import com.ibm.wala.util.collections.ArrayIterator;
+import com.ibm.wala.util.collections.EmptyIterator;
 
 /**
  * An immutable stack of objects. The {@link #push(Object)} and {@link #pop()} operations create new stacks.
@@ -243,12 +244,14 @@ public class ImmutableStack<T> implements Iterable<T> {
   }
 
   public Iterator<T> iterator() {
+    if (entries.length == 0) {
+      return EmptyIterator.instance();
+    }
     return new ArrayIterator<T>(entries);
   }
 
   /**
    * return a new stack with the top replaced with t
-   * 
    */
   public ImmutableStack<T> replaceTop(T t) {
     int size = entries.length;
