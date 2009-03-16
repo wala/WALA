@@ -51,13 +51,16 @@ public class Table<T> {
   /**
    * create an empty table with the given column headings
    * 
-   * @throws IllegalArgumentException if columns == null
+   * @throws IllegalArgumentException if columns == null, or columns[i] == null for some i
    */
   public Table(String[] columns) throws IllegalArgumentException {
     if (columns == null) {
       throw new IllegalArgumentException("columns == null");
     }
     for (int i = 0; i < columns.length; i++) {
+      if (columns[i] == null) {
+        throw new IllegalArgumentException("columns[" + i + "] is null");
+      }
       columnHeadings.set(i, columns[i]);
     }
   }

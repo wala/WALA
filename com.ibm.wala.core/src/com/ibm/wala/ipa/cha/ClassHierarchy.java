@@ -1151,6 +1151,9 @@ public class ClassHierarchy implements IClassHierarchy {
     if (scope == null) {
       throw new IllegalArgumentException("null scope");
     }
+    if (factory == null) {
+      throw new IllegalArgumentException("null factory");
+    }
     return new ClassHierarchy(scope, factory, new NullProgressMonitor());
   }
 
@@ -1179,6 +1182,9 @@ public class ClassHierarchy implements IClassHierarchy {
   @Internal
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, Language language, IProgressMonitor monitor)
       throws ClassHierarchyException {
+    if (factory == null) {
+      throw new IllegalArgumentException("null factory");
+    }
     return new ClassHierarchy(scope, factory, language, monitor);
   }
 

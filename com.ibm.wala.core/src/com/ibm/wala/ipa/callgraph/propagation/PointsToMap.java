@@ -26,7 +26,7 @@ import com.ibm.wala.util.intset.MutableMapping;
 /**
  * An object that tracks the mapping between pointer keys and points-to set variables
  */
-public class PointsToMap {
+class PointsToMap {
 
   /**
    * An object that manages the numbering of pointer keys
@@ -100,8 +100,7 @@ public class PointsToMap {
   }
 
   /**
-   * @param id
-   * @return get(p)
+   * @return the {@link PointsToSetVariable} recorded for a particular id
    */
   public PointsToSetVariable getPointsToSet(int id) {
     int repI = uf.find(id);

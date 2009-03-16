@@ -39,6 +39,7 @@
 package com.ibm.wala.demandpa.genericutil;
 
 import java.util.Arrays;
+import java.util.EmptyStackException;
 import java.util.Iterator;
 
 import com.ibm.wala.util.collections.ArrayIterator;
@@ -92,7 +93,9 @@ public class ImmutableStack<T> implements Iterable<T> {
   }
 
   public ImmutableStack<T> push(T entry) {
-    assert entry != null;
+    if (entry == null) {
+      throw new IllegalArgumentException("null entry");
+    }
     if (MAX_SIZE == 0) {
       return emptyStack();
     }
@@ -120,14 +123,23 @@ public class ImmutableStack<T> implements Iterable<T> {
     return new ImmutableStack<T>(tmpEntries);
   }
 
+  /**
+   * @return the element on the top of the stack
+   * @throws EmptyStackException if stack is empty
+   */
   public T peek() {
-    assert entries.length != 0;
+    if (entries.length == 0) {
+      throw new EmptyStackException();
+    }
     return entries[entries.length - 1];
   }
 
+  /**
+   * @throws EmptyStackException if stack is empty
+   */
   public ImmutableStack<T> pop() {
     if (entries.length == 0) {
-      throw new IllegalStateException("can't pop empty stack");
+      throw new EmptyStackException();
     }
     int size = entries.length - 1;
     T[] tmpEntries = makeInternalArray(size);
@@ -159,7 +171,14 @@ public class ImmutableStack<T> implements Iterable<T> {
   }
 
   public boolean contains(T entry) {
-    return Util.arrayContains(entries, entry, entries.length);
+    if (entry == null) {
+      return false;
+    }
+    for (int i = 0; i < entries.length; i++) {
+      if (entries[i] != null && entries[i].equals(entry))
+        return true;
+    }
+    return false;
   }
 
   /**
@@ -191,7 +210,9 @@ public class ImmutableStack<T> implements Iterable<T> {
 
   @SuppressWarnings("unchecked")
   public ImmutableStack<T> popAll(ImmutableStack<T> other) {
-    assert topMatches(other);
+    if (!topMatches(other)) {
+      throw new IllegalArgumentException("top does not match");
+    }
     int size = entries.length - other.entries.length;
     T[] tmpEntries = (T[]) new Object[size];
     System.arraycopy(entries, 0, tmpEntries, 0, size);

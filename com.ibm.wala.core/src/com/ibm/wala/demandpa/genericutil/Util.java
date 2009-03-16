@@ -419,15 +419,6 @@ public class Util {
 
   }
 
-  public static boolean arrayContains(Object[] arr, Object obj, int size) {
-    assert obj != null;
-    for (int i = 0; i < size; i++) {
-      if (arr[i] != null && arr[i].equals(obj))
-        return true;
-    }
-    return false;
-  }
-
   public static String toStringNull(Object o) {
     return o == null ? "" : "[" + o.toString() + "]";
   }

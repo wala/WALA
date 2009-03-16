@@ -54,9 +54,12 @@ public final class WalaProperties {
     return getJarsInDirectory(dir);
   }
 
+  /**
+   * @return names of the Jar files holding J2EE libraries
+   * @throws IllegalStateException if the J2EE_DIR property is not set
+   */
   public static String[] getJ2EEJarFiles() {
     Properties p = null;
-    ;
     try {
       p = WalaProperties.loadProperties();
     } catch (WalaException e) {

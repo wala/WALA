@@ -92,14 +92,14 @@ public class HeapTracer {
       internalClasses.add(Class.forName("java.util.HashSet"));
       internalClasses.add(Class.forName("java.util.Vector"));
       internalClasses.add(Class.forName("com.ibm.wala.util.collections.SmallMap"));
-      internalClasses.add(Class.forName("com.ibm.wala.util.intset.SimpleVector"));
+      internalClasses.add(Class.forName("com.ibm.wala.util.collections.SimpleVector"));
       internalClasses.add(Class.forName("com.ibm.wala.util.intset.SimpleIntVector"));
       internalClasses.add(Class.forName("com.ibm.wala.util.intset.BasicNaturalRelation"));
       internalClasses.add(Class.forName("com.ibm.wala.util.intset.SparseIntSet"));
-      internalClasses.add(Class.forName("com.ibm.wala.util.intset.SparseVector"));
+      internalClasses.add(Class.forName("com.ibm.wala.util.collections.SparseVector"));
       internalClasses.add(Class.forName("com.ibm.wala.util.intset.MutableSharedBitVectorIntSet"));
       internalClasses.add(Class.forName("com.ibm.wala.util.intset.MutableSparseIntSet"));
-      internalClasses.add(Class.forName("com.ibm.wala.util.intset.TwoLevelVector"));
+      internalClasses.add(Class.forName("com.ibm.wala.util.collections.TwoLevelVector"));
       internalClasses.add(Class.forName("com.ibm.wala.util.graph.impl.DelegatingNumberedNodeManager"));
       internalClasses.add(Class.forName("com.ibm.wala.util.graph.impl.SparseNumberedEdgeManager"));
     } catch (ClassNotFoundException e) {

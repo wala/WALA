@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaModel;
@@ -45,9 +46,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
- * Convenience methods to get information from JDT IJavaElement model.
- * 
- * @author aying
+ * Convenience methods to get information from JDT {@link IJavaElement} model.
  */
 public class JdtUtil {
 
@@ -55,8 +54,16 @@ public class JdtUtil {
     if (javaElt == null) {
       throw new IllegalArgumentException("javaElt is null");
     }
-    String filePath = javaElt.getPath().toString();
-    return filePath;
+    try {
+      IPath p = javaElt.getPath();
+      if (p == null) {
+        throw new IllegalArgumentException("javaElt has null path");
+      }
+      String filePath = p.toString();
+      return filePath;
+    } catch (Exception e) {
+      throw new IllegalArgumentException("malformed javaElt: " + javaElt, e);
+    }
   }
 
   public static String getPackageName(ICompilationUnit cu) {
@@ -177,6 +184,9 @@ public class JdtUtil {
   }
 
   public static IJavaProject getJavaProject(String projectName) {
+    if (projectName == null) {
+      throw new IllegalArgumentException("null projectName");
+    }
     IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
     IJavaModel javaModel = JavaCore.create(workspaceRoot);
     IJavaProject javaProject = javaModel.getJavaProject(projectName);
@@ -282,6 +292,9 @@ public class JdtUtil {
    */
   public static IMethod findJavaMethodInProjects(String klass, String selector, Collection<IJavaProject> projects) {
 
+    if (klass == null) {
+      throw new IllegalArgumentException("null klass");
+    }
     IType type = null;
     try {
       type = findJavaClassInProjects(klass, projects);

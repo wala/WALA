@@ -57,6 +57,9 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
     if (nbits < 0) {
       throw new IllegalArgumentException("invalid nbits: " + nbits);
     }
+    if (offset < 0) {
+      throw new IllegalArgumentException("invalid offset: " + offset);
+    }
     offset = (offset & ~LOW_MASK);
     this.offset = offset;
     this.bits = new int[subscript(nbits) + 1];

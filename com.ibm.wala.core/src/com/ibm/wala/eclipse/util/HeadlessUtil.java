@@ -37,6 +37,9 @@ public class HeadlessUtil {
     if (cmdLine == null) {
       throw new IllegalArgumentException("null cmdLine");
     }
+    if (cmdLine.length == 0) {
+      throw new IllegalArgumentException("cmdLine must have at least one parameter");
+    }
     Properties p = null;
     assert cmdLine[0].equals("-pdelaunch");
     String[] x = new String[cmdLine.length - 1];
@@ -60,6 +63,9 @@ public class HeadlessUtil {
    * @throws CoreException 
    */
   public static AnalysisScope computeScope(String projectName) throws IOException, CoreException {
+    if (projectName == null) {
+      throw new IllegalArgumentException("null projectName");
+    }
     IJavaProject jp = getProjectFromWorkspace(projectName);
     EclipseProjectPath path = EclipseProjectPath.make(jp);
     return path.toAnalysisScope((File)null);

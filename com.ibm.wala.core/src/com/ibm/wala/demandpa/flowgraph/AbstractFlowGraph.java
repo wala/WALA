@@ -285,6 +285,9 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
    * @throws UnsupportedOperationException if it doesn't know how to handle a {@link PointerKey}
    */
   public static PointerKey convertPointerKeyToHeapModel(PointerKey pk, HeapModel h) {
+    if (pk == null) {
+      throw new IllegalArgumentException("null pk");
+    }
     if (pk instanceof LocalPointerKey) {
       LocalPointerKey lpk = (LocalPointerKey) pk;
       return h.getPointerKeyForLocal(lpk.getNode(), lpk.getValueNumber());

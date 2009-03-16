@@ -49,7 +49,6 @@ import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 
 /**
- * 
  * Base class that represents a set of files to analyze.
  * 
  * The analysis scope is partitioned by class loader. There are three
@@ -283,6 +282,12 @@ public class AnalysisScope {
   }
 
   public void setLoaderImpl(ClassLoaderReference ref, String implClass) {
+    if (ref == null) {
+      throw new IllegalArgumentException("null ref");
+    }
+    if (implClass == null) {
+      throw new IllegalArgumentException("null implClass");
+    }
     loaderImplByRef.put(ref, implClass);
   }
   
