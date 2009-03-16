@@ -24,6 +24,7 @@ import java.util.jar.JarFile;
 import java.util.zip.ZipException;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -280,22 +281,16 @@ public class EclipseProjectPath {
   }
 
   protected IPath makeAbsolute(IPath p) {
+    IPath absolutePath= p;
     if (p.toFile().exists()) {
       return p;
     }
-    String projectName = p.segment(0);
-    IJavaProject jp = JdtUtil.getJavaProject(projectName);
-    if (jp != null) {
-      if (jp.getProject().getRawLocation() != null) {
-        return jp.getProject().getRawLocation().append(p.removeFirstSegments(1));
-      } else {
-        IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-        return workspaceRoot.getLocation().append(p);
-      }
-    } else {
-      Assertions.UNREACHABLE("Unsupported path " + p);
-      return null;
+
+    IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(p);
+    if (resource!=null && resource.exists()){
+        absolutePath = resource.getLocation();
     }
+    return absolutePath;
   }
 
   private void resolveProjectClasspathEntries(boolean includeSource) throws JavaModelException, IOException {
