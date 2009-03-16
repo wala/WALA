@@ -22,7 +22,6 @@ import java.util.TreeSet;
 public class MutableSparseIntSetFactory implements MutableIntSetFactory {
 
   /**
-   * @param set
    * @throws IllegalArgumentException  if set is null
    */
   public MutableIntSet make(int[] set) {

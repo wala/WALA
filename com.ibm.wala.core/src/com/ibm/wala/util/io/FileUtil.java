@@ -161,10 +161,16 @@ public class FileUtil {
     return new FileOutputStream(f);
   }
 
+  /**
+   * read fully the contents of s and return a byte array holding the result
+   * @throws IOException
+   */
   public static byte[] readBytes(InputStream s) throws IOException {
-    byte[] b;
+    if (s == null) {
+      throw new IllegalArgumentException("null s");
+    }
     ByteArrayOutputStream out = new ByteArrayOutputStream();
-    b = new byte[1024];
+    byte[] b = new byte[1024];
     int n = s.read(b);
     while (n != -1) {
       out.write(b, 0, n);

@@ -236,6 +236,7 @@ public final class Atom implements Serializable {
    * "[Ljava/lang/String;" or "[[I"
    * 
    * @return dimensionality - something like "1" or "2"
+   * @throws IllegalStateException if this Atom does not represent an array
    */
   public final int parseForArrayDimensionality() throws IllegalArgumentException {
     if (val.length == 0) {
@@ -255,6 +256,8 @@ public final class Atom implements Serializable {
 
   /**
    * Return the innermost element type reference for an array
+   * 
+   * @throws IllegalStateException if this Atom does not represent an array descriptor
    */
   public final Atom parseForInnermostArrayElementDescriptor() throws IllegalArgumentException {
     if (val.length == 0) {

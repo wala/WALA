@@ -19,8 +19,8 @@ import com.ibm.wala.util.debug.Assertions;
  * By convention, symbol numbers start at 1 ... the "this" parameter will be symbol number 1 in a virtual method.
  */
 public class SymbolTable {
-  
-  private final static int MAX_VALUE_NUMBER = Integer.MAX_VALUE/4;
+
+  private final static int MAX_VALUE_NUMBER = Integer.MAX_VALUE / 4;
 
   /**
    * value numbers for parameters to this method
@@ -88,9 +88,16 @@ public class SymbolTable {
     }
   }
 
+  /**
+   * set the default value for a value number.
+   * 
+   * @throws IllegalStateException if that value number value is already assigned
+   */
   public void setDefaultValue(int vn, final Object defaultValue) {
     try {
-      Assertions._assert(values[vn] == null);
+      if (values[vn] != null) {
+        throw new IllegalStateException("cannot set default value of vn " + vn);
+      }
 
       values[vn] = new Value() {
         public boolean isStringConstant() {
@@ -185,7 +192,7 @@ public class SymbolTable {
       }
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("invalid i: " + i);
-    } 
+    }
 
   }
 

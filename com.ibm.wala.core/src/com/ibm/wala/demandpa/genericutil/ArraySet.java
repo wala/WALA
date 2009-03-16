@@ -55,6 +55,9 @@ public class ArraySet<T> extends AbstractSet<T> {
 
   private static final ArraySet EMPTY = new ArraySet<Object>(0, true) {
     @Override
+    /**
+     * @throws UnsupportedOperationException unconditionally
+     */
     public boolean add(Object obj_) {
       throw new UnsupportedOperationException();
     }

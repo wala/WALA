@@ -51,8 +51,12 @@ public class IntSetUtil {
    * 
    * @param set
    * @return a new MutableIntSet object with the same value as set
-   * @throws UnimplementedError  if (not ( set instanceof com.ibm.wala.util.intset.SparseIntSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.BitVectorIntSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.BimodalMutableIntSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.DebuggingMutableIntSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.SemiSparseMutableIntSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.MutableSharedBitVectorIntSet ) )
-   * @throws IllegalArgumentException  if set == null
+   * @throws UnimplementedError if (not ( set instanceof com.ibm.wala.util.intset.SparseIntSet ) ) and (not ( set instanceof
+   *           com.ibm.wala.util.intset.BitVectorIntSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.BimodalMutableIntSet
+   *           ) ) and (not ( set instanceof com.ibm.wala.util.intset.DebuggingMutableIntSet ) ) and (not ( set instanceof
+   *           com.ibm.wala.util.intset.SemiSparseMutableIntSet ) ) and (not ( set instanceof
+   *           com.ibm.wala.util.intset.MutableSharedBitVectorIntSet ) )
+   * @throws IllegalArgumentException if set == null
    */
   public static MutableIntSet makeMutableCopy(IntSet set) throws IllegalArgumentException, UnimplementedError {
     if (set == null) {
@@ -136,7 +140,7 @@ public class IntSetUtil {
   /**
    * Subtract two sets, i.e. a = a \ b.
    * 
-   * @throws IllegalArgumentException  if B == null
+   * @throws IllegalArgumentException if B == null
    */
   public static MutableIntSet removeAll(MutableIntSet A, IntSet B) throws IllegalArgumentException {
     if (B == null) {
@@ -175,8 +179,8 @@ public class IntSetUtil {
     if (low <= high && (low < 0 || high < 0)) {
       throw new IllegalArgumentException("can't search negative indices " + low + " " + high);
     }
-    if (high > data.length -1 ) {
-      high = data.length -1;
+    if (high > data.length - 1) {
+      high = data.length - 1;
     }
     if (low <= high) {
       int mid = (low + high) / 2;
@@ -201,16 +205,18 @@ public class IntSetUtil {
   }
 
   /**
-   * @param defaultIntSetFactory
-   *          The defaultIntSetFactory to set.
+   * @param defaultIntSetFactory The defaultIntSetFactory to set.
    */
   public static void setDefaultIntSetFactory(MutableIntSetFactory defaultIntSetFactory) {
+    if (defaultIntSetFactory == null) {
+      throw new IllegalArgumentException("null defaultIntSetFactory");
+    }
     IntSetUtil.defaultIntSetFactory = defaultIntSetFactory;
   }
 
   /**
    * @return a new sparse int set which adds j to s
-   * @throws IllegalArgumentException  if s == null
+   * @throws IllegalArgumentException if s == null
    */
   public static IntSet add(IntSet s, int j) throws IllegalArgumentException {
     if (s == null) {
@@ -220,7 +226,7 @@ public class IntSetUtil {
       SparseIntSet sis = (SparseIntSet) s;
       return SparseIntSet.add(sis, j);
     } else {
-      // really slow.  optimize as needed.
+      // really slow. optimize as needed.
       MutableSparseIntSet result = MutableSparseIntSet.make(s);
       result.add(j);
       return result;

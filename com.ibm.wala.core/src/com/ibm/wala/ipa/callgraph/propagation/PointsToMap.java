@@ -133,6 +133,9 @@ public class PointsToMap {
    * record that a particular points-to-set has been unioned with another
    */
   public void recordUnified(PointerKey key) {
+    if (key == null) {
+      throw new IllegalArgumentException("null key");
+    }
     int i = findOrCreateIndex(key);
     pointsToSets.set(i, UNIFIED);
   }

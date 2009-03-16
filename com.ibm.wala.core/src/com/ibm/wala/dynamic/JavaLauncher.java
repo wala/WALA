@@ -179,6 +179,7 @@ public class JavaLauncher extends Launcher {
 
   /**
    * Wait for the spawned process to terminate.
+   * @throws IllegalStateException if the process has not been started
    */
   public void join() {
     if (stdOutDrain == null || stdErrDrain == null) {
