@@ -76,12 +76,14 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     this.cha = cha;
     this.options = options;
     this.cache = cache;
+    if (cache == null) {
+      throw new IllegalArgumentException("null cache");
+    }
     // I'd like to enforce that declaringClass is a FakeRootClass ... but CASt would currently break.
     // so checking dynamically instead.
     if (declaringClass instanceof FakeRootClass) {
       ((FakeRootClass)declaringClass).addMethod(this);
     }
-    assert cache != null;
   }
 
   public AbstractRootMethod(MethodReference method, final IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {

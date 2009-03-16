@@ -55,7 +55,7 @@ public class ArraySet<T> extends AbstractSet<T> {
 
   private static final ArraySet EMPTY = new ArraySet<Object>(0, true) {
     @Override
-    /**
+    /*
      * @throws UnsupportedOperationException unconditionally
      */
     public boolean add(Object obj_) {
@@ -104,21 +104,21 @@ public class ArraySet<T> extends AbstractSet<T> {
     addAll(other);
   }
 
-  /*
-   * @see AAA.util.AAASet#add(java.lang.Object)
-   */
   @SuppressWarnings("all")
-  public boolean add(T obj_) {
-    assert obj_ != null;
-    if (checkDupes && this.contains(obj_))
+  public boolean add(T o) {
+    if (o == null) {
+      throw new IllegalArgumentException("null o");
+    }
+    if (checkDupes && this.contains(o)) {
       return false;
+    }
     if (_curIndex == _elems.length) {
       // lengthen array
       Object[] tmp = _elems;
       _elems = (T[]) new Object[tmp.length * 2];
       System.arraycopy(tmp, 0, _elems, 0, tmp.length);
     }
-    _elems[_curIndex] = obj_;
+    _elems[_curIndex] = o;
     _curIndex++;
     return true;
   }

@@ -73,11 +73,14 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     if (options == null) {
       throw new IllegalArgumentException("null options");
     }
+    if (cache == null) {
+      throw new IllegalArgumentException("null cache");
+    }
     this.cha = cha;
     this.options = options;
     this.cache = cache;
     this.maxNumberOfNodes = options.getMaxNumberOfNodes();
-    assert cache != null;
+    
   }
 
   /**

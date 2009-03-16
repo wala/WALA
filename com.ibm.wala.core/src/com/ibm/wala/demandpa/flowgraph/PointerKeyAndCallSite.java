@@ -47,8 +47,12 @@ public class PointerKeyAndCallSite {
   private final CallSiteReference callSiteRef;
 
   public PointerKeyAndCallSite(final PointerKey key, final CallSiteReference callSiteRef) {
-    assert key != null;
-    assert callSiteRef != null;
+    if (key == null) {
+      throw new IllegalArgumentException("null key");
+    }
+    if (callSiteRef == null) {
+      throw new IllegalArgumentException("null callSiteRef");
+    }
     this.key = key;
     this.callSiteRef = callSiteRef;
   }

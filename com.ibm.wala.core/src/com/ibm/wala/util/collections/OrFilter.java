@@ -12,14 +12,13 @@ package com.ibm.wala.util.collections;
 
 /**
  * A filter "A or B"
- * 
- * @author sjfink
  */
 public class OrFilter<T> implements Filter<T> {
 
   public static <T> OrFilter<T> createOrFilter(Filter<T> a, Filter<T> b) {
-    assert a != null;
-    assert b != null;
+    if (a == null || b == null) {
+      throw new IllegalArgumentException("cannot compose null filter");
+    }
     return new OrFilter<T>(a, b);
   }
 

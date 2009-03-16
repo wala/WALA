@@ -278,8 +278,11 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   }
 
   /**
-   * convert a pointer key to one in the memory access map's heap model TODO move this somewhere more appropriate
-   * @param pk
+   * convert a pointer key to one in the memory access map's heap model 
+   * 
+   * TODO move this somewhere more appropriate
+   * 
+   * @throws UnsupportedOperationException if it doesn't know how to handle a {@link PointerKey}
    */
   public static PointerKey convertPointerKeyToHeapModel(PointerKey pk, HeapModel h) {
     if (pk instanceof LocalPointerKey) {
@@ -299,8 +302,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
       ReturnValueKey rvk = (ReturnValueKey) pk;
       return h.getPointerKeyForReturnValue(rvk.getNode());
     }
-    assert false : "need to handle " + pk.getClass();
-    return null;
+    throw new UnsupportedOperationException("need to handle " + pk.getClass());
   }
 
   public Iterator<PointerKey> getReadsOfInstanceField(PointerKey pk, IField f) {

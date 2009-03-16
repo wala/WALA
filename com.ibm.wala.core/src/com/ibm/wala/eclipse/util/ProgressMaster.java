@@ -36,7 +36,9 @@ public class ProgressMaster implements IProgressMonitor {
   }
 
   public static ProgressMaster make(IProgressMonitor monitor) {
-    assert monitor != null;
+    if (monitor == null) {
+      throw new IllegalArgumentException("null monitor");
+    }
     return new ProgressMaster(monitor);
   }
 

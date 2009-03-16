@@ -14,9 +14,6 @@ import com.ibm.wala.util.collections.Pair;
 
 /**
  * combination of 2 pi node policies
- * 
- * @author sjfink
- *
  */
 public class CompoundPiPolicy implements SSAPiNodePolicy {
   
@@ -30,8 +27,12 @@ public class CompoundPiPolicy implements SSAPiNodePolicy {
   private CompoundPiPolicy(SSAPiNodePolicy p1, SSAPiNodePolicy p2) {
     this.p1 = p1;
     this.p2 = p2;
-    assert p1 != null;
-    assert p2 != null;
+    if (p1 == null) {
+      throw new IllegalArgumentException("p1 is null");
+    }
+    if (p2 == null) {
+      throw new IllegalArgumentException("p2 is null");
+    }
   }
 
   public Pair<Integer, SSAInstruction> getPi(SSAConditionalBranchInstruction cond, SSAInstruction def1, SSAInstruction def2,

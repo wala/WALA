@@ -143,6 +143,9 @@ public class IntSetUtil {
    * @throws IllegalArgumentException if B == null
    */
   public static MutableIntSet removeAll(MutableIntSet A, IntSet B) throws IllegalArgumentException {
+    if (A == null) {
+      throw new IllegalArgumentException("A == null");
+    }
     if (B == null) {
       throw new IllegalArgumentException("B == null");
     }

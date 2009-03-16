@@ -19,8 +19,6 @@ import com.ibm.wala.util.strings.Atom;
 
 /**
  * A synthetic method that calls all class initializers
- * 
- * @author sfink
  */
 public class FakeWorldClinitMethod extends AbstractRootMethod {
 
