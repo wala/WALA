@@ -53,7 +53,7 @@ public class ActionFormFactoryMethod extends SummarizedMethod {
   }
 
   private static MethodSummary makeNoOpFactorySummary() {
-    MethodSummary noOpSummary = BypassMethodTargetSelector.generateNoOp(ref, true);
+    MethodSummary noOpSummary = BypassMethodTargetSelector.generateStandardNoOp(ref, true);
     noOpSummary.setFactory(true);
     return noOpSummary;
   }

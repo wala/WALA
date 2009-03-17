@@ -32,7 +32,7 @@ public class AnalysisOptions {
   /**
    * An object that identifies the entrypoints for the call graph
    */
-  private Iterable<Entrypoint> entrypoints;
+  private Iterable<? extends Entrypoint> entrypoints;
 
   /**
    * An object which represents the user specification for reflection
@@ -198,7 +198,7 @@ public class AnalysisOptions {
   public AnalysisOptions() {
   }
 
-  public AnalysisOptions(AnalysisScope scope, Iterable<Entrypoint> e) {
+  public AnalysisOptions(AnalysisScope scope, Iterable<? extends Entrypoint> e) {
     this.analysisScope = scope;
     this.entrypoints = e;
   }
@@ -211,11 +211,11 @@ public class AnalysisOptions {
     this.analysisScope = analysisScope;
   }
 
-  public Iterable<Entrypoint> getEntrypoints() {
+  public Iterable<? extends Entrypoint> getEntrypoints() {
     return entrypoints;
   }
 
-  public void setEntrypoints(Iterable<Entrypoint> entrypoints) {
+  public void setEntrypoints(Iterable<? extends Entrypoint> entrypoints) {
     this.entrypoints = entrypoints;
   }
 

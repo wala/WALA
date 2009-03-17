@@ -236,7 +236,7 @@ public class ClassLoaderImpl implements IClassLoader {
         } else {
           ShrikeClass klass = new ShrikeClass(reader, this, cha);
           if (klass.getReference().getName().equals(T)) {
-            loadedClasses.put(T, new ShrikeClass(reader, this, cha));
+            loadedClasses.put(T, klass);  // new ShrikeClass(reader, this, cha));
             if (DEBUG_LEVEL > 1) {
               System.err.println("put " + T + " ");
             }

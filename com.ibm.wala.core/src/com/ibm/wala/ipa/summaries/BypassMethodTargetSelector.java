@@ -209,9 +209,23 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
     }
   }
 
-  public static MethodSummary generateNoOp(MethodReference m, boolean isStatic) {
+  /**
+   * Generate a {@link MethodSummary} which is the "standard" representation of a method 
+   * that does nothing.
+   */
+  public static MethodSummary generateStandardNoOp(MethodReference m, boolean isStatic) {
     return new NoOpSummary(m, isStatic);
   }
+  
+  /**
+   * Generate a {@link MethodSummary} which is the "standard" representation of a method 
+   * that does nothing.  Subclasses may override this method to implement alternative semantics
+   * concerning what "do nothing" means.
+   */
+  public MethodSummary generateNoOp(MethodReference m, boolean isStatic) {
+    return new NoOpSummary(m, isStatic);
+  }
+  
 
   private static class NoOpSummary extends MethodSummary {
 
@@ -254,5 +268,5 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
 
   protected IClassHierarchy getClassHierarchy() {
     return cha;
-  }
+  }  
 }
