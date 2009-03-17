@@ -55,6 +55,9 @@ public class Analyzer {
   protected final static int[] noEdges = new int[0];
 
   public Analyzer(boolean isStatic, String classType, String signature, IInstruction[] instructions, ExceptionHandler[][] handlers) {
+    if (instructions == null) {
+      throw new IllegalArgumentException("null instructions");
+    }
     this.classType = classType;
     this.isStatic = isStatic;
     this.signature = signature;

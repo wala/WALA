@@ -17,13 +17,15 @@ import java.util.Arrays;
  */
 public final class LocalVariableTableWriter extends ClassWriter.Element {
   final private int attrID;
+
   private int[] rawTable = emptyTable;
 
   private static final int[] emptyTable = new int[0];
 
   /**
    * Create a blank LocalVariableTable.
-   * @throws IllegalArgumentException  if w is null
+   * 
+   * @throws IllegalArgumentException if w is null
    */
   public LocalVariableTableWriter(ClassWriter w) {
     if (w == null) {
@@ -33,12 +35,9 @@ public final class LocalVariableTableWriter extends ClassWriter.Element {
   }
 
   /**
-   * Set the raw local variable table values. Consider using
-   * LocalVariableTableWriter.makeRawTable to build the raw values.
+   * Set the raw local variable table values. Consider using LocalVariableTableWriter.makeRawTable to build the raw values.
    * 
-   * @param table
-   *          the raw values, a flattened sequence of (startPC, length,
-   *          nameIndex, typeIndex, var) tuples
+   * @param table the raw values, a flattened sequence of (startPC, length, nameIndex, typeIndex, var) tuples
    */
   public void setRawTable(int[] table) {
     if (table == null) {
@@ -83,73 +82,74 @@ public final class LocalVariableTableWriter extends ClassWriter.Element {
   /**
    * Build a raw local variable table from a formatted variable map.
    * 
-   * @param varMap
-   *          an array mapping bytecode offsets to a variable map for each
-   *          offset; a variable map is a array of 2*localVars elements,
-   *          containing a (nameIndex, typeIndex) for each local variable; the
-   *          pair (0,0) indicates that there is no information about that local
-   *          variable at that offset
-   * @throws IllegalArgumentException  if varMap == null
+   * @param varMap an array mapping bytecode offsets to a variable map for each offset; a variable map is a array of 2*localVars
+   *          elements, containing a (nameIndex, typeIndex) for each local variable; the pair (0,0) indicates that there is no
+   *          information about that local variable at that offset
+   * @throws IllegalArgumentException if varMap == null
    */
   public static int[] makeRawTable(int[][] varMap) throws IllegalArgumentException {
     if (varMap == null) {
       throw new IllegalArgumentException("varMap == null");
     }
-    int varCount = 0;
-    for (int i = 0; i < varMap.length; i++) {
-      if (varMap[i] != null) {
-        varCount = Math.max(varCount, varMap[i].length);
+    try {
+      int varCount = 0;
+      for (int i = 0; i < varMap.length; i++) {
+        if (varMap[i] != null) {
+          varCount = Math.max(varCount, varMap[i].length);
+        }
       }
-    }
-    varCount /= 2;
+      varCount /= 2;
 
-    int[] entries = new int[20];
-    int[] varEnd = new int[varCount];
-    Arrays.fill(varEnd, -1);
-    int[] lastVector = null;
-    int entryCount = 0;
-    for (int i = 0; i < varMap.length; i++) {
-      if (varMap[i] != lastVector) {
-        lastVector = varMap[i];
+      int[] entries = new int[20];
+      int[] varEnd = new int[varCount];
+      Arrays.fill(varEnd, -1);
+      int[] lastVector = null;
+      int entryCount = 0;
+      for (int i = 0; i < varMap.length; i++) {
+        if (varMap[i] != lastVector) {
+          lastVector = varMap[i];
 
-        if (lastVector != null) {
-          for (int k = 0; k < lastVector.length / 2; k++) {
-            if (lastVector[k * 2] > 0 && i >= varEnd[k]) {
-              int entryOffset = entryCount * 5;
-              entryCount++;
-              if (entryCount * 5 > entries.length) {
-                int[] newEntries = new int[entries.length * 2];
-                System.arraycopy(entries, 0, newEntries, 0, entries.length);
-                entries = newEntries;
-              }
-              int nameIndex = lastVector[k * 2];
-              int typeIndex = lastVector[k * 2 + 1];
-              int end = i + 1;
-              while (end < varMap.length) {
-                if (varMap[end] == null || k * 2 >= varMap[end].length || varMap[end][k * 2] != nameIndex
-                    || varMap[end][k * 2 + 1] != typeIndex) {
-                  break;
+          if (lastVector != null) {
+            for (int k = 0; k < lastVector.length / 2; k++) {
+              if (lastVector[k * 2] > 0 && i >= varEnd[k]) {
+                int entryOffset = entryCount * 5;
+                entryCount++;
+                if (entryCount * 5 > entries.length) {
+                  int[] newEntries = new int[entries.length * 2];
+                  System.arraycopy(entries, 0, newEntries, 0, entries.length);
+                  entries = newEntries;
                 }
-                end++;
+                int nameIndex = lastVector[k * 2];
+                int typeIndex = lastVector[k * 2 + 1];
+                int end = i + 1;
+                while (end < varMap.length) {
+                  if (varMap[end] == null || k * 2 >= varMap[end].length || varMap[end][k * 2] != nameIndex
+                      || varMap[end][k * 2 + 1] != typeIndex) {
+                    break;
+                  }
+                  end++;
+                }
+                varEnd[k] = end;
+                entries[entryOffset] = i;
+                entries[entryOffset + 1] = end - i;
+                entries[entryOffset + 2] = nameIndex;
+                entries[entryOffset + 3] = typeIndex;
+                entries[entryOffset + 4] = k;
               }
-              varEnd[k] = end;
-              entries[entryOffset] = i;
-              entries[entryOffset + 1] = end - i;
-              entries[entryOffset + 2] = nameIndex;
-              entries[entryOffset + 3] = typeIndex;
-              entries[entryOffset + 4] = k;
             }
           }
         }
       }
-    }
 
-    if (entryCount == 0) {
-      return null;
-    } else {
-      int[] r = new int[entryCount * 5];
-      System.arraycopy(entries, 0, r, 0, r.length);
-      return r;
+      if (entryCount == 0) {
+        return null;
+      } else {
+        int[] r = new int[entryCount * 5];
+        System.arraycopy(entries, 0, r, 0, r.length);
+        return r;
+      }
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("malformed varMap");
     }
   }
 }

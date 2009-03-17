@@ -56,26 +56,26 @@ import com.ibm.wala.shrikeBT.Util;
  *          System.out.println(&quot;Verification failed at instruction &quot;
  *              + ex.getOffset() + &quot;: &quot; + ex.getReason());
  *      }
- *  
+ * 
  * </pre>
  * 
- * For full verification you need to provide class hierarchy information using
- * setClassHierarchy. Without this information, we can't compute the exact types
- * of variables at control flow merge points. If you don't provide a hierarchy,
- * or the hierarchy you provide is partial, then the Verifier will be
- * optimistic.
+ * For full verification you need to provide class hierarchy information using setClassHierarchy. Without this information, we can't
+ * compute the exact types of variables at control flow merge points. If you don't provide a hierarchy, or the hierarchy you provide
+ * is partial, then the Verifier will be optimistic.
  * 
- * This method can also be used to gather type information for every stack and
- * local variable at every program point. Just call computeTypes() instead of
- * verify() and then retrieve the results with getLocalTypes() and
- * getStackTypes().
+ * This method can also be used to gather type information for every stack and local variable at every program point. Just call
+ * computeTypes() instead of verify() and then retrieve the results with getLocalTypes() and getStackTypes().
  */
 public final class Verifier extends Analyzer {
   final class VerifyVisitor extends TypeVisitor {
     private int curIndex;
+
     private List<PathElement> curPath;
+
     private FailureException ex;
+
     private String[] curStack;
+
     private String[] curLocals;
 
     VerifyVisitor() {
@@ -293,18 +293,17 @@ public final class Verifier extends Analyzer {
 
   /**
    * Initialize a verifier.
-   * @throws NullPointerException  if info is null
+   * 
+   * @throws NullPointerException if info is null
    */
   public Verifier(MethodData info) throws NullPointerException {
     super(info);
   }
 
   /**
-   * Try to verify the method. If verification is unsuccessful, we throw an
-   * exception.
+   * Try to verify the method. If verification is unsuccessful, we throw an exception.
    * 
-   * @throws FailureException
-   *           the method contains invalid bytecode
+   * @throws FailureException the method contains invalid bytecode
    */
   public void verify() throws FailureException {
     VerifyVisitor v = new VerifyVisitor();

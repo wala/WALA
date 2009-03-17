@@ -10,18 +10,19 @@
  *******************************************************************************/
 package com.ibm.wala.shrikeBT;
 
-import com.ibm.wala.annotations.NonNull;
 
 /**
  * This class represents instanceof instructions.
  */
 public final class InstanceofInstruction extends Instruction {
-  @NonNull
   final private String type;
 
   protected InstanceofInstruction(String type) {
     super(OP_instanceof);
     this.type = type;
+    if (type == null) {
+      throw new IllegalArgumentException("null type");
+    }
   }
 
   public static InstanceofInstruction make(String type) {

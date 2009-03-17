@@ -322,6 +322,9 @@ public abstract class OfflineInstrumenterBase {
 
     for (int i = 0; i < args.length; i++) {
       String a = args[i];
+      if (a == null) {
+        throw new IllegalArgumentException("args[" + i + "] is null");
+      }
       if (a.equals("-o") && i + 1 < args.length) {
         setOutputJar(new File(args[i + 1]));
         i++;
@@ -600,7 +603,7 @@ public abstract class OfflineInstrumenterBase {
   /**
    * Call this when you're done modifying classes.
    */
-  final public void close() throws IOException {
+  final public void close() throws IOException, IllegalStateException {
     if (passUnmodifiedClasses) {
       writeUnmodifiedClasses();
     }

@@ -41,8 +41,8 @@ public final class Util {
    * @throws IllegalArgumentException  if s is null
    */
   public static byte getWordSize(String s) {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
+    if (s == null || s.length() == 0) {
+      throw new IllegalArgumentException("invalid s: " + s);
     }
     return getWordSize(s, 0);
   }
@@ -210,8 +210,8 @@ public final class Util {
    * @throws IllegalArgumentException  if type == null
    */
   static int getParamsCount(String type) throws IllegalArgumentException {
-    if (type == null) {
-      throw new IllegalArgumentException("type == null");
+    if (type == null || type.length() < 2) {
+      throw new IllegalArgumentException("invalid type: " + type);
     }
     int index = 1;
     int count = 0;
@@ -289,8 +289,8 @@ public final class Util {
    * @throws IllegalArgumentException  if t is null
    */
   public static String getStackType(String t) {
-    if (t == null) {
-      throw new IllegalArgumentException("t is null");
+    if (t == null || t.length() < 1) {
+      throw new IllegalArgumentException("invalid t: " + t);
     }
     switch (t.charAt(0)) {
     case 'Z':
@@ -330,7 +330,7 @@ public final class Util {
    * @return true iff t is a primitive type
    */
   public static boolean isPrimitiveType(String t) {
-    if (t == null) {
+    if (t == null || t.length() == 0) {
       return false;
     } else {
       switch (t.charAt(0)) {

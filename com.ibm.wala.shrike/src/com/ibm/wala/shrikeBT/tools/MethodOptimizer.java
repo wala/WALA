@@ -55,6 +55,9 @@ public final class MethodOptimizer {
   final static int[] noEdges = new int[0];
 
   public MethodOptimizer(MethodData d, MethodEditor e) {
+    if (d == null) {
+      throw new IllegalArgumentException("null d");
+    }
     this.data = d;
     this.editor = e;
   }

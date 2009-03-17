@@ -182,6 +182,9 @@ public class AddSerialVersion {
 
   public static void main(String[] args) {
     for (int i = 0; i < args.length; i++) {
+      if (args[i] == null) {
+        throw new IllegalArgumentException("args[" + i + "] is null");
+      }
       try {
         byte[] data = Util.readFully(new FileInputStream(args[i]));
         ClassReader r = new ClassReader(data);

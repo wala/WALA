@@ -457,8 +457,7 @@ public abstract class ConstantInstruction extends Instruction {
   }
 
   /**
-   * @return the constant value pushed: an Integer, a Long, a Float, a Double, a
-   *         String, or null
+   * @return the constant value pushed: an Integer, a Long, a Float, a Double, a String, or null
    */
   public abstract Object getValue();
 
@@ -478,17 +477,21 @@ public abstract class ConstantInstruction extends Instruction {
     } else if (type.equals(TYPE_Class)) {
       return makeClass((String) constant);
     } else {
-      switch (Util.getTypeIndex(type)) {
-      case TYPE_int_index:
-        return make(((Number) constant).intValue());
-      case TYPE_long_index:
-        return make(((Number) constant).longValue());
-      case TYPE_float_index:
-        return make(((Number) constant).floatValue());
-      case TYPE_double_index:
-        return make(((Number) constant).doubleValue());
-      default:
-        throw new IllegalArgumentException("Invalid type for constant: " + type);
+      try {
+        switch (Util.getTypeIndex(type)) {
+        case TYPE_int_index:
+          return make(((Number) constant).intValue());
+        case TYPE_long_index:
+          return make(((Number) constant).longValue());
+        case TYPE_float_index:
+          return make(((Number) constant).floatValue());
+        case TYPE_double_index:
+          return make(((Number) constant).doubleValue());
+        default:
+          throw new IllegalArgumentException("Invalid type for constant: " + type);
+        }
+      } catch (ClassCastException e) {
+        throw new IllegalArgumentException(e);
       }
     }
   }
@@ -540,7 +543,22 @@ public abstract class ConstantInstruction extends Instruction {
   final public boolean equals(Object o) {
     if (o instanceof ConstantInstruction) {
       ConstantInstruction i = (ConstantInstruction) o;
-      return i.getType().equals(getType()) && i.getValue().equals(getValue());
+      if (!i.getType().equals(getType())) {
+        return false;
+      }
+      if (i.getValue() == null) {
+        if (getValue() == null) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        if (getValue() == null) {
+          return false;
+        } else {
+          return i.getValue().equals(getValue());
+        }
+      }
     } else {
       return false;
     }
@@ -558,7 +576,8 @@ public abstract class ConstantInstruction extends Instruction {
 
   @Override
   final public int hashCode() {
-    return getType().hashCode() + 14411 * getValue().hashCode();
+    int v = getValue() == null ? 0 : getValue().hashCode();
+    return getType().hashCode() + 14411 * v;
   }
 
   @Override

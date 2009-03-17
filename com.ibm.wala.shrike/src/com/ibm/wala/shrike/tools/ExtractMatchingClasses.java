@@ -42,6 +42,12 @@ public class ExtractMatchingClasses {
     }
     String in = args[0];
     String out = args[1];
+    if (in == null) {
+      throw new IllegalArgumentException("null args[0]");
+    }
+    if (out == null) {
+      throw new IllegalArgumentException("null args[1]");
+    }
     String[] match = new String[args.length - 2];
     System.arraycopy(args, 2, match, 0, match.length);
 

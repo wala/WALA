@@ -902,13 +902,14 @@ public final class ClassWriter implements ClassConstants {
     if (buf == null) {
       throw new IllegalArgumentException("buf is null");
     }
-    if (offset >= buf.length) {
+    try {
+      buf[offset] = (byte) (v >> 24);
+      buf[offset + 1] = (byte) (v >> 16);
+      buf[offset + 2] = (byte) (v >> 8);
+      buf[offset + 3] = (byte) v;
+    } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("illegal offset " + offset);
     }
-    buf[offset] = (byte) (v >> 24);
-    buf[offset + 1] = (byte) (v >> 16);
-    buf[offset + 2] = (byte) (v >> 8);
-    buf[offset + 3] = (byte) v;
   }
 
   /**
@@ -942,10 +943,14 @@ public final class ClassWriter implements ClassConstants {
     if (buf == null) {
       throw new IllegalArgumentException("buf is null");
     }
-    if (offset + 1 >= buf.length) {
+    if (offset < 0 || offset + 1 >= buf.length) {
       throw new IllegalArgumentException("buf is too short " + buf.length + " " + offset);
     }
-    buf[offset] = (byte) (v >> 8);
-    buf[offset + 1] = (byte) v;
+    try {
+      buf[offset] = (byte) (v >> 8);
+      buf[offset + 1] = (byte) v;
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid offset: " + offset);
+    }
   }
 }

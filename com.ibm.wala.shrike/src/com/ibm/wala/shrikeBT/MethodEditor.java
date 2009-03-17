@@ -129,6 +129,9 @@ public final class MethodEditor {
    * instructions-to-bytecode-offsets map.
    */
   public MethodEditor(Instruction[] instructions, ExceptionHandler[][] handlers, int[] instructionsToBytecodes) {
+    if (instructions == null) {
+      throw new IllegalArgumentException("null instructions");
+    }
     methodInfo = null;
     this.instructionsToBytecodes = instructionsToBytecodes;
     this.instructions = instructions;

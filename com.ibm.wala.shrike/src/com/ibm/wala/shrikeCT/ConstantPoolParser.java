@@ -19,6 +19,9 @@ public final class ConstantPoolParser implements ClassConstants {
   private int[] cpOffsets;
 
   private String[] cpItems;
+  
+  // TODO: use JVM spec limit here?
+  private final static int MAX_CP_ITEMS = Integer.MAX_VALUE / 4;
 
   /**
    * @param bytes the raw class file data
@@ -30,7 +33,7 @@ public final class ConstantPoolParser implements ClassConstants {
     if (offset < 0) {
       throw new IllegalArgumentException("invalid offset: " + offset);
     }
-    if (itemCount < 0) {
+    if (itemCount < 0 || itemCount > MAX_CP_ITEMS) {
       throw new IllegalArgumentException("invalid itemCount: " + itemCount);
     }
     parseConstantPool(offset, itemCount);
