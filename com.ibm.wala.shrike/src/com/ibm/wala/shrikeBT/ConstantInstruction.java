@@ -418,6 +418,12 @@ public abstract class ConstantInstruction extends Instruction {
     final public String getType() {
       return TYPE_Class;
     }
+
+    @Override
+    public boolean isPEI() {
+      // load of a class constant may trigger a ClassNotFoundException
+      return true;
+    }
   }
 
   final static class LazyClass extends ConstClass {
