@@ -11,24 +11,28 @@
 package com.ibm.wala.shrikeCT;
 
 /**
- * A ConstantPoolParser provides read-only access to the constant pool of a
- * class file.
+ * A ConstantPoolParser provides read-only access to the constant pool of a class file.
  */
 public final class ConstantPoolParser implements ClassConstants {
   final private byte[] bytes;
+
   private int[] cpOffsets;
+
   private String[] cpItems;
 
   /**
-   * @param bytes
-   *          the raw class file data
-   * @param offset
-   *          the start of the constant pool data
-   * @param itemCount
-   *          the number of items in the pool
+   * @param bytes the raw class file data
+   * @param offset the start of the constant pool data
+   * @param itemCount the number of items in the pool
    */
   public ConstantPoolParser(byte[] bytes, int offset, int itemCount) throws InvalidClassFileException {
     this.bytes = bytes;
+    if (offset < 0) {
+      throw new IllegalArgumentException("invalid offset: " + offset);
+    }
+    if (itemCount < 0) {
+      throw new IllegalArgumentException("invalid itemCount: " + itemCount);
+    }
     parseConstantPool(offset, itemCount);
   }
 
@@ -74,8 +78,7 @@ public final class ConstantPoolParser implements ClassConstants {
   }
 
   /**
-   * @return the type of constant pool item i, or 0 if i is an unused constant
-   *         pool item
+   * @return the type of constant pool item i, or 0 if i is an unused constant pool item
    */
   public byte getItemType(int i) throws IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
@@ -90,8 +93,7 @@ public final class ConstantPoolParser implements ClassConstants {
   }
 
   /**
-   * @return the name of the Class at constant pool item i, in JVM format (e.g.,
-   *         java/lang/Object)
+   * @return the name of the Class at constant pool item i, in JVM format (e.g., java/lang/Object)
    */
   public String getCPClass(int i) throws InvalidClassFileException, IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
@@ -116,7 +118,7 @@ public final class ConstantPoolParser implements ClassConstants {
   /**
    * @return the String at constant pool item i
    */
-  public String getCPString(int i) throws InvalidClassFileException , IllegalArgumentException{
+  public String getCPString(int i) throws InvalidClassFileException, IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
       throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
     }
@@ -148,8 +150,7 @@ public final class ConstantPoolParser implements ClassConstants {
   }
 
   /**
-   * @return the name of the class part of the FieldRef, MethodRef, or
-   *         InterfaceMethodRef at constant pool item i
+   * @return the name of the class part of the FieldRef, MethodRef, or InterfaceMethodRef at constant pool item i
    */
   public String getCPRefClass(int i) throws InvalidClassFileException, IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
@@ -167,8 +168,7 @@ public final class ConstantPoolParser implements ClassConstants {
   }
 
   /**
-   * @return the name part of the FieldRef, MethodRef, or InterfaceMethodRef at
-   *         constant pool item i
+   * @return the name part of the FieldRef, MethodRef, or InterfaceMethodRef at constant pool item i
    */
   public String getCPRefName(int i) throws InvalidClassFileException, IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
@@ -186,8 +186,7 @@ public final class ConstantPoolParser implements ClassConstants {
   }
 
   /**
-   * @return the type part of the FieldRef, MethodRef, or InterfaceMethodRef at
-   *         constant pool item i, in JVM format (e.g., I, Z, or
+   * @return the type part of the FieldRef, MethodRef, or InterfaceMethodRef at constant pool item i, in JVM format (e.g., I, Z, or
    *         Ljava/lang/Object;)
    */
   public String getCPRefType(int i) throws InvalidClassFileException, IllegalArgumentException {
@@ -208,7 +207,7 @@ public final class ConstantPoolParser implements ClassConstants {
   /**
    * @return the name part of the NameAndType at constant pool item i
    */
-  public String getCPNATName(int i) throws InvalidClassFileException,IllegalArgumentException {
+  public String getCPNATName(int i) throws InvalidClassFileException, IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
       throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
     }
@@ -224,8 +223,7 @@ public final class ConstantPoolParser implements ClassConstants {
   }
 
   /**
-   * @return the type part of the NameAndType at constant pool item i, in JVM
-   *         format (e.g., I, Z, or Ljava/lang/Object;)
+   * @return the type part of the NameAndType at constant pool item i, in JVM format (e.g., I, Z, or Ljava/lang/Object;)
    */
   public String getCPNATType(int i) throws InvalidClassFileException, IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
@@ -353,7 +351,7 @@ public final class ConstantPoolParser implements ClassConstants {
           throw invalidUtf8(i, offset);
         }
       }
-//      s = buf.toString().intern(); // removed intern() call --MS
+      // s = buf.toString().intern(); // removed intern() call --MS
       s = buf.toString();
       cpItems[i] = s;
     }
@@ -405,9 +403,9 @@ public final class ConstantPoolParser implements ClassConstants {
     return ((bytes[i] & 0xFF) << 8) + (bytes[i + 1] & 0xFF);
   }
 
-//  private short getShort(int i) {
-//    return (short) ((bytes[i] << 8) + (bytes[i + 1] & 0xFF));
-//  }
+  // private short getShort(int i) {
+  // return (short) ((bytes[i] << 8) + (bytes[i + 1] & 0xFF));
+  // }
 
   private int getInt(int i) {
     return (bytes[i] << 24) + ((bytes[i + 1] & 0xFF) << 16) + ((bytes[i + 2] & 0xFF) << 8) + (bytes[i + 3] & 0xFF);

@@ -25,11 +25,13 @@ public final class ClassWriter implements ClassConstants {
   private ConstantPoolParser rawCP;
 
   private HashMap<Object, Integer> cachedCPEntries = new HashMap<Object, Integer>(1);
+
   final private ArrayList<Object> newCPEntries = new ArrayList<Object>(1);
 
   private int nextCPIndex = 1;
 
   final private ArrayList<Element> fields = new ArrayList<Element>(1);
+
   final private ArrayList<Element> methods = new ArrayList<Element>(1);
 
   final private ArrayList<Element> classAttributes = new ArrayList<Element>(1);
@@ -50,16 +52,14 @@ public final class ClassWriter implements ClassConstants {
   private int bufLen;
 
   /**
-   * Create a blank ClassWriter with no methods, fields, or attributes, an empty
-   * constant pool, no super class, no implemented interfaces, no name,
-   * majorVersion 46, and minorVersion 0.
+   * Create a blank ClassWriter with no methods, fields, or attributes, an empty constant pool, no super class, no implemented
+   * interfaces, no name, majorVersion 46, and minorVersion 0.
    */
   public ClassWriter() {
   }
 
   /**
-   * Set the class file format major version. You probably don't want to use
-   * this unless you really know what you are doing.
+   * Set the class file format major version. You probably don't want to use this unless you really know what you are doing.
    */
   public void setMajorVersion(int major) {
     if (major < 0 || major > 0xFFFF) {
@@ -69,8 +69,7 @@ public final class ClassWriter implements ClassConstants {
   }
 
   /**
-   * Set the class file format minor version. You probably don't want to use
-   * this unless you really know what you are doing.
+   * Set the class file format minor version. You probably don't want to use this unless you really know what you are doing.
    */
   public void setMinorVersion(int minor) {
     if (minor < 0 || minor > 0xFFFF) {
@@ -89,7 +88,7 @@ public final class ClassWriter implements ClassConstants {
     CWString(String s) {
       this.s = s;
     }
-    
+
     @Override
     public boolean equals(Object o) {
       return o instanceof CWString && ((CWString) o).s.equals(s);
@@ -198,21 +197,14 @@ public final class ClassWriter implements ClassConstants {
   }
 
   /**
-   * Copy a constant pool from some ClassReader into this class. This must be
-   * done before any entries are allocated in this ClassWriter's constant pool,
-   * and it can only be done once. If and only if this is done, it is safe to
-   * copy "raw" fields, methods and attributes from the ClassReader into this
-   * class, because the constant pool references in those fields, methods and
-   * attributes are guaranteed to point to the same constant pool items in this
-   * new class.
+   * Copy a constant pool from some ClassReader into this class. This must be done before any entries are allocated in this
+   * ClassWriter's constant pool, and it can only be done once. If and only if this is done, it is safe to copy "raw" fields,
+   * methods and attributes from the ClassReader into this class, because the constant pool references in those fields, methods and
+   * attributes are guaranteed to point to the same constant pool items in this new class.
    * 
-   * @param cacheEntries
-   *          records whether to parse the raw constant pool completely so that
-   *          if new entries are required which are the same as entries already
-   *          in the raw pool, the existing entries in the raw pool are used
-   *          instead. Setting this to 'true' produces smaller constant pools
-   *          but may slow down performance because the raw pool must be
-   *          completely parsed
+   * @param cacheEntries records whether to parse the raw constant pool completely so that if new entries are required which are the
+   *          same as entries already in the raw pool, the existing entries in the raw pool are used instead. Setting this to 'true'
+   *          produces smaller constant pools but may slow down performance because the raw pool must be completely parsed
    */
   public void setRawCP(ConstantPoolParser cp, boolean cacheEntries) throws InvalidClassFileException, IllegalArgumentException {
     if (cp == null) {
@@ -266,10 +258,8 @@ public final class ClassWriter implements ClassConstants {
   }
 
   /**
-   * @param force
-   *          true iff you want the addCP methods to always create a new
-   *          constant pool entry and never reuse an existing constant pool
-   *          entry
+   * @param force true iff you want the addCP methods to always create a new constant pool entry and never reuse an existing
+   *          constant pool entry
    */
   public void setForceAddCPEntries(boolean force) {
     forceAddCPEntries = force;
@@ -353,23 +343,22 @@ public final class ClassWriter implements ClassConstants {
   /**
    * Add a Class to the constant pool if necessary.
    * 
-   * @param s
-   *          the class name, in JVM format (e.g., java/lang/Object)
+   * @param s the class name, in JVM format (e.g., java/lang/Object)
    * @return the index of a constant pool item with the right value
    */
   public int addCPClass(String s) {
+    if (s == null) {
+      throw new IllegalArgumentException("null s: " + s);
+    }
     return addCPEntry(new CWClass(s), 1);
   }
 
   /**
    * Add a FieldRef to the constant pool if necessary.
    * 
-   * @param c
-   *          the class name, in JVM format (e.g., java/lang/Object)
-   * @param n
-   *          the field name
-   * @param t
-   *          the field type, in JVM format (e.g., I, Z, or Ljava/lang/Object;)
+   * @param c the class name, in JVM format (e.g., java/lang/Object)
+   * @param n the field name
+   * @param t the field type, in JVM format (e.g., I, Z, or Ljava/lang/Object;)
    * @return the index of a constant pool item with the right value
    */
   public int addCPFieldRef(String c, String n, String t) {
@@ -379,12 +368,9 @@ public final class ClassWriter implements ClassConstants {
   /**
    * Add a MethodRef to the constant pool if necessary.
    * 
-   * @param c
-   *          the class name, in JVM format (e.g., java/lang/Object)
-   * @param n
-   *          the method name
-   * @param t
-   *          the method type, in JVM format (e.g., V(ILjava/lang/Object;) )
+   * @param c the class name, in JVM format (e.g., java/lang/Object)
+   * @param n the method name
+   * @param t the method type, in JVM format (e.g., V(ILjava/lang/Object;) )
    * @return the index of a constant pool item with the right value
    */
   public int addCPMethodRef(String c, String n, String t) {
@@ -394,12 +380,9 @@ public final class ClassWriter implements ClassConstants {
   /**
    * Add an InterfaceMethodRef to the constant pool if necessary.
    * 
-   * @param c
-   *          the class name, in JVM format (e.g., java/lang/Object)
-   * @param n
-   *          the field name
-   * @param t
-   *          the method type, in JVM format (e.g., V(ILjava/lang/Object;) )
+   * @param c the class name, in JVM format (e.g., java/lang/Object)
+   * @param n the field name
+   * @param t the method type, in JVM format (e.g., V(ILjava/lang/Object;) )
    * @return the index of a constant pool item with the right value
    */
   public int addCPInterfaceMethodRef(String c, String n, String t) {
@@ -409,10 +392,8 @@ public final class ClassWriter implements ClassConstants {
   /**
    * Add a NameAndType to the constant pool if necessary.
    * 
-   * @param n
-   *          the name
-   * @param t
-   *          the type, in JVM format
+   * @param n the name
+   * @param t the type, in JVM format
    * @return the index of a constant pool item with the right value
    */
   public int addCPNAT(String n, String t) {
@@ -475,8 +456,7 @@ public final class ClassWriter implements ClassConstants {
   }
 
   /**
-   * Set the name of the superclass; if c is null, then there is no superclass
-   * (this must be java/lang/Object).
+   * Set the name of the superclass; if c is null, then there is no superclass (this must be java/lang/Object).
    */
   public void setSuperName(String c) {
     setSuperNameIndex(c == null ? 0 : addCPClass(c));
@@ -498,11 +478,9 @@ public final class ClassWriter implements ClassConstants {
   }
 
   /**
-   * An Element is an object that can be serialized into a byte buffer.
-   * Serialization via 'copyInto' is performed when the user calls makeBytes()
-   * on the ClassWriter. At this time no new constant pool items can be
-   * allocated, so any item indices that need to be emitted must be allocated
-   * earlier.
+   * An Element is an object that can be serialized into a byte buffer. Serialization via 'copyInto' is performed when the user
+   * calls makeBytes() on the ClassWriter. At this time no new constant pool items can be allocated, so any item indices that need
+   * to be emitted must be allocated earlier.
    */
   public static abstract class Element {
     public Element() {
@@ -522,12 +500,13 @@ public final class ClassWriter implements ClassConstants {
   }
 
   /**
-   * A RawElement is an Element that is already available as some chunk of a
-   * byte buffer.
+   * A RawElement is an Element that is already available as some chunk of a byte buffer.
    */
   public static final class RawElement extends Element {
     final private byte[] buf;
+
     final private int offset;
+
     final private int len;
 
     /**
@@ -552,16 +531,14 @@ public final class ClassWriter implements ClassConstants {
   }
 
   /**
-   * Add a method to the class, the method data given as "raw" bytes (probably
-   * obtained from a ClassReader).
+   * Add a method to the class, the method data given as "raw" bytes (probably obtained from a ClassReader).
    */
   public void addRawMethod(Element e) {
     methods.add(e);
   }
 
   /**
-   * Add a field to the class, the field data given as "raw" bytes (probably
-   * obtained from a ClassReader).
+   * Add a field to the class, the field data given as "raw" bytes (probably obtained from a ClassReader).
    */
   public void addRawField(Element e) {
     fields.add(e);
@@ -570,14 +547,10 @@ public final class ClassWriter implements ClassConstants {
   /**
    * Add a method to the class.
    * 
-   * @param access
-   *          the access flags
-   * @param name
-   *          the method name
-   * @param type
-   *          the method type in JVM format (e.g., V(ILjava/lang/Object;) )
-   * @param attributes
-   *          the attributes in raw form, one Element per attribute
+   * @param access the access flags
+   * @param name the method name
+   * @param type the method type in JVM format (e.g., V(ILjava/lang/Object;) )
+   * @param attributes the attributes in raw form, one Element per attribute
    */
   public void addMethod(int access, String name, String type, Element[] attributes) {
     addMethod(access, addCPUtf8(name), addCPUtf8(type), attributes);
@@ -586,14 +559,10 @@ public final class ClassWriter implements ClassConstants {
   /**
    * Add a field to the class.
    * 
-   * @param access
-   *          the access flags
-   * @param name
-   *          the field name
-   * @param type
-   *          the field type in JVM format (e.g., I, Z, Ljava/lang/Object;)
-   * @param attributes
-   *          the attributes in raw form, one Element per attribute
+   * @param access the access flags
+   * @param name the field name
+   * @param type the field type in JVM format (e.g., I, Z, Ljava/lang/Object;)
+   * @param attributes the attributes in raw form, one Element per attribute
    */
   public void addField(int access, String name, String type, Element[] attributes) {
     addField(access, addCPUtf8(name), addCPUtf8(type), attributes);
@@ -601,7 +570,9 @@ public final class ClassWriter implements ClassConstants {
 
   static final class MemberElement extends Element {
     final private int access;
-    final private int name; 
+
+    final private int name;
+
     final private int type;
 
     final private Element[] attributes;
@@ -662,15 +633,10 @@ public final class ClassWriter implements ClassConstants {
   /**
    * Add a method to the class.
    * 
-   * @param access
-   *          the access flags
-   * @param name
-   *          the constant pool index of the method name
-   * @param type
-   *          the constant pool index of the method type in JVM format (e.g.,
-   *          V(ILjava/lang/Object;) )
-   * @param attributes
-   *          the attributes in raw form, one Element per attribute
+   * @param access the access flags
+   * @param name the constant pool index of the method name
+   * @param type the constant pool index of the method type in JVM format (e.g., V(ILjava/lang/Object;) )
+   * @param attributes the attributes in raw form, one Element per attribute
    */
   public void addMethod(int access, int name, int type, Element[] attributes) {
     // int idx=methods.size()-2;
@@ -685,15 +651,10 @@ public final class ClassWriter implements ClassConstants {
   /**
    * Add a field to the class.
    * 
-   * @param access
-   *          the access flags
-   * @param name
-   *          the constant pool index of the field name
-   * @param type
-   *          the constant pool index of the field type in JVM format (e.g., I,
-   *          Z, Ljava/lang/Object;)
-   * @param attributes
-   *          the attributes in raw form, one Element per attribute
+   * @param access the access flags
+   * @param name the constant pool index of the field name
+   * @param type the constant pool index of the field type in JVM format (e.g., I, Z, Ljava/lang/Object;)
+   * @param attributes the attributes in raw form, one Element per attribute
    */
   public void addField(int access, int name, int type, Element[] attributes) {
     fields.add(new MemberElement(access, name, type, attributes));
@@ -705,8 +666,7 @@ public final class ClassWriter implements ClassConstants {
   /**
    * Add an atttribute to the class.
    * 
-   * @param attribute
-   *          the attribute in raw form
+   * @param attribute the attribute in raw form
    */
   public void addClassAttribute(Element attribute) {
     classAttributes.add(attribute);
@@ -848,8 +808,8 @@ public final class ClassWriter implements ClassConstants {
   }
 
   /**
-   * After you've added everything you need to the class, call this method to
-   * generate the actual class file data. This can only be called once.
+   * After you've added everything you need to the class, call this method to generate the actual class file data. This can only be
+   * called once.
    */
   public byte[] makeBytes() throws IllegalArgumentException {
     if (buf != null) {
@@ -921,8 +881,7 @@ public final class ClassWriter implements ClassConstants {
   /**
    * Set the byte at offset 'offset' in 'buf' to the unsigned 8-bit value in v.
    * 
-   * @throws IllegalArgumentException
-   *           if buf is null
+   * @throws IllegalArgumentException if buf is null
    */
   public static void setUByte(byte[] buf, int offset, int v) throws IllegalArgumentException {
     if (buf == null) {
@@ -935,11 +894,9 @@ public final class ClassWriter implements ClassConstants {
   }
 
   /**
-   * Set the 4 bytes at offset 'offset' in 'buf' to the signed 32-bit value in
-   * v.
+   * Set the 4 bytes at offset 'offset' in 'buf' to the signed 32-bit value in v.
    * 
-   * @throws IllegalArgumentException
-   *           if buf is null
+   * @throws IllegalArgumentException if buf is null
    */
   public static void setInt(byte[] buf, int offset, int v) throws IllegalArgumentException {
     if (buf == null) {
@@ -955,8 +912,7 @@ public final class ClassWriter implements ClassConstants {
   }
 
   /**
-   * Set the 8 bytes at offset 'offset' in 'buf' to the signed 64-bit value in
-   * v.
+   * Set the 8 bytes at offset 'offset' in 'buf' to the signed 64-bit value in v.
    */
   public static void setLong(byte[] buf, int offset, long v) throws IllegalArgumentException {
     setInt(buf, offset, (int) (v >> 32));
@@ -978,11 +934,9 @@ public final class ClassWriter implements ClassConstants {
   }
 
   /**
-   * Set the 2 bytes at offset 'offset' in 'buf' to the unsigned 16-bit value in
-   * v.
+   * Set the 2 bytes at offset 'offset' in 'buf' to the unsigned 16-bit value in v.
    * 
-   * @throws IllegalArgumentException
-   *           if buf is null
+   * @throws IllegalArgumentException if buf is null
    */
   public static void setUShort(byte[] buf, int offset, int v) throws IllegalArgumentException {
     if (buf == null) {

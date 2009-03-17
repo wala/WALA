@@ -15,22 +15,16 @@ import java.util.ArrayList;
 import java.util.IdentityHashMap;
 
 /**
- * The MethodEditor is the core of the ShrikeBT code rewriting mechanism. To
- * rewrite code, construct a MethodEditor initialized with the intial code for
- * the method. Then perform a series of passes. In each pass you call
- * beginPass(), insert a number of patches using the insert...() or replace...()
- * methods, then optionally call applyPatches() to update the code with your
- * changes, then call endPass(). The end of each pass updates the code in the
- * MethodData that you passed in, so the new code can be extracted from that
- * MethodData object. Note that if applyPatches() is not called, or it is called
- * but no patches had been inserted, then the code will not be updated and that
- * pass is essentially aborted.
+ * The MethodEditor is the core of the ShrikeBT code rewriting mechanism. To rewrite code, construct a MethodEditor initialized with
+ * the intial code for the method. Then perform a series of passes. In each pass you call beginPass(), insert a number of patches
+ * using the insert...() or replace...() methods, then optionally call applyPatches() to update the code with your changes, then
+ * call endPass(). The end of each pass updates the code in the MethodData that you passed in, so the new code can be extracted from
+ * that MethodData object. Note that if applyPatches() is not called, or it is called but no patches had been inserted, then the
+ * code will not be updated and that pass is essentially aborted.
  * 
- * A patch is simply a subclass of MethodEditor.Patch, representing a code
- * sequence to insert into the method. Each patch class implements one method,
- * emitTo(), which writes the patch code into the code stream using the provided
- * MethodEditor.Output instance. Anonymous inner classes are very useful for
- * writing patches.
+ * A patch is simply a subclass of MethodEditor.Patch, representing a code sequence to insert into the method. Each patch class
+ * implements one method, emitTo(), which writes the patch code into the code stream using the provided MethodEditor.Output
+ * instance. Anonymous inner classes are very useful for writing patches.
  * 
  * Patches can be inserted at the following points:
  * <ul>
@@ -39,52 +33,60 @@ import java.util.IdentityHashMap;
  * <li>Replacing a particular instruction
  * <li>Handling an exception on a particular instruction
  * <li>Handling an exception anywhere in the method
- * <li>After the end of the method, where code will not normally be executed,
- * but can be branched to by another patch
+ * <li>After the end of the method, where code will not normally be executed, but can be branched to by another patch
  * </ul>
- * Patch application is deterministic; if two patches are applied at the same
- * point, then the order of application determines the order of code generation,
- * in a way specified by the particular application point. See the patch
- * application methods below.
+ * Patch application is deterministic; if two patches are applied at the same point, then the order of application determines the
+ * order of code generation, in a way specified by the particular application point. See the patch application methods below.
  * 
- * MethodEditor relies on labels. A label is an integer representing a point in
- * the code. Labels are valid only during a single pass; at the end of each
- * pass, instructions are reordered and old labels become invalid. At the
- * beginning of a pass every instruction in the instructions array is labelled
- * with the index of that instruction in the array. During instrumentation new
- * labels can be allocated by calling MethodEditor.allocateLabel(); control
- * instructions can be created referring to these new labels or the existing
- * labels. At the end of a pass, as patch code is spliced into the method body,
- * all instructions are updated to refer to the new labels which are simply the
- * indices of instructions in the instruction array.
+ * MethodEditor relies on labels. A label is an integer representing a point in the code. Labels are valid only during a single
+ * pass; at the end of each pass, instructions are reordered and old labels become invalid. At the beginning of a pass every
+ * instruction in the instructions array is labelled with the index of that instruction in the array. During instrumentation new
+ * labels can be allocated by calling MethodEditor.allocateLabel(); control instructions can be created referring to these new
+ * labels or the existing labels. At the end of a pass, as patch code is spliced into the method body, all instructions are updated
+ * to refer to the new labels which are simply the indices of instructions in the instruction array.
  */
 public final class MethodEditor {
   private static final ExceptionHandler[] noHandlers = new ExceptionHandler[0];
 
   /** Records which original bytecode instruction each Instruction belongs to. */
   private int[] instructionsToBytecodes;
+
   @NonNull
   private IInstruction[] instructions;
+
   private ExceptionHandler[][] handlers;
 
   final private MethodData methodInfo;
 
   // working
   private static final int BEFORE_PASS = 0x01;
+
   private static final int DURING_PASS = 0x02;
+
   private static final int EMITTING_CODE = 0x04;
+
   private static final int BEFORE_END_PASS = 0x08;
 
   private int state = BEFORE_PASS;
+
   private int patchCount;
+
   private Patch[] beforePatches;
+
   private Patch[] afterPatches;
+
   private Patch[] lastAfterPatches;
+
   private Patch[] replacementPatches;
+
   private Patch methodStartPatches;
+
   private Patch afterMethodPatches;
+
   private HandlerPatch[] instructionHandlerPatches;
+
   private HandlerPatch methodHandlerPatches;
+
   private int nextLabel;
 
   /**
@@ -92,8 +94,11 @@ public final class MethodEditor {
    */
   private static class HandlerPatch {
     final HandlerPatch next;
+
     final String catchClass;
+
     final int label;
+
     final Patch patch;
 
     HandlerPatch(HandlerPatch next, String catchClass, int label, Patch patch) {
@@ -105,9 +110,9 @@ public final class MethodEditor {
   }
 
   /**
-   * Build an editor for the given method. This editor will write back its
-   * changes to the method info.
-   * @throws IllegalArgumentException  if info is null
+   * Build an editor for the given method. This editor will write back its changes to the method info.
+   * 
+   * @throws IllegalArgumentException if info is null
    */
   public MethodEditor(MethodData info) {
     if (info == null) {
@@ -120,8 +125,8 @@ public final class MethodEditor {
   }
 
   /**
-   * Build an editor for specific method data. After patching the code you can
-   * retrieve the new code, handlers and instructions-to-bytecode-offsets map.
+   * Build an editor for specific method data. After patching the code you can retrieve the new code, handlers and
+   * instructions-to-bytecode-offsets map.
    */
   public MethodEditor(Instruction[] instructions, ExceptionHandler[][] handlers, int[] instructionsToBytecodes) {
     methodInfo = null;
@@ -189,16 +194,21 @@ public final class MethodEditor {
   }
 
   /**
-   * Output is the interface that patches use to emit their code into a method
-   * body.
+   * Output is the interface that patches use to emit their code into a method body.
    */
   public final static class Output {
     final ArrayList<IInstruction> newInstructions = new ArrayList<IInstruction>();
+
     final ArrayList<ExceptionHandler[]> newInstructionHandlers = new ArrayList<ExceptionHandler[]>();
+
     int[] instructionsToBytecodes = new int[10];
+
     final int[] labelDefs;
+
     ExceptionHandler[] additionalHandlers;
+
     int originalBytecode;
+
     boolean codeChanged = false;
 
     Output(int numLabels) {
@@ -206,8 +216,8 @@ public final class MethodEditor {
     }
 
     /**
-     * Emit a label definition at the current point in the code. The label must
-     * have been previously allocated using MethodEditor.allocateLabel.
+     * Emit a label definition at the current point in the code. The label must have been previously allocated using
+     * MethodEditor.allocateLabel.
      */
     public void emitLabel(int label) {
       labelDefs[label] = newInstructions.size();
@@ -222,8 +232,7 @@ public final class MethodEditor {
     }
 
     /**
-     * Emit an instruction with some exception handlers at the current point in
-     * the code.
+     * Emit an instruction with some exception handlers at the current point in the code.
      */
     public void emit(Instruction i, ExceptionHandler[] handlers) {
       codeChanged = true;
@@ -261,8 +270,8 @@ public final class MethodEditor {
     }
 
     /**
-     * Emit a list of instructions with some exception handlers at the current
-     * point in the code. All the instructions are covered by all the handlers.
+     * Emit a list of instructions with some exception handlers at the current point in the code. All the instructions are covered
+     * by all the handlers.
      */
     public void emit(Instruction[] instrs, ExceptionHandler[] handlers) {
       if (instrs.length == 0) {
@@ -343,8 +352,7 @@ public final class MethodEditor {
   }
 
   /**
-   * Allocate a fresh label. This must be called during a pass and not during
-   * code emission.
+   * Allocate a fresh label. This must be called during a pass and not during code emission.
    */
   public int allocateLabel() throws IllegalArgumentException {
     verifyState(DURING_PASS);
@@ -352,13 +360,12 @@ public final class MethodEditor {
   }
 
   /**
-   * Insert code to be executed whenever the method is entered. This code is not
-   * protected by any exception handlers (other than handlers declared in the
-   * patch).
+   * Insert code to be executed whenever the method is entered. This code is not protected by any exception handlers (other than
+   * handlers declared in the patch).
    * 
-   * When multiple 'start' patches are given, the last one added is first in
-   * execution order.
-   * @throws IllegalArgumentException  if p is null
+   * When multiple 'start' patches are given, the last one added is first in execution order.
+   * 
+   * @throws IllegalArgumentException if p is null
    */
   public void insertAtStart(Patch p) {
     if (p == null) {
@@ -370,13 +377,12 @@ public final class MethodEditor {
   }
 
   /**
-   * Insert code to be executed before the instruction. Branches to the
-   * instruction will branch to this code. Exception handlers that cover the
-   * instruction will be extended to cover the patch.
+   * Insert code to be executed before the instruction. Branches to the instruction will branch to this code. Exception handlers
+   * that cover the instruction will be extended to cover the patch.
    * 
-   * When multiple 'before' patches are given, the last one added is first in
-   * execution order.
-   * @throws IllegalArgumentException  if p is null
+   * When multiple 'before' patches are given, the last one added is first in execution order.
+   * 
+   * @throws IllegalArgumentException if p is null
    */
   public void insertBefore(int i, Patch p) {
     if (p == null) {
@@ -388,33 +394,34 @@ public final class MethodEditor {
   }
 
   /**
-   * Insert code to be executed after the instruction. This code will only
-   * execute if the instruction "falls through". For example, code inserted
-   * after a "goto" will never be executed. Likewise if the instruction throws
-   * an execution the 'after' code will not be executed. Exception handlers that
-   * cover the instruction will be extended to cover the patch.
+   * Insert code to be executed after the instruction. This code will only execute if the instruction "falls through". For example,
+   * code inserted after a "goto" will never be executed. Likewise if the instruction throws an execution the 'after' code will not
+   * be executed. Exception handlers that cover the instruction will be extended to cover the patch.
    * 
-   * When multiple 'after' patches are given, the last one added is LAST in
-   * execution order.
+   * When multiple 'after' patches are given, the last one added is LAST in execution order.
    */
   public void insertAfter(int i, Patch p) {
     verifyState(DURING_PASS);
-    if (afterPatches[i] == null) {
-      lastAfterPatches[i] = afterPatches[i] = p.insert(null);
-    } else {
-      lastAfterPatches[i].next = p;
-      lastAfterPatches[i] = p.insert(null);
+    try {
+      if (afterPatches[i] == null) {
+        lastAfterPatches[i] = afterPatches[i] = p.insert(null);
+      } else {
+        lastAfterPatches[i].next = p;
+        lastAfterPatches[i] = p.insert(null);
+      }
+      patchCount++;
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid i");
     }
-    patchCount++;
   }
 
   /**
-   * Insert code to replace the instruction. Exception handlers that cover the
-   * instruction will cover the patch.
+   * Insert code to replace the instruction. Exception handlers that cover the instruction will cover the patch.
    * 
    * Multiple replacements are not allowed.
-   * @throws NullPointerException  if p is null
-   * @throws IllegalArgumentException  if p is null
+   * 
+   * @throws NullPointerException if p is null
+   * @throws IllegalArgumentException if p is null
    */
   public void replaceWith(int i, Patch p) throws NullPointerException {
     if (p == null) {
@@ -429,32 +436,30 @@ public final class MethodEditor {
   }
 
   /**
-   * An "instruction exception handler" handles exceptions generated by a
-   * specific instruction (including patch code that may be inserted before,
-   * after, or instead of the instruction in this pass). If the patch code falls
-   * through, control resumes with the next instruction. This exception handler
-   * handles exceptions before any exception handler already attached to the
-   * instruction. Furthermore, the patch itself is covered by the exception
-   * handlers already attached to the instruction.
+   * An "instruction exception handler" handles exceptions generated by a specific instruction (including patch code that may be
+   * inserted before, after, or instead of the instruction in this pass). If the patch code falls through, control resumes with the
+   * next instruction. This exception handler handles exceptions before any exception handler already attached to the instruction.
+   * Furthermore, the patch itself is covered by the exception handlers already attached to the instruction.
    * 
-   * If multiple instruction exception handlers are given, then the last one
-   * added handles the exception first; if an exception is rethrown, then the
-   * next-to-last one added handles that exception, etc.
+   * If multiple instruction exception handlers are given, then the last one added handles the exception first; if an exception is
+   * rethrown, then the next-to-last one added handles that exception, etc.
    */
   public void addInstructionExceptionHandler(int i, String catchClass, Patch p) {
     verifyState(DURING_PASS);
-    instructionHandlerPatches[i] = new HandlerPatch(instructionHandlerPatches[i], catchClass, allocateLabel(), p);
-    patchCount++;
+    try {
+      instructionHandlerPatches[i] = new HandlerPatch(instructionHandlerPatches[i], catchClass, allocateLabel(), p);
+      patchCount++;
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid i: " + i);
+    }
   }
 
   /**
-   * A "method exception handler" handles exceptions generated anywhere in the
-   * method. The patch code must not fall through; it must return or throw an
-   * exception.
+   * A "method exception handler" handles exceptions generated anywhere in the method. The patch code must not fall through; it must
+   * return or throw an exception.
    * 
-   * If multiple method exception handlers are given, then the last one added
-   * handles the exception first; if an exception is rethrown, then the
-   * next-to-last one added handles that exception, etc.
+   * If multiple method exception handlers are given, then the last one added handles the exception first; if an exception is
+   * rethrown, then the next-to-last one added handles that exception, etc.
    */
   public void addMethodExceptionHandler(String catchClass, Patch p) {
     verifyState(DURING_PASS);
@@ -463,11 +468,11 @@ public final class MethodEditor {
   }
 
   /**
-   * This method inserts code that will be placed after the method body. This
-   * code will not be executed normally, but it can emit label definitions that
-   * other patches can branch to. No exception handlers cover this code (other
-   * than exception handlers emitted by patch p itself).
-   * @throws IllegalArgumentException  if p is null
+   * This method inserts code that will be placed after the method body. This code will not be executed normally, but it can emit
+   * label definitions that other patches can branch to. No exception handlers cover this code (other than exception handlers
+   * emitted by patch p itself).
+   * 
+   * @throws IllegalArgumentException if p is null
    */
   public void insertAfterBody(Patch p) {
     if (p == null) {
@@ -479,8 +484,7 @@ public final class MethodEditor {
   }
 
   /**
-   * @return the MethodData used to create this editor, or null if no MethodData
-   *         is linked to this editor
+   * @return the MethodData used to create this editor, or null if no MethodData is linked to this editor
    */
   public MethodData getData() {
     return methodInfo;
@@ -507,11 +511,9 @@ public final class MethodEditor {
   }
 
   /**
-   * This method finishes a pass. All code is updated; instructions are
-   * reordered and old labels may not be valid.
+   * This method finishes a pass. All code is updated; instructions are reordered and old labels may not be valid.
    * 
-   * If no patches were issued, we don't need to do anything at all; this case
-   * is detected quickly and no updates are made.
+   * If no patches were issued, we don't need to do anything at all; this case is detected quickly and no updates are made.
    * 
    * @return true iff non-trivial patches were applied
    */
@@ -657,8 +659,7 @@ public final class MethodEditor {
   }
 
   /**
-   * Apply Visitor v to each instruction in the code, for the purpose of
-   * patching the code.
+   * Apply Visitor v to each instruction in the code, for the purpose of patching the code.
    */
   public void visitInstructions(Visitor v) {
     verifyState(DURING_PASS);
@@ -670,12 +671,12 @@ public final class MethodEditor {
   }
 
   /**
-   * A specialized Instruction.Visitor providing convenience methods for
-   * inserting patches. In particular it maintains a notion of the "current
-   * position" in the code array.
+   * A specialized Instruction.Visitor providing convenience methods for inserting patches. In particular it maintains a notion of
+   * the "current position" in the code array.
    */
   public static class Visitor extends IInstruction.Visitor {
     private int index;
+
     private MethodEditor editor;
 
     /**
@@ -717,11 +718,8 @@ public final class MethodEditor {
     /**
      * Add an exception handler to the current instruction.
      * 
-     * @param catchClass
-     *          the JVM type for the exception to be caught (e.g.,
-     *          Ljava.io.IOException;), or null to catch all exceptions
-     * @param p
-     *          the code to handle the exception
+     * @param catchClass the JVM type for the exception to be caught (e.g., Ljava.io.IOException;), or null to catch all exceptions
+     * @param p the code to handle the exception
      */
     final public void addInstructionExceptionHandler(String catchClass, Patch p) {
       editor.addInstructionExceptionHandler(index, catchClass, p);

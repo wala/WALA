@@ -126,6 +126,9 @@ public final class ConstantValueWriter extends ClassWriter.Element {
    * Set the constant value to a String.
    */
   public void setString(String value) {
+    if (value == null) {
+      throw new IllegalArgumentException("null value");
+    }
     this.index = w.addCPString(value);
   }
 

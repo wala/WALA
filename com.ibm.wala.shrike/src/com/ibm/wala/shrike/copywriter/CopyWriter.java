@@ -64,7 +64,7 @@ public class CopyWriter {
   }
 
   public static void main(String[] args) throws Exception {
-    if (args.length == 0) {
+    if (args == null || args.length == 0) {
       System.err.println(USAGE);
       System.exit(1);
     }
