@@ -37,9 +37,6 @@ import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * A graph of basic blocks.
- * 
- * @author sfink
- * @author roca
  */
 public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
 
@@ -254,7 +251,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
      * 
      * @param last the last instruction in a basic block.
      */
-    private void addExceptionalEdges(IInstruction last) {
+    protected void addExceptionalEdges(IInstruction last) {
       IClassHierarchy cha = getMethod().getClassHierarchy();
       if (last.isPEI()) {
         Collection<TypeReference> exceptionTypes = null;

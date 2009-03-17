@@ -38,13 +38,7 @@ import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.viz.IFDSExplorer;
 
 /**
- * 
  * Interprocedural control-flow graph, constructed lazily.
- * 
- * 
- * @author sfink
- * @author Julian Dolby
- * @author Manu Sridharan
  */
 public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> implements NumberedGraph<BasicBlockInContext<T>> {
 
@@ -160,8 +154,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * @param instrs the instructions for node n
    * @param bb a basic block in the CFG
    */
-  private void addEdgesToNonEntryBlock(CGNode n, ControlFlowGraph<?, T> cfg, SSAInstruction[] instrs, T bb) {
-
+  protected void addEdgesToNonEntryBlock(CGNode n, ControlFlowGraph<?, T> cfg, SSAInstruction[] instrs, T bb) {
     if (DEBUG_LEVEL > 1) {
       System.err.println("addEdgesToNonEntryBlock: " + bb);
       System.err.println("nPred: " + cfg.getPredNodeCount(bb));
@@ -188,37 +181,6 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
         System.err.println("Last instruction is : " + inst);
       }
       if (inst instanceof SSAAbstractInvokeInstruction) {
-        // a previous instruction is a call instruction. If necessary,
-        // add an edge from the exit() of each target of the call.
-        // IInvokeInstruction call = (IInvokeInstruction) inst;
-        // CallSiteReference site = makeCallSiteReference(n.getMethod().getDeclaringClass().getClassLoader().getReference(), cfg
-        // .getProgramCounter(index), call);
-        // if (DEBUG_LEVEL > 1) {
-        // System.err.println("got Site: " + site);
-        // }
-        // boolean irrelevantTargets = false;
-        // for (Iterator ts = cg.getPossibleTargets(n, site).iterator(); ts.hasNext();) {
-        // CGNode tn = (CGNode) ts.next();
-        // if (!relevant.accepts(tn)) {
-        // if (DEBUG_LEVEL > 1) {
-        // System.err.println("Irrelevant target: " + tn);
-        // }
-        // irrelevantTargets = true;
-        // continue;
-        // }
-        //
-        // if (DEBUG_LEVEL > 1) {
-        // System.err.println("Relevant target: " + tn);
-        // }
-        // // add an edge from tn exit to this node
-        // ControlFlowGraph<? extends T> tcfg = getCFG(tn);
-        // // tcfg might be null if tn is an unmodelled native method
-        // if (tcfg != null) {
-        // addEdgesFromExitToReturn(n, bb, tn, tcfg);
-        // addEdgesFromCallToEntry(n, pb, tn, tcfg);
-        // }
-        // }
-
         if (CALL_TO_RETURN_EDGES) {
           // Add a "normal" edge from the predecessor block to this block.
           BasicBlockInContext<T> p = new BasicBlockInContext<T>(n, pb);
