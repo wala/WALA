@@ -44,6 +44,9 @@ public class MapUtil {
   }
 
   public static <K> MutableIntSet findOrCreateMutableIntSet(Map<K, MutableIntSet> M, K key){
+    if (M == null) {
+      throw new IllegalArgumentException("M is null");
+    }
     MutableIntSet mis = M.get(key);
     if (mis == null){
       mis = MutableSparseIntSet.makeEmpty();
