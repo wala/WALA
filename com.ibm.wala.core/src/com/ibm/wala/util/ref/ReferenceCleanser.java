@@ -65,7 +65,6 @@ public class ReferenceCleanser {
   /**
    * A debugging aid. TODO: move this elsewhere
    */
-  @SuppressWarnings("deprecation")
   public static void clearSoftCaches() {
     float occupancy = 1f - ((float)Runtime.getRuntime().freeMemory() / (float)Runtime.getRuntime().totalMemory());
     if (occupancy < OCCUPANCY_TRIGGER) {
@@ -74,7 +73,6 @@ public class ReferenceCleanser {
     AnalysisCache cache = getAnalysisCache();
     if (cache != null) {
       cache.getSSACache().wipe();
-      cache.getCFGCache().wipe();
     }
     IClassHierarchy cha = getClassHierarchy();
     if (cha != null) {

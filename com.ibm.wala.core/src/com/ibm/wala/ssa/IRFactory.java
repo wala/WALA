@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
-import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
 
@@ -28,9 +27,6 @@ import com.ibm.wala.ipa.callgraph.Context;
 public interface IRFactory<T extends IMethod> {
 
   IR makeIR(T method, Context C, SSAOptions options);
-
-  @Deprecated
-  ControlFlowGraph makeCFG(T method, Context C);
   
   /**
    * Does this factory always return the same IR for a method, regardless of context?
