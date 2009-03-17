@@ -132,6 +132,9 @@ public final class MethodEditor {
     if (instructions == null) {
       throw new IllegalArgumentException("null instructions");
     }
+    if (handlers == null) {
+      throw new IllegalArgumentException("null handlers");
+    }
     methodInfo = null;
     this.instructionsToBytecodes = instructionsToBytecodes;
     this.instructions = instructions;
@@ -466,6 +469,9 @@ public final class MethodEditor {
    */
   public void addMethodExceptionHandler(String catchClass, Patch p) {
     verifyState(DURING_PASS);
+    if (p == null) {
+      throw new IllegalArgumentException("null p");
+    }
     methodHandlerPatches = new HandlerPatch(methodHandlerPatches, catchClass, allocateLabel(), p);
     patchCount++;
   }

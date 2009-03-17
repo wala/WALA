@@ -58,6 +58,14 @@ public class Analyzer {
     if (instructions == null) {
       throw new IllegalArgumentException("null instructions");
     }
+    if (handlers == null) {
+      throw new IllegalArgumentException("null handlers");
+    }
+    for (IInstruction i : instructions) {
+      if (i == null) {
+        throw new IllegalArgumentException("null instruction is illegal");
+      }
+    }
     this.classType = classType;
     this.isStatic = isStatic;
     this.signature = signature;

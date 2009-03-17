@@ -887,10 +887,11 @@ public final class ClassWriter implements ClassConstants {
     if (buf == null) {
       throw new IllegalArgumentException("buf is null");
     }
-    if (offset >= buf.length) {
-      throw new IllegalArgumentException("illegal offset " + offset);
+    try {
+      buf[offset] = (byte) v;
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid offset: " + offset);
     }
-    buf[offset] = (byte) v;
   }
 
   /**

@@ -70,6 +70,9 @@ public class CopyWriter {
     }
 
     for (int i = 0; i < args.length - 1; i++) {
+      if (args[i] == null) {
+        throw new IllegalArgumentException("args[" + i + "] is null");
+      }
       if (args[i].equals("-c")) {
         copyright = "\u00A9 Copyright " + args[i + 1];
         String[] newArgs = new String[args.length - 2];

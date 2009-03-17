@@ -24,11 +24,9 @@ import com.ibm.wala.shrikeBT.IInvokeInstruction.Dispatch;
 /**
  * This class contains miscellaneous useful functions.
  * 
- * In the documentation below, we refer to a 'Java class name'. These are
- * formatted according to the rules for Class.forName() and Class.getName(). A
- * Java class name must use '$' to separate inner class names from their
- * containing class. There is no way to for Shrike to disambiguate 'A.B'
- * otherwise.
+ * In the documentation below, we refer to a 'Java class name'. These are formatted according to the rules for Class.forName() and
+ * Class.getName(). A Java class name must use '$' to separate inner class names from their containing class. There is no way to for
+ * Shrike to disambiguate 'A.B' otherwise.
  */
 @Internal
 public final class Util {
@@ -38,7 +36,7 @@ public final class Util {
 
   /**
    * @return the JVM "stack word size" for the given JVM type
-   * @throws IllegalArgumentException  if s is null
+   * @throws IllegalArgumentException if s is null
    */
   public static byte getWordSize(String s) {
     if (s == null || s.length() == 0) {
@@ -48,8 +46,7 @@ public final class Util {
   }
 
   /**
-   * @return the JVM "stack word size" for the given JVM type, looking at index
-   *         'index'
+   * @return the JVM "stack word size" for the given JVM type, looking at index 'index'
    */
   static byte getWordSize(String s, int index) {
     switch (s.charAt(index)) {
@@ -64,8 +61,7 @@ public final class Util {
   }
 
   /**
-   * Computes the character length of the internal JVM type given by
-   * s.substring(i).
+   * Computes the character length of the internal JVM type given by s.substring(i).
    */
   private static int getTypeLength(String s, int i) {
     switch (s.charAt(i)) {
@@ -79,10 +75,10 @@ public final class Util {
   }
 
   /**
-   * Compute the total number of JVM "stack words" occupied by the method
-   * parameters for method signature "type". Any "this" parameter is not
-   * included.
-   * @throws IllegalArgumentException  if type is null
+   * Compute the total number of JVM "stack words" occupied by the method parameters for method signature "type". Any "this"
+   * parameter is not included.
+   * 
+   * @throws IllegalArgumentException if type is null
    */
   public static int getParamsWordSize(String type) throws IllegalArgumentException {
     if (type == null) {
@@ -102,9 +98,10 @@ public final class Util {
   }
 
   /**
-   * Convert a fully-qualified Java class name ('.' separated) into an internal
-   * JVM type name ('/' separated, starting with 'L' and ending with ';').
-   * @throws IllegalArgumentException  if c is null
+   * Convert a fully-qualified Java class name ('.' separated) into an internal JVM type name ('/' separated, starting with 'L' and
+   * ending with ';').
+   * 
+   * @throws IllegalArgumentException if c is null
    */
   public static String makeType(String c) {
     if (c == null) {
@@ -120,9 +117,8 @@ public final class Util {
   }
 
   /**
-   * Convert a fully-qualified Java type name (either primitive or class name,
-   * '.' separated) into an internal JVM type name (one letter for primitive and
-   * '/' separated, starting with 'L' and ending with ';' for class name).
+   * Convert a fully-qualified Java type name (either primitive or class name, '.' separated) into an internal JVM type name (one
+   * letter for primitive and '/' separated, starting with 'L' and ending with ';' for class name).
    */
   public static String makeTypeAll(String c) {
     String alias = typeAliases.get(c);
@@ -135,7 +131,8 @@ public final class Util {
 
   /**
    * Convert a JVM type name back into a Java class name.
-   * @throws IllegalArgumentException  if t is null
+   * 
+   * @throws IllegalArgumentException if t is null
    */
   public static String makeClass(String t) throws IllegalArgumentException {
     if (t == null) {
@@ -151,8 +148,7 @@ public final class Util {
   }
 
   /**
-   * Convert a JVM type name (either for a primitive or a class name) into a
-   * Java type name.
+   * Convert a JVM type name (either for a primitive or a class name) into a Java type name.
    */
   static String makeClassAll(String t) {
     String alias = classAliases.get(t);
@@ -187,9 +183,10 @@ public final class Util {
   }
 
   /**
-   * Compute the JVM type name for an actual Java class. Names such as "int",
-   * "void", etc are also converted to their JVM type names.
-   * @throws IllegalArgumentException  if c is null
+   * Compute the JVM type name for an actual Java class. Names such as "int", "void", etc are also converted to their JVM type
+   * names.
+   * 
+   * @throws IllegalArgumentException if c is null
    */
   public static String makeType(Class<?> c) {
     if (c == null) {
@@ -205,9 +202,9 @@ public final class Util {
   }
 
   /**
-   * Compute the number of parameters given by method signature "type". Any
-   * "this" parameter is not included.
-   * @throws IllegalArgumentException  if type == null
+   * Compute the number of parameters given by method signature "type". Any "this" parameter is not included.
+   * 
+   * @throws IllegalArgumentException if type == null
    */
   static int getParamsCount(String type) throws IllegalArgumentException {
     if (type == null || type.length() < 2) {
@@ -216,21 +213,23 @@ public final class Util {
     int index = 1;
     int count = 0;
 
-    while (type.charAt(index) != ')') {
-      count++;
-      index += getTypeLength(type, index);
+    try {
+      while (type.charAt(index) != ')') {
+        count++;
+        index += getTypeLength(type, index);
+      }
+      return count;
+    } catch (StringIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid type: " + type);
     }
-    return count;
   }
 
   /**
    * Extract the types of the parameters given by method signature "type".
    * 
-   * @param thisClassType
-   *          null if the method is static, otherwise the type of "this"
-   * @return an array of the parameter types in order, including "this" as the
-   *         first parameter if thisClassType was non-null
-   * @throws IllegalArgumentException  if type == null
+   * @param thisClassType null if the method is static, otherwise the type of "this"
+   * @return an array of the parameter types in order, including "this" as the first parameter if thisClassType was non-null
+   * @throws IllegalArgumentException if type == null
    */
   public static String[] getParamsTypes(String thisClassType, String type) throws IllegalArgumentException {
     if (type == null) {
@@ -255,10 +254,10 @@ public final class Util {
   }
 
   /**
-   * Compute the types of the local variables on entry to a method. Similar to
-   * "getParamsTypes" except null array entries are inserted to account for
-   * unused local variables because of 2-word parameter values.
-   * @throws IllegalArgumentException  if type == null
+   * Compute the types of the local variables on entry to a method. Similar to "getParamsTypes" except null array entries are
+   * inserted to account for unused local variables because of 2-word parameter values.
+   * 
+   * @throws IllegalArgumentException if type == null
    */
   public static String[] getParamsTypesInLocals(String thisClassType, String type) throws IllegalArgumentException {
     if (type == null) {
@@ -284,9 +283,9 @@ public final class Util {
   }
 
   /**
-   * Compute the promoted type that the JVM uses to manipulate values of type
-   * "t" on its working stack.
-   * @throws IllegalArgumentException  if t is null
+   * Compute the promoted type that the JVM uses to manipulate values of type "t" on its working stack.
+   * 
+   * @throws IllegalArgumentException if t is null
    */
   public static String getStackType(String t) {
     if (t == null || t.length() < 1) {
@@ -345,7 +344,8 @@ public final class Util {
 
   /**
    * Get the return type from a method signature.
-   * @throws IllegalArgumentException  if s is null
+   * 
+   * @throws IllegalArgumentException if s is null
    */
   public static String getReturnType(String s) {
     if (s == null) {
@@ -364,7 +364,8 @@ public final class Util {
 
   /**
    * Given a Java Method, compute the VM-style type signature.
-   * @throws IllegalArgumentException  if params == null
+   * 
+   * @throws IllegalArgumentException if params == null
    */
   public static String computeSignature(Class<?>[] params, Class<?> result) throws IllegalArgumentException {
     if (params == null) {
@@ -381,9 +382,10 @@ public final class Util {
   }
 
   /**
-   * Make an Instruction which loads the value of a field, given its name and
-   * Java Class. The field type is obtained using reflection.
-   * @throws IllegalArgumentException  if c is null
+   * Make an Instruction which loads the value of a field, given its name and Java Class. The field type is obtained using
+   * reflection.
+   * 
+   * @throws IllegalArgumentException if c is null
    */
   public static GetInstruction makeGet(Class<?> c, String name) {
     if (c == null) {
@@ -400,9 +402,10 @@ public final class Util {
   }
 
   /**
-   * Make an Instruction which stores the value of a field, given its name and
-   * Java Class. The field type is obtained using reflection.
-   * @throws IllegalArgumentException  if c is null
+   * Make an Instruction which stores the value of a field, given its name and Java Class. The field type is obtained using
+   * reflection.
+   * 
+   * @throws IllegalArgumentException if c is null
    */
   public static PutInstruction makePut(Class<?> c, String name) {
     if (c == null) {
@@ -458,10 +461,10 @@ public final class Util {
   }
 
   /**
-   * Make an Instruction which calls a method, given its name, Java Class, and a
-   * list of parameter classes to use for overload resolution. Method
-   * information is obtained using reflection.
-   * @throws IllegalArgumentException  if name is null
+   * Make an Instruction which calls a method, given its name, Java Class, and a list of parameter classes to use for overload
+   * resolution. Method information is obtained using reflection.
+   * 
+   * @throws IllegalArgumentException if name is null
    */
   public static InvokeInstruction makeInvoke(Class<?> c, String name, Class<?>[] paramTypes) {
     if (name == null) {
@@ -502,18 +505,18 @@ public final class Util {
   }
 
   /**
-   * Make an Instruction which calls a method, given its name and Java Class.
-   * Method information is obtained using reflection. If there is more than one
-   * method with the given name, an error will be thrown.
-   * @throws IllegalArgumentException  if name is null
+   * Make an Instruction which calls a method, given its name and Java Class. Method information is obtained using reflection. If
+   * there is more than one method with the given name, an error will be thrown.
+   * 
+   * @throws IllegalArgumentException if name is null
    */
   public static InvokeInstruction makeInvoke(Class<?> c, String name) {
     return makeInvoke(c, name, null);
   }
 
   /**
-   * Compute the type index constant (Constants.TYPE_...) from the JVM type.
-   * Returns -1 if the type is not one of the predefined constants.
+   * Compute the type index constant (Constants.TYPE_...) from the JVM type. Returns -1 if the type is not one of the predefined
+   * constants.
    */
   static int getTypeIndex(String t) {
     if (t == null) {
