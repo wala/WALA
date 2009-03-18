@@ -16,9 +16,6 @@ import com.ibm.wala.util.strings.Atom;
 
 /**
  * Defines the meta-information that identifies a class loader. This is effectively a "name" for a class loader.
- * 
- * @author sfink
- * 
  */
 public class ClassLoaderReference implements Serializable {
 
