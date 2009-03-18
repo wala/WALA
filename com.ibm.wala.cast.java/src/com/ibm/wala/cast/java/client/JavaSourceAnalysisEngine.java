@@ -39,10 +39,6 @@ import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
- * @author julian dolby?
- * @author sfink. refactored to clean up eclipse utilities.
- * 
  */
 public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
 

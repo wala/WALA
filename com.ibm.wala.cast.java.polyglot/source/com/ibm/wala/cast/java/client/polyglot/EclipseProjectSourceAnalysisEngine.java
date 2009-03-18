@@ -15,7 +15,6 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaModelException;
 
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
@@ -93,7 +92,7 @@ public class EclipseProjectSourceAnalysisEngine extends EclipseProjectAnalysisEn
     try {
       scope = makeSourceAnalysisScope(); 
       if (getExclusionsFile() != null) {
-        scope.setExclusions(new FileOfClasses(new File(getExclusionsFile())));
+        scope.setExclusions(FileOfClasses.createFileOfClasses(new File(getExclusionsFile())));
       }
       EclipseProjectPath epath = getEclipseProjectPath();
  
@@ -109,7 +108,7 @@ public class EclipseProjectSourceAnalysisEngine extends EclipseProjectAnalysisEn
           scope.addToScope(app, m);
       }
       ClassLoaderReference src = ((JavaSourceAnalysisScope)scope).getSourceLoader();
-      for (Module m : epath.getModules(Loader.SOURCE, false)) {
+      for (Module m : epath.getModules(Loader.APPLICATION, false)) {
         scope.addToScope(src, m);
       }
 
@@ -144,7 +143,7 @@ public class EclipseProjectSourceAnalysisEngine extends EclipseProjectAnalysisEn
 
   @Override
   protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
-    return Util.makeMainEntrypoints(EclipseProjectPath.SOURCE_REF, cha);
+    return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha);
   }
 
   @Override

@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.ClassLoaderImpl;
 import com.ibm.wala.classLoader.IClassLoader;
@@ -36,7 +37,7 @@ public class PolyglotClassLoaderFactory extends ClassLoaderFactoryImpl {
 
   public PolyglotClassLoaderFactory(SetOfClasses exclusions, IRTranslatorExtension javaExtInfo) {
     super(exclusions);
-    fExtensionMap.put(EclipseProjectPath.SOURCE_REF, javaExtInfo);
+    fExtensionMap.put(JavaSourceAnalysisScope.SOURCE, javaExtInfo);
   }
 
   protected IRTranslatorExtension getExtensionFor(ClassLoaderReference clr) {
@@ -45,7 +46,7 @@ public class PolyglotClassLoaderFactory extends ClassLoaderFactoryImpl {
 
   protected IClassLoader makeNewClassLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, IClassLoader parent,
       AnalysisScope scope) throws IOException {
-    if (classLoaderReference.equals(EclipseProjectPath.SOURCE_REF)) {
+    if (classLoaderReference.equals(JavaSourceAnalysisScope.SOURCE)) {
       ClassLoaderImpl cl = new PolyglotSourceLoaderImpl(classLoaderReference, parent, getExclusions(), cha, getExtensionFor(classLoaderReference));
       cl.init(scope.getModules(classLoaderReference));
       return cl;
