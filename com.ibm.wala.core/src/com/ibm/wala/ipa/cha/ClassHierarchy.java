@@ -69,7 +69,7 @@ public class ClassHierarchy implements IClassHierarchy {
   final private HashMap<IClass, Node> map = HashMapFactory.make();
 
   /**
-   * TypeReference for the root type
+   * {@link TypeReference} for the root type
    */
   private TypeReference rootTypeRef;
 
@@ -132,7 +132,6 @@ public class ClassHierarchy implements IClassHierarchy {
    * @return Set the result set
    */
   private Set<IClass> computeSuperclasses(IClass klass) throws ClassHierarchyException {
-
     if (DEBUG) {
       System.err.println("computeSuperclasses: " + klass);
     }
@@ -142,11 +141,15 @@ public class ClassHierarchy implements IClassHierarchy {
 
     while (klass != null) {
       if (DEBUG) {
-        Trace.println("got superclass " + klass);
+        System.err.println("got superclass " + klass);
       }
       result.add(klass);
       klass = klass.getSuperclass();
-
+      if (klass != null && klass.getReference().getName().equals(rootTypeRef.getName())) {
+        if (!klass.getReference().getClassLoader().equals(rootTypeRef.getClassLoader())) {
+          throw new ClassHierarchyException("class " + klass + " is invalid, unexpected classloader");
+        }
+      }
     }
     return result;
   }
@@ -270,6 +273,11 @@ public class ClassHierarchy implements IClassHierarchy {
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");
     }
+    if (klass.getReference().getName().equals(rootTypeRef.getName())) {
+      if (!klass.getReference().getClassLoader().equals(rootTypeRef.getClassLoader())) {
+        throw new IllegalArgumentException("class " + klass + " is invalid, unexpected classloader");
+      }
+    }
     if (DEBUG) {
       Trace.println("Attempt to add class " + klass);
     }
@@ -357,8 +365,8 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Find the possible targets of a call to a method reference. Note that if the reference is to an instance initialization
-   * method, we assume the method was called with invokespecial rather than invokevirtual.
+   * Find the possible targets of a call to a method reference. Note that if the reference is to an instance initialization method,
+   * we assume the method was called with invokespecial rather than invokevirtual.
    * 
    * @param ref method reference
    * @return the set of IMethods that this call can resolve to.
@@ -618,8 +626,8 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Number the class hierarchy tree to support efficient subclass tests. After numbering the tree, n1 is a child of n2 iff n2.left <=
-   * n1.left ^ n1.left <= n2.right. Described as "relative numbering" by Vitek, Horspool, and Krall, OOPSLA 97
+   * Number the class hierarchy tree to support efficient subclass tests. After numbering the tree, n1 is a child of n2 iff n2.left
+   * <= n1.left ^ n1.left <= n2.right. Described as "relative numbering" by Vitek, Horspool, and Krall, OOPSLA 97
    * 
    * TODO: this implementation is recursive; un-recursify if needed
    */
