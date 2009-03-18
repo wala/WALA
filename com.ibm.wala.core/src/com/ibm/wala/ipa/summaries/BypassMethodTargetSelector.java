@@ -61,12 +61,12 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
   /**
    * Governing class hierarchy.
    */
-  private final IClassHierarchy cha;
+  protected final IClassHierarchy cha;
 
   /**
    * target selector to use for non-bypassed calls
    */
-  private final MethodTargetSelector parent;
+  protected final MethodTargetSelector parent;
 
   /**
    * for checking method target resolution via CHA
@@ -149,7 +149,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
    * @param m a method reference
    * @return a SyntheticMethod corresponding to m; or null if none is available.
    */
-  private SyntheticMethod findOrCreateSyntheticMethod(MethodReference m, boolean isStatic) {
+  protected SyntheticMethod findOrCreateSyntheticMethod(MethodReference m, boolean isStatic) {
     if (syntheticMethods.containsKey(m)) {
       return syntheticMethods.get(m);
     } else {
@@ -187,7 +187,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
    * @param m a method reference
    * @return a SyntheticMethod corresponding to m; or null if none is available.
    */
-  private SyntheticMethod findOrCreateSyntheticMethod(IMethod m, boolean isStatic) {
+  protected SyntheticMethod findOrCreateSyntheticMethod(IMethod m, boolean isStatic) {
     MethodReference ref = m.getReference();
     if (syntheticMethods.containsKey(ref)) {
       return syntheticMethods.get(ref);
