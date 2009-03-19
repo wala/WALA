@@ -130,7 +130,7 @@ public class SSABinaryOpInstruction extends SSAInstruction {
    */
   @Override
   public boolean isPEI() {
-    return mayBeInteger && operator == BinaryOpInstruction.Operator.DIV || operator == BinaryOpInstruction.Operator.REM;
+    return mayBeInteger && (operator == BinaryOpInstruction.Operator.DIV || operator == BinaryOpInstruction.Operator.REM);
   }
 
   /*

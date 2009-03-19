@@ -11,8 +11,7 @@
 package com.ibm.wala.shrikeBT;
 
 /**
- * This class represents binary operator instructions for which the operands and
- * the result all have the same type.
+ * This class represents binary operator instructions for which the operands and the result all have the same type.
  */
 final public class BinaryOpInstruction extends Instruction implements IBinaryOpInstruction {
   protected BinaryOpInstruction(short opcode) {
@@ -123,6 +122,6 @@ final public class BinaryOpInstruction extends Instruction implements IBinaryOpI
   }
 
   public boolean isPEI() {
-    return opcode == Constants.OP_idiv;
+    return opcode == Constants.OP_idiv || opcode == Constants.OP_ldiv || opcode == Constants.OP_irem || opcode == Constants.OP_lrem;
   }
 }
