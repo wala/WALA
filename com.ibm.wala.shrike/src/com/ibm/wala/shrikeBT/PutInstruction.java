@@ -142,6 +142,6 @@ public class PutInstruction extends Instruction implements IPutInstruction {
   }
 
   public boolean isPEI() {
-    return true;
+    return !isStatic();
   }
 }

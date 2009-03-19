@@ -155,6 +155,6 @@ public class GetInstruction extends Instruction implements IGetInstruction {
   }
 
   public boolean isPEI() {
-    return true;
+    return !isStatic();
   }
 }
