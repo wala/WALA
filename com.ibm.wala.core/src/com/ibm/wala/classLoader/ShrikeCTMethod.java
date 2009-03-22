@@ -17,6 +17,7 @@ import java.util.HashMap;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.Decoder;
 import com.ibm.wala.shrikeBT.shrikeCT.CTDecoder;
+import com.ibm.wala.shrikeCT.AnnotationsReader;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.CodeReader;
 import com.ibm.wala.shrikeCT.ExceptionsReader;
@@ -24,9 +25,10 @@ import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.shrikeCT.LineNumberTableReader;
 import com.ibm.wala.shrikeCT.LocalVariableTableReader;
 import com.ibm.wala.shrikeCT.RuntimeInvisibleAnnotationsReader;
+import com.ibm.wala.shrikeCT.RuntimeVisibleAnnotationsReader;
 import com.ibm.wala.shrikeCT.SignatureReader;
+import com.ibm.wala.shrikeCT.AnnotationsReader.UnimplementedException;
 import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
-import com.ibm.wala.shrikeCT.RuntimeInvisibleAnnotationsReader.UnimplementedException;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.types.generics.MethodTypeSignature;
@@ -269,17 +271,24 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
     return result;
   }
 
-  private RuntimeInvisibleAnnotationsReader getRuntimeInvisibleAnnotationsReader() {
+  private AnnotationsReader getAnnotationsReader(boolean runtimeInvisable) {
     ClassReader.AttrIterator iter = new AttrIterator();
     getClassReader().initMethodAttributeIterator(shrikeMethodIndex, iter);
 
     // search for the desired attribute
-    RuntimeInvisibleAnnotationsReader result = null;
+    AnnotationsReader result = null;
     try {
       for (; iter.isValid(); iter.advance()) {
-        if (iter.getName().equals("RuntimeInvisibleAnnotations")) {
-          result = new RuntimeInvisibleAnnotationsReader(iter);
-          break;
+        if (runtimeInvisable){
+          if (iter.getName().equals(RuntimeInvisibleAnnotationsReader.attrName)) {
+            result = new RuntimeInvisibleAnnotationsReader(iter);
+            break;
+          }
+        } else {
+          if (iter.getName().equals(RuntimeVisibleAnnotationsReader.attrName)) {
+            result = new RuntimeVisibleAnnotationsReader(iter);
+            break;
+          }
         }
       }
     } catch (InvalidClassFileException e) {
@@ -329,7 +338,18 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
    * read the runtime-invisible annotations from the class file
    */
   public Collection<Annotation> getRuntimeInvisibleAnnotations() throws InvalidClassFileException, UnimplementedException {
-    RuntimeInvisibleAnnotationsReader r = getRuntimeInvisibleAnnotationsReader();
+    return getAnnotations(true);
+  }
+
+  /**
+   * read the runtime-visible annotations from the class file
+   */
+  public Collection<Annotation> getRuntimeVisibleAnnotations() throws InvalidClassFileException, UnimplementedException {
+    return getAnnotations(false);
+  }
+
+  public Collection<Annotation> getAnnotations(boolean runtimeInvisable) throws InvalidClassFileException, UnimplementedException {
+    AnnotationsReader r = getAnnotationsReader(runtimeInvisable);
     if (r != null) {
       int[] offsets = r.getAnnotationOffsets();
       Collection<Annotation> result = HashSetFactory.make();
@@ -346,11 +366,11 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
   }
 
   /**
-   * Retrieves all the annotations associated with a given index. Returns null
+   * Retrieves all runtime-invisible annotations associated with a given index. Returns null
    * if the index is not valid or the annotation contains arrays.
    */
   public HashMap<String, String> getAnnotations(int index) {
-    RuntimeInvisibleAnnotationsReader r = getRuntimeInvisibleAnnotationsReader();
+    AnnotationsReader r = getAnnotationsReader(true);
     if (r == null)
       return null;
     int offsets[];

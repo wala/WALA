@@ -18,14 +18,16 @@ import java.util.List;
 
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.Constants;
+import com.ibm.wala.shrikeCT.AnnotationsReader;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.InnerClassesReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.shrikeCT.RuntimeInvisibleAnnotationsReader;
+import com.ibm.wala.shrikeCT.RuntimeVisibleAnnotationsReader;
 import com.ibm.wala.shrikeCT.SignatureReader;
+import com.ibm.wala.shrikeCT.AnnotationsReader.UnimplementedException;
 import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
-import com.ibm.wala.shrikeCT.RuntimeInvisibleAnnotationsReader.UnimplementedException;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
@@ -225,8 +227,16 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     reader.clear();
   }
 
-   public Collection<Annotation> getRuntimeInvisibleAnnotations() throws InvalidClassFileException, UnimplementedException {
-    RuntimeInvisibleAnnotationsReader r = getRuntimeInvisibleAnnotationsReader();
+  public Collection<Annotation> getRuntimeInvisibleAnnotations() throws InvalidClassFileException, UnimplementedException {
+    return getAnnotations(true);
+  }
+
+  public Collection<Annotation> getRuntimeVisibleAnnotations() throws InvalidClassFileException, UnimplementedException {
+    return getAnnotations(false);
+  }
+  
+  public Collection<Annotation> getAnnotations(boolean runtimeInvisable) throws InvalidClassFileException, UnimplementedException {
+    AnnotationsReader r = getAnnotationsReader(runtimeInvisable);
     if (r != null) {
       int[] offsets = r.getAnnotationOffsets();
       Collection<Annotation> result = HashSetFactory.make();
@@ -242,18 +252,25 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     }
   }
 
-  private RuntimeInvisibleAnnotationsReader getRuntimeInvisibleAnnotationsReader() throws InvalidClassFileException {
+  private AnnotationsReader getAnnotationsReader(boolean runtimeInvisable) throws InvalidClassFileException {
     ClassReader r = reader.get();
     ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
     r.initClassAttributeIterator(attrs);
 
     // search for the desired attribute
-    RuntimeInvisibleAnnotationsReader result = null;
+    AnnotationsReader result = null;
     try {
       for (; attrs.isValid(); attrs.advance()) {
-        if (attrs.getName().equals("RuntimeInvisibleAnnotations")) {
-          result = new RuntimeInvisibleAnnotationsReader(attrs);
-          break;
+        if (runtimeInvisable){
+          if (attrs.getName().equals(RuntimeInvisibleAnnotationsReader.attrName)) {
+            result = new RuntimeInvisibleAnnotationsReader(attrs);
+            break;
+          }
+        } else {
+          if (attrs.getName().equals(RuntimeVisibleAnnotationsReader.attrName)) {
+            result = new RuntimeVisibleAnnotationsReader(attrs);
+            break;
+          }
         }
       }
     } catch (InvalidClassFileException e) {
