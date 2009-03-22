@@ -22,6 +22,7 @@ import com.ibm.wala.shrikeBT.Decoder.InvalidBytecodeException;
 import com.ibm.wala.shrikeBT.shrikeCT.CTDecoder;
 import com.ibm.wala.shrikeBT.shrikeCT.ClassInstrumenter;
 import com.ibm.wala.shrikeBT.shrikeCT.OfflineInstrumenter;
+import com.ibm.wala.shrikeCT.AnnotationsReader;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.CodeReader;
@@ -31,6 +32,7 @@ import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.shrikeCT.LineNumberTableReader;
 import com.ibm.wala.shrikeCT.LocalVariableTableReader;
 import com.ibm.wala.shrikeCT.RuntimeInvisibleAnnotationsReader;
+import com.ibm.wala.shrikeCT.RuntimeVisibleAnnotationsReader;
 import com.ibm.wala.shrikeCT.SignatureReader;
 import com.ibm.wala.shrikeCT.SourceFileReader;
 
@@ -266,23 +268,12 @@ public class ClassPrinter {
       } else if (name.equals("Signature")) {
         SignatureReader sr = new SignatureReader(attrs);
         w.write("    signature: " + cr.getCP().getCPUtf8(sr.getSignatureCPIndex()) + "\n");
-      } else if (name.equals("RuntimeInvisibleAnnotations")) {
-        RuntimeInvisibleAnnotationsReader r = new RuntimeInvisibleAnnotationsReader(attrs);
-        try {
-          int[] annotations = r.getAnnotationOffsets();
-          for (int j : annotations) {
-            w.write("    Annotation type: " + r.getAnnotationType(j) + "\n");
-          }
-        } catch (RuntimeInvisibleAnnotationsReader.UnimplementedException e) {
-          int len = attrs.getDataSize();
-          int pos = attrs.getDataOffset();
-          while (len > 0) {
-            int amount = Math.min(16, len);
-            w.write("    " + makeHex(cr.getBytes(), pos, amount, 32) + " " + makeChars(cr.getBytes(), pos, amount) + "\n");
-            len -= amount;
-            pos += amount;
-          }
-        }
+      } else if (name.equals(RuntimeInvisibleAnnotationsReader.attrName)) {
+        AnnotationsReader r = new RuntimeInvisibleAnnotationsReader(attrs);
+        printAnnotations(cr, attrs, r );
+      } else if (name.equals(RuntimeVisibleAnnotationsReader.attrName)) {
+        AnnotationsReader r = new RuntimeVisibleAnnotationsReader(attrs);
+        printAnnotations(cr, attrs, r );
       } else {
         int len = attrs.getDataSize();
         int pos = attrs.getDataOffset();
@@ -292,6 +283,24 @@ public class ClassPrinter {
           len -= amount;
           pos += amount;
         }
+      }
+    }
+  }
+
+  private void printAnnotations(ClassReader cr, ClassReader.AttrIterator attrs, AnnotationsReader r) throws InvalidClassFileException {
+    try {
+      int[] annotations = r.getAnnotationOffsets();
+      for (int j : annotations) {
+        w.write("    Annotation type: " + r.getAnnotationType(j) + "\n");
+      }
+    } catch (AnnotationsReader.UnimplementedException e) {
+      int len = attrs.getDataSize();
+      int pos = attrs.getDataOffset();
+      while (len > 0) {
+        int amount = Math.min(16, len);
+        w.write("    " + makeHex(cr.getBytes(), pos, amount, 32) + " " + makeChars(cr.getBytes(), pos, amount) + "\n");
+        len -= amount;
+        pos += amount;
       }
     }
   }

@@ -11,15 +11,15 @@
 package com.ibm.wala.shrikeCT;
 
 /**
- * This class reads RuntimeInvisibleAnnotations attributes.
+ * This class reads RuntimeVisibleAnnotations attributes.
  * 
  * @author sjfink
  */
-public final class RuntimeInvisibleAnnotationsReader extends AnnotationsReader {
+public final class RuntimeVisibleAnnotationsReader extends AnnotationsReader {
 
-  public static final String attrName = "RuntimeInvisibleAnnotations";
-
-  public RuntimeInvisibleAnnotationsReader(ClassReader.AttrIterator iter) throws InvalidClassFileException {
+  public final static String attrName = "RuntimeVisibleAnnotations";
+  
+  public RuntimeVisibleAnnotationsReader(ClassReader.AttrIterator iter) throws InvalidClassFileException {
     super(iter, attrName);
   }
 }
