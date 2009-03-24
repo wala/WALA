@@ -24,6 +24,7 @@ import com.ibm.wala.cast.java.translator.polyglot.PolyglotClassLoaderFactory;
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.core.plugin.CorePlugin;
 import com.ibm.wala.eclipse.util.EclipseProjectPath;
 import com.ibm.wala.eclipse.util.EclipseProjectPath.Loader;
@@ -100,18 +101,24 @@ public class EclipseProjectSourceAnalysisEngine extends EclipseProjectAnalysisEn
         scope.addToScope(scope.getPrimordialLoader(), m);
       }
       ClassLoaderReference app = scope.getApplicationLoader();
+      ClassLoaderReference src = ((JavaSourceAnalysisScope)scope).getSourceLoader();
       for (Module m : epath.getModules(Loader.APPLICATION, true)) {
-        scope.addToScope(app, m);
+    	  if (m instanceof SourceDirectoryTreeModule) {
+    		  scope.addToScope(src, m);
+    	  } else {
+    		  scope.addToScope(app, m);
+    	  }
       }
       for (Module m : epath.getModules(Loader.EXTENSION, true)) {
         if (!(m instanceof BinaryDirectoryTreeModule))
           scope.addToScope(app, m);
       }
+      /*
       ClassLoaderReference src = ((JavaSourceAnalysisScope)scope).getSourceLoader();
       for (Module m : epath.getModules(Loader.APPLICATION, false)) {
         scope.addToScope(src, m);
       }
-
+      */
       
     } catch (IOException e) {
       Assertions.UNREACHABLE(e.toString());

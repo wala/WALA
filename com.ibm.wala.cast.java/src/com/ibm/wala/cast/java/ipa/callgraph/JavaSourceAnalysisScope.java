@@ -25,22 +25,23 @@ public class JavaSourceAnalysisScope extends AnalysisScope {
 
   public final static ClassLoaderReference SOURCE = new ClassLoaderReference(Atom.findOrCreateAsciiAtom("Source"), Atom
       .findOrCreateAsciiAtom("Java"), ClassLoaderReference.Application);
-  private final static ClassLoaderReference SYNTH_SOURCE = new ClassLoaderReference(Atom.findOrCreateAsciiAtom("Synthetic_Source"), Atom
-      .findOrCreateAsciiAtom("Java"), SOURCE);
-
+ 
   public JavaSourceAnalysisScope() {
     this(Collections.singleton(Language.JAVA));
   }
 
-  public JavaSourceAnalysisScope(Collection<Language> languages) {
-    super(languages);
-    initForJava();
-
+  protected void initCoreForJavaSource() {
+    initCoreForJava();
     loadersByName.put(SOURCE.getName(),SOURCE);
 
-    setLoaderImpl(getLoader(SYNTH_SOURCE.getName()), "com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader");
-    setLoaderImpl(SOURCE, "com.ibm.wala.cast.java.translator.polyglot.PolyglotSourceLoaderImpl");
+    setLoaderImpl(SOURCE, "com.ibm.wala.cast.java.translator.polyglot.PolyglotSourceLoaderImpl");   
   }
+  
+  protected JavaSourceAnalysisScope(Collection<Language> languages) {
+    super(languages);
+    initCoreForJavaSource();
+    initSynthetic(SOURCE);
+   }
 
   public ClassLoaderReference getSourceLoader() {
     return SOURCE;
