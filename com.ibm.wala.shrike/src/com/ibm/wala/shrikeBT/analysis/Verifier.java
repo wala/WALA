@@ -15,7 +15,6 @@ import java.util.List;
 
 import com.ibm.wala.shrikeBT.ArrayLengthInstruction;
 import com.ibm.wala.shrikeBT.CheckCastInstruction;
-import com.ibm.wala.shrikeBT.ComparisonInstruction;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.DupInstruction;
@@ -24,6 +23,7 @@ import com.ibm.wala.shrikeBT.GotoInstruction;
 import com.ibm.wala.shrikeBT.IArrayLoadInstruction;
 import com.ibm.wala.shrikeBT.IArrayStoreInstruction;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
+import com.ibm.wala.shrikeBT.IComparisonInstruction;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IConversionInstruction;
 import com.ibm.wala.shrikeBT.IGetInstruction;
@@ -183,7 +183,7 @@ public final class Verifier extends Analyzer {
     }
 
     @Override
-    public void visitComparison(ComparisonInstruction instruction) {
+    public void visitComparison(IComparisonInstruction instruction) {
       checkStackSubtype(0, instruction.getType());
       checkStackSubtype(1, instruction.getType());
     }

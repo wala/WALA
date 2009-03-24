@@ -20,6 +20,7 @@ import com.ibm.wala.shrikeBT.GotoInstruction;
 import com.ibm.wala.shrikeBT.IArrayLoadInstruction;
 import com.ibm.wala.shrikeBT.IArrayStoreInstruction;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
+import com.ibm.wala.shrikeBT.IComparisonInstruction;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IConversionInstruction;
 import com.ibm.wala.shrikeBT.IGetInstruction;
@@ -152,7 +153,7 @@ public class InstructionTypeCounter implements MethodData.Results {
       }
 
       @Override
-      public void visitComparison(ComparisonInstruction instruction) {
+      public void visitComparison(IComparisonInstruction instruction) {
         countComparisons++;
       }
 

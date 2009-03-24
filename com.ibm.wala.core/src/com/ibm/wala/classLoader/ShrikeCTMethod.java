@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 
+import com.ibm.wala.cfg.IBytecodeMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.Decoder;
 import com.ibm.wala.shrikeBT.shrikeCT.CTDecoder;
@@ -38,7 +39,7 @@ import com.ibm.wala.util.debug.Assertions;
 /**
  * A wrapper around a Shrike object that represents a method
  */
-public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
+public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMethod {
 
   /**
    * The index of this method in the declaring class's method list according to

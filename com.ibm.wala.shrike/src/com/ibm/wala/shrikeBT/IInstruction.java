@@ -61,7 +61,7 @@ public interface IInstruction {
     public void visitConversion(IConversionInstruction instruction) {
     }
   
-    public void visitComparison(ComparisonInstruction instruction) {
+    public void visitComparison(IComparisonInstruction instruction) {
     }
   
     public void visitConditionalBranch(IConditionalBranchInstruction instruction) {

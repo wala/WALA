@@ -48,7 +48,7 @@ package com.ibm.wala.shrikeBT;
  * These integers are usually indices into an array of instructions.
  */
 public abstract class Instruction implements Constants, Cloneable, IInstruction {
-  private final static int[] noInstructions = new int[0];
+  public final static int[] noInstructions = new int[0];
 
   /**
    * Ensure that only this package can subclass Instruction.

@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.ibm.wala.shrikeBT.Constants;
+import com.ibm.wala.shrikeBT.IComparisonInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -29,15 +30,15 @@ public class SSAComparisonInstruction extends SSAInstruction {
 
   private final int val2;
 
-  private final short opcode;
+  private final IComparisonInstruction.Operator operator;
 
   /**
    * @param opcode
    *            opcode from list in {@link Constants}
    */
-  SSAComparisonInstruction(short opcode, int result, int val1, int val2) {
+  SSAComparisonInstruction(IComparisonInstruction.Operator operator, int result, int val1, int val2) {
     super();
-    this.opcode = opcode;
+    this.operator = operator;
     this.result = result;
     this.val1 = val1;
     this.val2 = val2;
@@ -49,14 +50,14 @@ public class SSAComparisonInstruction extends SSAInstruction {
     if (uses != null && uses.length != 2) {
       throw new IllegalArgumentException("expected 2 uses, got " + uses.length);
     }
-    return new SSAComparisonInstruction(opcode, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val1 : uses[0],
+    return new SSAComparisonInstruction(operator, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val1 : uses[0],
         uses == null ? val2 : uses[1]);
   }
 
   @Override
   public String toString(SymbolTable symbolTable) {
     return getValueString(symbolTable, result) + " = compare " + getValueString(symbolTable, val1) + ","
-        + getValueString(symbolTable, val2) + " opcode=" + opcode;
+        + getValueString(symbolTable, val2) + " opcode=" + operator;
   }
 
   /**
@@ -135,7 +136,7 @@ public class SSAComparisonInstruction extends SSAInstruction {
   /**
    * @return Returns the opcode.
    */
-  public short getOpcode() {
-    return opcode;
+  public IComparisonInstruction.Operator getOperator() {
+    return operator;
   }
 }

@@ -76,21 +76,28 @@ public class AnalysisScope {
     scope.initForJava();
     return scope;
   }
-   
+ 
   protected void initForJava() {
+    initCoreForJava();
+    initSynthetic(loadersByName.get(APPLICATION));
+  }
+  
+  protected void initCoreForJava() {
     ClassLoaderReference primordial = new ClassLoaderReference(PRIMORDIAL, ClassLoaderReference.Java, null);
     ClassLoaderReference extension = new ClassLoaderReference(EXTENSION, ClassLoaderReference.Java, primordial);
     ClassLoaderReference application = new ClassLoaderReference(APPLICATION, ClassLoaderReference.Java, extension);
-    ClassLoaderReference synthetic = new ClassLoaderReference(SYNTHETIC, ClassLoaderReference.Java, application);
-
-    setLoaderImpl(synthetic, "com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader");
 
     loadersByName.put(PRIMORDIAL, primordial);
     loadersByName.put(EXTENSION, extension);
     loadersByName.put(APPLICATION, application);
-    loadersByName.put(SYNTHETIC, synthetic);
- }
+  }
 
+  protected void initSynthetic(ClassLoaderReference parent) {
+    ClassLoaderReference synthetic = new ClassLoaderReference(SYNTHETIC, ClassLoaderReference.Java, parent);
+    setLoaderImpl(synthetic, "com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader");
+    loadersByName.put(SYNTHETIC, synthetic);   
+  }
+  
   /**
    * A set of classes to exclude from the analysis entirely.
    */

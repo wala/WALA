@@ -13,18 +13,7 @@ package com.ibm.wala.shrikeBT;
 /**
  * This class represents comparisons between floats, longs and doubles.
  */
-final public class ComparisonInstruction extends Instruction {
-  public enum Operator {
-    CMP,
-    CMPL,
-    CMPG;
-
-    @Override
-    public String toString() {
-      return super.toString().toLowerCase();
-    }
-  }
-
+final public class ComparisonInstruction extends Instruction implements IComparisonInstruction {
   protected ComparisonInstruction(short opcode) {
     super(opcode);
   }

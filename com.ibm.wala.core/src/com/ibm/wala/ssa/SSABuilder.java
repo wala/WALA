@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 import com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine;
 import com.ibm.wala.cfg.IBasicBlock;
+import com.ibm.wala.cfg.IBytecodeMethod;
 import com.ibm.wala.cfg.ShrikeCFG;
 import com.ibm.wala.cfg.ShrikeCFG.BasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -21,12 +22,12 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.shrikeBT.ArrayLengthInstruction;
 import com.ibm.wala.shrikeBT.CheckCastInstruction;
-import com.ibm.wala.shrikeBT.ComparisonInstruction;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.GotoInstruction;
 import com.ibm.wala.shrikeBT.IArrayLoadInstruction;
 import com.ibm.wala.shrikeBT.IArrayStoreInstruction;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
+import com.ibm.wala.shrikeBT.IComparisonInstruction;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IConversionInstruction;
 import com.ibm.wala.shrikeBT.IGetInstruction;
@@ -58,7 +59,7 @@ import com.ibm.wala.util.shrike.ShrikeUtil;
  */
 public class SSABuilder extends AbstractIntStackMachine {
 
-  public static SSABuilder make(ShrikeCTMethod method, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions,
+  public static SSABuilder make(IBytecodeMethod method, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions,
       SymbolTable symbolTable, boolean buildLocalMap, SSAPiNodePolicy piNodePolicy) throws IllegalArgumentException {
     if (scfg == null) {
       throw new IllegalArgumentException("scfg == null");
@@ -69,7 +70,7 @@ public class SSABuilder extends AbstractIntStackMachine {
   /**
    * A wrapper around the method being analyzed.
    */
-  final private ShrikeCTMethod method;
+  final private IBytecodeMethod method;
 
   /**
    * Governing symbol table
@@ -81,7 +82,7 @@ public class SSABuilder extends AbstractIntStackMachine {
    */
   private final SSA2LocalMap localMap;
 
-  private SSABuilder(ShrikeCTMethod method, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions, SymbolTable symbolTable,
+  private SSABuilder(IBytecodeMethod method, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions, SymbolTable symbolTable,
       boolean buildLocalMap, SSAPiNodePolicy piNodePolicy) {
     super(scfg);
     localMap = buildLocalMap ? new SSA2LocalMap(scfg, instructions.length, cfg.getNumberOfNodes(), maxLocals) : null;
@@ -426,16 +427,16 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitComparison(ComparisonInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitComparison(IComparisonInstruction)
        */
       @Override
-      public void visitComparison(com.ibm.wala.shrikeBT.ComparisonInstruction instruction) {
+      public void visitComparison(IComparisonInstruction instruction) {
 
         int val2 = workingState.pop();
         int val1 = workingState.pop();
         int result = reuseOrCreateDef();
         workingState.push(result);
-        emitInstruction(new SSAComparisonInstruction(instruction.getOpcode(), result, val1, val2));
+        emitInstruction(new SSAComparisonInstruction(instruction.getOperator(), result, val1, val2));
       }
 
       /**
@@ -760,7 +761,7 @@ public class SSABuilder extends AbstractIntStackMachine {
     @Override
     public com.ibm.wala.shrikeBT.IInstruction[] getInstructions() {
       try {
-        return ((ShrikeCTMethod) shrikeCFG.getMethod()).getInstructions();
+        return shrikeCFG.getMethod().getInstructions();
       } catch (InvalidClassFileException e) {
         e.printStackTrace();
         Assertions.UNREACHABLE();
@@ -864,7 +865,7 @@ public class SSABuilder extends AbstractIntStackMachine {
           if (localNumbers == null) {
             return null;
           } else {
-            ShrikeCTMethod m = (ShrikeCTMethod) shrikeCFG.getMethod();
+            IBytecodeMethod m = shrikeCFG.getMethod();
             String[] result = new String[localNumbers.length];
             for (int i = 0; i < localNumbers.length; i++) {
               result[i] = m.getLocalVariableName(m.getBytecodeIndex(index), localNumbers[i]);

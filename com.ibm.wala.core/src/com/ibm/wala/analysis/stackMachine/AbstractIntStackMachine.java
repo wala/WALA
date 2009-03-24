@@ -27,13 +27,13 @@ import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.shrikeBT.ArrayLengthInstruction;
-import com.ibm.wala.shrikeBT.ComparisonInstruction;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.DupInstruction;
 import com.ibm.wala.shrikeBT.IArrayLoadInstruction;
 import com.ibm.wala.shrikeBT.IArrayStoreInstruction;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
+import com.ibm.wala.shrikeBT.IComparisonInstruction;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IConversionInstruction;
 import com.ibm.wala.shrikeBT.IGetInstruction;
@@ -982,10 +982,10 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitComparison(ComparisonInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitComparison(IComparisonInstruction)
        */
       @Override
-      public void visitComparison(ComparisonInstruction instruction) {
+      public void visitComparison(IComparisonInstruction instruction) {
         workingState.pop();
         workingState.pop();
         workingState.push(UNANALYZED);

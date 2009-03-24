@@ -14,6 +14,7 @@ package com.ibm.wala.ssa;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
+import com.ibm.wala.shrikeBT.IComparisonInstruction;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.types.FieldReference;
@@ -46,8 +47,8 @@ public final class SSAInstructionFactory {
   public static SSACheckCastInstruction CheckCastInstruction(int result, int val, TypeReference type) {
     return new SSACheckCastInstruction(result, val, type);
   }
-  public static SSAComparisonInstruction ComparisonInstruction(short opcode, int result, int val1, int val2) {
-    return new SSAComparisonInstruction(opcode, result, val1, val2);
+  public static SSAComparisonInstruction ComparisonInstruction(IComparisonInstruction.Operator operator, int result, int val1, int val2) {
+    return new SSAComparisonInstruction(operator, result, val1, val2);
   }
   public static SSAConditionalBranchInstruction ConditionalBranchInstruction(IConditionalBranchInstruction.IOperator operator, TypeReference type, int val1, int val2) {
     return new SSAConditionalBranchInstruction(operator,type,val1, val2);

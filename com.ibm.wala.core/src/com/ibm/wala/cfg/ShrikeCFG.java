@@ -44,7 +44,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
 
   private int[] instruction2Block;
 
-  private final ShrikeCTMethod method;
+  private final IBytecodeMethod method;
 
   /**
    * Cache this here for efficiency
@@ -56,7 +56,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
    */
   final private Set<ExceptionHandler> exceptionHandlers = HashSetFactory.make(10);
 
-  public ShrikeCFG(ShrikeCTMethod method) throws IllegalArgumentException {
+  public ShrikeCFG(IBytecodeMethod method) throws IllegalArgumentException {
     super(method);
     if (method == null) {
       throw new IllegalArgumentException("method cannot be null");
@@ -73,6 +73,11 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
     }
   }
 
+  @Override
+  public IBytecodeMethod getMethod() {
+    return method;
+  }
+  
   @Override
   public int hashCode() {
     return 9511 * getMethod().hashCode();

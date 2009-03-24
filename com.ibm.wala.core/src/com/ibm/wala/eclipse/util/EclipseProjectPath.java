@@ -306,7 +306,7 @@ public class EclipseProjectPath {
     return toAnalysisScope(scope);
   }
 
-  private AnalysisScope toAnalysisScope(AnalysisScope scope) {
+  public AnalysisScope toAnalysisScope(AnalysisScope scope) {
     try {
       List<Module> l = MapUtil.findOrCreateList(modules, Loader.APPLICATION);
       File dir = makeAbsolute(project.getOutputLocation()).toFile();
@@ -323,12 +323,6 @@ public class EclipseProjectPath {
             l.add(new SourceDirectoryTreeModule(src));
           }
         }
-        // File src = makeAbsolute(project.getJavaProject().getPath()).toFile();
-        // if (!src.isDirectory()) {
-        // System.err.println("PANIC: project output location is not a directory: " + dir);
-        // } else {
-        // l.add(new SourceDirectoryTreeModule(src));
-        // }
       }
 
       for (Loader loader : Loader.values()) {

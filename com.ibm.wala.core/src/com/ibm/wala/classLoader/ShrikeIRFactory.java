@@ -11,6 +11,7 @@
 package com.ibm.wala.classLoader;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
+import com.ibm.wala.cfg.IBytecodeMethod;
 import com.ibm.wala.cfg.ShrikeCFG;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
@@ -27,15 +28,15 @@ import com.ibm.wala.util.debug.Assertions;
 /**
  * @author Julian Dolby
  */
-public class ShrikeIRFactory implements IRFactory<ShrikeCTMethod> {
+public class ShrikeIRFactory implements IRFactory<IBytecodeMethod> {
 
   public final static boolean buildLocalMap = true;
 
-  public ControlFlowGraph makeCFG(final ShrikeCTMethod method, Context C) {
+  public ControlFlowGraph makeCFG(final IBytecodeMethod method, Context C) {
     return new ShrikeCFG(method);
   }
 
-  public IR makeIR(final ShrikeCTMethod method, Context C, final SSAOptions options) throws IllegalArgumentException {
+  public IR makeIR(final IBytecodeMethod method, Context C, final SSAOptions options) throws IllegalArgumentException {
 
     if (method == null) {
       throw new IllegalArgumentException("null method");
@@ -103,7 +104,7 @@ public class ShrikeIRFactory implements IRFactory<ShrikeCTMethod> {
     };
   }
 
-  public boolean contextIsIrrelevant(ShrikeCTMethod method) {
+  public boolean contextIsIrrelevant(IBytecodeMethod method) {
     // this factory always returns the same IR for a method
     return true;
   }
