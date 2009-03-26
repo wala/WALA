@@ -18,6 +18,7 @@ import com.ibm.wala.cfg.IBytecodeMethod;
 import com.ibm.wala.cfg.ShrikeCFG;
 import com.ibm.wala.cfg.ShrikeCFG.BasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.shrikeBT.ArrayLengthInstruction;
@@ -552,7 +553,8 @@ public class SSABuilder extends AbstractIntStackMachine {
         for (int i = n - 1; i >= 0; i--) {
           params[i] = workingState.pop();
         }
-        MethodReference m = MethodReference.findOrCreate(loader, instruction.getClassType(), instruction.getMethodName(),
+        Language lang = shrikeCFG.getMethod().getDeclaringClass().getClassLoader().getLanguage();
+        MethodReference m = MethodReference.findOrCreate(lang, loader, instruction.getClassType(), instruction.getMethodName(),
             instruction.getMethodSignature());
         IInvokeInstruction.IDispatch code = instruction.getInvocationCode();
         CallSiteReference site = CallSiteReference.make(getCurrentProgramCounter(), m, code);

@@ -39,6 +39,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.JarFileModule;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.core.tests.util.EclipseTestUtil;
@@ -356,7 +357,8 @@ public abstract class IRTests extends WalaTestCase {
 
     TypeReference typeRef = findOrCreateTypeReference(loaderName, typeStr, cha);
 
-    return MethodReference.findOrCreate(typeRef, methName, methSig);
+    Language l = cha.getLoader(typeRef.getClassLoader()).getLanguage();
+    return MethodReference.findOrCreate(l, typeRef, methName, methSig);
   }
 
   static TypeReference findOrCreateTypeReference(String loaderName, String typeStr, IClassHierarchy cha) {

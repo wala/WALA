@@ -118,13 +118,20 @@ public class AnalysisScope {
    */
   final private Map<ClassLoaderReference, List<Module>> moduleMap = HashMapFactory.make(3);
 
-  private final Collection<Language> languages;
+  private final Map<Atom, Language> languages;
 
   protected AnalysisScope(Collection<Language> languages) {
     super();
-    this.languages = languages;
+    this.languages = new HashMap<Atom,Language>();
+    for (Language l : languages) {
+      this.languages.put(l.getName(), l);
+    }
   }
 
+  public Language getLanguage(Atom name) {
+    return languages.get(name);
+  }
+  
   /**
    * Return the information regarding the primordial loader.
    * 
@@ -165,7 +172,7 @@ public class AnalysisScope {
    * @return the set of languages to be processed during this analysis session.
    */
   public Collection<Language> getLanguages() {
-    return Collections.unmodifiableCollection(languages);
+    return languages.values();
   }
 
   /**
@@ -175,7 +182,7 @@ public class AnalysisScope {
    */
   public Set<Language> getBaseLanguages() {
     Set<Language> result = HashSetFactory.make();
-    for (Language language : languages) {
+    for (Language language : getLanguages()) {
       if (language.getBaseLanguage() == null) {
         result.add(language);
       }
@@ -343,7 +350,7 @@ public class AnalysisScope {
    */
   public MethodReference findMethod(Atom loader, String klass, Atom name, ImmutableByteArray desc) {
     ClassLoaderReference clr = getLoader(loader);
-    Descriptor ddesc = Descriptor.findOrCreate(desc);
+    Descriptor ddesc = Descriptor.findOrCreate(languages.get(clr.getLanguage()), desc);
     TypeReference type = TypeReference.findOrCreate(clr, TypeName.string2TypeName(klass));
     return MethodReference.findOrCreate(type, name, ddesc);
   }

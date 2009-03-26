@@ -10,18 +10,14 @@
  *****************************************************************************/
 package com.ibm.wala.cast.types;
 
-import com.ibm.wala.types.Descriptor;
-import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.types.Selector;
-import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.*;
 import com.ibm.wala.util.strings.Atom;
 
 public class AstMethodReference {
 
   public final static String fnAtomStr = "do";
   public final static Atom fnAtom = Atom.findOrCreateUnicodeAtom(fnAtomStr);
-  public final static String fnDescStr = "()" + AstTypeReference.rootTypeName;
-  public final static Descriptor fnDesc = Descriptor.findOrCreateUTF8(fnDescStr);
+  public final static Descriptor fnDesc = Descriptor.findOrCreate(new TypeName[0], AstTypeReference.rootTypeName);
   public final static Selector fnSelector = new Selector(fnAtom, fnDesc);
 
   public static MethodReference fnReference(TypeReference cls) {

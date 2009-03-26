@@ -12,6 +12,7 @@ package com.ibm.wala.types;
 
 import java.util.Map;
 
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.ImmutableByteArray;
@@ -63,9 +64,9 @@ public final class Descriptor {
    * @param b a byte array holding the string representation of this descriptor
    * @return the canonical representative for this descriptor value
    */
-  public static Descriptor findOrCreate(ImmutableByteArray b) throws IllegalArgumentException {
-    TypeName returnType = StringStuff.parseForReturnTypeName(b);
-    TypeName[] parameters = StringStuff.parseForParameterNames(b);
+  public static Descriptor findOrCreate(Language l, ImmutableByteArray b) throws IllegalArgumentException {
+    TypeName returnType = StringStuff.parseForReturnTypeName(l, b);
+    TypeName[] parameters = StringStuff.parseForParameterNames(l, b);
     Key k = new Key(returnType, parameters);
     Descriptor result = map.get(k);
     if (result == null) {
@@ -75,13 +76,25 @@ public final class Descriptor {
     return result;
   }
 
+  public static Descriptor findOrCreate(ImmutableByteArray b) throws IllegalArgumentException {
+    return findOrCreate(Language.JAVA, b);
+  }
+  
   /**
    * @param s string representation of this descriptor
    * @return the canonical representative for this descriptor value
    */
   public static Descriptor findOrCreateUTF8(String s) throws IllegalArgumentException {
+    return findOrCreateUTF8(Language.JAVA, s);
+  }
+
+  /**
+   * @param s string representation of this descriptor
+   * @return the canonical representative for this descriptor value
+   */
+  public static Descriptor findOrCreateUTF8(Language l, String s) throws IllegalArgumentException {
     byte[] b = UTF8Convert.toUTF8(s);
-    return findOrCreate(new ImmutableByteArray(b));
+    return findOrCreate(l, new ImmutableByteArray(b));
   }
   /**
    * @param key "value" of this descriptor
@@ -227,7 +240,7 @@ public final class Descriptor {
         if (!TypeReference.isPrimitiveType(e)) {
           result.append(";");
         }
-      } else if (p.isClassType()) {
+      } else if (!TypeReference.isPrimitiveType(p)) {
         result.append(";");
       }
     }

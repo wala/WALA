@@ -15,7 +15,9 @@ import java.util.Set;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
@@ -50,9 +52,13 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
 
       // loader name, loader language, classname, method name, method descr
       case 5: {
-        MethodReference ref = MethodReference.findOrCreate(TypeReference.findOrCreate(new ClassLoaderReference(Atom
-            .findOrCreateUnicodeAtom(descr[0]), Atom.findOrCreateUnicodeAtom(descr[1]), null), TypeName.string2TypeName(descr[2])), Atom
-            .findOrCreateUnicodeAtom(descr[3]), Descriptor.findOrCreateUTF8(descr[4]));
+        ClassLoaderReference clr = cha.getScope().getLoader(Atom.findOrCreateUnicodeAtom(descr[0]));
+        IClassLoader loader = cha.getLoader(clr);
+        MethodReference ref = 
+          MethodReference.findOrCreate(
+              TypeReference.findOrCreate(clr, TypeName.string2TypeName(descr[2])), 
+              Atom.findOrCreateUnicodeAtom(descr[3]), 
+              Descriptor.findOrCreateUTF8(loader.getLanguage(), descr[4]));
 
         if (cha.resolveMethod(ref) != null) {
           methodsToSpecialize.add(cha.resolveMethod(ref).getReference());
@@ -65,7 +71,7 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
         // classname, method name, method descr
       case 3: {
         MethodReference ref = MethodReference.findOrCreate(TypeReference.findOrCreate(ClassLoaderReference.Application, TypeName.string2TypeName(descr[0])), Atom
-            .findOrCreateUnicodeAtom(descr[1]), Descriptor.findOrCreateUTF8(descr[2]));
+            .findOrCreateUnicodeAtom(descr[1]), Descriptor.findOrCreateUTF8(Language.JAVA, descr[2]));
 
         methodsToSpecialize.add(cha.resolveMethod(ref).getReference());
         break;

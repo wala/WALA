@@ -25,7 +25,7 @@ public interface IInvokeInstruction extends IInstruction {
   IDispatch getInvocationCode();
 
   String getMethodSignature();
-
+ 
   String getMethodName();
 
   String getClassType();

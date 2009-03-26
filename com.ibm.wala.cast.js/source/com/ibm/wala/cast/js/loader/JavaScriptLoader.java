@@ -96,6 +96,11 @@ public class JavaScriptLoader extends CAstAbstractLoader {
     public TypeReference[] getArrayInterfaces() {
        return new TypeReference[0];
     }
+
+    public TypeName lookupPrimitiveType(String name) {
+      // TODO Auto-generated method stub
+      return null;
+    }
   };
 
   private static final Map<Selector,IMethod> emptyMap1 = Collections.emptyMap();

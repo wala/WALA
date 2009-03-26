@@ -24,6 +24,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -261,12 +262,11 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
      * @param atts
      */
     private void startMethod(Attributes atts) {
-
+      Language l = scope.getLanguage(governingLoader.getLanguage());
       String methodName = atts.getValue(A_NAME);
       Atom mName = Atom.findOrCreateUnicodeAtom(methodName);
       String descString = atts.getValue(A_DESCRIPTOR).replace('.', '/');
-      Descriptor D = Descriptor.findOrCreateUTF8(descString);
-
+      Descriptor D = Descriptor.findOrCreateUTF8(l, descString);
       MethodReference ref = MethodReference.findOrCreate(governingClass, mName, D);
       governingMethod = new ReflectionSummary();
 

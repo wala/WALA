@@ -38,6 +38,7 @@ import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.classLoader.ClassLoaderImpl;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -330,7 +331,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
         Atom name = Atom.findOrCreateUnicodeAtom(nameStr);
 
         String descStr = sig.substring(nameEnd);
-        Descriptor desc = Descriptor.findOrCreateUTF8(descStr);
+        Descriptor desc = Descriptor.findOrCreateUTF8(Language.JAVA, descStr);
 
         final Selector sel = new Selector(name, desc);
 

@@ -109,6 +109,8 @@ public final class TypeReference implements Serializable {
 
   public final static TypeReference Void = makePrimitive(VoidName);
 
+  public final static byte OtherPrimitiveTypeCode = 'P';
+  
   /*********************************************************************************************************************
    * Primitive Array Dispatch *
    ********************************************************************************************************************/

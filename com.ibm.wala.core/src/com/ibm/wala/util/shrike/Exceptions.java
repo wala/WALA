@@ -17,6 +17,7 @@ import java.util.Collections;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.Constants;
@@ -90,7 +91,8 @@ public class Exceptions implements Constants {
       IInvokeInstruction call = (IInvokeInstruction) pei;
       Collection<TypeReference> result = null;
         try {
-          result = inferInvokeExceptions(MethodReference.findOrCreate(loader, call.getClassType(), call.getMethodName(),
+          Language lang = cha.getLoader(loader).getLanguage();
+          result = inferInvokeExceptions(MethodReference.findOrCreate(lang, loader, call.getClassType(), call.getMethodName(),
               call.getMethodSignature()), cha);
         } catch (InvalidClassFileException e) {
           e.printStackTrace();

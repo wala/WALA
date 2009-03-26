@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
@@ -123,8 +124,8 @@ public class StringStuff {
     }
   }
 
-  public static final TypeName parseForReturnTypeName(String desc) throws IllegalArgumentException {
-    return parseForReturnTypeName(ImmutableByteArray.make(desc));
+  public static final TypeName parseForReturnTypeName(Language l, String desc) throws IllegalArgumentException {
+    return parseForReturnTypeName(l, ImmutableByteArray.make(desc));
   }
 
   /**
@@ -135,7 +136,7 @@ public class StringStuff {
    * @return type description
    * @throws IllegalArgumentException if b is null
    */
-  public static final TypeName parseForReturnTypeName(ImmutableByteArray b) throws IllegalArgumentException {
+  public static final TypeName parseForReturnTypeName(Language l, ImmutableByteArray b) throws IllegalArgumentException {
 
     if (b == null) {
       throw new IllegalArgumentException("b is null");
@@ -173,6 +174,12 @@ public class StringStuff {
       return TypeReference.Double.getName();
     case TypeReference.CharTypeCode:
       return TypeReference.Char.getName();
+    case TypeReference.OtherPrimitiveTypeCode:
+      if (b.get(b.length() - 1) == ';') {
+        return l.lookupPrimitiveType(new String(b.substring(i+1, b.length() - i - 2)));
+      } else {
+        return l.lookupPrimitiveType(new String(b.substring(i+1, b.length() - i - 1)));
+      }      
     case TypeReference.ClassTypeCode: // fall through
     case TypeReference.ArrayTypeCode:
       if (b.get(b.length() - 1) == ';') {
@@ -185,8 +192,8 @@ public class StringStuff {
     }
   }
 
-  public static final TypeName[] parseForParameterNames(String descriptor) throws IllegalArgumentException {
-    return parseForParameterNames(ImmutableByteArray.make(descriptor));
+  public static final TypeName[] parseForParameterNames(Language l, String descriptor) throws IllegalArgumentException {
+    return parseForParameterNames(l, ImmutableByteArray.make(descriptor));
   }
 
   /**
@@ -195,7 +202,7 @@ public class StringStuff {
    * @return parameter descriptions, or null if there are no parameters
    * @throws IllegalArgumentException if b is null
    */
-  public static final TypeName[] parseForParameterNames(ImmutableByteArray b) throws IllegalArgumentException {
+  public static final TypeName[] parseForParameterNames(Language l, ImmutableByteArray b) throws IllegalArgumentException {
 
     if (b == null) {
       throw new IllegalArgumentException("b is null");
@@ -240,6 +247,14 @@ public class StringStuff {
       case TypeReference.CharTypeCode:
         sigs.add(TypeReference.CharName);
         continue;
+      case TypeReference.OtherPrimitiveTypeCode: {
+        int off = i - 1;
+        while (b.get(i++) != ';')
+          ;
+        sigs.add(l.lookupPrimitiveType(new String(b.substring(off+1, i - off - 2))));
+
+        continue;
+      }
       case TypeReference.ClassTypeCode: {
         int off = i - 1;
         while (b.get(i++) != ';')
@@ -469,7 +484,7 @@ public class StringStuff {
    * @param methodSig something like "java_cup.lexer.advance()V"
    * @throws IllegalArgumentException if methodSig is null
    */
-  public static MethodReference makeMethodReference(String methodSig) throws IllegalArgumentException {
+  public static MethodReference makeMethodReference(Language l, String methodSig) throws IllegalArgumentException {
     if (methodSig == null) {
       throw new IllegalArgumentException("methodSig is null");
     }
@@ -483,7 +498,7 @@ public class StringStuff {
     String methodName = methodSig.substring(methodSig.lastIndexOf('.') + 1, methodSig.indexOf('('));
     String desc = methodSig.substring(methodSig.indexOf('('));
 
-    return MethodReference.findOrCreate(t, methodName, desc);
+    return MethodReference.findOrCreate(l, t, methodName, desc);
   }
 
   /**

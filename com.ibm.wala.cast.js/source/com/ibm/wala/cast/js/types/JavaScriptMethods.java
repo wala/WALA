@@ -10,6 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.types;
 
+import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
@@ -21,7 +22,7 @@ public class JavaScriptMethods extends AstMethodReference {
   public final static String ctorAtomStr = "ctor";
   public final static Atom ctorAtom = Atom.findOrCreateUnicodeAtom(ctorAtomStr);
   public final static String ctorDescStr = "()LRoot;";
-  public final static Descriptor ctorDesc = Descriptor.findOrCreateUTF8(ctorDescStr);
+  public final static Descriptor ctorDesc = Descriptor.findOrCreateUTF8(JavaScriptLoader.JS, ctorDescStr);
   public final static MethodReference ctorReference =
     MethodReference.findOrCreate(JavaScriptTypes.CodeBody, ctorAtom, ctorDesc);
 

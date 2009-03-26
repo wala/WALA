@@ -46,9 +46,8 @@ public class SSAComparisonInstruction extends SSAInstruction {
 
   @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) throws IllegalArgumentException {
-    // TODO: Julian ... is this correct?
     if (uses != null && uses.length != 2) {
-      throw new IllegalArgumentException("expected 2 uses, got " + uses.length);
+      throw new IllegalArgumentException("expected 2 uses or null, but got " + uses.length);
     }
     return new SSAComparisonInstruction(operator, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val1 : uses[0],
         uses == null ? val2 : uses[1]);

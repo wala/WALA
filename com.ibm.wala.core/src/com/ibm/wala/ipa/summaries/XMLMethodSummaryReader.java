@@ -26,6 +26,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.shrikeBT.BytecodeConstants;
@@ -435,7 +436,8 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       String descString = atts.getValue(A_DESCRIPTOR);
       TypeReference type = TypeReference.findOrCreate(governingLoader, TypeName.string2TypeName(classString));
       Atom nm = Atom.findOrCreateAsciiAtom(nameString);
-      Descriptor D = Descriptor.findOrCreateUTF8(descString);
+      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Descriptor D = Descriptor.findOrCreateUTF8(lang, descString);
       MethodReference ref = MethodReference.findOrCreate(type, nm, D);
       CallSiteReference site = null;
       int nParams = ref.getNumberOfParameters();
@@ -778,7 +780,8 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
       Atom mName = Atom.findOrCreateUnicodeAtom(methodName);
       String descString = atts.getValue(A_DESCRIPTOR);
-      Descriptor D = Descriptor.findOrCreateUTF8(descString);
+      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      Descriptor D = Descriptor.findOrCreateUTF8(lang, descString);
 
       MethodReference ref = MethodReference.findOrCreate(governingClass, mName, D);
       governingMethod = new MethodSummary(ref);

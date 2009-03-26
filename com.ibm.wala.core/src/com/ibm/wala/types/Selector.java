@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.types;
 
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -23,14 +24,14 @@ public final class Selector {
 
   private final Descriptor descriptor;
 
-  public static Selector make(String selectorStr) {
+  public static Selector make(Language l, String selectorStr) {
     if (selectorStr == null) {
       throw new IllegalArgumentException("null selectorStr");
     }
     try {
       String methodName = selectorStr.substring(0, selectorStr.indexOf('('));
       String desc = selectorStr.substring(selectorStr.indexOf('('));
-      return new Selector(Atom.findOrCreateUnicodeAtom(methodName), Descriptor.findOrCreateUTF8(desc));
+      return new Selector(Atom.findOrCreateUnicodeAtom(methodName), Descriptor.findOrCreateUTF8(l, desc));
     } catch (StringIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("invalid selectorStr: " + selectorStr);
     }

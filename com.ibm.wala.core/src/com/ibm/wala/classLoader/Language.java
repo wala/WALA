@@ -3,6 +3,7 @@ package com.ibm.wala.classLoader;
 import java.util.Set;
 
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.strings.Atom;
 
@@ -40,6 +41,10 @@ public interface Language {
     public TypeReference[] getArrayInterfaces() {
       return new TypeReference[] { TypeReference.JavaIoSerializable, TypeReference.JavaLangCloneable };
     }
+    
+    public TypeName lookupPrimitiveType(String name) {
+      throw new UnsupportedOperationException();
+    }
   };
 
   Atom getName();
@@ -59,5 +64,7 @@ public interface Language {
   boolean isNullType(TypeReference type);
 
   TypeReference[] getArrayInterfaces();
+  
+  TypeName lookupPrimitiveType(String name);
   
 }

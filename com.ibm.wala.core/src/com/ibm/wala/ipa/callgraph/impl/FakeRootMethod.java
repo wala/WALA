@@ -18,6 +18,8 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -29,7 +31,7 @@ public class FakeRootMethod extends AbstractRootMethod {
 
   public static final Atom name = Atom.findOrCreateAsciiAtom("fakeRootMethod");
 
-  public static final Descriptor descr = Descriptor.findOrCreateUTF8("()V");
+  public static final Descriptor descr = Descriptor.findOrCreate(new TypeName[0], TypeReference.VoidName);
 
   public static final MethodReference rootMethod = MethodReference.findOrCreate(FakeRootClass.FAKE_ROOT_CLASS, name, descr);
 

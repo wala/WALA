@@ -326,7 +326,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     try {
       Atom name = Atom.findOrCreateUnicodeAtom(getMethodName());
       ImmutableByteArray desc = ImmutableByteArray.make(getMethodSignature());
-      Descriptor D = Descriptor.findOrCreate(desc);
+      Descriptor D = Descriptor.findOrCreate(declaringClass.getClassLoader().getLanguage(), desc);
       return MethodReference.findOrCreate(declaringClass.getReference(), name, D);
     } catch (InvalidClassFileException e) {
       Assertions.UNREACHABLE();
@@ -624,8 +624,8 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
 
     @Override
     public void visitInvoke(IInvokeInstruction instruction) {
-      ClassLoaderReference loader = getReference().getDeclaringClass().getClassLoader();
-      MethodReference m = MethodReference.findOrCreate(loader, instruction.getClassType(), instruction.getMethodName(), instruction
+      IClassLoader loader = getDeclaringClass().getClassLoader();
+      MethodReference m = MethodReference.findOrCreate(loader.getLanguage(), loader.getReference(), instruction.getClassType(), instruction.getMethodName(), instruction
           .getMethodSignature());
       int programCounter = 0;
       try {

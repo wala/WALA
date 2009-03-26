@@ -12,6 +12,7 @@ package com.ibm.wala.types;
 
 import java.util.HashMap;
 
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.shrike.ShrikeUtil;
 import com.ibm.wala.util.strings.Atom;
@@ -27,27 +28,27 @@ public final class MethodReference extends MemberReference {
 
   public final static Atom newInstanceAtom = Atom.findOrCreateUnicodeAtom("newInstance");
 
-  private final static Descriptor newInstanceDesc = Descriptor.findOrCreateUTF8("()Ljava/lang/Object;");
+  private final static Descriptor newInstanceDesc = Descriptor.findOrCreateUTF8(Language.JAVA, "()Ljava/lang/Object;");
 
   public final static MethodReference JavaLangClassNewInstance = findOrCreate(TypeReference.JavaLangClass, newInstanceAtom,
       newInstanceDesc);
 
   private final static Atom ctorNewInstanceAtom = Atom.findOrCreateUnicodeAtom("newInstance");
 
-  private final static Descriptor ctorNewInstanceDesc = Descriptor.findOrCreateUTF8("([Ljava/lang/Object;)Ljava/lang/Object;");
+  private final static Descriptor ctorNewInstanceDesc = Descriptor.findOrCreateUTF8(Language.JAVA, "([Ljava/lang/Object;)Ljava/lang/Object;");
 
   public final static MemberReference JavaLangReflectCtorNewInstance = findOrCreate(TypeReference.JavaLangReflectConstructor,
       ctorNewInstanceAtom, ctorNewInstanceDesc);
 
   public final static Atom forNameAtom = Atom.findOrCreateUnicodeAtom("forName");
 
-  private final static Descriptor forNameDesc = Descriptor.findOrCreateUTF8("(Ljava/langString;)Ljava/lang/Class;");
+  private final static Descriptor forNameDesc = Descriptor.findOrCreateUTF8(Language.JAVA, "(Ljava/langString;)Ljava/lang/Class;");
 
   public final static MethodReference JavaLangClassForName = findOrCreate(TypeReference.JavaLangClass, forNameAtom, forNameDesc);
 
   public final static Atom initAtom = Atom.findOrCreateUnicodeAtom("<init>");
 
-  public final static Descriptor defaultInitDesc = Descriptor.findOrCreateUTF8("()V");
+  public final static Descriptor defaultInitDesc = Descriptor.findOrCreateUTF8(Language.JAVA, "()V");
 
   public final static Selector initSelector = new Selector(initAtom, defaultInitDesc);
 
@@ -57,13 +58,13 @@ public final class MethodReference extends MemberReference {
 
   public final static Atom runAtom = Atom.findOrCreateUnicodeAtom("run");
 
-  public final static Descriptor runDesc = Descriptor.findOrCreateUTF8("()Ljava/lang/Object;");
+  public final static Descriptor runDesc = Descriptor.findOrCreateUTF8(Language.JAVA, "()Ljava/lang/Object;");
 
   public final static Selector runSelector = new Selector(runAtom, runDesc);
 
   public final static Atom equalsAtom = Atom.findOrCreateUnicodeAtom("equals");
 
-  public final static Descriptor equalsDesc = Descriptor.findOrCreateUTF8("(Ljava/lang/Object;)Z");
+  public final static Descriptor equalsDesc = Descriptor.findOrCreateUTF8(Language.JAVA, "(Ljava/lang/Object;)Z");
 
   public final static Selector equalsSelector = new Selector(equalsAtom, equalsDesc);
 
@@ -117,15 +118,19 @@ public final class MethodReference extends MemberReference {
   }
 
   public static MethodReference findOrCreate(TypeReference t, String methodName, String descriptor) throws IllegalArgumentException {
-    Descriptor d = Descriptor.findOrCreateUTF8(descriptor);
+    return findOrCreate(Language.JAVA, t, methodName, descriptor);
+  }
+  
+  public static MethodReference findOrCreate(Language l, TypeReference t, String methodName, String descriptor) throws IllegalArgumentException {
+    Descriptor d = Descriptor.findOrCreateUTF8(l, descriptor);
     return findOrCreate(t, Atom.findOrCreateUnicodeAtom(methodName), d);
   }
 
-  public static MethodReference findOrCreate(ClassLoaderReference loader, String methodClass, String methodName,
+  public static MethodReference findOrCreate(Language l, ClassLoaderReference loader, String methodClass, String methodName,
       String methodSignature) throws IllegalArgumentException {
     TypeReference t = ShrikeUtil.makeTypeReference(loader, methodClass);
     Atom name = Atom.findOrCreateUnicodeAtom(methodName);
-    Descriptor d = Descriptor.findOrCreateUTF8(methodSignature);
+    Descriptor d = Descriptor.findOrCreateUTF8(l, methodSignature);
     return findOrCreate(t, name, d);
   }
 
