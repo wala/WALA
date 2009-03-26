@@ -19,6 +19,7 @@ import java.util.Set;
 
 import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * 
@@ -70,8 +71,9 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
     hcFreq = HashMapFactory.make(size);
   }
 
-  /*
+  /**
    * @see java.util.Collection#add(java.lang.Object)
+   * @throws UnimplementedError if there's a bad hash code problem
    */
   @Override
   public boolean add(T arg0) {

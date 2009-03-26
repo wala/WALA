@@ -85,6 +85,12 @@ public class CallFlowEdges {
    * @return set of d1 s.t. <c, d1> -> <s_p, d2> was recorded as call flow, or null if none found.
    */
   public IntSet getCallFlowSources(int c, int d2) {
+    if (c < 0) {
+      throw new IllegalArgumentException("invalid c : " + c);
+    }
+    if (d2 < 0) {
+      throw new IllegalArgumentException("invalid d2: " + d2);
+    }
     IntSet s = identityEdges.get(d2);
     IBinaryNaturalRelation R = edges.get(d2);
     IntSet result = null;

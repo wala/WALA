@@ -54,19 +54,21 @@ public class Factorial {
 
   /** Factorial */
   public static BigInteger fact(BigInteger n) {
+    if (n == null) {
+      throw new IllegalArgumentException("n is null");
+    }
     BigInteger result = BigInteger.ONE;
-    for (BigInteger i = BigInteger.ONE; i.compareTo(n) <= 0; i = i.add(BigInteger.ONE))
+    for (BigInteger i = BigInteger.ONE; i.compareTo(n) <= 0; i = i.add(BigInteger.ONE)) {
       result = result.multiply(i);
+    }
     return result;
   }
 
   /**
    * Factorial on doubles; avoids overflow problems present when using integers.
    * 
-   * @param n
-   *            arg on which to compute factorial
-   * @return (<code>double</code> approximation to) factorial of largest
-   *         positive integer <= (n_ + epsilon)
+   * @param n arg on which to compute factorial
+   * @return (<code>double</code> approximation to) factorial of largest positive integer <= (n_ + epsilon)
    */
   public static double fact(double n) {
     n += 1e-6;

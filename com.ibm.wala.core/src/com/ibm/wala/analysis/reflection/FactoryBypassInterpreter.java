@@ -36,12 +36,9 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.ipa.summaries.ReflectionSummary;
 import com.ibm.wala.ipa.summaries.SummarizedMethod;
 import com.ibm.wala.ipa.summaries.SyntheticIR;
-import com.ibm.wala.ipa.summaries.XMLReflectionReader;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.ConstantValue;
@@ -54,7 +51,6 @@ import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.types.FieldReference;
-import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -101,18 +97,18 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
   private Set<TypeReference> getTypesForContext(Context context) {
     // first try user spec
-    XMLReflectionReader spec = (XMLReflectionReader) userSpec;
-    if (spec != null && context instanceof CallerSiteContext) {
-      CallerSiteContext site = (CallerSiteContext) context;
-      MemberReference m = site.getCaller().getMethod().getReference();
-      ReflectionSummary summary = spec.getSummary(m);
-      if (summary != null) {
-        Set<TypeReference> types = summary.getTypesForProgramLocation(site.getCallSite().getProgramCounter());
-        if (types != null) {
-          return types;
-        }
-      }
-    }
+//    XMLReflectionReader spec = (XMLReflectionReader) userSpec;
+//    if (spec != null && context instanceof CallerSiteContext) {
+//      CallerSiteContext site = (CallerSiteContext) context;
+//      MemberReference m = site.getCaller().getMethod().getReference();
+//      ReflectionSummary summary = spec.getSummary(m);
+//      if (summary != null) {
+//        Set<TypeReference> types = summary.getTypesForProgramLocation(site.getCallSite().getProgramCounter());
+//        if (types != null) {
+//          return types;
+//        }
+//      }
+//    }
 
     Set<TypeReference> types = map.get(context);
     return types;

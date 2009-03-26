@@ -41,13 +41,10 @@ import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * 
  * This class reads reflection summaries from an XML Stream. TODO: share part of
  * the implementation with XMLMethodSummaryReader
- * 
- * @author sfink
- * 
  */
+@Deprecated
 public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecification {
 
   static final boolean DEBUG = false;
@@ -131,8 +128,6 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
   }
 
   /**
-   * @author sfink
-   * 
    * SAX parser logic for XML method summaries
    */
   private class SAXHandler extends DefaultHandler {

@@ -47,9 +47,6 @@ import com.ibm.wala.util.collections.EmptyIterator;
 
 /**
  * An immutable stack of objects. The {@link #push(Object)} and {@link #pop()} operations create new stacks.
- * 
- * @author Manu Sridharan
- * 
  * @param <T>
  */
 public class ImmutableStack<T> implements Iterable<T> {
@@ -252,8 +249,12 @@ public class ImmutableStack<T> implements Iterable<T> {
 
   /**
    * return a new stack with the top replaced with t
+   * @throws EmptyStackException
    */
   public ImmutableStack<T> replaceTop(T t) {
+    if (isEmpty()) {
+      throw new EmptyStackException();
+    }
     int size = entries.length;
     T[] tmpEntries = makeInternalArray(size);
     System.arraycopy(entries, 0, tmpEntries, 0, entries.length - 1);

@@ -20,14 +20,11 @@ import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.graph.Graph;
 
 /**
- * This class implements breadth-first search over a Graph, returning an
- * Iterator of the nodes of the graph in order of discovery. This class follows
- * the outNodes of the graph nodes to define the graph, but this behavior can be
- * changed by overriding the getConnected method.
+ * This class implements breadth-first search over a Graph, returning an Iterator of the nodes of the graph in order of discovery.
+ * This class follows the outNodes of the graph nodes to define the graph, but this behavior can be changed by overriding the
+ * getConnected method.
  * 
  * This traversal only visits nodes within k hops of a root.
- * 
- * @author Stephen Fink
  */
 public class BoundedBFSIterator<T> implements Iterator<T> {
 
@@ -57,8 +54,7 @@ public class BoundedBFSIterator<T> implements Iterator<T> {
   private final int k;
 
   /**
-   * boundary[i] is the first index which represents a child that is > i hops
-   * away.
+   * boundary[i] is the first index which represents a child that is > i hops away.
    */
   private final int[] boundary;
 
@@ -68,16 +64,17 @@ public class BoundedBFSIterator<T> implements Iterator<T> {
   private int currentHops = 0;
 
   /**
-   * Construct a breadth-first iterator starting with a particular node in a
-   * directed graph.
+   * Construct a breadth-first iterator starting with a particular node in a directed graph.
    * 
-   * @param G
-   *          the graph whose nodes to enumerate
-   * @throws IllegalArgumentException  if G is null
+   * @param G the graph whose nodes to enumerate
+   * @throws IllegalArgumentException if G is null
    */
   public BoundedBFSIterator(Graph<T> G, T N, int k) {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
+    }
+    if (k < 0) {
+      throw new IllegalArgumentException("invalid k : " + k);
     }
     this.k = k;
     boundary = new int[k];
@@ -85,16 +82,14 @@ public class BoundedBFSIterator<T> implements Iterator<T> {
   }
 
   /**
-   * Construct a breadth-first enumerator across the (possibly improper) subset
-   * of nodes reachable from the nodes in the given enumeration.
+   * Construct a breadth-first enumerator across the (possibly improper) subset of nodes reachable from the nodes in the given
+   * enumeration.
    * 
-   * @param G
-   *          the graph whose nodes to enumerate
-   * @param nodes
-   *          the set of nodes from which to start searching
-   * @throws IllegalArgumentException  if G is null
+   * @param G the graph whose nodes to enumerate
+   * @param nodes the set of nodes from which to start searching
+   * @throws IllegalArgumentException if G is null
    */
-  public BoundedBFSIterator(Graph<T> G, Iterator <? extends T> nodes, int k) {
+  public BoundedBFSIterator(Graph<T> G, Iterator<? extends T> nodes, int k) {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
@@ -102,7 +97,6 @@ public class BoundedBFSIterator<T> implements Iterator<T> {
     boundary = new int[k];
     init(G, nodes);
   }
-
 
   private void init(Graph<T> G, Iterator<? extends T> nodes) {
     this.G = G;
@@ -172,8 +166,7 @@ public class BoundedBFSIterator<T> implements Iterator<T> {
   /**
    * get the out edges of a given node
    * 
-   * @param n
-   *          the node of which to get the out edges
+   * @param n the node of which to get the out edges
    * @return the out edges
    * 
    */
