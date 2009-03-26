@@ -12,7 +12,6 @@ package com.ibm.wala.shrikeBT.info;
 
 import com.ibm.wala.shrikeBT.ArrayLengthInstruction;
 import com.ibm.wala.shrikeBT.CheckCastInstruction;
-import com.ibm.wala.shrikeBT.ComparisonInstruction;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.DupInstruction;
 import com.ibm.wala.shrikeBT.ExceptionHandler;

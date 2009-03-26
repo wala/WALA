@@ -294,14 +294,14 @@ public class Analyzer {
     getReachingBase(to, reaching, mask);
   }
 
-  final public BitSet getReachingTo(int to, BitSet mask) {
+  final BitSet getReachingTo(int to, BitSet mask) {
     getBackEdges();
     BitSet reaching = new BitSet();
     getReachingBase(to, reaching, mask);
     return reaching;
   }
 
-  final public BitSet getReachingTo(int to) {
+  final BitSet getReachingTo(int to) {
     return getReachingTo(to, null);
   }
 
