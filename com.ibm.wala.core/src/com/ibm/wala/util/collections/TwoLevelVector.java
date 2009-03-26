@@ -117,10 +117,12 @@ public class TwoLevelVector<T> implements IVector<T> {
       {
         while (outer.hasNext()) {
           IVector<T> v = outer.next();
-          Iterator<T> it = v.iterator();
-          if (it.hasNext()) {
-            inner = it;
-            break;
+          if (v != null) {
+            Iterator<T> it = v.iterator();
+            if (it.hasNext()) {
+              inner = it;
+              break;
+            }
           }
         }
       }
