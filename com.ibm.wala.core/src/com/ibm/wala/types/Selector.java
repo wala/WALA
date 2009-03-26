@@ -23,6 +23,10 @@ public final class Selector {
   private final Atom name;
 
   private final Descriptor descriptor;
+  
+  public static Selector make(String selectorStr) {
+    return make(Language.JAVA, selectorStr);
+  }
 
   public static Selector make(Language l, String selectorStr) {
     if (selectorStr == null) {

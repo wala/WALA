@@ -124,6 +124,9 @@ public class StringStuff {
     }
   }
 
+  public static final TypeName parseForReturnTypeName(String desc) throws IllegalArgumentException {
+    return parseForReturnTypeName(Language.JAVA, ImmutableByteArray.make(desc));
+  }
   public static final TypeName parseForReturnTypeName(Language l, String desc) throws IllegalArgumentException {
     return parseForReturnTypeName(l, ImmutableByteArray.make(desc));
   }
@@ -192,6 +195,9 @@ public class StringStuff {
     }
   }
 
+  public static final TypeName[] parseForParameterNames(String descriptor) throws IllegalArgumentException {
+    return parseForParameterNames(Language.JAVA, ImmutableByteArray.make(descriptor));
+  }
   public static final TypeName[] parseForParameterNames(Language l, String descriptor) throws IllegalArgumentException {
     return parseForParameterNames(l, ImmutableByteArray.make(descriptor));
   }
@@ -484,6 +490,9 @@ public class StringStuff {
    * @param methodSig something like "java_cup.lexer.advance()V"
    * @throws IllegalArgumentException if methodSig is null
    */
+  public static MethodReference makeMethodReference(String methodSig) throws IllegalArgumentException {
+    return makeMethodReference(Language.JAVA, methodSig);
+  }
   public static MethodReference makeMethodReference(Language l, String methodSig) throws IllegalArgumentException {
     if (methodSig == null) {
       throw new IllegalArgumentException("methodSig is null");

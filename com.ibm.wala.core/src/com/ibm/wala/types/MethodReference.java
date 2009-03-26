@@ -125,6 +125,11 @@ public final class MethodReference extends MemberReference {
     Descriptor d = Descriptor.findOrCreateUTF8(l, descriptor);
     return findOrCreate(t, Atom.findOrCreateUnicodeAtom(methodName), d);
   }
+  
+  public static MethodReference findOrCreate(ClassLoaderReference loader, String methodClass, String methodName,
+      String methodSignature) throws IllegalArgumentException {
+    return findOrCreate(Language.JAVA, loader, methodClass, methodName, methodSignature);
+  }
 
   public static MethodReference findOrCreate(Language l, ClassLoaderReference loader, String methodClass, String methodName,
       String methodSignature) throws IllegalArgumentException {
