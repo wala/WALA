@@ -36,10 +36,10 @@ public class IntegerUnionFind {
   }
 
   /**
-   * @param size
+   * @param size initial size of the tables
    */
   public IntegerUnionFind(int size) {
-    if (size + 1 < 0) {
+    if (size  < 0) {
       throw new IllegalArgumentException("illegal size: " + size);
     }
     parent = new int[size + 1];

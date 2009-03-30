@@ -113,6 +113,9 @@ public final class WalaProperties {
     if (loader == null) {
       throw new IllegalArgumentException("loader is null");
     }
+    if (fileName == null) {
+      throw new IllegalArgumentException("null fileName");
+    }
     final InputStream propertyStream = loader.getResourceAsStream(fileName);
     if (propertyStream == null) {
       throw new IOException("property_file_unreadable " + fileName);

@@ -77,6 +77,9 @@ public class BFSIterator<T> implements Iterator<T> {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
+    if (nodes == null) {
+      throw new IllegalArgumentException("nodes is null");
+    }
     init(G, nodes);
   }
 

@@ -60,6 +60,9 @@ public class SlowDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIterator
    * @param nodes the set of nodes from which to start searching
    */
   public SlowDFSDiscoverTimeIterator(Graph<T> G, Iterator<T> nodes) {
+    if (nodes == null) {
+      throw new IllegalArgumentException("null nodes");
+    }
     init(G, nodes);
   }
 

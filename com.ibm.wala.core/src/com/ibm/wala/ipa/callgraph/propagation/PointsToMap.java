@@ -145,6 +145,9 @@ public class PointsToMap {
    * points-to-sets are the primordial assignments from which the transitive closure flows.
    */
   public void recordTransitiveRoot(PointerKey key) {
+    if (key == null) {
+      throw new IllegalArgumentException("null key");
+    }
     int i = findOrCreateIndex(key);
     transitiveRoots.set(i);
   }

@@ -93,6 +93,9 @@ public class BoundedBFSIterator<T> implements Iterator<T> {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
+    if (k < 0) {
+      throw new IllegalArgumentException("invalid k: " + k);
+    }
     this.k = k;
     boundary = new int[k];
     init(G, nodes);

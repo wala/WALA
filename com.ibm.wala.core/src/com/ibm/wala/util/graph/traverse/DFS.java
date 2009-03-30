@@ -74,24 +74,6 @@ public class DFS {
     return result;
   }
 
-  // need to comment this out to avoid ambiguous type failure from javac
-  // /**
-  // * Perform a DFS starting with a particular node and return the set of all
-  // * nodes visited.
-  // *
-  // * @param G
-  // * the graph containing n
-  // * @param n
-  // * @return Set
-  // */
-  // public static <T> Set<T> getReachableNodes(Graph<T> G, T n) {
-  // HashSet<T> result = HashSetFactory.make();
-  // Iterator<T> dfs = iterateFinishTime(G, new NonNullSingletonIterator<T>(n));
-  // while (dfs.hasNext()) {
-  // result.add(dfs.next());
-  // }
-  // return result;
-  // }
 
   /**
    * Perform a DFS and return the set of all nodes visited.
@@ -200,7 +182,7 @@ public class DFS {
   }
 
   /**
-   * @param G
+   * @param G a graph
    * @return iterator of nodes of G in order of DFS finish time
    * @throws IllegalArgumentException if G == null
    */
@@ -216,30 +198,18 @@ public class DFS {
   }
 
   /**
-   * @param G
+   * @param G a graph
    * @param ie roots of traversal, in order to visit in outermost loop of DFS
    * @return iterator of nodes of G in order of DFS finish time
    */
   public static <T> DFSFinishTimeIterator<T> iterateFinishTime(Graph<T> G, Iterator<? extends T> ie) {
+    if (ie == null) {
+      throw new IllegalArgumentException("null ie");
+    }
     if (G instanceof NumberedGraph) {
       return new NumberedDFSFinishTimeIterator<T>((NumberedGraph<T>) G, ie);
     } else {
       return new SlowDFSFinishTimeIterator<T>(G, ie);
     }
   }
-
-  // need to comment out to avoid ambiguous type error from javac
-  // /**
-  // * @param G
-  // * @param n
-  // * @return iterator of nodes of G in order of DFS finish time
-  // */
-  // public static <T> DFSFinishTimeIterator<T> iterateFinishTime(Graph<T> G, T
-  // n) {
-  // if (G instanceof NumberedGraph) {
-  // return new NumberedDFSFinishTimeIterator<T>((NumberedGraph<T>) G, n);
-  // } else {
-  // return new SlowDFSFinishTimeIterator<T>(G, n);
-  // }
-  // }
 }

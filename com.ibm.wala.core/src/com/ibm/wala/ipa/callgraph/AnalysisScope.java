@@ -349,6 +349,9 @@ public class AnalysisScope {
    * Utility function. Useful when parsing input.
    */
   public MethodReference findMethod(Atom loader, String klass, Atom name, ImmutableByteArray desc) {
+    if (desc == null) {
+      throw new IllegalArgumentException("null desc");
+    }
     ClassLoaderReference clr = getLoader(loader);
     Descriptor ddesc = Descriptor.findOrCreate(languages.get(clr.getLanguage()), desc);
     TypeReference type = TypeReference.findOrCreate(clr, TypeName.string2TypeName(klass));

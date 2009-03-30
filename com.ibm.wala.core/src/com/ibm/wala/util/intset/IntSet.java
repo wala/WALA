@@ -11,10 +11,7 @@
 package com.ibm.wala.util.intset;
 
 /**
- * 
  * Set of integers; not necessary mutable TODO: extract a smaller interface?
- * 
- * @author sfink
  */
 public interface IntSet {
 
@@ -60,15 +57,11 @@ public interface IntSet {
 
   /**
    * Invoke an action on each element of the Set
-   * 
-   * @param action
    */
   public void foreach(IntSetAction action);
 
   /**
    * Invoke an action on each element of the Set, excluding elements of Set X
-   * 
-   * @param action
    */
   public void foreachExcluding(IntSet X, IntSetAction action);
 

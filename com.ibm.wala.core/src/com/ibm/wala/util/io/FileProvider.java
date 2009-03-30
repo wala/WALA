@@ -95,6 +95,9 @@ public class FileProvider {
   }
 
   public static URL getResource(String fileName, ClassLoader loader) throws IOException {
+    if (fileName == null) {
+      throw new IllegalArgumentException("null fileName");
+    }
     if (CorePlugin.getDefault() == null && loader == null) {
       throw new IllegalArgumentException("null loader");
     }
@@ -214,6 +217,9 @@ public class FileProvider {
   public static File getFileFromClassLoader(String fileName, ClassLoader loader) throws FileNotFoundException {
     if (loader == null) {
       throw new IllegalArgumentException("null loader");
+    }
+    if (fileName == null) {
+      throw new IllegalArgumentException("null fileName");
     }
     URL url = loader.getResource(fileName);
     if (DEBUG_LEVEL > 0) {

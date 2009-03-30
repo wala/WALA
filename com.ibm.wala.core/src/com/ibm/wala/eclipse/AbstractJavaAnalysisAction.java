@@ -62,6 +62,9 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
   }
 
   public static AnalysisScope computeScope(IStructuredSelection selection, boolean includeSource) throws IOException {
+    if (selection == null) {
+      throw new IllegalArgumentException("null selection");
+    }
     Collection<EclipseProjectPath> projectPaths = new LinkedList<EclipseProjectPath>();
     for (Iterator it = selection.iterator(); it.hasNext();) {
       Object object = it.next();

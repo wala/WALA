@@ -163,6 +163,9 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
     }
     INodeWithNumber N = n;
     int number = N.getGraphNodeId();
+    if (number == -1) {
+      throw new IllegalArgumentException("Cannot remove node, not in graph");
+    }
     if (nodes[number] != null) {
       nodes[number] = null;
       numberOfNodes--;

@@ -19,9 +19,6 @@ import com.ibm.wala.util.intset.BitVector;
 
 /**
  * An interface that is common to the Shrike and SSA CFG implementations.
- * 
- * @author cahoon
- * @author sfink
  */
 public interface ControlFlowGraph<I, T extends IBasicBlock<I>> extends NumberedGraph<T> {
 
@@ -41,8 +38,7 @@ public interface ControlFlowGraph<I, T extends IBasicBlock<I>> extends NumberedG
   public BitVector getCatchBlocks();
 
   /**
-   * @param index
-   *          an instruction index
+   * @param index an instruction index
    * @return the basic block which contains this instruction.
    */
   public T getBlockForInstruction(int index);
@@ -54,10 +50,9 @@ public interface ControlFlowGraph<I, T extends IBasicBlock<I>> extends NumberedG
 
   /**
    * TODO: move this into IR?
-   * @param index
-   *          an instruction index
-   * @return the program counter (bytecode index) corresponding to that
-   *         instruction
+   * 
+   * @param index an instruction index
+   * @return the program counter (bytecode index) corresponding to that instruction
    */
   public int getProgramCounter(int index);
 
@@ -67,30 +62,26 @@ public interface ControlFlowGraph<I, T extends IBasicBlock<I>> extends NumberedG
   public IMethod getMethod();
 
   /**
-   * The order of blocks returned must indicate the exception-handling scope.
-   * So the first block is the first candidate catch block, and so on.
-   * With this invariant one can compute the exceptional control flow for
-   * a given exception type.
+   * The order of blocks returned must indicate the exception-handling scope. So the first block is the first candidate catch block,
+   * and so on. With this invariant one can compute the exceptional control flow for a given exception type.
    * 
-   * @return the basic blocks which may be reached from b via exceptional
-   *         control flow
+   * @return the basic blocks which may be reached from b via exceptional control flow
    */
   public List<T> getExceptionalSuccessors(T b);
 
   /**
    * The order of blocks returned should be arbitrary but deterministic.
+   * 
    * @param b
-   * @return the basic blocks which may be reached from b via normal control
-   *         flow
+   * @return the basic blocks which may be reached from b via normal control flow
    */
   public Collection<T> getNormalSuccessors(T b);
-  
+
   /**
    * The order of blocks returned should be arbitrary but deterministic.
    * 
    * @param b
-   * @return the basic blocks from which b may be reached via exceptional
-   *         control flow
+   * @return the basic blocks from which b may be reached via exceptional control flow
    */
   public Collection<T> getExceptionalPredecessors(T b);
 
@@ -98,8 +89,7 @@ public interface ControlFlowGraph<I, T extends IBasicBlock<I>> extends NumberedG
    * The order of blocks returned should be arbitrary but deterministic.
    * 
    * @param b
-   * @return the basic blocks from which b may be reached via normal
-   *         control flow
+   * @return the basic blocks from which b may be reached via normal control flow
    */
   public Collection<T> getNormalPredecessors(T b);
 }

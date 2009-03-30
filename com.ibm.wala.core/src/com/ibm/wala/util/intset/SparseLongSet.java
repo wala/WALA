@@ -414,7 +414,7 @@ public class SparseLongSet implements LongSet {
     if (elements == null) {
       throw new IllegalStateException("Illegal to ask max() on an empty int set");
     }
-    return elements[size - 1];
+    return (size > 0) ? elements[size - 1] : -1;
   }
 
   /**

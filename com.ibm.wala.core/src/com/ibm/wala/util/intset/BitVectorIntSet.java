@@ -219,6 +219,9 @@ public final class BitVectorIntSet implements MutableIntSet {
    * @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction)
    */
   public void foreach(IntSetAction action) {
+    if (action == null) {
+      throw new IllegalArgumentException("null action");
+    }
     int nextBit = bitVector.nextSetBit(0);
     populationCount = (populationCount == UNDEFINED) ? bitVector.populationCount() : populationCount;
     for (int i = 0; i < populationCount; i++) {

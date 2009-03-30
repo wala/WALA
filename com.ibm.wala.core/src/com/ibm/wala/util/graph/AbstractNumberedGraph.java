@@ -16,11 +16,8 @@ import com.ibm.wala.util.graph.impl.NumberedNodeIterator;
 import com.ibm.wala.util.intset.IntSet;
 
 /**
- * 
  * Basic functionality for a graph that delegates node and edge management, and
  * tracks node numbers
- * 
- * @author sfink
  */
 public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implements NumberedGraph<T> {
 
