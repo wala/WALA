@@ -50,7 +50,7 @@ public class HeapTracer {
   /**
    * Object instances that should be considered roots of the heap trace
    */
-  private final Collection rootInstances;
+  private final Collection<?> rootInstances;
 
   /**
    * Stack of instance objects discovered but not yet traced.
@@ -122,7 +122,7 @@ public class HeapTracer {
    * @param c
    * @param traceStatics
    */
-  public HeapTracer(Collection c, boolean traceStatics) {
+  public HeapTracer(Collection<?> c, boolean traceStatics) {
     rootInstances = c;
     this.traceStatics = traceStatics;
   }

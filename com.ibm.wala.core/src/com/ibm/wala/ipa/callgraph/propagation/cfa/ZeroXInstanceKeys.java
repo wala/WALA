@@ -146,7 +146,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   /**
    * a Map from CGNode->Set<IClass> that should be smushed.
    */
-  final Map<CGNode, Set> smushMap = HashMapFactory.make();
+  protected final Map<CGNode, Set<IClass>> smushMap = HashMapFactory.make();
 
   public ZeroXInstanceKeys(AnalysisOptions options, IClassHierarchy cha, RTAContextInterpreter contextInterpreter, int policy) {
     if (options == null) {
@@ -219,7 +219,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
    * @return true iff the node contains too many allocation sites of type c
    */
   private boolean exceedsSmushLimit(IClass c, CGNode node) {
-    Set s = smushMap.get(node);
+    Set<IClass> s = smushMap.get(node);
     if (s == null) {
       Map<IClass, Integer> count = countAllocsByType(node);
       HashSet<IClass> smushees = HashSetFactory.make(5);
@@ -230,7 +230,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
           smushees.add(e.getKey());
         }
       }
-      s = smushees.isEmpty() ? Collections.emptySet() : smushees;
+      s = smushees.isEmpty() ? Collections.<IClass>emptySet() : smushees;
       smushMap.put(node, s);
     }
     return s.contains(c);
