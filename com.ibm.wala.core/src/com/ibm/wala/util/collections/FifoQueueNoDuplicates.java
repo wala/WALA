@@ -100,10 +100,8 @@ public class FifoQueueNoDuplicates<T> extends FifoQueue<T> {
   }
 
   /**
-   * Return an iterator over all elements ever in the queue.
+   * Return the set of objects that have been queued.
    * 
-   * @return <code>true</code> if <code>element</code> is in the queue.
-   *         Otherwise <code>false</code>.
    */
   public Set<T> queuedSet() {
     return Collections.unmodifiableSet(wasInQueue);
