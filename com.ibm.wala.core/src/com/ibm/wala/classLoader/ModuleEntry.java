@@ -54,7 +54,7 @@ public interface ModuleEntry {
 
   /**
    * @return the name of the class represented by this entry
-   * @throws UnsupportedOperationException if !isClassFile() nad !isSourceFile()
+   * @throws UnsupportedOperationException if !isClassFile() and !isSourceFile()
    */
   String getClassName();
 
