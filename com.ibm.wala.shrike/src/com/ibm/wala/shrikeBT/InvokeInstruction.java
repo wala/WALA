@@ -43,7 +43,7 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
     short opcode = 0;
     switch (mode) {
     case VIRTUAL:
-      opcode = OP_invokeinterface;
+      opcode = OP_invokevirtual;
       break;
     case SPECIAL:
       opcode = OP_invokespecial;
