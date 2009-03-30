@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.Set;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
@@ -368,11 +367,6 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
       Assertions.productionAssertion(false, "unexpected null for " + index);
     }
     return i2block[index];
-  }
-
-  public Set getExceptionHandlers() {
-    // TODO: support exception handlers
-    return Collections.emptySet();
   }
 
   // TODO: share some common parts of this implementation with the ShrikeCFG
