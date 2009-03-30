@@ -20,7 +20,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
- * @author sfink
  */
 public abstract class SetOfClasses implements Serializable {
 
@@ -48,9 +47,6 @@ public abstract class SetOfClasses implements Serializable {
     return result.iterator();
   }
 
-  /**
-   * @paramklass
-   */
   public abstract void add(IClass klass);
 
 }
