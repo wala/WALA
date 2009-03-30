@@ -40,7 +40,24 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
     if (mode == null) {
       throw new NullPointerException("mode must not be null");
     }
-    return new InvokeInstruction((short) (OP_invokevirtual + mode.ordinal()), type, className, methodName);
+    short opcode = 0;
+    switch (mode) {
+    case VIRTUAL:
+      opcode = OP_invokeinterface;
+      break;
+    case SPECIAL:
+      opcode = OP_invokespecial;
+      break;
+    case STATIC:
+      opcode = OP_invokestatic;
+      break;
+    case INTERFACE:
+      opcode = OP_invokeinterface;
+      break;
+    default:
+      assert false;
+    }
+    return new InvokeInstruction(opcode, type, className, methodName);
   }
 
   ConstantPoolReader getLazyConstantPool() {
