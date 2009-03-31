@@ -41,4 +41,26 @@ public class ClassHierarchyUtil {
     }
   }
 
+  /**
+   * Return the method that m overrides, or null if none
+   */
+  public static IMethod getOverriden(IMethod m) {
+    try {
+      IClass c = m.getDeclaringClass();
+      IClass parent = c.getSuperclass();
+      if (parent == null) {
+        return null;
+      } else {
+        MethodReference ref = MethodReference.findOrCreate(parent.getReference(), m.getSelector());
+        IMethod m2 = m.getClassHierarchy().resolveMethod(ref);
+        if (m2 != null && !m2.equals(m)) {
+          return m2;
+        }
+        return null;
+      }
+    } catch (ClassHierarchyException e) {
+      return null;
+    }
+  }
+
 }
