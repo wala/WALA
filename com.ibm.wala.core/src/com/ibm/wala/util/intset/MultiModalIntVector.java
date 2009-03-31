@@ -35,7 +35,6 @@ public class MultiModalIntVector implements IntVector {
 
   int maxIndex = -1;
 
-  // private Object store = null;
   private int[] intStore = new int[0];
 
   private short[] shortStore = new short[0];
@@ -98,24 +97,18 @@ public class MultiModalIntVector implements IntVector {
     if (Assertions.verifyAssertions) {
       Assertions._assert(x >= 0);
     }
-    // print();
-    // System.out.println("getting @" + x);
     int index = x;
     if (index < byteStore.length) {
-      // System.out.println(byteStore[index]);
       return byteStore[index];
     }
     index -= byteStore.length;
     if (index < shortStore.length) {
-      // System.out.println(shortStore[index]);
       return shortStore[index];
     }
     index -= shortStore.length;
     if (index < intStore.length) {
-      // System.out.println(intStore[index]);
       return intStore[index];
     }
-    // System.out.println(defaultValue);
     return defaultValue;
   }
 
@@ -127,7 +120,6 @@ public class MultiModalIntVector implements IntVector {
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
   public void set(int x, int value) {
-    // System.out.println("Adding " + value + " @ " + x);
     if (Assertions.verifyAssertions) {
       Assertions._assert(x >= 0);
     }
@@ -144,7 +136,6 @@ public class MultiModalIntVector implements IntVector {
       ensureCapacity(x, value);
       add(value, x);
     }
-    // print();
   }
 
   private void add(int value, int index) {
@@ -223,7 +214,6 @@ public class MultiModalIntVector implements IntVector {
         // Current array size
         int[] old = intStore;
         // New array size
-        // int newSize = 1 + (int) (getGrowthFactor() * capacity) - byteStore.length - shortStore.length;
         int newSize = 1 + (int) (getGrowthFactor(length) * capacity) - byteStore.length - shortStore.length;
         int[] newData = new int[newSize];
         Arrays.fill(newData, defaultValue);
@@ -233,7 +223,6 @@ public class MultiModalIntVector implements IntVector {
     } else if (shortStore.length > 0 || NumberUtility.isShort(value)) {
       if (capacity >= length) {
         short[] old = shortStore;
-        // int newSize = 1 + (int) (getGrowthFactor() * capacity) - byteStore.length ;
         int newSize = 1 + (int) (getGrowthFactor(length) * capacity) - byteStore.length;
         short[] newData = new short[newSize];
         Arrays.fill(newData, (short) defaultValue);
@@ -243,7 +232,6 @@ public class MultiModalIntVector implements IntVector {
     } else {
       if (capacity >= length) {
         byte[] old = byteStore;
-        // int newSize = 1 + (int) (getGrowthFactor() * capacity) ;
         int newSize = 1 + (int) (getGrowthFactor(length) * capacity);
         byte[] newData = new byte[newSize];
         Arrays.fill(newData, (byte) defaultValue);
