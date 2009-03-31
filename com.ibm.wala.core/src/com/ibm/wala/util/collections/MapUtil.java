@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.WeakHashMap;
 
 import com.ibm.wala.util.intset.MutableIntSet;
@@ -31,7 +30,8 @@ public class MapUtil {
    * @param key
    * @return the Set corresponding to key in M; create one if needed
    * @throws IllegalArgumentException if M is null
-   * @throws ClassCastException if M is a {@link TreeMap} and key is not {@link Comparable}
+   * @throws ClassCastException if the key is of an inappropriate type for this map (optional)
+   * @throws NullPointerException if the specified key is null and this map does not permit null keys (optional)
    */
   public static <K, T> Set<T> findOrCreateSet(Map<K, Set<T>> M, K key) {
     if (M == null) {
@@ -46,25 +46,25 @@ public class MapUtil {
   }
 
   /**
-   * @throws ClassCastException if M is a {@link TreeMap} and key is not {@link Comparable}
+   * @throws ClassCastException if the key is of an inappropriate type for this map (optional)
+   * @throws NullPointerException if the specified key is null and this map does not permit null keys (optional)
    */
-  public static <K> MutableIntSet findOrCreateMutableIntSet(Map<K, MutableIntSet> M, K key){
+  public static <K> MutableIntSet findOrCreateMutableIntSet(Map<K, MutableIntSet> M, K key) {
     if (M == null) {
       throw new IllegalArgumentException("M is null");
     }
     MutableIntSet mis = M.get(key);
-    if (mis == null){
+    if (mis == null) {
       mis = MutableSparseIntSet.makeEmpty();
       M.put(key, mis);
     }
     return mis;
   }
-  
+
   /**
-   * @param M a mapping from Object -> Collection
-   * @param key
    * @return the Collection corresponding to key in M; create one if needed
-   * @throws IllegalArgumentException if M is null
+   * @throws ClassCastException if the key is of an inappropriate type for this map (optional)
+   * @throws NullPointerException if the specified key is null and this map does not permit null keys (optional)
    */
   public static <K, T> Collection<T> findOrCreateCollection(Map<K, Collection<T>> M, K key) {
     if (M == null) {
@@ -78,13 +78,11 @@ public class MapUtil {
     return result;
   }
 
-  
   /**
-   * @param M a mapping from Object -> Set
-   * @param key
    * @return the Set corresponding to key in M; create one if needed
    * @throws IllegalArgumentException if M is null
-   * @throws ClassCastException if M is a {@link TreeMap} and key is not {@link Comparable}
+   * @throws ClassCastException if the key is of an inappropriate type for this map (optional)
+   * @throws NullPointerException if the specified key is null and this map does not permit null keys (optional)
    */
   public static <K, T> List<T> findOrCreateList(Map<K, List<T>> M, K key) {
     if (M == null) {
@@ -102,8 +100,9 @@ public class MapUtil {
    * @param M a mapping from Object -> Map
    * @param key
    * @return the Map corresponding to key in M; create one if needed
-   * @throws IllegalArgumentException if M is null   
-   * @throws ClassCastException if M is a {@link TreeMap} and key is not {@link Comparable}
+   * @throws IllegalArgumentException if M is null
+   * @throws ClassCastException if the key is of an inappropriate type for this map (optional)
+   * @throws NullPointerException if the specified key is null and this map does not permit null keys (optional)
    */
   public static <K, K2, V> Map<K2, V> findOrCreateMap(Map<K, Map<K2, V>> M, K key) {
     if (M == null) {
@@ -118,9 +117,10 @@ public class MapUtil {
   }
 
   /**
-   * @throws ClassCastException if M is a {@link TreeMap} and key is not {@link Comparable}
+   * @throws ClassCastException if the key is of an inappropriate type for this map (optional)
+   * @throws NullPointerException if the specified key is null and this map does not permit null keys (optional)
    */
-  public static <K, V> V findOrCreateValue(Map<K,V> M, K key, Factory<V> factory){
+  public static <K, V> V findOrCreateValue(Map<K, V> M, K key, Factory<V> factory) {
     if (M == null) {
       throw new IllegalArgumentException("M is null");
     }
@@ -131,13 +131,14 @@ public class MapUtil {
     }
     return result;
   }
-  
+
   /**
    * @param M a mapping from Object -> WeakHashMap
    * @param key
    * @return the WeakHashMap corresponding to key in M; create one if needed
    * @throws IllegalArgumentException if M is null
-   * @throws ClassCastException if M is a {@link TreeMap} and key is not {@link Comparable}
+   * @throws ClassCastException if the key is of an inappropriate type for this map (optional)
+   * @throws NullPointerException if the specified key is null and this map does not permit null keys (optional)
    */
   public static <K, V> WeakHashMap<K, V> findOrCreateWeakHashMap(Map<Object, WeakHashMap<K, V>> M, Object key) {
     if (M == null) {

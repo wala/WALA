@@ -102,11 +102,15 @@ public final class Atom implements Serializable {
     if (utf8.length < off + len) {
       throw new IllegalArgumentException("utf8.length < off + len");
     }
+    if (off + len < 0) {
+      throw new IllegalArgumentException("off + len is too big: " + off + " + " + len);
+    }
     byte val[] = new byte[len];
     for (int i = 0; i < len; ++i) {
       val[i] = utf8[off++];
     }
     return findOrCreate(val);
+
   }
 
   public static synchronized Atom findOrCreate(byte[] bytes) {

@@ -197,15 +197,14 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
     if (number == -1) {
       return false;
     }
-    if (Assertions.verifyAssertions) {
-      if (number >= nodes.length) {
-        Assertions.UNREACHABLE("node already has a graph node id, but is not registered there in this graph (number too big)\n"
-            + "this graph implementation is fragile and won't support this kind of test\n" + n.getClass() + " : " + n);
-      }
-      if (nodes[number] != N) {
-        Assertions.UNREACHABLE("node already has a graph node id, but is not registered there in this graph\n"
-            + "this graph implementation is fragile and won't support this kind of test\n" + n.getClass() + " : " + n);
-      }
+    if (number >= nodes.length) {
+      throw new IllegalArgumentException(
+          "node already has a graph node id, but is not registered there in this graph (number too big)\n"
+              + "this graph implementation is fragile and won't support this kind of test\n" + n.getClass() + " : " + n);
+    }
+    if (nodes[number] != N) {
+      throw new IllegalArgumentException("node already has a graph node id, but is not registered there in this graph\n"
+          + "this graph implementation is fragile and won't support this kind of test\n" + n.getClass() + " : " + n);
     }
     return true;
     // return (nodes[number] == N);

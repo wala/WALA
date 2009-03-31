@@ -40,13 +40,17 @@ public final class WalaProperties {
 
   public final static String ECLIPSE_PLUGINS_DIR = "eclipse_plugins_dir"; //$NON-NLS-1$
 
+  /**
+   * Determine the classpath noted in wala.properties for J2SE standard libraries
+   * @throws IllegalStateException if there's a problem loading the wala properties
+   */
   public static String[] getJ2SEJarFiles() {
     Properties p = null;
     try {
       p = WalaProperties.loadProperties();
     } catch (WalaException e) {
       e.printStackTrace();
-      Assertions.UNREACHABLE();
+      throw new IllegalStateException("problem loading wala.properties");
     }
 
     String dir = p.getProperty(WalaProperties.J2SE_DIR);
@@ -64,7 +68,7 @@ public final class WalaProperties {
       p = WalaProperties.loadProperties();
     } catch (WalaException e) {
       e.printStackTrace();
-      Assertions.UNREACHABLE();
+      throw new IllegalStateException("problem loading wala.properties");
     }
     String dir = p.getProperty(WalaProperties.J2EE_DIR);
     if (dir == null) {

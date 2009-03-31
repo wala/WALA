@@ -295,6 +295,9 @@ public class JdtUtil {
     if (klass == null) {
       throw new IllegalArgumentException("null klass");
     }
+    if (projects == null) {
+      throw new IllegalArgumentException("null projects");
+    }
     IType type = null;
     try {
       type = findJavaClassInProjects(klass, projects);

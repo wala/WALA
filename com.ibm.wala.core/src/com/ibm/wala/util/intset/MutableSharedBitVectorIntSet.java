@@ -181,6 +181,9 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
    * @see com.ibm.wala.util.intset.IntSet#intersection(com.ibm.wala.util.intset.IntSet)
    */
   public IntSet intersection(IntSet that) {
+    if (that == null) {
+      throw new IllegalArgumentException("null that");
+    }
     if (that instanceof MutableSharedBitVectorIntSet) {
       return intersection((MutableSharedBitVectorIntSet) that);
     } else if (that instanceof BitVectorIntSet) {

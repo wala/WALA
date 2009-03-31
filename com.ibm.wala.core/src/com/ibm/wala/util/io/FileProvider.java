@@ -154,30 +154,34 @@ public class FileProvider {
    * @throws IOException
    */
   private static URL getFileURLFromPlugin(Plugin p, String fileName) throws IOException {
-    URL url = FileLocator.find(p.getBundle(), new Path(fileName), null);
-    if (url == null) {
-      // try lib/fileName
-      String libFileName = "lib/" + fileName;
-      url = FileLocator.find(p.getBundle(), new Path(libFileName), null);
+    try {
+      URL url = FileLocator.find(p.getBundle(), new Path(fileName), null);
       if (url == null) {
-        // try bin/fileName
-        String binFileName = "bin/" + fileName;
-        url = FileLocator.find(p.getBundle(), new Path(binFileName), null);
+        // try lib/fileName
+        String libFileName = "lib/" + fileName;
+        url = FileLocator.find(p.getBundle(), new Path(libFileName), null);
         if (url == null) {
-          // try it as an absolute path?
-          File f = new File(fileName);
-          if (!f.exists()) {
-            // give up
-            return null;
-          } else {
-            url = f.toURI().toURL();
+          // try bin/fileName
+          String binFileName = "bin/" + fileName;
+          url = FileLocator.find(p.getBundle(), new Path(binFileName), null);
+          if (url == null) {
+            // try it as an absolute path?
+            File f = new File(fileName);
+            if (!f.exists()) {
+              // give up
+              return null;
+            } else {
+              url = f.toURI().toURL();
+            }
           }
         }
       }
+      url = FileLocator.toFileURL(url);
+      url = fixupFileURLSpaces(url);
+      return url;
+    } catch (ExceptionInInitializerError e) {
+      throw new IOException("failure to get file URL for " + fileName);
     }
-    url = FileLocator.toFileURL(url);
-    url = fixupFileURLSpaces(url);
-    return url;
   }
 
   /**
@@ -239,8 +243,8 @@ public class FileProvider {
   }
 
   /**
-   * @return the jar file packaged with this plug-in of the given name, or null if not found: wrapped as a JarFileModule
-   *         or a NestedJarFileModule
+   * @return the jar file packaged with this plug-in of the given name, or null if not found: wrapped as a JarFileModule or a
+   *         NestedJarFileModule
    * @throws IOException
    */
   public static Module getJarFileFromClassLoader(String fileName, ClassLoader loader) throws IOException {
@@ -278,8 +282,8 @@ public class FileProvider {
   /**
    * Properly creates the String file name of a {@link URL}. This works around a bug in the Sun implementation of
    * {@link URL#getFile()}, which doesn't properly handle file paths with spaces (see <a
-   * href="http://sourceforge.net/tracker/index.php?func=detail&aid=1565842&group_id=176742&atid=878458">bug report</a>).
-   * For now, fails with an assertion if the url is malformed.
+   * href="http://sourceforge.net/tracker/index.php?func=detail&aid=1565842&group_id=176742&atid=878458">bug report</a>). For now,
+   * fails with an assertion if the url is malformed.
    * 
    * @param url
    * @return the path name for the url

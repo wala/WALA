@@ -19,11 +19,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- * 
- * a debugging aid. This implementation complains if you stick an object in here
- * which appears to use System.identityHashCode()
- * 
- * @author sfink
+ * a debugging aid. This implementation complains if you stick an object in here which appears to use System.identityHashCode()
  */
 @Internal
 public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
@@ -31,8 +27,7 @@ public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
 
   /**
    * @param t
-   * @throws NullPointerException
-   *           if t is null
+   * @throws NullPointerException if t is null
    */
   public ParanoidHashMap(Map<K, V> t) throws NullPointerException {
     super(t.size());
@@ -59,7 +54,7 @@ public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
     if (o != null && o.hashCode() == System.identityHashCode(o)) {
       try {
         Method method = o.getClass().getMethod("hashCode");
-        if (method.getDeclaringClass() == Object.class){
+        if (method.getDeclaringClass() == Object.class) {
           Assertions._assert(false, o.getClass().toString());
         }
       } catch (Exception e) {
@@ -76,7 +71,7 @@ public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
     if (arg0 == null) {
       throw new IllegalArgumentException("arg0 is null");
     }
-    for (Map.Entry<? extends K, ? extends V> E: arg0.entrySet()) {
+    for (Map.Entry<? extends K, ? extends V> E : arg0.entrySet()) {
       put(E.getKey(), E.getValue());
     }
   }

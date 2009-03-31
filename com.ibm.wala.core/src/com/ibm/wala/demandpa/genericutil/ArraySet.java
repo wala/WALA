@@ -104,6 +104,9 @@ public class ArraySet<T> extends AbstractSet<T> {
     addAll(other);
   }
 
+  /**
+   * @throws UnsupportedOperationException if this {@link ArraySet} is immutable (optional)
+   */
   @SuppressWarnings("all")
   public boolean add(T o) {
     if (o == null) {

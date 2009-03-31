@@ -127,6 +127,10 @@ public class AnalysisScopeReader {
     }
   }
   
+  /**
+   * @param exclusionsFile file holding class hierarchy exclusions.  may be null
+   * @throws IllegalStateException if there are problmes reading wala properties
+   */
   public static AnalysisScope makePrimordialScope(File exclusionsFile) {
     return readJavaScope(BASIC_FILE, exclusionsFile, MY_CLASSLOADER, CorePlugin.getDefault());
   }
@@ -137,6 +141,8 @@ public class AnalysisScopeReader {
 
   /**
    * @param classPath class path to analyze, delimited by File.pathSeparator
+   * @param exclusionsFile file holding class hierarchy exclusions.  may be null
+   * @throws IllegalStateException if there are problems reading wala properties
    */
   public static AnalysisScope makeJavaBinaryAnalysisScope(String classPath, File exclusionsFile) {
     return makeJavaBinaryAnalysisScope(classPath, exclusionsFile, CorePlugin.getDefault());
@@ -144,6 +150,8 @@ public class AnalysisScopeReader {
   
   /**
    * @param classPath class path to analyze, delimited by File.pathSeparator
+   * @param exclusionsFile file holding class hierarchy exclusions.  may be null
+   * @throws IllegalStateException if there are problems reading wala properties
    */
   public static AnalysisScope makeJavaBinaryAnalysisScope(String classPath, File exclusionsFile, Plugin plugIn) {
     if (classPath == null) {

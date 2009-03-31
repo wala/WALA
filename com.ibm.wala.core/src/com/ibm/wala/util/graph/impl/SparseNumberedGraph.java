@@ -18,8 +18,6 @@ import com.ibm.wala.util.intset.BasicNaturalRelation;
 
 /**
  * A graph of numbered nodes, expected to have a fairly sparse edge structure.
- * 
- * @author sfink
  */
 public class SparseNumberedGraph<T extends INodeWithNumber> extends AbstractNumberedGraph<T> {
 
@@ -27,20 +25,16 @@ public class SparseNumberedGraph<T extends INodeWithNumber> extends AbstractNumb
 
   private final SparseNumberedEdgeManager<T> edgeManager;
 
-  /**
-   * 
-   */
   public SparseNumberedGraph() {
     nodeManager = new DelegatingNumberedNodeManager<T>();
     edgeManager = new SparseNumberedEdgeManager<T>(nodeManager);
   }
 
   /**
-   * If normalCase == n, the s edge manager will eagerly allocated n words to
-   * hold out edges for each node. (performance optimization for time)
+   * If normalCase == n, the s edge manager will eagerly allocated n words to hold out edges for each node. (performance
+   * optimization for time)
    * 
-   * @param normalCase
-   *          what is the "normal" number of out edges for a node?
+   * @param normalCase what is the "normal" number of out edges for a node?
    */
   public SparseNumberedGraph(int normalCase) {
     nodeManager = new DelegatingNumberedNodeManager<T>();
