@@ -18,80 +18,57 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * 
  * Basic interface for an object that represents a single Java method for analysis purposes.
- * 
- * @author sfink
  */
 public interface IMethod extends IMember, ContextItem {
 
   /**
    * Is this method synchronized?
-   * 
-   * @return boolean
    */
   boolean isSynchronized();
 
   /**
    * Is this method a class initializer?
-   * 
-   * @return boolean
    */
   boolean isClinit();
 
   /**
    * Is this method an object initializer?
-   * 
-   * @return boolean
    */
   boolean isInit();
 
   /**
    * Is this method native?
-   * 
-   * @return boolean
    */
   boolean isNative();
 
   /**
    * Did someone synthesize this method? (As opposed to reading it from a class file)
-   * 
-   * @return boolean
    */
   boolean isSynthetic();
 
   /**
    * Is this method abstract?
-   * 
-   * @return boolean
    */
   boolean isAbstract();
 
   /**
    * Is this method private?
-   * 
-   * @return boolean
    */
   boolean isPrivate();
 
   /**
    * Is this method protected?
-   * 
-   * @return boolean
    */
   boolean isProtected();
 
   /**
    * Is this method public?
-   * 
-   * @return boolean
    */
   boolean isPublic();
 
   /**
    * Is this method final?
-   * 
-   * @return boolean
    */
   boolean isFinal();
 
@@ -137,37 +114,30 @@ public interface IMethod extends IMember, ContextItem {
   TypeReference[] getDeclaredExceptions() throws InvalidClassFileException, UnsupportedOperationException;
 
   /**
-   * @return the source line number corresponding to a particular bytecode index, or -1 if the information is not
-   *         available.
+   * @return the source line number corresponding to a particular bytecode index, or -1 if the information is not available.
    * @throws InvalidClassFileException
    */
   int getLineNumber(int bcIndex) throws InvalidClassFileException;
 
   /**
-   * @return the (source code) name of the local variable of a given number at the specified program counter, or null if
-   *         the information is not available.
+   * @return the (source code) name of the local variable of a given number at the specified program counter, or null if the
+   *         information is not available.
    * @throws InvalidClassFileException
    */
   String getLocalVariableName(int bcIndex, int localNumber) throws InvalidClassFileException;
 
   /**
    * something like: com.foo.bar.createLargeOrder(IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer;
-   * 
-   * @return String
    */
   public String getSignature();
 
   /**
    * something like: foo(Ljava/langString;)Ljava/lang/Class;
-   * 
-   * @return String
    */
   public Selector getSelector();
 
   /**
-   * Method getDescriptor. something like: (IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer;
-   * 
-   * @return Descriptor
+   * something like: (IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer;
    */
   Descriptor getDescriptor();
 
