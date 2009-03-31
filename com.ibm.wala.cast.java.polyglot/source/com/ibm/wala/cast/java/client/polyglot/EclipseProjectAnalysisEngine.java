@@ -17,7 +17,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaModelException;
 
 import com.ibm.wala.cast.java.client.impl.ZeroCFABuilderFactory;
 import com.ibm.wala.client.AbstractAnalysisEngine;
@@ -27,10 +26,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
-/**
- * @author Julian Dolby (dolby@us.ibm.com)
- * @author sfink ... refactored 
- */
 public class EclipseProjectAnalysisEngine extends AbstractAnalysisEngine {
 
   protected final IPath workspaceRootPath;
@@ -56,7 +51,7 @@ public class EclipseProjectAnalysisEngine extends AbstractAnalysisEngine {
   }
 
   @Override
-  protected void buildAnalysisScope() {
+  protected void buildAnalysisScope() throws IOException {
     super.scope = ePath.toAnalysisScope(new File(getExclusionsFile()));
   }
 
