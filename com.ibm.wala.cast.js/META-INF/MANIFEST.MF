@@ -91,4 +91,3 @@ Require-Bundle: com.ibm.wala.cast,
  com.ibm.wala.core,
  com.ibm.wala.cast
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
