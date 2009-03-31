@@ -13,8 +13,6 @@ package com.ibm.wala.util.intset;
 
 /**
  * interface for array of integer
- * 
- * @author sfink
  */
 public interface IntVector{
 
