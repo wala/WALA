@@ -19,13 +19,10 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
 /**
- * 
  * A relation between non-negative integers
  * 
  * This implementation uses n IntVectors, to hold the first n y's associated with each x, and then 1 extra vector of SparseIntSet to
  * hold the remaining ys.
- * 
- * @author sfink
  */
 public final class BasicNaturalRelation implements IBinaryNaturalRelation {
 
@@ -126,18 +123,14 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
    * This is performance-critical, so the implementation looks a little ugly in order to help out the compiler with redundancy
    * elimination.
    * 
-   * @param x
-   * @param y
    * @return true iff the relation changes as a result of this call.
    */
   public boolean add(int x, int y) throws IllegalArgumentException {
-    if (Assertions.verifyAssertions) {
-      if (x < 0) {
-        throw new IllegalArgumentException("illegal x: " + x);
-      }
-      if (y < 0) {
-        throw new IllegalArgumentException("illegal y: " + y);
-      }
+    if (x < 0) {
+      throw new IllegalArgumentException("illegal x: " + x);
+    }
+    if (y < 0) {
+      throw new IllegalArgumentException("illegal y: " + y);
     }
     maxX = Math.max(maxX, x);
     MutableIntSet delegated = (MutableIntSet) delegateStore.get(x);
@@ -351,6 +344,12 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
   }
 
   public void remove(int x, int y) {
+    if (x < 0) {
+      throw new IllegalArgumentException("illegal x: " + x);
+    }
+    if (y < 0) {
+      throw new IllegalArgumentException("illegal y: " + y);
+    }
     if (usingDelegate(x)) {
       // TODO: switch representation back to small store?
       MutableIntSet s = (MutableIntSet) delegateStore.get(x);

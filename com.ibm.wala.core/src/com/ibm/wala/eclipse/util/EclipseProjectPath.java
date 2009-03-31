@@ -299,8 +299,10 @@ public class EclipseProjectPath {
 
   /**
    * Convert this path to a WALA analysis scope
+   * 
+   * @throws IOException
    */
-  public AnalysisScope toAnalysisScope(ClassLoader classLoader, File exclusionsFile) {
+  public AnalysisScope toAnalysisScope(ClassLoader classLoader, File exclusionsFile) throws IOException {
     AnalysisScope scope = AnalysisScopeReader.readJavaScope(AbstractAnalysisEngine.SYNTHETIC_J2SE_MODEL, exclusionsFile,
         classLoader);
     return toAnalysisScope(scope);
@@ -338,11 +340,11 @@ public class EclipseProjectPath {
     }
   }
 
-  public AnalysisScope toAnalysisScope(final File exclusionsFile) {
+  public AnalysisScope toAnalysisScope(final File exclusionsFile) throws IOException {
     return toAnalysisScope(getClass().getClassLoader(), exclusionsFile);
   }
 
-  public AnalysisScope toAnalysisScope() {
+  public AnalysisScope toAnalysisScope() throws IOException {
     return toAnalysisScope(getClass().getClassLoader(), null);
   }
 
@@ -352,7 +354,12 @@ public class EclipseProjectPath {
 
   @Override
   public String toString() {
-    return toAnalysisScope((File) null).toString();
+    try {
+      return toAnalysisScope((File) null).toString();
+    } catch (IOException e) {
+      e.printStackTrace();
+      return "Error in toString()";
+    }
   }
 
   private IPluginModelBase findModel(IProject p) {

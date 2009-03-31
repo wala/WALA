@@ -84,6 +84,9 @@ public class PointsToMap {
    * If p is unified, returns the representative for p.
    */
   public PointsToSetVariable getPointsToSet(PointerKey p) {
+    if (p == null) {
+      throw new IllegalArgumentException("null p");
+    }
     if (isImplicit(p)) {
       throw new IllegalArgumentException("unexpected: shouldn't ask a PointsToMap for an implicit points-to-set: " + p);
     }
@@ -111,6 +114,9 @@ public class PointsToMap {
    * record that a particular points-to-set is represented implicitly
    */
   public void recordImplicit(PointerKey key) {
+    if (key == null) {
+      throw new IllegalArgumentException("null key");
+    }
     int i = findOrCreateIndex(key);
     pointsToSets.set(i, IMPLICIT);
   }

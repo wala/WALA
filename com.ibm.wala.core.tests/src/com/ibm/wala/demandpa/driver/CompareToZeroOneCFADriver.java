@@ -118,7 +118,7 @@ public class CompareToZeroOneCFADriver {
   }
 
   @SuppressWarnings("unused")
-  private static void runApplication(String appJar) throws IllegalArgumentException, CancelException {
+  private static void runApplication(String appJar) throws IllegalArgumentException, CancelException, IOException {
     Trace.println("=======---------------=============");
     Trace.println("ANALYZING " + appJar + "\n\n");
 

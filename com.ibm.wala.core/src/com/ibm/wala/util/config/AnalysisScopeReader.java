@@ -32,29 +32,29 @@ import com.ibm.wala.util.strings.Atom;
 
 /**
  * Reads {@link AnalysisScope} from a text file.
- * 
  */
 public class AnalysisScopeReader {
 
   private static final ClassLoader MY_CLASSLOADER = AnalysisScopeReader.class.getClassLoader();
 
   private static final String BASIC_FILE = "primordial.txt";
-  
-  public static AnalysisScope readJavaScope(String scopeFileName, File exclusionsFile, ClassLoader javaLoader) {
-    AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
 
+  public static AnalysisScope readJavaScope(String scopeFileName, File exclusionsFile, ClassLoader javaLoader) throws IOException {
+    AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
     return read(scope, scopeFileName, exclusionsFile, javaLoader, CorePlugin.getDefault());
   }
-  
-  private static AnalysisScope readJavaScope(String scopeFileName, File exclusionsFile, ClassLoader javaLoader, Plugin plugIn) {
+
+  private static AnalysisScope readJavaScope(String scopeFileName, File exclusionsFile, ClassLoader javaLoader, Plugin plugIn) throws IOException {
     AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
     return read(scope, scopeFileName, exclusionsFile, javaLoader, plugIn);
   }
 
-  private static AnalysisScope read(AnalysisScope scope, String scopeFileName, File exclusionsFile, ClassLoader javaLoader, Plugin plugIn) {
+  private static AnalysisScope read(AnalysisScope scope, String scopeFileName, File exclusionsFile, ClassLoader javaLoader,
+      Plugin plugIn) throws IOException {
     BufferedReader r = null;
     try {
-      File scopeFile = (plugIn == null) ? FileProvider.getFile(scopeFileName, javaLoader): FileProvider.getFileFromPlugin(plugIn, scopeFileName);
+      File scopeFile = (plugIn == null) ? FileProvider.getFile(scopeFileName, javaLoader) : FileProvider.getFileFromPlugin(plugIn,
+          scopeFileName);
       assert scopeFile.exists();
 
       String line;
@@ -67,15 +67,12 @@ public class AnalysisScopeReader {
         scope.setExclusions(FileOfClasses.createFileOfClasses(exclusionsFile));
       }
 
-    } catch (IOException e) {
-      e.printStackTrace();
-      Assertions.UNREACHABLE(e.toString());
     } finally {
       if (r != null) {
         try {
           r.close();
         } catch (IOException e) {
-           e.printStackTrace();
+          e.printStackTrace();
         }
       }
     }
@@ -126,34 +123,37 @@ public class AnalysisScopeReader {
       Assertions.UNREACHABLE();
     }
   }
-  
+
   /**
-   * @param exclusionsFile file holding class hierarchy exclusions.  may be null
+   * @param exclusionsFile file holding class hierarchy exclusions. may be null
+   * @throws IOException 
    * @throws IllegalStateException if there are problmes reading wala properties
    */
-  public static AnalysisScope makePrimordialScope(File exclusionsFile) {
+  public static AnalysisScope makePrimordialScope(File exclusionsFile) throws IOException {
     return readJavaScope(BASIC_FILE, exclusionsFile, MY_CLASSLOADER, CorePlugin.getDefault());
   }
-  
-  private static AnalysisScope makePrimordialScope(File exclusionsFile, Plugin plugIn) {
+
+  private static AnalysisScope makePrimordialScope(File exclusionsFile, Plugin plugIn) throws IOException {
     return readJavaScope(BASIC_FILE, exclusionsFile, MY_CLASSLOADER, plugIn);
   }
 
   /**
    * @param classPath class path to analyze, delimited by File.pathSeparator
-   * @param exclusionsFile file holding class hierarchy exclusions.  may be null
+   * @param exclusionsFile file holding class hierarchy exclusions. may be null
+   * @throws IOException 
    * @throws IllegalStateException if there are problems reading wala properties
    */
-  public static AnalysisScope makeJavaBinaryAnalysisScope(String classPath, File exclusionsFile) {
+  public static AnalysisScope makeJavaBinaryAnalysisScope(String classPath, File exclusionsFile) throws IOException {
     return makeJavaBinaryAnalysisScope(classPath, exclusionsFile, CorePlugin.getDefault());
   }
-  
+
   /**
    * @param classPath class path to analyze, delimited by File.pathSeparator
-   * @param exclusionsFile file holding class hierarchy exclusions.  may be null
+   * @param exclusionsFile file holding class hierarchy exclusions. may be null
+   * @throws IOException 
    * @throws IllegalStateException if there are problems reading wala properties
    */
-  public static AnalysisScope makeJavaBinaryAnalysisScope(String classPath, File exclusionsFile, Plugin plugIn) {
+  public static AnalysisScope makeJavaBinaryAnalysisScope(String classPath, File exclusionsFile, Plugin plugIn) throws IOException {
     if (classPath == null) {
       throw new IllegalArgumentException("classPath null");
     }

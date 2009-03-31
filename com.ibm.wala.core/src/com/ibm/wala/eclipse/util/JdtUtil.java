@@ -104,20 +104,6 @@ public class JdtUtil {
     return className;
   }
 
-  // public static String getMethodSignature(IMethod method) {
-  // if (method == null) {
-  // throw new IllegalArgumentException("method is null");
-  // }
-  // try {
-  // String methodParamReturnInfo = method.getSignature();
-  // String methodName = method.getElementName();
-  // String methodSignature = methodName + " " + methodParamReturnInfo;
-  // return methodSignature;
-  // } catch (JavaModelException e) {
-  // }
-  // return "";
-  // }
-
   /**
    * Return a unique string representing the specified Java element across projects in the workspace. The returned string can be
    * used as a handle to create JavaElement by 'JavaCore.create(String)'
@@ -135,6 +121,7 @@ public class JdtUtil {
     return javaElt.getHandleIdentifier();
   }
 
+  @Deprecated
   public static IJavaElement createJavaElementFromJdtHandle(String jdtHandle) {
     return JavaCore.create(jdtHandle);
   }

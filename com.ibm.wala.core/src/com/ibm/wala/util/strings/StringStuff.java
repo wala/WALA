@@ -350,11 +350,8 @@ public class StringStuff {
    * 
    * TODO: inefficient; needs tuning.
    * 
-   * @param name
-   * @param start
-   * @param length
    * @return an ImmutableByteArray that represents the package, or null if it's the unnamed package
-   * @throws IllegalArgumentException if name is null
+   * @throws IllegalArgumentException if name is null or malformed
    */
   public static ImmutableByteArray parseForClass(ImmutableByteArray name, int start, int length) throws IllegalArgumentException {
     if (name == null) {
@@ -363,6 +360,7 @@ public class StringStuff {
     if (name.length() == 0) {
       throw new IllegalArgumentException("invalid class name: zero length");
     }
+    try {
     if (parseForPackage(name, start, length) == null) {
       while (name.b[start] == '[') {
         start++;
@@ -382,6 +380,9 @@ public class StringStuff {
       }
       int L = length - (lastSlash - start + 1);
       return new ImmutableByteArray(name.b, lastSlash + 1, L);
+    }
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("Malformed name: " + name + " " + start + " " + length);
     }
   }
 

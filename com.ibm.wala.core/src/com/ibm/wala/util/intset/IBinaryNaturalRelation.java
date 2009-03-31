@@ -14,50 +14,35 @@ import com.ibm.wala.util.debug.VerboseAction;
 
 /**
  * a relation R(x,y) where x >= 0
- * 
- * @author sfink
  */
 public interface IBinaryNaturalRelation extends VerboseAction, Iterable<IntPair> {
   /**
    * Add (x,y) to the relation
    * 
-   * @param x
-   * @param y
    * @return true iff the relation changes as a result of this call.
    */
   public abstract boolean add(int x, int y);
 
   /**
-   * @param x
    * @return IntSet of y s.t. R(x,y) or null if none.
    */
   public abstract IntSet getRelated(int x);
 
   /**
-   * @param x
    * @return number of y s.t. R(x,y)
    */
   public abstract int getRelatedCount(int x);
 
   /**
-   * @param x
    * @return true iff there exists pair (x,y) for some y
    */
   public abstract boolean anyRelated(int x);
   
-  /**
-   * @param x
-   * @param y
-   */
   public abstract void remove(int x, int y);
 
-  /**
-   */
   public abstract void removeAll(int x);
 
   /**
-   * @param x
-   * @param y
    * @return true iff (x,y) \in R
    */
   public abstract boolean contains(int x, int y);

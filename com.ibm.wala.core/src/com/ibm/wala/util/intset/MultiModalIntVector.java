@@ -62,6 +62,9 @@ public class MultiModalIntVector implements IntVector {
   }
 
   public MultiModalIntVector(int defaultValue, int initialSize) {
+    if (initialSize <= 0) {
+      throw new IllegalArgumentException("invalid initialSize: " + initialSize);
+    }
     this.defaultValue = defaultValue;
     init(initialSize, defaultValue);
   }
@@ -94,8 +97,8 @@ public class MultiModalIntVector implements IntVector {
    * @see com.ibm.wala.util.intset.IntVector#get(int)
    */
   public int get(int x) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(x >= 0);
+    if (x < 0) {
+      throw new IllegalArgumentException("illegal x: " + x);
     }
     int index = x;
     if (index < byteStore.length) {
@@ -120,8 +123,11 @@ public class MultiModalIntVector implements IntVector {
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
   public void set(int x, int value) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(x >= 0);
+    if (x < 0) {
+      throw new IllegalArgumentException("illegal x: " + x);
+    }
+    if (x > MAX_SIZE) {
+      throw new IllegalArgumentException("x is too big: " + x);
     }
     maxIndex = Math.max(maxIndex, x); // Find out if the new position is bigger than size of the array
     handleMorph(x, value);
@@ -239,42 +245,6 @@ public class MultiModalIntVector implements IntVector {
         byteStore = newData;
       }
     }
-  }
-
-  /*
-   * @see com.ibm.wala.util.intset.IntVector#reportStats()
-   */
-  public void performVerboseAction() {
-    int length = getStoreLength();
-    Trace.println("size:       " + length);
-    Trace.println("occupancy:  " + computeOccupancy(length));
-  }
-
-  /**
-   * @return the percentage of entries in delegateStore that are non-null
-   */
-  private double computeOccupancy(int length) {
-    int count1 = 0;
-    int internalLength = length;
-    for (int i = 0; i < internalLength && i < byteStore.length; i++) {
-      if (byteStore[i] != -1) {
-        count1++;
-      }
-    }
-    length -= byteStore.length;
-    for (int i = 0; i < internalLength && i < byteStore.length; i++) {
-      if (shortStore[i] != -1) {
-        count1++;
-      }
-    }
-    length -= shortStore.length;
-    for (int i = 0; i < internalLength && i < intStore.length; i++) {
-      if (intStore[i] != -1) {
-        count1++;
-      }
-    }
-    int count = count1;
-    return (double) count / (double) length;
   }
 
   public int getMaxIndex() {

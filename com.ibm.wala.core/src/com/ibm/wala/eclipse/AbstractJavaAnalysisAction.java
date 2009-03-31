@@ -107,8 +107,9 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
 
   /**
    * create an analysis scope as the union of a bunch of EclipseProjectPath
+   * @throws IOException 
    */
-  private static AnalysisScope mergeProjectPaths(Collection<EclipseProjectPath> projectPaths) {
+  private static AnalysisScope mergeProjectPaths(Collection<EclipseProjectPath> projectPaths) throws IOException {
     AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
 
     Collection<Module> seen = HashSetFactory.make();
@@ -121,7 +122,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
   }
 
   private static void buildScope(ClassLoaderReference loader, Collection<EclipseProjectPath> projectPaths, AnalysisScope scope,
-      Collection<Module> seen) {
+      Collection<Module> seen) throws IOException {
     for (EclipseProjectPath path : projectPaths) {
       AnalysisScope pScope = path.toAnalysisScope((File) null);
       for (Module m : pScope.getModules(loader)) {

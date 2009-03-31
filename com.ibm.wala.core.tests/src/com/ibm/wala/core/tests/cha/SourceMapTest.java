@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.cha;
 
+import java.io.IOException;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -29,7 +31,7 @@ public class SourceMapTest extends WalaTestCase {
 
   private final static String CLASS_IN_PRIMORDIAL_JAR = "Lcom/ibm/wala/model/SyntheticFactory";
 
-  public void testHello() throws ClassHierarchyException {
+  public void testHello() throws ClassHierarchyException, IOException {
     AnalysisScope scope = null;
     scope = AnalysisScopeReader.readJavaScope(TestConstants.HELLO, null, MY_CLASSLOADER);
     // TODO: it's annoying to have to build a class hierarchy here.
@@ -43,7 +45,7 @@ public class SourceMapTest extends WalaTestCase {
     assertTrue(sourceFile != null);
   }
 
-  public void testFromJar() throws ClassHierarchyException {
+  public void testFromJar() throws ClassHierarchyException, IOException {
     AnalysisScope scope = null;
     scope = AnalysisScopeReader.readJavaScope(TestConstants.HELLO, null, MY_CLASSLOADER);
     // TODO: it's annoying to have to build a class hierarchy here.

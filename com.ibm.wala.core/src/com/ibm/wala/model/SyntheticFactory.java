@@ -11,10 +11,7 @@
 package com.ibm.wala.model;
 
 /**
- * 
  * A bogus class to support returning "unknown" objects
- * 
- * @author sfink
  */
 public class SyntheticFactory {
 
