@@ -217,13 +217,21 @@ public class ClassHierarchy implements IClassHierarchy {
         if (langNames.contains(ref.getLanguage())) {
           IClassLoader icl = factory.getLoader(ref, this, scope);
           loaders[idx++] = icl;
-          addAllClasses(icl, progressMonitor);
 
           if (progressMonitor != null) {
             progressMonitor.worked(1);
           }
         }
       }
+
+      for (IClassLoader icl : loaders) {
+        addAllClasses(icl, progressMonitor);
+
+        if (progressMonitor != null) {
+          progressMonitor.worked(1);
+        }
+      }
+      
     } catch (IOException e) {
       throw new ClassHierarchyException("factory.getLoader failed " + e);
     } finally {
