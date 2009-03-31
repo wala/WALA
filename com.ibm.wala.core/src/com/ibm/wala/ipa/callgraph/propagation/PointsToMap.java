@@ -228,12 +228,21 @@ public class PointsToMap {
     }
   }
 
+  /**
+   * Unify the points-to-sets for the variables with numbers i and j
+   */
   public void unify(int i, int j) {
     int repI = uf.find(i);
     int repJ = uf.find(j);
     if (repI != repJ) {
       PointsToSetVariable pi = (PointsToSetVariable) pointsToSets.get(repI);
       PointsToSetVariable pj = (PointsToSetVariable) pointsToSets.get(repJ);
+      if (pi == null) {
+        throw new IllegalArgumentException("No PointsToSetVariable for i: " + i);
+      }
+      if (pj == null) {
+        throw new IllegalArgumentException("No PointsToSetVariable for j: " + j);
+      }
       uf.union(repI, repJ);
       int rep = uf.find(repI);
       PointsToSetVariable p = (PointsToSetVariable) pointsToSets.get(rep);
