@@ -88,6 +88,11 @@ public class JavaLauncher extends Launcher {
    * Absolute path of the 'java' executable to use.
    */
   private String javaExe;
+  
+  /**
+   * Extra args to pass to the JVM
+   */
+  private String vmArgs;
 
   private JavaLauncher(String programArgs, String mainClass, boolean inheritClasspath, List<String> xtraClasspath,
       boolean captureOutput, boolean captureErr, Logger logger) {
@@ -159,8 +164,9 @@ public class JavaLauncher extends Launcher {
     String signalParam = PlatformUtil.onMacOSX() ? " -Xrs " : "";
 
     String ea = enableAssertions ? " -ea " : "";
+    String vmArgs = getVmArgs() == null ? "" : getVmArgs();
 
-    String cmd = javaExe + heap + signalParam + cp + " " + makeLibPath() + " " + ea + getMainClass() + " " + getProgramArgs();
+    String cmd = javaExe + heap + signalParam + cp + " " + makeLibPath() + " " + ea + " " + vmArgs + " " + getMainClass() + " " + getProgramArgs();
 
     Process p = spawnProcess(cmd);
     stdErrDrain = isCaptureErr() ? captureStdErr(p) : drainStdErr(p);
@@ -223,7 +229,7 @@ public class JavaLauncher extends Launcher {
    * Trailing separators are unsafe, so we have to escape the last backslash (if present and unescaped), so it doesn't escape the
    * closing quote.
    */
-  private String quoteStringIfNeeded(String s) {
+  public static String quoteStringIfNeeded(String s) {
     s = s.trim();
     // Check if there's a space. If not, skip quoting to make Macs happy.
     // TODO: Add the check for an escaped space.
@@ -242,6 +248,14 @@ public class JavaLauncher extends Launcher {
 
   public void setEnableAssertions(boolean enableAssertions) {
     this.enableAssertions = enableAssertions;
+  }
+
+  public void setVmArgs(String vmArgs) {
+    this.vmArgs = vmArgs;
+  }
+
+  public String getVmArgs() {
+    return vmArgs;
   }
 
 }
