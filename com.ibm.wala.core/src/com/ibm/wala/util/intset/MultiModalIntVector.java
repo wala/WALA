@@ -12,9 +12,6 @@ package com.ibm.wala.util.intset;
 
 import java.util.Arrays;
 
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
-
 /**
  * an implementation of {@link IntVector} that uses a mix of backing arrays of type int, char, and byte array, in an attempt to save
  * space for common data structures.
