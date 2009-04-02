@@ -93,6 +93,11 @@ public class JavaLauncher extends Launcher {
    * Extra args to pass to the JVM
    */
   private String vmArgs;
+  
+  /**
+   * The last process returned by a call to start() on this object.
+   */
+  private Process lastProcess;
 
   private JavaLauncher(String programArgs, String mainClass, boolean inheritClasspath, List<String> xtraClasspath,
       boolean captureOutput, boolean captureErr, Logger logger) {
@@ -171,7 +176,12 @@ public class JavaLauncher extends Launcher {
     Process p = spawnProcess(cmd);
     stdErrDrain = isCaptureErr() ? captureStdErr(p) : drainStdErr(p);
     stdOutDrain = isCaptureOutput() ? captureStdOut(p) : drainStdOut(p);
+    lastProcess = p;
     return p;
+  }
+  
+  public Process getLastProcess() {
+    return lastProcess;
   }
 
   private String makeLibPath() {
