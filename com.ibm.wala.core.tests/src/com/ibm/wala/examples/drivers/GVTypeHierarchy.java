@@ -44,7 +44,7 @@ public class GVTypeHierarchy {
 
   public final static String DOT_FILE = "temp.dt";
 
-  private final static String PS_FILE = "th.ps";
+  private final static String PDF_FILE = "th.pdf";
 
   public static Properties p;
 
@@ -76,11 +76,11 @@ public class GVTypeHierarchy {
 
       g = SWTTypeHierarchy.pruneForAppLoader(g);
       String dotFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + DOT_FILE;
-      String psFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + PS_FILE;
+      String pdfFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + PDF_FILE;
       String dotExe = p.getProperty(WalaExamplesProperties.DOT_EXE);
       String gvExe = p.getProperty(WalaExamplesProperties.GHOSTVIEW_EXE);
-      DotUtil.dotify(g, null, dotFile, psFile, dotExe);
-      return GVUtil.launchGV(psFile, gvExe);
+      DotUtil.dotify(g, null, dotFile, pdfFile, dotExe);
+      return GVUtil.launchGV(pdfFile, gvExe);
 
     } catch (WalaException e) {
       // TODO Auto-generated catch block
