@@ -16,7 +16,7 @@
 ##### Ghostview executable
 # Path to the ghostview executable
 # For instance, on a windows OS it's typically something like C:/Progra~1/Ghostgum/gsview/gsview32.exe
-# On Mac OSX typically /Applications/MacGSView/MacGSView
+# On Mac OSX typically /Applications/Preview.app/Contents/MacOS/Preview
 # Default value: none
 # Info: Must be absolute path
 #####
@@ -25,7 +25,7 @@
 ##### DOT executable
 # Path to the AT&T Graphview DOT executable
 # For instance, on a windows OS it's typically something like C:/Progra~1/ATT/Graphviz/bin/dot.exe
-# On Mac OSX typically /Applications/Graphviz.app/Contents/MacOS/dot
+# On Mac OSX /usr/local/bin/dot if you install Graphviz from http://www.graphviz.org/Download_macos.php
 # Default value: none
 # Info: Must be absolute path
 #####
