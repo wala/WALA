@@ -10,7 +10,8 @@
 # For instance, on a windows OS it's typically C:/Progra~1/Java/j2reYourVersion/lib
 # On MAC OS, typically /System/Library/Frameworks/JavaVM.framework/Classes
 #
-# N.B. This directory must contain a valid core.jar (or rt.jar for older VMs)
+# N.B. On Windows or Linux, this directory must contain a valid core.jar (or rt.jar 
+# for older VMs).  On Mac, it should contain the classes.jar file.
 # On IBM 1.4.x SDKs, this means you need to specify Java14x/jre/lib and not
 # Java14x/lib!
 #
