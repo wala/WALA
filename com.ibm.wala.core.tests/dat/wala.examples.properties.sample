@@ -13,9 +13,9 @@
 ### These are needed to run various individual examples
 
 
-##### Ghostview executable
-# Path to the ghostview executable
-# For instance, on a windows OS it's typically something like C:/Progra~1/Ghostgum/gsview/gsview32.exe
+##### PDF viewer executable
+# Path to the PDF viewer executable
+# For instance, on a windows OS it's typically something like c:/Progra~1/Adobe/Reader 8.0/Reader/AcroRd32.exe
 # On Mac OSX typically /Applications/Preview.app/Contents/MacOS/Preview
 # Default value: none
 # Info: Must be absolute path
@@ -24,7 +24,7 @@
 
 ##### DOT executable
 # Path to the AT&T Graphview DOT executable
-# For instance, on a windows OS it's typically something like C:/Progra~1/ATT/Graphviz/bin/dot.exe
+# For instance, on a windows OS it's typically something like c:/Progra~1/Graphviz2.22/bin/dot.exe
 # On Mac OSX /usr/local/bin/dot if you install Graphviz from http://www.graphviz.org/Download_macos.php
 # Default value: none
 # Info: Must be absolute path
