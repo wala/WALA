@@ -192,10 +192,10 @@ public class GVSlice {
       // create a dot representation.
       String psFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + PS_FILE;
       String dotExe = p.getProperty(WalaExamplesProperties.DOT_EXE);
-      DotUtil.dotify(g, makeNodeDecorator(), GVTypeHierarchy.DOT_FILE, psFile, dotExe);
+      DotUtil.dotify(g, makeNodeDecorator(), PDFTypeHierarchy.DOT_FILE, psFile, dotExe);
 
       // fire off ghostview
-      String gvExe = p.getProperty(WalaExamplesProperties.GHOSTVIEW_EXE);
+      String gvExe = p.getProperty(WalaExamplesProperties.PDFVIEW_EXE);
       return GVUtil.launchGV(psFile, gvExe);
 
     } catch (WalaException e) {

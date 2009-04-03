@@ -92,9 +92,9 @@ public class GVCallGraph {
       String psFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + PS_FILE;
 
       String dotExe = p.getProperty(WalaExamplesProperties.DOT_EXE);
-      DotUtil.dotify(g, null, GVTypeHierarchy.DOT_FILE, psFile, dotExe);
+      DotUtil.dotify(g, null, PDFTypeHierarchy.DOT_FILE, psFile, dotExe);
 
-      String gvExe = p.getProperty(WalaExamplesProperties.GHOSTVIEW_EXE);
+      String gvExe = p.getProperty(WalaExamplesProperties.PDFVIEW_EXE);
       return GVUtil.launchGV(psFile, gvExe);
 
     } catch (WalaException e) {
@@ -137,7 +137,7 @@ public class GVCallGraph {
   }
 
   static Graph<CGNode> pruneForAppLoader(CallGraph g) throws WalaException {
-    return GVTypeHierarchy.pruneGraph(g, new ApplicationLoaderFilter());
+    return PDFTypeHierarchy.pruneGraph(g, new ApplicationLoaderFilter());
   }
 
   /**

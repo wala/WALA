@@ -20,7 +20,7 @@
 # Default value: none
 # Info: Must be absolute path
 #####
-#ghostview_exe = Your location
+#pdfview_exe = Your location
 
 ##### DOT executable
 # Path to the AT&T Graphview DOT executable

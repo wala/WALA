@@ -40,7 +40,7 @@ import com.ibm.wala.viz.GVUtil;
  * 
  * @author sfink
  */
-public class GVTypeHierarchy {
+public class PDFTypeHierarchy {
 
   public final static String DOT_FILE = "temp.dt";
 
@@ -78,7 +78,7 @@ public class GVTypeHierarchy {
       String dotFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + DOT_FILE;
       String pdfFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + PDF_FILE;
       String dotExe = p.getProperty(WalaExamplesProperties.DOT_EXE);
-      String gvExe = p.getProperty(WalaExamplesProperties.GHOSTVIEW_EXE);
+      String gvExe = p.getProperty(WalaExamplesProperties.PDFVIEW_EXE);
       DotUtil.dotify(g, null, dotFile, pdfFile, dotExe);
       return GVUtil.launchGV(pdfFile, gvExe);
 

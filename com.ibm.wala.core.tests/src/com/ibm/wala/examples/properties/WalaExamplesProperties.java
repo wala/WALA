@@ -20,7 +20,7 @@ import com.ibm.wala.util.warnings.WalaException;
 
 public final class WalaExamplesProperties {
 
-  public static final String GHOSTVIEW_EXE = "ghostview_exe"; //$NON-NLS-1$
+  public static final String PDFVIEW_EXE = "pdfview_exe"; //$NON-NLS-1$
 
   public static final String DOT_EXE = "dot_exe"; //$NON-NLS-1$
 
@@ -41,7 +41,7 @@ public final class WalaExamplesProperties {
   public static String getWalaCoreTestsHomeDirectory() throws WalaException {
     final URL url = WalaExamplesProperties.class.getClassLoader().getResource(PROPERTY_FILENAME);
     if (url == null) {
-      throw new WalaException("failed to find URL for capa.examples.properties");
+      throw new WalaException("failed to find URL for wala.examples.properties");
     }
 
     return new File(FileProvider.filePathFromURL(url)).getParentFile().getParentFile().getAbsolutePath();

@@ -148,9 +148,9 @@ public class GVSDG {
 
       String dotExe = p.getProperty(WalaExamplesProperties.DOT_EXE);
       Graph<Statement> g = pruneSDG(sdg);
-      DotUtil.dotify(g, makeNodeDecorator(), GVTypeHierarchy.DOT_FILE, psFile, dotExe);
+      DotUtil.dotify(g, makeNodeDecorator(), PDFTypeHierarchy.DOT_FILE, psFile, dotExe);
 
-      String gvExe = p.getProperty(WalaExamplesProperties.GHOSTVIEW_EXE);
+      String gvExe = p.getProperty(WalaExamplesProperties.PDFVIEW_EXE);
       return GVUtil.launchGV(psFile, gvExe);
 
     } catch (WalaException e) {

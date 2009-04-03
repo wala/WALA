@@ -120,9 +120,9 @@ public class GVControlDependenceGraph {
       }
       String psFile = wp.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + GVControlDependenceGraph.PS_FILE;
       String dotFile = wp.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar
-          + GVTypeHierarchy.DOT_FILE;
+          + PDFTypeHierarchy.DOT_FILE;
       String dotExe = wp.getProperty(WalaExamplesProperties.DOT_EXE);
-      String gvExe = wp.getProperty(WalaExamplesProperties.GHOSTVIEW_EXE);
+      String gvExe = wp.getProperty(WalaExamplesProperties.PDFVIEW_EXE);
       
       DotUtil.dotify(cdg, GhostviewUtil.makeIRDecorator(ir), dotFile, psFile, dotExe);
 

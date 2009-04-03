@@ -112,9 +112,9 @@ public class GVWalaIR {
         Assertions.UNREACHABLE();
       }
       String psFile = wp.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + GVWalaIR.PS_FILE;
-      String dotFile = wp.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + GVTypeHierarchy.DOT_FILE;
+      String dotFile = wp.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + PDFTypeHierarchy.DOT_FILE;
       String dotExe = wp.getProperty(WalaExamplesProperties.DOT_EXE);
-      String gvExe = wp.getProperty(WalaExamplesProperties.GHOSTVIEW_EXE);
+      String gvExe = wp.getProperty(WalaExamplesProperties.PDFVIEW_EXE);
 
       return GhostviewUtil.ghostviewIR(cha, ir, psFile, dotFile, dotExe, gvExe);
 
