@@ -20,7 +20,6 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.InferGraphRoots;
 import com.ibm.wala.util.warnings.WalaException;
-import com.ibm.wala.viz.DotUtil.DotOutputType;
 
 /**
  * Explore the result of an IFDS problem with an SWT viewer and ghostview.
@@ -33,16 +32,16 @@ public class IFDSExplorer {
   protected static String dotExe = null;
 
   /**
-   * Absolute path name to invoke ghostview
+   * Absolute path name to invoke viewer
    */
-  protected static String gvExe = null;
+  protected static String viewerExe = null;
 
   public static void setDotExe(String newDotExe) {
     dotExe = newDotExe;
   }
 
   public static void setGvExe(String newGvExe) {
-    gvExe = newGvExe;
+    viewerExe = newGvExe;
   }
 
   public static <T, P, F> void viewIFDS(TabulationResult<T, P, F> r, Collection<? extends P> roots) throws WalaException {
@@ -72,7 +71,19 @@ public class IFDSExplorer {
     // dump the domain to stderr
     System.err.println("Domain:\n" + r.getProblem().getDomain().toString());
 
-    String outputFile = scratchDirectory + File.separatorChar + (DotUtil.getOutputType() == DotOutputType.PS ? "ir.ps" : "ir.svg");
+    String irFileName = null;
+    switch (DotUtil.getOutputType()) {
+    case PDF:
+      irFileName = "ir.pdf";
+      break;
+    case PS:
+      irFileName = "ir.ps";
+      break;
+    case SVG:
+      irFileName = "ir.svg";
+      break;
+    }
+    String outputFile = scratchDirectory + File.separatorChar + irFileName;
     String dotFile = scratchDirectory + File.separatorChar + "ir.dt";
 
     final SWTTreeViewer v = new SWTTreeViewer();
@@ -81,7 +92,7 @@ public class IFDSExplorer {
     v.setBlockInput(true);
     v.setRootsInput(roots);
     ViewIFDSLocalAction<T, P, F> action = (labels == null ? new ViewIFDSLocalAction<T, P, F>(v, r, outputFile, dotFile, dotExe,
-        gvExe) : new ViewIFDSLocalAction<T, P, F>(v, r, outputFile, dotFile, dotExe, gvExe, labels));
+        viewerExe) : new ViewIFDSLocalAction<T, P, F>(v, r, outputFile, dotFile, dotExe, viewerExe, labels));
     v.getPopUpActions().add(action);
     v.run();
 
@@ -103,7 +114,7 @@ public class IFDSExplorer {
   }
 
   public static String getGvExe() {
-    return gvExe;
+    return viewerExe;
   }
 
 }

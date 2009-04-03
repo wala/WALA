@@ -47,9 +47,9 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
   private final ISupergraph<T, P> supergraph;
 
   /**
-   * name of postscript file to generate
+   * name of PDF file to generate
    */
-  private final String psFile;
+  private final String pdfFile;
 
   /**
    * name of dot file to generate
@@ -62,23 +62,23 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
   private final String dotExe;
 
   /**
-   * path to ghostview executable
+   * path to pdf view executable
    */
-  private final String gvExe;
+  private final String pdfViewExe;
 
   private final NodeDecorator labels;
 
-  public ViewIFDSLocalAction(SWTTreeViewer viewer, TabulationResult<T, P, F> result, String psFile, String dotFile, String dotExe,
-      String gvExe, NodeDecorator labels) {
+  public ViewIFDSLocalAction(SWTTreeViewer viewer, TabulationResult<T, P, F> result, String pdfFile, String dotFile, String dotExe,
+      String pdfViewExe, NodeDecorator labels) {
     if (result == null) {
       throw new IllegalArgumentException("null result");
     }
     this.viewer = viewer;
     this.supergraph = result.getProblem().getSupergraph();
-    this.psFile = psFile;
+    this.pdfFile = pdfFile;
     this.dotFile = dotFile;
     this.dotExe = dotExe;
-    this.gvExe = gvExe;
+    this.pdfViewExe = pdfViewExe;
     this.labels = labels;
     setText("View Local Supergraph");
   }
@@ -90,10 +90,10 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
     }
     this.viewer = viewer;
     this.supergraph = result.getProblem().getSupergraph();
-    this.psFile = psFile;
+    this.pdfFile = psFile;
     this.dotFile = dotFile;
     this.dotExe = dotExe;
-    this.gvExe = gvExe;
+    this.pdfViewExe = gvExe;
     this.labels = new Labels<T, P, F>(result);
     setText("View Local Supergraph");
   }
@@ -181,10 +181,10 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
 
       // spawn the viewer
       System.err.println("Spawn Viewer for " + proc);
-      DotUtil.dotify(localGraph, labels, dotFile, psFile, dotExe);
+      DotUtil.dotify(localGraph, labels, dotFile, pdfFile, dotExe);
 
-      if (DotUtil.getOutputType() == DotUtil.DotOutputType.PS) {
-        PDFViewUtil.launchPDFView(psFile, gvExe);
+      if (DotUtil.getOutputType() == DotUtil.DotOutputType.PDF) {
+        PDFViewUtil.launchPDFView(pdfFile, pdfViewExe);
       }
     } catch (WalaException e) {
       e.printStackTrace();
@@ -221,10 +221,10 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
   }
 
   protected String getGvExe() {
-    return gvExe;
+    return pdfViewExe;
   }
 
   protected String getPsFile() {
-    return psFile;
+    return pdfFile;
   }
 }
