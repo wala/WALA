@@ -23,6 +23,7 @@ java_runtime_dir = Your location
 
 ##### Default output dir
 # Identify directory where all generated files without absolute path will be located.
+# Note that this directory must be created manually; WALA may fail if it does not exist.
 # Default value: results [Non absolute path are relative to WALA home location]
 # Info: Can be absolute or relative.
 #####
