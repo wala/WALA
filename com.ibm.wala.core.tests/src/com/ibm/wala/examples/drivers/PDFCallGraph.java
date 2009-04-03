@@ -37,16 +37,16 @@ import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.viz.DotUtil;
-import com.ibm.wala.viz.GVUtil;
+import com.ibm.wala.viz.PDFViewUtil;
 
 /**
  * This simple example WALA application builds a call graph and fires off ghostview to visualize a DOT representation.
  * 
  * @author sfink
  */
-public class GVCallGraph {
+public class PDFCallGraph {
 
-  private final static String PS_FILE = "cg.ps";
+  private final static String PDF_FILE = "cg.pdf";
 
   /**
    * Usage: args = "-appJar [jar file name] {-exclusionFile [exclusionFileName]}" The "jar file name" should be something like
@@ -89,13 +89,13 @@ public class GVCallGraph {
         e.printStackTrace();
         Assertions.UNREACHABLE();
       }
-      String psFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + PS_FILE;
+      String pdfFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + PDF_FILE;
 
       String dotExe = p.getProperty(WalaExamplesProperties.DOT_EXE);
-      DotUtil.dotify(g, null, PDFTypeHierarchy.DOT_FILE, psFile, dotExe);
+      DotUtil.dotify(g, null, PDFTypeHierarchy.DOT_FILE, pdfFile, dotExe);
 
       String gvExe = p.getProperty(WalaExamplesProperties.PDFVIEW_EXE);
-      return GVUtil.launchGV(psFile, gvExe);
+      return PDFViewUtil.launchPDFView(pdfFile, gvExe);
 
     } catch (WalaException e) {
       e.printStackTrace();

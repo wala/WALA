@@ -20,30 +20,30 @@ import com.ibm.wala.util.warnings.WalaException;
  * 
  * TODO: inherit from a launcher?
  */
-class GSViewLauncher {
+class PDFViewLauncher {
 
   private Process process;
 
   /**
    * Name of the postscript file to view
    */
-  protected String psfile = null;
+  protected String pdffile = null;
 
   /**
    * Path to ghostview executable
    */
   protected String gvExe = null;
 
-  GSViewLauncher() {
+  PDFViewLauncher() {
     super();
   }
 
-  String getPsfile() {
-    return psfile;
+  String getPDFFile() {
+    return pdffile;
   }
 
-  void setPsfile(String newPsfile) {
-    psfile = newPsfile;
+  void setPDFFile(String newPsfile) {
+    pdffile = newPsfile;
   }
 
   String getGvExe() {
@@ -58,7 +58,7 @@ class GSViewLauncher {
   public String toString() {
     StringBuffer result = new StringBuffer(super.toString());
     result.append(", psfile: ");
-    result.append(psfile);
+    result.append(pdffile);
     result.append(", gvExe: ");
     result.append(gvExe);
     result.append(')');
@@ -71,7 +71,7 @@ class GSViewLauncher {
    * @see java.lang.Runnable#run()
    */
   public void run() {
-    String[] cmdarray = { getGvExe(), getPsfile() };
+    String[] cmdarray = { getGvExe(), getPDFFile() };
     try {
       Process p = Runtime.getRuntime().exec(cmdarray);
       setProcess(p);

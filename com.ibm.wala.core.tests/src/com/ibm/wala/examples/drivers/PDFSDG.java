@@ -44,7 +44,7 @@ import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.viz.DotUtil;
-import com.ibm.wala.viz.GVUtil;
+import com.ibm.wala.viz.PDFViewUtil;
 import com.ibm.wala.viz.NodeDecorator;
 
 /**
@@ -54,9 +54,9 @@ import com.ibm.wala.viz.NodeDecorator;
  * 
  * @author sfink
  */
-public class GVSDG {
+public class PDFSDG {
 
-  private final static String PS_FILE = "sdg.ps";
+  private final static String PDF_FILE = "sdg.pdf";
 
   /**
    * Usage: GVSDG -appJar [jar file name] -mainclass [main class]
@@ -144,14 +144,14 @@ public class GVSDG {
         e.printStackTrace();
         Assertions.UNREACHABLE();
       }
-      String psFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + PS_FILE;
+      String psFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + PDF_FILE;
 
       String dotExe = p.getProperty(WalaExamplesProperties.DOT_EXE);
       Graph<Statement> g = pruneSDG(sdg);
       DotUtil.dotify(g, makeNodeDecorator(), PDFTypeHierarchy.DOT_FILE, psFile, dotExe);
 
       String gvExe = p.getProperty(WalaExamplesProperties.PDFVIEW_EXE);
-      return GVUtil.launchGV(psFile, gvExe);
+      return PDFViewUtil.launchPDFView(psFile, gvExe);
 
     } catch (WalaException e) {
       // TODO Auto-generated catch block

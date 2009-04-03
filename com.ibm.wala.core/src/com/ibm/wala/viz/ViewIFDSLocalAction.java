@@ -184,7 +184,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
       DotUtil.dotify(localGraph, labels, dotFile, psFile, dotExe);
 
       if (DotUtil.getOutputType() == DotUtil.DotOutputType.PS) {
-        GVUtil.launchGV(psFile, gvExe);
+        PDFViewUtil.launchPDFView(psFile, gvExe);
       }
     } catch (WalaException e) {
       e.printStackTrace();

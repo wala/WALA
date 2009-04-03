@@ -65,7 +65,7 @@ public class SWTCallGraph {
    */
   public static void main(String[] args) throws WalaException {
     Properties p = CommandLine.parse(args);
-    GVCallGraph.validateCommandLine(p);
+    PDFCallGraph.validateCommandLine(p);
     run(p);
   }
 
@@ -123,7 +123,7 @@ public class SWTCallGraph {
         e.printStackTrace();
         Assertions.UNREACHABLE();
       }
-      String psFile = wp.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + GVWalaIR.PS_FILE;
+      String psFile = wp.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + PDFWalaIR.PDF_FILE;
       String dotFile = wp.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + PDFTypeHierarchy.DOT_FILE;
       String dotExe = wp.getProperty(WalaExamplesProperties.DOT_EXE);
       String gvExe = wp.getProperty(WalaExamplesProperties.PDFVIEW_EXE);

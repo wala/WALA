@@ -32,7 +32,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.strings.StringStuff;
 import com.ibm.wala.util.warnings.WalaException;
-import com.ibm.wala.viz.GhostviewUtil;
+import com.ibm.wala.viz.PDFViewUtil;
 
 /**
  * 
@@ -41,9 +41,9 @@ import com.ibm.wala.viz.GhostviewUtil;
  * 
  * @author sfink
  */
-public class GVWalaIR {
+public class PDFWalaIR {
 
-  final public static String PS_FILE = "ir.ps";
+  final public static String PDF_FILE = "ir.pdf";
 
   /**
    * Usage: GVWalaIR -appJar [jar file name] -sig [method signature] The "jar
@@ -111,12 +111,12 @@ public class GVWalaIR {
         e.printStackTrace();
         Assertions.UNREACHABLE();
       }
-      String psFile = wp.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + GVWalaIR.PS_FILE;
+      String psFile = wp.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + PDFWalaIR.PDF_FILE;
       String dotFile = wp.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + PDFTypeHierarchy.DOT_FILE;
       String dotExe = wp.getProperty(WalaExamplesProperties.DOT_EXE);
       String gvExe = wp.getProperty(WalaExamplesProperties.PDFVIEW_EXE);
 
-      return GhostviewUtil.ghostviewIR(cha, ir, psFile, dotFile, dotExe, gvExe);
+      return PDFViewUtil.ghostviewIR(cha, ir, psFile, dotFile, dotExe, gvExe);
 
     } catch (WalaException e) {
       // TODO Auto-generated catch block

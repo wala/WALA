@@ -24,7 +24,7 @@ import junit.framework.TestCase;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.eclipse.util.CancelException;
-import com.ibm.wala.examples.drivers.GVSlice;
+import com.ibm.wala.examples.drivers.PDFSlice;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -147,7 +147,7 @@ public class SlicerTest extends TestCase {
 
     CGNode main = findMainMethod(cg);
     Statement s = findCallTo(main, "foo");
-    s = GVSlice.getReturnStatementForCall(s);
+    s = PDFSlice.getReturnStatementForCall(s);
     System.err.println("Statement: " + s);
     // compute a data slice
     Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
@@ -169,7 +169,7 @@ public class SlicerTest extends TestCase {
 
     CGNode n = findMethod(cg, "baz");
     Statement s = findCallTo(n, "foo");
-    s = GVSlice.getReturnStatementForCall(s);
+    s = PDFSlice.getReturnStatementForCall(s);
     System.err.println("Statement: " + s);
     // compute a data slice
     Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,

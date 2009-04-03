@@ -35,8 +35,7 @@ import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.strings.StringStuff;
 import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.viz.DotUtil;
-import com.ibm.wala.viz.GVUtil;
-import com.ibm.wala.viz.GhostviewUtil;
+import com.ibm.wala.viz.PDFViewUtil;
 
 /**
  * 
@@ -45,11 +44,11 @@ import com.ibm.wala.viz.GhostviewUtil;
  * 
  * @author sfink
  */
-public class GVControlDependenceGraph {
+public class PDFControlDependenceGraph {
 
   final public static boolean SANITIZE_CFG = false;
 
-  final public static String PS_FILE = "cdg.ps";
+  final public static String PDF_FILE = "cdg.pdf";
 
   /**
    * Usage: GVControlDependenceGraph -appJar [jar file name] -sig [method signature] The "jar
@@ -96,7 +95,8 @@ public class GVControlDependenceGraph {
 
       IMethod m = cha.resolveMethod(mr);
       if (m == null) {
-        Assertions.UNREACHABLE("could not resolve " + mr);
+        System.err.println("could not resolve " + mr);
+        throw new RuntimeException();
       }
       AnalysisOptions options = new AnalysisOptions();
       options.getSSAOptions().setPiNodePolicy(SSAOptions.getAllBuiltInPiNodes());
@@ -118,15 +118,15 @@ public class GVControlDependenceGraph {
         e.printStackTrace();
         Assertions.UNREACHABLE();
       }
-      String psFile = wp.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + GVControlDependenceGraph.PS_FILE;
+      String psFile = wp.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + PDFControlDependenceGraph.PDF_FILE;
       String dotFile = wp.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar
           + PDFTypeHierarchy.DOT_FILE;
       String dotExe = wp.getProperty(WalaExamplesProperties.DOT_EXE);
       String gvExe = wp.getProperty(WalaExamplesProperties.PDFVIEW_EXE);
       
-      DotUtil.dotify(cdg, GhostviewUtil.makeIRDecorator(ir), dotFile, psFile, dotExe);
+      DotUtil.dotify(cdg, PDFViewUtil.makeIRDecorator(ir), dotFile, psFile, dotExe);
 
-      return GVUtil.launchGV(psFile, gvExe);
+      return PDFViewUtil.launchPDFView(psFile, gvExe);
 
     } catch (WalaException e) {
       // TODO Auto-generated catch block

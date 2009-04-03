@@ -52,7 +52,7 @@ public class SWTPointsTo {
    */
   public static void main(String[] args) throws WalaException {
     Properties p = CommandLine.parse(args);
-    GVCallGraph.validateCommandLine(p);
+    PDFCallGraph.validateCommandLine(p);
     run(p.getProperty("appJar"));
   }
 

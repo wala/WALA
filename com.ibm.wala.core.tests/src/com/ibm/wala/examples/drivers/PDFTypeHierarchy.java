@@ -31,7 +31,7 @@ import com.ibm.wala.util.graph.GraphSlicer;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.viz.DotUtil;
-import com.ibm.wala.viz.GVUtil;
+import com.ibm.wala.viz.PDFViewUtil;
 
 /**
  * 
@@ -80,7 +80,7 @@ public class PDFTypeHierarchy {
       String dotExe = p.getProperty(WalaExamplesProperties.DOT_EXE);
       String gvExe = p.getProperty(WalaExamplesProperties.PDFVIEW_EXE);
       DotUtil.dotify(g, null, dotFile, pdfFile, dotExe);
-      return GVUtil.launchGV(pdfFile, gvExe);
+      return PDFViewUtil.launchPDFView(pdfFile, gvExe);
 
     } catch (WalaException e) {
       // TODO Auto-generated catch block

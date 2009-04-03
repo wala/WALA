@@ -80,7 +80,7 @@ public class ViewIRAction extends Action {
     // spawn the viewer
     System.err.println("Spawn IR Viewer for " + ir.getMethod());
     try {
-      GhostviewUtil.ghostviewIR(cg.getClassHierarchy(), ir, psFile, dotFile, dotExe, gvExe);
+      PDFViewUtil.ghostviewIR(cg.getClassHierarchy(), ir, psFile, dotFile, dotExe, gvExe);
     } catch (WalaException e) {
       e.printStackTrace();
     }

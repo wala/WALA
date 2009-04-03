@@ -34,7 +34,7 @@ import com.ibm.wala.util.warnings.WalaException;
  * 
  * @author sfink
  */
-public class GhostviewUtil {
+public class PDFViewUtil {
 
   /**
    * spawn a process to ghostview a WALA IR
@@ -70,7 +70,7 @@ public class GhostviewUtil {
 
     DotUtil.dotify(g, labels, dotFile, psFile, dotExe);
 
-    return GVUtil.launchGV(psFile, gvExe);
+    return launchPDFView(psFile, gvExe);
   }
 
   public static NodeDecorator makeIRDecorator(IR ir) {
@@ -158,4 +158,26 @@ public class GhostviewUtil {
     }
     return result.toString();
   }
+  
+  /**
+   * Launch a process to view a postscript file
+   */
+  public static Process launchPDFView(String pdfFile, String gvExe) throws WalaException {
+    // set up a viewer for the ps file.
+    if (gvExe == null) {
+      throw new IllegalArgumentException("null gvExe");
+    }
+    if (pdfFile == null) {
+      throw new IllegalArgumentException("null psFile");
+    }
+    final PDFViewLauncher gv = new PDFViewLauncher();
+    gv.setGvExe(gvExe);
+    gv.setPDFFile(pdfFile);
+    gv.run();
+    if (gv.getProcess() == null) {
+      throw new WalaException(" problem spawning process ");
+    }
+    return gv.getProcess();
+  }
+
 }
