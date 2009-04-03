@@ -36,7 +36,7 @@ public class DotUtil {
     PS, SVG, PDF
   }
 
-  private static DotOutputType outputType = DotOutputType.PS;
+  private static DotOutputType outputType = DotOutputType.PDF;
   
   private static int fontSize = 6;
   private static String fontColor = "black";
