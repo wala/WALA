@@ -23,8 +23,6 @@ import com.ibm.wala.util.debug.Assertions;
 /**
  * A MethodTargetSelector that simply looks up the declared type, name and descriptor of a CallSiteReference in the appropriate
  * class hierarchy.
- * 
- * @author Julian Dolby (dolby@us.ibm.com)
  */
 public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector {
 

@@ -24,8 +24,6 @@ import com.ibm.wala.util.strings.Atom;
 
 /**
  * A synthetic method that models the fake root node.
- * 
- * @author sfink
  */
 public class FakeRootMethod extends AbstractRootMethod {
 

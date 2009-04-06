@@ -22,11 +22,8 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * 
  * An entrypoint which chooses some valid (non-interface) concrete type for each
  * argument, if one is available.
- * 
- * @author sfink
  */
 public class ArgumentTypeEntrypoint extends Entrypoint {
 

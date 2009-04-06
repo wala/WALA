@@ -21,11 +21,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
- * 
  * An entrypoint whose parameter types are cones based on declared types.
- * 
- * @author Julian Dolby (dolby@us.ibm.com)
- * @author Mandana Vaziri (mvaziri@us.ibm.com)
  */
 public class SubtypesEntrypoint extends DefaultEntrypoint {
 

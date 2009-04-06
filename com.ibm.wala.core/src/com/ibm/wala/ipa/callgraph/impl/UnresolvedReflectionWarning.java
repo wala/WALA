@@ -20,9 +20,6 @@ public class UnresolvedReflectionWarning extends MethodWarning {
 
   }
 
-  /*
-   * @see com.ibm.wala.util.Warning#getMsg()
-   */
   @Override
   public String getMsg() {
     return "Failed to hijack reflective factory node: " + getMethod();

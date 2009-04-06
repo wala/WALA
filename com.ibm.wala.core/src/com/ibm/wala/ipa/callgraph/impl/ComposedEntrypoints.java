@@ -19,9 +19,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
  * This class represents the union of two sets of entryponts.
- * 
- * @author sfink
- *
  */
 public class ComposedEntrypoints implements Iterable<Entrypoint> {
 

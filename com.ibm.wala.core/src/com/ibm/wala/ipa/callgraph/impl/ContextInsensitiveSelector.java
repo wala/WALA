@@ -19,10 +19,7 @@ import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 
 /**
- *
  * A basic context selector that ignores context.
- * 
- * @author sfink
  */
 public class ContextInsensitiveSelector implements ContextSelector {
 

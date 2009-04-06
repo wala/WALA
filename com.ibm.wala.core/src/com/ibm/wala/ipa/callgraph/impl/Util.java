@@ -52,6 +52,7 @@ import com.ibm.wala.util.graph.traverse.SlowDFSDiscoverTimeIterator;
 import com.ibm.wala.util.strings.Atom;
 
 /**
+ * Call graph utilities
  */
 public class Util {
   /**

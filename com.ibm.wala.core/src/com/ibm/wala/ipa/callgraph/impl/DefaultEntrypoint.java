@@ -22,8 +22,6 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * An entrypoint whose parameter types are the declared types.
- * 
- * @author sfink
  */
 public class DefaultEntrypoint extends Entrypoint {
   private final TypeReference[][] paramTypes;

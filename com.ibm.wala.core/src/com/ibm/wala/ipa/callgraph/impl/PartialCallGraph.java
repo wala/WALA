@@ -35,9 +35,6 @@ import com.ibm.wala.util.intset.MutableIntSet;
 
 /**
  * a view of a portion of a call graph.
- * 
- * @author Julian Dolby
- *
  */
 public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGraph {
 

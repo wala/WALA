@@ -19,8 +19,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 /**
  * A ClassTargetSelector that simply looks up the declared type of a
  * NewSiteReference in the appropriate class hierarchy.
- * 
- * @author Julian Dolby (dolby@us.ibm.com)
  */
 public class ClassHierarchyClassTargetSelector implements ClassTargetSelector {
 

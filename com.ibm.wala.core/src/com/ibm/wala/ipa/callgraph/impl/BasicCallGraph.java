@@ -40,9 +40,6 @@ import com.ibm.wala.util.graph.traverse.DFS;
 
 /** 
  * Basic data structure support for a call graph.
- * 
- * @author sfink
- * 
  */
 public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> implements CallGraph {
 

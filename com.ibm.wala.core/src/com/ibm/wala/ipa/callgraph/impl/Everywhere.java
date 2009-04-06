@@ -15,11 +15,8 @@ import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 
 /**
- * 
  * An object that represent the context everywhere; used for context-insensitive
  * analysis
- * 
- * @author sfink
  */
 public class Everywhere implements Context {
 
