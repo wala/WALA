@@ -22,10 +22,7 @@ import com.ibm.wala.util.graph.INodeWithNumber;
 
 /**
  * Basic interface for a node in a call graph.
- *
- * @author Stephen Fink
  */
-
 public interface CGNode extends INodeWithNumber, ContextItem, IClassHierarchyDweller {
   /**
    * Return the {@link IMethod method} this CGNode represents.

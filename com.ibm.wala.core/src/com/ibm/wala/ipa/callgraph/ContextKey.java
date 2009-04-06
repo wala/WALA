@@ -11,10 +11,7 @@
 package com.ibm.wala.ipa.callgraph;
 
 /**
- *
  * This just exists to enforce strong typing.
- * 
- * @author sfink
  */
 public interface ContextKey {
   

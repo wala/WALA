@@ -22,15 +22,10 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.graph.traverse.DFS;
 
 /**
- * @author sfink
- * 
+ * Collect basic call graph statistics
  */
 public class CallGraphStats {
 
-  /**
-   * @author manu
-   * 
-   */
   public static class CGStats {
 
     private final int nNodes;

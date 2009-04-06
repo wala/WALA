@@ -22,14 +22,11 @@ import com.ibm.wala.util.graph.NumberedGraph;
 
 /**
  * Basic interface for a call graph, which is a graph of {@link CGNode}
- * 
- * @author Stephen Fink
  */
 public interface CallGraph extends NumberedGraph<CGNode> {
 
   /**
-   * Return the (fake) interprocedural {@link CGNode root node} of the call
-   * graph.
+   * Return the (fake) interprocedural {@link CGNode root node} of the call graph.
    * 
    * @return the "fake" root node the call graph
    */
@@ -41,16 +38,15 @@ public interface CallGraph extends NumberedGraph<CGNode> {
   public Collection<CGNode> getEntrypointNodes();
 
   /**
-   * If you want to get <em> all </em> the nodes corresponding to a particular
-   * method, regardless of context, then use {@link CGNode getNodes}
+   * If you want to get <em> all </em> the nodes corresponding to a particular method, regardless of context, then use
+   * {@link CGNode getNodes}
    * 
    * @return the node corresponding a method in a context
    */
   public CGNode getNode(IMethod method, Context C);
 
   /**
-   * @param m
-   *            a method reference
+   * @param m a method reference
    * @return the set of all nodes in the call graph that represent this method.
    */
   public Set<CGNode> getNodes(MethodReference m);
@@ -61,8 +57,7 @@ public interface CallGraph extends NumberedGraph<CGNode> {
   public IClassHierarchy getClassHierarchy();
 
   /**
-   * Return the set of CGNodes that represent possible targets of a particular
-   * call site from a particular node
+   * Return the set of CGNodes that represent possible targets of a particular call site from a particular node
    */
   public Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site);
 
@@ -72,8 +67,7 @@ public interface CallGraph extends NumberedGraph<CGNode> {
   public int getNumberOfTargets(CGNode node, CallSiteReference site);
 
   /**
-   * @return iterator of CallSiteReference, the call sites in a node that might
-   *         dispatch to the target node.
+   * @return iterator of CallSiteReference, the call sites in a node that might dispatch to the target node.
    */
   Iterator<CallSiteReference> getPossibleSites(CGNode src, CGNode target);
 

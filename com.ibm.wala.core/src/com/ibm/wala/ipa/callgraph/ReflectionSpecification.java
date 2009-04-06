@@ -15,11 +15,8 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MemberReference;
 
 /**
- *
  * This interface holds information describing reflection behavior specified
  * by the user.
- * 
- * @author sfink
  */
 public interface ReflectionSpecification {
 

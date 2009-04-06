@@ -17,10 +17,7 @@ import com.ibm.wala.ipa.callgraph.propagation.ReflectionHandler;
 import com.ibm.wala.ssa.SSAOptions;
 
 /**
- * 
  * Basic interface for options that control call graph generation.
- * 
- * @author sfink
  */
 public class AnalysisOptions {
 

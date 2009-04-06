@@ -14,28 +14,25 @@ import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 
 /**
- * An exception to throw when call graph construction is cancelled.  This exception allows clients
- * to retrieve the partially-built call graph and pointer analysis
- * 
- * @author sjfink
- *
+ * An exception to throw when call graph construction is cancelled. This exception allows clients to retrieve the partially-built
+ * call graph and pointer analysis
  */
 public class CallGraphBuilderCancelException extends CancelException {
-  
+
   private final CallGraph cg;
+
   private final PointerAnalysis pointerAnalysis;
-  
+
   public static CallGraphBuilderCancelException createCallGraphBuilderCancelException(Exception cause, CallGraph cg,
       PointerAnalysis pointerAnalysis) {
     return new CallGraphBuilderCancelException(cause, cg, pointerAnalysis);
   }
-  
-  
+
   public static CallGraphBuilderCancelException createCallGraphBuilderCancelException(String msg, CallGraph cg,
       PointerAnalysis pointerAnalysis) {
     return new CallGraphBuilderCancelException(msg, cg, pointerAnalysis);
   }
-  
+
   /**
    * @return the {@link CallGraph} in whatever state it was left when computation was canceled
    */
@@ -43,7 +40,6 @@ public class CallGraphBuilderCancelException extends CancelException {
     return cg;
   }
 
-  
   /**
    * @return the {@link PointerAnalysis} in whatever state it was left when computation was canceled
    */
@@ -56,7 +52,7 @@ public class CallGraphBuilderCancelException extends CancelException {
     this.cg = cg;
     this.pointerAnalysis = pointerAnalysis;
   }
-  
+
   private CallGraphBuilderCancelException(Exception cause, CallGraph cg, PointerAnalysis pointerAnalysis) {
     super(cause);
     this.cg = cg;

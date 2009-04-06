@@ -21,8 +21,6 @@ package com.ibm.wala.ipa.callgraph;
  * each parameter slot ("zero","one","two"), and the Context
  * provides a mapping from this name to a set of types.
  * eg. "one" -> {java.lang.String, java.lang.Date}
- * 
- * @author sfink
  */
 public interface Context {
   /**

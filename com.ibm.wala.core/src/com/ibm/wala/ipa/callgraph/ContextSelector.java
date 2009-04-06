@@ -16,18 +16,13 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 
 /**
  * An interface to an object which helps control context-sensitivity
- * 
- * @author sfink
  */
 public interface ContextSelector {
   /**
-   * Given a call site, returns the Context in which the callee should be
-   * evaluated.
+   * Given a call site, returns the Context in which the callee should be evaluated.
    * 
-   * @param site
-   *          description of the call site
-   * @return the Context in which the callee should be evaluated, or null if no
-   *         information is available.
+   * @param site description of the call site
+   * @return the Context in which the callee should be evaluated, or null if no information is available.
    */
   Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver);
 

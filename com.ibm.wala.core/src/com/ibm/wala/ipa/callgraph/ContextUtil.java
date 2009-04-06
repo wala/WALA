@@ -16,18 +16,15 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- *
  * misc utilities for dealing with contexts
- * 
- * @author sfink
  */
 public class ContextUtil {
 
   /**
    * @param c a context
-   * @return If this is an object-sensitive context that identifies a unique class
-   * for the receiver object, then return the unique class.  Else, return null.
-   * @throws IllegalArgumentException  if c is null
+   * @return If this is an object-sensitive context that identifies a unique class for the receiver object, then return the unique
+   *         class. Else, return null.
+   * @throws IllegalArgumentException if c is null
    */
   public static IClass getConcreteClassFromContext(Context c) {
     if (c == null) {
@@ -38,11 +35,11 @@ public class ContextUtil {
       return null;
     } else {
       if (item instanceof PointType) {
-	return ((PointType)item).getIClass();
+        return ((PointType) item).getIClass();
       } else if (item instanceof InstanceKey) {
-	return ((InstanceKey)item).getConcreteType();
+        return ((InstanceKey) item).getConcreteType();
       } else {
-	Assertions.UNREACHABLE("Unexpected: " + item.getClass());
+        Assertions.UNREACHABLE("Unexpected: " + item.getClass());
         return null;
       }
     }

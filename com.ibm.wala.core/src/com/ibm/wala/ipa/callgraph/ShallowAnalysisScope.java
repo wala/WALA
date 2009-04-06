@@ -22,7 +22,6 @@ import com.ibm.wala.util.config.AnalysisScopeReader;
  * representation.
  * 
  * @author dpikus, yinnonh
- * 
  */
 public class ShallowAnalysisScope implements Serializable {
 

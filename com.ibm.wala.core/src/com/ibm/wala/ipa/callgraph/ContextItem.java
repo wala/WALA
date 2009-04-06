@@ -12,10 +12,7 @@
 package com.ibm.wala.ipa.callgraph;
 
 /**
- *
  * A placeholder for strong typing.
- * 
- * @author sfink
  */
 public interface ContextItem {
 
