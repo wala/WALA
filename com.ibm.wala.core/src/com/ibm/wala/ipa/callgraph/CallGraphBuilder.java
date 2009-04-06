@@ -15,10 +15,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 
 /**
- *
  * Basic interface for an object that can build a call graph.
- * 
- * @author sfink
  */
 public interface CallGraphBuilder {
   /**
@@ -36,6 +33,9 @@ public interface CallGraphBuilder {
    */
   public PointerAnalysis getPointerAnalysis();
 
+  /**
+   * @return A cache of various analysis artifacts used during call graph construction.
+   */
   public AnalysisCache getAnalysisCache();
 
 }
