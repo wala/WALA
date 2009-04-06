@@ -34,8 +34,6 @@ import com.ibm.wala.classLoader.IMethod;
  * otherwise delegate to a child selector.  When registering with the
  * AnalysisOptions object, make the child selector be whatever the
  * options object had before.
- *
- * @author Julian Dolby (dolby@us.ibm.com)
  */
 public interface MethodTargetSelector {
 

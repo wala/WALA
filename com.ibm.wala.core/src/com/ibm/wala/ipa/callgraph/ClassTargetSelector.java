@@ -24,17 +24,15 @@ import com.ibm.wala.classLoader.NewSiteReference;
  *
  * Such policies are consulted by the different analysis mechanisms,
  * both the flow-based and non-flow algorithms.  The current
- * menchanism is that the policy object are registered with the
+ * mechanism is that the policy object are registered with the
  * AnalysisOptions object, and all analyses that need to analyze
- * allocations ask that object for the class seelctor to use.
+ * allocations ask that object for the class selector to use.
  *
  * In general, for specialized selectors, it is good practice to
  * build selectors that handle the special case of interest, and
  * otherwise delegate to a child selector.  When registering with the
  * AnalysisOptions object, make the child selector be whatever the
  * options object had before.
- *
- * @author Julian Dolby (dolby@us.ibm.com)
  */
 public interface ClassTargetSelector {
 
