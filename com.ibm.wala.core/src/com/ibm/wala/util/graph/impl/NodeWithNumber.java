@@ -11,13 +11,11 @@
 package com.ibm.wala.util.graph.impl;
 
 import com.ibm.wala.util.graph.INodeWithNumber;
+import com.ibm.wala.util.graph.NumberedGraph;
 
 /**
- *
  * A node which carries it's own number; which identifies it in a 
- * NumberedGraph implementation.
- * 
- * @author sfink
+ * {@link NumberedGraph} implementation.
  */
 public class NodeWithNumber implements INodeWithNumber {
 
