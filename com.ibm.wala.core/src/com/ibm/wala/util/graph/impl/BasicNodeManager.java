@@ -18,10 +18,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.graph.NodeManager;
 
 /**
- * 
- * Simple implementation of a Node Manager.
- * 
- * @author sfink
+ * Simple implementation of a {@link NodeManager}.
  */
 public class BasicNodeManager<T> implements NodeManager<T> {
 
