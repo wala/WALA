@@ -11,8 +11,6 @@
 package com.ibm.wala.util.functions;
 
 /**
- * @author sfink
- *
  */
 public interface Function<X,Y> {
 
