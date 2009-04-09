@@ -34,9 +34,6 @@ import com.ibm.wala.util.graph.traverse.SlowDFSDiscoverTimeIterator;
  * the number of nodes.
  * 
  * Sources: TOPLAS article, Muchnick book
- * 
- * @author Michael Hind
- * @author Julian Dolby
  */
 
 public abstract class Dominators<T> {

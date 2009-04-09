@@ -21,10 +21,7 @@ import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.traverse.DFS;
 
 /**
- * 
  * An object that computes the dominance frontiers of a graph
- * 
- * @author Julian Dolby
  */
 public class DominanceFrontiers<T> {
 

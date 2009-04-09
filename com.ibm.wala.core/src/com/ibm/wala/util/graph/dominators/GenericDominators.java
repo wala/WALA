@@ -22,9 +22,6 @@ import com.ibm.wala.util.graph.Graph;
  * is the number of nodes.
  * 
  * Sources: TOPLAS article, Muchnick book
- * 
- * @author Michael Hind
- * @author Julian Dolby
  */
 
 public class GenericDominators<T> extends Dominators<T> {

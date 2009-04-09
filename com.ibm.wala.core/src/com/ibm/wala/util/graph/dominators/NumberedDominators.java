@@ -19,9 +19,6 @@ import com.ibm.wala.util.graph.NumberedGraph;
  * is the number of nodes.
  * 
  * Sources: TOPLAS article, Muchnick book
- * 
- * @author Michael Hind
- * @author Julian Dolby
  */
 
 public class NumberedDominators<T> extends Dominators<T> {
