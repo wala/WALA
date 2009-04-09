@@ -214,7 +214,7 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
         }
       }
     };
-    staticFieldRefs = Iterator2Collection.toCollection(it);
+    staticFieldRefs = Iterator2Collection.toSet(it);
     initializeStaticFieldMap();
   }
 

@@ -52,7 +52,7 @@ public class DFS {
         return new FilterIterator<T>(G.getSuccNodes(n), filter);
       }
     };
-    return Iterator2Collection.toCollection(dfs);
+    return Iterator2Collection.toSet(dfs);
   }
 
   /**

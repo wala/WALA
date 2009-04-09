@@ -677,7 +677,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
 
     public Collection<InstanceKey> getP2Set(LocalPointerKey lpk) {
-      return Iterator2Collection.toCollection(new MapIterator<InstanceKeyAndState, InstanceKey>(makeOrdinalSet(
+      return Iterator2Collection.toSet(new MapIterator<InstanceKeyAndState, InstanceKey>(makeOrdinalSet(
           find(pkToP2Set, new PointerKeyAndState(lpk, stateMachine.getStartState()))).iterator(),
           new Function<InstanceKeyAndState, InstanceKey>() {
 

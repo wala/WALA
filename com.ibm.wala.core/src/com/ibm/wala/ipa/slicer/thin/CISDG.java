@@ -141,7 +141,7 @@ public class CISDG implements ISDG {
           pred.addAll(invMod.get(p));
         }
       }
-      pred.addAll(Iterator2Collection.toCollection(noHeap.getPredNodes(N)));
+      pred.addAll(Iterator2Collection.toSet(noHeap.getPredNodes(N)));
       return pred.iterator();
     }
   }
@@ -168,7 +168,7 @@ public class CISDG implements ISDG {
           succ.addAll(invRef.get(p));
         }
       }
-      succ.addAll(Iterator2Collection.toCollection(noHeap.getSuccNodes(N)));
+      succ.addAll(Iterator2Collection.toSet(noHeap.getSuccNodes(N)));
       return succ.iterator();
     }
   }

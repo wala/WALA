@@ -548,7 +548,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
    * @see com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#iteratePointerKeys()
    */
   public Collection<PointerKey> getPointerKeys() {
-    return Iterator2Collection.toCollection(pointsToMap.iterateKeys());
+    return Iterator2Collection.toSet(pointsToMap.iterateKeys());
   }
 
   public IClassHierarchy getClassHierarchy() {

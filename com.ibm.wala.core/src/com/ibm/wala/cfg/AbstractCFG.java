@@ -146,7 +146,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
       boolean exceptionalIn = getNumberOfExceptionalIn(N) > 0;
       if (normalIn) {
         if (exceptionalIn) {
-          return Iterator2Collection.toCollection(getPredNodes(N)).size();
+          return Iterator2Collection.toSet(getPredNodes(N)).size();
         } else {
           return getNumberOfNormalIn(N);
         }
@@ -241,8 +241,8 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
       if (normalIn) {
         if (exceptionalIn) {
           HashSet<T> result = HashSetFactory.make(getNumberOfNormalIn(N) + getNumberOfExceptionalIn(N));
-          result.addAll(Iterator2Collection.toCollection(normalEdgeManager.getPredNodes(N)));
-          result.addAll(Iterator2Collection.toCollection(exceptionalEdgeManager.getPredNodes(N)));
+          result.addAll(Iterator2Collection.toSet(normalEdgeManager.getPredNodes(N)));
+          result.addAll(Iterator2Collection.toSet(exceptionalEdgeManager.getPredNodes(N)));
           if (fallThru.get(number - 1)) {
             result.add(getNode(number - 1));
           }
@@ -300,7 +300,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
   }
 
   private int slowCountSuccNodes(T N) {
-    return Iterator2Collection.toCollection(getSuccNodes(N)).size();
+    return Iterator2Collection.toSet(getSuccNodes(N)).size();
   }
 
   public Iterator<T> getSuccNodes(T N) {
@@ -595,7 +595,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
-    return Iterator2Collection.toCollection(iterateNormalSuccessors(b.getNumber()));
+    return Iterator2Collection.toSet(iterateNormalSuccessors(b.getNumber()));
   }
 
   /*
@@ -628,7 +628,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
-    return Iterator2Collection.toCollection(iterateExceptionalPredecessors(b));
+    return Iterator2Collection.toSet(iterateExceptionalPredecessors(b));
   }
 
   /*
@@ -638,7 +638,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
-    return Iterator2Collection.toCollection(iterateNormalPredecessors(b));
+    return Iterator2Collection.toSet(iterateNormalPredecessors(b));
   }
 
   public IntSet getPredNodeNumbers(T node) throws UnimplementedError {

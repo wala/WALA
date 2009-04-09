@@ -117,7 +117,7 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
     }
 
     public int getSuccNodeCount(T N) {
-      return Iterator2Collection.toCollection(getSuccNodes(N)).size();
+      return Iterator2Collection.toSet(getSuccNodes(N)).size();
     }
 
     public IntSet getSuccNodeNumbers(T N) {
@@ -139,7 +139,7 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
     }
 
     public int getPredNodeCount(T N) {
-      return Iterator2Collection.toCollection(getPredNodes(N)).size();
+      return Iterator2Collection.toSet(getPredNodes(N)).size();
     }
 
     public IntSet getPredNodeNumbers(T N) {
@@ -301,15 +301,15 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
   }
 
   public Collection<T> getNormalSuccessors(final T N) {
-    return Iterator2Collection.toCollection(edges.getNormalSuccessors(N));
+    return Iterator2Collection.toSet(edges.getNormalSuccessors(N));
   }
 
   public Collection<T> getExceptionalPredecessors(final T N) {
-    return Iterator2Collection.toCollection(edges.getExceptionalPredecessors(N));
+    return Iterator2Collection.toSet(edges.getExceptionalPredecessors(N));
   }
 
   public Collection<T> getNormalPredecessors(final T N) {
-    return Iterator2Collection.toCollection(edges.getNormalPredecessors(N));
+    return Iterator2Collection.toSet(edges.getNormalPredecessors(N));
   }
 
   public T entry() {

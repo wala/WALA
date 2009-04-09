@@ -93,7 +93,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
     if (DEBUG_LEVEL > 1) {
       System.err.println(getClass() + " getCalledNodes " + ret);
       System.err.println("called nodes: "
-          + Iterator2Collection.toCollection(new FilterIterator<Object>(getSuccNodes(ret), exitFilter)));
+          + Iterator2Collection.toSet(new FilterIterator<Object>(getSuccNodes(ret), exitFilter)));
     }
     return new FilterIterator<T>(getSuccNodes(ret), exitFilter);
   }

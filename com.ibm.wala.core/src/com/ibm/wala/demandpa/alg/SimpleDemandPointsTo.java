@@ -106,7 +106,7 @@ public class SimpleDemandPointsTo extends AbstractDemandPointsTo {
     SlowDFSDiscoverTimeIterator<Object> dfs = new SlowDFSDiscoverTimeIterator<Object>(g, pk);
     // Collection reached =
     // DFS.getReachableNodes(g,Collections.singleton(pk));
-    return Iterator2Collection.toCollection((Iterator<? extends InstanceKey>)(Iterator)new FilterIterator<Object>(dfs, iKeyFilter));
+    return Iterator2Collection.toSet((Iterator<? extends InstanceKey>)(Iterator)new FilterIterator<Object>(dfs, iKeyFilter));
   }
 
 }

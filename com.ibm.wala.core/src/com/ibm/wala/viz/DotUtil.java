@@ -241,7 +241,7 @@ public class DotUtil {
    * Compute the nodes to visualize
    */
   private static <T> Collection<T> computeDotNodes(Graph<T> g) throws WalaException {
-    return Iterator2Collection.toCollection(g.iterator());
+    return Iterator2Collection.toSet(g.iterator());
   }
 
   private static String getRankDir() throws WalaException {

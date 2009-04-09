@@ -1109,7 +1109,7 @@ public class ClassHierarchy implements IClassHierarchy {
         return n.klass;
       }
     };
-    return Iterator2Collection.toCollection(new MapIterator<Node, IClass>(findNode(klass).children.iterator(), node2Class));
+    return Iterator2Collection.toSet(new MapIterator<Node, IClass>(findNode(klass).children.iterator(), node2Class));
   }
 
   private Collection<IClass> getImmediateArraySubclasses(IClass klass) {

@@ -984,7 +984,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock> 
         return basicBlocks[cfg.getNumber(object)];
       }
     };
-    return Iterator2Collection.toCollection(new MapIterator<IBasicBlock<IInstruction>, ISSABasicBlock>(cfg.getExceptionalPredecessors(n)
+    return Iterator2Collection.toSet(new MapIterator<IBasicBlock<IInstruction>, ISSABasicBlock>(cfg.getExceptionalPredecessors(n)
         .iterator(), f));
   }
 

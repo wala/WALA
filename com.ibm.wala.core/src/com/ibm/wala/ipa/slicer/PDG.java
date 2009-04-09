@@ -648,7 +648,7 @@ public class PDG implements NumberedGraph<Statement> {
         }
       }
     };
-    Collection<Statement> relevantStatements = Iterator2Collection.toCollection(new FilterIterator<Statement>(iterator(), f));
+    Collection<Statement> relevantStatements = Iterator2Collection.toSet(new FilterIterator<Statement>(iterator(), f));
 
     Map<Statement, OrdinalSet<Statement>> heapReachingDefs = new HeapReachingDefs(modRef).computeReachingDefs(node, ir, pa, mod,
         relevantStatements, new HeapExclusions(SetComplement.complement(new SingletonSet(t))), cg);
@@ -741,7 +741,7 @@ public class PDG implements NumberedGraph<Statement> {
         }
       }
     };
-    return Iterator2Collection.toCollection(new FilterIterator<NormalStatement>(iterator(), filter));
+    return Iterator2Collection.toSet(new FilterIterator<NormalStatement>(iterator(), filter));
   }
 
   /**

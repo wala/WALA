@@ -177,7 +177,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
   }
 
   public Collection<PointerKey> getPointerKeys() {
-    return Iterator2Collection.toCollection(heapModel.iteratePointerKeys());
+    return Iterator2Collection.toSet(heapModel.iteratePointerKeys());
   }
 
   public boolean isFiltered(PointerKey pk) {

@@ -10,39 +10,65 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
- * Converts an iterator to a collection
+ * Converts an {@link Iterator} to a {@link Collection}. Note that if you just want to use Java 5's for-each loop with an
+ * {@link Iterator}, use {@link Iterator2Iterable}.
  * 
- * @author sfink
+ * @see Iterator2Iterable
  */
 public class Iterator2Collection<T> implements Collection<T> {
 
   private final Collection<T> delegate;
 
-
-  private Iterator2Collection(Iterator<? extends T> i) {
-    delegate = new LinkedHashSet<T>(5);
+  private Iterator2Collection(Iterator<? extends T> i, Collection<T> delegate) {
+    this.delegate = delegate;
     while (i.hasNext()) {
       delegate.add(i.next());
     }
   }
-  
+
+  /**
+   * Just calls {@link #toSet(Iterator)}
+   * 
+   * @deprecated
+   */
+  @Deprecated
   public static <T> Iterator2Collection<T> toCollection(Iterator<? extends T> i) throws IllegalArgumentException {
+    return toSet(i);
+  }
+
+  /**
+   * Returns a {@link Set} containing all elements in i. Note that duplicates will be removed.
+   */
+  public static <T> Iterator2Collection<T> toSet(Iterator<? extends T> i) throws IllegalArgumentException {
     if (i == null) {
       throw new IllegalArgumentException("i == null");
     }
-    return new Iterator2Collection<T>(i);
+    return new Iterator2Collection<T>(i, new LinkedHashSet<T>(5));
+  }
+
+  /**
+   * Returns a {@link List} containing all elements in i, preserving duplicates.
+   */
+  public static <T> Iterator2Collection<T> toList(Iterator<? extends T> i) throws IllegalArgumentException {
+    if (i == null) {
+      throw new IllegalArgumentException("i == null");
+    }
+    return new Iterator2Collection<T>(i, new ArrayList<T>(5));
   }
 
   @Override
   public String toString() {
     return delegate.toString();
   }
-  
+
   /*
    * @see java.util.Collection#size()
    */

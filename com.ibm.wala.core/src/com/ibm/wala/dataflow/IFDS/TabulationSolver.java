@@ -555,7 +555,7 @@ public class TabulationSolver<T, P, F> {
         System.err.println(" process callee: " + callee);
       }
       MutableSparseIntSet reached = MutableSparseIntSet.makeEmpty();
-      final Collection<T> returnSitesForCallee = Iterator2Collection.toCollection(supergraph.getReturnSites(edge.target, supergraph
+      final Collection<T> returnSitesForCallee = Iterator2Collection.toSet(supergraph.getReturnSites(edge.target, supergraph
           .getProcOf(callee)));
       allReturnSites.addAll(returnSitesForCallee);
       // we modify this to handle each return site individually. Some types of problems

@@ -48,6 +48,7 @@ import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.ObjectArrayMapping;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
@@ -81,24 +82,16 @@ public class HeapReachingDefs {
   /**
    * For each statement s, return the set of statements that may def the heap value read by s.
    * 
-   * @param node
-   *            the node we are computing heap reaching defs for
-   * @param ir
-   *            IR for the node
-   * @param pa
-   *            governing pointer analysis
-   * @param mod
-   *            the set of heap locations which may be written (transitively) by this node. These are logically return
-   *            values in the SDG.
-   * @param statements
-   *            the statements whose def-use are considered interesting
-   * @param exclusions
-   *            heap locations that should be excluded from data dependence tracking
+   * @param node the node we are computing heap reaching defs for
+   * @param ir IR for the node
+   * @param pa governing pointer analysis
+   * @param mod the set of heap locations which may be written (transitively) by this node. These are logically return values in the
+   *          SDG.
+   * @param statements the statements whose def-use are considered interesting
+   * @param exclusions heap locations that should be excluded from data dependence tracking
    * 
-   * @throws IllegalArgumentException
-   *             if pa is null
-   * @throws IllegalArgumentException
-   *             if statements is null
+   * @throws IllegalArgumentException if pa is null
+   * @throws IllegalArgumentException if statements is null
    */
   public Map<Statement, OrdinalSet<Statement>> computeReachingDefs(CGNode node, IR ir, PointerAnalysis pa,
       Map<CGNode, OrdinalSet<PointerKey>> mod, Collection<Statement> statements, HeapExclusions exclusions, CallGraph cg) {
@@ -482,8 +475,8 @@ public class HeapReachingDefs {
     private final HeapExclusions exclusions;
 
     /**
-     * if (i,j) \in heapReturnCaller, then statement j is a HeapStatement.ReturnCaller for statement i, a
-     * NormalStatement representing an invoke
+     * if (i,j) \in heapReturnCaller, then statement j is a HeapStatement.ReturnCaller for statement i, a NormalStatement
+     * representing an invoke
      */
     private final IBinaryNaturalRelation heapReturnCaller = new BasicNaturalRelation();
 
@@ -523,7 +516,7 @@ public class HeapReachingDefs {
           System.err.println("heapEntry " + heapEntryStatements());
         }
         return new BitVectorUnionVector(new BitVectorIntSet(heapEntryStatements()).getBitVector());
-      } 
+      }
       if (src.getInstruction() != null && !(src.getInstruction() instanceof SSAAbstractInvokeInstruction)
           && !cfg.getNormalSuccessors(src).contains(dst)) {
         // if the edge only happens due to exceptional control flow, then no
@@ -640,8 +633,8 @@ public class HeapReachingDefs {
               return o instanceof StaticFieldKey;
             }
           };
-          final Collection<PointerKey> kill = Iterator2Collection.toCollection(new FilterIterator<PointerKey>(mod.iterator(),
-              staticFilter));
+          final Collection<PointerKey> kill = Iterator2Collection
+              .toSet(new FilterIterator<PointerKey>(mod.iterator(), staticFilter));
           if (kill.isEmpty()) {
             return null;
           } else {
@@ -658,10 +651,8 @@ public class HeapReachingDefs {
                 return false;
               }
             };
-            Collection<Statement> killedStatements = Iterator2Collection.toCollection(new FilterIterator<Statement>(domain
-                .iterator(), f));
             BitVector result = new BitVector();
-            for (Statement k : killedStatements) {
+            for (Statement k : Iterator2Iterable.make(new FilterIterator<Statement>(domain.iterator(), f))) {
               result.set(domain.getMappedIndex(k));
             }
             return result;
