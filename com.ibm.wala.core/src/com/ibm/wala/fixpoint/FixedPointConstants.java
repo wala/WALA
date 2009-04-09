@@ -11,10 +11,7 @@
 package com.ibm.wala.fixpoint;
 
 /**
- * 
  * Constants used in the fixed-point solver framework
- * 
- * @author sfink
  */
 public interface FixedPointConstants {
 

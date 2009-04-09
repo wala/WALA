@@ -15,8 +15,6 @@ import com.ibm.wala.util.graph.impl.NodeWithNumber;
 
 /**
  * Represents a single variable in a fixed-point system.
- * 
- * @author Stephen Fink
  */
 public abstract class AbstractVariable<T extends AbstractVariable> extends NodeWithNumber implements IVariable<T> {
 

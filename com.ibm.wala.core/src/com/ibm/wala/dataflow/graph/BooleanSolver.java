@@ -13,7 +13,7 @@ package com.ibm.wala.dataflow.graph;
 import com.ibm.wala.fixpoint.BooleanVariable;
 
 /**
- * @author sfink
+ * A {@link DataflowSolver} specialized for {@link BooleanVariable}s
  */
 public class BooleanSolver<T> extends DataflowSolver<T, BooleanVariable> {
 

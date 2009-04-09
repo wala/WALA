@@ -13,7 +13,7 @@ package com.ibm.wala.dataflow.graph;
 import com.ibm.wala.fixpoint.BitVectorVariable;
 
 /**
- * @author sfink
+ * A {@link DataflowSolver} specialized for {@link BitVectorVariable}s
  */
 public class BitVectorSolver<T> extends DataflowSolver<T, BitVectorVariable> {
 
@@ -31,5 +31,4 @@ public class BitVectorSolver<T> extends DataflowSolver<T, BitVectorVariable> {
     return new BitVectorVariable();
 
   }
-
 }

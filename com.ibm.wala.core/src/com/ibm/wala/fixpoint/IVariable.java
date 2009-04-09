@@ -15,12 +15,8 @@ import com.ibm.wala.util.graph.INodeWithNumber;
 
 /**
  * Represents a single variable in a fixed-point iterative system.
- * 
- * 
- * @author Stephen Fink
  */
 public interface IVariable<T extends IVariable> extends INodeWithNumber {
-
   
   /**
    * Variables must allow the solver implementation to get/set an order number,
@@ -39,15 +35,11 @@ public interface IVariable<T extends IVariable> extends INodeWithNumber {
    * 
    * It might be cleaner to hold this on the side, but we cannot tolerate any
    * extra space.  TODO: consider moving this functionality to a subinterface?
-   * 
-   * @param i
    */
   public abstract void setOrderNumber(int i);
 
   /**
     * Set this variable to have the same state as another one
-    * 
-    * @param v
     */
   public void copyState(T v);
 

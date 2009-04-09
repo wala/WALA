@@ -14,13 +14,10 @@ import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.util.graph.Graph;
 
 /**
- *
  * A dataflow framework in the style of Kildall, POPL 73
  * This represents a dataflow problem induced over a graph.
- * T type of nodes in the graph
  * 
- * @author sfink
- * 
+ * @param <T> type of nodes in the graph
  */
 public interface IKilldallFramework<T,V extends IVariable> {
 

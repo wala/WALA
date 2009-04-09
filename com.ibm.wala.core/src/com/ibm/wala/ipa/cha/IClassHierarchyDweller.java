@@ -12,9 +12,6 @@ package com.ibm.wala.ipa.cha;
 
 /**
  * Something that lives in a class hierarchy
- * 
- * @author sjfink
- *
  */
 public interface IClassHierarchyDweller {
   public IClassHierarchy getClassHierarchy();

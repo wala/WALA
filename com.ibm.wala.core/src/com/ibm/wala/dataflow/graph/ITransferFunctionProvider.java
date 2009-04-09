@@ -14,19 +14,13 @@ import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.IVariable;
 
 /**
- * 
- * The DataflowSolver builds system over graphs, with dataflow transfer
+ * The {@link DataflowSolver} builds system over graphs, with dataflow transfer
  * functions on the nodes, the edges or both. In any case, it takes an
- * ITransferFunctionProvider to tell it what functions to use.
- * 
- * @author sfink
- * @author Julian Dolby (dolby@us.ibm.com)
- * 
+ * {@link ITransferFunctionProvider} to tell it what functions to use.
  */
 public interface ITransferFunctionProvider<T, V extends IVariable> {
 
   /**
-   * @param node
    * @return the transfer function from IN_node -> OUT_node
    */
   public UnaryOperator<V> getNodeTransferFunction(T node);
@@ -37,8 +31,6 @@ public interface ITransferFunctionProvider<T, V extends IVariable> {
   public boolean hasNodeTransferFunctions();
 
   /**
-   * @param src
-   * @param dst
    * @return the transfer function from OUT_src -> EDGE_<src,dst>
    */
   public UnaryOperator<V> getEdgeTransferFunction(T src, T dst);

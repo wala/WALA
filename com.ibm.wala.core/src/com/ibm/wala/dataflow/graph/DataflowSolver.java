@@ -24,8 +24,6 @@ import com.ibm.wala.util.intset.IntegerUnionFind;
 
 /**
  * Iterative solver for a Killdall dataflow framework
- * 
- * @author sfink
  */
 public abstract class DataflowSolver<T, V extends IVariable> extends DefaultFixedPointSolver<V> {
 
@@ -45,13 +43,11 @@ public abstract class DataflowSolver<T, V extends IVariable> extends DefaultFixe
   private final Map<Object, V> node2Out = HashMapFactory.make();
 
   /**
-   * The variable for each edge, when edge transfers requested (indexed by
-   * Pair(src, dst))
+   * The variable for each edge, when edge transfers requested (indexed by Pair(src, dst))
    */
   private final Map<Object, V> edge2Var = HashMapFactory.make();
 
   /**
-   * @param problem
    */
   public DataflowSolver(IKilldallFramework<T, V> problem) {
     // tune the implementation for common case of 2 uses for each
@@ -61,10 +57,8 @@ public abstract class DataflowSolver<T, V extends IVariable> extends DefaultFixe
   }
 
   /**
-   * @param n
-   *            a node
-   * @return a fresh variable to represent the lattice value at the IN or OUT of
-   *         n
+   * @param n a node
+   * @return a fresh variable to represent the lattice value at the IN or OUT of n
    */
   protected abstract V makeNodeVariable(T n, boolean IN);
 
@@ -156,8 +150,7 @@ public abstract class DataflowSolver<T, V extends IVariable> extends DefaultFixe
     }
 
     /**
-     * record that variable (n1, in1) is the same as variable (n2,in2), where
-     * (x,true) = IN(X) and (x,false) = OUT(X)
+     * record that variable (n1, in1) is the same as variable (n2,in2), where (x,true) = IN(X) and (x,false) = OUT(X)
      */
     public void union(Object n1, Object n2) {
       assert n1 != null;
@@ -320,9 +313,9 @@ public abstract class DataflowSolver<T, V extends IVariable> extends DefaultFixe
       if (nPred == 1) {
         // short circuit by setting IN = OUT_p
         Object p = G.getPredNodes(node).next();
-//        if (p == null) {
-//          p = G.getPredNodes(node).next();
-//        }
+        // if (p == null) {
+        // p = G.getPredNodes(node).next();
+        // }
         assert p != null;
         uf.union(getIn(node), functions.hasEdgeTransferFunctions() ? getEdge(p, node) : getOut(p));
       }

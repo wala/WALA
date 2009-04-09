@@ -30,22 +30,20 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
 public class Acyclic {
 
   /**
-   * This is slow.  Fix it.
+   * This is slow. Fix it.
    */
   public static <T> boolean isAcyclic(NumberedGraph<T> G, T root) {
     IBinaryNaturalRelation r = computeBackEdges(G, root);
     Iterator<IntPair> it = r.iterator();
     return !it.hasNext();
   }
-  
+
   /**
-   * Compute a relation R s.t. (i,j) \in R iff (i,j) is a backedge according to
-   * a DFS of a numbered graph starting from some root.
+   * Compute a relation R s.t. (i,j) \in R iff (i,j) is a backedge according to a DFS of a numbered graph starting from some root.
    * 
    * Not efficient. Recursive and uses hash sets.
    */
   public static <T> IBinaryNaturalRelation computeBackEdges(NumberedGraph<T> G, T root) {
-   
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
@@ -73,11 +71,10 @@ public class Acyclic {
     }
     onstack.remove(root);
   }
-  
+
   public static <T> boolean hasIncomingBackEdges(Path p, NumberedGraph<T> G, T root) {
     /*
      * TODO: pull out computeBackEdges, and pass in the backedge relation as a parameter to this call
-     * 
      */
     IBinaryNaturalRelation backedges = computeBackEdges(G, root);
     for (int index = 0; index < p.size(); index++) {
@@ -92,19 +89,16 @@ public class Acyclic {
   }
 
   /**
-   * Compute a set of acyclic paths through a graph G from a node src to a node
-   * sink.
-   * 
+   * Compute a set of acyclic paths through a graph G from a node src to a node sink.
    * 
    * This is not terribly efficient.
    * 
-   * @param max
-   *            the max number of paths to return.
+   * @param max the max number of paths to return.
    */
   public static <T> Collection<Path> computeAcyclicPaths(NumberedGraph<T> G, T root, T src, T sink, int max) {
     Collection<Path> result = HashSetFactory.make();
     SubGraph<T> acyclic = new SubGraph<T>(G, computeBackEdges(G, root));
-    
+
     Collection<Path> worklist = HashSetFactory.make();
     Path sinkPath = Path.make(G.getNumber(sink));
     worklist.add(sinkPath);
@@ -115,12 +109,12 @@ public class Acyclic {
       if (first == G.getNumber(src)) {
         result.add(p);
       } else {
-        for (IntIterator it = acyclic.getPredNodeNumbers(acyclic.getNode(first)).intIterator(); it.hasNext(); ) {
+        for (IntIterator it = acyclic.getPredNodeNumbers(acyclic.getNode(first)).intIterator(); it.hasNext();) {
           worklist.add(Path.prepend(it.next(), p));
         }
       }
     }
-    
+
     return result;
   }
 
@@ -194,7 +188,7 @@ public class Acyclic {
       public IntSet getPredNodeNumbers(T node) {
         IntSet s = delegate.getPredNodeNumbers(node);
         MutableIntSet result = MutableSparseIntSet.makeEmpty();
-        for (IntIterator it = s.intIterator(); it.hasNext(); ) {
+        for (IntIterator it = s.intIterator(); it.hasNext();) {
           int y = it.next();
           if (!ignoreEdges.contains(y, getNumber(node))) {
             result.add(y);

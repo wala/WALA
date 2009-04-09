@@ -33,10 +33,6 @@ import com.ibm.wala.util.debug.VerboseAction;
  * The set of steps and variables is internally represented as a graph. Each step and each variable is a node in the graph. If a
  * step produces a variable that is used by another step, the graph has a directed edge from the producer to the consumer.
  * Fixed-point iteration proceeds in a topological order according to these edges.
- * 
- * @author Stephen Fink
- * @author Julian Dolby
- * 
  */
 public abstract class AbstractFixedPointSolver<T extends IVariable> implements IFixedPointSolver<T>, FixedPointConstants,
     VerboseAction {

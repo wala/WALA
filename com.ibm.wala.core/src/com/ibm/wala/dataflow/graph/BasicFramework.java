@@ -14,10 +14,7 @@ import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.util.graph.Graph;
 
 /**
- * 
  * a basic implementation of the dataflow framework
- * 
- * @author sfink
  */
 public class BasicFramework<T, V extends IVariable> implements IKilldallFramework<T, V> {
 
