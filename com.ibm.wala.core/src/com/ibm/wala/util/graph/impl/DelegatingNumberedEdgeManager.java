@@ -22,8 +22,7 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
- * An object that delegates edge management to the nodes, INodeWithNumberedEdges
- * 
+ * An object that delegates edge management to the nodes, {@link INodeWithNumberedEdges}
  */
 public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> implements NumberedEdgeManager<T> {
 

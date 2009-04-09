@@ -19,8 +19,6 @@ import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 
 /**
- * @author sfink
- *
  */
 public class NumberedNodeIterator<T> implements Iterator<T> {
   final IntIterator numbers;

@@ -19,8 +19,6 @@ import com.ibm.wala.util.graph.NumberedNodeManager;
 
 /**
  * A graph view that reverses the edges in a graph
- * 
- * @author Julian Dolby
  */
 public class InvertedNumberedGraph<T> extends AbstractNumberedGraph<T> {
 

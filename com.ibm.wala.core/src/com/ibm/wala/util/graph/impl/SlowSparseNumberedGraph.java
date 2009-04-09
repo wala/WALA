@@ -19,10 +19,7 @@ import com.ibm.wala.util.graph.NodeManager;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 
 /**
- * 
  * A graph of numbered nodes, expected to have a fairly sparse edge structure.
- * 
- * @author sfink
  */
 public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> {
 

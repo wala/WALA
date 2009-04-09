@@ -14,10 +14,9 @@ import com.ibm.wala.util.graph.AbstractGraph;
 import com.ibm.wala.util.graph.EdgeManager;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.NodeManager;
+
 /**
  * A graph view that reverses the edges in a graph
- *
- * @author Julian Dolby
  */
 public class InvertedGraph<T> extends AbstractGraph<T> {
 
@@ -38,7 +37,6 @@ public class InvertedGraph<T> extends AbstractGraph<T> {
   public InvertedGraph(Graph<T> G) {
     nodes = G;
     edges = new InvertingEdgeManager<T>(G);
-  } 
+  }
 
 }
-

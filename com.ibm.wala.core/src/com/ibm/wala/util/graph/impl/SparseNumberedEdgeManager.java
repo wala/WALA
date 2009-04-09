@@ -24,8 +24,6 @@ import com.ibm.wala.util.intset.IntSetAction;
 
 /**
  * An object which tracks edges for nodes that have numbers.
- * 
- * @author sfink
  */
 public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T> {
 
