@@ -16,7 +16,8 @@ import com.ibm.wala.util.graph.INodeWithNumberedEdges;
 import com.ibm.wala.util.graph.NodeManager;
 
 /**
- * @author sfink
+ * Basic functionality for a graph that delegates node and edge management, and
+ * tracks node numbers
  */
 public class DelegatingNumberedGraph<T extends INodeWithNumberedEdges> extends AbstractNumberedGraph<T> {
 
