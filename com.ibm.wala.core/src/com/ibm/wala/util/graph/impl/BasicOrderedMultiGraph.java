@@ -25,9 +25,7 @@ import com.ibm.wala.util.graph.OrderedMultiGraph;
  * 
  * UNDER CONSTRUCTION.
  * 
- * @author sjfink
- * 
- * @param <T>
+ * @param <T> type of node in the graph
  */
 public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
 
@@ -41,9 +39,6 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
 
   /**
    * Add this edge, unconditionally setting it as the next successor.
-   * 
-   * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object,
-   *      java.lang.Object)
    */
   public void addEdge(T src, T dst) throws IllegalArgumentException {
     delegate.addEdge(src, dst);
@@ -83,8 +78,6 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
 
   /**
    * For now, this returns nodes in no particular order! Fix this when needed.
-   * 
-   * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
    */
   public Iterator<? extends T> getPredNodes(T N) throws IllegalArgumentException {
     return delegate.getPredNodes(N);
