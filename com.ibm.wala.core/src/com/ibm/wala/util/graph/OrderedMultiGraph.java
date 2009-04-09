@@ -10,12 +10,11 @@
  *******************************************************************************/
 package com.ibm.wala.util.graph;
 
-
 /**
- * @author Stephen Fink
+ * 
  */
 public interface OrderedMultiGraph<T> extends Graph<T> {
-  
+
   /**
    * get the ith successor of a node
    */
@@ -25,6 +24,5 @@ public interface OrderedMultiGraph<T> extends Graph<T> {
    * add an edge and record it so dst is the ith successor of src
    */
   public void addEdge(int i, T src, T dst);
-
 
 }

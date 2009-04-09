@@ -13,9 +13,7 @@ package com.ibm.wala.util.graph;
 import java.util.Iterator;
 
 /**
- * Basic functionality for a graph that delegates node and edge management.
- * 
- * @author sfink
+ * Basic functionality for a {@link Graph} that delegates node and edge management.
  */
 public abstract class AbstractGraph<T> implements Graph<T> {
 

@@ -16,8 +16,7 @@ import com.ibm.wala.util.graph.impl.NumberedNodeIterator;
 import com.ibm.wala.util.intset.IntSet;
 
 /**
- * Basic functionality for a graph that delegates node and edge management, and
- * tracks node numbers
+ * Basic functionality for a graph that delegates node and edge management, and tracks node numbers
  */
 public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implements NumberedGraph<T> {
 
@@ -51,7 +50,7 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implemen
   public Iterator<T> iterateNodes(final IntSet s) {
     return new NumberedNodeIterator<T>(s, this);
   }
-  
+
   public IntSet getPredNodeNumbers(T node) throws IllegalArgumentException {
     assert getEdgeManager() != null;
     return ((NumberedEdgeManager<T>) getEdgeManager()).getPredNodeNumbers(node);

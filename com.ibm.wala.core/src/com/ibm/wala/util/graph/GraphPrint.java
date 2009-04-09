@@ -16,8 +16,6 @@ import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 
 /**
  * Simple graph printing utility
- * 
- * @author sfink
  */
 public class GraphPrint {
 

@@ -13,47 +13,41 @@ package com.ibm.wala.util.graph;
 import com.ibm.wala.util.intset.IntSet;
 
 /**
- * Basic interface for a node which lives in one graph ... it's id is used to
- * implement the NumberedGraph interface.
+ * Basic interface for a node which lives in one graph ... it's id is used to implement the {@link NumberedGraph} interface.
  */
-
 public interface INodeWithNumberedEdges extends INodeWithNumber {
-  /** 
+  /**
    * @return set of node numbers which are successors of this node
    */
   public IntSet getSuccNumbers();
 
-  /** 
+  /**
    * @return set of node numbers which are predecessors of this node
    */
   public IntSet getPredNumbers();
 
   /**
    * Modify the graph so that node number n is a successor of this node
-   * @param n
    */
   public void addSucc(int n);
-  
+
   /**
    * Modify the graph so that node number n is a predecessor of this node
-   * @param n
    */
   public void addPred(int n);
-  
+
   /**
-   * remove all edges that involve this node.  This must fix up
-   * the other nodes involved in each edge removed.
+   * remove all edges that involve this node. This must fix up the other nodes involved in each edge removed.
    */
   public void removeAllIncidentEdges();
 
   /**
-   * remove all incoming edges to this this node. This must fix up the other
-   * nodes involved in each edge removed.
+   * remove all incoming edges to this this node. This must fix up the other nodes involved in each edge removed.
    */
   public void removeIncomingEdges();
+
   /**
-   * remove all outgoing edges to this this node. This must fix up the other
-   * nodes involved in each edge removed.
+   * remove all outgoing edges to this this node. This must fix up the other nodes involved in each edge removed.
    */
   public void removeOutgoingEdges();
 

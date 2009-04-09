@@ -10,12 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.util.graph;
 
-
 /**
- * A numbered graph is a Graph where each node has a unique persistent 
- * non-negative integer id.
- *
- * @author Stephen Fink
+ * A numbered graph is a {@link Graph} where each node has a unique persistent non-negative integer id.
  */
 public interface NumberedGraph<T> extends Graph<T>, NumberedNodeManager<T>, NumberedEdgeManager<T> {
 

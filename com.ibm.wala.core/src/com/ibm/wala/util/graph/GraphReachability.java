@@ -35,11 +35,7 @@ import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 
 /**
- * 
- * A dataflow system that computes, for each graph node, the set of
- * "interesting" nodes that are reachable
- * 
- * @author sfink
+ * A dataflow system that computes, for each graph node, the set of "interesting" nodes that are reachable
  */
 public class GraphReachability<T> {
 
@@ -59,12 +55,9 @@ public class GraphReachability<T> {
   final OrdinalSetMapping<T> domain;
 
   /**
-   * @param g
-   *          call graph to analyze
-   * @param filter
-   *          "interesting" node definition
-   * @throws IllegalArgumentException
-   *           if g is null
+   * @param g call graph to analyze
+   * @param filter "interesting" node definition
+   * @throws IllegalArgumentException if g is null
    */
   public GraphReachability(Graph<T> g, Filter filter) {
     if (g == null) {
@@ -97,10 +90,9 @@ public class GraphReachability<T> {
   }
 
   /**
-   * @return true iff the evaluation of some equation caused a change in the
-   *         value of some variable.
+   * @return true iff the evaluation of some equation caused a change in the value of some variable.
    */
-  public boolean solve(IProgressMonitor monitor) throws CancelException{
+  public boolean solve(IProgressMonitor monitor) throws CancelException {
 
     ITransferFunctionProvider<T, BitVectorVariable> functions = new ITransferFunctionProvider<T, BitVectorVariable>() {
 
@@ -124,8 +116,7 @@ public class GraphReachability<T> {
       }
 
       /*
-       * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#getEdgeTransferFunction(java.lang.Object,
-       *      java.lang.Object)
+       * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#getEdgeTransferFunction(java.lang.Object, java.lang.Object)
        */
       public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(Object from, Object to) {
         Assertions.UNREACHABLE();

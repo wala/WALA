@@ -19,10 +19,7 @@ import com.ibm.wala.util.graph.traverse.BFSIterator;
 import com.ibm.wala.util.graph.traverse.DFS;
 
 /**
- * 
  * Utility class to check integrity of a graph data structure.
- * 
- * @author sfink
  */
 public class GraphIntegrity {
 

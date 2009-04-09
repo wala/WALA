@@ -15,10 +15,7 @@ import java.util.Iterator;
 import com.ibm.wala.util.intset.IntSet;
 
 /**
- * 
  * An object which tracks nodes with numbers.
- * 
- * @author sfink
  */
 public interface NumberedNodeManager<T> extends NodeManager<T> {
 

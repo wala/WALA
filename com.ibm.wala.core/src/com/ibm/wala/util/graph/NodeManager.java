@@ -14,8 +14,6 @@ import java.util.Iterator;
 
 /**
  * An object which tracks graph nodes.
- * 
- * @author sfink
  */
 public interface NodeManager<T> extends Iterable<T>{
 
@@ -31,20 +29,15 @@ public interface NodeManager<T> extends Iterable<T>{
 
   /**
    * add a node to this graph
-   * 
-   * @param n
    */
   public void addNode(T n);
 
   /**
    * remove a node from this graph
-   * 
-   * @param n
    */
   public void removeNode(T n);
 
   /**
-   * @param N
    * @return true iff the graph contains the specified node
    */
   public boolean containsNode(T N);

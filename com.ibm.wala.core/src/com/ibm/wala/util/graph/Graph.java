@@ -12,8 +12,6 @@ package com.ibm.wala.util.graph;
 
 /**
  * Basic interface for a directed graph.
- *
- * @author Stephen Fink
  */
 public interface Graph<T> extends NodeManager<T>, EdgeManager<T> {
   /**

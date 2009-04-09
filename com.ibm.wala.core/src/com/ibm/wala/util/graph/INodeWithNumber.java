@@ -13,7 +13,7 @@ package com.ibm.wala.util.graph;
 
 /**
  * Basic interface for a node which lives in one graph ... it's id is used
- * to implement the NumberedGraph interface.
+ * to implement the {@link NumberedGraph} interface.
  */
 
 public interface INodeWithNumber {
