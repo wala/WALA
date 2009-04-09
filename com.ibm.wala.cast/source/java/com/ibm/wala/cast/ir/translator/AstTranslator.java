@@ -10,15 +10,45 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.translator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 
-import com.ibm.wala.cast.ir.ssa.*;
+import com.ibm.wala.cast.ir.ssa.AssignInstruction;
+import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
+import com.ibm.wala.cast.ir.ssa.AstConstants;
+import com.ibm.wala.cast.ir.ssa.AstEchoInstruction;
+import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
+import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
+import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
+import com.ibm.wala.cast.ir.ssa.AstLexicalAccess;
+import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
+import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
+import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
+import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
-import com.ibm.wala.cast.tree.*;
+import com.ibm.wala.cast.tree.CAstControlFlowMap;
+import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.cast.tree.CAstSymbol;
+import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
-import com.ibm.wala.cast.tree.impl.*;
+import com.ibm.wala.cast.tree.impl.CAstCloner;
+import com.ibm.wala.cast.tree.impl.CAstImpl;
+import com.ibm.wala.cast.tree.impl.CAstOperator;
+import com.ibm.wala.cast.tree.impl.CAstRewriter;
+import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
+import com.ibm.wala.cast.tree.impl.CAstSymbolImplBase;
 import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cast.types.AstTypeReference;
 import com.ibm.wala.cast.util.CAstPrinter;
@@ -32,14 +62,18 @@ import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.ShiftInstruction;
-import com.ibm.wala.ssa.*;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
+import com.ibm.wala.ssa.SSALoadClassInstruction;
+import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.INodeWithNumber;
 import com.ibm.wala.util.graph.impl.SparseNumberedGraph;
 import com.ibm.wala.util.intset.IntSet;
@@ -632,10 +666,10 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       blocks.add(currentBlock);
 
       if (DEBUG_CFG)
-        Trace.println("adding new block (node) " + currentBlock);
+        System.err.println(("adding new block (node) " + currentBlock));
       if (fallThruFromPrior) {
         if (DEBUG_CFG)
-          Trace.println("adding fall-thru edge " + previous + " --> " + currentBlock);
+          System.err.println(("adding fall-thru edge " + previous + " --> " + currentBlock));
         addEdge(previous, currentBlock);
       } else {
         deadBlocks.add(currentBlock);
@@ -719,7 +753,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
     public void addPreNode(CAstNode n, UnwindState context) {
       if (DEBUG_CFG)
-        Trace.println("adding pre-node " + n);
+        System.err.println(("adding pre-node " + n));
       nodeToBlock.put(n, currentBlock);
       deadBlocks.remove(currentBlock);
       if (context != null)
@@ -739,7 +773,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       } else if (nodeToBlock.containsKey(dst)) {
         PreBasicBlock target = nodeToBlock.get(dst);
         if (DEBUG_CFG)
-          Trace.println("adding pre-edge " + src + " --> " + dst);
+          System.err.println(("adding pre-edge " + src + " --> " + dst));
         if (unwind == null) {
           addEdge(src, target);
         } else {
@@ -747,7 +781,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         }
       } else {
         if (DEBUG_CFG)
-          Trace.println("adding delayed pre-edge " + src + " --> " + dst);
+          System.err.println(("adding delayed pre-edge " + src + " --> " + dst));
         addDelayedEdge(src, dst, exception);
       }
     }
@@ -806,7 +840,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       }
 
       if (DEBUG_CFG) {
-        Trace.println("adding " + n + " at " + inst + " to " + currentBlock);
+        System.err.println(("adding " + n + " at " + inst + " to " + currentBlock));
       }
 
       currentBlock.instructions().add(n);
@@ -843,10 +877,10 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         }
 
         if (DEBUG_CFG)
-          Trace.println("added " + blocks.get(i) + " to final CFG as " + getNumber(blocks.get(i)));
+          System.err.println(("added " + blocks.get(i) + " to final CFG as " + getNumber(blocks.get(i))));
       }
       if (DEBUG_CFG)
-        Trace.println(getMaxNumber() + " blocks total");
+        System.err.println((getMaxNumber() + " blocks total"));
 
       init();
 
@@ -856,13 +890,13 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
           PreBasicBlock dst = (PreBasicBlock) j.next();
           if (isCatchBlock(dst.getNumber()) || (dst.isExitBlock() && icfg.exceptionalToExit.contains(src))) {
             if (DEBUG_CFG)
-              Trace.println("exceptonal edge " + src + " -> " + dst);
+              System.err.println(("exceptonal edge " + src + " -> " + dst));
             addExceptionalEdge(src, dst);
           }
 
           if (dst.isExitBlock() ? icfg.normalToExit.contains(src) : !isCatchBlock(dst.getNumber())) {
             if (DEBUG_CFG)
-              Trace.println("normal edge " + src + " -> " + dst);
+              System.err.println(("normal edge " + src + " -> " + dst));
             addNormalEdge(src, dst);
           }
         }
@@ -1122,7 +1156,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       } else if (o == CAstControlFlowMap.SWITCH_DEFAULT) {
         return getUnderlyingSymtab().getConstant("__default label");
       } else {
-        Trace.println("cannot handle constant " + o);
+        System.err.println(("cannot handle constant " + o));
         Assertions.UNREACHABLE();
         return -1;
       }
@@ -2007,8 +2041,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         scopingParents = parents.toArray(new String[parents.size()]);
 
         if (DEBUG_LEXICAL) {
-          Trace.println("scoping parents of " + scope.getEntity());
-          Trace.println(parents.toString());
+          System.err.println(("scoping parents of " + scope.getEntity()));
+          System.err.println(parents.toString());
         }
 
       } else {
@@ -2016,12 +2050,12 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       }
 
       if (DEBUG_NAMES) {
-        Trace.println("lexical uses of " + scope.getEntity());
+        System.err.println(("lexical uses of " + scope.getEntity()));
         for (int i = 0; i < instructionLexicalUses.length; i++) {
           if (instructionLexicalUses[i] != null) {
-            Trace.println("  lexical uses of " + instrs[i]);
+            System.err.println(("  lexical uses of " + instrs[i]));
             for (int j = 0; j < instructionLexicalUses[i].length; j++) {
-              Trace.println("    " + this.exposedNames[j].fst + ": " + instructionLexicalUses[i][j]);
+              System.err.println(("    " + this.exposedNames[j].fst + ": " + instructionLexicalUses[i][j]));
             }
           }
         }
@@ -2088,7 +2122,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     if (results.containsKey(n))
       return results.get(n).intValue();
     else {
-      Trace.println("no value for " + n.getKind());
+      System.err.println(("no value for " + n.getKind()));
       return -1;
     }
   }
@@ -2221,7 +2255,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     String[] map = new String[scopes.iterator().next().size() + 1];
 
     if (DEBUG_NAMES) {
-      Trace.println("names array of size " + map.length);
+      System.err.println(("names array of size " + map.length));
     }
 
     for (Iterator<Scope> S = scopes.iterator(); S.hasNext();) {
@@ -2244,7 +2278,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         map[v.valueNumber()] = nm;
 
         if (DEBUG_NAMES) {
-          Trace.println("mapping name " + nm + " to " + v.valueNumber());
+          System.err.println(("mapping name " + nm + " to " + v.valueNumber()));
         }
       }
     }
@@ -2293,7 +2327,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   protected boolean enterEntity(final CAstEntity n, Context context, CAstVisitor visitor) {
     if (DEBUG_TOP)
-      Trace.println("translating " + n.getName());
+      System.err.println(("translating " + n.getName()));
     return false;
   }
 
@@ -3483,8 +3517,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     CAstEntity included = getIncludedEntity(n);
     
     if (included == null) {
-      Trace.println("cannot find include for " + CAstPrinter.print(n));
-      Trace.println("from:\n" + namedEntityResolver);
+      System.err.println(("cannot find include for " + CAstPrinter.print(n)));
+      System.err.println(("from:\n" + namedEntityResolver));
     } else {
       final boolean isMacroExpansion = (included.getKind() == CAstEntity.MACRO_ENTITY);
 
@@ -3522,7 +3556,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       }).rewrite(included);
 
       if (copy.getAST() == null) {
-        Trace.println(copy.getName() + " has no AST");
+        System.err.println((copy.getName() + " has no AST"));
 
       } else {
         visit(copy.getAST(), new DelegatingContext(wc) {
@@ -3610,7 +3644,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   public void translate(final CAstEntity N, final String nm) {
     if (DEBUG_TOP)
-      Trace.println("translating " + nm);
+      System.err.println(("translating " + nm));
 //    this.inlinedSourceMap = inlinedSourceMap;
     walkEntities(N, new DefaultContext(this, N, nm));
   }

@@ -12,8 +12,6 @@ package com.ibm.wala.util.intset;
 
 import java.util.Arrays;
 
-import com.ibm.wala.util.debug.Trace;
-
 /**
  * simple implementation of IntVector
  */
@@ -109,8 +107,8 @@ public class SimpleIntVector implements IntVector {
    * @see com.ibm.wala.util.intset.IntVector#reportStats()
    */
   public void performVerboseAction() {
-    Trace.println("size:       " + store.length);
-    Trace.println("occupancy:  " + computeOccupancy());
+    System.err.println(("size:       " + store.length));
+    System.err.println(("occupancy:  " + computeOccupancy()));
   }
 
   /**

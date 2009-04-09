@@ -75,11 +75,11 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
               topLevelEntities.add(Pair.make(fileEntity, fn));
             }
           } catch (MalformedURLException e) {
-            Trace.println("unpected problems with " + f);
+            System.err.println(("unpected problems with " + f));
             e.printStackTrace(Trace.getTraceStream());
             Assertions.UNREACHABLE();
           } catch (RuntimeException e) {
-            Trace.println("unpected problems with " + f);
+            System.err.println(("unpected problems with " + f));
             e.printStackTrace(Trace.getTraceStream());
           }
 
@@ -96,18 +96,18 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
             CAstEntity fileEntity = xlatorToCAst.translateToCAst();
 
             if (fileEntity != null) {
-              Trace.println(CAstPrinter.print(fileEntity));
+              System.err.println(CAstPrinter.print(fileEntity));
 
               topLevelEntities.add(Pair.make(fileEntity, fileName));
             }
 
             F.delete();
           } catch (IOException e) {
-            Trace.println("unexpected problems with " + fileName);
+            System.err.println(("unexpected problems with " + fileName));
             e.printStackTrace(Trace.getTraceStream());
             Assertions.UNREACHABLE();
           } catch (RuntimeException e) {
-            Trace.println("unexpected problems with " + fileName);
+            System.err.println(("unexpected problems with " + fileName));
             e.printStackTrace(Trace.getTraceStream());
           }
         }
@@ -138,7 +138,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
     for (Iterator ts = types.keySet().iterator(); ts.hasNext();) {
       TypeName tn = (TypeName) ts.next();
       try {
-        Trace.println("found type " + tn + " : " + types.get(tn) + " < " + ((IClass) types.get(tn)).getSuperclass());
+        System.err.println(("found type " + tn + " : " + types.get(tn) + " < " + ((IClass) types.get(tn)).getSuperclass()));
       } catch (Exception e) {
         System.err.println(e);
       }

@@ -66,7 +66,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.intset.BitVectorIntSet;
@@ -393,7 +392,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   protected void unconditionallyAddConstraintsFromNode(CGNode node) {
 
     if (DEBUG) {
-      Trace.println("Visiting CGNode " + node);
+      System.err.println(("Visiting CGNode " + node));
     }
 
     if (SSAPropagationCallGraphBuilder.PERIODIC_WIPE_SOFT_CACHES) {
@@ -562,10 +561,10 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   private void debugPrintIR(IR ir) {
     if (DEBUG) {
       if (ir == null) {
-        Trace.println("\n   No statements\n");
+        System.err.println("\n   No statements\n");
       } else {
         try {
-          Trace.println(ir.toString());
+          System.err.println(ir.toString());
         } catch (Error e) {
           // TODO Auto-generated catch block
           e.printStackTrace();

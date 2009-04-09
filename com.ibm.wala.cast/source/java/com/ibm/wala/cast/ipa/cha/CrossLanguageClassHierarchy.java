@@ -10,7 +10,10 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.cha;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.IClass;

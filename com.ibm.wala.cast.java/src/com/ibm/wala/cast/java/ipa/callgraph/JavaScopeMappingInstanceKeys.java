@@ -27,7 +27,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
 
@@ -55,7 +54,7 @@ public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
 
         if (!result.isEmpty()) {
           if (AstTranslator.DEBUG_LEXICAL)
-            Trace.println(base + " has parents: " + result);
+            System.err.println((base + " has parents: " + result));
 
           return (LexicalParent[]) result.toArray(new LexicalParent[result.size()]);
         }
@@ -65,7 +64,7 @@ public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
     }
 
     if (AstTranslator.DEBUG_LEXICAL)
-      Trace.println(base + " has no parents");
+      System.err.println((base + " has no parents"));
 
     return new LexicalParent[0];
   }
@@ -77,7 +76,7 @@ public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
   protected boolean needsScopeMappingKey(InstanceKey base) {
     boolean result = getParents(base).length > 0;
     if (AstTranslator.DEBUG_LEXICAL)
-      Trace.println("does " + base + " need scope mapping? " + result);
+      System.err.println(("does " + base + " need scope mapping? " + result));
 
     return result;
   }

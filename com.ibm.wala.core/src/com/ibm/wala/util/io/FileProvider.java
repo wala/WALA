@@ -35,7 +35,6 @@ import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.NestedJarFileModule;
 import com.ibm.wala.core.plugin.CorePlugin;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * This class provides files that are packaged with this plug-in
@@ -227,7 +226,7 @@ public class FileProvider {
     }
     URL url = loader.getResource(fileName);
     if (DEBUG_LEVEL > 0) {
-      Trace.println("FileProvider got url: " + url + " for " + fileName);
+      System.err.println(("FileProvider got url: " + url + " for " + fileName));
     }
     if (url == null) {
       // couldn't load it from the class loader. try again from the

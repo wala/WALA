@@ -44,7 +44,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 
@@ -215,7 +214,7 @@ public class AnalysisScope {
   public void addToScope(ClassLoaderReference loader, JarFile file) {
     List<Module> s = MapUtil.findOrCreateList(moduleMap, loader);
     if (DEBUG_LEVEL > 0) {
-      Trace.println("AnalysisScope: add JarFileModule " + file.getName());
+      System.err.println(("AnalysisScope: add JarFileModule " + file.getName()));
     }
     s.add(new JarFileModule(file));
   }
@@ -229,7 +228,7 @@ public class AnalysisScope {
     }
     List<Module> s = MapUtil.findOrCreateList(moduleMap, loader);
     if (DEBUG_LEVEL > 0) {
-      Trace.println("AnalysisScope: add module " + m);
+      System.err.println(("AnalysisScope: add module " + m));
     }
     s.add(m);
   }
@@ -260,7 +259,7 @@ public class AnalysisScope {
     }
     List<Module> s = MapUtil.findOrCreateList(moduleMap, loader);
     if (DEBUG_LEVEL > 0) {
-      Trace.println("AnalysisScope: add overriding module " + m);
+      System.err.println(("AnalysisScope: add overriding module " + m));
     }
     s.add(0, m);
   }

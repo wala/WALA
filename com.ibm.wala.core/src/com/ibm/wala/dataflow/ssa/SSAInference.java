@@ -21,7 +21,6 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  *
@@ -146,7 +145,7 @@ public abstract class SSAInference<T extends IVariable> extends DefaultFixedPoin
       throw new IllegalArgumentException("Illegal valueNumber " + valueNumber);
     }
     if (DEBUG) {
-      Trace.println("getVariable for " + valueNumber + " returns " + vars[valueNumber]);
+      System.err.println(("getVariable for " + valueNumber + " returns " + vars[valueNumber]));
     }
     if (Assertions.verifyAssertions) {
       if (vars == null) {

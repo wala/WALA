@@ -32,7 +32,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warnings;
 
@@ -113,11 +112,11 @@ public class AppClientEntrypoints implements Iterable<Entrypoint> {
     ArchiveManifest manifest = file.getManifest();
     String mainClass = manifest.getMainClass();
     if (DEBUG) {
-      Trace.println("AppClientEntrypoints: add for file " + file);
+      System.err.println(("AppClientEntrypoints: add for file " + file));
     }
     if (mainClass == null) {
       if (DEBUG) {
-        Trace.println("AppClientEntrypoints:WARNING: mainClass is null");
+        System.err.println("AppClientEntrypoints:WARNING: mainClass is null");
       }
       return;
     }
@@ -126,7 +125,7 @@ public class AppClientEntrypoints implements Iterable<Entrypoint> {
     final TypeReference T = TypeReference.findOrCreate(scope.getApplicationLoader(), mainName);
     final MethodReference Main = MethodReference.findOrCreate(T, mainMethod, Descriptor.findOrCreateUTF8("([Ljava/lang/String;)V"));
     if (DEBUG) {
-      Trace.println("AppClientEntrypoints: create entrypoint " + Main);
+      System.err.println(("AppClientEntrypoints: create entrypoint " + Main));
     }
     IClass klass = cha.lookupClass(T);
     if (klass == null) {

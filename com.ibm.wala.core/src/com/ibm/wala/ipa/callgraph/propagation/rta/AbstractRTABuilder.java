@@ -56,7 +56,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * Abstract superclass of various RTA flavors
@@ -130,7 +129,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
       markAlreadyVisited(node);
     }
     if (DEBUG) {
-      Trace.println("\n\nAdd constraints from node " + node);
+      System.err.println(("\n\nAdd constraints from node " + node));
     }
 
     // add all relevant constraints
@@ -181,7 +180,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
    */
   private void processFieldAccess(CGNode node, FieldReference f) {
     if (DEBUG) {
-      Trace.println("processFieldAccess: " + f);
+      System.err.println(("processFieldAccess: " + f));
     }
     TypeReference t = f.getDeclaringClass();
     IClass klass = getClassHierarchy().lookupClass(t);
@@ -201,7 +200,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
 
     if (klass.getClassInitializer() != null) {
       if (DEBUG) {
-        Trace.println("process class initializer for " + klass);
+        System.err.println(("process class initializer for " + klass));
       }
 
       // add an invocation from the fake root method to the <clinit>
@@ -246,7 +245,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
       throw new IllegalArgumentException("site is null");
     }
     if (DEBUG) {
-      Trace.println("visitInvoke: " + site);
+      System.err.println(("visitInvoke: " + site));
     }
     
     // if non-virtual, add callgraph edges directly
@@ -275,7 +274,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
       }
 
       if (DEBUG) {
-        Trace.println("Add side effect, dispatch to " + site);
+        System.err.println(("Add side effect, dispatch to " + site));
       }
       UnaryOperator<PointsToSetVariable> dispatchOperator = makeDispatchOperator(site, node);
       system.newSideEffect(dispatchOperator, selector);
@@ -296,7 +295,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   void processResolvedCall(CGNode caller, CallSiteReference site, CGNode target) {
 
     if (DEBUG) {
-      Trace.println("processResolvedCall: " + caller + " ," + site + " , " + target);
+      System.err.println(("processResolvedCall: " + caller + " ," + site + " , " + target));
     }
     caller.addTarget(site, target);
 
@@ -321,7 +320,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
       throw new IllegalArgumentException("newSite is null");
     }
     if (DEBUG) {
-      Trace.println("visitNew: " + newSite);
+      System.err.println(("visitNew: " + newSite));
     }
     InstanceKey iKey = getInstanceKeyForAllocation(node, newSite);
     if (iKey == null) {
@@ -331,7 +330,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     IClass klass = iKey.getConcreteType();
 
     if (DEBUG) {
-      Trace.println("iKey: " + iKey + " " + system.findOrCreateIndexForInstanceKey(iKey));
+      System.err.println(("iKey: " + iKey + " " + system.findOrCreateIndexForInstanceKey(iKey)));
     }
 
     if (klass == null) {

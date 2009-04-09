@@ -58,7 +58,6 @@ import com.ibm.wala.ssa.SSABinaryOpInstruction;
 import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
@@ -106,14 +105,14 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     TypeInference ti = new JSTypeInference(ir, cha);
 
     if (DEBUG_TYPE_INFERENCE) {
-      Trace.println("IR of " + ir.getMethod());
-      Trace.println(ir);
-      Trace.println("TypeInference of " + ir.getMethod());
+      System.err.println(("IR of " + ir.getMethod()));
+      System.err.println(ir);
+      System.err.println(("TypeInference of " + ir.getMethod()));
       for (int i = 0; i <= ir.getSymbolTable().getMaxValueNumber(); i++) {
         if (ti.isUndefined(i)) {
-          Trace.println("  value " + i + " is undefined");
+          System.err.println(("  value " + i + " is undefined"));
         } else {
-          Trace.println("  value " + i + " has type " + ti.getType(i));
+          System.err.println(("  value " + i + " has type " + ti.getType(i)));
         }
       }
     }

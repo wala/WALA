@@ -30,7 +30,6 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.strings.Atom;
 
 public class MiscellaneousHacksContextSelector implements ContextSelector {
@@ -105,7 +104,7 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
       }
     }
 
-    Trace.println("hacking context selector for methods " + methodsToSpecialize);
+    System.err.println(("hacking context selector for methods " + methodsToSpecialize));
   }
 
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {

@@ -19,7 +19,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * This class provides Instance Key call backs where each instance is in the same equivalence class as all other
@@ -70,12 +69,12 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
    */
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
     if (DEBUG) {
-      Trace.println("getInstanceKeyForMultiNewArray " + allocation + " " + dim);
+      System.err.println(("getInstanceKeyForMultiNewArray " + allocation + " " + dim));
     }
     ArrayClass type = (ArrayClass) options.getClassTargetSelector().getAllocatedTarget(node, allocation);
     assert (type != null);
     if (DEBUG) {
-      Trace.println("type: " + type);
+      System.err.println(("type: " + type));
     }
     if (Assertions.verifyAssertions) {
       if (type == null) {
@@ -90,11 +89,11 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
       }
       type = (ArrayClass) type.getElementClass();
       if (DEBUG) {
-        Trace.println("intermediate: " + i + " " + type);
+        System.err.println(("intermediate: " + i + " " + type));
       }
     }
     if (DEBUG) {
-      Trace.println("final type: " + type);
+      System.err.println(("final type: " + type));
     }
     if (type == null) {
       return null;

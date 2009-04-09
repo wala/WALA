@@ -31,7 +31,6 @@ import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.SmallMap;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
 import com.ibm.wala.util.graph.EdgeManager;
@@ -246,14 +245,14 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
 
   private void addImplicitStatement(UnaryStatement<PointsToSetVariable> eq) {
     if (DEBUG) {
-      Trace.println("addImplicitStatement " + eq);
+      System.err.println(("addImplicitStatement " + eq));
     }
     delegateGraph.addVariable(eq.getLHS());
     delegateGraph.addVariable(eq.getRightHandSide());
     int lhs = eq.getLHS().getGraphNodeId();
     int rhs = eq.getRightHandSide().getGraphNodeId();
     if (DEBUG) {
-      Trace.println("lhs rhs " + lhs + " " + rhs);
+      System.err.println(("lhs rhs " + lhs + " " + rhs));
     }
     IBinaryNaturalRelation R = findOrCreateRelation(implicitUnaryMap, eq.getOperator());
     boolean b = R.add(lhs, rhs);
@@ -266,12 +265,12 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
 
   private void removeImplicitStatement(UnaryStatement<PointsToSetVariable> eq) {
     if (DEBUG) {
-      Trace.println("removeImplicitStatement " + eq);
+      System.err.println(("removeImplicitStatement " + eq));
     }
     int lhs = eq.getLHS().getGraphNodeId();
     int rhs = eq.getRightHandSide().getGraphNodeId();
     if (DEBUG) {
-      Trace.println("lhs rhs " + lhs + " " + rhs);
+      System.err.println(("lhs rhs " + lhs + " " + rhs));
     }
     IBinaryNaturalRelation R = findOrCreateRelation(implicitUnaryMap, eq.getOperator());
     R.remove(lhs, rhs);
@@ -316,8 +315,8 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       PointsToSetVariable lhs = (PointsToSetVariable) delegateGraph.getNode(l);
       UnaryStatement temp = op.makeEquation(lhs, use);
       if (DEBUG) {
-        Trace.print("XX Return temp: " + temp);
-        Trace.println("lhs rhs " + l + " " + use.getGraphNodeId());
+        System.err.print(("XX Return temp: " + temp));
+        System.err.println(("lhs rhs " + l + " " + use.getGraphNodeId()));
       }
       return temp;
     }
@@ -354,7 +353,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       PointsToSetVariable rhs = (PointsToSetVariable) delegateGraph.getNode(r);
       UnaryStatement temp = op.makeEquation(def, rhs);
       if (DEBUG) {
-        Trace.print("YY Return temp: " + temp);
+        System.err.print(("YY Return temp: " + temp));
       }
       return temp;
     }
@@ -757,23 +756,23 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
    */
   public void performVerboseAction() {
     if (VERBOSE) {
-      Trace.println("stats for " + getClass());
-      Trace.println("number of variables: " + delegateGraph.getVarCount());
-      Trace.println("implicit equations: " + (implicitUnaryCount));
-      Trace.println("explicit equations: " + delegateGraph.getEquationCount());
-      Trace.println("implicit map:");
+      System.err.println(("stats for " + getClass()));
+      System.err.println(("number of variables: " + delegateGraph.getVarCount()));
+      System.err.println(("implicit equations: " + (implicitUnaryCount)));
+      System.err.println(("explicit equations: " + delegateGraph.getEquationCount()));
+      System.err.println("implicit map:");
       int count = 0;
       int totalBytes = 0;
       for (Iterator it = implicitUnaryMap.entrySet().iterator(); it.hasNext();) {
         count++;
         Map.Entry e = (Map.Entry) it.next();
         IBinaryNaturalRelation R = (IBinaryNaturalRelation) e.getValue();
-        Trace.println("entry " + count);
+        System.err.println(("entry " + count));
         R.performVerboseAction();
         HeapTracer.Result result = HeapTracer.traceHeap(Collections.singleton(R), false);
         totalBytes += result.getTotalSize();
       }
-      Trace.println("bytes in implicit map: " + totalBytes);
+      System.err.println(("bytes in implicit map: " + totalBytes));
     }
   }
 

@@ -13,7 +13,9 @@
  */
 package com.ibm.wala.cast.tree;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public interface CAstType {
     /**

@@ -12,7 +12,6 @@ package com.ibm.wala.util.intset;
 
 import java.util.Vector;
 
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.math.Logs;
 
 /**
@@ -101,8 +100,8 @@ public class TwoLevelIntVector implements IntVector {
    * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
    */
   public void performVerboseAction() {
-    Trace.println("stats of " + getClass());
-    Trace.println("data: size = " + data.size());
+    System.err.println(("stats of " + getClass()));
+    System.err.println(("data: size = " + data.size()));
   }
   
   

@@ -27,7 +27,6 @@ import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.debug.Trace;
 
 public abstract class TestCAstTranslator extends WalaTestCase {
 
@@ -132,25 +131,25 @@ public abstract class TestCAstTranslator extends WalaTestCase {
   protected void dump(ClassHierarchy cha) {
     for (Iterator<?> clss = cha.iterator(); clss.hasNext();) {
       IClass cls = (IClass) clss.next();
-      Trace.println("class " + cls);
+      System.err.println(("class " + cls));
       for (Iterator<?> flds = cls.getDeclaredInstanceFields().iterator(); flds.hasNext();) {
         IField fld = (IField) flds.next();
-        Trace.println("instance field " + fld);
+        System.err.println(("instance field " + fld));
       }
       for (Iterator<?> flds = cls.getDeclaredStaticFields().iterator(); flds.hasNext();) {
         IField fld = (IField) flds.next();
-        Trace.println("static field " + fld);
+        System.err.println(("static field " + fld));
       }
       for (Iterator<?> mths = cls.getDeclaredMethods().iterator(); mths.hasNext();) {
         IMethod mth = (IMethod) mths.next();
         if (mth.isStatic())
-          Trace.print("static ");
-        Trace.println("method " + mth + " with " + 
-	  mth.getNumberOfParameters() + " parameters");
+          System.err.print("static ");
+        System.err.println(("method " + mth + " with " + 
+        mth.getNumberOfParameters() + " parameters"));
         for (int i = 0; i < mth.getNumberOfParameters(); i++) {
-          Trace.println("param " + i + ": " + mth.getParameterType(i));
+          System.err.println(("param " + i + ": " + mth.getParameterType(i)));
         }
-        Trace.println(factory.makeIR(mth, Everywhere.EVERYWHERE, options));
+        System.err.println(factory.makeIR(mth, Everywhere.EVERYWHERE, options));
       }
     }
   }
@@ -231,7 +230,7 @@ public abstract class TestCAstTranslator extends WalaTestCase {
     if (assertions != null) {
       checkAssertions(cha, assertions);
     } else {
-      Trace.println("WARNING: no assertions for " + getClass());
+      System.err.println(("WARNING: no assertions for " + getClass()));
     }
   }
 

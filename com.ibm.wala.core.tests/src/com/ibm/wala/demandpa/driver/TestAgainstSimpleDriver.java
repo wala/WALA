@@ -64,7 +64,6 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ssa.IR;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * Driver that tests a pointer analysis results against the results of
@@ -79,7 +78,6 @@ public class TestAgainstSimpleDriver {
 
   public static void main(String[] args) throws IllegalArgumentException, CancelException, IOException {
 
-    WalaUtil.initializeTraceFile();
     // for (String String : ALL_TEST_CASES) {
     // runAnalysisForString(String.mainClass, String.scopeFileName);
     // }
@@ -88,8 +86,8 @@ public class TestAgainstSimpleDriver {
   }
 
   private static void runAnalysisForTestCase(String mainClass) throws IllegalArgumentException, CancelException, IOException {
-    Trace.println("=======---------------=============");
-    Trace.println("ANALYZING " + mainClass + "\n\n");
+    System.err.println("=======---------------=============");
+    System.err.println(("ANALYZING " + mainClass + "\n\n"));
     // describe the "scope", what is the program we're analyzing
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestInfo.SCOPE_FILE, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
 
@@ -129,8 +127,8 @@ public class TestAgainstSimpleDriver {
         Collection<InstanceKey> p = dmp.getPointsTo(v);
         Collection<InstanceKey> oldP = simpleDmp.getPointsTo(v);
         if (!sameContents(p, oldP)) {
-          Trace.println("different result for " + v);
-          Trace.println("old " + oldP + "\n\nnew " + p);
+          System.err.println(("different result for " + v));
+          System.err.println(("old " + oldP + "\n\nnew " + p));
         }
         printResult(v, p);
       }

@@ -25,7 +25,6 @@ import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.cast.util.CAstPattern.Segments;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 public class TestCAstPattern extends WalaTestCase {
 
@@ -61,8 +60,8 @@ public class TestCAstPattern extends WalaTestCase {
   }
 
   private void test(CAstPattern p, CAstNode n, Map names) {
-    Trace.println("testing pattern " + p);
-    Trace.println("testing with input " + CAstPrinter.print(n));
+    System.err.println(("testing pattern " + p));
+    System.err.println(("testing with input " + CAstPrinter.print(n)));
 
     if (names == null) {
       Assert.assertFalse(p.match(n, null));
@@ -73,12 +72,12 @@ public class TestCAstPattern extends WalaTestCase {
         String nm = (String) ns.next();
         Object o = names.get(nm);
         if (o instanceof CAstNode) {
-          Trace.println("found " + CAstPrinter.print(s.getSingle(nm)) + " for " + nm);
+          System.err.println(("found " + CAstPrinter.print(s.getSingle(nm)) + " for " + nm));
           Assert.assertTrue("for name " + nm + ": expected " + names.get(nm) + " but got " + s.getSingle(nm), names.get(nm).equals(
               s.getSingle(nm)));
         } else {
           for (Iterator cs = s.getMultiple(nm).iterator(); cs.hasNext();) {
-            Trace.println("found " + CAstPrinter.print((CAstNode) cs.next()) + " for " + nm);
+            System.err.println(("found " + CAstPrinter.print((CAstNode) cs.next()) + " for " + nm));
           }
           Assert.assertTrue("for name " + nm + ": expected " + names.get(nm) + " but got " + s.getMultiple(nm), names.get(nm)
               .equals(s.getMultiple(nm)));

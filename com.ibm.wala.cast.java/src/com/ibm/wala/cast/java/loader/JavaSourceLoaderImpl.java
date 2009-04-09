@@ -53,7 +53,6 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -300,12 +299,12 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 
     public LexicalParent[] getParents() {
       if (AstTranslator.DEBUG_LEXICAL) {
-        Trace.println("resolving parents of " + this);
+        System.err.println(("resolving parents of " + this));
       }
 
       if (lexicalInfo() == null) {
         if (AstTranslator.DEBUG_LEXICAL)
-          Trace.println("no info");
+          System.err.println("no info");
         return new LexicalParent[0];
       }
 
@@ -313,7 +312,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 
       if (parents == null) {
         if (AstTranslator.DEBUG_LEXICAL)
-          Trace.println("no parents");
+          System.err.println("no parents");
         return new LexicalParent[0];
       }
 
@@ -336,7 +335,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
         final Selector sel = new Selector(name, desc);
 
         if (AstTranslator.DEBUG_LEXICAL)
-          Trace.println("get " + typeName + ", " + nameStr + ", " + descStr);
+          System.err.println(("get " + typeName + ", " + nameStr + ", " + descStr));
 
         final int hack = i;
         result[i] = new LexicalParent() {
@@ -350,7 +349,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
         };
 
         if (AstTranslator.DEBUG_LEXICAL)
-          Trace.println("parent " + result[i].getName() + " is " + result[i].getMethod());
+          System.err.println(("parent " + result[i].getName() + " is " + result[i].getMethod()));
       }
 
       return result;

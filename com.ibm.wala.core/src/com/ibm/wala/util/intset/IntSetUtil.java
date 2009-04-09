@@ -11,7 +11,6 @@
 package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
@@ -31,7 +30,7 @@ public class IntSetUtil {
         MutableIntSetFactory intSetFactory = (MutableIntSetFactory) intSetFactoryClass.newInstance();
         setDefaultIntSetFactory(intSetFactory);
       } catch (Exception e) {
-        Trace.println("Cannot use int set factory " + System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
+        System.err.println(("Cannot use int set factory " + System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME)));
         setDefaultIntSetFactory(defaultFactory);
       }
     } else {
@@ -99,17 +98,17 @@ public class IntSetUtil {
     // TODO: this is slow ... optimize please.
     MutableIntSet result = factory.makeCopy(A);
     if (DEBUG) {
-      Trace.println("initial result " + result + " " + result.getClass());
+      System.err.println(("initial result " + result + " " + result.getClass()));
     }
     for (IntIterator it = B.intIterator(); it.hasNext();) {
       int I = it.next();
       result.remove(I);
       if (DEBUG) {
-        Trace.println("removed " + I + " now is " + result);
+        System.err.println(("removed " + I + " now is " + result));
       }
     }
     if (DEBUG) {
-      Trace.println("return " + result);
+      System.err.println(("return " + result));
     }
     return result;
   }
@@ -151,7 +150,7 @@ public class IntSetUtil {
     }
     if (A instanceof SemiSparseMutableIntSet && B instanceof SemiSparseMutableIntSet) {
       if (DEBUG) {
-        Trace.println("call SemiSparseMutableIntSet.removeAll");
+        System.err.println("call SemiSparseMutableIntSet.removeAll");
       }
       return ((SemiSparseMutableIntSet) A).removeAll((SemiSparseMutableIntSet) B);
     } else {
@@ -159,11 +158,11 @@ public class IntSetUtil {
         int I = it.next();
         A.remove(I);
         if (DEBUG) {
-          Trace.println("removed " + I + " now is " + A);
+          System.err.println(("removed " + I + " now is " + A));
         }
       }
       if (DEBUG) {
-        Trace.println("return " + A);
+        System.err.println(("return " + A));
       }
       return A;
     }

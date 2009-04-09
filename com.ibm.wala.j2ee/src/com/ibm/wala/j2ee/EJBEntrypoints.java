@@ -40,7 +40,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 import com.ibm.wala.util.warnings.Warnings;
@@ -199,7 +198,7 @@ public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
     TypeReference T = J2EEUtil.ejb2TypeReference(b, loader);
     MethodReference e = MethodReference.findOrCreate(T, onMessageAtom, onMessageDesc);
     if (DEBUG) {
-      Trace.println("Add entrypoint: " + e + " from bean " + b);
+      System.err.println(("Add entrypoint: " + e + " from bean " + b));
     }
     IMethod m = cha.resolveMethod(e);
     if (m == null) {
@@ -278,7 +277,7 @@ public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
       Descriptor D = Descriptor.findOrCreate(sig);
       MethodReference e = MethodReference.findOrCreate(type, name, D);
       if (DEBUG) {
-        Trace.println("Add entrypoint: " + e + " from bean " + b);
+        System.err.println(("Add entrypoint: " + e + " from bean " + b));
       }
       IMethod m = cha.resolveMethod(e);
       if (m == null) {
@@ -306,7 +305,7 @@ public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
       MethodReference target = MethodReference
           .findOrCreate(interfaceType, declaredMethod.getName(), declaredMethod.getDescriptor());
       if (DEBUG) {
-        Trace.println("Add entrypoint: " + target + " from method list");
+        System.err.println(("Add entrypoint: " + target + " from method list"));
       }
       final IClass klass = cha.lookupClass(interfaceType);
       if (klass == null) {

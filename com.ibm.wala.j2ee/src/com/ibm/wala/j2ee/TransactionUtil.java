@@ -29,7 +29,6 @@ import org.eclipse.jst.j2ee.ejb.MethodTransaction;
 
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * Utilities for dealing with transaction declarations.
@@ -53,7 +52,7 @@ public class TransactionUtil {
   public static Set<DeploymentDeclaredTransaction> createDeclaredTransactionEntries(Archive A, ClassLoaderReference loader) {
 
     if (DEBUG) {
-      Trace.println("createDeclaredTransactionEntries: " + A + " type " + A.getClass());
+      System.err.println(("createDeclaredTransactionEntries: " + A + " type " + A.getClass()));
     }
 
     if (A.isEJBJarFile()) {
@@ -81,7 +80,7 @@ public class TransactionUtil {
   private static Set<DeploymentDeclaredTransaction> createDeclaredTransactionEntries(EJBJar DD, ClassLoaderReference loader) {
 
     if (DEBUG) {
-      Trace.println("createDeclaredTransactionEntries: " + DD);
+      System.err.println(("createDeclaredTransactionEntries: " + DD));
     }
 
     TreeSet<DeploymentDeclaredTransaction> result = new TreeSet<DeploymentDeclaredTransaction>();
@@ -93,7 +92,7 @@ public class TransactionUtil {
     for (Iterator it = AD.getMethodTransactions().iterator(); it.hasNext();) {
       MethodTransaction T = (MethodTransaction) it.next();
       if (DEBUG) {
-        Trace.println("got MethodTransaction " + T);
+        System.err.println(("got MethodTransaction " + T));
       }
       int TType = T.getTransactionAttribute().getValue();
       for (Iterator elements = T.getMethodElements().iterator(); elements.hasNext();) {
@@ -123,7 +122,7 @@ public class TransactionUtil {
     String name = method.getJavaClass().getJavaName();
 
     if (DEBUG) {
-      Trace.println("deduceKind: " + b + " " + name);
+      System.err.println(("deduceKind: " + b + " " + name));
     }
 
     if (name.equals(home) || name.equals(EJBHOME)) {

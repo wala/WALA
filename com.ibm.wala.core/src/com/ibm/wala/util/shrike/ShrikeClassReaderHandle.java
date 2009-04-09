@@ -18,7 +18,6 @@ import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.ref.CacheReference;
 
 /**
@@ -61,7 +60,7 @@ public class ShrikeClassReaderHandle {
       hydrateCount++;
       if (DEBUG) {
         if (hydrateCount > 1) {
-          Trace.println("Hydrate " + entry + " " + hydrateCount);
+          System.err.println(("Hydrate " + entry + " " + hydrateCount));
           try {
             throw new Exception();
           } catch (Exception e) {

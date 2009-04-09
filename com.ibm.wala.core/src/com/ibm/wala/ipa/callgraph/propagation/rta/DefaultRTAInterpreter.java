@@ -22,7 +22,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ContextInsensitiveSSAInterpreter;
 import com.ibm.wala.types.FieldReference;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  *
@@ -50,7 +49,7 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
       return f.getInterpreter();
     } else {
       if (DEBUG) {
-        Trace.println("providing context insensitive interpreter for node " + node);
+        System.err.println(("providing context insensitive interpreter for node " + node));
       }
       return defaultInterpreter;
     } 

@@ -30,7 +30,6 @@ import com.ibm.wala.ssa.IR.SSA2LocalMap;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;
@@ -137,7 +136,7 @@ public class SSAConversion extends AbstractSSAConversion {
 
     private CopyPropagationRecord(int instructionIndex, int lhs, int rhs) {
       if (DEBUG_UNDO)
-        Trace.println("new copy record for instruction #" + instructionIndex + ", rhs value is " + rhs);
+        System.err.println(("new copy record for instruction #" + instructionIndex + ", rhs value is " + rhs));
       this.lhs = lhs;
       this.rhs = rhs;
       this.instructionIndex = instructionIndex;
@@ -145,14 +144,14 @@ public class SSAConversion extends AbstractSSAConversion {
 
     private void addChild(CopyPropagationRecord rec) {
       if (DEBUG_UNDO)
-        Trace.println("(" + rec.instructionIndex + "," + rec.rhs + ") is a child of (" + instructionIndex + "," + rhs + ")");
+        System.err.println(("(" + rec.instructionIndex + "," + rec.rhs + ") is a child of (" + instructionIndex + "," + rhs + ")"));
       childRecords.add(rec);
     }
 
     private void addUse(int instructionIndex, int use) {
       if (DEBUG_UNDO)
-        Trace.println("propagated use of (" + this.instructionIndex + "," + this.rhs + ") at use #" + use + " of instruction #"
-            + instructionIndex);
+        System.err.println(("propagated use of (" + this.instructionIndex + "," + this.rhs + ") at use #" + use + " of instruction #"
+        + instructionIndex));
       UseRecord rec = new UseRecord(instructionIndex, use);
       copyPropagationMap.put(rec, this);
       renamedUses.add(rec);
@@ -183,7 +182,7 @@ public class SSAConversion extends AbstractSSAConversion {
       instructions[instructionIndex] = new AssignInstruction(lhs, rhs);
 
       if (DEBUG_UNDO)
-        Trace.println("recreating assignment at " + instructionIndex + " as " + lhs + " = " + rhs);
+        System.err.println(("recreating assignment at " + instructionIndex + " as " + lhs + " = " + rhs));
 
       for (Iterator<Object> uses = renamedUses.iterator(); uses.hasNext();) {
         Object x = uses.next();
@@ -193,7 +192,7 @@ public class SSAConversion extends AbstractSSAConversion {
           SSAInstruction inst = instructions[idx];
 
           if (DEBUG_UNDO)
-            Trace.println("Changing use #" + use.useNumber + " of inst #" + idx + " to val " + lhs);
+            System.err.println(("Changing use #" + use.useNumber + " of inst #" + idx + " to val " + lhs));
 
           if (use.useNumber >= 0) {
             instructions[idx] = undo(inst, use.useNumber, lhs);
@@ -249,7 +248,7 @@ public class SSAConversion extends AbstractSSAConversion {
     private void undoCopyPropagation(int instructionIndex, int useNumber) {
 
       if (DEBUG_UNDO)
-        Trace.println("undoing for use #" + useNumber + " of inst #" + instructionIndex);
+        System.err.println(("undoing for use #" + useNumber + " of inst #" + instructionIndex));
 
       UseRecord use = new UseRecord(instructionIndex, useNumber);
       if (copyPropagationMap.containsKey(use)) {
@@ -328,7 +327,7 @@ public class SSAConversion extends AbstractSSAConversion {
     SSAPhiInstruction phi = new SSAPhiInstruction(value, params);
 
     if (DEBUG)
-      Trace.println("Placing " + phi + " at " + Y);
+      System.err.println(("Placing " + phi + " at " + Y));
 
     addPhi(Y, phi);
   }
@@ -472,7 +471,7 @@ public class SSAConversion extends AbstractSSAConversion {
     this.liveness = LiveAnalysis.perform(CFG, symtab, v);
 
     if (DEBUG) {
-      Trace.println(liveness);
+      System.err.println(liveness);
     }
   }
 
@@ -544,16 +543,16 @@ public class SSAConversion extends AbstractSSAConversion {
     super.perform();
 
     if (DUMP) {
-      Trace.println(ir);
+      System.err.println(ir);
       if (lexicalInfo != null) {
         for (int i = 0; i < instructions.length; i++) {
           int[] lexicalUses = lexicalInfo.getExposedUses(i);
           if (lexicalUses != null) {
-            Trace.print("extra uses for " + instructions[i] + ": ");
+            System.err.print(("extra uses for " + instructions[i] + ": "));
             for (int j = 0; j < lexicalUses.length; j++) {
-              Trace.print(new Integer(lexicalUses[j]).toString() + " ");
+              System.err.print((new Integer(lexicalUses[j]).toString() + " "));
             }
-            Trace.println("");
+            System.err.println("");
           }
         }
       }
@@ -593,11 +592,11 @@ public class SSAConversion extends AbstractSSAConversion {
   public static SSA2LocalMap convert(AstMethod M, final AstIR ir, SSAOptions options, final IntSet values) {
     try {
       if (DEBUG) {
-        Trace.println("starting conversion for " + values);
-        Trace.println(ir);
+        System.err.println(("starting conversion for " + values));
+        System.err.println(ir);
       }
       if (DEBUG_UNDO)
-        Trace.println(">>> starting " + ir.getMethod());
+        System.err.println((">>> starting " + ir.getMethod()));
       SSAConversion ssa = new SSAConversion(M, ir, options) {
         final int limit = ir.getSymbolTable().getMaxValueNumber();
 
@@ -607,15 +606,15 @@ public class SSAConversion extends AbstractSSAConversion {
       };
       ssa.perform();
       if (DEBUG_UNDO)
-        Trace.println("<<< done " + ir.getMethod());
+        System.err.println(("<<< done " + ir.getMethod()));
       return ssa.getComputedLocalMap();
     } catch (RuntimeException e) {
-      Trace.println("exception " + e + " while converting:");
-      Trace.println(ir);
+      System.err.println(("exception " + e + " while converting:"));
+      System.err.println(ir);
       throw e;
     } catch (Error e) {
-      Trace.println("error " + e + " while converting:");
-      Trace.println(ir);
+      System.err.println(("error " + e + " while converting:"));
+      System.err.println(ir);
       throw e;
     }
   }

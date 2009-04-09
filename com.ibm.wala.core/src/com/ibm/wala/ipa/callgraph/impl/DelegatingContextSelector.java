@@ -16,7 +16,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * A context selector that first checks with A, then defaults to B.
@@ -41,20 +40,20 @@ public class DelegatingContextSelector implements ContextSelector {
 
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
     if (DEBUG) {
-      Trace.println("getCalleeTarget " + caller + " " + site + " " + callee);
+      System.err.println(("getCalleeTarget " + caller + " " + site + " " + callee));
     }
     if (A != null) {
       Context C = A.getCalleeTarget(caller, site, callee, receiver);
       if (C != null) {
         if (DEBUG) {
-          Trace.println("Case A " + A.getClass() + " " + C);
+          System.err.println(("Case A " + A.getClass() + " " + C));
         }
         return C;
       }
     }
     Context C = B.getCalleeTarget(caller, site, callee, receiver);
     if (DEBUG) {
-      Trace.println("Case B " + B.getClass() + " " + C);
+      System.err.println(("Case B " + B.getClass() + " " + C));
     }
     return C;
   }

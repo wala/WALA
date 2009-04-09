@@ -30,7 +30,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * 
@@ -310,7 +309,7 @@ public class HeapTracer {
   private void traverse(Field root, Result result, IdentityHashMap<Object, Object> objectsVisited) throws IllegalArgumentException,
       IllegalAccessException {
     if (DEBUG) {
-      Trace.println("traverse root " + root);
+      System.err.println(("traverse root " + root));
     }
     root.setAccessible(true);
     Object contents = root.get(null);
@@ -361,7 +360,7 @@ public class HeapTracer {
   private void traverseArray(Field root, Object array, Object container, Result result, IdentityHashMap<Object, Object> objectsVisited)
       throws IllegalArgumentException {
     if (DEBUG) {
-      Trace.println("traverse array " + array.getClass());
+      System.err.println(("traverse array " + array.getClass()));
     }
     Class elementKlass = array.getClass().getComponentType();
     if (elementKlass.isPrimitive()) {
@@ -393,7 +392,7 @@ public class HeapTracer {
 
     Class c = scalar.getClass();
     if (DEBUG) {
-      Trace.println("traverse scalar " + c);
+      System.err.println(("traverse scalar " + c));
     }
     Field[] fields = getAllReferenceInstanceFields(c);
     for (int i = 0; i < fields.length; i++) {
@@ -420,13 +419,13 @@ public class HeapTracer {
     } else {
       if (p.getName() != null && p.getName().indexOf("sun.reflect") != -1) {
         if (DEBUG) {
-          Trace.println("making " + p + " a BAD package");
+          System.err.println(("making " + p + " a BAD package"));
         }
         packageStatus.put(p, BAD);
         return true;
       } else {
         if (DEBUG) {
-          Trace.println("making " + p + " an OK package");
+          System.err.println(("making " + p + " an OK package"));
         }
         packageStatus.put(p, OK);
         return false;
@@ -549,11 +548,11 @@ public class HeapTracer {
       System.gc();
       long t = Runtime.getRuntime().totalMemory();
       long f = Runtime.getRuntime().freeMemory();
-      Trace.println("Total Memory:     " + t);
-      Trace.println("Occupied Memory:  " + (t - f));
+      System.err.println(("Total Memory:     " + t));
+      System.err.println(("Occupied Memory:  " + (t - f)));
       HeapTracer.Result r = (new HeapTracer(traceStatics)).perform();
-      Trace.println("HeapTracer Analysis:");
-      Trace.println(r.toString());
+      System.err.println("HeapTracer Analysis:");
+      System.err.println(r.toString());
     } catch (IllegalArgumentException e) {
       e.printStackTrace();
     } catch (ClassNotFoundException e) {
@@ -580,11 +579,11 @@ public class HeapTracer {
       System.gc();
       long t = Runtime.getRuntime().totalMemory();
       long f = Runtime.getRuntime().freeMemory();
-      Trace.println("Total Memory:     " + t);
-      Trace.println("Occupied Memory:  " + (t - f));
+      System.err.println(("Total Memory:     " + t));
+      System.err.println(("Occupied Memory:  " + (t - f)));
       HeapTracer.Result r = (new HeapTracer(instances, traceStatics)).perform();
-      Trace.println("HeapTracer Analysis:");
-      Trace.println(r.toString());
+      System.err.println("HeapTracer Analysis:");
+      System.err.println(r.toString());
       return r;
     } catch (IllegalArgumentException e) {
       e.printStackTrace();

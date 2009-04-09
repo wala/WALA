@@ -48,7 +48,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   private static final boolean DEBUG = false;
@@ -374,7 +373,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
             .getStringValue(callStmt.getUse(1))));
 
         if (DEBUG) {
-          Trace.println("ctor type name is " + (String) ST.getStringValue(callStmt.getUse(1)));
+          System.err.println(("ctor type name is " + (String) ST.getStringValue(callStmt.getUse(1))));
         }
 
         IClass cls2 = cha.lookupClass(ref);
@@ -415,7 +414,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
         cha.addClass(fcls);
 
         if (DEBUG)
-          Trace.println("looking for ctor " + ctorCount + " and got " + fcls);
+          System.err.println(("looking for ctor " + ctorCount + " and got " + fcls));
 
         if (fcls != null)
           return makeFunctionConstructor(cls, fcls);

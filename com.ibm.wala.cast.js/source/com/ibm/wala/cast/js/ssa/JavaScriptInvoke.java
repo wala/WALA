@@ -10,16 +10,16 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ssa;
 
+import java.util.Collection;
+
+import com.ibm.wala.cast.ir.ssa.AbstractLexicalInvoke;
+import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
+import com.ibm.wala.cast.js.types.JavaScriptMethods;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-
-import com.ibm.wala.cast.ir.ssa.*;
-import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
-import com.ibm.wala.cast.js.types.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ssa.*;
-
-import java.util.*;
 
 public class JavaScriptInvoke extends AbstractLexicalInvoke {
   /**

@@ -50,7 +50,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
@@ -160,7 +159,7 @@ public class CommandInterpreter implements SSAContextInterpreter {
           Set<IClass> implementors = cha.getImplementors(T.getType().getReference());
           if (implementors.isEmpty()) {
             if (DEBUG) {
-              Trace.println("Found no implementors of type " + T);
+              System.err.println(("Found no implementors of type " + T));
             }
             Warnings.add(NoSubtypesWarning.create(T));
           }
@@ -170,7 +169,7 @@ public class CommandInterpreter implements SSAContextInterpreter {
           Collection<IClass> subclasses = cha.computeSubClasses(T.getType().getReference());
           if (subclasses.isEmpty()) {
             if (DEBUG) {
-              Trace.println("Found no subclasses of type " + T);
+              System.err.println(("Found no subclasses of type " + T));
             }
             Warnings.add(NoSubtypesWarning.create(T));
           }
@@ -189,7 +188,7 @@ public class CommandInterpreter implements SSAContextInterpreter {
      */
     private void addStatementsForConcreteType(final TypeReference T) {
       if (DEBUG) {
-        Trace.println("addStatementsForConcreteType: " + T);
+        System.err.println(("addStatementsForConcreteType: " + T));
       }
       MethodReference performExecute = MethodReference.findOrCreate(T, PerformExecuteAtom, PerformExecuteDesc);
       CallSiteReference site = CallSiteReference.make(calls.size(), performExecute, IInvokeInstruction.Dispatch.VIRTUAL);

@@ -14,7 +14,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -92,7 +91,7 @@ public class JUnitEntryPoints {
     final Atom targetMethodAtom = Atom.findOrCreateAsciiAtom(targetMethodName);
 
     if (DEBUG) {
-      Trace.println("finding entrypoint " + targetMethodAtom + " in " + targetType);
+      System.err.println(("finding entrypoint " + targetMethodAtom + " in " + targetType));
     }
 
     final Set<Entrypoint> entryPts = HashSetFactory.make();
@@ -104,7 +103,7 @@ public class JUnitEntryPoints {
         TypeName klassType = klass.getName();
         if (klassType.equals(targetType) && isJUnitTestCase(klass)) {
           if (DEBUG) {
-            Trace.println("found test class");
+            System.err.println("found test class");
           }
           // add entry point corresponding to the target method
           for (Iterator methodsIt = klass.getDeclaredMethods().iterator(); methodsIt.hasNext();) {

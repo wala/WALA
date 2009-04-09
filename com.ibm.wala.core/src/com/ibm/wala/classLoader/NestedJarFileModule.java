@@ -23,7 +23,6 @@ import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.io.FileSuffixes;
 
 /**
@@ -74,7 +73,7 @@ public class NestedJarFileModule implements Module {
       final JarInputStream stream = new JarInputStream(new ByteArrayInputStream(b));
       for (ZipEntry z = stream.getNextEntry(); z != null; z = stream.getNextEntry()) {
         if (DEBUG) {
-          Trace.println("got entry: " + z.getName());
+          System.err.println(("got entry: " + z.getName()));
         }
         if (FileSuffixes.isClassFile(z.getName()) || FileSuffixes.isSourceFile(z.getName())) {
           ByteArrayOutputStream out = new ByteArrayOutputStream();

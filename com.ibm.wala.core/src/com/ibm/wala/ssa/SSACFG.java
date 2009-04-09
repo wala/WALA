@@ -34,7 +34,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.graph.impl.NumberedNodeIterator;
@@ -85,8 +84,8 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock> 
     }
     this.cfg = cfg;
     if (DEBUG) {
-      Trace.println("Incoming CFG for " + method + ":");
-      Trace.println(cfg.toString());
+      System.err.println(("Incoming CFG for " + method + ":"));
+      System.err.println(cfg.toString());
     }
 
     this.method = method;

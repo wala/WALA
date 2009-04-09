@@ -36,7 +36,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * 
@@ -297,7 +296,7 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
       for (Iterator<MethodReference> j = bean.getFinders().iterator(); j.hasNext();) {
         MethodReference m = j.next();
         if (DEBUG) {
-          Trace.println("Found finder " + m);
+          System.err.println(("Found finder " + m));
         }
         finder2Bean.put(m, bean);
       }
@@ -488,7 +487,7 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
   public boolean isFinder(MemberReference ref) {
     if (DEBUG) {
       boolean result = finder2Bean.keySet().contains(ref);
-      Trace.println("isFinder ? " + ref + " " + result);
+      System.err.println(("isFinder ? " + ref + " " + result));
     }
     return finder2Bean.keySet().contains(ref);
   }

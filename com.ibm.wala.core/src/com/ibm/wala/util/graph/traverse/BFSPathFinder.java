@@ -22,7 +22,6 @@ import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.Graph;
 
 /**
@@ -172,7 +171,7 @@ public class BFSPathFinder<T> {
     while (!Q.isEmpty()) {
       T N = Q.removeFirst();
       if (DEBUG) {
-        Trace.println("visit " + N);
+        System.err.println(("visit " + N));
       }
       if (filter.accepts(N)) {
         return makePath(N, history);

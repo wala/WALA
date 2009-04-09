@@ -56,7 +56,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
@@ -364,7 +363,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
       this.context = context;
       if (DEBUG) {
-        Trace.println("Create SpecializedFactoryMethod " + m + S);
+        System.err.println(("Create SpecializedFactoryMethod " + m + S));
       }
 
       this.method = m;
@@ -386,7 +385,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     protected void addStatementsForTypeAbstraction(TypeAbstraction T) {
 
       if (DEBUG) {
-        Trace.println("adding " + T + " to " + method);
+        System.err.println(("adding " + T + " to " + method));
       }
       T = interceptType(T);
       if (T == null) {
@@ -398,7 +397,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
         
         if (DEBUG) {
           IClass klass = options.getClassTargetSelector().getAllocatedTarget(null, site);
-          Trace.println("Selected allocated target: " + klass + " for " + T);
+          System.err.println(("Selected allocated target: " + klass + " for " + T));
         }
         if (T instanceof PointType) {
           if (!typesAllocated.contains(ref)) {
@@ -406,16 +405,16 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
           }
         } else if (T instanceof ConeType) {
           if (DEBUG) {
-            Trace.println("Cone clause for " + T);
+            System.err.println(("Cone clause for " + T));
           }
           if (((ConeType) T).isInterface()) {
             Set<IClass> implementors = T.getType().getClassHierarchy().getImplementors(ref);
             if (DEBUG) {
-              Trace.println("Implementors for " + T + " " + implementors);
+              System.err.println(("Implementors for " + T + " " + implementors));
             }
             if (implementors.isEmpty()) {
               if (DEBUG) {
-                Trace.println("Found no implementors of type " + T);
+                System.err.println(("Found no implementors of type " + T));
               }
               Warnings.add(NoSubtypesWarning.create(T));
             }
@@ -427,11 +426,11 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
           } else {
             Collection<IClass> subclasses = T.getType().getClassHierarchy().computeSubClasses(ref);
             if (DEBUG) {
-              Trace.println("Subclasses for " + T + " " + subclasses);
+              System.err.println(("Subclasses for " + T + " " + subclasses));
             }
             if (subclasses.isEmpty()) {
               if (DEBUG) {
-                Trace.println("Found no subclasses of type " + T);
+                System.err.println(("Found no subclasses of type " + T));
               }
               Warnings.add(NoSubtypesWarning.create(T));
             }

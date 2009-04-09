@@ -49,9 +49,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.ssa.IR;
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * Various utility methods for working with WALA.
@@ -60,22 +57,6 @@ import com.ibm.wala.util.warnings.WalaException;
  */
 public class WalaUtil {
 
-  public static void initializeTraceFile() {
-    Properties prop = null;
-    ;
-    try {
-      prop = WalaProperties.loadProperties();
-    } catch (WalaException e) {
-      e.printStackTrace();
-      Assertions.UNREACHABLE();
-    }
-  
-    String outputDir = prop.getProperty(WalaProperties.OUTPUT_DIR);
-    String fileName = outputDir + File.separator + "trace.txt";
-    // String fileName = outputDir + File.separator + "perf.txt";
-  
-    Trace.setTraceFile(fileName);
-  }
 
   public static void dumpAllIR(CallGraph cg, String benchName, Properties p) throws IllegalArgumentException, IllegalArgumentException {
     if (cg == null) {

@@ -21,7 +21,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * A {@link ClassTargetSelector} that looks up the declared type of a {@link NewSiteReference}
@@ -80,13 +79,13 @@ public class BypassClassTargetSelector implements ClassTargetSelector {
     }
     TypeReference nominalRef = site.getDeclaredType();
     if (DEBUG) {
-      Trace.println("BypassClassTargetSelector getAllocatedTarget: " + nominalRef);
+      System.err.println(("BypassClassTargetSelector getAllocatedTarget: " + nominalRef));
     }
 
     IClass realType = cha.lookupClass(nominalRef);
     if (realType == null) {
       if (DEBUG) {
-        Trace.println("cha lookup failed.  Delegating to " + parent.getClass());
+        System.err.println(("cha lookup failed.  Delegating to " + parent.getClass()));
       }
       return parent.getAllocatedTarget(caller, site);
     }
@@ -94,7 +93,7 @@ public class BypassClassTargetSelector implements ClassTargetSelector {
 
     if (allocatableTypes.contains(realRef)) {
       if (DEBUG) {
-        Trace.println("allocatableType! ");
+        System.err.println("allocatableType! ");
       }
       if (realType.isAbstract() || realType.isInterface()) {
         TypeName syntheticName = BypassSyntheticClass.getName(realRef);
@@ -111,7 +110,7 @@ public class BypassClassTargetSelector implements ClassTargetSelector {
       }
     } else {
       if (DEBUG) {
-        Trace.println("not allocatable.  Delegating to " + parent.getClass());
+        System.err.println(("not allocatable.  Delegating to " + parent.getClass()));
       }
       return parent.getAllocatedTarget(caller, site);
     }

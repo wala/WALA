@@ -38,7 +38,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.warnings.Warning;
 
 /**
@@ -225,7 +224,7 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
       // assert we haven't allocated this type already.
       assert !typesAllocated.contains(t);
       if (DEBUG) {
-        Trace.println("addStatementsForConcreteType: " + t);
+        System.err.println(("addStatementsForConcreteType: " + t));
       }
       NewSiteReference ref = NewSiteReference.make(getNewSiteForType(t), t);
       int alloc = getLocalForType(t);

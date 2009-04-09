@@ -47,7 +47,6 @@ import com.ibm.wala.demandpa.alg.refinepolicy.AlwaysRefineCGPolicy;
 import com.ibm.wala.demandpa.alg.refinepolicy.AlwaysRefineFieldsPolicy;
 import com.ibm.wala.demandpa.alg.refinepolicy.SinglePassRefinementPolicy;
 import com.ibm.wala.demandpa.alg.statemachine.StateMachineFactory;
-import com.ibm.wala.demandpa.driver.WalaUtil;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -61,7 +60,6 @@ public class ContextSensitiveTest extends AbstractPtrTest {
 
   @Override
   protected void setUp() {
-    WalaUtil.initializeTraceFile();
   }
 
   public void testArraySet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {

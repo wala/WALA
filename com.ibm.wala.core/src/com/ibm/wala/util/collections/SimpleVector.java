@@ -13,8 +13,6 @@ package com.ibm.wala.util.collections;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.ibm.wala.util.debug.Trace;
-
 /**
  * simple implementation of IVector
  */
@@ -84,8 +82,8 @@ public class SimpleVector<T> implements IVector<T> {
    * @see com.ibm.wala.util.intset.IntVector#reportStats()
    */
   public void performVerboseAction() {
-    Trace.println("size:       " + store.length);
-    Trace.println("occupancy:  " + computeOccupancy());
+    System.err.println(("size:       " + store.length));
+    System.err.println(("occupancy:  " + computeOccupancy()));
   }
 
   /**

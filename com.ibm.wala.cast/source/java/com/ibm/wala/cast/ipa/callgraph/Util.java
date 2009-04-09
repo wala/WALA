@@ -10,20 +10,26 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.Iterator;
 
-import com.ibm.wala.cast.ir.ssa.*;
-import com.ibm.wala.cast.loader.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.*;
+import com.ibm.wala.cast.ir.ssa.AstIRFactory;
+import com.ibm.wala.cast.loader.SingleClassLoaderFactory;
+import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 public class Util {
 
@@ -66,16 +72,16 @@ public class Util {
   }
 
   public static void dumpCG(PropagationCallGraphBuilder builder, CallGraph CG) {
-    Trace.println(CG);
+    System.err.println(CG);
 
     for (Iterator x = CG.iterator(); x.hasNext();) {
       CGNode N = (CGNode) x.next();
-      Trace.println("\nIR of node " + N);
+      System.err.println(("\nIR of node " + N));
       IR ir = N.getIR();
       if (ir != null) {
-        Trace.println(ir);
+        System.err.println(ir);
       } else {
-        Trace.println("no IR!");
+        System.err.println("no IR!");
       }
     }
 
@@ -83,9 +89,9 @@ public class Util {
     for (Iterator x = PA.getPointerKeys().iterator(); x.hasNext();) {
       PointerKey n = (PointerKey) x.next();
       try {
-        Trace.println(n + " --> " + PA.getPointsToSet(n));
+        System.err.println((n + " --> " + PA.getPointsToSet(n)));
       } catch (Throwable e) {
-        Trace.println("error computing set for " + n);
+        System.err.println(("error computing set for " + n));
       }
     }
   }

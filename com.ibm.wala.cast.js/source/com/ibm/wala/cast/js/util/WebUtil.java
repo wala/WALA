@@ -17,7 +17,6 @@ import java.net.URL;
 
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 public class WebUtil {
   private static final String outputDir;
@@ -55,7 +54,7 @@ public class WebUtil {
             urlFile.substring(urlFile.lastIndexOf('/')):
             url.getHost() + ".html";
       File F = new File(outputDir + urlName);
-      Trace.println("making driver at " + F + " " + outputDir);
+      System.err.println(("making driver at " + F + " " + outputDir));
       if (F.exists()) F.delete();
       
       generator.generate(url, F);

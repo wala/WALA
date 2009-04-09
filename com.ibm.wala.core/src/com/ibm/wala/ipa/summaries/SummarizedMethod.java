@@ -20,7 +20,6 @@ import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * @author sfink
@@ -38,7 +37,7 @@ public class SummarizedMethod extends SyntheticMethod {
       Assertions._assert(declaringClass != null);
     }
     if (DEBUG) {
-      Trace.println("SummarizedMethod ctor: " + ref + " " + summary);
+      System.err.println(("SummarizedMethod ctor: " + ref + " " + summary));
     }
   }
 
@@ -85,7 +84,7 @@ public class SummarizedMethod extends SyntheticMethod {
   @Override
   public SSAInstruction[] getStatements(SSAOptions options) {
     if (DEBUG) {
-      Trace.println("getStatements: " + this);
+      System.err.println(("getStatements: " + this));
     }
     return summary.getStatements();
   }

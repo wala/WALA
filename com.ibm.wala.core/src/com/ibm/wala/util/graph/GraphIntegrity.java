@@ -10,11 +10,11 @@
  *******************************************************************************/
 package com.ibm.wala.util.graph;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.traverse.BFSIterator;
 import com.ibm.wala.util.graph.traverse.DFS;
 
@@ -128,7 +128,7 @@ public class GraphIntegrity {
       for (Iterator it = G.iterator(); it.hasNext();) {
         Object n = it.next();
         if (DEBUG_LEVEL > 1) {
-          Trace.println("n2 loop: " + n);
+          System.err.println(("n2 loop: " + n));
         }
         n2++;
       }
@@ -183,8 +183,8 @@ public class GraphIntegrity {
         return new UnsoundGraphException("set2 already contained " + o2);
       }
     }
-    Trace.printCollection("set 1 ", set1);
-    Trace.printCollection("set 2 ", set2);
+    GraphIntegrity.printCollection("set 1 ", set1);
+    GraphIntegrity.printCollection("set 2 ", set2);
     HashSet s1clone = (HashSet) set1.clone();
     set1.removeAll(set2);
     if (set1.size() > 0) {
@@ -217,6 +217,26 @@ public class GraphIntegrity {
       super(s);
     }
 
+  }
+
+  /**
+   * @param string
+   * @param c
+   * @throws IllegalArgumentException  if c is null
+   */
+  public static void printCollection(String string, Collection c) {
+    if (c == null) {
+      throw new IllegalArgumentException("c is null");
+    }
+    System.err.println(string);
+    if (c.isEmpty()) {
+      System.err.println("none\n");
+    } else {
+      for (Iterator it = c.iterator(); it.hasNext();) {
+        System.err.println(it.next().toString());
+      }
+      System.err.println("\n");
+    }
   }
 
 }

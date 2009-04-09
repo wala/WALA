@@ -28,7 +28,6 @@ import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
 
@@ -57,7 +56,7 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
           LexicalParent restoreParent = null;
 
           if (AstTranslator.DEBUG_LEXICAL)
-            Trace.println(level + ": searching " + node + " for parents");
+            System.err.println((level + ": searching " + node + " for parents"));
 
           for (int i = 0; i < parents.length; i++) {
 
@@ -65,7 +64,7 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
               continue;
 
             if (AstTranslator.DEBUG_LEXICAL)
-              Trace.println(level + ": searching " + parents[i]);
+              System.err.println((level + ": searching " + parents[i]));
 
             if (node.getMethod() == parents[i].getMethod()) {
               if (containsKey(parents[i].getName()))
@@ -73,8 +72,8 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
               else {
                 put(parents[i].getName(), node);
                 if (AstTranslator.DEBUG_LEXICAL)
-                  Trace.println(level + ": Adding lexical parent " + parents[i].getName() + " for " + base + " at " + creator
-                      + "(toDo is now " + toDo + ")");
+                  System.err.println((level + ": Adding lexical parent " + parents[i].getName() + " for " + base + " at " + creator
+                  + "(toDo is now " + toDo + ")"));
               }
 
               toDo--;
@@ -107,7 +106,7 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
         LexicalParent[] parents = getParents(base);
 
         if (AstTranslator.DEBUG_LEXICAL)
-          Trace.println("starting search for parents at " + creator);
+          System.err.println(("starting search for parents at " + creator));
 
         HashSet<CGNode> s = HashSetFactory.make(5);
         scan(0, parents.length, parents, creator, s);

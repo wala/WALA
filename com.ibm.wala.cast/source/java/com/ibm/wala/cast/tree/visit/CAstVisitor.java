@@ -19,7 +19,6 @@ import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * @author Igor Peshansky
@@ -201,7 +200,7 @@ public abstract class CAstVisitor {
     }
     default: {
       if (!visitor.doVisitEntity(n, context, visitor)) {
-        Trace.println("No handler for entity " + n.getName());
+        System.err.println(("No handler for entity " + n.getName()));
         Assertions.UNREACHABLE("cannot handle entity of kind" + n.getKind());
       }
     }
@@ -818,7 +817,7 @@ public abstract class CAstVisitor {
 
     default: {
       if (!visitor.doVisit(n, context, visitor)) {
-        Trace.println("looking at unhandled " + n + "(" + NT + ")" + " of " + n.getClass());
+        System.err.println(("looking at unhandled " + n + "(" + NT + ")" + " of " + n.getClass()));
         Assertions.UNREACHABLE("cannot handle node of kind " + NT);
       }
     }
@@ -902,7 +901,7 @@ public abstract class CAstVisitor {
 
     default: {
       if (!visitor.doVisitAssignNodes(n, context, v, a, visitor)) {
-	Trace.println("cannot handle assign to kind " + n.getKind());
+	System.err.println(("cannot handle assign to kind " + n.getKind()));
 	throw new UnsupportedOperationException(
 	  "cannot handle assignment: " + 
 	  CAstPrinter.print(a, context.top().getSourceMap()));

@@ -46,7 +46,6 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.traverse.SlowDFSDiscoverTimeIterator;
 import com.ibm.wala.util.strings.Atom;
@@ -507,13 +506,13 @@ public class Util {
     Set<T> nodeDiff = setify(subG.iterator());
     nodeDiff.removeAll(setify(supG.iterator()));
     if (!nodeDiff.isEmpty()) {
-      Trace.println("supergraph: ");
-      Trace.println(supG.toString());
-      Trace.println("subgraph: ");
-      Trace.println(subG.toString());
-      Trace.println("nodeDiff: ");
+      System.err.println("supergraph: ");
+      System.err.println(supG.toString());
+      System.err.println("subgraph: ");
+      System.err.println(subG.toString());
+      System.err.println("nodeDiff: ");
       for (Iterator it = nodeDiff.iterator(); it.hasNext();) {
-        Trace.println(it.next().toString());
+        System.err.println(it.next().toString());
       }
       Assertions.productionAssertion(nodeDiff.isEmpty(), "bad superset, see tracefile\n");
     }
@@ -530,13 +529,13 @@ public class Util {
       Set<T> predDiff = setify(subG.getPredNodes(m));
       predDiff.removeAll(setify(supG.getPredNodes(m)));
       if (!predDiff.isEmpty()) {
-        Trace.println("supergraph: ");
-        Trace.println(supG.toString());
-        Trace.println("subgraph: ");
-        Trace.println(subG.toString());
-        Trace.println("predDiff: ");
+        System.err.println("supergraph: ");
+        System.err.println(supG.toString());
+        System.err.println("subgraph: ");
+        System.err.println(subG.toString());
+        System.err.println("predDiff: ");
         for (Iterator it = predDiff.iterator(); it.hasNext();) {
-          Trace.println(it.next().toString());
+          System.err.println(it.next().toString());
         }
         Assertions.UNREACHABLE("bad superset for predecessors of " + m + ":" + predDiff);
       }

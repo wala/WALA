@@ -25,7 +25,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -87,7 +86,7 @@ public class MethodBypass {
    */
   private SyntheticMethod getBypass(MethodReference m) {
     if (DEBUG) {
-      Trace.println("MethodBypass.getBypass? " + m);
+      System.err.println(("MethodBypass.getBypass? " + m));
     }
     SyntheticMethod result = findOrCreateSyntheticMethod(m);
     if (result != null) {
@@ -129,7 +128,7 @@ public class MethodBypass {
     MethodSummary result = (MethodSummary) methodSummaries.get(m);
     if (result != null) {
       if (DEBUG) {
-        Trace.println("findSummary succeeded: " + m);
+        System.err.println(("findSummary succeeded: " + m));
       }
       return result;
     }
@@ -139,7 +138,7 @@ public class MethodBypass {
     result = (MethodSummary) methodSummaries.get(t);
     if (result != null) {
       if (DEBUG) {
-        Trace.println("findSummary succeeded: " + t);
+        System.err.println(("findSummary succeeded: " + t));
       }
       return result;
     }
@@ -151,12 +150,12 @@ public class MethodBypass {
     result = (MethodSummary) methodSummaries.get(p);
     if (result != null) {
       if (DEBUG) {
-        Trace.println("findSummary succeeded: " + p);
+        System.err.println(("findSummary succeeded: " + p));
       }
       return result;
     } else {
       if (DEBUG) {
-        Trace.println("findSummary failed: " + m);
+        System.err.println(("findSummary failed: " + m));
       }
       return result;
     }
@@ -203,7 +202,7 @@ public class MethodBypass {
     IMethod m = getClassHierarchy().resolveMethod(target);
     if (m != null) {
       if (DEBUG) {
-        Trace.println("resolveTarget: resolved to " + m);
+        System.err.println(("resolveTarget: resolved to " + m));
       }
       target = m.getReference();
     }

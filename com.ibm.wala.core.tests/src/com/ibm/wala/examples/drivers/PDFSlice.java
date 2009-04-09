@@ -55,8 +55,8 @@ import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.viz.DotUtil;
-import com.ibm.wala.viz.PDFViewUtil;
 import com.ibm.wala.viz.NodeDecorator;
+import com.ibm.wala.viz.PDFViewUtil;
 
 /**
  * 

@@ -21,7 +21,6 @@ import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.IFixedPointSolver;
 import com.ibm.wala.fixpoint.IFixedPointStatement;
 import com.ibm.wala.fixpoint.IVariable;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.debug.VerboseAction;
 
 /**
@@ -139,7 +138,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable> implements I
       AbstractStatement s = workList.takeStatement();
 
       if (DEBUG) {
-        Trace.println("Before evaluation " + s);
+        System.err.println(("Before evaluation " + s));
       }
       byte code = s.evaluate();
       if (verbose) {
@@ -153,7 +152,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable> implements I
 
       }
       if (DEBUG) {
-        Trace.println("After evaluation  " + s + " " + isChanged(code));
+        System.err.println(("After evaluation  " + s + " " + isChanged(code)));
       }
       if (isChanged(code)) {
         globalChange = true;

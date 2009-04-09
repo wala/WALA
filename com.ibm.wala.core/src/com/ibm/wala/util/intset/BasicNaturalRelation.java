@@ -16,7 +16,6 @@ import com.ibm.wala.util.collections.IVector;
 import com.ibm.wala.util.collections.SimpleVector;
 import com.ibm.wala.util.collections.TwoLevelVector;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * A relation between non-negative integers
@@ -388,12 +387,12 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
    */
   public void performVerboseAction() {
     if (VERBOSE) {
-      Trace.println(getClass() + " stats:");
-      Trace.println("count: " + countPairs());
-      Trace.println("delegate: " + delegateStore.getClass());
+      System.err.println((getClass() + " stats:"));
+      System.err.println(("count: " + countPairs()));
+      System.err.println(("delegate: " + delegateStore.getClass()));
       delegateStore.performVerboseAction();
       for (int i = 0; i < smallStore.length; i++) {
-        Trace.println("smallStore[" + i + "]: " + smallStore[i].getClass());
+        System.err.println(("smallStore[" + i + "]: " + smallStore[i].getClass()));
       }
     }
   }

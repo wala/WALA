@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * A module containing files under some directory.
@@ -56,7 +55,7 @@ public abstract class DirectoryTreeModule implements Module {
     } else {
       // TODO: replace this with a real warning when the WarningSets are
       // revamped
-      Trace.println("Warning: failed to retrieve files in " + dir);
+      System.err.println(("Warning: failed to retrieve files in " + dir));
     }
 
     return result;

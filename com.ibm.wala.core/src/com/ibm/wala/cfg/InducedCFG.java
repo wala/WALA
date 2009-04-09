@@ -37,7 +37,6 @@ import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.util.collections.ArrayIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
@@ -78,7 +77,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     this.context = context;
     this.instructions = instructions;
     if (DEBUG) {
-      Trace.println("compute InducedCFG: " + method);
+      System.err.println(("compute InducedCFG: " + method));
     }
     i2block = new BasicBlock[instructions.length];
     if (instructions.length == 0) {
@@ -185,7 +184,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
         }
 
         if (DEBUG) {
-          Trace.println("Add basic block " + b);
+          System.err.println(("Add basic block " + b));
         }
       }
       if (instructions[i] instanceof SSAPiInstruction) {
@@ -197,7 +196,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     // allocate the exit block
     BasicBlock exit = new BasicBlock(-1);
     if (DEBUG) {
-      Trace.println("Add exit block " + exit);
+      System.err.println(("Add exit block " + exit));
     }
     addNode(exit);
     clearPhis(instructions);
@@ -439,7 +438,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     private void computeOutgoingEdges() {
 
       if (DEBUG) {
-        Trace.println("Block " + this + ": computeOutgoingEdges()");
+        System.err.println(("Block " + this + ": computeOutgoingEdges()"));
       }
       // TODO: we don't currently model branches
 
@@ -452,7 +451,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
       if (true) {
         // if (last.isFallThrough()) {
         if (DEBUG) {
-          Trace.println("Add fallthru to " + getNode(getGraphNodeId() + 1));
+          System.err.println(("Add fallthru to " + getNode(getGraphNodeId() + 1)));
         }
         addNormalEdgeTo(getNode(normalSuccNodeNumber));
       }

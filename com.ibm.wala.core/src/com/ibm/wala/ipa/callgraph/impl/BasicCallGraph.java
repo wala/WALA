@@ -30,7 +30,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
 import com.ibm.wala.util.graph.NodeManager;
@@ -121,8 +120,8 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
     Set<CGNode> s = findOrCreateMr2Nodes(K.m);
     s.add(N);
     if (DEBUG) {
-      Trace.println("registered Node: " + N + " for key " + K);
-      Trace.println("now size = " + getNumberOfNodes());
+      System.err.println(("registered Node: " + N + " for key " + K));
+      System.err.println(("now size = " + getNumberOfNodes()));
     }
   }
 

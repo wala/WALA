@@ -15,7 +15,6 @@ import java.util.Iterator;
 
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
@@ -68,7 +67,7 @@ public class DefUse {
     defs = new SSAInstruction[getMaxValueNumber() + 1];
     uses = new MutableIntSet[getMaxValueNumber() + 1];
     if (DEBUG) {
-      Trace.println("DefUse: defs.length " + defs.length);
+      System.err.println(("DefUse: defs.length " + defs.length));
     }
     Iterator it = allInstructions.iterator();
     for (int i = 0; i < allInstructions.size(); i++) {

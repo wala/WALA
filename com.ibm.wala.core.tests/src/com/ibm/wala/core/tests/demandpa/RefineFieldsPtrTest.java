@@ -43,7 +43,6 @@ import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
 import com.ibm.wala.demandpa.alg.refinepolicy.AlwaysRefineFieldsPolicy;
 import com.ibm.wala.demandpa.alg.refinepolicy.NeverRefineCGPolicy;
 import com.ibm.wala.demandpa.alg.refinepolicy.SinglePassRefinementPolicy;
-import com.ibm.wala.demandpa.driver.WalaUtil;
 import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 
@@ -51,7 +50,6 @@ public class RefineFieldsPtrTest extends AbstractPtrTest {
 
   @Override
   protected void setUp() throws Exception {
-    WalaUtil.initializeTraceFile();
   }
 
   public void testNastyPtrs() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {

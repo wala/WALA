@@ -44,7 +44,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.strings.Atom;
 
 public class JSAstTranslator extends AstTranslator {
@@ -138,10 +137,12 @@ public class JSAstTranslator extends AstTranslator {
 				AstLexicalInformation LI,
 				DebuggingInformation debugInfo)
   {
-    if (DEBUG) Trace.println("\n\nAdding code for " + N);
+    if (DEBUG)
+      System.err.println(("\n\nAdding code for " + N));
     String fnName = composeEntityName(definingContext, N);
     
-    if (DEBUG) Trace.println( cfg );
+    if (DEBUG)
+      System.err.println(cfg);
 
     ((JavaScriptLoader)loader).defineCodeBodyCode("L"+fnName, 
 			      cfg, 

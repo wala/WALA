@@ -48,7 +48,6 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warnings;
 
@@ -179,7 +178,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
     SyntheticMethod S = map.get(m);
     if (S == null) {
       if (DEBUG) {
-        Trace.println("EJBBypass: create Synthetic case A for " + m);
+        System.err.println(("EJBBypass: create Synthetic case A for " + m));
       }
       if (Assertions.verifyAssertions) {
         if (bean == null) {
@@ -238,7 +237,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
     }
 
     if (DEBUG) {
-      Trace.println("EJBBypass: case A return " + S);
+      System.err.println(("EJBBypass: case A return " + S));
     }
     return S;
   }
@@ -264,7 +263,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
     SyntheticMethod S = map.get(m);
     if (S == null) {
       if (DEBUG) {
-        Trace.println("EJBBypass: create Synthetic case A for " + m);
+        System.err.println(("EJBBypass: create Synthetic case A for " + m));
       }
       if (Assertions.verifyAssertions) {
         if (bean == null) {
@@ -316,7 +315,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
     }
 
     if (DEBUG) {
-      Trace.println("EJBBypass: case A return " + S);
+      System.err.println(("EJBBypass: case A return " + S));
     }
     return S;
   }
@@ -462,7 +461,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
   private SyntheticMethod methodReferenceIntercept(MethodReference m) {
     TypeReference type = m.getDeclaringClass();
     if (DEBUG) {
-      Trace.println("EJBBypass: intercept? " + m);
+      System.err.println(("EJBBypass: intercept? " + m));
     }
 
     if (type.getClassLoader().equals(ClassLoaderReference.Primordial)) {
@@ -502,7 +501,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
    */
   private SyntheticMethod findOrCreateEntityContractMethod(MethodReference m) {
     if (DEBUG) {
-      Trace.println("findOrCreateEntityContractMethod " + m);
+      System.err.println(("findOrCreateEntityContractMethod " + m));
     }
     SyntheticMethod S = map.get(m);
     if (S == null) {

@@ -70,7 +70,6 @@ import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.graph.traverse.NumberedDFSDiscoverTimeIterator;
 import com.ibm.wala.util.intset.IntSet;
@@ -522,7 +521,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           final int vn = accesses[i].valueNumber;
 
           if (AstTranslator.DEBUG_LEXICAL)
-            Trace.println("looking up lexical parent " + definer);
+            System.err.println(("looking up lexical parent " + definer));
 
           for (Iterator<CGNode> DS = getLexicalDefiners(node, definer).iterator(); DS.hasNext();) {
             final CGNode D = DS.next();
@@ -776,7 +775,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
               I.addLexicalUse(new Access(name, definer, values[i]));
 
               if (SSAConversion.DEBUG_UNDO)
-                Trace.println("copy use #" + (-i - 1) + " to use #" + (I.getNumberOfUses() - 1) + " at inst " + pc);
+                System.err.println(("copy use #" + (-i - 1) + " to use #" + (I.getNumberOfUses() - 1) + " at inst " + pc));
 
               SSAConversion.copyUse(ir, pc, -i - 1, pc, I.getNumberOfUses() - 1);
 
@@ -839,7 +838,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
               I.addLexicalDef(new Access(name, definer, values[i]));
 
               if (SSAConversion.DEBUG_UNDO)
-                Trace.println("new def of " + values[i] + " at inst " + pc + ": " + I);
+                System.err.println(("new def of " + values[i] + " at inst " + pc + ": " + I));
 
               // new def has broken SSA form for values[i], so fix for that
               // value
@@ -890,31 +889,31 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       // log field access
       if (DEBUG_PROPERTIES) {
         if (isLoadOperation)
-          Trace.print("adding read of " + objKey + "." + fieldKey + ":");
+          System.err.print(("adding read of " + objKey + "." + fieldKey + ":"));
         else
-          Trace.print("adding write of " + objKey + "." + fieldKey + ":");
+          System.err.print(("adding write of " + objKey + "." + fieldKey + ":"));
 
         if (contentsAreInvariant(symtab, du, objVn)) {
-          Trace.print(" constant obj:");
+          System.err.print(" constant obj:");
           InstanceKey[] x = getInvariantContents(symtab, du, opNode, objVn);
           for (int i = 0; i < x.length; i++) {
-            Trace.print(x[i].toString() + " ");
+            System.err.print((x[i].toString() + " "));
           }
         } else {
-          Trace.print(" obj:" + system.findOrCreatePointsToSet(objKey));
+          System.err.print((" obj:" + system.findOrCreatePointsToSet(objKey)));
         }
 
         if (contentsAreInvariant(symtab, du, fieldsVn)) {
-          Trace.print(" constant prop:");
+          System.err.print(" constant prop:");
           InstanceKey[] x = getInvariantContents(symtab, du, opNode, fieldsVn);
           for (int i = 0; i < x.length; i++) {
-            Trace.print(x[i].toString() + " ");
+            System.err.print((x[i].toString() + " "));
           }
         } else {
-          Trace.print(" props:" + system.findOrCreatePointsToSet(fieldKey));
+          System.err.print((" props:" + system.findOrCreatePointsToSet(fieldKey)));
         }
 
-        Trace.print("\n");
+        System.err.print("\n");
       }
 
       // make sure instance keys get mapped for PointerAnalysisImpl
@@ -1106,7 +1105,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       }
 
       if (DEBUG_PROPERTIES) {
-        Trace.println("finished\n");
+        System.err.println("finished\n");
       }
     }
 
@@ -1128,9 +1127,9 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
         newFieldOperation(opNode, objVn, fieldsVn, false, new ReflectedFieldAction() {
           public void dump(AbstractFieldPointerKey fieldKey, boolean constObj, boolean constProp) {
-            Trace.println("writing fixed rvals to " + fieldKey + " " + constObj + ", " + constProp);
+            System.err.println(("writing fixed rvals to " + fieldKey + " " + constObj + ", " + constProp));
             for (int i = 0; i < rhsFixedValues.length; i++) {
-              Trace.println("writing " + rhsFixedValues[i]);
+              System.err.println(("writing " + rhsFixedValues[i]));
             }
           }
 
@@ -1154,7 +1153,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     protected void newFieldWrite(CGNode opNode, int objVn, int fieldsVn, final PointerKey rhs) {
       newFieldOperation(opNode, objVn, fieldsVn, false, new ReflectedFieldAction() {
         public void dump(AbstractFieldPointerKey fieldKey, boolean constObj, boolean constProp) {
-          Trace.println("write " + rhs + " to " + fieldKey + " " + constObj + ", " + constProp);
+          System.err.println(("write " + rhs + " to " + fieldKey + " " + constObj + ", " + constProp));
         }
 
         public void action(AbstractFieldPointerKey fieldKey) {
@@ -1172,7 +1171,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     protected void newFieldRead(CGNode opNode, int objVn, int fieldsVn, final PointerKey lhs) {
       newFieldOperation(opNode, objVn, fieldsVn, true, new ReflectedFieldAction() {
         public void dump(AbstractFieldPointerKey fieldKey, boolean constObj, boolean constProp) {
-          Trace.println("read " + lhs + " from " + fieldKey + " " + constObj + ", " + constProp);
+          System.err.println(("read " + lhs + " from " + fieldKey + " " + constObj + ", " + constProp));
         }
 
         public void action(AbstractFieldPointerKey fieldKey) {

@@ -50,7 +50,6 @@ import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 public class RhinoToAstTranslator {
 
@@ -1334,7 +1333,7 @@ public class RhinoToAstTranslator {
     compilerEnv.setErrorReporter(reporter);
 
     if (DEBUG)
-      Trace.println("translating " + scriptName + " with Rhino");
+      System.err.println(("translating " + scriptName + " with Rhino"));
 
     Parser P = new Parser(compilerEnv, compilerEnv.getErrorReporter());
 

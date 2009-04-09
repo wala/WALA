@@ -11,7 +11,6 @@
 package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
@@ -31,7 +30,7 @@ public class LongSetUtil {
         MutableLongSetFactory intSetFactory = (MutableLongSetFactory) intSetFactoryClass.newInstance();
         setDefaultLongSetFactory(intSetFactory);
       } catch (Exception e) {
-        Trace.println("Cannot use int set factory " + System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
+        System.err.println(("Cannot use int set factory " + System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME)));
         setDefaultLongSetFactory(defaultFactory);
       }
     } else {
@@ -88,17 +87,17 @@ public class LongSetUtil {
     // TODO: this is slow ... optimize please.
     MutableLongSet result = factory.makeCopy(A);
     if (DEBUG) {
-      Trace.println("initial result " + result + " " + result.getClass());
+      System.err.println(("initial result " + result + " " + result.getClass()));
     }
     for (LongIterator it = B.longIterator(); it.hasNext();) {
       long I = it.next();
       result.remove(I);
       if (DEBUG) {
-        Trace.println("removed " + I + " now is " + result);
+        System.err.println(("removed " + I + " now is " + result));
       }
     }
     if (DEBUG) {
-      Trace.println("return " + result);
+      System.err.println(("return " + result));
     }
     return result;
   }
@@ -136,11 +135,11 @@ public class LongSetUtil {
       long I = it.next();
       A.remove(I);
       if (DEBUG) {
-        Trace.println("removed " + I + " now is " + A);
+        System.err.println(("removed " + I + " now is " + A));
       }
     }
     if (DEBUG) {
-      Trace.println("return " + A);
+      System.err.println(("return " + A));
     }
     return A;
   }

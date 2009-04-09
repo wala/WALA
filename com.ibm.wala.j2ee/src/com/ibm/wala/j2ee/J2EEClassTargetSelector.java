@@ -21,7 +21,6 @@ import com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * A class that selects concrete types for new statements.
@@ -83,7 +82,7 @@ public class J2EEClassTargetSelector implements ClassTargetSelector {
 
     TypeReference nominalRef = site.getDeclaredType();
     if (DEBUG) {
-      Trace.println("J2EEClassTargetSelector getAllocatedTarget: " + nominalRef);
+      System.err.println(("J2EEClassTargetSelector getAllocatedTarget: " + nominalRef));
     }
     if (Assertions.verifyAssertions) {
       if (nominalRef == null) {
@@ -93,7 +92,7 @@ public class J2EEClassTargetSelector implements ClassTargetSelector {
     IClass realType = cha.lookupClass(nominalRef);
     if (realType == null) {
       if (DEBUG) {
-        Trace.println("cha lookup failed.  Delegating to " + parent.getClass());
+        System.err.println(("cha lookup failed.  Delegating to " + parent.getClass()));
       }
       return parent.getAllocatedTarget(caller, site);
     }
@@ -120,7 +119,7 @@ public class J2EEClassTargetSelector implements ClassTargetSelector {
       }
     } else {
       if (DEBUG) {
-        Trace.println("Not bypassed.  Delegating to " + parent.getClass());
+        System.err.println(("Not bypassed.  Delegating to " + parent.getClass()));
       }
       return parent.getAllocatedTarget(caller, site);
     }

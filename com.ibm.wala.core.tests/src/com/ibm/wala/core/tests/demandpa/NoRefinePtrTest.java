@@ -39,7 +39,6 @@ package com.ibm.wala.core.tests.demandpa;
 
 import java.io.IOException;
 
-import com.ibm.wala.demandpa.driver.WalaUtil;
 import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 
@@ -47,7 +46,6 @@ public class NoRefinePtrTest extends AbstractPtrTest {
 
   @Override
   protected void setUp() {
-    WalaUtil.initializeTraceFile();
   }
 
   public void testOnTheFlySimple() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {

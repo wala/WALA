@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * 
@@ -83,9 +82,9 @@ public class SparseIntVector implements IntVector {
    * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
    */
   public void performVerboseAction() {
-    Trace.println(getClass() + " stats: ");
-    Trace.println("data.length " + data.length);
-    Trace.println("indices.size() " + indices.size());
+    System.err.println((getClass() + " stats: "));
+    System.err.println(("data.length " + data.length));
+    System.err.println(("indices.size() " + indices.size()));
   }
   
   

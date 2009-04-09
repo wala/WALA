@@ -20,7 +20,6 @@ import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.traverse.DFS;
 
 public class AstJavaSlicer extends Slicer {
@@ -63,7 +62,7 @@ public class AstJavaSlicer extends Slicer {
       Collection<CGNode> partialRoots) throws IllegalArgumentException, CancelException {
     CallGraph pcg = PartialCallGraph.make(CG, new LinkedHashSet<CGNode>(partialRoots));
     SDG sdg = new SDG(pcg, pa, new AstJavaModRef(), DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
-    Trace.println("SDG:\n" + sdg);
+    System.err.println(("SDG:\n" + sdg));
     return Pair.make(AstJavaSlicer.computeBackwardSlice(sdg, gatherAssertions(CG, partialRoots)), sdg);
   }
 

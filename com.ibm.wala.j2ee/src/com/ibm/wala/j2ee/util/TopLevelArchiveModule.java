@@ -29,7 +29,6 @@ import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.j2ee.J2EEUtil;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.io.FileSuffixes;
 
 /**
@@ -113,7 +112,7 @@ public class TopLevelArchiveModule implements Module {
   @SuppressWarnings({ "unchecked" })
   public Iterator<ModuleEntry> getEntries() {
     if (DEBUG) {
-      Trace.println("ArchiveModule.getEntries(): " + this);
+      System.err.println(("ArchiveModule.getEntries(): " + this));
     }
     Archive A = materializeArchive();
     Collection files = A.getFiles();

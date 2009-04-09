@@ -33,7 +33,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
@@ -82,14 +81,14 @@ public class BasicRTABuilder extends AbstractRTABuilder {
    */
   private void registerImplementedMethods(IClass declarer, InstanceKey iKey) {
     if (DEBUG) {
-      Trace.println("registerImplementedMethods: " + declarer + " " + iKey);
+      System.err.println(("registerImplementedMethods: " + declarer + " " + iKey));
     }
     for (Iterator it = declarer.getDeclaredMethods().iterator(); it.hasNext();) {
       IMethod M = (IMethod) it.next();
       Selector selector = M.getReference().getSelector();
       PointerKey sKey = getKeyForSelector(selector);
       if (DEBUG) {
-        Trace.println("Add constraint: " + selector + " U= " + iKey.getConcreteType());
+        System.err.println(("Add constraint: " + selector + " U= " + iKey.getConcreteType()));
       }
       system.newConstraint(sKey, iKey);
     }
@@ -140,15 +139,15 @@ public class BasicRTABuilder extends AbstractRTABuilder {
         // TODO: be more careful about what goes on the worklist to
         // avoid this.
         if (DEBUG) {
-          Trace.println("EVAL dispatch with value null");
+          System.err.println("EVAL dispatch with value null");
         }
         return NOT_CHANGED;
       }
       if (DEBUG) {
         String S = "EVAL dispatch to " + caller + ":" + site;
-        Trace.println(S);
+        System.err.println(S);
         if (DEBUG_LEVEL >= 2) {
-          Trace.println("receivers: " + value);
+          System.err.println(("receivers: " + value));
         }
       }
       // TODO: cache this!!!
@@ -158,12 +157,12 @@ public class BasicRTABuilder extends AbstractRTABuilder {
       }
       value = filterForClass(value, recvClass);
       if (DEBUG_LEVEL >= 2) {
-        Trace.println("filtered value: " + value);
+        System.err.println(("filtered value: " + value));
       }
       IntSetAction action = new IntSetAction() {
         public void act(int ptr) {
           if (DEBUG) {
-            Trace.println("    dispatch to ptr " + ptr);
+            System.err.println(("    dispatch to ptr " + ptr));
           }
           InstanceKey iKey = system.getInstanceKey(ptr);
 
@@ -172,7 +171,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
             // This indicates an error; I sure hope getTargetForCall
             // raised a warning about this!
             if (DEBUG) {
-              Trace.println("Warning: null target for call " + site + " " + iKey);
+              System.err.println(("Warning: null target for call " + site + " " + iKey));
             }
             return;
           }

@@ -44,7 +44,6 @@ import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.ref.CacheReference;
@@ -254,7 +253,7 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   private void addAllClasses(IClassLoader loader, IProgressMonitor progressMonitor) throws CancelCHAConstructionException {
     if (DEBUG) {
-      Trace.println("Add all classes from loader " + loader);
+      System.err.println(("Add all classes from loader " + loader));
     }
     Collection<IClass> toRemove = HashSetFactory.make();
     for (Iterator<IClass> it = loader.iterateAllClasses(); it.hasNext();) {
@@ -287,7 +286,7 @@ public class ClassHierarchy implements IClassHierarchy {
       }
     }
     if (DEBUG) {
-      Trace.println("Attempt to add class " + klass);
+      System.err.println(("Attempt to add class " + klass));
     }
     Set<IClass> loadedSuperclasses;
     Collection loadedSuperInterfaces;
@@ -298,7 +297,7 @@ public class ClassHierarchy implements IClassHierarchy {
       // a little cleanup
       if (klass instanceof ShrikeClass) {
         if (DEBUG) {
-          Trace.println("Exception.  Clearing " + klass);
+          System.err.println(("Exception.  Clearing " + klass));
         }
       }
       Warnings.add(ClassExclusion.create(klass.getReference(), e.getMessage()));
@@ -327,7 +326,7 @@ public class ClassHierarchy implements IClassHierarchy {
         workingSuperclasses.remove(superclass);
         Node supernode = findOrCreateNode(superclass);
         if (DEBUG) {
-          Trace.println("addChild " + node.getJavaClass() + " to " + supernode.getJavaClass());
+          System.err.println(("addChild " + node.getJavaClass() + " to " + supernode.getJavaClass()));
         }
         supernode.addChild(node);
         if (supernode.getJavaClass().getReference().equals(rootTypeRef)) {
@@ -561,12 +560,12 @@ public class ClassHierarchy implements IClassHierarchy {
       }
       if (superclass == null) {
         if (DEBUG) {
-          Trace.println("resolveMethod(" + selector + ") failed: method not found");
+          System.err.println(("resolveMethod(" + selector + ") failed: method not found"));
         }
         return null;
       } else {
         if (DEBUG) {
-          Trace.println("Attempt to resolve for " + receiverClass + " in superclass: " + superclass + " " + selector);
+          System.err.println(("Attempt to resolve for " + receiverClass + " in superclass: " + superclass + " " + selector));
         }
         return resolveMethod(superclass, selector);
       }

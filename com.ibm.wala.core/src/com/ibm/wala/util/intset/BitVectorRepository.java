@@ -16,7 +16,6 @@ import java.util.WeakHashMap;
 
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.MapUtil;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * 
@@ -86,8 +85,8 @@ public class BitVectorRepository {
    */
   private static void reportStats() {
     double percent = 100.0 * hits / queries;
-    Trace.println("BitVectorRepository: queries " + queries + " hits " + percent);
-    Trace.println("                     entries " + countEntries());
+    System.err.println(("BitVectorRepository: queries " + queries + " hits " + percent));
+    System.err.println(("                     entries " + countEntries()));
   }
 
   /**

@@ -18,7 +18,6 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * Includes all application methods in an analysis scope as entrypoints.
@@ -51,7 +50,7 @@ public class AllApplicationEntrypoints extends HashSet<Entrypoint> {
       }
     }
     if (DEBUG) {
-      Trace.println(getClass() + "Number of EntryPoints:" + size());
+      System.err.println((getClass() + "Number of EntryPoints:" + size()));
     }
 
   }

@@ -21,7 +21,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
-import com.ibm.wala.util.debug.Trace;
 
 public abstract class TestCallGraphShape extends WalaTestCase {
 
@@ -48,7 +47,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
         Name[] names = (Name[]) assertionData[i][1];
         for (int j = 0; j < names.length; j++) {
 
-          Trace.println("looking for " + names[j].name + ", " + names[j].vn + " in " + N);
+          System.err.println(("looking for " + names[j].name + ", " + names[j].vn + " in " + N));
 
           String[] localNames = ir.getLocalNames(names[j].instructionIndex, names[j].vn);
 
@@ -66,7 +65,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
   }
 
   protected void verifyGraphAssertions(CallGraph CG, Object[][] assertionData) {
-    Trace.println(CG);
+    System.err.println(CG);
 
     if (assertionData == null) {
       return;
@@ -92,7 +91,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
               CGNode dst = (CGNode) dsts.next();
               for (Iterator tos = CG.getPossibleTargets(src, sr).iterator(); tos.hasNext();) {
                 if (tos.next().equals(dst)) {
-                  Trace.println("found expected " + src + " --> " + dst + " at " + sr);
+                  System.err.println(("found expected " + src + " --> " + dst + " at " + sr));
                   continue check_target;
                 }
               }

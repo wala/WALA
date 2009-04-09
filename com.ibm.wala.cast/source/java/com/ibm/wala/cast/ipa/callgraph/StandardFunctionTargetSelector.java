@@ -21,7 +21,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.*;
 
 public class StandardFunctionTargetSelector implements MethodTargetSelector {  
   private final IClassHierarchy cha;
@@ -47,17 +46,15 @@ public class StandardFunctionTargetSelector implements MethodTargetSelector {
 	receiver;
 
     if (declarer == null) {
-      Trace.println(
-        "cannot find declarer for " +
-	site + ", " + receiver + " in " + caller);
+      System.err.println(("cannot find declarer for " +
+      site + ", " + receiver + " in " + caller));
     }
 
     IClass fun = cha.lookupClass(functionTypeRef);
 
     if (fun == null) {
-      Trace.println(
-        "cannot find function " + functionTypeRef + " for " +
-	site + ", " + receiver + " in " + caller);
+      System.err.println(("cannot find function " + functionTypeRef + " for " +
+      site + ", " + receiver + " in " + caller));
     }
 
     if (fun != null && declarer != null && cha.isSubclassOf(declarer, fun)) {

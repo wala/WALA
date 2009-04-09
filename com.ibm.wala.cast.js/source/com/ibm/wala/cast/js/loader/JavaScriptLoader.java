@@ -45,7 +45,6 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.strings.Atom;
 
 public class JavaScriptLoader extends CAstAbstractLoader {
@@ -237,7 +236,7 @@ public class JavaScriptLoader extends CAstAbstractLoader {
           }
         };
 
-        Trace.println("parent " + result[i].getName() + " is " + result[i].getMethod());
+        System.err.println(("parent " + result[i].getName() + " is " + result[i].getMethod()));
       }
 
       return result;

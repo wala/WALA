@@ -67,7 +67,6 @@ import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.ref.ReferenceCleanser;
 
@@ -256,7 +255,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
   protected void unconditionallyAddConstraintsFromNode(CGNode node, IR ir) {
 
     if (DEBUG) {
-      Trace.println("Adding constraints for CGNode " + node);
+      System.err.println(("Adding constraints for CGNode " + node));
     }
 
     if (SSAPropagationCallGraphBuilder.PERIODIC_WIPE_SOFT_CACHES) {

@@ -26,7 +26,6 @@ import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.io.FileProvider;
@@ -66,7 +65,7 @@ public class CFGTest extends WalaTestCase {
         GraphIntegrity.check(cfg);
       } catch (UnsoundGraphException e) {
         e.printStackTrace();
-        Trace.println(ir);
+        System.err.println(ir);
         assertTrue(" failed cfg integrity check for " + methodSig, false);
       }
 
@@ -74,8 +73,8 @@ public class CFGTest extends WalaTestCase {
         GraphIntegrity.check(cfg);
       } catch (UnsoundGraphException e) {
         e.printStackTrace();
-        Trace.println(ir);
-        Trace.println(cfg);
+        System.err.println(ir);
+        System.err.println(cfg);
         assertTrue(" failed 2-exit cfg integrity check for " + methodSig, false);
       }
     } catch (Exception e) {

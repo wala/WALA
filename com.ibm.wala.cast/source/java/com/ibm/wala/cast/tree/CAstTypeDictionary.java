@@ -13,7 +13,7 @@
  */
 package com.ibm.wala.cast.tree;
 
-import java.util.*;
+import java.util.Iterator;
 
 public interface CAstTypeDictionary/*<ASTType>*/ extends Iterable {
 

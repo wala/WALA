@@ -30,7 +30,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.IteratorPlusOne;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K extends CAstRewriter.CopyKey<K>> {
 
@@ -102,7 +101,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
       newMap.map(newSource, newSource);
 
       if (DEBUG) {
-        Trace.println("\n\nlooking at " + key + ":" + CAstPrinter.print(oldSource));
+        System.err.println(("\n\nlooking at " + key + ":" + CAstPrinter.print(oldSource)));
       }
 
       if (oldSources.contains(oldSource)) {
@@ -116,7 +115,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
           CAstNode oldTarget = orig.getTarget(oldSource, label);
 
           if (DEBUG) {
-            Trace.println("old: " + label + " --> " + CAstPrinter.print(oldTarget));
+            System.err.println(("old: " + label + " --> " + CAstPrinter.print(oldTarget)));
           }
 
           Pair targetKey;
@@ -145,8 +144,8 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
           }
 
           if (DEBUG) {
-            Trace.println("mapping:old: " + CAstPrinter.print(oldSource) + "-- " + label + " --> " + CAstPrinter.print(oldTarget));
-            Trace.println("mapping:new: " + CAstPrinter.print(newSource) + "-- " + label + " --> " + CAstPrinter.print(newTarget));
+            System.err.println(("mapping:old: " + CAstPrinter.print(oldSource) + "-- " + label + " --> " + CAstPrinter.print(oldTarget)));
+            System.err.println(("mapping:new: " + CAstPrinter.print(newSource) + "-- " + label + " --> " + CAstPrinter.print(newTarget)));
           }
         }
       }
@@ -272,7 +271,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
 
   public CAstEntity rewrite(final CAstEntity root) {
 
-    Trace.println("Rewriting " + root.getName());
+    System.err.println(("Rewriting " + root.getName()));
 
     if (root.getAST() != null) {
       final Rewrite rewrite = rewrite(root.getAST(), root.getControlFlow(), root.getSourceMap(), root.getNodeTypeMap(), root

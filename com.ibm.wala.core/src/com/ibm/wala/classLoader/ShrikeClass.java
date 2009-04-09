@@ -34,7 +34,6 @@ import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.types.generics.ClassSignature;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.shrike.ShrikeClassReaderHandle;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.ImmutableByteArray;
@@ -161,7 +160,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     for (int i = 0; i < methodCount; i++) {
       ShrikeCTMethod m = new ShrikeCTMethod(this, i);
       if (DEBUG) {
-        Trace.println("Register method " + m + " for class " + this);
+        System.err.println(("Register method " + m + " for class " + this));
       }
       result[i] = m;
     }

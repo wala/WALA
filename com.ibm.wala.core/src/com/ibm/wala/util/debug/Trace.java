@@ -15,18 +15,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * Simple utility for printing trace messages.
  * 
- * TODO: should this be nuked and replaced with some java.util.Logging
- * functions?
- * 
- * @author sfink
- * 
  */
+@Deprecated
 public class Trace {
 
   private static final String TRACEFILE_KEY = "com.ibm.wala.tracefile";
@@ -87,47 +81,29 @@ public class Trace {
   }
 
   /**
-   * Method println.
-   * 
-   * @param string
    */
   public static synchronized void println(String string) {
-    if (setTraceFile()) {
-      out.println(string);
-    }
+    System.err.println(string);
   }
 
   /**
-   * @param o
-   * @throws IllegalArgumentException  if o is null
    */
   public static synchronized void println(Object o) {
-    if (o == null) {
-      throw new IllegalArgumentException("o is null");
-    }
-    Trace.println(o.toString());
+    System.err.println(o);
   }
 
   /**
-   * @param string
    */
   public static synchronized void print(String string) {
-    if (setTraceFile()) {
-      out.print(string);
-    }
+    System.err.print(string);
   }
 
   public static synchronized void format(String format, Object ... args) {
-
-    if (setTraceFile()) {
-      out.format(format, args);
-    }
+    System.err.format(format, args);
   }
 
   public static void flush() {
-    if (setTraceFile()) {
-      out.flush();
-    }
+    System.err.flush();
   }
 
   public static PrintWriter getTraceWriter() {
@@ -149,7 +125,7 @@ public class Trace {
       throw new IllegalArgumentException("S == null");
     }
     if (substring == null || S.indexOf(substring) > -1) {
-      println(S);
+      System.err.println(S);
       return true;
     } else {
       return false;
@@ -169,30 +145,10 @@ public class Trace {
       throw new IllegalArgumentException("S == null");
     }
     if (substring == null || S.indexOf(substring) > -1) {
-      print(S);
+      System.err.print(S);
       return true;
     } else {
       return false;
-    }
-  }
-
-  /**
-   * @param string
-   * @param c
-   * @throws IllegalArgumentException  if c is null
-   */
-  public static void printCollection(String string, Collection c) {
-    if (c == null) {
-      throw new IllegalArgumentException("c is null");
-    }
-    println(string);
-    if (c.isEmpty()) {
-      println("none\n");
-    } else {
-      for (Iterator it = c.iterator(); it.hasNext();) {
-        println(it.next().toString());
-      }
-      println("\n");
     }
   }
 

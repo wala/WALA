@@ -31,7 +31,6 @@ import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
 import com.ibm.wala.ipa.slicer.thin.CISlicer;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * A {@link MemoryAccessMap} that makes use of a pre-computed
@@ -74,7 +73,7 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
   public Collection<MemoryAccess> getArrayReads(PointerKey arrayRef) {
     Collection<MemoryAccess> memAccesses = new ArrayList<MemoryAccess>();
     if (DEBUG) {
-      Trace.println("looking at reads of array ref " + arrayRef);
+      System.err.println(("looking at reads of array ref " + arrayRef));
     }
     for (InstanceKey ik : pa.getPointsToSet(arrayRef)) {
       PointerKey ack = heapModel.getPointerKeyForArrayContents(ik);
@@ -86,11 +85,11 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
   public Collection<MemoryAccess> getArrayWrites(PointerKey arrayRef) {
     Collection<MemoryAccess> memAccesses = new ArrayList<MemoryAccess>();
     if (DEBUG) {
-      Trace.println("looking at writes to array ref " + arrayRef);
+      System.err.println(("looking at writes to array ref " + arrayRef));
     }
     for (InstanceKey ik : pa.getPointsToSet(arrayRef)) {
       if (DEBUG) {
-        Trace.println("instance key " + ik + " class " + ik.getClass());
+        System.err.println(("instance key " + ik + " class " + ik.getClass()));
       }
       PointerKey ack = heapModel.getPointerKeyForArrayContents(ik);
       convertStmtsToMemoryAccess(invMod.get(ack), memAccesses);
@@ -133,7 +132,7 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
       return;
     }
     if (DEBUG) {
-      Trace.println("statements: " + stmts);
+      System.err.println(("statements: " + stmts));
     }
     for (Statement s : stmts) {
       switch (s.getKind()) {

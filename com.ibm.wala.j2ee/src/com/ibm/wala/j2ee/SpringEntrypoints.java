@@ -26,7 +26,6 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -88,7 +87,7 @@ public class SpringEntrypoints implements Iterable<Entrypoint> {
       IClass klass = (IClass) it.next();
       if (klass != null) {
         if (DEBUG) {
-          Trace.println(getClass() + " consider " + klass);
+          System.err.println((getClass() + " consider " + klass));
         }
         if (cha.lookupClass(klass.getReference()) == null) {
           continue;

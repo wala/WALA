@@ -13,12 +13,13 @@
  */
 package com.ibm.wala.cast.tree.impl;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import com.ibm.wala.cast.tree.CAstReference;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.CAstTypeDictionary;
 import com.ibm.wala.util.collections.HashMapFactory;
-
-import java.util.*;
 
 public class CAstTypeDictionaryImpl implements CAstTypeDictionary {
   protected final Map fMap = HashMapFactory.make();

@@ -58,7 +58,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.strings.Atom;
 
 public abstract class IRTests extends WalaTestCase {
@@ -169,11 +168,11 @@ public abstract class IRTests extends WalaTestCase {
       Set<CGNode> srcNodes = callGraph.getNodes(srcMethod);
 
       if (srcNodes.size() == 0) {
-        Trace.println("Unreachable/non-existent method: " + srcMethod);
+        System.err.println(("Unreachable/non-existent method: " + srcMethod));
         return;
       }
       if (srcNodes.size() > 1) {
-        Trace.println("Context-sensitive call graph?");
+        System.err.println("Context-sensitive call graph?");
       }
 
       // Assume only one node for src method
@@ -184,7 +183,7 @@ public abstract class IRTests extends WalaTestCase {
         // Assume only one node for target method
         Set<CGNode> tgtNodes = callGraph.getNodes(tgtMethod);
         if (tgtNodes.size() == 0) {
-          Trace.println("Unreachable/non-existent method: " + tgtMethod);
+          System.err.println(("Unreachable/non-existent method: " + tgtMethod));
           continue;
         }
         CGNode tgtNode = tgtNodes.iterator().next();
@@ -199,7 +198,7 @@ public abstract class IRTests extends WalaTestCase {
           }
         }
         if (!found) {
-          Trace.println("Missing edge: " + srcMethod + " -> " + tgtMethod);
+          System.err.println(("Missing edge: " + srcMethod + " -> " + tgtMethod));
         }
       }
     }
@@ -228,7 +227,7 @@ public abstract class IRTests extends WalaTestCase {
     }
 
     boolean check(IMethod m, IR ir) {
-      Trace.println("check for " + variableName + " defined at " + definingLineNumber);
+      System.err.println(("check for " + variableName + " defined at " + definingLineNumber));
       SSAInstruction[] insts = ir.getInstructions();
       for (int i = 0; i < insts.length; i++) {
         if (insts[i] != null) {
@@ -240,14 +239,14 @@ public abstract class IRTests extends WalaTestCase {
             Assertions.UNREACHABLE();
           }
           if (ln == definingLineNumber) {
-            Trace.println("  found " + insts[i] + " at " + ln);
+            System.err.println(("  found " + insts[i] + " at " + ln));
             for (int j = 0; j < insts[i].getNumberOfDefs(); j++) {
               int def = insts[i].getDef(j);
-              Trace.println("    looking at def " + j + ": " + def);
+              System.err.println(("    looking at def " + j + ": " + def));
               String[] names = ir.getLocalNames(i, def);
               if (names != null) {
                 for (String name : names) {
-                  Trace.println("      looking at name " + name);
+                  System.err.println(("      looking at name " + name));
                   if (name.equals(variableName)) {
                     return true;
                   }
@@ -288,7 +287,7 @@ public abstract class IRTests extends WalaTestCase {
       populateScope(engine, sources, libs);
 
       CallGraph callGraph = engine.buildDefaultCallGraph();
-      Trace.println(callGraph.toString());
+      System.err.println(callGraph.toString());
 
       // If we've gotten this far, IR has been produced.
       dumpIR(callGraph, assertReachable);
@@ -314,22 +313,22 @@ public abstract class IRTests extends WalaTestCase {
     for (Iterator iter = sourceLoader.iterateAllClasses(); iter.hasNext();) {
       IClass clazz = (IClass) iter.next();
 
-      Trace.println(clazz);
+      System.err.println(clazz);
       if (clazz.isInterface())
         continue;
 
       for (IMethod m : clazz.getDeclaredMethods()) {
         if (m.isAbstract()) {
-          Trace.println(m);
+          System.err.println(m);
         } else {
           Iterator nodeIter = cg.getNodes(m.getReference()).iterator();
           if (!nodeIter.hasNext()) {
-            Trace.println("Method " + m.getReference() + " not reachable?");
+            System.err.println(("Method " + m.getReference() + " not reachable?"));
             unreachable.add(m);
             continue;
           }
           CGNode node = (CGNode) nodeIter.next();
-          Trace.println(node.getIR());
+          System.err.println(node.getIR());
         }
       }
     }

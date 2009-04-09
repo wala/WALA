@@ -36,7 +36,6 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.intset.IntSetAction;
 
 public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraphBuilder {
@@ -90,14 +89,14 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
     TypeInference ti = new AstJavaTypeInference(ir, cha, false);
 
     if (DEBUG_TYPE_INFERENCE) {
-      Trace.println("IR of " + ir.getMethod());
-      Trace.println(ir);
-      Trace.println("TypeInference of " + ir.getMethod());
+      System.err.println(("IR of " + ir.getMethod()));
+      System.err.println(ir);
+      System.err.println(("TypeInference of " + ir.getMethod()));
       for (int i = 0; i <= ir.getSymbolTable().getMaxValueNumber(); i++) {
         if (ti.isUndefined(i)) {
-          Trace.println("  value " + i + " is undefined");
+          System.err.println(("  value " + i + " is undefined"));
         } else {
-          Trace.println("  value " + i + " has type " + ti.getType(i));
+          System.err.println(("  value " + i + " has type " + ti.getType(i)));
         }
       }
     }
@@ -238,7 +237,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
             else
               objKey = getPointerKeyForLocal(1);
 
-            Trace.println("class is " + klass + ", enclosing is " + enclosingClass + ", method is " + node.getMethod());
+            System.err.println(("class is " + klass + ", enclosing is " + enclosingClass + ", method is " + node.getMethod()));
 
             if (node.getMethod().isSynthetic()) {
               return;

@@ -55,7 +55,6 @@ import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ExceptionReturnValueKey;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
@@ -89,7 +88,7 @@ public class CallGraphMapUtil {
         // NOTE: clone() is cloned one level, even by RTA, so we need to handle it
         CGNode ret = toCG.getNode(orig.getMethod(), orig.getContext());
         if (ret == null) {
-          Trace.println("WEIRD can't map node " + orig);
+          System.err.println(("WEIRD can't map node " + orig));
         }
         return ret;
       } else {

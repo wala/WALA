@@ -55,7 +55,6 @@ import com.ibm.wala.shrikeBT.Util;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.shrike.ShrikeUtil;
 
 /**
@@ -888,14 +887,14 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       currentSuccessorBlock = null;
       IInstruction[] instructions = getInstructions();
       if (DEBUG) {
-        Trace.println("Entry to BB" + cfg.getNumber(basicBlock) + " " + workingState);
+        System.err.println(("Entry to BB" + cfg.getNumber(basicBlock) + " " + workingState));
       }
       for (int i = basicBlock.getFirstInstructionIndex(); i <= basicBlock.getLastInstructionIndex(); i++) {
         currentInstructionIndex = i;
         instructions[i].visit(visitor);
 
         if (DEBUG) {
-          Trace.println("After " + instructions[i] + " " + workingState);
+          System.err.println(("After " + instructions[i] + " " + workingState));
         }
       }
       return workingState;
@@ -907,13 +906,13 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       currentSuccessorBlock = to;
       IInstruction[] instructions = getInstructions();
       if (DEBUG) {
-        Trace.println("Entry to BB" + cfg.getNumber(from) + " " + workingState);
+        System.err.println(("Entry to BB" + cfg.getNumber(from) + " " + workingState));
       }
       for (int i = from.getFirstInstructionIndex(); i <= from.getLastInstructionIndex(); i++) {
         currentInstructionIndex = i;
         instructions[i].visit(edgeVisitor);
         if (DEBUG) {
-          Trace.println("After " + instructions[i] + " " + workingState);
+          System.err.println(("After " + instructions[i] + " " + workingState));
         }
       }
       return workingState;

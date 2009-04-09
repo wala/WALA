@@ -67,7 +67,6 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.intset.OrdinalSet;
 
 /**
@@ -82,7 +81,6 @@ public class CompareToZeroOneCFADriver {
    * @param args
    */
   public static void main(String[] args) {
-    WalaUtil.initializeTraceFile();
     // for (String testCase : TestInfo.ALL_TEST_CASES) {
     // runUnitTestCase(testCase);
     // }
@@ -92,8 +90,8 @@ public class CompareToZeroOneCFADriver {
 
   @SuppressWarnings("unused")
   private static void runUnitTestCase(String mainClass) throws IllegalArgumentException, CancelException, IOException {
-    Trace.println("=======---------------=============");
-    Trace.println("ANALYZING " + mainClass + "\n\n");
+    System.err.println("=======---------------=============");
+    System.err.println(("ANALYZING " + mainClass + "\n\n"));
     // describe the "scope", what is the program we're analyzing
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestInfo.SCOPE_FILE, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     Object warnings = new Object();
@@ -114,13 +112,13 @@ public class CompareToZeroOneCFADriver {
 
     // run existing pointer analysis
     doTests(scope, cha, options);
-    Trace.println("ALL FINE");
+    System.err.println("ALL FINE");
   }
 
   @SuppressWarnings("unused")
   private static void runApplication(String appJar) throws IllegalArgumentException, CancelException, IOException {
-    Trace.println("=======---------------=============");
-    Trace.println("ANALYZING " + appJar + "\n\n");
+    System.err.println("=======---------------=============");
+    System.err.println(("ANALYZING " + appJar + "\n\n"));
 
     AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
@@ -138,7 +136,7 @@ public class CompareToZeroOneCFADriver {
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
     AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
     doTests(scope, cha, options);
-    Trace.println("ALL FINE");
+    System.err.println("ALL FINE");
   }
 
   private static void doTests(AnalysisScope scope, final ClassHierarchy cha, AnalysisOptions options) throws IllegalArgumentException, CancelException {
@@ -160,14 +158,14 @@ public class CompareToZeroOneCFADriver {
       void checkPointersInMethod(CGNode node) {
         // TODO remove this hack
         if (node.getMethod().getReference().toString().indexOf("clone()Ljava/lang/Object;") != -1) {
-          Trace.println("SKIPPING " + node);
+          System.err.println(("SKIPPING " + node));
           return;
         }
         CGNode oldNode = CallGraphMapUtil.mapCGNode(node, cg, oldCG);
         if (oldNode == null) {
           return;
         }
-        Trace.println("METHOD " + node);
+        System.err.println(("METHOD " + node));
         IR ir = node.getIR();
         TypeInference ti = TypeInference.make(ir, false);
         for (int i = 1; i <= ir.getSymbolTable().getMaxValueNumber(); i++) {
@@ -178,16 +176,16 @@ public class CompareToZeroOneCFADriver {
             LocalPointerKey oldPk = (LocalPointerKey) CallGraphMapUtil.mapPointerKey(pk, cg, oldCG, heapModel);
             Collection<InstanceKey> p2set = dmp.getPointsTo(pk);
             OrdinalSet<InstanceKey> otherP2Set = pa.getPointsToSet(oldPk);
-            Trace.println("OLD POINTS-TO " + otherP2Set);
+            System.err.println(("OLD POINTS-TO " + otherP2Set));
             for (InstanceKey key : otherP2Set) {
               if (knownBug(key)) {
                 continue;
               }
               InstanceKey newKey = CallGraphMapUtil.mapInstKey(key, oldCG, cg, heapModel);
               if (!p2set.contains(newKey)) {
-                Trace.println("BADNESS");
-                Trace.println("pointer key " + pk);
-                Trace.println("missing " + newKey);
+                System.err.println("BADNESS");
+                System.err.println(("pointer key " + pk));
+                System.err.println(("missing " + newKey));
                 Assertions.UNREACHABLE();
               }
             }

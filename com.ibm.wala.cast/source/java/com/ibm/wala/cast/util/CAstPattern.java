@@ -21,7 +21,6 @@ import java.util.TreeMap;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 public class CAstPattern {
   private static boolean DEBUG_PARSER = false;
@@ -192,7 +191,7 @@ public class CAstPattern {
       if (cs[j].kind == CHILD_KIND) {
 
         if (DEBUG_MATCH) {
-          Trace.println("* matches " + CAstPrinter.print(tree.getChild(i)));
+          System.err.println(("* matches " + CAstPrinter.print(tree.getChild(i))));
         }
 
         if (s != null && cs[j].name != null) {
@@ -204,7 +203,7 @@ public class CAstPattern {
         if (tryMatchChildren(tree, i, cs, j + 1, s)) {
 
           if (DEBUG_MATCH) {
-            Trace.println("** matches nothing");
+            System.err.println("** matches nothing");
           }
 
           return true;
@@ -212,7 +211,7 @@ public class CAstPattern {
         } else {
 
           if (DEBUG_MATCH) {
-            Trace.println("** matches " + CAstPrinter.print(tree.getChild(i)));
+            System.err.println(("** matches " + CAstPrinter.print(tree.getChild(i))));
           }
 
           if (s != null && cs[j].name != null) {
@@ -230,7 +229,7 @@ public class CAstPattern {
           }
 
           if (DEBUG_MATCH) {
-            Trace.println(cs[j] + " matches " + CAstPrinter.print(tree.getChild(i)));
+            System.err.println((cs[j] + " matches " + CAstPrinter.print(tree.getChild(i))));
           }
 
           return matchChildren(tree, i + 1, cs, j, s);
@@ -238,7 +237,7 @@ public class CAstPattern {
         } else {
 
           if (DEBUG_MATCH) {
-            Trace.println(cs[j] + " matches nothing");
+            System.err.println((cs[j] + " matches nothing"));
           }
 
           return matchChildren(tree, i, cs, j + 1, s);
@@ -248,7 +247,7 @@ public class CAstPattern {
         if (tryMatchChildren(tree, i, cs, j + 1, s)) {
 
           if (DEBUG_MATCH) {
-            Trace.println(cs[j] + " matches nothing");
+            System.err.println((cs[j] + " matches nothing"));
           }
 
           return true;
@@ -257,7 +256,7 @@ public class CAstPattern {
           if (optionalPattern.tryMatch(tree.getChild(i), s)) {
 
             if (DEBUG_MATCH) {
-              Trace.println(cs[j] + " matches " + CAstPrinter.print(tree.getChild(i)));
+              System.err.println((cs[j] + " matches " + CAstPrinter.print(tree.getChild(i))));
             }
 
             return matchChildren(tree, i + 1, cs, j + 1, s);
@@ -274,7 +273,7 @@ public class CAstPattern {
 
   public boolean match(CAstNode tree, Segments s) {
     if (DEBUG_MATCH) {
-      Trace.println("matching " + this + " against " + CAstPrinter.print(tree));
+      System.err.println(("matching " + this + " against " + CAstPrinter.print(tree)));
     }
 
     if (kind == REFERENCE_PATTERN_KIND) {
@@ -292,7 +291,7 @@ public class CAstPattern {
       }
 
       if (DEBUG_MATCH) {
-        Trace.println("match failed (a)");
+        System.err.println("match failed (a)");
       }
       return false;
 
@@ -300,7 +299,7 @@ public class CAstPattern {
       if ((value == null) ? tree.getKind() != kind : (tree.getKind() != CAstNode.CONSTANT || !value.equals(tree.getValue()
           .toString()))) {
         if (DEBUG_MATCH) {
-          Trace.println("match failed (b)");
+          System.err.println("match failed (b)");
         }
 
         return false;
@@ -311,7 +310,7 @@ public class CAstPattern {
 
       if (children == null || children.length == 0) {
         if (DEBUG_MATCH && tree.getChildCount() != 0) {
-          Trace.println("match failed (c)");
+          System.err.println("match failed (c)");
         }
         return tree.getChildCount() == 0;
       } else {
@@ -396,7 +395,7 @@ public class CAstPattern {
 
     public CAstPattern parse() throws NoSuchFieldException, IllegalAccessException {
       if (DEBUG_PARSER) {
-        Trace.println("parsing " + patternString.substring(start));
+        System.err.println(("parsing " + patternString.substring(start)));
       }
 
       String internalName = parseName(true);
@@ -441,7 +440,7 @@ public class CAstPattern {
         end += 2;
 
         if (DEBUG_PARSER) {
-          Trace.println("repeated pattern: " + children[0]);
+          System.err.println(("repeated pattern: " + children[0]));
         }
 
         result = new CAstPattern(name, REPEATED_PATTERN_KIND, children);
@@ -453,7 +452,7 @@ public class CAstPattern {
         end += 2;
 
         if (DEBUG_PARSER) {
-          Trace.println("optional pattern: " + children[0]);
+          System.err.println(("optional pattern: " + children[0]));
         }
 
         result = new CAstPattern(name, OPTIONAL_PATTERN_KIND, children);
@@ -476,7 +475,7 @@ public class CAstPattern {
             start = end + 1;
 
             if (DEBUG_PARSER) {
-              Trace.println("parsing children: " + patternString.substring(end));
+              System.err.println(("parsing children: " + patternString.substring(end)));
             }
 
           } while (patternString.charAt(end) == ',');

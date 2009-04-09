@@ -32,7 +32,6 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.ImmutableByteArray;
@@ -110,7 +109,7 @@ public class LocalNamesTest extends WalaTestCase {
         if (instr != null) {
           String[] localNames = ir.getLocalNames(offsetIndex, instr.getDef());
           if (localNames != null && localNames.length > 0 && localNames[0] == null) {
-            Trace.println(ir);
+            System.err.println(ir);
             assertTrue(" getLocalNames() returned [null,...] for the def of instruction at offset " + offsetIndex + "\n\tinstr",
                 false);
           }
