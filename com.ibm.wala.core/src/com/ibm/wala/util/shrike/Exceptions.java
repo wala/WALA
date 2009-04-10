@@ -14,14 +14,9 @@ import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.util.warnings.Warning;
 
 /**
- * 
  * Utility class to help deal with analysis of exceptions.
- * 
- * @author sfink
  */
 public class Exceptions {
-
-
 
   /**
    * A warning for when we fail to resolve the type for a checkcast
