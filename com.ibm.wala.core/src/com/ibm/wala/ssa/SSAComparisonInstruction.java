@@ -10,18 +10,11 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
-import java.util.Collection;
-import java.util.Collections;
-
-import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.IComparisonInstruction;
-import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
  * SSA Instruction for comparisons between floats, longs and doubles
- * 
- * @author sfink
  */
 public class SSAComparisonInstruction extends SSAInstruction {
   private final int result;
@@ -33,8 +26,6 @@ public class SSAComparisonInstruction extends SSAInstruction {
   private final IComparisonInstruction.Operator operator;
 
   /**
-   * @param opcode
-   *            opcode from list in {@link Constants}
    */
   public SSAComparisonInstruction(IComparisonInstruction.Operator operator, int result, int val1, int val2) {
     super();
@@ -49,8 +40,8 @@ public class SSAComparisonInstruction extends SSAInstruction {
     if (uses != null && uses.length != 2) {
       throw new IllegalArgumentException("expected 2 uses or null, but got " + uses.length);
     }
-    return insts.ComparisonInstruction(operator, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val1 : uses[0],
-        uses == null ? val2 : uses[1]);
+    return insts.ComparisonInstruction(operator, defs == null || defs.length == 0 ? result : defs[0],
+        uses == null ? val1 : uses[0], uses == null ? val2 : uses[1]);
   }
 
   @Override

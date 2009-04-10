@@ -45,7 +45,6 @@ import java.util.Set;
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
-import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.demandpa.util.ArrayContents;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
@@ -455,7 +454,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
         // Account for those exceptions for which we do not actually have a
         // points-to set for
         // the pei, but just instance keys
-        Language l = ir.getMethod().getDeclaringClass().getClassLoader().getLanguage();
         Collection<TypeReference> types = pei.getExceptionTypes();
         if (types != null) {
           for (Iterator<TypeReference> it2 = types.iterator(); it2.hasNext();) {

@@ -26,10 +26,7 @@ import com.ibm.wala.util.io.FileUtil;
 import com.ibm.wala.util.ref.CacheReference;
 
 /**
- * 
  * A module which is a wrapper around a Jar file
- * 
- * @author sfink
  */
 public class JarFileModule implements Module {
 

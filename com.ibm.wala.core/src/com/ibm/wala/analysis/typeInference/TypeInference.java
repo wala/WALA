@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.dataflow.ssa.SSAInference;
 import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.eclipse.util.CancelRuntimeException;

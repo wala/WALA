@@ -10,11 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
-import java.util.Collection;
-
-import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.shrike.Exceptions;
 
 /**
  */

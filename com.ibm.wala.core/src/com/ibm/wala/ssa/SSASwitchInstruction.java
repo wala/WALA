@@ -11,10 +11,6 @@
 
 package com.ibm.wala.ssa;
 
-import java.util.Collection;
-import java.util.Collections;
-
-import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntIterator;
 

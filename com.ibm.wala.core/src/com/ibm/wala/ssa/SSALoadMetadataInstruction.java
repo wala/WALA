@@ -13,12 +13,23 @@ package com.ibm.wala.ssa;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
+/**
+ * An instruction that represents a reflective or meta-programming option,like loadClass in Java
+ * 
+ */
 public abstract class SSALoadMetadataInstruction extends SSAInstruction {
 
   private final int lval;
 
+  /**
+   * A representation of the meta-data itself. For a loadClass operation, this would be a {@link TypeReference} representing the
+   * class object being manipulated
+   */
   private final Object token;
-  
+
+  /**
+   * The type of the thing that this meta-data represents. For a loadClass instruction, entityType is java.lang.Class
+   */
   private final TypeReference entityType;
 
   protected SSALoadMetadataInstruction(int lval, TypeReference entityType, Object token) {
@@ -92,7 +103,7 @@ public abstract class SSALoadMetadataInstruction extends SSAInstruction {
   public Object getToken() {
     return token;
   }
-  
+
   public TypeReference getType() {
     return entityType;
   }

@@ -11,10 +11,6 @@
 
 package com.ibm.wala.ssa;
 
-import java.util.Collection;
-import java.util.Collections;
-
-import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 

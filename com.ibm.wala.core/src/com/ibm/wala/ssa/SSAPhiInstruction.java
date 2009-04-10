@@ -10,11 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine;
-import com.ibm.wala.types.TypeReference;
 
 /**
  * Note: if getUse(i) returns {@link AbstractIntStackMachine}.TOP (that is, -1), then that use represents an edge in the CFG which

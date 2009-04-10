@@ -10,11 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
