@@ -12,16 +12,16 @@ package com.ibm.wala.ssa;
 
 import java.util.Collection;
 
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.shrike.Exceptions;
 
 /**
  * @author sfink
  */
-public class SSANewInstruction extends SSAInstruction {
+public abstract class SSANewInstruction extends SSAInstruction {
   private final int result;
 
   private final NewSiteReference site;
@@ -35,7 +35,7 @@ public class SSANewInstruction extends SSAInstruction {
   /**
    * Create a new instruction to allocate a scalar.
    */
-  public SSANewInstruction(int result, NewSiteReference site) throws IllegalArgumentException {
+  protected SSANewInstruction(int result, NewSiteReference site) throws IllegalArgumentException {
     super();
     if (site == null) {
       throw new IllegalArgumentException("site cannot be null");
@@ -55,7 +55,7 @@ public class SSANewInstruction extends SSAInstruction {
    * @throws IllegalArgumentException if site is null
    * @throws IllegalArgumentException if params is null
    */
-  public SSANewInstruction(int result, NewSiteReference site, int[] params) {
+  protected SSANewInstruction(int result, NewSiteReference site, int[] params) {
     super();
     if (params == null) {
       throw new IllegalArgumentException("params is null");
@@ -74,11 +74,11 @@ public class SSANewInstruction extends SSAInstruction {
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (params == null) {
-      return new SSANewInstruction(defs == null ? result : defs[0], site);
+      return insts.NewInstruction(defs == null ? result : defs[0], site);
     } else {
-      return new SSANewInstruction(defs == null ? result : defs[0], site, uses == null ? params : uses);
+      return insts.NewInstruction(defs == null ? result : defs[0], site, uses == null ? params : uses);
     }
   }
 
@@ -181,11 +181,4 @@ public class SSANewInstruction extends SSAInstruction {
     return true;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
-   */
-  @Override
-  public Collection<TypeReference> getExceptionTypes() {
-    return site.getDeclaredType().isArrayType() ? Exceptions.getNewArrayExceptions() : Exceptions.getNewScalarExceptions();
-  }
-}
+ }

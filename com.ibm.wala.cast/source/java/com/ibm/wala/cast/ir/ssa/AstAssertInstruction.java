@@ -13,6 +13,7 @@ package com.ibm.wala.cast.ir.ssa;
 import java.util.Collection;
 
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
@@ -46,8 +47,8 @@ public class AstAssertInstruction extends SSAInstruction {
     return value;
   }
 
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    return new AstAssertInstruction(uses == null ? value : uses[0], fromSpecification);
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
+    return ((AstInstructionFactory)insts).AssertInstruction(uses == null ? value : uses[0], fromSpecification);
   }
 
   public String toString(SymbolTable symbolTable) {

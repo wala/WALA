@@ -21,13 +21,13 @@ import com.ibm.wala.types.TypeReference;
  */
 public class SSAGotoInstruction extends SSAInstruction {
 
-  SSAGotoInstruction() {
+  public SSAGotoInstruction() {
     super();
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    return new SSAGotoInstruction();
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
+    return insts.GotoInstruction();
   }
 
   @Override
@@ -60,11 +60,4 @@ public class SSAGotoInstruction extends SSAInstruction {
   public boolean isFallThrough() {
     return false;
   }
-
-  /*
-   * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
-   */
-  @Override
-  public Collection<TypeReference> getExceptionTypes() {
-    return Collections.emptySet();  }
 }

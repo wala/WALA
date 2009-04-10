@@ -14,6 +14,7 @@ import java.io.IOException;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -41,7 +42,7 @@ public class MultiNewArrayTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchy.make(scope);
     IClass klass = cha.lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Application, TestConstants.MULTI_DIM_MAIN));
     assertTrue(klass != null);
-    IMethod m = klass.getMethod(Selector.make("testNewMultiArray()V"));
+    IMethod m = klass.getMethod(Selector.make(Language.JAVA, "testNewMultiArray()V"));
     assertTrue(m != null);
     AnalysisCache cache = new AnalysisCache();
     IR ir = cache.getIRFactory().makeIR(m, Everywhere.EVERYWHERE, new SSAOptions());

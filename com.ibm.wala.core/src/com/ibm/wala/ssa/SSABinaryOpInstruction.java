@@ -13,13 +13,13 @@ package com.ibm.wala.ssa;
 import java.util.Collection;
 import java.util.Collections;
 
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.shrikeBT.BinaryOpInstruction;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.shrike.Exceptions;
 
-public class SSABinaryOpInstruction extends SSAInstruction {
+public abstract class SSABinaryOpInstruction extends SSAInstruction {
 
   private final int result;
 
@@ -34,7 +34,7 @@ public class SSABinaryOpInstruction extends SSAInstruction {
    */
   private final boolean mayBeInteger;
 
-  SSABinaryOpInstruction(IBinaryOpInstruction.IOperator operator, int result, int val1, int val2, boolean mayBeInteger) {
+  protected SSABinaryOpInstruction(IBinaryOpInstruction.IOperator operator, int result, int val1, int val2, boolean mayBeInteger) {
     super();
     this.result = result;
     this.val1 = val1;
@@ -47,15 +47,6 @@ public class SSABinaryOpInstruction extends SSAInstruction {
     if (val2 <= 0) {
       throw new IllegalArgumentException("illegal val2: " + val2);
     }
-  }
-
-  @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    if (uses != null && uses.length < 2) {
-      throw new IllegalArgumentException("uses.length < 2");
-    }
-    return new SSABinaryOpInstruction(operator, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val1 : uses[0],
-        uses == null ? val2 : uses[1], mayBeInteger);
   }
 
   @Override
@@ -141,16 +132,7 @@ public class SSABinaryOpInstruction extends SSAInstruction {
     return true;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
-   */
-  @Override
-  public Collection<TypeReference> getExceptionTypes() {
-    if (isPEI()) {
-      return Exceptions.getArithmeticException();
-    } else {
-      return Collections.emptySet();
-    }
+  public boolean mayBeIntegerOp() {
+    return mayBeInteger;
   }
-
 }

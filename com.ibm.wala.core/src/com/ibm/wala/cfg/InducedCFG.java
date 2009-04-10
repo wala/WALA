@@ -25,6 +25,7 @@ import com.ibm.wala.ssa.SSAConditionalBranchInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAGotoInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSAMonitorInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
@@ -472,7 +473,8 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     private void updatePiInstrs(int normalSuccNodeNumber) {
       for (int i = 0; i < pis.size(); i++) {
         SSAPiInstruction pi = pis.get(i);
-        pis.set(i, new SSAPiInstruction(pi.getDef(), pi.getVal(), getGraphNodeId(), normalSuccNodeNumber, pi.getCause()));
+        SSAInstructionFactory insts = getMethod().getDeclaringClass().getClassLoader().getInstructionFactory();
+        pis.set(i, insts.PiInstruction(pi.getDef(), pi.getVal(), getGraphNodeId(), normalSuccNodeNumber, pi.getCause()));
       }
     }
 

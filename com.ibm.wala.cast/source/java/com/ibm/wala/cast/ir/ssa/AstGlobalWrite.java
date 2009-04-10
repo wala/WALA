@@ -13,6 +13,7 @@ package com.ibm.wala.cast.ir.ssa;
 import java.util.Collection;
 
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
@@ -29,8 +30,8 @@ public class AstGlobalWrite extends SSAPutInstruction {
     super(rhs, global);
   }
 
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    return new AstGlobalWrite(getDeclaredField(), (uses==null)? getVal(): uses[0]);
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
+    return ((AstInstructionFactory)insts).GlobalWrite(getDeclaredField(), (uses==null)? getVal(): uses[0]);
   }
 
   public String toString(SymbolTable symbolTable) {

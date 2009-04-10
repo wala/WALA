@@ -12,7 +12,6 @@ import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
 import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
-import com.ibm.wala.cast.ir.ssa.NonExceptingThrowInstruction;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
@@ -46,10 +45,6 @@ public class AstModRef extends ModRef {
     
     }
     
-    public void visitNonExceptingThrow(NonExceptingThrowInstruction inst) {
-
-    }
-
     public void visitAssert(AstAssertInstruction instruction) {
 
     }    
@@ -100,10 +95,6 @@ public class AstModRef extends ModRef {
     
     }
     
-    public void visitNonExceptingThrow(NonExceptingThrowInstruction inst) {
-
-    }
-
     public void visitAssert(AstAssertInstruction instruction) {
 
     }    

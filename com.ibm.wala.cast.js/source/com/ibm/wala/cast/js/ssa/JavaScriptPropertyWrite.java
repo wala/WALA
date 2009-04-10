@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import com.ibm.wala.cast.ir.ssa.AbstractReflectivePut;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
@@ -24,8 +25,8 @@ public class JavaScriptPropertyWrite extends AbstractReflectivePut {
     super(objectRef, memberRef, value);
   }
 
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    return new JavaScriptPropertyWrite(uses == null ? getObjectRef() : uses[0], uses == null ? getMemberRef() : uses[1],
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
+    return ((JSInstructionFactory)insts).PropertyWrite(uses == null ? getObjectRef() : uses[0], uses == null ? getMemberRef() : uses[1],
         uses == null ? getValue() : uses[2]);
   }
 

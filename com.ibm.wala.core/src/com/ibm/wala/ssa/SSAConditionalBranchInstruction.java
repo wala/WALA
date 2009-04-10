@@ -30,7 +30,7 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
 
   private final TypeReference type;
 
-  SSAConditionalBranchInstruction(IConditionalBranchInstruction.IOperator operator, TypeReference type, int val1, int val2) throws IllegalArgumentException {
+  public SSAConditionalBranchInstruction(IConditionalBranchInstruction.IOperator operator, TypeReference type, int val1, int val2) throws IllegalArgumentException {
     super();
     this.operator = operator;
     this.val1 = val1;
@@ -45,11 +45,11 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) throws IllegalArgumentException {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) throws IllegalArgumentException {
     if (uses != null && uses.length < 2) {
       throw new IllegalArgumentException("(uses != null) and (uses.length < 2)");
     }
-    return new SSAConditionalBranchInstruction(operator, type, uses == null ? val1 : uses[0], uses == null ? val2 : uses[1]);
+    return insts.ConditionalBranchInstruction(operator, type, uses == null ? val1 : uses[0], uses == null ? val2 : uses[1]);
   }
 
   public IConditionalBranchInstruction.IOperator getOperator() {
@@ -117,11 +117,4 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
     return true;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
-   */
-  @Override
-  public Collection<TypeReference> getExceptionTypes() {
-    return Collections.emptySet();
-  }
-}
+ }

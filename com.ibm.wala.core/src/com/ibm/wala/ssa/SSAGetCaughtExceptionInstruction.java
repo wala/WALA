@@ -24,16 +24,16 @@ public class SSAGetCaughtExceptionInstruction extends SSAInstruction {
 
   private final int bbNumber;
 
-  SSAGetCaughtExceptionInstruction(int bbNumber, int exceptionValueNumber) {
+  public SSAGetCaughtExceptionInstruction(int bbNumber, int exceptionValueNumber) {
     super();
     this.exceptionValueNumber = exceptionValueNumber;
     this.bbNumber = bbNumber;
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    // TODO: check that this is the intended behavior. Julian?
-    return new SSAGetCaughtExceptionInstruction(bbNumber, defs == null || defs.length == 0 ? exceptionValueNumber : defs[0]);
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
+    assert defs == null || defs.length == 1;
+    return insts.GetCaughtExceptionInstruction(bbNumber, defs == null ? exceptionValueNumber : defs[0]);
   }
 
   @Override
@@ -113,11 +113,4 @@ public class SSAGetCaughtExceptionInstruction extends SSAInstruction {
     return true;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
-   */
-  @Override
-  public Collection<TypeReference> getExceptionTypes() {
-    return null;
-  }
 }

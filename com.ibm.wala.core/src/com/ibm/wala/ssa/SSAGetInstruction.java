@@ -18,25 +18,25 @@ import com.ibm.wala.util.debug.Assertions;
  * @author sfink
  * 
  */
-public class SSAGetInstruction extends SSAFieldAccessInstruction {
+public abstract class SSAGetInstruction extends SSAFieldAccessInstruction {
   private final int result;
 
-  public SSAGetInstruction(int result, int ref, FieldReference field) {
+  protected SSAGetInstruction(int result, int ref, FieldReference field) {
     super(field, ref);
     this.result = result;
   }
 
-  public SSAGetInstruction(int result, FieldReference field) {
+  protected SSAGetInstruction(int result, FieldReference field) {
     super(field, -1);
     this.result = result;
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (isStatic())
-      return new SSAGetInstruction(defs == null || defs.length == 0 ? result : defs[0], getDeclaredField());
+      return insts.GetInstruction(defs == null || defs.length == 0 ? result : defs[0], getDeclaredField());
     else
-      return new SSAGetInstruction(defs == null || defs.length == 0 ? result : defs[0], uses == null ? getRef() : uses[0],
+      return insts.GetInstruction(defs == null || defs.length == 0 ? result : defs[0], uses == null ? getRef() : uses[0],
           getDeclaredField());
   }
 

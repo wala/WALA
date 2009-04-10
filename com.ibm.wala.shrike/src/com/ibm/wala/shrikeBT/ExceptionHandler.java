@@ -33,6 +33,7 @@ package com.ibm.wala.shrikeBT;
  * </pre>
  */
 final public class ExceptionHandler {
+    
   int handler;
 
   final String catchClass;

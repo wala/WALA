@@ -13,6 +13,7 @@ package com.ibm.wala.cast.ir.ssa;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 
 /**
  *  This abstract instruction extends the abstract lexical invoke with
@@ -56,9 +57,9 @@ public abstract class FixedParametersLexicalInvokeInstruction
     this.params = params;
   }
 
-  protected abstract SSAInstruction copyInstruction(int result[], int[] params, int exception, Access[] lexicalReads, Access[] lexicalWrites);
+  protected abstract SSAInstruction copyInstruction(SSAInstructionFactory insts, int result[], int[] params, int exception, Access[] lexicalReads, Access[] lexicalWrites);
 
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     int newParams[] = params;
     Access[] reads = lexicalReads;
 
@@ -100,7 +101,7 @@ public abstract class FixedParametersLexicalInvokeInstruction
       }
     }
 
-    return copyInstruction(newLvals, newParams, newExp, reads, writes);
+    return copyInstruction(insts, newLvals, newParams, newExp, reads, writes);
   }
 
   public int getNumberOfParameters() {

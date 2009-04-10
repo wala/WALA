@@ -25,4 +25,9 @@ public interface IBinaryOpInstruction extends IInstruction {
       return super.toString().toLowerCase();
     }
   }
+  
+  public boolean throwsExceptionOnOverflow();
+  
+  public boolean isUnsigned();
+  
 }

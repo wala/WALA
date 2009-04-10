@@ -12,6 +12,7 @@ package com.ibm.wala.cast.ir.ssa;
 
 
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.debug.Assertions;
@@ -43,8 +44,8 @@ public class AssignInstruction extends SSAUnaryOpInstruction {
   /*
    * @see com.ibm.wala.ssa.SSAInstruction#copyForSSA(int[], int[])
    */
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    return new AssignInstruction(defs == null ? getDef(0) : defs[0], uses == null ? getUse(0) : uses[0]);
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
+    return ((AstInstructionFactory)insts).AssignInstruction(defs == null ? getDef(0) : defs[0], uses == null ? getUse(0) : uses[0]);
   }
 
   /*

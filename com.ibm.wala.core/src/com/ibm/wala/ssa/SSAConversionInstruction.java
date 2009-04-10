@@ -20,7 +20,7 @@ import com.ibm.wala.util.debug.Assertions;
  * @author Julian Dolby
  * 
  */
-public class SSAConversionInstruction extends SSAInstruction {
+public abstract class SSAConversionInstruction extends SSAInstruction {
   private final int result;
 
   private final int val;
@@ -29,21 +29,12 @@ public class SSAConversionInstruction extends SSAInstruction {
 
   private final TypeReference toType;
 
-  SSAConversionInstruction(int result, int val, TypeReference fromType, TypeReference toType) {
+  protected SSAConversionInstruction(int result, int val, TypeReference fromType, TypeReference toType) {
     super();
     this.result = result;
     this.val = val;
     this.fromType = fromType;
     this.toType = toType;
-  }
-
-  @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) throws IllegalArgumentException {
-    if (uses != null && uses.length == 0) {
-      throw new IllegalArgumentException("(uses != null) and (uses.length == 0)");
-    }
-    return new SSAConversionInstruction(defs == null || defs.length == 0 ? result : defs[0], uses == null ? val : uses[0],
-        fromType, toType);
   }
 
   @Override
@@ -123,13 +114,5 @@ public class SSAConversionInstruction extends SSAInstruction {
   @Override
   public boolean isFallThrough() {
     return true;
-  }
-
-  /*
-   * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
-   */
-  @Override
-  public Collection<TypeReference> getExceptionTypes() {
-    return Collections.emptySet();
   }
 }

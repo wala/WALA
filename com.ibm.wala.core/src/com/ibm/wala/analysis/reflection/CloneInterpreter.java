@@ -23,6 +23,7 @@ import com.ibm.wala.classLoader.CodeScanner;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
@@ -37,6 +38,7 @@ import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAOptions;
@@ -101,6 +103,8 @@ public class CloneInterpreter implements SSAContextInterpreter {
    */
   final private Map<TypeReference, IR> IRCache = HashMapFactory.make();
 
+  private final SSAInstructionFactory insts = Language.JAVA.instructionFactory();
+  
   public IR getIR(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -168,12 +172,12 @@ public class CloneInterpreter implements SSAContextInterpreter {
     SSANewInstruction N = null;
     if (klass.isArrayClass()) {
       int length = nextLocal++;
-      statements.add(new SSAArrayLengthInstruction(length, 1));
+      statements.add(insts.ArrayLengthInstruction(length, 1));
       int[] sizes = new int[klass.getReference().getDimensionality()];
       Arrays.fill(sizes,length);
-      N = new SSANewInstruction(retValue, ref, sizes);
+      N = insts.NewInstruction(retValue, ref, sizes);
     } else {
-      N = new SSANewInstruction(retValue, ref);
+      N = insts.NewInstruction(retValue, ref);
     }
     statements.add(N);
 
@@ -184,7 +188,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
       int[] params = new int[2];
       params[0] = 1;
       params[1] = retValue;
-      SSAInvokeInstruction S = new SSAInvokeInstruction(params, exceptionValue, ARRAYCOPY_SITE);
+      SSAInvokeInstruction S = insts.InvokeInstruction(params, exceptionValue, ARRAYCOPY_SITE);
       statements.add(S);
     } else {
       // copy the fields over, one by one.
@@ -194,9 +198,9 @@ public class CloneInterpreter implements SSAContextInterpreter {
         for (Iterator<IField> it = klass.getDeclaredInstanceFields().iterator(); it.hasNext();) {
           IField f = it.next();
           int tempValue = nextLocal++;
-          SSAGetInstruction G = new SSAGetInstruction(tempValue, 1, f.getReference());
+          SSAGetInstruction G = insts.GetInstruction(tempValue, 1, f.getReference());
           statements.add(G);
-          SSAPutInstruction P = new SSAPutInstruction(retValue, tempValue, f.getReference());
+          SSAPutInstruction P = insts.PutInstruction(retValue, tempValue, f.getReference());
           statements.add(P);
         }
         try {
@@ -208,7 +212,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
 
     }
 
-    SSAReturnInstruction R = new SSAReturnInstruction(retValue, false);
+    SSAReturnInstruction R = insts.ReturnInstruction(retValue, false);
     statements.add(R);
 
     SSAInstruction[] result = new SSAInstruction[statements.size()];
@@ -252,7 +256,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
 
   public Set getCaughtExceptions(CGNode node) {
     SSAInstruction[] statements = getIR(node).getInstructions();
-    return CodeScanner.getCaughtExceptions(statements);
+    return CodeScanner.getCaughtExceptions(node.getMethod().getDeclaringClass().getClassLoader().getLanguage(), statements);
   }
 
   public boolean hasObjectArrayLoad(CGNode node) {

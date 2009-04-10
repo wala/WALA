@@ -14,7 +14,6 @@ import com.ibm.wala.cast.ipa.callgraph.AstCallGraph;
 import com.ibm.wala.cast.js.cfg.JSInducedCFG;
 import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
-import com.ibm.wala.cast.js.ssa.JavaScriptNewInstruction;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -55,7 +54,7 @@ public class JSCallGraph extends AstCallGraph {
       if (cha.isSubclassOf(cha.lookupClass(T), cha.lookupClass(JavaScriptTypes.Root))) {
         int instance = nextLocal++;
         NewSiteReference ref = NewSiteReference.make(statements.size(), T);
-        SSANewInstruction result = new JavaScriptNewInstruction(instance, ref);
+        SSANewInstruction result = getDeclaringClass().getClassLoader().getInstructionFactory().NewInstruction(instance, ref);
         statements.add(result);
         return result;
       } else {
@@ -71,6 +70,11 @@ public class JSCallGraph extends AstCallGraph {
 
       return s;
     }
+  }
+
+  @Override
+  protected CGNode makeFakeWorldClinitNode() {
+    return null;
   }
 
   protected CGNode makeFakeRootNode() throws CancelException {

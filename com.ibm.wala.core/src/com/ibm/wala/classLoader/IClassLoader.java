@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.strings.Atom;
@@ -62,6 +63,8 @@ public interface IClassLoader {
    */
   Language getLanguage();
 
+  SSAInstructionFactory getInstructionFactory();
+  
   public abstract int getNumberOfMethods();
 
   /**

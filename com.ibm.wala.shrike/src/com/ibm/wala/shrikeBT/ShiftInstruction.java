@@ -93,4 +93,8 @@ public final class ShiftInstruction extends Instruction implements IShiftInstruc
   public boolean isPEI() {
     return false;
   }
+
+  public boolean isUnsigned() {
+    return false;
+  }
 }

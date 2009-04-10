@@ -30,6 +30,7 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
@@ -190,6 +191,8 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
      */
     protected final ArrayList<SSAInstruction> allInstructions = new ArrayList<SSAInstruction>();
 
+    private final SSAInstructionFactory insts = declaringClass.getClassLoader().getInstructionFactory();
+    
     public SpecializedMethod(MethodReference method, IClass declaringClass, boolean isStatic, boolean isFactory) {
       super(method, declaringClass, isStatic, isFactory);
     }
@@ -234,15 +237,15 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
         int dim = t.getDimensionality();
         int[] extents = new int[dim];
         Arrays.fill(extents, 1);
-        SSANewInstruction a = new SSANewInstruction(alloc, ref, extents);
+        SSANewInstruction a = insts.NewInstruction(alloc, ref, extents);
         addInstruction(t, a, true);
       } else {
-        SSANewInstruction a = new SSANewInstruction(alloc, ref);
+        SSANewInstruction a = insts.NewInstruction(alloc, ref);
         addInstruction(t, a, true);
         addCtorInvokeInstruction(t, alloc);
       }
 
-      SSAReturnInstruction r = new SSAReturnInstruction(alloc, false);
+      SSAReturnInstruction r = insts.ReturnInstruction(alloc, false);
       addInstruction(t, r, false);
       return alloc;
     }
@@ -256,7 +259,7 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
       int[] params = new int[1];
       params[0] = alloc;
       int exc = getExceptionsForType(t);
-      SSAInvokeInstruction s = new SSAInvokeInstruction(params, exc, site);
+      SSAInvokeInstruction s = insts.InvokeInstruction(params, exc, site);
       calls.add(s);
       allInstructions.add(s);
     }

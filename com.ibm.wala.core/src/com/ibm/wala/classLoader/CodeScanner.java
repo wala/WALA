@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.ibm.wala.cfg.IBytecodeMethod;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
@@ -53,7 +54,7 @@ public class CodeScanner {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getCallSites(sm.getStatements(SSAOptions.defaultOptions()));
     } else {
-      return getCallSitesFromShrikeBT((ShrikeCTMethod) m);
+      return getCallSitesFromShrikeBT((IBytecodeMethod) m);
     }
   }
 
@@ -152,7 +153,7 @@ public class CodeScanner {
     }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
-      return getCaughtExceptions(sm.getStatements(SSAOptions.defaultOptions()));
+      return getCaughtExceptions(m.getDeclaringClass().getClassLoader().getLanguage(), sm.getStatements(SSAOptions.defaultOptions()));
     } else {
       return getShrikeBTCaughtExceptions((ShrikeCTMethod) m);
     }
@@ -195,7 +196,7 @@ public class CodeScanner {
     return false;
   }
 
-  private static Collection<CallSiteReference> getCallSitesFromShrikeBT(ShrikeCTMethod M) throws InvalidClassFileException {
+  private static Collection<CallSiteReference> getCallSitesFromShrikeBT(IBytecodeMethod M) throws InvalidClassFileException {
     return M.getCallSites();
   }
 
@@ -249,7 +250,7 @@ public class CodeScanner {
    * @return Set <TypeReference>
    * @throws IllegalArgumentException if statements == null
    */
-  public static Set<TypeReference> getCaughtExceptions(SSAInstruction[] statements) throws IllegalArgumentException {
+  public static Set<TypeReference> getCaughtExceptions(final Language l, SSAInstruction[] statements) throws IllegalArgumentException {
     if (statements == null) {
       throw new IllegalArgumentException("statements == null");
     }

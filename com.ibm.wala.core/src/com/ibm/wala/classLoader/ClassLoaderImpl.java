@@ -24,6 +24,7 @@ import java.util.TreeSet;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.HashCodeComparator;
@@ -459,5 +460,9 @@ public class ClassLoaderImpl implements IClassLoader {
       loadedClasses.remove(klass.getName());
       sourceMap.remove(klass.getName());
     }
+  }
+
+  public SSAInstructionFactory getInstructionFactory() {
+    return getLanguage().instructionFactory();
   }
 }

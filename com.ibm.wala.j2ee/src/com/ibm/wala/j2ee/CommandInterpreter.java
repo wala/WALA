@@ -27,6 +27,7 @@ import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SyntheticMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -41,6 +42,7 @@ import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.Descriptor;
@@ -190,13 +192,15 @@ public class CommandInterpreter implements SSAContextInterpreter {
       if (DEBUG) {
         System.err.println(("addStatementsForConcreteType: " + T));
       }
+      SSAInstructionFactory insts = Language.JAVA.instructionFactory();
+      
       MethodReference performExecute = MethodReference.findOrCreate(T, PerformExecuteAtom, PerformExecuteDesc);
       CallSiteReference site = CallSiteReference.make(calls.size(), performExecute, IInvokeInstruction.Dispatch.VIRTUAL);
       int[] params = new int[1];
       // value number 1 is the receiver.
       params[0] = 1;
       int exc = nextLocal++;
-      SSAInvokeInstruction s = new SSAInvokeInstruction(params, exc, site);
+      SSAInvokeInstruction s = insts.InvokeInstruction(params, exc, site);
       calls.add(s);
     }
 

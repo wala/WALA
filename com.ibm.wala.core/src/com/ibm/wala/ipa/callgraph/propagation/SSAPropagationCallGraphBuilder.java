@@ -26,6 +26,7 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
@@ -57,7 +58,7 @@ import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstanceofInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
-import com.ibm.wala.ssa.SSALoadClassInstruction;
+import com.ibm.wala.ssa.SSALoadMetadataInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
@@ -391,7 +392,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       // Account for those exceptions for which we do not actually have a
       // points-to set for
       // the pei, but just instance keys
-      Collection<TypeReference> types = pei.getExceptionTypes();
+       Collection<TypeReference> types = pei.getExceptionTypes();
       if (types != null) {
         for (Iterator<TypeReference> it2 = types.iterator(); it2.hasNext();) {
           TypeReference type = it2.next();
@@ -1354,10 +1355,11 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
 
     @Override
-    public void visitLoadClass(SSALoadClassInstruction instruction) {
+    public void visitLoadMetadata(SSALoadMetadataInstruction instruction) {
       PointerKey def = getPointerKeyForLocal(instruction.getDef());
-      InstanceKey iKey = getInstanceKeyForClassObject(instruction.getLoadedClass());
-      IClass klass = getClassHierarchy().lookupClass(instruction.getLoadedClass());
+      assert instruction.getType() == TypeReference.JavaLangClass;
+      InstanceKey iKey = getInstanceKeyForClassObject((TypeReference)instruction.getToken());
+      IClass klass = getClassHierarchy().lookupClass((TypeReference)instruction.getToken());
       if (klass != null) {
         processClassInitializer(klass);
       }

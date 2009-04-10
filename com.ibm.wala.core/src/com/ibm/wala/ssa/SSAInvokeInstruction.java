@@ -14,16 +14,16 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.shrike.Exceptions;
 
 /**
  * @author sfink
  * 
  */
-public class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
+public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
 
   private final int result;
 
@@ -34,7 +34,7 @@ public class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
    */
   private final int[] params;
 
-  public SSAInvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
+  protected SSAInvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
     super(exception, site);
     this.result = result;
     this.params = params;
@@ -46,15 +46,15 @@ public class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
   /**
    * Constructor InvokeInstruction. This case for void return values
    */
-  public SSAInvokeInstruction(int[] params, int exception, CallSiteReference site) {
+  protected SSAInvokeInstruction(int[] params, int exception, CallSiteReference site) {
     this(-1, params, exception, site);
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     // result == -1 for void-returning methods, which are the only calls
     // that have a single value def.
-    return new SSAInvokeInstruction(defs == null || result == -1 ? result : defs[0], uses == null ? params : uses,
+    return insts.InvokeInstruction(defs == null || result == -1 ? result : defs[0], uses == null ? params : uses,
         defs == null ? exception : defs[result == -1 ? 0 : 1], site);
   }
 
@@ -151,9 +151,4 @@ public class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
     return (site.hashCode() * 7529) + (exception * 9823); 
   }
 
-  @Override
-  public Collection<TypeReference> getExceptionTypes() {
-    Collection<TypeReference> empty = Collections.emptySet();
-    return isStatic() ? empty : Exceptions.getNullPointerException();
-  }
 }

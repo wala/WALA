@@ -12,6 +12,7 @@ package com.ibm.wala.core.tests.ir;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -49,7 +50,7 @@ public class CFGTest extends WalaTestCase {
 
       ClassHierarchy cha = ClassHierarchy.make(scope);
 
-      MethodReference mr = StringStuff.makeMethodReference(methodSig);
+      MethodReference mr = StringStuff.makeMethodReference(Language.JAVA, methodSig);
 
       IMethod m = cha.resolveMethod(mr);
       if (m == null) {

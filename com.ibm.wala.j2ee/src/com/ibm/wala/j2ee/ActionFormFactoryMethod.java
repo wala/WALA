@@ -16,6 +16,7 @@ import java.util.Collections;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.SyntheticClass;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -53,7 +54,7 @@ public class ActionFormFactoryMethod extends SummarizedMethod {
   }
 
   private static MethodSummary makeNoOpFactorySummary() {
-    MethodSummary noOpSummary = BypassMethodTargetSelector.generateStandardNoOp(ref, true);
+    MethodSummary noOpSummary = BypassMethodTargetSelector.generateStandardNoOp(Language.JAVA, ref, true);
     noOpSummary.setFactory(true);
     return noOpSummary;
   }

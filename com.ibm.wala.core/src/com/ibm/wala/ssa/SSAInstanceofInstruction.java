@@ -27,7 +27,7 @@ public class SSAInstanceofInstruction extends SSAInstruction {
 
   private final TypeReference checkedType;
 
-  SSAInstanceofInstruction(int result, int ref, TypeReference checkedType) {
+  public SSAInstanceofInstruction(int result, int ref, TypeReference checkedType) {
     super();
     this.result = result;
     this.ref = ref;
@@ -35,14 +35,14 @@ public class SSAInstanceofInstruction extends SSAInstruction {
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (defs != null && defs.length == 0) {
       throw new IllegalArgumentException("defs.length == 0");
     }
     if (uses != null && uses.length == 0) {
       throw new IllegalArgumentException("uses.length == 0");
     }
-    return new SSAInstanceofInstruction(defs == null || defs.length == 0 ? result : defs[0], uses == null ? ref : uses[0],
+    return insts.InstanceofInstruction(defs == null || defs.length == 0 ? result : defs[0], uses == null ? ref : uses[0],
         checkedType);
   }
 
@@ -120,15 +120,7 @@ public class SSAInstanceofInstruction extends SSAInstruction {
     return true;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
-   */
-  @Override
-  public Collection<TypeReference> getExceptionTypes() {
-    return Collections.emptySet();
-  }
-
-  public int getRef() {
+   public int getRef() {
     return ref;
   }
 }

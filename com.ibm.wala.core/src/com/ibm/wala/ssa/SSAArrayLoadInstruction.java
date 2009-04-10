@@ -12,29 +12,29 @@ package com.ibm.wala.ssa;
 
 import java.util.Collection;
 
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.shrike.Exceptions;
 
 /**
  * SSA instruction representing an array load.
  */
-public class SSAArrayLoadInstruction extends SSAArrayReferenceInstruction {
+public abstract class SSAArrayLoadInstruction extends SSAArrayReferenceInstruction {
   private final int result;
 
-  public SSAArrayLoadInstruction(int result, int arrayref, int index, TypeReference elementType) {
+  protected SSAArrayLoadInstruction(int result, int arrayref, int index, TypeReference elementType) {
     super(arrayref, index, elementType);
     this.result = result;
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) throws IllegalArgumentException {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) throws IllegalArgumentException {
     if (defs != null && defs.length == 0) {
       throw new IllegalArgumentException("defs.length == 0");
     }
     if (uses != null && uses.length < 2) {
       throw new IllegalArgumentException("uses.length < 2");
     }
-    return new SSAArrayLoadInstruction(defs == null ? result : defs[0], uses == null ? getArrayRef() : uses[0],
+    return insts.ArrayLoadInstruction(defs == null ? result : defs[0], uses == null ? getArrayRef() : uses[0],
         uses == null ? getIndex() : uses[1], getElementType());
   }
 
@@ -88,12 +88,5 @@ public class SSAArrayLoadInstruction extends SSAArrayReferenceInstruction {
     return 6311 * result ^ 2371 * getArrayRef() + getIndex();
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
-   */
-  @Override
-  public Collection<TypeReference> getExceptionTypes() {
-    return Exceptions.getArrayAccessExceptions();
-  }
 
 }

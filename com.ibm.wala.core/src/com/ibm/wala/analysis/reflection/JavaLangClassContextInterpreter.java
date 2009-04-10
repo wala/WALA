@@ -31,6 +31,7 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAReturnInstruction;
@@ -270,12 +271,13 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     int nextLocal = ref.getNumberOfParameters() + 2;
     int retValue = nextLocal++;
     IClass cls = context.getType().getType();
+    SSAInstructionFactory insts = context.getType().getType().getClassLoader().getInstructionFactory();
     if (cls != null) {
       TypeReference arrType = ref.getReturnType();
       NewSiteReference site = new NewSiteReference(retValue, arrType);
       int sizeVn = nextLocal++;
       constants.put(sizeVn, new ConstantValue(returnValues.size()));
-      SSANewInstruction allocArr = new SSANewInstruction(retValue, site, new int[] { sizeVn });
+      SSANewInstruction allocArr = insts.NewInstruction(retValue, site, new int[] { sizeVn });
       statements.add(allocArr);
 
       int i = 0;
@@ -285,15 +287,15 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
         int index = i++;
         int indexVn = nextLocal++;
         constants.put(indexVn, new ConstantValue(index));
-        SSAArrayStoreInstruction store = new SSAArrayStoreInstruction(retValue, indexVn, c,
+        SSAArrayStoreInstruction store = insts.ArrayStoreInstruction(retValue, indexVn, c,
             TypeReference.JavaLangReflectConstructor);
         statements.add(store);
       }
-      SSAReturnInstruction R = new SSAReturnInstruction(retValue, false);
+      SSAReturnInstruction R = insts.ReturnInstruction(retValue, false);
       statements.add(R);
     } else {
       // SJF: This is incorrect. TODO: fix and enable.
-      // SSAThrowInstruction t = new SSAThrowInstruction(retValue);
+      // SSAThrowInstruction t = insts.ThrowInstruction(retValue);
       // statements.add(t);
     }
     SSAInstruction[] result = new SSAInstruction[statements.size()];
@@ -316,16 +318,17 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     ArrayList<SSAInstruction> statements = new ArrayList<SSAInstruction>();
     int nextLocal = ref.getNumberOfParameters() + 2;
     IClass cls = context.getType().getType();
+    SSAInstructionFactory insts = context.getType().getType().getClassLoader().getInstructionFactory();
     if (cls != null) {
       for (IMethod m : returnValues) {
         int c = nextLocal++;
         constants.put(c, new ConstantValue(m));
-        SSAReturnInstruction R = new SSAReturnInstruction(c, false);
+        SSAReturnInstruction R = insts.ReturnInstruction(c, false);
         statements.add(R);
       }
     } else {
       // SJF: This is incorrect. TODO: fix and enable.
-      // SSAThrowInstruction t = new SSAThrowInstruction(retValue);
+      // SSAThrowInstruction t = insts.ThrowInstruction(retValue);
       // statements.add(t);
     }
     SSAInstruction[] result = new SSAInstruction[statements.size()];

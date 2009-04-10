@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
@@ -18,7 +19,7 @@ public class AstIsDefinedInstruction extends SSAInstruction {
 
   private final int lval;
 
-  private AstIsDefinedInstruction(int lval, int rval, int fieldVal, FieldReference fieldRef) {
+  public AstIsDefinedInstruction(int lval, int rval, int fieldVal, FieldReference fieldRef) {
     this.lval = lval;
     this.rval = rval;
     this.fieldVal = fieldVal;
@@ -46,12 +47,12 @@ public class AstIsDefinedInstruction extends SSAInstruction {
     this.fieldRef = null;
   }
 
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts,  int[] defs, int[] uses) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(fieldVal == -1 || fieldRef == null);
     }
 
-    return new AstIsDefinedInstruction((defs == null) ? lval : defs[0], (uses == null) ? rval : uses[0],
+    return ((AstInstructionFactory)insts).IsDefinedInstruction((defs == null) ? lval : defs[0], (uses == null) ? rval : uses[0],
         (uses == null || fieldVal == -1) ? fieldVal : uses[1], fieldRef);
   }
 

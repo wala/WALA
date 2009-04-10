@@ -69,7 +69,7 @@ import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstanceofInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
-import com.ibm.wala.ssa.SSALoadClassInstruction;
+import com.ibm.wala.ssa.SSALoadMetadataInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
@@ -461,7 +461,7 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
     }
 
     @Override
-    public void visitLoadClass(SSALoadClassInstruction instruction) {
+    public void visitLoadMetadata(SSALoadMetadataInstruction instruction) {
       Assertions.UNREACHABLE();
     }
 

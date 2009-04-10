@@ -10,7 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ipa.summaries;
 
-import com.ibm.wala.cast.js.ssa.JavaScriptNewInstruction;
+import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.summaries.MethodSummary;
@@ -25,7 +25,7 @@ public class JavaScriptSummary extends MethodSummary {
     super(ref);
     this.declaredParameters = declaredParameters;
     addStatement(
-      new JavaScriptNewInstruction(
+      JavaScriptLoader.JS.instructionFactory().NewInstruction(
         declaredParameters+1,
 	NewSiteReference.make(
           getNextProgramCounter(),

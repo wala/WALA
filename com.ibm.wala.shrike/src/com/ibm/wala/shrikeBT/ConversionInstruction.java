@@ -120,4 +120,8 @@ public final class ConversionInstruction extends Instruction implements IConvers
   public boolean isPEI() {
     return false;
   }
+
+  public boolean throwsExceptionOnOverflow() {
+    return false;
+  }
 }

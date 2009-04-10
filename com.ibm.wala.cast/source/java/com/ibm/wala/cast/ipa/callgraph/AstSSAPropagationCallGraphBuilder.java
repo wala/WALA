@@ -28,7 +28,6 @@ import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
 import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
-import com.ibm.wala.cast.ir.ssa.NonExceptingThrowInstruction;
 import com.ibm.wala.cast.ir.ssa.SSAConversion;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory.AstIR;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
@@ -155,11 +154,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
       }
 
-      public void visitNonExceptingThrow(NonExceptingThrowInstruction inst) {
-
-      }
-
-      public void visitAssert(AstAssertInstruction instruction) {
+       public void visitAssert(AstAssertInstruction instruction) {
 
       }
 
@@ -210,10 +205,6 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     }
 
     public void visitAstGlobalWrite(AstGlobalWrite instruction) {
-      bingo = true;
-    }
-
-    public void visitNonExceptingThrow(NonExceptingThrowInstruction inst) {
       bingo = true;
     }
 
@@ -286,11 +277,6 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
     public Iterator<PointerKey> getPointerKeysForReflectedFieldWrite(InstanceKey I, InstanceKey F) {
       return ((AstPointerKeyFactory) getBuilder().getPointerKeyFactory()).getPointerKeysForReflectedFieldWrite(I, F);
-    }
-
-    public void visitNonExceptingThrow(NonExceptingThrowInstruction inst) {
-      // no-op: exceptions handled elsewhere
-      // (see comment in SSAPropagationCallGraphBuilder)
     }
 
     private void visitLexical(final LexicalOperator op) {

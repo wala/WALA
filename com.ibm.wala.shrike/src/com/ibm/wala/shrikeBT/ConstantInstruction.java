@@ -14,7 +14,45 @@ package com.ibm.wala.shrikeBT;
  * A ConstantInstruction pushes some constant value onto the stack.
  */
 public abstract class ConstantInstruction extends Instruction {
-  ConstantInstruction(short opcode) {
+  
+  public static class ClassToken {
+    private final String typeName;
+
+    ClassToken(String typeName) {
+      this.typeName = typeName;
+    }
+
+    @Override
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((typeName == null) ? 0 : typeName.hashCode());
+      return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      ClassToken other = (ClassToken) obj;
+      if (typeName == null) {
+        if (other.typeName != null)
+          return false;
+      } else if (!typeName.equals(other.typeName))
+        return false;
+      return true;
+    }
+
+    public String getTypeName() {
+      return typeName;
+    }
+    
+  }
+  public ConstantInstruction(short opcode) {
     super(opcode);
   }
 
@@ -411,7 +449,7 @@ public abstract class ConstantInstruction extends Instruction {
 
     @Override
     public Object getValue() {
-      return typeName;
+      return new ClassToken(typeName);
     }
 
     @Override
@@ -442,7 +480,7 @@ public abstract class ConstantInstruction extends Instruction {
       if (typeName == null) {
         typeName = cp.getConstantPoolClassType(index);
       }
-      return typeName;
+      return new ClassToken(typeName);
     }
 
     @Override

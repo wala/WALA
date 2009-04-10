@@ -12,26 +12,27 @@ package com.ibm.wala.ssa;
 
 import java.util.Collection;
 
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.shrike.Exceptions;
 
 /**
  */
-public class SSAArrayStoreInstruction extends SSAArrayReferenceInstruction {
+public abstract class SSAArrayStoreInstruction extends SSAArrayReferenceInstruction {
 
   private final int value;
 
-  public SSAArrayStoreInstruction(int arrayref, int index, int value, TypeReference elementType) {
+  protected SSAArrayStoreInstruction(int arrayref, int index, int value, TypeReference elementType) {
     super(arrayref, index, elementType);
     this.value = value;
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (uses != null && uses.length < 3) {
       throw new IllegalArgumentException("uses.length < 3");
     }
-    return new SSAArrayStoreInstruction(uses == null ? getArrayRef() : uses[0], uses == null ? getIndex() : uses[1],
+    return insts.ArrayStoreInstruction(uses == null ? getArrayRef() : uses[0], uses == null ? getIndex() : uses[1],
         uses == null ? value : uses[2], getElementType());
   }
 
@@ -85,18 +86,6 @@ public class SSAArrayStoreInstruction extends SSAArrayReferenceInstruction {
   @Override
   public int hashCode() {
     return 6311 * value ^ 2371 * getArrayRef() + getIndex();
-  }
-
-  /*
-   * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
-   */
-  @Override
-  public Collection<TypeReference> getExceptionTypes() {
-    if (typeIsPrimitive()) {
-      return Exceptions.getArrayAccessExceptions();
-    } else {
-      return Exceptions.getAaStoreExceptions();
-    }
   }
 
 }

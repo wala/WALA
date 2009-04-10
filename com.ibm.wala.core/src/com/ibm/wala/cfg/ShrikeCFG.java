@@ -12,18 +12,24 @@ package com.ibm.wala.cfg;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.ibm.wala.classLoader.BytecodeLanguage;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.IInstruction;
+import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.ReturnInstruction;
 import com.ibm.wala.shrikeBT.ThrowInstruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.ArrayIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -273,8 +279,25 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
           goToAllHandlers = true;
         } else {
           if (hs != null && hs.length > 0) {
-            exceptionTypes = Exceptions.getExceptionTypes(getMethod().getDeclaringClass().getReference().getClassLoader(), last,
-                cha);
+            IClassLoader loader = getMethod().getDeclaringClass().getClassLoader(); 
+            BytecodeLanguage l = (BytecodeLanguage)loader.getLanguage();
+            exceptionTypes = l.getImplicitExceptionTypes(last);
+            if (last instanceof IInvokeInstruction) {
+              IInvokeInstruction call = (IInvokeInstruction)last;
+              exceptionTypes = HashSetFactory.make(exceptionTypes);
+              MethodReference target = 
+                MethodReference.findOrCreate(l, 
+                    loader.getReference(),
+                    call.getClassType(), 
+                    call.getMethodName(),
+                    call.getMethodSignature());
+              try {
+                exceptionTypes.addAll(l.inferInvokeExceptions(target, cha));
+              } catch (InvalidClassFileException e) {
+                 e.printStackTrace();
+                 Assertions.UNREACHABLE();
+              }
+            }
           }
         }
 
@@ -299,7 +322,6 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
               addExceptionalEdgeTo(b);
             } else {
               TypeReference caughtException = null;
-
               if (hs[j].getCatchClass() != null) {
                 ClassLoaderReference loader = ShrikeCFG.this.getMethod().getDeclaringClass().getReference().getClassLoader();
                 caughtException = ShrikeUtil.makeTypeReference(loader, hs[j].getCatchClass());

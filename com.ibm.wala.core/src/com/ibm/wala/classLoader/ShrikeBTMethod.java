@@ -164,7 +164,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   /**
    * @throws InvalidClassFileException
    */
-  Collection<CallSiteReference> getCallSites() throws InvalidClassFileException {
+  public Collection<CallSiteReference> getCallSites() throws InvalidClassFileException {
     Collection<CallSiteReference> empty = Collections.emptySet();
     if (isNative()) {
       return empty;
@@ -425,12 +425,13 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
 
     SimpleVisitor simpleVisitor = new SimpleVisitor(info);
 
+    BytecodeLanguage lang = (BytecodeLanguage)getDeclaringClass().getClassLoader().getLanguage();
     IInstruction[] instructions = info.decoder.getInstructions();
     for (int i = 0; i < instructions.length; i++) {
       simpleVisitor.setInstructionIndex(i);
       instructions[i].visit(simpleVisitor);
       if (instructions[i].isPEI()) {
-        Collection<TypeReference> t = Exceptions.getIndependentExceptionTypes(instructions[i]);
+        Collection<TypeReference> t = lang.getImplicitExceptionTypes(instructions[i]);
         if (t != null) {
           simpleVisitor.implicitExceptions.addAll(t);
         }

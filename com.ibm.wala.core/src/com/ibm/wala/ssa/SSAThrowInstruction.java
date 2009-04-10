@@ -12,25 +12,25 @@ package com.ibm.wala.ssa;
 
 import java.util.Collection;
 
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.shrike.Exceptions;
 
 /**
  * @author sfink
  *
  */
-public class SSAThrowInstruction extends SSAAbstractThrowInstruction {
+public abstract class SSAThrowInstruction extends SSAAbstractThrowInstruction {
 
-  public SSAThrowInstruction(int exception) {
+  protected SSAThrowInstruction(int exception) {
     super(exception);
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) throws IllegalArgumentException {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) throws IllegalArgumentException {
     if (uses != null && uses.length != 1) {
       throw new IllegalArgumentException("if non-null, uses.length must be 1");
     }
-    return new SSAThrowInstruction(uses==null? getException(): uses[0]);
+    return insts.ThrowInstruction(uses==null? getException(): uses[0]);
   }
 
   /**
@@ -39,13 +39,5 @@ public class SSAThrowInstruction extends SSAAbstractThrowInstruction {
   @Override
   public void visit(IVisitor v) throws NullPointerException {
     v.visitThrow(this);
-  }
-
-  /*
-   * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
-   */
-  @Override
-  public Collection<TypeReference> getExceptionTypes() {
-    return Exceptions.getNullPointerException();
   }
 }

@@ -94,16 +94,18 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
     Key k = new Key(fakeRoot.getMethod(), fakeRoot.getContext());
     registerNode(k, fakeRoot);
     fakeWorldClinit = makeFakeWorldClinitNode();
-    k = new Key(fakeWorldClinit.getMethod(), fakeWorldClinit.getContext());
-    registerNode(k, fakeWorldClinit);
+    if (fakeWorldClinit != null) {
+      k = new Key(fakeWorldClinit.getMethod(), fakeWorldClinit.getContext());
+      registerNode(k, fakeWorldClinit);
     
-    // add a call from fakeRoot to fakeWorldClinit
-    CallSiteReference site = CallSiteReference.make(1, fakeWorldClinit.getMethod().getReference(), IInvokeInstruction.Dispatch.STATIC);
-    // note that the result of addInvocation is a different site, with a different program counter!
-    site = ((AbstractRootMethod)fakeRoot.getMethod()).addInvocation(null, site).getCallSite();
-    fakeRoot.addTarget(site, fakeWorldClinit);
+      // add a call from fakeRoot to fakeWorldClinit
+      CallSiteReference site = CallSiteReference.make(1, fakeWorldClinit.getMethod().getReference(), IInvokeInstruction.Dispatch.STATIC);
+      // note that the result of addInvocation is a different site, with a different program counter!
+      site = ((AbstractRootMethod)fakeRoot.getMethod()).addInvocation(null, site).getCallSite();
+      fakeRoot.addTarget(site, fakeWorldClinit);
+    }
   }
-
+  
   protected abstract CGNode makeFakeRootNode() throws CancelException;
   
   protected abstract CGNode makeFakeWorldClinitNode() throws CancelException;

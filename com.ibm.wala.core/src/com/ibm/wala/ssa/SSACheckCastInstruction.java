@@ -12,15 +12,15 @@ package com.ibm.wala.ssa;
 
 import java.util.Collection;
 
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.shrike.Exceptions;
 
 /**
  * @author sfink
  * 
  */
-public class SSACheckCastInstruction extends SSAInstruction {
+public abstract class SSACheckCastInstruction extends SSAInstruction {
 
   private final int result;
 
@@ -28,7 +28,7 @@ public class SSACheckCastInstruction extends SSAInstruction {
 
   private final TypeReference declaredResultType;
 
-  SSACheckCastInstruction(int result, int val, TypeReference type) {
+  protected SSACheckCastInstruction(int result, int val, TypeReference type) {
     super();
     this.result = result;
     this.val = val;
@@ -36,14 +36,14 @@ public class SSACheckCastInstruction extends SSAInstruction {
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (defs != null && defs.length == 0) {
       throw new IllegalArgumentException("(defs != null) and (defs.length == 0)");
     }
     if (uses != null && uses.length == 0) {
       throw new IllegalArgumentException("(uses != null) and (uses.length == 0)");
     }
-    return new SSACheckCastInstruction(defs == null ? result : defs[0], uses == null ? val : uses[0], declaredResultType);
+    return insts.CheckCastInstruction(defs == null ? result : defs[0], uses == null ? val : uses[0], declaredResultType);
   }
 
   @Override
@@ -140,14 +140,6 @@ public class SSACheckCastInstruction extends SSAInstruction {
   @Override
   public boolean isFallThrough() {
     return true;
-  }
-
-  /*
-   * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
-   */
-  @Override
-  public Collection<TypeReference> getExceptionTypes() {
-    return Exceptions.getClassCastException();
   }
 
   @Override

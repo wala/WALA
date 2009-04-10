@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
@@ -15,8 +16,8 @@ public class AstEchoInstruction extends SSAInstruction {
     this.rvals = rvals;
   }
 
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    return new AstEchoInstruction(uses==null? rvals: uses);
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
+    return ((AstInstructionFactory)insts).EchoInstruction(uses==null? rvals: uses);
   }
 
   public int getNumberOfDefs() {

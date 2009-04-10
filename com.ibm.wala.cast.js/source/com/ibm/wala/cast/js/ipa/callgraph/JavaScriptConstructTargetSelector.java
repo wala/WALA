@@ -19,12 +19,10 @@ import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummarizedFunction;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummary;
 import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
+import com.ibm.wala.cast.js.ssa.JSInstructionFactory;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
-import com.ibm.wala.cast.js.ssa.JavaScriptNewInstruction;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
-import com.ibm.wala.cast.js.ssa.JavaScriptStaticPropertyRead;
-import com.ibm.wala.cast.js.ssa.JavaScriptStaticPropertyWrite;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.types.AstMethodReference;
@@ -86,43 +84,45 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   }
 
   private IMethod makeNullaryValueConstructor(IClass cls, Object value) {
+    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
     MethodReference ref = JavaScriptMethods.makeCtorReference(cls.getReference());
     JavaScriptSummary S = new JavaScriptSummary(ref, 1);
 
-    S.addStatement(new JavaScriptStaticPropertyRead(4, 1, "prototype"));
+    S.addStatement(insts.GetInstruction(4, 1, "prototype"));
     S.getNextProgramCounter();
     
-    S.addStatement(new JavaScriptNewInstruction(5, NewSiteReference.make(S.getNextProgramCounter(), cls.getReference())));
+    S.addStatement(insts.NewInstruction(5, NewSiteReference.make(S.getNextProgramCounter(), cls.getReference())));
 
-    S.addStatement(new JavaScriptStaticPropertyWrite(5, "prototype", 4));
+    S.addStatement(insts.PutInstruction(5, 4, "prototype"));
     S.getNextProgramCounter();
     
     S.addConstant(new Integer(8), new ConstantValue(value));
-    S.addStatement(new JavaScriptStaticPropertyWrite(5, "$value", 8));
+    S.addStatement(insts.PutInstruction(5, 8, "$value"));
     S.getNextProgramCounter();
     
-    S.addStatement(SSAInstructionFactory.ReturnInstruction(5, false));
+    S.addStatement(insts.ReturnInstruction(5, false));
     S.getNextProgramCounter();
     
     return new JavaScriptConstructor(ref, S, cls);
   }
 
   private IMethod makeUnaryValueConstructor(IClass cls) {
-    MethodReference ref = JavaScriptMethods.makeCtorReference(cls.getReference());
+    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
+   MethodReference ref = JavaScriptMethods.makeCtorReference(cls.getReference());
     JavaScriptSummary S = new JavaScriptSummary(ref, 2);
 
-    S.addStatement(new JavaScriptStaticPropertyRead(5, 1, "prototype"));
+    S.addStatement(insts.GetInstruction(5, 1, "prototype"));
     S.getNextProgramCounter();
     
-    S.addStatement(new JavaScriptNewInstruction(6, NewSiteReference.make(S.getNextProgramCounter(), cls.getReference())));
+    S.addStatement(insts.NewInstruction(6, NewSiteReference.make(S.getNextProgramCounter(), cls.getReference())));
 
-    S.addStatement(new JavaScriptStaticPropertyWrite(6, "prototype", 5));
+    S.addStatement(insts.PutInstruction(6, 5, "prototype"));
     S.getNextProgramCounter();
     
-    S.addStatement(new JavaScriptStaticPropertyWrite(6, "$value", 2));
+    S.addStatement(insts.PutInstruction(6, 2, "$value"));
     S.getNextProgramCounter();
     
-    S.addStatement(SSAInstructionFactory.ReturnInstruction(6, false));
+    S.addStatement(insts.ReturnInstruction(6, false));
     S.getNextProgramCounter();
     
     return new JavaScriptConstructor(ref, S, cls);
@@ -140,28 +140,30 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   }
 
   private IMethod makeNullaryObjectConstructor(IClass cls) {
+    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
     MethodReference ref = JavaScriptMethods.makeCtorReference(JavaScriptTypes.Object);
     JavaScriptSummary S = new JavaScriptSummary(ref, 1);
 
-    S.addStatement(new JavaScriptStaticPropertyRead(4, 1, "prototype"));
+    S.addStatement(insts.GetInstruction(4, 1, "prototype"));
     S.getNextProgramCounter();
     
-    S.addStatement(new JavaScriptNewInstruction(5, NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Object)));
+    S.addStatement(insts.NewInstruction(5, NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Object)));
 
-    S.addStatement(new JavaScriptStaticPropertyWrite(5, "prototype", 4));
+    S.addStatement(insts.PutInstruction(5, 4, "prototype"));
     S.getNextProgramCounter();
     
-    S.addStatement(SSAInstructionFactory.ReturnInstruction(5, false));
+    S.addStatement(insts.ReturnInstruction(5, false));
     S.getNextProgramCounter();
     
     return new JavaScriptConstructor(ref, S, cls);
   }
 
   private IMethod makeUnaryObjectConstructor(IClass cls) {
+    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
     MethodReference ref = JavaScriptMethods.makeCtorReference(JavaScriptTypes.Object);
     JavaScriptSummary S = new JavaScriptSummary(ref, 2);
 
-    S.addStatement(SSAInstructionFactory.ReturnInstruction(2, false));
+    S.addStatement(insts.ReturnInstruction(2, false));
     S.getNextProgramCounter();
     
     return new JavaScriptConstructor(ref, S, cls);
@@ -190,53 +192,55 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   }
 
   private IMethod makeArrayLengthConstructor(IClass cls) {
-    MethodReference ref = JavaScriptMethods.makeCtorReference(JavaScriptTypes.Array);
+    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
+   MethodReference ref = JavaScriptMethods.makeCtorReference(JavaScriptTypes.Array);
     JavaScriptSummary S = new JavaScriptSummary(ref, 2);
 
-    S.addStatement(new JavaScriptStaticPropertyRead(5, 1, "prototype"));
+    S.addStatement(insts.GetInstruction(5, 1, "prototype"));
     S.getNextProgramCounter();
     
-    S.addStatement(new JavaScriptNewInstruction(6, NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Array)));
+    S.addStatement(insts.NewInstruction(6, NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Array)));
 
-    S.addStatement(new JavaScriptStaticPropertyWrite(6, "prototype", 5));
+    S.addStatement(insts.PutInstruction(6, 5, "prototype"));
     S.getNextProgramCounter();
     
-    S.addStatement(new JavaScriptStaticPropertyWrite(6, "length", 2));
+    S.addStatement(insts.PutInstruction(6, 2, "length"));
     S.getNextProgramCounter();
     
-    S.addStatement(SSAInstructionFactory.ReturnInstruction(6, false));
+    S.addStatement(insts.ReturnInstruction(6, false));
     S.getNextProgramCounter();
     
     return new JavaScriptConstructor(ref, S, cls);
   }
 
   private IMethod makeArrayContentsConstructor(IClass cls, int nargs) {
+    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
     MethodReference ref = JavaScriptMethods.makeCtorReference(JavaScriptTypes.Array);
     JavaScriptSummary S = new JavaScriptSummary(ref, nargs + 1);
 
     S.addConstant(new Integer(nargs + 3), new ConstantValue("prototype"));
-    S.addStatement(new JavaScriptPropertyRead(nargs + 4, 1, nargs + 3));
+    S.addStatement(insts.PropertyRead(nargs + 4, 1, nargs + 3));
     S.getNextProgramCounter();
     
     S.addStatement(
-        new JavaScriptNewInstruction(nargs + 5, NewSiteReference.make(S.getNextProgramCounter(),
+        insts.NewInstruction(nargs + 5, NewSiteReference.make(S.getNextProgramCounter(),
             JavaScriptTypes.Array)));
 
-    S.addStatement(new JavaScriptStaticPropertyWrite(nargs + 5, "prototype", nargs + 4));
+    S.addStatement(insts.PutInstruction(nargs + 5, nargs + 4, "prototype"));
     S.getNextProgramCounter();
     
     S.addConstant(new Integer(nargs + 7), new ConstantValue(nargs));
-    S.addStatement(new JavaScriptStaticPropertyWrite(nargs + 5, "length", nargs + 7));
+    S.addStatement(insts.PutInstruction(nargs + 5, nargs + 7, "length"));
     S.getNextProgramCounter();
     
     int vn = nargs + 9;
     for (int i = 0; i < nargs; i++, vn += 2) {
       S.addConstant(new Integer(vn), new ConstantValue(i));
-      S.addStatement(new JavaScriptPropertyWrite(nargs + 5, vn, i + 1));
+      S.addStatement(insts.PropertyWrite(nargs + 5, vn, i + 1));
       S.getNextProgramCounter();
       }
 
-    S.addStatement(SSAInstructionFactory.ReturnInstruction(5, false));
+    S.addStatement(insts.ReturnInstruction(5, false));
     S.getNextProgramCounter();
     
     return new JavaScriptConstructor(ref, S, cls);
@@ -252,27 +256,29 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   }
 
   private IMethod makeNullaryStringCall(IClass cls) {
+    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
     MethodReference ref = AstMethodReference.fnReference(JavaScriptTypes.String);
     JavaScriptSummary S = new JavaScriptSummary(ref, 1);
 
     S.addConstant(new Integer(2), new ConstantValue(""));
-    S.addStatement(SSAInstructionFactory.ReturnInstruction(2, false));
+    S.addStatement(insts.ReturnInstruction(2, false));
     S.getNextProgramCounter();
     
     return new JavaScriptConstructor(ref, S, cls);
   }
 
   private IMethod makeUnaryStringCall(IClass cls) {
-    MethodReference ref = AstMethodReference.fnReference(JavaScriptTypes.String);
+    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
+   MethodReference ref = AstMethodReference.fnReference(JavaScriptTypes.String);
     JavaScriptSummary S = new JavaScriptSummary(ref, 2);
 
-    S.addStatement(new JavaScriptStaticPropertyRead(4, 2, "toString"));
+    S.addStatement(insts.GetInstruction(4, 2, "toString"));
     S.getNextProgramCounter();
     
     CallSiteReference cs = new JSCallSiteReference(S.getNextProgramCounter());
-    S.addStatement(new JavaScriptInvoke(4, 5, new int[] { 2 }, 6, cs));
+    S.addStatement(insts.Invoke(4, 5, new int[] { 2 }, 6, cs));
 
-    S.addStatement(SSAInstructionFactory.ReturnInstruction(5, false));
+    S.addStatement(insts.ReturnInstruction(5, false));
     S.getNextProgramCounter();
     
     return new JavaScriptConstructor(ref, S, cls);
@@ -290,27 +296,29 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   }
 
   private IMethod makeNullaryNumberCall(IClass cls) {
+    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
     MethodReference ref = AstMethodReference.fnReference(JavaScriptTypes.Number);
     JavaScriptSummary S = new JavaScriptSummary(ref, 1);
 
     S.addConstant(new Integer(2), new ConstantValue(0.0));
-    S.addStatement(SSAInstructionFactory.ReturnInstruction(2, false));
+    S.addStatement(insts.ReturnInstruction(2, false));
     S.getNextProgramCounter();
     
     return new JavaScriptConstructor(ref, S, cls);
   }
 
   private IMethod makeUnaryNumberCall(IClass cls) {
-    MethodReference ref = AstMethodReference.fnReference(JavaScriptTypes.Number);
+    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
+   MethodReference ref = AstMethodReference.fnReference(JavaScriptTypes.Number);
     JavaScriptSummary S = new JavaScriptSummary(ref, 2);
 
-    S.addStatement(new JavaScriptStaticPropertyRead(4, 2, "toNumber"));
+    S.addStatement(insts.GetInstruction(4, 2, "toNumber"));
     S.getNextProgramCounter();
     
     CallSiteReference cs = new JSCallSiteReference(S.getNextProgramCounter());
-    S.addStatement(new JavaScriptInvoke(4, 5, new int[] { 2 }, 6, cs));
+    S.addStatement(insts.Invoke(4, 5, new int[] { 2 }, 6, cs));
 
-    S.addStatement(SSAInstructionFactory.ReturnInstruction(5, false));
+    S.addStatement(insts.ReturnInstruction(5, false));
     S.getNextProgramCounter();
     
     return new JavaScriptConstructor(ref, S, cls);
@@ -328,30 +336,31 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   }
 
   private IMethod makeFunctionConstructor(IClass receiver, IClass cls) {
-    Pair<IClass, IClass> tableKey = Pair.make(receiver, cls);
+    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
+   Pair<IClass, IClass> tableKey = Pair.make(receiver, cls);
     if (constructors.containsKey(tableKey))
       return constructors.get(tableKey);
 
     MethodReference ref = JavaScriptMethods.makeCtorReference(receiver.getReference());
     JavaScriptSummary S = new JavaScriptSummary(ref, 1);
 
-    S.addStatement(new JavaScriptStaticPropertyRead(4, 1, "prototype"));
+    S.addStatement(insts.GetInstruction(4, 1, "prototype"));
     S.getNextProgramCounter();
     
-    S.addStatement(new JavaScriptNewInstruction(5, NewSiteReference.make(S.getNextProgramCounter(), cls.getReference())));
+    S.addStatement(insts.NewInstruction(5, NewSiteReference.make(S.getNextProgramCounter(), cls.getReference())));
 
-    S.addStatement(new JavaScriptStaticPropertyWrite(5, "prototype", 4));
+    S.addStatement(insts.PutInstruction(5, 4, "prototype"));
     S.getNextProgramCounter();
     
-    S.addStatement(new JavaScriptNewInstruction(7, NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Object)));
+    S.addStatement(insts.NewInstruction(7, NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Object)));
 
-    S.addStatement(new JavaScriptStaticPropertyWrite(5, "prototype", 7));
+    S.addStatement(insts.PutInstruction(5, 7, "prototype"));
     S.getNextProgramCounter();
     
-    S.addStatement(new JavaScriptStaticPropertyWrite(7, "constructor", 5));
+    S.addStatement(insts.PutInstruction(7, 5, "constructor"));
     S.getNextProgramCounter();
     
-    S.addStatement(SSAInstructionFactory.ReturnInstruction(5, false));
+    S.addStatement(insts.ReturnInstruction(5, false));
     S.getNextProgramCounter();
     
     if (receiver != cls)
@@ -428,22 +437,23 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   }
 
   private IMethod makeFunctionObjectConstructor(IClass cls, int nargs) {
-    Object key = Pair.make(cls, new Integer(nargs));
+    JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
+   Object key = Pair.make(cls, new Integer(nargs));
     if (constructors.containsKey(key))
       return constructors.get(key);
 
     MethodReference ref = JavaScriptMethods.makeCtorReference(cls.getReference());
     JavaScriptSummary S = new JavaScriptSummary(ref, nargs + 1);
 
-    S.addStatement(new JavaScriptStaticPropertyRead(nargs + 4, 1, "prototype"));
+    S.addStatement(insts.GetInstruction(nargs + 4, 1, "prototype"));
     S.getNextProgramCounter();
       
     S.addStatement(
-        new JavaScriptNewInstruction(nargs + 5, 
+        insts.NewInstruction(nargs + 5, 
                                      NewSiteReference.make(S.getNextProgramCounter(),
                                      JavaScriptTypes.Object)));
 
-    S.addStatement(new JavaScriptStaticPropertyWrite(nargs + 5, "prototype", nargs + 4));
+    S.addStatement(insts.PutInstruction(nargs + 5, nargs + 4, "prototype"));
     S.getNextProgramCounter();
     
     CallSiteReference cs = new JSCallSiteReference(S.getNextProgramCounter());
@@ -451,12 +461,12 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     args[0] = nargs + 5;
     for (int i = 0; i < nargs; i++)
       args[i + 1] = i + 2;
-    S.addStatement(new JavaScriptInvoke(1, nargs + 7, args, nargs + 8, cs));
+    S.addStatement(insts.Invoke(1, nargs + 7, args, nargs + 8, cs));
 
-    S.addStatement(SSAInstructionFactory.ReturnInstruction(nargs + 7, false));
+    S.addStatement(insts.ReturnInstruction(nargs + 7, false));
     S.getNextProgramCounter();
     
-    S.addStatement(SSAInstructionFactory.ReturnInstruction(nargs + 5, false));
+    S.addStatement(insts.ReturnInstruction(nargs + 5, false));
     S.getNextProgramCounter();
     
     return record(key, new JavaScriptConstructor(ref, S, cls));

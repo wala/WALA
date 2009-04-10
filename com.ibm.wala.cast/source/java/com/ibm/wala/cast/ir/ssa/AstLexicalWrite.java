@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.ir.ssa;
 
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -36,7 +37,7 @@ public class AstLexicalWrite extends AstLexicalAccess {
     super(accesses);
   }
 
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (uses == null) {
       return new AstLexicalWrite(getAccesses());
     } else {
@@ -46,7 +47,7 @@ public class AstLexicalWrite extends AstLexicalAccess {
         accesses[i] = new Access(oldAccess.variableName, oldAccess.variableDefiner, uses[i]);
       }
 
-      return new AstLexicalWrite(accesses);
+      return ((AstInstructionFactory)insts).LexicalWrite(accesses);
     }
   }
 

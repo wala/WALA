@@ -26,7 +26,8 @@ import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSALoadClassInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
+import com.ibm.wala.ssa.SSALoadMetadataInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.ssa.SSAThrowInstruction;
@@ -108,17 +109,18 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
 
 
   private SSAInstruction[] makeStatements(JavaTypeContext context) {
+    SSAInstructionFactory insts = context.getType().getType().getClassLoader().getInstructionFactory();
     ArrayList<SSAInstruction> statements = new ArrayList<SSAInstruction>();
     // vn1 is the string parameter
     int retValue = 2;
     TypeReference tr = context.getType().getTypeReference();
     if (tr != null) {
-      SSALoadClassInstruction l = new SSALoadClassInstruction(retValue, tr);
+      SSALoadMetadataInstruction l = insts.LoadMetadataInstruction(retValue, TypeReference.JavaLangClass, tr);
       statements.add(l);
-      SSAReturnInstruction R = new SSAReturnInstruction(retValue, false);
+      SSAReturnInstruction R = insts.ReturnInstruction(retValue, false);
       statements.add(R);
     } else {
-      SSAThrowInstruction t = new SSAThrowInstruction(retValue);
+      SSAThrowInstruction t = insts.ThrowInstruction(retValue);
       statements.add(t);
     }
     SSAInstruction[] result = new SSAInstruction[statements.size()];

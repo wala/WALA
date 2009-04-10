@@ -37,7 +37,7 @@ public class JavaSourceAnalysisScope extends AnalysisScope {
     setLoaderImpl(SOURCE, "com.ibm.wala.cast.java.translator.polyglot.PolyglotSourceLoaderImpl");   
   }
   
-  protected JavaSourceAnalysisScope(Collection<Language> languages) {
+  protected JavaSourceAnalysisScope(Collection<? extends Language> languages) {
     super(languages);
     initCoreForJavaSource();
     initSynthetic(SOURCE);

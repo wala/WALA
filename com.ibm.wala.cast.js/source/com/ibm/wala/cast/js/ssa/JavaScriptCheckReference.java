@@ -5,6 +5,7 @@ import java.util.Collections;
 
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 
@@ -16,8 +17,8 @@ public class JavaScriptCheckReference extends SSAInstruction {
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-     return new JavaScriptCheckReference(uses==null? ref: uses[0]);
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
+     return ((JSInstructionFactory)insts).CheckReference(uses==null? ref: uses[0]);
   }
 
   @Override

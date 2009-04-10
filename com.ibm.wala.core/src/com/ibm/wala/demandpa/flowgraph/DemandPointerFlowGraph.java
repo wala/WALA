@@ -45,6 +45,7 @@ import java.util.Set;
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.demandpa.util.ArrayContents;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
@@ -71,7 +72,7 @@ import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
-import com.ibm.wala.ssa.SSALoadClassInstruction;
+import com.ibm.wala.ssa.SSALoadMetadataInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
@@ -454,6 +455,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
         // Account for those exceptions for which we do not actually have a
         // points-to set for
         // the pei, but just instance keys
+        Language l = ir.getMethod().getDeclaringClass().getClassLoader().getLanguage();
         Collection<TypeReference> types = pei.getExceptionTypes();
         if (types != null) {
           for (Iterator<TypeReference> it2 = types.iterator(); it2.hasNext();) {
@@ -506,9 +508,10 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     }
 
     @Override
-    public void visitLoadClass(SSALoadClassInstruction instruction) {
+    public void visitLoadMetadata(SSALoadMetadataInstruction instruction) {
       PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
-      InstanceKey iKey = heapModel.getInstanceKeyForClassObject(instruction.getLoadedClass());
+      assert instruction.getType() == TypeReference.JavaLangClass;
+      InstanceKey iKey = heapModel.getInstanceKeyForClassObject((TypeReference)instruction.getToken());
 
       g.addNode(iKey);
       g.addNode(def);

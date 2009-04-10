@@ -6,4 +6,6 @@ public interface IConversionInstruction extends IInstruction {
   
   String getToType();
   
+  boolean throwsExceptionOnOverflow();
+
 }

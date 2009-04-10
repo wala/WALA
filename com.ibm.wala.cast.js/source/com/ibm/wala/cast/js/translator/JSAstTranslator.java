@@ -12,18 +12,15 @@ package com.ibm.wala.cast.js.translator;
 
 import com.ibm.wala.cast.ir.ssa.AssignInstruction;
 import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
-import com.ibm.wala.cast.ir.ssa.NonExceptingThrowInstruction;
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
+import com.ibm.wala.cast.js.ssa.JSInstructionFactory;
 import com.ibm.wala.cast.js.ssa.JavaScriptCheckReference;
 import com.ibm.wala.cast.js.ssa.JavaScriptInstanceOf;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
-import com.ibm.wala.cast.js.ssa.JavaScriptNewInstruction;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
-import com.ibm.wala.cast.js.ssa.JavaScriptStaticPropertyRead;
-import com.ibm.wala.cast.js.ssa.JavaScriptStaticPropertyWrite;
 import com.ibm.wala.cast.js.ssa.JavaScriptTypeOfInstruction;
 import com.ibm.wala.cast.js.ssa.JavaScriptWithRegion;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
@@ -80,7 +77,7 @@ public class JSAstTranslator extends AstTranslator {
 
   private void addDefinedCheck(CAstNode n, WalkContext context, int readVn) {
     context.cfg().addPreNode(n);
-    context.cfg().addInstruction(new JavaScriptCheckReference(readVn));
+    context.cfg().addInstruction(((JSInstructionFactory)insts).CheckReference(readVn));
     
     CAstNode target = context.getControlFlow().getTarget(n, JavaScriptTypes.ReferenceError);
     assert target != null;
@@ -154,7 +151,7 @@ public class JSAstTranslator extends AstTranslator {
   }
 
   protected void doThrow(WalkContext context, int exception) {
-    context.cfg().addInstruction(new NonExceptingThrowInstruction(exception));
+    context.cfg().addInstruction(insts.ThrowInstruction(exception));
   }
     
   protected void doCall(WalkContext context, CAstNode call, int result, int exception, CAstNode name, int receiver, int[] arguments) {
@@ -164,7 +161,7 @@ public class JSAstTranslator extends AstTranslator {
 	AstMethodReference.fnReference(JavaScriptTypes.CodeBody);
     
     context.cfg().addInstruction(
-      new JavaScriptInvoke(receiver, result, arguments, exception, 
+        ((JSInstructionFactory)insts).Invoke(receiver, result, arguments, exception, 
         new JSCallSiteReference(ref, context.cfg().getCurrentInstruction())));
 
     context.cfg().addPreNode(call, context.getUnwindState());
@@ -185,7 +182,7 @@ public class JSAstTranslator extends AstTranslator {
         TypeName.string2TypeName( "L" + type ));
 
     context.cfg().addInstruction(
-      new JavaScriptNewInstruction(
+      insts.NewInstruction(
         result,
 	NewSiteReference.make( 
           context.cfg().getCurrentInstruction(), 
@@ -196,7 +193,7 @@ public class JSAstTranslator extends AstTranslator {
     int nm = context.currentScope().getConstantValue("L"+composeEntityName(context, fn));
     int tmp = super.doGlobalRead(n, context, "Function");
     context.cfg().addInstruction(
-      new JavaScriptInvoke(tmp, result, new int[]{ nm }, exception,
+      ((JSInstructionFactory)insts).Invoke(tmp, result, new int[]{ nm }, exception,
         new JSCallSiteReference(
           JavaScriptMethods.ctorReference,
 	  context.cfg().getCurrentInstruction())));
@@ -214,14 +211,14 @@ public class JSAstTranslator extends AstTranslator {
     this.visit(elt, context, this);
     int x = context.currentScope().allocateTempValue();
 
-    context.cfg().addInstruction(new AssignInstruction(x, receiver));
+    context.cfg().addInstruction(((JSInstructionFactory)insts).AssignInstruction(x, receiver));
 
     if (elt.getKind()==CAstNode.CONSTANT && elt.getValue() instanceof String) {
       context.cfg().addInstruction(
-        new JavaScriptStaticPropertyRead(result, x, (String)elt.getValue()));
+        ((JSInstructionFactory)insts).GetInstruction(result, x, (String)elt.getValue()));
     } else {
       context.cfg().addInstruction(
-        new JavaScriptPropertyRead(result, x, getValue(elt) ));
+          ((JSInstructionFactory)insts).PropertyRead(result, x, getValue(elt) ));
     }
   }
     
@@ -230,10 +227,10 @@ public class JSAstTranslator extends AstTranslator {
     if (elt.getKind() == CAstNode.CONSTANT && elt.getValue() instanceof String)
     {
       context.cfg().addInstruction(
-        new JavaScriptStaticPropertyWrite(receiver, (String)elt.getValue(), rval));
+          ((JSInstructionFactory)insts).PutInstruction(receiver, rval, (String)elt.getValue()));
     } else {
       context.cfg().addInstruction(
-        new JavaScriptPropertyWrite(receiver, getValue(elt), rval));
+          ((JSInstructionFactory)insts).PropertyWrite(receiver, getValue(elt), rval));
     }
   }
 
@@ -243,7 +240,7 @@ public class JSAstTranslator extends AstTranslator {
     doNewObject(context, null, resultVal, typeName + "Object", null);
     int rval = context.currentScope().getConstantValue(typeName);
     context.cfg().addInstruction(
-      new JavaScriptStaticPropertyWrite(resultVal, "class" , rval));
+        ((JSInstructionFactory)insts).PutInstruction(resultVal, rval, "class"));
   } 
 
   protected void doPrimitive(int resultVal, WalkContext context, CAstNode primitiveCall) {
@@ -251,42 +248,42 @@ public class JSAstTranslator extends AstTranslator {
       String name = (String)primitiveCall.getChild(0).getValue();
       if (name.equals("GlobalNaN")) {
 	context.cfg().addInstruction(
-	  new AssignInstruction(
+	    ((JSInstructionFactory)insts).AssignInstruction(
 	    resultVal, 
 	    context.currentScope().getConstantValue(new Float(Float.NaN))));
       } else if (name.equals("GlobalInfinity")) {
         context.cfg().addInstruction(
-          new AssignInstruction(
+            ((JSInstructionFactory)insts).AssignInstruction(
             resultVal, 
             context.currentScope().getConstantValue(new Float(Float.POSITIVE_INFINITY))));
       } else if (name.equals("MathE")) {
         context.cfg().addInstruction(
-          new AssignInstruction(
+            ((JSInstructionFactory)insts).AssignInstruction(
             resultVal, 
             context.currentScope().getConstantValue(new Double(Math.E))));
       } else if (name.equals("MathPI")) {
         context.cfg().addInstruction(
-          new AssignInstruction(
+            ((JSInstructionFactory)insts).AssignInstruction(
             resultVal, 
             context.currentScope().getConstantValue(new Double(Math.PI))));
       } else if (name.equals("MathSQRT1_2")) {
         context.cfg().addInstruction(
-          new AssignInstruction(
+            ((JSInstructionFactory)insts).AssignInstruction(
             resultVal, 
             context.currentScope().getConstantValue(new Double(Math.sqrt(.5)))));
       } else if (name.equals("MathSQRT2")) {
         context.cfg().addInstruction(
-          new AssignInstruction(
+            ((JSInstructionFactory)insts).AssignInstruction(
             resultVal, 
             context.currentScope().getConstantValue(new Double(Math.sqrt(2)))));
       } else if (name.equals("MathLN2")) {
         context.cfg().addInstruction(
-          new AssignInstruction(
+            ((JSInstructionFactory)insts).AssignInstruction(
             resultVal, 
             context.currentScope().getConstantValue(new Double(Math.log(2)))));
       } else if (name.equals("MathLN10")) {
         context.cfg().addInstruction(
-          new AssignInstruction(
+            ((JSInstructionFactory)insts).AssignInstruction(
             resultVal, 
             context.currentScope().getConstantValue(new Double(Math.log(10)))));
       } else if (name.equals("NewObject")) {
@@ -312,7 +309,7 @@ public class JSAstTranslator extends AstTranslator {
 
       } else {
 	context.cfg().addInstruction(
-          new AssignInstruction(
+	    ((JSInstructionFactory)insts).AssignInstruction(
             resultVal, 
             context.currentScope().getConstantValue( null )));
       }
@@ -336,12 +333,12 @@ public class JSAstTranslator extends AstTranslator {
 	  JavaScriptTypes.Root);
     
       context.cfg()
-	.addInstruction(new AstIsDefinedInstruction(result, ref, fieldRef));
+	.addInstruction(((JSInstructionFactory)insts).IsDefinedInstruction(result, ref, fieldRef));
 
     } else {
 
       context.cfg()
-        .addInstruction(new AstIsDefinedInstruction(result, ref, getValue(f)));
+        .addInstruction(((JSInstructionFactory)insts).IsDefinedInstruction(result, ref, getValue(f)));
     }
   }
 
@@ -372,7 +369,7 @@ public class JSAstTranslator extends AstTranslator {
     CAstSymbol args = new CAstSymbolImpl("arguments");
     context.currentScope().declare(args, tempVal);
     context.cfg().addInstruction(
-      new JavaScriptStaticPropertyWrite(1, "arguments", tempVal));
+        ((JSInstructionFactory)insts).PutInstruction(1, tempVal, "arguments"));
   }
 
   protected boolean doVisit(CAstNode n, Context cntxt, CAstVisitor visitor) {
@@ -385,7 +382,7 @@ public class JSAstTranslator extends AstTranslator {
       int ref = getValue(n.getChild(0));
 
       context.cfg().addInstruction(
-        new JavaScriptTypeOfInstruction(result, ref));
+          ((JSInstructionFactory)insts).TypeOfInstruction(result, ref));
 
       setValue(n, result);
       return true;
@@ -397,7 +394,7 @@ public class JSAstTranslator extends AstTranslator {
       this.visit(n.getChild(0), context, this);
       int ref = getValue(n.getChild(0));
 
-      context.cfg().addInstruction(new JavaScriptWithRegion(ref, n.getKind()==JavaScriptCAstNode.ENTER_WITH));
+      context.cfg().addInstruction(((JSInstructionFactory)insts).WithRegion(ref, n.getKind()==JavaScriptCAstNode.ENTER_WITH));
 
       return true;
     }

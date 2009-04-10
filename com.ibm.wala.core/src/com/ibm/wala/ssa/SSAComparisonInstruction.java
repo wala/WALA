@@ -36,7 +36,7 @@ public class SSAComparisonInstruction extends SSAInstruction {
    * @param opcode
    *            opcode from list in {@link Constants}
    */
-  SSAComparisonInstruction(IComparisonInstruction.Operator operator, int result, int val1, int val2) {
+  public SSAComparisonInstruction(IComparisonInstruction.Operator operator, int result, int val1, int val2) {
     super();
     this.operator = operator;
     this.result = result;
@@ -45,11 +45,11 @@ public class SSAComparisonInstruction extends SSAInstruction {
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) throws IllegalArgumentException {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) throws IllegalArgumentException {
     if (uses != null && uses.length != 2) {
       throw new IllegalArgumentException("expected 2 uses or null, but got " + uses.length);
     }
-    return new SSAComparisonInstruction(operator, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val1 : uses[0],
+    return insts.ComparisonInstruction(operator, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val1 : uses[0],
         uses == null ? val2 : uses[1]);
   }
 
@@ -122,14 +122,6 @@ public class SSAComparisonInstruction extends SSAInstruction {
   @Override
   public boolean isFallThrough() {
     return true;
-  }
-
-  /*
-   * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
-   */
-  @Override
-  public Collection<TypeReference> getExceptionTypes() {
-    return Collections.emptySet();
   }
 
   /**

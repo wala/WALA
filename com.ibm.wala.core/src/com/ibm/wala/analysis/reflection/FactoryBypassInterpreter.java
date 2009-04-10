@@ -46,6 +46,7 @@ import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAOptions;
@@ -352,6 +353,8 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
      */
     private int valueNumberForConstantOne = -1;
 
+    private final SSAInstructionFactory insts = declaringClass.getClassLoader().getInstructionFactory();
+
     private void initValueNumberForConstantOne() {
       if (valueNumberForConstantOne == -1) {
         valueNumberForConstantOne = nextLocal++;
@@ -478,7 +481,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
         int[] params = new int[1];
         params[0] = alloc;
         int exc = getExceptionsForType(T);
-        SSAInvokeInstruction s = new SSAInvokeInstruction(params, exc, site);
+        SSAInvokeInstruction s = insts.InvokeInstruction(params, exc, site);
         calls.add(s);
         allInstructions.add(s);
       } 
@@ -515,7 +518,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
     private void addStatementsForSetOfTypes(Iterator<IClass> it) {
       if (!it.hasNext()) { // Uh. No types. Hope the caller reported a warning.
-        SSAReturnInstruction r = new SSAReturnInstruction(nextLocal, false);
+        SSAReturnInstruction r = insts.ReturnInstruction(nextLocal, false);
         allInstructions.add(r);
       }
 
@@ -533,20 +536,20 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
           int[] sizes = new int[T.getDimensionality()];
           initValueNumberForConstantOne();
           Arrays.fill(sizes, valueNumberForConstantOne);
-          a = new SSANewInstruction(i, ref, sizes);
+          a = insts.NewInstruction(i, ref, sizes);
 
         } else {
-          a = new SSANewInstruction(i, ref);
+          a = insts.NewInstruction(i, ref);
         }
         allocations.add(a);
         allInstructions.add(a);
-        SSAReturnInstruction r = new SSAReturnInstruction(i, false);
+        SSAReturnInstruction r = insts.ReturnInstruction(i, false);
         allInstructions.add(r);
         MethodReference init = MethodReference.findOrCreate(T, MethodReference.initAtom, MethodReference.defaultInitDesc);
         CallSiteReference site = CallSiteReference.make(getCallSiteForType(T), init, IInvokeInstruction.Dispatch.SPECIAL);
         int[] params = new int[1];
         params[0] = i;
-        SSAInvokeInstruction s = new SSAInvokeInstruction(params, getExceptionsForType(T), site);
+        SSAInvokeInstruction s = insts.InvokeInstruction(params, getExceptionsForType(T), site);
         calls.add(s);
         allInstructions.add(s);
       }

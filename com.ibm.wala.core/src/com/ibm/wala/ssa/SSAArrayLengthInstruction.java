@@ -12,32 +12,32 @@ package com.ibm.wala.ssa;
 
 import java.util.Collection;
 
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.shrike.Exceptions;
 
 /**
  * SSA instruction representing v_x := arraylength v_y
  */
-public class SSAArrayLengthInstruction extends SSAInstruction {
+public abstract class SSAArrayLengthInstruction extends SSAInstruction {
   private final int result;
 
   private final int arrayref;
 
-  public SSAArrayLengthInstruction(int result, int arrayref) {
+  protected SSAArrayLengthInstruction(int result, int arrayref) {
     super();
     this.result = result;
     this.arrayref = arrayref;
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) throws IllegalArgumentException {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) throws IllegalArgumentException {
     if (defs != null && defs.length != 1) {
       throw new IllegalArgumentException();
     }
     if (uses != null && uses.length != 1) {
       throw new IllegalArgumentException();
     }
-    return new SSAArrayLengthInstruction(defs == null ? result : defs[0], uses == null ? arrayref : uses[0]);
+    return insts.ArrayLengthInstruction(defs == null ? result : defs[0], uses == null ? arrayref : uses[0]);
   }
 
   @Override
@@ -121,14 +121,6 @@ public class SSAArrayLengthInstruction extends SSAInstruction {
   @Override
   public boolean isFallThrough() {
     return true;
-  }
-
-  /*
-   * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
-   */
-  @Override
-  public Collection<TypeReference> getExceptionTypes() {
-    return Exceptions.getNullPointerException();
   }
 
 }

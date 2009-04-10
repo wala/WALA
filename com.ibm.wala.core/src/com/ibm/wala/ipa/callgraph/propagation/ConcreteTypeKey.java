@@ -14,7 +14,9 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
@@ -77,7 +79,7 @@ public final class ConcreteTypeKey implements InstanceKey {
    *         throw.
    * @throws IllegalArgumentException  if pei is null
    */
-  public static InstanceKey[] getInstanceKeysForPEI(SSAInstruction pei, IClassHierarchy cha) {
+  public static InstanceKey[] getInstanceKeysForPEI(SSAInstruction pei, IR ir, IClassHierarchy cha) {
     if (pei == null) {
       throw new IllegalArgumentException("pei is null");
     }

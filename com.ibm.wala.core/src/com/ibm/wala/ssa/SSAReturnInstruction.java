@@ -42,14 +42,14 @@ public class SSAReturnInstruction extends SSAInstruction {
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (result == -1)
-      return new SSAReturnInstruction();
+      return insts.ReturnInstruction();
     else {
       if (uses != null && uses.length != 1) {
         throw new IllegalArgumentException("invalid uses.  must have exactly one use.");
       }
-      return new SSAReturnInstruction(uses == null ? result : uses[0], isPrimitive);
+      return insts.ReturnInstruction(uses == null ? result : uses[0], isPrimitive);
     }
   }
 
@@ -121,11 +121,4 @@ public class SSAReturnInstruction extends SSAInstruction {
     return false;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
-   */
-  @Override
-  public Collection<TypeReference> getExceptionTypes() {
-    return Collections.emptySet();
-  }
-}
+ }

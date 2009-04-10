@@ -119,7 +119,7 @@ public class AnalysisScope {
 
   private final Map<Atom, Language> languages;
 
-  protected AnalysisScope(Collection<Language> languages) {
+  protected AnalysisScope(Collection<? extends Language> languages) {
     super();
     this.languages = new HashMap<Atom,Language>();
     for (Language l : languages) {

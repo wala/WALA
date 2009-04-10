@@ -46,11 +46,11 @@ public class SSAPhiInstruction extends SSAInstruction {
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) throws IllegalArgumentException {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) throws IllegalArgumentException {
     if (defs != null && defs.length == 0) {
       throw new IllegalArgumentException();
     }
-    return new SSAPhiInstruction(defs == null ? result : defs[0], uses == null ? params : uses);
+    return insts.PhiInstruction(defs == null ? result : defs[0], uses == null ? params : uses);
   }
 
   @Override
@@ -158,11 +158,4 @@ public class SSAPhiInstruction extends SSAInstruction {
     return true;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
-   */
-  @Override
-  public Collection<TypeReference> getExceptionTypes() {
-    return Collections.emptySet();
-  }
-}
+ }

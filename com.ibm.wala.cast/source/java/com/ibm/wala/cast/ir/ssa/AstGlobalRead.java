@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
@@ -29,8 +30,8 @@ public class AstGlobalRead extends SSAGetInstruction {
     super(lhs, global);
   }
 
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    return new AstGlobalRead((defs==null)? getDef(): defs[0], getDeclaredField());
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
+    return ((AstInstructionFactory)insts).GlobalRead((defs==null)? getDef(): defs[0], getDeclaredField());
   }
 
   public String toString(SymbolTable symbolTable) {

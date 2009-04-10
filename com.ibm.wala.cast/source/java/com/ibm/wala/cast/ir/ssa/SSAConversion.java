@@ -173,7 +173,7 @@ public class SSAConversion extends AbstractSSAConversion {
           newUses[i] = getUse(inst, i);
       }
 
-      return inst.copyForSSA(null, newUses);
+      return inst.copyForSSA(CFG.getMethod().getDeclaringClass().getClassLoader().getInstructionFactory(), null, newUses);
     }
 
     private void undo(int rhs) {
@@ -341,7 +341,7 @@ public class SSAConversion extends AbstractSSAConversion {
   }
 
   protected SSAPhiInstruction repairPhiDefs(SSAPhiInstruction phi, int[] newDefs) {
-    return (SSAPhiInstruction) phi.copyForSSA(newDefs, null);
+    return (SSAPhiInstruction) phi.copyForSSA(CFG.getMethod().getDeclaringClass().getClassLoader().getInstructionFactory(), newDefs, null);
   }
 
   protected void repairPhiUse(SSACFG.BasicBlock BB, int phiIndex, int rvalIndex, int newRval) {
@@ -403,7 +403,7 @@ public class SSAConversion extends AbstractSSAConversion {
   }
 
   protected void repairInstructionDefs(SSAInstruction inst, int index, int[] newDefs, int[] newUses) {
-    instructions[index] = inst.copyForSSA(newDefs, newUses);
+    instructions[index] = inst.copyForSSA(CFG.getMethod().getDeclaringClass().getClassLoader().getInstructionFactory(), newDefs, newUses);
   }
 
   protected void popAssignment(SSAInstruction inst, int index) {

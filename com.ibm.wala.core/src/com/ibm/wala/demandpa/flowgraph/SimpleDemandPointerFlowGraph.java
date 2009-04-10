@@ -25,6 +25,7 @@ import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.demandpa.util.MemoryAccess;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
@@ -53,7 +54,7 @@ import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
-import com.ibm.wala.ssa.SSALoadClassInstruction;
+import com.ibm.wala.ssa.SSALoadMetadataInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
@@ -1333,7 +1334,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     // }
 
     @Override
-    public void visitLoadClass(SSALoadClassInstruction instruction) {
+    public void visitLoadMetadata(SSALoadMetadataInstruction instruction) {
       Assertions.UNREACHABLE();
       // PointerKey def = getPointerKeyForLocal(node, instruction.getDef());
       // InstanceKey iKey =

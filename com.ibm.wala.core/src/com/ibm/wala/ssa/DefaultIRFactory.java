@@ -11,6 +11,7 @@
 package com.ibm.wala.ssa;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
+import com.ibm.wala.cfg.IBytecodeMethod;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.classLoader.ShrikeIRFactory;
@@ -37,8 +38,8 @@ public class DefaultIRFactory implements IRFactory<IMethod> {
     }
     if (method.isSynthetic()) {
       return syntheticFactory.makeCFG((SyntheticMethod)method, C);
-    } else if (method instanceof ShrikeCTMethod) {
-      return shrikeFactory.makeCFG((ShrikeCTMethod) method, C);
+    } else if (method instanceof IBytecodeMethod) {
+      return shrikeFactory.makeCFG((IBytecodeMethod) method, C);
     } else {
       Assertions.UNREACHABLE();
       return null;
@@ -54,8 +55,8 @@ public class DefaultIRFactory implements IRFactory<IMethod> {
     }
     if (method.isSynthetic()) {
       return syntheticFactory.makeIR((SyntheticMethod)method, C, options);
-    } else if (method instanceof ShrikeCTMethod) {
-      return shrikeFactory.makeIR((ShrikeCTMethod) method, C, options);
+    } else if (method instanceof IBytecodeMethod) {
+      return shrikeFactory.makeIR((IBytecodeMethod) method, C, options);
     } else {
       Assertions.UNREACHABLE();
       return null;

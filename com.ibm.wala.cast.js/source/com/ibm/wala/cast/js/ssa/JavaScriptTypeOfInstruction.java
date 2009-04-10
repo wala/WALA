@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import com.ibm.wala.ssa.SSAAbstractUnaryInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 
@@ -23,8 +24,8 @@ public class JavaScriptTypeOfInstruction extends SSAAbstractUnaryInstruction {
     super(lval, object);
   }
 
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    return new JavaScriptTypeOfInstruction((defs != null ? defs[0] : getDef(0)), (uses != null ? uses[0] : getUse(0)));
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
+    return ((JSInstructionFactory)insts).TypeOfInstruction((defs != null ? defs[0] : getDef(0)), (uses != null ? uses[0] : getUse(0)));
   }
 
   public String toString(SymbolTable symbolTable) {

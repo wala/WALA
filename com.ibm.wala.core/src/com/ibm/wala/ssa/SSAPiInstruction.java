@@ -64,14 +64,10 @@ public class SSAPiInstruction extends SSAUnaryOpInstruction {
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    if (defs != null && defs.length == 0) {
-      throw new IllegalArgumentException("defs.length == 0");
-    }
-    if (uses != null && uses.length == 0) {
-      throw new IllegalArgumentException("uses.length == 0");
-    }
-    return new SSAPiInstruction(defs == null ? result : defs[0], uses == null ? val : uses[0], piBlock, successorBlock, cause);
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
+    assert defs == null || defs.length == 1;
+    assert uses == null || uses.length == 1;
+    return insts.PiInstruction(defs == null ? result : defs[0], uses == null ? val : uses[0], piBlock, successorBlock, cause);
   }
 
   @Override

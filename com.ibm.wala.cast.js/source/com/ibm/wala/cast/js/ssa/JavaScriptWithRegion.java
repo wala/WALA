@@ -3,6 +3,7 @@ package com.ibm.wala.cast.js.ssa;
 import java.util.Collection;
 
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 
@@ -16,8 +17,8 @@ public class JavaScriptWithRegion extends SSAInstruction {
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    return new JavaScriptWithRegion(uses==null? expr: uses[0], isEnter);
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
+    return ((JSInstructionFactory)insts).WithRegion(uses==null? expr: uses[0], isEnter);
   }
 
   @Override

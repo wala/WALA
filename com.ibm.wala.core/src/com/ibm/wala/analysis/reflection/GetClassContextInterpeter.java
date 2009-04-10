@@ -26,7 +26,8 @@ import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSALoadClassInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
+import com.ibm.wala.ssa.SSALoadMetadataInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.types.FieldReference;
@@ -87,10 +88,11 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
     int nextLocal = 2;
     int retValue = nextLocal++;
     TypeReference tr = context.getType().getTypeReference();
-    if (tr != null) {
-      SSALoadClassInstruction l = new SSALoadClassInstruction(retValue, tr);
+    SSAInstructionFactory insts = context.getType().getType().getClassLoader().getInstructionFactory();
+   if (tr != null) {
+      SSALoadMetadataInstruction l = insts.LoadMetadataInstruction(retValue, TypeReference.JavaLangClass, tr);
       statements.add(l);
-      SSAReturnInstruction R = new SSAReturnInstruction(retValue, false);
+      SSAReturnInstruction R = insts.ReturnInstruction(retValue, false);
       statements.add(R);
     }
     SSAInstruction[] result = new SSAInstruction[statements.size()];

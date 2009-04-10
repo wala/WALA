@@ -34,7 +34,7 @@ public class SSASwitchInstruction extends SSAInstruction {
   /**
    * The labels in casesAndLabels represent <em>instruction indices</em> in the IR that each switch case branches to.
    */
-  SSASwitchInstruction(int val, int defaultLabel, int[] casesAndLabels) {
+  public SSASwitchInstruction(int val, int defaultLabel, int[] casesAndLabels) {
     super();
     this.val = val;
     this.defaultLabel = defaultLabel;
@@ -42,9 +42,9 @@ public class SSASwitchInstruction extends SSAInstruction {
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    // TODO: check if this is the intended semantics for uses==null or uses.length == 0;
-    return new SSASwitchInstruction(uses == null || uses.length == 0 ? val : uses[0], defaultLabel, casesAndLabels);
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
+    assert uses == null || uses.length == 1;
+    return insts.SwitchInstruction(uses == null ? val : uses[0], defaultLabel, casesAndLabels);
   }
 
   @Override
@@ -146,11 +146,4 @@ public class SSASwitchInstruction extends SSAInstruction {
     return false;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
-   */
-  @Override
-  public Collection<TypeReference> getExceptionTypes() {
-    return Collections.emptySet();
-  }
-}
+ }

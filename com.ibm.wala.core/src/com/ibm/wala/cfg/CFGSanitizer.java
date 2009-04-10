@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.IR;
@@ -28,7 +29,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
-import com.ibm.wala.util.shrike.Exceptions;
 import com.ibm.wala.util.warnings.WalaException;
 
 /**
@@ -84,7 +84,7 @@ public class CFGSanitizer {
         // compute types of exceptions the pei may throw
         TypeReference[] exceptions = null;
         try {
-          exceptions = computeExceptions(cha, s);
+          exceptions = computeExceptions(cha, ir, s);
         } catch (InvalidClassFileException e1) {
           e1.printStackTrace();
           Assertions.UNREACHABLE();
@@ -154,11 +154,12 @@ public class CFGSanitizer {
     return g;
   }
 
-  private static TypeReference[] computeExceptions(IClassHierarchy cha, SSAInstruction s) throws InvalidClassFileException {
+  private static TypeReference[] computeExceptions(IClassHierarchy cha, IR ir, SSAInstruction s) throws InvalidClassFileException {
     Collection c = null;
+    Language l = ir.getMethod().getDeclaringClass().getClassLoader().getLanguage();
     if (s instanceof SSAInvokeInstruction) {
       SSAInvokeInstruction call = (SSAInvokeInstruction) s;
-      c = Exceptions.inferInvokeExceptions(call.getDeclaredTarget(), cha);
+      c = l.inferInvokeExceptions(call.getDeclaredTarget(), cha);
     } else {
       c = s.getExceptionTypes();
     }

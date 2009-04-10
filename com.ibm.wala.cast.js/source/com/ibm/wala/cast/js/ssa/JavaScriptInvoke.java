@@ -17,6 +17,7 @@ import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
@@ -29,13 +30,13 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
 
   private int function;
 
-  private JavaScriptInvoke(int function, int results[], int[] params, int exception, CallSiteReference site) {
+  public JavaScriptInvoke(int function, int results[], int[] params, int exception, CallSiteReference site) {
     super(results, exception, site);
     this.function = function;
     this.params = params;
   }
 
-  private JavaScriptInvoke(int function, int results[], int[] params, int exception, CallSiteReference site, Access[] lexicalReads,
+  public JavaScriptInvoke(int function, int results[], int[] params, int exception, CallSiteReference site, Access[] lexicalReads,
       Access[] lexicalWrites) {
     super(results, exception, site, lexicalReads, lexicalWrites);
     this.function = function;
@@ -50,7 +51,7 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
     this(function, null, params, exception, site);
   }
 
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     int fn = function;
     int newParams[] = params;
     Access[] reads = lexicalReads;
@@ -93,7 +94,7 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
       }
     }
 
-    return new JavaScriptInvoke(fn, newLvals, newParams, newExp, site, reads, writes);
+    return ((JSInstructionFactory)insts).Invoke(fn, newLvals, newParams, newExp, site, reads, writes);
   }
 
   public String toString(SymbolTable symbolTable) {

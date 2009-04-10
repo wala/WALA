@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import com.ibm.wala.cast.ir.ssa.AbstractReflectiveGet;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -22,9 +23,9 @@ public class JavaScriptPropertyRead extends AbstractReflectiveGet {
     super(result, objectRef, memberRef);
   }
 
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return
-      new JavaScriptPropertyRead(
+      ((JSInstructionFactory)insts).PropertyRead(
         defs==null? getDef(): defs[0],
 	uses==null? getObjectRef(): uses[0],
 	uses==null? getMemberRef(): uses[1]);

@@ -18,6 +18,7 @@ import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
@@ -137,6 +138,8 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
    * @param target is the method being called reflectively
    */
   private IR makeIR(IMethod method, IMethod target, ReceiverInstanceContext context) {
+    SSAInstructionFactory insts = method.getDeclaringClass().getClassLoader().getInstructionFactory();
+    
     SpecializedMethod m = new SpecializedMethod(method, method.getDeclaringClass(), method.isStatic(), false);
     Map<Integer, ConstantValue> constants = HashMapFactory.make();
 
@@ -150,7 +153,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     if (method.getReference().equals(CTOR_NEW_INSTANCE)) {
       // allocate the new object constructed
       TypeReference allocatedType = target.getDeclaringClass().getReference();
-      m.addInstruction(allocatedType, new SSANewInstruction(args[0] = nextLocal++, NewSiteReference.make(pc++, allocatedType)),
+      m.addInstruction(allocatedType, insts.NewInstruction(args[0] = nextLocal++, NewSiteReference.make(pc++, allocatedType)),
           true);
       parametersVn = 2;
     } else {
@@ -163,7 +166,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
         // insert a cast for v2 to filter out bogus types
         args[0] = nextLocal++;
         TypeReference type = target.getParameterType(0);
-        SSACheckCastInstruction cast = SSAInstructionFactory.CheckCastInstruction(args[0], 2, type);
+        SSACheckCastInstruction cast = insts.CheckCastInstruction(args[0], 2, type);
         m.addInstruction(null, cast, false);
       }
     }
@@ -176,14 +179,14 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
       int indexConst = nextLocal++;
       constants.put(new Integer(indexConst), new ConstantValue(nextParameter++)); 
       int temp = nextLocal++;
-      m.addInstruction(null, new SSAArrayLoadInstruction(temp, parametersVn, indexConst, TypeReference.JavaLangObject), false);
+      m.addInstruction(null, insts.ArrayLoadInstruction(temp, parametersVn, indexConst, TypeReference.JavaLangObject), false);
       pc++;
       
       // cast v_temp to the appropriate type and store it in args[j]
       args[j] = nextLocal++;
       TypeReference type = target.getParameterType(j);
       // we insert a cast to filter out bogus types
-      SSACheckCastInstruction cast = SSAInstructionFactory.CheckCastInstruction(args[j], temp, type);
+      SSACheckCastInstruction cast = insts.CheckCastInstruction(args[j], temp, type);
       m.addInstruction(null, cast, false);
       pc++;
     }
@@ -193,19 +196,19 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
 
     // emit the dispatch and return instructions
     if (method.getReference().equals(CTOR_NEW_INSTANCE)) {
-      m.addInstruction(null, new SSAInvokeInstruction(args, exceptions, CallSiteReference.make(pc++, target.getReference(),
+      m.addInstruction(null, insts.InvokeInstruction(args, exceptions, CallSiteReference.make(pc++, target.getReference(),
           IInvokeInstruction.Dispatch.SPECIAL)), false);
-      m.addInstruction(null, new SSAReturnInstruction(args[0], false), false);
+      m.addInstruction(null, insts.ReturnInstruction(args[0], false), false);
     } else {
       Dispatch d = target.isStatic() ? Dispatch.STATIC : Dispatch.VIRTUAL;
       if (target.getReturnType().equals(TypeReference.Void)) {
-        m.addInstruction(null, new SSAInvokeInstruction(args, exceptions, CallSiteReference.make(pc++, target.getReference(), d)),
+        m.addInstruction(null, insts.InvokeInstruction(args, exceptions, CallSiteReference.make(pc++, target.getReference(), d)),
             false);
       } else {
         result = nextLocal++;
-        m.addInstruction(null, new SSAInvokeInstruction(result, args, exceptions, CallSiteReference.make(pc++, target
+        m.addInstruction(null, insts.InvokeInstruction(result, args, exceptions, CallSiteReference.make(pc++, target
             .getReference(), d)), false);
-        m.addInstruction(null, new SSAReturnInstruction(result, false), false);
+        m.addInstruction(null, insts.ReturnInstruction(result, false), false);
       }
     }
 

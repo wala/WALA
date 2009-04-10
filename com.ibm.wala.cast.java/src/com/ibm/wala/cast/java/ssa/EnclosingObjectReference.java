@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
@@ -50,8 +51,8 @@ public class EnclosingObjectReference extends SSAInstruction {
     return type;
   }
 
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    return new EnclosingObjectReference(defs==null? lval: defs[0], type);
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
+    return ((AstJavaInstructionFactory)insts).EnclosingObjectReference(defs==null? lval: defs[0], type);
   }
 
   public String toString(SymbolTable symbolTable) {

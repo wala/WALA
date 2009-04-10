@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.dataflow.ssa.SSAInference;
 import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.eclipse.util.CancelRuntimeException;
@@ -39,7 +40,7 @@ import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstanceofInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
-import com.ibm.wala.ssa.SSALoadClassInstruction;
+import com.ibm.wala.ssa.SSALoadMetadataInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
@@ -176,7 +177,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       if (s instanceof SSAAbstractInvokeInstruction) {
         SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) s;
         TypeVariable v = getVariable(call.getException());
-        Collection<TypeReference> defaultExceptions = call.getExceptionTypes();
+         Collection<TypeReference> defaultExceptions = call.getExceptionTypes();
         if (defaultExceptions.size() == 0) {
           continue;
         }
@@ -513,7 +514,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     }
 
     @Override
-    public void visitLoadClass(SSALoadClassInstruction instruction) {
+    public void visitLoadMetadata(SSALoadMetadataInstruction instruction) {
       IClass jlClassKlass = cha.lookupClass(TypeReference.JavaLangClass);
       if (Assertions.verifyAssertions) {
         Assertions._assert(jlClassKlass != null);

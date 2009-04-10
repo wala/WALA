@@ -19,6 +19,7 @@ import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SyntheticMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -35,6 +36,7 @@ import com.ibm.wala.shrikeBT.BytecodeConstants;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.SSAFieldAccessInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
@@ -115,6 +117,8 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
    */
   private final MethodTargetSelector parent;
 
+  private final SSAInstructionFactory insts;
+  
   /**
    * A mapping for EJB entity contract method names
    * 
@@ -148,6 +152,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
     this.parent = parent;
     this.cha = cha;
     this.typeInference = typeInference;
+    this.insts = Language.JAVA.instructionFactory();
   }
 
   /**
@@ -198,7 +203,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       // 1. extract bean object from container object
       // TODO: we pretend that the Entity is stateless, which it is not.
       int beanVN = nextLocal++;
-      summ.addStatement(new SSAGetInstruction(beanVN, J2EEContainerModel.getBeanFieldRef(bean)));
+      summ.addStatement(insts.GetInstruction(beanVN, J2EEContainerModel.getBeanFieldRef(bean)));
 
       // 2. call corresponding method on bean object
       int EXCEPTION_VN = nextLocal++;
@@ -214,22 +219,22 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       CallSiteReference site = CallSiteReference.make(summ.getNextProgramCounter(), ref, IInvokeInstruction.Dispatch.VIRTUAL);
 
       if (summ.getReturnType() != null) {
-        summ.addStatement(new SSAInvokeInstruction(returnVN, params, EXCEPTION_VN, site));
-        summ.addStatement(new SSAReturnInstruction(returnVN, summ.getReturnType().isPrimitiveType()));
+        summ.addStatement(insts.InvokeInstruction(returnVN, params, EXCEPTION_VN, site));
+        summ.addStatement(insts.ReturnInstruction(returnVN, summ.getReturnType().isPrimitiveType()));
       } else {
-        summ.addStatement(new SSAInvokeInstruction(params, EXCEPTION_VN, site));
+        summ.addStatement(insts.InvokeInstruction(params, EXCEPTION_VN, site));
       }
 
       // 3. throw RemoteException if remote interface
       if (deployment.isRemoteInterface(m.getDeclaringClass())) {
         int xobj = nextLocal++;
-        summ.addStatement(new SSANewInstruction(xobj, NewSiteReference.make(summ.getNextProgramCounter(), RemoteExceptionClass)));
-        summ.addStatement(new SSAThrowInstruction(xobj));
+        summ.addStatement(insts.NewInstruction(xobj, NewSiteReference.make(summ.getNextProgramCounter(), RemoteExceptionClass)));
+        summ.addStatement(insts.ThrowInstruction(xobj));
       }
 
       int xobj = nextLocal++;
-      summ.addStatement(new SSANewInstruction(xobj, NewSiteReference.make(summ.getNextProgramCounter(), EJBExceptionClass)));
-      summ.addStatement(new SSAThrowInstruction(xobj));
+      summ.addStatement(insts.NewInstruction(xobj, NewSiteReference.make(summ.getNextProgramCounter(), EJBExceptionClass)));
+      summ.addStatement(insts.ThrowInstruction(xobj));
 
       IClass C = cha.lookupClass(m.getDeclaringClass());
       S = new SummarizedEJBMethod(bean, m, summ, C);
@@ -276,7 +281,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       // 1. extract bean object from container object
       // TODO: we pretend that the Entity is stateless, which it is not.
       int beanVN = nextLocal++;
-      summ.addStatement(new SSAGetInstruction(beanVN, J2EEContainerModel.getBeanFieldRef(bean)));
+      summ.addStatement(insts.GetInstruction(beanVN, J2EEContainerModel.getBeanFieldRef(bean)));
 
       // 2. call corresponding method on bean object
       int EXCEPTION_VN = nextLocal++;
@@ -292,22 +297,22 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       CallSiteReference site = CallSiteReference.make(summ.getNextProgramCounter(), ref, IInvokeInstruction.Dispatch.VIRTUAL);
 
       if (summ.getReturnType() != null) {
-        summ.addStatement(new SSAInvokeInstruction(returnVN, params, EXCEPTION_VN, site));
-        summ.addStatement(new SSAReturnInstruction(returnVN, summ.getReturnType().isPrimitiveType()));
+        summ.addStatement(insts.InvokeInstruction(returnVN, params, EXCEPTION_VN, site));
+        summ.addStatement(insts.ReturnInstruction(returnVN, summ.getReturnType().isPrimitiveType()));
       } else {
-        summ.addStatement(new SSAInvokeInstruction(params, EXCEPTION_VN, site));
+        summ.addStatement(insts.InvokeInstruction(params, EXCEPTION_VN, site));
       }
 
       // 3. throw RemoteException if remote interface
       if (deployment.isRemoteInterface(m.getDeclaringClass())) {
         int xobj = nextLocal++;
-        summ.addStatement(new SSANewInstruction(xobj, NewSiteReference.make(summ.getNextProgramCounter(), RemoteExceptionClass)));
-        summ.addStatement(new SSAThrowInstruction(xobj));
+        summ.addStatement(insts.NewInstruction(xobj, NewSiteReference.make(summ.getNextProgramCounter(), RemoteExceptionClass)));
+        summ.addStatement(insts.ThrowInstruction(xobj));
       }
 
       int xobj = nextLocal++;
-      summ.addStatement(new SSANewInstruction(xobj, NewSiteReference.make(summ.getNextProgramCounter(), EJBExceptionClass)));
-      summ.addStatement(new SSAThrowInstruction(xobj));
+      summ.addStatement(insts.NewInstruction(xobj, NewSiteReference.make(summ.getNextProgramCounter(), EJBExceptionClass)));
+      summ.addStatement(insts.ThrowInstruction(xobj));
 
       IClass C = cha.lookupClass(m.getDeclaringClass());
       S = new SummarizedEJBMethod(bean, m, summ, C);
@@ -338,7 +343,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       if (!m.getDeclaringClass().getClassLoader().equals(ClassLoaderReference.Primordial)) {
         int servletConfigVN = nextLocal++;
         NewSiteReference newConfig = NewSiteReference.make(summ.getNextProgramCounter(), ServletEntrypoints.WalaServletConfigModel);
-        summ.addStatement(new SSANewInstruction(servletConfigVN, newConfig));
+        summ.addStatement(insts.NewInstruction(servletConfigVN, newConfig));
 
         // initialize the servlet
         CallSiteReference site = CallSiteReference.make(summ.getNextProgramCounter(), ServletEntrypoints.servletInit,
@@ -346,7 +351,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
         int[] params = new int[2];
         params[0] = 1; // "this" pointer
         params[1] = servletConfigVN;
-        summ.addStatement(new SSAInvokeInstruction(params, EXCEPTION_VN, site));
+        summ.addStatement(insts.InvokeInstruction(params, EXCEPTION_VN, site));
       }
 
       int[] params = new int[summ.getNumberOfParameters()];
@@ -357,10 +362,10 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       // invoke the desired entrypoint
       CallSiteReference site = CallSiteReference.make(summ.getNextProgramCounter(), m, IInvokeInstruction.Dispatch.VIRTUAL);
       if (!summ.getReturnType().equals(TypeReference.Void)) {
-        summ.addStatement(new SSAInvokeInstruction(returnVN, params, EXCEPTION_VN, site));
-        summ.addStatement(new SSAReturnInstruction(returnVN, summ.getReturnType().isPrimitiveType()));
+        summ.addStatement(insts.InvokeInstruction(returnVN, params, EXCEPTION_VN, site));
+        summ.addStatement(insts.ReturnInstruction(returnVN, summ.getReturnType().isPrimitiveType()));
       } else {
-        summ.addStatement(new SSAInvokeInstruction(params, EXCEPTION_VN, site));
+        summ.addStatement(insts.InvokeInstruction(params, EXCEPTION_VN, site));
       }
 
       IClass C = cha.lookupClass(m.getDeclaringClass());
@@ -518,17 +523,17 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
 
       // get ejb object from pool
       int alloc = nextLocal++;
-      summ.addStatement(new SSAGetInstruction(alloc, J2EEContainerModel.getBeanFieldRef(bean)));
+      summ.addStatement(insts.GetInstruction(alloc, J2EEContainerModel.getBeanFieldRef(bean)));
 
       // create+return entity object, if appropriate
       if (rType != TypeReference.Void) {
 
         // create result object
         int ret = nextLocal++;
-        summ.addStatement(new SSANewInstruction(ret, NewSiteReference.make(summ.getNextProgramCounter(), rType)));
+        summ.addStatement(insts.NewInstruction(ret, NewSiteReference.make(summ.getNextProgramCounter(), rType)));
 
         // return it
-        summ.addStatement(new SSAReturnInstruction(ret, false));
+        summ.addStatement(insts.ReturnInstruction(ret, false));
       }
 
       // call contract methods
@@ -549,29 +554,29 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
         // note that we reserve value number 2 to hold the exceptional result
         // of the call.
         if (!ref.getReturnType().equals(TypeReference.Void)) {
-          summ.addStatement(new SSAInvokeInstruction(nextLocal++, params, nextLocal++, site));
+          summ.addStatement(insts.InvokeInstruction(nextLocal++, params, nextLocal++, site));
         } else {
-          summ.addStatement(new SSAInvokeInstruction(params, nextLocal++, site));
+          summ.addStatement(insts.InvokeInstruction(params, nextLocal++, site));
         }
       }
 
       final TypeReference t = entityContractExceptionMap.get(m.getName());
       if (t != null) {
         int ex = nextLocal++;
-        summ.addStatement(new SSANewInstruction(ex, NewSiteReference.make(summ.getNextProgramCounter(), t)));
-        summ.addStatement(new SSAThrowInstruction(ex));
+        summ.addStatement(insts.NewInstruction(ex, NewSiteReference.make(summ.getNextProgramCounter(), t)));
+        summ.addStatement(insts.ThrowInstruction(ex));
       }
 
       if (deployment.isRemoteInterface(m.getDeclaringClass()) || deployment.isHomeInterface(m.getDeclaringClass())) {
         int xobj = nextLocal++;
-        summ.addStatement(new SSANewInstruction(xobj, NewSiteReference.make(summ.getNextProgramCounter(), RemoteExceptionClass)));
-        summ.addStatement(new SSAThrowInstruction(xobj));
+        summ.addStatement(insts.NewInstruction(xobj, NewSiteReference.make(summ.getNextProgramCounter(), RemoteExceptionClass)));
+        summ.addStatement(insts.ThrowInstruction(xobj));
       }
 
       int ejbException = nextLocal++;
       summ
-          .addStatement(new SSANewInstruction(ejbException, NewSiteReference.make(summ.getNextProgramCounter(), EJBExceptionClass)));
-      summ.addStatement(new SSAThrowInstruction(ejbException));
+          .addStatement(insts.NewInstruction(ejbException, NewSiteReference.make(summ.getNextProgramCounter(), EJBExceptionClass)));
+      summ.addStatement(insts.ThrowInstruction(ejbException));
 
       S = new SummarizedMethod(m, summ, receiverClass);
       map.put(m, S);
@@ -616,20 +621,20 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
 
       // TODO: we should make sure that finders populate all fields.
       int result = nextLocal++;
-      SSAFieldAccessInstruction f = new SSAGetInstruction(result, 1, field);
+      SSAFieldAccessInstruction f = insts.GetInstruction(result, 1, field);
       addStatement(f);
 
-      SSAReturnInstruction r = new SSAReturnInstruction(result, field.getFieldType().isPrimitiveType());
+      SSAReturnInstruction r = insts.ReturnInstruction(result, field.getFieldType().isPrimitiveType());
       addStatement(r);
 
       if (deployment.isRemoteInterface(method.getDeclaringClass())) {
         int xobj = nextLocal++;
-        addStatement(new SSANewInstruction(xobj, NewSiteReference.make(getNextProgramCounter(), RemoteExceptionClass)));
-        addStatement(new SSAThrowInstruction(xobj));
+        addStatement(insts.NewInstruction(xobj, NewSiteReference.make(getNextProgramCounter(), RemoteExceptionClass)));
+        addStatement(insts.ThrowInstruction(xobj));
       }
       int xobj = nextLocal++;
-      addStatement(new SSANewInstruction(xobj, NewSiteReference.make(getNextProgramCounter(), EJBExceptionClass)));
-      addStatement(new SSAThrowInstruction(xobj));
+      addStatement(insts.NewInstruction(xobj, NewSiteReference.make(getNextProgramCounter(), EJBExceptionClass)));
+      addStatement(insts.ThrowInstruction(xobj));
     }
   }
 
@@ -668,44 +673,44 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       // TODO: should probably pretend the object has a field of this type
       NewSiteReference nsr = NewSiteReference.make(getNextProgramCounter(), keyType);
       int keyAlloc = nextLocal++;
-      addStatement(new SSANewInstruction(keyAlloc, nsr));
+      addStatement(insts.NewInstruction(keyAlloc, nsr));
 
       // allocate local home type
       // TODO: this is fake; should model container providing home somehow
       NewSiteReference lhnr = NewSiteReference.make(getNextProgramCounter(), getteeHomeType);
       int localHomeAlloc = nextLocal++;
-      addStatement(new SSANewInstruction(localHomeAlloc, lhnr));
+      addStatement(insts.NewInstruction(localHomeAlloc, lhnr));
 
       // call findByPrimaryKey
       int fr = nextLocal++;
       int ignoredExceptions = nextLocal++;
       CallSiteReference fcsr = CallSiteReference.make(getNextProgramCounter(), finder.getReference(), IInvokeInstruction.Dispatch.INTERFACE);
-      addStatement(new SSAInvokeInstruction(fr, new int[] { localHomeAlloc, keyAlloc }, ignoredExceptions, fcsr));
+      addStatement(insts.InvokeInstruction(fr, new int[] { localHomeAlloc, keyAlloc }, ignoredExceptions, fcsr));
 
       // return result, as set if appropriate
       if (T.equals(TypeReference.JavaUtilSet) || T.equals(TypeReference.JavaUtilCollection)) {
         // assume HashSet is the type of the returned collection.
         int setObj = nextLocal++;
         NewSiteReference setRef = NewSiteReference.make(getNextProgramCounter(), TypeReference.JavaUtilHashSet);
-        SSANewInstruction n = new SSANewInstruction(setObj, setRef);
+        SSANewInstruction n = insts.NewInstruction(setObj, setRef);
         addStatement(n);
 
         int initIgnoredExceptions = nextLocal++;
         CallSiteReference initRef = CallSiteReference.make(getNextProgramCounter(), hashSetInit, IInvokeInstruction.Dispatch.SPECIAL);
-        addStatement(new SSAInvokeInstruction(new int[] { setObj }, initIgnoredExceptions, initRef));
+        addStatement(insts.InvokeInstruction(new int[] { setObj }, initIgnoredExceptions, initRef));
 
         int ignoredResult = nextLocal++;
         int moreIgnoredExceptions = nextLocal++;
         CallSiteReference addRef = CallSiteReference.make(getNextProgramCounter(), addMethod, IInvokeInstruction.Dispatch.INTERFACE);
-        SSAInvokeInstruction addCall = new SSAInvokeInstruction(ignoredResult, new int[] { setObj, fr }, moreIgnoredExceptions,
+        SSAInvokeInstruction addCall = insts.InvokeInstruction(ignoredResult, new int[] { setObj, fr }, moreIgnoredExceptions,
             addRef);
         addStatement(addCall);
 
-        SSAReturnInstruction r = new SSAReturnInstruction(setObj, false);
+        SSAReturnInstruction r = insts.ReturnInstruction(setObj, false);
         addStatement(r);
       } else {
 
-        SSAReturnInstruction r = new SSAReturnInstruction(fr, false);
+        SSAReturnInstruction r = insts.ReturnInstruction(fr, false);
         addStatement(r);
       }
 
@@ -713,17 +718,17 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       // to see a getfield here. TODO: rewrite the old clients to
       // avoid needing this instruction.
       int ignore = nextLocal++;
-      SSAFieldAccessInstruction f = new SSAGetInstruction(ignore, 1, field);
+      SSAFieldAccessInstruction f = insts.GetInstruction(ignore, 1, field);
       addStatement(f);
 
       if (deployment.isRemoteInterface(method.getDeclaringClass())) {
         int xobj = nextLocal++;
-        addStatement(new SSANewInstruction(xobj, NewSiteReference.make(getNextProgramCounter(), RemoteExceptionClass)));
-        addStatement(new SSAThrowInstruction(xobj));
+        addStatement(insts.NewInstruction(xobj, NewSiteReference.make(getNextProgramCounter(), RemoteExceptionClass)));
+        addStatement(insts.ThrowInstruction(xobj));
       }
       int xobj = nextLocal++;
-      addStatement(new SSANewInstruction(xobj, NewSiteReference.make(getNextProgramCounter(), EJBExceptionClass)));
-      addStatement(new SSAThrowInstruction(xobj));
+      addStatement(insts.NewInstruction(xobj, NewSiteReference.make(getNextProgramCounter(), EJBExceptionClass)));
+      addStatement(insts.ThrowInstruction(xobj));
     }
   }
 
@@ -735,7 +740,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       super(method);
       // the reference dispatched on is value number 1, and
       // the value stored is value number 2
-      SSAFieldAccessInstruction f = new SSAPutInstruction(1, 2, deployment.getCMPField(method));
+      SSAFieldAccessInstruction f = insts.PutInstruction(1, 2, deployment.getCMPField(method));
       addStatement(f);
     }
   }
@@ -756,24 +761,24 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
         // assume HashSet is the type of the returned collection.
         int setObj = nextLocal++;
         NewSiteReference setRef = NewSiteReference.make(getNextProgramCounter(), TypeReference.JavaUtilHashSet);
-        SSANewInstruction allocSet = new SSANewInstruction(setObj, setRef);
+        SSANewInstruction allocSet = insts.NewInstruction(setObj, setRef);
         addStatement(allocSet);
 
         int initIgnoredExceptions = nextLocal++;
         CallSiteReference initRef = CallSiteReference.make(getNextProgramCounter(), hashSetInit, IInvokeInstruction.Dispatch.SPECIAL);
-        addStatement(new SSAInvokeInstruction(new int[] { setObj }, initIgnoredExceptions, initRef));
+        addStatement(insts.InvokeInstruction(new int[] { setObj }, initIgnoredExceptions, initRef));
 
         int ignoredResult = nextLocal++;
         int moreIgnoredExceptions = nextLocal++;
         CallSiteReference addRef = CallSiteReference.make(getNextProgramCounter(), addMethod,IInvokeInstruction.Dispatch.INTERFACE);
-        SSAInvokeInstruction addCall = new SSAInvokeInstruction(ignoredResult, new int[] { setObj, 2 }, moreIgnoredExceptions,
+        SSAInvokeInstruction addCall = insts.InvokeInstruction(ignoredResult, new int[] { setObj, 2 }, moreIgnoredExceptions,
             addRef);
         addStatement(addCall);
 
-        SSAFieldAccessInstruction f2 = new SSAPutInstruction(1, setObj, field);
+        SSAFieldAccessInstruction f2 = insts.PutInstruction(1, setObj, field);
         addStatement(f2);
       } else {
-        SSAFieldAccessInstruction f2 = new SSAPutInstruction(1, 2, field);
+        SSAFieldAccessInstruction f2 = insts.PutInstruction(1, 2, field);
         addStatement(f2);
       }
 
@@ -785,7 +790,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       TypeReference otherType = otherBean.getLocalInterface();
       NewSiteReference newRef = NewSiteReference.make(getNextProgramCounter(), otherType);
       int otherInstance = nextLocal++;
-      SSANewInstruction n = new SSANewInstruction(otherInstance, newRef);
+      SSANewInstruction n = insts.NewInstruction(otherInstance, newRef);
       addStatement(n);
 
       // model a putfield on the other instance
@@ -806,24 +811,24 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
         // assume HashSet is the type of the returned collection.
         int setObj = nextLocal++;
         NewSiteReference setRef = NewSiteReference.make(getNextProgramCounter(), TypeReference.JavaUtilHashSet);
-        SSANewInstruction allocSet = new SSANewInstruction(setObj, setRef);
+        SSANewInstruction allocSet = insts.NewInstruction(setObj, setRef);
         addStatement(allocSet);
 
         int initIgnoredExceptions = nextLocal++;
         CallSiteReference initRef = CallSiteReference.make(getNextProgramCounter(), hashSetInit, IInvokeInstruction.Dispatch.SPECIAL);
-        addStatement(new SSAInvokeInstruction(new int[] { setObj }, initIgnoredExceptions, initRef));
+        addStatement(insts.InvokeInstruction(new int[] { setObj }, initIgnoredExceptions, initRef));
 
         int ignoredResult = nextLocal++;
         int moreIgnoredExceptions = nextLocal++;
         CallSiteReference addRef = CallSiteReference.make(getNextProgramCounter(), addMethod,IInvokeInstruction.Dispatch.INTERFACE);
-        SSAInvokeInstruction addCall = new SSAInvokeInstruction(ignoredResult, new int[] { setObj, 1 }, moreIgnoredExceptions,
+        SSAInvokeInstruction addCall = insts.InvokeInstruction(ignoredResult, new int[] { setObj, 1 }, moreIgnoredExceptions,
             addRef);
         addStatement(addCall);
 
-        SSAFieldAccessInstruction f2 = new SSAPutInstruction(otherInstance, setObj, oppField);
+        SSAFieldAccessInstruction f2 = insts.PutInstruction(otherInstance, setObj, oppField);
         addStatement(f2);
       } else {
-        SSAFieldAccessInstruction f2 = new SSAPutInstruction(otherInstance, 1, oppField);
+        SSAFieldAccessInstruction f2 = insts.PutInstruction(otherInstance, 1, oppField);
         addStatement(f2);
       }
     }
@@ -862,7 +867,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
 
       // get ejb object from pool
       int ejbObject = nextLocal++;
-      addStatement(new SSAGetInstruction(ejbObject, J2EEContainerModel.getBeanFieldRef(bean)));
+      addStatement(insts.GetInstruction(ejbObject, J2EEContainerModel.getBeanFieldRef(bean)));
 
       TypeReference rType = method.getReturnType();
 
@@ -883,11 +888,11 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       // note that we reserve a value number to hold the exceptional result
       // of the call.
       if (rType.equals(TypeReference.Void)) {
-        addStatement(new SSAInvokeInstruction(params, nextLocal++, site));
+        addStatement(insts.InvokeInstruction(params, nextLocal++, site));
       } else {
         int ret = nextLocal++;
-        addStatement(new SSAInvokeInstruction(ret, params, nextLocal++, site));
-        addStatement(new SSAReturnInstruction(ret, rType.isPrimitiveType()));
+        addStatement(insts.InvokeInstruction(ret, params, nextLocal++, site));
+        addStatement(insts.ReturnInstruction(ret, rType.isPrimitiveType()));
       }
 
     }
@@ -913,71 +918,71 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       // create interface object
       int result2 = nextLocal++;
       NewSiteReference ref2 = NewSiteReference.make(getNextProgramCounter(), entType);
-      SSANewInstruction a2 = new SSANewInstruction(result2, ref2);
+      SSANewInstruction a2 = insts.NewInstruction(result2, ref2);
       addStatement(a2);
 
       if (rType.equals(TypeReference.JavaUtilCollection) || rType.equals(TypeReference.JavaUtilSet)) {
         // assume that the finder returns a HashSet
         int result3 = nextLocal++;
         NewSiteReference ref3 = NewSiteReference.make(getNextProgramCounter(), TypeReference.JavaUtilHashSet);
-        SSANewInstruction a3 = new SSANewInstruction(result3, ref3);
+        SSANewInstruction a3 = insts.NewInstruction(result3, ref3);
         addStatement(a3);
 
         int initIgnoredExceptions = nextLocal++;
         CallSiteReference initRef = CallSiteReference.make(getNextProgramCounter(), hashSetInit, IInvokeInstruction.Dispatch.SPECIAL);
-        addStatement(new SSAInvokeInstruction(new int[] { result3 }, initIgnoredExceptions, initRef));
+        addStatement(insts.InvokeInstruction(new int[] { result3 }, initIgnoredExceptions, initRef));
 
         int ignoredResult = nextLocal++;
         int ignoredExceptions = nextLocal++;
         CallSiteReference addRef = CallSiteReference.make(getNextProgramCounter(), addMethod, IInvokeInstruction.Dispatch.INTERFACE);
-        SSAInvokeInstruction addCall = new SSAInvokeInstruction(ignoredResult, new int[] { result3, result2 }, ignoredExceptions,
+        SSAInvokeInstruction addCall = insts.InvokeInstruction(ignoredResult, new int[] { result3, result2 }, ignoredExceptions,
             addRef);
         addStatement(addCall);
 
-        SSAReturnInstruction r = new SSAReturnInstruction(result3, false);
+        SSAReturnInstruction r = insts.ReturnInstruction(result3, false);
         addStatement(r);
       } else if (rType.equals(TypeReference.JavaUtilEnum)) {
         int result3 = nextLocal++;
         NewSiteReference ref3 = NewSiteReference.make(getNextProgramCounter(), TypeReference.JavaUtilVector);
-        SSANewInstruction a3 = new SSANewInstruction(result3, ref3);
+        SSANewInstruction a3 = insts.NewInstruction(result3, ref3);
         addStatement(a3);
 
         int initIgnoredExceptions = nextLocal++;
         CallSiteReference initRef = CallSiteReference.make(getNextProgramCounter(), vectorInit, IInvokeInstruction.Dispatch.SPECIAL);
-        addStatement(new SSAInvokeInstruction(new int[] { result3 }, initIgnoredExceptions, initRef));
+        addStatement(insts.InvokeInstruction(new int[] { result3 }, initIgnoredExceptions, initRef));
 
         int ignoredResult = nextLocal++;
         int ignoredExceptions = nextLocal++;
         CallSiteReference addRef = CallSiteReference.make(getNextProgramCounter(), addMethod, IInvokeInstruction.Dispatch.INTERFACE);
-        SSAInvokeInstruction addCall = new SSAInvokeInstruction(ignoredResult, new int[] { result3, result2 }, ignoredExceptions,
+        SSAInvokeInstruction addCall = insts.InvokeInstruction(ignoredResult, new int[] { result3, result2 }, ignoredExceptions,
             addRef);
         addStatement(addCall);
 
         int result4 = nextLocal++;
         int moreIgnoredExceptions = nextLocal++;
         CallSiteReference elementsRef = CallSiteReference.make(getNextProgramCounter(), elementsMethod, IInvokeInstruction.Dispatch.VIRTUAL);
-        SSAInvokeInstruction elementsCall = new SSAInvokeInstruction(result4, new int[] { result3 }, moreIgnoredExceptions,
+        SSAInvokeInstruction elementsCall = insts.InvokeInstruction(result4, new int[] { result3 }, moreIgnoredExceptions,
             elementsRef);
         addStatement(elementsCall);
 
-        SSAReturnInstruction r = new SSAReturnInstruction(result4, false);
+        SSAReturnInstruction r = insts.ReturnInstruction(result4, false);
         addStatement(r);
       } else {
         int xobj = nextLocal++;
-        addStatement(new SSANewInstruction(xobj, NewSiteReference.make(getNextProgramCounter(), ObjectNotFoundExceptionClass)));
-        addStatement(new SSAThrowInstruction(xobj));
+        addStatement(insts.NewInstruction(xobj, NewSiteReference.make(getNextProgramCounter(), ObjectNotFoundExceptionClass)));
+        addStatement(insts.ThrowInstruction(xobj));
 
-        SSAReturnInstruction r = new SSAReturnInstruction(result2, false);
+        SSAReturnInstruction r = insts.ReturnInstruction(result2, false);
         addStatement(r);
       }
 
       int xobj2 = nextLocal++;
-      addStatement(new SSANewInstruction(xobj2, NewSiteReference.make(getNextProgramCounter(), FinderExceptionClass)));
-      addStatement(new SSAThrowInstruction(xobj2));
+      addStatement(insts.NewInstruction(xobj2, NewSiteReference.make(getNextProgramCounter(), FinderExceptionClass)));
+      addStatement(insts.ThrowInstruction(xobj2));
 
       int xobj3 = nextLocal++;
-      addStatement(new SSANewInstruction(xobj3, NewSiteReference.make(getNextProgramCounter(), EJBExceptionClass)));
-      addStatement(new SSAThrowInstruction(xobj3));
+      addStatement(insts.NewInstruction(xobj3, NewSiteReference.make(getNextProgramCounter(), EJBExceptionClass)));
+      addStatement(insts.ThrowInstruction(xobj3));
 
     }
   }
@@ -987,8 +992,8 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       super(method);
 
       int xobj = nextLocal++;
-      addStatement(new SSANewInstruction(xobj, NewSiteReference.make(getNextProgramCounter(), RemoteExceptionClass)));
-      addStatement(new SSAThrowInstruction(xobj));
+      addStatement(insts.NewInstruction(xobj, NewSiteReference.make(getNextProgramCounter(), RemoteExceptionClass)));
+      addStatement(insts.ThrowInstruction(xobj));
 
     }
   }

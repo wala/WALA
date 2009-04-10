@@ -21,6 +21,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SyntheticClass;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -30,6 +31,7 @@ import com.ibm.wala.shrikeBT.BytecodeConstants;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -251,6 +253,8 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
    */
   public IMethod getClassInitializer() {
     if (clinitMethod == null) {
+      SSAInstructionFactory insts = Language.JAVA.instructionFactory();
+      
       MethodReference clinit = MethodReference.findOrCreate(containerModelRef, MethodReference.clinitName,
           MethodReference.defaultInitDesc);
       MethodSummary code = new MethodSummary(clinit);
@@ -263,37 +267,37 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
 
         // 1. create bean type representing pool objects
         int beanAlloc = nextLocal++;
-        code.addStatement(new SSANewInstruction(beanAlloc, NewSiteReference.make(code.getNextProgramCounter(), ejbType)));
+        code.addStatement(insts.NewInstruction(beanAlloc, NewSiteReference.make(code.getNextProgramCounter(), ejbType)));
 
         // 2. call set...Context, as required by lifecycle.
         int contextAlloc = nextLocal++;
         int ignoredExceptions = nextLocal++;
         if (deployment.getBeanMetaData(ejbType).isSessionBean()) {
-          code.addStatement(new SSANewInstruction(contextAlloc, NewSiteReference.make(code.getNextProgramCounter(),
+          code.addStatement(insts.NewInstruction(contextAlloc, NewSiteReference.make(code.getNextProgramCounter(),
               sessionContextRef)));
-          code.addStatement(new SSAInvokeInstruction(new int[] { beanAlloc, contextAlloc }, ignoredExceptions, CallSiteReference
+          code.addStatement(insts.InvokeInstruction(new int[] { beanAlloc, contextAlloc }, ignoredExceptions, CallSiteReference
               .make(code.getNextProgramCounter(), setSessionContext, IInvokeInstruction.Dispatch.INTERFACE)));
         } else if (deployment.getBeanMetaData(ejbType).isMessageDrivenBean()) {
-          code.addStatement(new SSANewInstruction(contextAlloc, NewSiteReference.make(code.getNextProgramCounter(),
+          code.addStatement(insts.NewInstruction(contextAlloc, NewSiteReference.make(code.getNextProgramCounter(),
               messageContextRef)));
-          code.addStatement(new SSAInvokeInstruction(new int[] { beanAlloc, contextAlloc }, ignoredExceptions, CallSiteReference
+          code.addStatement(insts.InvokeInstruction(new int[] { beanAlloc, contextAlloc }, ignoredExceptions, CallSiteReference
               .make(code.getNextProgramCounter(), setMessageContext, IInvokeInstruction.Dispatch.INTERFACE)));
           // message driven beans also get ejbCreate called at this point
           // (or that is how I interpret the spec, such as it is)
           int moreIgnoredExceptions = nextLocal++;
           MethodReference ejbCreate = MethodReference.findOrCreate(ejbType, EJB_CREATE, Descriptor.findOrCreate(null,
               TypeReference.VoidName));
-          code.addStatement(new SSAInvokeInstruction(new int[] { beanAlloc }, moreIgnoredExceptions, CallSiteReference.make(code
+          code.addStatement(insts.InvokeInstruction(new int[] { beanAlloc }, moreIgnoredExceptions, CallSiteReference.make(code
               .getNextProgramCounter(), ejbCreate, IInvokeInstruction.Dispatch.VIRTUAL)));
         } else {
-          code.addStatement(new SSANewInstruction(contextAlloc, NewSiteReference.make(code.getNextProgramCounter(),
+          code.addStatement(insts.NewInstruction(contextAlloc, NewSiteReference.make(code.getNextProgramCounter(),
               entityContextRef)));
-          code.addStatement(new SSAInvokeInstruction(new int[] { beanAlloc, contextAlloc }, ignoredExceptions, CallSiteReference
+          code.addStatement(insts.InvokeInstruction(new int[] { beanAlloc, contextAlloc }, ignoredExceptions, CallSiteReference
               .make(code.getNextProgramCounter(), setEntityContext, IInvokeInstruction.Dispatch.INTERFACE)));
         }
 
         // 3. put bean into static field representing pool.
-        code.addStatement(new SSAPutInstruction(beanAlloc, field));
+        code.addStatement(insts.PutInstruction(beanAlloc, field));
       }
 
       clinitMethod = new SummarizedMethod(clinit, code, this);

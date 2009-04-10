@@ -22,8 +22,6 @@ public interface AstInstructionVisitor extends SSAInstruction.IVisitor {
     
   public void visitAstGlobalWrite(AstGlobalWrite instruction);
 
-  public void visitNonExceptingThrow(NonExceptingThrowInstruction inst);
-
   public void visitAssert(AstAssertInstruction instruction);    
 
   public void visitEachElementGet(EachElementGetInstruction inst);

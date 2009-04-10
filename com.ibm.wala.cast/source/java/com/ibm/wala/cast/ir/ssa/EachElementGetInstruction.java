@@ -15,6 +15,7 @@ import java.util.Collections;
 
 import com.ibm.wala.ssa.SSAAbstractUnaryInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 
@@ -34,8 +35,8 @@ public class EachElementGetInstruction extends SSAAbstractUnaryInstruction {
     super(lValue, objectRef);
   }
 
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    return new EachElementGetInstruction((defs == null) ? getDef(0) : defs[0], (uses == null) ? getUse(0) : uses[0]);
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
+    return ((AstInstructionFactory)insts).EachElementGetInstruction((defs == null) ? getDef(0) : defs[0], (uses == null) ? getUse(0) : uses[0]);
   }
 
   public String toString(SymbolTable symbolTable) {

@@ -33,10 +33,6 @@ public abstract class AstAbstractInstructionVisitor
 
   }
 
-  public void visitNonExceptingThrow(NonExceptingThrowInstruction inst) {
-		
-  }
-
   public void visitAssert(AstAssertInstruction instruction) {
 		
   }

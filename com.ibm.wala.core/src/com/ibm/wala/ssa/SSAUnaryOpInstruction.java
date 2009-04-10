@@ -24,17 +24,17 @@ public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
 
   private final IUnaryOpInstruction.IOperator operator;
 
-  protected SSAUnaryOpInstruction(IUnaryOpInstruction.IOperator operator, int result, int val) {
+  public SSAUnaryOpInstruction(IUnaryOpInstruction.IOperator operator, int result, int val) {
     super(result, val);
     this.operator = operator;
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) throws IllegalArgumentException {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) throws IllegalArgumentException {
     if (uses != null && uses.length == 0) {
       throw new IllegalArgumentException("(uses != null) and (uses.length == 0)");
     }
-    return new SSAUnaryOpInstruction(operator, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val : uses[0]);
+    return insts.UnaryOpInstruction(operator, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val : uses[0]);
   }
 
   @Override
@@ -54,11 +54,4 @@ public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
     return operator;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
-   */
-  @Override
-  public Collection<TypeReference> getExceptionTypes() {
-    return Collections.emptySet();
-  }
-}
+ }

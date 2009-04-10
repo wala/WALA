@@ -1,8 +1,11 @@
 package com.ibm.wala.cast.js.ssa;
 
 import java.util.Collection;
+import java.util.Collections;
 
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
@@ -19,9 +22,9 @@ public class JavaScriptInstanceOf extends SSAInstruction {
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return 
-      new JavaScriptInstanceOf(
+      ((JSInstructionFactory)insts).InstanceOf(
           defs==null? result: defs[0],
           uses==null? objVal: uses[0],
           uses==null? typeVal: uses[1]);
@@ -29,9 +32,13 @@ public class JavaScriptInstanceOf extends SSAInstruction {
 
   @Override
   public Collection<TypeReference> getExceptionTypes() {
-    return null;
+    return Collections.singleton(JavaScriptTypes.TypeError);
   }
 
+  public boolean isPEI() {
+    return true;
+  }
+  
   @Override
   public int hashCode() {
      return objVal*31771 + typeVal*23 + result;

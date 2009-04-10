@@ -10,40 +10,37 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
-public class SSALoadClassInstruction extends SSAInstruction {
-
-  private static final Collection<TypeReference> loadClassExceptions = Collections
-      .singleton(TypeReference.JavaLangClassNotFoundException);
+public abstract class SSALoadMetadataInstruction extends SSAInstruction {
 
   private final int lval;
 
-  private final TypeReference typeRef;
+  private final Object token;
+  
+  private final TypeReference entityType;
 
-  public SSALoadClassInstruction(int lval, TypeReference typeRef) {
+  protected SSALoadMetadataInstruction(int lval, TypeReference entityType, Object token) {
     this.lval = lval;
-    this.typeRef = typeRef;
-    if (typeRef == null) {
+    this.token = token;
+    this.entityType = entityType;
+    if (token == null) {
       throw new IllegalArgumentException("null typeRef");
     }
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (defs != null && defs.length == 0) {
       throw new IllegalArgumentException("(defs != null) and (defs.length == 0)");
     }
-    return new SSALoadClassInstruction(defs == null ? lval : defs[0], typeRef);
+    return insts.LoadMetadataInstruction(defs == null ? lval : defs[0], entityType, token);
   }
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return getValueString(symbolTable, lval) + " = load_class: " + typeRef;
+    return getValueString(symbolTable, lval) + " = load_metadata: " + token + ", " + entityType;
   }
 
   @Override
@@ -51,12 +48,12 @@ public class SSALoadClassInstruction extends SSAInstruction {
     if (v == null) {
       throw new IllegalArgumentException("v is null");
     }
-    v.visitLoadClass(this);
+    v.visitLoadMetadata(this);
   }
 
   @Override
   public int hashCode() {
-    return typeRef.hashCode() * lval;
+    return token.hashCode() * lval;
   }
 
   @Override
@@ -64,11 +61,6 @@ public class SSALoadClassInstruction extends SSAInstruction {
     return true;
   }
 
-  @Override
-  public Collection<TypeReference> getExceptionTypes() {
-    return loadClassExceptions;
-  }
-  
   @Override
   public boolean hasDef() {
     return true;
@@ -97,7 +89,11 @@ public class SSALoadClassInstruction extends SSAInstruction {
     return true;
   }
 
-  public TypeReference getLoadedClass() {
-    return typeRef;
+  public Object getToken() {
+    return token;
+  }
+  
+  public TypeReference getType() {
+    return entityType;
   }
 }

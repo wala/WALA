@@ -26,6 +26,7 @@ import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAThrowInstruction;
@@ -119,6 +120,7 @@ public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterp
   }
 
   private IR makeIR(IMethod method, JavaTypeContext context) {    
+    SSAInstructionFactory insts = context.getType().getType().getClassLoader().getInstructionFactory();
     TypeReference tr = context.getType().getTypeReference();
     if (tr != null) {
       SpecializedMethod m = new SpecializedMethod(method, method.getDeclaringClass(), method.isStatic(), false);
@@ -129,16 +131,16 @@ public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterp
       } else if (klass.getMethod(defCtorSelector) == null) {
         TypeReference instantiationExceptionRef = TypeReference.findOrCreateClass(ClassLoaderReference.Primordial, "java/lang", "InstantiationException");
         int xobj = method.getNumberOfParameters() + 1;
-        SSAInstruction newStatement = new SSANewInstruction(xobj, NewSiteReference.make(2, instantiationExceptionRef));
+        SSAInstruction newStatement = insts.NewInstruction(xobj, NewSiteReference.make(2, instantiationExceptionRef));
         m.addInstruction(tr, newStatement, true);
-        SSAInstruction throwStatement = new SSAThrowInstruction(xobj);
+        SSAInstruction throwStatement = insts.ThrowInstruction(xobj);
         m.addInstruction(tr, throwStatement, false);
       } else {
         TypeReference illegalAccessExceptionRef = TypeReference.findOrCreateClass(ClassLoaderReference.Primordial, "java/lang", "IllegalAccessException");
         int xobj = method.getNumberOfParameters() + 1;
-        SSAInstruction newStatement = new SSANewInstruction(xobj, NewSiteReference.make(2, illegalAccessExceptionRef));
+        SSAInstruction newStatement = insts.NewInstruction(xobj, NewSiteReference.make(2, illegalAccessExceptionRef));
         m.addInstruction(tr, newStatement, true);
-        SSAInstruction throwStatement = new SSAThrowInstruction(xobj);
+        SSAInstruction throwStatement = insts.ThrowInstruction(xobj);
         m.addInstruction(tr, throwStatement, false);        
       }
       

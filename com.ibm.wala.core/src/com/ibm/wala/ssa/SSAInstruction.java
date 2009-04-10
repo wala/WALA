@@ -11,6 +11,7 @@
 package com.ibm.wala.ssa;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import com.ibm.wala.types.TypeReference;
 
@@ -38,9 +39,9 @@ public abstract class SSAInstruction /* implements IInstruction */ {
    * Note that this only applies to CAst-based IR translation, since Java bytecode-based IR generation uses a different
    * SSA construction mechanism.
    * 
-   * TODO: this is kind of arcane? Move this out into CAst?
+   * TODO: move this into the SSAInstructionFactory
    */
-  public abstract SSAInstruction copyForSSA(int[] defs, int[] uses);
+  public abstract SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses);
 
   public abstract String toString(SymbolTable symbolTable);
 
@@ -111,7 +112,7 @@ public abstract class SSAInstruction /* implements IInstruction */ {
 
     void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction);
 
-    void visitLoadClass(SSALoadClassInstruction instruction);
+    void visitLoadMetadata(SSALoadMetadataInstruction instruction);
   }
 
   /**
@@ -184,7 +185,7 @@ public abstract class SSAInstruction /* implements IInstruction */ {
     public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
     }
 
-    public void visitLoadClass(SSALoadClassInstruction instruction) {
+    public void visitLoadMetadata(SSALoadMetadataInstruction instruction) {
     }
   }
 
@@ -240,7 +241,10 @@ public abstract class SSAInstruction /* implements IInstruction */ {
    * 
    * @return the set of exception types that an instruction might throw ... disregarding athrows and invokes.
    */
-  abstract public Collection<TypeReference> getExceptionTypes();
+  public Collection<TypeReference> getExceptionTypes() {
+    assert ! isPEI();
+    return Collections.emptySet();
+  }
 
   /**
    * @return true iff this instruction may fall through to the next

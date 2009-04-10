@@ -124,4 +124,12 @@ final public class BinaryOpInstruction extends Instruction implements IBinaryOpI
   public boolean isPEI() {
     return opcode == Constants.OP_idiv || opcode == Constants.OP_ldiv || opcode == Constants.OP_irem || opcode == Constants.OP_lrem;
   }
+
+  public boolean throwsExceptionOnOverflow() {
+    return false;
+  }
+
+  public boolean isUnsigned() {
+     return false;
+  }
 }

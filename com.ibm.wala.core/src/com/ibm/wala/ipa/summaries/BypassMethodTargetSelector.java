@@ -17,12 +17,14 @@ import java.util.Set;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.SyntheticMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.impl.ClassHierarchyMethodTargetSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
@@ -213,8 +215,8 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
    * Generate a {@link MethodSummary} which is the "standard" representation of a method 
    * that does nothing.
    */
-  public static MethodSummary generateStandardNoOp(MethodReference m, boolean isStatic) {
-    return new NoOpSummary(m, isStatic);
+  public static MethodSummary generateStandardNoOp(Language l, MethodReference m, boolean isStatic) {
+    return new NoOpSummary(l, m, isStatic);
   }
   
   /**
@@ -223,15 +225,19 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
    * concerning what "do nothing" means.
    */
   public MethodSummary generateNoOp(MethodReference m, boolean isStatic) {
-    return new NoOpSummary(m, isStatic);
+    Language l = cha.resolveMethod(m).getDeclaringClass().getClassLoader().getLanguage();
+    return new NoOpSummary(l, m, isStatic);
   }
   
 
   private static class NoOpSummary extends MethodSummary {
 
-    public NoOpSummary(MethodReference method, boolean isStatic) {
+    private final Language l;
+    
+    public NoOpSummary(Language l, MethodReference method, boolean isStatic) {
       super(method);
       setStatic(isStatic);
+      this.l = l;
     }
 
     /*
@@ -244,7 +250,8 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
       } else {
         int nullValue = getNumberOfParameters() + 1;
         SSAInstruction[] result = new SSAInstruction[1];
-        result[0] = new SSAReturnInstruction(nullValue, getReturnType().isPrimitiveType());
+        SSAInstructionFactory insts = l.instructionFactory();
+        result[0] = insts.ReturnInstruction(nullValue, getReturnType().isPrimitiveType());
         return result;
       }
     }

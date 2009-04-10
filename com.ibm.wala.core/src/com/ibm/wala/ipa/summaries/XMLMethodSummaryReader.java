@@ -35,6 +35,7 @@ import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
@@ -436,6 +437,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       TypeReference type = TypeReference.findOrCreate(governingLoader, TypeName.string2TypeName(classString));
       Atom nm = Atom.findOrCreateAsciiAtom(nameString);
       Language lang = scope.getLanguage(governingLoader.getLanguage());
+      SSAInstructionFactory insts = lang.instructionFactory();
       Descriptor D = Descriptor.findOrCreateUTF8(lang, descString);
       MethodReference ref = MethodReference.findOrCreate(type, nm, D);
       CallSiteReference site = null;
@@ -480,10 +482,10 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         int defNum = nextLocal;
         symbolTable.put(defVar, new Integer(nextLocal++));
 
-        governingMethod.addStatement(new SSAInvokeInstruction(defNum, params, exceptionValue, site));
+        governingMethod.addStatement(insts.InvokeInstruction(defNum, params, exceptionValue, site));
       } else {
         // ignore return value, if any
-        governingMethod.addStatement(new SSAInvokeInstruction(params, exceptionValue, site));
+        governingMethod.addStatement(insts.InvokeInstruction(params, exceptionValue, site));
       }
     }
 
@@ -493,6 +495,9 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
      * @param atts
      */
     private void processAllocation(Attributes atts) {
+      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      SSAInstructionFactory insts = lang.instructionFactory();
+
       // deduce the concrete type allocated
       String classString = atts.getValue(A_CLASS);
       final TypeReference type = TypeReference.findOrCreate(governingLoader, TypeName.string2TypeName(classString));
@@ -520,9 +525,9 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         Integer sNumber = symbolTable.get(size);
         Assertions.productionAssertion(sNumber != null);
         Assertions.productionAssertion(type.getDimensionality() == 1);
-        a = new SSANewInstruction(defNum, ref, new int[] { sNumber.intValue() });
+        a = insts.NewInstruction(defNum, ref, new int[] { sNumber.intValue() });
       } else {
-        a = new SSANewInstruction(defNum, ref);
+        a = insts.NewInstruction(defNum, ref);
       }
       governingMethod.addStatement(a);
     }
@@ -533,6 +538,8 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
      * @param atts
      */
     private void processAthrow(Attributes atts) {
+      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      SSAInstructionFactory insts = lang.instructionFactory();
 
       // get the value thrown
       String V = atts.getValue(A_VALUE);
@@ -544,7 +551,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         Assertions.UNREACHABLE("Cannot lookup value: " + V);
       }
 
-      SSAThrowInstruction T = new SSAThrowInstruction(valueNumber.intValue());
+      SSAThrowInstruction T = insts.ThrowInstruction(valueNumber.intValue());
       governingMethod.addStatement(T);
     }
 
@@ -554,6 +561,9 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
      * @param atts
      */
     private void processGetField(Attributes atts) {
+      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      SSAInstructionFactory insts = lang.instructionFactory();
+
       // deduce the field written
       String classString = atts.getValue(A_CLASS);
       TypeReference type = TypeReference.findOrCreate(governingLoader, TypeName.string2TypeName(classString));
@@ -587,7 +597,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         Assertions.UNREACHABLE("Cannot lookup ref: " + R);
       }
 
-      SSAGetInstruction G = new SSAGetInstruction(defNum, refNumber.intValue(), field);
+      SSAGetInstruction G = insts.GetInstruction(defNum, refNumber.intValue(), field);
       governingMethod.addStatement(G);
     }
 
@@ -597,6 +607,9 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
      * @param atts
      */
     private void processPutField(Attributes atts) {
+      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      SSAInstructionFactory insts = lang.instructionFactory();
+
       // deduce the field written
       String classString = atts.getValue(A_CLASS);
       TypeReference type = TypeReference.findOrCreate(governingLoader, TypeName.string2TypeName(classString));
@@ -629,7 +642,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         Assertions.UNREACHABLE("Cannot lookup ref: " + R);
       }
 
-      SSAPutInstruction P = new SSAPutInstruction(refNumber.intValue(), valueNumber.intValue(), field);
+      SSAPutInstruction P = insts.PutInstruction(refNumber.intValue(), valueNumber.intValue(), field);
       governingMethod.addStatement(P);
     }
 
@@ -639,6 +652,9 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
      * @param atts
      */
     private void processPutStatic(Attributes atts) {
+      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      SSAInstructionFactory insts = lang.instructionFactory();
+
       // deduce the field written
       String classString = atts.getValue(A_CLASS);
       TypeReference type = TypeReference.findOrCreate(governingLoader, TypeName.string2TypeName(classString));
@@ -660,7 +676,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       if (valueNumber == null) {
         Assertions.UNREACHABLE("Cannot lookup value: " + V);
       }
-      SSAPutInstruction P = new SSAPutInstruction(valueNumber.intValue(), field);
+      SSAPutInstruction P = insts.PutInstruction(valueNumber.intValue(), field);
       governingMethod.addStatement(P);
     }
 
@@ -670,6 +686,9 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
      * @param atts
      */
     private void processAastore(Attributes atts) {
+      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      SSAInstructionFactory insts = lang.instructionFactory();
+
       String R = atts.getValue(A_REF);
       if (R == null) {
         Assertions.UNREACHABLE("Must specify ref for aastore " + governingMethod);
@@ -691,7 +710,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       if (valueNumber == null) {
         Assertions.UNREACHABLE("Cannot lookup value: " + V);
       }
-      SSAArrayStoreInstruction S = new SSAArrayStoreInstruction(refNumber.intValue(), 0, valueNumber.intValue(),
+      SSAArrayStoreInstruction S = insts.ArrayStoreInstruction(refNumber.intValue(), 0, valueNumber.intValue(),
           TypeReference.JavaLangObject);
       governingMethod.addStatement(S);
     }
@@ -702,10 +721,13 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
      * @param atts
      */
     private void processReturn(Attributes atts) {
+      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      SSAInstructionFactory insts = lang.instructionFactory();
+
       if (governingMethod.getReturnType() != null) {
         String retV = atts.getValue(A_VALUE);
         if (retV == null) {
-          SSAReturnInstruction R = new SSAReturnInstruction();
+          SSAReturnInstruction R = insts.ReturnInstruction();
           governingMethod.addStatement(R);
         } else {
           Integer valueNumber = symbolTable.get(retV);
@@ -721,7 +743,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
             }
           }
           boolean isPrimitive = governingMethod.getReturnType().isPrimitiveType();
-          SSAReturnInstruction R = new SSAReturnInstruction(valueNumber.intValue(), isPrimitive);
+          SSAReturnInstruction R = insts.ReturnInstruction(valueNumber.intValue(), isPrimitive);
           governingMethod.addStatement(R);
         }
       }

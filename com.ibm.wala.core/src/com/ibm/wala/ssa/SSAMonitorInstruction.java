@@ -12,16 +12,16 @@ package com.ibm.wala.ssa;
 
 import java.util.Collection;
 
+import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.shrike.Exceptions;
 
 /**
  * An instruction representing a monitorenter or monitorexit operation.
  * 
  * @author sfink
  */
-public class SSAMonitorInstruction extends SSAInstruction {
+public abstract class SSAMonitorInstruction extends SSAInstruction {
   /**
    * The value number of the object being locked or unlocked
    */
@@ -36,21 +36,21 @@ public class SSAMonitorInstruction extends SSAInstruction {
    * @param ref The value number of the object being locked or unlocked
    * @param isEnter Does this instruction represent a monitorenter?
    */
-  SSAMonitorInstruction(int ref, boolean isEnter) {
+  protected SSAMonitorInstruction(int ref, boolean isEnter) {
     super();
     this.ref = ref;
     this.isEnter = isEnter;
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    // todo: check that this is the intended behavior. julian?
-    return new SSAMonitorInstruction(uses == null || uses.length == 0 ? ref : uses[0], isEnter);
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
+    assert uses == null || uses.length == 1;
+    return insts.MonitorInstruction(uses == null ? ref : uses[0], isEnter);
   }
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return "monitor " + getValueString(symbolTable, ref);
+    return "monitor" + (isEnter? "enter " : "exit ") + getValueString(symbolTable, ref);
   }
 
   /**
@@ -102,14 +102,6 @@ public class SSAMonitorInstruction extends SSAInstruction {
   @Override
   public boolean isFallThrough() {
     return true;
-  }
-
-  /*
-   * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
-   */
-  @Override
-  public Collection<TypeReference> getExceptionTypes() {
-    return Exceptions.getNullPointerException();
   }
 
   /**

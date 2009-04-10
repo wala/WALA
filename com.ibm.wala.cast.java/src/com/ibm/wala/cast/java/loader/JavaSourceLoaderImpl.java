@@ -22,8 +22,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.ibm.wala.cast.ir.ssa.AssignInstruction;
+import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
+import com.ibm.wala.cast.ir.ssa.AstEchoInstruction;
+import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
+import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
+import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
+import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
+import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
+import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.ir.translator.AstTranslator.AstLexicalInformation;
+import com.ibm.wala.cast.java.ssa.AstJavaInstructionFactory;
+import com.ibm.wala.cast.java.ssa.AstJavaInvokeInstruction;
+import com.ibm.wala.cast.java.ssa.AstJavaNewEnclosingInstruction;
+import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
 import com.ibm.wala.cast.java.translator.SourceModuleTranslator;
 import com.ibm.wala.cast.loader.AstClass;
 import com.ibm.wala.cast.loader.AstField;
@@ -35,14 +48,19 @@ import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.CAstType.Function;
 import com.ibm.wala.cfg.AbstractCFG;
+import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.ClassLoaderImpl;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.ModuleEntry;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.ClassConstants;
+import com.ibm.wala.ssa.SSAInstructionFactory;
+import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
@@ -434,4 +452,107 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
   public String toString() {
     return "Java Source Loader (classes " + loadedClasses.values() + ")";
   }
+  
+  public static class InstructionFactory extends JavaInstructionFactory implements AstJavaInstructionFactory {
+
+    public com.ibm.wala.cast.java.ssa.EnclosingObjectReference EnclosingObjectReference(int lval, TypeReference type) {
+      return new EnclosingObjectReference(lval, type);
+    }
+
+    public AstJavaNewEnclosingInstruction JavaNewEnclosingInstruction(int result, NewSiteReference site, int enclosing) {
+      return new AstJavaNewEnclosingInstruction(result, site, enclosing);
+    }
+
+    public AstJavaInvokeInstruction JavaInvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
+      return new AstJavaInvokeInstruction(result, params, exception, site);
+    }
+
+    public AstJavaInvokeInstruction JavaInvokeInstruction(int[] params, int exception, CallSiteReference site) {
+      return new AstJavaInvokeInstruction(params, exception, site);
+    }
+
+    public AstJavaInvokeInstruction JavaInvokeInstruction(int[] results, int[] params, int exception, CallSiteReference site,
+        Access[] lexicalReads, Access[] lexicalWrites) {
+      return new AstJavaInvokeInstruction(results, params, exception, site, lexicalReads, lexicalWrites);
+    }
+
+    public AstAssertInstruction AssertInstruction(int value, boolean fromSpecification) {
+      return new AstAssertInstruction(value, fromSpecification);
+    }
+
+    public com.ibm.wala.cast.ir.ssa.AssignInstruction AssignInstruction(int result, int val) {
+       return new AssignInstruction(result, val);
+    }
+
+    public com.ibm.wala.cast.ir.ssa.EachElementGetInstruction EachElementGetInstruction(int value, int objectRef) {
+      throw new UnsupportedOperationException();
+    }
+
+    public com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction EachElementHasNextInstruction(int value, int objectRef) {
+      throw new UnsupportedOperationException();
+    }
+
+    public AstEchoInstruction EchoInstruction(int[] rvals) {
+      throw new UnsupportedOperationException();
+    }
+
+    public AstGlobalRead GlobalRead(int lhs, FieldReference global) {
+      throw new UnsupportedOperationException();
+    }
+
+    public AstGlobalWrite GlobalWrite(FieldReference global, int rhs) {
+      throw new UnsupportedOperationException();
+    }
+
+    public AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval, int fieldVal, FieldReference fieldRef) {
+      throw new UnsupportedOperationException();
+    }
+
+    public AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval, FieldReference fieldRef) {
+      throw new UnsupportedOperationException();
+    }
+
+    public AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval, int fieldVal) {
+      throw new UnsupportedOperationException();
+    }
+
+    public AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval) {
+      throw new UnsupportedOperationException();
+    }
+
+    public AstLexicalRead LexicalRead(Access[] accesses) {
+      return new AstLexicalRead(accesses);
+    }
+
+    public AstLexicalRead LexicalRead(Access access) {
+       return new AstLexicalRead(access);
+    }
+
+    public AstLexicalRead LexicalRead(int lhs, String definer, String globalName) {
+      return new AstLexicalRead(lhs, definer, globalName);
+    }
+
+    public AstLexicalWrite LexicalWrite(Access[] accesses) {
+      return new AstLexicalWrite(accesses);
+    }
+
+    public AstLexicalWrite LexicalWrite(Access access) {
+      return new AstLexicalWrite(access);
+    }
+
+    public AstLexicalWrite LexicalWrite(String definer, String globalName, int rhs) {
+       return new AstLexicalWrite(definer, globalName, rhs);
+    }
+
+    public SSAThrowInstruction NonExceptingThrowInstruction(int exception) {
+      throw new UnsupportedOperationException();
+   }    
+  }
+  
+  private static final InstructionFactory insts = new InstructionFactory();
+  
+  public InstructionFactory getInstructionFactory() {
+    return insts;
+  }
+
 }

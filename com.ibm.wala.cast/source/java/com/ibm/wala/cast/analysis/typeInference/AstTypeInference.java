@@ -23,7 +23,6 @@ import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
 import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
-import com.ibm.wala.cast.ir.ssa.NonExceptingThrowInstruction;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 
@@ -44,9 +43,6 @@ public abstract class AstTypeInference extends TypeInference {
     }
 
     public void visitAstGlobalWrite(AstGlobalWrite instruction) {
-    }
-
-    public void visitNonExceptingThrow(NonExceptingThrowInstruction inst) {
     }
 
     public void visitAssert(AstAssertInstruction instruction) {

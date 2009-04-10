@@ -19,26 +19,26 @@ import com.ibm.wala.util.debug.Assertions;
  * @author sfink
  * 
  */
-public class SSAPutInstruction extends SSAFieldAccessInstruction {
+public abstract class SSAPutInstruction extends SSAFieldAccessInstruction {
 
   private final int val;
 
-  public SSAPutInstruction(int ref, int val, FieldReference field) {
+  protected SSAPutInstruction(int ref, int val, FieldReference field) {
     super(field, ref);
     this.val = val;
   }
 
-  public SSAPutInstruction(int val, FieldReference field) {
+  protected SSAPutInstruction(int val, FieldReference field) {
     super(field, -1);
     this.val = val;
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (isStatic())
-      return new SSAPutInstruction(uses == null ? val : uses[0], getDeclaredField());
+      return insts.PutInstruction(uses == null ? val : uses[0], getDeclaredField());
     else
-      return new SSAPutInstruction(uses == null ? getRef() : uses[0], uses == null ? val : uses[1], getDeclaredField());
+      return insts.PutInstruction(uses == null ? getRef() : uses[0], uses == null ? val : uses[1], getDeclaredField());
   }
 
   @Override

@@ -12,4 +12,6 @@ public interface IShiftInstruction extends IInstruction {
   
   String getType();
   
+  boolean isUnsigned();
+  
 }

@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.ir.ssa;
 
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -36,7 +37,7 @@ public class AstLexicalRead extends AstLexicalAccess {
     this(new Access(globalName, definer, lhs));
   }
 
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+  public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (defs == null) {
       return new AstLexicalRead(getAccesses());
     } else {
@@ -46,7 +47,7 @@ public class AstLexicalRead extends AstLexicalAccess {
         accesses[i] = new Access(oldAccess.variableName, oldAccess.variableDefiner, defs[i]);
       }
 
-      return new AstLexicalRead(accesses);
+      return ((AstInstructionFactory)insts).LexicalRead(accesses);
     }
   }
 
