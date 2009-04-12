@@ -17,6 +17,8 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.strings.Atom;
@@ -45,5 +47,13 @@ public class JavaSourceAnalysisScope extends AnalysisScope {
 
   public ClassLoaderReference getSourceLoader() {
     return SOURCE;
+  }
+  
+  public void addToScope(ClassLoaderReference loader, Module m) {
+    if (m instanceof SourceDirectoryTreeModule && loader.equals(ClassLoaderReference.Application)) {
+      super.addToScope(SOURCE, m);
+    } else {
+      super.addToScope(loader, m);
+    }
   }
 }

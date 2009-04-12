@@ -42,6 +42,7 @@ import org.eclipse.pde.internal.core.PDECore;
 import org.eclipse.pde.internal.core.PDEStateHelper;
 
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
+import com.ibm.wala.classLoader.EclipseSourceDirectoryTreeModule;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
@@ -166,8 +167,7 @@ public class EclipseProjectPath {
       List<Module> s = MapUtil.findOrCreateList(modules, loader);
 
       if (includeSource) {
-        File dir = makeAbsolute(e.getPath()).toFile();
-        s.add(new SourceDirectoryTreeModule(dir));
+          s.add(new EclipseSourceDirectoryTreeModule(e.getPath()));
       }
       if (e.getOutputLocation() != null) {
         File output = makeAbsolute(e.getOutputLocation()).toFile();
@@ -280,7 +280,7 @@ public class EclipseProjectPath {
     }
   }
 
-  protected IPath makeAbsolute(IPath p) {
+  public static IPath makeAbsolute(IPath p) {
     IPath absolutePath= p;
     if (p.toFile().exists()) {
       return p;
@@ -311,18 +311,19 @@ public class EclipseProjectPath {
   public AnalysisScope toAnalysisScope(AnalysisScope scope) {
     try {
       List<Module> l = MapUtil.findOrCreateList(modules, Loader.APPLICATION);
-      File dir = makeAbsolute(project.getOutputLocation()).toFile();
-      if (!dir.isDirectory()) {
-        System.err.println("PANIC: project output location is not a directory: " + dir);
-      } else {
-        l.add(new BinaryDirectoryTreeModule(dir));
+      if (! includeSource) {
+        File dir = makeAbsolute(project.getOutputLocation()).toFile();
+        if (!dir.isDirectory()) {
+          System.err.println("PANIC: project output location is not a directory: " + dir);
+        } else {
+          l.add(new BinaryDirectoryTreeModule(dir));
+        }
       }
-
+      
       if (includeSource) {
         for (IClasspathEntry e : project.getRawClasspath()) {
           if (e.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
-            File src = makeAbsolute(e.getPath()).toFile();
-            l.add(new SourceDirectoryTreeModule(src));
+            l.add(new EclipseSourceDirectoryTreeModule(e.getPath()));
           }
         }
       }
