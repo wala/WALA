@@ -58,10 +58,10 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
    * Compute an analysis scope for the current selection
    */
   public static AnalysisScope computeScope(IStructuredSelection selection) throws IOException {
-    return computeScope(selection, false);
+    return computeScope(selection, false, true);
   }
 
-  public static AnalysisScope computeScope(IStructuredSelection selection, boolean includeSource) throws IOException {
+  public static AnalysisScope computeScope(IStructuredSelection selection, boolean includeSource, boolean includeClassFiles) throws IOException {
     if (selection == null) {
       throw new IllegalArgumentException("null selection");
     }
@@ -72,7 +72,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
         IJavaElement e = (IJavaElement) object;
         IJavaProject jp = e.getJavaProject();
         try {
-          projectPaths.add(EclipseProjectPath.make(jp, includeSource));
+          projectPaths.add(EclipseProjectPath.make(jp, includeSource, includeClassFiles));
         } catch (CoreException e1) {
           e1.printStackTrace();
           // skip and continue

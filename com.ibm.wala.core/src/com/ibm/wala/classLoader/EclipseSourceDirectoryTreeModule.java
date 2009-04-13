@@ -13,11 +13,11 @@ package com.ibm.wala.classLoader;
 import java.io.File;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+
 import com.ibm.wala.eclipse.util.EclipseProjectPath;
 
 public class EclipseSourceDirectoryTreeModule extends SourceDirectoryTreeModule {
