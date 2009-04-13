@@ -171,6 +171,7 @@ import com.ibm.wala.util.debug.Assertions;
 // * boxing (YUCK). see resolveBoxing()
 // * enums (probably in simplename or something. but using resolveConstantExpressionValue() possible)
 
+@SuppressWarnings("unchecked")
 public class JDTJava2CAstTranslator implements TranslatorToCAst {
   protected final CAst fFactory = new CAstImpl();
 
@@ -493,9 +494,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
 
   /**
    * @param n for positioning.
-   */
-  @SuppressWarnings("unchecked")
-  /*
+   *
    * Make a constructor with parameters that calls super(...) with parameters. Used for anonymous classes with arguments to a
    * constructor, like new Foo(arg1,arg2) { }
    */
@@ -3246,12 +3245,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
 
   /**
    * Called only from visitFieldInitNode(node,context)
-   * 
-   * @param node
-   * @param context
-   * @return
    */
-  @SuppressWarnings("unchecked")
   private CAstNode createEnumConstantDeclarationInit(EnumConstantDeclaration node, WalkContext context) {
     String hiddenVariableName = (String) node.getProperty("com.ibm.wala.cast.java.translator.jdt.fakeValuesDeclName");
     if (hiddenVariableName == null) {
@@ -3281,7 +3275,6 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
     }
   }
 
-  @SuppressWarnings("unchecked")
   private CAstEntity createEnumValueOfMethod(ITypeBinding enumType, WalkContext oldContext) {
     IMethodBinding met = null, superMet = null;
     // find our valueOf(String)
@@ -3410,7 +3403,6 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
   /**
    * @param n for positioning.
    */
-  @SuppressWarnings("unchecked")
   private CAstEntity createEnumConstructorWithParameters(IMethodBinding ctor, ASTNode n, WalkContext oldContext,
       ArrayList<ASTNode> inits, MethodDeclaration nonDefaultCtor) {
     // PART I: find super ctor to call
