@@ -1,7 +1,18 @@
+/******************************************************************************
+ * Copyright (c) 2009 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *****************************************************************************/
 package com.ibm.wala.cast.loader;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
@@ -26,7 +37,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 
 public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
 
@@ -70,17 +80,17 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
             CAstEntity fileEntity = xlatorToCAst.translateToCAst();
 
             if (fileEntity != null) {
-              CAstPrinter.printTo(fileEntity, Trace.getTraceWriter());
+              CAstPrinter.printTo(fileEntity, new PrintWriter(System.err));
 
               topLevelEntities.add(Pair.make(fileEntity, fn));
             }
           } catch (MalformedURLException e) {
             System.err.println(("unpected problems with " + f));
-            e.printStackTrace(Trace.getTraceStream());
+            e.printStackTrace(System.err);
             Assertions.UNREACHABLE();
           } catch (RuntimeException e) {
             System.err.println(("unpected problems with " + f));
-            e.printStackTrace(Trace.getTraceStream());
+            e.printStackTrace(System.err);
           }
 
         } else if (moduleEntry instanceof SourceURLModule) {
@@ -104,11 +114,11 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
             F.delete();
           } catch (IOException e) {
             System.err.println(("unexpected problems with " + fileName));
-            e.printStackTrace(Trace.getTraceStream());
+            e.printStackTrace(System.err);
             Assertions.UNREACHABLE();
           } catch (RuntimeException e) {
             System.err.println(("unexpected problems with " + fileName));
-            e.printStackTrace(Trace.getTraceStream());
+            e.printStackTrace(System.err);
           }
         }
       }
