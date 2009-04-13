@@ -1,3 +1,9 @@
+/******************************************************************************
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *****************************************************************************/
 package com.ibm.wala.cast.java.test;
 
 import java.io.IOException;
@@ -13,7 +19,6 @@ import com.ibm.wala.cast.java.translator.jdt.JDTJavaSourceAnalysisEngine;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.plugin.CoreTestsPlugin;
 import com.ibm.wala.core.tests.util.EclipseTestUtil;
-import com.ibm.wala.eclipse.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
@@ -54,7 +59,8 @@ public class JDTJava15IRTests extends IRTests {
     return engine;
   }
 
-  private void runSimple15Test(List assertions) {
+  @SuppressWarnings("unused")
+  private void runSimple15Test(List<? extends IRAssertion> assertions) {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), assertions, true);
   }
 
