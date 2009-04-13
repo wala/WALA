@@ -14,7 +14,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- * Utilities for dealing with IntSets
+ * Utilities for dealing with {@link IntSet}s
  */
 public class IntSetUtil {
 
@@ -48,8 +48,7 @@ public class IntSetUtil {
   /**
    * This method constructs an appropriate mutable copy of set.
    * 
-   * @param set
-   * @return a new MutableIntSet object with the same value as set
+   * @return a new {@link MutableIntSet} object with the same value as set
    * @throws UnimplementedError if (not ( set instanceof com.ibm.wala.util.intset.SparseIntSet ) ) and (not ( set instanceof
    *           com.ibm.wala.util.intset.BitVectorIntSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.BimodalMutableIntSet
    *           ) ) and (not ( set instanceof com.ibm.wala.util.intset.DebuggingMutableIntSet ) ) and (not ( set instanceof
