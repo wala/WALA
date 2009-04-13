@@ -46,11 +46,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileProvider;
 
 /**
- * 
- * @author julian dolby?
- * @author sfink .. cleaned up and refactored some 
- * @author smarkstr (added file extension support)
- *
+ * An {@link EclipseProjectAnalysisEngine} specialized for source code analysis with CAst
  */
 public class EclipseProjectSourceAnalysisEngine extends EclipseProjectAnalysisEngine {
 
