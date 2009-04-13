@@ -28,24 +28,24 @@ public class PolyglotSyncDuplicatorTest extends SyncDuplicatorTest {
   }
 
   protected JavaSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors) {
-	    JavaSourceAnalysisEngine engine = new PolyglotJavaSourceAnalysisEngine() {
-	      protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
-	        return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
-	      }
+    JavaSourceAnalysisEngine engine = new PolyglotJavaSourceAnalysisEngine() {
+      protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
+        return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
+      }
 
-	      public IRTranslatorExtension getTranslatorExtension() {
-	        JavaIRTranslatorExtension ext = new JavaIRTranslatorExtension();
-	        ext.setCAstRewriterFactory(new CAstRewriterFactory() {
-		          public CAstRewriter createCAstRewriter(CAst ast) {
-		            return new SynchronizedBlockDuplicator(ast, true, testMethod);
-		          } 
-		        });
-	        return ext;
-	      }
+      public IRTranslatorExtension getTranslatorExtension() {
+        JavaIRTranslatorExtension ext = new JavaIRTranslatorExtension();
+        ext.setCAstRewriterFactory(new CAstRewriterFactory() {
+          public CAstRewriter createCAstRewriter(CAst ast) {
+            return new SynchronizedBlockDuplicator(ast, true, testMethod);
+          }
+        });
+        return ext;
+      }
 
-	    };
-	    engine.setExclusionsFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-	    return engine;
-	  }
-  
+    };
+    engine.setExclusionsFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    return engine;
+  }
+
 }

@@ -6,7 +6,6 @@
  *******************************************************************************/
 package com.ibm.wala.cast.java.test;
 
-
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.java.translator.polyglot.PolyglotJavaSourceAnalysisEngine;
@@ -32,5 +31,5 @@ public class PolyglotJavaIRTests extends JavaIRTests {
     engine.setExclusionsFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     return engine;
   }
-  
+
 }
