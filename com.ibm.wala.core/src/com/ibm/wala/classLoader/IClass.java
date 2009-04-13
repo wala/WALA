@@ -35,8 +35,6 @@ public interface IClass extends IClassHierarchyDweller {
 
   /**
    * Is this class a Java interface?
-   * 
-   * @return boolean
    */
   boolean isInterface();
 
@@ -63,13 +61,14 @@ public interface IClass extends IClassHierarchyDweller {
   IClass getSuperclass() throws ClassHierarchyException;
 
   /**
-   * @return Collection of (IClass) interfaces this class directly implements If this class is an interface, returns the interfaces
+   * @return Collection of (IClass) interfaces this class directly implements. If this class is an interface, returns the interfaces
    *         it immediately extends.
    */
   Collection<IClass> getDirectInterfaces() throws ClassHierarchyException;
 
   /**
    * @return Collection of (IClass) interfaces this class implements, including all ancestors of interfaces immediately implemented.
+   *         If this class is an interface, it returns all super-interfaces.
    */
   Collection<IClass> getAllImplementedInterfaces() throws ClassHierarchyException;
 
