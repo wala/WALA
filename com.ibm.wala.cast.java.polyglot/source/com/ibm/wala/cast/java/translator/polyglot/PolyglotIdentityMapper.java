@@ -126,6 +126,7 @@ public class PolyglotIdentityMapper implements IdentityMapper<Type, CodeInstance
     return typeRef;
   }
 
+  @SuppressWarnings("unchecked")
   private Selector selectorForMethod(CodeInstance procInstance) {
     Atom name = (procInstance instanceof ConstructorInstance) ? MethodReference.initAtom
         : (procInstance instanceof InitializerInstance) ? MethodReference.clinitName : Atom

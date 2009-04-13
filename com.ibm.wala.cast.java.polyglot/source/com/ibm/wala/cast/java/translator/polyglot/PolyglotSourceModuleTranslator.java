@@ -100,6 +100,7 @@ public class PolyglotSourceModuleTranslator implements SourceModuleTranslator {
     throw new IllegalStateException("No innermost class loader???");
   }
 
+  @SuppressWarnings("unchecked")
   public void loadAllSources(Set modules) {
     Options opts = fExtInfo.getOptions();
     opts.assertions = true;

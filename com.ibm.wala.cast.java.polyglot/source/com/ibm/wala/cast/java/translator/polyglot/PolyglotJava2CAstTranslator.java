@@ -150,6 +150,7 @@ import com.ibm.wala.util.collections.IteratorPlusOne;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 
+@SuppressWarnings("unchecked")
 public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
   protected final CAst fFactory = new CAstImpl();
 
@@ -457,6 +458,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       return processAssign(la, wc);
     }
 
+
     private CAstNode processAssign(Assign la, WalkContext wc) {
       WalkContext lvc = new AssignmentContext(wc);
       if (la.operator() == Assign.ASSIGN) {
@@ -565,7 +567,6 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       }
     }
 
-    @SuppressWarnings("unchecked")
     private void handleThrowsFromCall(ProcedureInstance procedureInstance, Node callAstNode, WalkContext wc) {
       List<Type> throwTypes = procedureInstance.throwTypes();
       for (Iterator<Type> iter = IteratorPlusOne.make(throwTypes.iterator(), fREType); iter.hasNext();) {
@@ -2575,7 +2576,6 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     return ct.fullName() + "$" + pos.line() + "$" + pos.column();
   }
 
-  @SuppressWarnings("unchecked")
   protected CAstEntity walkEntity(Node rootNode, final WalkContext context) {
     if (rootNode instanceof SourceFile) {
       SourceFile file = (SourceFile) rootNode;

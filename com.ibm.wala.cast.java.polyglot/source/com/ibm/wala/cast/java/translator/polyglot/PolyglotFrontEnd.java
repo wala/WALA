@@ -44,6 +44,7 @@ public final class PolyglotFrontEnd extends Compiler {
     this(info, new StdErrorQueue(System.err, 1000 * 1000, info.compilerName()));
   }
 
+  @SuppressWarnings("unchecked")
   public boolean compile(Collection/* <StreamSource> */sources) {
     boolean okay = false;
 

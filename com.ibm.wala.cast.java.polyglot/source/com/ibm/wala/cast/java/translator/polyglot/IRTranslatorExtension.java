@@ -25,7 +25,7 @@ public interface IRTranslatorExtension {
   PolyglotIdentityMapper getIdentityMapper();
 
   /**
-   * @return the CAstRewriterFactory.
    */
+  @SuppressWarnings("unchecked")
   CAstRewriterFactory getCAstRewriterFactory();
 }

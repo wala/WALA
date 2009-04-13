@@ -30,6 +30,7 @@ public class JavaIRTranslatorExtension extends JLExtensionInfo implements IRTran
 
   protected PolyglotIdentityMapper fMapper;
 
+  @SuppressWarnings("unchecked")
   protected CAstRewriterFactory rewriterFactory;
 
   public void setSourceLoader(PolyglotSourceLoaderImpl sourceLoader) {
@@ -45,10 +46,12 @@ public class JavaIRTranslatorExtension extends JLExtensionInfo implements IRTran
     return fMapper;
   }
 
+  @SuppressWarnings("unchecked")
   public void setCAstRewriterFactory(CAstRewriterFactory factory) {
     rewriterFactory = factory;
   }
 
+  @SuppressWarnings("unchecked")
   public CAstRewriterFactory getCAstRewriterFactory() {
     return rewriterFactory;
   }

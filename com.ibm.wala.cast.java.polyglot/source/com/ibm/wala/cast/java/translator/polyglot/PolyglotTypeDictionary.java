@@ -54,6 +54,7 @@ public class PolyglotTypeDictionary extends CAstTypeDictionaryImpl {
       return "[" + fEltCAstType.getName();
     }
 
+    @SuppressWarnings("unchecked")
     public Collection getSupertypes() {
       if (fEltPolyglotType.isPrimitive())
         return Collections.singleton(getCAstTypeFor(fTypeSystem.Object()));
