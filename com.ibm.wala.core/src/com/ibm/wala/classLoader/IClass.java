@@ -22,41 +22,38 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * Basic interface for an object that represents a single Java class
- * for analysis purposes, including array classes.
+ * Basic interface for an object that represents a single Java class for analysis purposes, including array classes.
  */
 public interface IClass extends IClassHierarchyDweller {
 
   /**
-   * Return the object that represents the defining class loader
-   * for this class.
-   * @return the object that represents the defining class loader
-   * for this class.
+   * Return the object that represents the defining class loader for this class.
+   * 
+   * @return the object that represents the defining class loader for this class.
    */
   IClassLoader getClassLoader();
 
   /**
    * Is this class a Java interface?
+   * 
    * @return boolean
    */
   boolean isInterface();
 
   /**
-   *  @return true iff this class is abstract
+   * @return true iff this class is abstract
    */
   boolean isAbstract();
-  
-  /**
-   *  @return true iff this class is public
-   */
-  boolean isPublic();
-  
 
   /**
-   * Return the integer that encodes the class's modifiers,
-   * as defined by the JVM specification
-   * @return the integer that encodes the class's modifiers,
-   * as defined by the JVM specification
+   * @return true iff this class is public
+   */
+  boolean isPublic();
+
+  /**
+   * Return the integer that encodes the class's modifiers, as defined by the JVM specification
+   * 
+   * @return the integer that encodes the class's modifiers, as defined by the JVM specification
    */
   int getModifiers() throws UnsupportedOperationException;
 
@@ -66,28 +63,24 @@ public interface IClass extends IClassHierarchyDweller {
   IClass getSuperclass() throws ClassHierarchyException;
 
   /**
-   * @return Collection of (IClass) interfaces this class directly implements
-   * If this class is an interface, returns the interfaces it immediately extends.
+   * @return Collection of (IClass) interfaces this class directly implements If this class is an interface, returns the interfaces
+   *         it immediately extends.
    */
   Collection<IClass> getDirectInterfaces() throws ClassHierarchyException;
-  
-  /**
-   * @return Collection of (IClass) interfaces this class implements, including
-   * all ancestors of interfaces immediately implemented.
-   */
-  Collection<IClass> getAllImplementedInterfaces() throws ClassHierarchyException;
-  
 
   /**
-   * Finds method matching signature.  Delegates to superclass if not
-   * found.
+   * @return Collection of (IClass) interfaces this class implements, including all ancestors of interfaces immediately implemented.
+   */
+  Collection<IClass> getAllImplementedInterfaces() throws ClassHierarchyException;
+
+  /**
+   * Finds method matching signature. Delegates to superclass if not found.
    * 
    * @param selector a method signature
-   * @return IMethod from this class matching the signature; null
-   *         if not found in this class or any superclass.
+   * @return IMethod from this class matching the signature; null if not found in this class or any superclass.
    */
   IMethod getMethod(Selector selector);
-  
+
   /**
    * Finds a field.
    */
@@ -99,8 +92,7 @@ public interface IClass extends IClassHierarchyDweller {
   TypeReference getReference();
 
   /**
-   * @return String holding the name of the source file that defined
-   * this class, or null if none found
+   * @return String holding the name of the source file that defined this class, or null if none found
    */
   String getSourceFileName();
 
@@ -108,14 +100,14 @@ public interface IClass extends IClassHierarchyDweller {
    * @return String representing the source file holding this class, or null if not found
    */
   InputStream getSource();
-  
+
   /**
    * @return the method that is this class's initializer, or null if none
    */
   IMethod getClassInitializer();
 
   /**
-   *  @return true iff the class is an array class.
+   * @return true iff the class is an array class.
    */
   boolean isArrayClass();
 
@@ -125,41 +117,25 @@ public interface IClass extends IClassHierarchyDweller {
   Collection<IMethod> getDeclaredMethods();
 
   /**
-   * Compute the instance fields declared by this class or any of
-   * its superclasses.
-   * 
-   * @return Collection of IFields
-   * @throws ClassHierarchyException 
+   * Compute the instance fields declared by this class or any of its superclasses.
    */
   Collection<IField> getAllInstanceFields() throws ClassHierarchyException;
-  
+
   /**
-   * Compute the static fields declared by this class or any of
-   * its superclasses.
-   * 
-   * @return Collection of IFields
-   * @throws ClassHierarchyException 
+   * Compute the static fields declared by this class or any of its superclasses.
    */
   Collection<IField> getAllStaticFields() throws ClassHierarchyException;
-  
+
   /**
-   * Compute the instance and static fields declared by this class or
-   * any of its superclasses.
-   * 
-   * @return Collection of IFields
-   * @throws ClassHierarchyException 
+   * Compute the instance and static fields declared by this class or any of its superclasses.
    */
   Collection<IField> getAllFields() throws ClassHierarchyException;
-  
+
   /**
-   * Compute the methods declared by this class or
-   * any of its superclasses.
-   * 
-   * @return Collection of IMethods
-   * @throws ClassHierarchyException 
+   * Compute the methods declared by this class or any of its superclasses.
    */
   Collection<IMethod> getAllMethods() throws ClassHierarchyException;
-  
+
   /**
    * Compute the instance fields declared by this class.
    * 
@@ -178,10 +154,8 @@ public interface IClass extends IClassHierarchyDweller {
   TypeName getName();
 
   /**
-   * Does 'this' refer to a reference type?  If not, then it refers
-   * to a primitive type.
+   * Does 'this' refer to a reference type? If not, then it refers to a primitive type.
    */
   boolean isReferenceType();
-
 
 }
