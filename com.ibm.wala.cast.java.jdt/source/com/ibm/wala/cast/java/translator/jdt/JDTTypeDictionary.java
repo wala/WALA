@@ -56,8 +56,8 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl {
   // TODO: better way of getting type "ObjecT" that doesn't require us to keep AST? although this is similar to
   // polyglot.
   protected final AST fAst; // TAGALONG
-  protected final JDTIdentityMapper fIdentityMapper; // TAGALONG
 
+  protected final JDTIdentityMapper fIdentityMapper; // TAGALONG
 
   /**
    * 
@@ -70,7 +70,7 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl {
   }
 
   public CAstType getCAstTypeFor(Object astType) {
-    
+
     ITypeBinding jdtType = JDT2CAstUtils.getErasedType((ITypeBinding) astType, fAst);
 
     CAstType type = super.getCAstTypeFor(astType); // check cache first
@@ -139,16 +139,16 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl {
     private Collection<CAstType> fSuperTypes = null;
 
     public String toString() {
-      return super.toString() + ":" +getName();
+      return super.toString() + ":" + getName();
     }
-    
+
     public JdtJavaType(ITypeBinding type) {
       super();
       fType = type;
     }
 
     public String getName() {
-       return fIdentityMapper.getTypeRef(fType).getName().toString();
+      return fIdentityMapper.getTypeRef(fType).getName().toString();
     }
 
     public Collection getSupertypes() {
@@ -161,19 +161,20 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl {
     private void buildSuperTypes() {
       // TODO this is a source entity, but it might actually be the root type
       // (Object), so assume # intfs + 1
-      ITypeBinding superType = (fType.getSuperclass() == null) ? fAst.resolveWellKnownType("java.lang.Object") : fType.getSuperclass();
+      ITypeBinding superType = (fType.getSuperclass() == null) ? fAst.resolveWellKnownType("java.lang.Object") : fType
+          .getSuperclass();
       int N = fType.getInterfaces().length + 1;
 
       fSuperTypes = new ArrayList<CAstType>(N);
       // Following assumes that noone can call getSupertypes() before we have
       // created CAstType's for every type in the program being analyzed.
       fSuperTypes.add(getCAstTypeFor(superType));
-      for (ITypeBinding t: fType.getInterfaces() )
+      for (ITypeBinding t : fType.getInterfaces())
         fSuperTypes.add(getCAstTypeFor(t));
     }
 
     public Collection<CAstQualifier> getQualifiers() {
-      return JDT2CAstUtils.mapModifiersToQualifiers(fType.getModifiers(),fType.isInterface());
+      return JDT2CAstUtils.mapModifiersToQualifiers(fType.getModifiers(), fType.isInterface());
     }
 
     public boolean isInterface() {

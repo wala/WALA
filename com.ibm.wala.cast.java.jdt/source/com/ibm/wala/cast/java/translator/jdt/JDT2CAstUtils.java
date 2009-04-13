@@ -62,10 +62,10 @@ import com.ibm.wala.util.debug.Assertions;
 public class JDT2CAstUtils {
   public static Collection<CAstQualifier> mapModifiersToQualifiers(int modifiers, boolean isInterface) {
     Set<CAstQualifier> quals = new LinkedHashSet<CAstQualifier>();
-    
+
     if (isInterface)
       quals.add(CAstQualifier.INTERFACE);
-    
+
     if ((modifiers & Modifier.ABSTRACT) != 0)
       quals.add(CAstQualifier.ABSTRACT);
     if ((modifiers & Modifier.FINAL) != 0)
@@ -89,10 +89,10 @@ public class JDT2CAstUtils {
       quals.add(CAstQualifier.TRANSIENT);
     if ((modifiers & Modifier.VOLATILE) != 0)
       quals.add(CAstQualifier.VOLATILE);
-    
+
     return quals;
   }
-  
+
   public static CAstOperator mapAssignOperator(Operator op) {
     if (op == Assignment.Operator.PLUS_ASSIGN)
       return CAstOperator.OP_ADD;
@@ -131,12 +131,12 @@ public class JDT2CAstUtils {
     if (operator == InfixExpression.Operator.XOR)
       return CAstOperator.OP_BIT_XOR;
 
-    // TODO: shouldn't get here (conditional and handled differently); however should separate bitwise & logical '&' / '|', maybe. 
+    // TODO: shouldn't get here (conditional and handled differently); however should separate bitwise & logical '&' / '|', maybe.
     if (operator == InfixExpression.Operator.CONDITIONAL_AND)
       return CAstOperator.OP_REL_AND;
     if (operator == InfixExpression.Operator.CONDITIONAL_OR)
       return CAstOperator.OP_REL_OR;
-    
+
     if (operator == InfixExpression.Operator.DIVIDE)
       return CAstOperator.OP_DIV;
     if (operator == InfixExpression.Operator.EQUALS)
@@ -168,8 +168,8 @@ public class JDT2CAstUtils {
   }
 
   /**
-   * Returns true if type is char, byte, short, int, or long.
-   * Return false otherwise (including boolean!)
+   * Returns true if type is char, byte, short, int, or long. Return false otherwise (including boolean!)
+   * 
    * @param type
    * @return
    */
@@ -179,44 +179,44 @@ public class JDT2CAstUtils {
   }
 
   /**
-   * If isLongOrLess(type), returns Integer(0).
-   * If a float or double, returns Double(0.0)
-   * Otherwise (including boolean), returns CAstSymbol.NULL_DEFAULT_VALUE.
+   * If isLongOrLess(type), returns Integer(0). If a float or double, returns Double(0.0) Otherwise (including boolean), returns
+   * CAstSymbol.NULL_DEFAULT_VALUE.
+   * 
    * @param type
    * @return
-   */ 
+   */
   public static Object defaultValueForType(ITypeBinding type) {
-    if ( isLongOrLess(type) )
+    if (isLongOrLess(type))
       return new Integer(0);
     else if (type.getBinaryName().equals("D") || type.getBinaryName().equals("F"))
       return new Double(0.0);
     else
       return CAstSymbol.NULL_DEFAULT_VALUE;
   }
-  
+
   public static ITypeBinding promoteTypes(ITypeBinding t1, ITypeBinding t2, AST ast) {
     // JLS 5.6.2
     ITypeBinding doble = ast.resolveWellKnownType("double");
-      if (t1.equals(doble) || t2.equals(doble) )  
-          return doble;
-      ITypeBinding flotando = ast.resolveWellKnownType("float");
-      if (t1.equals(flotando) || t2.equals(flotando) )
-          return flotando;
-      ITypeBinding largo = ast.resolveWellKnownType("long");
-      if (t1.equals(largo) || t2.equals(largo) )
-          return largo;
-      return ast.resolveWellKnownType("int");
+    if (t1.equals(doble) || t2.equals(doble))
+      return doble;
+    ITypeBinding flotando = ast.resolveWellKnownType("float");
+    if (t1.equals(flotando) || t2.equals(flotando))
+      return flotando;
+    ITypeBinding largo = ast.resolveWellKnownType("long");
+    if (t1.equals(largo) || t2.equals(largo))
+      return largo;
+    return ast.resolveWellKnownType("int");
   }
 
   public static ITypeBinding getDeclaringClassOfNode(ASTNode n) {
     ASTNode current = n;
-    while ( current != null ) {
-      if (current instanceof TypeDeclaration )
-        return ((TypeDeclaration)current).resolveBinding();
-      else if ( current instanceof AnonymousClassDeclaration )
-        return ((AnonymousClassDeclaration)current).resolveBinding();
-      else if ( current instanceof EnumDeclaration )
-        return ((EnumDeclaration)current).resolveBinding();
+    while (current != null) {
+      if (current instanceof TypeDeclaration)
+        return ((TypeDeclaration) current).resolveBinding();
+      else if (current instanceof AnonymousClassDeclaration)
+        return ((AnonymousClassDeclaration) current).resolveBinding();
+      else if (current instanceof EnumDeclaration)
+        return ((EnumDeclaration) current).resolveBinding();
       current = current.getParent();
     }
     Assertions.UNREACHABLE("Couldn't find declaring class of node");
@@ -230,21 +230,21 @@ public class JDT2CAstUtils {
   }
 
   /**
-   * If a type variable, return the bound (getTypeVariablesBase()).
-   * If a parameterized type, return the generic type.
+   * If a type variable, return the bound (getTypeVariablesBase()). If a parameterized type, return the generic type.
+   * 
    * @param returnType
    * @param ast
    * @return
    */
   public static ITypeBinding getErasedType(ITypeBinding returnType, AST ast) {
-    if ( returnType.isTypeVariable() || returnType.isCapture() )
+    if (returnType.isTypeVariable() || returnType.isCapture())
       return getTypesVariablesBase(returnType, ast);
     return returnType.getTypeDeclaration(); // Things like "Collection<? extends Bla>" are parameterized types...
   }
-  
+
   public static ITypeBinding getTypesVariablesBase(ITypeBinding returnType, AST ast) {
     Assertions._assert(returnType.isTypeVariable() || returnType.isCapture());
-    if ( returnType.getTypeBounds().length > 0 )
+    if (returnType.getTypeBounds().length > 0)
       return returnType.getTypeBounds()[0]; // TODO: why is there more than one bound?
     else
       return ast.resolveWellKnownType("java.lang.Object");
@@ -277,26 +277,27 @@ public class JDT2CAstUtils {
     return null;
   }
 
-  private static void getMethodInClassOrSuperclass(IMethodBinding met, ITypeBinding klass, boolean superclassonly, HashMap<ITypeBinding, IMethodBinding> overridden) {
-    if ( !superclassonly ) {
-      for ( IMethodBinding ourmet: klass.getDeclaredMethods() )
-        if ( met.isSubsignature(ourmet) && (met.getModifiers() & Modifier.PRIVATE) == 0) {
-          overridden.put(ourmet.getMethodDeclaration().getReturnType(),ourmet.getMethodDeclaration());
-          break; // there can only be one per class so don't bother looking for more 
+  private static void getMethodInClassOrSuperclass(IMethodBinding met, ITypeBinding klass, boolean superclassonly,
+      HashMap<ITypeBinding, IMethodBinding> overridden) {
+    if (!superclassonly) {
+      for (IMethodBinding ourmet : klass.getDeclaredMethods())
+        if (met.isSubsignature(ourmet) && (met.getModifiers() & Modifier.PRIVATE) == 0) {
+          overridden.put(ourmet.getMethodDeclaration().getReturnType(), ourmet.getMethodDeclaration());
+          break; // there can only be one per class so don't bother looking for more
         }
     }
-    
-    for ( ITypeBinding iface: klass.getInterfaces() )
+
+    for (ITypeBinding iface : klass.getInterfaces())
       getMethodInClassOrSuperclass(met, iface, false, overridden);
-  
+
     ITypeBinding superclass = klass.getSuperclass();
-    if ( superclass != null )
+    if (superclass != null)
       getMethodInClassOrSuperclass(met, superclass, false, overridden);
   }
 
   public static Collection<IMethodBinding> getOverriddenMethod(IMethodBinding met) {
-    HashMap<ITypeBinding,IMethodBinding> overridden = new HashMap<ITypeBinding,IMethodBinding>();
-    if ( met == null )
+    HashMap<ITypeBinding, IMethodBinding> overridden = new HashMap<ITypeBinding, IMethodBinding>();
+    if (met == null)
       return null;
     getMethodInClassOrSuperclass(met, met.getDeclaringClass(), true, overridden);
     if (overridden.size() == 0)
@@ -305,18 +306,18 @@ public class JDT2CAstUtils {
   }
 
   public static boolean sameSignatureAndReturnType(IMethodBinding met1, IMethodBinding met2) {
-    if ( !met1.getReturnType().isEqualTo(met2.getReturnType()) )
+    if (!met1.getReturnType().isEqualTo(met2.getReturnType()))
       return false;
-    
+
     ITypeBinding[] params1 = met1.getParameterTypes();
     ITypeBinding[] params2 = met2.getParameterTypes();
-    if ( params1.length != params2.length )
+    if (params1.length != params2.length)
       return false;
-    
-    for ( int i = 0; i < params1.length; i++ )
-      if ( ! params1[i].isEqualTo(params2[i]) )
+
+    for (int i = 0; i < params1.length; i++)
+      if (!params1[i].isEqualTo(params2[i]))
         return false;
-    
+
     return true;
   }
 

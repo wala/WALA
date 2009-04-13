@@ -65,8 +65,9 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * A SourceModuleTranslator whose implementation of loadAllSources() uses the PolyglotFrontEnd pseudo-compiler to
- * generate DOMO IR for the sources in the compile-time classpath.
+ * A SourceModuleTranslator whose implementation of loadAllSources() uses the PolyglotFrontEnd pseudo-compiler to generate DOMO IR
+ * for the sources in the compile-time classpath.
+ * 
  * @author rfuhrer
  */
 // remove me comment: Jdt little-case = not OK, upper case = OK
@@ -105,31 +106,31 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
       cl = cl.getParent();
     }
   }
-  
-//Map options= javaProject.getOptions(true);
-//// turn all errors and warnings into ignore. The customizable set of compiler
-//// options only contains additional Eclipse options. The standard JDK compiler
-//// options can't be changed anyway.
-//for (Iterator iter= options.keySet().iterator(); iter.hasNext();) {
-//    String key= (String)iter.next();
-//    String value= (String)options.get(key);
-//    if ("error".equals(value) || "warning".equals(value)) {  //$NON-NLS-1$//$NON-NLS-2$
-//        // System.out.println("Ignoring - " + key);
-//        options.put(key, "ignore"); //$NON-NLS-1$
-//    } else if ("enabled".equals(value)) {
-//        // System.out.println(" - disabling " + key);
-//        options.put(key, "disabled");
-//    }
-//}
-//options.put(JavaCore.COMPILER_TASK_TAGS, "");
-//parser.setCompilerOptions(options);
+
+  // Map options= javaProject.getOptions(true);
+  // // turn all errors and warnings into ignore. The customizable set of compiler
+  // // options only contains additional Eclipse options. The standard JDK compiler
+  // // options can't be changed anyway.
+  // for (Iterator iter= options.keySet().iterator(); iter.hasNext();) {
+  // String key= (String)iter.next();
+  // String value= (String)options.get(key);
+  //    if ("error".equals(value) || "warning".equals(value)) {  //$NON-NLS-1$//$NON-NLS-2$
+  // // System.out.println("Ignoring - " + key);
+  //        options.put(key, "ignore"); //$NON-NLS-1$
+  // } else if ("enabled".equals(value)) {
+  // // System.out.println(" - disabling " + key);
+  // options.put(key, "disabled");
+  // }
+  // }
+  // options.put(JavaCore.COMPILER_TASK_TAGS, "");
+  // parser.setCompilerOptions(options);
 
   /*
-   * Project -> AST code from org.eclipse.jdt.core.tests.performance 
+   * Project -> AST code from org.eclipse.jdt.core.tests.performance
    */
 
   @SuppressWarnings("unchecked")
-public void loadAllSources(Set modules) {
+  public void loadAllSources(Set modules) {
     // TODO: we might need one AST (-> "Object" class) for all files.
     // TODO: group by project and send 'em in
     JDTJava2CAstTranslator jdt2cast = new JDTJava2CAstTranslator(sourceLoader);
@@ -137,14 +138,13 @@ public void loadAllSources(Set modules) {
 
     System.out.println(modules);
 
-
-    // sort files into projects 
-    HashMap<IProject,ArrayList<ICompilationUnit>> projectsFiles = new HashMap<IProject,ArrayList<ICompilationUnit>>();
-    for ( Object m: modules ) {
+    // sort files into projects
+    HashMap<IProject, ArrayList<ICompilationUnit>> projectsFiles = new HashMap<IProject, ArrayList<ICompilationUnit>>();
+    for (Object m : modules) {
       Assertions._assert(m instanceof EclipseSourceFileModule, "Expecing EclipseSourceFileModule");
       EclipseSourceFileModule entry = (EclipseSourceFileModule) m;
       IProject proj = entry.getIFile().getProject();
-      if ( ! projectsFiles.containsKey(proj) )
+      if (!projectsFiles.containsKey(proj))
         projectsFiles.put(proj, new ArrayList<ICompilationUnit>());
       projectsFiles.get(proj).add(JavaCore.createCompilationUnitFrom(entry.getIFile()));
     }
@@ -152,32 +152,31 @@ public void loadAllSources(Set modules) {
     final ASTParser parser = ASTParser.newParser(AST.JLS3);
     parser.setResolveBindings(true);
 
-    for ( IProject proj: projectsFiles.keySet() ) {
+    for (IProject proj : projectsFiles.keySet()) {
       parser.setProject(JavaCore.create(proj));
       ArrayList<ICompilationUnit> files = projectsFiles.get(proj);
       parser.createASTs(files.toArray(new ICompilationUnit[files.size()]), new String[0], new ASTRequestor() {
         public void acceptAST(ICompilationUnit source, CompilationUnit ast) {
-          
+
           try {
             java2ir.translate(ast, source.getUnderlyingResource().getLocation().toOSString());
           } catch (JavaModelException e) {
             e.printStackTrace();
           }
-          
+
           IProblem[] problems = ast.getProblems();
           int length = problems.length;
           if (length > 0) {
             StringBuffer buffer = new StringBuffer();
-            for (int i=0; i<length; i++) {
+            for (int i = 0; i < length; i++) {
               buffer.append(problems[i].getMessage());
               buffer.append('\n');
             }
-            if ( length != 0 )
-              System.err.println("Unexpected problems in "+source.getElementName()+buffer.toString());
+            if (length != 0)
+              System.err.println("Unexpected problems in " + source.getElementName() + buffer.toString());
           }
         }
-      },
-      null);
+      }, null);
 
     }
   }

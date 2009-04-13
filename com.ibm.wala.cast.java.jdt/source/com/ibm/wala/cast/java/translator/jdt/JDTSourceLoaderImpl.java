@@ -48,12 +48,12 @@ import com.ibm.wala.types.ClassLoaderReference;
 
 public class JDTSourceLoaderImpl extends JavaSourceLoaderImpl {
 
-    public JDTSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions,
-	    IClassHierarchy cha) throws IOException {
-	super(loaderRef, parent, exclusions, cha);
-    }
+  public JDTSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha)
+      throws IOException {
+    super(loaderRef, parent, exclusions, cha);
+  }
 
-    protected SourceModuleTranslator getTranslator() {
-	return new JDTSourceModuleTranslator(cha.getScope(), this);
-    }
+  protected SourceModuleTranslator getTranslator() {
+    return new JDTSourceModuleTranslator(cha.getScope(), this);
+  }
 }

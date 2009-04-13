@@ -48,44 +48,49 @@ import org.eclipse.jdt.core.dom.IVariableBinding;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * This is a hack to get around the fact that AST.resolveWellKnownTypes() doesn't know
- * about some implicitly declared exceptions, such as ArithmeticException (implicitly
- * thrown in a division operation) and NullPointerException (implicitly thrown in a field
+ * This is a hack to get around the fact that AST.resolveWellKnownTypes() doesn't know about some implicitly declared exceptions,
+ * such as ArithmeticException (implicitly thrown in a division operation) and NullPointerException (implicitly thrown in a field
  * access). We need to know the lineage of these types to determine possible catch targets.
  * 
  * @author evan
- *
+ * 
  */
 public class FakeExceptionTypeBinding implements ITypeBinding {
 
   static public final FakeExceptionTypeBinding arithmetic = new FakeExceptionTypeBinding("Ljava/lang/ArithmeticException;");
+
   static public final FakeExceptionTypeBinding nullPointer = new FakeExceptionTypeBinding("Ljava/lang/NullPointerException;");
+
   static public final FakeExceptionTypeBinding classCast = new FakeExceptionTypeBinding("Ljava/lang/ClassCastException;");
+
   static public final FakeExceptionTypeBinding noClassDef = new FakeExceptionTypeBinding("Ljava/lang/NoClassDefFoundError;");
-  static public final FakeExceptionTypeBinding initException = new FakeExceptionTypeBinding("Ljava/lang/ExceptionInInitializerError;");
+
+  static public final FakeExceptionTypeBinding initException = new FakeExceptionTypeBinding(
+      "Ljava/lang/ExceptionInInitializerError;");
+
   static public final FakeExceptionTypeBinding outOfMemory = new FakeExceptionTypeBinding("Ljava/lang/OutOfMemoryError;");
-  
+
   private final String exceptionBinaryName;
 
   private FakeExceptionTypeBinding(String exceptionBinaryName) {
     this.exceptionBinaryName = exceptionBinaryName;
   }
-  
+
   public boolean isAssignmentCompatible(ITypeBinding variableType) {
     Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
     return false;
   }
 
   public boolean equals(Object o) {
-    if ( o instanceof FakeExceptionTypeBinding )
+    if (o instanceof FakeExceptionTypeBinding)
       return this == o;
-    if ( o instanceof ITypeBinding )
-      return ((ITypeBinding)o).getBinaryName().equals(exceptionBinaryName);
+    if (o instanceof ITypeBinding)
+      return ((ITypeBinding) o).getBinaryName().equals(exceptionBinaryName);
     return false;
   }
 
   // --- rest not needed
-  
+
   public ITypeBinding createArrayType(int dimension) {
     Assertions.UNREACHABLE("FakeExceptionTypeBinding createArrayType");
     return null;
@@ -294,23 +299,17 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
   public boolean isSubTypeCompatible(ITypeBinding type) {
     String name = type.getBinaryName();
     if (exceptionBinaryName.endsWith("Error;")) {
-       	if ( name.equals("Ljava/lang/Throwable;") ||
-       		 name.equals("Ljava/lang/Error;") ||
-       		 name.equals(exceptionBinaryName) ) 
-       	{
-       		return true;
-       	}
-    	
+      if (name.equals("Ljava/lang/Throwable;") || name.equals("Ljava/lang/Error;") || name.equals(exceptionBinaryName)) {
+        return true;
+      }
+
     } else {
-    	if ( name.equals("Ljava/lang/Throwable;") ||
-    		 name.equals("Ljava/lang/Exception;") ||
-    		 name.equals("Ljava/lang/RuntimeException;") ||
-    		 name.equals(exceptionBinaryName) ) 
-    	{
-    		return true;
-    	}
+      if (name.equals("Ljava/lang/Throwable;") || name.equals("Ljava/lang/Exception;")
+          || name.equals("Ljava/lang/RuntimeException;") || name.equals(exceptionBinaryName)) {
+        return true;
+      }
     }
-    
+
     return false;
   }
 

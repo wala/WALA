@@ -50,11 +50,11 @@ import com.ibm.wala.types.ClassLoaderReference;
 
 public class JDTClassLoaderFactory extends ClassLoaderFactoryImpl {
 
-//  /**
-//   * A map from ClassLoaderReference to IRTranslatorExtension, so that source files
-//   * in different languages are processed by the right kind of IRTranslatorExtension.
-//   */
-//  that's nice, but there's only one kind of IRTransatorExtension.
+  // /**
+  // * A map from ClassLoaderReference to IRTranslatorExtension, so that source files
+  // * in different languages are processed by the right kind of IRTranslatorExtension.
+  // */
+  // that's nice, but there's only one kind of IRTransatorExtension.
 
   public JDTClassLoaderFactory(SetOfClasses exclusions) {
     super(exclusions);
