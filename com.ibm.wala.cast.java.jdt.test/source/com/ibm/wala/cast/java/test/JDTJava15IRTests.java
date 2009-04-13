@@ -22,120 +22,120 @@ import com.ibm.wala.util.io.FileProvider;
 
 public class JDTJava15IRTests extends IRTests {
 
-	public JDTJava15IRTests() {
-	    super("Test 1.5 features for JDT front end for WALA CAst", "com.ibm.wala.cast.java.test.data");
-	}
-	
-	@Override
-	public void setUp() {
-		EclipseTestUtil.importZippedProject(TestPlugin.getDefault(), "test_project.zip", new NullProgressMonitor());
-		System.err.println("finish importing project");
-	}	
+  public JDTJava15IRTests() {
+    super("Test 1.5 features for JDT front end for WALA CAst", "com.ibm.wala.cast.java.test.data");
+  }
 
-	public void tearDown() {
-		EclipseTestUtil.destroyProject("com.ibm.wala.cast.java.test.data");
-	}
+  @Override
+  public void setUp() {
+    EclipseTestUtil.importZippedProject(TestPlugin.getDefault(), "test_project.zip", new NullProgressMonitor());
+    System.err.println("finish importing project");
+  }
 
-	@Override
-	protected JavaSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors) {
-		JavaSourceAnalysisEngine engine = new JDTJavaSourceAnalysisEngine() {
-			protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
-				return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
-			}
-		};
-		       
-		try {
-			engine.setExclusionsFile(FileProvider.getFileFromPlugin(CoreTestsPlugin.getDefault(), CallGraphTestUtil.REGRESSION_EXCLUSIONS).getAbsolutePath());
-		} catch (IOException e) {
-			Assert.assertFalse("Cannot find exclusions file", true);
-		}
-		    
-		return engine;
-	}
-	
-	private void runSimple15Test(List assertions) {
-		 runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), assertions, true);		
-	}
-	
-	public void testAnonGeneNullarySimple() {
-		 runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
-	}
+  public void tearDown() {
+    EclipseTestUtil.destroyProject("com.ibm.wala.cast.java.test.data");
+  }
 
-	public void testAnonymousGenerics() {
-		 runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
-	}
-	
-	public void testBasicsGenerics() {
-		 runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
-	}
-	
-	public void testCocovariant() {
-		 runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
-	}
+  @Override
+  protected JavaSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors) {
+    JavaSourceAnalysisEngine engine = new JDTJavaSourceAnalysisEngine() {
+      protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
+        return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
+      }
+    };
 
-	public void testCustomGenericsAndFields() {
-		 runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
-	}
+    try {
+      engine.setExclusionsFile(FileProvider
+          .getFileFromPlugin(CoreTestsPlugin.getDefault(), CallGraphTestUtil.REGRESSION_EXCLUSIONS).getAbsolutePath());
+    } catch (IOException e) {
+      Assert.assertFalse("Cannot find exclusions file", true);
+    }
 
-	public void testEnumSwitch() {
-		 runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
-	}
+    return engine;
+  }
 
-	public void testExplicitBoxingTest() {
-		 runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
-	}
+  private void runSimple15Test(List assertions) {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), assertions, true);
+  }
 
-	public void testGenericArrays() {
-		 runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
-	}
+  public void testAnonGeneNullarySimple() {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
+  }
 
-	public void testGenericMemberClasses() {
-		 runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
-	}
+  public void testAnonymousGenerics() {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
+  }
 
-	public void testGenericSuperSink() {
-		 runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
-	}
+  public void testBasicsGenerics() {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
+  }
 
-	public void testMethodGenerics() {
-		 runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
-	}
+  public void testCocovariant() {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
+  }
 
-	public void testMoreOverriddenGenerics() {
-		 runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
-	}
+  public void testCustomGenericsAndFields() {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
+  }
 
-	public void testNotSoSimpleEnums() {
-		 runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
-	}
+  public void testEnumSwitch() {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
+  }
 
-	public void testOverridesOnePointFour() {
-		 runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
-	}
+  public void testExplicitBoxingTest() {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
+  }
 
-	public void testSimpleEnums() {
-		 runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
-	}
+  public void testGenericArrays() {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
+  }
 
-	public void testSimpleEnums2() {
-		 runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
-	}
+  public void testGenericMemberClasses() {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
+  }
 
-	public void testVarargs() {
-		 runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
-	}
+  public void testGenericSuperSink() {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
+  }
 
-	public void testVarargsCovariant() {
-		 runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
-	}
+  public void testMethodGenerics() {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
+  }
 
-	public void testVarargsOverriding() {
-		 runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
-	}
+  public void testMoreOverriddenGenerics() {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
+  }
 
-	public void testWildcards() {
-		 runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
-	}
+  public void testNotSoSimpleEnums() {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
+  }
+
+  public void testOverridesOnePointFour() {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
+  }
+
+  public void testSimpleEnums() {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
+  }
+
+  public void testSimpleEnums2() {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
+  }
+
+  public void testVarargs() {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
+  }
+
+  public void testVarargsCovariant() {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
+  }
+
+  public void testVarargsOverriding() {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
+  }
+
+  public void testWildcards() {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
+  }
 
 }
-

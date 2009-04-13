@@ -63,14 +63,14 @@ public class JDTJavaIRTests extends JavaIRTests {
 
   @Override
   public void setUp() {
-     EclipseTestUtil.importZippedProject(TestPlugin.getDefault(), "test_project.zip", new NullProgressMonitor());
-     System.err.println("finish importing project");
+    EclipseTestUtil.importZippedProject(TestPlugin.getDefault(), "test_project.zip", new NullProgressMonitor());
+    System.err.println("finish importing project");
   }
 
   public void tearDown() {
     EclipseTestUtil.destroyProject("com.ibm.wala.cast.java.test.data");
   }
-  
+
   @Override
   protected JavaSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors) {
     JavaSourceAnalysisEngine engine = new JDTJavaSourceAnalysisEngine() {
@@ -78,13 +78,14 @@ public class JDTJavaIRTests extends JavaIRTests {
         return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
       }
     };
-       
+
     try {
-      engine.setExclusionsFile(FileProvider.getFileFromPlugin(CoreTestsPlugin.getDefault(), CallGraphTestUtil.REGRESSION_EXCLUSIONS).getAbsolutePath());
+      engine.setExclusionsFile(FileProvider
+          .getFileFromPlugin(CoreTestsPlugin.getDefault(), CallGraphTestUtil.REGRESSION_EXCLUSIONS).getAbsolutePath());
     } catch (IOException e) {
       Assert.assertFalse("Cannot find exclusions file", true);
     }
-    
+
     return engine;
   }
 }
