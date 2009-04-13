@@ -324,6 +324,11 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     while (declaredMethods.hasNext()) {
       result.add(declaredMethods.next());
     }
+    if (isInterface()) {
+      for (IClass i : getDirectInterfaces()) {
+        result.addAll(i.getAllMethods());
+      }
+    }
     IClass s = getSuperclass();
     while (s != null) {
       Iterator<IMethod> superDeclaredMethods = s.getDeclaredMethods().iterator();
