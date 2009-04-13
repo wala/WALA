@@ -56,20 +56,17 @@ public class EclipseProjectSourceAnalysisEngine extends EclipseProjectAnalysisEn
    * file extension for source files in this Eclipse project
    */
   final String fileExt;
-  
-  public EclipseProjectSourceAnalysisEngine(IJavaProject project)
-    throws IOException, CoreException 
-  {
+
+  public EclipseProjectSourceAnalysisEngine(IJavaProject project) throws IOException, CoreException {
     this(project, defaultFileExt);
   }
 
-  public EclipseProjectSourceAnalysisEngine(IJavaProject project, String fileExt)
-    throws IOException, CoreException 
-  {
+  public EclipseProjectSourceAnalysisEngine(IJavaProject project, String fileExt) throws IOException, CoreException {
     super(project);
     this.fileExt = fileExt;
     try {
-      setExclusionsFile(FileProvider.getFileFromPlugin(CorePlugin.getDefault(), "J2SEClassHierarchyExclusions.txt").getAbsolutePath());
+      setExclusionsFile(FileProvider.getFileFromPlugin(CorePlugin.getDefault(), "J2SEClassHierarchyExclusions.txt")
+          .getAbsolutePath());
     } catch (IOException e) {
       Assertions.UNREACHABLE("Cannot find exclusions file");
     }
@@ -87,35 +84,33 @@ public class EclipseProjectSourceAnalysisEngine extends EclipseProjectAnalysisEn
   @Override
   protected void buildAnalysisScope() {
     try {
-      scope = makeSourceAnalysisScope(); 
+      scope = makeSourceAnalysisScope();
       if (getExclusionsFile() != null) {
         scope.setExclusions(FileOfClasses.createFileOfClasses(new File(getExclusionsFile())));
       }
       EclipseProjectPath epath = getEclipseProjectPath();
- 
+
       for (Module m : epath.getModules(Loader.PRIMORDIAL, true)) {
         scope.addToScope(scope.getPrimordialLoader(), m);
       }
       ClassLoaderReference app = scope.getApplicationLoader();
-      ClassLoaderReference src = ((JavaSourceAnalysisScope)scope).getSourceLoader();
+      ClassLoaderReference src = ((JavaSourceAnalysisScope) scope).getSourceLoader();
       for (Module m : epath.getModules(Loader.APPLICATION, true)) {
-    	  if (m instanceof SourceDirectoryTreeModule) {
-    		  scope.addToScope(src, m);
-    	  } else {
-    		  scope.addToScope(app, m);
-    	  }
+        if (m instanceof SourceDirectoryTreeModule) {
+          scope.addToScope(src, m);
+        } else {
+          scope.addToScope(app, m);
+        }
       }
       for (Module m : epath.getModules(Loader.EXTENSION, true)) {
         if (!(m instanceof BinaryDirectoryTreeModule))
           scope.addToScope(app, m);
       }
       /*
-      ClassLoaderReference src = ((JavaSourceAnalysisScope)scope).getSourceLoader();
-      for (Module m : epath.getModules(Loader.APPLICATION, false)) {
-        scope.addToScope(src, m);
-      }
-      */
-      
+       * ClassLoaderReference src = ((JavaSourceAnalysisScope)scope).getSourceLoader(); for (Module m :
+       * epath.getModules(Loader.APPLICATION, false)) { scope.addToScope(src, m); }
+       */
+
     } catch (IOException e) {
       Assertions.UNREACHABLE(e.toString());
     }
@@ -125,7 +120,7 @@ public class EclipseProjectSourceAnalysisEngine extends EclipseProjectAnalysisEn
     return new JavaIRTranslatorExtension();
   }
 
-  protected ClassLoaderFactory getClassLoaderFactory(SetOfClasses exclusions,IRTranslatorExtension extInfo) {
+  protected ClassLoaderFactory getClassLoaderFactory(SetOfClasses exclusions, IRTranslatorExtension extInfo) {
     return new PolyglotClassLoaderFactory(exclusions, extInfo);
   }
 

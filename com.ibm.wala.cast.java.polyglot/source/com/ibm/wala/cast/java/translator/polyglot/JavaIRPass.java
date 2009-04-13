@@ -21,20 +21,22 @@ import com.ibm.wala.cast.java.translator.Java2IRTranslator;
 
 /**
  * A Pass that creates DOMO IR for the given Java compilation unit.
+ * 
  * @author rfuhrer
  */
 public final class JavaIRPass extends AbstractPass {
-    private final Job fJob;
-    private final Java2IRTranslator fTranslator;
+  private final Job fJob;
 
-    public JavaIRPass(Goal goal, Job job, Java2IRTranslator translator) {
-	super(goal);
-	this.fJob= job;
-	this.fTranslator= translator;
-    }
+  private final Java2IRTranslator fTranslator;
 
-    public boolean run() {
-	fTranslator.translate(fJob.ast(), fJob.source().name());
-	return true;
-    }
+  public JavaIRPass(Goal goal, Job job, Java2IRTranslator translator) {
+    super(goal);
+    this.fJob = job;
+    this.fTranslator = translator;
+  }
+
+  public boolean run() {
+    fTranslator.translate(fJob.ast(), fJob.source().name());
+    return true;
+  }
 }

@@ -34,16 +34,14 @@ public class EclipseProjectAnalysisEngine extends AbstractAnalysisEngine {
 
   protected final EclipseProjectPath ePath;
 
-  public EclipseProjectAnalysisEngine(IJavaProject project)
-      throws IOException, CoreException 
-  {
+  public EclipseProjectAnalysisEngine(IJavaProject project) throws IOException, CoreException {
     super();
     this.project = project;
     this.workspaceRootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
     assert project != null;
     assert workspaceRootPath != null;
     this.ePath = createProjectPath(project);
-    //setCallGraphBuilderFactory(new ZeroCFABuilderFactory());
+    // setCallGraphBuilderFactory(new ZeroCFABuilderFactory());
   }
 
   protected EclipseProjectPath createProjectPath(IJavaProject project) throws IOException, CoreException {

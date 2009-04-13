@@ -75,62 +75,118 @@ import com.ibm.wala.cast.tree.CAstNode;
 
 /**
  * An alternative visitor API for Polyglot, whose API is somewhat brain-damaged...
+ * 
  * @author rfuhrer
  */
 public interface TranslatingVisitor {
-    CAstNode visit(MethodDecl m, MethodContext context);
-    CAstNode visit(ConstructorDecl cd, MethodContext cc);
-    CAstNode visit(FieldDecl f, MethodContext mc); // yes, a MethodContext; we process FieldDecl's only to add their initializers to each constructor
-    CAstNode visit(Import i, WalkContext wc);
-    CAstNode visit(PackageNode p, WalkContext wc);
-    CAstNode visit(CanonicalTypeNode ctn, WalkContext wc);
-    CAstNode visit(ArrayTypeNode ctn, WalkContext wc);
-    CAstNode visit(ArrayInit ai, WalkContext wc);
-    CAstNode visit(ArrayAccessAssign aaa, WalkContext wc);
-    CAstNode visit(FieldAssign fa, WalkContext wc);
-    CAstNode visit(LocalAssign la, WalkContext wc);
-    CAstNode visit(Binary b, WalkContext wc);
-    CAstNode visit(Call c, WalkContext wc);
-    CAstNode visit(ConstructorCall cc, WalkContext wc);
-    CAstNode visit(Cast c, WalkContext wc);
-    CAstNode visit(Conditional c, WalkContext wc);
-    CAstNode visit(Instanceof io, WalkContext wc);
-    CAstNode visit(BooleanLit bl, WalkContext wc);
-    CAstNode visit(ClassLit cl, WalkContext wc);
-    CAstNode visit(FloatLit fl, WalkContext wc);
-    CAstNode visit(NullLit nl, WalkContext wc);
-    CAstNode visit(CharLit cl, WalkContext wc);
-    CAstNode visit(IntLit il, WalkContext wc);
-    CAstNode visit(StringLit sl, WalkContext wc);
-    CAstNode visit(New n, WalkContext wc);
-    CAstNode visit(NewArray na, WalkContext wc);
-    CAstNode visit(Special s, WalkContext wc);
-    CAstNode visit(Unary u, WalkContext wc);
-    CAstNode visit(ArrayAccess aa, WalkContext wc);
-    CAstNode visit(Field f, WalkContext wc);
-    CAstNode visit(Local l, WalkContext wc);
-    CAstNode visit(ClassBody cb, WalkContext wc); // should never see this when producing CAstNodes
-    CAstNode visit(ClassDecl cd, WalkContext wc); // should never see this when producing CAstNodes
-    CAstNode visit(Initializer i, WalkContext wc); // should never see this when producing CAstNodes
-    CAstNode visit(Assert a, WalkContext wc);
-    CAstNode visit(Branch b, WalkContext wc);
-    CAstNode visit(Block b, WalkContext wc);
-    CAstNode visit(SwitchBlock sb, WalkContext wc);
-    CAstNode visit(Catch c, WalkContext wc);
-    CAstNode visit(If i, WalkContext wc);
-    CAstNode visit(Labeled l, WalkContext wc);
-    CAstNode visit(LocalClassDecl lcd, WalkContext wc);
-    CAstNode visit(Do d, WalkContext wc);
-    CAstNode visit(For f, WalkContext wc);
-    CAstNode visit(While w, WalkContext wc);
-    CAstNode visit(Switch s, WalkContext wc);
-    CAstNode visit(Synchronized s, WalkContext wc);
-    CAstNode visit(Try t, WalkContext wc);
-    CAstNode visit(Empty e, WalkContext wc);
-    CAstNode visit(Eval e, WalkContext wc);
-    CAstNode visit(LocalDecl ld, WalkContext wc);
-    CAstNode visit(Return r, WalkContext wc);
-    CAstNode visit(Case c, WalkContext wc);
-    CAstNode visit(Throw t, WalkContext wc);
-    CAstNode visit(Formal f, WalkContext wc); // may not see these (might be handled by parent)
+  CAstNode visit(MethodDecl m, MethodContext context);
+
+  CAstNode visit(ConstructorDecl cd, MethodContext cc);
+
+  CAstNode visit(FieldDecl f, MethodContext mc); // yes, a MethodContext; we process FieldDecl's only to add their initializers to
+                                                 // each constructor
+
+  CAstNode visit(Import i, WalkContext wc);
+
+  CAstNode visit(PackageNode p, WalkContext wc);
+
+  CAstNode visit(CanonicalTypeNode ctn, WalkContext wc);
+
+  CAstNode visit(ArrayTypeNode ctn, WalkContext wc);
+
+  CAstNode visit(ArrayInit ai, WalkContext wc);
+
+  CAstNode visit(ArrayAccessAssign aaa, WalkContext wc);
+
+  CAstNode visit(FieldAssign fa, WalkContext wc);
+
+  CAstNode visit(LocalAssign la, WalkContext wc);
+
+  CAstNode visit(Binary b, WalkContext wc);
+
+  CAstNode visit(Call c, WalkContext wc);
+
+  CAstNode visit(ConstructorCall cc, WalkContext wc);
+
+  CAstNode visit(Cast c, WalkContext wc);
+
+  CAstNode visit(Conditional c, WalkContext wc);
+
+  CAstNode visit(Instanceof io, WalkContext wc);
+
+  CAstNode visit(BooleanLit bl, WalkContext wc);
+
+  CAstNode visit(ClassLit cl, WalkContext wc);
+
+  CAstNode visit(FloatLit fl, WalkContext wc);
+
+  CAstNode visit(NullLit nl, WalkContext wc);
+
+  CAstNode visit(CharLit cl, WalkContext wc);
+
+  CAstNode visit(IntLit il, WalkContext wc);
+
+  CAstNode visit(StringLit sl, WalkContext wc);
+
+  CAstNode visit(New n, WalkContext wc);
+
+  CAstNode visit(NewArray na, WalkContext wc);
+
+  CAstNode visit(Special s, WalkContext wc);
+
+  CAstNode visit(Unary u, WalkContext wc);
+
+  CAstNode visit(ArrayAccess aa, WalkContext wc);
+
+  CAstNode visit(Field f, WalkContext wc);
+
+  CAstNode visit(Local l, WalkContext wc);
+
+  CAstNode visit(ClassBody cb, WalkContext wc); // should never see this when producing CAstNodes
+
+  CAstNode visit(ClassDecl cd, WalkContext wc); // should never see this when producing CAstNodes
+
+  CAstNode visit(Initializer i, WalkContext wc); // should never see this when producing CAstNodes
+
+  CAstNode visit(Assert a, WalkContext wc);
+
+  CAstNode visit(Branch b, WalkContext wc);
+
+  CAstNode visit(Block b, WalkContext wc);
+
+  CAstNode visit(SwitchBlock sb, WalkContext wc);
+
+  CAstNode visit(Catch c, WalkContext wc);
+
+  CAstNode visit(If i, WalkContext wc);
+
+  CAstNode visit(Labeled l, WalkContext wc);
+
+  CAstNode visit(LocalClassDecl lcd, WalkContext wc);
+
+  CAstNode visit(Do d, WalkContext wc);
+
+  CAstNode visit(For f, WalkContext wc);
+
+  CAstNode visit(While w, WalkContext wc);
+
+  CAstNode visit(Switch s, WalkContext wc);
+
+  CAstNode visit(Synchronized s, WalkContext wc);
+
+  CAstNode visit(Try t, WalkContext wc);
+
+  CAstNode visit(Empty e, WalkContext wc);
+
+  CAstNode visit(Eval e, WalkContext wc);
+
+  CAstNode visit(LocalDecl ld, WalkContext wc);
+
+  CAstNode visit(Return r, WalkContext wc);
+
+  CAstNode visit(Case c, WalkContext wc);
+
+  CAstNode visit(Throw t, WalkContext wc);
+
+  CAstNode visit(Formal f, WalkContext wc); // may not see these (might be handled by parent)
 }

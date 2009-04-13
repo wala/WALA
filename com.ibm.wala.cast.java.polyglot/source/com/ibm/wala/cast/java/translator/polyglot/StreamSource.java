@@ -22,24 +22,24 @@ import polyglot.frontend.FileSource;
 
 /**
  * A Polyglot Source whose input comes from an InputStream.<br>
- * Currently extends FileSource since that's all that the Polyglot Compiler class
- * will accept.
+ * Currently extends FileSource since that's all that the Polyglot Compiler class will accept.
+ * 
  * @author rfuhrer
  */
 public class StreamSource extends FileSource {
-    private InputStream fStream;
+  private InputStream fStream;
 
-    public StreamSource(InputStream s, String fullPath) throws IOException {
-	super(new File(fullPath), true);
-	fStream= s;
+  public StreamSource(InputStream s, String fullPath) throws IOException {
+    super(new File(fullPath), true);
+    fStream = s;
+  }
+
+  public Reader open() throws IOException {
+    if (reader == null) {
+      reader = createReader(fStream);
     }
 
-    public Reader open() throws IOException {
-      if (reader == null) {
-	 reader = createReader(fStream);
-      }
-
-      return reader;
-    }
+    return reader;
+  }
 
 }

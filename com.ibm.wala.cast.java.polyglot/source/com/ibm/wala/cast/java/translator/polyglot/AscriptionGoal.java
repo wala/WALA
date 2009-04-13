@@ -26,30 +26,30 @@ import polyglot.visit.AscriptionVisitor;
 
 /**
  * Runs an AscriptionVisitor to make sure that empty array literals actually get a type.
+ * 
  * @author rfuhrer
  */
 public class AscriptionGoal extends AbstractGoal {
-    public AscriptionGoal(Job job) {
-	super(job);
-	try {
-	    Scheduler scheduler= job.extensionInfo().scheduler();
+  public AscriptionGoal(Job job) {
+    super(job);
+    try {
+      Scheduler scheduler = job.extensionInfo().scheduler();
 
-	    addPrerequisiteGoal(scheduler.TypeChecked(job), scheduler);
-	} catch (CyclicDependencyException e) {
-	    job.compiler().errorQueue().enqueue(ErrorInfo.INTERNAL_ERROR, "Cycle encountered in goal graph?");
-	    throw new IllegalStateException(e.getMessage());
-	}
+      addPrerequisiteGoal(scheduler.TypeChecked(job), scheduler);
+    } catch (CyclicDependencyException e) {
+      job.compiler().errorQueue().enqueue(ErrorInfo.INTERNAL_ERROR, "Cycle encountered in goal graph?");
+      throw new IllegalStateException(e.getMessage());
     }
+  }
 
-    public Pass createPass(ExtensionInfo extInfo) {
-	return new VisitorPass(this,
-	    new AscriptionVisitor(job(), extInfo.typeSystem(), extInfo.nodeFactory()) {
-	    	public Expr ascribe(Expr e, Type toType) throws SemanticException {
-	    	    if (e instanceof ArrayInit && e.type().isNull()) {
-	    		return e.type(toType);
-	    	    }
-	    	    return super.ascribe(e, toType);
-	    	}
-	});
-    }
+  public Pass createPass(ExtensionInfo extInfo) {
+    return new VisitorPass(this, new AscriptionVisitor(job(), extInfo.typeSystem(), extInfo.nodeFactory()) {
+      public Expr ascribe(Expr e, Type toType) throws SemanticException {
+        if (e instanceof ArrayInit && e.type().isNull()) {
+          return e.type(toType);
+        }
+        return super.ascribe(e, toType);
+      }
+    });
+  }
 }

@@ -23,19 +23,19 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 
 public class PolyglotSourceLoaderImpl extends JavaSourceLoaderImpl {
-    private final IRTranslatorExtension fExtInfo;
+  private final IRTranslatorExtension fExtInfo;
 
-    public PolyglotSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions,
-	    IClassHierarchy cha, IRTranslatorExtension extInfo) throws IOException {
-	super(loaderRef, parent, exclusions, cha);
-	this.fExtInfo = extInfo;
-    }
+  public PolyglotSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions,
+      IClassHierarchy cha, IRTranslatorExtension extInfo) throws IOException {
+    super(loaderRef, parent, exclusions, cha);
+    this.fExtInfo = extInfo;
+  }
 
-    public IRTranslatorExtension getTranslatorExtension() {
-      return fExtInfo;
-    }
+  public IRTranslatorExtension getTranslatorExtension() {
+    return fExtInfo;
+  }
 
-    protected SourceModuleTranslator getTranslator() {
-	return new PolyglotSourceModuleTranslator(cha.getScope(), fExtInfo, this);
-    }
+  protected SourceModuleTranslator getTranslator() {
+    return new PolyglotSourceModuleTranslator(cha.getScope(), fExtInfo, this);
+  }
 }

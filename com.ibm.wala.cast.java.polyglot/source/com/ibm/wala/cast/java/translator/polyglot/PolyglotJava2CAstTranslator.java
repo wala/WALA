@@ -359,8 +359,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
       Expr init = f.init();
       CAstNode rhsNode;
-      if ( init instanceof ArrayInit ) {
-        rhsNode = visit((ArrayInit)init,ctorContext,f.declType());
+      if (init instanceof ArrayInit) {
+        rhsNode = visit((ArrayInit) init, ctorContext, f.declType());
       } else {
         rhsNode = walkNodes(init, ctorContext);
       }
@@ -391,8 +391,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     /*
-     * If we've handled all the parent cases, this should never be called --
-     * visit(ArrayInit,WalkContext,Type) should be instead.
+     * If we've handled all the parent cases, this should never be called -- visit(ArrayInit,WalkContext,Type) should be instead.
      */
     public CAstNode visit(ArrayInit ai, WalkContext wc) {
       if (((ArrayType) ai.type()).base().isNull()) {
@@ -407,8 +406,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
           .elements().size()));
       for (Iterator iter = ai.elements().iterator(); iter.hasNext(); idx++) {
         Expr element = (Expr) iter.next();
-        if ( element instanceof ArrayInit ) {
-          eltNodes[idx] = visit((ArrayInit)element, wc, ((ArrayType)ai.type()).base());
+        if (element instanceof ArrayInit) {
+          eltNodes[idx] = visit((ArrayInit) element, wc, ((ArrayType) ai.type()).base());
         } else {
           eltNodes[idx] = walkNodes(element, wc);
         }
@@ -421,9 +420,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     /*
-     * Workaround for the null array init bug: just in case ai.type().base() is null (e.g.
-     * "new Object[] {null}") we get the type from the parent (in this example, a
-     * NewArray of type Object[])
+     * Workaround for the null array init bug: just in case ai.type().base() is null (e.g. "new Object[] {null}") we get the type
+     * from the parent (in this example, a NewArray of type Object[])
      */
     public CAstNode visit(ArrayInit ai, WalkContext wc, Type t) {
       TypeReference newTypeRef = fIdentityMapper.getTypeRef(t);
@@ -434,8 +432,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
           .elements().size()));
       for (Iterator iter = ai.elements().iterator(); iter.hasNext(); idx++) {
         Expr element = (Expr) iter.next();
-        if ( element instanceof ArrayInit ) {
-          eltNodes[idx] = visit((ArrayInit)element, wc, ((ArrayType)t).base());
+        if (element instanceof ArrayInit) {
+          eltNodes[idx] = visit((ArrayInit) element, wc, ((ArrayType) t).base());
         } else {
           eltNodes[idx] = walkNodes(element, wc);
         }
@@ -464,36 +462,23 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       if (la.operator() == Assign.ASSIGN) {
         return makeNode(wc, fFactory, la, CAstNode.ASSIGN, walkNodes(la.left(), lvc), walkNodes(la.right(), wc));
       } else {
-	CAstNode op = 
-	  makeNode(wc, 
-		   fFactory, 
-		   la, 
-		   CAstNode.ASSIGN_PRE_OP,
-		   walkNodes(la.left(), lvc),
-		   walkNodes(la.right(), wc),
-		   mapAssignOperator(la.operator()));
+        CAstNode op = makeNode(wc, fFactory, la, CAstNode.ASSIGN_PRE_OP, walkNodes(la.left(), lvc), walkNodes(la.right(), wc),
+            mapAssignOperator(la.operator()));
 
+        if (la.type().isLongOrLess()
+            && (mapAssignOperator(la.operator()) == CAstOperator.OP_DIV || mapAssignOperator(la.operator()) == CAstOperator.OP_MOD)) {
+          Collection excTargets = wc.getCatchTargets(fDivByZeroType);
+          if (!excTargets.isEmpty()) {
+            for (Iterator iterator = excTargets.iterator(); iterator.hasNext();) {
+              Pair catchPair = (Pair) iterator.next();
+              wc.cfg().add(op, catchPair.snd, fDivByZeroType);
+            }
+          } else {
+            wc.cfg().add(op, CAstControlFlowMap.EXCEPTION_TO_EXIT, fDivByZeroType);
+          }
+        }
 
-	  if (la.type().isLongOrLess() &&
-	      (mapAssignOperator(la.operator())==CAstOperator.OP_DIV ||
-	       mapAssignOperator(la.operator())==CAstOperator.OP_MOD))
-	  {
-	    Collection excTargets = wc.getCatchTargets(fDivByZeroType);
-	    if (!excTargets.isEmpty()) {
-	      for (Iterator iterator = excTargets.iterator(); 
-		   iterator.hasNext();) 
-	      {
-		Pair catchPair = (Pair) iterator.next();
-		wc.cfg().add(op, catchPair.snd, fDivByZeroType);
-	      }
-	    } else {
-	      wc.cfg().add(op, 
-			   CAstControlFlowMap.EXCEPTION_TO_EXIT, 
-			   fDivByZeroType);
-	    }
-	  }
-
-	  return op;
+        return op;
       }
     }
 
@@ -534,53 +519,49 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       else if (operator.equals(Binary.COND_OR))
         return makeNode(wc, fFactory, b, CAstNode.IF_EXPR, walkNodes(left, wc), fFactory.makeConstant(true), walkNodes(right, wc));
       else {
-	Type leftType = left.type();
-	Type rightType = right.type();
-	if (leftType.isPrimitive() && rightType.isPrimitive()) {
-	  CAstNode leftNode = walkNodes(left, wc);
-	  CAstNode rightNode = walkNodes(right, wc);
-	  
-	  try {
-	    Type result = fTypeSystem.promote(leftType, rightType);
+        Type leftType = left.type();
+        Type rightType = right.type();
+        if (leftType.isPrimitive() && rightType.isPrimitive()) {
+          CAstNode leftNode = walkNodes(left, wc);
+          CAstNode rightNode = walkNodes(right, wc);
 
-	    if (! result.equals(leftType)) {
-	      leftNode = makeNode(wc, fFactory, b, CAstNode.CAST, fFactory.makeConstant(getTypeDict().getCAstTypeFor(result)), leftNode, fFactory.makeConstant(getTypeDict().getCAstTypeFor(leftType)));
-	    }
+          try {
+            Type result = fTypeSystem.promote(leftType, rightType);
 
-	    if (! result.equals(rightType)) {
-	      rightNode = makeNode(wc, fFactory, b, CAstNode.CAST, fFactory.makeConstant(getTypeDict().getCAstTypeFor(result)), rightNode, fFactory.makeConstant(getTypeDict().getCAstTypeFor(rightType)));
-	    }
-	  } catch (SemanticException e) {
+            if (!result.equals(leftType)) {
+              leftNode = makeNode(wc, fFactory, b, CAstNode.CAST, fFactory.makeConstant(getTypeDict().getCAstTypeFor(result)),
+                  leftNode, fFactory.makeConstant(getTypeDict().getCAstTypeFor(leftType)));
+            }
 
-	  }
+            if (!result.equals(rightType)) {
+              rightNode = makeNode(wc, fFactory, b, CAstNode.CAST, fFactory.makeConstant(getTypeDict().getCAstTypeFor(result)),
+                  rightNode, fFactory.makeConstant(getTypeDict().getCAstTypeFor(rightType)));
+            }
+          } catch (SemanticException e) {
 
-	  CAstNode op = makeNode(wc, fFactory, b, CAstNode.BINARY_EXPR, mapBinaryOpcode(operator), leftNode, rightNode);
+          }
 
-	  if (leftType.isLongOrLess() &&
-	      rightType.isLongOrLess() &&
-	      (mapBinaryOpcode(operator)==CAstOperator.OP_DIV ||
-	       mapBinaryOpcode(operator)==CAstOperator.OP_MOD))
-	  {
-	    Collection excTargets = wc.getCatchTargets(fDivByZeroType);
-	    if (!excTargets.isEmpty()) {
-	      for (Iterator iterator = excTargets.iterator(); 
-		   iterator.hasNext();) 
-	      {
-		Pair catchPair = (Pair) iterator.next();
-		wc.cfg().add(op, catchPair.snd, fDivByZeroType);
-	      }
-	    } else {
-	      wc.cfg().add(op, 
-			   CAstControlFlowMap.EXCEPTION_TO_EXIT, 
-			   fDivByZeroType);
-	    }
-	  }
+          CAstNode op = makeNode(wc, fFactory, b, CAstNode.BINARY_EXPR, mapBinaryOpcode(operator), leftNode, rightNode);
 
-	  return op;
-	  
-	} else {
-	  return makeNode(wc, fFactory, b, CAstNode.BINARY_EXPR, mapBinaryOpcode(operator), walkNodes(left, wc), walkNodes(right, wc));
-	}
+          if (leftType.isLongOrLess() && rightType.isLongOrLess()
+              && (mapBinaryOpcode(operator) == CAstOperator.OP_DIV || mapBinaryOpcode(operator) == CAstOperator.OP_MOD)) {
+            Collection excTargets = wc.getCatchTargets(fDivByZeroType);
+            if (!excTargets.isEmpty()) {
+              for (Iterator iterator = excTargets.iterator(); iterator.hasNext();) {
+                Pair catchPair = (Pair) iterator.next();
+                wc.cfg().add(op, catchPair.snd, fDivByZeroType);
+              }
+            } else {
+              wc.cfg().add(op, CAstControlFlowMap.EXCEPTION_TO_EXIT, fDivByZeroType);
+            }
+          }
+
+          return op;
+
+        } else {
+          return makeNode(wc, fFactory, b, CAstNode.BINARY_EXPR, mapBinaryOpcode(operator), walkNodes(left, wc), walkNodes(right,
+              wc));
+        }
       }
     }
 
@@ -700,13 +681,12 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       Type castedFrom = arg.type();
       Type castedTo = c.castType().type();
 
-      // null can go into anything (e.g. in "((Foobar) null)" null can be assumed to be of type Foobar already) 
-      if ( castedFrom.isNull() )
+      // null can go into anything (e.g. in "((Foobar) null)" null can be assumed to be of type Foobar already)
+      if (castedFrom.isNull())
         castedFrom = castedTo;
-      
+
       CAstNode ast = makeNode(wc, fFactory, c, CAstNode.CAST, fFactory.makeConstant(getTypeDict().getCAstTypeFor(castedTo)),
-          walkNodes(arg, wc),
-	  fFactory.makeConstant(getTypeDict().getCAstTypeFor(castedFrom)));
+          walkNodes(arg, wc), fFactory.makeConstant(getTypeDict().getCAstTypeFor(castedFrom)));
 
       Collection excTargets = wc.getCatchTargets(fCCEType);
       if (!excTargets.isEmpty()) {
@@ -790,14 +770,14 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       String tmpName = "ctor temp"; // this name is an illegal Java
       // identifier
 
-      // new nodes with an explicit enclosing argument, e.g. "outer.new Inner()". They are mostly treated the same, except in JavaCAst2IRTranslator.doNewObject
+      // new nodes with an explicit enclosing argument, e.g. "outer.new Inner()". They are mostly treated the same, except in
+      // JavaCAst2IRTranslator.doNewObject
       CAstNode newNode;
       Expr enclosing = n.qualifier();
-      if ( enclosing != null ) {
+      if (enclosing != null) {
         CAstNode encNode = walkNodes(enclosing, wc);
         newNode = makeNode(wc, fFactory, n, CAstNode.NEW_ENCLOSING, fFactory.makeConstant(newTypeRef), encNode);
-      }
-      else 
+      } else
         newNode = makeNode(wc, fFactory, n, CAstNode.NEW, fFactory.makeConstant(newTypeRef));
       // end enclosing new stuff
 
@@ -909,9 +889,9 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
       CAstNode n = makeNode(wc, fFactory, aa, CAstNode.ARRAY_REF, walkNodes(aa.array(), wc), fFactory.makeConstant(eltTypeRef),
           walkNodes(aa.index(), wc));
-      
+
       wc.cfg().map(aa, n);
-      
+
       return n;
     }
 
@@ -938,9 +918,9 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
         // CAst -> IR translator interprets as a static ref).
         if (fi.isConstant()) {
           return makeNode(wc, fFactory, f, CAstNode.BLOCK_EXPR, targetNode, // can
-                                                                            // have
-                                                                            // side
-                                                                            // effects!
+              // have
+              // side
+              // effects!
               translateConstant(fi.constantValue()));
         } else {
           return makeNode(wc, fFactory, f, CAstNode.BLOCK_EXPR, targetNode, makeNode(wc, fFactory, f, CAstNode.OBJECT_REF,
@@ -965,9 +945,9 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
         if (fi.isConstant()) {
           return makeNode(wc, fFactory, f, CAstNode.BLOCK_EXPR, refNode, // can
-                                                                          // have
-                                                                          // side
-                                                                          // effects!
+              // have
+              // side
+              // effects!
               translateConstant(fi.constantValue()));
         } else {
           return refNode;
@@ -1067,16 +1047,13 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       wc.getLabelMap().put(stmt, l.label());
 
       CAstNode result;
-      if (! (l.statement() instanceof Empty)) {
-	WalkContext child = new BreakContext(wc, l.label(), breakTarget);
+      if (!(l.statement() instanceof Empty)) {
+        WalkContext child = new BreakContext(wc, l.label(), breakTarget);
 
-	result = 
-	  makeNode(wc, fFactory, l, CAstNode.BLOCK_STMT, 
-	    makeNode(wc, fFactory, l, CAstNode.LABEL_STMT, fFactory.makeConstant(l.label()), walkNodes(l.statement(), child)),
-	    walkNodes(breakTarget, wc));
+        result = makeNode(wc, fFactory, l, CAstNode.BLOCK_STMT, makeNode(wc, fFactory, l, CAstNode.LABEL_STMT, fFactory
+            .makeConstant(l.label()), walkNodes(l.statement(), child)), walkNodes(breakTarget, wc));
       } else {
-	result = 
-	  makeNode(wc, fFactory, l, CAstNode.LABEL_STMT, fFactory.makeConstant(l.label()), walkNodes(l.statement(), wc));
+        result = makeNode(wc, fFactory, l, CAstNode.LABEL_STMT, fFactory.makeConstant(l.label()), walkNodes(l.statement(), wc));
       }
 
       wc.cfg().map(l, result);
@@ -1162,16 +1139,15 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       LoopContext lc = new LoopContext(wc, loopLabel, breakTarget, continueTarget);
 
       /*
-       * The following loop is created sligtly differently than in jscore. It
-       * doesn't have a specific target for continue.
+       * The following loop is created sligtly differently than in jscore. It doesn't have a specific target for continue.
        */
       return makeNode(wc, fFactory, w, CAstNode.BLOCK_STMT, makeNode(wc, fFactory, w, CAstNode.LOOP, walkNodes(c, wc), makeNode(wc,
           fFactory, w, CAstNode.BLOCK_STMT, walkNodes(b, lc), walkNodes(continueTarget, wc))), walkNodes(breakTarget, wc));
     }
 
     public CAstNode visit(Switch s, WalkContext wc) {
-	Node breakLabel = fNodeFactory.Labeled(s.position(), "switchBreakLabel"
-					     + s.position().toString().replace('.', '_'), fNodeFactory.Empty(s.position()));
+      Node breakLabel = fNodeFactory.Labeled(s.position(), "switchBreakLabel" + s.position().toString().replace('.', '_'),
+          fNodeFactory.Empty(s.position()));
       CAstNode breakAst = walkNodes(breakLabel, wc);
       String loopLabel = (String) wc.getLabelMap().get(s);
       WalkContext child = new BreakContext(wc, loopLabel, breakLabel);
@@ -1278,9 +1254,9 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
         else
           initNode = fFactory.makeConstant(null);
       } else if (init instanceof ArrayInit)
-        initNode = visit((ArrayInit) init, wc, type); 
+        initNode = visit((ArrayInit) init, wc, type);
       else
-          initNode = walkNodes(init, wc);
+        initNode = walkNodes(init, wc);
 
       Object defaultValue;
       if (type.isLongOrLess())
@@ -2084,7 +2060,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     public Collection<Pair<Type, Object>> getCatchTargets(Type label) {
-      Collection<Pair<Type, Object>> result = Collections.singleton(Pair.<Type,Object>make(fREType, CAstControlFlowMap.EXCEPTION_TO_EXIT));
+      Collection<Pair<Type, Object>> result = Collections.singleton(Pair.<Type, Object> make(fREType,
+          CAstControlFlowMap.EXCEPTION_TO_EXIT));
       return result;
     }
 
@@ -2097,7 +2074,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     @SuppressWarnings("unused")
     private final Try tryNode;
 
-    Collection<Pair<Type,Object>> fCatchNodes = new ArrayList<Pair<Type, Object>>();
+    Collection<Pair<Type, Object>> fCatchNodes = new ArrayList<Pair<Type, Object>>();
 
     TryCatchContext(WalkContext parent, Try tryNode) {
       super(parent);
@@ -2105,7 +2082,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
       for (Iterator catchIter = tryNode.catchBlocks().iterator(); catchIter.hasNext();) {
         Catch c = (Catch) catchIter.next();
-        Pair<Type,Object> p = Pair.make(c.catchType(), (Object)c);
+        Pair<Type, Object> p = Pair.make(c.catchType(), (Object) c);
 
         fCatchNodes.add(p);
       }
@@ -2312,7 +2289,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     public int getLastCol() {
       return p.endColumn();
     }
-     
+
     public int getFirstOffset() {
       return p.offset();
     }
@@ -2454,8 +2431,9 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
   /**
    * Maps front-end-specific representations into WALA references of the appropriate kind.
+   * 
    * @author rfuhrer
-   *
+   * 
    * @param <T> The front-end-specific representation of a type (e.g., for Polyglot, a Type)
    * @param <M> The front-end-specific representation of a procedure/method (e.g., for Polyglot, a CodeInstance)
    * @param <F> The front-end-specific representation of a field (e.g., for Polyglot, a FieldInstance)
