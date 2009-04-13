@@ -59,7 +59,6 @@ import com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.ClassConstants;
-import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -74,10 +73,8 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * A DOMO ClassLoaderImpl that processes source file entities in the
+ * A {@link ClassLoaderImpl} that processes source file entities in the
  * compile-time classpath.
- * 
- * @author rfuhrer
  */
 public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
   public Map<CAstEntity, IClass> fTypeMap = HashMapFactory.make();
