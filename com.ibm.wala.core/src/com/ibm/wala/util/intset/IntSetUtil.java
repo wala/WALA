@@ -49,11 +49,7 @@ public class IntSetUtil {
    * This method constructs an appropriate mutable copy of set.
    * 
    * @return a new {@link MutableIntSet} object with the same value as set
-   * @throws UnimplementedError if (not ( set instanceof com.ibm.wala.util.intset.SparseIntSet ) ) and (not ( set instanceof
-   *           com.ibm.wala.util.intset.BitVectorIntSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.BimodalMutableIntSet
-   *           ) ) and (not ( set instanceof com.ibm.wala.util.intset.DebuggingMutableIntSet ) ) and (not ( set instanceof
-   *           com.ibm.wala.util.intset.SemiSparseMutableIntSet ) ) and (not ( set instanceof
-   *           com.ibm.wala.util.intset.MutableSharedBitVectorIntSet ) )
+   * @throws UnimplementedError if we haven't supported the set type yet.
    * @throws IllegalArgumentException if set == null
    */
   public static MutableIntSet makeMutableCopy(IntSet set) throws IllegalArgumentException, UnimplementedError {
