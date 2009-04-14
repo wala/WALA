@@ -54,7 +54,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
   private final int hashBase;
 
   /**
-   * Set of Shrike ExceptionHandler objects that cover this method.
+   * Set of Shrike {@link ExceptionHandler} objects that cover this method.
    */
   final private Set<ExceptionHandler> exceptionHandlers = HashSetFactory.make(10);
 
@@ -79,7 +79,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
   public IBytecodeMethod getMethod() {
     return method;
   }
-  
+
   @Override
   public int hashCode() {
     return 9511 * getMethod().hashCode();
@@ -276,23 +276,19 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
           goToAllHandlers = true;
         } else {
           if (hs != null && hs.length > 0) {
-            IClassLoader loader = getMethod().getDeclaringClass().getClassLoader(); 
-            BytecodeLanguage l = (BytecodeLanguage)loader.getLanguage();
+            IClassLoader loader = getMethod().getDeclaringClass().getClassLoader();
+            BytecodeLanguage l = (BytecodeLanguage) loader.getLanguage();
             exceptionTypes = l.getImplicitExceptionTypes(last);
             if (last instanceof IInvokeInstruction) {
-              IInvokeInstruction call = (IInvokeInstruction)last;
+              IInvokeInstruction call = (IInvokeInstruction) last;
               exceptionTypes = HashSetFactory.make(exceptionTypes);
-              MethodReference target = 
-                MethodReference.findOrCreate(l, 
-                    loader.getReference(),
-                    call.getClassType(), 
-                    call.getMethodName(),
-                    call.getMethodSignature());
+              MethodReference target = MethodReference.findOrCreate(l, loader.getReference(), call.getClassType(), call
+                  .getMethodName(), call.getMethodSignature());
               try {
                 exceptionTypes.addAll(l.inferInvokeExceptions(target, cha));
               } catch (InvalidClassFileException e) {
-                 e.printStackTrace();
-                 Assertions.UNREACHABLE();
+                e.printStackTrace();
+                Assertions.UNREACHABLE();
               }
             }
           }
@@ -316,6 +312,9 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
             }
             if (goToAllHandlers) {
               // add an edge to the catch block.
+              if (DEBUG) {
+                System.err.println(" gotoAllHandlers " + b);
+              }
               addExceptionalEdgeTo(b);
             } else {
               TypeReference caughtException = null;
@@ -334,12 +333,17 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
                   caughtException = null;
                 }
               } else {
+                if (DEBUG) {
+                  System.err.println(" catchClass() == null");
+                }
                 // hs[j].getCatchClass() == null.
                 // this means that the handler catches all exceptions.
                 // add the edge and null out all types
-                addExceptionalEdgeTo(b);
-                exceptionTypes.clear();
-                caughtException = null;
+                if (!exceptionTypes.isEmpty()) {
+                  addExceptionalEdgeTo(b);
+                  exceptionTypes.clear();
+                  caughtException = null;
+                }
               }
               if (caughtException != null) {
                 IClass caughtClass = cha.lookupClass(caughtException);
@@ -347,7 +351,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
                 // have been caught by the handlers in scope
                 ArrayList<TypeReference> caught = new ArrayList<TypeReference>(exceptionTypes.size());
                 // check if we should add an edge to the catch block.
-                for (TypeReference t:  exceptionTypes) {
+                for (TypeReference t : exceptionTypes) {
                   if (t != null) {
                     IClass klass = cha.lookupClass(t);
                     if (klass == null) {
