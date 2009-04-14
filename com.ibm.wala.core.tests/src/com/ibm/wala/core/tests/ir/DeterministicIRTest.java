@@ -38,9 +38,8 @@ import com.ibm.wala.util.warnings.Warnings;
 /**
  * Test that the SSA-numbering of variables in the IR is deterministic.
  * 
- * Introduced 05-AUG-03; the default implementation of hashCode was being
- * invoked. Object.hashCode is a source of random numbers and has no place in a
- * deterministic program.
+ * Introduced 05-AUG-03; the default implementation of hashCode was being invoked. Object.hashCode is a source of random numbers and
+ * has no place in a deterministic program.
  */
 public class DeterministicIRTest extends WalaTestCase {
 
@@ -51,7 +50,7 @@ public class DeterministicIRTest extends WalaTestCase {
   private ClassHierarchy cha;
 
   private AnalysisOptions options;
-  
+
   private AnalysisCache cache;
 
   public static void main(String[] args) {
@@ -60,10 +59,11 @@ public class DeterministicIRTest extends WalaTestCase {
 
   protected void setUp() throws Exception {
 
-    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
+    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
+        FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
     options = new AnalysisOptions(scope, null);
     cache = new AnalysisCache();
-    ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions() );
+    ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions());
 
     try {
       cha = ClassHierarchy.make(scope, factory);
@@ -86,7 +86,7 @@ public class DeterministicIRTest extends WalaTestCase {
     assertNotNull("method not found", method);
     IMethod imethod = cha.resolveMethod(method);
     assertNotNull("imethod not found", imethod);
-    IR ir1 = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions() );
+    IR ir1 = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     cache.getSSACache().wipe();
 
     checkNotAllNull(ir1.getInstructions());
@@ -155,5 +155,12 @@ public class DeterministicIRTest extends WalaTestCase {
     doMethod(scope.findMethod(AnalysisScope.APPLICATION, "Ljava/io/ObjectInputStream", Atom
         .findOrCreateUnicodeAtom("resolveProxyClass"), new ImmutableByteArray(UTF8Convert
         .toUTF8("([Ljava/lang/String;)Ljava/lang/Class;"))));
+  }
+  
+  public void testIR4() {
+    // test some corner cases with try-finally
+    doMethod(scope.findMethod(AnalysisScope.APPLICATION, "LcornerCases/TryFinally", Atom
+        .findOrCreateUnicodeAtom("test1"), new ImmutableByteArray(UTF8Convert
+        .toUTF8("(Ljava/io/InputStream;Ljava/io/InputStream;)V"))));
   }
 }
