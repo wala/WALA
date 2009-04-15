@@ -105,8 +105,12 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
       job.join();
       IStatus result = job.getResult();
       if (result.getSeverity() == IStatus.ERROR) {
-        IOException exception = (IOException) result.getException();
-        throw exception;
+        Throwable exception = result.getException();
+        if (exception instanceof IOException) {
+          throw (IOException)exception;
+        } else if (exception instanceof RuntimeException) {
+          throw (RuntimeException)exception;
+        }
       }
     } catch (InterruptedException e) {
       e.printStackTrace();
