@@ -42,7 +42,7 @@ public final class MethodReference extends MemberReference {
 
   public final static Atom forNameAtom = Atom.findOrCreateUnicodeAtom("forName");
 
-  private final static Descriptor forNameDesc = Descriptor.findOrCreateUTF8(Language.JAVA, "(Ljava/langString;)Ljava/lang/Class;");
+  private final static Descriptor forNameDesc = Descriptor.findOrCreateUTF8(Language.JAVA, "(Ljava/lang/String;)Ljava/lang/Class;");
 
   public final static MethodReference JavaLangClassForName = findOrCreate(TypeReference.JavaLangClass, forNameAtom, forNameDesc);
 
