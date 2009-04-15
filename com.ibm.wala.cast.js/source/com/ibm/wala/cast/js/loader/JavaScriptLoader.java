@@ -11,8 +11,10 @@
 package com.ibm.wala.cast.js.loader;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,6 +30,8 @@ import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
 import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
+import com.ibm.wala.cast.ir.translator.TranslatorToIR;
 import com.ibm.wala.cast.ir.translator.AstTranslator.AstLexicalInformation;
 import com.ibm.wala.cast.js.ssa.JSInstructionFactory;
 import com.ibm.wala.cast.js.ssa.JavaScriptCheckReference;
@@ -37,6 +41,7 @@ import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
 import com.ibm.wala.cast.js.ssa.JavaScriptTypeOfInstruction;
 import com.ibm.wala.cast.js.ssa.JavaScriptWithRegion;
+import com.ibm.wala.cast.js.translator.JSAstTranslator;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.loader.AstClass;
@@ -44,7 +49,10 @@ import com.ibm.wala.cast.loader.AstDynamicPropertyClass;
 import com.ibm.wala.cast.loader.AstFunctionClass;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.CAstAbstractLoader;
+import com.ibm.wala.cast.loader.CAstAbstractModuleLoader;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
+import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.cast.types.AstMethodReference;
@@ -57,7 +65,9 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.LanguageImpl;
 import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction.IOperator;
@@ -99,7 +109,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
-public class JavaScriptLoader extends CAstAbstractLoader {
+public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
   public final static Language JS = new LanguageImpl() {
 
@@ -559,9 +569,9 @@ public class JavaScriptLoader extends CAstAbstractLoader {
     }
   }
 
-  private final Set<CAstQualifier> functionQualifiers;
+  private static final Set<CAstQualifier> functionQualifiers;
 
-  {
+  static {
     functionQualifiers = HashSetFactory.make();
     functionQualifiers.add(CAstQualifier.PUBLIC);
     functionQualifiers.add(CAstQualifier.FINAL);
@@ -714,8 +724,57 @@ public class JavaScriptLoader extends CAstAbstractLoader {
      return JS.instructionFactory();
   }
 
-  public void init(List<Module> modules) throws IOException {
-    translatorFactory.make(this).translate(modules);
+  public static final Set<String> bootstrapFileNames;
+
+  private static String prologueFileName = "prologue.js";
+
+  public static void resetPrologueFile() {
+    prologueFileName = "prologue.js";
+  }
+
+  public static void setPrologueFile(String name) {
+    prologueFileName = name;
+  }
+
+  public static void addBootstrapFile(String fileName) {
+    bootstrapFileNames.add(fileName);
+  }
+
+  static {
+    bootstrapFileNames = HashSetFactory.make();
+    bootstrapFileNames.add(prologueFileName);
+  }
+
+  public void init(List<Module> modules) {
+
+    List<Module> all = new LinkedList<Module>();
+    
+    for(final String fn : bootstrapFileNames) {
+      all.add(new SourceURLModule(getClass().getClassLoader().getResource(fn)) {
+        public String getName() {
+          return fn;
+        }
+      });
+    }
+    
+    all.addAll(modules);
+    
+    super.init(all);
+  }
+
+  @Override
+  protected TranslatorToCAst getTranslatorToCAst(CAst ast, ModuleEntry module, URL sourceURL, String localFileName) {
+     return translatorFactory.make(ast, module, sourceURL, localFileName);
+  }
+
+  @Override
+  protected TranslatorToIR initTranslator() {
+    return new JSAstTranslator(this);
+  }
+
+  @Override
+  protected boolean shouldTranslate(CAstEntity entity) {
+    return true;
   }
 
 }

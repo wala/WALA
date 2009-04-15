@@ -37,6 +37,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.warnings.Warning;
 
 public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
 
@@ -48,7 +49,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
     this(cha, null);
   }
 
-  protected abstract TranslatorToCAst getTranslatorToCAst(CAst ast, URL sourceURL, String localFileName);
+  protected abstract TranslatorToCAst getTranslatorToCAst(CAst ast, ModuleEntry M, URL sourceURL, String localFileName);
 
   protected abstract boolean shouldTranslate(CAstEntity entity);
 
@@ -68,40 +69,39 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
     class TranslatorNestingHack {
 
       private void init(ModuleEntry moduleEntry) {
-        if (moduleEntry.isModuleFile()) {
-          init(moduleEntry.asModule());
-        } else if (moduleEntry instanceof SourceFileModule) {
-          File f = ((SourceFileModule) moduleEntry).getFile();
-          String fn = f.toString();
+        try {
+          if (moduleEntry.isModuleFile()) {
+            init(moduleEntry.asModule());
+          } else if (moduleEntry instanceof SourceFileModule) {
+            File f = ((SourceFileModule) moduleEntry).getFile();
+            String fn = f.toString();
 
-          try {
-            TranslatorToCAst xlatorToCAst = getTranslatorToCAst(ast, new URL("file://" + f), fn);
+             TranslatorToCAst xlatorToCAst = getTranslatorToCAst(ast, moduleEntry, new URL("file://" + f), fn);
 
-            CAstEntity fileEntity = xlatorToCAst.translateToCAst();
+             CAstEntity fileEntity = xlatorToCAst.translateToCAst();
 
-            if (fileEntity != null) {
-              CAstPrinter.printTo(fileEntity, new PrintWriter(System.err));
+             if (fileEntity != null) {
+               CAstPrinter.printTo(fileEntity, new PrintWriter(System.err));
 
-              topLevelEntities.add(Pair.make(fileEntity, fn));
-            }
-          } catch (MalformedURLException e) {
-            System.err.println(("unpected problems with " + f));
-            e.printStackTrace(System.err);
-            Assertions.UNREACHABLE();
-          } catch (RuntimeException e) {
-            System.err.println(("unpected problems with " + f));
-            e.printStackTrace(System.err);
-          }
+               topLevelEntities.add(Pair.make(fileEntity, fn));
+             
+             }  else {
+               addMessage(moduleEntry, new Warning(Warning.SEVERE) {
+                 @Override
+                 public String getMsg() {
+                    return "parse error";
+                 }         
+               });
+             }
 
-        } else if (moduleEntry instanceof SourceURLModule) {
-          java.net.URL url = ((SourceURLModule) moduleEntry).getURL();
-          String fileName = ((SourceURLModule) moduleEntry).getName();
-          String localFileName = fileName.replace('/', '_');
+          } else if (moduleEntry instanceof SourceURLModule) {
+            java.net.URL url = ((SourceURLModule) moduleEntry).getURL();
+            String fileName = ((SourceURLModule) moduleEntry).getName();
+            String localFileName = fileName.replace('/', '_');
 
-          try {
             File F = TemporaryFile.streamToFile(localFileName, ((SourceURLModule) moduleEntry).getInputStream());
 
-            final TranslatorToCAst xlatorToCAst = getTranslatorToCAst(ast, url, localFileName);
+            final TranslatorToCAst xlatorToCAst = getTranslatorToCAst(ast, moduleEntry, url, localFileName);
 
             CAstEntity fileEntity = xlatorToCAst.translateToCAst();
 
@@ -109,17 +109,39 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
               System.err.println(CAstPrinter.print(fileEntity));
 
               topLevelEntities.add(Pair.make(fileEntity, fileName));
+            
+            } else {
+              addMessage(moduleEntry, new Warning(Warning.SEVERE) {
+                @Override
+                public String getMsg() {
+                   return "parse error";
+                }         
+              });
             }
 
             F.delete();
-          } catch (IOException e) {
-            System.err.println(("unexpected problems with " + fileName));
-            e.printStackTrace(System.err);
-            Assertions.UNREACHABLE();
-          } catch (RuntimeException e) {
-            System.err.println(("unexpected problems with " + fileName));
-            e.printStackTrace(System.err);
           }
+        } catch (final MalformedURLException e) {
+          addMessage(moduleEntry, new Warning(Warning.SEVERE) {
+            @Override
+            public String getMsg() {
+               return "Malformed URL issue: " + e.getMessage();
+            }         
+          });
+        } catch (final IOException e) {
+          addMessage(moduleEntry, new Warning(Warning.SEVERE) {
+            @Override
+            public String getMsg() {
+               return "I/O issue: " + e.getMessage();
+            }         
+          });
+        } catch (final RuntimeException e) {
+          addMessage(moduleEntry, new Warning(Warning.SEVERE) {
+            @Override
+            public String getMsg() {
+               return "Parsing issue: " + e.getMessage();
+            }         
+          });
         }
       }
 

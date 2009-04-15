@@ -30,6 +30,7 @@ import org.mozilla.javascript.ScriptOrFnNode;
 import org.mozilla.javascript.Token;
 import org.mozilla.javascript.tools.ToolErrorReporter;
 
+import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
@@ -469,7 +470,7 @@ public class RhinoToAstTranslator {
   }
 
   private boolean isPrologueScript(WalkContext context) {
-    return TranslatorBase.bootstrapFileNames.contains(context.script());
+    return JavaScriptLoader.bootstrapFileNames.contains(context.script());
   }
 
   private boolean isPrimitiveCall(WalkContext context, Node n) {
@@ -1347,8 +1348,6 @@ public class RhinoToAstTranslator {
   private final ModuleEntry sourceModule;
 
   private int anonymousCounter = 0;
-
-  // private int receiverCounter = 0;
 
   public RhinoToAstTranslator(CAst Ast, ModuleEntry M, String scriptName) {
     this.Ast = Ast;

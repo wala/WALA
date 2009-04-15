@@ -223,7 +223,7 @@ public:
 
   jobject makeFieldEntity(jobject, jobject, bool, list<jobject> *);
 
-  jobject makeGlobalEntity(char *, list<jobject> *);
+  jobject makeGlobalEntity(char *, jobject, list<jobject> *);
 
   jobject getEntityAst(jobject);
 

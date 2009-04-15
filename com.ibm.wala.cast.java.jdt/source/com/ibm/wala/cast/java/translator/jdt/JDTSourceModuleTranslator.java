@@ -106,25 +106,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
       cl = cl.getParent();
     }
   }
-
-  // Map options= javaProject.getOptions(true);
-  // // turn all errors and warnings into ignore. The customizable set of compiler
-  // // options only contains additional Eclipse options. The standard JDK compiler
-  // // options can't be changed anyway.
-  // for (Iterator iter= options.keySet().iterator(); iter.hasNext();) {
-  // String key= (String)iter.next();
-  // String value= (String)options.get(key);
-  //    if ("error".equals(value) || "warning".equals(value)) {  //$NON-NLS-1$//$NON-NLS-2$
-  // // System.out.println("Ignoring - " + key);
-  //        options.put(key, "ignore"); //$NON-NLS-1$
-  // } else if ("enabled".equals(value)) {
-  // // System.out.println(" - disabling " + key);
-  // options.put(key, "disabled");
-  // }
-  // }
-  // options.put(JavaCore.COMPILER_TASK_TAGS, "");
-  // parser.setCompilerOptions(options);
-
+  
   /*
    * Project -> AST code from org.eclipse.jdt.core.tests.performance
    */

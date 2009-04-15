@@ -2,18 +2,27 @@ package com.ibm.wala.cast.loader;
 
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
+import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.strings.Atom;
+import com.ibm.wala.util.warnings.Warning;
 
 public abstract class CAstAbstractLoader implements IClassLoader {
 
@@ -23,6 +32,8 @@ public abstract class CAstAbstractLoader implements IClassLoader {
 
   protected final IClassLoader parent;
 
+  private final Map<ModuleEntry, Set<Warning>> errors = new HashMap<ModuleEntry, Set<Warning>>();
+  
   public CAstAbstractLoader(IClassHierarchy cha, IClassLoader parent) {
     this.cha = cha;
     this.parent = parent;
@@ -32,6 +43,43 @@ public abstract class CAstAbstractLoader implements IClassLoader {
     this(cha, null);
   }
 
+  protected void addMessage(ModuleEntry module, Warning message) {
+    if (! errors.containsKey(module)) {
+      errors.put(module, new HashSet<Warning>());
+    }
+    
+    errors.get(module).add(message);
+  }
+  
+  private Iterator<ModuleEntry> getMessages(final byte severity) {
+    return new MapIterator<Map.Entry<ModuleEntry,Set<Warning>>, ModuleEntry>(new FilterIterator<Map.Entry<ModuleEntry,Set<Warning>>>(errors.entrySet().iterator(), new Filter<Map.Entry<ModuleEntry,Set<Warning>>>()  {
+      public boolean accepts(Entry<ModuleEntry, Set<Warning>> o) {
+         for(Warning w : o.getValue()) {
+           if (w.getLevel() == severity) {
+             return true;
+           }
+         }
+         return false;
+      }
+    }), new Function<Map.Entry<ModuleEntry,Set<Warning>>, ModuleEntry>() {
+      public ModuleEntry apply(Entry<ModuleEntry, Set<Warning>> object) {
+        return object.getKey();
+      }      
+    });
+  }
+  
+  public Iterator<ModuleEntry> getModulesWithParseErrors() {
+     return getMessages(Warning.SEVERE);
+  }
+
+  public Iterator<ModuleEntry> getModulesWithWarnings() {
+    return getMessages(Warning.MILD);
+  }
+
+  public Set<Warning> getMessages(ModuleEntry m) {
+    return errors.get(m);
+  }
+  
   public IClass lookupClass(String className, IClassHierarchy cha) {
     Assertions._assert(this.cha == cha);
     return (IClass) types.get(TypeName.string2TypeName(className));

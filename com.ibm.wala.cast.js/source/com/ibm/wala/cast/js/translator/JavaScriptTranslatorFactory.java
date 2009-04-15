@@ -10,16 +10,20 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.translator;
 
-import com.ibm.wala.cast.js.loader.JavaScriptLoader;
+import java.net.URL;
+
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
+import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.classLoader.ModuleEntry;
 
 public interface JavaScriptTranslatorFactory {
 
-  TranslatorBase make(JavaScriptLoader loader);
+  TranslatorToCAst make(CAst ast, ModuleEntry M, URL sourceURL, String localFileName);
 
   public static class CAstRhinoFactory implements JavaScriptTranslatorFactory {
 
-    public TranslatorBase make(JavaScriptLoader loader) {
-       return new CAstRhinoTranslator(loader);
+    public TranslatorToCAst make(CAst ast, ModuleEntry M, URL sourceURL, String localFileName) {
+       return new CAstRhinoTranslator(M);
     }
   }
 

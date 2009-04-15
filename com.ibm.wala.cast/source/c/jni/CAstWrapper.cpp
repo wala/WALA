@@ -675,13 +675,13 @@ jobject CAstWrapper::makeFieldEntity(jobject declaringClass, jobject name, bool 
   return entity;
 }
 
-jobject CAstWrapper::makeGlobalEntity(char *name, list<jobject> *modifiers) {
+jobject CAstWrapper::makeGlobalEntity(char *name, jobject type, list<jobject> *modifiers) {
   char *safeData = strdup(name);
   jobject val = env->NewStringUTF( safeData );
   THROW_ANY_EXCEPTION(java_ex);
   delete safeData;
 
-  jobject entity = env->NewObject(NativeGlobalEntity, globalEntityInit, val, makeSet(modifiers));
+  jobject entity = env->NewObject(NativeGlobalEntity, globalEntityInit, val, type, makeSet(modifiers));
   THROW_ANY_EXCEPTION(java_ex);
 
   return entity;

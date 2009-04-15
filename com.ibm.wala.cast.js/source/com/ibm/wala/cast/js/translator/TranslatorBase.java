@@ -22,31 +22,9 @@ import com.ibm.wala.util.collections.HashSetFactory;
 
 public abstract class TranslatorBase {
 
-  protected static final Set<String> bootstrapFileNames;
-
-  private static String prologueFileName = "prologue.js";
-
-  public static void resetPrologueFile() {
-    prologueFileName = "prologue.js";
-  }
-
-  public static void setPrologueFile(String name) {
-    prologueFileName = name;
-  }
-
-  public static void addBootstrapFile(String fileName) {
-    bootstrapFileNames.add(fileName);
-  }
-
-  static {
-    bootstrapFileNames = HashSetFactory.make();
-    bootstrapFileNames.add(prologueFileName);
-  }
-
   public abstract void translate(ModuleEntry M, String N) throws IOException;
 
   public void translate(List modules) throws IOException {
-    translate(new SourceURLModule(getClass().getClassLoader().getResource(prologueFileName)), prologueFileName);
     Iterator MS = modules.iterator();
     while (MS.hasNext()) {
       ModuleEntry M = (ModuleEntry) MS.next();

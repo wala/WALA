@@ -56,6 +56,12 @@ public interface CAstType {
 	CAstType getDeclaringType();
     }
 
+    public interface Complex extends CAstType {
+      
+      CAstType getType();
+
+    }
+    
     public static final CAstType DYNAMIC = new CAstType() {
     
       public String getName() {
