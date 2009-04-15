@@ -17,7 +17,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.action.IAction;
@@ -61,27 +66,52 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
     return computeScope(selection, false, true);
   }
 
-  public static AnalysisScope computeScope(IStructuredSelection selection, boolean includeSource, boolean includeClassFiles) throws IOException {
+  public static AnalysisScope computeScope(final IStructuredSelection selection, final boolean includeSource,
+      final boolean includeClassFiles) throws IOException {
     if (selection == null) {
       throw new IllegalArgumentException("null selection");
     }
-    Collection<EclipseProjectPath> projectPaths = new LinkedList<EclipseProjectPath>();
-    for (Iterator it = selection.iterator(); it.hasNext();) {
-      Object object = it.next();
-      if (object instanceof IJavaElement) {
-        IJavaElement e = (IJavaElement) object;
-        IJavaProject jp = e.getJavaProject();
-        try {
-          projectPaths.add(EclipseProjectPath.make(jp, includeSource, includeClassFiles));
-        } catch (CoreException e1) {
-          e1.printStackTrace();
-          // skip and continue
-        }
-      } else {
-        Assertions.UNREACHABLE(object.getClass());
-      }
-    }
+    final Collection<EclipseProjectPath> projectPaths = new LinkedList<EclipseProjectPath>();
+    Job job = new Job("Compute project paths") {
 
+      @Override
+      protected IStatus run(IProgressMonitor monitor) {
+        for (Iterator it = selection.iterator(); it.hasNext();) {
+          Object object = it.next();
+          if (object instanceof IJavaElement) {
+            IJavaElement e = (IJavaElement) object;
+            IJavaProject jp = e.getJavaProject();
+            try {
+              projectPaths.add(EclipseProjectPath.make(jp, includeSource, includeClassFiles));
+            } catch (CoreException e1) {
+              e1.printStackTrace();
+              // skip and continue
+            } catch (IOException e2) {
+              e2.printStackTrace();
+              return new Status(IStatus.ERROR, "", "", e2);
+            }
+          } else {
+            Assertions.UNREACHABLE(object.getClass());
+          }
+        }
+        return Status.OK_STATUS;
+      }
+
+    };
+    // lock the whole workspace
+    job.setRule(ResourcesPlugin.getWorkspace().getRoot());
+    job.schedule();
+    try {
+      job.join();
+      IStatus result = job.getResult();
+      if (result.getSeverity() == IStatus.ERROR) {
+        IOException exception = (IOException) result.getException();
+        throw exception;
+      }
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+      assert false;
+    }
     AnalysisScope scope = mergeProjectPaths(projectPaths);
     return scope;
   }
@@ -107,7 +137,8 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
 
   /**
    * create an analysis scope as the union of a bunch of EclipseProjectPath
-   * @throws IOException 
+   * 
+   * @throws IOException
    */
   private static AnalysisScope mergeProjectPaths(Collection<EclipseProjectPath> projectPaths) throws IOException {
     AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
