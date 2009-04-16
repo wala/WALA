@@ -65,6 +65,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
    *          For example implementation = {SIMPLE_INT_VECTOR,TWO_LEVEL_INT_VECTOR,TWO_LEVEL_INT_VECTOR} will result in an
    *          implementation where the first 3 y's associated with each x are represented in IntVectors. The IntVector for the first
    *          y will be implemented with a SimpleIntVector, and the 2nd and 3rd are implemented with TwoLevelIntVector
+   * 
    * @throws IllegalArgumentException if implementation is null
    * @throws IllegalArgumentException if implementation.length == 0
    */
@@ -104,9 +105,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
     }
   }
 
-  /**
-   * a Default contructor
-   */
+
   public BasicNaturalRelation() {
     this(new byte[] { SIMPLE }, TWO_LEVEL);
   }
@@ -175,9 +174,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
     return smallStore[0].get(x) == DELEGATE_CODE;
   }
 
-  /**
-   * @return Iterator of IntPair
-   */
+
   public Iterator<IntPair> iterator() {
     return new TotalIterator();
   }
