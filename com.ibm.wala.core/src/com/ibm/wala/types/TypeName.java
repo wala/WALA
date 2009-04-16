@@ -142,7 +142,6 @@ public final class TypeName implements Serializable {
    * @return the name of the array element type for an array
    */
   public TypeName parseForArrayElementName() {
-
     short newDim = (short) (key.dim - 1);
     if (newDim == 0 && key.innermostPrimitive) {
       newDim = -1;
