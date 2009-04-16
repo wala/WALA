@@ -21,19 +21,14 @@ import com.ibm.wala.util.strings.ImmutableByteArray;
 import com.ibm.wala.util.strings.StringStuff;
 
 /**
- *
- * We've introduced this class to canonicalize Atoms that represent package
- * names.
+ * We've introduced this class to canonicalize Atoms that represent package names.
  * 
- * NB: All package names should use '/' and not '.' as a separator. eg.
- * Ljava/lang/Class
- * 
- * @author sfink
+ * NB: All package names should use '/' and not '.' as a separator. eg. Ljava/lang/Class
  */
 public final class TypeName implements Serializable {
 
   /* Serial version */
-  private static final long serialVersionUID = -3256390509887654326L;  
+  private static final long serialVersionUID = -3256390509887654326L;
 
   /**
    * canonical mapping from TypeNameKey -> TypeName
@@ -75,7 +70,7 @@ public final class TypeName implements Serializable {
     }
     return findOrCreate(name, 0, name.length());
   }
-  
+
   public static TypeName findOrCreate(String name) throws IllegalArgumentException {
     ImmutableByteArray b = ImmutableByteArray.make(name);
     return findOrCreate(b);
@@ -124,10 +119,9 @@ public final class TypeName implements Serializable {
   }
 
   /**
-   * @param s
-   *          a String like Ljava/lang/Object
+   * @param s a String like Ljava/lang/Object
    * @return the corresponding TypeName
-   * @throws IllegalArgumentException  if s is null
+   * @throws IllegalArgumentException if s is null
    */
   public static TypeName string2TypeName(String s) throws IllegalArgumentException {
     if (s == null) {
@@ -168,9 +162,8 @@ public final class TypeName implements Serializable {
   }
 
   /**
-   * @return the dimensionality of the type. By convention, class types have
-   *         dimensionality 0, primitves -1, and arrays the number of [ in their
-   *         descriptor.
+   * @return the dimensionality of the type. By convention, class types have dimensionality 0, primitves -1, and arrays the number
+   *         of [ in their descriptor.
    */
   public final int getDimensionality() {
     return key.dim;
@@ -206,10 +199,7 @@ public final class TypeName implements Serializable {
   }
 
   /**
-   * @author sfink
-   * 
-   * A key into the dictionary; this is just like a type name, but uses value
-   * equality instead of object equality.
+   * A key into the dictionary; this is just like a type name, but uses value equality instead of object equality.
    */
   private final static class TypeNameKey implements Serializable {
     /**
@@ -234,22 +224,12 @@ public final class TypeName implements Serializable {
 
     /**
      * This should be the only constructor
-     * 
-     * @param packageName
-     * @param className
-     * @param dim
-     * @param innermostPrimitive
      */
     private TypeNameKey(Atom packageName, Atom className, short dim, boolean innermostPrimitive) {
       this.packageName = packageName;
       this.className = className;
       this.dim = dim;
       this.innermostPrimitive = innermostPrimitive;
-
-      /*
-       * if (Assertions.verifyAssertions) { if (className.contains((byte) ';')) {
-       * Assertions._assert(false, "invalid class name: " + className); } }
-       */
     }
 
     @Override
@@ -323,7 +303,7 @@ public final class TypeName implements Serializable {
   public Atom getPackage() {
     return key.packageName;
   }
-  
+
   /**
    * @return the Atom naming the class for this type (without package)
    */

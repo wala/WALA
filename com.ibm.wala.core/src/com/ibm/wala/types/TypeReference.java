@@ -24,11 +24,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
  * </ul>
  * Resolving a TypeReference to a Type can be an expensive operation. Therefore we canonicalize TypeReference instances
  * and cache the result of resolution.
- * 
- * @author Bowen Alpern
- * @author Dave Grove
- * @author Derek Lieber
- * @author Stephen Fink
  */
 public final class TypeReference implements Serializable {
 
