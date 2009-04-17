@@ -28,13 +28,17 @@ import com.ibm.wala.shrikeCT.ConstantValueWriter;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 
 public class AddSerialVersion {
+
+  // this class should not be instantiated
+  private AddSerialVersion() {
+  }
+
   /**
-   * This method computes the serialVersionUID for class r (if there isn't one
-   * already) and adds the field to the classwriter w.
+   * This method computes the serialVersionUID for class r (if there isn't one already) and adds the field to the classwriter w.
    * 
-   * When run as a program, just takes a list of class files as command line
-   * arguments and computes their serialVersionUIDs.
-   * @throws IllegalArgumentException  if r is null
+   * When run as a program, just takes a list of class files as command line arguments and computes their serialVersionUIDs.
+   * 
+   * @throws IllegalArgumentException if r is null
    */
   public static void addSerialVersionUID(ClassReader r, ClassWriter w) throws InvalidClassFileException {
     if (r == null) {
@@ -70,10 +74,10 @@ public class AddSerialVersion {
   }
 
   /**
-   * This method computes the serialVersionUID for class r. See the
-   * specification at
+   * This method computes the serialVersionUID for class r. See the specification at
    * http://java.sun.com/j2se/1.4.2/docs/guide/serialization/spec/class.html
-   * @throws IllegalArgumentException  if r is null
+   * 
+   * @throws IllegalArgumentException if r is null
    */
   public static long computeSerialVersionUID(final ClassReader r) throws InvalidClassFileException {
     if (r == null) {
