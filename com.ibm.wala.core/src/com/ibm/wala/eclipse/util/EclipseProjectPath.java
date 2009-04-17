@@ -209,6 +209,17 @@ public class EclipseProjectPath {
    */
   private void resolvePluginClassPath(IProject p, boolean includeSource) throws CoreException, IOException {
     BundleDescription bd = findModel(p).getBundleDescription();
+
+    if (bd == null) {
+      // SJF: this is horrible.  We can't figure out the race condition yet which causes this to happen.
+      // sleep and try again.  cross your fingers.
+      try {
+        Thread.sleep(5000);
+      } catch (InterruptedException e) {
+        // whatever.
+      }
+      bd = findModel(p).getBundleDescription();
+    }
     if (bd == null) {
       throw new IllegalStateException("bundle description was null for " + p);
     }
