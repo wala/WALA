@@ -23,10 +23,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
  * Some simple utilities used to manipulate Strings
- * 
- * @author sfink
  */
 public class StringStuff {
 
@@ -61,8 +58,6 @@ public class StringStuff {
    * 
    * eg. [[java/lang/String
    * 
-   * @param dString
-   * @return String
    * @throws IllegalArgumentException if dString is null
    */
   public static String deployment2CanonicalTypeString(String dString) {
@@ -95,8 +90,6 @@ public class StringStuff {
    * 
    * eg. [[Ljava.lang.String;
    * 
-   * @param dString
-   * @return String
    * @throws IllegalArgumentException if dString is null
    */
   public static String deployment2CanonicalDescriptorTypeString(String dString) {
@@ -127,6 +120,7 @@ public class StringStuff {
   public static final TypeName parseForReturnTypeName(String desc) throws IllegalArgumentException {
     return parseForReturnTypeName(Language.JAVA, ImmutableByteArray.make(desc));
   }
+
   public static final TypeName parseForReturnTypeName(Language l, String desc) throws IllegalArgumentException {
     return parseForReturnTypeName(l, ImmutableByteArray.make(desc));
   }
@@ -179,10 +173,10 @@ public class StringStuff {
       return TypeReference.Char.getName();
     case TypeReference.OtherPrimitiveTypeCode:
       if (b.get(b.length() - 1) == ';') {
-        return l.lookupPrimitiveType(new String(b.substring(i+1, b.length() - i - 2)));
+        return l.lookupPrimitiveType(new String(b.substring(i + 1, b.length() - i - 2)));
       } else {
-        return l.lookupPrimitiveType(new String(b.substring(i+1, b.length() - i - 1)));
-      }      
+        return l.lookupPrimitiveType(new String(b.substring(i + 1, b.length() - i - 1)));
+      }
     case TypeReference.ClassTypeCode: // fall through
     case TypeReference.ArrayTypeCode:
       if (b.get(b.length() - 1) == ';') {
@@ -198,6 +192,7 @@ public class StringStuff {
   public static final TypeName[] parseForParameterNames(String descriptor) throws IllegalArgumentException {
     return parseForParameterNames(Language.JAVA, ImmutableByteArray.make(descriptor));
   }
+
   public static final TypeName[] parseForParameterNames(Language l, String descriptor) throws IllegalArgumentException {
     return parseForParameterNames(l, ImmutableByteArray.make(descriptor));
   }
@@ -257,7 +252,7 @@ public class StringStuff {
         int off = i - 1;
         while (b.get(i++) != ';')
           ;
-        sigs.add(l.lookupPrimitiveType(new String(b.substring(off+1, i - off - 2))));
+        sigs.add(l.lookupPrimitiveType(new String(b.substring(off + 1, i - off - 2))));
 
         continue;
       }
@@ -361,26 +356,26 @@ public class StringStuff {
       throw new IllegalArgumentException("invalid class name: zero length");
     }
     try {
-    if (parseForPackage(name, start, length) == null) {
-      while (name.b[start] == '[') {
-        start++;
-        length--;
-      }
-      if (name.b[start] == 'L') {
-        start++;
-        length--;
-      }
-      return new ImmutableByteArray(name.b, start, length);
-    } else {
-      int lastSlash = 0;
-      for (int i = start; i < start + length; i++) {
-        if (name.b[i] == '/') {
-          lastSlash = i;
+      if (parseForPackage(name, start, length) == null) {
+        while (name.b[start] == '[') {
+          start++;
+          length--;
         }
+        if (name.b[start] == 'L') {
+          start++;
+          length--;
+        }
+        return new ImmutableByteArray(name.b, start, length);
+      } else {
+        int lastSlash = 0;
+        for (int i = start; i < start + length; i++) {
+          if (name.b[i] == '/') {
+            lastSlash = i;
+          }
+        }
+        int L = length - (lastSlash - start + 1);
+        return new ImmutableByteArray(name.b, lastSlash + 1, L);
       }
-      int L = length - (lastSlash - start + 1);
-      return new ImmutableByteArray(name.b, lastSlash + 1, L);
-    }
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("Malformed name: " + name + " " + start + " " + length);
     }
@@ -494,6 +489,7 @@ public class StringStuff {
   public static MethodReference makeMethodReference(String methodSig) throws IllegalArgumentException {
     return makeMethodReference(Language.JAVA, methodSig);
   }
+
   public static MethodReference makeMethodReference(Language l, String methodSig) throws IllegalArgumentException {
     if (methodSig == null) {
       throw new IllegalArgumentException("methodSig is null");
