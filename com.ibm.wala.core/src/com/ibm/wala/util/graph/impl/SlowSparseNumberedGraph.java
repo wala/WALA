@@ -32,12 +32,10 @@ public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> {
   }
 
   /**
+   * If normalOutCount == n, this edge manager will eagerly allocated n words to hold out edges for each node. (performance
+   * optimization for time)
    * 
-   * If normalOutCount == n, this edge manager will eagerly allocated n words to
-   * hold out edges for each node. (performance optimization for time)
-   * 
-   * @param normalOutCount
-   *          what is the "normal" number of out edges for a node?
+   * @param normalOutCount what is the "normal" number of out edges for a node?
    */
   public SlowSparseNumberedGraph(int normalOutCount) {
     edgeManager = new SparseNumberedEdgeManager<T>(nodeManager, normalOutCount, BasicNaturalRelation.TWO_LEVEL);
