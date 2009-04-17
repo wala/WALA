@@ -76,9 +76,7 @@ public class SparseIntSet implements IntSet {
     cloneState(S);
   }
 
-  /**
-   * @param S
-   */
+
   private void cloneState(SparseIntSet S) {
     if (S.elements != null) {
       elements = S.elements.clone();
