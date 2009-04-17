@@ -35,9 +35,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
  * <li>getDeclaredMethod
  * <li>getMethods
  * </ul>
- * 
- * @author pistoia
- * @author sjfink
  */
 class JavaLangClassContextSelector implements ContextSelector {
 

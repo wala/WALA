@@ -10,10 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph;
 
-import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
-import com.ibm.wala.analysis.reflection.ReflectionContextSelector;
-import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
-import com.ibm.wala.ipa.callgraph.propagation.ReflectionHandler;
 import com.ibm.wala.ssa.SSAOptions;
 
 /**

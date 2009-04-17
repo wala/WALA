@@ -44,9 +44,6 @@ import com.ibm.wala.util.debug.Assertions;
 /**
  * An {@link SSAContextInterpreter} specialized to interpret reflective invocations such as Constructor.newInstance and
  * Method.invoke on an {@link IMethod} constant.
- * 
- * @author pistoia
- * @author sjfink
  */
 public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpreter {
 

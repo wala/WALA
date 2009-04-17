@@ -18,8 +18,6 @@ import com.ibm.wala.types.TypeReference;
 
 /**
  * Common interface to all SSA BasicBlocks
- * 
- * @author Eran Yahav
  */
 public interface ISSABasicBlock extends IBasicBlock<SSAInstruction> {
   

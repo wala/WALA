@@ -16,7 +16,6 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 
 /**
  * A {@link PointerKey} that represents an array length location
- * 
  */
 public class ArrayLengthKey extends AbstractFieldPointerKey {
 

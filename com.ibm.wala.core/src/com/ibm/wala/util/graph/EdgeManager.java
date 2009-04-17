@@ -12,15 +12,13 @@ package com.ibm.wala.util.graph;
 
 import java.util.Iterator;
 
-import org.w3c.dom.Node;
-
 /**
  * An object which manages edges in a directed graph.
  */
 public interface EdgeManager<T> {
 
   /**
-   * Return an Iterator over the immediate predecessor {@link Node nodes} of this Node in the Graph.
+   * Return an Iterator over the immediate predecessor nodesof this Node in the Graph.
    * 
    * This method never returns <code>null</code>.
    * 
@@ -29,14 +27,14 @@ public interface EdgeManager<T> {
   public Iterator<? extends T> getPredNodes(T N);
 
   /**
-   * Return the number of {@link #getPredNodes immediate predecessor} {@link Node nodes} of this Node in the Graph.
+   * Return the number of {@link #getPredNodes immediate predecessor} nodes of this Node in the Graph.
    * 
    * @return the number of immediate predecessor Nodes of this Node in the Graph.
    */
   public int getPredNodeCount(T N);
 
   /**
-   * Return an Iterator over the immediate successor {@link Node nodes} of this Node in the Graph
+   * Return an Iterator over the immediate successor nodes of this Node in the Graph
    * <p>
    * This method never returns <code>null</code>.
    * 
@@ -45,7 +43,7 @@ public interface EdgeManager<T> {
   public Iterator<? extends T> getSuccNodes(T N);
 
   /**
-   * Return the number of {@link #getSuccNodes immediate successor} {@link Node nodes} of this Node in the Graph
+   * Return the number of {@link #getSuccNodes immediate successor} nodes of this Node in the Graph
    * 
    * @return the number of immediate successor Nodes of this Node in the Graph.
    */

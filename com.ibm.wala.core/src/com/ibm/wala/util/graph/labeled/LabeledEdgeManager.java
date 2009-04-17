@@ -51,14 +51,10 @@ package com.ibm.wala.util.graph.labeled;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.w3c.dom.Node;
-
 import com.ibm.wala.util.graph.EdgeManager;
 
 /**
  * An object which tracks labeled edges in a graph.
- * 
- * @author Manu Sridharan
  * 
  * @param <T> type of nodes in this graph
  * @param <U> types of edge labels.
@@ -66,15 +62,13 @@ import com.ibm.wala.util.graph.EdgeManager;
 public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
 
   /**
-   * Sets the default object used as label for operations where no specific
-   * edge label is provided. This is due to compatibility with the 
-   * EdgeManager interface
+   * Sets the default object used as label for operations where no specific edge label is provided. This is due to compatibility
+   * with the EdgeManager interface
    */
   public U getDefaultLabel();
-  
+
   /**
-   * Return an Iterator over the immediate predecessor {@link Node nodes} of
-   * this Node in the Graph on edges with some label.
+   * Return an Iterator over the immediate predecessor nodes of this Node in the Graph on edges with some label.
    * 
    * This method never returns <code>null</code>.
    * 
@@ -90,17 +84,14 @@ public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
   public Iterator<? extends U> getPredLabels(T N);
 
   /**
-   * Return the number of {@link #getPredNodes immediate predecessor}
-   * {@link Node nodes} of this Node in the Graph on edges with some label.
+   * Return the number of {@link #getPredNodes immediate predecessor} nodes of this Node in the Graph on edges with some label.
    * 
-   * @return the number of immediate predecessor Nodes of this Node in the
-   *         Graph.
+   * @return the number of immediate predecessor Nodes of this Node in the Graph.
    */
   public int getPredNodeCount(T N, U label);
 
   /**
-   * Return an Iterator over the immediate successor {@link Node nodes} of this
-   * Node in the Graph on edges with some label.
+   * Return an Iterator over the immediate successor nodes of this Node in the Graph on edges with some label.
    * <p>
    * This method never returns <code>null</code>.
    * 
@@ -109,15 +100,12 @@ public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
   public Iterator<? extends T> getSuccNodes(T N, U label);
 
   /**
-   * 
-   * @param N
    * @return the labels on edges whose source is N
    */
   public Iterator<? extends U> getSuccLabels(T N);
 
   /**
-   * Return the number of {@link #getSuccNodes immediate successor}
-   * {@link Node nodes} of this Node in the Graph
+   * Return the number of {@link #getSuccNodes immediate successor} nodes of this Node in the Graph
    * 
    * @return the number of immediate successor Nodes of this Node in the Graph.
    */
@@ -125,19 +113,16 @@ public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
 
   /**
    * adds an edge with some label
-   * 
-   * @param src
-   * @param dst
-   * @param label
    */
   public void addEdge(T src, T dst, U label);
 
   public void removeEdge(T src, T dst, U label) throws UnsupportedOperationException;
 
   public boolean hasEdge(T src, T dst, U label);
-  
+
   /**
    * Returns a set of all labeled edges between node src and node dst
+   * 
    * @param src source node of the edge
    * @param dst target node of the edge
    * @return Set of edge labels

@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.analysis.reflection;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;

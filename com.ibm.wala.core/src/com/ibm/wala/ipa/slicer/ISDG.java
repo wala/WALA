@@ -15,16 +15,11 @@ import java.util.Iterator;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.cha.IClassHierarchyDweller;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
-import com.ibm.wala.ipa.slicer.thin.CISDG;
 import com.ibm.wala.util.graph.NumberedGraph;
 
 /**
- * Interface for an SDG (loosely defined here as a graph of {@link Statement}s. There can be funny dependence graph
- * variants that we call {@link ISDG}s, such as the {@link CISDG} described in the Thin Slicing paper.
- * 
+ * Interface for an SDG (loosely defined here as a graph of {@link Statement}s. 
  * This interface implies that the underlying graph is computed lazily on demand.
- * 
- * @author sjfink
  */
 public interface ISDG extends NumberedGraph<Statement>, IClassHierarchyDweller {
 

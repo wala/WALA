@@ -19,8 +19,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import com.ibm.wala.util.warnings.WalaException;
-
 /**
  * Abstract base class for a process launcher
  */

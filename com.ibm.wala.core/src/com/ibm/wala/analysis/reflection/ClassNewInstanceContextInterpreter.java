@@ -42,8 +42,6 @@ import com.ibm.wala.util.strings.Atom;
 /**
  * An {@link SSAContextInterpreter} specialized to interpret Class.forName in a {@link JavaTypeContext} which
  * represents the point-type of the class object created by the call.
- * 
- * @author pistoia
  */
 public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterpreter {
 
