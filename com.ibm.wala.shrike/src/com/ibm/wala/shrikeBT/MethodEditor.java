@@ -10,9 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.shrikeBT;
 
-import com.ibm.wala.annotations.NonNull;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
+
+import com.ibm.wala.annotations.NonNull;
 
 /**
  * The MethodEditor is the core of the ShrikeBT code rewriting mechanism. To rewrite code, construct a MethodEditor initialized with

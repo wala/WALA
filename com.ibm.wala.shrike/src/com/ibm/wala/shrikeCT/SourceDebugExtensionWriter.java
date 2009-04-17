@@ -12,8 +12,6 @@ package com.ibm.wala.shrikeCT;
 
 import java.io.UnsupportedEncodingException;
 
-import com.ibm.wala.shrikeCT.ClassWriter;
-
 public class SourceDebugExtensionWriter extends ClassWriter.Element {
   final private int attrID;
 
