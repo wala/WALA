@@ -487,15 +487,19 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   }
 
   protected IField findDeclaredField(Atom name) {
-    for (int i = 0; i < instanceFields.length; i++) {
-      if (instanceFields[i].getName() == name) {
-        return instanceFields[i];
+    if (instanceFields != null) {
+      for (int i = 0; i < instanceFields.length; i++) {
+        if (instanceFields[i].getName() == name) {
+          return instanceFields[i];
+        }
       }
     }
 
-    for (int i = 0; i < staticFields.length; i++) {
-      if (staticFields[i].getName() == name) {
-        return staticFields[i];
+    if (staticFields != null) {
+      for (int i = 0; i < staticFields.length; i++) {
+        if (staticFields[i].getName() == name) {
+          return staticFields[i];
+        }
       }
     }
 

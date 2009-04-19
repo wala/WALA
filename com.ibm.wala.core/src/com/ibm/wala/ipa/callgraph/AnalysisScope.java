@@ -28,6 +28,7 @@ import java.util.jar.Manifest;
 import com.ibm.wala.classLoader.ArrayClassLoader;
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.classLoader.ClassFileModule;
+import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
@@ -129,6 +130,10 @@ public class AnalysisScope {
 
   public Language getLanguage(Atom name) {
     return languages.get(name);
+  }
+  
+  public boolean isApplicationLoader(IClassLoader loader) {
+    return loader.getReference().equals(getLoader(APPLICATION));
   }
   
   /**
