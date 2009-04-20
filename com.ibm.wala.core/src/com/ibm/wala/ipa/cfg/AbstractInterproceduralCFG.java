@@ -288,36 +288,38 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
       System.err.println("caller " + caller + "is relevant");
     }
     ControlFlowGraph<SSAInstruction, T> ccfg = getCFG(caller);
-    SSAInstruction[] cinsts = ccfg.getInstructions();
-
-    if (DEBUG_LEVEL > 1) {
-      System.err.println("Visiting " + cinsts.length + " instructions");
-    }
-    for (int i = 0; i < cinsts.length; i++) {
-      if (cinsts[i] instanceof SSAAbstractInvokeInstruction) {
-        if (DEBUG_LEVEL > 1) {
-          System.err.println("Checking invokeinstruction: " + cinsts[i]);
-        }
-        SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) cinsts[i];
-        CallSiteReference site = makeCallSiteReference(n.getMethod().getDeclaringClass().getClassLoader().getReference(), ccfg
-            .getProgramCounter(i), call);
-        if (cg.getPossibleTargets(caller, site).contains(n)) {
+    if (ccfg != null) {
+      SSAInstruction[] cinsts = ccfg.getInstructions();
+  
+      if (DEBUG_LEVEL > 1) {
+        System.err.println("Visiting " + cinsts.length + " instructions");
+      }
+      for (int i = 0; i < cinsts.length; i++) {
+        if (cinsts[i] instanceof SSAAbstractInvokeInstruction) {
           if (DEBUG_LEVEL > 1) {
-            System.err.println("Adding edge " + ccfg.getBlockForInstruction(i) + " to " + entryBlock);
+            System.err.println("Checking invokeinstruction: " + cinsts[i]);
           }
-          T callerBB = ccfg.getBlockForInstruction(i);
-          BasicBlockInContext<T> b1 = new BasicBlockInContext<T>(caller, callerBB);
-          // need to add a node for caller basic block, in case we haven't processed caller yet
-          addNodeForBasicBlockIfNeeded(b1);
-          BasicBlockInContext<T> b2 = new BasicBlockInContext<T>(n, entryBlock);
-          g.addEdge(b1, b2);
-          // also add edges from exit node to all return nodes (successor of call bb)
-          for (Iterator<? extends T> succIter = ccfg.getSuccNodes(callerBB); succIter.hasNext();) {
-            T returnBB = succIter.next();
-            BasicBlockInContext<T> b3 = new BasicBlockInContext<T>(n, exitBlock);
-            BasicBlockInContext<T> b4 = new BasicBlockInContext<T>(caller, returnBB);
-            addNodeForBasicBlockIfNeeded(b4);
-            g.addEdge(b3, b4);
+          SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) cinsts[i];
+          CallSiteReference site = makeCallSiteReference(n.getMethod().getDeclaringClass().getClassLoader().getReference(), ccfg
+              .getProgramCounter(i), call);
+          if (cg.getPossibleTargets(caller, site).contains(n)) {
+            if (DEBUG_LEVEL > 1) {
+              System.err.println("Adding edge " + ccfg.getBlockForInstruction(i) + " to " + entryBlock);
+            }
+            T callerBB = ccfg.getBlockForInstruction(i);
+            BasicBlockInContext<T> b1 = new BasicBlockInContext<T>(caller, callerBB);
+            // need to add a node for caller basic block, in case we haven't processed caller yet
+            addNodeForBasicBlockIfNeeded(b1);
+            BasicBlockInContext<T> b2 = new BasicBlockInContext<T>(n, entryBlock);
+            g.addEdge(b1, b2);
+            // also add edges from exit node to all return nodes (successor of call bb)
+            for (Iterator<? extends T> succIter = ccfg.getSuccNodes(callerBB); succIter.hasNext();) {
+              T returnBB = succIter.next();
+              BasicBlockInContext<T> b3 = new BasicBlockInContext<T>(n, exitBlock);
+              BasicBlockInContext<T> b4 = new BasicBlockInContext<T>(caller, returnBB);
+              addNodeForBasicBlockIfNeeded(b4);
+              g.addEdge(b3, b4);
+            }
           }
         }
       }
