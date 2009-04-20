@@ -36,7 +36,6 @@ import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.Warning;
 
 public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {

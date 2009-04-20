@@ -13,12 +13,9 @@ package com.ibm.wala.cast.js.translator;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.SourceFileModule;
-import com.ibm.wala.classLoader.SourceURLModule;
-import com.ibm.wala.util.collections.HashSetFactory;
 
 public abstract class TranslatorBase {
 

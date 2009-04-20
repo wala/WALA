@@ -13,7 +13,6 @@ package com.ibm.wala.cast.js.ipa.callgraph;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Map;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;

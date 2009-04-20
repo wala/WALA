@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.loader;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
@@ -48,7 +47,6 @@ import com.ibm.wala.cast.loader.AstClass;
 import com.ibm.wala.cast.loader.AstDynamicPropertyClass;
 import com.ibm.wala.cast.loader.AstFunctionClass;
 import com.ibm.wala.cast.loader.AstMethod;
-import com.ibm.wala.cast.loader.CAstAbstractLoader;
 import com.ibm.wala.cast.loader.CAstAbstractModuleLoader;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.tree.CAst;
