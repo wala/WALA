@@ -16,16 +16,13 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * This class wraps two concrete {@link MutableIntSet}s behind the standard interface, carrying
- * out all operations on both of them and performing consistency checks at
- * every step. The purpose of this is debugging bitset implementations.
- * 
- * @author Julian Dolby (dolby@us.ibm.com)
- *  
+ * This class wraps two concrete {@link MutableIntSet}s behind the standard interface, carrying out all operations on both of them
+ * and performing consistency checks at every step. The purpose of this is debugging bitset implementations.
  */
 class DebuggingMutableIntSet implements MutableIntSet {
 
   final MutableIntSet primaryImpl;
+
   final MutableIntSet secondaryImpl;
 
   DebuggingMutableIntSet(MutableIntSet p, MutableIntSet s) {
@@ -38,7 +35,6 @@ class DebuggingMutableIntSet implements MutableIntSet {
   }
 
   /**
-   * @param i
    * @return true iff this set contains integer i
    */
   public boolean contains(int i) {
@@ -62,11 +58,8 @@ class DebuggingMutableIntSet implements MutableIntSet {
    */
   public int size() {
     if (primaryImpl.size() != secondaryImpl.size()) {
-      Assertions._assert(
-        primaryImpl.size() == secondaryImpl.size(),
-        "size " + primaryImpl.size() + " of " + primaryImpl +
-	" differs from " + 
-	"size " + secondaryImpl.size() + " of " + secondaryImpl);
+      Assertions._assert(primaryImpl.size() == secondaryImpl.size(), "size " + primaryImpl.size() + " of " + primaryImpl
+          + " differs from " + "size " + secondaryImpl.size() + " of " + secondaryImpl);
     }
 
     return primaryImpl.size();
@@ -80,7 +73,6 @@ class DebuggingMutableIntSet implements MutableIntSet {
   /**
    * Add an integer value to this set.
    * 
-   * @param i
    * @return true iff the value of this changes.
    */
   public boolean add(int i) {
@@ -88,9 +80,8 @@ class DebuggingMutableIntSet implements MutableIntSet {
     boolean sr = secondaryImpl.add(i);
 
     if (pr != sr) {
-      Assertions._assert(pr == sr, 
-        "adding " + i + " to " + primaryImpl + " returns " + pr + 
-	", but adding " + i + " to " + secondaryImpl + " returns " + sr);
+      Assertions._assert(pr == sr, "adding " + i + " to " + primaryImpl + " returns " + pr + ", but adding " + i + " to "
+          + secondaryImpl + " returns " + sr);
     }
 
     return pr;
@@ -98,8 +89,6 @@ class DebuggingMutableIntSet implements MutableIntSet {
 
   /**
    * Remove an integer from this set.
-   * 
-   * @param i
    */
   public boolean remove(int i) {
     boolean result = primaryImpl.remove(i);
@@ -159,8 +148,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
   }
 
   /**
-   * @return true iff <code>this</code> has the same value as
-   *         <code>that</code>.
+   * @return true iff <code>this</code> has the same value as <code>that</code>.
    */
   public boolean sameValue(IntSet that) {
     if (that instanceof DebuggingMutableIntSet) {
@@ -197,8 +185,6 @@ class DebuggingMutableIntSet implements MutableIntSet {
 
   /**
    * Set the value of this to be the same as the value of set
-   * 
-   * @param set
    */
   public void copySet(IntSet set) {
     if (set instanceof DebuggingMutableIntSet) {
@@ -215,7 +201,6 @@ class DebuggingMutableIntSet implements MutableIntSet {
   /**
    * Add all members of set to this.
    * 
-   * @param set
    * @return true iff the value of this changes.
    */
   public boolean addAll(IntSet set) {
@@ -241,9 +226,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
   }
 
   /**
-   * Interset this with another set.
-   * 
-   * @param set
+   * Intersect this with another set.
    */
   public void intersectWith(IntSet set) {
     if (set instanceof DebuggingMutableIntSet) {
@@ -260,8 +243,6 @@ class DebuggingMutableIntSet implements MutableIntSet {
   }
 
   /**
-   * @param other
-   * @param filter
    */
   public boolean addAllInIntersection(IntSet other, IntSet filter) {
     if (other instanceof DebuggingMutableIntSet && filter instanceof DebuggingMutableIntSet) {
@@ -301,8 +282,6 @@ class DebuggingMutableIntSet implements MutableIntSet {
 
   /**
    * Invoke an action on each element of the Set
-   * 
-   * @param action
    */
   public void foreach(IntSetAction action) {
     final Set<Integer> bits = HashSetFactory.make();
@@ -325,8 +304,6 @@ class DebuggingMutableIntSet implements MutableIntSet {
 
   /**
    * Invoke an action on each element of the Set, excluding elements of Set X
-   * 
-   * @param action
    */
   public void foreachExcluding(IntSet X, IntSetAction action) {
     final Set<Integer> bits = HashSetFactory.make();

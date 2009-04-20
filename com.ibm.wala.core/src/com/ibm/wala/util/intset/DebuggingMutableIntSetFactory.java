@@ -16,7 +16,6 @@ import com.ibm.wala.util.debug.UnimplementedError;
 /**
  * A debugging factory that creates debugging bitsets that are implemented as
  * two bitsets that perform consistency checks for every operation.
- * 
  */
 public class DebuggingMutableIntSetFactory implements MutableIntSetFactory {
 
