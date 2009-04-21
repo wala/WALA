@@ -18,7 +18,7 @@ import java.util.Iterator;
 public interface NodeManager<T> extends Iterable<T>{
 
   /**
-   * @return an Iterator of the nodes in this graph
+   * @return an {@link Iterator} of the nodes in this graph
    */
   public Iterator<T> iterator();
 
@@ -40,5 +40,5 @@ public interface NodeManager<T> extends Iterable<T>{
   /**
    * @return true iff the graph contains the specified node
    */
-  public boolean containsNode(T N);
+  public boolean containsNode(T n);
 }
