@@ -15,7 +15,7 @@ import java.io.InputStream;
 
 /**
  * A ModuleEntry represents a wrapper around a file representation
- * in a Module.
+ * in a {@link Module}.
  */
 public interface ModuleEntry {
 

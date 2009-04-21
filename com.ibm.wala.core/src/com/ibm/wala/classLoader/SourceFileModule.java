@@ -15,10 +15,7 @@ import java.io.File;
 import com.ibm.wala.util.io.FileSuffixes;
 
 /**
- * 
- * A module which is a wrapper around a .java file
- * 
- * @author sfink
+ * A {@link Module} which is a wrapper around a .java file
  */
 public class SourceFileModule extends FileModule implements Module, ModuleEntry {
 

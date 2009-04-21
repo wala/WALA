@@ -14,8 +14,6 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * @author sfink
- *
  */
 public interface IField extends IMember {
 

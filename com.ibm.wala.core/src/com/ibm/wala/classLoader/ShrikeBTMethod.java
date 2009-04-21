@@ -49,10 +49,7 @@ import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 
 /**
- * 
  * A wrapper around a Shrike object that represents a method
- * 
- * @author sfink
  */
 public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
 

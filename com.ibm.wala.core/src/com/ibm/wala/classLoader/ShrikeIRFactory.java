@@ -26,7 +26,7 @@ import com.ibm.wala.ssa.analysis.DeadAssignmentElimination;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * @author Julian Dolby
+ * An {@link IRFactory} that for methods that originate from Shrike.
  */
 public class ShrikeIRFactory implements IRFactory<IBytecodeMethod> {
 

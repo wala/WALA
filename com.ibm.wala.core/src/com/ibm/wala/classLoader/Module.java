@@ -14,12 +14,9 @@ package com.ibm.wala.classLoader;
 import java.util.Iterator;
 
 /**
- *
- * A Module represents a set of files to analyze.  eg., a Jar file.
+ * A {@link Module} represents a set of files to analyze.  eg., a Jar file.
  * These are persistent (hung onto by ClassLoaderReference) .. so,
  * a Module should not hold onto a lot of data.
- * 
- * @author sfink
  */
 public interface Module {
 

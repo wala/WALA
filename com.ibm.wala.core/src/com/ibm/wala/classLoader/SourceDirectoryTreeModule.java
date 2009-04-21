@@ -16,10 +16,6 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * a module representing a directory tree of source files.
- * 
- * @author julian dolby (?)
- * @author smarkstr (added file extension)
- * 
  */
 public class SourceDirectoryTreeModule extends DirectoryTreeModule {
 

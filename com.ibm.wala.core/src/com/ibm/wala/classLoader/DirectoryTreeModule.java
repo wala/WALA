@@ -18,7 +18,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
  * A module containing files under some directory.
- * 
  */
 public abstract class DirectoryTreeModule implements Module {
 

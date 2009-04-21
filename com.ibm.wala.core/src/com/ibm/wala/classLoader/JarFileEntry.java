@@ -18,10 +18,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileSuffixes;
 
 /**
- * 
  * An entry in a Jar file.
- * 
- * @author sfink
  */
 public class JarFileEntry implements ModuleEntry {
 

@@ -24,8 +24,6 @@ import com.ibm.wala.util.strings.Atom;
 
 /**
  * Base class for an object that represents a single Java classloader for analysis purposes.
- * 
- * @author sfink
  */
 public interface IClassLoader {
   /**

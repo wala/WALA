@@ -21,11 +21,8 @@ import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * 
  * Implementation of a canonical field reference. TODO: canonicalize these?
  * TODO: don't cache fieldType here .. move to class?
- * 
- * @author sfink
  */
 public final class FieldImpl implements IField {
 

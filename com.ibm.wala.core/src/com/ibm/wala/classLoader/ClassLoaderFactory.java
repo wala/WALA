@@ -18,8 +18,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 
 /**
- * @author sfink
- *
  */
 public interface ClassLoaderFactory {
 

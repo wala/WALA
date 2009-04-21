@@ -17,19 +17,12 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
+ * Simple object that represents a static call site (ie., an invoke instruction in the bytecode)
  * 
- * Simple object that represents a static call site (ie., an invoke instruction
- * in the bytecode)
- * 
- * Note that the identity of a call site reference depends on two things:
- * the program counter, and the containing IR.   Thus, it suffices to
- * defines equals() and hashCode() from ProgramCounter, since this class
- * does not maintain a pointer to the containing IR (or CGNode) anyway.
- * If using a hashtable of CallSiteReference from different IRs,
- * you probably want to use a wrapper which also holds a pointer to 
- * the governing CGNode.
- * 
- * @author sfink
+ * Note that the identity of a call site reference depends on two things: the program counter, and the containing IR. Thus, it
+ * suffices to defines equals() and hashCode() from ProgramCounter, since this class does not maintain a pointer to the containing
+ * IR (or CGNode) anyway. If using a hashtable of CallSiteReference from different IRs, you probably want to use a wrapper which
+ * also holds a pointer to the governing CGNode.
  */
 public abstract class CallSiteReference extends ProgramCounter implements BytecodeConstants, ContextItem {
 
@@ -44,8 +37,6 @@ public abstract class CallSiteReference extends ProgramCounter implements Byteco
     this.declaredTarget = declaredTarget;
   }
 
-  
-  
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -120,16 +111,15 @@ public abstract class CallSiteReference extends ProgramCounter implements Byteco
   }
 
   /**
-   * This factory method plays a little game to avoid storing the invocation
-   * code in the object; this saves a byte (probably actually a whole word) in
-   * each created object.
+   * This factory method plays a little game to avoid storing the invocation code in the object; this saves a byte (probably
+   * actually a whole word) in each created object.
    * 
    * TODO: Consider canonicalization?
    */
   public static CallSiteReference make(int programCounter, MethodReference declaredTarget,
       IInvokeInstruction.IDispatch invocationCode) {
 
-    if (invocationCode == IInvokeInstruction.Dispatch.SPECIAL) 
+    if (invocationCode == IInvokeInstruction.Dispatch.SPECIAL)
       return new SpecialCall(programCounter, declaredTarget);
     if (invocationCode == IInvokeInstruction.Dispatch.VIRTUAL)
       return new VirtualCall(programCounter, declaredTarget);
@@ -142,16 +132,14 @@ public abstract class CallSiteReference extends ProgramCounter implements Byteco
   }
 
   /**
-   * Return the Method that this call site calls. This represents the method
-   * declared in the invoke instruction only.
+   * Return the Method that this call site calls. This represents the method declared in the invoke instruction only.
    */
   public MethodReference getDeclaredTarget() {
     return declaredTarget;
   }
 
   /**
-   * Return one of INVOKESPECIAL, INVOKESTATIC, INVOKEVIRTUAL, or
-   * INVOKEINTERFACE
+   * Return one of INVOKESPECIAL, INVOKESTATIC, INVOKEVIRTUAL, or INVOKEINTERFACE
    */
   abstract public IInvokeInstruction.IDispatch getInvocationCode();
 
@@ -226,8 +214,5 @@ public abstract class CallSiteReference extends ProgramCounter implements Byteco
   public CallSiteReference cloneReference(int pc) {
     return make(pc, getDeclaredTarget(), getInvocationCode());
   }
-  
-  
-  
-  
+
 }

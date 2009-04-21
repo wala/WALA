@@ -16,8 +16,6 @@ import com.ibm.wala.util.strings.Atom;
 /**
  * Basic interface for an object that represents a single
  * Java member (method or field) for analysis purposes.
- * 
- * @author sfink
  */
 public interface IMember extends IClassHierarchyDweller {
 

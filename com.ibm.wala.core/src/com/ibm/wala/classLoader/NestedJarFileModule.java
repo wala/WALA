@@ -26,11 +26,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileSuffixes;
 
 /**
- * 
  * A Jar file nested in a parent jar file
- * 
- * @author sfink
- * 
  */
 public class NestedJarFileModule implements Module {
 

@@ -27,8 +27,6 @@ import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * @author sfink
- * 
  */
 public class SyntheticMethod implements IMethod {
 

@@ -21,8 +21,6 @@ import com.ibm.wala.util.debug.Assertions;
 /**
  * Pseudo-classloader for all array classes; all other IClassLoader
  * implementations should delegate to this one for array classes only.
- * 
- * @author Stephen Fink
  */
 public class ArrayClassLoader {
 

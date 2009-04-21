@@ -11,21 +11,16 @@
 
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.ssa.IR;
 import com.ibm.wala.types.TypeReference;
 
 /**
- *
  * Represents a textual allocation site
  * 
- * Note that the identity of a NewSiteReference depends on two things:
- * the program counter, and the containing IR.   Thus, it suffices to
- * defines equals() and hashCode() from ProgramCounter, since this class
- * does not maintain a pointer to the containing IR (or CGNode) anyway.
- * If using a hashtable of NewSiteReference from different IRs,
- * you probably want to use a wrapper which also holds a pointer to 
- * the governing CGNode.
- * 
- * @author dolby
+ * Note that the identity of a {@link NewSiteReference} depends on two things: the program counter, and the containing {@link IR}. Thus, it suffices
+ * to defines equals() and hashCode() from ProgramCounter, since this class does not maintain a pointer to the containing IR (or
+ * CGNode) anyway. If using a hashtable of NewSiteReference from different IRs, you probably want to use a wrapper which also holds
+ * a pointer to the governing CGNode.
  */
 public class NewSiteReference extends ProgramCounter {
 
@@ -50,7 +45,7 @@ public class NewSiteReference extends ProgramCounter {
   public static NewSiteReference make(int programCounter, TypeReference declaredType) {
     return new NewSiteReference(programCounter, declaredType);
   }
-  
+
   @Override
   public String toString() {
     return "NEW " + declaredType + "@" + getProgramCounter();

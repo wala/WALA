@@ -35,10 +35,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
- * 
- * This class can scan an IMethod and generate a list of call sites in the method.
- * 
- * @author sfink
+ * Simple utilities to scan {@link IMethod}s to gather information without building an IR.
  */
 public class CodeScanner {
 
