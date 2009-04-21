@@ -10,12 +10,18 @@
  *******************************************************************************/
 package com.ibm.wala.util.graph;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 /**
  * An object which tracks graph nodes.
+ * 
+ * This is effectively a stripped-down collection interface. We choose to avoid using the full {@link Collection} interface, so that
+ * it takes less code to implement a new {@link NodeManager}.
+ * 
+ * @param <T> the type of nodes this {@link NodeManager} tracks.
  */
-public interface NodeManager<T> extends Iterable<T>{
+public interface NodeManager<T> extends Iterable<T> {
 
   /**
    * @return an {@link Iterator} of the nodes in this graph

@@ -16,6 +16,8 @@ package com.ibm.wala.util.graph;
  * We choose to define a {@link Graph} as a composition of a {@link NodeManager} and an {@link EdgeManager}, which
  * track nodes and edges, respectively.   This way, in many cases we can compose separate {@link NodeManager} and
  * {@link EdgeManager} implementations to create {@link Graph} implementations, using delegation.
+ * 
+ * @param <T> the type of nodes in this graph.
  */
 public interface Graph<T> extends NodeManager<T>, EdgeManager<T> {
   /**
