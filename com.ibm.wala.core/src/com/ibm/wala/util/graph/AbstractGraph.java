@@ -41,32 +41,44 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     return getNodeManager().getNumberOfNodes();
   }
 
-  public int getPredNodeCount(T N) throws IllegalArgumentException {
-    if (N == null) {
-      throw new IllegalArgumentException("N cannot be null");
+  /* 
+   * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
+   */
+  public int getPredNodeCount(T n) throws IllegalArgumentException {
+    if (n == null) {
+      throw new IllegalArgumentException("n cannot be null");
     }
-    return getEdgeManager().getPredNodeCount(N);
+    return getEdgeManager().getPredNodeCount(n);
   }
 
-  public Iterator<? extends T> getPredNodes(T N) throws IllegalArgumentException {
-    if (N == null) {
-      throw new IllegalArgumentException("N cannot be null");
+  /* 
+   * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
+   */
+  public Iterator<? extends T> getPredNodes(T n) throws IllegalArgumentException {
+    if (n == null) {
+      throw new IllegalArgumentException("n cannot be null");
     }
-    return getEdgeManager().getPredNodes(N);
+    return getEdgeManager().getPredNodes(n);
   }
 
-  public int getSuccNodeCount(T N) throws IllegalArgumentException {
-    if (!containsNode(N) || N == null) {
-      throw new IllegalArgumentException("node not in graph " + N);
+  /* 
+   * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
+   */
+  public int getSuccNodeCount(T n) throws IllegalArgumentException {
+    if (!containsNode(n) || n == null) {
+      throw new IllegalArgumentException("node not in graph " + n);
     }
-    return getEdgeManager().getSuccNodeCount(N);
+    return getEdgeManager().getSuccNodeCount(n);
   }
 
-  public Iterator<? extends T> getSuccNodes(T N) throws IllegalArgumentException {
-    if (N == null) {
-      throw new IllegalArgumentException("N cannot be null");
+  /* 
+   * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
+   */
+  public Iterator<? extends T> getSuccNodes(T n) throws IllegalArgumentException {
+    if (n == null) {
+      throw new IllegalArgumentException("n cannot be null");
     }
-    return getEdgeManager().getSuccNodes(N);
+    return getEdgeManager().getSuccNodes(n);
   }
 
   /*
@@ -84,10 +96,16 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     getEdgeManager().addEdge(src, dst);
   }
 
+  /* 
+   * @see com.ibm.wala.util.graph.EdgeManager#removeEdge(java.lang.Object, java.lang.Object)
+   */
   public void removeEdge(T src, T dst) throws IllegalArgumentException {
     getEdgeManager().removeEdge(src, dst);
   }
 
+  /* 
+   * @see com.ibm.wala.util.graph.EdgeManager#hasEdge(java.lang.Object, java.lang.Object)
+   */
   public boolean hasEdge(T src, T dst) {
     if (src == null) {
       throw new IllegalArgumentException("src is null");
@@ -169,11 +187,11 @@ public abstract class AbstractGraph<T> implements Graph<T> {
   /*
    * @see com.ibm.wala.util.graph.NodeManager#containsNode(com.ibm.wala.util.graph.Node)
    */
-  public boolean containsNode(T N) {
-    if (N == null) {
-      throw new IllegalArgumentException("N cannot be null");
+  public boolean containsNode(T n) {
+    if (n == null) {
+      throw new IllegalArgumentException("n cannot be null");
     }
-    return getNodeManager().containsNode(N);
+    return getNodeManager().containsNode(n);
   }
 
 }
