@@ -15,9 +15,6 @@ import com.ibm.wala.util.graph.NumberedGraph;
 
 /**
  * A graph view that reverses the edges in a graph
- * 
- * @author Julian Dolby
- * @author sjfink
  */
 public class GraphInverter {
 

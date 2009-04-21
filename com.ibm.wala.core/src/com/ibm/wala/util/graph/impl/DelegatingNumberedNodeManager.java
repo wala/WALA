@@ -18,12 +18,9 @@ import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.intset.IntSet;
 
 /**
- * 
  * Basic implementation of a numbered graph -- this implementation relies on nodes that carry numbers and edges.
  * 
  * The management of node numbers is a bit fragile, but designed this way for efficiency. Use this class with care.
- * 
- * @author sfink
  */
 public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements NumberedNodeManager<T> {
 

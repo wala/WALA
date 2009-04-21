@@ -17,7 +17,7 @@ import com.ibm.wala.util.intset.BimodalMutableIntSet;
 import com.ibm.wala.util.intset.IntSet;
 
 /**
- * @author Stephen Fink
+ * Simple implementation of {@link INodeWithNumberedEdges}
  */
 public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNumberedEdges {
 

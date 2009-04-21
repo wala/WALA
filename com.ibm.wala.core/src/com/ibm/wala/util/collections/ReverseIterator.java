@@ -15,10 +15,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * 
  * An iterator that reverses an input iterator. Not very efficient.
- * 
- * @author sfink
  */
 public class ReverseIterator<T> implements Iterator<T> {
 
