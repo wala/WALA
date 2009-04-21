@@ -51,11 +51,17 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implemen
     return new NumberedNodeIterator<T>(s, this);
   }
 
+  /* 
+   * @see com.ibm.wala.util.graph.NumberedEdgeManager#getPredNodeNumbers(java.lang.Object)
+   */
   public IntSet getPredNodeNumbers(T node) throws IllegalArgumentException {
     assert getEdgeManager() != null;
     return ((NumberedEdgeManager<T>) getEdgeManager()).getPredNodeNumbers(node);
   }
 
+  /* 
+   * @see com.ibm.wala.util.graph.NumberedEdgeManager#getSuccNodeNumbers(java.lang.Object)
+   */
   public IntSet getSuccNodeNumbers(T node) throws IllegalArgumentException {
     return ((NumberedEdgeManager<T>) getEdgeManager()).getSuccNodeNumbers(node);
   }
