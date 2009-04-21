@@ -13,8 +13,7 @@ package com.ibm.wala.util.intset;
 import java.io.Serializable;
 
 /**
- * @author sfink
- * @author Julian Dolby (dolby@us.ibm.com)
+ * Abstract base class for implementations of bitvectors
  */
 abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneable, Serializable {
 
@@ -68,9 +67,6 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
     }
   }
 
-  /**
-   * Gets the hashcode.
-   */
   @Override
   public int hashCode() {
     int h = 1234;
@@ -102,9 +98,6 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
     return true;
   }
 
-  /**
-   * Clones the FixedSizeBitVector.
-   */
   @Override
   @SuppressWarnings("unchecked")
   public Object clone() {
@@ -120,9 +113,6 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
     return result;
   }
 
-  /**
-   * Converts the FixedSizeBitVector to a String.
-   */
   @Override
   public String toString() {
     StringBuffer buffer = new StringBuffer();
@@ -215,9 +205,8 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
   /**
    * Copies the values of the bits in the specified set into this set.
    * 
-   * @param set
-   *          the bit set to copy the bits from
-   * @throws IllegalArgumentException  if set is null
+   * @param set the bit set to copy the bits from
+   * @throws IllegalArgumentException if set is null
    */
   public void copyBits(BitVectorBase set) {
     if (set == null) {
@@ -229,6 +218,5 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
       bits[i] = set.bits[i];
       i--;
     }
-
   }
 }
