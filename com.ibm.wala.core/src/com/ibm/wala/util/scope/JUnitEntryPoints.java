@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2007 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package com.ibm.wala.util.scope;
 
 import java.util.Collection;
@@ -17,21 +27,17 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * This class represents entry points (@link
- * com.ibm.domo.ipa.callgraph.EnryPoints) of JUnit test methods. JUnit test
- * methods are those invoked by the JUnit framework reflectively The entry
- * points can be used to specify entry points of a call graph (through
- * 
- * @author aying
+ * This class represents entry points ({@link Entrypoint})s of JUnit test methods. JUnit test methods are those invoked by the JUnit
+ * framework reflectively The entry points can be used to specify entry points of a call graph (through
  */
 public class JUnitEntryPoints {
 
   private static final boolean DEBUG = false;
 
   /**
-   * Construct JUnit entrypoints for all the JUnit test methods in the given
-   * scope.
-   * @throws IllegalArgumentException  if cha is null
+   * Construct JUnit entrypoints for all the JUnit test methods in the given scope.
+   * 
+   * @throws IllegalArgumentException if cha is null
    */
   public static Iterable<Entrypoint> make(IClassHierarchy cha) {
 
@@ -40,9 +46,7 @@ public class JUnitEntryPoints {
     }
     final HashSet<Entrypoint> result = HashSetFactory.make();
     for (IClass klass : cha) {
-
       if (klass.getClassLoader().getReference().equals(ClassLoaderReference.Application)) {
-
         try {
           // if the class is a subclass of the Junit TestCase
           if (isJUnitTestCase(klass)) {
@@ -76,14 +80,14 @@ public class JUnitEntryPoints {
 
   /**
    * Construct JUnit entrypoints for the specified test method in a scope.
-   * @throws IllegalArgumentException  if cha is null
+   * 
+   * @throws IllegalArgumentException if cha is null
    */
   public static Iterable<Entrypoint> makeOne(IClassHierarchy cha, String targetPackageName, String targetSimpleClassName,
       String targetMethodName) {
-
     if (cha == null) {
-          throw new IllegalArgumentException("cha is null");
-        }
+      throw new IllegalArgumentException("cha is null");
+    }
     // assume test methods don't have parameters
     final Atom targetPackageAtom = Atom.findOrCreateAsciiAtom(targetPackageName);
     final Atom targetSimpleClassAtom = Atom.findOrCreateAsciiAtom(targetSimpleClassName);
@@ -134,9 +138,10 @@ public class JUnitEntryPoints {
   }
 
   /**
-   * Check if the given class is a JUnit test class. A JUnit test class is a
-   * subclass of junit.framework.TestCase or junit.framework.TestSuite.
-   * @throws IllegalArgumentException  if klass is null
+   * Check if the given class is a JUnit test class. A JUnit test class is a subclass of junit.framework.TestCase or
+   * junit.framework.TestSuite.
+   * 
+   * @throws IllegalArgumentException if klass is null
    */
   public static boolean isJUnitTestCase(IClass klass) throws ClassHierarchyException {
     if (klass == null) {
@@ -160,10 +165,10 @@ public class JUnitEntryPoints {
   }
 
   /**
-   * Check if the given method is a JUnit test method, assuming that it is
-   * declared in a JUnit test class. A method is a JUnit test method if the name
-   * has the prefix "test", or its name is "setUp" or "tearDown".
-   * @throws IllegalArgumentException  if m is null
+   * Check if the given method is a JUnit test method, assuming that it is declared in a JUnit test class. A method is a JUnit test
+   * method if the name has the prefix "test", or its name is "setUp" or "tearDown".
+   * 
+   * @throws IllegalArgumentException if m is null
    */
   public static boolean isJUnitMethod(IMethod m) {
     if (m == null) {
