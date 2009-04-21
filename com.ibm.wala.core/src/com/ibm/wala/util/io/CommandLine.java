@@ -13,10 +13,7 @@ package com.ibm.wala.util.io;
 import java.util.Properties;
 
 /**
- * 
  * utilities for parsing a command line
- * 
- * @author sfink
  */
 public class CommandLine {
 

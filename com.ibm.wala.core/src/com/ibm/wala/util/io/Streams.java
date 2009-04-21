@@ -16,15 +16,12 @@ import java.io.InputStream;
 
 /**
  * utilities for IO streams
- * 
- * @author sfink
  */
 public class Streams {
 
   /**
    * @param in
    * @return byte[] holding the contents of the stream
-   * @throws IOException
    * @throws IllegalArgumentException  if in == null
    */
   public static byte[] inputStream2ByteArray(InputStream in) throws IllegalArgumentException, IOException {

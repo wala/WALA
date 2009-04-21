@@ -11,10 +11,7 @@
 package com.ibm.wala.util.io;
 
 /**
- * 
  * Some simple utilities used to manipulate Strings
- * 
- * @author sfink
  */
 public class FileSuffixes {
 
