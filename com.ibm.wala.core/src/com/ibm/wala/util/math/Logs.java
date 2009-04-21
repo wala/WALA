@@ -45,8 +45,6 @@ import com.ibm.wala.util.intset.Bits;
 
 /**
  * simple utilities with logarithms
- * 
- * @author sfink, manu
  */
 public class Logs {
 

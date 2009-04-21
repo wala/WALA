@@ -14,9 +14,6 @@ package com.ibm.wala.util.perf;
 /**
  * A {@link Stopwatch} that also queries the free memory from the GC.
  * This is mostly useless.
- * 
- * @author sfink
- * @author dgrove
  */
 public class StopwatchGC extends com.ibm.wala.util.perf.Stopwatch {
 

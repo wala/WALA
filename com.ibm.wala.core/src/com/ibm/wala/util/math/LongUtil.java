@@ -11,8 +11,6 @@
 package com.ibm.wala.util.math;
 
 /**
- * @author sfink
- *
  */
 public class LongUtil {
 

@@ -12,8 +12,6 @@ package com.ibm.wala.util.perf;
 
 /**
  * Basic class to time events
- * 
- * @author sfink
  */
 public class Stopwatch {
 
