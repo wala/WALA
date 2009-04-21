@@ -12,6 +12,10 @@ package com.ibm.wala.util.graph;
 
 /**
  * Basic interface for a directed graph.
+ * 
+ * We choose to define a {@link Graph} as a composition of a {@link NodeManager} and an {@link EdgeManager}, which
+ * track nodes and edges, respectively.   This way, in many cases we can compose separate {@link NodeManager} and
+ * {@link EdgeManager} implementations to create {@link Graph} implementations, using delegation.
  */
 public interface Graph<T> extends NodeManager<T>, EdgeManager<T> {
   /**
