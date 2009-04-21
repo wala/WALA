@@ -13,11 +13,9 @@ package com.ibm.wala.fixpoint;
 import java.util.Iterator;
 
 /**
- * Represents a set of {@link IFixedPointStatement}s to be solved by a
- * {@link IFixedPointSolver}
+ * Represents a set of {@link IFixedPointStatement}s to be solved by a {@link IFixedPointSolver}
  */
 public interface IFixedPointSystem<T extends IVariable> {
-
 
   /**
    * removes a given statement
@@ -44,14 +42,12 @@ public interface IFixedPointSystem<T extends IVariable> {
   public Iterator getVariables();
 
   /**
-   * @return true iff this system already contains an equation that is equal()
-   *         to s
+   * @return true iff this system already contains an equation that is equal() to s
    */
   boolean containsStatement(IFixedPointStatement<T> s);
 
   /**
-   * @return true iff this system already contains a variable that is equal() to
-   *         v.
+   * @return true iff this system already contains a variable that is equal() to v.
    */
   boolean containsVariable(T v);
 

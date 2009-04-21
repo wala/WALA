@@ -12,22 +12,19 @@ package com.ibm.wala.fixpoint;
 
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 
-
-
 /**
  * Operator U(n) = U(n) | U(j)
  */
 public final class UnaryOr extends UnaryOperator<BooleanVariable> {
 
   private static final UnaryOr SINGLETON = new UnaryOr();
-  
+
   public static UnaryOr instance() {
     return UnaryOr.SINGLETON;
   }
 
   private UnaryOr() {
   }
-
 
   @Override
   public byte evaluate(BooleanVariable lhs, BooleanVariable rhs) throws IllegalArgumentException {

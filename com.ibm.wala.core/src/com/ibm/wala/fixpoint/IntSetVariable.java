@@ -16,13 +16,9 @@ import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 
 /**
- * 
  * A variable for dataflow analysis, representing a set of integers.
  * 
- * TODO: optimize the representation more; e.g. BitVectors with non-zero lower
- * bound.
- * 
- * @author sfink
+ * TODO: optimize the representation more; e.g. BitVectors with non-zero lower bound.
  */
 public abstract class IntSetVariable<T extends IntSetVariable> extends AbstractVariable<T> {
 
@@ -46,7 +42,6 @@ public abstract class IntSetVariable<T extends IntSetVariable> extends AbstractV
   /**
    * Add all integers from the set B
    * 
-   * @param B
    * @return true iff the value of this changes
    */
   public boolean addAll(IntSet B) {
@@ -90,9 +85,6 @@ public abstract class IntSetVariable<T extends IntSetVariable> extends AbstractV
     }
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     if (V == null) {
@@ -104,8 +96,7 @@ public abstract class IntSetVariable<T extends IntSetVariable> extends AbstractV
   /**
    * Set a particular bit
    * 
-   * @param b
-   *          the bit to set
+   * @param b the bit to set
    */
   public void add(int b) {
     if (V == null) {
@@ -117,8 +108,7 @@ public abstract class IntSetVariable<T extends IntSetVariable> extends AbstractV
   /**
    * Is a particular bit set?
    * 
-   * @param b
-   *          the bit to check
+   * @param b the bit to check
    */
   public boolean contains(int b) {
     if (V == null) {
@@ -129,8 +119,7 @@ public abstract class IntSetVariable<T extends IntSetVariable> extends AbstractV
   }
 
   /**
-   * @return the value of this variable as a MutableSparseIntSet ... null if the
-   *         set is empty.
+   * @return the value of this variable as a MutableSparseIntSet ... null if the set is empty.
    */
   public MutableIntSet getValue() {
     return V;
@@ -186,7 +175,7 @@ public abstract class IntSetVariable<T extends IntSetVariable> extends AbstractV
       return result;
     }
   }
-  
+
   public void removeAll() {
     V = null;
   }
