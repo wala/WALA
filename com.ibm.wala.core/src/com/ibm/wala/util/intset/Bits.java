@@ -12,11 +12,12 @@ package com.ibm.wala.util.intset;
 
 /**
  * utilities for manipulating values at the bit-level.
- *
- * @author Stephen Fink
- * @author Dave Grove
  */
 public class Bits {
+
+  // there's no reason to instantiate this class.
+  private Bits() {
+  }
 
   /**
    * Return the lower 8 bits (as an int) of an int
@@ -26,7 +27,7 @@ public class Bits {
   }
 
   /**
-   * Return the lower 16 bits (as an int) of  an int
+   * Return the lower 16 bits (as an int) of an int
    */
   public static int lower16(int value) {
     return (value & 0xffff);
@@ -69,8 +70,7 @@ public class Bits {
   }
 
   /**
-   * Return the number of ones in the binary representation of an integer.
-   * Hank Warren's Hacker's Delight algorithm
+   * Return the number of ones in the binary representation of an integer. Hank Warren's Hacker's Delight algorithm
    */
   public static int populationCount(int value) {
     int result = ((value & 0xAAAAAAAA) >>> 1) + (value & 0x55555555);

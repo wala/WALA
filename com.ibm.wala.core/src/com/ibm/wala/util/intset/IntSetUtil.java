@@ -45,6 +45,10 @@ public class IntSetUtil {
 
   private final static boolean DEBUG = false;
 
+  // there's no reason to instantiate this class
+  private IntSetUtil() {
+  }
+  
   /**
    * This method constructs an appropriate mutable copy of set.
    * 
