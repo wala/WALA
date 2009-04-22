@@ -29,6 +29,12 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
  */
 public class Acyclic {
 
+  /*
+   * prevent instantiation 
+   */
+  private Acyclic() {
+  }
+  
   /**
    * This is slow. Fix it.
    */
