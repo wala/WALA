@@ -270,10 +270,22 @@ public class StringStuff {
           ++i;
         }
         TypeName T = null;
-        if (b.get(i++) == TypeReference.ClassTypeCode) {
+        byte c = b.get(i++); 
+        if (c == TypeReference.ClassTypeCode) {
           while (b.get(i++) != ';')
             ;
           T = TypeName.findOrCreate(b, off, i - off - 1);
+        } else if (c == TypeReference.OtherPrimitiveTypeCode) {
+          int typeOff = i;
+          
+          while (b.get(i++) != ';')
+            ;
+          
+          T = l.lookupPrimitiveType(new String(b.substring(typeOff, i - typeOff - 1)));
+          while(--typeOff > off) {
+            T = T.getArrayTypeForElementType();
+          }
+          
         } else {
           T = TypeName.findOrCreate(b, off, i - off);
         }
