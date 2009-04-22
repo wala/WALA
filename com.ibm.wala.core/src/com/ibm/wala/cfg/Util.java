@@ -20,28 +20,40 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * Convenience methods for navigating a CFG.
+ * Convenience methods for navigating a {@link ControlFlowGraph}.
  */
 public class Util {
 
-  public static SSAInstruction getLastInstruction(ControlFlowGraph G, IBasicBlock b) {
+  /**
+   * @return the last instruction in basic block b, as stored in the instruction array for cfg
+   */
+  public static SSAInstruction getLastInstruction(ControlFlowGraph cfg, IBasicBlock b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
-    if (G == null) {
+    if (cfg == null) {
       throw new IllegalArgumentException("G is null");
     }
-    return (SSAInstruction) G.getInstructions()[b.getLastInstructionIndex()];
+    return (SSAInstruction) cfg.getInstructions()[b.getLastInstructionIndex()];
   }
 
+  /**
+   * Does basic block b end with a conditional branch instruction?
+   */
   public static boolean endsWithConditionalBranch(ControlFlowGraph G, IBasicBlock b) {
     return getLastInstruction(G, b) instanceof SSAConditionalBranchInstruction;
   }
 
+  /**
+   * Does basic block b end with a switch instruction?
+   */
   public static boolean endsWithSwitch(ControlFlowGraph G, IBasicBlock b) {
     return getLastInstruction(G, b) instanceof SSASwitchInstruction;
   }
 
+  /**
+   * Given that b falls through to the next basic block, what basic block does it fall through to?
+   */
   public static <I, T extends IBasicBlock<I>> T getFallThruBlock(ControlFlowGraph<I, T> G, T b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
@@ -105,6 +117,9 @@ public class Util {
     return G.getBlockForInstruction(s.getDefault());
   }
 
+  /**
+   * Is block s the default case for the switch instruction which is the last instruction of block b?
+   */
   public static <I, T extends IBasicBlock<I>> boolean isSwitchDefault(ControlFlowGraph<I, T> G, T b, T s) {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
