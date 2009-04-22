@@ -15,13 +15,9 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 
 /**
+ * A mapping from IMethod -> SSAOptions -> SoftReference -> Something
  * 
- * A mapping from IMethod -> SSAOptions -> SoftReference -> IR
- * 
- * This doesn't work very well ... GCs don't do such a great job with
- * SoftReferences ... revamp it.
- * 
- * @author sfink
+ * This doesn't work very well ... GCs don't do such a great job with SoftReferences ... revamp it.
  */
 public class SSACache {
 
@@ -46,21 +42,17 @@ public class SSACache {
   final private AuxiliaryCache duCache = new AuxiliaryCache();
 
   /**
-   * @param factory
+   * @param factory a factory for creating IRs
    */
   public SSACache(IRFactory<IMethod> factory) {
     this.factory = factory;
   }
 
   /**
-   * @param m
-   *          a "normal" (bytecode-based) method
-   * @param options
-   *          options governing ssa construction
-   * @return an IR for m, built according to the specified options. null if m is
-   *         abstract or native.
-   * @throws IllegalArgumentException
-   *           if m is null
+   * @param m a "normal" (bytecode-based) method
+   * @param options options governing ssa construction
+   * @return an IR for m, built according to the specified options. null if m is abstract or native.
+   * @throws IllegalArgumentException if m is null
    */
   public synchronized IR findOrCreateIR(final IMethod m, Context c, final SSAOptions options) {
 
@@ -70,7 +62,7 @@ public class SSACache {
     if (m.isAbstract() || m.isNative()) {
       return null;
     }
-    
+
     if (factory.contextIsIrrelevant(m)) {
       c = Everywhere.EVERYWHERE;
     }
@@ -88,17 +80,12 @@ public class SSACache {
   }
 
   /**
-   * @param m
-   *          a method
-   * @param options
-   *          options governing ssa construction
-   * @return DefUse information for m, built according to the specified options.
-   *         null if unavailable
-   * @throws IllegalArgumentException
-   *           if m is null
+   * @param m a method
+   * @param options options governing ssa construction
+   * @return DefUse information for m, built according to the specified options. null if unavailable
+   * @throws IllegalArgumentException if m is null
    */
   public synchronized DefUse findOrCreateDU(IMethod m, Context c, SSAOptions options) {
-
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
@@ -119,10 +106,8 @@ public class SSACache {
   }
 
   /**
-   * @return DefUse information for m, built according to the specified options.
-   *         null if unavailable
-   * @throws IllegalArgumentException
-   *           if ir is null
+   * @return {@link DefUse} information for m, built according to the specified options. null if unavailable
+   * @throws IllegalArgumentException if ir is null
    */
   public synchronized DefUse findOrCreateDU(IR ir, Context C) {
     if (ir == null) {
@@ -144,17 +129,25 @@ public class SSACache {
     duCache.wipe();
   }
 
-  public void invalidateIR(IMethod method, Context C) {
-    irCache.invalidate(method, C);
+  /**
+   * Invalidate the cached IR for a <method,context> pair
+   */
+  public void invalidateIR(IMethod method, Context c) {
+    irCache.invalidate(method, c);
   }
 
-  public void invalidateDU(IMethod method, Context C) {
-    duCache.invalidate(method, C);
+  /**
+   * Invalidate the cached {@link DefUse} for a <method,context> pair
+   */
+  public void invalidateDU(IMethod method, Context c) {
+    duCache.invalidate(method, c);
   }
 
-  public void invalidate(IMethod method, Context C) {
-    invalidateIR(method, C);
-    invalidateDU(method, C);
+  /**
+   * Invalidate all cached information for a <method,context> pair
+   */
+  public void invalidate(IMethod method, Context c) {
+    invalidateIR(method, c);
+    invalidateDU(method, c);
   }
-
 }

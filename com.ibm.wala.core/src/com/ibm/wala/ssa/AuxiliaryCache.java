@@ -30,7 +30,7 @@ import com.ibm.wala.util.ref.CacheReference;
  * 
  * This doesn't work very well ... GCs don't do such a great job with SoftReferences ... revamp it.
  */
-public class AuxiliaryCache {
+class AuxiliaryCache {
 
   /**
    * A mapping from IMethod -> SSAOptions -> SoftReference -> IR
