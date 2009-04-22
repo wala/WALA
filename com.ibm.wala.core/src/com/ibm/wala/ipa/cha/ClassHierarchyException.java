@@ -13,7 +13,7 @@ package com.ibm.wala.ipa.cha;
 import com.ibm.wala.util.warnings.WalaException;
 
 /**
- * @author sfink
+ * An exception that means something went wrong when constructing a {@link ClassHierarchy}.
  *
  */
 public class ClassHierarchyException extends WalaException {

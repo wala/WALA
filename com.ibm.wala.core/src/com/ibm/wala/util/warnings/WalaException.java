@@ -11,10 +11,7 @@
 package com.ibm.wala.util.warnings;
 
 /**
- *
  * An exception to raise for some WALA failure
- * 
- * @author sfink
  */
 public class WalaException extends Exception {
 

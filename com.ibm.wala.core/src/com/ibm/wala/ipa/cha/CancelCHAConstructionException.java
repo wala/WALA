@@ -11,19 +11,15 @@
 
 package com.ibm.wala.ipa.cha;
 
-
 /**
- * Exception class that indicates that construction of class hierarchy has been
- * cancelled by a progress monitor.
- * 
- * @author egeay
+ * Exception class that indicates that construction of class hierarchy has been cancelled by a progress monitor.
  */
 public final class CancelCHAConstructionException extends ClassHierarchyException {
 
   private static final long serialVersionUID = -1987107302523285889L;
 
   public CancelCHAConstructionException() {
-    super("class hierarchy construction was cancelled"); 
+    super("class hierarchy construction was cancelled");
   }
 
 }
