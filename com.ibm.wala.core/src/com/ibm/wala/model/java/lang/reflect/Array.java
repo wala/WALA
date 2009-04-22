@@ -12,7 +12,7 @@ package com.ibm.wala.model.java.lang.reflect;
 
 
 /**
- * @author sfink
+ * A synthetic model of java.lang.reflect.Array native methods
  */
 public class Array {
 

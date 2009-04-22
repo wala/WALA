@@ -12,7 +12,7 @@ package com.ibm.wala.model.java.lang;
 
 
 /**
- * Model of single-threaded behavior
+ * A synthetic model of single-threaded behavior
  */
 public class Thread {
 
