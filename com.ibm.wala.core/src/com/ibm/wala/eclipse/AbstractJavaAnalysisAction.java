@@ -29,7 +29,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -47,13 +46,16 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegate, IRunnableWithProgress {
 
+  /**
+   * The current {@link ISelection} highlighted in the Eclipse workspace
+   */
   private ISelection currentSelection;
 
   public AbstractJavaAnalysisAction() {
     super();
   }
 
-  /**
+  /*
    * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
    */
   public void setActivePart(IAction action, IWorkbenchPart targetPart) {
@@ -66,6 +68,11 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
     return computeScope(selection, false, true);
   }
 
+  /**
+   * Compute an analysis scope for the current selection
+   * @param includeSource should files from the source folders in Eclipse projects be included
+   * @param includeClassFiles should class files built by Eclipse, in the project output folders, be include?
+   */
   public static AnalysisScope computeScope(final IStructuredSelection selection, final boolean includeSource,
       final boolean includeClassFiles) throws IOException {
     if (selection == null) {
@@ -141,8 +148,6 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
 
   /**
    * create an analysis scope as the union of a bunch of EclipseProjectPath
-   * 
-   * @throws IOException
    */
   private static AnalysisScope mergeProjectPaths(Collection<EclipseProjectPath> projectPaths) throws IOException {
     AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
@@ -156,6 +161,13 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
     return scope;
   }
 
+  /**
+   * Enhance an {@link AnalysisScope} to include in a particular loader, elements from a set of Eclipse projects
+   * @param loader the class loader in which new {@link Module}s will live
+   * @param projectPaths Eclipse project paths to add to the analysis scope
+   * @param scope the {@link AnalysisScope} under construction.  This will be mutated.
+   * @param seen set of {@link Module}s which have already been seen, and should not be added to the analysis scope
+   */
   private static void buildScope(ClassLoaderReference loader, Collection<EclipseProjectPath> projectPaths, AnalysisScope scope,
       Collection<Module> seen) throws IOException {
     for (EclipseProjectPath path : projectPaths) {
@@ -169,7 +181,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
     }
   }
 
-  /**
+  /*
    * @see IActionDelegate#run(IAction)
    */
   public void run(IAction action) {
@@ -184,13 +196,16 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
 
   }
 
-  /**
+  /*
    * @see IActionDelegate#selectionChanged(IAction, ISelection)
    */
   public void selectionChanged(IAction action, ISelection selection) {
     currentSelection = selection;
   }
 
+  /**
+   * @return The current {@link ISelection} highlighted in the Eclipse workspace
+   */
   public ISelection getCurrentSelection() {
     return currentSelection;
   }
