@@ -13,19 +13,14 @@ package com.ibm.wala.ssa;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * @author Julian Dolby
- * 
- * TODO: document me
+ * TODO: document me.
  */
 public abstract class ReflectiveMemberAccess extends SSAInstruction {
   protected final int objectRef;
 
   protected final int memberRef;
 
-  /**
-   * @param objectRef
-   * @param memberRef
-   */
+
   protected ReflectiveMemberAccess(int objectRef, int memberRef) {
     super();
     this.objectRef = objectRef;

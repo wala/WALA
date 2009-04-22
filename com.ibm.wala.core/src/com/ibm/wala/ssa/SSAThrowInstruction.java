@@ -10,10 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
-
 /**
- * @author sfink
- *
+ * An instruction which unconditionally throws an exception
  */
 public abstract class SSAThrowInstruction extends SSAAbstractThrowInstruction {
 
@@ -21,12 +19,15 @@ public abstract class SSAThrowInstruction extends SSAAbstractThrowInstruction {
     super(exception);
   }
 
+  /* 
+   * @see com.ibm.wala.ssa.SSAInstruction#copyForSSA(com.ibm.wala.ssa.SSAInstructionFactory, int[], int[])
+   */
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) throws IllegalArgumentException {
     if (uses != null && uses.length != 1) {
       throw new IllegalArgumentException("if non-null, uses.length must be 1");
     }
-    return insts.ThrowInstruction(uses==null? getException(): uses[0]);
+    return insts.ThrowInstruction(uses == null ? getException() : uses[0]);
   }
 
   /**

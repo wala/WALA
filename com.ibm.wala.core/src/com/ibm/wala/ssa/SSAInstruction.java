@@ -18,7 +18,7 @@ import com.ibm.wala.types.TypeReference;
 /**
  * An instruction in SSA form.
  */
-public abstract class SSAInstruction /* implements IInstruction */ {
+public abstract class SSAInstruction  {
 
   /**
    * prevent instantiation by the outside

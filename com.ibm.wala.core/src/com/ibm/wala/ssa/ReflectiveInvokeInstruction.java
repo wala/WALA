@@ -13,9 +13,11 @@ package com.ibm.wala.ssa;
 import com.ibm.wala.classLoader.CallSiteReference;
 
 /**
- * @author Julian Dolby (dolby@us.ibm.com)
- *
+ * Representation of a call instruction to a function determined dynamically or by reflection.
+ * 
+ * SJF: Is this dead?   I see no subtypes in my workspace.  deprecating for now.
  */
+@Deprecated
 public abstract class ReflectiveInvokeInstruction extends SSAAbstractInvokeInstruction {
 
   /**
@@ -32,5 +34,3 @@ public abstract class ReflectiveInvokeInstruction extends SSAAbstractInvokeInstr
     return function;
   }
 }
-
-

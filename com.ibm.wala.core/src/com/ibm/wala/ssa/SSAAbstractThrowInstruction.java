@@ -11,8 +11,8 @@
 
 package com.ibm.wala.ssa;
 
-
 /**
+ * An instruction which unconditionally throws an exception
  */
 public abstract class SSAAbstractThrowInstruction extends SSAInstruction {
   private final int exception;
