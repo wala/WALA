@@ -30,7 +30,14 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.strings.StringStuff;
 
 /**
- * An SSA IR
+ * An SSA IR.
+ * 
+ * The IR (Intermediate Representation) is the central data structure that represents the instructions of a particular method.
+ * The IR represents a method's instructions in a language close to JVM bytecode, but in an SSA-based register transfer language
+ * which eliminates the stack abstraction, relying instead on a set of symbolic registers. The IR organizes instructions in a
+ * control-flow graph of basic blocks, as typical in compiler textbooks.
+ * 
+ * See http://wala.sourceforge.net/wiki/index.php/UserGuide:IR for more details on the IR API.
  */
 public abstract class IR {
 
