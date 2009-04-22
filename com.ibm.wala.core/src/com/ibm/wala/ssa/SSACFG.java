@@ -45,10 +45,7 @@ import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * A control-flow graph for ssa form.
- * 
- * @author sfink
  */
-
 public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock> {
 
   private static final boolean DEBUG = false;
@@ -246,7 +243,6 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock> 
 
   /**
    * A Basic Block in an SSA IR
-   * 
    */
   public class BasicBlock implements ISSABasicBlock {
 
