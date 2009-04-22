@@ -58,18 +58,11 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.shrike.ShrikeUtil;
 
 /**
- * 
- * Skeleton of functionality to propagate information through the Java bytecode
- * stack machine using ShrikeBT.
- * 
- * This class computes properties the Java operand stack and of the local
- * variables at the beginning of each basic block.
- * 
- * In this implementation, each dataflow variable value is an integer, and the
- * "meeter" object provides the meets
- * 
- * @author sfink
- * @author roca (some code stolen from ShrikeBT verifier)
+ * Skeleton of functionality to propagate information through the Java bytecode stack machine using ShrikeBT.
+ * <p>
+ * This class computes properties the Java operand stack and of the local variables at the beginning of each basic block.
+ * <p>
+ * In this implementation, each dataflow variable value is an integer, and the "meeter" object provides the meets
  */
 public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
@@ -104,8 +97,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
   final protected int maxLocals;
 
   /**
-   * Should uninitialized variables be considered TOP (optimistic) or BOTTOM
-   * (pessimistic);
+   * Should uninitialized variables be considered TOP (optimistic) or BOTTOM (pessimistic);
    */
   final public static boolean OPTIMISTIC = true;
 
@@ -320,45 +312,34 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
   }
 
   /**
-   * A Meeter object provides the dataflow logic needed to meet the abstract
-   * machine state for a dataflow meet.
+   * A Meeter object provides the dataflow logic needed to meet the abstract machine state for a dataflow meet.
    */
   protected interface Meeter {
 
     /**
-     * Return the integer that represents the meet of a particular stack slot at
-     * the entry to a basic block.
+     * Return the integer that represents the meet of a particular stack slot at the entry to a basic block.
      * 
-     * @param slot
-     *          The stack slot to meet
-     * @param rhs
-     *          The values to meet
-     * @param bb
-     *          The basic block at whose entry this meet occurs
+     * @param slot The stack slot to meet
+     * @param rhs The values to meet
+     * @param bb The basic block at whose entry this meet occurs
      * @return The value result of the meet
      */
     int meetStack(int slot, int[] rhs, BasicBlock bb);
 
     /**
-     * Return the integer that represents stack slot 0 after a meet at the entry
-     * to a catch block.
+     * Return the integer that represents stack slot 0 after a meet at the entry to a catch block.
      * 
-     * @param bb
-     *          The basic block at whose entry this meet occurs
+     * @param bb The basic block at whose entry this meet occurs
      * @return The value of stack slot 0 after the meet
      */
     int meetStackAtCatchBlock(BasicBlock bb);
 
     /**
-     * Return the integer that represents the meet of a particular local at the
-     * entry to a basic block.
+     * Return the integer that represents the meet of a particular local at the entry to a basic block.
      * 
-     * @param n
-     *          The number of the local
-     * @param rhs
-     *          The values to meet
-     * @param bb
-     *          The basic block at whose entry this meet occurs
+     * @param n The number of the local
+     * @param rhs The values to meet
+     * @param bb The basic block at whose entry this meet occurs
      * @return The value of local n after the meet.
      */
     int meetLocal(int n, int[] rhs, BasicBlock bb);
@@ -369,8 +350,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
    * 
    * TODO: add some efficiency shortcuts. TODO: clean up and refactor.
    * 
-   * @param bb
-   *          the basic block at whose entry the meet occurs
+   * @param bb the basic block at whose entry the meet occurs
    * @return true if the lhs value changes. false otherwise.
    */
   private boolean meet(IVariable lhs, IVariable[] rhs, BasicBlock bb, Meeter meeter) {
@@ -386,8 +366,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
    * 
    * TODO: add some efficiency shortcuts. TODO: clean up and refactor.
    * 
-   * @param bb
-   *          the basic block at whose entry the meet occurs
+   * @param bb the basic block at whose entry the meet occurs
    * @return true if the lhs value changes. false otherwise.
    */
   private boolean meetForCatchBlock(IVariable lhs, IVariable[] rhs, BasicBlock bb, Meeter meeter) {
@@ -398,13 +377,11 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
   }
 
   /**
-   * Evaluate a meet of the stacks of machine states at the entry of a catch
-   * block.
+   * Evaluate a meet of the stacks of machine states at the entry of a catch block.
    * 
    * TODO: add some efficiency shortcuts. TODO: clean up and refactor.
    * 
-   * @param bb
-   *          the basic block at whose entry the meet occurs
+   * @param bb the basic block at whose entry the meet occurs
    * @return true if the lhs value changes. false otherwise.
    */
   private boolean meetStacksAtCatchBlock(IVariable lhs, BasicBlock bb, Meeter meeter) {
@@ -435,13 +412,11 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
   }
 
   /**
-   * Evaluate a meet of the stacks of machine states at the entry of a basic
-   * block.
+   * Evaluate a meet of the stacks of machine states at the entry of a basic block.
    * 
    * TODO: add some efficiency shortcuts. TODO: clean up and refactor.
    * 
-   * @param bb
-   *          the basic block at whose entry the meet occurs
+   * @param bb the basic block at whose entry the meet occurs
    * @return true if the lhs value changes. false otherwise.
    */
   private boolean meetStacks(IVariable lhs, IVariable[] rhs, BasicBlock bb, Meeter meeter) {
@@ -494,8 +469,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
    * 
    * TODO: add some efficiency shortcuts. TODO: clean up and refactor.
    * 
-   * @param bb
-   *          the basic block at whose entry the meet occurs
+   * @param bb the basic block at whose entry the meet occurs
    * @return true if the lhs value changes. false otherwise.
    */
   private boolean meetLocals(IVariable lhs, IVariable[] rhs, BasicBlock bb, Meeter meeter) {
@@ -529,10 +503,8 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
   }
 
   /**
-   * @return the number of locals to meet. Return -1 if there is no local meet
-   *         necessary.
-   * @param operands
-   *          The operands for this operator. operands[0] is the left-hand side.
+   * @return the number of locals to meet. Return -1 if there is no local meet necessary.
+   * @param operands The operands for this operator. operands[0] is the left-hand side.
    */
   private static int computeMeetNLocals(IVariable[] operands) {
     MachineState lhs = (MachineState) operands[0];
@@ -552,10 +524,8 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
   }
 
   /**
-   * @return the height of stacks that are being meeted. Return -1 if there is
-   *         no stack meet necessary.
-   * @param operands
-   *          The operands for this operator. operands[0] is the left-hand side.
+   * @return the height of stacks that are being meeted. Return -1 if there is no stack meet necessary.
+   * @param operands The operands for this operator. operands[0] is the left-hand side.
    */
   private static int computeMeetStackHeight(IVariable[] operands) {
     MachineState lhs = (MachineState) operands[0];
@@ -588,8 +558,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     private final BasicBlock bb;
 
     /**
-     * I'm not using clone because I don't want to necessarily inherit the
-     * AbstractVariable state from the superclass
+     * I'm not using clone because I don't want to necessarily inherit the AbstractVariable state from the superclass
      */
     public MachineState duplicate() {
       MachineState result = new MachineState(bb);
@@ -799,7 +768,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     public int getStackHeight() {
       return stackHeight;
     }
-    
+
     /**
      * Use with care.
      */
@@ -827,21 +796,18 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     public boolean needsEdgeFlow();
 
     /**
-     * Compute the MachineState at the exit of a basic block, given a
-     * MachineState at the block's entry.
+     * Compute the MachineState at the exit of a basic block, given a MachineState at the block's entry.
      */
     public MachineState flow(MachineState entry, BasicBlock basicBlock);
 
     /**
-     * Compute the MachineState at the end of an edge, given a MachineState at
-     * the edges's entry.
+     * Compute the MachineState at the end of an edge, given a MachineState at the edges's entry.
      */
     public MachineState flow(MachineState entry, BasicBlock from, BasicBlock to);
   }
 
   /**
-   * This gives some basic facilities for shoving things around on the stack.
-   * Client analyses should subclass this as needed.
+   * This gives some basic facilities for shoving things around on the stack. Client analyses should subclass this as needed.
    */
   protected static abstract class BasicStackFlowProvider implements FlowProvider, Constants {
     private final ShrikeCFG cfg;
@@ -933,7 +899,6 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     protected BasicBlock getCurrentSuccessor() {
       return currentSuccessorBlock;
     }
-
 
     public abstract IInstruction[] getInstructions();
 
