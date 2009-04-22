@@ -234,6 +234,8 @@ public class ClassLoaderImpl implements IClassLoader {
         TypeName T = TypeName.string2TypeName(className);
         if (loadedClasses.get(T) != null) {
           Warnings.add(MultipleImplementationsWarning.create(className));
+        }  else if (parent != null && parent.lookupClass(T) != null) {  
+          Warnings.add(MultipleImplementationsWarning.create(className));
         } else {
           ShrikeClass klass = new ShrikeClass(reader, this, cha);
           if (klass.getReference().getName().equals(T)) {
