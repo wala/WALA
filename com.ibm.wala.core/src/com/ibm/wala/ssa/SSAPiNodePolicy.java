@@ -14,16 +14,14 @@ import com.ibm.wala.util.collections.Pair;
 
 /**
  * The {@link SSABuilder} consults this as an oracle to decide how to insert {@link SSAPiInstruction}s
- * 
- * @author sjfink
  */
 public interface SSAPiNodePolicy {
 
   /**
    * Do we need to introduce a new name for some value immediately after a call?
    * 
-   * If so, returns a pair consisting of the value number needing renaming, and the instruction which should be recorded
-   * as the cause of the pi instruction
+   * If so, returns a pair consisting of the value number needing renaming, and the instruction which should be recorded as the
+   * cause of the pi instruction
    * 
    * @param call the call instruction in question
    * @param symbolTable current state of the symbol table for the IR under construction
@@ -32,11 +30,10 @@ public interface SSAPiNodePolicy {
   Pair<Integer, SSAInstruction> getPi(SSAAbstractInvokeInstruction call, SymbolTable symbolTable);
 
   /**
-   * Do we need to introduce a new name for some value after deciding on an outcome for a conditional branch
-   * instruction?
+   * Do we need to introduce a new name for some value after deciding on an outcome for a conditional branch instruction?
    * 
-   * If so, returns a pair consisting of the value number needing renaming, and the instruction which should be recorded
-   * as the cause of the pi instruction
+   * If so, returns a pair consisting of the value number needing renaming, and the instruction which should be recorded as the
+   * cause of the pi instruction
    * 
    * @param cond the conditional branch instruction in question
    * @param def1 the {@link SSAInstruction} that defs cond.getUse(0), or null if none

@@ -11,9 +11,7 @@
 package com.ibm.wala.ssa;
 
 /**
- * The value of a constant.
- * 
- * @author sfink
+ * The value of a constant which appears in an SSA IR.
  */
 public class ConstantValue implements Value {
   final private Object constant;

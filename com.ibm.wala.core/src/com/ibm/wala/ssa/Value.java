@@ -11,15 +11,25 @@
 package com.ibm.wala.ssa;
 
 /**
- * @author sfink
- *
+ * Representation of a particular value which appears in an SSA IR. 
+ * 
+ * Clients probably shouldn't use this; it's only public (for now) due to Java's package-based weak module system.
  */
 public interface Value {
 
+  /**
+   * Is this value a string constant?
+   */
   public boolean isStringConstant();
 
+  /**
+   * Is this value a null constant?
+   */
   public boolean isNullConstant();
 
+  /**
+   * TODO: what is this????   It's only used by CAst....
+   */
   public int getDefaultValue(SymbolTable symtab);
-  
+
 }
