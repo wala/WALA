@@ -33,18 +33,13 @@ import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.viz.SWTTreeViewer;
 
 /**
+ * This is a simple example WALA application. It's neither efficient nor concise, but is intended to demonstrate some basic
+ * framework concepts.
  * 
- * This is a simple example WALA application. It's neither efficient nor
- * concise, but is intended to demonstrate some basic framework concepts.
- * 
- * This application builds a type hierarchy visualizes it with an SWT
- * {@link TreeViewer}.
- * 
- * @author sfink
+ * This application builds a type hierarchy visualizes it with an SWT {@link TreeViewer}.
  */
 public class SWTTypeHierarchy {
-  // This example takes one command-line argument, so args[1] should be the
-  // "-classpath" parameter
+  // This example takes one command-line argument, so args[1] should be the "-classpath" parameter
   final static int CLASSPATH_INDEX = 1;
 
   /**
@@ -59,7 +54,8 @@ public class SWTTypeHierarchy {
   public static ApplicationWindow run(String classpath) {
 
     try {
-      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(classpath, FileProvider.getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(classpath, FileProvider
+          .getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // invoke WALA to build a class hierarchy
       ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -84,38 +80,43 @@ public class SWTTypeHierarchy {
       return null;
     }
   }
-  
+
+  /**
+   * Return a view of an {@link IClassHierarchy} as a {@link Graph}, with edges from classes to immediate subtypes
+   */
   public static Graph<IClass> typeHierarchy2Graph(IClassHierarchy cha) throws WalaException {
     Graph<IClass> result = SlowSparseNumberedGraph.make();
-    
     for (IClass c : cha) {
       result.addNode(c);
     }
-    
     for (IClass c : cha) {
       for (IClass x : cha.getImmediateSubclasses(c)) {
         result.addEdge(c, x);
       }
       if (c.isInterface()) {
         for (IClass x : cha.getImplementors(c.getReference())) {
-          result.addEdge(c,x);
+          result.addEdge(c, x);
         }
       }
     }
-
     return result;
   }
 
+  /**
+   * Restrict g to nodes from the Application loader
+   */
   static Graph<IClass> pruneForAppLoader(Graph<IClass> g) throws WalaException {
     Filter<IClass> f = new Filter<IClass>() {
       public boolean accepts(IClass c) {
         return (c.getClassLoader().getReference().equals(ClassLoaderReference.Application));
       }
     };
-
     return pruneGraph(g, f);
   }
-  
+
+  /**
+   * Remove from a graph g any nodes that are not accepted by a {@link Filter}
+   */
   public static <T> Graph<T> pruneGraph(Graph<T> g, Filter<T> f) throws WalaException {
     Collection<T> slice = GraphSlicer.slice(g, f);
     return GraphSlicer.prune(g, new CollectionFilter<T>(slice));
@@ -126,9 +127,7 @@ public class SWTTypeHierarchy {
    * 
    * Usage: args[0] : "-classpath" args[1] : String, a ";"-delimited class path
    * 
-   * @param args
-   * @throws UnsupportedOperationException
-   *             if command-line is malformed.
+   * @throws UnsupportedOperationException if command-line is malformed.
    */
   static void validateCommandLine(String[] args) {
     if (args.length < 2) {
