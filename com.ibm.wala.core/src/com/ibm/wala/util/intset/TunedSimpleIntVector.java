@@ -11,11 +11,8 @@
 package com.ibm.wala.util.intset;
 
 /**
- *
  * a simple implementation of int vector that can be tuned to control
  * space usage
- * 
- * @author sfink
  */
 public class TunedSimpleIntVector extends SimpleIntVector {
 

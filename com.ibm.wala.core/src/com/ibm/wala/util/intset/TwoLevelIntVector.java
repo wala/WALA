@@ -16,8 +16,6 @@ import com.ibm.wala.util.math.Logs;
 
 /**
  * an int vector implementation which delegates to pages of int vectors.
- * 
- * @author sfink
  */
 public class TwoLevelIntVector implements IntVector {
 
