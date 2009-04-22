@@ -16,8 +16,6 @@ import com.ibm.wala.util.graph.INodeWithNumber;
 
 /**
  * An interface for a basic block in a control flow graph.
- * @author cahoon
- * @author Stephen Fink
  */
 public interface IBasicBlock<InstType> extends INodeWithNumber, Iterable<InstType> {
 

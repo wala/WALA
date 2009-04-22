@@ -660,10 +660,6 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   }
 
   /**
-   * Method getInstructions.
-   * 
-   * @return Instruction[]
-   * @throws InvalidClassFileException
    */
   public IInstruction[] getInstructions() throws InvalidClassFileException {
     if (getBCInfo().decoder == null) {

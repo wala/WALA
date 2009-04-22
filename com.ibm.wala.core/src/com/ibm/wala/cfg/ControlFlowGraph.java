@@ -72,7 +72,6 @@ public interface ControlFlowGraph<I, T extends IBasicBlock<I>> extends NumberedG
   /**
    * The order of blocks returned should be arbitrary but deterministic.
    * 
-   * @param b
    * @return the basic blocks which may be reached from b via normal control flow
    */
   public Collection<T> getNormalSuccessors(T b);
@@ -80,7 +79,6 @@ public interface ControlFlowGraph<I, T extends IBasicBlock<I>> extends NumberedG
   /**
    * The order of blocks returned should be arbitrary but deterministic.
    * 
-   * @param b
    * @return the basic blocks from which b may be reached via exceptional control flow
    */
   public Collection<T> getExceptionalPredecessors(T b);
@@ -88,7 +86,6 @@ public interface ControlFlowGraph<I, T extends IBasicBlock<I>> extends NumberedG
   /**
    * The order of blocks returned should be arbitrary but deterministic.
    * 
-   * @param b
    * @return the basic blocks from which b may be reached via normal control flow
    */
   public Collection<T> getNormalPredecessors(T b);

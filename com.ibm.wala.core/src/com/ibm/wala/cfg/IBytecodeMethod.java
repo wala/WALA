@@ -19,17 +19,28 @@ import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 
 /**
- * @author omert
- *
+ * A method which originated in bytecode, decoded by Shrike
  */
 public interface IBytecodeMethod extends IMethod {
 
-  int getBytecodeIndex(int index) throws InvalidClassFileException;
+  /**
+   * @return the bytecode index corresponding to instruction i in the getInstructions() array
+   */
+  int getBytecodeIndex(int i) throws InvalidClassFileException;
 
+  /**
+   * @return the Shrike representation of the exception handlers
+   */
   ExceptionHandler[][] getHandlers() throws InvalidClassFileException;
 
+  /**
+   * @return the Shrike instructions decoded from the bytecode
+   */
   IInstruction[] getInstructions() throws InvalidClassFileException;
 
+  /**
+   * @return the call sites declared in the bytecode for this method
+   */
   Collection<CallSiteReference> getCallSites() throws InvalidClassFileException;
 
 }

@@ -33,8 +33,6 @@ import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * Utility class to remove edges to exit() from a CFG
- * 
- * @author Stephen Fink
  */
 public class CFGSanitizer {
 

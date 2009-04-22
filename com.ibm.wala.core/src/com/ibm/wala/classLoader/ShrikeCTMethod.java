@@ -42,8 +42,7 @@ import com.ibm.wala.util.debug.Assertions;
 public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMethod {
 
   /**
-   * The index of this method in the declaring class's method list according to
-   * Shrike CT.
+   * The index of this method in the declaring class's method list according to Shrike CT.
    */
   final private int shrikeMethodIndex;
 
@@ -280,7 +279,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     AnnotationsReader result = null;
     try {
       for (; iter.isValid(); iter.advance()) {
-        if (runtimeInvisable){
+        if (runtimeInvisable) {
           if (iter.getName().equals(RuntimeInvisibleAnnotationsReader.attrName)) {
             result = new RuntimeInvisibleAnnotationsReader(iter);
             break;
@@ -367,8 +366,8 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
   }
 
   /**
-   * Retrieves all runtime-invisible annotations associated with a given index. Returns null
-   * if the index is not valid or the annotation contains arrays.
+   * Retrieves all runtime-invisible annotations associated with a given index. Returns null if the index is not valid or the
+   * annotation contains arrays.
    */
   public HashMap<String, String> getAnnotations(int index) {
     AnnotationsReader r = getAnnotationsReader(true);
