@@ -467,7 +467,7 @@ public class StringStuff {
     if (a == null) {
       throw new IllegalArgumentException("a is null");
     }
-    ImmutableByteArray b = new ImmutableByteArray(a.val);
+    ImmutableByteArray b = new ImmutableByteArray(a.getValArray());
     return parseForInnermostArrayElementDescriptor(b, 0, b.length());
   }
 

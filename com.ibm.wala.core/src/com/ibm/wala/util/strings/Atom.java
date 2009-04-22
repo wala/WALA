@@ -35,7 +35,7 @@ public final class Atom implements Serializable {
   /**
    * The utf8 value this atom represents
    */
-  final byte val[];
+  private final byte val[];
 
   /**
    * Cached hash code for this atom key.
@@ -365,6 +365,15 @@ public final class Atom implements Serializable {
     return this == obj;
   }
 
+  /**
+   * return an array of bytes representing the utf8 characters in this
+   */
+  public byte[] getValArray() {
+    byte[] result = new byte[val.length];
+    System.arraycopy(val, 0, result, 0, val.length);
+    return result;
+  }
+  
   public byte getVal(int i) throws IllegalArgumentException {
     try {
       return val[i];
