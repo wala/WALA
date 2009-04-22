@@ -43,9 +43,10 @@ import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
 
 /**
- * A ControlFlowGraph computed from a set of SSA instructions
+ * A {@link ControlFlowGraph} computed from a set of {@link SSAInstruction} instructions.
  * 
- * This is a funny CFG ... we assume that there are always fallthru edges, even from throws and returns.
+ * This is a funny CFG ... we assume that there are always fallthru edges, even from throws and returns. It is extremely fragile and
+ * unsuited for flow-sensitive analysis.  Someday this should be nuked.
  */
 public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBlock> {
 
@@ -134,7 +135,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
       }
     }
   }
-  
+
   /**
    * Create basic blocks for an empty method
    */
@@ -272,8 +273,8 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     }
 
     /**
-     * introduce a basic block boundary immediately after instruction number 'index' if it is not followed by pi
-     * instructions, or after the pi instructions otherwise
+     * introduce a basic block boundary immediately after instruction number 'index' if it is not followed by pi instructions, or
+     * after the pi instructions otherwise
      */
     protected void breakBasicBlock(int index) {
       int j = index + 1;
@@ -467,8 +468,8 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     }
 
     /**
-     * correct pi instructions with appropriate basic block numbers. we assume for now that pi instructions are always
-     * associated with the normal "fall-thru" exit edge.
+     * correct pi instructions with appropriate basic block numbers. we assume for now that pi instructions are always associated
+     * with the normal "fall-thru" exit edge.
      */
     private void updatePiInstrs(int normalSuccNodeNumber) {
       for (int i = 0; i < pis.size(); i++) {

@@ -32,14 +32,15 @@ import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.warnings.WalaException;
 
 /**
- * Utility class to remove edges to exit() from a CFG
+ * Utility class to remove exceptional edges to exit() from a CFG
  */
 public class CFGSanitizer {
 
-  /*
+  /**
+   * Return a view of the {@link ControlFlowGraph} for an {@link IR}, which elides all exceptional exits from PEIs in the IR.
    */
   public static Graph<ISSABasicBlock> sanitize(IR ir, IClassHierarchy cha) throws IllegalArgumentException, WalaException {
- 
+
     if (ir == null) {
       throw new IllegalArgumentException("ir cannot be null");
     }
@@ -152,6 +153,9 @@ public class CFGSanitizer {
     return g;
   }
 
+  /**
+   * What are the exception types which s may throw?
+   */
   private static TypeReference[] computeExceptions(IClassHierarchy cha, IR ir, SSAInstruction s) throws InvalidClassFileException {
     Collection c = null;
     Language l = ir.getMethod().getDeclaringClass().getClassLoader().getLanguage();
@@ -173,4 +177,4 @@ public class CFGSanitizer {
     }
   }
 
-} 
+}

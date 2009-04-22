@@ -62,10 +62,13 @@ import com.ibm.wala.util.shrike.Exceptions.MethodResolutionFailure;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warnings;
 
+/**
+ * The implementation of {@link Language} which defines Java semantics.
+ *
+ */
 public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Constants {
 
   public static class JavaInstructionFactory implements SSAInstructionFactory {
-
     public SSAArrayLengthInstruction ArrayLengthInstruction(int result, int arrayref) {
       return new SSAArrayLengthInstruction(result, arrayref) {
         @Override

@@ -14,6 +14,9 @@ import java.util.Set;
 
 import com.ibm.wala.util.collections.HashSetFactory;
 
+/**
+ * Common functionality for most {@link Language} implementations.
+ */
 public abstract class LanguageImpl implements Language {
 
   private Language baseLang;
