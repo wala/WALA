@@ -12,9 +12,6 @@ package com.ibm.wala.annotations;
 
 /**
  * An annotation which indicates a Java element should not be null.
- * 
- * @author sjfink
- *
  */
 public @interface NonNull {
 

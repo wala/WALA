@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.graph;
 
+
 /**
  * Utility methods for graphs.
  */
@@ -28,4 +29,5 @@ public class GraphUtil {
     }
     return edgeCount;
   }
+
 }

@@ -10,9 +10,13 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.impl;
 
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.util.warnings.MethodWarning;
 
+/**
+ * A warning about a failure to resolve reflection relating to a particular {@link IMethod}.
+ */
 public class UnresolvedReflectionWarning extends MethodWarning {
 
   public UnresolvedReflectionWarning(CGNode node) throws NullPointerException {

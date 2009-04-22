@@ -25,10 +25,7 @@ import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * 
  * An object which represents a set of classes read from a text file.
- * 
- * @author sfink
  */
 public class FileOfClasses extends SetOfClasses implements Serializable {
 

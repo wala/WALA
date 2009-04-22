@@ -18,9 +18,6 @@ package com.ibm.wala.annotations;
  * This annotation is placed in the shrike project just so it's
  * at the top of the WALA project dependency hierarchy.  It doesn't have
  * anything to do with shrike.
- * 
- * @author sjfink
- *
  */
 public @interface Internal {
 

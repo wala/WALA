@@ -17,6 +17,11 @@ import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 
+/**
+ * SJF: This is not used in my workspace.  Is it dead?
+ * Deprecating for now.
+ */
+@Deprecated
 abstract public class ReflectiveSubtypesEntrypoint extends SubtypesEntrypoint {
 
   public ReflectiveSubtypesEntrypoint(MethodReference method, IClassHierarchy cha) {

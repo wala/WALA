@@ -24,9 +24,6 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * heap locations that should be excluded from data dependence during slicing
- * 
- * @author sjfink
- * 
  */
 public class HeapExclusions {
 

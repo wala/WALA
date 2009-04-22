@@ -78,6 +78,7 @@ public class Util {
    * @throws IllegalArgumentException if g1 is null
    * @throws IllegalArgumentException if g2 is null
    */
+  @Deprecated
   public static <T> boolean areEqual(Graph<T> g1, Graph<T> g2) {
     if (g2 == null) {
       throw new IllegalArgumentException("g2 is null");
@@ -113,6 +114,7 @@ public class Util {
    * @throws IllegalArgumentException if g1 is null
    * @throws IllegalArgumentException if g2 is null
    */
+  @Deprecated
   public static <T> boolean isSubset(Graph<T> g1, Graph<T> g2) {
     if (g2 == null) {
       throw new IllegalArgumentException("g2 is null");
@@ -181,6 +183,7 @@ public class Util {
    * @return the Set of CGNodes in the call graph that are reachable without traversing any entrypoint node
    * @throws IllegalArgumentException if cg is null
    */
+  @Deprecated
   public static Collection<CGNode> computeDarkEntrypointNodes(final CallGraph cg, final Collection<CGNode> entrypoints) {
 
     if (cg == null) {
@@ -321,160 +324,7 @@ public class Util {
     };
   }
 
-  /**
-   * @param name
-   * @param cg
-   * @return a graph whose nodes are MethodReferences, and whose edges represent calls between MethodReferences
-   * @throws IllegalArgumentException if cg is null
-   */
-  public static Graph<MethodReference> squashCallGraph(final String name, final CallGraph cg) {
-    if (cg == null) {
-      throw new IllegalArgumentException("cg is null");
-    }
-    final Set<MethodReference> nodes = HashSetFactory.make();
-    for (Iterator nodesI = cg.iterator(); nodesI.hasNext();) {
-      nodes.add(((CGNode) nodesI.next()).getMethod().getReference());
-    }
-
-    return new Graph<MethodReference>() {
-      @Override
-      public String toString() {
-        StringBuffer result = new StringBuffer();
-        result.append("squashed " + name + " call graph\n");
-        result.append("Original graph:");
-        result.append(cg.toString());
-        return result.toString();
-      }
-
-      /*
-       * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
-       */
-      public Iterator<MethodReference> iterator() {
-        return nodes.iterator();
-      }
-
-      /*
-       * @see com.ibm.wala.util.graph.NodeManager#containsNode(java.lang.Object)
-       */
-      public boolean containsNode(MethodReference N) {
-        return nodes.contains(N);
-      }
-
-      /*
-       * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
-       */
-      public int getNumberOfNodes() {
-        return nodes.size();
-      }
-
-      /*
-       * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
-       */
-      public Iterator<MethodReference> getPredNodes(MethodReference N) {
-        Set<MethodReference> pred = HashSetFactory.make(10);
-        MethodReference methodReference = N;
-        for (Iterator<CGNode> i = cg.getNodes(methodReference).iterator(); i.hasNext();)
-          for (Iterator ps = cg.getPredNodes(i.next()); ps.hasNext();)
-            pred.add(((CGNode) ps.next()).getMethod().getReference());
-
-        return pred.iterator();
-      }
-
-      /*
-       * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
-       */
-      public int getPredNodeCount(MethodReference N) {
-        int count = 0;
-        for (Iterator ps = getPredNodes(N); ps.hasNext(); count++, ps.next())
-          ;
-        return count;
-      }
-
-      /*
-       * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
-       */
-      public Iterator<MethodReference> getSuccNodes(MethodReference N) {
-        Set<MethodReference> succ = HashSetFactory.make(10);
-        MethodReference methodReference = N;
-        for (Iterator<? extends CGNode> i = cg.getNodes(methodReference).iterator(); i.hasNext();)
-          for (Iterator<? extends CGNode> ps = cg.getSuccNodes(i.next()); ps.hasNext();)
-            succ.add(((CGNode) ps.next()).getMethod().getReference());
-
-        return succ.iterator();
-      }
-
-      /*
-       * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
-       */
-      public int getSuccNodeCount(MethodReference N) {
-        int count = 0;
-        for (Iterator ps = getSuccNodes(N); ps.hasNext(); count++, ps.next())
-          ;
-        return count;
-      }
-
-      /*
-       * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
-       */
-      public void addNode(MethodReference n) {
-        Assertions.UNREACHABLE();
-      }
-
-      /*
-       * @see com.ibm.wala.util.graph.NodeManager#removeNode(java.lang.Object)
-       */
-      public void removeNode(MethodReference n) {
-        Assertions.UNREACHABLE();
-      }
-
-      /*
-       * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object, java.lang.Object)
-       */
-      public void addEdge(MethodReference src, MethodReference dst) {
-        Assertions.UNREACHABLE();
-      }
-
-      public void removeEdge(MethodReference src, MethodReference dst) {
-        Assertions.UNREACHABLE();
-      }
-
-      /*
-       * @see com.ibm.wala.util.graph.EdgeManager#removeAllIncidentEdges(java.lang.Object)
-       */
-      public void removeAllIncidentEdges(MethodReference node) {
-        Assertions.UNREACHABLE();
-      }
-
-      /*
-       * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(java.lang.Object)
-       */
-      public void removeNodeAndEdges(MethodReference N) {
-        Assertions.UNREACHABLE();
-      }
-
-      public void removeIncomingEdges(MethodReference node) {
-        // TODO Auto-generated method stubMethodReference
-        Assertions.UNREACHABLE();
-
-      }
-
-      public void removeOutgoingEdges(MethodReference node) {
-        // TODO Auto-generated method stub
-        Assertions.UNREACHABLE();
-
-      }
-
-      public boolean hasEdge(MethodReference src, MethodReference dst) {
-        for (Iterator<MethodReference> succNodes = getSuccNodes(src); succNodes.hasNext();) {
-          if (dst.equals(succNodes.next())) {
-            return true;
-          }
-        }
-        return false;
-      }
-    };
-  }
-
+ 
   /**
    * create a set holding the contents of an {@link Iterator}
    */
@@ -496,7 +346,6 @@ public class Util {
    * @throws IllegalArgumentException if supG is null
    */
   public static <T> void checkGraphSubset(Graph<T> supG, Graph<T> subG) {
-
     if (supG == null) {
       throw new IllegalArgumentException("supG is null");
     }
