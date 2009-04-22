@@ -31,8 +31,6 @@ import com.ibm.wala.util.strings.StringStuff;
 
 /**
  * An SSA IR
- * 
- * @author sfink
  */
 public abstract class IR {
 
@@ -101,7 +99,7 @@ public abstract class IR {
   }
 
   /**
-   * create mappings from callsites, new sites, and PEIs to instruction index
+   * create mappings from call sites, new sites, and PEIs to instruction index
    */
   protected void setupLocationMap() {
     for (int i = 0; i < instructions.length; i++) {
@@ -120,6 +118,9 @@ public abstract class IR {
     }
   }
 
+  /**
+   * @return a String which is a readable representation of the instruction position corresponding to an instruction index
+   */
   protected abstract String instructionPosition(int instructionIndex);
 
   @Override
@@ -173,8 +174,8 @@ public abstract class IR {
 
   /**
    * Returns the normal instructions. Does not include {@link SSAPhiInstruction}, {@link SSAPiInstruction}, or
-   * {@link SSAGetCaughtExceptionInstruction}s, which are currently managed by {@link BasicBlock}. Entries in the
-   * returned array might be null.
+   * {@link SSAGetCaughtExceptionInstruction}s, which are currently managed by {@link BasicBlock}. Entries in the returned array
+   * might be null.
    * 
    * This may go away someday.
    */
@@ -197,7 +198,7 @@ public abstract class IR {
   }
 
   /**
-   * Return an iterator of all {@link SSAPhiInstruction}s for this IR.
+   * Return an {@link Iterator} of all {@link SSAPhiInstruction}s for this IR.
    */
   public Iterator<? extends SSAInstruction> iteratePhis() {
     return new TwoLevelIterator() {
@@ -209,7 +210,7 @@ public abstract class IR {
   }
 
   /**
-   * Return an iterator of all {@link SSAPiInstruction}s for this IR.
+   * Return an {@link Iterator} of all {@link SSAPiInstruction}s for this IR.
    */
   public Iterator<? extends SSAInstruction> iteratePis() {
     return new TwoLevelIterator() {
@@ -221,8 +222,8 @@ public abstract class IR {
   }
 
   /**
-   * An {@link Iterator} over all {@link SSAInstruction}s of a certain type, retrieved by iterating over the
-   * {@link BasicBlock}s, one at a time.
+   * An {@link Iterator} over all {@link SSAInstruction}s of a certain type, retrieved by iterating over the {@link BasicBlock}s,
+   * one at a time.
    * 
    * TODO: this looks buggy to me .. looks like it's hardcoded for Phis. Does it work for Pis?
    */
@@ -288,8 +289,8 @@ public abstract class IR {
   }
 
   /**
-   * Get the {@link TypeReference} that describes the ith parameter to this method. By convention, for a non-static
-   * method, the 0th parameter is "this".
+   * Get the {@link TypeReference} that describes the ith parameter to this method. By convention, for a non-static method, the 0th
+   * parameter is "this".
    */
   public TypeReference getParameterType(int i) {
     return method.getParameterType(i);
@@ -438,9 +439,8 @@ public abstract class IR {
   /**
    * Return the invoke instructions corresponding to a call site
    * 
-   * Note that Shrike may inline JSRS.  This can lead to multiple copies of a single bytecode
-   * instruction in a particular IR.  So we may have more than one instruction index for a 
-   * particular call site from bytecode.
+   * Note that Shrike may inline JSRS. This can lead to multiple copies of a single bytecode instruction in a particular IR. So we
+   * may have more than one instruction index for a particular call site from bytecode.
    */
   public SSAAbstractInvokeInstruction[] getCalls(CallSiteReference site) {
     if (site == null) {
@@ -462,9 +462,8 @@ public abstract class IR {
   /**
    * Return the instruction indices corresponding to a call site.
    * 
-   * Note that Shrike may inline JSRS.  This can lead to multiple copies of a single bytecode
-   * instruction in a particular IR.  So we may have more than one instruction index for a 
-   * particular call site from bytecode.
+   * Note that Shrike may inline JSRS. This can lead to multiple copies of a single bytecode instruction in a particular IR. So we
+   * may have more than one instruction index for a particular call site from bytecode.
    */
   public IntSet getCallInstructionIndices(CallSiteReference site) {
     if (site == null) {
@@ -498,10 +497,16 @@ public abstract class IR {
     return instructions[i.intValue()];
   }
 
+  /**
+   * @return an {@link Iterator} of all the allocation sites ( {@link NewSiteReference}s ) in this IR
+   */
   public Iterator<NewSiteReference> iterateNewSites() {
     return newSiteMapping.keySet().iterator();
   }
 
+  /**
+   * @return an {@link Iterator} of all the call sites ( {@link CallSiteReference}s ) in this IR
+   */
   public Iterator<CallSiteReference> iterateCallSites() {
     return new Iterator<CallSiteReference>() {
       private final int limit = callSiteMapping.maxKeyValue();
@@ -558,8 +563,7 @@ public abstract class IR {
   /**
    * This is space-inefficient. Use with care.
    * 
-   * Be very careful; note the strange identity semantics of SSAInstruction, using ==. You can't mix SSAInstructions and
-   * IRs freely.
+   * Be very careful; note the strange identity semantics of SSAInstruction, using ==. You can't mix SSAInstructions and IRs freely.
    */
   public ISSABasicBlock getBasicBlockForInstruction(SSAInstruction s) {
     if (instruction2Block == null) {
@@ -596,8 +600,8 @@ public abstract class IR {
   /**
    * @param index an index into the IR instruction array
    * @param vn a value number
-   * @return if we know that immediately after the given program counter, v_vn corresponds to one or more locals and
-   *         local variable names are available, the name of the locals which v_vn represents. Otherwise, null.
+   * @return if we know that immediately after the given program counter, v_vn corresponds to one or more locals and local variable
+   *         names are available, the name of the locals which v_vn represents. Otherwise, null.
    */
   public String[] getLocalNames(int index, int vn) {
     if (getLocalMap() == null) {
@@ -608,20 +612,22 @@ public abstract class IR {
   }
 
   /**
-   * 
-   * 
+   * A Map that gives the names of the local variables corresponding to SSA value numbers at particular IR instruction indices, if
+   * such information is available from source code mapping.
    */
   public interface SSA2LocalMap {
     /**
      * @param index an index into the IR instruction array
      * @param vn a value number
-     * @return if we know that immediately after the given program counter, v_vn corresponds to one or more locals and
-     *         local variable names are available, the name of the locals which v_vn represents. Otherwise, null.
+     * @return if we know that immediately after the given program counter, v_vn corresponds to one or more locals and local
+     *         variable names are available, the name of the locals which v_vn represents. Otherwise, null.
      */
     String[] getLocalNames(int index, int vn);
-
   }
 
+  /**
+   * Return the {@link ISSABasicBlock} corresponding to a particular catch instruction
+   */
   public ISSABasicBlock getBasicBlockForCatch(SSAGetCaughtExceptionInstruction instruction) {
     if (instruction == null) {
       throw new IllegalArgumentException("instruction is null");
@@ -631,7 +637,7 @@ public abstract class IR {
   }
 
   /**
-   * @return Returns the options.
+   * @return the {@link SSAOptions} which controlled how this {@link IR} was built
    */
   public SSAOptions getOptions() {
     return options;

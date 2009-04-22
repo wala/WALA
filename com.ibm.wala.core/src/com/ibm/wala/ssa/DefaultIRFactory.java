@@ -21,25 +21,28 @@ import com.ibm.wala.ipa.summaries.SyntheticIRFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * @author Julian Dolby
- *
+ * Default implementation of {@link IRFactory}.
+ * 
+ * This creates {@link IR} objects from Shrike methods, and directly from synthetic methods.
  */
 public class DefaultIRFactory implements IRFactory<IMethod> {
+
   private final ShrikeIRFactory shrikeFactory = new ShrikeIRFactory();
 
   private final SyntheticIRFactory syntheticFactory = new SyntheticIRFactory();
 
-  /* 
-   * @see com.ibm.wala.ssa.IRFactory#makeCFG(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context, com.ibm.wala.ipa.cha.IClassHierarchy, com.ibm.wala.util.warnings.WarningSet)
+  /*
+   * @see com.ibm.wala.ssa.IRFactory#makeCFG(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context,
+   * com.ibm.wala.ipa.cha.IClassHierarchy, com.ibm.wala.util.warnings.WarningSet)
    */
-  public ControlFlowGraph makeCFG(IMethod method, Context C) throws IllegalArgumentException {
+  public ControlFlowGraph makeCFG(IMethod method, Context c) throws IllegalArgumentException {
     if (method == null) {
       throw new IllegalArgumentException("method cannot be null");
     }
     if (method.isSynthetic()) {
-      return syntheticFactory.makeCFG((SyntheticMethod)method, C);
+      return syntheticFactory.makeCFG((SyntheticMethod) method, c);
     } else if (method instanceof IBytecodeMethod) {
-      return shrikeFactory.makeCFG((IBytecodeMethod) method, C);
+      return shrikeFactory.makeCFG((IBytecodeMethod) method, c);
     } else {
       Assertions.UNREACHABLE();
       return null;
@@ -47,28 +50,32 @@ public class DefaultIRFactory implements IRFactory<IMethod> {
   }
 
   /*
-   * @see com.ibm.wala.ssa.IRFactory#makeIR(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context, com.ibm.wala.ipa.cha.IClassHierarchy, com.ibm.wala.ssa.SSAOptions, com.ibm.wala.util.warnings.WarningSet)
+   * @see com.ibm.wala.ssa.IRFactory#makeIR(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context,
+   * com.ibm.wala.ipa.cha.IClassHierarchy, com.ibm.wala.ssa.SSAOptions, com.ibm.wala.util.warnings.WarningSet)
    */
-  public IR makeIR(IMethod method, Context C, SSAOptions options) throws IllegalArgumentException{
+  public IR makeIR(IMethod method, Context c, SSAOptions options) throws IllegalArgumentException {
     if (method == null) {
       throw new IllegalArgumentException("method cannot be null");
     }
     if (method.isSynthetic()) {
-      return syntheticFactory.makeIR((SyntheticMethod)method, C, options);
+      return syntheticFactory.makeIR((SyntheticMethod) method, c, options);
     } else if (method instanceof IBytecodeMethod) {
-      return shrikeFactory.makeIR((IBytecodeMethod) method, C, options);
+      return shrikeFactory.makeIR((IBytecodeMethod) method, c, options);
     } else {
       Assertions.UNREACHABLE();
       return null;
     }
   }
 
+  /**
+   * Is the {@link Context} irrelevant as to structure of the {@link IR} for a particular {@link IMethod}? 
+   */
   public boolean contextIsIrrelevant(IMethod method) {
     if (method == null) {
       throw new IllegalArgumentException("null method");
     }
     if (method.isSynthetic()) {
-      return syntheticFactory.contextIsIrrelevant((SyntheticMethod)method);
+      return syntheticFactory.contextIsIrrelevant((SyntheticMethod) method);
     } else if (method instanceof ShrikeCTMethod) {
       // we know ShrikeFactory contextIsIrrelevant
       return true;

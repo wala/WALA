@@ -21,22 +21,18 @@ import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 
 /**
- * 
- * An object which represent Def-Use information for an SSA IR
- * 
- * @author sfink
+ * An object which represent Def-Use information for an SSA {@link IR}
  */
 public class DefUse {
   static final boolean DEBUG = false;
 
   /**
-   * A mapping from integer (value number) -> Instruction that defines the value
+   * A mapping from integer (value number) -> {@link SSAInstruction} that defines the value
    */
   final private SSAInstruction[] defs;
 
   /**
-   * A mapping from integer (value number) -> BitVector holding integers
-   * representing instructions that use the value number
+   * A mapping from integer (value number) -> bit vector holding integers representing instructions that use the value number
    */
   final private MutableIntSet[] uses;
 
@@ -49,12 +45,12 @@ public class DefUse {
    * prevent the IR from being collected while this is live.
    */
   private final IR ir;
-  
+
   /**
    * keep this package private: all calls should be through SSACache
-   * @param ir
-   *          an IR in SSA form.
-   * @throws IllegalArgumentException  if ir is null
+   * 
+   * @param ir an IR in SSA form.
+   * @throws IllegalArgumentException if ir is null
    */
   public DefUse(final IR ir) {
     if (ir == null) {
@@ -63,7 +59,7 @@ public class DefUse {
     this.ir = ir;
 
     // set up mapping from integer -> instruction
-    getAllInstructions();
+    initAllInstructions();
     defs = new SSAInstruction[getMaxValueNumber() + 1];
     uses = new MutableIntSet[getMaxValueNumber() + 1];
     if (DEBUG) {
@@ -76,10 +72,10 @@ public class DefUse {
         continue;
       }
       for (int j = 0; j < getNumberOfDefs(s); j++) {
-        defs[getDef(s,j)] = s;
+        defs[getDef(s, j)] = s;
       }
       for (int j = 0; j < getNumberOfUses(s); j++) {
-        int use = getUse(s,j);
+        int use = getUse(s, j);
         if (use != -1) {
           if (uses[use] == null) {
             uses[use] = IntSetUtil.make();
@@ -90,46 +86,59 @@ public class DefUse {
     }
   }
 
+  /**
+   * @return the maximum value number in a particular IR
+   */
   protected int getMaxValueNumber() {
     return ir.getSymbolTable().getMaxValueNumber();
   }
 
-  protected void getAllInstructions() {
-    for (Iterator<SSAInstruction> it = ir.iterateAllInstructions(); 
-	 it.hasNext();) 
-    {
+  /**
+   * Initialize the allInstructions field with every {@link SSAInstruction} in the ir.
+   */
+  protected void initAllInstructions() {
+    for (Iterator<SSAInstruction> it = ir.iterateAllInstructions(); it.hasNext();) {
       allInstructions.add(it.next());
     }
   }
 
+  /**
+   * What is the ith value number defined by instruction s?
+   */
   protected int getDef(SSAInstruction s, int i) {
     return s.getDef(i);
   }
 
+  /**
+   * What is the ith value number used by instruction s?
+   */
   protected int getUse(SSAInstruction s, int i) {
     return s.getUse(i);
   }
 
+  /**
+   * How many value numbers does instruction s def?
+   */
   protected int getNumberOfDefs(SSAInstruction s) {
     return s.getNumberOfDefs();
   }
 
+  /**
+   * How many value numbers does instruction s use?
+   */
   protected int getNumberOfUses(SSAInstruction s) {
     return s.getNumberOfUses();
   }
 
   /**
-   * @return the Instruction that defines the variable with value number v.
+   * @return the {@link SSAInstruction} that defines the variable with value number v.
    */
-  public SSAInstruction getDef(int v) {    
-      return (v < defs.length)? defs[v]: null;
+  public SSAInstruction getDef(int v) {
+    return (v < defs.length) ? defs[v] : null;
   }
 
   /**
    * Return all uses of the variable with the given value number
-   * 
-   * @param v
-   *          value number
    */
   public Iterator<SSAInstruction> getUses(int v) {
     if (uses[v] == null) {
@@ -140,9 +149,7 @@ public class DefUse {
   }
 
   /**
-   * @author sfink
-   *
-   * return an iterator of all instructions that use any of a set of variables
+   * return an {@link Iterator} of all instructions that use any of a set of variables
    */
   private class UseIterator implements Iterator<SSAInstruction> {
     final IntIterator it;
@@ -174,16 +181,16 @@ public class DefUse {
   public int getNumberOfUses(int v) {
     return uses[v] == null ? 0 : uses[v].size();
   }
-  
+
   /**
-   * Return the actual, honest-to-goodness IR object used to compute the
-   * DefUse information.   By doing this, you ensure that for any
-   * SSAInstruction returned by getUses() or getDefs(), the instruction
-   * actually == (equals()) an SSAInstruction in the IR.
+   * Return the actual, honest-to-goodness IR object used to compute the {@link DefUse} information. By doing this, you ensure that
+   * for any SSAInstruction returned by getUses() or getDefs(), the instruction actually == (equals()) an SSAInstruction in the IR.
    * 
-   * This is pretty horrible.   TODO: Should think about redesigning instruction
-   * identity to avoid this.
+   * This is pretty horrible. TODO: Should think about redesigning instruction identity to avoid this.
+   * 
+   * This is deprecated since there is rarely a good reason to use this.
    */
+  @Deprecated
   public IR getIR() {
     return ir;
   }
