@@ -14,8 +14,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * @author Julian Dolby
- * 
+ * An instruction which converts a value of one primitive type into another primitive type.
  */
 public abstract class SSAConversionInstruction extends SSAInstruction {
   private final int result;

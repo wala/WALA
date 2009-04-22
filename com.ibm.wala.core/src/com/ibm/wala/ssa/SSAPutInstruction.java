@@ -14,10 +14,7 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * Instruction for a putfield or putstatic
- * 
- * @author sfink
- * 
+ * A putfield or putstatic instruction
  */
 public abstract class SSAPutInstruction extends SSAFieldAccessInstruction {
 

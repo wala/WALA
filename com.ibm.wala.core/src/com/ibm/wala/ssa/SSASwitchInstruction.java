@@ -16,9 +16,6 @@ import com.ibm.wala.util.intset.IntIterator;
 
 /**
  * SSA instruction representing a switch statement.
- * 
- * @author sjfink
- * 
  */
 public class SSASwitchInstruction extends SSAInstruction {
   private final int val;

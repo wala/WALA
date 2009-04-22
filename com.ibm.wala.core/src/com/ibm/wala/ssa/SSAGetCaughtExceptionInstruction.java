@@ -13,8 +13,10 @@ package com.ibm.wala.ssa;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * @author sfink
+ * A "catch" instruction, inserted at the head of a catch block, which assigns a pending exception object to a local vairable.
  * 
+ * In SSA {@link IR}s, these instructions do <em>not</em> appear in the normal instruction array returned by IR.getInstructions();
+ * instead these instructions live in {@link ISSABasicBlock}.
  */
 public class SSAGetCaughtExceptionInstruction extends SSAInstruction {
   private final int exceptionValueNumber;

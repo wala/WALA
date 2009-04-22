@@ -14,8 +14,6 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * An instruction representing a monitorenter or monitorexit operation.
- * 
- * @author sfink
  */
 public abstract class SSAMonitorInstruction extends SSAInstruction {
   /**

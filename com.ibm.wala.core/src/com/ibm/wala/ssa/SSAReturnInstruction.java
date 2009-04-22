@@ -11,10 +11,8 @@
 
 package com.ibm.wala.ssa;
 
-
 /**
- * @author sfink
- * 
+ * A return instruction.
  */
 public class SSAReturnInstruction extends SSAInstruction {
 

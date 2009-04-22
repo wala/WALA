@@ -14,8 +14,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * An instruction that represents a reflective or meta-programming option,like loadClass in Java
- * 
+ * An instruction that represents a reflective or meta-programming operation, like loadClass in Java
  */
 public abstract class SSALoadMetadataInstruction extends SSAInstruction {
 

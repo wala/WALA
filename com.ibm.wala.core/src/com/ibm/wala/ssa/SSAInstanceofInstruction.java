@@ -14,8 +14,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * @author sfink
- * 
+ * A dynamic type test (instanceof) instruction.
  */
 public class SSAInstanceofInstruction extends SSAInstruction {
   private final int result;

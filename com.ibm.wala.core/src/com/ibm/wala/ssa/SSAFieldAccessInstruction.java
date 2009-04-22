@@ -15,10 +15,7 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * 
- * Abstract base class for GetInstruction and PutInstruction
- * 
- * @author sfink
+ * Abstract base class for {@link SSAGetInstruction} and {@link SSAPutInstruction}.
  */
 public abstract class SSAFieldAccessInstruction extends SSAInstruction {
 
@@ -55,5 +52,4 @@ public abstract class SSAFieldAccessInstruction extends SSAInstruction {
   public boolean isPEI() {
     return !isStatic();
   }
-
 }

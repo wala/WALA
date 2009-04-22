@@ -15,8 +15,7 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * @author sfink
- * 
+ * SSA instruction that reads a field (i.e. getstatic or getfield).
  */
 public abstract class SSAGetInstruction extends SSAFieldAccessInstruction {
   private final int result;

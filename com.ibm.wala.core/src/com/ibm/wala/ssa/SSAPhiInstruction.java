@@ -13,11 +13,15 @@ package com.ibm.wala.ssa;
 import com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine;
 
 /**
+ * A phi instruction in SSA form.
+ * 
+ * See any modern compiler textbook for the definition of phi and the nature of SSA.
+ * 
+ * Note: In SSA {@link IR}s, these instructions do <em>not</em> appear in the normal instruction array returned by IR.getInstructions();
+ * instead these instructions live in {@link ISSABasicBlock}.
+ * 
  * Note: if getUse(i) returns {@link AbstractIntStackMachine}.TOP (that is, -1), then that use represents an edge in the CFG which
  * is infeasible in verifiable bytecode.
- * 
- * @author sfink
- * 
  */
 public class SSAPhiInstruction extends SSAInstruction {
   private final int result;

@@ -53,9 +53,11 @@ import com.ibm.wala.util.intset.IntPair;
 import com.ibm.wala.util.shrike.ShrikeUtil;
 
 /**
- * This class constructs an SSA IR from a backing ShrikeBT instruction stream.
+ * This class constructs an SSA {@link IR} from a backing ShrikeBT instruction stream.
  * 
- * @author sfink
+ * The basic algorithm here is an abstract interpretation over the Java bytecode to determine types of stack locations and local
+ * variables. As a side effect, the flow functions of the abstract interpretation emit instructions, eliminating the
+ * stack abstraction and moving to a register-transfer language in SSA form.
  */
 public class SSABuilder extends AbstractIntStackMachine {
 
@@ -86,7 +88,7 @@ public class SSABuilder extends AbstractIntStackMachine {
    * a factory to create concrete instructions
    */
   private final SSAInstructionFactory insts;
-  
+
   private SSABuilder(IBytecodeMethod method, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions, SymbolTable symbolTable,
       boolean buildLocalMap, SSAPiNodePolicy piNodePolicy) {
     super(scfg);
@@ -416,7 +418,8 @@ public class SSABuilder extends AbstractIntStackMachine {
         int result = reuseOrCreateDef();
         workingState.push(result);
         boolean isFloat = instruction.getType().equals(TYPE_double) || instruction.getType().equals(TYPE_float);
-        emitInstruction(insts.BinaryOpInstruction(instruction.getOperator(), instruction.throwsExceptionOnOverflow(), instruction.isUnsigned(), result, val1, val2, !isFloat));
+        emitInstruction(insts.BinaryOpInstruction(instruction.getOperator(), instruction.throwsExceptionOnOverflow(), instruction
+            .isUnsigned(), result, val1, val2, !isFloat));
       }
 
       /**
@@ -463,7 +466,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       @Override
       public void visitConstant(com.ibm.wala.shrikeBT.ConstantInstruction instruction) {
         Language l = cfg.getMethod().getDeclaringClass().getClassLoader().getLanguage();
-        TypeReference type = l.getConstantType(instruction.getValue());   
+        TypeReference type = l.getConstantType(instruction.getValue());
         int symbol = 0;
         if (l.isNullType(type)) {
           symbol = symbolTable.getNullConstant();
@@ -656,7 +659,8 @@ public class SSABuilder extends AbstractIntStackMachine {
         int val1 = workingState.pop();
         int result = reuseOrCreateDef();
         workingState.push(result);
-        emitInstruction(insts.BinaryOpInstruction(instruction.getOperator(), false, instruction.isUnsigned(), result, val1, val2, true));
+        emitInstruction(insts.BinaryOpInstruction(instruction.getOperator(), false, instruction.isUnsigned(), result, val1, val2,
+            true));
       }
 
       /**

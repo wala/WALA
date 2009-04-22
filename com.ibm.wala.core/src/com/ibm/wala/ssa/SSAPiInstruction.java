@@ -13,12 +13,13 @@ package com.ibm.wala.ssa;
 /**
  * A Pi instruction is a dummy assignment inserted at the tail of a basic block, in order
  * to get a new variable name to associate with some flow-insensitive dataflow fact.
- * You can build an IR with or without Pi instructions, depending on SSAOptions selected.
+ * You can build an {@link IR} with or without Pi instructions, depending on {@link SSAOptions} selected.
  * 
  * A Pi instruction is linked to its "cause" instruction, which is usually a conditional 
  * branch.
  * 
  * for example, the following pseudo-code
+ * <p>
  * <verbatim>
  *     boolean condition = (x instanceof Integer);
  *     if (condition) {
@@ -40,10 +41,6 @@ package com.ibm.wala.ssa;
  *        S2;
  *     }
  * </verbatim>
- * 
- * @author Julian Dolby
- * @author Stephen Fink
- *
  */
 public class SSAPiInstruction extends SSAUnaryOpInstruction {
   private final SSAInstruction cause;

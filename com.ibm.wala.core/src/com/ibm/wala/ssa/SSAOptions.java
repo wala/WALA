@@ -11,10 +11,7 @@
 package com.ibm.wala.ssa;
 
 /**
- * 
  * Options that govern SSA construction
- * 
- * @author sfink
  */
 public class SSAOptions {
 
@@ -24,9 +21,6 @@ public class SSAOptions {
    * used in SSA conversion to add bogus assignments of the default that will get copy propagated away, this interface
    * is a way to specify what the default values are: this object will be invoked whenever SSA conversion needs to read
    * a value with an no definition.
-   * 
-   * @author Julian Dolby (dolby@us.ibm.com)
-   * 
    */
   public interface DefaultValues {
     int getDefaultValue(SymbolTable symtab, int valueNumber);

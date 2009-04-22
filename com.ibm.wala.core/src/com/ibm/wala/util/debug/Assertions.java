@@ -11,6 +11,11 @@
 package com.ibm.wala.util.debug;
 
 
+/**
+ * WALA-specific assertion checking.
+ * 
+ * This may go away in favor of Java language-level assertions.
+ */
 public class Assertions {
 
   public static final boolean verifyAssertions = true;

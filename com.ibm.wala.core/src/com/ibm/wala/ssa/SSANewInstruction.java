@@ -16,7 +16,9 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * @author sfink
+ * An allocation instruction ("new") for SSA form.   
+ * 
+ * This includes allocations of both scalars and arrays.
  */
 public abstract class SSANewInstruction extends SSAInstruction {
   private final int result;

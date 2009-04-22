@@ -10,10 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
-
 /**
- * @author sfink
- * 
+ * Unconditional branch instruction for SSA form.
  */
 public class SSAGotoInstruction extends SSAInstruction {
 

@@ -15,7 +15,6 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * Abstract base class for instructions that load or store from array contents.
- *  
  */
 public abstract class SSAArrayReferenceInstruction extends SSAInstruction {
 

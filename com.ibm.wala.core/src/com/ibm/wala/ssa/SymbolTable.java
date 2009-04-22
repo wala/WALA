@@ -15,7 +15,11 @@ import java.util.HashMap;
 import com.ibm.wala.util.collections.HashMapFactory;
 
 /**
+ * A symbol table which associates information with each variable (value number) in an SSA IR.
+ * 
  * By convention, symbol numbers start at 1 ... the "this" parameter will be symbol number 1 in a virtual method.
+ * 
+ * This class is used heavily during SSA construction by {@link SSABuilder}.
  */
 public class SymbolTable {
 

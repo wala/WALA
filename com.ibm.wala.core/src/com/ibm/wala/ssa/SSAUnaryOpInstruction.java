@@ -13,8 +13,9 @@ package com.ibm.wala.ssa;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 
 /**
- * @author sfink
+ * An SSA instruction for some unary operator.
  * 
+ * @see IUnaryOpInstruction for a list of operators
  */
 public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
 

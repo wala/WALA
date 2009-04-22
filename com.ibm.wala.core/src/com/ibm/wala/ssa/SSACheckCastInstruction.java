@@ -14,17 +14,31 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * @author sfink
- * 
+ * A checkcast (dynamic type test) instruction. This instruction produces a new value number (like an assignment) if the check
+ * succeeds.
  */
 public abstract class SSACheckCastInstruction extends SSAInstruction {
 
+  /**
+   * A new value number def'fed by this instruction when the type check succeeds.
+   */
   private final int result;
 
+  /**
+   * The value being checked by this instruction
+   */
   private final int val;
 
+  /**
+   * The type which this instruction checks; the assignment succeeds if the val is a subtype of this type
+   */
   private final TypeReference declaredResultType;
 
+  /**
+   * @param result A new value number def'fed by this instruction when the type check succeeds.
+   * @param val The value being checked by this instruction
+   * @param type The type which this instruction checks
+   */
   protected SSACheckCastInstruction(int result, int val, TypeReference type) {
     super();
     this.result = result;
@@ -49,10 +63,9 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
         + getValueString(symbolTable, val);
   }
 
-  /**
+  /*
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   * @throws IllegalArgumentException
-   *             if v is null
+   * @throws IllegalArgumentException if v is null
    */
   @Override
   public void visit(IVisitor v) {
@@ -62,19 +75,26 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
     v.visitCheckCast(this);
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
+
+  /* 
+   * @see com.ibm.wala.ssa.SSAInstruction#hasDef()
    */
   @Override
   public boolean hasDef() {
     return true;
   }
 
+  /**
+   * @return A new value number def'fed by this instruction when the type check succeeds.
+   */
   @Override
   public int getDef() {
     return result;
   }
 
+  /* 
+   * @see com.ibm.wala.ssa.SSAInstruction#getDef(int)
+   */
   @Override
   public int getDef(int i) {
     if (Assertions.verifyAssertions) {
@@ -83,7 +103,7 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
     return result;
   }
 
-  /**
+  /*
    * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
    */
   @Override

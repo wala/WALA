@@ -13,6 +13,7 @@ package com.ibm.wala.ssa;
 import com.ibm.wala.types.TypeReference;
 
 /**
+ * SSA instruction representing an array store.
  */
 public abstract class SSAArrayStoreInstruction extends SSAArrayReferenceInstruction {
 
