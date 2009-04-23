@@ -79,7 +79,7 @@ public class PolyglotSourceModuleTranslator implements SourceModuleTranslator {
         } else if (m instanceof FileModule) {
           // do nothing
         } else
-          Assertions.UNREACHABLE("Module entry is neither jar file nor directory");
+          Assertions.UNREACHABLE("Module entry is neither jar file nor directory: " + m);
       }
       cl = cl.getParent();
     }
