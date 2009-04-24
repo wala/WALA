@@ -373,7 +373,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
   }
 
   /**
-   * Does the class file indicate that this class is a member of some other classe?
+   * Does the class file indicate that this class is a member of some other class?
    * 
    * @throws InvalidClassFileException
    */

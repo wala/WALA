@@ -51,7 +51,6 @@ public final class TypeName implements Serializable {
   private final TypeNameKey key;
 
   public static TypeName findOrCreate(ImmutableByteArray name, int start, int length) throws IllegalArgumentException {
-
     Atom className = Atom.findOrCreate(StringStuff.parseForClass(name, start, length));
     ImmutableByteArray p = StringStuff.parseForPackage(name, start, length);
     Atom packageName = (p == null) ? null : Atom.findOrCreate(p);
