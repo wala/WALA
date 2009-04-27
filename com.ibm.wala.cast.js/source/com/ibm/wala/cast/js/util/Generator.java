@@ -46,7 +46,7 @@ public class Generator {
   }
   
   public Generator() {
-    this(false, defaultCallbackFactory);
+    this(true, defaultCallbackFactory);
   }
   
   private InputStreamReader getStream(String url) throws IOException {
