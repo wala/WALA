@@ -216,6 +216,10 @@ public class EclipseProjectPath {
     }
     BundleDescription bd = model.getBundleDescription();
 
+    if (bd == null) {
+      // temporary debugging code; remove once we figure out what the heck is going on here --MS
+      System.err.println("model.isDisposed(): " + model.isDisposed());
+    }
     for (int i = 0; i < 3 && bd == null; i++) {
       // Uh oh. bd is null. Go to sleep, cross your fingers, and try again.
       // This is horrible. We can't figure out the race condition yet which causes this to happen.
