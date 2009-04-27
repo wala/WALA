@@ -28,7 +28,9 @@ import com.ibm.wala.util.strings.Atom;
 
 /**
  * This class represents entry points ({@link Entrypoint})s of JUnit test methods. JUnit test methods are those invoked by the JUnit
- * framework reflectively The entry points can be used to specify entry points of a call graph (through
+ * framework reflectively The entry points can be used to specify entry points of a call graph.
+ * 
+ * This implementation only handles JUnit 3.
  */
 public class JUnitEntryPoints {
 
@@ -168,11 +170,16 @@ public class JUnitEntryPoints {
    * Check if the given method is a JUnit test method, assuming that it is declared in a JUnit test class. A method is a JUnit test
    * method if the name has the prefix "test", or its name is "setUp" or "tearDown".
    * 
+   * @throws ClassHierarchyException Note that this is only good for JUnit 3.
+   * 
    * @throws IllegalArgumentException if m is null
    */
-  public static boolean isJUnitMethod(IMethod m) {
+  public static boolean isJUnitMethod(IMethod m) throws ClassHierarchyException {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
+    }
+    if (!isJUnitTestCase(m.getDeclaringClass())) {
+      return false;
     }
     Atom method = m.getName();
     String methodName = method.toString();
