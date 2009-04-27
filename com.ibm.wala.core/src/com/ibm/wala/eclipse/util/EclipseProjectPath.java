@@ -210,10 +210,14 @@ public class EclipseProjectPath {
    * traverse the bundle description for an Eclipse project and populate the analysis scope accordingly
    */
   private void resolvePluginClassPath(IProject p, boolean includeSource) throws CoreException, IOException {
-    BundleDescription bd = findModel(p).getBundleDescription();
+    IPluginModelBase model = findModel(p);
+    if (!model.isInSync() || model.isDisposed()) {
+      model.load();
+    }
+    BundleDescription bd = model.getBundleDescription();
 
     for (int i = 0; i < 3 && bd == null; i++) {
-      // Uh oh.  bd is null.   Go to sleep, cross your fingers, and try again.
+      // Uh oh. bd is null. Go to sleep, cross your fingers, and try again.
       // This is horrible. We can't figure out the race condition yet which causes this to happen.
       try {
         Thread.sleep(5000);
@@ -222,8 +226,7 @@ public class EclipseProjectPath {
       }
       bd = findModel(p).getBundleDescription();
     }
-    
-    
+
     if (bd == null) {
       throw new IllegalStateException("bundle description was null for " + p);
     }
