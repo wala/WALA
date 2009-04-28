@@ -483,11 +483,6 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
       return start;
     }
 
-    /**
-     * Method getLastInstructionIndex.
-     * 
-     * @return int
-     */
     public int getLastInstructionIndex() {
       int exitNumber = InducedCFG.this.getNumber(exit());
       if (getGraphNodeId() == exitNumber) {
@@ -562,9 +557,6 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     }
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     StringBuffer s = new StringBuffer("");
