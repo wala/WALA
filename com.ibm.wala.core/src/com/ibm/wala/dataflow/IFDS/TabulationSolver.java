@@ -582,7 +582,9 @@ public class TabulationSolver<T, P, F> {
 
         reached.foreach(new IntSetAction() {
           public void act(final int d1) {
-            propagate(callee, d1, callee, d1);
+            // we get reuse if we _don't_ propagate a new fact to the callee entry
+            final boolean gotReuse = !propagate(callee, d1, callee, d1);
+            recordCall(edge.target, callee, d1, gotReuse);
             // cache the fact that we've flowed <c, d2> -> <callee, d1> by a
             // call flow
             callFlow.addCallEdge(c, edge.d2, d1);
@@ -592,7 +594,6 @@ public class TabulationSolver<T, P, F> {
               // for each exit from the callee
               P p = supergraph.getProcOf(callee);
               T[] exits = supergraph.getExitsForProcedure(p);
-              boolean gotReuse = false;
               for (int e = 0; e < exits.length; e++) {
                 final T exit = exits[e];
                 // if "exit" is a valid exit from the callee to the return
@@ -607,7 +608,6 @@ public class TabulationSolver<T, P, F> {
                     if (supergraph.hasEdge(exit, returnSite)) {
                       // reachedBySummary := {d2} s.t. <callee,d1> -> <exit,d2>
                       // was recorded as a summary edge
-                      gotReuse = true;
                       final IFlowFunction retf = flowFunctionMap.getReturnFlowFunction(edge.target, exit, returnSite);
                       reachedBySummary.foreach(new IntSetAction() {
                         public void act(int d2) {
@@ -639,11 +639,7 @@ public class TabulationSolver<T, P, F> {
                   }
                 }
               }
-              recordCall(edge.target, callee, d1, gotReuse);
-            } else { // summaries == null
-              // no reuse possible
-              recordCall(edge.target, callee, d1, false);
-            }
+            } 
           }
         });
       }
