@@ -39,14 +39,15 @@ public class BoundedPartiallyBalancedSolver<T, P, F> extends PartiallyBalancedTa
   }
   
   @Override
-  protected void propagate(T s_p, int i,T n, int j) {
+  protected boolean propagate(T s_p, int i,T n, int j) {
     if (numSteps < bound) {
       numSteps++;
-      super.propagate(s_p, i, n, j);
+      return super.propagate(s_p, i, n, j);
     } else {
       if (VERBOSE) {
         System.err.println("Suppressing propagation; reached bound " + s_p + " " + i + " " + n + " " + j);
       }
+      return false;
     }
   }
   

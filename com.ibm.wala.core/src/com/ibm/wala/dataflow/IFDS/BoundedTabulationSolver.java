@@ -37,11 +37,12 @@ public class BoundedTabulationSolver<T, P, F> extends TabulationSolver<T, P, F> 
   }
   
   @Override
-  protected void propagate(T s_p, int i,T n, int j) {
+  protected boolean propagate(T s_p, int i,T n, int j) {
     if (numSteps < bound) {
       numSteps++;
-      super.propagate(s_p, i, n, j);
+      return super.propagate(s_p, i, n, j);
     }
+    return false;
   }
   
   public int getNumSteps() {

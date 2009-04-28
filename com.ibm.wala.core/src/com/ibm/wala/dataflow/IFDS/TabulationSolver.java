@@ -760,19 +760,15 @@ public class TabulationSolver<T, P, F> {
   }
 
   /**
-   * Propagate the fact <s_p,i> -> <n, j> has arisen as a path edge. Note: apply merging if necessary.
-   * 
-   * Merging: suppose we're doing propagate <s_p,i> -> <n,j> but we already have path edges <s_p,i> -> <n, x>, <s_p,i> -> <n,y>, and
-   * <s_p,i> -><n, z>.
-   * 
-   * let \alpha be the merge function. then instead of <s_p,i> -> <n,j>, we propagate <s_p,i> -> <n, \alpha(j,x,y,z) > !!!
+   * Propagate the fact <s_p,i> -> <n, j> has arisen as a path edge. Returns <code>true</code> iff the path edge was not previously
+   * observed.
    * 
    * @param s_p entry block
    * @param i dataflow fact on entry
    * @param n reached block
    * @param j dataflow fact reached
    */
-  protected void propagate(T s_p, int i, T n, int j) {
+  protected boolean propagate(T s_p, int i, T n, int j) {
     int number = supergraph.getLocalBlockNumber(n);
     if (Assertions.verifyAssertions) {
       if (number < 0) {
@@ -794,7 +790,9 @@ public class TabulationSolver<T, P, F> {
       }
       pLocal.addPathEdge(i, number, j);
       addToWorkList(s_p, i, n, j);
+      return true;
     }
+    return false;
   }
 
   public LocalPathEdges getLocalPathEdges(T s_p) {
