@@ -411,4 +411,24 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     }
     return false;
   }
+  
+  /**
+   * If this is an inner class, return the outer class.   Else return null.
+   * @throws InvalidClassFileException 
+   */
+  public TypeReference getOuterClass() throws InvalidClassFileException {
+    if (!isInnerClass()) {
+      return null;
+    }
+    InnerClassesReader r = getInnerClassesReader();
+    for (String s : r.getInnerClasses()) {
+      if (s.equals(getName().toString().substring(1))) {
+        String outer = r.getOuterClass(s);
+        if (outer != null) {
+          return TypeReference.findOrCreate(getClassLoader().getReference(), "L" + outer);
+        }
+      }
+    }
+    return null;
+  }
 }
