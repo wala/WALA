@@ -28,9 +28,8 @@ import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * Implementation of {@link IClass} for array classes.  Such classes would be
- * best called 'broken covariant array types', since that is the semantics that
- * they implement.
+ * Implementation of {@link IClass} for array classes. Such classes would be best called 'broken covariant array types', since that
+ * is the semantics that they implement.
  */
 public class ArrayClass implements IClass, Constants {
 
@@ -107,30 +106,24 @@ public class ArrayClass implements IClass, Constants {
    * @see com.ibm.wala.classLoader.IClass#getSuperclass()
    */
   public IClass getSuperclass() {
-    try {
-      IClass elt = getElementClass();
+    IClass elt = getElementClass();
 
-      if (Assertions.verifyAssertions) {
-        Assertions._assert(getReference().getArrayElementType().isPrimitiveType() || elt != null);
-      }
+    if (Assertions.verifyAssertions) {
+      Assertions._assert(getReference().getArrayElementType().isPrimitiveType() || elt != null);
+    }
 
-      // super is Ljava/lang/Object in two cases:
-      // 1) [Ljava/lang/Object
-      // 2) [? for primitive arrays (null from getElementClass)
-      if (elt == null || elt.getReference() == getClassLoader().getLanguage().getRootType()) {
-        return loader.lookupClass(getClassLoader().getLanguage().getRootType().getName());
-      }
+    // super is Ljava/lang/Object in two cases:
+    // 1) [Ljava/lang/Object
+    // 2) [? for primitive arrays (null from getElementClass)
+    if (elt == null || elt.getReference() == getClassLoader().getLanguage().getRootType()) {
+      return loader.lookupClass(getClassLoader().getLanguage().getRootType().getName());
+    }
 
-      // else it is array of super of element type (yuck)
-      else {
-        TypeReference eltSuperRef = elt.getSuperclass().getReference();
-        TypeReference superRef = TypeReference.findOrCreateArrayOf(eltSuperRef);
-        return elt.getSuperclass().getClassLoader().lookupClass(superRef.getName());
-      }
-    } catch (ClassHierarchyException e) {
-      e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return null;
+    // else it is array of super of element type (yuck)
+    else {
+      TypeReference eltSuperRef = elt.getSuperclass().getReference();
+      TypeReference superRef = TypeReference.findOrCreateArrayOf(eltSuperRef);
+      return elt.getSuperclass().getClassLoader().lookupClass(superRef.getName());
     }
   }
 
@@ -225,7 +218,7 @@ public class ArrayClass implements IClass, Constants {
    */
   public Collection<IClass> getAllImplementedInterfaces() {
     HashSet<IClass> result = HashSetFactory.make(2);
-    for(TypeReference ref : getClassLoader().getLanguage().getArrayInterfaces()) {
+    for (TypeReference ref : getClassLoader().getLanguage().getArrayInterfaces()) {
       IClass klass = loader.lookupClass(ref.getName());
       if (klass != null) {
         result.add(klass);

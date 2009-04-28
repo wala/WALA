@@ -29,18 +29,16 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.SmushedAllocationSiteInstanceKeys;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
- * Flexible class to create {@link InstanceKey}s depending on various policies ranging from
- * class-based (i.e. 0-CFA) to allocation-site-based (0-1-CFA variants).
+ * Flexible class to create {@link InstanceKey}s depending on various policies ranging from class-based (i.e. 0-CFA) to
+ * allocation-site-based (0-1-CFA variants).
  * 
  * @author sfink
  */
@@ -55,7 +53,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
 
   public final static TypeReference JavaLangStringBuilder = TypeReference.findOrCreate(ClassLoaderReference.Primordial,
       JavaLangStringBuilderName);
-  
+
   private final static TypeName JavaLangAbstractStringBuilderName = TypeName.string2TypeName("Ljava/lang/AbstractStringBuilder");
 
   public final static TypeReference JavaLangAbstractStringBuilder = TypeReference.findOrCreate(ClassLoaderReference.Primordial,
@@ -67,35 +65,31 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   public static final int NONE = 0;
 
   /**
-   * An ALLOCATIONS - based policy distinguishes instances by allocation site.
-   * Otherwise, the policy distinguishes instances by type.
+   * An ALLOCATIONS - based policy distinguishes instances by allocation site. Otherwise, the policy distinguishes instances by
+   * type.
    */
   public static final int ALLOCATIONS = 1;
 
   /**
-   * A policy variant where String and StringBuffers are NOT disambiguated
-   * according to allocation site.
+   * A policy variant where String and StringBuffers are NOT disambiguated according to allocation site.
    */
   public static final int SMUSH_STRINGS = 2;
 
   /**
-   * A policy variant where {@link Throwable} instances are NOT disambiguated according
-   * to allocation site.
+   * A policy variant where {@link Throwable} instances are NOT disambiguated according to allocation site.
    * 
    */
   public static final int SMUSH_THROWABLES = 4;
 
   /**
-   * A policy variant where if a type T has only primitive instance fields, then
-   * instances of type T are NOT disambiguated by allocation site.
+   * A policy variant where if a type T has only primitive instance fields, then instances of type T are NOT disambiguated by
+   * allocation site.
    */
   public static final int SMUSH_PRIMITIVE_HOLDERS = 8;
 
   /**
-   * This variant counts the N, number of allocation sites of a particular type
-   * T in each method. If N > SMUSH_LIMIT, then these N allocation sites are NOT
-   * distinguished ... instead there is a single abstract allocation site for
-   * <N,T>
+   * This variant counts the N, number of allocation sites of a particular type T in each method. If N > SMUSH_LIMIT, then these N
+   * allocation sites are NOT distinguished ... instead there is a single abstract allocation site for <N,T>
    * 
    * Probably the best choice in many cases.
    */
@@ -107,8 +101,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   public static final int CONSTANT_SPECIFIC = 32;
 
   /**
-   * When using smushing, how many sites in a node will be kept distinct before
-   * smushing?
+   * When using smushing, how many sites in a node will be kept distinct before smushing?
    */
   private final int SMUSH_LIMIT = 25;
 
@@ -128,8 +121,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   private final AllocationSiteInNodeFactory siteBased;
 
   /**
-   * A delegate object to create "abstract allocation site" - based abstract
-   * instances
+   * A delegate object to create "abstract allocation site" - based abstract instances
    */
   private final SmushedAllocationSiteInstanceKeys smushed;
 
@@ -230,15 +222,14 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
           smushees.add(e.getKey());
         }
       }
-      s = smushees.isEmpty() ? Collections.<IClass>emptySet() : smushees;
+      s = smushees.isEmpty() ? Collections.<IClass> emptySet() : smushees;
       smushMap.put(node, s);
     }
     return s.contains(c);
   }
 
   /**
-   * @return Map: IClass -> Integer, the number of allocation sites for each
-   *         type.
+   * @return Map: IClass -> Integer, the number of allocation sites for each type.
    */
   private Map<IClass, Integer> countAllocsByType(CGNode node) {
     Map<IClass, Integer> count = HashMapFactory.make();
@@ -282,8 +273,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
 
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory#getInstanceKeyForPEI(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.ProgramCounter,
-   *      com.ibm.wala.types.TypeReference)
+   * com.ibm.wala.classLoader.ProgramCounter, com.ibm.wala.types.TypeReference)
    */
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter pei, TypeReference type) {
     return classBased.getInstanceKeyForPEI(node, pei, type);
@@ -326,33 +316,28 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     return c.getClassHierarchy().isSubclassOf(c, c.getClassHierarchy().lookupClass(TypeReference.JavaLangThrowable));
   }
 
-  public boolean isStackTraceElement(IClass C) {
-    if (C == null) {
+  public boolean isStackTraceElement(IClass c) {
+    if (c == null) {
       throw new IllegalArgumentException("C is null");
     }
-    return C.getReference().equals(TypeReference.JavaLangStackTraceElement);
+    return c.getReference().equals(TypeReference.JavaLangStackTraceElement);
   }
 
-  private boolean allFieldsArePrimitive(IClass C) {
-    if (C.isArrayClass()) {
-      TypeReference t = C.getReference().getArrayElementType();
+  private boolean allFieldsArePrimitive(IClass c) {
+    if (c.isArrayClass()) {
+      TypeReference t = c.getReference().getArrayElementType();
       return t.isPrimitiveType();
     } else {
-      if (C.getReference().equals(TypeReference.JavaLangObject)) {
+      if (c.getReference().equals(TypeReference.JavaLangObject)) {
         return true;
       } else {
-        for (Iterator<IField> it = C.getDeclaredInstanceFields().iterator(); it.hasNext();) {
+        for (Iterator<IField> it = c.getDeclaredInstanceFields().iterator(); it.hasNext();) {
           IField f = it.next();
           if (f.getReference().getFieldType().isReferenceType()) {
             return false;
           }
         }
-        try {
-          return allFieldsArePrimitive(C.getSuperclass());
-        } catch (ClassHierarchyException e) {
-          Assertions.UNREACHABLE();
-          return false;
-        }
+        return allFieldsArePrimitive(c.getSuperclass());
       }
     }
   }

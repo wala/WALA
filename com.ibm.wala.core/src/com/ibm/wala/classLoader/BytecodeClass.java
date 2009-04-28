@@ -44,8 +44,8 @@ import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * A class representing which originates in some form of bytecode.
- *
- * @param <T> type of classloader which loads this format of class. 
+ * 
+ * @param <T> type of classloader which loads this format of class.
  */
 public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
 
@@ -151,7 +151,6 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
 
   protected abstract IMethod[] computeDeclaredMethods() throws InvalidClassFileException;
 
-
   public TypeReference getReference() {
     return typeReference;
   }
@@ -159,7 +158,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   public String getSourceFileName() {
     return loader.getSourceFileName(this);
   }
-  
+
   public InputStream getSource() {
     return loader.getSource(this);
   }
@@ -235,12 +234,12 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     superClass = loader.lookupClass(TypeName.findOrCreate(superName));
   }
 
-  public IClass getSuperclass() throws ClassHierarchyException {
+  public IClass getSuperclass() {
     if (!superclassComputed) {
       computeSuperclass();
     }
     if (superClass == null && !getReference().equals(TypeReference.JavaLangObject)) {
-      throw new ClassHierarchyException("No superclass found for " + this+" Superclass name "+superName);
+      throw new IllegalStateException("No superclass found for " + this + " Superclass name " + superName);
     }
     return superClass;
   }
@@ -381,22 +380,18 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     }
 
     // check parent, caching if found
-    try {
-      if (!selector.equals(MethodReference.clinitSelector) && !selector.equals(MethodReference.initSelector)) {
-        IClass superclass = getSuperclass();
-        if (superclass != null) {
-          IMethod inherit = superclass.getMethod(selector);
-          if (inherit != null) {
-            if (inheritCache == null) {
-              inheritCache = new BimodalMap<Selector, IMethod>(5);
-            }
-            inheritCache.put(selector, inherit);
-            return inherit;
+    if (!selector.equals(MethodReference.clinitSelector) && !selector.equals(MethodReference.initSelector)) {
+      IClass superclass = getSuperclass();
+      if (superclass != null) {
+        IMethod inherit = superclass.getMethod(selector);
+        if (inherit != null) {
+          if (inheritCache == null) {
+            inheritCache = new BimodalMap<Selector, IMethod>(5);
           }
+          inheritCache.put(selector, inherit);
+          return inherit;
         }
       }
-    } catch (ClassHierarchyException e) {
-      Assertions.UNREACHABLE();
     }
 
     // didn't find it yet. special logic for interfaces
@@ -441,7 +436,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
         Warnings.add(ClassHierarchyWarning.create("expected an interface " + klass));
       }
     }
-    
+
     // at this point result holds all interfaces the class directly extends.
     // now expand to a fixed point.
     Set<IClass> last = null;
@@ -451,15 +446,10 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
         result.addAll(i.getDirectInterfaces());
       }
     } while (last.size() < result.size());
-    
 
     // now add any interfaces implemented by the super class
     IClass sup = null;
-    try {
-      sup = getSuperclass();
-    } catch (ClassHierarchyException e1) {
-      Assertions.UNREACHABLE();
-    }
+    sup = getSuperclass();
     if (sup != null) {
       result.addAll(sup.getAllImplementedInterfaces());
     }

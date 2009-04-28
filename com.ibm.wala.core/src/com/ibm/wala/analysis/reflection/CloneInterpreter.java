@@ -29,7 +29,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextUtil;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.summaries.SyntheticIR;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.DefUse;
@@ -87,8 +86,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
       arraycopyDesc);
 
   /**
-   * If the type is an array, the program counter of the synthesized call to
-   * arraycopy. Doesn't really matter what it is.
+   * If the type is an array, the program counter of the synthesized call to arraycopy. Doesn't really matter what it is.
    */
   private final static int ARRAYCOPY_PC = 3;
 
@@ -103,7 +101,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
   final private Map<TypeReference, IR> IRCache = HashMapFactory.make();
 
   private final SSAInstructionFactory insts = Language.JAVA.instructionFactory();
-  
+
   public IR getIR(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -153,8 +151,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
   }
 
   /**
-   * @return an array of statements that encode the behavior of the clone method
-   *         for a given type.
+   * @return an array of statements that encode the behavior of the clone method for a given type.
    */
   private SSAInstruction[] makeStatements(IClass klass) {
     if (Assertions.verifyAssertions) {
@@ -173,7 +170,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
       int length = nextLocal++;
       statements.add(insts.ArrayLengthInstruction(length, 1));
       int[] sizes = new int[klass.getReference().getDimensionality()];
-      Arrays.fill(sizes,length);
+      Arrays.fill(sizes, length);
       N = insts.NewInstruction(retValue, ref, sizes);
     } else {
       N = insts.NewInstruction(retValue, ref);
@@ -202,11 +199,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
           SSAPutInstruction P = insts.PutInstruction(retValue, tempValue, f.getReference());
           statements.add(P);
         }
-        try {
-          k = k.getSuperclass();
-        } catch (ClassHierarchyException e) {
-          Assertions.UNREACHABLE();
-        }
+        k = k.getSuperclass();
       }
 
     }
@@ -223,8 +216,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
   }
 
   /**
-   * @return an IR that encodes the behavior of the clone method for a given
-   *         type.
+   * @return an IR that encodes the behavior of the clone method for a given type.
    */
   private IR makeIR(IMethod method, Context context, IClass klass) {
     if (Assertions.verifyAssertions) {
@@ -236,12 +228,11 @@ public class CloneInterpreter implements SSAContextInterpreter {
 
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.cfa.CFAContextInterpreter#recordFactoryType(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.IClass)
+   * com.ibm.wala.classLoader.IClass)
    */
   public boolean recordFactoryType(CGNode node, IClass klass) {
     return false;
   }
-
 
   public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
     SSAInstruction[] statements = getIR(node).getInstructions();

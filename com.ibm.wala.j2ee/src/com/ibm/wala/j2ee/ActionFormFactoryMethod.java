@@ -131,7 +131,7 @@ public class ActionFormFactoryMethod extends SummarizedMethod {
       return factoryClassRef.getName();
     }
 
-    public IClass getSuperclass() throws ClassHierarchyException {
+    public IClass getSuperclass()  {
       return null;
     }
 

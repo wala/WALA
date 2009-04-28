@@ -57,8 +57,9 @@ public interface IClass extends IClassHierarchyDweller {
 
   /**
    * @return the superclass, or null if java.lang.Object
+   * @throws IllegalStateException if there's some problem determining the superclass
    */
-  IClass getSuperclass() throws ClassHierarchyException;
+  IClass getSuperclass();
 
   /**
    * @return Collection of (IClass) interfaces this class directly implements. If this class is an interface, returns the interfaces

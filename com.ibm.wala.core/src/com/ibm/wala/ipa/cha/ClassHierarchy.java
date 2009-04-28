@@ -125,17 +125,18 @@ public class ClassHierarchy implements IClassHierarchy {
   private Collection<TypeReference> runtimeExceptionTypeRefs;
 
   /**
-   * Return a set of IClasses that holds all superclasses of klass
+   * Return a set of {@link IClass} that holds all superclasses of klass
    * 
    * @param klass class in question
    * @return Set the result set
    */
-  private Set<IClass> computeSuperclasses(IClass klass) throws ClassHierarchyException {
+  private Set<IClass> computeSuperclasses(IClass klass)  {
     if (DEBUG) {
       System.err.println("computeSuperclasses: " + klass);
     }
 
     Set<IClass> result = HashSetFactory.make(3);
+    
     klass = klass.getSuperclass();
 
     while (klass != null) {
@@ -146,7 +147,7 @@ public class ClassHierarchy implements IClassHierarchy {
       klass = klass.getSuperclass();
       if (klass != null && klass.getReference().getName().equals(rootTypeRef.getName())) {
         if (!klass.getReference().getClassLoader().equals(rootTypeRef.getClassLoader())) {
-          throw new ClassHierarchyException("class " + klass + " is invalid, unexpected classloader");
+          throw new IllegalStateException("class " + klass + " is invalid, unexpected classloader");
         }
       }
     }
@@ -230,7 +231,7 @@ public class ClassHierarchy implements IClassHierarchy {
           progressMonitor.worked(1);
         }
       }
-      
+
     } catch (IOException e) {
       throw new ClassHierarchyException("factory.getLoader failed " + e);
     } finally {
@@ -293,7 +294,7 @@ public class ClassHierarchy implements IClassHierarchy {
     try {
       loadedSuperclasses = computeSuperclasses(klass);
       loadedSuperInterfaces = klass.getAllImplementedInterfaces();
-    } catch (ClassHierarchyException e) {
+    } catch (Exception e) {
       // a little cleanup
       if (klass instanceof ShrikeClass) {
         if (DEBUG) {
@@ -317,11 +318,7 @@ public class ClassHierarchy implements IClassHierarchy {
     while (node != null) {
       IClass c = node.getJavaClass();
       IClass superclass = null;
-      try {
-        superclass = c.getSuperclass();
-      } catch (ClassHierarchyException e1) {
-        Assertions.UNREACHABLE();
-      }
+      superclass = c.getSuperclass();
       if (superclass != null) {
         workingSuperclasses.remove(superclass);
         Node supernode = findOrCreateNode(superclass);
@@ -345,7 +342,7 @@ public class ClassHierarchy implements IClassHierarchy {
         try {
           // make sure we'll be able to load the interface!
           computeSuperclasses(iface);
-        } catch (ClassHierarchyException e) {
+        } catch (IllegalStateException e) {
           Warnings.add(ClassExclusion.create(iface.getReference(), e.getMessage()));
           continue;
         }
@@ -553,11 +550,7 @@ public class ClassHierarchy implements IClassHierarchy {
       return result;
     } else {
       IClass superclass = null;
-      try {
-        superclass = receiverClass.getSuperclass();
-      } catch (ClassHierarchyException e) {
-        Assertions.UNREACHABLE();
-      }
+      superclass = receiverClass.getSuperclass();
       if (superclass == null) {
         if (DEBUG) {
           System.err.println(("resolveMethod(" + selector + ") failed: method not found"));
@@ -756,13 +749,10 @@ public class ClassHierarchy implements IClassHierarchy {
         superB = null;
       }
       while (A != null) {
-        if (superB.contains(A))
+        if (superB.contains(A)) {
           return A;
-        try {
-          A = A.getSuperclass();
-        } catch (ClassHierarchyException e) {
-          Assertions.UNREACHABLE();
         }
+        A = A.getSuperclass();
       }
       Assertions.UNREACHABLE("getLeastCommonSuperclass " + tempA + " " + B);
       return null;
@@ -833,19 +823,16 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   private boolean slowIsSubclass(IClass sub, IClass sup) {
-    if (sub == sup)
+    if (sub == sup) {
       return true;
-    else
-      try {
-        IClass parent = sub.getSuperclass();
-        if (parent == null)
-          return false;
-        else
-          return slowIsSubclass(parent, sup);
-      } catch (ClassHierarchyException e) {
-        Assertions.UNREACHABLE();
+    } else {
+      IClass parent = sub.getSuperclass();
+      if (parent == null) {
         return false;
+      } else {
+        return slowIsSubclass(parent, sup);
       }
+    }
   }
 
   /**

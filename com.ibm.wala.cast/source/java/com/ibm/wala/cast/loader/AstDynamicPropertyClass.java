@@ -18,13 +18,11 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
 public abstract class AstDynamicPropertyClass extends AstClass {
@@ -37,69 +35,65 @@ public abstract class AstDynamicPropertyClass extends AstClass {
   }
 
   public IField getField(final Atom name) {
-    try {
-      if (declaredFields.containsKey(name)) {
-        return declaredFields.get(name);
-      } else if (getSuperclass() != null) {
-        return getSuperclass().getField(name);
-      } else {
-        final boolean isStatic = isStaticField(name);
-        declaredFields.put(name, new IField() {
-          public String toString() {
-            return "<field " + name + ">";
-          }
+    if (declaredFields.containsKey(name)) {
+      return declaredFields.get(name);
+    } else if (getSuperclass() != null) {
+      return getSuperclass().getField(name);
+    } else {
+      final boolean isStatic = isStaticField(name);
+      declaredFields.put(name, new IField() {
+        public String toString() {
+          return "<field " + name + ">";
+        }
 
-          public IClass getDeclaringClass() {
-            return AstDynamicPropertyClass.this;
-          }
+        public IClass getDeclaringClass() {
+          return AstDynamicPropertyClass.this;
+        }
 
-          public Atom getName() {
-            return name;
-          }
+        public Atom getName() {
+          return name;
+        }
 
-          public TypeReference getFieldTypeReference() {
-            return defaultDescriptor;
-          }
+        public TypeReference getFieldTypeReference() {
+          return defaultDescriptor;
+        }
 
-          public FieldReference getReference() {
-            return FieldReference.findOrCreate(AstDynamicPropertyClass.this.getReference(), name, defaultDescriptor);
-          }
+        public FieldReference getReference() {
+          return FieldReference.findOrCreate(AstDynamicPropertyClass.this.getReference(), name, defaultDescriptor);
+        }
 
-          public boolean isFinal() {
-            return false;
-          }
+        public boolean isFinal() {
+          return false;
+        }
 
-          public boolean isPrivate() {
-            return false;
-          }
+        public boolean isPrivate() {
+          return false;
+        }
 
-          public boolean isProtected() {
-            return false;
-          }
+        public boolean isProtected() {
+          return false;
+        }
 
-          public boolean isPublic() {
-            return false;
-          }
+        public boolean isPublic() {
+          return false;
+        }
 
-          public boolean isVolatile() {
-            return false;
-          }
+        public boolean isVolatile() {
+          return false;
+        }
 
-          public boolean isStatic() {
-            return isStatic;
-          }
+        public boolean isStatic() {
+          return isStatic;
+        }
 
-          public IClassHierarchy getClassHierarchy() {
-            return AstDynamicPropertyClass.this.getClassHierarchy();
-          }
-        });
+        public IClassHierarchy getClassHierarchy() {
+          return AstDynamicPropertyClass.this.getClassHierarchy();
+        }
+      });
 
-        return declaredFields.get(name);
-      }
-    } catch (ClassHierarchyException e) {
-      Assertions.UNREACHABLE();
-      return null;
+      return declaredFields.get(name);
     }
+
   }
 
   protected boolean isStaticField(Atom name) {

@@ -23,7 +23,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
@@ -39,9 +38,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * This class provides an iterator of entrypoints that are implementations of org.apache.struts.action.Action
- * 
- * @author sfink
+ * This class provides an iterator of {@link Entrypoint}s that are implementations of org.apache.struts.action.Action
  */
 public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
 
@@ -226,6 +223,7 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
    * Add any methods that look like they might be DispatchAction targets, based on the method signature.
    * 
    * TODO: instead, parse the struts xml directly.
+   * 
    * @param klass an Action
    */
   private void addSpeculativeDispatchMethods(IClass klass, IClassHierarchy cha) {
@@ -239,12 +237,7 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
           entrypoints.put(m, new StrutsActionEntrypoint(klass, M, cha));
         }
       }
-      try {
-        c = c.getSuperclass();
-      } catch (ClassHierarchyException e) {
-        e.printStackTrace();
-        Assertions.UNREACHABLE();
-      }
+      c = c.getSuperclass();
     }
   }
 
@@ -331,8 +324,9 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
       TypeName n = getParameterTypes(i)[0].getName();
       if (n.equals(actionFormName)) {
         // invoke a synthetic factory method that creates ActionForm objects
-        MethodReference declaredTarget = MethodReference.findOrCreate(ActionFormFactoryMethod.factoryClassRef, ActionFormFactoryMethod.name, ActionFormFactoryMethod.descr);
-        CallSiteReference site = CallSiteReference.make(0, declaredTarget , IInvokeInstruction.Dispatch.STATIC);
+        MethodReference declaredTarget = MethodReference.findOrCreate(ActionFormFactoryMethod.factoryClassRef,
+            ActionFormFactoryMethod.name, ActionFormFactoryMethod.descr);
+        CallSiteReference site = CallSiteReference.make(0, declaredTarget, IInvokeInstruction.Dispatch.STATIC);
         SSAInvokeInstruction factoryInv = m.addInvocation(new int[0], site);
         return factoryInv.getDef();
       } else {
@@ -373,8 +367,8 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
   }
 
   /**
-   * An entrypoint which assumes all ServletRequest and ServletResponses are of the HTTP flavor. TODO: get rid of this
-   * and just use {@link DefaultEntrypoint}? --MS
+   * An entrypoint which assumes all ServletRequest and ServletResponses are of the HTTP flavor. TODO: get rid of this and just use
+   * {@link DefaultEntrypoint}? --MS
    */
   private static class StrutsPlugInEntrypoint extends DefaultEntrypoint {
 
@@ -382,7 +376,7 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
       super(method, cha);
     }
   }
-  
+
   /**
    * return the set of classes that should be examined when searching for struts entrypoints.
    */

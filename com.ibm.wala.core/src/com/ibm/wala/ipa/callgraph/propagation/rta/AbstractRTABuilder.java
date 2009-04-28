@@ -45,7 +45,6 @@ import com.ibm.wala.ipa.callgraph.propagation.StandardSolver;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultPointerKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultSSAInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
@@ -55,7 +54,6 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * Abstract superclass of various RTA flavors
@@ -87,10 +85,8 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
    */
   protected final HashSet<IClass> allocatedClasses = HashSetFactory.make();
 
-
   /**
-   * set of class names that are implicitly pre-allocated Note: for performance
-   * reasons make sure java.lang.Object comes first
+   * set of class names that are implicitly pre-allocated Note: for performance reasons make sure java.lang.Object comes first
    */
   private final static TypeReference[] PRE_ALLOC = {
       TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Object"),
@@ -103,8 +99,8 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
       TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/ExceptionInInitializerError"),
       TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/NullPointerException") };
 
-  protected AbstractRTABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, ContextSelector appContextSelector,
-      SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
+  protected AbstractRTABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
+      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
     super(cha, options, cache, new DefaultPointerKeyFactory());
     setInstanceKeys(new ClassBasedInstanceKeys(options, cha));
     setContextSelector(makeContextSelector(appContextSelector));
@@ -116,13 +112,11 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   }
 
   /**
-   * Visit all instructions in a node, and add dataflow constraints induced by
-   * each statement relevat to RTA
+   * Visit all instructions in a node, and add dataflow constraints induced by each statement relevat to RTA
    */
   @Override
   protected boolean addConstraintsFromNode(CGNode node) {
-    
-    
+
     if (haveAlreadyVisited(node)) {
       return false;
     } else {
@@ -175,8 +169,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   }
 
   /**
-   * Is s is a getstatic or putstatic, then potentially add the relevant
-   * <clinit>to the newMethod set.
+   * Is s is a getstatic or putstatic, then potentially add the relevant <clinit>to the newMethod set.
    */
   private void processFieldAccess(CGNode node, FieldReference f) {
     if (DEBUG) {
@@ -190,9 +183,8 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     }
   }
 
- 
   protected void processClassInitializer(IClass klass) {
-    
+
     if (clinitProcessed.contains(klass)) {
       return;
     }
@@ -217,8 +209,8 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
             processResolvedCall(callGraph.getFakeWorldClinitNode(), s.getCallSite(), target);
           } catch (CancelException e) {
             if (DEBUG) {
-              System.err.println("Could not add node for class initializer: " + targetMethod.getSignature() +
-                  " due to constraints on the maximum number of nodes in the call graph.");
+              System.err.println("Could not add node for class initializer: " + targetMethod.getSignature()
+                  + " due to constraints on the maximum number of nodes in the call graph.");
               return;
             }
           }
@@ -226,18 +218,15 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
       }
     }
 
-    try {
-      klass = klass.getSuperclass();
-      if (klass != null && !clinitProcessed.contains(klass))
-        processClassInitializer(klass);
-    } catch (ClassHierarchyException e) {
-      Assertions.UNREACHABLE();
-    }
+    klass = klass.getSuperclass();
+    if (klass != null && !clinitProcessed.contains(klass))
+      processClassInitializer(klass);
   }
 
   /**
    * Add a constraint for a call instruction
-   * @throws IllegalArgumentException  if site is null
+   * 
+   * @throws IllegalArgumentException if site is null
    */
   public void visitInvoke(CGNode node, CallSiteReference site) {
 
@@ -247,7 +236,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     if (DEBUG) {
       System.err.println(("visitInvoke: " + site));
     }
-    
+
     // if non-virtual, add callgraph edges directly
     IInvokeInstruction.IDispatch code = site.getInvocationCode();
 
@@ -286,8 +275,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   protected abstract PointerKey getKeyForSite(CallSiteReference site);
 
   /**
-   * Add constraints for a call site after we have computed a reachable target
-   * for the dispatch
+   * Add constraints for a call site after we have computed a reachable target for the dispatch
    * 
    * Side effect: add edge to the call graph.
    */
@@ -312,7 +300,8 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
 
   /**
    * Add a constraint for an allocate
-   * @throws IllegalArgumentException  if newSite is null
+   * 
+   * @throws IllegalArgumentException if newSite is null
    */
   public void visitNew(CGNode node, NewSiteReference newSite) {
 
@@ -395,9 +384,10 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
       ReflectionSpecification reflect) {
 
     SSAContextInterpreter defI = new DefaultSSAInterpreter(getOptions(), getAnalysisCache());
-    defI = new DelegatingSSAContextInterpreter(ReflectionContextInterpreter.createReflectionContextInterpreter(cha, getOptions(), getAnalysisCache(), reflect),
-        defI);
-    SSAContextInterpreter contextInterpreter = appContextInterpreter == null ? defI : new DelegatingSSAContextInterpreter(appContextInterpreter, defI);
+    defI = new DelegatingSSAContextInterpreter(ReflectionContextInterpreter.createReflectionContextInterpreter(cha, getOptions(),
+        getAnalysisCache(), reflect), defI);
+    SSAContextInterpreter contextInterpreter = appContextInterpreter == null ? defI : new DelegatingSSAContextInterpreter(
+        appContextInterpreter, defI);
     return contextInterpreter;
   }
 
@@ -426,9 +416,8 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     result.setPeriodicMaintainInterval(PERIODIC_MAINTAIN_INTERVAL);
     return result;
   }
-  
 
-  /* 
+  /*
    * @see com.ibm.wala.ipa.callgraph.CallGraphBuilder#getPointerAnalysis()
    */
   @Override

@@ -18,7 +18,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ClassTargetSelector;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.j2ee.BeanMetaData;
 import com.ibm.wala.j2ee.DeploymentMetaData;
@@ -30,7 +29,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * @author sfink
+ * Miscellaneous J2EE Utilities
  */
 public class Util {
 
@@ -49,9 +48,7 @@ public class Util {
   }
 
   /**
-   * @param bean
-   * @param cha
-   *            governing class hierarchy
+   * @param cha governing class hierarchy
    * @return the Set of CMR fields for this bean, including inherited CMRs
    */
   public static Set<Object> getCMRFields(BeanMetaData bean, DeploymentMetaData dmd, ClassHierarchy cha) {
@@ -66,12 +63,8 @@ public class Util {
       if (Assertions.verifyAssertions) {
         Assertions._assert(klass != null);
       }
-      try {
-        IClass superKlass = klass.getSuperclass();
-        T = (superKlass == null) ? null : superKlass.getReference();
-      } catch (ClassHierarchyException e) {
-        Assertions.UNREACHABLE();
-      }
+      IClass superKlass = klass.getSuperclass();
+      T = (superKlass == null) ? null : superKlass.getReference();
     }
     return result;
   }

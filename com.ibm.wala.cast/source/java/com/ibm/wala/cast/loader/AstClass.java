@@ -29,7 +29,6 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
 abstract public class AstClass implements IClass, ClassConstants {
@@ -66,7 +65,7 @@ abstract public class AstClass implements IClass, ClassConstants {
   public boolean isPublic() {
     return (modifiers & ACC_PUBLIC) != 0;
   }
-  
+
   public boolean isReferenceType() {
     return true;
   }
@@ -90,7 +89,7 @@ abstract public class AstClass implements IClass, ClassConstants {
   public String getSourceFileName() {
     return sourcePosition.getURL().getFile();
   }
-  
+
   public InputStream getSource() {
     return null;
   }
@@ -107,13 +106,14 @@ abstract public class AstClass implements IClass, ClassConstants {
     return loader;
   }
 
-  public abstract IClass getSuperclass() throws ClassHierarchyException;
+  public abstract IClass getSuperclass();
 
   private Collection<IClass> gatherInterfaces() throws ClassHierarchyException {
     Set<IClass> result = HashSetFactory.make();
     result.addAll(getDirectInterfaces());
-    if (getSuperclass() != null)
+    if (getSuperclass() != null) {
       result.addAll(getSuperclass().getAllImplementedInterfaces());
+    }
     return result;
   }
 
@@ -128,31 +128,21 @@ abstract public class AstClass implements IClass, ClassConstants {
   }
 
   public IMethod getMethod(Selector selector) {
-    try {
-      if (declaredMethods.containsKey(selector)) {
-        return declaredMethods.get(selector);
-      } else if (getSuperclass() != null) {
-        return getSuperclass().getMethod(selector);
-      } else {
-        return null;
-      }
-    } catch (ClassHierarchyException e) {
-      Assertions.UNREACHABLE();
+    if (declaredMethods.containsKey(selector)) {
+      return declaredMethods.get(selector);
+    } else if (getSuperclass() != null) {
+      return getSuperclass().getMethod(selector);
+    } else {
       return null;
     }
   }
 
   public IField getField(Atom name) {
-    try {
-      if (declaredFields.containsKey(name)) {
-        return declaredFields.get(name);
-      } else if (getSuperclass() != null) {
-        return getSuperclass().getField(name);
-      } else {
-        return null;
-      }
-    } catch (ClassHierarchyException e) {
-      Assertions.UNREACHABLE();
+    if (declaredFields.containsKey(name)) {
+      return declaredFields.get(name);
+    } else if (getSuperclass() != null) {
+      return getSuperclass().getField(name);
+    } else {
       return null;
     }
   }

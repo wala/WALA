@@ -72,13 +72,13 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getSuperclass()
    */
-  public IClass getSuperclass() throws ClassHierarchyException {
+  public IClass getSuperclass()  {
     if (realType.isInterface()) {
       IClass result = loader.lookupClass(TypeReference.JavaLangObject.getName());
       if (result != null) {
         return result;
       } else {
-        throw new ClassHierarchyException("could not find java.lang.Object");
+        throw new IllegalStateException("could not find java.lang.Object");
       }
     } else
       return realType;

@@ -519,7 +519,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     }
 
     @Override
-    public IClass getSuperclass() throws ClassHierarchyException {
+    public IClass getSuperclass()  {
       return superClass;
     }
   }
@@ -544,7 +544,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       return Collections.emptySet();
     }
 
-    public IClass getSuperclass() throws ClassHierarchyException {
+    public IClass getSuperclass() {
       return null;
     }
   }

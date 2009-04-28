@@ -23,7 +23,6 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
@@ -86,7 +85,7 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
     return ACC_PUBLIC;
   }
 
-  public IClass getSuperclass() throws ClassHierarchyException {
+  public IClass getSuperclass() {
     return loader.lookupClass(superReference.getName());
   }
 

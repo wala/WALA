@@ -22,7 +22,6 @@ import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -120,8 +119,7 @@ public abstract class TestCAstTranslator extends WalaTestCase {
   public ClassHierarchy runTranslator(SourceFileModule[] fileNames) throws Exception {
     SingleClassLoaderFactory loaders = getClassLoaderFactory();
 
-    AnalysisScope scope = 
-      Util.makeScope(fileNames, loaders, getLanguage());
+    AnalysisScope scope = Util.makeScope(fileNames, loaders, getLanguage());
 
     ClassHierarchy cha = ClassHierarchy.make(scope, loaders, getLanguage());
 
@@ -144,8 +142,7 @@ public abstract class TestCAstTranslator extends WalaTestCase {
         IMethod mth = (IMethod) mths.next();
         if (mth.isStatic())
           System.err.print("static ");
-        System.err.println(("method " + mth + " with " + 
-        mth.getNumberOfParameters() + " parameters"));
+        System.err.println(("method " + mth + " with " + mth.getNumberOfParameters() + " parameters"));
         for (int i = 0; i < mth.getNumberOfParameters(); i++) {
           System.err.println(("param " + i + ": " + mth.getParameterType(i)));
         }
@@ -168,15 +165,11 @@ public abstract class TestCAstTranslator extends WalaTestCase {
       clsCount++;
       Assert.assertTrue("found class " + cls.getName().toString(), classes.contains(cls.getName().toString()));
 
-      try {
-        if (cls.getSuperclass() == null) {
-          Assert.assertTrue(cls.getName() + " has no superclass", supers.get(cls.getName()) == null);
-        } else {
-          Assert.assertTrue("super of " + cls.getName() + " is " + cls.getSuperclass().getName(), supers.get(
-              cls.getName().toString()).equals(cls.getSuperclass().getName().toString()));
-        }
-      } catch (ClassHierarchyException e) {
-        Assert.assertTrue(false);
+      if (cls.getSuperclass() == null) {
+        Assert.assertTrue(cls.getName() + " has no superclass", supers.get(cls.getName()) == null);
+      } else {
+        Assert.assertTrue("super of " + cls.getName() + " is " + cls.getSuperclass().getName(), supers
+            .get(cls.getName().toString()).equals(cls.getSuperclass().getName().toString()));
       }
 
       for (Iterator<?> flds = cls.getDeclaredInstanceFields().iterator(); flds.hasNext();) {
