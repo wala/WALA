@@ -30,30 +30,30 @@ import com.ibm.wala.util.strings.StringStuff;
 import com.ibm.wala.util.warnings.WalaException;
 
 /**
- * utilities for integrating with ghostview
+ * utilities for integrating with ghostview (or another PS/PDF viewer)
  * 
  * @author sfink
  */
 public class PDFViewUtil {
 
   /**
-   * spawn a process to ghostview a WALA IR
+   * spawn a process to view a WALA IR
    * 
    * @return a handle to the ghostview process
    */
-  public static Process ghostviewIR(IClassHierarchy cha, IR ir, String psFile, String dotFile, String dotExe, String gvExe)
+  public static Process ghostviewIR(IClassHierarchy cha, IR ir, String pdfFile, String dotFile, String dotExe, String pdfViewExe)
       throws WalaException {
-    return ghostviewIR(cha, ir, psFile, dotFile, dotExe, gvExe, null);
+    return ghostviewIR(cha, ir, pdfFile, dotFile, dotExe, pdfViewExe, null);
   }
 
   /**
-   * spawn a process to ghostview a WALA IR
+   * spawn a process to view a WALA IR
    * 
-   * @return a handle to the ghostview process
+   * @return a handle to the pdf viewer process
    * @throws IllegalArgumentException
    *             if ir is null
    */
-  public static Process ghostviewIR(IClassHierarchy cha, IR ir, String psFile, String dotFile, String dotExe, String gvExe,
+  public static Process ghostviewIR(IClassHierarchy cha, IR ir, String pdfFile, String dotFile, String dotExe, String pdfViewExe,
       NodeDecorator annotations) throws WalaException {
 
     if (ir == null) {
@@ -68,9 +68,9 @@ public class PDFViewUtil {
 
     g = CFGSanitizer.sanitize(ir, cha);
 
-    DotUtil.dotify(g, labels, dotFile, psFile, dotExe);
+    DotUtil.dotify(g, labels, dotFile, pdfFile, dotExe);
 
-    return launchPDFView(psFile, gvExe);
+    return launchPDFView(pdfFile, pdfViewExe);
   }
 
   public static NodeDecorator makeIRDecorator(IR ir) {
@@ -160,7 +160,7 @@ public class PDFViewUtil {
   }
   
   /**
-   * Launch a process to view a postscript file
+   * Launch a process to view a PDF file
    */
   public static Process launchPDFView(String pdfFile, String gvExe) throws WalaException {
     // set up a viewer for the ps file.
