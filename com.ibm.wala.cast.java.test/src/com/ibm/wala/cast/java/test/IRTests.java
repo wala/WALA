@@ -260,6 +260,10 @@ public abstract class IRTests extends WalaTestCase {
       return false;
     }
   }
+  
+  protected Collection<String> singleTestSrc() {
+    return Collections.singletonList(getTestSrcPath() + File.separator + singleJavaInputForTest());
+  }
 
   protected Collection<String> singleTestSrc(final String folder) {
     return Collections.singletonList(getTestSrcPath() + File.separator + folder + File.separator + singleJavaInputForTest());
