@@ -281,11 +281,13 @@ public class AnalysisScope {
     if (name.length() == 0) {
       throw new IllegalArgumentException("empty atom is not a legal class loader name");
     }
+    /*
     if (Assertions.verifyAssertions) {
       if (name.getVal(0) > 'Z') {
         Assertions._assert(name.getVal(0) <= 'Z', "Classloader name improperly capitalised?  (" + name + ")");
       }
     }
+    */
     return loadersByName.get(name);
   }
 
