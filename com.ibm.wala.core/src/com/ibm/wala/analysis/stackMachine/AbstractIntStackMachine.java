@@ -1093,7 +1093,9 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
        */
       @Override
       public void visitPop(PopInstruction instruction) {
-        workingState.pop();
+        if (instruction.getPoppedCount() > 0) {
+          workingState.pop();
+        }
       }
 
       /**
