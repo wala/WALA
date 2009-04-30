@@ -51,8 +51,7 @@ import com.ibm.wala.util.strings.ImmutableByteArray;
 /**
  * Base class that represents a set of files to analyze.
  * 
- * The analysis scope is partitioned by class loader. There are three
- * pre-defined class loader scopes:
+ * The analysis scope is partitioned by class loader. There are three pre-defined class loader scopes:
  * <ul>
  * <li>Primordial (for <code>rt.jar</code>, the core classes)
  * <li>Extension (for extension libraries in $JRE/lib/ext)
@@ -71,17 +70,26 @@ public class AnalysisScope {
 
   public static final Atom SYNTHETIC = Atom.findOrCreateUnicodeAtom("Synthetic");
 
+  /**
+   * Create an analysis scope initialized for analysis of Java
+   */
   public static AnalysisScope createJavaAnalysisScope() {
     AnalysisScope scope = new AnalysisScope(Collections.singleton(Language.JAVA));
     scope.initForJava();
     return scope;
   }
- 
+
+  /**
+   * Initialize a scope for java analysis
+   */
   protected void initForJava() {
     initCoreForJava();
     initSynthetic(loadersByName.get(APPLICATION));
   }
-  
+
+  /**
+   * Initialize the standard 3 class loaders for java analysis
+   */
   protected void initCoreForJava() {
     ClassLoaderReference primordial = new ClassLoaderReference(PRIMORDIAL, ClassLoaderReference.Java, null);
     ClassLoaderReference extension = new ClassLoaderReference(EXTENSION, ClassLoaderReference.Java, primordial);
@@ -92,20 +100,20 @@ public class AnalysisScope {
     loadersByName.put(APPLICATION, application);
   }
 
+  /**
+   * Create the class loader for synthetic classes.
+   */
   protected void initSynthetic(ClassLoaderReference parent) {
     ClassLoaderReference synthetic = new ClassLoaderReference(SYNTHETIC, ClassLoaderReference.Java, parent);
     setLoaderImpl(synthetic, "com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader");
-    loadersByName.put(SYNTHETIC, synthetic);   
+    loadersByName.put(SYNTHETIC, synthetic);
   }
-  
+
   /**
    * A set of classes to exclude from the analysis entirely.
    */
   private SetOfClasses exclusions;
 
-  /**
-   * map: Atom -> ClassLoaderReference
-   */
   final protected LinkedHashMap<Atom, ClassLoaderReference> loadersByName = new LinkedHashMap<Atom, ClassLoaderReference>();
 
   /**
@@ -113,16 +121,13 @@ public class AnalysisScope {
    */
   private final ArrayClassLoader arrayClassLoader = new ArrayClassLoader();
 
-  /**
-   * map: ClassLoaderReference -> List <Modules>
-   */
   final private Map<ClassLoaderReference, List<Module>> moduleMap = HashMapFactory.make(3);
 
   private final Map<Atom, Language> languages;
 
   protected AnalysisScope(Collection<? extends Language> languages) {
     super();
-    this.languages = new HashMap<Atom,Language>();
+    this.languages = new HashMap<Atom, Language>();
     for (Language l : languages) {
       this.languages.put(l.getName(), l);
     }
@@ -131,15 +136,13 @@ public class AnalysisScope {
   public Language getLanguage(Atom name) {
     return languages.get(name);
   }
-  
+
   public boolean isApplicationLoader(IClassLoader loader) {
     return loader.getReference().equals(getLoader(APPLICATION));
   }
-  
+
   /**
    * Return the information regarding the primordial loader.
-   * 
-   * @return ClassLoaderReference
    */
   public ClassLoaderReference getPrimordialLoader() {
     return getLoader(PRIMORDIAL);
@@ -147,8 +150,6 @@ public class AnalysisScope {
 
   /**
    * Return the information regarding the extension loader.
-   * 
-   * @return ClassLoaderReference
    */
   public ClassLoaderReference getExtensionLoader() {
     return getLoader(EXTENSION);
@@ -156,8 +157,6 @@ public class AnalysisScope {
 
   /**
    * Return the information regarding the application loader.
-   * 
-   * @return ClassLoaderReference
    */
   public ClassLoaderReference getApplicationLoader() {
     return getLoader(APPLICATION);
@@ -165,8 +164,6 @@ public class AnalysisScope {
 
   /**
    * Return the information regarding the application loader.
-   * 
-   * @return ClassLoaderReference
    */
   public ClassLoaderReference getSyntheticLoader() {
     return getLoader(SYNTHETIC);
@@ -180,8 +177,7 @@ public class AnalysisScope {
   }
 
   /**
-   * @return the set of "base languages," each of which defines a family of
-   *         compatible languages, and therefore induces a distinct
+   * @return the set of "base languages," each of which defines a family of compatible languages, and therefore induces a distinct
    *         ClassHierarchy
    */
   public Set<Language> getBaseLanguages() {
@@ -196,9 +192,6 @@ public class AnalysisScope {
 
   /**
    * Add a class file to the scope for a loader
-   * 
-   * @param loader
-   * @param file
    */
   public void addSourceFileToScope(ClassLoaderReference loader, File file, String fileName) throws IllegalArgumentException {
     List<Module> s = MapUtil.findOrCreateList(moduleMap, loader);
@@ -237,7 +230,7 @@ public class AnalysisScope {
     }
     s.add(m);
   }
-  
+
   /**
    * Add all modules from another scope
    */
@@ -254,9 +247,6 @@ public class AnalysisScope {
 
   /**
    * Add a module file to the scope for a loader. The classes in the added jar file will override classes added to the scope so far.
-   * 
-   * @param loader
-   * @param m
    */
   public void addToScopeHead(ClassLoaderReference loader, Module m) {
     if (m == null) {
@@ -271,8 +261,7 @@ public class AnalysisScope {
 
   /**
    * @return the ClassLoaderReference specified by <code>name</code>.
-   * @throws IllegalArgumentException
-   *             if name is null
+   * @throws IllegalArgumentException if name is null
    */
   public ClassLoaderReference getLoader(Atom name) throws IllegalArgumentException {
     if (name == null) {
@@ -282,12 +271,9 @@ public class AnalysisScope {
       throw new IllegalArgumentException("empty atom is not a legal class loader name");
     }
     /*
-    if (Assertions.verifyAssertions) {
-      if (name.getVal(0) > 'Z') {
-        Assertions._assert(name.getVal(0) <= 'Z', "Classloader name improperly capitalised?  (" + name + ")");
-      }
-    }
-    */
+     * if (Assertions.verifyAssertions) { if (name.getVal(0) > 'Z') { Assertions._assert(name.getVal(0) <= 'Z',
+     * "Classloader name improperly capitalised?  (" + name + ")"); } }
+     */
     return loadersByName.get(name);
   }
 
@@ -310,7 +296,7 @@ public class AnalysisScope {
     }
     loaderImplByRef.put(ref, implClass);
   }
-  
+
   public Collection<ClassLoaderReference> getLoaders() {
     return Collections.unmodifiableCollection(loadersByName.values());
   }
@@ -440,61 +426,60 @@ public class AnalysisScope {
    * @throws NotSerializableException
    */
   public ShallowAnalysisScope toShallowAnalysisScope() throws NotSerializableException {
- 
-    if(getArrayClassLoader().getNumberOfClasses() != 0) {
+
+    if (getArrayClassLoader().getNumberOfClasses() != 0) {
       throw new NotSerializableException("Scope was already used for building array classes");
     }
-    //Note: 'arrayClassLoader' object will be built from scratch in remote process
-    
+    // Note: 'arrayClassLoader' object will be built from scratch in remote process
+
     // represent modules map as a set of strings (corresponding to analysis scope file lines.
     List<String> moduleLines = new ArrayList<String>();
-    for (Map.Entry<ClassLoaderReference, List<Module>> e : moduleMap.entrySet()){
+    for (Map.Entry<ClassLoaderReference, List<Module>> e : moduleMap.entrySet()) {
       ClassLoaderReference lrReference = e.getKey();
       String moduleLdr = lrReference.getName().toString();
       String moduleLang = lrReference.getLanguage().toString();
-      Assertions.precondition(Language.JAVA.getName().equals(lrReference.getLanguage()), "Java language only is currently supported");
-      
-      for (Module m : e.getValue()){
+      Assertions.precondition(Language.JAVA.getName().equals(lrReference.getLanguage()),
+          "Java language only is currently supported");
+
+      for (Module m : e.getValue()) {
         String moduleType;
         String modulePath;
-        if(m instanceof JarFileModule) {
+        if (m instanceof JarFileModule) {
           moduleType = "jarFile";
-          modulePath = ((JarFileModule)m).getAbsolutePath();
-        } else if(m instanceof BinaryDirectoryTreeModule) {
+          modulePath = ((JarFileModule) m).getAbsolutePath();
+        } else if (m instanceof BinaryDirectoryTreeModule) {
           moduleType = "binaryDir";
-          modulePath = ((BinaryDirectoryTreeModule)m).getPath();  
-        } else if(m instanceof SourceDirectoryTreeModule) {
+          modulePath = ((BinaryDirectoryTreeModule) m).getPath();
+        } else if (m instanceof SourceDirectoryTreeModule) {
           moduleType = "sourceDir";
-          modulePath = ((SourceDirectoryTreeModule)m).getPath();  
-        } else if(m instanceof SourceFileModule) {
+          modulePath = ((SourceDirectoryTreeModule) m).getPath();
+        } else if (m instanceof SourceFileModule) {
           moduleType = "sourceFile";
-          modulePath = ((SourceFileModule)m).getAbsolutePath();  
+          modulePath = ((SourceFileModule) m).getAbsolutePath();
         } else {
           Assertions.UNREACHABLE("Module type isn't supported - " + m);
           continue;
-        }        
+        }
         modulePath.replace("\\", "/");
         String moduleDescrLine = String.format("%s,%s,%s,%s", moduleLdr, moduleLang, moduleType, modulePath);
         moduleLines.add(moduleDescrLine);
       }
     }
-    
+
     // represent loaderImplByRef map as set of strings
     List<String> ldrImplLines = new ArrayList<String>();
-    for (Map.Entry<ClassLoaderReference, String> e : loaderImplByRef.entrySet()){
+    for (Map.Entry<ClassLoaderReference, String> e : loaderImplByRef.entrySet()) {
       ClassLoaderReference lrReference = e.getKey();
       String ldrName = lrReference.getName().toString();
-      String ldrLang = lrReference.getLanguage().toString();      
-      Assertions.precondition(Language.JAVA.getName().equals(lrReference.getLanguage()), "Java language only is currently supported");
+      String ldrLang = lrReference.getLanguage().toString();
+      Assertions.precondition(Language.JAVA.getName().equals(lrReference.getLanguage()),
+          "Java language only is currently supported");
       String ldrImplName = e.getValue();
       String ldrImplDescrLine = String.format("%s,%s,%s,%s", ldrName, ldrLang, "loaderImpl", ldrImplName);
       ldrImplLines.add(ldrImplDescrLine);
     }
-    
-    ShallowAnalysisScope shallowScope = 
-      new ShallowAnalysisScope(getExclusions(),
-                               moduleLines,
-                               ldrImplLines);
+
+    ShallowAnalysisScope shallowScope = new ShallowAnalysisScope(getExclusions(), moduleLines, ldrImplLines);
     return shallowScope;
   }
 }
