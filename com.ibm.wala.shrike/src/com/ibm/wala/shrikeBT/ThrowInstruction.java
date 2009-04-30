@@ -14,14 +14,22 @@ package com.ibm.wala.shrikeBT;
  * This class represents the athrow instruction.
  */
 public final class ThrowInstruction extends Instruction {
-  private static final ThrowInstruction preallocated = new ThrowInstruction();
+  private static final ThrowInstruction preallocated = new ThrowInstruction(false);
+  private static final ThrowInstruction preallocatedRethrow = new ThrowInstruction(true);
 
-  protected ThrowInstruction() {
+  private final boolean rethrow;
+  
+  protected ThrowInstruction(boolean rethrow) {
     super(OP_athrow);
+    this.rethrow = rethrow;
   }
 
-  public static ThrowInstruction make() {
-    return preallocated;
+  public static ThrowInstruction make(boolean isRethrow) {
+    if (isRethrow) {
+      return preallocatedRethrow;
+    } else {
+      return preallocated;
+    }
   }
 
   @Override
@@ -29,6 +37,10 @@ public final class ThrowInstruction extends Instruction {
     return o instanceof ThrowInstruction;
   }
 
+  public boolean isRethrow() {
+    return rethrow;
+  }
+  
   @Override
   public boolean isFallThrough() {
     return false;

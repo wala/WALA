@@ -49,6 +49,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.graph.dominators.Dominators;
 import com.ibm.wala.util.intset.IntPair;
 import com.ibm.wala.util.shrike.ShrikeUtil;
 
@@ -672,15 +673,52 @@ public class SSABuilder extends AbstractIntStackMachine {
         emitInstruction(insts.SwitchInstruction(val, instruction.getDefaultLabel(), instruction.getCasesAndLabels()));
       }
 
+      private Dominators<ISSABasicBlock> dom = null;
+      
+      private int findRethrowException() {
+        int index = getCurrentInstructionIndex();
+        SSACFG.BasicBlock bb= cfg.getBlockForInstruction(index);
+        if (bb.isCatchBlock()) {
+          SSACFG.ExceptionHandlerBasicBlock newBB = (SSACFG.ExceptionHandlerBasicBlock) bb;
+          SSAGetCaughtExceptionInstruction s = newBB.getCatchInstruction();
+          return s.getDef();
+        } else {
+          // TODO: should we really use dominators here?  maybe it would be cleaner to propagate
+          // the notion of 'current exception to rethrow' using the abstract interpreter.
+          if (dom == null) {
+            dom = Dominators.make(cfg, cfg.entry());
+          }
+          
+          ISSABasicBlock x = bb;
+          while (x != null) {
+            if (x.isCatchBlock()) {
+              SSACFG.ExceptionHandlerBasicBlock newBB = (SSACFG.ExceptionHandlerBasicBlock) x;
+              SSAGetCaughtExceptionInstruction s = newBB.getCatchInstruction();
+              return s.getDef();
+            } else {
+              x = dom.getIdom(x);
+            }
+          }
+            
+          //assert false;
+          return -1;
+        }
+      }
+      
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitThrow(ThrowInstruction)
        */
       @Override
       public void visitThrow(com.ibm.wala.shrikeBT.ThrowInstruction instruction) {
-        int exception = workingState.pop();
-        workingState.clearStack();
-        workingState.push(exception);
-        emitInstruction(insts.ThrowInstruction(exception));
+        if (instruction.isRethrow()) {
+           workingState.clearStack();
+           emitInstruction(insts.ThrowInstruction(findRethrowException()));          
+        } else {
+          int exception = workingState.pop();
+          workingState.clearStack();
+          workingState.push(exception);
+          emitInstruction(insts.ThrowInstruction(exception));
+        }
       }
 
       /**

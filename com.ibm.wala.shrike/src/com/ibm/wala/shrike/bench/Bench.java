@@ -171,7 +171,7 @@ public class Bench {
               w.emit(ConstantInstruction.makeString(msg0));
               w.emit(callPrintln);
               w.emitLabel(noTraceLabel);
-              w.emit(ThrowInstruction.make());
+              w.emit(ThrowInstruction.make(false));
             }
           });
         }

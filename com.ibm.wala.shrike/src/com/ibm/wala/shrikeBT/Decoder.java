@@ -116,7 +116,7 @@ public abstract class Decoder implements Constants {
     }
     table[OP_return] = ReturnInstruction.make(TYPE_void);
 
-    table[OP_athrow] = ThrowInstruction.make();
+    table[OP_athrow] = ThrowInstruction.make(false);
 
     table[OP_monitorenter] = MonitorInstruction.make(true);
     table[OP_monitorexit] = MonitorInstruction.make(false);
