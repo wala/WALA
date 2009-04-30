@@ -10,10 +10,16 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph;
 
+import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
+import com.ibm.wala.analysis.reflection.ReflectionContextSelector;
+import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.ReflectionHandler;
 import com.ibm.wala.ssa.SSAOptions;
 
 /**
  * Basic interface for options that control call graph generation.
+ * 
+ * TODO: This class should be refactored into an abstract base class and language-specific subclasses.
  */
 public class AnalysisOptions {
 
@@ -340,36 +346,62 @@ public class AnalysisOptions {
     this.ssaOptions = ssaOptions;
   }
 
+  /**
+   * Use distinct instance keys for distinct string constants?
+   */
   public boolean getUseConstantSpecificKeys() {
     return useConstantSpecificKeys;
   }
 
+  /**
+   * Use distinct instance keys for distinct string constants?
+   */
   public void setUseConstantSpecificKeys(boolean useConstantSpecificKeys) {
     this.useConstantSpecificKeys = useConstantSpecificKeys;
   }
 
+  /**
+   * Should analysis of lexical scoping consider call stacks?
+   */
   public boolean getUseStacksForLexicalScoping() {
     return useStacksForLexicalScoping;
   }
 
+  /**
+   * Should analysis of lexical scoping consider call stacks?
+   */
   public void setUseStacksForLexicalScoping(boolean v) {
     useStacksForLexicalScoping = v;
   }
 
+  /**
+   * Should global variables be considered lexically-scoped from the root node?
+   */
   public boolean getUseLexicalScopingForGlobals() {
     return useLexicalScopingForGlobals;
   }
+  
+  /**
+   * Should global variables be considered lexically-scoped from the root node?
+   */
+  public void setUseLexicalScopingForGlobals(boolean v) {
+    useLexicalScopingForGlobals = v;
+  }
 
+  /**
+   * Should analysis try to understand the results of string constants flowing to a + operator? Note that this option does not apply
+   * to Java bytecode analysis, since the + operators have been compiled away for that. It is used for the Java CAst front end.
+   */
   public void setTraceStringConstants(boolean v) {
     traceStringConstants = v;
   }
 
+  /**
+   * Should analysis try to understand the results of string constants flowing to a + operator? Note that this option does not apply
+   * to Java bytecode analysis, since the + operators have been compiled away for that. It is used for the Java CAst front end.
+   */
   public boolean getTraceStringConstants() {
     return traceStringConstants;
-  }
-
-  public void setUseLexicalScopingForGlobals(boolean v) {
-    useLexicalScopingForGlobals = v;
   }
 
   /**
@@ -383,18 +415,40 @@ public class AnalysisOptions {
     usePreTransitiveSolver = b;
   }
 
+  /**
+   * Should call graph construction attempt to handle reflection via detection of flows to casts, analysis of string constant
+   * parameters to reflective methods, etc.?
+   * 
+   * @see ReflectionHandler
+   * @see ReflectionContextInterpreter
+   * @see ReflectionContextSelector
+   */
   public ReflectionOptions getReflectionOptions() {
     return reflectionOptions;
   }
 
+  /**
+   * Should call graph construction attempt to handle reflection via detection of flows to casts, analysis of string constant
+   * parameters to reflective methods, etc.?
+   * 
+   * @see ReflectionHandler
+   * @see ReflectionContextInterpreter
+   * @see ReflectionContextSelector
+   */
   public void setReflectionOptions(ReflectionOptions reflectionOptions) {
     this.reflectionOptions = reflectionOptions;
   }
 
+  /**
+   * Should call graph construction handle possible invocations of static initializer methods?
+   */
   public boolean getHandleStaticInit() {
     return handleStaticInit;
   }
 
+  /**
+   * Should call graph construction handle possible invocations of static initializer methods?
+   */
   public void setHandleStaticInit(boolean handleStaticInit) {
     this.handleStaticInit = handleStaticInit;
   }
