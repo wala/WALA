@@ -21,15 +21,14 @@ public interface CallGraphBuilder {
   /**
    * Build a call graph.
    * 
-   * @param options an object representing controlling options that the call
-   * graph building algorithm needs to know.
+   * @param options an object representing controlling options that the call graph building algorithm needs to know.
    * @return the built call graph
    */
-  public CallGraph makeCallGraph(AnalysisOptions options, IProgressMonitor monitor) throws IllegalArgumentException, CallGraphBuilderCancelException;
+  public CallGraph makeCallGraph(AnalysisOptions options, IProgressMonitor monitor) throws IllegalArgumentException,
+      CallGraphBuilderCancelException;
 
   /**
-   * @return the Pointer Analysis information computed as a side-effect of
-   * call graph construction.
+   * @return the Pointer Analysis information computed as a side-effect of call graph construction.
    */
   public PointerAnalysis getPointerAnalysis();
 

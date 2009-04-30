@@ -12,6 +12,15 @@ package com.ibm.wala.ipa.callgraph;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 
+/**
+ * An explicit representation of an edge in a call graph, which additionally carries a label.
+ * 
+ * NB: We do NOT enforce that any particular call graph implementation actually contains {@link CGEdge} objects. In fact, the CGEdge is
+ * currently not mentioned anywhere else in the callgraph API. This class is just provided since some clients might find it a useful
+ * utility.
+ * 
+ * This abstraction does not include a call site reference, so this edge might actually represent several distinct call sites.
+ */
 public class CGLabeledEdge extends CGEdge {
 
   private final CallSiteReference label;

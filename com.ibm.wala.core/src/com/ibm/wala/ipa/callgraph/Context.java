@@ -10,21 +10,17 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph;
 
-
 /**
  * A Context is a mapping from a name (ContextKey) to a value (ContextItem)
  * 
- * For example, for CFA-1, there is only one name ("caller");
- * and the context maps "caller" to an IMethod
+ * For example, for CFA-1, there is only one name ("caller"); and the context maps "caller" to an IMethod
  * 
- * As another example, for CPA, there would be name for
- * each parameter slot ("zero","one","two"), and the Context
- * provides a mapping from this name to a set of types.
- * eg. "one" -> {java.lang.String, java.lang.Date}
+ * As another example, for CPA, there would be name for each parameter slot ("zero","one","two"), and the Context provides a mapping
+ * from this name to a set of types. eg. "one" -> {java.lang.String, java.lang.Date}
  */
 public interface Context {
   /**
    * @return the objects corresponding to a given name
    */
-  ContextItem get(ContextKey name);  
+  ContextItem get(ContextKey name);
 }

@@ -39,8 +39,7 @@ public abstract class Entrypoint implements BytecodeConstants {
   protected final IMethod method;
 
   /**
-   * @param method
-   *            the method to be called for this entrypoint
+   * @param method the method to be called for this entrypoint
    */
   protected Entrypoint(IMethod method) {
     if (method == null) {
@@ -67,8 +66,7 @@ public abstract class Entrypoint implements BytecodeConstants {
   /**
    * Create a call site reference representing a call to this entrypoint
    * 
-   * @param programCounter
-   *            the bytecode index of the synthesize call
+   * @param programCounter the bytecode index of the synthesize call
    * @return the call site reference, or null if failed to find entrypoint
    */
   public CallSiteReference makeSite(int programCounter) {
@@ -93,13 +91,10 @@ public abstract class Entrypoint implements BytecodeConstants {
   }
 
   /**
-   * Add allocation statements to the fake root method for each possible value
-   * of parameter i. If necessary, add a phi to combine the values.
+   * Add allocation statements to the fake root method for each possible value of parameter i. If necessary, add a phi to combine
+   * the values.
    * 
-   * @param m
-   * @param i
-   * @return value number holding the parameter to the call; -1 if there was
-   *         some error
+   * @return value number holding the parameter to the call; -1 if there was some error
    */
   protected int makeArgument(AbstractRootMethod m, int i) {
     TypeReference[] p = getParameterTypes(i);
@@ -159,8 +154,7 @@ public abstract class Entrypoint implements BytecodeConstants {
   /**
    * Add a call to this entrypoint from the fake root method
    * 
-   * @param m
-   *            the Fake Root Method
+   * @param m the Fake Root Method
    * @return the call instruction added, or null if the operation fails
    */
   public SSAAbstractInvokeInstruction addCall(AbstractRootMethod m) {
@@ -189,8 +183,7 @@ public abstract class Entrypoint implements BytecodeConstants {
   }
 
   /**
-   * @return types to allocate for parameter i; for non-static methods,
-   *         parameter 0 is "this"
+   * @return types to allocate for parameter i; for non-static methods, parameter 0 is "this"
    */
   public abstract TypeReference[] getParameterTypes(int i);
 

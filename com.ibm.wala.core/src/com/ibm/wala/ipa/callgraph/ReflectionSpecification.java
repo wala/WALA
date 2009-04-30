@@ -15,16 +15,15 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MemberReference;
 
 /**
- * This interface holds information describing reflection behavior specified
- * by the user.
+ * This interface holds information describing reflection behavior specified by the user.
  */
 public interface ReflectionSpecification {
 
   /**
    * @param method
    * @param bcIndex
-   * @return the TypeAbstraction which represents the set of types allocated by the new instance
-   * at the specified bytecode index; or null if not specified.
+   * @return the TypeAbstraction which represents the set of types allocated by the new instance at the specified bytecode index; or
+   *         null if not specified.
    */
   TypeAbstraction getTypeForNewInstance(MemberReference method, int bcIndex, IClassHierarchy cha);
 }
