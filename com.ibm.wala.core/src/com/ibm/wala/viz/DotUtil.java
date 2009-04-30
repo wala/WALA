@@ -33,7 +33,7 @@ public class DotUtil {
    * 
    */
   public static enum DotOutputType {
-    PS, SVG, PDF
+    PS, SVG, PDF, EPS
   }
 
   private static DotOutputType outputType = DotOutputType.PDF;
@@ -54,6 +54,8 @@ public class DotUtil {
     switch (outputType) {
     case PS:
       return "-Tps";
+    case EPS:
+      return "-Teps";
     case SVG:
       return "-Tsvg";
     case PDF:
