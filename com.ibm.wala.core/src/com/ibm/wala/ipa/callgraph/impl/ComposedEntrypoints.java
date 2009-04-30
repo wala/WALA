@@ -18,7 +18,7 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
- * This class represents the union of two sets of entryponts.
+ * This class represents the union of two sets of {@link Entrypoint}s.
  */
 public class ComposedEntrypoints implements Iterable<Entrypoint> {
 

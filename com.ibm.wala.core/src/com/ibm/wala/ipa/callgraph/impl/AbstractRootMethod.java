@@ -70,7 +70,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
   protected final AnalysisCache cache;
 
   protected final SSAInstructionFactory insts;
-  
+
   public AbstractRootMethod(MethodReference method, IClass declaringClass, final IClassHierarchy cha, AnalysisOptions options,
       AnalysisCache cache) {
     super(method, declaringClass, true, false);
@@ -84,7 +84,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     // I'd like to enforce that declaringClass is a FakeRootClass ... but CASt would currently break.
     // so checking dynamically instead.
     if (declaringClass instanceof FakeRootClass) {
-      ((FakeRootClass)declaringClass).addMethod(this);
+      ((FakeRootClass) declaringClass).addMethod(this);
     }
   }
 
@@ -332,7 +332,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
   public int addCheckcast(TypeReference type, int rv) {
     int lv = nextLocal++;
-    
+
     statements.add(insts.CheckCastInstruction(lv, rv, type));
     return lv;
   }

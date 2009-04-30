@@ -37,7 +37,7 @@ import com.ibm.wala.util.graph.impl.DelegatingNumberedNodeManager;
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
 import com.ibm.wala.util.graph.traverse.DFS;
 
-/** 
+/**
  * Basic data structure support for a call graph.
  */
 public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> implements CallGraph {
@@ -50,7 +50,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
    * A fake root node for the graph
    */
   private CGNode fakeRoot;
-  
+
   /**
    * A node which handles all calls to class initializers
    */
@@ -67,22 +67,19 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
   private final Set<CGNode> entrypointNodes = HashSetFactory.make();
 
   /**
-   * A mapping from Key to NodeImpls in the graph. Note that each node is
-   * created on demand. This Map does not include the root node.
+   * A mapping from Key to NodeImpls in the graph. Note that each node is created on demand. This Map does not include the root
+   * node.
    */
-  final private Map<Key,CGNode> nodes = HashMapFactory.make();
+  final private Map<Key, CGNode> nodes = HashMapFactory.make();
 
   /**
-   * A mapping from MethodReference to Set of nodes that represent this
-   * methodReference.
+   * A mapping from MethodReference to Set of nodes that represent this methodReference.
    * 
-   * TODO: rhs of mapping doesn't have to be a set if it's a singleton; could be
-   * a node instead.
+   * TODO: rhs of mapping doesn't have to be a set if it's a singleton; could be a node instead.
    * 
-   * TODO: this is a bit redundant with the nodes Map. Restructure these data
-   * structures for space efficiency.
+   * TODO: this is a bit redundant with the nodes Map. Restructure these data structures for space efficiency.
    */
-  final private Map<MethodReference,Set<CGNode>> mr2Nodes = HashMapFactory.make();
+  final private Map<MethodReference, Set<CGNode>> mr2Nodes = HashMapFactory.make();
 
   public BasicCallGraph() {
     super();
@@ -97,21 +94,23 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
     if (fakeWorldClinit != null) {
       k = new Key(fakeWorldClinit.getMethod(), fakeWorldClinit.getContext());
       registerNode(k, fakeWorldClinit);
-    
+
       // add a call from fakeRoot to fakeWorldClinit
-      CallSiteReference site = CallSiteReference.make(1, fakeWorldClinit.getMethod().getReference(), IInvokeInstruction.Dispatch.STATIC);
+      CallSiteReference site = CallSiteReference.make(1, fakeWorldClinit.getMethod().getReference(),
+          IInvokeInstruction.Dispatch.STATIC);
       // note that the result of addInvocation is a different site, with a different program counter!
-      site = ((AbstractRootMethod)fakeRoot.getMethod()).addInvocation(null, site).getCallSite();
+      site = ((AbstractRootMethod) fakeRoot.getMethod()).addInvocation(null, site).getCallSite();
       fakeRoot.addTarget(site, fakeWorldClinit);
     }
   }
-  
+
   protected abstract CGNode makeFakeRootNode() throws CancelException;
-  
+
   protected abstract CGNode makeFakeWorldClinitNode() throws CancelException;
 
   /**
    * Use with extreme care.
+   * 
    * @throws CancelException TODO
    */
   public abstract CGNode findOrCreateNode(IMethod method, Context C) throws CancelException;
@@ -143,7 +142,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
   public CGNode getFakeRootNode() {
     return fakeRoot;
   }
-  
+
   public CGNode getFakeWorldClinitNode() {
     return fakeWorldClinit;
   }
@@ -218,7 +217,6 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
 
     public abstract boolean addTarget(CallSiteReference reference, CGNode target);
 
-    
     public IClassHierarchy getClassHierarchy() {
       return method.getClassHierarchy();
     }
@@ -253,7 +251,6 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
   }
 
   /**
-   * @param method
    * @return NodeImpl, or null if none found
    */
   public CGNode getNode(IMethod method, Context C) {
@@ -315,8 +312,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
   }
 
   /**
-   * We override this since this class supports remove() on nodes, but the
-   * superclass doesn't.
+   * We override this since this class supports remove() on nodes, but the superclass doesn't.
    * 
    * @see com.ibm.wala.util.graph.Graph#getNumberOfNodes()
    */
@@ -326,8 +322,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
   }
 
   /**
-   * We override this since this class supports remove() on nodes, but the
-   * superclass doesn't.
+   * We override this since this class supports remove() on nodes, but the superclass doesn't.
    * 
    * @see com.ibm.wala.util.graph.Graph#iterator()
    */
@@ -337,9 +332,9 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
   }
 
   /**
-   * This implementation is necessary because the underlying SparseNumberedGraph
-   * may not support node membership tests.
-   * @throws IllegalArgumentException  if N is null
+   * This implementation is necessary because the underlying SparseNumberedGraph may not support node membership tests.
+   * 
+   * @throws IllegalArgumentException if N is null
    * 
    */
   @Override

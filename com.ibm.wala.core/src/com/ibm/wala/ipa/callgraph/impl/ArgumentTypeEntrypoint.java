@@ -22,8 +22,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * An entrypoint which chooses some valid (non-interface) concrete type for each
- * argument, if one is available.
+ * An entrypoint which chooses some valid (non-interface) concrete type for each argument, if one is available.
  */
 public class ArgumentTypeEntrypoint extends Entrypoint {
 
@@ -32,7 +31,7 @@ public class ArgumentTypeEntrypoint extends Entrypoint {
   private final IClassHierarchy cha;
 
   /**
-   * @throws IllegalArgumentException  if method == null
+   * @throws IllegalArgumentException if method == null
    */
   protected TypeReference[][] makeParameterTypes(IMethod method) throws IllegalArgumentException {
     if (method == null) {

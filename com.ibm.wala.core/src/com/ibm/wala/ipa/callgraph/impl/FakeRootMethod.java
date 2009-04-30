@@ -38,10 +38,8 @@ public class FakeRootMethod extends AbstractRootMethod {
   }
 
   /**
-   * @param m
-   *          a method reference
    * @return true iff m is the fake root method.
-   * @throws IllegalArgumentException  if m is null
+   * @throws IllegalArgumentException if m is null
    */
   public static boolean isFakeRootMethod(MemberReference m) {
     if (m == null) {
@@ -49,11 +47,10 @@ public class FakeRootMethod extends AbstractRootMethod {
     }
     return m.equals(rootMethod);
   }
-  
+
   /**
-   * @param block
    * @return true iff block is a basic block in the fake root method
-   * @throws IllegalArgumentException  if block is null
+   * @throws IllegalArgumentException if block is null
    */
   public static boolean isFromFakeRoot(IBasicBlock block) {
     if (block == null) {

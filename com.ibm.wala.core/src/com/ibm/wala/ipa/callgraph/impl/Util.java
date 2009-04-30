@@ -324,7 +324,6 @@ public class Util {
     };
   }
 
- 
   /**
    * create a set holding the contents of an {@link Iterator}
    */

@@ -17,8 +17,7 @@ import com.ibm.wala.ipa.callgraph.ClassTargetSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * A ClassTargetSelector that simply looks up the declared type of a
- * NewSiteReference in the appropriate class hierarchy.
+ * A {@link ClassTargetSelector} that simply looks up the declared type of a {@link NewSiteReference} in the appropriate class hierarchy.
  */
 public class ClassHierarchyClassTargetSelector implements ClassTargetSelector {
 

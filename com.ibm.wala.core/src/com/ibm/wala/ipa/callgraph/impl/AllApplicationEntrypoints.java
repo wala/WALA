@@ -25,12 +25,11 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 public class AllApplicationEntrypoints extends HashSet<Entrypoint> {
 
   private final static boolean DEBUG = false;
+
   /**
-   * @param scope
-   *          governing analyais scope
-   * @param cha
-   *          governing class hierarchy
-   * @throws IllegalArgumentException  if cha is null
+   * @param scope governing analyais scope
+   * @param cha governing class hierarchy
+   * @throws IllegalArgumentException if cha is null
    */
   public AllApplicationEntrypoints(AnalysisScope scope, final IClassHierarchy cha) {
 
@@ -56,8 +55,6 @@ public class AllApplicationEntrypoints extends HashSet<Entrypoint> {
   }
 
   /**
-   * @param scope
-   * @param klass
    * @return true iff klass is loaded by the application loader.
    */
   private boolean isApplicationClass(AnalysisScope scope, IClass klass) {

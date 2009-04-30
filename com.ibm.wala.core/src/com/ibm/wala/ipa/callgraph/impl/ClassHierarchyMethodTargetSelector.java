@@ -21,8 +21,8 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * A MethodTargetSelector that simply looks up the declared type, name and descriptor of a CallSiteReference in the appropriate
- * class hierarchy.
+ * A {@link MethodTargetSelector} that simply looks up the declared type, name and descriptor of a {@link CallSiteReference} in the
+ * appropriate class hierarchy.
  */
 public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector {
 
