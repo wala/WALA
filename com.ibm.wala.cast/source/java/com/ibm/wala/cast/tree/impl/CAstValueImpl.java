@@ -13,7 +13,7 @@ package com.ibm.wala.cast.tree.impl;
 import com.ibm.wala.cast.tree.CAstNode;
 
 /**
- *  An implementation of CAst, i.e. a simple factory for creating capa
+ * An implementation of CAst, i.e. a simple factory for creating capa
  * ast nodes.  This class simply creates generic nodes with a kind
  * field, and either an array of children.  Note that there is no easy
  * way to mutate these trees; do not changes this (see CAstNode for

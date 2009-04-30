@@ -361,7 +361,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
     }
 
     if (Assertions.verifyAssertions) {
-      Assertions._assert(ci > 0);
+      assert ci > 0;
     }
 
     elements = (cr == null) ? ar : cr;

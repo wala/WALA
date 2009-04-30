@@ -357,8 +357,8 @@ public class BeanMetaDataImpl implements BeanMetaData {
    */
   private FieldReference createFieldReference(CMPAttribute att) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(att != null, "null attribute");
-      Assertions._assert(att.getType() != null, "null attribute type");
+      assert att != null : "null attribute";
+      assert att.getType() != null : "null attribute type";
     }
     Atom name = Atom.findOrCreateUnicodeAtom(att.getName());
     String dString = att.getType().getJavaName();

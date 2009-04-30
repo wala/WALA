@@ -90,7 +90,7 @@ public class OrdinalSet<T> implements Iterable<T> {
     }
     if (Assertions.verifyAssertions) {
       if (A.size() != 0 && B.size() != 0) {
-        Assertions._assert(A.mapping.equals(B.mapping));
+        assert A.mapping.equals(B.mapping);
       }
     }
     if (A.S == null || B.S == null) {
@@ -117,7 +117,7 @@ public class OrdinalSet<T> implements Iterable<T> {
     }
     if (Assertions.verifyAssertions) {
       if (A.size() != 0 && B.size() != 0) {
-        Assertions._assert(A.mapping.equals(B.mapping));
+        assert A.mapping.equals(B.mapping);
       }
     }
 
@@ -189,7 +189,7 @@ public class OrdinalSet<T> implements Iterable<T> {
     for (Iterator<T> it = c.iterator(); it.hasNext();) {
       int index = m.getMappedIndex(it.next());
       if (Assertions.verifyAssertions) {
-        Assertions._assert(index >= 0);
+        assert index >= 0;
       }
       s.add(index);
     }

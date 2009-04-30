@@ -59,9 +59,9 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory {
       MutableIntSet pr = primary.makeCopy(db.primaryImpl);
       MutableIntSet sr = secondary.makeCopy(db.secondaryImpl);
 
-      Assertions._assert(pr.sameValue(db.primaryImpl));
-      Assertions._assert(sr.sameValue(db.secondaryImpl));
-      Assertions._assert(pr.sameValue(sr));
+      assert pr.sameValue(db.primaryImpl);
+      assert sr.sameValue(db.secondaryImpl);
+      assert pr.sameValue(sr);
 
       return new DebuggingMutableIntSet(pr, sr);
     } else {

@@ -118,7 +118,7 @@ public class PolyglotSourceModuleTranslator implements SourceModuleTranslator {
     for (Iterator it = modules.iterator(); it.hasNext();) {
       SourceFileModule entry = (SourceFileModule) it.next();
 
-      Assertions._assert(entry.isSourceFile());
+      assert entry.isSourceFile();
 
       if (skipSourceFile(entry)) {
         continue;

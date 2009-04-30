@@ -128,7 +128,7 @@ public class MethodSummary {
   public void setPoisonLevel(byte b) {
     poisonLevel = b;
     if (Assertions.verifyAssertions) {
-      Assertions._assert(b == Warning.MILD || b == Warning.MODERATE || b == Warning.SEVERE);
+      assert b == Warning.MILD || b == Warning.MODERATE || b == Warning.SEVERE;
     }
   }
 

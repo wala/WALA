@@ -13,7 +13,6 @@ package com.ibm.wala.dataflow.IFDS;
 import java.util.Iterator;
 
 import com.ibm.wala.util.collections.SparseVector;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
@@ -318,7 +317,7 @@ public class LocalPathEdges {
    */
   public IntSet getReachable(int n, int d1) {
     if (PARANOID) {
-      Assertions._assert(getReachableSlow(n, d1).sameValue(getReachableFast(n, d1)));
+      assert getReachableSlow(n, d1).sameValue(getReachableFast(n, d1));
     }
     return (altPaths == null) ? getReachableSlow(n, d1) : getReachableFast(n, d1);
   }

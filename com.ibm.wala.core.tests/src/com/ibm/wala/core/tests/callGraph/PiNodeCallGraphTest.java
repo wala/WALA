@@ -35,7 +35,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -90,19 +89,19 @@ public class PiNodeCallGraphTest extends WalaTestCase {
     Set<CGNode> callerNodes = HashSetFactory.make();
     callerNodes.addAll(cg.getNodes(thisBinaryRef));
     callerNodes.addAll(cg.getNodes(thatBinaryRef));
-    Assertions._assert(callerNodes.size() == 2);
+    assert callerNodes.size() == 2;
 
     for (CGNode n : callerNodes) {
       for (Iterator<CallSiteReference> sites = n.iterateCallSites(); sites.hasNext();) {
         CallSiteReference csRef = (CallSiteReference) sites.next();
         if (csRef.getDeclaredTarget().equals(unary2Ref)) {
           numberOfCalls++;
-          Assertions._assert(cg.getNumberOfTargets(n, csRef) == desiredNumberOfTargets);
+          assert cg.getNumberOfTargets(n, csRef) == desiredNumberOfTargets;
         }
       }
     }
 
-    Assertions._assert(numberOfCalls == desiredNumberOfCalls);
+    assert numberOfCalls == desiredNumberOfCalls;
   }
 
   public void testNoPiNodes() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {

@@ -231,7 +231,7 @@ public class BasicHeapGraph extends HeapGraph {
 
       if (Assertions.verifyAssertions) {
         if (T == null) {
-          Assertions._assert(T != null, "null concrete type from " + I.getClass());
+          assert T != null : "null concrete type from " + I.getClass();
         }
       }
       if (T.isArrayType()) {
@@ -245,7 +245,7 @@ public class BasicHeapGraph extends HeapGraph {
         IClass klass = getHeapModel().getClassHierarchy().lookupClass(T);
         if (Assertions.verifyAssertions) {
           if (klass == null) {
-            Assertions._assert(klass != null, "null klass for type " + T);
+            assert klass != null : "null klass for type " + T;
           }
         }
         MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();

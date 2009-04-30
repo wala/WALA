@@ -123,7 +123,7 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
       String topMostName = klassStr.substring(0, dollarIndex);
       IClass topMostClass = cha.lookupClass(TypeReference.findOrCreate(cl, topMostName));
       if (Assertions.verifyAssertions) {
-        Assertions._assert(topMostClass != null);
+        assert topMostClass != null;
       }
       return topMostClass;
     }

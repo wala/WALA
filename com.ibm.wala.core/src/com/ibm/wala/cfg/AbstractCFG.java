@@ -161,7 +161,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
       throw new IllegalArgumentException("N is null");
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(!N.equals(exit()));
+      assert !N.equals(exit());
     }
     int number = getNumber(N);
     int xtra = 0;
@@ -178,7 +178,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
       throw new IllegalArgumentException("N is null");
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(!N.equals(exit()));
+      assert !N.equals(exit());
     }
     return exceptionalEdgeManager.getPredNodeCount(N);
   }

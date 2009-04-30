@@ -153,7 +153,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
     if (key instanceof LocalPointerKeyWithFilter) {
       LocalPointerKeyWithFilter lpk = (LocalPointerKeyWithFilter) key;
       FilteredPointerKey.TypeFilter filter = lpk.getTypeFilter();
-      Assertions._assert(filter instanceof FilteredPointerKey.SingleClassFilter);
+      assert filter instanceof FilteredPointerKey.SingleClassFilter;
       return ((FilteredPointerKey.SingleClassFilter) filter).getConcreteType();
     } else if (key instanceof StaticFieldKey) {
       StaticFieldKey s = (StaticFieldKey) key;
@@ -164,7 +164,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
     } else if (key instanceof ArrayContentsKey) {
       ArrayContentsKey i = (ArrayContentsKey) key;
       FilteredPointerKey.TypeFilter filter = i.getTypeFilter();
-      Assertions._assert(filter instanceof FilteredPointerKey.SingleClassFilter);
+      assert filter instanceof FilteredPointerKey.SingleClassFilter;
       return ((FilteredPointerKey.SingleClassFilter) filter).getConcreteType();
     } else {
       Assertions.UNREACHABLE("inferType " + key.getClass());

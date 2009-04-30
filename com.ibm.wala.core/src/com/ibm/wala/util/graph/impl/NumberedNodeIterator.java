@@ -44,7 +44,7 @@ public class NumberedNodeIterator<T> implements Iterator<T> {
     T result = nodeManager.getNode(i);
     if (Assertions.verifyAssertions) {
       if (result == null) {
-        Assertions._assert(result != null, "null node for " + i);
+        assert result != null : "null node for " + i;
       }
     }
     return result;

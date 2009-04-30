@@ -195,7 +195,7 @@ public class ClassLoaderImpl implements IClassLoader {
    */
   private Collection<IClass> getAllClasses() {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(loadedClasses != null);
+      assert loadedClasses != null;
     }
 
     return loadedClasses.values();

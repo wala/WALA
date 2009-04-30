@@ -366,7 +366,7 @@ public class HeapTracer {
     if (elementKlass.isPrimitive()) {
       return;
     }
-    Assertions._assert(container != null);
+    assert container != null;
     int length = Array.getLength(array);
     for (int i = 0; i < length; i++) {
       Object contents = Array.get(array, i);

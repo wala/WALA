@@ -292,7 +292,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         }
       }
       if (DEBUG && Assertions.verifyAssertions) {
-        Assertions._assert(n < cfg.getPredNodeCount(sb));
+        assert n < cfg.getPredNodeCount(sb);
       }
       for (Iterator<? extends SSAInstruction> phis = sb.iteratePhis(); phis.hasNext();) {
         SSAPhiInstruction phi = (SSAPhiInstruction) phis.next();
@@ -401,8 +401,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             }
             if (Assertions.verifyAssertions) {
               if (!(ik instanceof ConcreteTypeKey)) {
-                Assertions._assert(ik instanceof ConcreteTypeKey,
-                    "uh oh: need to implement getCaughtException constraints for instance " + ik);
+                assert ik instanceof ConcreteTypeKey : "uh oh: need to implement getCaughtException constraints for instance " + ik;
               }
             }
             ConcreteTypeKey ck = (ConcreteTypeKey) ik;
@@ -449,7 +448,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
     ISSABasicBlock[] bb = ir.getBasicBlocksForCall(call.getCallSite());
     if (Assertions.verifyAssertions) {
-      Assertions._assert(bb.length == 1);
+      assert bb.length == 1;
     }
     SSACFG.BasicBlock cb = (BasicBlock) ir.getControlFlowGraph().getExceptionalSuccessors(bb[0]).iterator().next();
     if (cb.isExitBlock()) {
@@ -555,7 +554,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       this.du = builder.getCFAContextInterpreter().getDU(node);
 
       if (Assertions.verifyAssertions) {
-        Assertions._assert(symbolTable != null);
+        assert symbolTable != null;
       }
     }
 
@@ -681,8 +680,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           }
         } else {
           if (Assertions.verifyAssertions) {
-            Assertions._assert(!system.isUnified(result));
-            Assertions._assert(!system.isUnified(arrayRefPtrKey));
+            assert !system.isUnified(result);
+            assert !system.isUnified(arrayRefPtrKey);
           }
           system.newSideEffect(getBuilder().new ArrayLoadOperator(system.findOrCreatePointsToSet(result)), arrayRefPtrKey);
         }
@@ -738,7 +737,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           for (int i = 0; i < ik.length; i++) {
             system.findOrCreateIndexForInstanceKey(ik[i]);
             if (Assertions.verifyAssertions) {
-              Assertions._assert(!system.isUnified(arrayRefPtrKey));
+              assert !system.isUnified(arrayRefPtrKey);
             }
             system.newSideEffect(getBuilder().new InstanceArrayStoreOperator(ik[i]), arrayRefPtrKey);
           }
@@ -861,7 +860,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
       PointerKey def = getPointerKeyForLocal(lval);
       if (Assertions.verifyAssertions) {
-        Assertions._assert(def != null);
+        assert def != null;
       }
 
       IField f = getClassHierarchy().resolveField(field);
@@ -936,7 +935,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         return;
       }
       if (Assertions.verifyAssertions) {
-        Assertions._assert(isStatic || !symbolTable.isStringConstant(ref), "put to string constant shouldn't be allowed?");
+        assert isStatic || !symbolTable.isStringConstant(ref) : "put to string constant shouldn't be allowed?";
       }
       if (isStatic) {
         processPutStatic(rval, field, f);
@@ -947,7 +946,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
     private void processPutField(int rval, int ref, IField f) {
       if (Assertions.verifyAssertions) {
-        Assertions._assert(!f.getFieldTypeReference().isPrimitiveType());
+        assert !f.getFieldTypeReference().isPrimitiveType();
       }
       PointerKey refKey = getPointerKeyForLocal(ref);
       PointerKey rvalKey = getPointerKeyForLocal(rval);
@@ -1377,7 +1376,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     private void processClassInitializer(IClass klass) {
 
       if (Assertions.verifyAssertions) {
-        Assertions._assert(klass != null);
+        assert klass != null;
       }
 
       if (!getBuilder().getOptions().getHandleStaticInit()) {

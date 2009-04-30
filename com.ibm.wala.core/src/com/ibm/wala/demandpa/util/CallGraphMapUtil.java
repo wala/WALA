@@ -95,7 +95,7 @@ public class CallGraphMapUtil {
         Set<CGNode> nodes = toCG.getNodes(methodRef);
         int size = nodes.size();
         if (Assertions.verifyAssertions) {
-          Assertions._assert(size <= 1);
+          assert size <= 1;
         }
         return (size == 0) ? null : nodes.iterator().next();
       }
@@ -129,8 +129,8 @@ public class CallGraphMapUtil {
       Assertions.UNREACHABLE();
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(ret != null);
-      Assertions._assert(ret.getClass() == ik.getClass());
+      assert ret != null;
+      assert ret.getClass() == ik.getClass();
     }
     return ret;
   }
@@ -160,7 +160,7 @@ public class CallGraphMapUtil {
       Assertions.UNREACHABLE();
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(ret != null);
+      assert ret != null;
     }
     return ret;
   }

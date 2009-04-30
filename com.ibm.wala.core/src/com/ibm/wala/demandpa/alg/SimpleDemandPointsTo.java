@@ -54,7 +54,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.Iterator2Collection;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.traverse.SlowDFSDiscoverTimeIterator;
 
@@ -79,7 +78,7 @@ public class SimpleDemandPointsTo extends AbstractDemandPointsTo {
     if (pk == null) {
       throw new IllegalArgumentException("pk == null");
     }
-    Assertions._assert(pk instanceof LocalPointerKey, "we only handle locals");
+    assert pk instanceof LocalPointerKey : "we only handle locals";
     LocalPointerKey lpk = (LocalPointerKey) pk;
     // Create an (initially empty) dependence graph
     SimpleDemandPointerFlowGraph g = new SimpleDemandPointerFlowGraph(cg, heapModel, mam, cha);

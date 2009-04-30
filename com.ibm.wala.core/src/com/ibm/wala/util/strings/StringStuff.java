@@ -306,7 +306,7 @@ public class StringStuff {
         return result;
       default:
         if (Assertions.verifyAssertions) {
-          Assertions._assert(false, "bad descriptor " + b);
+          assert false : "bad descriptor " + b;
         }
       }
     }

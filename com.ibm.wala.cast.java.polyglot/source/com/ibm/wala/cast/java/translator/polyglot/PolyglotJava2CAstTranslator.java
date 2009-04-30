@@ -301,7 +301,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
           bodyNodes[idx++] = walkNodes(s, mc);
           if (idx == 1) {
-            Assertions._assert(isSpecialCallStmt(s, ConstructorCall.SUPER));
+            assert isSpecialCallStmt(s, ConstructorCall.SUPER);
             idx = insertInitializers(mc, bodyNodes, false, idx);
           }
         }
@@ -396,7 +396,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
      */
     public CAstNode visit(ArrayInit ai, WalkContext wc) {
       if (((ArrayType) ai.type()).base().isNull()) {
-        Assertions._assert(false, "bad type " + ai.type() + " for " + ai + " at " + ai.position());
+        assert false : "bad type " + ai.type() + " for " + ai + " at " + ai.position();
       }
 
       TypeReference newTypeRef = fIdentityMapper.getTypeRef(ai.type());
@@ -413,7 +413,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
           eltNodes[idx] = walkNodes(element, wc);
         }
         if (eltNodes[idx] == null) {
-          Assertions._assert(eltNodes[idx] != null, element.toString());
+          assert eltNodes[idx] != null : element.toString();
         }
       }
 
@@ -439,7 +439,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
           eltNodes[idx] = walkNodes(element, wc);
         }
         if (eltNodes[idx] == null) {
-          Assertions._assert(eltNodes[idx] != null, element.toString());
+          assert eltNodes[idx] != null : element.toString();
         }
       }
 
@@ -588,13 +588,13 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
       if (methodOwner.isArray()) {
         List realOne = methodInstance.overrides();
-        Assertions._assert(realOne.size() == 2, "bad array method");
+        assert realOne.size() == 2 : "bad array method";
         methodInstance = (MethodInstance) realOne.get(1);
         methodOwner = methodInstance.container();
       }
 
       if (!methodOwner.isClass()) {
-        Assertions._assert(false, "owner " + methodOwner + " of " + methodInstance + " is not a class");
+        assert false : "owner " + methodOwner + " of " + methodInstance + " is not a class";
       }
 
       boolean isIntf = ((ClassType) methodOwner).flags().isInterface();
@@ -613,7 +613,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
         children[i++] = makeNode(wc, fFactory, null, CAstNode.VOID);
 
       if (children[0] == null) {
-        Assertions._assert(children[0] != null, "no receiver for " + methodInstance + " in " + wc.getEnclosingMethod());
+        assert children[0] != null : "no receiver for " + methodInstance + " in " + wc.getEnclosingMethod();
       }
 
       MethodReference methodRef = fIdentityMapper.getMethodRef(methodInstance);
@@ -646,7 +646,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     public CAstNode visit(ConstructorCall cc, WalkContext wc) {
       ConstructorInstance ctorInstance = cc.constructorInstance();
       ReferenceType methodOwner = ctorInstance.container();
-      Assertions._assert(methodOwner.isClass());
+      assert methodOwner.isClass();
       MethodReference methodRef = fIdentityMapper.getMethodRef(ctorInstance);
 
       int dummyPC = 0; // Just want to wrap the kind of call; the "rear end"
@@ -812,7 +812,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     public CAstNode visit(NewArray na, WalkContext wc) {
       Type newType = na.type();
       ArrayInit ai = na.init();
-      Assertions._assert(newType.isArray());
+      assert newType.isArray();
 
       if (ai != null) {
         return visit(ai, wc, newType);
@@ -902,7 +902,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       // Type fieldType = f.type();
 
       if (targetType.isArray()) {
-        Assertions._assert(f.name().equals("length"));
+        assert f.name().equals("length");
 
         return makeNode(wc, fFactory, f, CAstNode.ARRAY_LENGTH, walkNodes(target, wc));
       }
@@ -988,7 +988,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
         target = wc.getContinueFor(b.label());
       }
 
-      Assertions._assert(target != null);
+      assert target != null;
 
       CAstNode result = makeNode(wc, fFactory, b, CAstNode.GOTO);
 
@@ -1626,7 +1626,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
         if (fPd instanceof InitializerInstance) {
           return MethodReference.clinitName.toString();
         } else {
-          Assertions._assert(fPd instanceof MethodInstance);
+          assert fPd instanceof MethodInstance;
           return ((MethodInstance) fPd).name();
         }
       }
@@ -1936,7 +1936,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     public void addScopedEntity(CAstNode node, CAstEntity e) {
-      Assertions._assert(node == null);
+      assert node == null;
       fChildren.add(e);
     }
 

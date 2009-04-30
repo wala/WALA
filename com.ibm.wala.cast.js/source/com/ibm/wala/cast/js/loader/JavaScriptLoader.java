@@ -664,7 +664,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
   public IMethod defineCodeBodyCode(String clsName, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
       TypeReference[][] caughtTypes, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
     JavaScriptCodeBody C = (JavaScriptCodeBody) lookupClass(clsName, cha);
-    Assertions._assert(C != null, clsName);
+    assert C != null : clsName;
     return C.setCodeBody(new JavaScriptMethodObject(C, cfg, symtab, hasCatchBlock, caughtTypes, lexicalInfo, debugInfo));
   }
 

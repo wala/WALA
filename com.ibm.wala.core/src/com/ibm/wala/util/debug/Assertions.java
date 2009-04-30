@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.util.debug;
 
-
 /**
  * WALA-specific assertion checking.
  * 
@@ -32,29 +31,27 @@ public class Assertions {
   }
 
   /**
-   * @throws UnimplementedError  if b == false
+   * @throws UnimplementedError if b == false
    */
+  @Deprecated
   public static void _assert(boolean b) throws UnimplementedError {
-    checkGuard();
-    if (!b)
-      throw new UnimplementedError();
+    assert b;
   }
 
   /**
-   * @throws UnimplementedError  if b == false
+   * @throws UnimplementedError if b == false
    */
+  @Deprecated
   public static void _assert(boolean b, String string) throws UnimplementedError {
-    checkGuard();
-    if (!b)
-      throw new UnimplementedError(string);
+    assert b : string;
   }
 
   /**
-   * An assertion which does not need to be guarded by verifyAssertions.
-   * These assertions will be enabled in production!
+   * An assertion which does not need to be guarded by verifyAssertions. These assertions will be enabled in production!
+   * 
    * @param b
    * @param string
-   * @throws UnimplementedError  if b == false
+   * @throws UnimplementedError if b == false
    */
   public static void productionAssertion(boolean b, String string) throws UnimplementedError {
     if (!b)
@@ -62,10 +59,10 @@ public class Assertions {
   }
 
   /**
-   * An assertion which does not need to be guarded by verifyAssertions.
-   * These assertions will be enabled in production!
+   * An assertion which does not need to be guarded by verifyAssertions. These assertions will be enabled in production!
+   * 
    * @param b
-   * @throws UnimplementedError  if b == false
+   * @throws UnimplementedError if b == false
    */
   public static void productionAssertion(boolean b) throws UnimplementedError {
     if (!b)
@@ -74,6 +71,7 @@ public class Assertions {
 
   /**
    * An assertion to call when reaching a point that should not be reached.
+   * 
    * @throws UnimplementedError unconditionally
    */
   public static void UNREACHABLE() {
@@ -82,6 +80,7 @@ public class Assertions {
 
   /**
    * An assertion to call when reaching a point that should not be reached.
+   * 
    * @throws UnimplementedError unconditionally
    */
   public static void UNREACHABLE(String string) {
@@ -90,16 +89,18 @@ public class Assertions {
 
   /**
    * An assertion to call when reaching a point that should not be reached.
+   * 
    * @throws UnimplementedError unconditionally
    */
   public static void UNREACHABLE(Object o) {
     throw new UnimplementedError(o == null ? "" : o.toString());
   }
-  
+
   /**
-   * This is only a convenience method, identical to _assert.
-   * Allows the programmer to distinguish preconditions from other assertions.
-   * @throws UnimplementedError  if b == false
+   * This is only a convenience method, identical to _assert. Allows the programmer to distinguish preconditions from other
+   * assertions.
+   * 
+   * @throws UnimplementedError if b == false
    */
   public static void precondition(boolean b) throws UnimplementedError {
     checkGuard();
@@ -108,20 +109,22 @@ public class Assertions {
   }
 
   /**
-   * This is only a convenience method, identical to _assert.
-   * It allows the programmer to distinguish preconditions from other assertions.
-   * @throws UnimplementedError  if b == false
+   * This is only a convenience method, identical to _assert. It allows the programmer to distinguish preconditions from other
+   * assertions.
+   * 
+   * @throws UnimplementedError if b == false
    */
   public static void precondition(boolean b, String string) throws UnimplementedError {
     checkGuard();
     if (!b)
       throw new UnimplementedError(string);
   }
-  
+
   /**
-   * This is only a convenience method, identical to _assert.
-   * Allows the programmer to distinguish postconditions from other assertions.
-   * @throws UnimplementedError  if b == false
+   * This is only a convenience method, identical to _assert. Allows the programmer to distinguish postconditions from other
+   * assertions.
+   * 
+   * @throws UnimplementedError if b == false
    */
   public static void postcondition(boolean b) throws UnimplementedError {
     checkGuard();
@@ -130,9 +133,10 @@ public class Assertions {
   }
 
   /**
-   * This is only a convenience method, identical to _assert.
-   * It allows the programmer to distinguish postconditions from other assertions.
-   * @throws UnimplementedError  if b == false
+   * This is only a convenience method, identical to _assert. It allows the programmer to distinguish postconditions from other
+   * assertions.
+   * 
+   * @throws UnimplementedError if b == false
    */
   public static void postcondition(boolean b, String string) throws UnimplementedError {
     checkGuard();

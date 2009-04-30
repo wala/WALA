@@ -307,7 +307,7 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
       } else {
         TypeReference[] tarray = super.getParameterTypes(i);
         if (Assertions.verifyAssertions) {
-          Assertions._assert(tarray.length == 1);
+          assert tarray.length == 1;
         }
         TypeReference T = tarray[0];
         TypeName n = T.getName();
@@ -352,7 +352,7 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
       } else {
         TypeReference[] tarray = super.getParameterTypes(i);
         if (Assertions.verifyAssertions) {
-          Assertions._assert(tarray.length == 1);
+          assert tarray.length == 1;
         }
         TypeReference T = tarray[0];
         TypeName n = T.getName();

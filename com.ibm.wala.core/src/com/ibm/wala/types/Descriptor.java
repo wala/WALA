@@ -159,7 +159,7 @@ public final class Descriptor {
       this.returnType = returnType;
       this.parameters = parameters;
       if (Assertions.verifyAssertions && parameters != null) {
-        Assertions._assert(parameters.length > 0);
+        assert parameters.length > 0;
       }
       hashCode = computeHashCode();
     }
@@ -179,7 +179,7 @@ public final class Descriptor {
     @Override
     public boolean equals(Object obj) {
       if (Assertions.verifyAssertions) {
-        Assertions._assert(obj instanceof Key);
+        assert obj instanceof Key;
       }
       Key other = (Key) obj;
       if (!returnType.equals(other.returnType)) {

@@ -86,7 +86,7 @@ public class J2EEClassTargetSelector implements ClassTargetSelector {
     }
     if (Assertions.verifyAssertions) {
       if (nominalRef == null) {
-        Assertions._assert(nominalRef != null, "null declared type in site " + site);
+        assert nominalRef != null : "null declared type in site " + site;
       }
     }
     IClass realType = cha.lookupClass(nominalRef);

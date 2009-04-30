@@ -51,7 +51,7 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
       }
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(B.understands(node));
+      assert B.understands(node);
     }
     return B.iterateNewSites(node);
   }
@@ -63,7 +63,7 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
       }
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(B.understands(node));
+      assert B.understands(node);
     }
     return B.iterateCallSites(node);
   }
@@ -75,7 +75,7 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
       }
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(B.understands(node));
+      assert B.understands(node);
     }
     return B.iterateFieldsRead(node);
   }
@@ -87,7 +87,7 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
       }
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(B.understands(node));
+      assert B.understands(node);
     }
     return B.iterateFieldsWritten(node);
   }

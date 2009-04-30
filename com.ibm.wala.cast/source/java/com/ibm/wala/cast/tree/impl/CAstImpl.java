@@ -44,8 +44,7 @@ public class CAstImpl implements CAst {
 
       if (Assertions.verifyAssertions)
 	for(int i = 0; i < cs.length; i++)
-	  Assertions._assert(cs[i] != null, 
-	    "argument " + i + " is null for node kind " + kind + " [" + CAstPrinter.entityKindAsString(kind) + "]");
+    assert cs[i] != null : "argument " + i + " is null for node kind " + kind + " [" + CAstPrinter.entityKindAsString(kind) + "]";
     }
 
     public int getKind() {

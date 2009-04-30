@@ -17,7 +17,6 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 public class JavaScriptPropertyWrite extends AbstractReflectivePut {
 
@@ -38,7 +37,7 @@ public class JavaScriptPropertyWrite extends AbstractReflectivePut {
    * @see com.ibm.domo.ssa.Instruction#visit(Visitor)
    */
   public void visit(IVisitor v) {
-    Assertions._assert(v instanceof InstructionVisitor);
+    assert v instanceof InstructionVisitor;
     ((InstructionVisitor) v).visitJavaScriptPropertyWrite(this);
   }
 

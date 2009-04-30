@@ -61,7 +61,7 @@ public class Util {
       }
       IClass klass = cha.lookupClass(T);
       if (Assertions.verifyAssertions) {
-        Assertions._assert(klass != null);
+        assert klass != null;
       }
       IClass superKlass = klass.getSuperclass();
       T = (superKlass == null) ? null : superKlass.getReference();

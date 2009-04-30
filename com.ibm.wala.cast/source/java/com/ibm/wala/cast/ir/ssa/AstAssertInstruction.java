@@ -16,7 +16,6 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  *  An assert statement, as found in a variety of languages.  It has a
@@ -43,7 +42,7 @@ public class AstAssertInstruction extends SSAInstruction {
   }
 
   public int getUse(int i) {
-    Assertions._assert(i == 0);
+    assert i == 0;
     return value;
   }
 

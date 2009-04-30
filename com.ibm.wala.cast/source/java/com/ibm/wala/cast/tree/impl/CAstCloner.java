@@ -20,7 +20,6 @@ import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstNodeTypeMap;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.debug.Assertions;
 
 public class CAstCloner extends CAstBasicRewriter {
 
@@ -43,7 +42,7 @@ public class CAstCloner extends CAstBasicRewriter {
       return root;
     } else if (root.getValue() != null) {
       CAstNode copy = Ast.makeConstant(root.getValue());
-      Assertions._assert(!nodeMap.containsKey(root));
+      assert !nodeMap.containsKey(root);
       nodeMap.put(Pair.make(root, c.key()), copy);
       return copy;
     } else {
@@ -54,7 +53,7 @@ public class CAstCloner extends CAstBasicRewriter {
       }
 
       CAstNode copy = Ast.makeNode(root.getKind(), newChildren);
-      Assertions._assert(!nodeMap.containsKey(root));
+      assert !nodeMap.containsKey(root);
       nodeMap.put(Pair.make(root, c.key()), copy);
       return copy;
     }

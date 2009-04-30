@@ -25,7 +25,6 @@ import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.ssa.SSAOptions.DefaultValues;
 import com.ibm.wala.util.collections.ArrayIterator;
 import com.ibm.wala.util.collections.IntStack;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.dominators.DominanceFrontiers;
 
@@ -383,7 +382,7 @@ public abstract class AbstractSSAConversion {
   }
 
   protected void fail(int v) {
-    Assertions._assert(isConstant(v) || !S[v].isEmpty(), "bad stack for " + v + " while SSA converting");
+    assert isConstant(v) || !S[v].isEmpty() : "bad stack for " + v + " while SSA converting";
   }
 
   protected boolean hasDefaultValue(int valueNumber) {

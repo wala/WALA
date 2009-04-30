@@ -309,7 +309,7 @@ public class ClassHierarchy implements IClassHierarchy {
     if (klass.getReference().equals(this.rootTypeRef)) {
       // there is only one root
       if (Assertions.verifyAssertions) {
-        Assertions._assert(root == null);
+        assert root == null;
       }
       root = node;
     }
@@ -348,7 +348,7 @@ public class ClassHierarchy implements IClassHierarchy {
         }
         if (DEBUG && Assertions.verifyAssertions) {
           if (!iface.isInterface()) {
-            Assertions._assert(false, "not an interface: " + iface);
+            assert false : "not an interface: " + iface;
           }
         }
         recordImplements(klass, iface);
@@ -635,7 +635,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
   private void numberTree() {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(root != null);
+      assert root != null;
     }
     visitForNumbering(root);
   }
@@ -737,7 +737,7 @@ public class ClassHierarchy implements IClassHierarchy {
       if (Assertions.verifyAssertions) {
         Node n = map.get(B);
         if (n == null) {
-          Assertions._assert(n != null, "null n for " + B);
+          assert n != null : "null n for " + B;
         }
       }
       Set<IClass> superB;
@@ -845,7 +845,7 @@ public class ClassHierarchy implements IClassHierarchy {
       throw new IllegalArgumentException("c is null");
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(T != null, "null T");
+      assert T != null : "null T";
     }
 
     if (c.isArrayClass()) {
@@ -1001,7 +1001,7 @@ public class ClassHierarchy implements IClassHierarchy {
     Node node = findNode(T);
     if (Assertions.verifyAssertions) {
       if (node == null) {
-        Assertions._assert(node != null, "null node for class " + T);
+        assert node != null : "null node for class " + T;
       }
     }
     HashSet<IClass> result = HashSetFactory.make(3);
@@ -1017,7 +1017,7 @@ public class ClassHierarchy implements IClassHierarchy {
     IClass T = lookupClass(type);
     if (Assertions.verifyAssertions) {
       if (T == null) {
-        Assertions._assert(T != null, "Null lookup for " + type);
+        assert T != null : "Null lookup for " + type;
       }
     }
     return T.isInterface();

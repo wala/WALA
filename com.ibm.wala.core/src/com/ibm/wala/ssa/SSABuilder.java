@@ -100,7 +100,7 @@ public class SSABuilder extends AbstractIntStackMachine {
     this.symbolTable = symbolTable;
     this.insts = method.getDeclaringClass().getClassLoader().getInstructionFactory();
     if (Assertions.verifyAssertions) {
-      Assertions._assert(cfg != null, "Null CFG");
+      assert cfg != null : "Null CFG";
     }
   }
 
@@ -124,7 +124,7 @@ public class SSABuilder extends AbstractIntStackMachine {
     public int meetStack(int slot, int[] rhs, BasicBlock bb) {
 
       if (Assertions.verifyAssertions) {
-        Assertions._assert(bb != null, "null basic block");
+        assert bb != null : "null basic block";
       }
 
       if (bb.isExitBlock()) {
@@ -354,7 +354,7 @@ public class SSABuilder extends AbstractIntStackMachine {
 
       if (Assertions.verifyAssertions) {
         if (getCurrentInstruction() != null) {
-          Assertions._assert(getCurrentInstruction() instanceof SSAInvokeInstruction);
+          assert getCurrentInstruction() instanceof SSAInvokeInstruction;
         }
       }
       if (getCurrentInstruction() == null) {
@@ -880,7 +880,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       if (Assertions.verifyAssertions) {
         int max = shrikeCFG.getMethod().getMaxLocals();
         if (localNumber >= max) {
-          Assertions._assert(false, "invalid local " + localNumber + ">" + max);
+          assert false : "invalid local " + localNumber + ">" + max;
         }
       }
 

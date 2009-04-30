@@ -192,7 +192,7 @@ public abstract class TypeSignature extends Signature {
         return result;
       default:
         if (Assertions.verifyAssertions) {
-          Assertions._assert(false, "bad type signature list " + typeSigs);
+          assert false : "bad type signature list " + typeSigs;
         }
       }
     }

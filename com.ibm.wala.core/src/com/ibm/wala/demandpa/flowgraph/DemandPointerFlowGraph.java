@@ -176,7 +176,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       this.du = node.getDU();
       this.symbolTable = ir.getSymbolTable();
       if (Assertions.verifyAssertions) {
-        Assertions._assert(symbolTable != null);
+        assert symbolTable != null;
       }
     }
 
@@ -289,7 +289,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       }
       PointerKey def = heapModel.getPointerKeyForLocal(node, lval);
       if (Assertions.verifyAssertions) {
-        Assertions._assert(def != null);
+        assert def != null;
       }
 
       if (isStatic) {
@@ -325,7 +325,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       }
       PointerKey use = heapModel.getPointerKeyForLocal(node, rval);
       if (Assertions.verifyAssertions) {
-        Assertions._assert(use != null);
+        assert use != null;
       }
 
       if (isStatic) {
@@ -462,8 +462,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
               InstanceKey ik = heapModel.getInstanceKeyForPEI(node, peiLoc, type);
               if (Assertions.verifyAssertions) {
                 if (!(ik instanceof ConcreteTypeKey)) {
-                  Assertions._assert(ik instanceof ConcreteTypeKey,
-                      "uh oh: need to implement getCaughtException constraints for instance " + ik);
+                  assert ik instanceof ConcreteTypeKey : "uh oh: need to implement getCaughtException constraints for instance " + ik;
                 }
               }
               ConcreteTypeKey ck = (ConcreteTypeKey) ik;

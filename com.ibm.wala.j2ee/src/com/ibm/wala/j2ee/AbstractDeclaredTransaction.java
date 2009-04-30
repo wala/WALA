@@ -133,7 +133,7 @@ public abstract class AbstractDeclaredTransaction implements Comparable<IDeclare
    */
   public int compareTo(IDeclaredTransaction o) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(this.getClass().equals(o.getClass()));
+      assert this.getClass().equals(o.getClass());
     }
     String A = bean.toString() + kindString() + getMethodReference().toString();
     AbstractDeclaredTransaction other = (AbstractDeclaredTransaction) o;

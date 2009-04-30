@@ -16,7 +16,6 @@ import com.ibm.wala.cast.ir.ssa.AbstractReflectiveGet;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 public class JavaScriptPropertyRead extends AbstractReflectiveGet {
   public JavaScriptPropertyRead(int result, int objectRef, int memberRef) {
@@ -50,7 +49,7 @@ public class JavaScriptPropertyRead extends AbstractReflectiveGet {
    * @see com.ibm.domo.ssa.SSAInstruction#visit(com.ibm.domo.ssa.SSAInstruction.Visitor)
    */
   public void visit(IVisitor v) {
-    Assertions._assert(v instanceof InstructionVisitor);
+    assert v instanceof InstructionVisitor;
     ((InstructionVisitor)v).visitJavaScriptPropertyRead(this);
   }
 }

@@ -775,7 +775,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
     void handleCopy(final PointerKeyAndState curPkAndState, final PointerKey succPk, final IFlowLabel label) {
       if (Assertions.verifyAssertions) {
-        Assertions._assert(!label.isBarred());
+        assert !label.isBarred();
       }
       State curState = curPkAndState.getState();
       doTransition(curState, label, new Function<State, Object>() {
@@ -816,7 +816,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     Collection<PointerKeyAndState> matchingPToQueried(PointerKeyAndState curPkAndState, PointerKey predPk, IFlowLabel label) {
       Collection<PointerKeyAndState> ret = ArraySet.make();
       if (Assertions.verifyAssertions) {
-        Assertions._assert(label.isBarred());
+        assert label.isBarred();
       }
       IFlowLabel unbarredLabel = label.bar();
       final State curState = curPkAndState.getState();
@@ -834,7 +834,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     Collection<PointerKeyAndState> matchingTrackedQueried(PointerKeyAndState curPkAndState, PointerKey succPk, IFlowLabel label) {
       Collection<PointerKeyAndState> ret = ArraySet.make();
       if (Assertions.verifyAssertions) {
-        Assertions._assert(label.isBarred());
+        assert label.isBarred();
       }
       final State curState = curPkAndState.getState();
       Set<State> succPkStates = trackedQueried.get(succPk);
@@ -880,7 +880,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         if (Assertions.verifyAssertions && pkAndState.getPointerKey() instanceof LocalPointerKey) {
           CGNode node = ((LocalPointerKey) pkAndState.getPointerKey()).getNode();
           if (!g.hasSubgraphForNode(node)) {
-            Assertions._assert(false, "missing constraints for node of var " + pkAndState);
+            assert false : "missing constraints for node of var " + pkAndState;
           }
         }
         if (DEBUG) {
@@ -899,7 +899,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       if (Assertions.verifyAssertions && pkAndState.getPointerKey() instanceof LocalPointerKey) {
         CGNode node = ((LocalPointerKey) pkAndState.getPointerKey()).getNode();
         if (!g.hasSubgraphForNode(node)) {
-          Assertions._assert(false, "missing constraints for " + node);
+          assert false : "missing constraints for " + node;
         }
       }
       if (DEBUG) {
@@ -1029,7 +1029,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         if (DEBUG)
           System.err.println("init " + curPkAndState);
         if (Assertions.verifyAssertions && curPk instanceof LocalPointerKey) {
-          Assertions._assert(g.hasSubgraphForNode(((LocalPointerKey) curPk).getNode()));
+          assert g.hasSubgraphForNode(((LocalPointerKey) curPk).getNode());
         }
         // if (curPk instanceof LocalPointerKey) {
         // Collection<InstanceKey> constantVals =
@@ -1142,8 +1142,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                   SSAAbstractInvokeInstruction callInstr = callInstrs[i];
                   PointerKey actualPk = heapModel.getPointerKeyForLocal(caller, callInstr.getUse(paramPos));
                   if (Assertions.verifyAssertions) {
-                    Assertions._assert(g.containsNode(actualPk));
-                    Assertions._assert(g.containsNode(localPk));
+                    assert g.containsNode(actualPk);
+                    assert g.containsNode(localPk);
                   }
                   handler.handle(curPkAndState, actualPk, paramLabel);
                 }
@@ -1202,7 +1202,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               PointerKey retVal = isExceptional ? heapModel.getPointerKeyForExceptionalReturnValue(callee) : heapModel
                   .getPointerKeyForReturnValue(callee);
               if (Assertions.verifyAssertions) {
-                Assertions._assert(g.containsNode(retVal));
+                assert g.containsNode(retVal);
               }
               handler.handle(curPkAndState, retVal, ReturnLabel.make(callSiteAndCGNode));
             }
@@ -1220,7 +1220,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                   PointerKey retVal = isExceptional ? heapModel.getPointerKeyForExceptionalReturnValue(callee) : heapModel
                       .getPointerKeyForReturnValue(callee);
                   if (Assertions.verifyAssertions) {
-                    Assertions._assert(g.containsNode(retVal));
+                    assert g.containsNode(retVal);
                   }
                   handler.handle(curPkAndState, retVal, ReturnLabel.make(callSiteAndCGNode));
                 }
@@ -1256,7 +1256,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         PointerKeyAndState ikPredAndState = new PointerKeyAndState(ikPred, ikAndState.getState());
         int mappedIndex = ikAndStates.getMappedIndex(ikAndState);
         if (Assertions.verifyAssertions) {
-          Assertions._assert(mappedIndex != -1);
+          assert mappedIndex != -1;
         }
         if (findOrCreate(pkToTrackedSet, ikPredAndState).add(mappedIndex)) {
           addToTrackedPToWorklist(ikPredAndState);
@@ -1446,8 +1446,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                 PointerKey returnAtCallerKey = heapModel.getPointerKeyForLocal(caller, isExceptional ? callInstr.getException()
                     : callInstr.getDef());
                 if (Assertions.verifyAssertions) {
-                  Assertions._assert(g.containsNode(returnAtCallerKey));
-                  Assertions._assert(g.containsNode(returnKey));
+                  assert g.containsNode(returnAtCallerKey);
+                  assert g.containsNode(returnKey);
                 }
                 handler.handle(curPkAndState, returnAtCallerKey, returnBarLabel);
               }
@@ -1508,7 +1508,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                 g.addSubgraphForNode(callee);
                 PointerKey paramVal = heapModel.getPointerKeyForLocal(callee, i + 1);
                 if (Assertions.verifyAssertions) {
-                  Assertions._assert(g.containsNode(paramVal));
+                  assert g.containsNode(paramVal);
                 }
                 handler.handle(curPkAndState, paramVal, ParamBarLabel.make(callSiteAndCGNode));
               }
@@ -1525,7 +1525,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                     g.addSubgraphForNode(callee);
                     PointerKey paramVal = heapModel.getPointerKeyForLocal(callee, i + 1);
                     if (Assertions.verifyAssertions) {
-                      Assertions._assert(g.containsNode(paramVal));
+                      assert g.containsNode(paramVal);
                     }
                     handler.handle(curPkAndState, paramVal, ParamBarLabel.make(callSiteAndCGNode));
                   }
@@ -1678,7 +1678,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           @Override
           void handle(PointerKeyAndState src, final PointerKey dst, IFlowLabel label) {
             if (Assertions.verifyAssertions) {
-              Assertions._assert(src == curPkAndState);
+              assert src == curPkAndState;
             }
             doTransition(curState, label, new Function<State, Object>() {
 
@@ -1931,8 +1931,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                     SSAAbstractInvokeInstruction callInstr = callInstrs[i];
                     final PointerKey actualPk = heapModel.getPointerKeyForLocal(caller, callInstr.getUse(paramPos));
                     if (Assertions.verifyAssertions) {
-                      Assertions._assert(g.containsNode(actualPk));
-                      Assertions._assert(g.containsNode(localPk));
+                      assert g.containsNode(actualPk);
+                      assert g.containsNode(localPk);
                     }
                     doTransition(curState, paramLabel, new Function<State, Object>() {
 
@@ -1986,7 +1986,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                 final PointerKey retVal = isExceptional ? heapModel.getPointerKeyForExceptionalReturnValue(callee) : heapModel
                     .getPointerKeyForReturnValue(callee);
                 if (Assertions.verifyAssertions) {
-                  Assertions._assert(g.containsNode(retVal));
+                  assert g.containsNode(retVal);
                 }
                 doTransition(curState, ReturnLabel.make(callSiteAndCGNode), new Function<State, Object>() {
 
@@ -2009,7 +2009,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                   final PointerKey retVal = isExceptional ? heapModel.getPointerKeyForExceptionalReturnValue(callee) : heapModel
                       .getPointerKeyForReturnValue(callee);
                   if (Assertions.verifyAssertions) {
-                    Assertions._assert(g.containsNode(retVal));
+                    assert g.containsNode(retVal);
                   }
                   doTransition(curState, ReturnLabel.make(callSiteAndCGNode), new Function<State, Object>() {
 

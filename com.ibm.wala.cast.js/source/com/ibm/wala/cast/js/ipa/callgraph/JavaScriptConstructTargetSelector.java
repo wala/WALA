@@ -44,7 +44,6 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.debug.Assertions;
 
 public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   private static final boolean DEBUG = false;
@@ -128,7 +127,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   }
 
   private IMethod makeValueConstructor(IClass cls, int nargs, Object value) {
-    Assertions._assert(nargs == 0 || nargs == 1);
+    assert nargs == 0 || nargs == 1;
 
     Object key = Pair.make(cls, new Integer(nargs));
     if (constructors.containsKey(key))
@@ -169,7 +168,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   }
 
   private IMethod makeObjectConstructor(IClass cls, int nargs) {
-    Assertions._assert(nargs == 0 || nargs == 1);
+    assert nargs == 0 || nargs == 1;
 
     Object key = Pair.make(cls, new Integer(nargs));
     if (constructors.containsKey(key))
@@ -180,7 +179,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   }
 
   private IMethod makeObjectCall(IClass cls, int nargs) {
-    Assertions._assert(nargs == 0);
+    assert nargs == 0;
 
     Object key = Pair.make(cls, new Integer(nargs));
     if (constructors.containsKey(key))
@@ -284,7 +283,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   }
 
   private IMethod makeStringCall(IClass cls, int nargs) {
-    Assertions._assert(nargs == 0 || nargs == 1);
+    assert nargs == 0 || nargs == 1;
 
     Object key = Pair.make(cls, new Integer(nargs));
     if (constructors.containsKey(key))
@@ -324,7 +323,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   }
 
   private IMethod makeNumberCall(IClass cls, int nargs) {
-    Assertions._assert(nargs == 0 || nargs == 1);
+    assert nargs == 0 || nargs == 1;
 
     Object key = Pair.make(cls, new Integer(nargs));
     if (constructors.containsKey(key))
@@ -392,7 +391,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
 
       return makeFunctionConstructor(cls, cls);
     } else {
-      Assertions._assert(nargs > 1);
+      assert nargs > 1;
       JavaScriptLoader cl = (JavaScriptLoader) cha.getLoader(JavaScriptTypes.jsLoader);
 
       for (int i = 1; i < callStmt.getNumberOfUses(); i++)
@@ -482,7 +481,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     else if (receiver.getReference().equals(JavaScriptTypes.StringObject))
       return makeValueConstructor(receiver, nargs, "");
     else if (receiver.getReference().equals(JavaScriptTypes.BooleanObject)) {
-      Assertions._assert(nargs == 1);
+      assert nargs == 1;
       return makeValueConstructor(receiver, nargs, null);
     } else if (receiver.getReference().equals(JavaScriptTypes.NumberObject))
       return makeValueConstructor(receiver, nargs, new Integer(0));
@@ -515,10 +514,10 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
 
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
     if (site.getDeclaredTarget().equals(JavaScriptMethods.ctorReference)) {
-      Assertions._assert(cha.isSubclassOf(receiver, cha.lookupClass(JavaScriptTypes.Root)));
+      assert cha.isSubclassOf(receiver, cha.lookupClass(JavaScriptTypes.Root));
       IR callerIR = caller.getIR();
       SSAAbstractInvokeInstruction callStmts[] = callerIR.getCalls(site);
-      Assertions._assert(callStmts.length == 1);
+      assert callStmts.length == 1;
       int nargs = callStmts[0].getNumberOfUses();
       return findOrCreateConstructorMethod(callerIR, callStmts[0], receiver, nargs - 1);
     } else {

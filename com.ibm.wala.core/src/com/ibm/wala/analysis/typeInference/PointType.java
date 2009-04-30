@@ -36,7 +36,7 @@ public class PointType extends TypeAbstraction {
     }
     this.type = type;
     if (Assertions.verifyAssertions) {
-      Assertions._assert(type.getReference().isReferenceType());
+      assert type.getReference().isReferenceType();
     }
   }
 

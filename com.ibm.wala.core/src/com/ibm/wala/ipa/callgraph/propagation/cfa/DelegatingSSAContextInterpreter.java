@@ -54,7 +54,7 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
       }
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(B.understands(node));
+      assert B.understands(node);
     }
     return B.getIR(node);
   }
@@ -66,7 +66,7 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
       }
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(B.understands(node));
+      assert B.understands(node);
     }
     return B.getNumberOfStatements(node);
   }
@@ -94,7 +94,7 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
       }
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(B.understands(node));
+      assert B.understands(node);
     }
     return B.getCFG(node);
   }
@@ -106,7 +106,7 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
       }
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(B.understands(node));
+      assert B.understands(node);
     }
     return B.getDU(node);
   }

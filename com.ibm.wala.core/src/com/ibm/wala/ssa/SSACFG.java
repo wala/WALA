@@ -111,7 +111,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock> 
     this.method = method;
     if (Assertions.verifyAssertions) {
       if (method.getDeclaringClass() == null) {
-        Assertions._assert(method.getDeclaringClass() != null, "null declaring class for " + method);
+        assert method.getDeclaringClass() != null : "null declaring class for " + method;
       }
     }
     createBasicBlocks(cfg);
@@ -196,7 +196,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock> 
       if (Assertions.verifyAssertions) {
         IBasicBlock b = getBlockForInstruction(instructionIndex);
         if (!(b instanceof ExceptionHandlerBasicBlock)) {
-          Assertions._assert(b instanceof ExceptionHandlerBasicBlock, "not exception handler " + b + " index " + instructionIndex);
+          assert b instanceof ExceptionHandlerBasicBlock : "not exception handler " + b + " index " + instructionIndex;
         }
       }
       ExceptionHandlerBasicBlock bb = (ExceptionHandlerBasicBlock) getBlockForInstruction(instructionIndex);

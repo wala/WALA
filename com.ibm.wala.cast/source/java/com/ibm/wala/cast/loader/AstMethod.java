@@ -25,7 +25,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.strings.Atom;
 
@@ -103,7 +102,7 @@ public abstract class AstMethod implements IMethod {
     this.lexicalInfo = null;
     this.debugInfo = null;
     
-    Assertions._assert(isAbstract());
+    assert isAbstract();
   }
 
   public AbstractCFG cfg() {

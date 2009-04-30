@@ -13,6 +13,7 @@ package com.ibm.wala.ipa.slicer;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -441,7 +442,7 @@ public class PDG implements NumberedGraph<Statement> {
       case NORMAL_RET_CALLER:
       case PARAM_CALLEE: {
         if (Assertions.verifyAssertions && dOptions.isIgnoreExceptions()) {
-          Assertions._assert(!s.getKind().equals(Kind.EXC_RET_CALLER));
+          assert !s.getKind().equals(Kind.EXC_RET_CALLER);
         }
 
         ValueNumberCarrier a = (ValueNumberCarrier) s;

@@ -37,7 +37,7 @@ public class PointerKeyComparator implements Comparator {
     if (h1 != h2)
       return h1-h2;
     else {
-      Assertions._assert(r1 == r2);
+      assert r1 == r2;
       return 0;
     }
   }
@@ -50,7 +50,7 @@ public class PointerKeyComparator implements Comparator {
     else {
       int s1 = k1.hashCode();
       int s2 = k2.hashCode();
-      Assertions._assert(k1 == k2 || s1 != s2);
+      assert k1 == k2 || s1 != s2;
       return s1-s2;
     }
   }
@@ -65,7 +65,7 @@ public class PointerKeyComparator implements Comparator {
     if (f1 != f2)
       return f1-f2;
     else {
-      Assertions._assert(if1 == if2);
+      assert if1 == if2;
       return 0;
     }
   }
@@ -82,7 +82,7 @@ public class PointerKeyComparator implements Comparator {
 	if (n1 != n2)
 	  return n1-n2;
 	else {
-	  Assertions._assert(key1.equals(key2));
+	  assert key1.equals(key2);
 	  return 0;
 	}
       }
@@ -98,7 +98,7 @@ public class PointerKeyComparator implements Comparator {
       if (n1 != n2)
 	return n1-n2;
       else {
-	Assertions._assert(key1.equals(key2));
+	assert key1.equals(key2);
 	return 0;
       }
     }
@@ -113,7 +113,7 @@ public class PointerKeyComparator implements Comparator {
       if (n1 != n2)
 	return n1-n2;
       else {
-	Assertions._assert(key1.equals(key2));
+	assert key1.equals(key2);
 	return 0;
       }
     }

@@ -114,7 +114,7 @@ public class SpringEntrypoints implements Iterable<Entrypoint> {
                   } else {
                     TypeReference[] tArray = super.getParameterTypes(i);
                     if (Assertions.verifyAssertions) {
-                      Assertions._assert(tArray.length == 1);
+                      assert tArray.length == 1;
                     }
                     TypeReference T = tArray[0];
                     TypeName n = T.getName();

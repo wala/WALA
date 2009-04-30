@@ -293,8 +293,8 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
 
     public Iterator<? extends Statement> getPredNodes(Statement N) {
       if (Assertions.verifyAssertions && dOptions.isIgnoreExceptions()) {
-        Assertions._assert(!N.getKind().equals(Kind.EXC_RET_CALLEE));
-        Assertions._assert(!N.getKind().equals(Kind.EXC_RET_CALLER));
+        assert !N.getKind().equals(Kind.EXC_RET_CALLEE);
+        assert !N.getKind().equals(Kind.EXC_RET_CALLER);
       }
       addPDGStatementNodes(N.getNode());
       switch (N.getKind()) {

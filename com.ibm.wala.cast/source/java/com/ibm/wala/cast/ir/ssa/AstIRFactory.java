@@ -27,7 +27,6 @@ import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.SSACFG.ExceptionHandlerBasicBlock;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 public class AstIRFactory implements IRFactory {
 
@@ -93,7 +92,7 @@ public class AstIRFactory implements IRFactory {
   }
 
   public IR makeIR(final IMethod method, final Context context, final SSAOptions options) {
-    Assertions._assert(method instanceof AstMethod, method.toString());
+    assert method instanceof AstMethod : method.toString();
 //    Pair<IMethod,Context> key = Pair.make(method, context);
 
     AbstractCFG oldCfg = ((AstMethod) method).cfg();

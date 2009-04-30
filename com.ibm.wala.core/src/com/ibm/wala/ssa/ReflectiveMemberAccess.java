@@ -38,7 +38,7 @@ public abstract class ReflectiveMemberAccess extends SSAInstruction {
   @Override
   public int getUse(int j) {
     if (Assertions.verifyAssertions)
-      Assertions._assert(j <= 1);
+      assert j <= 1;
     return (j == 0) ? objectRef : memberRef;
   }
 

@@ -24,7 +24,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphSlicer;
 import com.ibm.wala.util.graph.impl.DelegatingGraph;
@@ -133,7 +132,7 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
   }
 
   public IntSet getSuccNodeNumbers(CGNode node) {
-    Assertions._assert(containsNode(node));
+    assert containsNode(node);
     MutableIntSet x = IntSetUtil.make();
     for (Iterator ns = getSuccNodes(node); ns.hasNext();) {
       CGNode succ = (CGNode) ns.next();
@@ -146,7 +145,7 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
   }
 
   public IntSet getPredNodeNumbers(CGNode node) {
-    Assertions._assert(containsNode(node));
+    assert containsNode(node);
     MutableIntSet x = IntSetUtil.make();
     for (Iterator ns = getPredNodes(node); ns.hasNext();) {
       CGNode pred = (CGNode) ns.next();

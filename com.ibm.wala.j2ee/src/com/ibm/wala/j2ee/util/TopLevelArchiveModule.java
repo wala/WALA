@@ -214,7 +214,7 @@ public class TopLevelArchiveModule implements Module {
      */
     public Module asModule() {
       if (Assertions.verifyAssertions) {
-        Assertions._assert(isModuleFile());
+        assert isModuleFile();
       }
       return new BloatedArchiveModule((Archive) F);
     }

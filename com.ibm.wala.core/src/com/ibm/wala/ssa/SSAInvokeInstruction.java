@@ -60,7 +60,7 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
     }
     if (site.getDeclaredTarget().getReturnType().equals(TypeReference.Void)) {
       if (result != -1) {
-        Assertions._assert(result == -1, "bogus call to " + site);
+        assert result == -1 : "bogus call to " + site;
       }
     }
 
@@ -72,11 +72,11 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
     nExpected += site.getDeclaredTarget().getNumberOfParameters();
     if (nExpected > 0) {
       if (params == null) {
-        Assertions._assert(params != null, "null params for " + site);
+        assert params != null : "null params for " + site;
       }
       if (params.length != nExpected) {
-        Assertions._assert(params.length == nExpected, "wrong number of params for " + site + " Expected " + nExpected + " got "
-            + params.length);
+        assert params.length == nExpected : "wrong number of params for " + site + " Expected " + nExpected + " got "
+        + params.length;
       }
     }
   }
@@ -100,9 +100,9 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
   public int getNumberOfUses() {
     if (params == null) {
       if (Assertions.verifyAssertions) {
-        Assertions._assert(site.getInvocationCode() == IInvokeInstruction.Dispatch.STATIC
-            || site.getInvocationCode() == IInvokeInstruction.Dispatch.SPECIAL);
-        Assertions._assert(site.getDeclaredTarget().getNumberOfParameters() == 0);
+        assert site.getInvocationCode() == IInvokeInstruction.Dispatch.STATIC
+        || site.getInvocationCode() == IInvokeInstruction.Dispatch.SPECIAL;
+        assert site.getDeclaredTarget().getNumberOfParameters() == 0;
       }
       return 0;
     } else {
@@ -133,10 +133,10 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
   public int getUse(int j) {
     if (Assertions.verifyAssertions) {
       if (params == null) {
-        Assertions._assert(false, "Invalid getUse: " + j + " , null params " + this);
+        assert false : "Invalid getUse: " + j + " , null params " + this;
       }
       if (params.length <= j) {
-        Assertions._assert(params.length > j, "Invalid getUse: " + this + ", index " + j + ", params.length " + params.length);
+        assert params.length > j : "Invalid getUse: " + this + ", index " + j + ", params.length " + params.length;
       }
     }
     return params[j];

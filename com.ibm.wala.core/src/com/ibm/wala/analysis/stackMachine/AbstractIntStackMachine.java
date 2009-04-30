@@ -201,7 +201,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       @Override
       protected MachineState makeNodeVariable(BasicBlock n, boolean IN) {
         if (Assertions.verifyAssertions) {
-          Assertions._assert(n != null);
+          assert n != null;
         }
         MachineState result = new MachineState(n);
         if (IN && n.equals(cfg.entry())) {
@@ -213,8 +213,8 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       @Override
       protected MachineState makeEdgeVariable(BasicBlock from, BasicBlock to) {
         if (Assertions.verifyAssertions) {
-          Assertions._assert(from != null);
-          Assertions._assert(to != null);
+          assert from != null;
+          assert to != null;
         }
         MachineState result = new MachineState(from);
 
@@ -592,7 +592,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     public int pop() {
       if (Assertions.verifyAssertions) {
         if (stackHeight <= 0) {
-          Assertions._assert(stackHeight > 0, "can't pop stack of height " + stackHeight);
+          assert stackHeight > 0 : "can't pop stack of height " + stackHeight;
         }
       }
       stackHeight -= 1;
@@ -990,8 +990,8 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         int size = instruction.getSize();
         int delta = instruction.getDelta();
         if (Assertions.verifyAssertions) {
-          Assertions._assert(size == 1 || size == 2);
-          Assertions._assert(delta == 0 || delta == 1 || delta == 2);
+          assert size == 1 || size == 2;
+          assert delta == 0 || delta == 1 || delta == 2;
         }
         int toPop = size + delta;
         int v1 = workingState.pop();

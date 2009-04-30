@@ -74,7 +74,7 @@ public abstract class SSAPutInstruction extends SSAFieldAccessInstruction {
   @Override
   public int getUse(int j) {
     if (Assertions.verifyAssertions)
-      Assertions._assert(j == 0 || (!isStatic() && j == 1));
+      assert j == 0 || (!isStatic() && j == 1);
     return (j == 0 && !isStatic()) ? getRef() : val;
   }
 

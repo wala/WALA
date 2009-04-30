@@ -37,7 +37,7 @@ public class DefaultEntrypoint extends Entrypoint {
     this.cha = cha;
     paramTypes = makeParameterTypes(method);
     if (Assertions.verifyAssertions) {
-      Assertions._assert(paramTypes != null, method.toString());
+      assert paramTypes != null : method.toString();
     }
   }
 
@@ -49,7 +49,7 @@ public class DefaultEntrypoint extends Entrypoint {
     this.cha = cha;
     paramTypes = makeParameterTypes(getMethod());
     if (Assertions.verifyAssertions) {
-      Assertions._assert(paramTypes != null, method.toString());
+      assert paramTypes != null : method.toString();
     }
   }
 

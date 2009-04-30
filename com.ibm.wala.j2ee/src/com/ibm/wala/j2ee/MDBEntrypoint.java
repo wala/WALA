@@ -20,7 +20,7 @@ class MDBEntrypoint extends EJBLifecycleEntrypoint {
   MDBEntrypoint(IMethod m, IClassHierarchy cha, TypeReference bean) {
     super(m, cha, bean);
     if (Assertions.verifyAssertions) {
-      Assertions._assert(m.getDescriptor().equals(EJBConstants.onMessageDesc));
+      assert m.getDescriptor().equals(EJBConstants.onMessageDesc);
     }
   }
   

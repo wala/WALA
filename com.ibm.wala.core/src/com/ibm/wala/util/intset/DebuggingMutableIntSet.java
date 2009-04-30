@@ -31,14 +31,14 @@ class DebuggingMutableIntSet implements MutableIntSet {
   }
 
   private void assertEquiv() {
-    Assertions._assert(primaryImpl.sameValue(secondaryImpl));
+    assert primaryImpl.sameValue(secondaryImpl);
   }
 
   /**
    * @return true iff this set contains integer i
    */
   public boolean contains(int i) {
-    Assertions._assert(primaryImpl.contains(i) == secondaryImpl.contains(i));
+    assert primaryImpl.contains(i) == secondaryImpl.contains(i);
     return primaryImpl.contains(i);
   }
 
@@ -58,15 +58,15 @@ class DebuggingMutableIntSet implements MutableIntSet {
    */
   public int size() {
     if (primaryImpl.size() != secondaryImpl.size()) {
-      Assertions._assert(primaryImpl.size() == secondaryImpl.size(), "size " + primaryImpl.size() + " of " + primaryImpl
-          + " differs from " + "size " + secondaryImpl.size() + " of " + secondaryImpl);
+      assert primaryImpl.size() == secondaryImpl.size() : "size " + primaryImpl.size() + " of " + primaryImpl
+      + " differs from " + "size " + secondaryImpl.size() + " of " + secondaryImpl;
     }
 
     return primaryImpl.size();
   }
 
   public int max() {
-    Assertions._assert(primaryImpl.max() == secondaryImpl.max());
+    assert primaryImpl.max() == secondaryImpl.max();
     return primaryImpl.max();
   }
 
@@ -80,8 +80,8 @@ class DebuggingMutableIntSet implements MutableIntSet {
     boolean sr = secondaryImpl.add(i);
 
     if (pr != sr) {
-      Assertions._assert(pr == sr, "adding " + i + " to " + primaryImpl + " returns " + pr + ", but adding " + i + " to "
-          + secondaryImpl + " returns " + sr);
+      assert pr == sr : "adding " + i + " to " + primaryImpl + " returns " + pr + ", but adding " + i + " to "
+      + secondaryImpl + " returns " + sr;
     }
 
     return pr;
@@ -107,7 +107,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
       boolean ssr = secondaryImpl.containsAny(db.secondaryImpl);
 
       if (ppr != ssr) {
-        Assertions._assert(ppr == ssr, "containsAny " + this + " " + set + " " + ppr + " " + ssr);
+        assert ppr == ssr : "containsAny " + this + " " + set + " " + ppr + " " + ssr;
       }
       return ppr;
     } else {
@@ -127,7 +127,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
       IntSet ppr = primaryImpl.intersection(db.primaryImpl);
       IntSet ssr = secondaryImpl.intersection(db.secondaryImpl);
 
-      Assertions._assert(ppr.sameValue(ssr));
+      assert ppr.sameValue(ssr);
 
       return ppr;
     } else {
@@ -156,7 +156,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
       boolean ppr = primaryImpl.sameValue(db.primaryImpl);
       boolean ssr = secondaryImpl.sameValue(db.secondaryImpl);
 
-      Assertions._assert(ppr == ssr);
+      assert ppr == ssr;
 
       return ppr;
     } else {
@@ -174,7 +174,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
       boolean ppr = primaryImpl.isSubset(db.primaryImpl);
       boolean ssr = secondaryImpl.isSubset(db.secondaryImpl);
 
-      Assertions._assert(ppr == ssr);
+      assert ppr == ssr;
 
       return ppr;
     } else {
@@ -192,7 +192,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
       primaryImpl.copySet(db.primaryImpl);
       secondaryImpl.copySet(db.secondaryImpl);
 
-      Assertions._assert(primaryImpl.sameValue(secondaryImpl));
+      assert primaryImpl.sameValue(secondaryImpl);
     } else {
       Assertions.UNREACHABLE();
     }
@@ -235,8 +235,8 @@ class DebuggingMutableIntSet implements MutableIntSet {
       secondaryImpl.intersectWith(db.secondaryImpl);
 
       if (!primaryImpl.sameValue(secondaryImpl))
-        Assertions._assert(false, this + " (" + primaryImpl.size() + ", " + secondaryImpl.size()
-            + ") inconsistent after intersecting with " + set);
+        assert false : this + " (" + primaryImpl.size() + ", " + secondaryImpl.size()
+        + ") inconsistent after intersecting with " + set;
     } else {
       Assertions.UNREACHABLE();
     }
@@ -251,7 +251,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
       boolean pr = primaryImpl.addAllInIntersection(db.primaryImpl, df.primaryImpl);
       boolean sr = secondaryImpl.addAllInIntersection(db.secondaryImpl, df.secondaryImpl);
 
-      Assertions._assert(pr == sr);
+      assert pr == sr;
 
       return pr;
     } else {
@@ -267,15 +267,15 @@ class DebuggingMutableIntSet implements MutableIntSet {
     MutableSparseIntSet bits = MutableSparseIntSet.makeEmpty();
     for (IntIterator pi = primaryImpl.intIterator(); pi.hasNext();) {
       int x = pi.next();
-      Assertions._assert(!bits.contains(x));
+      assert !bits.contains(x);
       bits.add(x);
     }
     for (IntIterator si = secondaryImpl.intIterator(); si.hasNext();) {
       int x = si.next();
-      Assertions._assert(bits.contains(x));
+      assert bits.contains(x);
       bits.remove(x);
     }
-    Assertions._assert(bits.isEmpty());
+    assert bits.isEmpty();
 
     return primaryImpl.intIterator();
   }
@@ -287,17 +287,17 @@ class DebuggingMutableIntSet implements MutableIntSet {
     final Set<Integer> bits = HashSetFactory.make();
     primaryImpl.foreach(new IntSetAction() {
       public void act(int x) {
-        Assertions._assert(!bits.contains(new Integer(x)));
+        assert !bits.contains(new Integer(x));
         bits.add(new Integer(x));
       }
     });
     secondaryImpl.foreach(new IntSetAction() {
       public void act(int x) {
-        Assertions._assert(bits.contains(new Integer(x)));
+        assert bits.contains(new Integer(x));
         bits.remove(new Integer(x));
       }
     });
-    Assertions._assert(bits.isEmpty());
+    assert bits.isEmpty();
 
     primaryImpl.foreach(action);
   }
@@ -309,17 +309,17 @@ class DebuggingMutableIntSet implements MutableIntSet {
     final Set<Integer> bits = HashSetFactory.make();
     primaryImpl.foreachExcluding(X, new IntSetAction() {
       public void act(int x) {
-        Assertions._assert(!bits.contains(new Integer(x)));
+        assert !bits.contains(new Integer(x));
         bits.add(new Integer(x));
       }
     });
     secondaryImpl.foreachExcluding(X, new IntSetAction() {
       public void act(int x) {
-        Assertions._assert(bits.contains(new Integer(x)));
+        assert bits.contains(new Integer(x));
         bits.remove(new Integer(x));
       }
     });
-    Assertions._assert(bits.isEmpty());
+    assert bits.isEmpty();
 
     primaryImpl.foreachExcluding(X, action);
   }

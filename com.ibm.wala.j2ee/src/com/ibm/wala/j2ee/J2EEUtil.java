@@ -120,7 +120,7 @@ public class J2EEUtil {
    */
   public static TypeReference getTypeForInterface(ClassLoaderReference loader, String iName) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(iName != null);
+      assert iName != null;
     }
     iName = "L" + iName.replace('.', '/');
     TypeReference iFace = TypeReference.findOrCreate(loader, TypeName.string2TypeName(iName));

@@ -118,7 +118,7 @@ public abstract class SSAInference<T extends IVariable> extends DefaultFixedPoin
             if (s.getUse(j) > -1) {
               uses[j] = getVariable(s.getUse(j));
               if (Assertions.verifyAssertions) {
-                Assertions._assert(uses[j] != null);
+                assert uses[j] != null;
               }
             }
           }
@@ -153,7 +153,7 @@ public abstract class SSAInference<T extends IVariable> extends DefaultFixedPoin
     }
     if (Assertions.verifyAssertions) {
       if (vars == null) {
-        Assertions._assert(vars != null, "null vars array");
+        assert vars != null : "null vars array";
       }
     }
     return (T) vars[valueNumber];

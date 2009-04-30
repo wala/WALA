@@ -281,7 +281,7 @@ public class CommandInterpreter implements SSAContextInterpreter {
   private SpecializedExecuteMethod findOrCreateSpecializedMethod(CGNode node) {
     if (Assertions.verifyAssertions) {
       if (!(node.getContext() instanceof JavaTypeContext))
-        Assertions._assert(false, "unexpected context: " + node);
+        assert false : "unexpected context: " + node;
     }
     SpecializedExecuteMethod m = syntheticMethodCache.get(node.getContext());
     if (m == null) {

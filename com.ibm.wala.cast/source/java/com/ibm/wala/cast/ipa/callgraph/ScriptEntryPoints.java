@@ -23,7 +23,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
 
 public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
 
@@ -41,7 +40,7 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
     }
 
     public TypeReference[] getParameterTypes(int i) {
-      Assertions._assert(i == 0);
+      assert i == 0;
       if (getMethod().isStatic()) {
 	return new TypeReference[0];
       } else {

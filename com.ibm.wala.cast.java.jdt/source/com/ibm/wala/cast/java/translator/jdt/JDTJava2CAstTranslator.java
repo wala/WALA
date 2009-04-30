@@ -51,6 +51,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
@@ -477,7 +478,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
   private CAstNode visit(TypeDeclarationStatement n, WalkContext context) {
     // TODO 1.6: enums of course...
     AbstractTypeDeclaration decl = n.getDeclaration();
-    Assertions._assert(decl instanceof TypeDeclaration, "Local enum declaration not yet supported");
+    assert decl instanceof TypeDeclaration : "Local enum declaration not yet supported";
     CAstEntity classEntity = visit((TypeDeclaration) decl, context);
 
     // these statements doin't actually do anything, just define a type
@@ -509,7 +510,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
       if (m.isConstructor() && Arrays.equals(m.getParameterTypes(), ctor.getParameterTypes()))
         superCtor = m;
 
-    Assertions._assert(superCtor != null, "couldn't find constructor for anonymous class");
+    assert superCtor != null : "couldn't find constructor for anonymous class";
 
     // PART II: make ctor with simply "super(a,b,c...)"
     final Map<CAstNode, CAstEntity> memberEntities = new LinkedHashMap<CAstNode, CAstEntity>();
@@ -1154,7 +1155,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
 
   private CAstNode visit(ArrayInitializer n, WalkContext context) {
     ITypeBinding type = n.resolveTypeBinding();
-    Assertions._assert(type != null, "Could not determine type of ArrayInitializer");
+    assert type != null : "Could not determine type of ArrayInitializer";
     TypeReference newTypeRef = fIdentityMapper.getTypeRef(type);
     CAstNode[] eltNodes = new CAstNode[n.expressions().size() + 1];
     int idx = 0;
@@ -1165,7 +1166,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
       Expression element = (Expression) iter.next();
       eltNodes[idx] = visitNode(element, context);
       if (eltNodes[idx] == null)
-        Assertions._assert(eltNodes[idx] != null, element.toString());
+        assert eltNodes[idx] != null : element.toString();
     }
 
     return makeNode(context, fFactory, n, CAstNode.ARRAY_LITERAL, eltNodes);
@@ -1368,7 +1369,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
     ITypeBinding methodOwner = methodBinding.getDeclaringClass();
 
     if (!(methodOwner.isInterface() || methodOwner.isClass() || methodOwner.isEnum())) {
-      Assertions._assert(false, "owner " + methodOwner + " of " + methodBinding + " is not a class");
+      assert false : "owner " + methodOwner + " of " + methodBinding + " is not a class";
     }
 
     // POPULATE PARAMETERS
@@ -1377,7 +1378,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
     CAstNode[] children = new CAstNode[2 + nFormals];
 
     // this (or void for static)
-    Assertions._assert(target != null, "no receiver for " + methodBinding);
+    assert target != null : "no receiver for " + methodBinding;
     children[0] = target;
 
     // method reference
@@ -1424,7 +1425,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
   private void populateArguments(CAstNode[] children, IMethodBinding methodBinding, List/* CAstNode or Expression */arguments,
       WalkContext context) {
     int nFormals = methodBinding.getParameterTypes().length;
-    Assertions._assert(children.length == nFormals + 2);
+    assert children.length == nFormals + 2;
     int nActuals = arguments.size();
 
     ITypeBinding lastArgType = null;
@@ -1443,8 +1444,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
       for (Object arg : arguments)
         children[i++] = (arg instanceof CAstNode) ? ((CAstNode) arg) : visitNode((Expression) arg, context);
     } else {
-      Assertions._assert(nActuals >= (nFormals - 1) && methodBinding.isVarargs(),
-          "Invalid number of parameters for constructor call");
+      assert nActuals >= (nFormals - 1) && methodBinding.isVarargs() : "Invalid number of parameters for constructor call";
       for (int i = 0; i < nFormals - 1; i++) {
         Object arg = arguments.get(i);
         children[i + 2] = (arg instanceof CAstNode) ? ((CAstNode) arg) : visitNode((Expression) arg, context);
@@ -1536,7 +1536,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
 
     while (left instanceof ParenthesizedExpression)
       left = ((ParenthesizedExpression) left).getExpression();
-    Assertions._assert(left instanceof FieldAccess, "Cast in assign pre-op but no field access?!");
+    assert left instanceof FieldAccess : "Cast in assign pre-op but no field access?!";
 
     FieldAccess field = (FieldAccess) left;
     InfixExpression.Operator infixop = JDT2CAstUtils.mapAssignOperatorToInfixOperator(assign.getOperator());
@@ -1609,7 +1609,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
     if (n.resolveBinding() instanceof ITypeBinding)
       return makeNode(context, fFactory, null, CAstNode.EMPTY);
 
-    Assertions._assert(n.resolveBinding() instanceof IVariableBinding, "SimpleName's binding is not a variable or a type binding!");
+    assert n.resolveBinding() instanceof IVariableBinding : "SimpleName's binding is not a variable or a type binding!";
 
     IVariableBinding binding = (IVariableBinding) n.resolveBinding();
     binding = binding.getVariableDeclaration(); // ignore weird generic stuff
@@ -1730,11 +1730,11 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
     ITypeBinding targetType = fieldBinding.getDeclaringClass();
 
     if (targetType == null) { // array
-      Assertions._assert(fieldName.equals("length"), "null targetType but not aray length access");
+      assert fieldName.equals("length") : "null targetType but not aray length access";
       return makeNode(context, fFactory, positioningNode, CAstNode.ARRAY_LENGTH, targetNode);
     }
 
-    Assertions._assert(fieldBinding.isField(), "Field binding is not a field?!"); // we can probably safely delete this
+    assert fieldBinding.isField() : "Field binding is not a field?!"; // we can probably safely delete this
     // check
 
     // translate JDT field ref to WALA field ref
@@ -1824,7 +1824,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
 
     if (n.resolveBinding() instanceof IVariableBinding) {
       IVariableBinding binding = (IVariableBinding) n.resolveBinding();
-      Assertions._assert(binding.isField(), "Non-field variable QualifiedName!");
+      assert binding.isField() : "Non-field variable QualifiedName!";
 
       // if field access is static, visitNode(n.getQualifier()) will come back here
       // and we will return an EMPTY node
@@ -1950,7 +1950,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
   private CAstNode createConstructorInvocation(IMethodBinding ctorBinding, List/* <Expression> */arguments, ASTNode callerNode,
       WalkContext context, boolean isSuper) {
     ITypeBinding ctorType = ctorBinding.getDeclaringClass();
-    Assertions._assert(ctorType.isClass());
+    assert ctorType.isClass();
 
     // dummy PC = 0 -- Just want to wrap the kind of call; the "rear end"
     // won't care about anything else...
@@ -2113,7 +2113,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
   private CAstNode visit(BreakStatement n, WalkContext context) {
     String label = n.getLabel() == null ? null : n.getLabel().getIdentifier();
     ASTNode target = context.getBreakFor(label);
-    Assertions._assert(target != null);
+    assert target != null;
     CAstNode result = makeNode(context, fFactory, n, CAstNode.GOTO);
     context.cfg().map(n, result);
     context.cfg().add(n, target, null);
@@ -2123,7 +2123,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
   private CAstNode visit(ContinueStatement n, WalkContext context) {
     String label = n.getLabel() == null ? null : n.getLabel().getIdentifier();
     ASTNode target = context.getContinueFor(label);
-    Assertions._assert(target != null);
+    assert target != null;
     CAstNode result = makeNode(context, fFactory, n, CAstNode.GOTO);
     context.cfg().map(n, result);
     context.cfg().add(n, target, null);
@@ -2557,7 +2557,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
   private CAstNode visit(ArrayCreation n, WalkContext context) {
     ITypeBinding newType = n.resolveTypeBinding();
     ArrayInitializer ai = n.getInitializer();
-    Assertions._assert(newType.isArray());
+    assert newType.isArray();
 
     if (ai != null) {
       return visitNode(ai, context);
@@ -2994,7 +2994,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
 
         // catchType here should NEVER be FakeExceptionTypeBinary, because these can only be thrown (not caught) by
         // "1/0", implicit null pointer exceptions, etc.
-        Assertions._assert(!(catchNodes instanceof FakeExceptionTypeBinding), "catchNodes instanceof FakeExceptionTypeBinary!");
+        assert !(catchNodes instanceof FakeExceptionTypeBinding) : "catchNodes instanceof FakeExceptionTypeBinary!";
 
         if (label.isSubTypeCompatible(catchType) || label.isEqualTo(catchType)) {
           catchNodes.add(p);
@@ -3286,7 +3286,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
     for (IMethodBinding m : enumType.getSuperclass().getTypeDeclaration().getDeclaredMethods())
       if (m.getName().equals("valueOf") && m.getParameterTypes().length == 2)
         superMet = m;
-    Assertions._assert(met != null && superMet != null, "Couldn't find enum values() function in JDT bindings!");
+    assert met != null && superMet != null : "Couldn't find enum values() function in JDT bindings!";
 
     Map<CAstNode, CAstEntity> memberEntities = new LinkedHashMap<CAstNode, CAstEntity>();
     final MethodContext context = new MethodContext(oldContext, memberEntities);
@@ -3325,7 +3325,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
     for (IMethodBinding m : enumType.getDeclaredMethods())
       if (m.getName().equals("values") && m.getParameterTypes().length == 0)
         met = m;
-    Assertions._assert(met != null, "Couldn't find enum values() function in JDT bindings!");
+    assert met != null : "Couldn't find enum values() function in JDT bindings!";
 
     Map<CAstNode, CAstEntity> memberEntities = new LinkedHashMap<CAstNode, CAstEntity>();
     final MethodContext context = new MethodContext(oldContext, memberEntities);
@@ -3418,7 +3418,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
         }
     }
 
-    Assertions._assert(superCtor != null, "enum");
+    assert superCtor != null : "enum";
 
     // PART II: make ctor with simply "super(a,b,c...)"
     // TODO: extra CAstNodes

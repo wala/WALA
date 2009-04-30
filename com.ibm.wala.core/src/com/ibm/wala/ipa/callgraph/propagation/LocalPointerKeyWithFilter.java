@@ -25,7 +25,7 @@ public class LocalPointerKeyWithFilter extends LocalPointerKey implements Filter
   public LocalPointerKeyWithFilter(CGNode node, int valueNumber, TypeFilter typeFilter) {
     super(node,valueNumber);
     if (Assertions.verifyAssertions) {
-      Assertions._assert(typeFilter != null);
+      assert typeFilter != null;
     }
     this.typeFilter = typeFilter;
   }

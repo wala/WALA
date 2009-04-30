@@ -27,7 +27,6 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
 
 abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
 
@@ -68,7 +67,7 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
 
             if (node.getMethod() == parents[i].getMethod()) {
               if (containsKey(parents[i].getName()))
-                Assertions._assert(get(parents[i].getName()) == node);
+                assert get(parents[i].getName()) == node;
               else {
                 put(parents[i].getName(), node);
                 if (AstTranslator.DEBUG_LEXICAL)

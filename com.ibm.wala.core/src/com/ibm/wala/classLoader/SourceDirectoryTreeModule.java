@@ -12,8 +12,6 @@ package com.ibm.wala.classLoader;
 
 import java.io.File;
 
-import com.ibm.wala.util.debug.Assertions;
-
 /**
  * a module representing a directory tree of source files.
  */
@@ -48,7 +46,7 @@ public class SourceDirectoryTreeModule extends DirectoryTreeModule {
 
     String filePath = file.getAbsolutePath();
 
-    Assertions._assert(filePath.startsWith(rootPath));
+    assert filePath.startsWith(rootPath);
 
     return new SourceFileModule(file, filePath.substring(rootPath.length()));
   }

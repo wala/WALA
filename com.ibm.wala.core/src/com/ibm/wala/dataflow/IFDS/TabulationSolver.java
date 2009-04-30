@@ -599,7 +599,7 @@ public class TabulationSolver<T, P, F> {
                 // if "exit" is a valid exit from the callee to the return
                 // site being processed
                 if (DEBUG_LEVEL > 0 && Assertions.verifyAssertions) {
-                  Assertions._assert(supergraph.containsNode(exit));
+                  assert supergraph.containsNode(exit);
                 }
                 int x_num = supergraph.getLocalBlockNumber(exit);
                 IntSet reachedBySummary = summaries.getSummaryEdges(s_p_num, x_num, d1);
@@ -685,8 +685,8 @@ public class TabulationSolver<T, P, F> {
         reached.foreach(new IntSetAction() {
           public void act(int x) {
             if (Assertions.verifyAssertions) {
-              Assertions._assert(x >= 0);
-              Assertions._assert(edge.d1 >= 0);
+              assert x >= 0;
+              assert edge.d1 >= 0;
             }
             propagate(edge.entry, edge.d1, returnSite, x);
           }
@@ -771,13 +771,13 @@ public class TabulationSolver<T, P, F> {
         System.err.println("BOOM " + n);
         supergraph.getLocalBlockNumber(n);
       }
-      Assertions._assert(number >= 0);
+      assert number >= 0;
     }
 
     LocalPathEdges pLocal = findOrCreateLocalPathEdges(s_p);
 
     if (Assertions.verifyAssertions) {
-      Assertions._assert(j >= 0);
+      assert j >= 0;
     }
 
     if (!pLocal.contains(i, number, j)) {
@@ -805,7 +805,7 @@ public class TabulationSolver<T, P, F> {
    */
   private int merge(T s_p, int i, T n, int j) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(j >= 0);
+      assert j >= 0;
     }
     IMergeFunction alpha = problem.getMergeFunction();
     if (alpha != null) {

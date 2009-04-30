@@ -71,7 +71,7 @@ public class ReflectionSummary {
         IClass klass = cha.lookupClass(T);
         if (Assertions.verifyAssertions) {
           if (klass == null) {
-            Assertions._assert(klass != null, "null type for " + T);
+            assert klass != null : "null type for " + T;
           }
         }
         p[i] = new PointType(klass);

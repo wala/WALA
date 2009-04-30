@@ -123,7 +123,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
     // sort files into projects
     HashMap<IProject, ArrayList<ICompilationUnit>> projectsFiles = new HashMap<IProject, ArrayList<ICompilationUnit>>();
     for (Object m : modules) {
-      Assertions._assert(m instanceof EclipseSourceFileModule, "Expecing EclipseSourceFileModule");
+      assert m instanceof EclipseSourceFileModule : "Expecing EclipseSourceFileModule";
       EclipseSourceFileModule entry = (EclipseSourceFileModule) m;
       IProject proj = entry.getIFile().getProject();
       if (!projectsFiles.containsKey(proj))

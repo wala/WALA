@@ -61,7 +61,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
       throw new IllegalArgumentException("node is null");
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(understands(node));
+      assert understands(node);
     }
     if (DEBUG) {
       System.err.println("generating IR for " + node);
@@ -78,7 +78,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
    */
   public int getNumberOfStatements(CGNode node) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(understands(node));
+      assert understands(node);
     }
     return getIR(node).getInstructions().length;
   }
@@ -108,7 +108,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
       throw new IllegalArgumentException("node is null");
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(understands(node));
+      assert understands(node);
     }
     return getIR(node).iterateNewSites();
   }
@@ -118,7 +118,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
    */
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(understands(node));
+      assert understands(node);
     }
     return getIR(node).iterateCallSites();
   }

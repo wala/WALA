@@ -394,7 +394,7 @@ public class RhinoToAstTranslator {
     }
 
     public String getForInInitVar() {
-      Assertions._assert(forInVar != null);
+      assert forInVar != null;
       return forInVar;
     }
 
@@ -753,7 +753,7 @@ public class RhinoToAstTranslator {
     case Token.CATCH_SCOPE: {
       Node catchVarNode = n.getFirstChild();
       String catchVarName = catchVarNode.getString();
-      Assertions._assert(catchVarName != null);
+      assert catchVarName != null;
       context.setCatchVar(catchVarName);
       return Ast.makeNode(CAstNode.EMPTY);
     }
@@ -902,7 +902,7 @@ public class RhinoToAstTranslator {
         context.cfg().map(defaultLabel, defaultLabel);
 
         for (Node kase = switchValue.getNext(); kase != null; kase = kase.getNext()) {
-          Assertions._assert(kase.getType() == Token.CASE);
+          assert kase.getType() == Token.CASE;
           Node caseLbl = kase.getFirstChild();
           Node target = ((Node.Jump) kase).target;
           context.cfg().add(c1, target, walkNodes(caseLbl, context));
@@ -1054,8 +1054,8 @@ public class RhinoToAstTranslator {
     case Token.REGEXP: {
       int regexIdx = n.getIntProp(Node.REGEXP_PROP, -1);
 
-      Assertions._assert(regexIdx != -1, "while converting: " + context.top().toStringTree(context.top())
-          + "\nlooking at bad regex:\n " + n.toStringTree(context.top()));
+      assert regexIdx != -1 : "while converting: " + context.top().toStringTree(context.top())
+      + "\nlooking at bad regex:\n " + n.toStringTree(context.top());
 
       String flags = context.top().getRegexpFlags(regexIdx);
       Node flagsNode = Node.newString(flags);

@@ -113,7 +113,7 @@ public class MethodBypass {
         IClass c = cha.lookupClass(T);
         if (Assertions.verifyAssertions) {
           if (c == null) {
-            Assertions._assert(c != null, "null class for " + T);
+            assert c != null : "null class for " + T;
           }
         }
         SummarizedMethod n = new SummarizedMethod(m, summ, c);

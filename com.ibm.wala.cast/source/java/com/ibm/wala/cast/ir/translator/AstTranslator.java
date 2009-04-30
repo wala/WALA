@@ -764,7 +764,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
 
     public void addPreEdge(CAstNode src, CAstNode dst, boolean exception) {
-      Assertions._assert(nodeToBlock.containsKey(src));
+      assert nodeToBlock.containsKey(src);
       addPreEdge(nodeToBlock.get(src), dst, exception);
     }
 
@@ -789,7 +789,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
 
     public void addPreEdgeToExit(CAstNode src, boolean exception) {
-      Assertions._assert(nodeToBlock.containsKey(src));
+      assert nodeToBlock.containsKey(src);
       addPreEdgeToExit(nodeToBlock.get(src), exception);
     }
 
@@ -838,7 +838,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       if (currentBlock.instructions().size() == 0) {
         currentBlock.setFirstIndex(inst);
       } else {
-        Assertions._assert(!(n instanceof SSAGetCaughtExceptionInstruction));
+        assert !(n instanceof SSAGetCaughtExceptionInstruction);
       }
 
       if (DEBUG_CFG) {
@@ -1174,7 +1174,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
     public void declare(CAstSymbol s, int vn) {
       String nm = s.name();
-      Assertions._assert(!contains(nm), nm);
+      assert !contains(nm) : nm;
       if (s.isCaseInsensitive())
         caseInsensitiveNames.put(nm.toLowerCase(), nm);
       values.put(nm, makeSymbol(s, vn));
@@ -1187,7 +1187,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
           caseInsensitiveNames.put(nm.toLowerCase(), nm);
         values.put(nm, makeSymbol(s));
       } else {
-        Assertions._assert(!s.isFinal(), "trying to redeclare " + nm);
+        assert !s.isFinal() : "trying to redeclare " + nm;
       }
     }
 
@@ -1381,7 +1381,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
           {
             int x = find(nm);
             if (x != -1) {
-              Assertions._assert(valueNumber == -1);
+              assert valueNumber == -1;
               vn = x;
             } else if (valueNumber != -1) {
               vn = valueNumber;
@@ -1562,7 +1562,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       }
 
       public void declare(CAstSymbol s, int vn) {
-        Assertions._assert(vn == -1);
+        assert vn == -1;
         declare(s);
       }
 
@@ -1662,13 +1662,13 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       }
 
       public void declare(CAstSymbol s, int vn) {
-        Assertions._assert(vn == -1);
+        assert vn == -1;
         declare(s);
       }
 
       public void declare(final CAstSymbol s) {
         final String name = s.name();
-        Assertions._assert(!s.isFinal());
+        assert !s.isFinal();
         if (s.isCaseInsensitive())
           caseInsensitiveNames.put(name.toLowerCase(), name);
         typeSymbols.put(name, new AbstractSymbol(this, s.isFinal(), s.defaultInitValue()) {
@@ -2156,7 +2156,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     if (e == null) {
       return null;
     } else {
-      Assertions._assert(entityNames.containsKey(e));
+      assert entityNames.containsKey(e);
       return "L" + entityNames.get(e);
     }
   }
@@ -2274,8 +2274,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         if (scope.isConstant(v.valueNumber()))
           continue;
 
-        Assertions._assert(map[v.valueNumber()] == null || map[v.valueNumber()].equals(nm), "value number " + v.valueNumber()
-            + " mapped to multiple names in " + n.getName() + ": " + nm + " and " + map[v.valueNumber()]);
+        assert map[v.valueNumber()] == null || map[v.valueNumber()].equals(nm) : "value number " + v.valueNumber()
+        + " mapped to multiple names in " + n.getName() + ": " + nm + " and " + map[v.valueNumber()];
 
         map[v.valueNumber()] = nm;
 
@@ -2348,7 +2348,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     // Define a new field in the enclosing type, if the language we're
     // processing allows such.
     CAstEntity topEntity = context.top(); // better be a type
-    Assertions._assert(topEntity.getKind() == CAstEntity.TYPE_ENTITY, "Parent of field entity is not a type???");
+    assert topEntity.getKind() == CAstEntity.TYPE_ENTITY : "Parent of field entity is not a type???";
     defineField(topEntity, (WalkContext) context, n);
   }
 
@@ -2542,9 +2542,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     PreBasicBlock headerB = context.cfg().getCurrentBlock();
     visitor.visit(n.getChild(0), context, visitor);
 
-    Assertions._assert(getValue(n.getChild(0)) != -1, "error in loop test "
-        + CAstPrinter.print(n.getChild(0), context.top().getSourceMap()) + " of loop "
-        + CAstPrinter.print(n, context.top().getSourceMap()));
+    assert getValue(n.getChild(0)) != -1 : "error in loop test "
+    + CAstPrinter.print(n.getChild(0), context.top().getSourceMap()) + " of loop "
+    + CAstPrinter.print(n, context.top().getSourceMap());
     context.cfg().addInstruction(
         insts.ConditionalBranchInstruction(translateConditionOpcode(CAstOperator.OP_EQ), null, getValue(n
             .getChild(0)), context.currentScope().getConstantValue(new Integer(0))));
@@ -2687,8 +2687,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     int result = getValue(n);
     CAstNode l = n.getChild(1);
     CAstNode r = n.getChild(2);
-    Assertions._assert(getValue(r) != -1, CAstPrinter.print(n));
-    Assertions._assert(getValue(l) != -1, CAstPrinter.print(n));
+    assert getValue(r) != -1 : CAstPrinter.print(n);
+    assert getValue(l) != -1 : CAstPrinter.print(n);
 
     boolean mayBeInteger = handleBinaryOpThrow(n, n.getChild(0), context);
 
@@ -2755,7 +2755,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     if (n.getChildCount() == 2) {
       CAstNode v = n.getChild(1);
       if (scope.contains(nm) && scope.lookup(nm).getDefiningScope() == scope) {
-        Assertions._assert(!s.isFinal());
+        assert !s.isFinal();
         context.cfg().addInstruction(new AssignInstruction(scope.lookup(nm).valueNumber(), getValue(v)));
       } else if (v.getKind() != CAstNode.CONSTANT && v.getKind() != CAstNode.VAR && v.getKind() != CAstNode.THIS) {
         scope.declare(s, getValue(v));
@@ -2818,8 +2818,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     context.cfg().addInstruction(insts.GotoInstruction());
     context.cfg().newBlock(false);
     if (context.getControlFlow().getTarget(n, null) == null) {
-      Assertions._assert(context.getControlFlow().getTarget(n, null) != null, context.getControlFlow() + " does not map " + n
-          + " (" + context.getSourceMap().getPosition(n) + ")");
+      assert context.getControlFlow().getTarget(n, null) != null : context.getControlFlow() + " does not map " + n
+      + " (" + context.getSourceMap().getPosition(n) + ")";
     }
     context.cfg().addPreEdge(n, context.getControlFlow().getTarget(n, null), false);
   }
@@ -3102,7 +3102,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     else if (context.currentScope().isLexicallyScoped(ls)) {
       doLexicallyScopedWrite(context, nm, rval);
     } else {
-      Assertions._assert(rval != -1, CAstPrinter.print(n, c.top().getSourceMap()));
+      assert rval != -1 : CAstPrinter.print(n, c.top().getSourceMap());
       doLocalWrite(context, nm, rval);
     }
   }
@@ -3426,8 +3426,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     boolean fromSpec = true;
     int result = getValue(n.getChild(0));
     if (n.getChildCount() == 2) {
-      Assertions._assert(n.getChild(1).getKind() == CAstNode.CONSTANT);
-      Assertions._assert(n.getChild(1).getValue() instanceof Boolean);
+      assert n.getChild(1).getKind() == CAstNode.CONSTANT;
+      assert n.getChild(1).getValue() instanceof Boolean;
       fromSpec = n.getChild(1).getValue().equals(Boolean.TRUE);
     }
     context.cfg().addInstruction(new AstAssertInstruction(result, fromSpec));
@@ -3459,7 +3459,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   protected void leaveTypeLiteralExpr(CAstNode n, Context c, CAstVisitor visitor) {
     WalkContext wc = (WalkContext) c;
-    Assertions._assert(n.getChild(0).getKind() == CAstNode.CONSTANT);
+    assert n.getChild(0).getKind() == CAstNode.CONSTANT;
     String typeNameStr = (String) n.getChild(0).getValue();
     TypeName typeName = TypeName.string2TypeName(typeNameStr);
     TypeReference typeRef = TypeReference.findOrCreate(loader.getReference(), typeName);

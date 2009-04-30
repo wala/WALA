@@ -34,7 +34,7 @@ public class SummarizedMethod extends SyntheticMethod {
     super(ref, declaringClass, summary.isStatic(), summary.isFactory());
     this.summary = summary;
     if (Assertions.verifyAssertions) {
-      Assertions._assert(declaringClass != null);
+      assert declaringClass != null;
     }
     if (DEBUG) {
       System.err.println(("SummarizedMethod ctor: " + ref + " " + summary));

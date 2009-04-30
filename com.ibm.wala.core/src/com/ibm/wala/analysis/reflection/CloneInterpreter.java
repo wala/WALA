@@ -107,7 +107,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
       throw new IllegalArgumentException("node is null");
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(understands(node));
+      assert understands(node);
     }
     IClass cls = ContextUtil.getConcreteClassFromContext(node.getContext());
     IR result = IRCache.get(cls.getReference());
@@ -120,7 +120,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
 
   public int getNumberOfStatements(CGNode node) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(understands(node));
+      assert understands(node);
     }
     return getIR(node).getInstructions().length;
   }
@@ -137,7 +137,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
       throw new IllegalArgumentException("node is null");
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(understands(node));
+      assert understands(node);
     }
     IClass cls = ContextUtil.getConcreteClassFromContext(node.getContext());
     return new NonNullSingletonIterator<NewSiteReference>(NewSiteReference.make(NEW_PC, cls.getReference()));
@@ -145,7 +145,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
 
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(understands(node));
+      assert understands(node);
     }
     return new NonNullSingletonIterator<CallSiteReference>(ARRAYCOPY_SITE);
   }
@@ -155,7 +155,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
    */
   private SSAInstruction[] makeStatements(IClass klass) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(klass != null);
+      assert klass != null;
     }
 
     ArrayList<SSAInstruction> statements = new ArrayList<SSAInstruction>();
@@ -220,7 +220,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
    */
   private IR makeIR(IMethod method, Context context, IClass klass) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(klass != null);
+      assert klass != null;
     }
     SSAInstruction instrs[] = makeStatements(klass);
     return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), null);

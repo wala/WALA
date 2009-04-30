@@ -568,8 +568,8 @@ public abstract class CAstVisitor {
       visitor.visit(n.getChild(0), context, visitor);
       if (n.getChildCount() == 2)
         visitor.visit(n.getChild(1), context, visitor);
-      else // FIXME: this doesn't belong here
-        Assertions._assert(n.getChildCount() < 2);
+      else
+        assert n.getChildCount() < 2;
       visitor.leaveLabelStmt(n, context, visitor);
       break;
     }

@@ -171,7 +171,7 @@ public class DFSPathFinder<T> extends Stack<T> {
 
     // compute the next node to return.
     if (Assertions.verifyAssertions) {
-      Assertions._assert(getPendingChildren(currentNode) != null);
+      assert getPendingChildren(currentNode) != null;
     }
 
     do {

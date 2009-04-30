@@ -167,7 +167,7 @@ public class JSAstTranslator extends AstTranslator {
   }
 
   protected void doNewObject(WalkContext context, CAstNode newNode, int result, Object type, int[] arguments) {
-    Assertions._assert(arguments == null);
+    assert arguments == null;
     TypeReference typeRef = 
       TypeReference.findOrCreate(
         JavaScriptTypes.jsLoader, 

@@ -46,7 +46,7 @@ public class Util {
 
     File scriptFile = new File(hackedName);
 
-    Assertions._assert(hackedName.endsWith(scriptName), scriptName + " does not match file " + script.getFile());
+    assert hackedName.endsWith(scriptName) : scriptName + " does not match file " + script.getFile();
 
     return new SourceFileModule(scriptFile, scriptName);
   }

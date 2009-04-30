@@ -49,7 +49,7 @@ public class AstIsDefinedInstruction extends SSAInstruction {
 
   public SSAInstruction copyForSSA(SSAInstructionFactory insts,  int[] defs, int[] uses) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(fieldVal == -1 || fieldRef == null);
+      assert fieldVal == -1 || fieldRef == null;
     }
 
     return ((AstInstructionFactory)insts).IsDefinedInstruction((defs == null) ? lval : defs[0], (uses == null) ? rval : uses[0],
@@ -89,7 +89,7 @@ public class AstIsDefinedInstruction extends SSAInstruction {
 
   public int getDef(int i) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(i == 0);
+      assert i == 0;
     }
 
     return lval;

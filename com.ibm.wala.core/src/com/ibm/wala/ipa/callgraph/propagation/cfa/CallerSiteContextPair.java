@@ -37,7 +37,7 @@ public class CallerSiteContextPair extends CallerSiteContext {
     this.baseContext = baseContext;
     if (Assertions.verifyAssertions) {
       // avoid recursive contexts for now.
-      Assertions._assert(!(baseContext instanceof CallerContextPair));
+      assert !(baseContext instanceof CallerContextPair);
     }
   }
 

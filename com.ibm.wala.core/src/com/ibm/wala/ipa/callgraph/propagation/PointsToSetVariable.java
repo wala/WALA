@@ -142,7 +142,7 @@ public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
   void setPointerKey(PointerKey pointerKey) {
     // check that we haven't modified the hash code!!! this is crucial
     if (Assertions.verifyAssertions) {
-      Assertions._assert(this.pointerKey.hashCode() == pointerKey.hashCode());
+      assert this.pointerKey.hashCode() == pointerKey.hashCode();
     }
     this.pointerKey = pointerKey;
   }

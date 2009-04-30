@@ -399,7 +399,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     }
 
     if (Assertions.verifyAssertions) {
-      Assertions._assert(ci > 0);
+      assert ci > 0;
     }
 
     elements = (cr == null) ? ar : cr;

@@ -45,7 +45,7 @@ public class DefaultPointerKeyFactory implements PointerKeyFactory {
     }
     if (Assertions.verifyAssertions) {
       if (valueNumber <= 0) {
-        Assertions._assert(valueNumber > 0, "illegal value number: " + valueNumber + " in " + node);
+        assert valueNumber > 0 : "illegal value number: " + valueNumber + " in " + node;
       }
     }
     // TODO: add type filters!

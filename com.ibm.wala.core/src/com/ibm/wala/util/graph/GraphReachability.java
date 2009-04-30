@@ -79,7 +79,7 @@ public class GraphReachability<T> {
     BitVectorVariable v = (BitVectorVariable) solver.getOut(n);
     if (Assertions.verifyAssertions) {
       if (v == null) {
-        Assertions._assert(v != null, "null variable for node " + n);
+        assert v != null : "null variable for node " + n;
       }
     }
     if (v.getValue() == null) {

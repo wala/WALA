@@ -15,7 +15,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.ibm.wala.annotations.Internal;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
@@ -55,10 +54,10 @@ public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
       try {
         Method method = o.getClass().getMethod("hashCode");
         if (method.getDeclaringClass() == Object.class) {
-          Assertions._assert(false, o.getClass().toString());
+          assert false : o.getClass().toString();
         }
       } catch (Exception e) {
-        Assertions._assert(false, "Could not find hashCode method");
+        assert false : "Could not find hashCode method";
       }
     }
   }

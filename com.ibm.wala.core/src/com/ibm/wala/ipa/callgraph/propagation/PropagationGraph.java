@@ -144,7 +144,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
 
     public void addEquation(AbstractStatement<PointsToSetVariable, ?> eq) {
       if (Assertions.verifyAssertions) {
-        Assertions._assert(!containsStatement(eq));
+        assert !containsStatement(eq);
       }
       equationCount++;
       super.addNode(eq);
@@ -237,8 +237,8 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
 
   public void removeVariable(PointsToSetVariable p) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(getNumberOfStatementsThatDef(p) == 0);
-      Assertions._assert(getNumberOfStatementsThatUse(p) == 0);
+      assert getNumberOfStatementsThatDef(p) == 0;
+      assert getNumberOfStatementsThatUse(p) == 0;
     }
     delegateGraph.removeNode(p);
   }

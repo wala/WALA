@@ -181,7 +181,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
           continue;
         }
         if (Assertions.verifyAssertions) {
-          Assertions._assert(defaultExceptions.size() == 1);
+          assert defaultExceptions.size() == 1;
         }
         // t should be NullPointerException
         TypeReference t = defaultExceptions.iterator().next();
@@ -449,7 +449,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
         } else {
           IClass klass = cha.lookupClass(elementType);
           if (Assertions.verifyAssertions) {
-            Assertions._assert(klass != null);
+            assert klass != null;
           }
           lhs.setType(new ConeType(klass));
           return CHANGED;
@@ -516,7 +516,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     public void visitLoadMetadata(SSALoadMetadataInstruction instruction) {
       IClass jlClassKlass = cha.lookupClass(TypeReference.JavaLangClass);
       if (Assertions.verifyAssertions) {
-        Assertions._assert(jlClassKlass != null);
+        assert jlClassKlass != null;
       }
       result = new DeclaredTypeOperator(new ConeType(jlClassKlass));
     }
@@ -691,7 +691,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     }
     if (Assertions.verifyAssertions) {
       if (getVariable(valueNumber) == null) {
-        Assertions._assert(getVariable(valueNumber) != null, "null variable for value number " + valueNumber);
+        assert getVariable(valueNumber) != null : "null variable for value number " + valueNumber;
       }
     }
     return getVariable(valueNumber).getType();

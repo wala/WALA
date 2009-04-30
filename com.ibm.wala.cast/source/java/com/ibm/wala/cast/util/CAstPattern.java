@@ -54,7 +54,7 @@ public class CAstPattern {
   public static class Segments extends TreeMap<String,Object> {
 
     public CAstNode getSingle(String name) {
-      Assertions._assert(containsKey(name), name);
+      assert containsKey(name) : name;
       return (CAstNode) get(name);
     }
 
@@ -67,7 +67,7 @@ public class CAstPattern {
         if (o instanceof CAstNode) {
           return Collections.singletonList(o);
         } else {
-          Assertions._assert(o instanceof List);
+          assert o instanceof List;
           return (List<Object>) o;
         }
       }
@@ -94,7 +94,7 @@ public class CAstPattern {
         if (o instanceof List) {
           ((List<CAstNode>) o).add(result);
         } else {
-          Assertions._assert(o instanceof CAstNode);
+          assert o instanceof CAstNode;
           List<Object> x = new ArrayList<Object>();
           x.add(o);
           x.add(result);
@@ -406,7 +406,7 @@ public class CAstPattern {
         int strEnd = patternString.indexOf('`', start + 1);
         end = strEnd + 1;
         String patternName = patternString.substring(start + 1, strEnd);
-        Assertions._assert(internalName == null);
+        assert internalName == null;
         result = new CAstPattern(patternName, namedPatterns);
 
       } else if (patternString.charAt(start) == '"') {
@@ -429,14 +429,14 @@ public class CAstPattern {
           alternatives.add(parse());
           start = end + 2;
         } while (patternString.startsWith("||", end));
-        Assertions._assert(patternString.startsWith(")|", end), patternString);
+        assert patternString.startsWith(")|", end) : patternString;
         end += 2;
         result = new CAstPattern(name, ALTERNATIVE_PATTERN_KIND, alternatives.toArray(new CAstPattern[alternatives.size()]));
 
       } else if (patternString.startsWith("@(", start)) {
         start += 2;
         CAstPattern children[] = new CAstPattern[] { parse() };
-        Assertions._assert(patternString.startsWith(")@", end));
+        assert patternString.startsWith(")@", end);
         end += 2;
 
         if (DEBUG_PARSER) {
@@ -448,7 +448,7 @@ public class CAstPattern {
       } else if (patternString.startsWith("?(", start)) {
         start += 2;
         CAstPattern children[] = new CAstPattern[] { parse() };
-        Assertions._assert(patternString.startsWith(")?", end));
+        assert patternString.startsWith(")?", end);
         end += 2;
 
         if (DEBUG_PARSER) {
@@ -480,7 +480,7 @@ public class CAstPattern {
 
           } while (patternString.charAt(end) == ',');
 
-          Assertions._assert(patternString.charAt(end) == ')');
+          assert patternString.charAt(end) == ')';
           end++;
 
           result = new CAstPattern(name, kind, children.toArray(new CAstPattern[children.size()]));

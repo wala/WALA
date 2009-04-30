@@ -58,7 +58,7 @@ public class BypassClassTargetSelector implements ClassTargetSelector {
     }
     if (Assertions.verifyAssertions) {
       if (!(bypassLoader instanceof BypassSyntheticClassLoader)) {
-        Assertions._assert(false, "unexpected bypass loader: " + bypassLoader.getClass());
+        assert false : "unexpected bypass loader: " + bypassLoader.getClass();
       }
     }
 

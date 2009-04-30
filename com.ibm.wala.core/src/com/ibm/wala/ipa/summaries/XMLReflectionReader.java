@@ -111,7 +111,7 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
     SAXHandler handler = new SAXHandler();
 
     if (Assertions.verifyAssertions) {
-      Assertions._assert(xml != null, "Null xml stream");
+      assert xml != null : "Null xml stream";
     }
 
     SAXParserFactory factory = SAXParserFactory.newInstance();

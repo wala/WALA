@@ -40,8 +40,8 @@ public abstract class SSANewInstruction extends SSAInstruction {
       throw new IllegalArgumentException("site cannot be null");
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(!site.getDeclaredType().isArrayType()
-          || site.getDeclaredType().getClassLoader().getLanguage() != ClassLoaderReference.Java);
+      assert !site.getDeclaredType().isArrayType()
+      || site.getDeclaredType().getClassLoader().getLanguage() != ClassLoaderReference.Java;
     }
     this.result = result;
     this.site = site;
@@ -63,8 +63,8 @@ public abstract class SSANewInstruction extends SSAInstruction {
       throw new IllegalArgumentException("site is null");
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(site.getDeclaredType().isArrayType()
-          || site.getDeclaredType().getClassLoader().getLanguage() != ClassLoaderReference.Java);
+      assert site.getDeclaredType().isArrayType()
+      || site.getDeclaredType().getClassLoader().getLanguage() != ClassLoaderReference.Java;
     }
     this.result = result;
     this.site = site;
@@ -124,7 +124,7 @@ public abstract class SSANewInstruction extends SSAInstruction {
   @Override
   public int getDef(int i) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(i == 0);
+      assert i == 0;
     }
     return result;
   }
@@ -158,8 +158,8 @@ public abstract class SSANewInstruction extends SSAInstruction {
   @Override
   public int getUse(int j) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(params != null, "expected params but got null");
-      Assertions._assert(params.length > j, "found too few parameters");
+      assert params != null : "expected params but got null";
+      assert params.length > j : "found too few parameters";
     }
     return params[j];
   }

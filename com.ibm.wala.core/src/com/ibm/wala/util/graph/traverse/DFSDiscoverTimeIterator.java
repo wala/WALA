@@ -98,7 +98,7 @@ public abstract class DFSDiscoverTimeIterator<T> extends Stack<T> implements Ite
 
     // compute the next node to return.
     if (Assertions.verifyAssertions) {
-      Assertions._assert(getPendingChildren(toReturn) != null);
+      assert getPendingChildren(toReturn) != null;
     }
 
     do {

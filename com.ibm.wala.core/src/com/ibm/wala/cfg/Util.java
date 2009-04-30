@@ -107,7 +107,7 @@ public class Util {
    * block does control transfer to.
    */
   public static <I, T extends IBasicBlock<I>> T resolveSwitch(ControlFlowGraph<I, T> G, T b, int c) {
-    Assertions._assert(endsWithSwitch(G, b));
+    assert endsWithSwitch(G, b);
     SSASwitchInstruction s = (SSASwitchInstruction) getLastInstruction(G, b);
     int[] casesAndLabels = s.getCasesAndLabels();
     for (int i = 0; i < casesAndLabels.length; i += 2)
@@ -124,7 +124,7 @@ public class Util {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
-    Assertions._assert(endsWithSwitch(G, b));
+    assert endsWithSwitch(G, b);
     SSASwitchInstruction sw = (SSASwitchInstruction) getLastInstruction(G, b);
     assert G.getBlockForInstruction(sw.getDefault()) != null;
     return G.getBlockForInstruction(sw.getDefault()).equals(s);
@@ -136,7 +136,7 @@ public class Util {
    * that apply? Check on this.
    */
   public static <I, T extends IBasicBlock<I>> int getSwitchLabel(ControlFlowGraph<I, T> G, T b, T s) {
-    Assertions._assert(endsWithSwitch(G, b));
+    assert endsWithSwitch(G, b);
     SSASwitchInstruction sw = (SSASwitchInstruction) getLastInstruction(G, b);
     int[] casesAndLabels = sw.getCasesAndLabels();
     for (int i = 0; i < casesAndLabels.length; i += 2) {

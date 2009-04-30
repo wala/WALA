@@ -24,7 +24,6 @@ import com.ibm.wala.cast.util.CAstPattern;
 import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.cast.util.CAstPattern.Segments;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.util.debug.Assertions;
 
 public class TestCAstPattern extends WalaTestCase {
 
@@ -38,8 +37,8 @@ public class TestCAstPattern extends WalaTestCase {
     @SuppressWarnings("unchecked")
     public CAstNode makeNode(int kind, CAstNode children[]) {
       if (kind == NAME_ASSERTION_SINGLE || kind == NAME_ASSERTION_MULTI) {
-        Assertions._assert(children.length == 2);
-        Assertions._assert(children[0].getValue() instanceof String);
+        assert children.length == 2;
+        assert children[0].getValue() instanceof String;
         @SuppressWarnings("unused")
         CAstNode result = children[1];
         if (kind == NAME_ASSERTION_SINGLE) {

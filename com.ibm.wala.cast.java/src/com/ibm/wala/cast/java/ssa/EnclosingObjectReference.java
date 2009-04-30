@@ -37,7 +37,7 @@ public class EnclosingObjectReference extends SSAInstruction {
 
   public int getDef(int i) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(i == 0);
+      assert i == 0;
     }
     
     return lval;

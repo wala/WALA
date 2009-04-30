@@ -151,7 +151,7 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
       this.ir = node.getIR();
       this.symbolTable = ir.getSymbolTable();
       if (Assertions.verifyAssertions) {
-        Assertions._assert(symbolTable != null);
+        assert symbolTable != null;
       }
       this.du = node.getDU();
     }
@@ -253,7 +253,7 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
       }
       PointerKey def = heapModel.getPointerKeyForLocal(node, lval);
       if (Assertions.verifyAssertions) {
-        Assertions._assert(def != null);
+        assert def != null;
       }
 
       if (isStatic) {
@@ -286,7 +286,7 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
       }
       PointerKey use = heapModel.getPointerKeyForLocal(node, rval);
       if (Assertions.verifyAssertions) {
-        Assertions._assert(use != null);
+        assert use != null;
       }
 
       if (isStatic) {

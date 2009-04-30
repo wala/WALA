@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.annotations.Internal;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
@@ -97,7 +96,7 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
             Object o = it.next();
             System.err.println(o + " " + o.hashCode());
           }
-          Assertions._assert(false, "bad hc " + arg0.getClass() + " " + arg0);
+          assert false : "bad hc " + arg0.getClass() + " " + arg0;
         } else {
           s.add(arg0);
         }

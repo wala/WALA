@@ -393,7 +393,7 @@ public class AnalysisScope {
     }
     try {
       Manifest man = rtJar.getManifest();
-      Assertions._assert(man != null, "runtime library has no manifest!");
+      assert man != null : "runtime library has no manifest!";
       String result = man.getMainAttributes().getValue("Specification-Version");
       if (result == null) {
         Attributes att = man.getMainAttributes();

@@ -58,7 +58,7 @@ public class PolyglotTypeDictionary extends CAstTypeDictionaryImpl {
     public Collection getSupertypes() {
       if (fEltPolyglotType.isPrimitive())
         return Collections.singleton(getCAstTypeFor(fTypeSystem.Object()));
-      Assertions._assert(fEltPolyglotType.isReference(), "Non-primitive, non-reference array element type!");
+      assert fEltPolyglotType.isReference() : "Non-primitive, non-reference array element type!";
       ReferenceType baseRefType = (ReferenceType) fEltPolyglotType;
       Collection<CAstType> supers = new ArrayList<CAstType>();
       for (Iterator superIter = baseRefType.interfaces().iterator(); superIter.hasNext();) {

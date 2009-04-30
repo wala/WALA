@@ -199,7 +199,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     SAXHandler handler = new SAXHandler();
 
     if (Assertions.verifyAssertions) {
-      Assertions._assert(xml != null, "Null xml stream");
+      assert xml != null : "Null xml stream";
     }
     SAXParserFactory factory = SAXParserFactory.newInstance();
     factory.newSAXParser().parse(new InputSource(xml), handler);

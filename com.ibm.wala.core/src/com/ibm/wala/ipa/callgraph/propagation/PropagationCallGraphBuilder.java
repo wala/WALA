@@ -185,7 +185,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     this.analysisCache = cache;
     if (Assertions.verifyAssertions) {
       // we need pointer keys to handle reflection
-      Assertions._assert(pointerKeyFactory != null);
+      assert pointerKeyFactory != null;
     }
     this.pointerKeyFactory = pointerKeyFactory;
     callGraph = createEmptyCallGraph(cha, options);
@@ -340,7 +340,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    */
   public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(filter != null);
+      assert filter != null;
     }
     return pointerKeyFactory.getFilteredPointerKeyForLocal(node, valueNumber, filter);
   }
@@ -375,7 +375,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    */
   public PointerKey getPointerKeyForStaticField(IField f) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(f != null, "null FieldReference");
+      assert f != null : "null FieldReference";
     }
     return pointerKeyFactory.getPointerKeyForStaticField(f);
   }
@@ -419,7 +419,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     if (Assertions.verifyAssertions) {
       IClass C = I.getConcreteType();
       if (!C.isArrayClass()) {
-        Assertions._assert(false, "illegal arguments: " + I);
+        assert false : "illegal arguments: " + I;
       }
     }
     return pointerKeyFactory.getPointerKeyForArrayContents(I);
@@ -499,7 +499,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
 
     static TypedPointerKey make(PointerKey base, IClass type) {
       if (Assertions.verifyAssertions) {
-        Assertions._assert(type != null);
+        assert type != null;
       }
       return new TypedPointerKey(base, type);
     }
@@ -508,8 +508,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       this.type = type;
       this.base = base;
       if (Assertions.verifyAssertions) {
-        Assertions._assert(type != null);
-        Assertions._assert(!(type instanceof FilteredPointerKey));
+        assert type != null;
+        assert !(type instanceof FilteredPointerKey);
       }
     }
 
@@ -929,7 +929,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
         IClass contents = getClassHierarchy().lookupClass(C);
         if (Assertions.verifyAssertions) {
           if (contents == null) {
-            Assertions._assert(false, "null type for " + C + " " + I.getConcreteType());
+            assert false : "null type for " + C + " " + I.getConcreteType();
           }
         }
         PointerKey p = getPointerKeyForArrayContents(I);
@@ -1311,7 +1311,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
           IClass contents = getClassHierarchy().lookupClass(C);
           if (Assertions.verifyAssertions) {
             if (contents == null) {
-              Assertions._assert(false, "null type for " + C + " " + I.getConcreteType());
+              assert false : "null type for " + C + " " + I.getConcreteType();
             }
           }
           PointerKey p = getPointerKeyForArrayContents(I);

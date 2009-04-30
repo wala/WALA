@@ -49,7 +49,7 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
       throw new IllegalArgumentException("node is null");
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(understands(node));
+      assert understands(node);
     }
     if (DEBUG) {
       System.err.println("generating IR for " + node);
@@ -60,7 +60,7 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
 
   public int getNumberOfStatements(CGNode node) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(understands(node));
+      assert understands(node);
     }
     return getIR(node).getInstructions().length;
   }

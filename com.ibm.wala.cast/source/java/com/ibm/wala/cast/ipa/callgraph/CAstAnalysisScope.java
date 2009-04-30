@@ -120,7 +120,7 @@ public class CAstAnalysisScope extends AnalysisScope {
    */
   public ClassLoaderReference getLoader(Atom name) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(name.equals(theLoader.getName()));
+      assert name.equals(theLoader.getName());
     }
     return theLoader;
   }

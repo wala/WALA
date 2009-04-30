@@ -59,7 +59,7 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
     if (call.isDispatch()) {
       if (Assertions.verifyAssertions) {
         if (receiver == null) {
-          Assertions._assert(receiver != null, "null receiver for " + call);
+          assert receiver != null : "null receiver for " + call;
         }
       }
       klass = receiver;

@@ -12,7 +12,6 @@ package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.collections.CompoundIntIterator;
 import com.ibm.wala.util.collections.EmptyIntIterator;
-import com.ibm.wala.util.debug.Assertions;
 
 public class SemiSparseMutableIntSet implements MutableIntSet {
   private static final boolean DEBUG = true;
@@ -201,7 +200,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
           }
 
           if (index != moveCount) {
-            Assertions._assert(index == moveCount, "index is " + index + ", but moveCount is " + moveCount + " for " + this);
+            assert index == moveCount : "index is " + index + ", but moveCount is " + moveCount + " for " + this;
           }
 
           if (newLength != -1 && bits[index - 1] == sparsePart.max()) {

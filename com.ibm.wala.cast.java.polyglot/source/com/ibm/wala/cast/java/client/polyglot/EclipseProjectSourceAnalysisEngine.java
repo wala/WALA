@@ -153,7 +153,7 @@ public class EclipseProjectSourceAnalysisEngine extends EclipseProjectAnalysisEn
       public int getDefaultValue(SymbolTable symtab, int valueNumber) {
         Value v = symtab.getValue(valueNumber);
         if (v == null) {
-          Assertions._assert(v != null, "no default for " + valueNumber);
+          assert v != null : "no default for " + valueNumber;
         }
         return v.getDefaultValue(symtab);
       }

@@ -259,7 +259,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
             s.remove(n);
           } else {
             if (Assertions.verifyAssertions) {
-              Assertions._assert(s.size() == 2);
+              assert s.size() == 2;
             }
             if (s.contains(n)) {
               s.remove(n);

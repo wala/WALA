@@ -187,8 +187,8 @@ public class PolyglotIdentityMapper implements IdentityMapper<Type, CodeInstance
       Assertions.UNREACHABLE("typeToTypeID() encountered a null type!");
       return null;
     }
-    Assertions._assert(type.isClass(), "typeToTypeID() encountered the type " + type
-        + " that is neither primitive, array, nor class!");
+    assert type.isClass() : "typeToTypeID() encountered the type " + type
+    + " that is neither primitive, array, nor class!";
 
     ClassType ctype = (ClassType) type;
 
@@ -212,7 +212,7 @@ public class PolyglotIdentityMapper implements IdentityMapper<Type, CodeInstance
     if (ctype.package_() != null) {
       String packageName = ctype.package_().fullName();
 
-      Assertions._assert(ctype.fullName().startsWith(packageName));
+      assert ctype.fullName().startsWith(packageName);
       return packageName.replace('.', '/') + "/" + ctype.fullName().substring(packageName.length() + 1).replace('.', '$');
     } else {
       return ctype.fullName().replace('.', '$');

@@ -29,7 +29,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.IteratorPlusOne;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.debug.Assertions;
 
 public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K extends CAstRewriter.CopyKey<K>> {
 
@@ -96,7 +95,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
       CopyKey key = (CopyKey) N.snd;
 
       CAstNode newSource = (CAstNode) entry.getValue();
-      Assertions._assert(newSource != null);
+      assert newSource != null;
 
       newMap.map(newSource, newSource);
 

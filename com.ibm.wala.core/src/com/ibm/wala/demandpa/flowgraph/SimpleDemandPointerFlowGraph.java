@@ -289,8 +289,8 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       SSAArrayStoreInstruction s = (SSAArrayStoreInstruction) ir.getInstructions()[a.getInstructionIndex()];
       PointerKey r = heapModel.getPointerKeyForLocal(a.getNode(), s.getValue());
       if (Assertions.verifyAssertions) {
-        Assertions._assert(containsNode(r));
-        Assertions._assert(containsNode(pk));
+        assert containsNode(r);
+        assert containsNode(pk);
       }
       addMatchEdge(pk, r);
     }
@@ -313,8 +313,8 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
             SSAAbstractInvokeInstruction callInstr = callInstrs[i];
             PointerKey actualPk = heapModel.getPointerKeyForLocal(caller, callInstr.getUse(paramPos));
             if (Assertions.verifyAssertions) {
-              Assertions._assert(containsNode(actualPk));
-              Assertions._assert(containsNode(pk));
+              assert containsNode(actualPk);
+              assert containsNode(pk);
             }
             addEdge(pk, actualPk);
 
@@ -340,7 +340,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       PointerKey retVal = isExceptional ? heapModel.getPointerKeyForExceptionalReturnValue(callee) : heapModel
           .getPointerKeyForReturnValue(callee);
       if (Assertions.verifyAssertions) {
-        Assertions._assert(containsNode(retVal));
+        assert containsNode(retVal);
       }
       addEdge(pk, retVal);
     }
@@ -360,8 +360,8 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       SSAPutInstruction s = (SSAPutInstruction) ir.getInstructions()[a.getInstructionIndex()];
       PointerKey r = heapModel.getPointerKeyForLocal(a.getNode(), s.getVal());
       if (Assertions.verifyAssertions) {
-        Assertions._assert(containsNode(r));
-        Assertions._assert(containsNode(pk));
+        assert containsNode(r);
+        assert containsNode(pk);
       }
       addMatchEdge(pk, r);
     }
@@ -471,8 +471,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
             InstanceKey ik = heapModel.getInstanceKeyForPEI(node, peiLoc, type);
             if (Assertions.verifyAssertions) {
               if (!(ik instanceof ConcreteTypeKey)) {
-                Assertions._assert(ik instanceof ConcreteTypeKey,
-                    "uh oh: need to implement getCaughtException constraints for instance " + ik);
+                assert ik instanceof ConcreteTypeKey : "uh oh: need to implement getCaughtException constraints for instance " + ik;
               }
             }
             ConcreteTypeKey ck = (ConcreteTypeKey) ik;
@@ -534,7 +533,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
         }
       }
       if (DEBUG && Assertions.verifyAssertions) {
-        Assertions._assert(n < cfg.getPredNodeCount(sb));
+        assert n < cfg.getPredNodeCount(sb);
       }
       for (Iterator<SSAPhiInstruction> phis = sb.iteratePhis(); phis.hasNext();) {
         SSAPhiInstruction phi = phis.next();
@@ -613,7 +612,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       this.ir = ir;
       this.symbolTable = ir.getSymbolTable();
       if (Assertions.verifyAssertions) {
-        Assertions._assert(symbolTable != null);
+        assert symbolTable != null;
       }
       this.du = du;
     }
@@ -884,7 +883,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       }
       PointerKey def = heapModel.getPointerKeyForLocal(node, lval);
       if (Assertions.verifyAssertions) {
-        Assertions._assert(def != null);
+        assert def != null;
       }
 
       if (isStatic) {
@@ -967,7 +966,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       }
       PointerKey use = heapModel.getPointerKeyForLocal(node, rval);
       if (Assertions.verifyAssertions) {
-        Assertions._assert(use != null);
+        assert use != null;
       }
 
       if (isStatic) {

@@ -396,7 +396,7 @@ public abstract class IRTests extends WalaTestCase {
         engine.addSystemModule(new JarFileModule(new JarFile(libFile)));
       }
     }
-    Assertions._assert(foundLib, "couldn't find library file from " + libs);
+    assert foundLib : "couldn't find library file from " + libs;
 
      IWorkspace w = null;
      IJavaProject project = null;

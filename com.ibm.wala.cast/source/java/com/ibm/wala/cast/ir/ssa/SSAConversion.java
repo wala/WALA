@@ -29,7 +29,6 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.IR.SSA2LocalMap;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;
@@ -518,7 +517,7 @@ public class SSAConversion extends AbstractSSAConversion {
     if (exitLives != null) {
       for (int i = 0; i < exitLives.length; i++) {
         if (!skip(exitLives[i])) {
-          Assertions._assert(!S[exitLives[i]].isEmpty());
+          assert !S[exitLives[i]].isEmpty();
           exitLives[i] = top(exitLives[i]);
         }
       }

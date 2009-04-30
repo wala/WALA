@@ -220,7 +220,7 @@ public class PreTransitiveSolver extends AbstractPointsToSolver {
 
     public void remove(int number) {
       if (Assertions.verifyAssertions) {
-        Assertions._assert(sequence.get(sequence.size() - 1).intValue() == number);
+        assert sequence.get(sequence.size() - 1).intValue() == number;
       }
       sequence.remove(sequence.size() - 1);
       contents.remove(number);

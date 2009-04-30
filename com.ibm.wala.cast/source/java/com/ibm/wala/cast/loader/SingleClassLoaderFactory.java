@@ -33,7 +33,7 @@ public abstract class SingleClassLoaderFactory implements ClassLoaderFactory {
       }
     }
 
-    Assertions._assert(classLoaderReference.equals(getTheReference()));
+    assert classLoaderReference.equals(getTheReference());
     
     return THE_LOADER;
   }

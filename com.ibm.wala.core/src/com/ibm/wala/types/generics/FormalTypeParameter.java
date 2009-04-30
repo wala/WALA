@@ -148,7 +148,7 @@ public class FormalTypeParameter extends Signature {
         break;
       default:
         if (Assertions.verifyAssertions) {
-          Assertions._assert(false, "bad type signature list " + s + " " + (result - 1));
+          assert false : "bad type signature list " + s + " " + (result - 1);
         }
       }
     } while (s.charAt(result) == ':');

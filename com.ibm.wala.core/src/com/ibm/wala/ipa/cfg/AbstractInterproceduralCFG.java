@@ -193,8 +193,8 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
         BasicBlockInContext<T> b = new BasicBlockInContext<T>(n, bb);
         if (Assertions.verifyAssertions) {
           if (!g.containsNode(p) || !g.containsNode(b)) {
-            Assertions._assert(g.containsNode(p), "IPCFG does not contain " + p);
-            Assertions._assert(g.containsNode(b), "IPCFG does not contain " + b);
+            assert g.containsNode(p) : "IPCFG does not contain " + p;
+            assert g.containsNode(b) : "IPCFG does not contain " + b;
           }
         }
         g.addEdge(p, b);
@@ -225,8 +225,8 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     BasicBlockInContext<T> ret = new BasicBlockInContext<T>(caller, returnBlock);
     if (Assertions.verifyAssertions) {
       if (!g.containsNode(exit) || !g.containsNode(ret)) {
-        Assertions._assert(g.containsNode(exit), "IPCFG does not contain " + exit);
-        Assertions._assert(g.containsNode(ret), "IPCFG does not contain " + ret);
+        assert g.containsNode(exit) : "IPCFG does not contain " + exit;
+        assert g.containsNode(ret) : "IPCFG does not contain " + ret;
       }
     }
     if (DEBUG_LEVEL > 1) {
@@ -248,8 +248,8 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     BasicBlockInContext<T> call = new BasicBlockInContext<T>(caller, callBlock);
     if (Assertions.verifyAssertions) {
       if (!g.containsNode(entry) || !g.containsNode(call)) {
-        Assertions._assert(g.containsNode(entry), "IPCFG does not contain " + entry);
-        Assertions._assert(g.containsNode(call), "IPCFG does not contain " + call);
+        assert g.containsNode(entry) : "IPCFG does not contain " + entry;
+        assert g.containsNode(call) : "IPCFG does not contain " + call;
       }
     }
     if (DEBUG_LEVEL > 1) {
@@ -662,7 +662,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
         if (statements.length <= lastIndex) {
           System.err.println(statements.length);
           System.err.println(cfg);
-          Assertions._assert(lastIndex < statements.length, "bad BB " + B + " and CFG for " + getCGNode(B));
+          assert lastIndex < statements.length : "bad BB " + B + " and CFG for " + getCGNode(B);
         }
       }
       SSAInstruction last = statements[lastIndex];

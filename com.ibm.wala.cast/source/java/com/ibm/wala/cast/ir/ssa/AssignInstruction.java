@@ -35,9 +35,9 @@ public class AssignInstruction extends SSAUnaryOpInstruction {
   public AssignInstruction(int result, int val) {
     super(null, result, val);
     if (Assertions.verifyAssertions) {
-      Assertions._assert(result != val);
-      Assertions._assert(result != -1);
-      Assertions._assert(val != -1);
+      assert result != val;
+      assert result != -1;
+      assert val != -1;
     }
   }
 

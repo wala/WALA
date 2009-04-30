@@ -175,7 +175,7 @@ public class TypeArgument extends Signature {
         return result;
       default:
         if (Assertions.verifyAssertions) {
-          Assertions._assert(false, "bad type argument list " + typeArgs);
+          assert false : "bad type argument list " + typeArgs;
         }
       }
     }

@@ -181,9 +181,9 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
       this.context = C;
       if (Assertions.verifyAssertions) {
         if (method != null && !method.isSynthetic() && method.isAbstract()) {
-          Assertions._assert(!method.isAbstract(), "Abstract method " + method);
+          assert !method.isAbstract() : "Abstract method " + method;
         }
-        Assertions._assert(C != null);
+        assert C != null;
       }
     }
 
@@ -265,8 +265,8 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
 
     public Key(IMethod m, Context C) {
       if (Assertions.verifyAssertions) {
-        Assertions._assert(m != null, "null method");
-        Assertions._assert(C != null, "null context");
+        assert m != null : "null method";
+        assert C != null : "null context";
       }
       this.m = m;
       this.C = C;
@@ -280,7 +280,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
     @Override
     public boolean equals(Object o) {
       if (Assertions.verifyAssertions) {
-        Assertions._assert(o instanceof Key);
+        assert o instanceof Key;
       }
       Key other = (Key) o;
       return (m.equals(other.m) && C.equals(other.C));

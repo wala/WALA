@@ -93,7 +93,7 @@ public final class ConcreteTypeKey implements InstanceKey {
       TypeReference type = (TypeReference)it.next();
       if (Assertions.verifyAssertions) {
         if (type == null) {
-          Assertions._assert(type != null);
+          assert type != null;
         }
       }
       IClass klass = cha.lookupClass(type);

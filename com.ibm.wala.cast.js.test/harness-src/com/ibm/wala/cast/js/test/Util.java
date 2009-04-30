@@ -17,7 +17,8 @@ import java.net.URL;
 
 import junit.framework.Assert;
 
-import com.ibm.wala.cast.js.ipa.callgraph.*;
+import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
+import com.ibm.wala.cast.js.ipa.callgraph.JSZeroOrOneXCFABuilder;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.util.WebUtil;
@@ -32,7 +33,6 @@ import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.debug.Assertions;
 
 public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
 
@@ -43,7 +43,7 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
     if (script == null) {
       script = Util.class.getClassLoader().getResource(dir + "/" + name);
     }
-    Assertions._assert(script != null, "cannot find " + dir + " and " + name);
+    assert script != null : "cannot find " + dir + " and " + name;
 
     AnalysisScope scope;
     if (script.openConnection() instanceof JarURLConnection) {

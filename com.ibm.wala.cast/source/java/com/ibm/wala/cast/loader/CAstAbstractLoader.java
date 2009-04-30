@@ -19,7 +19,6 @@ import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapIterator;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warning;
@@ -81,7 +80,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
   }
   
   public IClass lookupClass(String className, IClassHierarchy cha) {
-    Assertions._assert(this.cha == cha);
+    assert this.cha == cha;
     return (IClass) types.get(TypeName.string2TypeName(className));
   }
 

@@ -48,7 +48,7 @@ public abstract class Entrypoint implements BytecodeConstants {
     this.method = method;
 
     if (Assertions.verifyAssertions) {
-      Assertions._assert(method.getDeclaringClass() != null, "null declaring class");
+      assert method.getDeclaringClass() != null : "null declaring class";
     }
   }
 
@@ -72,10 +72,10 @@ public abstract class Entrypoint implements BytecodeConstants {
   public CallSiteReference makeSite(int programCounter) {
 
     if (method.getSelector().equals(MethodReference.clinitSelector)) {
-      Assertions._assert(method.isStatic());
+      assert method.isStatic();
       return CallSiteReference.make(programCounter, method.getReference(), IInvokeInstruction.Dispatch.STATIC);
     } else if (method.getSelector().equals(MethodReference.initSelector)) {
-      Assertions._assert(!method.isStatic());
+      assert !method.isStatic();
       return CallSiteReference.make(programCounter, method.getReference(), IInvokeInstruction.Dispatch.SPECIAL);
     } else {
       if (method.getDeclaringClass().isInterface()) {

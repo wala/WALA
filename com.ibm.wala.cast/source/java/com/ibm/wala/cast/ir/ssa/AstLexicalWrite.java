@@ -13,7 +13,6 @@ package com.ibm.wala.cast.ir.ssa;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * A set of lexical writes. This instruction represents writes of a set of variables that are defined by a pair of
@@ -85,7 +84,7 @@ public class AstLexicalWrite extends AstLexicalAccess {
   }
 
   public void visit(IVisitor v) {
-    Assertions._assert(v instanceof AstInstructionVisitor);
+    assert v instanceof AstInstructionVisitor;
     ((AstInstructionVisitor) v).visitAstLexicalWrite(this);
   }
 }

@@ -186,7 +186,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 
     protected void doCall(WalkContext context, CAstNode call, int result, int exception,
 	    CAstNode name, int receiver, int[] arguments) {
-	Assertions._assert(name.getKind() == CAstNode.CONSTANT);
+	assert name.getKind() == CAstNode.CONSTANT;
 	CallSiteReference dummySiteRef= (CallSiteReference) name.getValue();
 	int pc= context.cfg().getCurrentInstruction();
 	boolean isStatic= (receiver == -1);
@@ -214,8 +214,8 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     }
 
     protected void defineField(CAstEntity topEntity, WalkContext definingContext, CAstEntity n) {
-      Assertions._assert(topEntity.getKind() == CAstEntity.TYPE_ENTITY);
-      Assertions._assert(n.getKind() == CAstEntity.FIELD_ENTITY);
+      assert topEntity.getKind() == CAstEntity.TYPE_ENTITY;
+      assert n.getKind() == CAstEntity.FIELD_ENTITY;
 
       // N.B.: base class may actually ask to create a synthetic type to wrap
       // code bodies, so we may see other things than TYPE_ENTITY here.
@@ -223,7 +223,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 	loader.lookupClass(makeType(topEntity.getType()).getName());
 
       if (owner == null) {
-	Assertions._assert(owner != null, makeType(topEntity.getType()).getName() + " not found in " + loader);
+	assert owner != null : makeType(topEntity.getType()).getName() + " not found in " + loader;
       }
 
       ((JavaSourceLoaderImpl)loader).defineField(n, owner);
@@ -237,7 +237,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 	loader.lookupClass(makeType(owningType).getName());
 
       if (owner == null) {
-	Assertions._assert(owner != null, makeType(owningType).getName().toString() + " not found in " + loader);
+	assert owner != null : makeType(owningType).getName().toString() + " not found in " + loader;
       }
 
       ((JavaSourceLoaderImpl)loader).defineAbstractFunction(N, owner);
@@ -259,7 +259,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 	loader.lookupClass(makeType(owningType).getName());
 
       if (owner == null) {
-	Assertions._assert(owner != null, makeType(owningType).getName().toString() + " not found in " + loader);
+	assert owner != null : makeType(owningType).getName().toString() + " not found in " + loader;
       }
 
       ((JavaSourceLoaderImpl)loader).defineFunction(N, owner, cfg, symtab, hasCatchBlock, caughtTypes, lexicalInfo, debugInfo);

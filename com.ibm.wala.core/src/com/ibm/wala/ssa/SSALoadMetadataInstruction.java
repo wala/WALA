@@ -84,7 +84,7 @@ public abstract class SSALoadMetadataInstruction extends SSAInstruction {
   @Override
   public int getDef(int i) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(i == 0);
+      assert i == 0;
     }
     return lval;
   }

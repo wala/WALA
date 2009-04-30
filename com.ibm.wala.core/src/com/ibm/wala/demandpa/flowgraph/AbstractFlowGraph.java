@@ -446,8 +446,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
             InstanceKey ik = heapModel.getInstanceKeyForPEI(node, peiLoc, type);
             if (Assertions.verifyAssertions) {
               if (!(ik instanceof ConcreteTypeKey)) {
-                Assertions._assert(ik instanceof ConcreteTypeKey,
-                    "uh oh: need to implement getCaughtException constraints for instance " + ik);
+                assert ik instanceof ConcreteTypeKey : "uh oh: need to implement getCaughtException constraints for instance " + ik;
               }
             }
             ConcreteTypeKey ck = (ConcreteTypeKey) ik;

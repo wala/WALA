@@ -165,7 +165,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
    */
   private MutableIntSet findOrCreateSparseSetForClass(IClass klass) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(klass.getReference() != TypeReference.JavaLangObject);
+      assert klass.getReference() != TypeReference.JavaLangObject;
     }
     MutableIntSet result = class2InstanceKey.get(klass);
     if (result == null) {
@@ -181,7 +181,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
    */
   MutableIntSet cloneInstanceKeysForClass(IClass klass) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(klass.getReference() != TypeReference.JavaLangObject);
+      assert klass.getReference() != TypeReference.JavaLangObject;
     }
     MutableIntSet set = class2InstanceKey.get(klass);
     if (set == null) {
@@ -201,7 +201,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       throw new IllegalArgumentException("klass is null");
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(klass.getReference() != TypeReference.JavaLangObject);
+      assert klass.getReference() != TypeReference.JavaLangObject;
     }
     return class2InstanceKey.get(klass);
   }
@@ -372,8 +372,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       System.err.println("Add constraint A: " + lhs + " " + op + " " + rhs);
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(!pointsToMap.isUnified(lhs));
-      Assertions._assert(!pointsToMap.isUnified(rhs));
+      assert !pointsToMap.isUnified(lhs);
+      assert !pointsToMap.isUnified(rhs);
     }
     PointsToSetVariable L = findOrCreatePointsToSet(lhs);
     PointsToSetVariable R = findOrCreatePointsToSet(rhs);
@@ -397,9 +397,9 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       System.err.println("Add constraint A: " + lhs + " " + op + " " + rhs1 + ", " + rhs2);
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(!pointsToMap.isUnified(lhs));
-      Assertions._assert(!pointsToMap.isUnified(rhs1));
-      Assertions._assert(!pointsToMap.isUnified(rhs2));
+      assert !pointsToMap.isUnified(lhs);
+      assert !pointsToMap.isUnified(rhs1);
+      assert !pointsToMap.isUnified(rhs2);
     }
     PointsToSetVariable L = findOrCreatePointsToSet(lhs);
     PointsToSetVariable R1 = findOrCreatePointsToSet(rhs1);
@@ -443,7 +443,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
       // also register that we have an instanceKey for the klass
       if (Assertions.verifyAssertions) {
-        Assertions._assert(value.getConcreteType() != null);
+        assert value.getConcreteType() != null;
       }
 
       if (!value.getConcreteType().getReference().equals(TypeReference.JavaLangObject)) {
@@ -474,7 +474,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     }
 
     if (Assertions.verifyAssertions) {
-      Assertions._assert(!klass.getReference().equals(TypeReference.JavaLangObject));
+      assert !klass.getReference().equals(TypeReference.JavaLangObject);
     }
 
     try {
@@ -598,7 +598,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       System.err.println("add constraint D: " + op + " " + arg0);
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(!pointsToMap.isUnified(arg0));
+      assert !pointsToMap.isUnified(arg0);
     }
     PointsToSetVariable v1 = findOrCreatePointsToSet(arg0);
     newStatement(null, op, v1, true, true);
@@ -609,8 +609,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       System.err.println("add constraint D: " + op + " " + arg0);
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(!pointsToMap.isUnified(arg0));
-      Assertions._assert(!pointsToMap.isUnified(arg1));
+      assert !pointsToMap.isUnified(arg0);
+      assert !pointsToMap.isUnified(arg1);
     }
     PointsToSetVariable v1 = findOrCreatePointsToSet(arg0);
     PointsToSetVariable v2 = findOrCreatePointsToSet(arg1);
@@ -886,7 +886,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       AbstractStatement<PointsToSetVariable, AbstractOperator<PointsToSetVariable>> as) {
     if (as instanceof UnaryStatement) {
       if (Assertions.verifyAssertions) {
-        Assertions._assert(((UnaryStatement) as).getRightHandSide() == p);
+        assert ((UnaryStatement) as).getRightHandSide() == p;
       }
       newStatement(as.getLHS(), (UnaryOperator<PointsToSetVariable>) as.getOperator(), pRef, false, false);
     } else {
@@ -912,7 +912,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   private void replaceLHS(PointsToSetVariable pRef, PointsToSetVariable p,
       AbstractStatement<PointsToSetVariable, AbstractOperator<PointsToSetVariable>> as) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(as.getLHS() == p);
+      assert as.getLHS() == p;
     }
     if (as instanceof UnaryStatement) {
       newStatement(pRef, (UnaryOperator<PointsToSetVariable>) as.getOperator(), (PointsToSetVariable) ((UnaryStatement) as)

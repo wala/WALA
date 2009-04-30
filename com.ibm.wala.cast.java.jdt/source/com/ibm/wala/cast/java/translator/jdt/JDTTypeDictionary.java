@@ -123,7 +123,7 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl {
       // TODO: there is no '.isReference()' as in Polyglot: is this right? enum? I think if it's another array it will
       // just ignore it
       // TEST DOUBLE ARRAYS! and maybe ask someone?
-      Assertions._assert(fEltJdtType.isArray() || fEltJdtType.isClass(), "Non-primitive, non-reference array element type!");
+      assert fEltJdtType.isArray() || fEltJdtType.isClass() : "Non-primitive, non-reference array element type!";
       Collection<CAstType> supers = new ArrayList<CAstType>();
       for (ITypeBinding type : fEltJdtType.getInterfaces()) {
         supers.add(getCAstTypeFor(type));

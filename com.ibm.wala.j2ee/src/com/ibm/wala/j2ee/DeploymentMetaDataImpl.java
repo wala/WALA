@@ -474,7 +474,7 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
   public TypeReference getFinderBeanType(MemberReference method) {
     BeanMetaData bean = finder2Bean.get(method);
     if (Assertions.verifyAssertions) {
-      Assertions._assert(bean != null);
+      assert bean != null;
     }
     return bean.getEJBClass();
   }

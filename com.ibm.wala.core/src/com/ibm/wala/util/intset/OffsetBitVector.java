@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * @author Julian Dolby (dolby@us.ibm.com)
@@ -159,7 +158,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
   @Override
   public final boolean get(int bit) {
     if (DEBUG) {
-      Assertions._assert(bit >= 0);
+      assert bit >= 0;
     }
     if (bit < offset) {
       return false;

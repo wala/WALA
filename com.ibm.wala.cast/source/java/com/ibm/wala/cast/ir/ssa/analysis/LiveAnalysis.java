@@ -146,7 +146,7 @@ public class LiveAnalysis {
        */
       private void processUses(SSAInstruction inst, BitVector bits) {
         for (int j = 0; j < inst.getNumberOfUses(); j++) {
-          Assertions._assert(inst.getUse(j) != -1, inst.toString());
+          assert inst.getUse(j) != -1 : inst.toString();
           if (!symtab.isConstant(inst.getUse(j))) {
             bits.set(inst.getUse(j));
           }

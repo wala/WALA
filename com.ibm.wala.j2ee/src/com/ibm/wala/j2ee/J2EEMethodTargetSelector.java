@@ -184,14 +184,14 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       }
       if (Assertions.verifyAssertions) {
         if (bean == null) {
-          Assertions._assert(false, "no bean bound for " + entityType);
+          assert false : "no bean bound for " + entityType;
         }
       }
       IMethod ejbMethod = cha.resolveMethod(MethodReference.findOrCreate(bean.getEJBClass(), m.getName(), m.getDescriptor()));
 
       if (Assertions.verifyAssertions) {
-        Assertions._assert(ejbMethod != null, "Could not find method " + bean.getEJBClass() + " " + m.getName() + " "
-            + m.getDescriptor());
+        assert ejbMethod != null : "Could not find method " + bean.getEJBClass() + " " + m.getName() + " "
+        + m.getDescriptor();
       }
 
       MethodSummary summ = new MethodSummary(m);
@@ -269,7 +269,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       }
       if (Assertions.verifyAssertions) {
         if (bean == null) {
-          Assertions._assert(false, "no bean bound for " + mdbType);
+          assert false : "no bean bound for " + mdbType;
         }
       }
       MethodSummary summ = new MethodSummary(m);
@@ -389,7 +389,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
     IClass C = cha.lookupClass(type);
     BeanMetaData bean = deployment.getBeanForInterface(type);
     if (Assertions.verifyAssertions) {
-      Assertions._assert(bean != null, "null bean for " + type);
+      assert bean != null : "null bean for " + type;
     }
     boolean local = deployment.isLocalHomeInterface(type);
 
@@ -595,7 +595,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
   private MethodReference makeEntityContractMethod(BeanMetaData bean, MethodReference ifaceMethod, TypeReference ejbType,
       Atom methodName) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(bean != null);
+      assert bean != null;
     }
     TypeName returnType = TypeReference.VoidName;
     if (methodName.equals(EJB_CREATE) && bean.isContainerManagedEntity()) {
@@ -662,7 +662,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
         finderDesc = Descriptor.findOrCreate(new TypeName[] { TypeReference.JavaLangObject.getName() }, getteeType.getName());
         finder = cha.resolveMethod(MethodReference.findOrCreate(getteeHomeType, finderName, finderDesc));
         if (Assertions.verifyAssertions) {
-          Assertions._assert(finder != null, "failed to find findByPrimaryKey for " + getteeType);
+          assert finder != null : "failed to find findByPrimaryKey for " + getteeType;
         }
       }
 

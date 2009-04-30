@@ -121,10 +121,10 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
    * 
    */
   private void checkIntegrity() {
-    Assertions._assert(privatePart == null || !privatePart.isEmpty());
-    Assertions._assert(sharedPart == null || !sharedPart.isEmpty());
+    assert privatePart == null || !privatePart.isEmpty();
+    assert sharedPart == null || !sharedPart.isEmpty();
     if (privatePart != null && sharedPart != null) {
-      Assertions._assert(privatePart.intersection(sharedPart).isEmpty());
+      assert privatePart.intersection(sharedPart).isEmpty();
     }
   }
 
@@ -654,7 +654,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   private boolean addAllInternal(BitVectorIntSet set) {
     if (Assertions.verifyAssertions) {
       // should have hijacked this case before getting here!
-      Assertions._assert(sharedPart != set);
+      assert sharedPart != set;
     }
     if (privatePart == null) {
       if (sharedPart == null) {
@@ -866,7 +866,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     }
     if (DEBUG) {
       if (privatePart != null && sharedPart != null)
-        Assertions._assert(privatePart.intersection(sharedPart).isEmpty());
+        assert privatePart.intersection(sharedPart).isEmpty();
     }
   }
 

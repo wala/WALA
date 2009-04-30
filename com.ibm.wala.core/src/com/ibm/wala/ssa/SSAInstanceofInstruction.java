@@ -71,7 +71,7 @@ public class SSAInstanceofInstruction extends SSAInstruction {
   @Override
   public int getDef(int i) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(i == 0);
+      assert i == 0;
     }
     return result;
   }
@@ -99,7 +99,7 @@ public class SSAInstanceofInstruction extends SSAInstruction {
   @Override
   public int getUse(int j) {
     if (Assertions.verifyAssertions)
-      Assertions._assert(j == 0);
+      assert j == 0;
     return ref;
   }
 

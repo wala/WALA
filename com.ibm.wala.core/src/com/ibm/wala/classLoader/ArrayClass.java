@@ -53,7 +53,7 @@ public class ArrayClass implements IClass, Constants {
         }
       } else {
         if (Assertions.verifyAssertions) {
-          Assertions._assert(loader.getReference().equals(ClassLoaderReference.Primordial));
+          assert loader.getReference().equals(ClassLoaderReference.Primordial);
         }
       }
     }
@@ -109,7 +109,7 @@ public class ArrayClass implements IClass, Constants {
     IClass elt = getElementClass();
 
     if (Assertions.verifyAssertions) {
-      Assertions._assert(getReference().getArrayElementType().isPrimitiveType() || elt != null);
+      assert getReference().getArrayElementType().isPrimitiveType() || elt != null;
     }
 
     // super is Ljava/lang/Object in two cases:

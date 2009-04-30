@@ -371,8 +371,8 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
       this.method = m;
       if (Assertions.verifyAssertions) {
-        Assertions._assert(S != null);
-        Assertions._assert(m.getDeclaringClass() != null, "null declaring class for " + m);
+        assert S != null;
+        assert m.getDeclaringClass() != null : "null declaring class for " + m;
       }
 
       // add original statements from the method summary
@@ -599,7 +599,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     public IClass getDeclaringClass() {
       if (Assertions.verifyAssertions) {
         if (method.getDeclaringClass() == null) {
-          Assertions._assert(method.getDeclaringClass() != null, "null declaring class for original method " + method);
+          assert method.getDeclaringClass() != null : "null declaring class for original method " + method;
         }
       }
       return method.getDeclaringClass();

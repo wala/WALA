@@ -78,7 +78,7 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
     }
     if (Assertions.verifyAssertions) {
       if (type == null) {
-        Assertions._assert(type != null, "null type for " + allocation);
+        assert type != null : "null type for " + allocation;
       }
     }
     int i = 0;

@@ -45,7 +45,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
       Assertions.UNREACHABLE("Unexpected type " + set.getClass());
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(impl instanceof BitVectorIntSet || impl instanceof MutableSparseIntSet);
+      assert impl instanceof BitVectorIntSet || impl instanceof MutableSparseIntSet;
     }
   }
 
@@ -100,7 +100,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
    */
   private void maybeChangeRepresentation() {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(impl instanceof BitVectorIntSet || impl instanceof MutableSparseIntSet);
+      assert impl instanceof BitVectorIntSet || impl instanceof MutableSparseIntSet;
     }
     if (impl == null) {
       return;
@@ -122,7 +122,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
       }
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(impl instanceof BitVectorIntSet || impl instanceof MutableSparseIntSet);
+      assert impl instanceof BitVectorIntSet || impl instanceof MutableSparseIntSet;
     }
   }
 
@@ -251,14 +251,14 @@ public class BimodalMutableIntSet implements MutableIntSet {
       MutableSharedBitVectorIntSet s = (MutableSharedBitVectorIntSet) B;
       result.impl = IntSetUtil.makeMutableCopy(s.makeSparseCopy());
       if (Assertions.verifyAssertions) {
-        Assertions._assert(result.impl instanceof BitVectorIntSet || result.impl instanceof MutableSparseIntSet);
+        assert result.impl instanceof BitVectorIntSet || result.impl instanceof MutableSparseIntSet;
       }
       return result;
     } else {
       BimodalMutableIntSet result = new BimodalMutableIntSet();
       result.impl = IntSetUtil.makeMutableCopy(B);
       if (Assertions.verifyAssertions) {
-        Assertions._assert(result.impl instanceof BitVectorIntSet || result.impl instanceof MutableSparseIntSet);
+        assert result.impl instanceof BitVectorIntSet || result.impl instanceof MutableSparseIntSet;
       }
       return result;
     }
@@ -283,7 +283,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
     }
     impl = IntSetUtil.makeMutableCopy(x.impl);
     if (Assertions.verifyAssertions) {
-      Assertions._assert(impl instanceof BitVectorIntSet || impl instanceof MutableSparseIntSet);
+      assert impl instanceof BitVectorIntSet || impl instanceof MutableSparseIntSet;
     }
   }
 

@@ -36,7 +36,6 @@ import com.ibm.wala.ssa.Value;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.config.FileOfClasses;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  */
@@ -153,7 +152,7 @@ public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
       public int getDefaultValue(SymbolTable symtab, int valueNumber) {
         Value v = symtab.getValue(valueNumber);
         if (v == null) {
-          Assertions._assert(v != null, "no default for " + valueNumber);
+          assert v != null : "no default for " + valueNumber;
         }
         return v.getDefaultValue(symtab);
       }

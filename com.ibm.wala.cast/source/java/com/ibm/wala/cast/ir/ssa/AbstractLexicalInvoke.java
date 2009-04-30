@@ -13,7 +13,6 @@ package com.ibm.wala.cast.ir.ssa;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * This abstract class adds to invoke instructions the ability to handle lexical uses and definitions during call graph
@@ -62,9 +61,9 @@ public abstract class AbstractLexicalInvoke extends MultiReturnValueInvokeInstru
   }
 
   public int getUse(int j) {
-    Assertions._assert(j >= getNumberOfParameters());
-    Assertions._assert(lexicalReads != null);
-    Assertions._assert(lexicalReads[j - getNumberOfParameters()] != null);
+    assert j >= getNumberOfParameters();
+    assert lexicalReads != null;
+    assert lexicalReads[j - getNumberOfParameters()] != null;
     return lexicalReads[j - getNumberOfParameters()].valueNumber;
   }
 

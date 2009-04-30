@@ -133,7 +133,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     PointsToSetVariable v = pointsToMap.getPointsToSet(key);
 
     if (Assertions.verifyAssertions) {
-      Assertions._assert(key != null);
+      assert key != null;
     }
 
     if (v == null) {
@@ -434,7 +434,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       if (index != -1) {
         s.add(index);
       } else {
-        Assertions._assert(index != -1, "instance " + ik[i] + " not mapped!");
+        assert index != -1 : "instance " + ik[i] + " not mapped!";
       }
     }
     return new OrdinalSet<InstanceKey>(s, instanceKeys);

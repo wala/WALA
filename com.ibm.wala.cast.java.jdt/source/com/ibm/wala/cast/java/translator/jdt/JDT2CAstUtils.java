@@ -49,8 +49,8 @@ import org.eclipse.jdt.core.dom.Assignment;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.InfixExpression;
+import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.Assignment.Operator;
 
@@ -243,7 +243,7 @@ public class JDT2CAstUtils {
   }
 
   public static ITypeBinding getTypesVariablesBase(ITypeBinding returnType, AST ast) {
-    Assertions._assert(returnType.isTypeVariable() || returnType.isCapture());
+    assert returnType.isTypeVariable() || returnType.isCapture();
     if (returnType.getTypeBounds().length > 0)
       return returnType.getTypeBounds()[0]; // TODO: why is there more than one bound?
     else

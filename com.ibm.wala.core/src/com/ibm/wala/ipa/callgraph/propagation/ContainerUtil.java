@@ -57,8 +57,8 @@ public class ContainerUtil {
       IClass map = c.getClassHierarchy().lookupClass(TypeReference.JavaUtilMap);
       if (c.isInterface()) {
         if (Assertions.verifyAssertions) {
-          Assertions._assert(collection != null);
-          Assertions._assert(map != null);
+          assert collection != null;
+          assert map != null;
         }
         Collection s;
         try {

@@ -103,7 +103,7 @@ public abstract class DFSFinishTimeIterator<T> extends Stack<T> implements Itera
       for (Iterator<? extends T> e = pc; e.hasNext();) {
         T n = e.next();
         if (Assertions.verifyAssertions) {
-          Assertions._assert(n != null, "null node in pc");
+          assert n != null : "null node in pc";
         }
         Iterator nChildren = getPendingChildren(n);
         if (nChildren == null) {

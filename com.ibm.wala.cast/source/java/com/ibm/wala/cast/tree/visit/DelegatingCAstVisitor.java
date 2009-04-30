@@ -12,7 +12,6 @@ package com.ibm.wala.cast.tree.visit;
 
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * @author Igor Peshansky
@@ -92,7 +91,7 @@ public abstract class DelegatingCAstVisitor extends CAstVisitor {
    * @param delegate the visitor to delegate to for default implementation
    */
   protected DelegatingCAstVisitor(CAstVisitor delegate) {
-    Assertions._assert(delegate != null);
+    assert delegate != null;
     this.delegate = delegate;
   }
 
