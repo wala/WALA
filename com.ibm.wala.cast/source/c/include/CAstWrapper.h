@@ -54,11 +54,13 @@ private:
   jclass CAstPrinter;
   jclass CAstSymbol;
   jclass NativeEntity;
+  jclass NativeClassEntity;
   jclass NativeCodeEntity;
   jclass NativeFieldEntity;
   jclass NativeGlobalEntity;
   jclass NativeBridge;
   jclass NativeTranslatorToCAst;
+  jmethodID classEntityInit;
   jmethodID castPrint;
   jmethodID makeNode0;
   jmethodID makeNode1;
@@ -224,6 +226,8 @@ public:
   jobject makeFieldEntity(jobject, jobject, bool, list<jobject> *);
 
   jobject makeGlobalEntity(char *, jobject, list<jobject> *);
+
+  jobject makeClassEntity(jobject);
 
   jobject getEntityAst(jobject);
 

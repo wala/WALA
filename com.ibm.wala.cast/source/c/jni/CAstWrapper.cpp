@@ -57,6 +57,7 @@ static const char *objectSig = "(" __OBJS ")" __CNS;
 static const char *XlatorCls = XLATOR_PKG XLATOR_CLS_NAME;
 
 static const char *EntityCls = XLATOR_PKG "AbstractEntity";
+static const char *ClassCls = XLATOR_PKG "AbstractClassEntity";
 static const char *CodeEntityCls = XLATOR_PKG "AbstractCodeEntity";
 static const char *ScriptCls = XLATOR_PKG "AbstractScriptEntity";
 static const char *FieldCls = XLATOR_PKG "AbstractFieldEntity";
@@ -88,6 +89,12 @@ CAstWrapper::CAstWrapper(JNIEnv *env, Exceptions &ex, jobject xlator)
   this->entityGetType = env->GetMethodID(NativeEntity, "getType", "()Lcom/ibm/wala/cast/tree/CAstType;");
   THROW_ANY_EXCEPTION(java_ex);
 
+  this->NativeClassEntity = env->FindClass(ClassCls);
+  THROW_ANY_EXCEPTION(java_ex);
+  this->classEntityInit = env->GetMethodID(NativeClassEntity, "<init>", "(Lcom/ibm/wala/cast/tree/CAstType$Class;)V");
+  THROW_ANY_EXCEPTION(java_ex);
+
+
   this->NativeCodeEntity = env->FindClass(CodeEntityCls);
   THROW_ANY_EXCEPTION(java_ex);
   this->astField = env->GetFieldID(NativeCodeEntity, "Ast", "Lcom/ibm/wala/cast/tree/CAstNode;");
@@ -110,7 +117,7 @@ CAstWrapper::CAstWrapper(JNIEnv *env, Exceptions &ex, jobject xlator)
 
   this->NativeGlobalEntity = env->FindClass(GlobalCls);
   THROW_ANY_EXCEPTION(java_ex);
-  this->globalEntityInit = env->GetMethodID(NativeGlobalEntity, "<init>", "(Ljava/lang/String;Ljava/util/Set;)V");
+  this->globalEntityInit = env->GetMethodID(NativeGlobalEntity, "<init>", "(Ljava/lang/String;Lcom/ibm/wala/cast/tree/CAstType;Ljava/util/Set;)V");
   THROW_ANY_EXCEPTION(java_ex);
 
   this->AbstractScriptEntity = env->FindClass(ScriptCls);
@@ -670,6 +677,14 @@ jobject CAstWrapper::makeLocation(int fl, int fc, int ll, int lc) {
 jobject CAstWrapper::makeFieldEntity(jobject declaringClass, jobject name, bool isStatic, list<jobject> *modifiers) {
 
   jobject entity = env->NewObject(NativeFieldEntity, fieldEntityInit, getConstantValue(name), makeSet(modifiers), isStatic, declaringClass);
+
+  THROW_ANY_EXCEPTION(java_ex);
+  return entity;
+}
+
+jobject CAstWrapper::makeClassEntity(jobject classType) {
+
+  jobject entity = env->NewObject(NativeClassEntity, classEntityInit, classType);
 
   THROW_ANY_EXCEPTION(java_ex);
   return entity;
