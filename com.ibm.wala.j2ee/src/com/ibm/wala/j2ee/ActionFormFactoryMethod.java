@@ -77,7 +77,7 @@ public class ActionFormFactoryMethod extends SummarizedMethod {
       return Collections.emptySet();
     }
 
-    public Collection<IMethod> getAllMethods() throws ClassHierarchyException {
+    public Collection<IMethod> getAllMethods() {
       // TODO Auto-generated method stub
       assert false;
       return null;

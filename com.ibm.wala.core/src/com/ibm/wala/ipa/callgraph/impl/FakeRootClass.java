@@ -219,7 +219,7 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllMethods()
    */
-  public Collection<IMethod> getAllMethods() throws UnsupportedOperationException, ClassHierarchyException {
+  public Collection<IMethod> getAllMethods()  {
     throw new UnsupportedOperationException();
   }
 

@@ -221,7 +221,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllMethods()
    */
-  public Collection<IMethod> getAllMethods() throws ClassHierarchyException {
+  public Collection<IMethod> getAllMethods() {
     return realType.getAllMethods();
   }
 

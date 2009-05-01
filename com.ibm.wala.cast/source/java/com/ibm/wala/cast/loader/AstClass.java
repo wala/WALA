@@ -202,7 +202,7 @@ abstract public class AstClass implements IClass, ClassConstants {
     return result;
   }
 
-  public Collection<IMethod> getAllMethods() throws ClassHierarchyException {
+  public Collection<IMethod> getAllMethods()  {
     Collection<IMethod> result = HashSetFactory.make();
     for (Iterator<IMethod> ms = getDeclaredMethods().iterator(); ms.hasNext();) {
       result.add(ms.next());

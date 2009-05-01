@@ -23,10 +23,8 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
 
 public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
 
@@ -38,29 +36,26 @@ public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
   protected LexicalParent[] getParents(InstanceKey base) {
     IClass cls = base.getConcreteType();
     if (isPossiblyLexicalClass(cls)) {
-      try {
-        Set<LexicalParent> result = HashSetFactory.make();
+      Set<LexicalParent> result = HashSetFactory.make();
 
-        for (Iterator MS = cls.getAllMethods().iterator(); MS.hasNext();) {
-          IMethod m = (IMethod) MS.next();
-          if ((m instanceof AstMethod) && !m.isStatic()) {
-            AstMethod M = (AstMethod) m;
-            LexicalParent[] parents = M.getParents();
-            for (int i = 0; i < parents.length; i++) {
-              result.add(parents[i]);
-            }
+      for (Iterator MS = cls.getAllMethods().iterator(); MS.hasNext();) {
+        IMethod m = (IMethod) MS.next();
+        if ((m instanceof AstMethod) && !m.isStatic()) {
+          AstMethod M = (AstMethod) m;
+          LexicalParent[] parents = M.getParents();
+          for (int i = 0; i < parents.length; i++) {
+            result.add(parents[i]);
           }
         }
-
-        if (!result.isEmpty()) {
-          if (AstTranslator.DEBUG_LEXICAL)
-            System.err.println((base + " has parents: " + result));
-
-          return (LexicalParent[]) result.toArray(new LexicalParent[result.size()]);
-        }
-      } catch (ClassHierarchyException e) {
-        Assertions.UNREACHABLE();
       }
+
+      if (!result.isEmpty()) {
+        if (AstTranslator.DEBUG_LEXICAL)
+          System.err.println((base + " has parents: " + result));
+
+        return (LexicalParent[]) result.toArray(new LexicalParent[result.size()]);
+      }
+
     }
 
     if (AstTranslator.DEBUG_LEXICAL)

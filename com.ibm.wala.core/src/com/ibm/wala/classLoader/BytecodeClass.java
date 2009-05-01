@@ -317,7 +317,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllMethods()
    */
-  public Collection<IMethod> getAllMethods() throws ClassHierarchyException {
+  public Collection<IMethod> getAllMethods()  {
     Collection<IMethod> result = new LinkedList<IMethod>();
     Iterator<IMethod> declaredMethods = getDeclaredMethods().iterator();
     while (declaredMethods.hasNext()) {

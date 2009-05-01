@@ -134,7 +134,7 @@ public interface IClass extends IClassHierarchyDweller {
   /**
    * Compute the methods declared by this class or any of its superclasses.
    */
-  Collection<IMethod> getAllMethods() throws ClassHierarchyException;
+  Collection<IMethod> getAllMethods();
 
   /**
    * Compute the instance fields declared by this class.
