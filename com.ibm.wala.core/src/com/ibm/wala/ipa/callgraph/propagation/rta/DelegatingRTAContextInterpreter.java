@@ -17,7 +17,6 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.types.FieldReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * A context interpreter that first checks with A, then defaults to B.
@@ -50,9 +49,7 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
         return A.iterateNewSites(node);
       }
     }
-    if (Assertions.verifyAssertions) {
-      assert B.understands(node);
-    }
+    assert B.understands(node);
     return B.iterateNewSites(node);
   }
 
@@ -62,9 +59,7 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
         return A.iterateCallSites(node);
       }
     }
-    if (Assertions.verifyAssertions) {
-      assert B.understands(node);
-    }
+    assert B.understands(node);
     return B.iterateCallSites(node);
   }
 
@@ -74,9 +69,7 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
         return A.iterateFieldsRead(node);
       }
     }
-    if (Assertions.verifyAssertions) {
-      assert B.understands(node);
-    }
+    assert B.understands(node);
     return B.iterateFieldsRead(node);
   }
 
@@ -86,9 +79,7 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
         return A.iterateFieldsWritten(node);
       }
     }
-    if (Assertions.verifyAssertions) {
-      assert B.understands(node);
-    }
+    assert B.understands(node);
     return B.iterateFieldsWritten(node);
   }
 

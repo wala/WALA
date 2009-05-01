@@ -164,9 +164,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
    * Keep this method private .. this returns the actual backing set for the class, which we do not want to expose to clients.
    */
   private MutableIntSet findOrCreateSparseSetForClass(IClass klass) {
-    if (Assertions.verifyAssertions) {
-      assert klass.getReference() != TypeReference.JavaLangObject;
-    }
+    assert klass.getReference() != TypeReference.JavaLangObject;
     MutableIntSet result = class2InstanceKey.get(klass);
     if (result == null) {
       result = IntSetUtil.getDefaultIntSetFactory().make();
@@ -180,9 +178,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
    *         the caller may bash at will.
    */
   MutableIntSet cloneInstanceKeysForClass(IClass klass) {
-    if (Assertions.verifyAssertions) {
-      assert klass.getReference() != TypeReference.JavaLangObject;
-    }
+    assert klass.getReference() != TypeReference.JavaLangObject;
     MutableIntSet set = class2InstanceKey.get(klass);
     if (set == null) {
       return IntSetUtil.getDefaultIntSetFactory().make();
@@ -200,9 +196,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");
     }
-    if (Assertions.verifyAssertions) {
-      assert klass.getReference() != TypeReference.JavaLangObject;
-    }
+    assert klass.getReference() != TypeReference.JavaLangObject;
     return class2InstanceKey.get(klass);
   }
 
@@ -241,15 +235,13 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     if (key == null) {
       throw new IllegalArgumentException("null key");
     }
-    if (Assertions.verifyAssertions) {
-      if (key instanceof LocalPointerKey) {
-        LocalPointerKey lpk = (LocalPointerKey) key;
-        if (lpk.isParameter()) {
-          System.err.println(lpk);
-          System.err.println("Constant? " + lpk.getNode().getIR().getSymbolTable().isConstant(lpk.getValueNumber()));
-          System.err.println(lpk.getNode().getIR());
-          Assertions.UNREACHABLE("How can parameter be implicit?");
-        }
+    if (key instanceof LocalPointerKey) {
+      LocalPointerKey lpk = (LocalPointerKey) key;
+      if (lpk.isParameter()) {
+        System.err.println(lpk);
+        System.err.println("Constant? " + lpk.getNode().getIR().getSymbolTable().isConstant(lpk.getValueNumber()));
+        System.err.println(lpk.getNode().getIR());
+        Assertions.UNREACHABLE("How can parameter be implicit?");
       }
     }
     pointsToMap.recordImplicit(key);
@@ -267,12 +259,10 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       throw new IllegalArgumentException("null key");
     }
 
-    if (Assertions.verifyAssertions) {
-      if (pointsToMap.isImplicit(key)) {
-        System.err.println("Did not expect to findOrCreatePointsToSet for implicitly represented PointerKey");
-        System.err.println(key);
-        Assertions.UNREACHABLE();
-      }
+    if (pointsToMap.isImplicit(key)) {
+      System.err.println("Did not expect to findOrCreatePointsToSet for implicitly represented PointerKey");
+      System.err.println(key);
+      Assertions.UNREACHABLE();
     }
     PointsToSetVariable result = pointsToMap.getPointsToSet(key);
     if (result == null) {
@@ -290,21 +280,19 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
           result.setPointerKey(key);
           pk = key;
         }
-        if (Assertions.verifyAssertions) {
-          FilteredPointerKey fpk = (FilteredPointerKey) pk;
-          if (fpk == null) {
-            Assertions.UNREACHABLE("fpk is null");
-          }
-          if (key == null) {
-            Assertions.UNREACHABLE("key is null");
-          }
-          if (fpk.getTypeFilter() == null) {
-            Assertions.UNREACHABLE("fpk.getTypeFilter() is null");
-          }
-          if (!fpk.getTypeFilter().equals(((FilteredPointerKey) key).getTypeFilter())) {
-            Assertions.UNREACHABLE("Cannot use filter " + ((FilteredPointerKey) key).getTypeFilter() + " for " + key
-                + ": previously created different filter " + fpk.getTypeFilter());
-          }
+        FilteredPointerKey fpk = (FilteredPointerKey) pk;
+        if (fpk == null) {
+          Assertions.UNREACHABLE("fpk is null");
+        }
+        if (key == null) {
+          Assertions.UNREACHABLE("key is null");
+        }
+        if (fpk.getTypeFilter() == null) {
+          Assertions.UNREACHABLE("fpk.getTypeFilter() is null");
+        }
+        if (!fpk.getTypeFilter().equals(((FilteredPointerKey) key).getTypeFilter())) {
+          Assertions.UNREACHABLE("Cannot use filter " + ((FilteredPointerKey) key).getTypeFilter() + " for " + key
+              + ": previously created different filter " + fpk.getTypeFilter());
         }
       }
     }
@@ -348,11 +336,9 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       // we instead want to check in the outer loop of the pre-transitive
       // solver if the value of L changes.
       pointsToMap.recordTransitiveRoot(L.getPointerKey());
-      if (Assertions.verifyAssertions) {
-        if (!(L.getPointerKey() instanceof FilteredPointerKey)) {
-          Assertions.UNREACHABLE("expected filtered lhs " + L.getPointerKey() + " " + L.getPointerKey().getClass() + " " + lhs
-              + " " + lhs.getClass());
-        }
+      if (!(L.getPointerKey() instanceof FilteredPointerKey)) {
+        Assertions.UNREACHABLE("expected filtered lhs " + L.getPointerKey() + " " + L.getPointerKey().getClass() + " " + lhs + " "
+            + lhs.getClass());
       }
     }
     return newStatement(L, op, R, true, true);
@@ -371,10 +357,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     if (DEBUG) {
       System.err.println("Add constraint A: " + lhs + " " + op + " " + rhs);
     }
-    if (Assertions.verifyAssertions) {
-      assert !pointsToMap.isUnified(lhs);
-      assert !pointsToMap.isUnified(rhs);
-    }
+    assert !pointsToMap.isUnified(lhs);
+    assert !pointsToMap.isUnified(rhs);
     PointsToSetVariable L = findOrCreatePointsToSet(lhs);
     PointsToSetVariable R = findOrCreatePointsToSet(rhs);
     newStatement(L, op, new PointsToSetVariable[] { R }, true, true);
@@ -396,11 +380,9 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     if (DEBUG) {
       System.err.println("Add constraint A: " + lhs + " " + op + " " + rhs1 + ", " + rhs2);
     }
-    if (Assertions.verifyAssertions) {
-      assert !pointsToMap.isUnified(lhs);
-      assert !pointsToMap.isUnified(rhs1);
-      assert !pointsToMap.isUnified(rhs2);
-    }
+    assert !pointsToMap.isUnified(lhs);
+    assert !pointsToMap.isUnified(rhs1);
+    assert !pointsToMap.isUnified(rhs2);
     PointsToSetVariable L = findOrCreatePointsToSet(lhs);
     PointsToSetVariable R1 = findOrCreatePointsToSet(rhs1);
     PointsToSetVariable R2 = findOrCreatePointsToSet(rhs2);
@@ -442,9 +424,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       L.add(index);
 
       // also register that we have an instanceKey for the klass
-      if (Assertions.verifyAssertions) {
-        assert value.getConcreteType() != null;
-      }
+      assert value.getConcreteType() != null;
 
       if (!value.getConcreteType().getReference().equals(TypeReference.JavaLangObject)) {
         registerInstanceOfClass(value.getConcreteType(), index);
@@ -463,9 +443,6 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
   /**
    * Record that we have a new instanceKey for a given declared type.
-   * 
-   * @param klass
-   * @param index
    */
   private void registerInstanceOfClass(IClass klass, int index) {
 
@@ -473,9 +450,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       System.err.println("registerInstanceOfClass " + klass + " " + index);
     }
 
-    if (Assertions.verifyAssertions) {
-      assert !klass.getReference().equals(TypeReference.JavaLangObject);
-    }
+    assert !klass.getReference().equals(TypeReference.JavaLangObject);
 
     try {
       IClass T = klass;
@@ -592,9 +567,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     if (DEBUG) {
       System.err.println("add constraint D: " + op + " " + arg0);
     }
-    if (Assertions.verifyAssertions) {
-      assert !pointsToMap.isUnified(arg0);
-    }
+    assert !pointsToMap.isUnified(arg0);
     PointsToSetVariable v1 = findOrCreatePointsToSet(arg0);
     newStatement(null, op, v1, true, true);
   }
@@ -603,10 +576,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     if (DEBUG) {
       System.err.println("add constraint D: " + op + " " + arg0);
     }
-    if (Assertions.verifyAssertions) {
-      assert !pointsToMap.isUnified(arg0);
-      assert !pointsToMap.isUnified(arg1);
-    }
+    assert !pointsToMap.isUnified(arg0);
+    assert !pointsToMap.isUnified(arg1);
     PointsToSetVariable v1 = findOrCreatePointsToSet(arg0);
     PointsToSetVariable v2 = findOrCreatePointsToSet(arg1);
     newStatement(null, op, v1, v2, true, true);
@@ -880,9 +851,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   private void replaceRHS(PointsToSetVariable pRef, PointsToSetVariable p,
       AbstractStatement<PointsToSetVariable, AbstractOperator<PointsToSetVariable>> as) {
     if (as instanceof UnaryStatement) {
-      if (Assertions.verifyAssertions) {
-        assert ((UnaryStatement) as).getRightHandSide() == p;
-      }
+      assert ((UnaryStatement) as).getRightHandSide() == p;
       newStatement(as.getLHS(), (UnaryOperator<PointsToSetVariable>) as.getOperator(), pRef, false, false);
     } else {
       IVariable[] rhs = as.getRHS();
@@ -906,9 +875,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
    */
   private void replaceLHS(PointsToSetVariable pRef, PointsToSetVariable p,
       AbstractStatement<PointsToSetVariable, AbstractOperator<PointsToSetVariable>> as) {
-    if (Assertions.verifyAssertions) {
-      assert as.getLHS() == p;
-    }
+    assert as.getLHS() == p;
     if (as instanceof UnaryStatement) {
       newStatement(pRef, (UnaryOperator<PointsToSetVariable>) as.getOperator(), (PointsToSetVariable) ((UnaryStatement) as)
           .getRightHandSide(), false, false);

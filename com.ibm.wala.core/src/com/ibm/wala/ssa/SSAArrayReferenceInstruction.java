@@ -11,7 +11,6 @@
 package com.ibm.wala.ssa;
 
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * Abstract base class for instructions that load or store from array contents.
@@ -46,9 +45,7 @@ public abstract class SSAArrayReferenceInstruction extends SSAInstruction {
    */
   @Override
   public int getUse(int j) {
-    if (Assertions.verifyAssertions) {
-      assert j <= 1;
-    }
+    assert j <= 1;
     return (j == 0) ? arrayref : index;
   }
 

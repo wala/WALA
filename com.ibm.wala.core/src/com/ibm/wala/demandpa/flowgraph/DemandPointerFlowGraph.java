@@ -82,14 +82,10 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * A graph representation of statements flowing pointer values, but <em>not</em> primitive values. Nodes are variables, and edges
  * are <em>against</em> value flow; assignment x = y yields edge from x to y with label {@link AssignLabel#noFilter()}
- * 
- * @author Manu Sridharan
- * 
  */
 public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements IFlowGraph {
 
@@ -99,8 +95,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
 
   /**
    * add nodes for parameters and return values
-   * 
-   * @param node
    */
   @Override
   protected void addNodesForParameters(CGNode node, IR ir) {
@@ -175,9 +169,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       this.ir = node.getIR();
       this.du = node.getDU();
       this.symbolTable = ir.getSymbolTable();
-      if (Assertions.verifyAssertions) {
-        assert symbolTable != null;
-      }
+      assert symbolTable != null;
     }
 
     /*
@@ -288,9 +280,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
         return;
       }
       PointerKey def = heapModel.getPointerKeyForLocal(node, lval);
-      if (Assertions.verifyAssertions) {
-        assert def != null;
-      }
+      assert def != null;
 
       if (isStatic) {
         PointerKey fKey = heapModel.getPointerKeyForStaticField(f);
@@ -324,9 +314,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
         return;
       }
       PointerKey use = heapModel.getPointerKeyForLocal(node, rval);
-      if (Assertions.verifyAssertions) {
-        assert use != null;
-      }
+      assert use != null;
 
       if (isStatic) {
         PointerKey fKey = heapModel.getPointerKeyForStaticField(f);
@@ -460,11 +448,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
             TypeReference type = it2.next();
             if (type != null) {
               InstanceKey ik = heapModel.getInstanceKeyForPEI(node, peiLoc, type);
-              if (Assertions.verifyAssertions) {
-                if (!(ik instanceof ConcreteTypeKey)) {
-                  assert ik instanceof ConcreteTypeKey : "uh oh: need to implement getCaughtException constraints for instance " + ik;
-                }
-              }
+              assert ik instanceof ConcreteTypeKey : "uh oh: need to implement getCaughtException constraints for instance " + ik;
               ConcreteTypeKey ck = (ConcreteTypeKey) ik;
               IClass klass = ck.getType();
               if (PropagationCallGraphBuilder.catches(catchClasses, klass, cha)) {
@@ -508,7 +492,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     public void visitLoadMetadata(SSALoadMetadataInstruction instruction) {
       PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
       assert instruction.getType() == TypeReference.JavaLangClass;
-      InstanceKey iKey = heapModel.getInstanceKeyForClassObject((TypeReference)instruction.getToken());
+      InstanceKey iKey = heapModel.getInstanceKeyForClassObject((TypeReference) instruction.getToken());
 
       g.addNode(iKey);
       g.addNode(def);

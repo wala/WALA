@@ -20,7 +20,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * Some simple utilities used to manipulate Strings
@@ -270,22 +269,22 @@ public class StringStuff {
           ++i;
         }
         TypeName T = null;
-        byte c = b.get(i++); 
+        byte c = b.get(i++);
         if (c == TypeReference.ClassTypeCode) {
           while (b.get(i++) != ';')
             ;
           T = TypeName.findOrCreate(b, off, i - off - 1);
         } else if (c == TypeReference.OtherPrimitiveTypeCode) {
           int typeOff = i;
-          
+
           while (b.get(i++) != ';')
             ;
-          
+
           T = l.lookupPrimitiveType(new String(b.substring(typeOff, i - typeOff - 1)));
-          while(--typeOff > off) {
+          while (--typeOff > off) {
             T = T.getArrayTypeForElementType();
           }
-          
+
         } else {
           T = TypeName.findOrCreate(b, off, i - off);
         }
@@ -305,9 +304,7 @@ public class StringStuff {
         }
         return result;
       default:
-        if (Assertions.verifyAssertions) {
-          assert false : "bad descriptor " + b;
-        }
+        assert false : "bad descriptor " + b;
       }
     }
   }

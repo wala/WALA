@@ -270,11 +270,9 @@ public class PointsToMap {
     if (src.getPointerKey() instanceof FilteredPointerKey) {
       FilteredPointerKey fpk = (FilteredPointerKey) src.getPointerKey();
       if (dest.getPointerKey() instanceof FilteredPointerKey) {
-        if (Assertions.verifyAssertions) {
-          FilteredPointerKey fp = (FilteredPointerKey) dest.getPointerKey();
-          if (!fp.getTypeFilter().equals(fpk.getTypeFilter())) {
-            Assertions.UNREACHABLE("src " + fpk.getTypeFilter() + " dest " + fp.getTypeFilter());
-          }
+        FilteredPointerKey fp = (FilteredPointerKey) dest.getPointerKey();
+        if (!fp.getTypeFilter().equals(fpk.getTypeFilter())) {
+          Assertions.UNREACHABLE("src " + fpk.getTypeFilter() + " dest " + fp.getTypeFilter());
         }
       } else {
         upgradeToFilter(dest, fpk.getTypeFilter());

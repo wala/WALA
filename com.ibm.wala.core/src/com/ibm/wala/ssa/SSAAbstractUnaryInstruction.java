@@ -11,11 +11,7 @@
 
 package com.ibm.wala.ssa;
 
-import com.ibm.wala.util.debug.Assertions;
-
 /**
- * @author sfink
- * 
  */
 public abstract class SSAAbstractUnaryInstruction extends SSAInstruction {
 
@@ -44,9 +40,7 @@ public abstract class SSAAbstractUnaryInstruction extends SSAInstruction {
 
   @Override
   public int getDef(int i) {
-    if (Assertions.verifyAssertions) {
-      assert i == 0;
-    }
+    assert i == 0;
     return result;
   }
 
@@ -68,8 +62,7 @@ public abstract class SSAAbstractUnaryInstruction extends SSAInstruction {
    */
   @Override
   public int getUse(int j) {
-    if (Assertions.verifyAssertions)
-      assert j == 0;
+    assert j == 0;
     return val;
   }
 

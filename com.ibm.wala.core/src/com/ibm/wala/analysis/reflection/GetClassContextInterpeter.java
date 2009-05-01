@@ -33,12 +33,9 @@ import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * {@link SSAContextInterpreter} specialized to interpret Object.getClass() in a {@link JavaTypeContext}
- * 
- * @author sjfink
  */
 public class GetClassContextInterpeter implements SSAContextInterpreter {
 
@@ -48,9 +45,7 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     if (DEBUG) {
       System.err.println("generating IR for " + node);
     }
@@ -59,9 +54,7 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
   }
 
   public int getNumberOfStatements(CGNode node) {
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     return getIR(node).getInstructions().length;
   }
 
@@ -89,7 +82,7 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
     int retValue = nextLocal++;
     TypeReference tr = context.getType().getTypeReference();
     SSAInstructionFactory insts = context.getType().getType().getClassLoader().getInstructionFactory();
-   if (tr != null) {
+    if (tr != null) {
       SSALoadMetadataInstruction l = insts.LoadMetadataInstruction(retValue, TypeReference.JavaLangClass, tr);
       statements.add(l);
       SSAReturnInstruction R = insts.ReturnInstruction(retValue, false);

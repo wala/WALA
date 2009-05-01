@@ -36,15 +36,12 @@ import com.ibm.wala.util.graph.traverse.DFS;
 public class LocalLiveRangeAnalysis {
 
   /**
-   * Is the variable with value number v live immediately after a particular
-   * instruction index?
+   * Is the variable with value number v live immediately after a particular instruction index?
    * 
-   * Algorithm: returns true if there is a path from pc to some use of v that
-   * does not traverse the def of v
+   * Algorithm: returns true if there is a path from pc to some use of v that does not traverse the def of v
    * 
-   * @param instructionIndex
-   *          index of an instruction in the IR
-   * @throws IllegalArgumentException  if du is null
+   * @param instructionIndex index of an instruction in the IR
+   * @throws IllegalArgumentException if du is null
    */
   public static boolean isLive(int v, int instructionIndex, IR ir, DefUse du) {
     if (du == null) {
@@ -53,10 +50,8 @@ public class LocalLiveRangeAnalysis {
     if (du.getNumberOfUses(v) == 0) {
       return false;
     }
-    if (Assertions.verifyAssertions) {
-      if (instructionIndex < 0) {
-        Assertions.UNREACHABLE();
-      }
+    if (instructionIndex < 0) {
+      Assertions.UNREACHABLE();
     }
     ISSABasicBlock queryBlock = findBlock(ir, instructionIndex);
     SSAInstruction def = du.getDef(v);
@@ -101,8 +96,7 @@ public class LocalLiveRangeAnalysis {
   }
 
   /**
-   * @param statements
-   *          Iterator<SSAInstruction>
+   * @param statements Iterator<SSAInstruction>
    */
   private static Collection<BasicBlock> findBlocks(IR ir, Iterator<SSAInstruction> statements) {
     Collection<SSAInstruction> s = Iterator2Collection.toSet(statements);
@@ -117,10 +111,8 @@ public class LocalLiveRangeAnalysis {
         }
       }
     }
-    if (Assertions.verifyAssertions) {
-      if (result.isEmpty()) {
-        Assertions.UNREACHABLE();
-      }
+    if (result.isEmpty()) {
+      Assertions.UNREACHABLE();
     }
     return result;
   }
@@ -131,10 +123,8 @@ public class LocalLiveRangeAnalysis {
    * @return the basic block which contains the instruction
    */
   private static SSACFG.BasicBlock findBlock(IR ir, SSAInstruction s) {
-    if (Assertions.verifyAssertions) {
-      if (s == null) {
-        Assertions.UNREACHABLE();
-      }
+    if (s == null) {
+      Assertions.UNREACHABLE();
     }
     for (Iterator it = ir.getControlFlowGraph().iterator(); it.hasNext();) {
       SSACFG.BasicBlock b = (SSACFG.BasicBlock) it.next();

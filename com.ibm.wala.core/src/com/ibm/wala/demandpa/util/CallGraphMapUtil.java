@@ -58,8 +58,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- * utility methods for mapping various program entities from one call graph to
- * the corresponding entity in another one
+ * utility methods for mapping various program entities from one call graph to the corresponding entity in another one
  * 
  * @author Manu Sridharan
  * 
@@ -67,14 +66,11 @@ import com.ibm.wala.util.debug.UnimplementedError;
 public class CallGraphMapUtil {
 
   /**
-   * map a call graph node from one call graph to the corresponding node in
-   * another. Note that the target call graph must be context-insensitive for
-   * the method, i.e., the only context for the method should be
-   * Everywhere.EVERYWHERE.
+   * map a call graph node from one call graph to the corresponding node in another. Note that the target call graph must be
+   * context-insensitive for the method, i.e., the only context for the method should be Everywhere.EVERYWHERE.
    * 
-   * @return the corresponding node, or <code>null</code> if the method is not
-   *         in the target call graph
-   * @throws IllegalArgumentException  if fromCG == null
+   * @return the corresponding node, or <code>null</code> if the method is not in the target call graph
+   * @throws IllegalArgumentException if fromCG == null
    */
   public static CGNode mapCGNode(CGNode orig, CallGraph fromCG, CallGraph toCG) throws IllegalArgumentException {
     if (fromCG == null) {
@@ -94,15 +90,14 @@ public class CallGraphMapUtil {
       } else {
         Set<CGNode> nodes = toCG.getNodes(methodRef);
         int size = nodes.size();
-        if (Assertions.verifyAssertions) {
-          assert size <= 1;
-        }
+        assert size <= 1;
         return (size == 0) ? null : nodes.iterator().next();
       }
     }
   }
 
-  public static InstanceKey mapInstKey(InstanceKey ik, CallGraph fromCG, CallGraph toCG, HeapModel heapModel) throws UnimplementedError, NullPointerException {
+  public static InstanceKey mapInstKey(InstanceKey ik, CallGraph fromCG, CallGraph toCG, HeapModel heapModel)
+      throws UnimplementedError, NullPointerException {
     InstanceKey ret = null;
     if (ik instanceof InstanceKeyWithNode) {
       CGNode oldCGNode = ((InstanceKeyWithNode) ik).getNode();
@@ -128,14 +123,13 @@ public class CallGraphMapUtil {
     } else {
       Assertions.UNREACHABLE();
     }
-    if (Assertions.verifyAssertions) {
-      assert ret != null;
-      assert ret.getClass() == ik.getClass();
-    }
+    assert ret != null;
+    assert ret.getClass() == ik.getClass();
     return ret;
   }
 
-  public static PointerKey mapPointerKey(PointerKey pk, CallGraph fromCG, CallGraph toCG, HeapModel heapModel) throws UnimplementedError {
+  public static PointerKey mapPointerKey(PointerKey pk, CallGraph fromCG, CallGraph toCG, HeapModel heapModel)
+      throws UnimplementedError {
     PointerKey ret = null;
     if (pk instanceof AbstractLocalPointerKey) {
       CGNode oldCGNode = ((AbstractLocalPointerKey) pk).getNode();
@@ -159,9 +153,7 @@ public class CallGraphMapUtil {
     } else {
       Assertions.UNREACHABLE();
     }
-    if (Assertions.verifyAssertions) {
-      assert ret != null;
-    }
+    assert ret != null;
     return ret;
   }
 }

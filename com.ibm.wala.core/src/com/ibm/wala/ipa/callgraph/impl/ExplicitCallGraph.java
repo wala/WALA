@@ -78,7 +78,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     this.options = options;
     this.cache = cache;
     this.maxNumberOfNodes = options.getMaxNumberOfNodes();
-    
+
   }
 
   /**
@@ -90,6 +90,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
 
   /**
    * subclasses may wish to override!
+   * 
    * @throws CancelException
    */
   @Override
@@ -99,6 +100,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
 
   /**
    * subclasses may wish to override!
+   * 
    * @throws CancelException
    */
   @Override
@@ -132,8 +134,8 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
   public class ExplicitNode extends NodeImpl {
 
     /**
-     * A Mapping from call site program counter (int) -> Object, where Object is a CGNode if we've discovered exactly
-     * one target for the site, or an IntSet of node numbers if we've discovered more than one target for the site.
+     * A Mapping from call site program counter (int) -> Object, where Object is a CGNode if we've discovered exactly one target for
+     * the site, or an IntSet of node numbers if we've discovered more than one target for the site.
      */
     protected final SparseVector<Object> targets = new SparseVector<Object>();
 
@@ -258,9 +260,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
           if (s.size() > 2) {
             s.remove(n);
           } else {
-            if (Assertions.verifyAssertions) {
-              assert s.size() == 2;
-            }
+            assert s.size() == 2;
             if (s.contains(n)) {
               s.remove(n);
               int i = s.intIterator().next();

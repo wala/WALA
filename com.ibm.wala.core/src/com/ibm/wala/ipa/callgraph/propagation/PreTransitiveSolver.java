@@ -24,7 +24,6 @@ import com.ibm.wala.fixedpoint.impl.UnaryStatement;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.intset.BimodalMutableIntSet;
@@ -219,9 +218,7 @@ public class PreTransitiveSolver extends AbstractPointsToSolver {
     }
 
     public void remove(int number) {
-      if (Assertions.verifyAssertions) {
-        assert sequence.get(sequence.size() - 1).intValue() == number;
-      }
+      assert sequence.get(sequence.size() - 1).intValue() == number;
       sequence.remove(sequence.size() - 1);
       contents.remove(number);
     }

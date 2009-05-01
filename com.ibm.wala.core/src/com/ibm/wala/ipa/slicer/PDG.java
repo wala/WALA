@@ -441,7 +441,7 @@ public class PDG implements NumberedGraph<Statement> {
       case EXC_RET_CALLER:
       case NORMAL_RET_CALLER:
       case PARAM_CALLEE: {
-        if (Assertions.verifyAssertions && dOptions.isIgnoreExceptions()) {
+        if (dOptions.isIgnoreExceptions()) {
           assert !s.getKind().equals(Kind.EXC_RET_CALLER);
         }
 
@@ -479,7 +479,7 @@ public class PDG implements NumberedGraph<Statement> {
         }
         break;
       case EXC_RET_CALLEE:
-        if (Assertions.verifyAssertions && dOptions.isIgnoreExceptions()) {
+        if (dOptions.isIgnoreExceptions()) {
           Assertions.UNREACHABLE();
         }
         // TODO: this is overly conservative. deal with catch blocks?

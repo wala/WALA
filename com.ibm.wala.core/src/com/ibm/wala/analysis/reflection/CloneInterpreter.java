@@ -50,16 +50,12 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * 
  * A context interpreter for java.lang.Object.clone
  * 
  * TODO: The current implementation does not model CloneNotSupportedExceptions
- * 
- * @author sfink
  */
 public class CloneInterpreter implements SSAContextInterpreter {
 
@@ -106,9 +102,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     IClass cls = ContextUtil.getConcreteClassFromContext(node.getContext());
     IR result = IRCache.get(cls.getReference());
     if (result == null) {
@@ -119,9 +113,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
   }
 
   public int getNumberOfStatements(CGNode node) {
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     return getIR(node).getInstructions().length;
   }
 
@@ -136,17 +128,13 @@ public class CloneInterpreter implements SSAContextInterpreter {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     IClass cls = ContextUtil.getConcreteClassFromContext(node.getContext());
     return new NonNullSingletonIterator<NewSiteReference>(NewSiteReference.make(NEW_PC, cls.getReference()));
   }
 
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     return new NonNullSingletonIterator<CallSiteReference>(ARRAYCOPY_SITE);
   }
 
@@ -154,9 +142,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
    * @return an array of statements that encode the behavior of the clone method for a given type.
    */
   private SSAInstruction[] makeStatements(IClass klass) {
-    if (Assertions.verifyAssertions) {
-      assert klass != null;
-    }
+    assert klass != null;
 
     ArrayList<SSAInstruction> statements = new ArrayList<SSAInstruction>();
     // value number 1 is "this".
@@ -219,9 +205,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
    * @return an IR that encodes the behavior of the clone method for a given type.
    */
   private IR makeIR(IMethod method, Context context, IClass klass) {
-    if (Assertions.verifyAssertions) {
-      assert klass != null;
-    }
+    assert klass != null;
     SSAInstruction instrs[] = makeStatements(klass);
     return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), null);
   }

@@ -105,7 +105,6 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
     }
   }
 
-
   public BasicNaturalRelation() {
     this(new byte[] { SIMPLE }, TWO_LEVEL);
   }
@@ -174,7 +173,6 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
     return smallStore[0].get(x) == DELEGATE_CODE;
   }
 
-
   public Iterator<IntPair> iterator() {
     return new TotalIterator();
   }
@@ -206,9 +204,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
           nextIndex = getFirstIndex(i);
           if (nextIndex == smallStore.length) {
             IntSet s = delegateStore.get(i);
-            if (Assertions.verifyAssertions) {
-              assert s.size() > 0;
-            }
+            assert s.size() > 0;
             delegateIterator = s.intIterator();
           }
           return;
@@ -317,9 +313,6 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
   public int getRelatedCount(int x) throws IllegalArgumentException {
     if (x < 0) {
       throw new IllegalArgumentException("x must be greater than zero");
-    }
-    if (Assertions.verifyAssertions) {
-      assert x >= 0;
     }
     if (!anyRelated(x)) {
       return 0;

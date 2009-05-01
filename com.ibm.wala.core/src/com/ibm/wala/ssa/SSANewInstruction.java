@@ -13,10 +13,9 @@ package com.ibm.wala.ssa;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
- * An allocation instruction ("new") for SSA form.   
+ * An allocation instruction ("new") for SSA form.
  * 
  * This includes allocations of both scalars and arrays.
  */
@@ -39,10 +38,8 @@ public abstract class SSANewInstruction extends SSAInstruction {
     if (site == null) {
       throw new IllegalArgumentException("site cannot be null");
     }
-    if (Assertions.verifyAssertions) {
-      assert !site.getDeclaredType().isArrayType()
-      || site.getDeclaredType().getClassLoader().getLanguage() != ClassLoaderReference.Java;
-    }
+    assert !site.getDeclaredType().isArrayType()
+        || site.getDeclaredType().getClassLoader().getLanguage() != ClassLoaderReference.Java;
     this.result = result;
     this.site = site;
     this.params = null;
@@ -62,10 +59,8 @@ public abstract class SSANewInstruction extends SSAInstruction {
     if (site == null) {
       throw new IllegalArgumentException("site is null");
     }
-    if (Assertions.verifyAssertions) {
-      assert site.getDeclaredType().isArrayType()
-      || site.getDeclaredType().getClassLoader().getLanguage() != ClassLoaderReference.Java;
-    }
+    assert site.getDeclaredType().isArrayType()
+        || site.getDeclaredType().getClassLoader().getLanguage() != ClassLoaderReference.Java;
     this.result = result;
     this.site = site;
     this.params = new int[params.length];
@@ -89,7 +84,7 @@ public abstract class SSANewInstruction extends SSAInstruction {
 
   private String array2String(int[] params, SymbolTable symbolTable) {
     StringBuffer result = new StringBuffer();
-    for (int i =0; i < params.length; i++) {
+    for (int i = 0; i < params.length; i++) {
       result.append(getValueString(symbolTable, params[i]));
       result.append(" ");
     }
@@ -123,9 +118,7 @@ public abstract class SSANewInstruction extends SSAInstruction {
 
   @Override
   public int getDef(int i) {
-    if (Assertions.verifyAssertions) {
-      assert i == 0;
-    }
+    assert i == 0;
     return result;
   }
 
@@ -157,10 +150,8 @@ public abstract class SSANewInstruction extends SSAInstruction {
 
   @Override
   public int getUse(int j) {
-    if (Assertions.verifyAssertions) {
-      assert params != null : "expected params but got null";
-      assert params.length > j : "found too few parameters";
-    }
+    assert params != null : "expected params but got null";
+    assert params.length > j : "found too few parameters";
     return params[j];
   }
 
@@ -180,4 +171,4 @@ public abstract class SSANewInstruction extends SSAInstruction {
     return true;
   }
 
- }
+}

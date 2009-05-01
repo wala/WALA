@@ -114,12 +114,12 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     if (pointsToMap.isImplicit(key)) {
       return computeImplicitPointsToSet(key);
     }
-    
+
     // special logic to handle contents of char[] from string constants.
     if (key instanceof InstanceFieldKey) {
-      InstanceFieldKey ifk = (InstanceFieldKey)key;
+      InstanceFieldKey ifk = (InstanceFieldKey) key;
       if (ifk.getInstanceKey() instanceof ConstantKey) {
-        ConstantKey<?> i = (ConstantKey<?>)ifk.getInstanceKey();
+        ConstantKey<?> i = (ConstantKey<?>) ifk.getInstanceKey();
         if (i.getValue() instanceof String) {
           StringConstantCharArray contents = StringConstantCharArray.make((ConstantKey<String>) i);
           instanceKeys.add(contents);
@@ -129,12 +129,10 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
         }
       }
     }
-    
+
     PointsToSetVariable v = pointsToMap.getPointsToSet(key);
 
-    if (Assertions.verifyAssertions) {
-      assert key != null;
-    }
+    assert key != null;
 
     if (v == null) {
       return OrdinalSet.empty();
@@ -145,8 +143,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   }
 
   /**
-   * did the pointer analysis use a type filter for a given points-to set? (this
-   * is ugly).
+   * did the pointer analysis use a type filter for a given points-to set? (this is ugly).
    */
   public boolean isFiltered(PointerKey key) {
     if (pointsToMap.isImplicit(key)) {
@@ -162,16 +159,14 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
 
   protected static class ImplicitPointsToSetVisitor extends SSAInstruction.Visitor {
     protected final PointerAnalysisImpl analysis;
-    
+
     protected final CGNode node;
 
     protected final LocalPointerKey lpk;
 
     protected OrdinalSet<InstanceKey> pointsToSet = null;
 
-    protected ImplicitPointsToSetVisitor(PointerAnalysisImpl analysis,
-					 LocalPointerKey lpk) 
-    {
+    protected ImplicitPointsToSetVisitor(PointerAnalysisImpl analysis, LocalPointerKey lpk) {
       this.lpk = lpk;
       this.node = lpk.getNode();
       this.analysis = analysis;
@@ -184,44 +179,37 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
 
     @Override
     public void visitInvoke(SSAInvokeInstruction instruction) {
-      pointsToSet = 
-	analysis.computeImplicitPointsToSetAtCall(lpk, node, instruction);
+      pointsToSet = analysis.computeImplicitPointsToSetAtCall(lpk, node, instruction);
     }
 
     @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
-      pointsToSet = 
-	analysis.computeImplicitPointsToSetAtCheckCast(node, instruction);
+      pointsToSet = analysis.computeImplicitPointsToSetAtCheckCast(node, instruction);
     }
 
     @Override
     public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
-      pointsToSet = 
-	analysis.computeImplicitPointsToSetAtCatch(node, instruction);
+      pointsToSet = analysis.computeImplicitPointsToSetAtCatch(node, instruction);
     }
 
     @Override
     public void visitGet(SSAGetInstruction instruction) {
-      pointsToSet =
-	analysis.computeImplicitPointsToSetAtGet(node, instruction);
+      pointsToSet = analysis.computeImplicitPointsToSetAtGet(node, instruction);
     }
 
     @Override
     public void visitPhi(SSAPhiInstruction instruction) {
-      pointsToSet = 
-	analysis.computeImplicitPointsToSetAtPhi(node, instruction);
+      pointsToSet = analysis.computeImplicitPointsToSetAtPhi(node, instruction);
     }
 
     @Override
     public void visitPi(SSAPiInstruction instruction) {
-      pointsToSet = 
-	analysis.computeImplicitPointsToSetAtPi(node, instruction);
+      pointsToSet = analysis.computeImplicitPointsToSetAtPi(node, instruction);
     }
 
     @Override
     public void visitArrayLoad(SSAArrayLoadInstruction instruction) {
-      pointsToSet = 
-	analysis.computeImplicitPointsToSetAtALoad(node, instruction);
+      pointsToSet = analysis.computeImplicitPointsToSetAtALoad(node, instruction);
     }
   };
 
@@ -441,8 +429,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   }
 
   /**
-   * @return the points-to set for the exceptional return values from a
-   *         particular call site
+   * @return the points-to set for the exceptional return values from a particular call site
    */
   private OrdinalSet<InstanceKey> computeImplicitExceptionsForCall(CGNode node, SSAInvokeInstruction call) {
     MutableSparseIntSet S = MutableSparseIntSet.makeEmpty();
@@ -491,8 +478,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     }
 
     /*
-     * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForLocal(com.ibm.detox.ipa.callgraph.CGNode,
-     *      int)
+     * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForLocal(com.ibm.detox.ipa.callgraph.CGNode, int)
      */
     public PointerKey getPointerKeyForLocal(CGNode node, int valueNumber) {
       return pointerKeys.getPointerKeyForLocal(node, valueNumber);
@@ -510,22 +496,26 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     }
 
     /*
-     * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForExceptionalReturnValue(com.ibm.detox.ipa.callgraph.CGNode)
+     * @see
+     * com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForExceptionalReturnValue(com.ibm.detox.ipa.callgraph
+     * .CGNode)
      */
     public PointerKey getPointerKeyForExceptionalReturnValue(CGNode node) {
       return pointerKeys.getPointerKeyForExceptionalReturnValue(node);
     }
 
     /*
-     * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForStaticField(com.ibm.wala.classLoader.FieldReference)
+     * @see
+     * com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForStaticField(com.ibm.wala.classLoader.FieldReference)
      */
     public PointerKey getPointerKeyForStaticField(IField f) {
       return pointerKeys.getPointerKeyForStaticField(f);
     }
 
     /*
-     * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForInstance(com.ibm.wala.ipa.callgraph.propagation.InstanceKey,
-     *      com.ibm.wala.classLoader.FieldReference)
+     * @see
+     * com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForInstance(com.ibm.wala.ipa.callgraph.propagation.
+     * InstanceKey, com.ibm.wala.classLoader.FieldReference)
      */
     public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField field) {
       assert field != null;
@@ -533,7 +523,9 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     }
 
     /*
-     * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForArrayContents(com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
+     * @see
+     * com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForArrayContents(com.ibm.wala.ipa.callgraph.propagation
+     * .InstanceKey)
      */
     public PointerKey getPointerKeyForArrayContents(InstanceKey I) {
       return pointerKeys.getPointerKeyForArrayContents(I);

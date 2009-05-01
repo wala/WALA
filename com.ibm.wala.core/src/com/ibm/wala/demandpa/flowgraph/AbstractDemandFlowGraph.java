@@ -66,15 +66,11 @@ import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.ref.ReferenceCleanser;
 
 /**
  * A graph representing program flow, constructed method-by-method on demand
- * 
- * @author Manu Sridharan
- * 
  */
 public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
   private final static boolean DEBUG = false;
@@ -141,10 +137,8 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
           for (int i = 0; i < callInstrs.length; i++) {
             SSAAbstractInvokeInstruction callInstr = callInstrs[i];
             PointerKey actualPk = heapModel.getPointerKeyForLocal(caller, callInstr.getUse(paramPos));
-            if (Assertions.verifyAssertions) {
-              assert containsNode(actualPk);
-              assert containsNode(pk);
-            }
+            assert containsNode(actualPk);
+            assert containsNode(pk);
             paramSuccs.add(new PointerKeyAndCallSite(actualPk, call));
           }
         }
@@ -176,9 +170,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
           // TODO test this!!!
           // TODO test passing null as an argument
           PointerKey paramVal = heapModel.getPointerKeyForLocal(callee, i + 1);
-          if (Assertions.verifyAssertions) {
-            assert containsNode(paramVal);
-          }
+          assert containsNode(paramVal);
           paramPreds.add(new PointerKeyAndCallSite(paramVal, callSiteRef));
         }
       }
@@ -205,9 +197,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
       addSubgraphForNode(callee);
       PointerKey retVal = isExceptional ? heapModel.getPointerKeyForExceptionalReturnValue(callee) : heapModel
           .getPointerKeyForReturnValue(callee);
-      if (Assertions.verifyAssertions) {
-        assert containsNode(retVal);
-      }
+      assert containsNode(retVal);
       returnSuccs.add(new PointerKeyAndCallSite(retVal, callSiteRef));
     }
 
@@ -238,10 +228,8 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
             SSAAbstractInvokeInstruction callInstr = callInstrs[i];
             PointerKey returnPk = heapModel.getPointerKeyForLocal(caller, isExceptional ? callInstr.getException() : callInstr
                 .getDef());
-            if (Assertions.verifyAssertions) {
-              assert containsNode(returnPk);
-              assert containsNode(pk);
-            }
+            assert containsNode(returnPk);
+            assert containsNode(pk);
             returnPreds.add(new PointerKeyAndCallSite(returnPk, call));
           }
         }
@@ -292,8 +280,8 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
   /**
    * Add constraints for a particular basic block.
    */
-  protected void addBlockInstructionConstraints(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, ISSABasicBlock b,
-      FlowStatementVisitor v) {
+  protected void addBlockInstructionConstraints(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg,
+      ISSABasicBlock b, FlowStatementVisitor v) {
     v.setBasicBlock(b);
 
     // visit each instruction in the basic block.
@@ -325,9 +313,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
           break;
         }
       }
-      if (DEBUG && Assertions.verifyAssertions) {
-        assert n < cfg.getPredNodeCount(sb);
-      }
+      assert n < cfg.getPredNodeCount(sb);
       for (Iterator<SSAPhiInstruction> phis = sb.iteratePhis(); phis.hasNext();) {
         // Assertions.UNREACHABLE();
         SSAPhiInstruction phi = phis.next();

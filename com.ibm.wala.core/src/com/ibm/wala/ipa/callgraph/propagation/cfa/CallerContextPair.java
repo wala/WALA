@@ -15,32 +15,24 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
- *
- * This is a context which is defined by a pair consisting of 
- * <caller node, base context>.
+ * This is a {@link Context} which is defined by a pair consisting of <caller node, base context>.
  * 
- * The base context is typically some special case; e.g.,
- * a JavaTypeContext used for reflection.
- * 
- * @author sfink
+ * The base context is typically some special case; e.g., a JavaTypeContext used for reflection.
  */
 public class CallerContextPair extends CallerContext {
 
-
   private final Context baseContext;
+
   /**
    * @param caller the node which defines this context.
    */
   public CallerContextPair(CGNode caller, Context baseContext) {
     super(caller);
     this.baseContext = baseContext;
-    if (Assertions.verifyAssertions) {
-      // avoid recursive contexts for now.
-      assert !(baseContext instanceof CallerContextPair);
-    }
+    // avoid recursive contexts for now.
+    assert !(baseContext instanceof CallerContextPair);
   }
 
   @Override
@@ -61,7 +53,7 @@ public class CallerContextPair extends CallerContext {
       return false;
     }
     if (getClass().equals(obj.getClass())) {
-      CallerContextPair other = (CallerContextPair)obj;
+      CallerContextPair other = (CallerContextPair) obj;
       return getCaller().equals(other.getCaller()) && baseContext.equals(other.baseContext);
     } else {
       return false;

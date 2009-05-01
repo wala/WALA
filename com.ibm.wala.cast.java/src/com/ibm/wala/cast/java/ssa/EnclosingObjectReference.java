@@ -7,19 +7,17 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
- *  The CAst source language front end for Java has explicit support
- * for lexicallly-enclosing objects, rather than compiling them away
- * into extra fields and access-control thwarting accessor methods as
- * is done in bytecode.  This instruction represents a read of the
- * object of the given type that lexically encloses its use value.
- *
+ * The CAst source language front end for Java has explicit support for lexicallly-enclosing objects, rather than compiling them
+ * away into extra fields and access-control thwarting accessor methods as is done in bytecode. This instruction represents a read
+ * of the object of the given type that lexically encloses its use value.
+ * 
  * @author Julian Dolby (dolby@us.ibm.com)
  */
 public class EnclosingObjectReference extends SSAInstruction {
   private final TypeReference type;
+
   private final int lval;
 
   public EnclosingObjectReference(int lval, TypeReference type) {
@@ -36,10 +34,8 @@ public class EnclosingObjectReference extends SSAInstruction {
   }
 
   public int getDef(int i) {
-    if (Assertions.verifyAssertions) {
-      assert i == 0;
-    }
-    
+    assert i == 0;
+
     return lval;
   }
 
@@ -52,15 +48,15 @@ public class EnclosingObjectReference extends SSAInstruction {
   }
 
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return ((AstJavaInstructionFactory)insts).EnclosingObjectReference(defs==null? lval: defs[0], type);
+    return ((AstJavaInstructionFactory) insts).EnclosingObjectReference(defs == null ? lval : defs[0], type);
   }
 
   public String toString(SymbolTable symbolTable) {
-    return getValueString(symbolTable, lval) + " = enclosing " + type.getName(); 
+    return getValueString(symbolTable, lval) + " = enclosing " + type.getName();
   }
 
   public void visit(IVisitor v) {
-    ((AstJavaInstructionVisitor)v).visitEnclosingObjectReference(this);
+    ((AstJavaInstructionVisitor) v).visitEnclosingObjectReference(this);
   }
 
   public int hashCode() {

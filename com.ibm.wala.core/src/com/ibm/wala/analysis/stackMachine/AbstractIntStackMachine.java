@@ -54,7 +54,6 @@ import com.ibm.wala.shrikeBT.ThrowInstruction;
 import com.ibm.wala.shrikeBT.Util;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.shrike.ShrikeUtil;
 
 /**
@@ -200,9 +199,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
       @Override
       protected MachineState makeNodeVariable(BasicBlock n, boolean IN) {
-        if (Assertions.verifyAssertions) {
-          assert n != null;
-        }
+        assert n != null;
         MachineState result = new MachineState(n);
         if (IN && n.equals(cfg.entry())) {
           entry = result;
@@ -212,10 +209,8 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
       @Override
       protected MachineState makeEdgeVariable(BasicBlock from, BasicBlock to) {
-        if (Assertions.verifyAssertions) {
-          assert from != null;
-          assert to != null;
-        }
+        assert from != null;
+        assert to != null;
         MachineState result = new MachineState(from);
 
         return result;
@@ -224,7 +219,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       @Override
       protected void initializeWorkList() {
         super.buildEquations(false, false);
-        /**
+        /*
          * Add only the entry variable to the work list.
          */
         for (Iterator it = getFixedPointSystem().getStatementsThatUse(entry); it.hasNext();) {
@@ -590,10 +585,8 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     }
 
     public int pop() {
-      if (Assertions.verifyAssertions) {
-        if (stackHeight <= 0) {
-          assert stackHeight > 0 : "can't pop stack of height " + stackHeight;
-        }
+      if (stackHeight <= 0) {
+        assert stackHeight > 0 : "can't pop stack of height " + stackHeight;
       }
       stackHeight -= 1;
       return stack[stackHeight];
@@ -989,10 +982,8 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
         int size = instruction.getSize();
         int delta = instruction.getDelta();
-        if (Assertions.verifyAssertions) {
-          assert size == 1 || size == 2;
-          assert delta == 0 || delta == 1 || delta == 2;
-        }
+        assert size == 1 || size == 2;
+        assert delta == 0 || delta == 1 || delta == 2;
         int toPop = size + delta;
         int v1 = workingState.pop();
         int v2 = (toPop > 1) ? workingState.pop() : IGNORE;

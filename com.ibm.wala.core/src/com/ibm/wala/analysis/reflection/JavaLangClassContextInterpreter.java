@@ -97,9 +97,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     if (DEBUG) {
       System.err.println("generating IR for " + node);
     }
@@ -154,9 +152,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
    * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getNumberOfStatements(com.ibm.wala.ipa.callgraph.CGNode)
    */
   public int getNumberOfStatements(CGNode node) {
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     return getIR(node).getInstructions().length;
   }
 
@@ -180,9 +176,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     JavaTypeContext context = (JavaTypeContext) node.getContext();
     TypeReference tr = context.getType().getTypeReference();
     if (tr != null) {
@@ -192,9 +186,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
   }
 
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     return EmptyIterator.instance();
   }
 

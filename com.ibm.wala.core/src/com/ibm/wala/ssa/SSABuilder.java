@@ -57,8 +57,8 @@ import com.ibm.wala.util.shrike.ShrikeUtil;
  * This class constructs an SSA {@link IR} from a backing ShrikeBT instruction stream.
  * 
  * The basic algorithm here is an abstract interpretation over the Java bytecode to determine types of stack locations and local
- * variables. As a side effect, the flow functions of the abstract interpretation emit instructions, eliminating the
- * stack abstraction and moving to a register-transfer language in SSA form.
+ * variables. As a side effect, the flow functions of the abstract interpretation emit instructions, eliminating the stack
+ * abstraction and moving to a register-transfer language in SSA form.
  */
 public class SSABuilder extends AbstractIntStackMachine {
 
@@ -99,9 +99,7 @@ public class SSABuilder extends AbstractIntStackMachine {
     this.method = method;
     this.symbolTable = symbolTable;
     this.insts = method.getDeclaringClass().getClassLoader().getInstructionFactory();
-    if (Assertions.verifyAssertions) {
-      assert cfg != null : "Null CFG";
-    }
+    assert cfg != null : "Null CFG";
   }
 
   private class SymbolTableMeeter implements Meeter {
@@ -123,9 +121,7 @@ public class SSABuilder extends AbstractIntStackMachine {
 
     public int meetStack(int slot, int[] rhs, BasicBlock bb) {
 
-      if (Assertions.verifyAssertions) {
-        assert bb != null : "null basic block";
-      }
+      assert bb != null : "null basic block";
 
       if (bb.isExitBlock()) {
         return TOP;
@@ -352,10 +348,8 @@ public class SSABuilder extends AbstractIntStackMachine {
      */
     private int reuseOrCreateException() {
 
-      if (Assertions.verifyAssertions) {
-        if (getCurrentInstruction() != null) {
-          assert getCurrentInstruction() instanceof SSAInvokeInstruction;
-        }
+      if (getCurrentInstruction() != null) {
+        assert getCurrentInstruction() instanceof SSAInvokeInstruction;
       }
       if (getCurrentInstruction() == null) {
         return symbolTable.newSymbol();
@@ -674,21 +668,21 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       private Dominators<ISSABasicBlock> dom = null;
-      
+
       private int findRethrowException() {
         int index = getCurrentInstructionIndex();
-        SSACFG.BasicBlock bb= cfg.getBlockForInstruction(index);
+        SSACFG.BasicBlock bb = cfg.getBlockForInstruction(index);
         if (bb.isCatchBlock()) {
           SSACFG.ExceptionHandlerBasicBlock newBB = (SSACFG.ExceptionHandlerBasicBlock) bb;
           SSAGetCaughtExceptionInstruction s = newBB.getCatchInstruction();
           return s.getDef();
         } else {
-          // TODO: should we really use dominators here?  maybe it would be cleaner to propagate
+          // TODO: should we really use dominators here? maybe it would be cleaner to propagate
           // the notion of 'current exception to rethrow' using the abstract interpreter.
           if (dom == null) {
             dom = Dominators.make(cfg, cfg.entry());
           }
-          
+
           ISSABasicBlock x = bb;
           while (x != null) {
             if (x.isCatchBlock()) {
@@ -699,20 +693,20 @@ public class SSABuilder extends AbstractIntStackMachine {
               x = dom.getIdom(x);
             }
           }
-            
-          //assert false;
+
+          // assert false;
           return -1;
         }
       }
-      
+
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitThrow(ThrowInstruction)
        */
       @Override
       public void visitThrow(com.ibm.wala.shrikeBT.ThrowInstruction instruction) {
         if (instruction.isRethrow()) {
-           workingState.clearStack();
-           emitInstruction(insts.ThrowInstruction(findRethrowException()));          
+          workingState.clearStack();
+          emitInstruction(insts.ThrowInstruction(findRethrowException()));
         } else {
           int exception = workingState.pop();
           workingState.clearStack();
@@ -871,17 +865,11 @@ public class SSABuilder extends AbstractIntStackMachine {
     /**
      * Record the beginning of a new range, starting at the given program counter, in which a particular value number corresponds to
      * a particular local number
-     * 
-     * @param pc
-     * @param valueNumber
-     * @param localNumber
      */
     void startRange(int pc, int localNumber, int valueNumber) {
-      if (Assertions.verifyAssertions) {
-        int max = shrikeCFG.getMethod().getMaxLocals();
-        if (localNumber >= max) {
-          assert false : "invalid local " + localNumber + ">" + max;
-        }
+      int max = shrikeCFG.getMethod().getMaxLocals();
+      if (localNumber >= max) {
+        assert false : "invalid local " + localNumber + ">" + max;
       }
 
       localStoreMap[pc] = new IntPair(valueNumber, localNumber);
@@ -889,8 +877,6 @@ public class SSABuilder extends AbstractIntStackMachine {
 
     /**
      * Finish populating the map of local variable information
-     * 
-     * @param builder
      */
     private void finishLocalMap(SSABuilder builder) {
       for (Iterator it = shrikeCFG.iterator(); it.hasNext();) {

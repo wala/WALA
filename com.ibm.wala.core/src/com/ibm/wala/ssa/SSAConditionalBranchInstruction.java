@@ -13,7 +13,6 @@ package com.ibm.wala.ssa;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction.IOperator;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * A conditional branch instruction, which tests two values according to some {@link IOperator}.
@@ -27,7 +26,8 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
 
   private final TypeReference type;
 
-  public SSAConditionalBranchInstruction(IConditionalBranchInstruction.IOperator operator, TypeReference type, int val1, int val2) throws IllegalArgumentException {
+  public SSAConditionalBranchInstruction(IConditionalBranchInstruction.IOperator operator, TypeReference type, int val1, int val2)
+      throws IllegalArgumentException {
     super();
     this.operator = operator;
     this.val1 = val1;
@@ -55,13 +55,12 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return "conditional branch(" + operator + ") " + getValueString(symbolTable, val1) + ","
-        + getValueString(symbolTable, val2);
+    return "conditional branch(" + operator + ") " + getValueString(symbolTable, val1) + "," + getValueString(symbolTable, val2);
   }
 
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   * @throws IllegalArgumentException  if v is null
+   * @throws IllegalArgumentException if v is null
    */
   @Override
   public void visit(IVisitor v) {
@@ -84,8 +83,7 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
    */
   @Override
   public int getUse(int j) {
-    if (Assertions.verifyAssertions)
-      assert j <= 1;
+    assert j <= 1;
     return (j == 0) ? val1 : val2;
   }
 
@@ -114,4 +112,4 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
     return true;
   }
 
- }
+}

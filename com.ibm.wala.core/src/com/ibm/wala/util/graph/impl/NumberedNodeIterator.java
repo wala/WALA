@@ -13,7 +13,6 @@ package com.ibm.wala.util.graph.impl;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
@@ -22,10 +21,11 @@ import com.ibm.wala.util.intset.IntSet;
  */
 public class NumberedNodeIterator<T> implements Iterator<T> {
   final IntIterator numbers;
+
   final NumberedNodeManager<T> nodeManager;
 
   /**
-   * @throws IllegalArgumentException  if s is null
+   * @throws IllegalArgumentException if s is null
    */
   public NumberedNodeIterator(IntSet s, NumberedNodeManager<T> nodeManager) {
     if (s == null) {
@@ -40,13 +40,9 @@ public class NumberedNodeIterator<T> implements Iterator<T> {
   }
 
   public T next() throws NoSuchElementException {
-    int i  = numbers.next();
+    int i = numbers.next();
     T result = nodeManager.getNode(i);
-    if (Assertions.verifyAssertions) {
-      if (result == null) {
-        assert result != null : "null node for " + i;
-      }
-    }
+    assert result != null : "null node for " + i;
     return result;
   }
 

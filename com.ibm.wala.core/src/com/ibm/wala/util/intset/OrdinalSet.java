@@ -88,10 +88,8 @@ public class OrdinalSet<T> implements Iterable<T> {
     if (A == null) {
       throw new IllegalArgumentException("A is null");
     }
-    if (Assertions.verifyAssertions) {
-      if (A.size() != 0 && B.size() != 0) {
-        assert A.mapping.equals(B.mapping);
-      }
+    if (A.size() != 0 && B.size() != 0) {
+      assert A.mapping.equals(B.mapping);
     }
     if (A.S == null || B.S == null) {
       return new OrdinalSet<T>(null, A.mapping);
@@ -115,10 +113,8 @@ public class OrdinalSet<T> implements Iterable<T> {
     if (B == null) {
       throw new IllegalArgumentException("B is null");
     }
-    if (Assertions.verifyAssertions) {
-      if (A.size() != 0 && B.size() != 0) {
-        assert A.mapping.equals(B.mapping);
-      }
+    if (A.size() != 0 && B.size() != 0) {
+      assert A.mapping.equals(B.mapping);
     }
 
     if (A.S == null) {
@@ -165,7 +161,6 @@ public class OrdinalSet<T> implements Iterable<T> {
   }
 
   /**
-   * @param instances
    * @throws NullPointerException if instances is null
    */
   public static <T> Collection<T> toCollection(OrdinalSet<T> instances) {
@@ -188,9 +183,7 @@ public class OrdinalSet<T> implements Iterable<T> {
     MutableSparseIntSet s = MutableSparseIntSet.makeEmpty();
     for (Iterator<T> it = c.iterator(); it.hasNext();) {
       int index = m.getMappedIndex(it.next());
-      if (Assertions.verifyAssertions) {
-        assert index >= 0;
-      }
+      assert index >= 0;
       s.add(index);
     }
     return new OrdinalSet<T>(s, m);

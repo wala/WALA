@@ -11,7 +11,6 @@
 package com.ibm.wala.ssa;
 
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * An instruction that represents a reflective or meta-programming operation, like loadClass in Java
@@ -83,9 +82,7 @@ public abstract class SSALoadMetadataInstruction extends SSAInstruction {
 
   @Override
   public int getDef(int i) {
-    if (Assertions.verifyAssertions) {
-      assert i == 0;
-    }
+    assert i == 0;
     return lval;
   }
 

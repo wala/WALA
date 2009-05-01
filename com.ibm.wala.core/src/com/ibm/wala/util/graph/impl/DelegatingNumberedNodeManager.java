@@ -130,10 +130,8 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
       }
     }
     ensureCapacity(number);
-    if (Assertions.verifyAssertions) {
-      if (nodes[number] != null && nodes[number] != N) {
-        Assertions.UNREACHABLE("number: " + number + " N: " + N + " nodes[number]: " + nodes[number]);
-      }
+    if (nodes[number] != null && nodes[number] != N) {
+      Assertions.UNREACHABLE("number: " + number + " N: " + N + " nodes[number]: " + nodes[number]);
     }
     nodes[number] = N;
     numberOfNodes++;

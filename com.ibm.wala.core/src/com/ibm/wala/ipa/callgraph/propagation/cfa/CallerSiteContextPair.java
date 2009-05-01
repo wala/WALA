@@ -15,7 +15,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * This is a context which is defined by a pair consisting of <caller node, base context>.
@@ -35,10 +34,8 @@ public class CallerSiteContextPair extends CallerSiteContext {
       throw new IllegalArgumentException("null caller");
     }
     this.baseContext = baseContext;
-    if (Assertions.verifyAssertions) {
-      // avoid recursive contexts for now.
-      assert !(baseContext instanceof CallerContextPair);
-    }
+    // avoid recursive contexts for now.
+    assert !(baseContext instanceof CallerContextPair);
   }
 
   @Override

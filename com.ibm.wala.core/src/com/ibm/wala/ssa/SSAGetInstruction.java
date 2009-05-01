@@ -12,7 +12,6 @@
 package com.ibm.wala.ssa;
 
 import com.ibm.wala.types.FieldReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * SSA instruction that reads a field (i.e. getstatic or getfield).
@@ -72,9 +71,7 @@ public abstract class SSAGetInstruction extends SSAFieldAccessInstruction {
 
   @Override
   public int getDef(int i) {
-    if (Assertions.verifyAssertions) {
-      assert i == 0;
-    }
+    assert i == 0;
     return result;
   }
 
@@ -96,8 +93,7 @@ public abstract class SSAGetInstruction extends SSAFieldAccessInstruction {
    */
   @Override
   public int getUse(int j) {
-    if (Assertions.verifyAssertions)
-      assert j == 0 && getRef() != -1;
+    assert j == 0 && getRef() != -1;
     return getRef();
   }
 

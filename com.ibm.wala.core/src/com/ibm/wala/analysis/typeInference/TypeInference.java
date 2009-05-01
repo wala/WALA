@@ -176,13 +176,11 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       if (s instanceof SSAAbstractInvokeInstruction) {
         SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) s;
         TypeVariable v = getVariable(call.getException());
-         Collection<TypeReference> defaultExceptions = call.getExceptionTypes();
+        Collection<TypeReference> defaultExceptions = call.getExceptionTypes();
         if (defaultExceptions.size() == 0) {
           continue;
         }
-        if (Assertions.verifyAssertions) {
-          assert defaultExceptions.size() == 1;
-        }
+        assert defaultExceptions.size() == 1;
         // t should be NullPointerException
         TypeReference t = defaultExceptions.iterator().next();
         IClass klass = cha.lookupClass(t);
@@ -448,9 +446,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
           return NOT_CHANGED;
         } else {
           IClass klass = cha.lookupClass(elementType);
-          if (Assertions.verifyAssertions) {
-            assert klass != null;
-          }
+          assert klass != null;
           lhs.setType(new ConeType(klass));
           return CHANGED;
         }
@@ -515,9 +511,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     @Override
     public void visitLoadMetadata(SSALoadMetadataInstruction instruction) {
       IClass jlClassKlass = cha.lookupClass(TypeReference.JavaLangClass);
-      if (Assertions.verifyAssertions) {
-        assert jlClassKlass != null;
-      }
+      assert jlClassKlass != null;
       result = new DeclaredTypeOperator(new ConeType(jlClassKlass));
     }
 
@@ -689,11 +683,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     if (valueNumber < 0) {
       throw new IllegalArgumentException("bad value number " + valueNumber);
     }
-    if (Assertions.verifyAssertions) {
-      if (getVariable(valueNumber) == null) {
-        assert getVariable(valueNumber) != null : "null variable for value number " + valueNumber;
-      }
-    }
+    assert getVariable(valueNumber) != null : "null variable for value number " + valueNumber;
     return getVariable(valueNumber).getType();
   }
 
@@ -733,17 +723,18 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
   /**
    * Extract all results of the type inference analysis.
-   * @return an array, where the i'th variable holds the type abstraction of the i'th value number. 
+   * 
+   * @return an array, where the i'th variable holds the type abstraction of the i'th value number.
    */
-  public TypeAbstraction[] extractAllResults(){
+  public TypeAbstraction[] extractAllResults() {
     int numberOfVars = ir.getSymbolTable().getMaxValueNumber() + 1;
     TypeAbstraction[] ret = new TypeAbstraction[numberOfVars];
-    
-    for (int i = 0 ; i < numberOfVars ; ++i){
+
+    for (int i = 0; i < numberOfVars; ++i) {
       TypeVariable var = getVariable(i);
       ret[i] = var == null ? null : var.getType();
     }
-    
+
     return ret;
   }
 }

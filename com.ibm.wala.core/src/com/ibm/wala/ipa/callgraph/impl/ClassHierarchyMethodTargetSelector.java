@@ -18,7 +18,6 @@ import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * A {@link MethodTargetSelector} that simply looks up the declared type, name and descriptor of a {@link CallSiteReference} in the
@@ -57,11 +56,7 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
 
     // java virtual calls
     if (call.isDispatch()) {
-      if (Assertions.verifyAssertions) {
-        if (receiver == null) {
-          assert receiver != null : "null receiver for " + call;
-        }
-      }
+      assert receiver != null : "null receiver for " + call;
       klass = receiver;
 
       // java static calls

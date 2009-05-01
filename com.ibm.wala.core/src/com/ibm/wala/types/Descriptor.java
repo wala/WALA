@@ -14,18 +14,14 @@ import java.util.Map;
 
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 import com.ibm.wala.util.strings.StringStuff;
 import com.ibm.wala.util.strings.UTF8Convert;
 
 /**
- * A method descriptor; something like:
- * (Ljava/langString;)Ljava/lang/Class;
+ * A method descriptor; something like: (Ljava/langString;)Ljava/lang/Class;
  * 
  * Descriptors are canonical
- * 
- * @author sfink
  */
 public final class Descriptor {
 
@@ -79,7 +75,7 @@ public final class Descriptor {
   public static Descriptor findOrCreate(ImmutableByteArray b) throws IllegalArgumentException {
     return findOrCreate(Language.JAVA, b);
   }
-  
+
   /**
    * @param s string representation of this descriptor
    * @return the canonical representative for this descriptor value
@@ -96,6 +92,7 @@ public final class Descriptor {
     byte[] b = UTF8Convert.toUTF8(s);
     return findOrCreate(l, new ImmutableByteArray(b));
   }
+
   /**
    * @param key "value" of this descriptor
    */
@@ -117,7 +114,7 @@ public final class Descriptor {
   public String toString() {
     return key.toString();
   }
-  
+
   /**
    * @return a unicode string representation of this descriptor
    */
@@ -148,39 +145,43 @@ public final class Descriptor {
 
   /**
    * @author sfink
-   *
-   * value that defines a descriptor: used to canonicalize instances
+   * 
+   *         value that defines a descriptor: used to canonicalize instances
    */
   private static class Key {
     final private TypeName returnType;
+
     final private TypeName[] parameters;
+
     final private int hashCode; // cached for efficiency
+
     Key(TypeName returnType, TypeName[] parameters) {
       this.returnType = returnType;
       this.parameters = parameters;
-      if (Assertions.verifyAssertions && parameters != null) {
+      if (parameters != null) {
         assert parameters.length > 0;
       }
       hashCode = computeHashCode();
     }
+
     @Override
     public int hashCode() {
       return hashCode;
     }
+
     public int computeHashCode() {
       int result = returnType.hashCode() * 5309;
       if (parameters != null) {
-        for (int i = 0; i<parameters.length; i++) {
+        for (int i = 0; i < parameters.length; i++) {
           result += parameters[i].hashCode() * (5323 ^ i);
         }
       }
       return result;
     }
+
     @Override
     public boolean equals(Object obj) {
-      if (Assertions.verifyAssertions) {
-        assert obj instanceof Key;
-      }
+      assert obj instanceof Key;
       Key other = (Key) obj;
       if (!returnType.equals(other.returnType)) {
         return false;
@@ -201,6 +202,7 @@ public final class Descriptor {
       }
       return true;
     }
+
     @Override
     public String toString() {
       StringBuffer result = new StringBuffer();
@@ -217,7 +219,7 @@ public final class Descriptor {
       appendSemicolonIfNeeded(result, returnType);
       return result.toString();
     }
-    
+
     public String toUnicodeString() {
       StringBuffer result = new StringBuffer();
       result.append("(");
@@ -233,7 +235,7 @@ public final class Descriptor {
       appendSemicolonIfNeeded(result, returnType);
       return result.toString();
     }
-    
+
     private void appendSemicolonIfNeeded(StringBuffer result, TypeName p) {
       if (p.isArrayType()) {
         TypeName e = p.getInnermostElementType();
@@ -245,6 +247,5 @@ public final class Descriptor {
       }
     }
   }
-
 
 }

@@ -143,9 +143,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     }
 
     public void addEquation(AbstractStatement<PointsToSetVariable, ?> eq) {
-      if (Assertions.verifyAssertions) {
-        assert !containsStatement(eq);
-      }
+      assert !containsStatement(eq);
       equationCount++;
       super.addNode(eq);
     }
@@ -236,10 +234,8 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   public void removeVariable(PointsToSetVariable p) {
-    if (Assertions.verifyAssertions) {
-      assert getNumberOfStatementsThatDef(p) == 0;
-      assert getNumberOfStatementsThatUse(p) == 0;
-    }
+    assert getNumberOfStatementsThatDef(p) == 0;
+    assert getNumberOfStatementsThatUse(p) == 0;
     delegateGraph.removeNode(p);
   }
 
@@ -856,7 +852,8 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   /**
-   * NOTE: do not use this method unless you really know what you are doing. Functionality is fragile and may not work in the future.
+   * NOTE: do not use this method unless you really know what you are doing. Functionality is fragile and may not work in the
+   * future.
    */
   public Graph<PointsToSetVariable> getFlowGraphIncludingImplicitConstraints() {
     return new VariableGraphView();

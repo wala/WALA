@@ -14,21 +14,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * UNDER CONSTRUCTION
  * 
- * <verbatim> 
- * TypeArgument: 
- *     WildcardIndicator? FieldTypeSignature 
- *     *
+ * <verbatim> TypeArgument: WildcardIndicator? FieldTypeSignature *
  * 
- * WildcardIndicator: 
- *    + 
- *    - 
- *    
- *    
+ * WildcardIndicator: + -
+ * 
+ * 
  * </verbatim>
  * 
  * @author sjfink
@@ -36,14 +30,12 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class TypeArgument extends Signature {
 
-
   private final TypeSignature sig;
 
   private final WildcardIndicator w;
 
   private static enum WildcardIndicator {
-    PLUS,
-    MINUS
+    PLUS, MINUS
   }
 
   private final static TypeArgument WILDCARD = new TypeArgument("*") {
@@ -51,6 +43,7 @@ public class TypeArgument extends Signature {
     public boolean isWildcard() {
       return true;
     }
+
     @Override
     public String toString() {
       return "*";
@@ -110,8 +103,7 @@ public class TypeArgument extends Signature {
   }
 
   /**
-   * @param typeSigs
-   *          TypeSignature*
+   * @param typeSigs TypeSignature*
    * @return tokenize it
    */
   static String[] parseForTypeArguments(String typeArgs) {
@@ -174,9 +166,7 @@ public class TypeArgument extends Signature {
         }
         return result;
       default:
-        if (Assertions.verifyAssertions) {
-          assert false : "bad type argument list " + typeArgs;
-        }
+        assert false : "bad type argument list " + typeArgs;
       }
     }
   }
@@ -184,7 +174,6 @@ public class TypeArgument extends Signature {
   public TypeSignature getFieldTypeSignature() {
     return sig;
   }
-  
 
   @Override
   public String toString() {

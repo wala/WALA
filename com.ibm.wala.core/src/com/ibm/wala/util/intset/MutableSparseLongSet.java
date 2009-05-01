@@ -14,13 +14,11 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- * A sparse ordered, mutable duplicate-free, fully-encapsulated set of longs.
- * Instances are not canonical, except for EMPTY.
+ * A sparse ordered, mutable duplicate-free, fully-encapsulated set of longs. Instances are not canonical, except for EMPTY.
  * 
  * This implementation will be inefficient if these sets get large.
  * 
- * TODO: even for small sets, we probably want to work on this to reduce the
- * allocation activity.
+ * TODO: even for small sets, we probably want to work on this to reduce the allocation activity.
  * 
  * @author Alan Donovan
  * @author Stephen Fink
@@ -36,7 +34,6 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
    * Default initial size for a backing array with one element
    */
   private final static int INITIAL_NONEMPTY_SIZE = 2;
-
 
   public static MutableSparseLongSet make(LongSet set) throws UnimplementedError {
     if (!(set instanceof SparseLongSet)) {
@@ -154,7 +151,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
   }
 
   /**
-   * @throws UnimplementedError  if not ( that instanceof com.ibm.wala.util.intset.SparseLongSet ) 
+   * @throws UnimplementedError if not ( that instanceof com.ibm.wala.util.intset.SparseLongSet )
    */
   public void copySet(LongSet that) throws UnimplementedError {
     if (that instanceof SparseLongSet) {
@@ -264,7 +261,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
    * Add all elements from another int set.
    * 
    * @return true iff this set changes
-   * @throws UnimplementedError  if not ( set instanceof com.ibm.wala.util.intset.SparseLongSet ) 
+   * @throws UnimplementedError if not ( set instanceof com.ibm.wala.util.intset.SparseLongSet )
    */
   public boolean addAll(LongSet set) throws UnimplementedError {
     if (set instanceof SparseLongSet) {
@@ -360,9 +357,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
       ci += tail;
     }
 
-    if (Assertions.verifyAssertions) {
-      assert ci > 0;
-    }
+    assert ci > 0;
 
     elements = (cr == null) ? ar : cr;
     size = ci;

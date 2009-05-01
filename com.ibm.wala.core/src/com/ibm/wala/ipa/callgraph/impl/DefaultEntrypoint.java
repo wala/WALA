@@ -18,7 +18,6 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * An entrypoint whose parameter types are the declared types.
@@ -36,9 +35,7 @@ public class DefaultEntrypoint extends Entrypoint {
     }
     this.cha = cha;
     paramTypes = makeParameterTypes(method);
-    if (Assertions.verifyAssertions) {
-      assert paramTypes != null : method.toString();
-    }
+    assert paramTypes != null : method.toString();
   }
 
   public DefaultEntrypoint(MethodReference method, IClassHierarchy cha) {
@@ -48,9 +45,7 @@ public class DefaultEntrypoint extends Entrypoint {
     }
     this.cha = cha;
     paramTypes = makeParameterTypes(getMethod());
-    if (Assertions.verifyAssertions) {
-      assert paramTypes != null : method.toString();
-    }
+    assert paramTypes != null : method.toString();
   }
 
   protected TypeReference[][] makeParameterTypes(IMethod method) {

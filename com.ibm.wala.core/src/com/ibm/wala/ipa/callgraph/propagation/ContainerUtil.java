@@ -14,18 +14,13 @@ import java.util.Collection;
 
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
  * Utilities for container class analysis
- * 
- * @author sfink
  */
 public class ContainerUtil {
 
@@ -56,10 +51,8 @@ public class ContainerUtil {
       IClass collection = c.getClassHierarchy().lookupClass(TypeReference.JavaUtilCollection);
       IClass map = c.getClassHierarchy().lookupClass(TypeReference.JavaUtilMap);
       if (c.isInterface()) {
-        if (Assertions.verifyAssertions) {
-          assert collection != null;
-          assert map != null;
-        }
+        assert collection != null;
+        assert map != null;
         Collection s;
         s = c.getAllImplementedInterfaces();
         if (s.contains(collection) || s.contains(map)) {

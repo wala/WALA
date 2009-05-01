@@ -145,16 +145,12 @@ public abstract class AbstractPtrTest extends TestCase {
 
   protected void doPointsToSizeTest(String scopeFile, String mainClass, int expected14Size, int expected15Size, int expected16Size)
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    if (Assertions.verifyAssertions) {
-      assert scope == null;
-    }
+    assert scope == null;
     Collection<InstanceKey> pointsTo = getPointsToSetToTest(scopeFile, mainClass);
     if (debug) {
       System.err.println("points-to for " + mainClass + ": " + pointsTo);
     }
-    if (Assertions.verifyAssertions) {
-      assert scope != null;
-    }
+    assert scope != null;
     if (scope.isJava16Libraries()) {
       assertEquals(expected16Size, pointsTo.size());
     } else if (scope.isJava15Libraries()) {
@@ -199,13 +195,13 @@ public abstract class AbstractPtrTest extends TestCase {
     final AnalysisCache analysisCache = new AnalysisCache();
     CallGraphBuilder cgBuilder = Util.makeZeroCFABuilder(options, analysisCache, cha, scope);
     final CallGraph cg = cgBuilder.makeCallGraph(options, null);
-//    System.err.println(cg.toString());
+    // System.err.println(cg.toString());
 
-//    MemoryAccessMap mam = new SimpleMemoryAccessMap(cg, cgBuilder.getPointerAnalysis().getHeapModel(), false);
+    // MemoryAccessMap mam = new SimpleMemoryAccessMap(cg, cgBuilder.getPointerAnalysis().getHeapModel(), false);
     MemoryAccessMap mam = new PABasedMemoryAccessMap(cg, cgBuilder.getPointerAnalysis());
     SSAPropagationCallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, analysisCache, cha, scope);
-    DemandRefinementPointsTo fullDemandPointsTo = new DemandRefinementPointsTo(cg, new ThisFilteringHeapModel(builder,cha), mam, cha, options,
-        getStateMachineFactory());
+    DemandRefinementPointsTo fullDemandPointsTo = new DemandRefinementPointsTo(cg, new ThisFilteringHeapModel(builder, cha), mam,
+        cha, options, getStateMachineFactory());
 
     return fullDemandPointsTo;
   }

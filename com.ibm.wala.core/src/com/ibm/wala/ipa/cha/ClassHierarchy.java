@@ -130,13 +130,13 @@ public class ClassHierarchy implements IClassHierarchy {
    * @param klass class in question
    * @return Set the result set
    */
-  private Set<IClass> computeSuperclasses(IClass klass)  {
+  private Set<IClass> computeSuperclasses(IClass klass) {
     if (DEBUG) {
       System.err.println("computeSuperclasses: " + klass);
     }
 
     Set<IClass> result = HashSetFactory.make(3);
-    
+
     klass = klass.getSuperclass();
 
     while (klass != null) {
@@ -308,9 +308,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
     if (klass.getReference().equals(this.rootTypeRef)) {
       // there is only one root
-      if (Assertions.verifyAssertions) {
-        assert root == null;
-      }
+      assert root == null;
       root = node;
     }
 
@@ -346,10 +344,8 @@ public class ClassHierarchy implements IClassHierarchy {
           Warnings.add(ClassExclusion.create(iface.getReference(), e.getMessage()));
           continue;
         }
-        if (DEBUG && Assertions.verifyAssertions) {
-          if (!iface.isInterface()) {
-            assert false : "not an interface: " + iface;
-          }
+        if (!iface.isInterface()) {
+          assert false : "not an interface: " + iface;
         }
         recordImplements(klass, iface);
       }
@@ -634,9 +630,7 @@ public class ClassHierarchy implements IClassHierarchy {
   private int nextNumber = 1;
 
   private void numberTree() {
-    if (Assertions.verifyAssertions) {
-      assert root != null;
-    }
+    assert root != null;
     visitForNumbering(root);
   }
 
@@ -734,11 +728,9 @@ public class ClassHierarchy implements IClassHierarchy {
     } else if (B.getReference().equals(TypeReference.JavaLangObject)) {
       return B;
     } else {
-      if (Assertions.verifyAssertions) {
-        Node n = map.get(B);
-        if (n == null) {
-          assert n != null : "null n for " + B;
-        }
+      Node n = map.get(B);
+      if (n == null) {
+        assert n != null : "null n for " + B;
       }
       Set<IClass> superB;
       try {
@@ -844,9 +836,7 @@ public class ClassHierarchy implements IClassHierarchy {
     if (c == null) {
       throw new IllegalArgumentException("c is null");
     }
-    if (Assertions.verifyAssertions) {
-      assert T != null : "null T";
-    }
+    assert T != null : "null T";
 
     if (c.isArrayClass()) {
       if (T.getReference() == TypeReference.JavaLangObject) {
@@ -999,11 +989,7 @@ public class ClassHierarchy implements IClassHierarchy {
       return Collections.singleton(T);
     }
     Node node = findNode(T);
-    if (Assertions.verifyAssertions) {
-      if (node == null) {
-        assert node != null : "null node for class " + T;
-      }
-    }
+    assert node != null : "null node for class " + T;
     HashSet<IClass> result = HashSetFactory.make(3);
     result.add(T);
     for (Iterator<Node> it = node.getChildren(); it.hasNext();) {
@@ -1015,11 +1001,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
   public boolean isInterface(TypeReference type) {
     IClass T = lookupClass(type);
-    if (Assertions.verifyAssertions) {
-      if (T == null) {
-        assert T != null : "Null lookup for " + type;
-      }
-    }
+    assert T != null : "Null lookup for " + type;
     return T.isInterface();
   }
 

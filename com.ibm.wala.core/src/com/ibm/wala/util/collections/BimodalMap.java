@@ -16,15 +16,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- * 
- * This implementation of Map chooses between one of two implementations,
- * depending on the size of the map.
- * 
- * @author sfink
+ * This implementation of {@link Map} chooses between one of two implementations, depending on the size of the map.
  */
 public class BimodalMap<K, V> implements Map<K, V> {
 
@@ -40,9 +35,7 @@ public class BimodalMap<K, V> implements Map<K, V> {
   private Map<K, V> backingStore;
 
   /**
-   * @param cutoff
-   *          the map size at which to switch from the small map implementation
-   *          to the large map implementation
+   * @param cutoff the map size at which to switch from the small map implementation to the large map implementation
    */
   public BimodalMap(int cutoff) {
     this.cutOff = cutoff;
@@ -108,10 +101,8 @@ public class BimodalMap<K, V> implements Map<K, V> {
    * Switch backing implementation from a SmallMap to a HashMap
    */
   private void transferBackingStore() {
-    if (Assertions.verifyAssertions) {
-      assert backingStore instanceof SmallMap;
-    }
-    SmallMap<K, V> S = (SmallMap<K,V>) backingStore;
+    assert backingStore instanceof SmallMap;
+    SmallMap<K, V> S = (SmallMap<K, V>) backingStore;
     backingStore = HashMapFactory.make(2 * S.size());
     for (Iterator<K> it = S.keySet().iterator(); it.hasNext();) {
       K key = it.next();

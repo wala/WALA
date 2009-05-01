@@ -21,27 +21,17 @@ import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.classLoader.ShrikeClass;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * Under construction.
  * 
- * FormalTypeParameter: 
- *   Identifier ClassBound InterfaceBound*
+ * FormalTypeParameter: Identifier ClassBound InterfaceBound*
  * 
- * ClassBound: 
- *    : FieldTypeSignature?
+ * ClassBound: : FieldTypeSignature?
  * 
- * InterfaceBound 
- *    : FieldTypeSignature
+ * InterfaceBound : FieldTypeSignature
  * 
- * FieldTypeSignature: 
- *    ClassTypeSignature 
- *    ArrayTypeSignature
- *    TypeVariableSignature
- * 
- * @author sjfink
- * 
+ * FieldTypeSignature: ClassTypeSignature ArrayTypeSignature TypeVariableSignature
  */
 public class FormalTypeParameter extends Signature {
 
@@ -102,7 +92,7 @@ public class FormalTypeParameter extends Signature {
     return s.substring(0, s.indexOf(':'));
   }
 
-  public static FormalTypeParameter make(String string) throws IllegalArgumentException{
+  public static FormalTypeParameter make(String string) throws IllegalArgumentException {
     if (string == null) {
       throw new IllegalArgumentException("string is null");
     }
@@ -118,10 +108,9 @@ public class FormalTypeParameter extends Signature {
   }
 
   /**
-   * @param s a string that holds a sequence of formal type parameters beginning
-   * at index begin
+   * @param s a string that holds a sequence of formal type parameters beginning at index begin
    * @return the index where the next formal type parameter ends (actually, end +1)
-   */  
+   */
   static int formalTypeParameterEnds(String s, int begin) {
     int result = begin;
     while (s.charAt(result) != ':') {
@@ -147,9 +136,7 @@ public class FormalTypeParameter extends Signature {
       case ':':
         break;
       default:
-        if (Assertions.verifyAssertions) {
-          assert false : "bad type signature list " + s + " " + (result - 1);
-        }
+        assert false : "bad type signature list " + s + " " + (result - 1);
       }
     } while (s.charAt(result) == ':');
     return result;

@@ -32,7 +32,6 @@ import com.ibm.wala.util.collections.Heap;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.ToStringComparator;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.heapTrace.HeapTracer;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
@@ -598,7 +597,7 @@ public class TabulationSolver<T, P, F> {
                 final T exit = exits[e];
                 // if "exit" is a valid exit from the callee to the return
                 // site being processed
-                if (DEBUG_LEVEL > 0 && Assertions.verifyAssertions) {
+                if (DEBUG_LEVEL > 0) {
                   assert supergraph.containsNode(exit);
                 }
                 int x_num = supergraph.getLocalBlockNumber(exit);
@@ -639,7 +638,7 @@ public class TabulationSolver<T, P, F> {
                   }
                 }
               }
-            } 
+            }
           }
         });
       }
@@ -684,10 +683,8 @@ public class TabulationSolver<T, P, F> {
       if (reached != null) {
         reached.foreach(new IntSetAction() {
           public void act(int x) {
-            if (Assertions.verifyAssertions) {
-              assert x >= 0;
-              assert edge.d1 >= 0;
-            }
+            assert x >= 0;
+            assert edge.d1 >= 0;
             propagate(edge.entry, edge.d1, returnSite, x);
           }
         });
@@ -766,19 +763,15 @@ public class TabulationSolver<T, P, F> {
    */
   protected boolean propagate(T s_p, int i, T n, int j) {
     int number = supergraph.getLocalBlockNumber(n);
-    if (Assertions.verifyAssertions) {
-      if (number < 0) {
-        System.err.println("BOOM " + n);
-        supergraph.getLocalBlockNumber(n);
-      }
-      assert number >= 0;
+    if (number < 0) {
+      System.err.println("BOOM " + n);
+      supergraph.getLocalBlockNumber(n);
     }
+    assert number >= 0;
 
     LocalPathEdges pLocal = findOrCreateLocalPathEdges(s_p);
 
-    if (Assertions.verifyAssertions) {
-      assert j >= 0;
-    }
+    assert j >= 0;
 
     if (!pLocal.contains(i, number, j)) {
       if (DEBUG_LEVEL > 0) {
@@ -804,9 +797,7 @@ public class TabulationSolver<T, P, F> {
    * return -1 if no fact should be propagated
    */
   private int merge(T s_p, int i, T n, int j) {
-    if (Assertions.verifyAssertions) {
-      assert j >= 0;
-    }
+    assert j >= 0;
     IMergeFunction alpha = problem.getMergeFunction();
     if (alpha != null) {
       LocalPathEdges lp = pathEdges.get(s_p);

@@ -13,17 +13,12 @@ package com.ibm.wala.util.graph.traverse;
 import java.util.Iterator;
 
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.NumberedGraph;
 
 /**
- * This class implements depth-first search over a NumberedGraph,
- * return an enumeration of the nodes of the graph in order of
- * increasing discover time.  This class follows the outNodes of the
- * graph nodes to define the graph, but this behavior can be changed
- * by overriding the getConnected method.
- *
- * @author Stephen Fink
+ * This class implements depth-first search over a NumberedGraph, return an enumeration of the nodes of the graph in order of
+ * increasing discover time. This class follows the outNodes of the graph nodes to define the graph, but this behavior can be
+ * changed by overriding the getConnected method.
  */
 public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> implements Iterator<T> {
   public static final long serialVersionUID = 8737376661L;
@@ -31,7 +26,7 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> i
   /**
    * An iterator of child nodes for each node being searched
    */
-  private  Iterator[] pendingChildren;
+  private Iterator[] pendingChildren;
 
   /**
    * The Graph being traversed
@@ -39,9 +34,8 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> i
   private final NumberedGraph<T> G;
 
   /**
-   * Construct a depth-first enumerator starting with a particular node
-   * in a directed graph. 
-   *
+   * Construct a depth-first enumerator starting with a particular node in a directed graph.
+   * 
    * @param G the graph whose nodes to enumerate
    */
   NumberedDFSFinishTimeIterator(NumberedGraph<T> G, T N) {
@@ -51,21 +45,21 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> i
   }
 
   /**
-   * Construct a depth-first enumerator across the (possibly
-   * improper) subset of nodes reachable from the nodes in the given
-   * enumeration. 
-   *
+   * Construct a depth-first enumerator across the (possibly improper) subset of nodes reachable from the nodes in the given
+   * enumeration.
+   * 
    * @param G the graph whose nodes to enumerate
    * @param nodes the set of nodes from which to start searching
    */
   NumberedDFSFinishTimeIterator(NumberedGraph<T> G, Iterator<? extends T> nodes) {
     this.G = G;
     pendingChildren = new Iterator[G.getMaxNumber() + 1];
-    init(G,nodes);
+    init(G, nodes);
   }
 
   /**
    * Constructor DFSFinishTimeIterator.
+   * 
    * @param G
    */
   NumberedDFSFinishTimeIterator(NumberedGraph<T> G) {
@@ -82,15 +76,15 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> i
       System.arraycopy(old, 0, pendingChildren, 0, old.length);
       return null;
     }
-    if (Assertions.verifyAssertions) {
-      if (number < 0) {
-        assert false : "negative number for " + n + " " + n.getClass();
-      }
+    if (number < 0) {
+      assert false : "negative number for " + n + " " + n.getClass();
     }
     return pendingChildren[number];
   }
+
   /**
    * Method setPendingChildren.
+   * 
    * @param v
    * @param iterator
    */

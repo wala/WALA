@@ -24,28 +24,24 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
 /**
  * "Non-standard" bypass rules to use during call graph construction.
  * 
- * Normally, the method bypass rules replace the IMethod that is resolved by
- * other means, via the getBypass() method. However, the bypass rules can be
- * invoked even before resolving the target of a call, by checking the intercept
- * rules.
+ * Normally, the method bypass rules replace the IMethod that is resolved by other means, via the getBypass() method. However, the
+ * bypass rules can be invoked even before resolving the target of a call, by checking the intercept rules.
  */
 public class MethodBypass {
 
   static final boolean DEBUG = false;
 
   /**
-   * Method summaries collected for methods. Mapping Object -> MethodSummary
-   * where Object is either a
+   * Method summaries collected for methods. Mapping Object -> MethodSummary where Object is either a
    * <ul>
-   * <li> MethodReference
-   * <li> TypeReference
-   * <li> Atom (package name)
+   * <li>MethodReference
+   * <li>TypeReference
+   * <li>Atom (package name)
    * </ul>
    */
   private final Map methodSummaries;
@@ -98,8 +94,7 @@ public class MethodBypass {
   }
 
   /**
-   * @param m
-   *          a method reference
+   * @param m a method reference
    * @return a SyntheticMethod corresponding to m; or null if none is available.
    */
   private SyntheticMethod findOrCreateSyntheticMethod(MethodReference m) {
@@ -111,11 +106,7 @@ public class MethodBypass {
       if (summ != null) {
         TypeReference T = m.getDeclaringClass();
         IClass c = cha.lookupClass(T);
-        if (Assertions.verifyAssertions) {
-          if (c == null) {
-            assert c != null : "null class for " + T;
-          }
-        }
+        assert c != null : "null class for " + T;
         SummarizedMethod n = new SummarizedMethod(m, summ, c);
         syntheticMethods.put(m, n);
         return n;
@@ -162,12 +153,11 @@ public class MethodBypass {
   }
 
   /**
-   * Method getBypass. check to see if a call to the receiver 'target' should be
-   * redirected to a different receiver.
+   * Method getBypass. check to see if a call to the receiver 'target' should be redirected to a different receiver.
    * 
    * @param target
    * @return Object
-   * @throws IllegalArgumentException  if target is null
+   * @throws IllegalArgumentException if target is null
    */
   public SyntheticMethod getBypass(IMethod target) {
     if (target == null) {
@@ -180,8 +170,7 @@ public class MethodBypass {
    * Method extractPackage.
    * 
    * @param type
-   * @return Atom that represents the package name, or null if this is the
-   *         unnamed package.
+   * @return Atom that represents the package name, or null if this is the unnamed package.
    */
   private Atom extractPackage(TypeReference type) {
     String s = type.getName().toString();
@@ -210,11 +199,10 @@ public class MethodBypass {
   }
 
   /**
-   * Are we allowed to allocate (for analysis purposes) an instance of a given
-   * type? By default, the answer is yes iff T is not abstract. However,
-   * subclasses and summaries can override this to allow "special" abstract
-   * classes to be allocatable as well.
-   * @throws IllegalArgumentException  if klass is null
+   * Are we allowed to allocate (for analysis purposes) an instance of a given type? By default, the answer is yes iff T is not
+   * abstract. However, subclasses and summaries can override this to allow "special" abstract classes to be allocatable as well.
+   * 
+   * @throws IllegalArgumentException if klass is null
    * 
    */
   public boolean isAllocatable(IClass klass) {

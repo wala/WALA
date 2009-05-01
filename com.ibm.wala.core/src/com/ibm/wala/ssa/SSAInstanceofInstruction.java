@@ -11,7 +11,6 @@
 package com.ibm.wala.ssa;
 
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * A dynamic type test (instanceof) instruction.
@@ -70,9 +69,7 @@ public class SSAInstanceofInstruction extends SSAInstruction {
 
   @Override
   public int getDef(int i) {
-    if (Assertions.verifyAssertions) {
-      assert i == 0;
-    }
+    assert i == 0;
     return result;
   }
 
@@ -98,8 +95,7 @@ public class SSAInstanceofInstruction extends SSAInstruction {
    */
   @Override
   public int getUse(int j) {
-    if (Assertions.verifyAssertions)
-      assert j == 0;
+    assert j == 0;
     return ref;
   }
 
@@ -116,7 +112,7 @@ public class SSAInstanceofInstruction extends SSAInstruction {
     return true;
   }
 
-   public int getRef() {
+  public int getRef() {
     return ref;
   }
 }

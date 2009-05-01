@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * An instruction representing a monitorenter or monitorexit operation.
@@ -44,12 +43,12 @@ public abstract class SSAMonitorInstruction extends SSAInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return "monitor" + (isEnter? "enter " : "exit ") + getValueString(symbolTable, ref);
+    return "monitor" + (isEnter ? "enter " : "exit ") + getValueString(symbolTable, ref);
   }
 
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   * @throws IllegalArgumentException  if v is null
+   * @throws IllegalArgumentException if v is null
    */
   @Override
   public void visit(IVisitor v) {
@@ -72,8 +71,7 @@ public abstract class SSAMonitorInstruction extends SSAInstruction {
    */
   @Override
   public int getUse(int j) {
-    if (Assertions.verifyAssertions)
-      assert j == 0;
+    assert j == 0;
     return ref;
   }
 

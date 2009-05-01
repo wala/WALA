@@ -49,8 +49,8 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   private static final boolean FAIL_ON_EAGER_CONSTRUCTION = false;
 
   /**
-   * Should the graph include call-to-return edges? When set to <code>false</code>, the graphs output by {@link IFDSExplorer}
-   * look incorrect
+   * Should the graph include call-to-return edges? When set to <code>false</code>, the graphs output by {@link IFDSExplorer} look
+   * incorrect
    */
   private final static boolean CALL_TO_RETURN_EDGES = true;
 
@@ -191,11 +191,9 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
         // previous instruction is not a call instruction.
         BasicBlockInContext<T> p = new BasicBlockInContext<T>(n, pb);
         BasicBlockInContext<T> b = new BasicBlockInContext<T>(n, bb);
-        if (Assertions.verifyAssertions) {
-          if (!g.containsNode(p) || !g.containsNode(b)) {
-            assert g.containsNode(p) : "IPCFG does not contain " + p;
-            assert g.containsNode(b) : "IPCFG does not contain " + b;
-          }
+        if (!g.containsNode(p) || !g.containsNode(b)) {
+          assert g.containsNode(p) : "IPCFG does not contain " + p;
+          assert g.containsNode(b) : "IPCFG does not contain " + b;
         }
         g.addEdge(p, b);
       }
@@ -208,9 +206,9 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     if (call == null) {
       throw new IllegalArgumentException("call == null");
     }
- 
+
     return call.getCallSite().cloneReference(pc);
-   }
+  }
 
   /**
    * Add an edge from the exit() block of a callee to a return site in the caller
@@ -218,16 +216,15 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * @param returnBlock the return site for a call
    * @param targetCFG the called method
    */
-  private void addEdgesFromExitToReturn(CGNode caller, T returnBlock, CGNode target, ControlFlowGraph<SSAInstruction, ? extends T> targetCFG) {
+  private void addEdgesFromExitToReturn(CGNode caller, T returnBlock, CGNode target,
+      ControlFlowGraph<SSAInstruction, ? extends T> targetCFG) {
     T texit = targetCFG.exit();
     BasicBlockInContext<T> exit = new BasicBlockInContext<T>(target, texit);
     addNodeForBasicBlockIfNeeded(exit);
     BasicBlockInContext<T> ret = new BasicBlockInContext<T>(caller, returnBlock);
-    if (Assertions.verifyAssertions) {
-      if (!g.containsNode(exit) || !g.containsNode(ret)) {
-        assert g.containsNode(exit) : "IPCFG does not contain " + exit;
-        assert g.containsNode(ret) : "IPCFG does not contain " + ret;
-      }
+    if (!g.containsNode(exit) || !g.containsNode(ret)) {
+      assert g.containsNode(exit) : "IPCFG does not contain " + exit;
+      assert g.containsNode(ret) : "IPCFG does not contain " + ret;
     }
     if (DEBUG_LEVEL > 1) {
       System.err.println("addEdgeFromExitToReturn " + exit + ret);
@@ -241,16 +238,15 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * @param callBlock the return site for a call
    * @param targetCFG the called method
    */
-  private void addEdgesFromCallToEntry(CGNode caller, T callBlock, CGNode target, ControlFlowGraph<SSAInstruction, ? extends T> targetCFG) {
+  private void addEdgesFromCallToEntry(CGNode caller, T callBlock, CGNode target,
+      ControlFlowGraph<SSAInstruction, ? extends T> targetCFG) {
     T tentry = targetCFG.entry();
     BasicBlockInContext<T> entry = new BasicBlockInContext<T>(target, tentry);
     addNodeForBasicBlockIfNeeded(entry);
     BasicBlockInContext<T> call = new BasicBlockInContext<T>(caller, callBlock);
-    if (Assertions.verifyAssertions) {
-      if (!g.containsNode(entry) || !g.containsNode(call)) {
-        assert g.containsNode(entry) : "IPCFG does not contain " + entry;
-        assert g.containsNode(call) : "IPCFG does not contain " + call;
-      }
+    if (!g.containsNode(entry) || !g.containsNode(call)) {
+      assert g.containsNode(entry) : "IPCFG does not contain " + entry;
+      assert g.containsNode(call) : "IPCFG does not contain " + call;
     }
     if (DEBUG_LEVEL > 1) {
       System.err.println("addEdgeFromCallToEntry " + call + " " + entry);
@@ -290,7 +286,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     ControlFlowGraph<SSAInstruction, T> ccfg = getCFG(caller);
     if (ccfg != null) {
       SSAInstruction[] cinsts = ccfg.getInstructions();
-  
+
       if (DEBUG_LEVEL > 1) {
         System.err.println("Visiting " + cinsts.length + " instructions");
       }
@@ -469,7 +465,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     int num = g.getNumber(callBlock);
     if (!handledCalls.contains(num)) {
       handledCalls.add(num);
-      ControlFlowGraph<SSAInstruction,T> cfg = getCFG(n);
+      ControlFlowGraph<SSAInstruction, T> cfg = getCFG(n);
       int index = callBlock.getLastInstructionIndex();
       SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) callBlock.getLastInstruction();
       CallSiteReference site = makeCallSiteReference(n.getMethod().getDeclaringClass().getClassLoader().getReference(), cfg
@@ -658,12 +654,10 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     int lastIndex = B.getLastInstructionIndex();
     if (lastIndex >= 0) {
 
-      if (Assertions.verifyAssertions) {
-        if (statements.length <= lastIndex) {
-          System.err.println(statements.length);
-          System.err.println(cfg);
-          assert lastIndex < statements.length : "bad BB " + B + " and CFG for " + getCGNode(B);
-        }
+      if (statements.length <= lastIndex) {
+        System.err.println(statements.length);
+        System.err.println(cfg);
+        assert lastIndex < statements.length : "bad BB " + B + " and CFG for " + getCGNode(B);
       }
       SSAInstruction last = statements[lastIndex];
       return (last instanceof SSAAbstractInvokeInstruction);
@@ -723,7 +717,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
             CGNode caller = src.getNode();
             T entryBlock = dst.getDelegate();
             T exitBlock = getCFG(callee).exit();
-            addEntryAndExitEdgesToCaller(callee, entryBlock, exitBlock, caller);            
+            addEntryAndExitEdgesToCaller(callee, entryBlock, exitBlock, caller);
           }
         }
       } else {

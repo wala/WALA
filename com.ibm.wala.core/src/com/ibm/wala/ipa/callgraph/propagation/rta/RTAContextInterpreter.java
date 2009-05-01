@@ -19,11 +19,8 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.types.FieldReference;
 
 /**
- *
  * This object will analyze a method in a context and return information
  * needed for RTA.
- * 
- * @author sfink
  */
 public interface RTAContextInterpreter {
   /**

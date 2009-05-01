@@ -20,14 +20,9 @@ import com.ibm.wala.ipa.callgraph.ClassTargetSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
- * A {@link ClassTargetSelector} that looks up the declared type of a {@link NewSiteReference}
- * based on bypass rules.
- * 
- * @author dolby
- * @author sfink
+ * A {@link ClassTargetSelector} that looks up the declared type of a {@link NewSiteReference} based on bypass rules.
  */
 public class BypassClassTargetSelector implements ClassTargetSelector {
   private static final boolean DEBUG = false;
@@ -52,14 +47,13 @@ public class BypassClassTargetSelector implements ClassTargetSelector {
    */
   private final BypassSyntheticClassLoader bypassLoader;
 
-  public BypassClassTargetSelector(ClassTargetSelector parent, Set<TypeReference> allocatableTypes, IClassHierarchy cha, IClassLoader bypassLoader) throws IllegalArgumentException {
+  public BypassClassTargetSelector(ClassTargetSelector parent, Set<TypeReference> allocatableTypes, IClassHierarchy cha,
+      IClassLoader bypassLoader) throws IllegalArgumentException {
     if (bypassLoader == null) {
       throw new IllegalArgumentException("bypassLoader == null");
     }
-    if (Assertions.verifyAssertions) {
-      if (!(bypassLoader instanceof BypassSyntheticClassLoader)) {
-        assert false : "unexpected bypass loader: " + bypassLoader.getClass();
-      }
+    if (!(bypassLoader instanceof BypassSyntheticClassLoader)) {
+      assert false : "unexpected bypass loader: " + bypassLoader.getClass();
     }
 
     this.allocatableTypes = allocatableTypes;
@@ -70,7 +64,7 @@ public class BypassClassTargetSelector implements ClassTargetSelector {
 
   /*
    * @see com.ibm.wala.ipa.callgraph.ClassTargetSelector#getAllocatedTarget(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.NewSiteReference)
+   * com.ibm.wala.classLoader.NewSiteReference)
    */
   public IClass getAllocatedTarget(CGNode caller, NewSiteReference site) {
 

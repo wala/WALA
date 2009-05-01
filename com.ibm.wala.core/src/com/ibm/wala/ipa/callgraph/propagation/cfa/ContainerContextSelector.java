@@ -33,13 +33,12 @@ import com.ibm.wala.util.strings.Atom;
  * 
  * This context selector returns a context customized for the {@link InstanceKey} of the receiver if
  * <ul>
- * <li>receiver is a container, or </li>
- * was allocated in a node whose context was a {@link ReceiverInstanceContext}, and the type is interesting according
- * to a delegate {@link ZeroXInstanceKeys}
+ * <li>receiver is a container, or</li>
+ * was allocated in a node whose context was a {@link ReceiverInstanceContext}, and the type is interesting according to a delegate
+ * {@link ZeroXInstanceKeys}
  * </ul>
  * 
- * Additionally, we add one level of call string context to a few well-known static factory methods from the standard
- * libraries.
+ * Additionally, we add one level of call string context to a few well-known static factory methods from the standard libraries.
  * 
  * @author sfink
  */
@@ -51,22 +50,32 @@ public class ContainerContextSelector implements ContextSelector {
 
   public final static TypeReference SyntheticSystem = TypeReference.findOrCreate(ClassLoaderReference.Primordial,
       SyntheticSystemName);
-  public final static TypeReference JavaUtilHashtable = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/util/Hashtable");
+
+  public final static TypeReference JavaUtilHashtable = TypeReference.findOrCreate(ClassLoaderReference.Primordial,
+      "Ljava/util/Hashtable");
 
   public final static Atom arraycopyAtom = Atom.findOrCreateUnicodeAtom("arraycopy");
 
   private final static Descriptor arraycopyDesc = Descriptor.findOrCreateUTF8("(Ljava/lang/Object;Ljava/lang/Object;)V");
 
   public final static MethodReference synthArraycopy = MethodReference.findOrCreate(SyntheticSystem, arraycopyAtom, arraycopyDesc);
-  
+
   private final static TypeReference Arrays = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/util/Arrays");
+
   private final static Atom asList = Atom.findOrCreateUnicodeAtom("asList");
+
   private final static Atom copyOf = Atom.findOrCreateUnicodeAtom("copyOf");
+
   private final static Atom copyOfRange = Atom.findOrCreateUnicodeAtom("copyOfRange");
+
   private final static Atom toString = Atom.findOrCreateUnicodeAtom("toString");
-  private final static MethodReference StringValueOf = MethodReference.findOrCreate(TypeReference.JavaLangString, "valueOf", "(Ljava/lang/Object;)Ljava/lang/String;");
-  private final static MethodReference HashtableNewEntry = MethodReference.findOrCreate(JavaUtilHashtable, "newEntry", "(Ljava/lang/Object;Ljava/lang/Object;I)Ljava/util/Hashtable$Entry;");
-  
+
+  private final static MethodReference StringValueOf = MethodReference.findOrCreate(TypeReference.JavaLangString, "valueOf",
+      "(Ljava/lang/Object;)Ljava/lang/String;");
+
+  private final static MethodReference HashtableNewEntry = MethodReference.findOrCreate(JavaUtilHashtable, "newEntry",
+      "(Ljava/lang/Object;Ljava/lang/Object;I)Ljava/util/Hashtable$Entry;");
+
   /**
    * The governing class hierarchy.
    */
@@ -89,8 +98,10 @@ public class ContainerContextSelector implements ContextSelector {
     }
   }
 
-  /* 
-   * @see com.ibm.wala.ipa.callgraph.ContextSelector#getCalleeTarget(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
+  /*
+   * @see com.ibm.wala.ipa.callgraph.ContextSelector#getCalleeTarget(com.ibm.wala.ipa.callgraph.CGNode,
+   * com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod,
+   * com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
    */
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
     if (DEBUG) {
@@ -103,10 +114,8 @@ public class ContainerContextSelector implements ContextSelector {
       if (isWellKnownStaticFactory(callee.getReference())) {
         return new CallerSiteContext(caller, site);
       } else {
-        if (Assertions.verifyAssertions) {
-          if (receiver == null) {
-            Assertions.UNREACHABLE("null receiver for " + site);
-          }
+        if (receiver == null) {
+          Assertions.UNREACHABLE("null receiver for " + site);
         }
         return new ReceiverInstanceContext(receiver);
       }
@@ -116,8 +125,8 @@ public class ContainerContextSelector implements ContextSelector {
   }
 
   /**
-   * Does m represent a static factory method we know about from the standard libraries, that we
-   * usually wish to model with one level of call-string context?
+   * Does m represent a static factory method we know about from the standard libraries, that we usually wish to model with one
+   * level of call-string context?
    */
   public static boolean isWellKnownStaticFactory(MethodReference m) {
     if (isArrayCopyingMethod(m)) {
@@ -152,12 +161,12 @@ public class ContainerContextSelector implements ContextSelector {
     }
     if (isArrayCopyMethod(m)) {
       return true;
-    }    
+    }
     return false;
   }
+
   /**
-   * return true iff m represents one of the well-known methods in java.lang.reflect.Arrays that 
-   * do some sort of arraycopy
+   * return true iff m represents one of the well-known methods in java.lang.reflect.Arrays that do some sort of arraycopy
    */
   private static boolean isArrayCopyMethod(MethodReference m) {
     if (m.getDeclaringClass().equals(Arrays)) {
@@ -167,14 +176,13 @@ public class ContainerContextSelector implements ContextSelector {
     }
     return false;
   }
-  
+
   /**
-   * return true iff m represents one of the well-known methods in java.lang.reflect.Arrays that 
-   * do toString() on an array
+   * return true iff m represents one of the well-known methods in java.lang.reflect.Arrays that do toString() on an array
    */
   private static boolean isArrayToStringMethod(MethodReference m) {
     if (m.getDeclaringClass().equals(Arrays)) {
-      if (m.getName().equals(toString)){
+      if (m.getName().equals(toString)) {
         return true;
       }
     }
@@ -182,8 +190,8 @@ public class ContainerContextSelector implements ContextSelector {
   }
 
   /**
-   * This method walks recursively up the definition of a context C, to see if the chain of contexts that give rise to C
-   * a) includes the method M. or b) includes the method in which the receiver was allocated
+   * This method walks recursively up the definition of a context C, to see if the chain of contexts that give rise to C a) includes
+   * the method M. or b) includes the method in which the receiver was allocated
    * 
    * @return the matching context if found, null otherwise
    */
@@ -206,11 +214,11 @@ public class ContainerContextSelector implements ContextSelector {
   }
 
   /**
-   * This method walks recursively up the definition of a context C, to see if the chain of contexts that give rise to C
-   * includes the method M.
+   * This method walks recursively up the definition of a context C, to see if the chain of contexts that give rise to C includes
+   * the method M.
    * 
-   * If C is a ReceiverInstanceContext, Let N be the node that allocated C.instance. If N.method == M, return N. Else
-   * return findRecursiveMatchingContext(M, N.context) Else return null
+   * If C is a ReceiverInstanceContext, Let N be the node that allocated C.instance. If N.method == M, return N. Else return
+   * findRecursiveMatchingContext(M, N.context) Else return null
    */
   public static CGNode findNodeRecursiveMatchingContext(IMethod m, Context c) {
     if (DEBUG) {
@@ -229,7 +237,7 @@ public class ContainerContextSelector implements ContextSelector {
         return findNodeRecursiveMatchingContext(m, n.getContext());
       }
     } else if (c instanceof CallerContext) {
-      CallerContext cc = (CallerContext)c;
+      CallerContext cc = (CallerContext) c;
       CGNode n = cc.getCaller();
       if (n.getMethod().equals(m)) {
         return n;
@@ -242,11 +250,11 @@ public class ContainerContextSelector implements ContextSelector {
   }
 
   /**
-   * This method walks recursively up the definition of a context C, to see if the chain of contexts that give rise to C
-   * includes the method M.
+   * This method walks recursively up the definition of a context C, to see if the chain of contexts that give rise to C includes
+   * the method M.
    * 
-   * If C is a ReceiverInstanceContext, Let N be the node that allocated C.instance. If N.method == M, return N.context.
-   * Else return findRecursiveMatchingContext(M, N.context) Else return null
+   * If C is a ReceiverInstanceContext, Let N be the node that allocated C.instance. If N.method == M, return N.context. Else return
+   * findRecursiveMatchingContext(M, N.context) Else return null
    */
   public static Context findRecursiveMatchingContext(IMethod M, Context C) {
     CGNode n = findNodeRecursiveMatchingContext(M, C);

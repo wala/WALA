@@ -11,7 +11,6 @@
 package com.ibm.wala.ssa;
 
 import com.ibm.wala.types.FieldReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * A putfield or putstatic instruction
@@ -73,8 +72,7 @@ public abstract class SSAPutInstruction extends SSAFieldAccessInstruction {
    */
   @Override
   public int getUse(int j) {
-    if (Assertions.verifyAssertions)
-      assert j == 0 || (!isStatic() && j == 1);
+    assert j == 0 || (!isStatic() && j == 1);
     return (j == 0 && !isStatic()) ? getRef() : val;
   }
 

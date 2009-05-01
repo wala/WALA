@@ -17,18 +17,8 @@ package com.ibm.wala.util.debug;
  */
 public class Assertions {
 
+  @Deprecated
   public static final boolean verifyAssertions = true;
-
-  private static void checkGuard() {
-    if (!verifyAssertions) {
-      try {
-        throw new Exception();
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-      throw new Error("unguarded assertion!");
-    }
-  }
 
   /**
    * @throws UnimplementedError if b == false
@@ -49,8 +39,6 @@ public class Assertions {
   /**
    * An assertion which does not need to be guarded by verifyAssertions. These assertions will be enabled in production!
    * 
-   * @param b
-   * @param string
    * @throws UnimplementedError if b == false
    */
   public static void productionAssertion(boolean b, String string) throws UnimplementedError {
@@ -61,7 +49,6 @@ public class Assertions {
   /**
    * An assertion which does not need to be guarded by verifyAssertions. These assertions will be enabled in production!
    * 
-   * @param b
    * @throws UnimplementedError if b == false
    */
   public static void productionAssertion(boolean b) throws UnimplementedError {
@@ -102,10 +89,9 @@ public class Assertions {
    * 
    * @throws UnimplementedError if b == false
    */
+  @Deprecated
   public static void precondition(boolean b) throws UnimplementedError {
-    checkGuard();
-    if (!b)
-      throw new UnimplementedError();
+    assert b;
   }
 
   /**
@@ -114,10 +100,9 @@ public class Assertions {
    * 
    * @throws UnimplementedError if b == false
    */
+  @Deprecated
   public static void precondition(boolean b, String string) throws UnimplementedError {
-    checkGuard();
-    if (!b)
-      throw new UnimplementedError(string);
+    assert b : string;
   }
 
   /**
@@ -126,10 +111,9 @@ public class Assertions {
    * 
    * @throws UnimplementedError if b == false
    */
+  @Deprecated
   public static void postcondition(boolean b) throws UnimplementedError {
-    checkGuard();
-    if (!b)
-      throw new UnimplementedError();
+    assert b;
   }
 
   /**
@@ -138,9 +122,8 @@ public class Assertions {
    * 
    * @throws UnimplementedError if b == false
    */
+  @Deprecated
   public static void postcondition(boolean b, String string) throws UnimplementedError {
-    checkGuard();
-    if (!b)
-      throw new UnimplementedError(string);
+    assert b : string;
   }
 }

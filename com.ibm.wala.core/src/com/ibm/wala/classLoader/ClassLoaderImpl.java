@@ -31,7 +31,6 @@ import com.ibm.wala.util.collections.HashCodeComparator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.shrike.ShrikeClassReaderHandle;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warning;
@@ -89,7 +88,7 @@ public class ClassLoaderImpl implements IClassLoader {
     if (loader == null) {
       throw new IllegalArgumentException("null loader");
     }
-    
+
     this.arrayClassLoader = arrayClassLoader;
     this.parent = parent;
     this.loader = loader;
@@ -194,9 +193,7 @@ public class ClassLoaderImpl implements IClassLoader {
    * Return a Set of IClasses, which represents all classes this class loader can load.
    */
   private Collection<IClass> getAllClasses() {
-    if (Assertions.verifyAssertions) {
-      assert loadedClasses != null;
-    }
+    assert loadedClasses != null;
 
     return loadedClasses.values();
   }
@@ -234,12 +231,12 @@ public class ClassLoaderImpl implements IClassLoader {
         TypeName T = TypeName.string2TypeName(className);
         if (loadedClasses.get(T) != null) {
           Warnings.add(MultipleImplementationsWarning.create(className));
-        }  else if (parent != null && parent.lookupClass(T) != null) {  
+        } else if (parent != null && parent.lookupClass(T) != null) {
           Warnings.add(MultipleImplementationsWarning.create(className));
         } else {
           ShrikeClass klass = new ShrikeClass(reader, this, cha);
           if (klass.getReference().getName().equals(T)) {
-            loadedClasses.put(T, klass);  // new ShrikeClass(reader, this, cha));
+            loadedClasses.put(T, klass); // new ShrikeClass(reader, this, cha));
             if (DEBUG_LEVEL > 1) {
               System.err.println("put " + T + " ");
             }
@@ -438,7 +435,7 @@ public class ClassLoaderImpl implements IClassLoader {
     ModuleEntry e = sourceMap.get(klass.getName());
     return e == null ? null : e.getName();
   }
-  
+
   public InputStream getSource(IClass klass) {
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");

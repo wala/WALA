@@ -46,10 +46,7 @@ public abstract class Entrypoint implements BytecodeConstants {
       throw new IllegalArgumentException("method is null");
     }
     this.method = method;
-
-    if (Assertions.verifyAssertions) {
-      assert method.getDeclaringClass() != null : "null declaring class";
-    }
+    assert method.getDeclaringClass() != null : "null declaring class";
   }
 
   protected Entrypoint(MethodReference method, IClassHierarchy cha) {
@@ -57,7 +54,7 @@ public abstract class Entrypoint implements BytecodeConstants {
       throw new IllegalArgumentException("cha is null");
     }
     IMethod m = cha.resolveMethod(method);
-    if (Assertions.verifyAssertions && m == null) {
+    if (m == null) {
       Assertions.UNREACHABLE("could not resolve " + method);
     }
     this.method = m;

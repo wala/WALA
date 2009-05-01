@@ -15,7 +15,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -44,18 +43,14 @@ public class ArrayClass implements IClass, Constants {
     this.type = type;
     this.loader = loader;
     this.cha = cha;
-    if (Assertions.verifyAssertions) {
-      TypeReference elementType = type.getInnermostElementType();
-      if (!elementType.isPrimitiveType()) {
-        IClass klass = loader.lookupClass(elementType.getName());
-        if (klass == null) {
-          Assertions.UNREACHABLE("caller should not attempt to create an array with type " + type);
-        }
-      } else {
-        if (Assertions.verifyAssertions) {
-          assert loader.getReference().equals(ClassLoaderReference.Primordial);
-        }
+    TypeReference elementType = type.getInnermostElementType();
+    if (!elementType.isPrimitiveType()) {
+      IClass klass = loader.lookupClass(elementType.getName());
+      if (klass == null) {
+        Assertions.UNREACHABLE("caller should not attempt to create an array with type " + type);
       }
+    } else {
+      assert loader.getReference().equals(ClassLoaderReference.Primordial);
     }
   }
 
@@ -107,10 +102,7 @@ public class ArrayClass implements IClass, Constants {
    */
   public IClass getSuperclass() {
     IClass elt = getElementClass();
-
-    if (Assertions.verifyAssertions) {
-      assert getReference().getArrayElementType().isPrimitiveType() || elt != null;
-    }
+    assert getReference().getArrayElementType().isPrimitiveType() || elt != null;
 
     // super is Ljava/lang/Object in two cases:
     // 1) [Ljava/lang/Object
@@ -279,7 +271,7 @@ public class ArrayClass implements IClass, Constants {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllInstanceFields()
    */
-  public Collection<IField> getAllInstanceFields()  {
+  public Collection<IField> getAllInstanceFields() {
     Assertions.UNREACHABLE();
     return null;
   }
@@ -302,7 +294,7 @@ public class ArrayClass implements IClass, Constants {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllFields()
    */
-  public Collection<IField> getAllFields()  {
+  public Collection<IField> getAllFields() {
     Assertions.UNREACHABLE();
     return null;
   }

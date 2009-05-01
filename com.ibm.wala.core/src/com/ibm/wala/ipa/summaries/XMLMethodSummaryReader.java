@@ -198,16 +198,13 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
   private void readXML(InputStream xml) throws SAXException, IOException, ParserConfigurationException {
     SAXHandler handler = new SAXHandler();
 
-    if (Assertions.verifyAssertions) {
-      assert xml != null : "Null xml stream";
-    }
+    assert xml != null : "Null xml stream";
     SAXParserFactory factory = SAXParserFactory.newInstance();
     factory.newSAXParser().parse(new InputSource(xml), handler);
   }
 
   /**
-   * @return Method summaries collected for methods. Mapping Object ->
-   *         MethodSummary where Object is either a
+   * @return Method summaries collected for methods. Mapping Object -> MethodSummary where Object is either a
    *         <ul>
    *         <li>MethodReference
    *         <li>TypeReference
@@ -235,7 +232,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
   /**
    * @author sfink
    * 
-   * SAX parser logic for XML method summaries
+   *         SAX parser logic for XML method summaries
    */
   private class SAXHandler extends DefaultHandler {
     /**
@@ -269,8 +266,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     private Map<String, Integer> symbolTable = null;
 
     /*
-     * @see org.xml.sax.ContentHandler#startElement(java.lang.String,
-     *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+     * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
      */
     @Override
     public void startElement(String uri, String name, String qName, Attributes atts) {
@@ -356,8 +352,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     }
 
     /*
-     * @see org.xml.sax.ContentHandler#endElement(java.lang.String,
-     *      java.lang.String, java.lang.String)
+     * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
      */
     @Override
     public void endElement(String uri, String name, String qName) {
@@ -370,10 +365,8 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         governingLoader = null;
         break;
       case E_METHOD:
-        if (Assertions.verifyAssertions) {
-          if (governingMethod != null) {
-            checkReturnValue(governingMethod);
-          }
+        if (governingMethod != null) {
+          checkReturnValue(governingMethod);
         }
         governingMethod = null;
         symbolTable = null;
@@ -403,8 +396,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     }
 
     /**
-     * If a method is declared to return a value, be sure the method summary
-     * includes a return statement. Throw an assertion if not.
+     * If a method is declared to return a value, be sure the method summary includes a return statement. Throw an assertion if not.
      * 
      * @param governingMethod
      */
@@ -789,8 +781,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     }
 
     /**
-     * Begin processing of a method. 1. Set the governing method. 2. Initialize
-     * the nextLocal variable
+     * Begin processing of a method. 1. Set the governing method. 2. Initialize the nextLocal variable
      * 
      * @param atts
      */

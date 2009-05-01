@@ -15,18 +15,13 @@ import java.util.NoSuchElementException;
 import java.util.Stack;
 
 import com.ibm.wala.util.collections.EmptyIterator;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.Graph;
 
 /**
- * This class implements depth-first search over a Graph, return an enumeration
- * of the nodes of the graph in order of increasing finishing time. This class
- * follows the outNodes of the graph nodes to define the graph, but this
- * behavior can be changed by overriding the getConnected method.
- * 
- * @author Julian Dolby
- * @author Stephen Fink
+ * This class implements depth-first search over a {@link Graph}, return an enumeration of the nodes of the graph in order of increasing
+ * finishing time. This class follows the outNodes of the graph nodes to define the graph, but this behavior can be changed by
+ * overriding the getConnected method.
  */
 public abstract class DFSFinishTimeIterator<T> extends Stack<T> implements Iterator<T> {
 
@@ -102,9 +97,7 @@ public abstract class DFSFinishTimeIterator<T> extends Stack<T> implements Itera
       Iterator<? extends T> pc = getPendingChildren(v);
       for (Iterator<? extends T> e = pc; e.hasNext();) {
         T n = e.next();
-        if (Assertions.verifyAssertions) {
-          assert n != null : "null node in pc";
-        }
+        assert n != null : "null node in pc";
         Iterator nChildren = getPendingChildren(n);
         if (nChildren == null) {
           // found a new child: recurse to it.
@@ -129,8 +122,7 @@ public abstract class DFSFinishTimeIterator<T> extends Stack<T> implements Itera
   /**
    * get the out edges of a given node
    * 
-   * @param n
-   *          the node of which to get the out edges
+   * @param n the node of which to get the out edges
    * @return the out edges
    * 
    */

@@ -49,13 +49,9 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * Manually annotated policy for refining field accesses.
- * 
- * @author Manu Sridharan
- * 
  */
 public class ManualFieldPolicy implements FieldRefinePolicy {
 
@@ -109,8 +105,6 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
   private final IClassHierarchy cha;
 
   /**
-   * 
-   * @param klass
    * @return the top-level {@link IClass} where klass is declared, or klass itself if klass is top-level
    */
   private IClass removeInner(IClass klass) {
@@ -122,16 +116,12 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
     } else {
       String topMostName = klassStr.substring(0, dollarIndex);
       IClass topMostClass = cha.lookupClass(TypeReference.findOrCreate(cl, topMostName));
-      if (Assertions.verifyAssertions) {
-        assert topMostClass != null;
-      }
+      assert topMostClass != null;
       return topMostClass;
     }
   }
 
   /**
-   * 
-   * @param cha
    * @param refinePattern a pattern for detecting which match edges to refine. If the <em>declaring class</em> of the field related
    *          to the match edge matches the pattern, the match edge will be refined. For example, the pattern
    *          <code>Pattern.compile("Ljava/util")</code> will cause all fields of classes in the <code>java.util</code> package to

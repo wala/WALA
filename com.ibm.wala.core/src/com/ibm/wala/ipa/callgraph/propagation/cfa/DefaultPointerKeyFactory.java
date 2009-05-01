@@ -22,7 +22,6 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * Default implementation of {@link PointerKeyFactory}
@@ -43,11 +42,7 @@ public class DefaultPointerKeyFactory implements PointerKeyFactory {
     if (filter == null) {
       throw new IllegalArgumentException("null filter");
     }
-    if (Assertions.verifyAssertions) {
-      if (valueNumber <= 0) {
-        assert valueNumber > 0 : "illegal value number: " + valueNumber + " in " + node;
-      }
-    }
+    assert valueNumber > 0 : "illegal value number: " + valueNumber + " in " + node;
     // TODO: add type filters!
     return new LocalPointerKeyWithFilter(node, valueNumber, filter);
   }

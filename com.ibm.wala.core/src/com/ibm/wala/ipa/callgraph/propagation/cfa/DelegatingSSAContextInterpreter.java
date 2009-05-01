@@ -19,12 +19,9 @@ import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * An {@link SSAContextInterpreter} that first checks with A, then defaults to B.
- * 
- * @author sfink
  */
 public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpreter implements SSAContextInterpreter {
 
@@ -53,9 +50,7 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
         return A.getIR(node);
       }
     }
-    if (Assertions.verifyAssertions) {
-      assert B.understands(node);
-    }
+    assert B.understands(node);
     return B.getIR(node);
   }
 
@@ -65,9 +60,7 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
         return A.getNumberOfStatements(node);
       }
     }
-    if (Assertions.verifyAssertions) {
-      assert B.understands(node);
-    }
+    assert B.understands(node);
     return B.getNumberOfStatements(node);
   }
 
@@ -85,17 +78,14 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
     result |= B.recordFactoryType(node, klass);
     return result;
   }
-  
-  
+
   public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode node) {
     if (A != null) {
       if (A.understands(node)) {
         return A.getCFG(node);
       }
     }
-    if (Assertions.verifyAssertions) {
-      assert B.understands(node);
-    }
+    assert B.understands(node);
     return B.getCFG(node);
   }
 
@@ -105,9 +95,7 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
         return A.getDU(node);
       }
     }
-    if (Assertions.verifyAssertions) {
-      assert B.understands(node);
-    }
+    assert B.understands(node);
     return B.getDU(node);
   }
 }

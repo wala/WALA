@@ -15,8 +15,7 @@ import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * 
- * An implementation of mutable int set that delegates to either a
- * {@link MutableSparseIntSet} or a {@link BitVectorIntSet}
+ * An implementation of mutable int set that delegates to either a {@link MutableSparseIntSet} or a {@link BitVectorIntSet}
  * 
  * @author sfink
  */
@@ -44,14 +43,11 @@ public class BimodalMutableIntSet implements MutableIntSet {
     } else {
       Assertions.UNREACHABLE("Unexpected type " + set.getClass());
     }
-    if (Assertions.verifyAssertions) {
-      assert impl instanceof BitVectorIntSet || impl instanceof MutableSparseIntSet;
-    }
+    assert impl instanceof BitVectorIntSet || impl instanceof MutableSparseIntSet;
   }
 
   /**
-   * @return true iff we would like to use the same representation for V as we
-   *         do for W
+   * @return true iff we would like to use the same representation for V as we do for W
    */
   private boolean sameRepresentation(IntSet V, IntSet W) {
     // for now we assume that we always want to use the same representation for
@@ -93,15 +89,12 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /**
    * If appropriate, change the representation of V.
    * 
-   * For now, this method will change a MutableSparseIntSet to a BitVector if it
-   * saves space.
+   * For now, this method will change a MutableSparseIntSet to a BitVector if it saves space.
    * 
    * TODO: add more variants.
    */
   private void maybeChangeRepresentation() {
-    if (Assertions.verifyAssertions) {
-      assert impl instanceof BitVectorIntSet || impl instanceof MutableSparseIntSet;
-    }
+    assert impl instanceof BitVectorIntSet || impl instanceof MutableSparseIntSet;
     if (impl == null) {
       return;
     }
@@ -121,9 +114,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
         impl = MutableSparseIntSet.make(impl);
       }
     }
-    if (Assertions.verifyAssertions) {
-      assert impl instanceof BitVectorIntSet || impl instanceof MutableSparseIntSet;
-    }
+    assert impl instanceof BitVectorIntSet || impl instanceof MutableSparseIntSet;
   }
 
   /*
@@ -223,8 +214,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   }
 
   /*
-   * @see com.ibm.wala.util.intset.IntSet#foreachExcluding(com.ibm.wala.util.intset.IntSet,
-   *      com.ibm.wala.util.intset.IntSetAction)
+   * @see com.ibm.wala.util.intset.IntSet#foreachExcluding(com.ibm.wala.util.intset.IntSet, com.ibm.wala.util.intset.IntSetAction)
    */
   public void foreachExcluding(IntSet X, IntSetAction action) {
     impl.foreachExcluding(X, action);
@@ -250,16 +240,12 @@ public class BimodalMutableIntSet implements MutableIntSet {
       BimodalMutableIntSet result = new BimodalMutableIntSet();
       MutableSharedBitVectorIntSet s = (MutableSharedBitVectorIntSet) B;
       result.impl = IntSetUtil.makeMutableCopy(s.makeSparseCopy());
-      if (Assertions.verifyAssertions) {
-        assert result.impl instanceof BitVectorIntSet || result.impl instanceof MutableSparseIntSet;
-      }
+      assert result.impl instanceof BitVectorIntSet || result.impl instanceof MutableSparseIntSet;
       return result;
     } else {
       BimodalMutableIntSet result = new BimodalMutableIntSet();
       result.impl = IntSetUtil.makeMutableCopy(B);
-      if (Assertions.verifyAssertions) {
-        assert result.impl instanceof BitVectorIntSet || result.impl instanceof MutableSparseIntSet;
-      }
+      assert result.impl instanceof BitVectorIntSet || result.impl instanceof MutableSparseIntSet;
       return result;
     }
 
@@ -275,16 +261,14 @@ public class BimodalMutableIntSet implements MutableIntSet {
 
   /**
    * @param x
-   * @throws IllegalArgumentException  if x is null
+   * @throws IllegalArgumentException if x is null
    */
   public BimodalMutableIntSet(BimodalMutableIntSet x) {
     if (x == null) {
       throw new IllegalArgumentException("x is null");
     }
     impl = IntSetUtil.makeMutableCopy(x.impl);
-    if (Assertions.verifyAssertions) {
-      assert impl instanceof BitVectorIntSet || impl instanceof MutableSparseIntSet;
-    }
+    assert impl instanceof BitVectorIntSet || impl instanceof MutableSparseIntSet;
   }
 
   /*
@@ -347,7 +331,8 @@ public class BimodalMutableIntSet implements MutableIntSet {
 
   /**
    * TODO: optimize ME!
-   * @throws IllegalArgumentException  if that is null
+   * 
+   * @throws IllegalArgumentException if that is null
    */
   public boolean removeAll(IntSet that) {
     if (that == null) {
@@ -363,7 +348,8 @@ public class BimodalMutableIntSet implements MutableIntSet {
 
   /**
    * TODO: optimize ME!
-   * @throws IllegalArgumentException  if that is null
+   * 
+   * @throws IllegalArgumentException if that is null
    */
   public boolean containsAll(BimodalMutableIntSet that) {
     if (that == null) {

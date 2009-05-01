@@ -36,12 +36,11 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * An {@link SSAContextInterpreter} specialized to interpret Class.forName in a {@link JavaTypeContext} which
- * represents the point-type of the class object created by the call.
+ * An {@link SSAContextInterpreter} specialized to interpret Class.forName in a {@link JavaTypeContext} which represents the
+ * point-type of the class object created by the call.
  */
 public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterpreter {
 
@@ -49,15 +48,17 @@ public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterp
 
   private final static Descriptor classNewInstanceDescriptor = Descriptor.findOrCreateUTF8("()Ljava/lang/Object;");
 
-  public final static MethodReference CLASS_NEW_INSTANCE_REF = MethodReference.findOrCreate(TypeReference.JavaLangClass, newInstanceAtom,
-      classNewInstanceDescriptor);
-  
+  public final static MethodReference CLASS_NEW_INSTANCE_REF = MethodReference.findOrCreate(TypeReference.JavaLangClass,
+      newInstanceAtom, classNewInstanceDescriptor);
+
   private final static Atom defCtorAtom = Atom.findOrCreateUnicodeAtom("<init>");
+
   private final static Descriptor defCtorDescriptor = Descriptor.findOrCreateUTF8("()V");
+
   private final static Selector defCtorSelector = new Selector(defCtorAtom, defCtorDescriptor);
-  
+
   private final IClassHierarchy cha;
-  
+
   public ClassNewInstanceContextInterpreter(IClassHierarchy cha) {
     this.cha = cha;
   }
@@ -66,9 +67,7 @@ public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterp
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     if (DEBUG) {
       System.err.println("generating IR for " + node);
     }
@@ -77,9 +76,7 @@ public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterp
   }
 
   public int getNumberOfStatements(CGNode node) {
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     return getIR(node).getInstructions().length;
   }
 
@@ -97,9 +94,7 @@ public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterp
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     JavaTypeContext context = (JavaTypeContext) node.getContext();
     TypeReference tr = context.getType().getTypeReference();
     if (tr != null) {
@@ -109,45 +104,45 @@ public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterp
   }
 
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     return EmptyIterator.instance();
   }
 
-  private IR makeIR(IMethod method, JavaTypeContext context) {    
+  private IR makeIR(IMethod method, JavaTypeContext context) {
     SSAInstructionFactory insts = context.getType().getType().getClassLoader().getInstructionFactory();
     TypeReference tr = context.getType().getTypeReference();
     if (tr != null) {
       SpecializedMethod m = new SpecializedMethod(method, method.getDeclaringClass(), method.isStatic(), false);
       IClass klass = cha.lookupClass(tr);
-      IMethod publicDefaultCtor = getPublicDefaultCtor(klass); 
+      IMethod publicDefaultCtor = getPublicDefaultCtor(klass);
       if (publicDefaultCtor != null) {
         m.addStatementsForConcreteSimpleType(tr);
       } else if (klass.getMethod(defCtorSelector) == null) {
-        TypeReference instantiationExceptionRef = TypeReference.findOrCreateClass(ClassLoaderReference.Primordial, "java/lang", "InstantiationException");
+        TypeReference instantiationExceptionRef = TypeReference.findOrCreateClass(ClassLoaderReference.Primordial, "java/lang",
+            "InstantiationException");
         int xobj = method.getNumberOfParameters() + 1;
         SSAInstruction newStatement = insts.NewInstruction(xobj, NewSiteReference.make(2, instantiationExceptionRef));
         m.addInstruction(tr, newStatement, true);
         SSAInstruction throwStatement = insts.ThrowInstruction(xobj);
         m.addInstruction(tr, throwStatement, false);
       } else {
-        TypeReference illegalAccessExceptionRef = TypeReference.findOrCreateClass(ClassLoaderReference.Primordial, "java/lang", "IllegalAccessException");
+        TypeReference illegalAccessExceptionRef = TypeReference.findOrCreateClass(ClassLoaderReference.Primordial, "java/lang",
+            "IllegalAccessException");
         int xobj = method.getNumberOfParameters() + 1;
         SSAInstruction newStatement = insts.NewInstruction(xobj, NewSiteReference.make(2, illegalAccessExceptionRef));
         m.addInstruction(tr, newStatement, true);
         SSAInstruction throwStatement = insts.ThrowInstruction(xobj);
-        m.addInstruction(tr, throwStatement, false);        
+        m.addInstruction(tr, throwStatement, false);
       }
-      
+
       SSAInstruction[] instrs = new SSAInstruction[m.allInstructions.size()];
       m.allInstructions.<SSAInstruction> toArray(instrs);
       return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), null);
     }
-    
+
     return null;
   }
-  
+
   private IMethod getPublicDefaultCtor(IClass klass) {
     IMethod ctorMethod = klass.getMethod(defCtorSelector);
     if (ctorMethod != null && ctorMethod.isPublic()) {
@@ -155,7 +150,7 @@ public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterp
     }
     return null;
   }
-  
+
   public boolean recordFactoryType(CGNode node, IClass klass) {
     return false;
   }

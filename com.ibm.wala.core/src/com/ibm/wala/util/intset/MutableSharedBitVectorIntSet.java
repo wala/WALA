@@ -17,8 +17,7 @@ import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * 
- * The shared bit vector implementation described by [Heintze 1999] TODO: much
- * optimization possible.
+ * The shared bit vector implementation described by [Heintze 1999] TODO: much optimization possible.
  * 
  * @author sfink
  */
@@ -42,7 +41,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
 
   /**
    * @param set
-   * @throws IllegalArgumentException  if set is null
+   * @throws IllegalArgumentException if set is null
    */
   public MutableSharedBitVectorIntSet(MutableSharedBitVectorIntSet set) {
     if (set == null) {
@@ -56,7 +55,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
 
   /**
    * @param s
-   * @throws IllegalArgumentException  if s is null
+   * @throws IllegalArgumentException if s is null
    */
   public MutableSharedBitVectorIntSet(SparseIntSet s) {
     if (s == null) {
@@ -75,7 +74,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
 
   /**
    * @param s
-   * @throws IllegalArgumentException  if s is null
+   * @throws IllegalArgumentException if s is null
    */
   public MutableSharedBitVectorIntSet(BitVectorIntSet s) {
     if (s == null) {
@@ -271,8 +270,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * @see com.ibm.wala.util.intset.IntSet#foreachExcluding(com.ibm.wala.util.intset.IntSet,
-   *      com.ibm.wala.util.intset.IntSetAction)
+   * @see com.ibm.wala.util.intset.IntSet#foreachExcluding(com.ibm.wala.util.intset.IntSet, com.ibm.wala.util.intset.IntSetAction)
    */
   public void foreachExcluding(IntSet X, IntSetAction action) {
     if (X instanceof MutableSharedBitVectorIntSet) {
@@ -283,8 +281,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * @see com.ibm.wala.util.intset.IntSet#foreachExcluding(com.ibm.wala.util.intset.IntSet,
-   *      com.ibm.wala.util.intset.IntSetAction)
+   * @see com.ibm.wala.util.intset.IntSet#foreachExcluding(com.ibm.wala.util.intset.IntSet, com.ibm.wala.util.intset.IntSetAction)
    */
   private void foreachExcludingInternal(MutableSharedBitVectorIntSet X, IntSetAction action) {
 
@@ -307,8 +304,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * @see com.ibm.wala.util.intset.IntSet#foreachExcluding(com.ibm.wala.util.intset.IntSet,
-   *      com.ibm.wala.util.intset.IntSetAction)
+   * @see com.ibm.wala.util.intset.IntSet#foreachExcluding(com.ibm.wala.util.intset.IntSet, com.ibm.wala.util.intset.IntSetAction)
    */
   private void foreachExcludingGeneral(IntSet X, IntSetAction action) {
     if (privatePart != null) {
@@ -536,8 +532,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
             return privatePart.isSubset(that.privatePart) && sharedPart.isSubset(that.privatePart);
           } else {
             /*
-             * sharedPart != null, privatePart!= null, that.privatePart != null,
-             * that.sharedPart != null
+             * sharedPart != null, privatePart!= null, that.privatePart != null, that.sharedPart != null
              */
             if (sharedPart.isSubset(that.sharedPart)) {
               if (privatePart.isSubset(that.privatePart)) {
@@ -565,10 +560,8 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
                 }
               } else {
                 /*
-                 * !((sharedPart-that.sharedPart).isSubset(that.privatePart))
-                 * i.e some bit in my shared part is in neither that's
-                 * sharedPart nor that's privatePart, hence I am not a subset of
-                 * that
+                 * !((sharedPart-that.sharedPart).isSubset(that.privatePart)) i.e some bit in my shared part is in neither that's
+                 * sharedPart nor that's privatePart, hence I am not a subset of that
                  */
                 return false;
               }
@@ -592,7 +585,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
       }
       this.sharedPart = other.sharedPart;
     } else {
-      // really slow.  optimize as needed.
+      // really slow. optimize as needed.
       clear();
       addAll(set);
     }
@@ -635,9 +628,9 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
       }
       return result;
     } else {
-      // really slow.   optimize as needed.
+      // really slow. optimize as needed.
       boolean result = false;
-      for (IntIterator it = set.intIterator(); it.hasNext(); ) {
+      for (IntIterator it = set.intIterator(); it.hasNext();) {
         int x = it.next();
         if (!contains(x)) {
           result = true;
@@ -652,10 +645,8 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
    * @param set
    */
   private boolean addAllInternal(BitVectorIntSet set) {
-    if (Assertions.verifyAssertions) {
-      // should have hijacked this case before getting here!
-      assert sharedPart != set;
-    }
+    // should have hijacked this case before getting here!
+    assert sharedPart != set;
     if (privatePart == null) {
       if (sharedPart == null) {
         copyValue(set);
@@ -1019,8 +1010,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * @see com.ibm.wala.util.intset.MutableIntSet#addAllExcluding(com.ibm.wala.util.intset.IntSet,
-   *      com.ibm.wala.util.intset.IntSet)
+   * @see com.ibm.wala.util.intset.MutableIntSet#addAllExcluding(com.ibm.wala.util.intset.IntSet, com.ibm.wala.util.intset.IntSet)
    */
   public boolean addAllInIntersection(IntSet other, IntSet filter) {
     if (other instanceof MutableSharedBitVectorIntSet) {

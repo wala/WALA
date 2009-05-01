@@ -30,10 +30,8 @@ public final class ConcreteTypeKey implements InstanceKey {
     if (type == null) {
       throw new IllegalArgumentException("type is null");
     }
-    if (Assertions.verifyAssertions) {
-      if (type.isInterface()) {
-        Assertions.UNREACHABLE("unexpected interface: " + type);
-      }
+    if (type.isInterface()) {
+      Assertions.UNREACHABLE("unexpected interface: " + type);
     }
     this.type = type;
   }
@@ -70,13 +68,10 @@ public final class ConcreteTypeKey implements InstanceKey {
   }
 
   /**
-   * @param pei
-   *          a PEI instruction
-   * @param cha
-   *          governing class hierarchy
-   * @return a set of ConcreteTypeKeys that represent the exceptions the PEI may
-   *         throw.
-   * @throws IllegalArgumentException  if pei is null
+   * @param pei a PEI instruction
+   * @param cha governing class hierarchy
+   * @return a set of ConcreteTypeKeys that represent the exceptions the PEI may throw.
+   * @throws IllegalArgumentException if pei is null
    */
   public static InstanceKey[] getInstanceKeysForPEI(SSAInstruction pei, IR ir, IClassHierarchy cha) {
     if (pei == null) {
@@ -89,13 +84,9 @@ public final class ConcreteTypeKey implements InstanceKey {
     }
     InstanceKey[] result = new InstanceKey[types.size()];
     int i = 0;
-    for (Iterator it = types.iterator(); it.hasNext(); ) {
-      TypeReference type = (TypeReference)it.next();
-      if (Assertions.verifyAssertions) {
-        if (type == null) {
-          assert type != null;
-        }
-      }
+    for (Iterator it = types.iterator(); it.hasNext();) {
+      TypeReference type = (TypeReference) it.next();
+      assert type != null;
       IClass klass = cha.lookupClass(type);
       result[i++] = new ConcreteTypeKey(klass);
     }

@@ -45,9 +45,8 @@ import com.ibm.wala.util.io.FileProvider;
  * 
  * Abstract base class for analysis engine implementations
  * 
- * Some clients choose to build on this, but many don't. I usually don't in new
- * code; I usually don't find the re-use enabled by this class compelling. I
- * would probably nuke this except for some legacy code that uses it.
+ * Some clients choose to build on this, but many don't. I usually don't in new code; I usually don't find the re-use enabled by
+ * this class compelling. I would probably nuke this except for some legacy code that uses it.
  * 
  * @author sfink
  */
@@ -70,8 +69,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   protected static final int DEBUG_LEVEL = 1;
 
   /**
-   * Name of the file which holds the class hierarchy exclusions directives for
-   * this analysis.
+   * Name of the file which holds the class hierarchy exclusions directives for this analysis.
    */
   private String exclusionsFile = "J2SEClassHierarchyExclusions.txt";
 
@@ -89,7 +87,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
    * A representation of the analysis options
    */
   private AnalysisOptions options;
-  
+
   /**
    * A cache of IRs and stuff
    */
@@ -120,7 +118,6 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
    */
   protected PointerAnalysis pointerAnalysis;
 
-
   /**
    * Graph view of flow of pointers between heap abstractions
    */
@@ -134,7 +131,8 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
 
   protected abstract CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache);
 
-  protected CallGraphBuilder buildCallGraph(IClassHierarchy cha, AnalysisOptions options, boolean savePointerAnalysis, IProgressMonitor monitor) throws IllegalArgumentException, CancelException {
+  protected CallGraphBuilder buildCallGraph(IClassHierarchy cha, AnalysisOptions options, boolean savePointerAnalysis,
+      IProgressMonitor monitor) throws IllegalArgumentException, CancelException {
     CallGraphBuilder builder = getCallGraphBuilder(cha, options, cache);
 
     cg = builder.makeCallGraph(options, monitor);
@@ -152,14 +150,16 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
 
   /**
    * Set up the AnalysisScope object
-   * @throws IOException 
+   * 
+   * @throws IOException
    */
   protected void buildAnalysisScope() throws IOException {
     if (j2seLibs == null) {
       Assertions.UNREACHABLE("no j2selibs specified. You probably did not call AppAnalysisEngine.setJ2SELibrary.");
     }
 
-    scope = AnalysisScopeReader.readJavaScope(SYNTHETIC_J2SE_MODEL, FileProvider.getFile(getExclusionsFile()), getClass().getClassLoader());
+    scope = AnalysisScopeReader.readJavaScope(SYNTHETIC_J2SE_MODEL, FileProvider.getFile(getExclusionsFile()), getClass()
+        .getClassLoader());
 
     // add standard libraries
     for (int i = 0; i < j2seLibs.length; i++) {
@@ -175,7 +175,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
    */
   public IClassHierarchy buildClassHierarchy() {
     IClassHierarchy cha = null;
-    ClassLoaderFactory factory = new ClassLoaderFactoryImpl(getScope().getExclusions() );
+    ClassLoaderFactory factory = new ClassLoaderFactoryImpl(getScope().getExclusions());
     try {
       cha = ClassHierarchy.make(getScope(), factory);
     } catch (ClassHierarchyException e) {
@@ -208,10 +208,8 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     ClassLoaderReference app = scope.getApplicationLoader();
     for (Iterator it = moduleFiles.iterator(); it.hasNext();) {
       Object o = it.next();
-      if (Assertions.verifyAssertions) {
-        if (!(o instanceof Module)) {
-          Assertions.UNREACHABLE("Unexpected type: " + o.getClass());
-        }
+      if (!(o instanceof Module)) {
+        Assertions.UNREACHABLE("Unexpected type: " + o.getClass());
       }
       Module M = (Module) o;
       scope.addToScope(app, M);
@@ -253,7 +251,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   public PointerAnalysis getPointerAnalysis() {
     return pointerAnalysis;
   }
-  
+
   public HeapGraph getHeapGraph() {
     if (heapGraph == null) {
       heapGraph = new BasicHeapGraph(getPointerAnalysis(), cg);
@@ -272,7 +270,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   public AnalysisOptions getDefaultOptions(Iterable<Entrypoint> entrypoints) {
     return new AnalysisOptions(getScope(), entrypoints);
   }
-  
+
   public AnalysisCache makeDefaultCache() {
     return new AnalysisCache(new DefaultIRFactory());
   }
@@ -286,11 +284,11 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   }
 
   /**
-   * Builds the call graph for the analysis scope in effect, using all of the
-   * given entry points.
-   * @throws CancelException 
-   * @throws IllegalArgumentException 
-   * @throws IOException 
+   * Builds the call graph for the analysis scope in effect, using all of the given entry points.
+   * 
+   * @throws CancelException
+   * @throws IllegalArgumentException
+   * @throws IOException
    */
   public CallGraphBuilder defaultCallGraphBuilder() throws IllegalArgumentException, CancelException, IOException {
     buildAnalysisScope();

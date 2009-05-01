@@ -15,10 +15,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
  * Represents a single concrete type.
- * 
- * @author sfink
  */
 public class PointType extends TypeAbstraction {
 
@@ -27,17 +24,14 @@ public class PointType extends TypeAbstraction {
   /**
    * Private constructor ... only for internal use.
    * 
-   * @throws IllegalArgumentException
-   *             if type is null
+   * @throws IllegalArgumentException if type is null
    */
   public PointType(IClass type) {
     if (type == null) {
       throw new IllegalArgumentException("type is null");
     }
     this.type = type;
-    if (Assertions.verifyAssertions) {
-      assert type.getReference().isReferenceType();
-    }
+    assert type.getReference().isReferenceType();
   }
 
   @Override
@@ -112,10 +106,8 @@ public class PointType extends TypeAbstraction {
       return false;
     }
     PointType other = (PointType) obj;
-    if (Assertions.verifyAssertions) {
-      if (!type.getClassHierarchy().equals(other.type.getClassHierarchy())) {
-        Assertions.UNREACHABLE("different chas " + this + " " + other);
-      }
+    if (!type.getClassHierarchy().equals(other.type.getClassHierarchy())) {
+      Assertions.UNREACHABLE("different chas " + this + " " + other);
     }
     return type.equals(other.type);
   }

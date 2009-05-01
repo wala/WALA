@@ -10,10 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
-import com.ibm.wala.util.debug.Assertions;
 
 /**
- * A "catch" instruction, inserted at the head of a catch block, which assigns a pending exception object to a local vairable.
+ * A "catch" instruction, inserted at the head of a catch block, which assigns a pending exception object to a local variable.
  * 
  * In SSA {@link IR}s, these instructions do <em>not</em> appear in the normal instruction array returned by IR.getInstructions();
  * instead these instructions live in {@link ISSABasicBlock}.
@@ -44,8 +43,7 @@ public class SSAGetCaughtExceptionInstruction extends SSAInstruction {
 
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   * @throws IllegalArgumentException
-   *             if v is null
+   * @throws IllegalArgumentException if v is null
    */
   @Override
   public void visit(IVisitor v) {
@@ -79,9 +77,7 @@ public class SSAGetCaughtExceptionInstruction extends SSAInstruction {
 
   @Override
   public int getDef(int i) {
-    if (Assertions.verifyAssertions) {
-      assert i == 0;
-    }
+    assert i == 0;
     return exceptionValueNumber;
   }
 
@@ -90,11 +86,6 @@ public class SSAGetCaughtExceptionInstruction extends SSAInstruction {
     return 1;
   }
 
-  /**
-   * Returns the bb.
-   * 
-   * @return BasicBlock
-   */
   public int getBasicBlockNumber() {
     return bbNumber;
   }

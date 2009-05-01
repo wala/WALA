@@ -19,7 +19,7 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * 
- * Represents a type and its subtypes.  
+ * Represents a type and its subtypes.
  * 
  * @author sfink
  */
@@ -30,16 +30,13 @@ public class ConeType extends TypeAbstraction {
   /**
    * default constructor
    * 
-   * @throws IllegalArgumentException
-   *             if type is null
+   * @throws IllegalArgumentException if type is null
    */
   public ConeType(IClass type) {
     if (type == null) {
       throw new IllegalArgumentException("type is null");
     }
-    if (Assertions.verifyAssertions) {
-      assert type.getReference().isReferenceType();
-    }
+    assert type.getReference().isReferenceType();
     this.type = type;
   }
 
@@ -90,9 +87,6 @@ public class ConeType extends TypeAbstraction {
     return type.getReference();
   }
 
-  /**
-   * @see java.lang.Object#equals(Object)
-   */
   @Override
   public boolean equals(Object obj) {
     if (!(obj instanceof ConeType)) {
@@ -102,10 +96,8 @@ public class ConeType extends TypeAbstraction {
     if (other == TOP) {
       return false;
     }
-    if (Assertions.verifyAssertions) {
-      if (!type.getClassHierarchy().equals(other.type.getClassHierarchy())) {
-        Assertions.UNREACHABLE("different chas " + this + " " + other);
-      }
+    if (!type.getClassHierarchy().equals(other.type.getClassHierarchy())) {
+      Assertions.UNREACHABLE("different chas " + this + " " + other);
     }
     return type.equals(other.type);
   }

@@ -22,7 +22,6 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
@@ -46,7 +45,7 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
 import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
- * @author sfink
+ * Basic implementation of {@link HeapGraph}
  */
 public class BasicHeapGraph extends HeapGraph {
 
@@ -94,10 +93,8 @@ public class BasicHeapGraph extends HeapGraph {
         if (N instanceof PointerKey) {
           return pointerKeys.getMappedIndex((PointerKey) N);
         } else {
-          if (Assertions.verifyAssertions) {
-            if (!(N instanceof InstanceKey)) {
-              Assertions.UNREACHABLE(N.getClass().toString());
-            }
+          if (!(N instanceof InstanceKey)) {
+            Assertions.UNREACHABLE(N.getClass().toString());
           }
           int inumber = P.getInstanceKeyMapping().getMappedIndex((InstanceKey) N);
           return (inumber == -1) ? -1 : inumber + pointerKeys.getMaximumIndex() + 1;
@@ -227,10 +224,8 @@ public class BasicHeapGraph extends HeapGraph {
       InstanceKey I = (InstanceKey) N;
       TypeReference T = I.getConcreteType().getReference();
 
-      if (Assertions.verifyAssertions) {
-        if (T == null) {
-          assert T != null : "null concrete type from " + I.getClass();
-        }
+      if (T == null) {
+        assert T != null : "null concrete type from " + I.getClass();
       }
       if (T.isArrayType()) {
         PointerKey p = getHeapModel().getPointerKeyForArrayContents(I);
@@ -241,10 +236,8 @@ public class BasicHeapGraph extends HeapGraph {
         }
       } else {
         IClass klass = getHeapModel().getClassHierarchy().lookupClass(T);
-        if (Assertions.verifyAssertions) {
-          if (klass == null) {
-            assert klass != null : "null klass for type " + T;
-          }
+        if (klass == null) {
+          assert klass != null : "null klass for type " + T;
         }
         MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
         for (Iterator<IField> it = klass.getAllInstanceFields().iterator(); it.hasNext();) {

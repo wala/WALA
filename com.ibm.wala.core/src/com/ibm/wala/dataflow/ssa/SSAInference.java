@@ -21,7 +21,6 @@ import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * This class performs intra-procedural propagation over an SSA form.
@@ -117,9 +116,7 @@ public abstract class SSAInference<T extends IVariable> extends DefaultFixedPoin
           for (int j = 0; j < n; j++) {
             if (s.getUse(j) > -1) {
               uses[j] = getVariable(s.getUse(j));
-              if (Assertions.verifyAssertions) {
-                assert uses[j] != null;
-              }
+              assert uses[j] != null;
             }
           }
           newStatement(def, op, uses, false, false);
@@ -140,7 +137,6 @@ public abstract class SSAInference<T extends IVariable> extends DefaultFixedPoin
   }
 
   /**
-   * @param valueNumber
    * @return the dataflow variable representing the value number, or null if none found.
    */
   @SuppressWarnings("unchecked")
@@ -151,11 +147,7 @@ public abstract class SSAInference<T extends IVariable> extends DefaultFixedPoin
     if (DEBUG) {
       System.err.println(("getVariable for " + valueNumber + " returns " + vars[valueNumber]));
     }
-    if (Assertions.verifyAssertions) {
-      if (vars == null) {
-        assert vars != null : "null vars array";
-      }
-    }
+    assert vars != null : "null vars array";
     return (T) vars[valueNumber];
   }
 

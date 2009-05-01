@@ -291,9 +291,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           break;
         }
       }
-      if (DEBUG && Assertions.verifyAssertions) {
-        assert n < cfg.getPredNodeCount(sb);
-      }
+      assert n < cfg.getPredNodeCount(sb);
       for (Iterator<? extends SSAInstruction> phis = sb.iteratePhis(); phis.hasNext();) {
         SSAPhiInstruction phi = (SSAPhiInstruction) phis.next();
         if (phi == null) {
@@ -399,11 +397,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             if (ik == null) {
               continue;
             }
-            if (Assertions.verifyAssertions) {
-              if (!(ik instanceof ConcreteTypeKey)) {
-                assert ik instanceof ConcreteTypeKey : "uh oh: need to implement getCaughtException constraints for instance " + ik;
-              }
-            }
+            assert ik instanceof ConcreteTypeKey : "uh oh: need to implement getCaughtException constraints for instance " + ik;
             ConcreteTypeKey ck = (ConcreteTypeKey) ik;
             IClass klass = ck.getType();
             if (PropagationCallGraphBuilder.catches(catchClasses, klass, cha)) {
@@ -447,9 +441,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       throw new IllegalArgumentException("ir == null");
     }
     ISSABasicBlock[] bb = ir.getBasicBlocksForCall(call.getCallSite());
-    if (Assertions.verifyAssertions) {
-      assert bb.length == 1;
-    }
+    assert bb.length == 1;
     SSACFG.BasicBlock cb = (BasicBlock) ir.getControlFlowGraph().getExceptionalSuccessors(bb[0]).iterator().next();
     if (cb.isExitBlock()) {
       return getPointerKeyForExceptionalReturnValue(node);
@@ -553,9 +545,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
       this.du = builder.getCFAContextInterpreter().getDU(node);
 
-      if (Assertions.verifyAssertions) {
-        assert symbolTable != null;
-      }
+      assert symbolTable != null;
     }
 
     protected SSAPropagationCallGraphBuilder getBuilder() {
@@ -679,10 +669,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             }
           }
         } else {
-          if (Assertions.verifyAssertions) {
-            assert !system.isUnified(result);
-            assert !system.isUnified(arrayRefPtrKey);
-          }
+          assert !system.isUnified(result);
+          assert !system.isUnified(arrayRefPtrKey);
           system.newSideEffect(getBuilder().new ArrayLoadOperator(system.findOrCreatePointsToSet(result)), arrayRefPtrKey);
         }
       }
@@ -736,9 +724,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           InstanceKey[] ik = getInvariantContents(value);
           for (int i = 0; i < ik.length; i++) {
             system.findOrCreateIndexForInstanceKey(ik[i]);
-            if (Assertions.verifyAssertions) {
-              assert !system.isUnified(arrayRefPtrKey);
-            }
+            assert !system.isUnified(arrayRefPtrKey);
             system.newSideEffect(getBuilder().new InstanceArrayStoreOperator(ik[i]), arrayRefPtrKey);
           }
         } else {
@@ -859,9 +845,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         return;
       }
       PointerKey def = getPointerKeyForLocal(lval);
-      if (Assertions.verifyAssertions) {
-        assert def != null;
-      }
+      assert def != null;
 
       IField f = getClassHierarchy().resolveField(field);
       if (f == null && callGraph.getFakeRootNode().getMethod().getDeclaringClass().getReference().equals(field.getDeclaringClass())) {
@@ -934,9 +918,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         Warnings.add(FieldResolutionFailure.create(field));
         return;
       }
-      if (Assertions.verifyAssertions) {
-        assert isStatic || !symbolTable.isStringConstant(ref) : "put to string constant shouldn't be allowed?";
-      }
+      assert isStatic || !symbolTable.isStringConstant(ref) : "put to string constant shouldn't be allowed?";
       if (isStatic) {
         processPutStatic(rval, field, f);
       } else {
@@ -945,9 +927,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
 
     private void processPutField(int rval, int ref, IField f) {
-      if (Assertions.verifyAssertions) {
-        assert !f.getFieldTypeReference().isPrimitiveType();
-      }
+      assert !f.getFieldTypeReference().isPrimitiveType();
       PointerKey refKey = getPointerKeyForLocal(ref);
       PointerKey rvalKey = getPointerKeyForLocal(rval);
       // if (!supportFullPointerFlowGraph &&
@@ -1375,9 +1355,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      */
     private void processClassInitializer(IClass klass) {
 
-      if (Assertions.verifyAssertions) {
-        assert klass != null;
-      }
+      assert klass != null;
 
       if (!getBuilder().getOptions().getHandleStaticInit()) {
         return;
@@ -1898,13 +1876,11 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   private IClass getReceiverClass(IMethod method) {
     TypeReference formalType = method.getParameterType(0);
     IClass C = getClassHierarchy().lookupClass(formalType);
-    if (Assertions.verifyAssertions) {
-      if (method.isStatic()) {
-        Assertions.UNREACHABLE("asked for receiver of static method " + method);
-      }
-      if (C == null) {
-        Assertions.UNREACHABLE("no class found for " + formalType + " recv of " + method);
-      }
+    if (method.isStatic()) {
+      Assertions.UNREACHABLE("asked for receiver of static method " + method);
+    }
+    if (C == null) {
+      Assertions.UNREACHABLE("no class found for " + formalType + " recv of " + method);
     }
     return C;
   }

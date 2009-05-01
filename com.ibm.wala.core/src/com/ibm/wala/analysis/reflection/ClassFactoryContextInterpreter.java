@@ -35,7 +35,6 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * An {@link SSAContextInterpreter} specialized to interpret reflective class factories (e.g. Class.forName()) in a
@@ -49,9 +48,7 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     if (DEBUG) {
       System.err.println("generating IR for " + node);
     }
@@ -60,13 +57,11 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
   }
 
   public int getNumberOfStatements(CGNode node) {
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     return getIR(node).getInstructions().length;
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#understands(com.ibm.wala.ipa.callgraph.CGNode)
    */
   public boolean understands(CGNode node) {
@@ -79,16 +74,14 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
     return ClassFactoryContextSelector.isClassFactory(node.getMethod());
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateNewSites(com.ibm.wala.ipa.callgraph.CGNode)
    */
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     JavaTypeContext context = (JavaTypeContext) node.getContext();
     TypeReference tr = context.getType().getTypeReference();
     if (tr != null) {
@@ -97,16 +90,13 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
     return EmptyIterator.instance();
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateCallSites(com.ibm.wala.ipa.callgraph.CGNode)
    */
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     return EmptyIterator.instance();
   }
-
 
   private SSAInstruction[] makeStatements(JavaTypeContext context) {
     SSAInstructionFactory insts = context.getType().getType().getClassLoader().getInstructionFactory();

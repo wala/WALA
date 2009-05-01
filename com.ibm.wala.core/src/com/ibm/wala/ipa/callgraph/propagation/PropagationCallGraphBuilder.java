@@ -51,8 +51,8 @@ import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
- * This abstract base class provides the general algorithm for a call graph builder that relies on propagation through
- * an iterative dataflow solver
+ * This abstract base class provides the general algorithm for a call graph builder that relies on propagation through an iterative
+ * dataflow solver
  * 
  * TODO: This implementation currently keeps all points to sets live ... even those for local variables that do not span
  * interprocedural boundaries. This may be too space-inefficient .. we can consider recomputing local sets on demand.
@@ -183,10 +183,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     this.cha = cha;
     this.options = options;
     this.analysisCache = cache;
-    if (Assertions.verifyAssertions) {
-      // we need pointer keys to handle reflection
-      assert pointerKeyFactory != null;
-    }
+    // we need pointer keys to handle reflection
+    assert pointerKeyFactory != null;
     this.pointerKeyFactory = pointerKeyFactory;
     callGraph = createEmptyCallGraph(cha, options);
     try {
@@ -308,8 +306,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   protected abstract boolean addConstraintsFromNode(CGNode n);
 
   /**
-   * Add constraints from newly discovered nodes. Note: the act of adding constraints may discover new nodes, so this
-   * routine is iterative.
+   * Add constraints from newly discovered nodes. Note: the act of adding constraints may discover new nodes, so this routine is
+   * iterative.
    * 
    * @return true iff any new constraints are added.
    */
@@ -327,21 +325,19 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   }
 
   /**
-   * @return the PointerKey that acts as a representative for the class of pointers that includes the local variable
-   *         identified by the value number parameter.
+   * @return the PointerKey that acts as a representative for the class of pointers that includes the local variable identified by
+   *         the value number parameter.
    */
   public PointerKey getPointerKeyForLocal(CGNode node, int valueNumber) {
     return pointerKeyFactory.getPointerKeyForLocal(node, valueNumber);
   }
 
   /**
-   * @return the PointerKey that acts as a representative for the class of pointers that includes the local variable
-   *         identified by the value number parameter.
+   * @return the PointerKey that acts as a representative for the class of pointers that includes the local variable identified by
+   *         the value number parameter.
    */
   public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter) {
-    if (Assertions.verifyAssertions) {
-      assert filter != null;
-    }
+    assert filter != null;
     return pointerKeyFactory.getFilteredPointerKeyForLocal(node, valueNumber, filter);
   }
 
@@ -354,35 +350,30 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   }
 
   /**
-   * @return the PointerKey that acts as a representative for the class of pointers that includes the return value for a
-   *         node
+   * @return the PointerKey that acts as a representative for the class of pointers that includes the return value for a node
    */
   public PointerKey getPointerKeyForReturnValue(CGNode node) {
     return pointerKeyFactory.getPointerKeyForReturnValue(node);
   }
 
   /**
-   * @return the PointerKey that acts as a representative for the class of pointers that includes the exceptional return
-   *         value
+   * @return the PointerKey that acts as a representative for the class of pointers that includes the exceptional return value
    */
   public PointerKey getPointerKeyForExceptionalReturnValue(CGNode node) {
     return pointerKeyFactory.getPointerKeyForExceptionalReturnValue(node);
   }
 
   /**
-   * @return the PointerKey that acts as a representative for the class of pointers that includes the contents of the
-   *         static field
+   * @return the PointerKey that acts as a representative for the class of pointers that includes the contents of the static field
    */
   public PointerKey getPointerKeyForStaticField(IField f) {
-    if (Assertions.verifyAssertions) {
-      assert f != null : "null FieldReference";
-    }
+    assert f != null : "null FieldReference";
     return pointerKeyFactory.getPointerKeyForStaticField(f);
   }
 
   /**
-   * @return the PointerKey that acts as a representation for the class of pointers that includes the given instance
-   *         field. null if there's some problem.
+   * @return the PointerKey that acts as a representation for the class of pointers that includes the given instance field. null if
+   *         there's some problem.
    * @throws IllegalArgumentException if I is null
    * @throws IllegalArgumentException if field is null
    */
@@ -408,19 +399,17 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * TODO: expand this API to differentiate between different array indices
    * 
    * @param I an InstanceKey representing an abstract array
-   * @return the PointerKey that acts as a representation for the class of pointers that includes the given array
-   *         contents, or null if none found.
+   * @return the PointerKey that acts as a representation for the class of pointers that includes the given array contents, or null
+   *         if none found.
    * @throws IllegalArgumentException if I is null
    */
   public PointerKey getPointerKeyForArrayContents(InstanceKey I) {
     if (I == null) {
       throw new IllegalArgumentException("I is null");
     }
-    if (Assertions.verifyAssertions) {
-      IClass C = I.getConcreteType();
-      if (!C.isArrayClass()) {
-        assert false : "illegal arguments: " + I;
-      }
+    IClass C = I.getConcreteType();
+    if (!C.isArrayClass()) {
+      assert false : "illegal arguments: " + I;
     }
     return pointerKeyFactory.getPointerKeyForArrayContents(I);
   }
@@ -498,19 +487,15 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     private final PointerKey base;
 
     static TypedPointerKey make(PointerKey base, IClass type) {
-      if (Assertions.verifyAssertions) {
-        assert type != null;
-      }
+      assert type != null;
       return new TypedPointerKey(base, type);
     }
 
     private TypedPointerKey(PointerKey base, IClass type) {
       this.type = type;
       this.base = base;
-      if (Assertions.verifyAssertions) {
-        assert type != null;
-        assert !(type instanceof FilteredPointerKey);
-      }
+      assert type != null;
+      assert !(type instanceof FilteredPointerKey);
     }
 
     /*
@@ -581,9 +566,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   }
 
   /**
-   * The FilterOperator is a filtered set-union. i.e. the LHS is `unioned' with the RHS, but filtered by the set
-   * associated with this operator instance. The filter is the set of InstanceKeys corresponding to the target type of
-   * this cast. This is still monotonic.
+   * The FilterOperator is a filtered set-union. i.e. the LHS is `unioned' with the RHS, but filtered by the set associated with
+   * this operator instance. The filter is the set of InstanceKeys corresponding to the target type of this cast. This is still
+   * monotonic.
    * 
    * LHS U= (RHS n k)
    * 
@@ -601,8 +586,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     }
 
     /*
-     * @see com.ibm.wala.dataflow.UnaryOperator#evaluate(com.ibm.wala.dataflow.IVariable,
-     *      com.ibm.wala.dataflow.IVariable)
+     * @see com.ibm.wala.dataflow.UnaryOperator#evaluate(com.ibm.wala.dataflow.IVariable, com.ibm.wala.dataflow.IVariable)
      */
     @Override
     public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
@@ -743,19 +727,19 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   }
 
   /**
-   * @return the InstanceKey that acts as a representative for the class of objects that includes objects allocated at
-   *         the given new instruction in the given node
+   * @return the InstanceKey that acts as a representative for the class of objects that includes objects allocated at the given new
+   *         instruction in the given node
    */
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
     return instanceKeyFactory.getInstanceKeyForAllocation(node, allocation);
   }
 
   /**
-   * @param dim the dimension of the array whose instance we would like to model. dim == 0 represents the first
-   *        dimension, e.g., the [Object; instances in [[Object; e.g., the [[Object; instances in [[[Object; dim == 1
-   *        represents the second dimension, e.g., the [Object instances in [[[Object;
-   * @return the InstanceKey that acts as a representative for the class of array contents objects that includes objects
-   *         allocated at the given new instruction in the given node
+   * @param dim the dimension of the array whose instance we would like to model. dim == 0 represents the first dimension, e.g., the
+   *          [Object; instances in [[Object; e.g., the [[Object; instances in [[[Object; dim == 1 represents the second dimension,
+   *          e.g., the [Object instances in [[[Object;
+   * @return the InstanceKey that acts as a representative for the class of array contents objects that includes objects allocated
+   *         at the given new instruction in the given node
    */
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
     return instanceKeyFactory.getInstanceKeyForMultiNewArray(node, allocation, dim);
@@ -927,10 +911,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
           continue;
         }
         IClass contents = getClassHierarchy().lookupClass(C);
-        if (Assertions.verifyAssertions) {
-          if (contents == null) {
-            assert false : "null type for " + C + " " + I.getConcreteType();
-          }
+        if (contents == null) {
+          assert false : "null type for " + C + " " + I.getConcreteType();
         }
         PointerKey p = getPointerKeyForArrayContents(I);
         if (DEBUG_ARRAY_STORE) {
@@ -1309,10 +1291,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
             return;
           }
           IClass contents = getClassHierarchy().lookupClass(C);
-          if (Assertions.verifyAssertions) {
-            if (contents == null) {
-              assert false : "null type for " + C + " " + I.getConcreteType();
-            }
+          if (contents == null) {
+            assert false : "null type for " + C + " " + I.getConcreteType();
           }
           PointerKey p = getPointerKeyForArrayContents(I);
           if (contents.isInterface()) {
@@ -1414,8 +1394,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     /*
      * simply check if rhs contains a malleable.
      * 
-     * @see com.ibm.wala.dataflow.UnaryOperator#evaluate(com.ibm.wala.dataflow.IVariable,
-     *      com.ibm.wala.dataflow.IVariable)
+     * @see com.ibm.wala.dataflow.UnaryOperator#evaluate(com.ibm.wala.dataflow.IVariable, com.ibm.wala.dataflow.IVariable)
      */
     @Override
     public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {

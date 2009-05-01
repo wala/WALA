@@ -77,11 +77,7 @@ public class GraphReachability<T> {
       throw new IllegalStateException("must call solve() before calling getReachableSet()");
     }
     BitVectorVariable v = (BitVectorVariable) solver.getOut(n);
-    if (Assertions.verifyAssertions) {
-      if (v == null) {
-        assert v != null : "null variable for node " + n;
-      }
-    }
+    assert v != null : "null variable for node " + n;
     if (v.getValue() == null) {
       return OrdinalSet.empty();
     } else {

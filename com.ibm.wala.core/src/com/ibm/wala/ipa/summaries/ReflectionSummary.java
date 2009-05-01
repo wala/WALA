@@ -22,25 +22,16 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
- * Reflection summary information for a  method.
- * 
- * @author sfink
+ * Reflection summary information for a method.
  */
 public class ReflectionSummary {
 
-  /**
-   * Mapping from Integer -> Set of TypeReference
-   */
+
   private final Map<Integer, Set<TypeReference>> map = HashMapFactory.make();
 
-  /**
-   * @param bcIndex
-   * @param T
-   */
+
   public void addType(int bcIndex, TypeReference T) {
     Set<TypeReference> S = findOrCreateSetForBCIndex(bcIndex);
     S.add(T);
@@ -69,17 +60,13 @@ public class ReflectionSummary {
       for (int i = 0; i < p.length; i++) {
         TypeReference T = (TypeReference) it.next();
         IClass klass = cha.lookupClass(T);
-        if (Assertions.verifyAssertions) {
-          if (klass == null) {
-            assert klass != null : "null type for " + T;
-          }
-        }
+        assert klass != null : "null type for " + T;
         p[i] = new PointType(klass);
       }
       return new SetType(p);
     }
   }
-  
+
   public Set<TypeReference> getTypesForProgramLocation(int bcIndex) {
     return map.get(new Integer(bcIndex));
   }

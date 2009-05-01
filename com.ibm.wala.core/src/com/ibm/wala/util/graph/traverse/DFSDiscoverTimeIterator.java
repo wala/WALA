@@ -16,16 +16,13 @@ import java.util.Stack;
 
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
+import com.ibm.wala.util.graph.NumberedGraph;
 
 /**
- * This class implements depth-first search over a NumberedGraph, return an
- * enumeration of the nodes of the graph in order of increasing discover time.
- * This class follows the outNodes of the graph nodes to define the graph, but
- * this behavior can be changed by overriding the getConnected method.
- * 
- * @author Stephen Fink
+ * This class implements depth-first search over a {@link NumberedGraph}, return an enumeration of the nodes of the graph in order of
+ * increasing discover time. This class follows the outNodes of the graph nodes to define the graph, but this behavior can be
+ * changed by overriding the getConnected method.
  */
 public abstract class DFSDiscoverTimeIterator<T> extends Stack<T> implements Iterator<T> {
 
@@ -36,9 +33,6 @@ public abstract class DFSDiscoverTimeIterator<T> extends Stack<T> implements Ite
 
   /**
    * subclass constructors must call this!
-   * 
-   * @param G
-   * @param nodes
    */
   protected void init(Iterator<? extends T> nodes) {
     roots = nodes;
@@ -52,7 +46,6 @@ public abstract class DFSDiscoverTimeIterator<T> extends Stack<T> implements Ite
 
   /**
    * subclass constructors must call this!
-   * 
    */
   protected void init(T N) {
     init(new NonNullSingletonIterator<T>(N));
@@ -67,19 +60,8 @@ public abstract class DFSDiscoverTimeIterator<T> extends Stack<T> implements Ite
     return (!empty());
   }
 
-  /**
-   * Method getPendingChildren.
-   * 
-   * @return Object
-   */
   abstract protected Iterator<? extends T> getPendingChildren(T n);
 
-  /**
-   * Method setPendingChildren.
-   * 
-   * @param v
-   * @param iterator
-   */
   abstract protected void setPendingChildren(T v, Iterator<? extends T> iterator);
 
   /**
@@ -97,10 +79,7 @@ public abstract class DFSDiscoverTimeIterator<T> extends Stack<T> implements Ite
     T toReturn = peek();
 
     // compute the next node to return.
-    if (Assertions.verifyAssertions) {
-      assert getPendingChildren(toReturn) != null;
-    }
-
+    assert getPendingChildren(toReturn) != null;
     do {
       T stackTop = peek();
       for (Iterator<? extends T> it = getPendingChildren(stackTop); it.hasNext();) {
@@ -137,16 +116,12 @@ public abstract class DFSDiscoverTimeIterator<T> extends Stack<T> implements Ite
   /**
    * get the out edges of a given node
    * 
-   * @param n
-   *          the node of which to get the out edges
+   * @param n the node of which to get the out edges
    * @return the out edges
    * 
    */
   abstract protected Iterator<? extends T> getConnected(T n);
 
-  /**
-   * @see java.util.Iterator#remove()
-   */
   public void remove() throws UnimplementedError {
     throw new UnimplementedError();
   }
@@ -156,6 +131,6 @@ public abstract class DFSDiscoverTimeIterator<T> extends Stack<T> implements Ite
    * @param to target of the edge to visit
    */
   protected void visitEdge(T from, T to) {
-    // do nothing.  subclasses will override.
+    // do nothing. subclasses will override.
   }
 }

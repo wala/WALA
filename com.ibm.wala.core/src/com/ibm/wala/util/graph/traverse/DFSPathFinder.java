@@ -20,7 +20,6 @@ import java.util.Stack;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 
 /**
@@ -170,10 +169,7 @@ public class DFSPathFinder<T> extends Stack<T> {
     T currentNode = peek();
 
     // compute the next node to return.
-    if (Assertions.verifyAssertions) {
-      assert getPendingChildren(currentNode) != null;
-    }
-
+    assert getPendingChildren(currentNode) != null;
     do {
       T stackTop = peek();
       for (Iterator<? extends T> it = getPendingChildren(stackTop); it.hasNext();) {

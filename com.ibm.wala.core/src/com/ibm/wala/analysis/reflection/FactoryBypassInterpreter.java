@@ -65,8 +65,7 @@ import com.ibm.wala.util.warnings.Warnings;
 class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
   /**
-   * A Map from CallerSiteContext -> Set <TypeReference>represents the types a factory method might create in a
-   * particular context
+   * A Map from CallerSiteContext -> Set <TypeReference>represents the types a factory method might create in a particular context
    */
   private final Map<Context, Set<TypeReference>> map = HashMapFactory.make();
 
@@ -97,18 +96,18 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
   private Set<TypeReference> getTypesForContext(Context context) {
     // first try user spec
-//    XMLReflectionReader spec = (XMLReflectionReader) userSpec;
-//    if (spec != null && context instanceof CallerSiteContext) {
-//      CallerSiteContext site = (CallerSiteContext) context;
-//      MemberReference m = site.getCaller().getMethod().getReference();
-//      ReflectionSummary summary = spec.getSummary(m);
-//      if (summary != null) {
-//        Set<TypeReference> types = summary.getTypesForProgramLocation(site.getCallSite().getProgramCounter());
-//        if (types != null) {
-//          return types;
-//        }
-//      }
-//    }
+    // XMLReflectionReader spec = (XMLReflectionReader) userSpec;
+    // if (spec != null && context instanceof CallerSiteContext) {
+    // CallerSiteContext site = (CallerSiteContext) context;
+    // MemberReference m = site.getCaller().getMethod().getReference();
+    // ReflectionSummary summary = spec.getSummary(m);
+    // if (summary != null) {
+    // Set<TypeReference> types = summary.getTypesForProgramLocation(site.getCallSite().getProgramCounter());
+    // if (types != null) {
+    // return types;
+    // }
+    // }
+    // }
 
     Set<TypeReference> types = map.get(context);
     return types;
@@ -127,7 +126,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
   /*
    * @see com.ibm.wala.ipa.callgraph.rta.RTAContextInterpreter#understands(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.wala.ipa.callgraph.Context)
+   * com.ibm.wala.ipa.callgraph.Context)
    */
   public boolean understands(CGNode node) {
     if (node == null) {
@@ -205,7 +204,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#recordFactoryType(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.IClass)
+   * com.ibm.wala.classLoader.IClass)
    */
   public boolean recordFactoryType(CGNode node, IClass klass) {
     if (klass == null) {
@@ -370,10 +369,8 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       }
 
       this.method = m;
-      if (Assertions.verifyAssertions) {
-        assert S != null;
-        assert m.getDeclaringClass() != null : "null declaring class for " + m;
-      }
+      assert S != null;
+      assert m.getDeclaringClass() != null : "null declaring class for " + m;
 
       // add original statements from the method summary
       nextLocal = addOriginalStatements(m);
@@ -397,7 +394,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       if ((T instanceof PointType) || (T instanceof ConeType)) {
         TypeReference ref = T.getType().getReference();
         NewSiteReference site = NewSiteReference.make(0, ref);
-        
+
         if (DEBUG) {
           IClass klass = options.getClassTargetSelector().getAllocatedTarget(null, site);
           System.err.println(("Selected allocated target: " + klass + " for " + T));
@@ -447,9 +444,9 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
         }
       } else if (T instanceof SetType) {
         // This code has clearly bitrotted, since iteratePoints() returns an Iterator<TypeReference>
-        // and we need an Iterator<IClass>.  Commenting out for now.  --MS
+        // and we need an Iterator<IClass>. Commenting out for now. --MS
         Assertions.UNREACHABLE();
-        //addStatementsForSetOfTypes(((SetType) T).iteratePoints());
+        // addStatementsForSetOfTypes(((SetType) T).iteratePoints());
       } else {
         Assertions.UNREACHABLE("Unexpected type " + T.getClass());
       }
@@ -484,7 +481,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
         SSAInvokeInstruction s = insts.InvokeInstruction(params, exc, site);
         calls.add(s);
         allInstructions.add(s);
-      } 
+      }
     }
 
     private int addOriginalStatements(SummarizedMethod m) {
@@ -564,9 +561,8 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     }
 
     /**
-     * Two specialized methods can be different, even if they represent the same source method. So, revert to object
-     * identity for testing equality. TODO: this is non-optimal; could try to re-use specialized methods that have the
-     * same context.
+     * Two specialized methods can be different, even if they represent the same source method. So, revert to object identity for
+     * testing equality. TODO: this is non-optimal; could try to re-use specialized methods that have the same context.
      * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
@@ -597,11 +593,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
     @Override
     public IClass getDeclaringClass() {
-      if (Assertions.verifyAssertions) {
-        if (method.getDeclaringClass() == null) {
-          assert method.getDeclaringClass() != null : "null declaring class for original method " + method;
-        }
-      }
+      assert method.getDeclaringClass() != null : "null declaring class for original method " + method;
       return method.getDeclaringClass();
     }
 

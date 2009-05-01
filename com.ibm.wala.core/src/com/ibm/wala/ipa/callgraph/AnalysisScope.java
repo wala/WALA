@@ -438,8 +438,7 @@ public class AnalysisScope {
       ClassLoaderReference lrReference = e.getKey();
       String moduleLdr = lrReference.getName().toString();
       String moduleLang = lrReference.getLanguage().toString();
-      Assertions.precondition(Language.JAVA.getName().equals(lrReference.getLanguage()),
-          "Java language only is currently supported");
+      assert Language.JAVA.getName().equals(lrReference.getLanguage()) : "Java language only is currently supported";
 
       for (Module m : e.getValue()) {
         String moduleType;
@@ -472,8 +471,7 @@ public class AnalysisScope {
       ClassLoaderReference lrReference = e.getKey();
       String ldrName = lrReference.getName().toString();
       String ldrLang = lrReference.getLanguage().toString();
-      Assertions.precondition(Language.JAVA.getName().equals(lrReference.getLanguage()),
-          "Java language only is currently supported");
+      assert Language.JAVA.getName().equals(lrReference.getLanguage()) : "Java language only is currently supported";
       String ldrImplName = e.getValue();
       String ldrImplDescrLine = String.format("%s,%s,%s,%s", ldrName, ldrLang, "loaderImpl", ldrImplName);
       ldrImplLines.add(ldrImplDescrLine);

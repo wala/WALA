@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * TODO: document me.
@@ -19,7 +18,6 @@ public abstract class ReflectiveMemberAccess extends SSAInstruction {
   protected final int objectRef;
 
   protected final int memberRef;
-
 
   protected ReflectiveMemberAccess(int objectRef, int memberRef) {
     super();
@@ -37,8 +35,7 @@ public abstract class ReflectiveMemberAccess extends SSAInstruction {
    */
   @Override
   public int getUse(int j) {
-    if (Assertions.verifyAssertions)
-      assert j <= 1;
+    assert j <= 1;
     return (j == 0) ? objectRef : memberRef;
   }
 

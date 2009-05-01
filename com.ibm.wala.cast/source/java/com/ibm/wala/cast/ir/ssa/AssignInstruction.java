@@ -10,42 +10,39 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.ssa;
 
-
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
- *  A simple assignment statement.  Only appears in the IR before SSA
- * conversion, and temporarily when needed to undo copy propagation
+ * A simple assignment statement. Only appears in the IR before SSA conversion, and temporarily when needed to undo copy propagation
  * during processing of new lexical definitions and uses.
- *
+ * 
  * @author Julian Dolby (dolby@us.ibm.com)
- *
+ * 
  */
 public class AssignInstruction extends SSAUnaryOpInstruction {
 
   /**
    * create the assignment v_result := v_val
+   * 
    * @param result
    * @param val
    */
   public AssignInstruction(int result, int val) {
     super(null, result, val);
-    if (Assertions.verifyAssertions) {
-      assert result != val;
-      assert result != -1;
-      assert val != -1;
-    }
+    assert result != val;
+    assert result != -1;
+    assert val != -1;
   }
 
   /*
    * @see com.ibm.wala.ssa.SSAInstruction#copyForSSA(int[], int[])
    */
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return ((AstInstructionFactory)insts).AssignInstruction(defs == null ? getDef(0) : defs[0], uses == null ? getUse(0) : uses[0]);
+    return ((AstInstructionFactory) insts)
+        .AssignInstruction(defs == null ? getDef(0) : defs[0], uses == null ? getUse(0) : uses[0]);
   }
 
   /*

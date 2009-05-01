@@ -11,12 +11,9 @@
 package com.ibm.wala.ipa.callgraph.propagation;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * a local pointer key that carries a type filter
- * 
- * @author sfink
  */
 public class LocalPointerKeyWithFilter extends LocalPointerKey implements FilteredPointerKey {
 
@@ -24,9 +21,7 @@ public class LocalPointerKeyWithFilter extends LocalPointerKey implements Filter
 
   public LocalPointerKeyWithFilter(CGNode node, int valueNumber, TypeFilter typeFilter) {
     super(node,valueNumber);
-    if (Assertions.verifyAssertions) {
       assert typeFilter != null;
-    }
     this.typeFilter = typeFilter;
   }
 

@@ -19,11 +19,9 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
- * @author sfink
- * 
+ * A {@link SyntheticMethod} representing the semantics encoded in a {@link MethodSummary}
  */
 public class SummarizedMethod extends SyntheticMethod {
   static final boolean DEBUG = false;
@@ -33,9 +31,7 @@ public class SummarizedMethod extends SyntheticMethod {
   public SummarizedMethod(MethodReference ref, MethodSummary summary, IClass declaringClass) throws NullPointerException {
     super(ref, declaringClass, summary.isStatic(), summary.isFactory());
     this.summary = summary;
-    if (Assertions.verifyAssertions) {
-      assert declaringClass != null;
-    }
+    assert declaringClass != null;
     if (DEBUG) {
       System.err.println(("SummarizedMethod ctor: " + ref + " " + summary));
     }

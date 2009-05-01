@@ -19,17 +19,11 @@ import com.ibm.wala.util.debug.Assertions;
 /**
  * UNDER CONSTRUCTION.
  * 
- * <verbatim> TypeSignature: 
- *    FieldTypeSignature 
- *    BaseType (code for a primitive)
+ * <verbatim> TypeSignature: FieldTypeSignature BaseType (code for a primitive)
  * 
- * FieldTypeSignature:
- *   ClassTypeSignature 
- *   ArrayTypeSignature
- *   TypeVariableSignature
+ * FieldTypeSignature: ClassTypeSignature ArrayTypeSignature TypeVariableSignature
  * 
- * TypeVariableSignature: 
- *    T identifier ;
+ * TypeVariableSignature: T identifier ;
  * 
  * </verbatim>
  * 
@@ -90,11 +84,10 @@ public abstract class TypeSignature extends Signature {
   public abstract boolean isBaseType();
 
   /**
-   * @param typeSigs
-   *         TypeSignature*
+   * @param typeSigs TypeSignature*
    * @return tokenize it
    */
-  static String[] parseForTypeSignatures(String typeSigs) throws IllegalArgumentException{
+  static String[] parseForTypeSignatures(String typeSigs) throws IllegalArgumentException {
     ArrayList<String> sigs = new ArrayList<String>(10);
     if (typeSigs.length() < 2) {
       // TODO: check this?
@@ -150,7 +143,7 @@ public abstract class TypeSignature extends Signature {
         case TypeReference.BooleanTypeCode:
         case TypeReference.ByteTypeCode:
         case TypeReference.IntTypeCode:
-          sigs.add(typeSigs.substring(i-1, i+1));
+          sigs.add(typeSigs.substring(i - 1, i + 1));
           break;
         case 'T':
         case TypeReference.ClassTypeCode:
@@ -191,9 +184,7 @@ public abstract class TypeSignature extends Signature {
         }
         return result;
       default:
-        if (Assertions.verifyAssertions) {
-          assert false : "bad type signature list " + typeSigs;
-        }
+        assert false : "bad type signature list " + typeSigs;
       }
     }
   }

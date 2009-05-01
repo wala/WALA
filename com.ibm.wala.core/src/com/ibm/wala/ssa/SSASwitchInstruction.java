@@ -11,7 +11,6 @@
 
 package com.ibm.wala.ssa;
 
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntIterator;
 
 /**
@@ -83,8 +82,7 @@ public class SSASwitchInstruction extends SSAInstruction {
    */
   @Override
   public int getUse(int j) {
-    if (Assertions.verifyAssertions)
-      assert j <= 1;
+    assert j <= 1;
     return val;
   }
 
@@ -139,4 +137,4 @@ public class SSASwitchInstruction extends SSAInstruction {
     return false;
   }
 
- }
+}

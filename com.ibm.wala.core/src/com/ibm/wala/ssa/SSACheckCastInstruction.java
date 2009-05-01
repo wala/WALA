@@ -11,7 +11,6 @@
 package com.ibm.wala.ssa;
 
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * A checkcast (dynamic type test) instruction. This instruction produces a new value number (like an assignment) if the check
@@ -65,6 +64,7 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
 
   /*
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
+   * 
    * @throws IllegalArgumentException if v is null
    */
   @Override
@@ -75,8 +75,7 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
     v.visitCheckCast(this);
   }
 
-
-  /* 
+  /*
    * @see com.ibm.wala.ssa.SSAInstruction#hasDef()
    */
   @Override
@@ -92,14 +91,12 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
     return result;
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.ssa.SSAInstruction#getDef(int)
    */
   @Override
   public int getDef(int i) {
-    if (Assertions.verifyAssertions) {
-      assert i == 0;
-    }
+    assert i == 0;
     return result;
   }
 
@@ -121,8 +118,7 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
    */
   @Override
   public int getUse(int j) {
-    if (Assertions.verifyAssertions)
-      assert j == 0;
+    assert j == 0;
     return val;
   }
 

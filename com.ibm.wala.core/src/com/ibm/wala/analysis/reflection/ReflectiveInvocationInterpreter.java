@@ -39,7 +39,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * An {@link SSAContextInterpreter} specialized to interpret reflective invocations such as Constructor.newInstance and
@@ -60,9 +59,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     if (DEBUG) {
       System.err.println("generating IR for " + node);
     }
@@ -77,9 +74,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
    * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getNumberOfStatements(com.ibm.wala.ipa.callgraph.CGNode)
    */
   public int getNumberOfStatements(CGNode node) {
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     return getIR(node).getInstructions().length;
   }
 
@@ -107,9 +102,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     return getIR(node).iterateNewSites();
   }
 
@@ -117,9 +110,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
    * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateCallSites(com.ibm.wala.ipa.callgraph.CGNode)
    */
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
-    if (Assertions.verifyAssertions) {
-      assert understands(node);
-    }
+    assert understands(node);
     return getIR(node).iterateCallSites();
   }
 
@@ -131,7 +122,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
    */
   private IR makeIR(IMethod method, IMethod target, ReceiverInstanceContext context) {
     SSAInstructionFactory insts = method.getDeclaringClass().getClassLoader().getInstructionFactory();
-    
+
     SpecializedMethod m = new SpecializedMethod(method, method.getDeclaringClass(), method.isStatic(), false);
     Map<Integer, ConstantValue> constants = HashMapFactory.make();
 
@@ -145,8 +136,9 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     if (method.getReference().equals(CTOR_NEW_INSTANCE)) {
       // allocate the new object constructed
       TypeReference allocatedType = target.getDeclaringClass().getReference();
-      m.addInstruction(allocatedType, insts.NewInstruction(args[0] = nextLocal++, NewSiteReference.make(pc++, allocatedType)),
-          true);
+      m
+          .addInstruction(allocatedType, insts.NewInstruction(args[0] = nextLocal++, NewSiteReference.make(pc++, allocatedType)),
+              true);
       parametersVn = 2;
     } else {
       // for Method.invoke, v3 is the parameter to the method being called
@@ -164,16 +156,16 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     }
     int nextArg = target.isStatic() ? 0 : 1; // nextArg := next index in args[] array that needs to be initialized
     int nextParameter = 0; // nextParameter := next index in the parameters[] array that needs to be copied into the args[] array.
-    
+
     // load each of the parameters into a local variable, args[something]
     for (int j = nextArg; j < nargs; j++) {
-      // load the next parameter into v_temp.  
+      // load the next parameter into v_temp.
       int indexConst = nextLocal++;
-      constants.put(new Integer(indexConst), new ConstantValue(nextParameter++)); 
+      constants.put(new Integer(indexConst), new ConstantValue(nextParameter++));
       int temp = nextLocal++;
       m.addInstruction(null, insts.ArrayLoadInstruction(temp, parametersVn, indexConst, TypeReference.JavaLangObject), false);
       pc++;
-      
+
       // cast v_temp to the appropriate type and store it in args[j]
       args[j] = nextLocal++;
       TypeReference type = target.getParameterType(j);
@@ -198,8 +190,8 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
             false);
       } else {
         result = nextLocal++;
-        m.addInstruction(null, insts.InvokeInstruction(result, args, exceptions, CallSiteReference.make(pc++, target
-            .getReference(), d)), false);
+        m.addInstruction(null, insts.InvokeInstruction(result, args, exceptions, CallSiteReference.make(pc++,
+            target.getReference(), d)), false);
         m.addInstruction(null, insts.ReturnInstruction(result, false), false);
       }
     }

@@ -20,14 +20,10 @@ import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.Warning;
 
 /**
- * 
  * Summary information for a method.
- * 
- * @author sfink
  */
 public class MethodSummary {
 
@@ -122,14 +118,9 @@ public class MethodSummary {
     return poison;
   }
 
-  /**
-   * @param b
-   */
   public void setPoisonLevel(byte b) {
     poisonLevel = b;
-    if (Assertions.verifyAssertions) {
-      assert b == Warning.MILD || b == Warning.MODERATE || b == Warning.SEVERE;
-    }
+    assert b == Warning.MILD || b == Warning.MODERATE || b == Warning.SEVERE;
   }
 
   public byte getPoisonLevel() {
@@ -178,8 +169,7 @@ public class MethodSummary {
   }
 
   /**
-   * Note that by convention, getParameterType(0) == this for non-static
-   * methods.
+   * Note that by convention, getParameterType(0) == this for non-static methods.
    */
   public TypeReference getParameterType(int i) {
     if (isStatic()) {
@@ -198,9 +188,8 @@ public class MethodSummary {
   }
 
   /**
-   * Record if this is a "factory" method; meaning it returns some object which
-   * we know little about ... usually we'll resolve this based on downstream
-   * uses of the object
+   * Record if this is a "factory" method; meaning it returns some object which we know little about ... usually we'll resolve this
+   * based on downstream uses of the object
    * 
    * @param b
    */

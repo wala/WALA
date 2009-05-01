@@ -30,8 +30,7 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
 public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
 
   /**
-   * if set, check that all instance keys in a points-to set are consistent with the type of the corresponding pointer
-   * key
+   * if set, check that all instance keys in a points-to set are consistent with the type of the corresponding pointer key
    */
   public static final boolean PARANOID = false;
 
@@ -141,9 +140,7 @@ public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
    */
   void setPointerKey(PointerKey pointerKey) {
     // check that we haven't modified the hash code!!! this is crucial
-    if (Assertions.verifyAssertions) {
-      assert this.pointerKey.hashCode() == pointerKey.hashCode();
-    }
+    assert this.pointerKey.hashCode() == pointerKey.hashCode();
     this.pointerKey = pointerKey;
   }
 

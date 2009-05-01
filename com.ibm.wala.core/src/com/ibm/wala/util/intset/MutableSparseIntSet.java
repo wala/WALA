@@ -13,8 +13,7 @@ package com.ibm.wala.util.intset;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * A sparse ordered, mutable duplicate-free, fully-encapsulated set of integers. Instances are not canonical, except for
- * EMPTY.
+ * A sparse ordered, mutable duplicate-free, fully-encapsulated set of integers. Instances are not canonical, except for EMPTY.
  * 
  * This implementation will be inefficient if these sets get large.
  * 
@@ -168,7 +167,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     if (that instanceof SparseIntSet) {
       SparseIntSet set = (SparseIntSet) that;
       if (set.elements != null) {
-        // SJF: clone is performance problem.  don't use it.
+        // SJF: clone is performance problem. don't use it.
         // elements = set.elements.clone();
         elements = new int[set.elements.length];
         for (int i = 0; i < set.size; i++) {
@@ -398,9 +397,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
       ci += tail;
     }
 
-    if (Assertions.verifyAssertions) {
-      assert ci > 0;
-    }
+    assert ci > 0;
 
     elements = (cr == null) ? ar : cr;
     size = ci;
@@ -453,7 +450,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 
   /*
    * @see com.ibm.wala.util.intset.MutableIntSet#addAllInIntersection(com.ibm.wala.util.intset.IntSet,
-   *      com.ibm.wala.util.intset.IntSet)
+   * com.ibm.wala.util.intset.IntSet)
    */
   public boolean addAllInIntersection(IntSet other, IntSet filter) {
     if (other == null) {
