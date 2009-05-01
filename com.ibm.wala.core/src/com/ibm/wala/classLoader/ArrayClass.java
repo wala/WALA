@@ -279,7 +279,7 @@ public class ArrayClass implements IClass, Constants {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllInstanceFields()
    */
-  public Collection<IField> getAllInstanceFields() throws UnimplementedError, ClassHierarchyException {
+  public Collection<IField> getAllInstanceFields()  {
     Assertions.UNREACHABLE();
     return null;
   }
@@ -287,7 +287,7 @@ public class ArrayClass implements IClass, Constants {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllStaticFields()
    */
-  public Collection<IField> getAllStaticFields() throws UnimplementedError, ClassHierarchyException {
+  public Collection<IField> getAllStaticFields() {
     Assertions.UNREACHABLE();
     return null;
   }
@@ -302,7 +302,7 @@ public class ArrayClass implements IClass, Constants {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllFields()
    */
-  public Collection<IField> getAllFields() throws UnimplementedError, ClassHierarchyException {
+  public Collection<IField> getAllFields()  {
     Assertions.UNREACHABLE();
     return null;
   }

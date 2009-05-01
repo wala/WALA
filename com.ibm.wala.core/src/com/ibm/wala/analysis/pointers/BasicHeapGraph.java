@@ -65,10 +65,8 @@ public class BasicHeapGraph extends HeapGraph {
   private final CallGraph callGraph;
 
   /**
-   * @param P
-   *            governing pointer analysis
-   * @throws NullPointerException
-   *             if P is null
+   * @param P governing pointer analysis
+   * @throws NullPointerException if P is null
    */
   public BasicHeapGraph(final PointerAnalysis P, final CallGraph callGraph) throws NullPointerException {
     super(P);
@@ -249,21 +247,17 @@ public class BasicHeapGraph extends HeapGraph {
           }
         }
         MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
-        try {
-          for (Iterator<IField> it = klass.getAllInstanceFields().iterator(); it.hasNext();) {
-            IField f = it.next();
-            if (!f.getReference().getFieldType().isPrimitiveType()) {
-              PointerKey p = getHeapModel().getPointerKeyForInstanceField(I, f);
-              if (p != null && nodeManager.containsNode(p)) {
-                result.add(nodeManager.getNumber(p));
-              }
+        for (Iterator<IField> it = klass.getAllInstanceFields().iterator(); it.hasNext();) {
+          IField f = it.next();
+          if (!f.getReference().getFieldType().isPrimitiveType()) {
+            PointerKey p = getHeapModel().getPointerKeyForInstanceField(I, f);
+            if (p != null && nodeManager.containsNode(p)) {
+              result.add(nodeManager.getNumber(p));
             }
           }
-        } catch (ClassHierarchyException e) {
-          // uh oh. skip it for now.
         }
         return result.toIntArray();
-      } 
+      }
     } else {
       Assertions.UNREACHABLE("Unexpected type: " + N.getClass());
       return null;
@@ -309,8 +303,7 @@ public class BasicHeapGraph extends HeapGraph {
   }
 
   /**
-   * traverse locals in order, first by node, then by value number: attempt to
-   * improve locality
+   * traverse locals in order, first by node, then by value number: attempt to improve locality
    */
   private void computePredecessorsForLocals(NumberedNodeManager<Object> nodeManager, BasicNaturalRelation R) {
 

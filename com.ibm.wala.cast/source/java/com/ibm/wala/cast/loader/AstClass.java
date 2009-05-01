@@ -22,7 +22,6 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
@@ -108,7 +107,7 @@ abstract public class AstClass implements IClass, ClassConstants {
 
   public abstract IClass getSuperclass();
 
-  private Collection<IClass> gatherInterfaces() throws ClassHierarchyException {
+  private Collection<IClass> gatherInterfaces() {
     Set<IClass> result = HashSetFactory.make();
     result.addAll(getDirectInterfaces());
     if (getSuperclass() != null) {
@@ -117,9 +116,9 @@ abstract public class AstClass implements IClass, ClassConstants {
     return result;
   }
 
-  public abstract Collection<IClass> getDirectInterfaces() throws ClassHierarchyException;
+  public abstract Collection<IClass> getDirectInterfaces();
 
-  public Collection<IClass> getAllImplementedInterfaces() throws ClassHierarchyException {
+  public Collection<IClass> getAllImplementedInterfaces() {
     return gatherInterfaces();
   }
 
@@ -175,7 +174,7 @@ abstract public class AstClass implements IClass, ClassConstants {
     return result;
   }
 
-  public Collection<IField> getAllInstanceFields() throws ClassHierarchyException {
+  public Collection<IField> getAllInstanceFields() {
     Collection<IField> result = HashSetFactory.make();
     result.addAll(getDeclaredInstanceFields());
     if (getSuperclass() != null) {
@@ -185,7 +184,7 @@ abstract public class AstClass implements IClass, ClassConstants {
     return result;
   }
 
-  public Collection<IField> getAllStaticFields() throws ClassHierarchyException {
+  public Collection<IField> getAllStaticFields() {
     Collection<IField> result = HashSetFactory.make();
     result.addAll(getDeclaredStaticFields());
     if (getSuperclass() != null) {
@@ -195,14 +194,14 @@ abstract public class AstClass implements IClass, ClassConstants {
     return result;
   }
 
-  public Collection<IField> getAllFields() throws ClassHierarchyException {
+  public Collection<IField> getAllFields() {
     Collection<IField> result = HashSetFactory.make();
     result.addAll(getAllInstanceFields());
     result.addAll(getAllStaticFields());
     return result;
   }
 
-  public Collection<IMethod> getAllMethods()  {
+  public Collection<IMethod> getAllMethods() {
     Collection<IMethod> result = HashSetFactory.make();
     for (Iterator<IMethod> ms = getDeclaredMethods().iterator(); ms.hasNext();) {
       result.add(ms.next());

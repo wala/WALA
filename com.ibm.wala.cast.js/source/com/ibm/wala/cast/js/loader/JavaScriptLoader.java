@@ -66,7 +66,6 @@ import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SourceURLModule;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction.IOperator;
 import com.ibm.wala.shrikeBT.IComparisonInstruction.Operator;
@@ -514,7 +513,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     }
 
     @Override
-    public Collection<IClass> getDirectInterfaces() throws ClassHierarchyException {
+    public Collection<IClass> getDirectInterfaces()  {
       return Collections.emptySet();
     }
 
@@ -540,7 +539,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       return "JS Root:" + getReference().toString();
     }
 
-    public Collection<IClass> getDirectInterfaces() throws ClassHierarchyException {
+    public Collection<IClass> getDirectInterfaces() {
       return Collections.emptySet();
     }
 

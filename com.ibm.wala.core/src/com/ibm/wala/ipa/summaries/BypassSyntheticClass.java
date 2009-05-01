@@ -87,7 +87,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllInterfaces()
    */
-  public Collection<IClass> getAllImplementedInterfaces() throws ClassHierarchyException {
+  public Collection<IClass> getAllImplementedInterfaces() {
     Collection<IClass> realIfaces = realType.getAllImplementedInterfaces();
     if (realType.isInterface()) {
       HashSet<IClass> result = HashSetFactory.make(realIfaces);
@@ -207,14 +207,14 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllInstanceFields()
    */
-  public Collection<IField> getAllInstanceFields() throws ClassHierarchyException {
+  public Collection<IField> getAllInstanceFields() {
     return realType.getAllInstanceFields();
   }
 
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllStaticFields()
    */
-  public Collection<IField> getAllStaticFields() throws ClassHierarchyException {
+  public Collection<IField> getAllStaticFields(){
     return realType.getAllStaticFields();
   }
 
@@ -228,7 +228,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllFields()
    */
-  public Collection<IField> getAllFields() throws ClassHierarchyException {
+  public Collection<IField> getAllFields()  {
     return realType.getAllFields();
   }
 

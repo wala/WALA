@@ -45,8 +45,8 @@ import com.ibm.wala.util.intset.OrdinalSet;
 /**
  * Mod-ref analysis for heap locations.
  * 
- * For each call graph node, what heap locations (as determined by a heap model) may it read or write, including it's
- * callees transitively
+ * For each call graph node, what heap locations (as determined by a heap model) may it read or write, including it's callees
+ * transitively
  * 
  * @author sjfink
  * 
@@ -61,8 +61,7 @@ public class ModRef {
   }
 
   /**
-   * For each call graph node, what heap locations (as determined by a heap model) may it write, including its callees
-   * transitively
+   * For each call graph node, what heap locations (as determined by a heap model) may it write, including its callees transitively
    * 
    * @throws IllegalArgumentException if cg is null
    * 
@@ -76,8 +75,7 @@ public class ModRef {
   }
 
   /**
-   * For each call graph node, what heap locations (as determined by a heap model) may it read, including its callees
-   * transitively
+   * For each call graph node, what heap locations (as determined by a heap model) may it read, including its callees transitively
    * 
    * @throws IllegalArgumentException if cg is null
    * 
@@ -91,8 +89,7 @@ public class ModRef {
   }
 
   /**
-   * For each call graph node, what heap locations (as determined by a heap model) may it write, including its callees
-   * transitively
+   * For each call graph node, what heap locations (as determined by a heap model) may it write, including its callees transitively
    * 
    */
   public Map<CGNode, OrdinalSet<PointerKey>> computeMod(CallGraph cg, PointerAnalysis pa) {
@@ -100,8 +97,7 @@ public class ModRef {
   }
 
   /**
-   * For each call graph node, what heap locations (as determined by a heap model) may it read, including its callees
-   * transitively
+   * For each call graph node, what heap locations (as determined by a heap model) may it read, including its callees transitively
    * 
    */
   public Map<CGNode, OrdinalSet<PointerKey>> computeRef(CallGraph cg, PointerAnalysis pa) {
@@ -126,8 +122,8 @@ public class ModRef {
   }
 
   /**
-   * For each call graph node, what heap locations (as determined by a heap model) may it write, <bf> NOT </bf>
-   * including its callees transitively
+   * For each call graph node, what heap locations (as determined by a heap model) may it write, <bf> NOT </bf> including its
+   * callees transitively
    * 
    * @param heapExclude
    */
@@ -141,8 +137,8 @@ public class ModRef {
   }
 
   /**
-   * For each call graph node, what heap locations (as determined by a heap model) may it read, <bf> NOT </bf> including
-   * its callees transitively
+   * For each call graph node, what heap locations (as determined by a heap model) may it read, <bf> NOT </bf> including its callees
+   * transitively
    * 
    * @param heapExclude
    */
@@ -156,8 +152,8 @@ public class ModRef {
   }
 
   /**
-   * For a call graph node, what heap locations (as determined by a heap model) may it write, <bf> NOT </bf> including
-   * it's callees transitively
+   * For a call graph node, what heap locations (as determined by a heap model) may it write, <bf> NOT </bf> including it's callees
+   * transitively
    * 
    * @param heapExclude
    */
@@ -178,8 +174,8 @@ public class ModRef {
   }
 
   /**
-   * For a call graph node, what heap locations (as determined by a heap model) may it read, <bf> NOT </bf> including
-   * it's callees transitively
+   * For a call graph node, what heap locations (as determined by a heap model) may it read, <bf> NOT </bf> including it's callees
+   * transitively
    */
   private Collection<PointerKey> scanNodeForRef(final CGNode n, final PointerAnalysis pa, HeapExclusions heapExclude) {
     Collection<PointerKey> result = HashSetFactory.make();
@@ -320,15 +316,10 @@ public class ModRef {
           InstanceKey i = h.getInstanceKeyForAllocation(n, instruction.getNewSite());
           if (i != null) {
             IClass type = i.getConcreteType();
-            try {
-              for (IField f : type.getAllInstanceFields()) {
-                PointerKey pk = h.getPointerKeyForInstanceField(i, f);
-                assert pk != null;
-                result.add(pk);
-              }
-            } catch (ClassHierarchyException e) {
-              Assertions.UNREACHABLE();
-              e.printStackTrace();
+            for (IField f : type.getAllInstanceFields()) {
+              PointerKey pk = h.getPointerKeyForInstanceField(i, f);
+              assert pk != null;
+              result.add(pk);
             }
           }
         }

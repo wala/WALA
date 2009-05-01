@@ -41,12 +41,12 @@ import com.ibm.wala.util.intset.MutableIntSet;
 /**
  * @author sfink
  * 
- * TODO: refactor to eliminate more redundancy with SSACallGraphBuilder
+ *         TODO: refactor to eliminate more redundancy with SSACallGraphBuilder
  */
 public class BasicRTABuilder extends AbstractRTABuilder {
 
-  public BasicRTABuilder(IClassHierarchy cha, AnalysisOptions options,AnalysisCache cache,
-      ContextSelector contextSelector, SSAContextInterpreter contextInterpreter) {
+  public BasicRTABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, ContextSelector contextSelector,
+      SSAContextInterpreter contextInterpreter) {
     super(cha, options, cache, contextSelector, contextInterpreter, null);
   }
 
@@ -61,18 +61,14 @@ public class BasicRTABuilder extends AbstractRTABuilder {
     // set up the selector map to record each method that class implements
     registerImplementedMethods(klass, iKey);
 
-    try {
-      for (Iterator ifaces = klass.getAllImplementedInterfaces().iterator(); ifaces.hasNext();) {
-        IClass c = (IClass) ifaces.next();
-        registerImplementedMethods(c, iKey);
-      }
+    for (Iterator ifaces = klass.getAllImplementedInterfaces().iterator(); ifaces.hasNext();) {
+      IClass c = (IClass) ifaces.next();
+      registerImplementedMethods(c, iKey);
+    }
+    klass = klass.getSuperclass();
+    while (klass != null) {
+      registerImplementedMethods(klass, iKey);
       klass = klass.getSuperclass();
-      while (klass != null) {
-        registerImplementedMethods(klass, iKey);
-        klass = klass.getSuperclass();
-      }
-    } catch (ClassHierarchyException e) {
-      Assertions.UNREACHABLE();
     }
   }
 
@@ -102,19 +98,18 @@ public class BasicRTABuilder extends AbstractRTABuilder {
   protected RTASelectorKey getKeyForSelector(Selector selector) {
     return new RTASelectorKey(selector);
   }
+
   /**
-   * An operator to fire when we discover a potential new callee for a virtual
-   * or interface call site.
+   * An operator to fire when we discover a potential new callee for a virtual or interface call site.
    * 
-   * This operator will create a new callee context and constraints if
-   * necessary.
+   * This operator will create a new callee context and constraints if necessary.
    * 
-   * N.B: This implementation assumes that the calling context depends solely on
-   * the dataflow information computed for the receiver. TODO: generalize this
-   * to have other forms of context selection, such as CPA-style algorithms.
+   * N.B: This implementation assumes that the calling context depends solely on the dataflow information computed for the receiver.
+   * TODO: generalize this to have other forms of context selection, such as CPA-style algorithms.
    */
   private final class DispatchOperator extends UnaryOperator<PointsToSetVariable> {
     private final CallSiteReference site;
+
     private final ExplicitCallGraph.ExplicitNode caller;
 
     DispatchOperator(CallSiteReference site, ExplicitNode caller) {
@@ -129,7 +124,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
 
     @Override
     public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-      IntSetVariable receivers =rhs;
+      IntSetVariable receivers = rhs;
 
       // compute the set of pointers that were not previously handled
       IntSet value = receivers.getValue();
@@ -185,7 +180,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
             }
           }
 
-          IntSet targets = getCallGraph().getPossibleTargetNumbers(caller,site);
+          IntSet targets = getCallGraph().getPossibleTargetNumbers(caller, site);
           if (targets != null && targets.contains(target.getGraphNodeId())) {
             // do nothing; we've previously discovered and handled this
             // receiver for this call site.
@@ -222,7 +217,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
     @Override
     public boolean equals(Object o) {
       if (o instanceof DispatchOperator) {
-        DispatchOperator other = (DispatchOperator)o;
+        DispatchOperator other = (DispatchOperator) o;
         return caller.equals(other.caller) && site.equals(other.site);
       } else {
         return false;
@@ -231,12 +226,13 @@ public class BasicRTABuilder extends AbstractRTABuilder {
   }
 
   /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.rta.AbstractRTABuilder#makeDispatchOperator(com.ibm.wala.classLoader.CallSiteReference,
-   *      com.ibm.wala.ipa.callgraph.CGNode)
+   * @see
+   * com.ibm.wala.ipa.callgraph.propagation.rta.AbstractRTABuilder#makeDispatchOperator(com.ibm.wala.classLoader.CallSiteReference,
+   * com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
   protected UnaryOperator<PointsToSetVariable> makeDispatchOperator(CallSiteReference site, CGNode node) {
-    return new DispatchOperator(site, (ExplicitNode)node);
+    return new DispatchOperator(site, (ExplicitNode) node);
   }
 
 }

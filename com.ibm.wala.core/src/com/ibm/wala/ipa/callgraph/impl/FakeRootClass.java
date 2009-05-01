@@ -205,14 +205,14 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllInstanceFields()
    */
-  public Collection<IField> getAllInstanceFields() throws UnsupportedOperationException, ClassHierarchyException {
+  public Collection<IField> getAllInstanceFields()  {
     return Collections.emptySet();
   }
 
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllStaticFields()
    */
-  public Collection<IField> getAllStaticFields() throws ClassHierarchyException {
+  public Collection<IField> getAllStaticFields() {
     return getDeclaredStaticFields();
   }
 
@@ -226,7 +226,7 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllFields()
    */
-  public Collection<IField> getAllFields() throws ClassHierarchyException {
+  public Collection<IField> getAllFields()  {
     return getDeclaredStaticFields();
   }
 

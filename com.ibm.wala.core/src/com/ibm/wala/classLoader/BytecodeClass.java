@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyWarning;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
@@ -205,16 +204,12 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
         }
       }
       // try superinterfaces
-      try {
-        for (IClass i : getAllImplementedInterfaces()) {
-          f = i.getField(name);
-          if (f != null) {
-            fieldMap.put(name, f);
-            return f;
-          }
+      for (IClass i : getAllImplementedInterfaces()) {
+        f = i.getField(name);
+        if (f != null) {
+          fieldMap.put(name, f);
+          return f;
         }
-      } catch (ClassHierarchyException e) {
-        // skip
       }
     }
 
@@ -247,7 +242,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllFields()
    */
-  public Collection<IField> getAllFields() throws ClassHierarchyException {
+  public Collection<IField> getAllFields() {
     Collection<IField> result = new LinkedList<IField>();
     result.addAll(getAllInstanceFields());
     result.addAll(getAllStaticFields());
@@ -257,7 +252,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllImplementedInterfaces()
    */
-  public Collection<IClass> getAllImplementedInterfaces() throws ClassHierarchyException {
+  public Collection<IClass> getAllImplementedInterfaces() {
     if (allInterfaces != null) {
       return allInterfaces;
     } else {
@@ -291,7 +286,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllInstanceFields()
    */
-  public Collection<IField> getAllInstanceFields() throws ClassHierarchyException {
+  public Collection<IField> getAllInstanceFields() {
     Collection<IField> result = new LinkedList<IField>(getDeclaredInstanceFields());
     IClass s = getSuperclass();
     while (s != null) {
@@ -304,7 +299,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllStaticFields()
    */
-  public Collection<IField> getAllStaticFields() throws ClassHierarchyException {
+  public Collection<IField> getAllStaticFields() {
     Collection<IField> result = new LinkedList<IField>(getDeclaredStaticFields());
     IClass s = getSuperclass();
     while (s != null) {
@@ -317,7 +312,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllMethods()
    */
-  public Collection<IMethod> getAllMethods()  {
+  public Collection<IMethod> getAllMethods() {
     Collection<IMethod> result = new LinkedList<IMethod>();
     Iterator<IMethod> declaredMethods = getDeclaredMethods().iterator();
     while (declaredMethods.hasNext()) {
@@ -395,21 +390,16 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     }
 
     // didn't find it yet. special logic for interfaces
-    try {
-      if (isInterface() || isAbstract()) {
-        final Iterator<IClass> it = getAllImplementedInterfaces().iterator();
-        // try each superinterface
-        while (it.hasNext()) {
-          IClass k = it.next();
-          result = k.getMethod(selector);
-          if (result != null) {
-            return result;
-          }
+    if (isInterface() || isAbstract()) {
+      final Iterator<IClass> it = getAllImplementedInterfaces().iterator();
+      // try each superinterface
+      while (it.hasNext()) {
+        IClass k = it.next();
+        result = k.getMethod(selector);
+        if (result != null) {
+          return result;
         }
       }
-    } catch (ClassHierarchyException e) {
-      e.printStackTrace();
-      Assertions.UNREACHABLE("Bad method lookup in " + this);
     }
     return null;
 
@@ -425,7 +415,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   /**
    * @return Collection of IClasses, representing the interfaces this class implements.
    */
-  protected Collection<IClass> computeAllInterfacesAsCollection() throws ClassHierarchyException {
+  protected Collection<IClass> computeAllInterfacesAsCollection() {
     Collection<IClass> c = getDirectInterfaces();
     Set<IClass> result = HashSetFactory.make();
     for (Iterator<IClass> it = c.iterator(); it.hasNext();) {

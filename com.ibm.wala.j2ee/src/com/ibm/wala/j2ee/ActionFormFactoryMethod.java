@@ -18,7 +18,6 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.SyntheticClass;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.BypassMethodTargetSelector;
 import com.ibm.wala.ipa.summaries.MethodSummary;
@@ -32,8 +31,8 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * Method representing a factory that creates ActionForm objects. We extend {@link SummarizedMethod} to allow for re-use
- * of the machinery in FactoryBypassInterpreter.
+ * Method representing a factory that creates ActionForm objects. We extend {@link SummarizedMethod} to allow for re-use of the
+ * machinery in FactoryBypassInterpreter.
  * 
  * @author manu
  * 
@@ -65,15 +64,15 @@ public class ActionFormFactoryMethod extends SummarizedMethod {
       super(factoryClassRef, cha);
     }
 
-    public Collection<IField> getAllFields() throws ClassHierarchyException {
+    public Collection<IField> getAllFields() {
       return Collections.emptySet();
     }
 
-    public Collection<IClass> getAllImplementedInterfaces() throws ClassHierarchyException {
+    public Collection<IClass> getAllImplementedInterfaces() {
       return Collections.emptySet();
     }
 
-    public Collection<IField> getAllInstanceFields() throws ClassHierarchyException {
+    public Collection<IField> getAllInstanceFields() {
       return Collections.emptySet();
     }
 
@@ -83,7 +82,7 @@ public class ActionFormFactoryMethod extends SummarizedMethod {
       return null;
     }
 
-    public Collection<IField> getAllStaticFields() throws ClassHierarchyException {
+    public Collection<IField> getAllStaticFields() {
       return Collections.emptySet();
     }
 
@@ -105,24 +104,21 @@ public class ActionFormFactoryMethod extends SummarizedMethod {
       return Collections.emptySet();
     }
 
-    public Collection<IClass> getDirectInterfaces() throws ClassHierarchyException {
+    public Collection<IClass> getDirectInterfaces() {
       return Collections.emptySet();
     }
 
     public IField getField(Atom name) {
-      // TODO Auto-generated method stub
       assert false;
       return null;
     }
 
     public IMethod getMethod(Selector selector) {
-      // TODO Auto-generated method stub
       assert false;
       return null;
     }
 
     public int getModifiers() {
-      // TODO Auto-generated method stub
       assert false;
       return 0;
     }
@@ -131,7 +127,7 @@ public class ActionFormFactoryMethod extends SummarizedMethod {
       return factoryClassRef.getName();
     }
 
-    public IClass getSuperclass()  {
+    public IClass getSuperclass() {
       return null;
     }
 
@@ -146,17 +142,17 @@ public class ActionFormFactoryMethod extends SummarizedMethod {
       assert false;
       return false;
     }
-    
+
     @Override
     public int hashCode() {
       return super.hashCode(); // like a singleton
     }
-    
+
     @Override
     public boolean equals(Object o) {
       return super.equals(o);
     }
-    
+
   }
 
 }

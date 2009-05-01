@@ -32,7 +32,6 @@ import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultPointerKeyFactory;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SymbolTable;
@@ -45,16 +44,12 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- * A trivial field-based heap model, which only uses the information of which
- * types (classes) are live.
+ * A trivial field-based heap model, which only uses the information of which types (classes) are live.
  * 
- * Note that this heap model is based on ssa value numbers for locals, since we
- * will build a pointer flow graph based on this heap model when resolving
- * reflection.
+ * Note that this heap model is based on ssa value numbers for locals, since we will build a pointer flow graph based on this heap
+ * model when resolving reflection.
  * 
  * This is an inefficient prototype.
- * 
- * @author sfink
  */
 public class TypeBasedHeapModel implements HeapModel {
 
@@ -71,18 +66,15 @@ public class TypeBasedHeapModel implements HeapModel {
   private final Collection<CGNode> nodesHandled = HashSetFactory.make();
 
   /**
-   * Map: <PointerKey> -> thing, where thing is a FilteredPointerKey or an
-   * InstanceKey representing a constant.
+   * Map: <PointerKey> -> thing, where thing is a FilteredPointerKey or an InstanceKey representing a constant.
    * 
    * computed lazily
    */
   private Map<PointerKey, Object> pKeys;
 
   /**
-   * @param klasses
-   *            Collection<IClass>
-   * @throws IllegalArgumentException
-   *             if cg is null
+   * @param klasses Collection<IClass>
+   * @throws IllegalArgumentException if cg is null
    */
   public TypeBasedHeapModel(AnalysisOptions options, Collection<IClass> klasses, CallGraph cg) {
     if (cg == null) {
@@ -167,22 +159,17 @@ public class TypeBasedHeapModel implements HeapModel {
         result.put(p, p);
       }
     } else {
-      try {
-        for (Iterator<IField> it = klass.getAllFields().iterator(); it.hasNext();) {
-          IField f = it.next();
-          if (!f.getFieldTypeReference().isPrimitiveType()) {
-            if (f.isStatic()) {
-              PointerKey p = pointerKeys.getPointerKeyForStaticField(f);
-              result.put(p, p);
-            } else {
-              PointerKey p = pointerKeys.getPointerKeyForInstanceField(new ConcreteTypeKey(klass), f);
-              result.put(p, p);
-            }
+      for (Iterator<IField> it = klass.getAllFields().iterator(); it.hasNext();) {
+        IField f = it.next();
+        if (!f.getFieldTypeReference().isPrimitiveType()) {
+          if (f.isStatic()) {
+            PointerKey p = pointerKeys.getPointerKeyForStaticField(f);
+            result.put(p, p);
+          } else {
+            PointerKey p = pointerKeys.getPointerKeyForInstanceField(new ConcreteTypeKey(klass), f);
+            result.put(p, p);
           }
         }
-      } catch (ClassHierarchyException e) {
-        e.printStackTrace();
-        Assertions.UNREACHABLE();
       }
     }
     return result;
@@ -230,12 +217,10 @@ public class TypeBasedHeapModel implements HeapModel {
   }
 
   /**
-   * Note that this always returns a {@link FilteredPointerKey}, since the
-   * {@link TypeBasedPointerAnalysis} relies on the type filter to compute
-   * points to sets.
+   * Note that this always returns a {@link FilteredPointerKey}, since the {@link TypeBasedPointerAnalysis} relies on the type
+   * filter to compute points to sets.
    * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForLocal(com.ibm.wala.ipa.callgraph.CGNode,
-   *      int)
+   * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForLocal(com.ibm.wala.ipa.callgraph.CGNode, int)
    */
   public FilteredPointerKey getPointerKeyForLocal(CGNode node, int valueNumber) {
     initPKeysForNode(node);

@@ -266,7 +266,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     if (key == null) {
       throw new IllegalArgumentException("null key");
     }
-    
+
     if (Assertions.verifyAssertions) {
       if (pointsToMap.isImplicit(key)) {
         System.err.println("Did not expect to findOrCreatePointsToSet for implicitly represented PointerKey");
@@ -512,12 +512,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
   private void registerArrayInstanceWithAllInterfacesOfElement(int index, IClass elementClass, int dim) {
     Collection ifaces = null;
-    try {
-      ifaces = elementClass.getAllImplementedInterfaces();
-    } catch (ClassHierarchyException e) {
-      Warnings.add(ClassHierarchyWarning.create(e.getMessage()));
-      return;
-    }
+    ifaces = elementClass.getAllImplementedInterfaces();
     for (Iterator it = ifaces.iterator(); it.hasNext();) {
       IClass I = (IClass) it.next();
       TypeReference iArrayRef = makeArray(I.getReference(), dim);

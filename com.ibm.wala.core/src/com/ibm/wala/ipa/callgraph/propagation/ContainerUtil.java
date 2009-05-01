@@ -28,31 +28,31 @@ import com.ibm.wala.util.debug.Assertions;
  * @author sfink
  */
 public class ContainerUtil {
-  
+
   private final static TypeName FreezableListName = TypeName.string2TypeName("Lcom/sun/corba/se/internal/ior/FreezableList");
-  public final static TypeReference FreezableList =
-    TypeReference.findOrCreate(ClassLoaderReference.Primordial, FreezableListName);
-  
+
+  public final static TypeReference FreezableList = TypeReference.findOrCreate(ClassLoaderReference.Primordial, FreezableListName);
+
   private final static TypeName JarAttributesName = TypeName.string2TypeName("Ljava/util/jar/Attributes");
-  public final static TypeReference JarAttributes =
-    TypeReference.findOrCreate(ClassLoaderReference.Primordial, JarAttributesName);
-  
+
+  public final static TypeReference JarAttributes = TypeReference.findOrCreate(ClassLoaderReference.Primordial, JarAttributesName);
+
   private final static Collection<TypeReference> miscContainers = HashSetFactory.make();
   static {
     miscContainers.add(FreezableList);
     miscContainers.add(JarAttributes);
   }
-  
+
   /**
    * @return true iff C is a container class from java.util
-   * @throws IllegalArgumentException  if C is null
+   * @throws IllegalArgumentException if C is null
    */
   public static boolean isContainer(IClass c) {
     if (c == null) {
       throw new IllegalArgumentException("c is null");
     }
-    if (ClassLoaderReference.Primordial.equals(c.getClassLoader().getReference())&& 
-        TypeReference.JavaUtilCollection.getName().getPackage().equals(c.getReference().getName().getPackage())) {
+    if (ClassLoaderReference.Primordial.equals(c.getClassLoader().getReference())
+        && TypeReference.JavaUtilCollection.getName().getPackage().equals(c.getReference().getName().getPackage())) {
       IClass collection = c.getClassHierarchy().lookupClass(TypeReference.JavaUtilCollection);
       IClass map = c.getClassHierarchy().lookupClass(TypeReference.JavaUtilMap);
       if (c.isInterface()) {
@@ -61,12 +61,7 @@ public class ContainerUtil {
           assert map != null;
         }
         Collection s;
-        try {
-          s = c.getAllImplementedInterfaces();
-        } catch (ClassHierarchyException e) {
-          // give up
-          return false;
-        }
+        s = c.getAllImplementedInterfaces();
         if (s.contains(collection) || s.contains(map)) {
           return true;
         }
@@ -79,7 +74,7 @@ public class ContainerUtil {
     if (miscContainers.contains(c.getReference())) {
       return true;
     }
-    
+
     if (c.isArrayClass() && ((ArrayClass) c).getElementClass() != null
         && ((ArrayClass) c).getElementClass().getReference().isReferenceType()) {
       return true;

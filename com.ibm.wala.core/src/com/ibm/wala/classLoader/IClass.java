@@ -14,7 +14,6 @@ package com.ibm.wala.classLoader;
 import java.io.InputStream;
 import java.util.Collection;
 
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchyDweller;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
@@ -65,13 +64,13 @@ public interface IClass extends IClassHierarchyDweller {
    * @return Collection of (IClass) interfaces this class directly implements. If this class is an interface, returns the interfaces
    *         it immediately extends.
    */
-  Collection<IClass> getDirectInterfaces() throws ClassHierarchyException;
+  Collection<IClass> getDirectInterfaces();
 
   /**
    * @return Collection of (IClass) interfaces this class implements, including all ancestors of interfaces immediately implemented.
    *         If this class is an interface, it returns all super-interfaces.
    */
-  Collection<IClass> getAllImplementedInterfaces() throws ClassHierarchyException;
+  Collection<IClass> getAllImplementedInterfaces();
 
   /**
    * Finds method matching signature. Delegates to superclass if not found.
@@ -119,17 +118,17 @@ public interface IClass extends IClassHierarchyDweller {
   /**
    * Compute the instance fields declared by this class or any of its superclasses.
    */
-  Collection<IField> getAllInstanceFields() throws ClassHierarchyException;
+  Collection<IField> getAllInstanceFields();
 
   /**
    * Compute the static fields declared by this class or any of its superclasses.
    */
-  Collection<IField> getAllStaticFields() throws ClassHierarchyException;
+  Collection<IField> getAllStaticFields();
 
   /**
    * Compute the instance and static fields declared by this class or any of its superclasses.
    */
-  Collection<IField> getAllFields() throws ClassHierarchyException;
+  Collection<IField> getAllFields();
 
   /**
    * Compute the methods declared by this class or any of its superclasses.
