@@ -20,7 +20,7 @@ public class BasicTree<T> {
   private final T value;
   final private SimpleVector<BasicTree<T>> children = new SimpleVector<BasicTree<T>>();
 
-  private BasicTree(T value) {
+  protected BasicTree(T value) {
     this.value = value;
   }
   
@@ -49,6 +49,10 @@ public class BasicTree<T> {
 
   public void setChild(int i, BasicTree<T> tree) {
     children.set(i, tree);
+  }
+  
+  public int getMaxChildIndex() {
+    return children.getMaxIndex();
   }
   
 }
