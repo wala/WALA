@@ -94,6 +94,7 @@ import com.ibm.wala.demandpa.util.PointerParamValueNumIterator;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.AbstractLocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceFieldKey;
@@ -868,9 +869,11 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
     boolean addToInitWorklist(PointerKeyAndState pkAndState) {
       if (pointsToQueried.put(pkAndState.getPointerKey(), pkAndState.getState())) {
-        CGNode node = ((LocalPointerKey) pkAndState.getPointerKey()).getNode();
-        if (!g.hasSubgraphForNode(node)) {
-          assert false : "missing constraints for node of var " + pkAndState;
+        if (pkAndState.getPointerKey() instanceof AbstractLocalPointerKey) {
+          CGNode node = ((AbstractLocalPointerKey) pkAndState.getPointerKey()).getNode();
+          if (!g.hasSubgraphForNode(node)) {
+            assert false : "missing constraints for " + node;
+          }
         }
         if (DEBUG) {
           // System.err.println("adding to init_ " + pkAndState);
@@ -885,8 +888,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
 
     protected void addToTrackedPToWorklist(PointerKeyAndState pkAndState) {
-      if (pkAndState.getPointerKey() instanceof LocalPointerKey) {
-        CGNode node = ((LocalPointerKey) pkAndState.getPointerKey()).getNode();
+      if (pkAndState.getPointerKey() instanceof AbstractLocalPointerKey) {
+        CGNode node = ((AbstractLocalPointerKey) pkAndState.getPointerKey()).getNode();
         if (!g.hasSubgraphForNode(node)) {
           assert false : "missing constraints for " + node;
         }
