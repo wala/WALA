@@ -72,11 +72,14 @@ public class Util {
   }
 
   public static void dumpCG(PropagationCallGraphBuilder builder, CallGraph CG) {
-    System.err.println(CG);
 
     for (Iterator x = CG.iterator(); x.hasNext();) {
       CGNode N = (CGNode) x.next();
-      System.err.println(("\nIR of node " + N));
+      System.err.println("\ncallees of node " + N);
+      for(Iterator<? extends CGNode> ns = CG.getSuccNodes(N); ns.hasNext(); ) {
+        System.err.println("\n  " + ns.next());
+      }
+      System.err.println("\nIR of node " + N);
       IR ir = N.getIR();
       if (ir != null) {
         System.err.println(ir);

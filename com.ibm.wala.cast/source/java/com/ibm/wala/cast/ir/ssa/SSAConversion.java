@@ -43,9 +43,9 @@ public class SSAConversion extends AbstractSSAConversion {
 
   public static boolean DEBUG = false;
 
-  public static boolean DEBUG_UNDO = true;
+  public static boolean DEBUG_UNDO = false;
 
-  public static boolean DEBUG_NAMES = true;
+  public static boolean DEBUG_NAMES = false;
 
   public static boolean DUMP = false;
 

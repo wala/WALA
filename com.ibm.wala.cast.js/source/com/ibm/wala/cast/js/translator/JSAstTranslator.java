@@ -36,7 +36,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
 public class JSAstTranslator extends AstTranslator {
-  private final static boolean DEBUG = true;
+  private final static boolean DEBUG = false;
 
   public JSAstTranslator(JavaScriptLoader loader) {
     super(loader);

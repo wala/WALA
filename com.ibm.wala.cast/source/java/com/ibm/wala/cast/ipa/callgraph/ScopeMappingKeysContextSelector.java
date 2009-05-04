@@ -33,8 +33,13 @@ public class ScopeMappingKeysContextSelector implements ContextSelector {
       }
     }
  
+    private int hashcode = -1;
+    
     public int hashCode() {
-      return base.hashCode()*key.hashCode();
+      if (hashcode == -1) {
+        hashcode = base.hashCode()*key.hashCode();
+      }
+      return hashcode;
     }
     
     public String toString() {

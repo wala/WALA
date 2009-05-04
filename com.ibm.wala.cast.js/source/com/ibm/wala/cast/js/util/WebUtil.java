@@ -46,25 +46,40 @@ public class WebUtil {
     return extractScriptFromHTML(url, defaultGenerator);
   }
   
-  public static SourceFileModule extractScriptFromHTML(URL url, Generator generator) {
+  private static String urlName(URL url) {
+    String urlFile = url.getFile();
+    return urlFile.lastIndexOf('/')>0?
+        urlFile.substring(urlFile.lastIndexOf('/')):
+          url.getHost() + ".html";
+  }
+  
+  public static File extractScriptFileFromHTML(URL url, Generator generator) {
     try {
-      String urlFile = url.getFile();
-      String urlName = 
-        urlFile.lastIndexOf('/')>0?
-            urlFile.substring(urlFile.lastIndexOf('/')):
-            url.getHost() + ".html";
-      File F = new File(outputDir + urlName);
+       String urlName = urlName(url);
+       File F = new File(outputDir + urlName);
       System.err.println(("making driver at " + F + " " + outputDir));
       if (F.exists()) F.delete();
       
       generator.generate(url, F);
 
-      return new SourceFileModule(F, urlName.substring(1));
+      return F;
 
     } catch (IOException e) {
       Assertions.UNREACHABLE("error processing " + url + ": " + e);
       return null;
     }
+  }
+
+  public static SourceFileModule extractScriptFromHTML(URL url, Generator generator) {
+    String urlName = urlName(url);
+          
+    File F = extractScriptFileFromHTML(url, generator);
+
+    return new SourceFileModule(F, urlName.substring(1));
+  }
+  
+  public static void main(String[] args) throws MalformedURLException {
+    System.err.println(extractScriptFromHTML(new URL(args[0]), defaultGenerator));
   }
 }
 	

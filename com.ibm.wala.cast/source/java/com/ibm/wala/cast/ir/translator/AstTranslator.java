@@ -361,7 +361,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   public static final boolean DEBUG_NAMES = DEBUG_ALL || false;
 
-  public static final boolean DEBUG_LEXICAL = DEBUG_ALL || true;
+  public static final boolean DEBUG_LEXICAL = DEBUG_ALL || false;
 
   protected final static class PreBasicBlock implements INodeWithNumber, IBasicBlock<SSAInstruction> {
     private static final int NORMAL = 0;
@@ -2109,7 +2109,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   };
 
-  private final Map<CAstNode, Integer> results = new LinkedHashMap<CAstNode, Integer>();
+  private final Stack<Map<CAstNode, Integer>> resultStack = new Stack<Map<CAstNode, Integer>>();
+  
+  private Map<CAstNode, Integer> results = new LinkedHashMap<CAstNode, Integer>();
 
   protected boolean hasValue(CAstNode n) {
     return results.containsKey(n);
@@ -2398,6 +2400,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
   }
 
   public void initFunctionEntity(final CAstEntity n, WalkContext parentContext, WalkContext functionContext) {
+    resultStack.push(results);
+    results = new LinkedHashMap<CAstNode,Integer>();
     // entry block
     functionContext.cfg().makeEntryBlock(functionContext.cfg().newBlock(false));
     // first real block
@@ -2435,6 +2439,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
     // actually make code body
     defineFunction(n, parentContext, cfg, symtab, katch, catchTypes, LI, DBG);
+    
+    results = resultStack.pop();
   }
 
   private final Stack<Position> positions = new Stack<Position>();

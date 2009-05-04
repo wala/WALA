@@ -12,6 +12,7 @@ package com.ibm.wala.cast.js.util;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,15 +24,15 @@ import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.parser.ParserDelegator;
 
 public class Generator {
-  public static final String preamble = "preamble.js", temp = "temp.js";
+  public static final String preamble = "preamble.js", temp1 = "temp1.js", temp2 = "temp2.js", temp3 = "temp3.js";
   
   public static interface CallbackFactory {
-    HTMLEditorKit.ParserCallback createCallback(URL input, FileWriter out, FileWriter out2);
+    HTMLEditorKit.ParserCallback createCallback(URL input, FileWriter domTreeFile, FileWriter embeddedScriptFile, FileWriter entrypointFile);
   }
   
   public static class HTMLCallbackFactory implements CallbackFactory {
-    public HTMLEditorKit.ParserCallback createCallback(URL input, FileWriter out, FileWriter out2) {
-      return new HTMLCallback(input, out, out2);
+    public HTMLEditorKit.ParserCallback createCallback(URL input, FileWriter domTreeFile, FileWriter embeddedScriptFile, FileWriter entrypointFile) {
+      return new HTMLCallback(input, domTreeFile, embeddedScriptFile, entrypointFile);
     }
   }
   
@@ -68,30 +69,40 @@ public class Generator {
     }
   }
   
-  public void generate(URL input, File outFile) throws IOException {
-    InputStreamReader fr = getStream( input );
-    FileWriter out = new FileWriter(outFile);
-    FileWriter out2 = new FileWriter(temp);
-    
-    ParserDelegator pd = new ParserDelegator();
-    HTMLEditorKit.ParserCallback cb = callbackFactory.createCallback(input, out, out2);
-
-    generatePreamble(out, cb);
-    
-    out.write("//Generation of the DOM Tree Begins\n");
-    pd.parse(fr, cb, ignoreCharset);
-    out2.close();
-    out.write("//Generation of the DOM Tree Ends\n\n\n");
-    
-    FileReader tmp = new FileReader(temp);
+  private void writeRegion(FileWriter out, String region, String tempFileName) throws IOException {
+    FileReader tmp = new FileReader(tempFileName);
     BufferedReader tempIn = new BufferedReader(tmp);
-    out.write("//Embedded Script Region Begins\n");
+    out.write("// " + region + " Region Begins\n");
     String line = tempIn.readLine();
     while(line != null) {
       out.write(line+"\n");
       line = tempIn.readLine();
     }
-    out.write("//Embedded Script Region Ends\n\n\n");
+    out.write("// " + region + " Region Ends\n\n\n");
+  }
+  
+  public void generate(URL input, File outFile) throws IOException {
+    InputStreamReader fr = getStream( input );
+    FileWriter out = new FileWriter(outFile);
+    
+    FileWriter out1 = new FileWriter(temp1);
+    FileWriter out2 = new FileWriter(temp2);
+    FileWriter out3 = new FileWriter(temp3);
+    
+    ParserDelegator pd = new ParserDelegator();
+    HTMLEditorKit.ParserCallback cb = callbackFactory.createCallback(input, out1, out2, out3);
+    pd.parse(fr, cb, ignoreCharset);
+    out1.close();
+    out2.close();
+    out3.close();
+    
+    generatePreamble(out, cb);
+    
+    writeRegion(out, "Embedded Script", temp2);
+
+    writeRegion(out, "DOM Tree", temp1);
+    
+    writeRegion(out, "Entrypoints", temp3);
     
     generateTrailer(out, cb);
     

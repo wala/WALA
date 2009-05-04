@@ -27,7 +27,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 
 public class HTMLCallback extends HTMLEditorKit.ParserCallback {
   private final URL input;
-  private final FileWriter out, out2;
+  private final FileWriter domTreeFile, embeddedScriptFile, entrypointFile;
 
   private int counter=0;
   private boolean script = false;
@@ -36,21 +36,28 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
 	
   protected final Stack<String> stack;
 
-  public HTMLCallback(URL input, FileWriter out, FileWriter out2) {
+  public HTMLCallback(URL input, FileWriter out, FileWriter out2, FileWriter entrypointFile) {
     this.input = input;
-    this.out = out;
-    this.out2 = out2;
+    this.domTreeFile = out;
+    this.embeddedScriptFile = out2;
+    this.entrypointFile = entrypointFile;
     stack = new Stack<String>();
     constructors.put("FORM", "DOMHTMLFormElement");
     constructors.put("TABLE", "DOMHTMLTableElement");
   }
   
+  private void indent() throws IOException {
+    for(int i = 0; i < stack.size(); i++) {
+      domTreeFile.write("  ");
+    }
+  }
+  
   protected FileWriter getWriter() {
-    return out;
+    return domTreeFile;
   }
   
   protected FileWriter getWriter2() {
-    return out2;
+    return embeddedScriptFile;
   }
 	
   public void flush() throws BadLocationException {
@@ -58,15 +65,13 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
   }
     
   public void handleText(char[] data, int pos) {
-    System.out.println("text pos: " + pos);
     getScript(data);
   }
     
   private void getScript(char [] data) {
     if(script) {
-      System.out.println(new String(data));
       try {
-	out2.write(data);
+	embeddedScriptFile.write(data);
       } catch (IOException e) {
 	System.out.println("Error writing to second file");
       }
@@ -74,14 +79,13 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
   }
     
   public void handleComment(char[] data, int pos) {
-    System.out.println("comment pos: " + pos);
-    getScript(data);
+     getScript(data);
   }
     
   public void handleEndOfLineString(String eol) {
     if (script) {
       try {
-        out2.write("\n");
+        embeddedScriptFile.write("\n");
       } catch (IOException e) {
 	System.out.println("Error writing to second file");
       }
@@ -90,137 +94,148 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
 
   protected String createElement(HTML.Tag t, MutableAttributeSet a) {
     String tag = t.toString().toUpperCase();
-    String varName = "node" + (counter++);
-    String cons = constructors.get(tag);
     if(tag.equals("SCRIPT")) {
       Object value = a.getAttribute( HTML.Attribute.SRC );
 	
       // script is out-of-line
       if (value != null) {
-	try {
-	  URL scriptSrc = new URL(input, value.toString());
-	  InputStreamReader scriptReader =
-	    new InputStreamReader(
-	      scriptSrc.openConnection().getInputStream());
-		    
-	  int read;
-	  char[] buffer = new char[ 1024 ];
-	  while ( (read = scriptReader.read(buffer)) != -1 ) {
-	    out2.write(buffer, 0, read);
-	  }
-	  scriptReader.close();
-	} catch (IOException e) {
-	  System.out.println("bad input script " + value);
-	}
-	
-      // script is inline
+        try {
+          URL scriptSrc = new URL(input, value.toString());
+          InputStreamReader scriptReader =
+            new InputStreamReader(
+                scriptSrc.openConnection().getInputStream());
+  		    
+          int read;
+          char[] buffer = new char[ 1024 ];
+          while ( (read = scriptReader.read(buffer)) != -1 ) {
+            embeddedScriptFile.write(buffer, 0, read);
+          }
+          scriptReader.close();
+        } catch (IOException e) {
+          System.out.println("bad input script " + value);
+        }
+  	
+        // script is inline
       } else {
-	System.out.println("Entering Script");
-	script = true;
+        System.out.println("Entering Script");
+        script = true;
       }
     }
+
+    String varName = "node" + (counter++);
+    
+    String cons = constructors.get(tag);
     if(cons == null) cons = "DOMHTMLElement";
+    
     try {
       writeElement(t, a, tag, cons, varName);
-      out.write("\n");
+      domTreeFile.write("\n");
     } catch (IOException e) {
       System.out.println("Error writing to file");
       System.exit(1);
     }
     return varName;
-  }
-
-  protected void writeElement(HTML.Tag t, MutableAttributeSet a, String tag, String cons, String varName) throws IOException {
-    Enumeration enu = a.getAttributeNames();
-
-    if (! enu.hasMoreElements()) {
-      out.write("var " + varName + " = new " + cons + "(" + tag + ");\n");
-
-    } else {
-      out.write("function make_" + varName + "() {\n");
-      out.write("  this.temp = " + cons + ";\n");
-      out.write("  this.temp(" + tag + ");\n");
+    }
+  
+    protected void writeElement(HTML.Tag t, MutableAttributeSet a, String tag, String cons, String varName) throws IOException {
+      Enumeration enu = a.getAttributeNames();
+      indent(); domTreeFile.write("function make_" + varName + "(parent, dom_nodes) {\n");
+      indent(); domTreeFile.write("  this.temp = " + cons + ";\n");
+      indent(); domTreeFile.write("  this.temp(" + tag + ");\n");
       while(enu.hasMoreElements()) {
-	Object attrObj = enu.nextElement(); 
-	String attr = attrObj.toString();
-	String value = a.getAttribute(attrObj).toString();
-	System.out.println(attr);
-	writeAttribute(t, a, attr, value, "this", varName);
+        Object attrObj = enu.nextElement(); 
+        String attr = attrObj.toString();
+        String value = a.getAttribute(attrObj).toString();
+        domTreeFile.write("  ");
+        writeAttribute(t, a, attr, value, "this", varName);
       }
-      out.write("}\n");
-      out.write("var " + varName + " = new make_" + varName + "();\n");
+      indent(); domTreeFile.write("  dom_nodes." + varName + " = this;\n");
+      indent(); domTreeFile.write("  parent.appendChild(this);\n");
+   }
+  
+    protected void writeAttribute(HTML.Tag t, MutableAttributeSet a, String attr, String value, String varName, String varName2) throws IOException {
+      writePortletAttribute(t, a, attr, value, varName);
+      writeEventAttribute(t, a, attr, value, varName, varName2);
     }
-    if(!stack.empty()) {
-      out.write(stack.peek() + ".appendChild(" + varName + ");\n");
-    } else {
-      out.write("document.appendChild(" + varName + ");\n");
-    }
-  }
-
-  protected void writeAttribute(HTML.Tag t, MutableAttributeSet a, String attr, String value, String varName, String varName2) throws IOException {
-    writePortletAttribute(t, a, attr, value, varName);
-    writeEventAttribute(t, a, attr, value, varName, varName2);
-  }
-
-  protected void writeEventAttribute(HTML.Tag t, MutableAttributeSet a, String attr, String value, String varName, String varName2) throws IOException {
-    if(attr.substring(0,2).equals("on")) {
-      out.write(varName + "." + attr + " = function " + attr + "_" + varName + "(event) {" + value + "};\n");
-      out2.write("\n\n" + varName2 + "." + attr + "(null);\n\n");
-    } else if (value.startsWith("javascript:") || value.startsWith("javaScript:")) {
-      out.write("var " + varName + attr + " = " + value.substring(11) + "\n");
-      out.write(varName + ".setAttribute('" + attr + "', " + varName + attr + ");\n");
-    } else {
-      out.write(varName + ".setAttribute('" + attr + "', '" + value + "');\n");
+  
+    protected void writeEventAttribute(HTML.Tag t, MutableAttributeSet a, String attr, String value, String varName, String varName2) throws IOException {
+      if(attr.substring(0,2).equals("on")) {
+        indent(); domTreeFile.write(varName + "." + attr + " = function " + attr + "_" + varName + "(event) {" + value + "};\n");
+        entrypointFile.write("\n\ndom_nodes." + varName2 + "." + attr + "(null);\n\n");
+      } else if (value.startsWith("javascript:") || value.startsWith("javaScript:")) {
+        indent(); domTreeFile.write("var " + varName + attr + " = " + value.substring(11) + "\n");
+        indent(); domTreeFile.write(varName + ".setAttribute('" + attr + "', " + varName + attr + ");\n");
+      } else {
+        if (value.indexOf('\'') > 0) {
+          value = value.replaceAll("\\'", "\\\\'");
+      }
+      if (value.indexOf('\n') > 0) {
+        value = value.replaceAll("\\n", "\\\\n");
+      }
+      indent(); domTreeFile.write(varName + ".setAttribute('" + attr + "', '" + value + "');\n");
     }
   }
 
   protected void writePortletAttribute(HTML.Tag t, MutableAttributeSet a, String attr, String value, String varName) throws IOException {
     if(attr.equals("portletid")) {
       if(value.substring(value.length()-4).equals("vice")) {
-        out.write("\n\nfunction cVice() { var contextVice = " + varName + "; }\ncVice();\n\n");
+        indent(); domTreeFile.write("\n\nfunction cVice() { var contextVice = " + varName + "; }\ncVice();\n\n");
       } else if(value.substring(value.length()-4).equals("root")) {
-        out.write("\n\nfunction cRoot() { var contextRoot = " + varName + "; }\ncRoot();\n\n");
+        indent(); domTreeFile.write("\n\nfunction cRoot() { var contextRoot = " + varName + "; }\ncRoot();\n\n");
       }
     }
   }
   
   public void handleStartTag(HTML.Tag t, MutableAttributeSet a, int pos) {
-    System.out.println("Start" + t);
     String varName = createElement(t,a);
-    stack.push(varName);    	
+    stack.push(varName);
   }
-    
+ 
+  private void endElement(String name) {
+    try {
+      indent(); domTreeFile.write("};\n");
+      indent();
+      if (stack.isEmpty()) {
+        domTreeFile.write("make_" + name + "(document, dom_nodes);\n\n\n");
+      } else {
+        domTreeFile.write("make_" + name + "(this, dom_nodes);\n\n");
+      }
+    } catch (IOException e) {
+      System.exit(-1);
+    }
+  }
+
   public void handleEndTag(HTML.Tag t, int pos) {
     if(t.toString().toUpperCase().equals("SCRIPT")) {
       System.out.println("Exiting Script");
       try {
-        out2.write("\n\n");
+        embeddedScriptFile.write("\n\n");
       } catch (IOException e) {
         
       }
       script = false;
     }
-    System.out.println("End" + t);
-    stack.pop();
-  }
+     endElement(stack.pop());
+ }
     
   public void handleSimpleTag(HTML.Tag t, MutableAttributeSet a, int pos) {
     System.out.println("Simple" + t);
     if (script) {
       try {
-        out2.write("<" + t);
+        embeddedScriptFile.write("<" + t);
         Enumeration names = a.getAttributeNames();
         while (names.hasMoreElements()) {
           Object name = names.nextElement();
           Object val = a.getAttribute(name);
-          out2.write(" " + name + "='" + val + "'");
+          embeddedScriptFile.write(" " + name + "='" + val + "'");
         }
-        out2.write("></" + t + ">");
+        embeddedScriptFile.write("></" + t + ">");
       } catch (IOException e) {
         
       }
     } else {
-      createElement(t,a);
+      String nm = createElement(t,a);
+      endElement(nm);
     }
   }
     
