@@ -116,11 +116,15 @@ function DOMDocument() {
 		return toReturn;
 	}
 
-        this.getElementById = function getElementById(id) {
+    this.getElementById = function getElementById(id) {
           var result = new NamedNodeList();
           this.collect(function check_id(x) { return x.id == id; }, result);
           return result.get(0);
 	}
+	
+	this.write = function write_to_dom (stuff) {
+		
+	};
 }
 
 function DOMHTMLDocument() {
