@@ -83,4 +83,9 @@ public class CAstQualifier {
     result = result * 13 + fName.hashCode();
     return result;
   }
+
+  @Override
+  public String toString() {
+    return fName;
+  }
 }
