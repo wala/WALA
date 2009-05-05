@@ -110,7 +110,12 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
         }
       }
 
-      Assertions.UNREACHABLE("Cannot find super class for " + this + " in " + superTypeNames);
+      // The following test allows the root class to reside in source; without
+      // it, the assertion requires all classes represented by a JavaClass to
+      // have a superclass.
+      if (!getName().equals(JavaSourceLoaderImpl.this.getLanguage().getRootType().getName())) {
+        Assertions.UNREACHABLE("Cannot find super class for " + this + " in " + superTypeNames);
+      }
 
       return null;
     }
@@ -124,10 +129,12 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
           result.add(domoType);
         }
       }
+      // The following computation allows the root class to reside in source
+      int numSuperClasses = (getName().equals(JavaSourceLoaderImpl.this.getLanguage().getRootType().getName())) ? 1 : 0; // 0 if the root class
 
-      if (result.size() != (superTypeNames.size() - 1)) {
-        assert result.size() == superTypeNames.size() - 1 : "found " + result + " interfaces for " + superTypeNames
-        + " for " + this;
+      if (result.size() != (superTypeNames.size() - numSuperClasses)) {
+        assert result.size() == superTypeNames.size() - numSuperClasses : "found " + result + " interfaces for " + superTypeNames
+            + " for " + this;
       }
 
       return result;
