@@ -255,11 +255,11 @@ public class JavaCAst2IRTranslator extends AstTranslator {
       // code bodies, so we may see other things than TYPE_ENTITY here.
       CAstType.Method methodType= (Method) N.getType();
       CAstType owningType= methodType.getDeclaringType();
-      IClass owner = 
-	loader.lookupClass(makeType(owningType).getName());
+      TypeName typeName = makeType(owningType).getName();
+      IClass owner = loader.lookupClass(typeName);
 
       if (owner == null) {
-	assert owner != null : makeType(owningType).getName().toString() + " not found in " + loader;
+        assert owner != null : typeName.toString() + " not found in " + loader;
       }
 
       ((JavaSourceLoaderImpl)loader).defineFunction(N, owner, cfg, symtab, hasCatchBlock, caughtTypes, lexicalInfo, debugInfo);
