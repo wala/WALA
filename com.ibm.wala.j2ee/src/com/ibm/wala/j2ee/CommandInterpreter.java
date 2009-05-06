@@ -58,14 +58,13 @@ import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * Logic to interpret dynacache commands in context
- * 
- * @author sfink
  */
 public class CommandInterpreter implements SSAContextInterpreter {
 
   private static final boolean DEBUG = false;
 
   private static final Atom PerformExecuteAtom = Atom.findOrCreateAsciiAtom("performExecute");
+
   private final static Descriptor PerformExecuteDesc = Descriptor.findOrCreateUTF8("()V");
 
   /**
@@ -79,21 +78,16 @@ public class CommandInterpreter implements SSAContextInterpreter {
   private final IClassHierarchy cha;
 
   /**
-   * @param cha
-   *          governing class hierarchy
-   * @param warnings
-   *          object to track analysis warnings
+   * @param cha governing class hierarchy
+   * @param warnings object to track analysis warnings
    */
   public CommandInterpreter(IClassHierarchy cha) {
     this.cha = cha;
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.cfa.CFAContextInterpreter#getIR(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.wala.ipa.callgraph.Context,
-   *      com.ibm.wala.util.warnings.WarningSet)
+   * com.ibm.wala.ipa.callgraph.Context, com.ibm.wala.util.warnings.WarningSet)
    */
   public IR getIR(CGNode node) {
     SpecializedExecuteMethod m = findOrCreateSpecializedMethod(node);
@@ -142,11 +136,11 @@ public class CommandInterpreter implements SSAContextInterpreter {
       }
     };
   }
+
   protected class SpecializedExecuteMethod extends SyntheticMethod {
 
     /**
-     * List of synthetic invoke instructions we model for this specialized
-     * instance.
+     * List of synthetic invoke instructions we model for this specialized instance.
      */
     private ArrayList<SSAInstruction> calls = new ArrayList<SSAInstruction>();
 
@@ -183,17 +177,14 @@ public class CommandInterpreter implements SSAContextInterpreter {
     }
 
     /**
-     * Set up a method summary which allocates and returns an instance of
-     * concrete type T.
-     * 
-     * @param T
+     * Set up a method summary which allocates and returns an instance of concrete type T.
      */
     private void addStatementsForConcreteType(final TypeReference T) {
       if (DEBUG) {
         System.err.println(("addStatementsForConcreteType: " + T));
       }
       SSAInstructionFactory insts = Language.JAVA.instructionFactory();
-      
+
       MethodReference performExecute = MethodReference.findOrCreate(T, PerformExecuteAtom, PerformExecuteDesc);
       CallSiteReference site = CallSiteReference.make(calls.size(), performExecute, IInvokeInstruction.Dispatch.VIRTUAL);
       int[] params = new int[1];
@@ -220,10 +211,8 @@ public class CommandInterpreter implements SSAContextInterpreter {
     }
 
     /**
-     * Two specialized methods can be different, even if they represent the same
-     * source method. So, revert to object identity for testing equality. TODO:
-     * this is non-optimal; could try to re-use specialized methods that have
-     * the same context.
+     * Two specialized methods can be different, even if they represent the same source method. So, revert to object identity for
+     * testing equality. TODO: this is non-optimal; could try to re-use specialized methods that have the same context.
      * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
@@ -232,10 +221,8 @@ public class CommandInterpreter implements SSAContextInterpreter {
     }
 
     /**
-     * Two specialized methods can be different, even if they represent the same
-     * source method. So, revert to object identity for testing equality. TODO:
-     * this is non-optimal; could try to re-use specialized methods that have
-     * the same context.
+     * Two specialized methods can be different, even if they represent the same source method. So, revert to object identity for
+     * testing equality. TODO: this is non-optimal; could try to re-use specialized methods that have the same context.
      */
     public int hashCode() {
       // TODO: change this to avoid non-determinism!
@@ -247,8 +234,6 @@ public class CommandInterpreter implements SSAContextInterpreter {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.classLoader.IMethod#getStatements(com.ibm.wala.util.warnings.WarningSet)
      */
     public SSAInstruction[] getStatements() {
@@ -262,7 +247,8 @@ public class CommandInterpreter implements SSAContextInterpreter {
 
     public IR getIR() {
       SSAInstruction[] instrs = getStatements();
-      return new SyntheticIR(this, Everywhere.EVERYWHERE, new InducedCFG(instrs, this, Everywhere.EVERYWHERE), instrs, SSAOptions.defaultOptions(), null);
+      return new SyntheticIR(this, Everywhere.EVERYWHERE, new InducedCFG(instrs, this, Everywhere.EVERYWHERE), instrs, SSAOptions
+          .defaultOptions(), null);
     }
   }
 
@@ -275,7 +261,6 @@ public class CommandInterpreter implements SSAContextInterpreter {
   }
 
   /**
-   * @param node
    * @return a synthetic method representing the node
    */
   private SpecializedExecuteMethod findOrCreateSpecializedMethod(CGNode node) {
@@ -304,7 +289,7 @@ public class CommandInterpreter implements SSAContextInterpreter {
     return false;
   }
 
-  public Iterator<IClass> iterateCastTypes(CGNode node ) {
+  public Iterator<IClass> iterateCastTypes(CGNode node) {
     return EmptyIterator.instance();
   }
 
@@ -316,23 +301,28 @@ public class CommandInterpreter implements SSAContextInterpreter {
   public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode N) {
     return getIR(N).getControlFlowGraph();
   }
- /**
+
+  /**
    * A warning when we fail to find subtypes for a command method
    */
   private static class NoSubtypesWarning extends Warning {
 
     final TypeAbstraction T;
+
     NoSubtypesWarning(TypeAbstraction T) {
       super(Warning.SEVERE);
       this.T = T;
     }
+
     public String getMsg() {
       return getClass().toString() + " : " + T;
     }
+
     public static NoSubtypesWarning create(TypeAbstraction T) {
       return new NoSubtypesWarning(T);
     }
   }
+
   public DefUse getDU(CGNode node) {
     return new DefUse(getIR(node));
   }

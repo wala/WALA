@@ -29,8 +29,6 @@ import com.ibm.wala.util.io.FileProvider;
 
 /**
  * Description of analysis for EJBs
- * 
- * @author sfink
  */
 public class J2EEAnalysisScope extends AnalysisScope {
 
@@ -47,25 +45,20 @@ public class J2EEAnalysisScope extends AnalysisScope {
   }
 
   /**
-   * @param lifecycleEntrypoints
-   *          Should EJB lifecycle entrypoints be considered as call graph
-   *          entrypoints?
-   * @throws IOException 
+   * @param lifecycleEntrypoints Should EJB lifecycle entrypoints be considered as call graph entrypoints?
    */
   public J2EEAnalysisScope(String baseScope, ClassLoader loader, boolean lifecycleEntrypoints) throws IOException {
     this(baseScope, loader, FileProvider.getFile(EXCLUSIONS_FILE), lifecycleEntrypoints);
   }
 
   /**
-   * @param lifecycleEntrypoints
-   *          Should EJB lifecycle entrypoints be considered as call graph
-   *          entrypoints?
-   * @throws IOException 
+   * @param lifecycleEntrypoints Should EJB lifecycle entrypoints be considered as call graph entrypoints?
    */
-  public J2EEAnalysisScope(String baseScope, ClassLoader loader, File exclusionsFile, boolean lifecycleEntrypoints) throws IOException {
+  public J2EEAnalysisScope(String baseScope, ClassLoader loader, File exclusionsFile, boolean lifecycleEntrypoints)
+      throws IOException {
     super(Collections.singleton(Language.JAVA));
     AnalysisScope base = AnalysisScopeReader.readJavaScope(baseScope, exclusionsFile, loader);
-    
+
     for (ClassLoaderReference cl : base.getLoaders()) {
       for (Module m : base.getModules(cl)) {
         addToScope(cl, m);
@@ -78,28 +71,20 @@ public class J2EEAnalysisScope extends AnalysisScope {
     this.lifecycleEntrypoints = lifecycleEntrypoints;
   }
 
-
   /**
-   * @param lifecycleEntrypoints
-   *          Should EJB lifecycle entrypoints be considered as call graph
-   *          entrypoints?
-   * @throws IOException 
+   * @param lifecycleEntrypoints Should EJB lifecycle entrypoints be considered as call graph entrypoints?
    */
   public static J2EEAnalysisScope makeDefault(ClassLoader loader, boolean lifecycleEntrypoints) throws IOException {
     return new J2EEAnalysisScope(DEFAULT_FILE, loader, lifecycleEntrypoints);
   }
 
-  public static J2EEAnalysisScope make(JarFile[] J2SELibs, JarFile[] J2EELibs, ClassLoader loader, boolean lifecycleEntrypoints) throws IOException {
+  public static J2EEAnalysisScope make(JarFile[] J2SELibs, JarFile[] J2EELibs, ClassLoader loader, boolean lifecycleEntrypoints)
+      throws IOException {
     return make(J2SELibs, J2EELibs, EXCLUSIONS_FILE, loader, lifecycleEntrypoints);
   }
 
-
-
   /**
-   * @param lifecycleEntrypoints
-   *          Should EJB lifecycle entrypoints be considered as call graph
-   *          entrypoints?
-   * @throws IOException 
+   * @param lifecycleEntrypoints Should EJB lifecycle entrypoints be considered as call graph entrypoints?
    */
   public static J2EEAnalysisScope make(JarFile[] J2SELibs, JarFile[] J2EELibs, String exclusionsFile, ClassLoader loader,
       boolean lifecycleEntrypoints) throws IOException {
@@ -118,10 +103,7 @@ public class J2EEAnalysisScope extends AnalysisScope {
   }
 
   /**
-   * @param lifecycleEntrypoints
-   *          Should EJB lifecycle entrypoints be considered as call graph
-   *          entrypoints?
-   * @throws IOException 
+   * @param lifecycleEntrypoints Should EJB lifecycle entrypoints be considered as call graph entrypoints?
    */
   public static J2EEAnalysisScope make(Module[] J2SELibs, Module[] J2EELibs, String exclusionsFile, ClassLoader loader,
       boolean lifecycleEntrypoints) throws IOException {
@@ -145,20 +127,17 @@ public class J2EEAnalysisScope extends AnalysisScope {
   }
 
   /**
-   * Add each Module in application loader of the passed-in scope, to the
-   * application loader of this scope.
+   * Add each Module in application loader of the passed-in scope, to the application loader of this scope.
    * 
-   * 
-   * @param scope
-   *          an analysis scope.
-   * @throws IllegalArgumentException  if scope is null
+   * @param scope an analysis scope.
+   * @throws IllegalArgumentException if scope is null
    */
   public void addToApplicationLoader(AnalysisScope scope) {
     if (scope == null) {
       throw new IllegalArgumentException("scope is null");
     }
     ClassLoaderReference app = scope.getApplicationLoader();
-    for (Module m :scope.getModules(app)) {
+    for (Module m : scope.getModules(app)) {
       addToScope(getApplicationLoader(), m);
     }
   }

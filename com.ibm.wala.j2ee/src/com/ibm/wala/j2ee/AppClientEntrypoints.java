@@ -13,6 +13,7 @@ package com.ibm.wala.j2ee;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.eclipse.jst.j2ee.client.ApplicationClient;
 import org.eclipse.jst.j2ee.commonarchivecore.internal.ApplicationClientFile;
 import org.eclipse.jst.j2ee.commonarchivecore.internal.helpers.ArchiveManifest;
 
@@ -36,11 +37,7 @@ import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
- * 
- * Representation of entrypoints gleaned from the descriptor for an
- * ApplicationClient module.
- * 
- * @author sfink
+ * Representation of entrypoints gleaned from the descriptor for an {@link ApplicationClient} module.
  */
 public class AppClientEntrypoints implements Iterable<Entrypoint> {
 
@@ -60,13 +57,11 @@ public class AppClientEntrypoints implements Iterable<Entrypoint> {
    * Governing analysis scope
    */
   private final AnalysisScope scope;
-  
+
   /**
-   * @param scope
-   *          scope of analysis
-   * @param cha
-   *          loaded class hierarchy
-   * @throws IllegalArgumentException  if scope is null
+   * @param scope scope of analysis
+   * @param cha loaded class hierarchy
+   * @throws IllegalArgumentException if scope is null
    */
   public AppClientEntrypoints(J2EEAnalysisScope scope, IClassHierarchy cha) {
     if (scope == null) {
@@ -84,13 +79,10 @@ public class AppClientEntrypoints implements Iterable<Entrypoint> {
   }
 
   /**
-   * Recursively traverse a module and add entrypoints from ApplicationClient
-   * archives
+   * Recursively traverse a module and add entrypoints from ApplicationClient archives
    * 
-   * @param T
-   *          a WCCM archive
-   * @param loader
-   *          governing class loader
+   * @param T a WCCM archive
+   * @param loader governing class loader
    */
   private void addEntrypointsRecursive(TopLevelArchiveModule T, ClassLoaderReference loader) {
     if (T.getType() == TopLevelArchiveModule.APPLICATION_CLIENT_FILE) {
@@ -132,24 +124,19 @@ public class AppClientEntrypoints implements Iterable<Entrypoint> {
       Warnings.add(LoadFailure.create(T));
       return;
     }
-    IMethod m = cha.resolveMethod(klass,Main.getSelector());
+    IMethod m = cha.resolveMethod(klass, Main.getSelector());
     if (m == null) {
       Warnings.add(LoadFailure.create(Main));
       return;
     }
     entrypoints.put(Main, new DefaultEntrypoint(m, cha));
   }
- /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.Entrypoints#iterator()
-   */
+
   public Iterator<Entrypoint> iterator() {
     return entrypoints.values().iterator();
   }
 
   /**
-   * @param m
    * @return true iff m is an entrypoint recorded by this class
    */
   public boolean contains(MemberReference m) {

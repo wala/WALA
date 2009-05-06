@@ -37,18 +37,13 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.StringStuff;
 
 /**
- *
- * Simple implementation of the BeanMetaData interface.
+ * Simple implementation of the {@link BeanMetaData} interface.
  * 
- * TODO: rework this class to have a hierarchy to distinguish between entities and
- * other beans.
- * 
- * @author sfink
+ * TODO: rework this class to have a hierarchy to distinguish between entities and other beans.
  */
 public class BeanMetaDataImpl implements BeanMetaData {
 
@@ -88,15 +83,10 @@ public class BeanMetaDataImpl implements BeanMetaData {
   private TypeReference localInterface;
 
   /**
-   * Mapping from field name (Atom) to FieldReference for all
-   * CMP fields in this bean.
+   * Mapping from field name (Atom) to FieldReference for all CMP fields in this bean.
    */
   private Map<Object, FieldReference> cmpFields;
 
-  /**
-   * Constructor BeanMetaDataImpl.
-   * @param b
-   */
   BeanMetaDataImpl(EnterpriseBean b, EJBJar ejbJar, TypeReference cl) {
     this.bean = b;
     this.klass = cl;
@@ -131,8 +121,7 @@ public class BeanMetaDataImpl implements BeanMetaData {
   }
 
   /**
-   * compute a Set of FieldReferences, one corresponding to each
-   * CMP field in this bean.
+   * compute a Set of FieldReferences, one corresponding to each CMP field in this bean.
    */
   private void computeCMPFields() {
     cmpFields = Collections.emptyMap();
@@ -165,17 +154,17 @@ public class BeanMetaDataImpl implements BeanMetaData {
       cmpFields.put(f.getName(), f);
     }
   }
+
   /**
-  * Return a Set of FieldReferences, one corresponding to each
-  * CMP field in this bean.
-  */
+   * Return a Set of FieldReferences, one corresponding to each CMP field in this bean.
+   */
   public Collection<FieldReference> getCMPFields() {
     return cmpFields.values();
   }
 
   /**
-   * Return a Set of the bean's container managed relationship fields,
-   * as FieldReference objects. 
+   * Return a Set of the bean's container managed relationship fields, as FieldReference objects.
+   * 
    * @return the bean's CMRs.
    */
   @SuppressWarnings("unchecked")
@@ -198,9 +187,9 @@ public class BeanMetaDataImpl implements BeanMetaData {
   }
 
   /**
-   * Return the Set of container created getter methods, as
-   * MethodReference objects.  The container is responsible for creating
-   * a getter method for each container managed field and relationship.
+   * Return the Set of container created getter methods, as MethodReference objects. The container is responsible for creating a
+   * getter method for each container managed field and relationship.
+   * 
    * @see com.ibm.wala.j2ee.BeanMetaData#getGetterMethods()
    * @return Set of container created getter methods.
    */
@@ -233,10 +222,10 @@ public class BeanMetaDataImpl implements BeanMetaData {
     }
     return result;
   }
+
   /**
-   * Return the Set of container created getter methods for CMRs, as
-   * a mapping from MethodReference->FieldReference.  The container is responsible for creating
-   * a getter method for each container managed relationship.
+   * Return the Set of container created getter methods for CMRs, as a mapping from MethodReference->FieldReference. The container
+   * is responsible for creating a getter method for each container managed relationship.
    */
   @SuppressWarnings("unchecked")
   public Map<MethodReference, FieldReference> getCMRGetters() {
@@ -257,10 +246,11 @@ public class BeanMetaDataImpl implements BeanMetaData {
     }
     return result;
   }
+
   /**
-   * Return the Set of container created setter methods, as
-   * Method reference objects.  The container is responsible for creating
-   * a setter method for each container managed field or relationship.
+   * Return the Set of container created setter methods, as Method reference objects. The container is responsible for creating a
+   * setter method for each container managed field or relationship.
+   * 
    * @see com.ibm.wala.j2ee.BeanMetaData#getSetterMethods()
    * @return Set of container created setter methods.
    */
@@ -295,9 +285,8 @@ public class BeanMetaDataImpl implements BeanMetaData {
   }
 
   /**
-   * Return the Set of container created setter methods for CMRs, as
-   * a mapping from MethodReference->FieldReference.  The container is responsible for creating
-   * a setter method for each container managed relationship.
+   * Return the Set of container created setter methods for CMRs, as a mapping from MethodReference->FieldReference. The container
+   * is responsible for creating a setter method for each container managed relationship.
    */
   @SuppressWarnings("unchecked")
   public Map<MethodReference, FieldReference> getCMRSetters() {
@@ -318,9 +307,9 @@ public class BeanMetaDataImpl implements BeanMetaData {
     }
     return result;
   }
+
   /**
-   * Return the Set of container created finder methods, as
-   * Method reference objects.
+   * Return the Set of container created finder methods, as Method reference objects.
    */
   public Set<MethodReference> getFinders() {
     HashSet<MethodReference> result = HashSetFactory.make(5);
@@ -341,25 +330,18 @@ public class BeanMetaDataImpl implements BeanMetaData {
     }
   }
 
-  /**
-   * Method isFinder.
-   * @param method
-   * @return boolean
-   */
   private static boolean isFinder(Method method) {
     return method.getName().indexOf("find") == 0;
   }
 
   /**
    * Create a field reference from a container managed field attribute.
+   * 
    * @param att the container managed field attribute
-   * @return FieldReference 
    */
   private FieldReference createFieldReference(CMPAttribute att) {
-    if (Assertions.verifyAssertions) {
-      assert att != null : "null attribute";
-      assert att.getType() != null : "null attribute type";
-    }
+    assert att != null : "null attribute";
+    assert att.getType() != null : "null attribute type";
     Atom name = Atom.findOrCreateUnicodeAtom(att.getName());
     String dString = att.getType().getJavaName();
     dString = StringStuff.deployment2CanonicalTypeString(dString);
@@ -370,14 +352,17 @@ public class BeanMetaDataImpl implements BeanMetaData {
 
   /**
    * Create a method reference from a finder
+   * 
    * @param method etools method representation
    * @return MethodReference that represents the method.
    */
   private MethodReference createMethodReference(Method method) {
     return J2EEUtil.createMethodReference(method, klass.getClassLoader());
   }
+
   /**
    * Create a method reference from a container managed field attribute.
+   * 
    * @param attr the container managed field attribute
    * @param methodName the name of the method
    * @return MethodReference that represents the method.
@@ -389,8 +374,10 @@ public class BeanMetaDataImpl implements BeanMetaData {
     MethodReference m = MethodReference.findOrCreate(klass, name, D);
     return m;
   }
+
   /**
    * Create a method reference from a container managed field attribute.
+   * 
    * @param attr the container managed field attribute
    * @param methodName the name of the method
    * @return MethodReference that represents the method.
@@ -403,7 +390,7 @@ public class BeanMetaDataImpl implements BeanMetaData {
     return m;
   }
 
-  /**
+  /*
    * @see com.ibm.wala.j2ee.BeanMetaData#getEJBClass()
    */
   public TypeReference getEJBClass() {
@@ -427,22 +414,22 @@ public class BeanMetaDataImpl implements BeanMetaData {
     }
     return false;
   }
-  
-	/*
-	 * @see com.ibm.wala.j2ee.BeanMetaData#isContainerManaged()
-	 */
-	public boolean isContainerManagedEntity() {
-		return bean.isContainerManagedEntity();
-	}
 
-  /* (non-Javadoc)
+  /*
+   * @see com.ibm.wala.j2ee.BeanMetaData#isContainerManaged()
+   */
+  public boolean isContainerManagedEntity() {
+    return bean.isContainerManagedEntity();
+  }
+
+  /*
    * @see com.ibm.wala.j2ee.BeanMetaData#isSessionBean()
    */
   public boolean isSessionBean() {
     return bean.isSession();
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.j2ee.BeanMetaData#isMessageDrivenBean()
    */
   public boolean isMessageDrivenBean() {
@@ -471,28 +458,28 @@ public class BeanMetaDataImpl implements BeanMetaData {
     return bean;
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.j2ee.BeanMetaData#getHomeInterface()
    */
   public TypeReference getHomeInterface() {
     return homeInterface;
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.j2ee.BeanMetaData#getLocalHomeInterface()
    */
   public TypeReference getLocalHomeInterface() {
     return localHomeInterface;
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.j2ee.BeanMetaData#getRemoteInterface()
    */
   public TypeReference getRemoteInterface() {
     return remoteInterface;
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.j2ee.BeanMetaData#getLocalInterface()
    */
   public TypeReference getLocalInterface() {
@@ -509,22 +496,20 @@ public class BeanMetaDataImpl implements BeanMetaData {
     }
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.j2ee.BeanMetaData#isBeanManaged()
    */
   public boolean isBeanManaged() {
     return bean.isBeanManagedEntity();
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.j2ee.BeanMetaData#getEJBJar()
    */
   public EJBJar getEJBJar() {
     return ejbJar;
   }
-  /* (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
+
   public int hashCode() {
     return bean.hashCode() * 941;
   }

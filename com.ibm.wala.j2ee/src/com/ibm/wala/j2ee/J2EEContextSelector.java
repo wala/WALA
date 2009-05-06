@@ -30,8 +30,6 @@ import com.ibm.wala.util.strings.Atom;
 
 /**
  * This class provides context selection logic for special J2EE methods.
- * 
- * @author sfink
  */
 public class J2EEContextSelector implements ContextSelector {
 
@@ -55,10 +53,6 @@ public class J2EEContextSelector implements ContextSelector {
 
   /**
    * Analyze each call to Command.execute() in a different context
-   * 
-   * @see com.ibm.wala.ipa.callgraph.ContextSelector#getCalleeTarget(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.CallSiteReference,
-   *      com.ibm.wala.classLoader.IMethod)
    */
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
     if (callee.getReference().equals(ExecuteMethod)) {
@@ -77,15 +71,7 @@ public class J2EEContextSelector implements ContextSelector {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.ContextSelector#getBoundOnNumberOfTargets(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.CallSiteReference,
-   *      com.ibm.wala.classLoader.IMethod)
-   */
   public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference site, IMethod callee) {
-
     if (callee.getReference().equals(ExecuteMethod)) {
       return 1;
     } else {
@@ -93,10 +79,6 @@ public class J2EEContextSelector implements ContextSelector {
     }
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.ContextSelector#contextIsIrrelevant(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.CallSiteReference)
-   */
   public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
     Atom name = site.getDeclaredTarget().getName();
     Descriptor d = site.getDeclaredTarget().getDescriptor();
@@ -107,19 +89,14 @@ public class J2EEContextSelector implements ContextSelector {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.ContextSelector#allSitesDispatchIdentically(com.ibm.wala.types.MethodReference)
-   */
   public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
-//    Atom name = site.getDeclaredTarget().getName();
-//    Descriptor d = site.getDeclaredTarget().getDescriptor();
-//    if (name.equals(ExecuteAtom) && d.equals(ExecuteDesc)) {
-//      return false;
-//    } else {
-//      return true;
-//    }
+    // Atom name = site.getDeclaredTarget().getName();
+    // Descriptor d = site.getDeclaredTarget().getDescriptor();
+    // if (name.equals(ExecuteAtom) && d.equals(ExecuteDesc)) {
+    // return false;
+    // } else {
+    // return true;
+    // }
     // todo: fix me
     return false;
   }

@@ -23,79 +23,64 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * 
  * Deployment descriptor data for a single EJB.
  * 
- * TODO: this currently can represent either a session or entity bean. Introduce
- * classes to distinguish between them.
- * 
- * @author sfink
+ * TODO: this currently can represent either a session or entity bean. Introduce classes to distinguish between them.
  */
 public interface BeanMetaData {
 
   /**
-   * Return a Set of IFields, one corresponding to each CMP field in this bean.
-   * 
-   * @return Set of IFields
+   * Return a Set of {@link FieldReference}, one corresponding to each CMP field in this bean.
    */
   Collection<FieldReference> getCMPFields();
 
   /**
-   * Return a Set of container managed relationship (cmr) fields, as
-   * FieldReference objects.
-   * 
-   * @return Set of cmrs
+   * Return a Set of container managed relationship (cmr) fields, as FieldReference objects.
    */
   Set<Object> getCMRFields();
 
   /**
-   * Return a Map of the container created getter methods, as MethodReference
-   * objects, and the field that the method references.
+   * Return a Map of the container created getter methods, as MethodReference objects, and the field that the method references.
    * 
    * @return Map of container created getter methods and field reference.
    */
   Map<Object, FieldReference> getGetterMethods();
 
   /**
-   * Return a Map of the container created setter methods, as MethodReference
-   * objects, and the field that the method references.
+   * Return a Map of the container created setter methods, as MethodReference objects, and the field that the method references.
    * 
    * @return Map of container created setter methods and field reference.
    */
   Map<Object, FieldReference> getSetterMethods();
 
   /**
-   * Return a Map of container created getter methods for CMRs, as a mapping
-   * from MethodReference->FieldReference. The container is responsible for
-   * creating a getter method for each container managed relationship.
+   * Return a Map of container created getter methods for CMRs, as a mapping from MethodReference->FieldReference. The container is
+   * responsible for creating a getter method for each container managed relationship.
    */
   Map<MethodReference, FieldReference> getCMRGetters();
 
   /**
-   * Return a Map of container created setter methods for CMRs, as a mapping
-   * from MethodReference->FieldReference. The container is responsible for
-   * creating a setter method for each container managed relationship.
+   * Return a Map of container created setter methods for CMRs, as a mapping from MethodReference->FieldReference. The container is
+   * responsible for creating a setter method for each container managed relationship.
    */
   Map<MethodReference, FieldReference> getCMRSetters();
 
   /**
    * Return the type of the EJB class for this entity bean
-   * 
-   * @return TypeReference
    */
   TypeReference getEJBClass();
 
   /**
    * Return true if the bean is container managed.
    * 
-   * @return true if bean is container manged.
+   * @return true if bean is container managed.
    */
   boolean isContainerManaged();
 
   /**
    * Return true if the bean is a container managed entity.
    * 
-   * @return true if bean is a container manged entity.
+   * @return true if bean is a container managed entity.
    */
   boolean isContainerManagedEntity();
 
@@ -121,8 +106,7 @@ public interface BeanMetaData {
   boolean isMessageDrivenBean();
 
   /**
-   * Return the Set of container created finder methods, as Method reference
-   * objects.
+   * Return the Set of container created finder methods, as Method reference objects.
    * 
    * @return Set of container created setter methods.
    */

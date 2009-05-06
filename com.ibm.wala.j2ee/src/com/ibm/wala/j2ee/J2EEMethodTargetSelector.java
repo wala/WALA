@@ -51,13 +51,9 @@ import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
- * 
  * Special bypass rules divined from an EJB deployment descriptor.
  * 
  * TODO: refactor this class using the delegation model
- * 
- * @author sfink
- * @author Julian Dolby (dolby@us.ibm.com)
  */
 public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeConstants, EJBConstants {
   static final boolean DEBUG = false;
@@ -94,8 +90,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
   private final IClassHierarchy cha;
 
   /**
-   * A cache of synthetic methods generated so far. Mapping from MethodReference ->
-   * SyntheticMethods
+   * A cache of synthetic methods generated so far. Mapping from MethodReference -> SyntheticMethods
    */
   private final Map<MethodReference, SyntheticMethod> map = HashMapFactory.make();
 
@@ -115,7 +110,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
   private final MethodTargetSelector parent;
 
   private final SSAInstructionFactory insts;
-  
+
   /**
    * A mapping for EJB entity contract method names
    * 
@@ -133,8 +128,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
   }
 
   /**
-   * A mapping from EJB entity contract method name to classes allocated by
-   * these methods.
+   * A mapping from EJB entity contract method name to classes allocated by these methods.
    */
   private static final HashMap<Atom, TypeReference> entityContractExceptionMap = HashMapFactory.make(5);
   static {
@@ -155,10 +149,8 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
   /**
    * Handle a call to an entity's remote or local interface
    * 
-   * @param m
-   *          a call to a remote or local interface
-   * @return a synthetic method which serves as a target implementation for a
-   *         call to m, or null if there's a problem
+   * @param m a call to a remote or local interface
+   * @return a synthetic method which serves as a target implementation for a call to m, or null if there's a problem
    */
   private SyntheticMethod hijackEntityInterface(MethodReference m) {
     if (isJavaLangObjectMethod(m))
@@ -190,8 +182,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       IMethod ejbMethod = cha.resolveMethod(MethodReference.findOrCreate(bean.getEJBClass(), m.getName(), m.getDescriptor()));
 
       if (Assertions.verifyAssertions) {
-        assert ejbMethod != null : "Could not find method " + bean.getEJBClass() + " " + m.getName() + " "
-        + m.getDescriptor();
+        assert ejbMethod != null : "Could not find method " + bean.getEJBClass() + " " + m.getName() + " " + m.getDescriptor();
       }
 
       MethodSummary summ = new MethodSummary(m);
@@ -248,8 +239,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
    * TODO: refactor extract common code with other hijack methods
    * 
    * @param m
-   * @return a Synthetic method representing the a container-implemented method
-   *         for the onMessage MDB entrypoint
+   * @return a Synthetic method representing the a container-implemented method for the onMessage MDB entrypoint
    */
   private SyntheticMethod hijackOnMessageEntrypoint(MethodReference m) {
 
@@ -376,10 +366,8 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
   /**
    * Handle a call to an entity's home or local home
    * 
-   * @param m
-   *          a call to a home or local home interface
-   * @return a synthetic method which serves as a target implementation for a
-   *         call to m
+   * @param m a call to a home or local home interface
+   * @return a synthetic method which serves as a target implementation for a call to m
    */
   private SyntheticMethod hijackHomeInterface(MethodReference m) {
     if (isJavaLangObjectMethod(m))
@@ -412,10 +400,8 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
   /**
    * Handle a call to a CMP or CMR getter or setter
    * 
-   * @param m
-   *          a call to a CMP or CMR getter of setter
-   * @return a synthetic method which serves as a target implementation for a
-   *         call to m
+   * @param m a call to a CMP or CMR getter of setter
+   * @return a synthetic method which serves as a target implementation for a call to m
    */
   private SyntheticMethod hijackCMPBeanMethods(MethodReference m) {
 
@@ -457,8 +443,8 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
   }
 
   /**
-   * If m is a special EJB-container generated method, return the IMethod that
-   * represents the modelled target of a call to m. Else, return null;
+   * If m is a special EJB-container generated method, return the IMethod that represents the modelled target of a call to m. Else,
+   * return null;
    */
   private SyntheticMethod methodReferenceIntercept(MethodReference m) {
     TypeReference type = m.getDeclaringClass();
@@ -498,8 +484,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
 
   /**
    * @param m
-   * @return a Synthetic method representing the a container-implemented method
-   *         for the EJB Entity contract
+   * @return a Synthetic method representing the a container-implemented method for the EJB Entity contract
    */
   private SyntheticMethod findOrCreateEntityContractMethod(MethodReference m) {
     if (DEBUG) {
@@ -538,8 +523,8 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       for (int i = 0; i < names.length; i++) {
         Atom name = names[i];
         MethodReference ref = makeEntityContractMethod(bean, m, ejbType, name);
-        CallSiteReference site = CallSiteReference.make(summ.getNextProgramCounter(), ref, ejbClass.isInterface() ? IInvokeInstruction.Dispatch.INTERFACE
-            : IInvokeInstruction.Dispatch.VIRTUAL);
+        CallSiteReference site = CallSiteReference.make(summ.getNextProgramCounter(), ref,
+            ejbClass.isInterface() ? IInvokeInstruction.Dispatch.INTERFACE : IInvokeInstruction.Dispatch.VIRTUAL);
         if (cha.resolveMethod(ejbClass, ref.getSelector()) == null)
           continue;
         int[] params = new int[summ.getNumberOfParameters()];
@@ -571,8 +556,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       }
 
       int ejbException = nextLocal++;
-      summ
-          .addStatement(insts.NewInstruction(ejbException, NewSiteReference.make(summ.getNextProgramCounter(), EJBExceptionClass)));
+      summ.addStatement(insts.NewInstruction(ejbException, NewSiteReference.make(summ.getNextProgramCounter(), EJBExceptionClass)));
       summ.addStatement(insts.ThrowInstruction(ejbException));
 
       S = new SummarizedMethod(m, summ, receiverClass);
@@ -582,14 +566,10 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
   }
 
   /**
-   * @param bean
-   *          metadata regarding the EJB
-   * @param ifaceMethod
-   *          name of a method called on an EJB interface
-   * @param ejbType
-   *          concrete type the method should dispatch to
-   * @param methodName
-   *          name of the bean method to dispatch to
+   * @param bean metadata regarding the EJB
+   * @param ifaceMethod name of a method called on an EJB interface
+   * @param ejbType concrete type the method should dispatch to
+   * @param methodName name of the bean method to dispatch to
    * @return a method reference representing the dispatch target
    */
   private MethodReference makeEntityContractMethod(BeanMetaData bean, MethodReference ifaceMethod, TypeReference ejbType,
@@ -681,7 +661,8 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       // call findByPrimaryKey
       int fr = nextLocal++;
       int ignoredExceptions = nextLocal++;
-      CallSiteReference fcsr = CallSiteReference.make(getNextProgramCounter(), finder.getReference(), IInvokeInstruction.Dispatch.INTERFACE);
+      CallSiteReference fcsr = CallSiteReference.make(getNextProgramCounter(), finder.getReference(),
+          IInvokeInstruction.Dispatch.INTERFACE);
       addStatement(insts.InvokeInstruction(fr, new int[] { localHomeAlloc, keyAlloc }, ignoredExceptions, fcsr));
 
       // return result, as set if appropriate
@@ -693,12 +674,14 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
         addStatement(n);
 
         int initIgnoredExceptions = nextLocal++;
-        CallSiteReference initRef = CallSiteReference.make(getNextProgramCounter(), hashSetInit, IInvokeInstruction.Dispatch.SPECIAL);
+        CallSiteReference initRef = CallSiteReference.make(getNextProgramCounter(), hashSetInit,
+            IInvokeInstruction.Dispatch.SPECIAL);
         addStatement(insts.InvokeInstruction(new int[] { setObj }, initIgnoredExceptions, initRef));
 
         int ignoredResult = nextLocal++;
         int moreIgnoredExceptions = nextLocal++;
-        CallSiteReference addRef = CallSiteReference.make(getNextProgramCounter(), addMethod, IInvokeInstruction.Dispatch.INTERFACE);
+        CallSiteReference addRef = CallSiteReference
+            .make(getNextProgramCounter(), addMethod, IInvokeInstruction.Dispatch.INTERFACE);
         SSAInvokeInstruction addCall = insts.InvokeInstruction(ignoredResult, new int[] { setObj, fr }, moreIgnoredExceptions,
             addRef);
         addStatement(addCall);
@@ -762,12 +745,14 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
         addStatement(allocSet);
 
         int initIgnoredExceptions = nextLocal++;
-        CallSiteReference initRef = CallSiteReference.make(getNextProgramCounter(), hashSetInit, IInvokeInstruction.Dispatch.SPECIAL);
+        CallSiteReference initRef = CallSiteReference.make(getNextProgramCounter(), hashSetInit,
+            IInvokeInstruction.Dispatch.SPECIAL);
         addStatement(insts.InvokeInstruction(new int[] { setObj }, initIgnoredExceptions, initRef));
 
         int ignoredResult = nextLocal++;
         int moreIgnoredExceptions = nextLocal++;
-        CallSiteReference addRef = CallSiteReference.make(getNextProgramCounter(), addMethod,IInvokeInstruction.Dispatch.INTERFACE);
+        CallSiteReference addRef = CallSiteReference
+            .make(getNextProgramCounter(), addMethod, IInvokeInstruction.Dispatch.INTERFACE);
         SSAInvokeInstruction addCall = insts.InvokeInstruction(ignoredResult, new int[] { setObj, 2 }, moreIgnoredExceptions,
             addRef);
         addStatement(addCall);
@@ -812,12 +797,14 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
         addStatement(allocSet);
 
         int initIgnoredExceptions = nextLocal++;
-        CallSiteReference initRef = CallSiteReference.make(getNextProgramCounter(), hashSetInit, IInvokeInstruction.Dispatch.SPECIAL);
+        CallSiteReference initRef = CallSiteReference.make(getNextProgramCounter(), hashSetInit,
+            IInvokeInstruction.Dispatch.SPECIAL);
         addStatement(insts.InvokeInstruction(new int[] { setObj }, initIgnoredExceptions, initRef));
 
         int ignoredResult = nextLocal++;
         int moreIgnoredExceptions = nextLocal++;
-        CallSiteReference addRef = CallSiteReference.make(getNextProgramCounter(), addMethod,IInvokeInstruction.Dispatch.INTERFACE);
+        CallSiteReference addRef = CallSiteReference
+            .make(getNextProgramCounter(), addMethod, IInvokeInstruction.Dispatch.INTERFACE);
         SSAInvokeInstruction addCall = insts.InvokeInstruction(ignoredResult, new int[] { setObj, 1 }, moreIgnoredExceptions,
             addRef);
         addStatement(addCall);
@@ -851,8 +838,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
    */
   private class HomeMethodSummary extends MethodSummary {
     /**
-     * @param method
-     *          the interface method summarized
+     * @param method the interface method summarized
      */
     public HomeMethodSummary(MethodReference method, BeanMetaData bean) {
       super(method);
@@ -926,12 +912,14 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
         addStatement(a3);
 
         int initIgnoredExceptions = nextLocal++;
-        CallSiteReference initRef = CallSiteReference.make(getNextProgramCounter(), hashSetInit, IInvokeInstruction.Dispatch.SPECIAL);
+        CallSiteReference initRef = CallSiteReference.make(getNextProgramCounter(), hashSetInit,
+            IInvokeInstruction.Dispatch.SPECIAL);
         addStatement(insts.InvokeInstruction(new int[] { result3 }, initIgnoredExceptions, initRef));
 
         int ignoredResult = nextLocal++;
         int ignoredExceptions = nextLocal++;
-        CallSiteReference addRef = CallSiteReference.make(getNextProgramCounter(), addMethod, IInvokeInstruction.Dispatch.INTERFACE);
+        CallSiteReference addRef = CallSiteReference
+            .make(getNextProgramCounter(), addMethod, IInvokeInstruction.Dispatch.INTERFACE);
         SSAInvokeInstruction addCall = insts.InvokeInstruction(ignoredResult, new int[] { result3, result2 }, ignoredExceptions,
             addRef);
         addStatement(addCall);
@@ -945,19 +933,22 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
         addStatement(a3);
 
         int initIgnoredExceptions = nextLocal++;
-        CallSiteReference initRef = CallSiteReference.make(getNextProgramCounter(), vectorInit, IInvokeInstruction.Dispatch.SPECIAL);
+        CallSiteReference initRef = CallSiteReference
+            .make(getNextProgramCounter(), vectorInit, IInvokeInstruction.Dispatch.SPECIAL);
         addStatement(insts.InvokeInstruction(new int[] { result3 }, initIgnoredExceptions, initRef));
 
         int ignoredResult = nextLocal++;
         int ignoredExceptions = nextLocal++;
-        CallSiteReference addRef = CallSiteReference.make(getNextProgramCounter(), addMethod, IInvokeInstruction.Dispatch.INTERFACE);
+        CallSiteReference addRef = CallSiteReference
+            .make(getNextProgramCounter(), addMethod, IInvokeInstruction.Dispatch.INTERFACE);
         SSAInvokeInstruction addCall = insts.InvokeInstruction(ignoredResult, new int[] { result3, result2 }, ignoredExceptions,
             addRef);
         addStatement(addCall);
 
         int result4 = nextLocal++;
         int moreIgnoredExceptions = nextLocal++;
-        CallSiteReference elementsRef = CallSiteReference.make(getNextProgramCounter(), elementsMethod, IInvokeInstruction.Dispatch.VIRTUAL);
+        CallSiteReference elementsRef = CallSiteReference.make(getNextProgramCounter(), elementsMethod,
+            IInvokeInstruction.Dispatch.VIRTUAL);
         SSAInvokeInstruction elementsCall = insts.InvokeInstruction(result4, new int[] { result3 }, moreIgnoredExceptions,
             elementsRef);
         addStatement(elementsCall);
@@ -1067,8 +1058,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
   /**
    * @param receiver
    * @param m
-   * @return a method reference based on m, but encoding the receiver as the
-   *         declared class ... or m is receiver is null
+   * @return a method reference based on m, but encoding the receiver as the declared class ... or m is receiver is null
    */
   private MethodReference specializeForReceiverType(IClass receiver, MethodReference m) {
     // create a MethodReference m which encodes the receiver type.
@@ -1087,12 +1077,9 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
   }
 
   /**
-   * @param N
-   *          governing node
-   * @param site
-   *          a call to something generic like EJBObject
-   * @return an estimate for the receiver class based on local type inference,
-   *         or null if type inference doesn't help
+   * @param N governing node
+   * @param site a call to something generic like EJBObject
+   * @return an estimate for the receiver class based on local type inference, or null if type inference doesn't help
    */
   private IClass getReceiverClassFromTypeInference(CGNode N, CallSiteReference site) {
     ReceiverTypeInference R = typeInference.findOrCreate(N);
@@ -1142,7 +1129,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
    * (non-Javadoc)
    * 
    * @see com.ibm.wala.ipa.callgraph.MethodTargetSelector#mightReturnSyntheticMethod(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.CallSiteReference)
+   * com.ibm.wala.classLoader.CallSiteReference)
    */
   public boolean mightReturnSyntheticMethod(CGNode caller, CallSiteReference site) {
     // TODO optimize this!

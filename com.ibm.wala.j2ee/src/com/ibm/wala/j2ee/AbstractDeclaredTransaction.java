@@ -15,23 +15,17 @@ import org.eclipse.jst.j2ee.ejb.MethodElement;
 import org.eclipse.jst.j2ee.ejb.MethodElementKind;
 import org.eclipse.jst.j2ee.ejb.TransactionAttributeType;
 
-import com.ibm.wala.annotations.NonNull;
 import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
- * Represents a declarative transaction attribute, either from a deployment
- * descriptor or synthetic
- * 
- * @author sfink
+ * Represents a declarative transaction attribute, either from a deployment descriptor or synthetic
  */
 public abstract class AbstractDeclaredTransaction implements Comparable<IDeclaredTransaction>, IDeclaredTransaction {
 
   /**
    * The governing entity bean.
    */
-  @NonNull
   private final EnterpriseBean bean;
 
   /**
@@ -50,11 +44,6 @@ public abstract class AbstractDeclaredTransaction implements Comparable<IDeclare
     this.transactionType = transactionType;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   public String toString() {
     StringBuffer result = new StringBuffer(bean.getName() + ":" + kindString() + getMethodReference());
     result.append("\n   ");
@@ -102,11 +91,6 @@ public abstract class AbstractDeclaredTransaction implements Comparable<IDeclare
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   public boolean equals(Object obj) {
     if (obj == null) {
       return false;
@@ -117,24 +101,12 @@ public abstract class AbstractDeclaredTransaction implements Comparable<IDeclare
     return (bean.equals(other.bean) && getMethodReference().equals(other.getMethodReference()) && kind == other.kind);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#hashCode()
-   */
   public int hashCode() {
     return bean.hashCode() * 93 + kind * 5 + getMethodReference().hashCode();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Comparable#compareTo(java.lang.Object)
-   */
   public int compareTo(IDeclaredTransaction o) {
-    if (Assertions.verifyAssertions) {
-      assert this.getClass().equals(o.getClass());
-    }
+    assert this.getClass().equals(o.getClass());
     String A = bean.toString() + kindString() + getMethodReference().toString();
     AbstractDeclaredTransaction other = (AbstractDeclaredTransaction) o;
     String B = other.bean.toString() + other.kindString() + other.getMethodReference().toString();

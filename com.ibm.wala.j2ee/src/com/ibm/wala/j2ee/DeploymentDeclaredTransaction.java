@@ -19,25 +19,20 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 
 /**
- *
- * Represents a declarative transaction attribute in a deployment
- * descriptor
- * 
- * @author sfink
+ * Represents a declarative transaction attribute in a deployment descriptor
  */
 public class DeploymentDeclaredTransaction extends AbstractDeclaredTransaction {
-  
+
   /**
    * The method whose call is declared to be a transaction
    */
   private final Method method;
-  
+
   /**
-   * The MethodElement that gave birth to this transaction
-   * declaration
+   * The MethodElement that gave birth to this transaction declaration
    */
   private final MethodElement methodElement;
-  
+
   /**
    * Reference to the governing class loader.
    */
@@ -46,8 +41,9 @@ public class DeploymentDeclaredTransaction extends AbstractDeclaredTransaction {
   /**
    * @param method
    */
-  public DeploymentDeclaredTransaction(EnterpriseBean B, Method method, MethodElement methodElement, ClassLoaderReference loader, int kind, int transactionType) {
-    super(B,kind,transactionType);
+  public DeploymentDeclaredTransaction(EnterpriseBean B, Method method, MethodElement methodElement, ClassLoaderReference loader,
+      int kind, int transactionType) {
+    super(B, kind, transactionType);
     this.method = method;
     this.methodElement = methodElement;
     this.loader = loader;
@@ -63,6 +59,5 @@ public class DeploymentDeclaredTransaction extends AbstractDeclaredTransaction {
   public MethodElement getMethodElement() {
     return methodElement;
   }
-
 
 }

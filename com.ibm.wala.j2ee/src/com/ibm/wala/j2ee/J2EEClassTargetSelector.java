@@ -24,9 +24,6 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * A class that selects concrete types for new statements.
- * 
- * @author Julian Dolby (dolby@us.ibm.com)
- * @author Stephen Fink
  */
 public class J2EEClassTargetSelector implements ClassTargetSelector {
 
@@ -50,14 +47,10 @@ public class J2EEClassTargetSelector implements ClassTargetSelector {
   private final BypassSyntheticClassLoader bypassLoader;
 
   /**
-   * @param parent
-   *          a target selector to delegate to if logic here fails
-   * @param metaData
-   *          information about the deployment descriptor
-   * @param cha
-   *          governing class hierarchy
-   * @param bypassLoader
-   *          class loader to deal with J2EE bypass logic
+   * @param parent a target selector to delegate to if logic here fails
+   * @param metaData information about the deployment descriptor
+   * @param cha governing class hierarchy
+   * @param bypassLoader class loader to deal with J2EE bypass logic
    */
   public J2EEClassTargetSelector(ClassTargetSelector parent, DeploymentMetaData metaData, IClassHierarchy cha,
       IClassLoader bypassLoader) {
@@ -70,13 +63,6 @@ public class J2EEClassTargetSelector implements ClassTargetSelector {
     IClass x = new J2EEContainerModel(metaData, cha);
     this.bypassLoader.registerClass(J2EEContainerModel.containerModelName, x);
   }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.detox.ipa.callgraph.ClassTargetSelector#getAllocatedTarget(com.ibm.detox.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.NewSiteReference)
-   */
 
   public IClass getAllocatedTarget(CGNode caller, NewSiteReference site) {
 

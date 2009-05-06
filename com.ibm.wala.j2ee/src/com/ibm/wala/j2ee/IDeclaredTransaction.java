@@ -6,7 +6,6 @@ import org.eclipse.jst.j2ee.ejb.MethodElement;
 import com.ibm.wala.types.MemberReference;
 
 /**
- * @author sfink
  */
 public interface IDeclaredTransaction extends Comparable<IDeclaredTransaction> {
 

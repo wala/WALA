@@ -19,8 +19,6 @@ import com.ibm.wala.util.strings.Atom;
 
 /**
  * Entrypoints for an EAR file.
- * 
- * @author sfink
  */
 public class J2EEEntrypoints implements Iterable<Entrypoint> {
 
@@ -33,15 +31,11 @@ public class J2EEEntrypoints implements Iterable<Entrypoint> {
   private final StrutsEntrypoints strutsEntrypoints;
 
   /**
-   * @param scope
-   *          representation of the analysis scope
-   * @param cha
-   *          governing class hierarchy
-   * @param useEjbEntrypoints
-   *          should the analysis assume external callers on the EJB interfaces?
+   * @param scope representation of the analysis scope
+   * @param cha governing class hierarchy
+   * @param useEjbEntrypoints should the analysis assume external callers on the EJB interfaces?
    */
-  public J2EEEntrypoints(J2EEAnalysisScope scope, DeploymentMetaData dmd, IClassHierarchy cha, 
-      boolean useEjbEntrypoints) {
+  public J2EEEntrypoints(J2EEAnalysisScope scope, DeploymentMetaData dmd, IClassHierarchy cha, boolean useEjbEntrypoints) {
     ServletEntrypoints servletEntrypoints = new ServletEntrypoints(scope, cha);
     J2EEClassTargetSelector classTargetSelector = new J2EEClassTargetSelector(null, dmd, cha, cha.getLoader(scope.getLoader(Atom
         .findOrCreateUnicodeAtom("Synthetic"))));
@@ -66,7 +60,6 @@ public class J2EEEntrypoints implements Iterable<Entrypoint> {
       strutsEntrypoints = null;
     }
   }
-
 
   public Iterator<Entrypoint> iterator() {
     return entrypoints.iterator();

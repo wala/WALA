@@ -45,11 +45,7 @@ import com.ibm.wala.util.strings.ImmutableByteArray;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
- * 
- * This class provides an enumeration of EJB methods as listed in EJB jar file
- * deployment descriptors
- * 
- * @author sfink
+ * This class provides an enumeration of EJB methods as listed in EJB jar file deployment descriptors
  */
 public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
   static final boolean DEBUG = false;
@@ -107,10 +103,9 @@ public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
   /**
    * Create the set of EJB entrypoints that are defined in an analysis scope
    * 
-   * @param scope
-   *          representation of the analysis scope.
+   * @param scope representation of the analysis scope.
    */
-  @SuppressWarnings({ "unchecked" })
+  @SuppressWarnings( { "unchecked" })
   public EJBEntrypoints(IClassHierarchy cha, J2EEAnalysisScope scope, DeploymentMetaData deployment, boolean justMDBs,
       J2EEClassTargetSelector classTargetSelector) {
     this.cha = cha;
@@ -155,14 +150,11 @@ public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
   }
 
   /**
-   * @param scope
-   *          analysis scope
-   * @param loader
-   *          application class loader
-   * @param archive
-   *          WCCM representation of EJB jar file.
+   * @param scope analysis scope
+   * @param loader application class loader
+   * @param archive WCCM representation of EJB jar file.
    */
-  @SuppressWarnings({ "unchecked" })
+  @SuppressWarnings( { "unchecked" })
   private void addEntrypointsForEJBJarFile(J2EEAnalysisScope scope, ClassLoaderReference loader, Archive archive) {
     // extract the deployment descriptor
     EJBJar DD = ((EJBJarFile) archive).getDeploymentDescriptor();
@@ -189,10 +181,6 @@ public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
     pruneEntrypointsByTransactions(archive, loader);
   }
 
-  /**
-   * @param b
-   * @param loader
-   */
   private void addMessageDestination(MessageDriven b, ClassLoaderReference loader) {
 
     TypeReference T = J2EEUtil.ejb2TypeReference(b, loader);
@@ -209,13 +197,11 @@ public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
   }
 
   /**
-   * Remove any entrypoints that are marked as MANDATORY transactions; we can't
-   * call these from the outside world without raising an exception.
+   * Remove any entrypoints that are marked as MANDATORY transactions; we can't call these from the outside world without raising an
+   * exception.
    * 
-   * TODO: this algorithm is inefficient; but it shouldn't matter, since this is
-   * a one-time cost on a small set, I hope. If this is a problem, represent the
-   * entrypoints as a Map from MethodReference -> Entrypoint, to allow constant
-   * time deletions.
+   * TODO: this algorithm is inefficient; but it shouldn't matter, since this is a one-time cost on a small set, I hope. If this is
+   * a problem, represent the entrypoints as a Map from MethodReference -> Entrypoint, to allow constant time deletions.
    */
   private void pruneEntrypointsByTransactions(Archive A, ClassLoaderReference loader) {
     Set<DeploymentDeclaredTransaction> S = TransactionUtil.createDeclaredTransactionEntries(A, loader);
@@ -238,11 +224,6 @@ public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
     entrypoints.removeAll(toRemove);
   }
 
-  /**
-   * @param b
-   * @param methods
-   * @param loader
-   */
   private void addRemoteMethods(EnterpriseBean b, Method[] methods, ClassLoaderReference loader) {
     TypeReference T = J2EEUtil.ejb2TypeReference(b, loader);
     BeanMetaData bean = deployment.getBeanMetaData(T);
@@ -251,11 +232,6 @@ public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
     addMethods(bean, remoteInterface, methods, loader);
   }
 
-  /**
-   * @param b
-   * @param methods
-   * @param loader
-   */
   private void addHomeMethods(EnterpriseBean b, Method[] methods, ClassLoaderReference loader) {
     TypeReference T = J2EEUtil.ejb2TypeReference(b, loader);
     BeanMetaData bean = deployment.getBeanMetaData(T);
@@ -263,15 +239,13 @@ public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
     addMethods(bean, remoteInterface, methods, loader);
   }
 
-  /**
-   * @param b
-   */
   private void addEJBLifecycleEntrypoints(EnterpriseBean b, ClassLoaderReference loader) {
     TypeReference type = J2EEUtil.ejb2TypeReference(b, loader);
 
-    Iterator<Map.Entry<Atom, ImmutableByteArray>> i = b.isSession() ? sessionBeanMethodNames.entrySet().iterator() : entityBeanMethodNames.entrySet().iterator();
+    Iterator<Map.Entry<Atom, ImmutableByteArray>> i = b.isSession() ? sessionBeanMethodNames.entrySet().iterator()
+        : entityBeanMethodNames.entrySet().iterator();
     while (i.hasNext()) {
-      Map.Entry<Atom, ImmutableByteArray> entry =  i.next();
+      Map.Entry<Atom, ImmutableByteArray> entry = i.next();
       Atom name = (Atom) entry.getKey();
       ImmutableByteArray sig = (ImmutableByteArray) entry.getValue();
       Descriptor D = Descriptor.findOrCreate(sig);
@@ -292,11 +266,7 @@ public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
   /**
    * Add some EJB methods to the entrypoint set
    * 
-   * @param bean
-   * @param interfaceType
-   * @param methods
-   *          array of Method from the bean
-   * @param loader
+   * @param methods array of Method from the bean
    */
   private void addMethods(final BeanMetaData bean, TypeReference interfaceType, Method[] methods, ClassLoaderReference loader) {
     for (int i = 0; i < methods.length; i++) {
@@ -334,9 +304,6 @@ public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
     return entrypoints.iterator();
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   public String toString() {
     String result = "";
     for (Iterator<Entrypoint> i = entrypoints.iterator(); i.hasNext();) {
