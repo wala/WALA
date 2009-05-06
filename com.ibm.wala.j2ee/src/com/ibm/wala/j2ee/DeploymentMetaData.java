@@ -24,28 +24,20 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 
 /**
- *
  * Interface to data from deployment descriptors.
- * 
- * @author sfink
  */
 public interface DeploymentMetaData {
 
   /**
-   * Return the BeanMetaData describing a particular bean,
-   * or null if the type does not correspond to an EJB.
-   * @param type TypeReference 
+   * Return the BeanMetaData describing a particular bean, or null if the type does not correspond to an EJB.
    */
   BeanMetaData getBeanMetaData(TypeReference type);
 
-  /**
-   * Method getAllCMPFields.
-   * @return Set
-   */
   Set<FieldReference> getAllCMPFields();
 
   /**
    * Return a Set of the container managed relationship (cmr) fields.
+   * 
    * @return Set of container managed relationship fields.
    */
   Set<Object> getAllCMRFields();
@@ -74,15 +66,14 @@ public interface DeploymentMetaData {
    * Is a class an EJB interface (any flavor)?
    */
   boolean isEJBInterface(TypeReference t);
-  
+
   /**
    * Is type an MDB?
    */
   boolean isMessageDriven(TypeReference type);
 
   /**
-   * Return the entity bean implementation corresponding to 
-   * the interface t
+   * Return the entity bean implementation corresponding to the interface t
    * 
    * @param t the home or remote interface for a bean
    * @return the BeanMetaData, or null if not found.
@@ -96,52 +87,26 @@ public interface DeploymentMetaData {
    */
   boolean isContainerManaged(TypeReference t);
 
-  /**
-   * Method getCMPType.
-   * @param typeReference
-   * @return TypeReference
-   */
   TypeReference getCMPType(TypeReference typeReference);
 
-  /**
-   * Method isCMPGetter.
-   * @param mr
-   * @return boolean
-   */
   boolean isCMPGetter(MemberReference mr);
 
-  /**
-   * Method getCMPField.
-   * @param mr
-   * @return the CMP Field the method gets or sets.
-   */
   FieldReference getCMPField(MemberReference mr);
 
-  /**
-   * Method isCMPSetter.
-   * @param mr
-   * @return boolean
-   */
   boolean isCMPSetter(MemberReference mr);
 
   /**
    * Return the Set of MethodReferences corresponding to EJB finder methods.
-   * @return Collection
    */
   Collection<MethodReference> getAllFinders();
 
   /**
-   * Return the Set of methods corresponding to EJB CMR getter methods,
-   * as a mapping from MethodReference -> FieldReference
-   * @return Collection
+   * Return the Set of methods corresponding to EJB CMR getter methods, as a mapping from MethodReference -> FieldReference
    */
   Map<MethodReference, FieldReference> getAllCMRGetters();
 
   /**
-   * Given a field that is populated by a CMR, return the descriptor
-   * of the Bean type that the field will point to.
-   * @param field
-   * @return BeanMetaData
+   * Given a field that is populated by a CMR, return the descriptor of the Bean type that the field will point to.
    */
   BeanMetaData getCMRBean(FieldReference field);
 
@@ -152,7 +117,6 @@ public interface DeploymentMetaData {
   TypeReference getFinderBeanType(MemberReference method);
 
   /**
-   * @param ref
    * @return true iff ref is finder method
    */
   boolean isFinder(MemberReference ref);
@@ -173,13 +137,11 @@ public interface DeploymentMetaData {
   Iterator<BeanMetaData> iterateMDBs();
 
   /**
-   * @param method
    * @return true iff method is a getter for a CMR.
    */
   boolean isCMRGetter(MemberReference method);
 
   /**
-   * @param method
    * @return true iff method is a setter for a CMR.
    */
   boolean isCMRSetter(MemberReference method);
@@ -192,9 +154,8 @@ public interface DeploymentMetaData {
 
   /**
    * @param field a field that represents a CMR
-   * @return the governing EJBRelationshipRole 
+   * @return the governing EJBRelationshipRole
    */
   EJBRelationshipRole getCMRRole(FieldReference field);
-
 
 }

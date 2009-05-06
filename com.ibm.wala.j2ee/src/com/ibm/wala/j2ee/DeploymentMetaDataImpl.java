@@ -38,65 +38,57 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
- * A simple implementation of the DeploymentMetaData interface
- * 
- * @author sfink
+ * A simple implementation of the {@link DeploymentMetaData} interface
  */
 public class DeploymentMetaDataImpl implements DeploymentMetaData {
 
   static final boolean DEBUG = false;
+
   /**
-   * A mapping from type reference for a bean to the BeanMetaData object that
-   * describes the bean.
+   * A mapping from type reference for a bean to the BeanMetaData object that describes the bean.
    */
   private HashMap<TypeReference, BeanMetaData> entities = HashMapFactory.make();
 
   /**
-   * A mapping from type reference for a bean to the BeanMetaData object that
-   * describes the bean.
+   * A mapping from type reference for a bean to the BeanMetaData object that describes the bean.
    */
   private HashMap<TypeReference, BeanMetaData> sessions = HashMapFactory.make();
 
   /**
-   * A mapping from type reference for a bean to the BeanMetaData object that
-   * describes the bean.
+   * A mapping from type reference for a bean to the BeanMetaData object that describes the bean.
    */
   private HashMap<TypeReference, BeanMetaData> MDBs = HashMapFactory.make();
 
   /**
-   * A mapping from type reference for a bean to the BeanMetaData object that
-   * describes the bean.
+   * A mapping from type reference for a bean to the BeanMetaData object that describes the bean.
    */
   private HashMap<TypeReference, BeanMetaDataImpl> allBeans = HashMapFactory.make();
 
   /**
-   * A mapping from type reference for a remote interface to the bean that
-   * implements it.
+   * A mapping from type reference for a remote interface to the bean that implements it.
    */
   private HashMap<TypeReference, BeanMetaData> remote2Bean = HashMapFactory.make();
 
   /**
-   * A mapping from type reference for a home interface to the bean that
-   * implements it.
+   * A mapping from type reference for a home interface to the bean that implements it.
    */
   private HashMap<TypeReference, BeanMetaData> home2Bean = HashMapFactory.make();
+
   /**
-   * A mapping from type reference for a local interface to the bean that
-   * implements it.
+   * A mapping from type reference for a local interface to the bean that implements it.
    */
   private HashMap<TypeReference, BeanMetaData> local2Bean = HashMapFactory.make();
+
   /**
-   * A mapping from type reference for a local home interface to the bean that
-   * implements it.
+   * A mapping from type reference for a local home interface to the bean that implements it.
    */
   private HashMap<TypeReference, BeanMetaData> localHome2Bean = HashMapFactory.make();
 
   /**
-   * All container-generated getters and setters; a mapping from MethodReference ->
-   * FieldReference
+   * All container-generated getters and setters; a mapping from MethodReference -> FieldReference
    */
   private HashMap<Object, FieldReference> getters = HashMapFactory.make();
+
   private HashMap<Object, FieldReference> setters = HashMapFactory.make();
 
   /**
@@ -130,12 +122,9 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
   private HashMap<FieldReference, FieldReference> oppositeFields = HashMapFactory.make();
 
   /**
-   * Method DeploymentMetaDataImpl.
-   * 
-   * @param scope
-   *          the analysis scope which defines the EJB jar files to analyze
+   * @param scope the analysis scope which defines the EJB jar files to analyze
    */
-  @SuppressWarnings({ "unchecked" })
+  @SuppressWarnings( { "unchecked" })
   public DeploymentMetaDataImpl(AnalysisScope scope) {
     ClassLoaderReference loader = scope.getApplicationLoader();
 
@@ -157,12 +146,10 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
   }
 
   /**
-   * @param loader
-   *          governing class loader for the application
-   * @param archive
-   *          WCCM object which holds the ejb jarfile
+   * @param loader governing class loader for the application
+   * @param archive WCCM object which holds the ejb jarfile
    */
-  @SuppressWarnings({ "unchecked" })
+  @SuppressWarnings( { "unchecked" })
   private void processEJBJarFile(ClassLoaderReference loader, EJBJarFile archive) {
     // extract the deployment descriptor
     EJBJar DD = null;
@@ -212,18 +199,13 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
   }
 
   /**
-   * Method mapEJBInterface.
-   * 
-   * @param loader
-   *          the interface's defining class loader
-   * @param bmd
-   *          data about the bean
-   * @param iName
-   *          name of the interface
-   * @param iMap
-   *          mapping from TypeReferece -> BeanMetaData
+   * @param loader the interface's defining class loader
+   * @param bmd data about the bean
+   * @param iName name of the interface
+   * @param iMap mapping from TypeReferece -> BeanMetaData
    */
-  private void mapEJBInterface(ClassLoaderReference loader, BeanMetaData bmd, String iName, HashMap<TypeReference, BeanMetaData> iMap) {
+  private void mapEJBInterface(ClassLoaderReference loader, BeanMetaData bmd, String iName,
+      HashMap<TypeReference, BeanMetaData> iMap) {
 
     if (iName == null)
       return;
@@ -243,7 +225,6 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
     iMap.put(iFace, bmd);
   }
 
-
   public BeanMetaData getBeanMetaData(TypeReference type) {
     return allBeans.get(type);
   }
@@ -254,7 +235,7 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
   public Set<FieldReference> getAllCMPFields() {
     HashSet<FieldReference> result = HashSetFactory.make();
     for (Iterator<Map.Entry<TypeReference, BeanMetaData>> i = entities.entrySet().iterator(); i.hasNext();) {
-      Map.Entry<TypeReference,BeanMetaData> entry = (Map.Entry<TypeReference,BeanMetaData>) i.next();
+      Map.Entry<TypeReference, BeanMetaData> entry = (Map.Entry<TypeReference, BeanMetaData>) i.next();
       BeanMetaData bean = (BeanMetaData) entry.getValue();
       result.addAll(bean.getCMPFields());
     }
@@ -270,7 +251,7 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
   public Set<Object> getAllCMRFields() {
     HashSet<Object> result = HashSetFactory.make();
     for (Iterator<Map.Entry<TypeReference, BeanMetaData>> i = entities.entrySet().iterator(); i.hasNext();) {
-      Map.Entry<TypeReference,BeanMetaData> entry = (Map.Entry<TypeReference,BeanMetaData>) i.next();
+      Map.Entry<TypeReference, BeanMetaData> entry = (Map.Entry<TypeReference, BeanMetaData>) i.next();
       BeanMetaData bean = (BeanMetaData) entry.getValue();
       result.addAll(bean.getCMRFields());
     }
@@ -467,8 +448,6 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.j2ee.DeploymentMetaData#getFinderBeanType(com.ibm.wala.classLoader.MethodReference)
    */
   public TypeReference getFinderBeanType(MemberReference method) {
@@ -480,8 +459,6 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.j2ee.DeploymentMetaData#isFinder(com.ibm.wala.classLoader.MethodReference)
    */
   public boolean isFinder(MemberReference ref) {
@@ -493,8 +470,6 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.j2ee.DeploymentMetaData#iterateEntities()
    */
   public Iterator<BeanMetaData> iterateEntities() {
@@ -502,8 +477,6 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.j2ee.DeploymentMetaData#iterateSessions()
    */
   public Iterator<BeanMetaData> iterateSessions() {
@@ -511,8 +484,6 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.j2ee.DeploymentMetaData#iterateSessions()
    */
   public Iterator<BeanMetaData> iterateMDBs() {
@@ -520,8 +491,6 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.j2ee.DeploymentMetaData#isCMRGetter(com.ibm.wala.classLoader.MethodReference)
    */
   public boolean isCMRGetter(MemberReference method) {
@@ -529,8 +498,6 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.j2ee.DeploymentMetaData#isCMRGetter(com.ibm.wala.classLoader.MethodReference)
    */
   public boolean isCMRSetter(MemberReference method) {
@@ -538,8 +505,6 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.j2ee.DeploymentMetaData#getOppositeField(com.ibm.wala.classLoader.FieldReference)
    */
   public FieldReference getOppositeField(FieldReference field) {
@@ -547,15 +512,13 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.j2ee.DeploymentMetaData#getCMRRole(com.ibm.wala.classLoader.FieldReference)
    */
   public EJBRelationshipRole getCMRRole(FieldReference field) {
     return cmrField2Role.get(field);
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.j2ee.DeploymentMetaData#isMessageDriven(com.ibm.wala.classLoader.TypeReference)
    */
   public boolean isMessageDriven(TypeReference type) {
