@@ -42,23 +42,25 @@ import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.StringStuff;
 
 /**
- *
  * Miscellaneous utilities for J2EE processing
- * 
- * @author sfink
  */
 public class J2EEUtil {
 
-  public static final TypeReference EJB_HOME =
-    TypeReference.findOrCreateClass(ClassLoaderReference.Extension, "javax/ejb", "EJBHome");
-  public static final TypeReference EJB_LOCAL_HOME =
-    TypeReference.findOrCreateClass(ClassLoaderReference.Extension, "javax/ejb", "EJBLocalHome");
-  public static final TypeReference EJB_OBJECT =
-    TypeReference.findOrCreateClass(ClassLoaderReference.Extension, "javax/ejb", "EJBObject");
-  public static final TypeReference EJB_LOCAL_OBJECT =
-    TypeReference.findOrCreateClass(ClassLoaderReference.Extension, "javax/ejb", "EJBLocalObject");
+  public static final TypeReference EJB_HOME = TypeReference.findOrCreateClass(ClassLoaderReference.Extension, "javax/ejb",
+      "EJBHome");
+
+  public static final TypeReference EJB_LOCAL_HOME = TypeReference.findOrCreateClass(ClassLoaderReference.Extension, "javax/ejb",
+      "EJBLocalHome");
+
+  public static final TypeReference EJB_OBJECT = TypeReference.findOrCreateClass(ClassLoaderReference.Extension, "javax/ejb",
+      "EJBObject");
+
+  public static final TypeReference EJB_LOCAL_OBJECT = TypeReference.findOrCreateClass(ClassLoaderReference.Extension, "javax/ejb",
+      "EJBLocalObject");
+
   /**
    * Get the WCCM archive representing a particular module
+   * 
    * @param M the module to analyze
    * @return Archive, or null if no WCCM conversion is possible
    */
@@ -86,9 +88,9 @@ public class J2EEUtil {
 
   /**
    * Create a ClassReference to represent an EnterpriseBean
+   * 
    * @param b the bean in question
    * @param loader reference to the class loader that loads the bean
-   * @return ClassReference
    */
   public static TypeReference ejb2TypeReference(EnterpriseBean b, ClassLoaderReference loader) {
     String klass = b.getEjbClass().getQualifiedNameForReflection();
@@ -96,8 +98,10 @@ public class J2EEUtil {
     TypeReference c = TypeReference.findOrCreate(loader, TypeName.string2TypeName(klass));
     return c;
   }
+
   /**
    * Create a method reference from a finder
+   * 
    * @param method etools method representation
    * @return MethodReference that represents the method.
    */
@@ -114,7 +118,7 @@ public class J2EEUtil {
   }
 
   /**
-   * @param loader a governing class loader refernce
+   * @param loader a governing class loader reference
    * @param iName name of an interface
    * @return corresponding TypeReference
    */
@@ -126,23 +130,23 @@ public class J2EEUtil {
     TypeReference iFace = TypeReference.findOrCreate(loader, TypeName.string2TypeName(iName));
     return iFace;
   }
+
   /**
-   * Build up a string representing the method's signature.
-   * Returns a string describing this Method.  The string is formatted as the method name, 
-   * followed by a parenthesized, comma-separated list of the method's formal parameter types, followed by
-   * the return type.
-   *
-   * This implementation clone-and-owned from com.ibm.etools.java.impl.MethodImpl.getSignature() 
+   * Build up a string representing the method's signature. Returns a string describing this Method. The string is formatted as the
+   * method name, followed by a parenthesized, comma-separated list of the method's formal parameter types, followed by the return
+   * type.
+   * 
+   * This implementation clone-and-owned from com.ibm.etools.java.impl.MethodImpl.getSignature()
    * 
    * TODO: Move me elsewhere.
    * 
    * For example:
    * 
-   *     (Ljava/lang/Object;)Z
+   * (Ljava/lang/Object;)Z
    * 
    * @param method the Method in question
    * @return String a String representation of the signature.
-   * @throws IllegalArgumentException  if method is null
+   * @throws IllegalArgumentException if method is null
    */
   @SuppressWarnings("unchecked")
   public static String buildDescriptor(Method method) {
@@ -158,7 +162,7 @@ public class J2EEUtil {
     for (int j = 0; j < parmSize; j++) {
       JavaParameter param = (JavaParameter) params.get(j);
       if (param.isReturn())
-        continue; //  listParameters() includes return type in array 
+        continue; // listParameters() includes return type in array
       String s = param.getJavaType().getQualifiedName();
       sb.append(StringStuff.deployment2CanonicalDescriptorTypeString(s));
     }
@@ -176,11 +180,10 @@ public class J2EEUtil {
 
     return sb.toString();
   }
-  
+
   /**
-   * We define the "logical entrypoints" for J2EE to be the normal call graph
-   * entrypoints; except for servlet entrypoints ... which are treated a little
-   * specially.
+   * We define the "logical entrypoints" for J2EE to be the normal call graph entrypoints; except for servlet entrypoints ... which
+   * are treated a little specially.
    * 
    * @param cg governing call graph
    * @return Set of nodes which should be considered "entrypoints" for this analysis.
@@ -202,17 +205,14 @@ public class J2EEUtil {
   }
 
   private static boolean isServletFrameworkType(TypeReference t) {
-    return t.equals(ServletEntrypoints.Servlet)
-      || t.equals(ServletEntrypoints.HttpServlet)
-      || t.equals(ServletEntrypoints.HttpJspBase);
+    return t.equals(ServletEntrypoints.Servlet) || t.equals(ServletEntrypoints.HttpServlet)
+        || t.equals(ServletEntrypoints.HttpJspBase);
   }
 
   /**
-   * @param n a call graph node declared on javax.servlet.Servlet or
-   * javax.servlet.HttpServlet
-   * @return the set of nodes S s.t. for m in S, m is reachable from n, m is not
-   * a method on Servlet or HttpServlet, and there is a predecessor p of m s.t.
-   * p is a method on Servlet or HttpServlet.
+   * @param n a call graph node declared on javax.servlet.Servlet or javax.servlet.HttpServlet
+   * @return the set of nodes S s.t. for m in S, m is reachable from n, m is not a method on Servlet or HttpServlet, and there is a
+   *         predecessor p of m s.t. p is a method on Servlet or HttpServlet.
    */
   public static Collection<CGNode> servletFrontier(CallGraph cg, CGNode n, Set<CGNode> seen) {
     HashSet<CGNode> result = HashSetFactory.make();

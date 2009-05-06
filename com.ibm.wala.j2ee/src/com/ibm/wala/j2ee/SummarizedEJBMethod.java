@@ -16,7 +16,6 @@ import com.ibm.wala.ipa.summaries.SummarizedMethod;
 import com.ibm.wala.types.MethodReference;
 
 /**
- * @author sfink
  */
 public class SummarizedEJBMethod extends SummarizedMethod {
 

@@ -34,37 +34,42 @@ import com.ibm.wala.util.strings.ImmutableByteArray;
 import com.ibm.wala.util.strings.UTF8Convert;
 
 /**
- * 
- * This class provides an iterator of entrypoints that are implementations of
- * servlet methods.
- * 
- * @author sfink
+ * This class provides an iterator of entrypoints that are implementations of servlet methods.
  */
 public class ServletEntrypoints implements Iterable<Entrypoint>, EJBConstants {
 
   static final boolean DEBUG = false;
-  
+
   public final static Atom doFilterName = Atom.findOrCreateUnicodeAtom("doFilter");
-  private final static Descriptor doFilterDesc = Descriptor.findOrCreateUTF8("(Ljavax/servlet/ServletRequest;Ljavax/servlet/ServletResponse;Ljavax/servlet/FilterChain;)V");
+
+  private final static Descriptor doFilterDesc = Descriptor
+      .findOrCreateUTF8("(Ljavax/servlet/ServletRequest;Ljavax/servlet/ServletResponse;Ljavax/servlet/FilterChain;)V");
 
   private final static Atom destroyName = Atom.findOrCreateUnicodeAtom("destroy");
+
   private final static Descriptor destroyDesc = Descriptor.findOrCreateUTF8("()V");
 
   private final static Atom getServletConfigName = Atom.findOrCreateUnicodeAtom("getServletConfig");
+
   private final static Descriptor getServletConfigDesc = Descriptor.findOrCreateUTF8("()Ljavax/servlet/ServletConfig;");
 
   private final static Atom getServletInfoName = Atom.findOrCreateUnicodeAtom("getServletInfo");
+
   private final static Descriptor getServletInfoDesc = Descriptor.findOrCreateUTF8("()Ljava/lang/String;");
 
   private final static Atom initName = Atom.findOrCreateUnicodeAtom("init");
+
   private final static Descriptor initDesc = Descriptor.findOrCreateUTF8("(Ljavax/servlet/ServletConfig;)V");
 
   public final static Atom serviceName = Atom.findOrCreateUnicodeAtom("service");
+
   private final static byte[] serviceDescAtom = UTF8Convert
       .toUTF8("(Ljavax/servlet/ServletRequest;Ljavax/servlet/ServletResponse;)V");
+
   private final static Descriptor serviceDesc = Descriptor.findOrCreate(new ImmutableByteArray(serviceDescAtom));
 
   public final static Atom finalizeName = Atom.findOrCreateUnicodeAtom("finalize");
+
   private final static Descriptor finalizeDesc = Descriptor.findOrCreateUTF8("()V");
 
   private final static Atom[] servletMethodNames = { destroyName, getServletConfigName, getServletInfoName, initName, serviceName,
@@ -72,65 +77,79 @@ public class ServletEntrypoints implements Iterable<Entrypoint>, EJBConstants {
 
   private final static Descriptor[] servletMethodDescs = { destroyDesc, getServletConfigDesc, getServletInfoDesc, initDesc,
       serviceDesc, finalizeDesc };
-  
+
   private final static Atom[] servletFilterMethodNames = { doFilterName };
 
-private final static Descriptor[] servletFilterMethodDescs = { doFilterDesc };
+  private final static Descriptor[] servletFilterMethodDescs = { doFilterDesc };
 
   private final static TypeName servletName = TypeName.string2TypeName("Ljavax/servlet/Servlet");
+
   public final static TypeReference Servlet = TypeReference.findOrCreate(ClassLoaderReference.Extension, servletName);
-  
+
   private final static TypeName servletFilterName = TypeName.string2TypeName("Ljavax/servlet/Filter");
+
   public final static TypeReference ServletFilter = TypeReference.findOrCreate(ClassLoaderReference.Extension, servletFilterName);
 
   private final static TypeName httpServletName = TypeName.string2TypeName("Ljavax/servlet/http/HttpServlet");
+
   public final static TypeReference HttpServlet = TypeReference.findOrCreate(ClassLoaderReference.Extension, httpServletName);
 
   private final static TypeName httpJspBaseName = TypeName.string2TypeName("Lcom/ibm/ws/webcontainer/jsp/runtime/HttpJspBase");
+
   public final static TypeReference HttpJspBase = TypeReference.findOrCreate(ClassLoaderReference.Extension, httpJspBaseName);
 
   final static TypeName servletRequest = TypeName.string2TypeName("Ljavax/servlet/ServletRequest");
+
   public final static TypeReference ServletRequest = TypeReference.findOrCreate(ClassLoaderReference.Extension, servletRequest);
 
   public final static TypeName servletResponse = TypeName.string2TypeName("Ljavax/servlet/ServletResponse");
+
   public final static TypeReference ServletResponse = TypeReference.findOrCreate(ClassLoaderReference.Extension, servletResponse);
 
   final static TypeName httpServletRequest = TypeName.string2TypeName("Ljavax/servlet/http/HttpServletRequest");
+
   public final static TypeReference HttpServletRequest = TypeReference.findOrCreate(ClassLoaderReference.Extension, servletRequest);
 
   public final static TypeName httpServletResponse = TypeName.string2TypeName("Ljavax/servlet/http/HttpServletResponse");
+
   public final static TypeReference HttpServletResponse = TypeReference.findOrCreate(ClassLoaderReference.Extension,
       servletResponse);
 
   private final static TypeName servletContext = TypeName.string2TypeName("Ljavax/servlet/ServletContext");
+
   public final static TypeReference ServletContext = TypeReference.findOrCreate(ClassLoaderReference.Extension, servletContext);
 
   private final static TypeName servletConfig = TypeName.string2TypeName("Ljavax/servlet/ServletConfig");
+
   public final static TypeReference ServletConfig = TypeReference.findOrCreate(ClassLoaderReference.Extension, servletConfig);
 
   private final static TypeName walaHttpServletRequest = TypeName
       .string2TypeName("Lcom/ibm/wala/model/javax/servlet/http/HttpServletRequest");
+
   public final static TypeReference WalaHttpServletRequest = TypeReference.findOrCreate(ClassLoaderReference.Extension,
       walaHttpServletRequest);
 
   private final static TypeName walaHttpServletResponse = TypeName
       .string2TypeName("Lcom/ibm/wala/model/javax/servlet/http/HttpServletResponse");
+
   public final static TypeReference WalaHttpServletResponse = TypeReference.findOrCreate(ClassLoaderReference.Extension,
       walaHttpServletResponse);
 
   private final static TypeName walaServletContextModel = TypeName
       .string2TypeName("Lcom/ibm/wala/model/javax/servlet/ServletContext");
+
   public final static TypeReference WalaServletContextModel = TypeReference.findOrCreate(ClassLoaderReference.Extension,
       walaServletContextModel);
 
   private final static TypeName walaServletConfigModel = TypeName
       .string2TypeName("Lcom/ibm/wala/model/javax/servlet/ServletConfig");
+
   public final static TypeReference WalaServletConfigModel = TypeReference.findOrCreate(ClassLoaderReference.Extension,
       walaServletConfigModel);
 
   private final static TypeName actionServlet = TypeName.string2TypeName("Lorg/apache/struts/action/ActionServlet");
-  
-  public final static MethodReference servletInit = MethodReference.findOrCreate(Servlet,initName,initDesc);
+
+  public final static MethodReference servletInit = MethodReference.findOrCreate(Servlet, initName, initDesc);
 
   private Set<Entrypoint> entrypoints = HashSetFactory.make();
 
@@ -140,8 +159,7 @@ private final static Descriptor[] servletFilterMethodDescs = { doFilterDesc };
   private Set<IClass> servlets = HashSetFactory.make();
 
   /**
-   * Mapping of TypeName -> TypeReference; this map controls selection of
-   * concrete types for parameters to some servlet methods.
+   * Mapping of TypeName -> TypeReference; this map controls selection of concrete types for parameters to some servlet methods.
    */
   private final static HashMap<TypeName, TypeReference> concreteParameterMap = HashMapFactory.make(5);
   static {
@@ -152,18 +170,16 @@ private final static Descriptor[] servletFilterMethodDescs = { doFilterDesc };
     concreteParameterMap.put(servletContext, WalaServletContextModel);
     concreteParameterMap.put(servletConfig, WalaServletConfigModel);
   }
-  
+
   private final AnalysisScope scope;
-  
+
   private final IClassHierarchy cha;
-  
+
   private boolean isInitialized;
 
   /**
-   * @param scope
-   *          scope of analysis
-   * @param cha
-   *          loaded class hierarchy
+   * @param scope scope of analysis
+   * @param cha loaded class hierarchy
    */
   public ServletEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
     this.scope = scope;
@@ -177,7 +193,7 @@ private final static Descriptor[] servletFilterMethodDescs = { doFilterDesc };
     isInitialized = true;
     TypeReference actionServletType = TypeReference.findOrCreate(scope.getApplicationLoader(), actionServlet);
     IClass actionServletClass = cha.lookupClass(actionServletType);
-    
+
     IClass servlet = cha.lookupClass(Servlet);
     IClass servletFilter = cha.lookupClass(ServletFilter);
     assert servlet != null;
@@ -197,10 +213,10 @@ private final static Descriptor[] servletFilterMethodDescs = { doFilterDesc };
             continue;
           }
         }
-        if (cha.implementsInterface(klass, servlet) ) {
+        if (cha.implementsInterface(klass, servlet)) {
           servlets.add(klass);
           final TypeReference type = klass.getReference();
-          
+
           for (int i = 0; i < servletMethodNames.length; i++) {
             Atom name = servletMethodNames[i];
             Descriptor desc = servletMethodDescs[i];
@@ -208,7 +224,7 @@ private final static Descriptor[] servletFilterMethodDescs = { doFilterDesc };
             IMethod m = cha.resolveMethod(M);
             if (cha.resolveMethod(M) != null) {
               entrypoints.add(new DefaultEntrypoint(m, cha) {
-  
+
                 /**
                  * Assume all ServletRequest and ServletResponse are HTTP flavor.
                  */
@@ -234,10 +250,10 @@ private final static Descriptor[] servletFilterMethodDescs = { doFilterDesc };
             }
           }
         }
-        if (cha.implementsInterface(klass, servletFilter) ) {
+        if (cha.implementsInterface(klass, servletFilter)) {
           servlets.add(klass);
           final TypeReference type = klass.getReference();
-          
+
           for (int i = 0; i < servletFilterMethodNames.length; i++) {
             Atom name = servletFilterMethodNames[i];
             Descriptor desc = servletFilterMethodDescs[i];
@@ -245,7 +261,7 @@ private final static Descriptor[] servletFilterMethodDescs = { doFilterDesc };
             IMethod m = cha.resolveMethod(M);
             if (cha.resolveMethod(M) != null) {
               entrypoints.add(new DefaultEntrypoint(m, cha) {
-  
+
                 /**
                  * Assume all ServletRequest and ServletResponse are HTTP flavor.
                  */
@@ -303,7 +319,7 @@ private final static Descriptor[] servletFilterMethodDescs = { doFilterDesc };
     }
     return result.toString();
   }
-  
+
   /**
    * return the concrete type to use for a parameter to a servlet with declared type n.
    */
@@ -316,7 +332,7 @@ private final static Descriptor[] servletFilterMethodDescs = { doFilterDesc };
     IClassHierarchy cha = klass.getClassHierarchy();
     TypeReference actionServletType = TypeReference.findOrCreate(ClassLoaderReference.Application, actionServlet);
     IClass actionServletClass = cha.lookupClass(actionServletType);
-    
+
     IClass servlet = cha.lookupClass(Servlet);
     IClass servletFilter = cha.lookupClass(ServletFilter);
     if (servlet == null) {

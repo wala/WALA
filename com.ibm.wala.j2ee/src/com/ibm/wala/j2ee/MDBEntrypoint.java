@@ -24,7 +24,7 @@ class MDBEntrypoint extends EJBLifecycleEntrypoint {
     }
   }
   
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.ipa.callgraph.Entrypoint#getParameterTypes(int)
    */
   public TypeReference[] getParameterTypes(int i) {

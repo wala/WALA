@@ -13,10 +13,7 @@ package com.ibm.wala.j2ee;
 import com.ibm.wala.util.warnings.Warning;
 
 /**
- *
  * A warning for when we can't load some reference
- * 
- * @author sfink
  */
 public class LoadFailure extends Warning {
 

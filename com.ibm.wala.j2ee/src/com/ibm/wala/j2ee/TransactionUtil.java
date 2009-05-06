@@ -32,23 +32,23 @@ import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
  * Utilities for dealing with transaction declarations.
- * 
- * @author sfink
  */
 public class TransactionUtil {
 
   private static final boolean DEBUG = false;
 
   private final static String EJBHOME = "javax.ejb.EJBHome";
+
   private final static String EJBLOCALHOME = "javax.ejb.EJBLocalHome";
+
   private final static String EJBOBJECT = "javax.ejb.EJBObject";
+
   private final static String EJBLOCALOBJECT = "javax.ejb.EJBLocalObject";
 
   /**
-   * Create a set of objects to represent transaction entrypoints
-   * defined in this module.
+   * Create a set of objects to represent transaction entrypoints defined in this module.
    */
-  @SuppressWarnings({ "unchecked" })
+  @SuppressWarnings( { "unchecked" })
   public static Set<DeploymentDeclaredTransaction> createDeclaredTransactionEntries(Archive A, ClassLoaderReference loader) {
 
     if (DEBUG) {
@@ -73,8 +73,7 @@ public class TransactionUtil {
   }
 
   /**
-   * Create a set of objects to represent transaction entrypoints
-   * defined in this module.
+   * Create a set of objects to represent transaction entrypoints defined in this module.
    */
   @SuppressWarnings("unchecked")
   private static Set<DeploymentDeclaredTransaction> createDeclaredTransactionEntries(EJBJar DD, ClassLoaderReference loader) {
@@ -103,7 +102,7 @@ public class TransactionUtil {
         for (int i = 0; i < methods.length; i++) {
           int kind = (elementKind == MethodElementKind.UNSPECIFIED) ? deduceKind(b, methods[i]) : elementKind;
           if (kind != MethodElementKind.UNSPECIFIED) {
-            result.add(new DeploymentDeclaredTransaction(b, methods[i], M,  loader, kind, TType));
+            result.add(new DeploymentDeclaredTransaction(b, methods[i], M, loader, kind, TType));
           }
         }
       }
@@ -112,7 +111,7 @@ public class TransactionUtil {
   }
 
   /**
-   * Figure out the EJB interface to which a method belongs 
+   * Figure out the EJB interface to which a method belongs
    */
   private static int deduceKind(EnterpriseBean b, Method method) {
     String home = b.getHomeInterfaceName();
