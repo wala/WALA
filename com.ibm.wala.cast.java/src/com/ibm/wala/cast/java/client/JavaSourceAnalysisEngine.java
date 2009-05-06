@@ -100,7 +100,7 @@ public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
     }
   }
 
-  protected void buildAnalysisScope() throws IOException {
+  public void buildAnalysisScope() throws IOException {
     scope = makeSourceAnalysisScope();
 
     if (getExclusionsFile() != null) {
