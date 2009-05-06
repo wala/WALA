@@ -153,7 +153,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
    * 
    * @throws IOException
    */
-  protected void buildAnalysisScope() throws IOException {
+  public void buildAnalysisScope() throws IOException {
     if (j2seLibs == null) {
       Assertions.UNREACHABLE("no j2selibs specified. You probably did not call AppAnalysisEngine.setJ2SELibrary.");
     }
