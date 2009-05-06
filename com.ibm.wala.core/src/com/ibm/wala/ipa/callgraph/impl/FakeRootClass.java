@@ -43,8 +43,12 @@ public class FakeRootClass extends SyntheticClass {
 
   private Set<IMethod> methods = HashSetFactory.make();
 
-  FakeRootClass(IClassHierarchy cha) {
-    super(FAKE_ROOT_CLASS, cha);
+  public FakeRootClass(IClassHierarchy cha) {
+    this(FAKE_ROOT_CLASS, cha);
+  }
+
+  public FakeRootClass(TypeReference typeRef, IClassHierarchy cha) {
+    super(typeRef, cha);
   }
 
   public void addMethod(IMethod m) {
