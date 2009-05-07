@@ -114,8 +114,8 @@ public abstract class CAstAbstractLoader implements IClassLoader {
     return i;
   }
 
-  public Collection<String> getSourceFileNames(IClass klass) {
-    return klass.getSourceFileNames();
+  public String getSourceFileName(IClass klass) {
+    return klass.getSourceFileName();
   }
   
   public InputStream getSource(IClass klass) {

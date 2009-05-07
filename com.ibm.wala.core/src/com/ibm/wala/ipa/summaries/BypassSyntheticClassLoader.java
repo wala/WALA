@@ -155,7 +155,7 @@ public class BypassSyntheticClassLoader implements IClassLoader {
   /*
    * @see com.ibm.wala.classLoader.IClassLoader#getSourceFileName(com.ibm.wala.classLoader.IClass)
    */
-  public Collection<String> getSourceFileNames(IClass klass) {
+  public String getSourceFileName(IClass klass) {
     return null;
   }
 

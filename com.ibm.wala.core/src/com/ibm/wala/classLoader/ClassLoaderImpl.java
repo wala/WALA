@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -429,12 +428,12 @@ public class ClassLoaderImpl implements IClassLoader {
   /*
    * @see com.ibm.wala.classLoader.IClassLoader#getSourceFileName(com.ibm.wala.classLoader.IClass)
    */
-  public Collection<String> getSourceFileNames(IClass klass) {
+  public String getSourceFileName(IClass klass) {
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");
     }
     ModuleEntry e = sourceMap.get(klass.getName());
-    return e == null ? null : Collections.singleton(e.getName());
+    return e == null ? null : e.getName();
   }
 
   public InputStream getSource(IClass klass) {
