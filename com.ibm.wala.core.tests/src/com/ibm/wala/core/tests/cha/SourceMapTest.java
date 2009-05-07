@@ -11,6 +11,7 @@
 package com.ibm.wala.core.tests.cha;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -40,7 +41,9 @@ public class SourceMapTest extends WalaTestCase {
     TypeReference t = TypeReference.findOrCreate(scope.getApplicationLoader(), TestConstants.HELLO_MAIN);
     IClass klass = cha.lookupClass(t);
     assertTrue("failed to load " + t, klass != null);
-    String sourceFile = klass.getSourceFileName();
+    Collection<String> sourceFiles = klass.getSourceFileNames();
+    assert sourceFiles.size() == 1;
+    String sourceFile = sourceFiles.iterator().next();
     System.err.println("Source file: " + sourceFile);
     assertTrue(sourceFile != null);
   }
@@ -54,7 +57,8 @@ public class SourceMapTest extends WalaTestCase {
     TypeReference t = TypeReference.findOrCreate(scope.getPrimordialLoader(), CLASS_IN_PRIMORDIAL_JAR);
     IClass klass = cha.lookupClass(t);
     assertTrue(klass != null);
-    String sourceFile = klass.getSourceFileName();
+    Collection<String> sourceFiles = klass.getSourceFileNames();
+    String sourceFile = sourceFiles.iterator().next();
     assertTrue(sourceFile != null);
     System.err.println("Source file: " + sourceFile);
   }
