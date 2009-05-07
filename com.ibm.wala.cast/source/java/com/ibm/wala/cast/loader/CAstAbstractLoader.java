@@ -1,5 +1,6 @@
 package com.ibm.wala.cast.loader;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Map.Entry;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
@@ -114,12 +116,28 @@ public abstract class CAstAbstractLoader implements IClassLoader {
     return i;
   }
 
+  public String getSourceFileName(IMethod method, int bcOffset) {
+    return ((AstMethod)method).getSourcePosition(bcOffset).getURL().getFile();
+  }
+  
   public String getSourceFileName(IClass klass) {
-    return klass.getSourceFileName();
+    return ((AstClass)klass).getSourcePosition().getURL().getFile();
   }
   
   public InputStream getSource(IClass klass) {
-    return null;
+    try {
+      return ((AstClass)klass).getSourcePosition().getInputStream();
+    } catch (IOException e) {
+      return null;
+    }
+  }
+
+  public InputStream getSource(IMethod method, int bcOffset) {
+    try {
+      return ((AstMethod)method).getSourcePosition(bcOffset).getInputStream();
+    } catch (IOException e) {
+      return null;
+    }
   }
 
   public IClassLoader getParent() {
