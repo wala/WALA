@@ -154,8 +154,8 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     return typeReference;
   }
 
-  public String getSourceFileName() {
-    return loader.getSourceFileName(this);
+  public Collection<String> getSourceFileNames() {
+    return loader.getSourceFileNames(this);
   }
 
   public InputStream getSource() {

@@ -387,4 +387,14 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
 
     return res;
   }
+
+  public String getSourceFileName(int offset) {
+    Collection<String> result = getDeclaringClass().getSourceFileNames();
+    if (result == null) {
+      return null;
+    } else {
+      assert (result.size() == 1);
+      return result.iterator().next();
+    }
+  }
 }

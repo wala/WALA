@@ -151,7 +151,7 @@ public class ArrayClass implements IClass, Constants {
   /*
    * @see com.ibm.wala.classLoader.IClass#getSourceFileName()
    */
-  public String getSourceFileName() {
+  public Collection<String> getSourceFileNames() {
     return null;
   }
 

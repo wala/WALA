@@ -37,10 +37,14 @@ public interface IBytecodeMethod extends IMethod {
    * @return the Shrike instructions decoded from the bytecode
    */
   IInstruction[] getInstructions() throws InvalidClassFileException;
-
+  
   /**
    * @return the call sites declared in the bytecode for this method
    */
   Collection<CallSiteReference> getCallSites() throws InvalidClassFileException;
 
+  /**
+   * @return the source file corresponding to the specified bytecode offset
+   */
+  String getSourceFileName(int offset);
 }

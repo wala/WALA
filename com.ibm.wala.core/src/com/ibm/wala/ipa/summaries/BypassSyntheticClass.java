@@ -115,8 +115,8 @@ public class BypassSyntheticClass extends SyntheticClass {
    * @see com.ibm.wala.classLoader.IClass#getSourceFileName()
    */
   @Override
-  public String getSourceFileName() {
-    return realType.getSourceFileName();
+  public Collection<String> getSourceFileNames() {
+    return realType.getSourceFileNames();
   }
 
   /*

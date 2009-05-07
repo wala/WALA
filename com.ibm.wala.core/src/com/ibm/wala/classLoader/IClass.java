@@ -91,9 +91,9 @@ public interface IClass extends IClassHierarchyDweller {
   TypeReference getReference();
 
   /**
-   * @return String holding the name of the source file that defined this class, or null if none found
+   * @return Collection of strings holding the names of the source files that defined this class, or null if none found
    */
-  String getSourceFileName();
+  Collection<String> getSourceFileNames();
 
   /**
    * @return String representing the source file holding this class, or null if not found

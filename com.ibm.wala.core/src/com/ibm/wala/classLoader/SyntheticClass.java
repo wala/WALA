@@ -12,6 +12,7 @@
 package com.ibm.wala.classLoader;
 
 import java.io.InputStream;
+import java.util.Collection;
 
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -99,7 +100,7 @@ public abstract class SyntheticClass implements IClass {
   /* 
    * @see com.ibm.wala.classLoader.IClass#getSourceFileName()
    */
-  public String getSourceFileName() {
+  public Collection<String> getSourceFileNames() {
     return null;
   }
   

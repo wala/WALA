@@ -68,7 +68,7 @@ public interface IClassLoader {
   /**
    * @return name of source file corresponding to the class, or null if not available
    */
-  public abstract String getSourceFileName(IClass klass);
+  public abstract Collection<String> getSourceFileNames(IClass klass);
 
   /**
    * @return input stream representing the source file for a class, or null if not available
