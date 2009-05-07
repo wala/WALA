@@ -130,7 +130,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
         }
       }
       // The following computation allows the root class to reside in source
-      int numSuperClasses = (getName().equals(JavaSourceLoaderImpl.this.getLanguage().getRootType().getName())) ? 1 : 0; // 0 if the root class
+      int numSuperClasses = (getName().equals(JavaSourceLoaderImpl.this.getLanguage().getRootType().getName())) ? 0 : 1; // 0 if the root class
 
       if (result.size() != (superTypeNames.size() - numSuperClasses)) {
         assert result.size() == superTypeNames.size() - numSuperClasses : "found " + result + " interfaces for " + superTypeNames
