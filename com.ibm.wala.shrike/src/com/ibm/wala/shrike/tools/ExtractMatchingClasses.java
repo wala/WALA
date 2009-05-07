@@ -18,6 +18,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 
+@Deprecated
 public class ExtractMatchingClasses {
   private static boolean matchEntry(JarFile[] matches, JarEntry e) {
     for (int i = 0; i < matches.length; i++) {

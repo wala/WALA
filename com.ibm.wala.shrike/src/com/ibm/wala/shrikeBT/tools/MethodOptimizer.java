@@ -25,6 +25,7 @@ import com.ibm.wala.shrikeBT.Util;
 import com.ibm.wala.shrikeBT.MethodEditor.Output;
 import com.ibm.wala.shrikeBT.info.LocalAllocator;
 
+@Deprecated
 public final class MethodOptimizer {
   final private MethodData data;
   private IInstruction[] instructions;
