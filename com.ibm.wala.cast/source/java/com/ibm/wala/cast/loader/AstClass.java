@@ -13,6 +13,7 @@ package com.ibm.wala.cast.loader;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -85,8 +86,8 @@ abstract public class AstClass implements IClass, ClassConstants {
     return sourcePosition.getURL();
   }
 
-  public String getSourceFileName() {
-    return sourcePosition.getURL().getFile();
+  public Collection<String> getSourceFileNames() {
+    return Collections.singleton(sourcePosition.getURL().getFile());
   }
 
   public InputStream getSource() {
