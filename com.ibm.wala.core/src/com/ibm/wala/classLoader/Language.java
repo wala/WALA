@@ -58,6 +58,8 @@ public interface Language {
 
   boolean isLongType(TypeReference type);
 
+  boolean isVoidType(TypeReference type);
+  
   boolean isFloatType(TypeReference type);
 
   boolean isDoubleType(TypeReference type);

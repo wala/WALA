@@ -555,6 +555,10 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   public boolean isLongType(TypeReference type) {
     return type == TypeReference.Long;
   }
+  
+  public boolean isVoidType(TypeReference type) {
+    return type == TypeReference.Void;
+  }
 
   public boolean isMetadataType(TypeReference type) {
     return type == TypeReference.JavaLangClass;
