@@ -10,14 +10,12 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
-import com.ibm.wala.annotations.NonNull;
 
 /**
  * intersection of two filters
  */
 public class Filtersection<T> implements Filter<T> {
   
-  @NonNull
   final private Filter<T> a;
   final private Filter<T> b;
   

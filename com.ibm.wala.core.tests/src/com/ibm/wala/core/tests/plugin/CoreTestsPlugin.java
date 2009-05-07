@@ -13,12 +13,10 @@ package com.ibm.wala.core.tests.plugin;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
-import com.ibm.wala.annotations.Internal;
 
 /**
  * The main plugin class to be used in the desktop.
  */
-@Internal
 public class CoreTestsPlugin extends Plugin {
 
   // The shared instance.

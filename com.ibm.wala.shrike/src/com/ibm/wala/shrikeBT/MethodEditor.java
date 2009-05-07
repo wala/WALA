@@ -13,8 +13,6 @@ package com.ibm.wala.shrikeBT;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 
-import com.ibm.wala.annotations.NonNull;
-
 /**
  * The MethodEditor is the core of the ShrikeBT code rewriting mechanism. To rewrite code, construct a MethodEditor initialized with
  * the intial code for the method. Then perform a series of passes. In each pass you call beginPass(), insert a number of patches
@@ -52,7 +50,6 @@ public final class MethodEditor {
   /** Records which original bytecode instruction each Instruction belongs to. */
   private int[] instructionsToBytecodes;
 
-  @NonNull
   private IInstruction[] instructions;
 
   private ExceptionHandler[][] handlers;

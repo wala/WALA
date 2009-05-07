@@ -17,18 +17,12 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- * 
- * a debugging aid. This implementation complains if you stick an object in here
- * which appears to use System.identityHashCode(), or if it detects more than
- * BAD_HC collisions in the Set (possibly indicated a bad hash function)
- * 
- * @author sfink
+ * a debugging aid. This implementation complains if you stick an object in here which appears to use System.identityHashCode(), or
+ * if it detects more than BAD_HC collisions in the Set (possibly indicated a bad hash function)
  */
-@Internal
 public class ParanoidHashSet<T> extends LinkedHashSet<T> {
   public static final long serialVersionUID = 30919839181133333L;
 
@@ -40,14 +34,13 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
   private int nAdded = 0;
 
   /**
-   * If a hash set contains more than this number of items with the same hash
-   * code, complain.
+   * If a hash set contains more than this number of items with the same hash code, complain.
    */
   private final int BAD_HC = 3;
 
   /**
    * @param s
-   * @throws NullPointerException  if s is null
+   * @throws NullPointerException if s is null
    */
   public ParanoidHashSet(Collection<T> s) throws NullPointerException {
     super(s.size());
@@ -79,7 +72,7 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
     if (arg0 == null) {
       throw new IllegalArgumentException("arg0 is null");
     }
-    
+
     ParanoidHashMap.assertOverridesHashCode(arg0);
     boolean result = super.add(arg0);
     if (result) {

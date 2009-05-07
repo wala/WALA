@@ -10,14 +10,12 @@
  *******************************************************************************/
 package com.ibm.wala.shrikeCT;
 
-import com.ibm.wala.annotations.NonNull;
 
 /**
  * This is a base class for "attribute readers", the classes which provide
  * access to the contents of attributes.
  */
 public abstract class AttributeReader {
-  @NonNull
   protected final ClassReader cr;
   final protected int attr;
   final protected int length;

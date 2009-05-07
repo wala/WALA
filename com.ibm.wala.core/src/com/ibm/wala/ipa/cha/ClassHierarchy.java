@@ -22,7 +22,6 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
-import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
@@ -1123,7 +1122,6 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * temporarily marking this internal to avoid infinite sleep with randomly chosen IProgressMonitor.
    */
-  @Internal
   public static ClassHierarchy make(AnalysisScope scope, IProgressMonitor monitor) throws ClassHierarchyException {
     if (scope == null) {
       throw new IllegalArgumentException("null scope");
@@ -1144,7 +1142,6 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * temporarily marking this internal to avoid infinite sleep with randomly chosen IProgressMonitor.
    */
-  @Internal
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, IProgressMonitor monitor)
       throws ClassHierarchyException {
     return new ClassHierarchy(scope, factory, monitor);
@@ -1163,7 +1160,6 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * temporarily marking this internal to avoid infinite sleep with randomly chosen IProgressMonitor. TODO: nanny for testgen
    */
-  @Internal
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, Language language, IProgressMonitor monitor)
       throws ClassHierarchyException {
     if (factory == null) {

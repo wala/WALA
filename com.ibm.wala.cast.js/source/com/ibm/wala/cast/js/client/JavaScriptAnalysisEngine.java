@@ -45,7 +45,7 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
   }
 
   @SuppressWarnings("unchecked")
-  protected void buildAnalysisScope() {
+  public void buildAnalysisScope() {
     try {
       if (translatorFactory == null) {
         translatorFactory = new JavaScriptTranslatorFactory.CAstRhinoFactory();

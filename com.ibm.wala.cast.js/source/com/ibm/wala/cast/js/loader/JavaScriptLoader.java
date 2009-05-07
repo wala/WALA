@@ -124,35 +124,32 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
     public TypeReference getConstantType(Object o) {
       if (o == null) {
-	return JavaScriptTypes.Null;
+        return JavaScriptTypes.Null;
       } else {
-	Class c = o.getClass();
-	if (c == Boolean.class) {
-	  return JavaScriptTypes.Boolean; 
-	} else if (c == String.class) {
-	  return JavaScriptTypes.String; 
-	} else if (c == Integer.class) { 
-	  return JavaScriptTypes.Number; 
-	} else if (c == Float.class) {
-	  return JavaScriptTypes.Number; 
-	} else if (c == Double.class) {
-	  return JavaScriptTypes.Number; 
-	} else {
-	  assert false : "cannot determine type for " + o + " of class " + c;
-	  return null;
-	}
+        Class c = o.getClass();
+        if (c == Boolean.class) {
+          return JavaScriptTypes.Boolean;
+        } else if (c == String.class) {
+          return JavaScriptTypes.String;
+        } else if (c == Integer.class) {
+          return JavaScriptTypes.Number;
+        } else if (c == Float.class) {
+          return JavaScriptTypes.Number;
+        } else if (c == Double.class) {
+          return JavaScriptTypes.Number;
+        } else {
+          assert false : "cannot determine type for " + o + " of class " + c;
+          return null;
+        }
       }
     }
 
     public boolean isNullType(TypeReference type) {
-      return 
-	type.equals(JavaScriptTypes.Undefined)
-	                 || 
-	type.equals(JavaScriptTypes.Null);
+      return type.equals(JavaScriptTypes.Undefined) || type.equals(JavaScriptTypes.Null);
     }
 
     public TypeReference[] getArrayInterfaces() {
-       return new TypeReference[0];
+      return new TypeReference[0];
     }
 
     public TypeName lookupPrimitiveType(String name) {
@@ -188,7 +185,8 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         public SSAGetInstruction GetInstruction(int result, int ref, String field) {
-          return GetInstruction(result, ref, FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreateUnicodeAtom(field), JavaScriptTypes.Root));
+          return GetInstruction(result, ref, FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreateUnicodeAtom(field),
+              JavaScriptTypes.Root));
         }
 
         public JavaScriptInstanceOf InstanceOf(int result, int objVal, int typeVal) {
@@ -196,7 +194,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         public JavaScriptInvoke Invoke(int function, int[] results, int[] params, int exception, CallSiteReference site) {
-           return new JavaScriptInvoke(function, results, params, exception, site);
+          return new JavaScriptInvoke(function, results, params, exception, site);
         }
 
         public JavaScriptInvoke Invoke(int function, int[] results, int[] params, int exception, CallSiteReference site,
@@ -209,11 +207,11 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         public JavaScriptInvoke Invoke(int function, int[] params, int exception, CallSiteReference site) {
-           return new JavaScriptInvoke(function, params, exception, site);
+          return new JavaScriptInvoke(function, params, exception, site);
         }
 
         public JavaScriptPropertyRead PropertyRead(int result, int objectRef, int memberRef) {
-           return new JavaScriptPropertyRead(result, objectRef, memberRef);
+          return new JavaScriptPropertyRead(result, objectRef, memberRef);
         }
 
         public JavaScriptPropertyWrite PropertyWrite(int objectRef, int memberRef, int value) {
@@ -221,11 +219,12 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         public SSAPutInstruction PutInstruction(int ref, int value, String field) {
-          return PutInstruction(ref, value, FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreateUnicodeAtom(field), JavaScriptTypes.Root));
+          return PutInstruction(ref, value, FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreateUnicodeAtom(field),
+              JavaScriptTypes.Root));
         }
 
         public JavaScriptTypeOfInstruction TypeOfInstruction(int lval, int object) {
-           return new JavaScriptTypeOfInstruction(lval, object);
+          return new JavaScriptTypeOfInstruction(lval, object);
         }
 
         public JavaScriptWithRegion WithRegion(int expr, boolean isEnter) {
@@ -245,7 +244,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         public com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction EachElementHasNextInstruction(int value, int objectRef) {
-           return new EachElementHasNextInstruction(value, objectRef);
+          return new EachElementHasNextInstruction(value, objectRef);
         }
 
         public AstEchoInstruction EchoInstruction(int[] rvals) {
@@ -261,7 +260,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         public AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval, int fieldVal, FieldReference fieldRef) {
-           return new AstIsDefinedInstruction(lval, rval, fieldVal, fieldRef);
+          return new AstIsDefinedInstruction(lval, rval, fieldVal, fieldRef);
         }
 
         public AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval, FieldReference fieldRef) {
@@ -269,7 +268,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         public AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval, int fieldVal) {
-           return new AstIsDefinedInstruction(lval, rval, fieldVal);
+          return new AstIsDefinedInstruction(lval, rval, fieldVal);
         }
 
         public AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval) {
@@ -281,7 +280,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         public AstLexicalRead LexicalRead(Access access) {
-           return new AstLexicalRead(access);
+          return new AstLexicalRead(access);
         }
 
         public AstLexicalRead LexicalRead(int lhs, String definer, String globalName) {
@@ -297,7 +296,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         public AstLexicalWrite LexicalWrite(String definer, String globalName, int rhs) {
-           return new AstLexicalWrite(definer, globalName, rhs);
+          return new AstLexicalWrite(definer, globalName, rhs);
         }
 
         public SSAArrayLengthInstruction ArrayLengthInstruction(int result, int arrayref) {
@@ -318,10 +317,11 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
             public boolean isPEI() {
               return false;
             }
+
             public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-              return insts.BinaryOpInstruction(getOperator(), false, false, defs == null || defs.length == 0 ? getDef(0) : defs[0], uses == null ? getUse(0) : uses[0],
-                 uses == null ? getUse(1) : uses[1], mayBeIntegerOp());
-           }
+              return insts.BinaryOpInstruction(getOperator(), false, false, defs == null || defs.length == 0 ? getDef(0) : defs[0],
+                  uses == null ? getUse(0) : uses[0], uses == null ? getUse(1) : uses[1], mayBeIntegerOp());
+            }
           };
         }
 
@@ -330,12 +330,12 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         public SSAComparisonInstruction ComparisonInstruction(Operator operator, int result, int val1, int val2) {
-           return new SSAComparisonInstruction(operator, result, val1, val2);
+          return new SSAComparisonInstruction(operator, result, val1, val2);
         }
 
         public SSAConditionalBranchInstruction ConditionalBranchInstruction(
             com.ibm.wala.shrikeBT.IConditionalBranchInstruction.IOperator operator, TypeReference type, int val1, int val2) {
-           return new SSAConditionalBranchInstruction(operator, type, val1, val2);
+          return new SSAConditionalBranchInstruction(operator, type, val1, val2);
         }
 
         public SSAConversionInstruction ConversionInstruction(int result, int val, TypeReference fromType, TypeReference toType,
@@ -347,8 +347,8 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
               if (uses != null && uses.length == 0) {
                 throw new IllegalArgumentException("(uses != null) and (uses.length == 0)");
               }
-              return insts.ConversionInstruction(defs == null || defs.length == 0 ? getDef(0) : defs[0], uses == null ? getUse(0) : uses[0],
-                  getFromType(), getToType(), false);
+              return insts.ConversionInstruction(defs == null || defs.length == 0 ? getDef(0) : defs[0], uses == null ? getUse(0)
+                  : uses[0], getFromType(), getToType(), false);
             }
           };
         }
@@ -359,7 +359,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
         public SSAGetInstruction GetInstruction(int result, FieldReference field) {
           throw new UnsupportedOperationException();
-       }
+        }
 
         public SSAGetInstruction GetInstruction(int result, int ref, FieldReference field) {
           return new SSAGetInstruction(result, ref, field) {
@@ -370,7 +370,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         public SSAGotoInstruction GotoInstruction() {
-           return new SSAGotoInstruction();
+          return new SSAGotoInstruction();
         }
 
         public SSAInstanceofInstruction InstanceofInstruction(int result, int ref, TypeReference checkedType) {
@@ -383,7 +383,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
         public SSAInvokeInstruction InvokeInstruction(int[] params, int exception, CallSiteReference site) {
           throw new UnsupportedOperationException();
-       }
+        }
 
         public SSALoadMetadataInstruction LoadMetadataInstruction(int lval, TypeReference entityType, Object token) {
           throw new UnsupportedOperationException();
@@ -398,6 +398,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
             public boolean isPEI() {
               return true;
             }
+
             public Collection<TypeReference> getExceptionTypes() {
               return Collections.singleton(JavaScriptTypes.TypeError);
             }
@@ -409,7 +410,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         public SSAPhiInstruction PhiInstruction(int result, int[] params) {
-           return new SSAPhiInstruction(result, params);
+          return new SSAPhiInstruction(result, params);
         }
 
         public SSAPiInstruction PiInstruction(int result, int val, int piBlock, int successorBlock, SSAInstruction cause) {
@@ -426,7 +427,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
         public SSAPutInstruction PutInstruction(int value, FieldReference field) {
           throw new UnsupportedOperationException();
-       }
+        }
 
         public SSAReturnInstruction ReturnInstruction() {
           return new SSAReturnInstruction();
@@ -445,6 +446,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
             public boolean isPEI() {
               return true;
             }
+
             public Collection<TypeReference> getExceptionTypes() {
               return Collections.emptySet();
             }
@@ -453,9 +455,9 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
         public SSAUnaryOpInstruction UnaryOpInstruction(com.ibm.wala.shrikeBT.IUnaryOpInstruction.IOperator operator, int result,
             int val) {
-           return new SSAUnaryOpInstruction(operator, result, val);
+          return new SSAUnaryOpInstruction(operator, result, val);
         }
-        
+
       };
     }
 
@@ -472,20 +474,27 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     }
 
     public boolean isLongType(TypeReference type) {
-       return false;
+      return false;
     }
 
     public boolean isMetadataType(TypeReference type) {
-       return false;
+      return false;
     }
 
     public boolean isStringType(TypeReference type) {
-       return type == JavaScriptTypes.String || type == JavaScriptTypes.StringObject;
+      return type == JavaScriptTypes.String || type == JavaScriptTypes.StringObject;
+    }
+
+    @Override
+    public boolean isVoidType(TypeReference type) {
+      Assertions.UNREACHABLE("Implement me");
+      return false;
     }
   };
 
-  private static final Map<Selector,IMethod> emptyMap1 = Collections.emptyMap();
-  private static final Map<Atom,IField> emptyMap2 = Collections.emptyMap();
+  private static final Map<Selector, IMethod> emptyMap1 = Collections.emptyMap();
+
+  private static final Map<Atom, IField> emptyMap2 = Collections.emptyMap();
 
   private final JavaScriptTranslatorFactory translatorFactory;
 
@@ -513,12 +522,12 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     }
 
     @Override
-    public Collection<IClass> getDirectInterfaces()  {
+    public Collection<IClass> getDirectInterfaces() {
       return Collections.emptySet();
     }
 
     @Override
-    public IClass getSuperclass()  {
+    public IClass getSuperclass() {
       return superClass;
     }
   }
@@ -718,7 +727,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
   }
 
   public SSAInstructionFactory getInstructionFactory() {
-     return JS.instructionFactory();
+    return JS.instructionFactory();
   }
 
   public static final Set<String> bootstrapFileNames;
@@ -745,23 +754,23 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
   public void init(List<Module> modules) {
 
     List<Module> all = new LinkedList<Module>();
-    
-    for(final String fn : bootstrapFileNames) {
+
+    for (final String fn : bootstrapFileNames) {
       all.add(new SourceURLModule(getClass().getClassLoader().getResource(fn)) {
         public String getName() {
           return fn;
         }
       });
     }
-    
+
     all.addAll(modules);
-    
+
     super.init(all);
   }
 
   @Override
   protected TranslatorToCAst getTranslatorToCAst(CAst ast, ModuleEntry module, URL sourceURL, String localFileName) {
-     return translatorFactory.make(ast, module, sourceURL, localFileName);
+    return translatorFactory.make(ast, module, sourceURL, localFileName);
   }
 
   @Override

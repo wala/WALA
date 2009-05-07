@@ -10,12 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.model.java.lang;
 
-import com.ibm.wala.annotations.Internal;
 
 /**
  * A synthetic model of java.lang.System native methods.
  */
-@Internal
 public class System {
 
   /**

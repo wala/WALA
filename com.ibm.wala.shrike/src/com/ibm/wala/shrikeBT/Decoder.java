@@ -12,16 +12,14 @@ package com.ibm.wala.shrikeBT;
 
 import java.util.ArrayList;
 
-import com.ibm.wala.annotations.NonNull;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction.Operator;
 
 /**
- * A Decoder translates a method's Java bytecode into shrikeBT code, i.e. an
- * array of Instruction objects and an array of lists of ExceptionHandlers.
+ * A Decoder translates a method's Java bytecode into shrikeBT code, i.e. an array of Instruction objects and an array of lists of
+ * ExceptionHandlers.
  * 
- * This class implements basic decoding functionality. A toolkit for reading
- * class files must specialize this class with particular constant pool reader
- * implementation.
+ * This class implements basic decoding functionality. A toolkit for reading class files must specialize this class with particular
+ * constant pool reader implementation.
  * 
  * Normal usage of this class looks like this:
  * 
@@ -35,11 +33,12 @@ import com.ibm.wala.shrikeBT.IBinaryOpInstruction.Operator;
  *    }
  *    Instruction[] myInstructions = d.getInstructions();
  *    ExceptionHandler[][] exnHandlers = d.getHandlers();
- *  
+ * 
  * </pre>
  */
 public abstract class Decoder implements Constants {
   private static final int UNSEEN = -1;
+
   private static final int INSIDE_INSTRUCTION = -2;
 
   private static int skip(int a, int b) {
@@ -87,7 +86,8 @@ public abstract class Decoder implements Constants {
     table[OP_swap] = SwapInstruction.make();
 
     for (int i = OP_iadd; i <= OP_drem; i++) {
-      table[i] = BinaryOpInstruction.make(indexedTypes[(i - OP_iadd) % 4], BinaryOpInstruction.Operator.values()[(i - OP_iadd) / 4]);
+      table[i] = BinaryOpInstruction
+          .make(indexedTypes[(i - OP_iadd) % 4], BinaryOpInstruction.Operator.values()[(i - OP_iadd) / 4]);
     }
     for (int i = OP_ineg; i <= OP_dneg; i++) {
       table[i] = UnaryOpInstruction.make(indexedTypes[i - OP_ineg], IUnaryOpInstruction.Operator.NEG);
@@ -96,7 +96,8 @@ public abstract class Decoder implements Constants {
       table[i] = ShiftInstruction.make(indexedTypes[(i - OP_ishl) % 2], ShiftInstruction.Operator.values()[(i - OP_ishl) / 2]);
     }
     for (int i = OP_iand; i <= OP_lxor; i++) {
-      table[i] = BinaryOpInstruction.make(indexedTypes[(i - OP_iand) % 2], BinaryOpInstruction.Operator.values()[BinaryOpInstruction.Operator.AND.ordinal() + (i - OP_iand) / 2]);
+      table[i] = BinaryOpInstruction.make(indexedTypes[(i - OP_iand) % 2],
+          BinaryOpInstruction.Operator.values()[BinaryOpInstruction.Operator.AND.ordinal() + (i - OP_iand) / 2]);
     }
 
     for (int i = OP_i2l; i <= OP_d2f; i++) {
@@ -108,7 +109,8 @@ public abstract class Decoder implements Constants {
 
     table[OP_lcmp] = ComparisonInstruction.make(TYPE_long, ComparisonInstruction.Operator.CMP);
     for (int i = OP_fcmpl; i <= OP_dcmpg; i++) {
-      table[i] = ComparisonInstruction.make(indexedTypes[2 + (i - OP_fcmpl) / 2], ComparisonInstruction.Operator.values()[ComparisonInstruction.Operator.CMPL.ordinal() + (i - OP_fcmpl) % 2]);
+      table[i] = ComparisonInstruction.make(indexedTypes[2 + (i - OP_fcmpl) / 2],
+          ComparisonInstruction.Operator.values()[ComparisonInstruction.Operator.CMPL.ordinal() + (i - OP_fcmpl) % 2]);
     }
 
     for (int i = OP_ireturn; i <= OP_areturn; i++) {
@@ -130,32 +132,36 @@ public abstract class Decoder implements Constants {
 
   // Holds the result of decoding
   private IInstruction[] instructions;
+
   private ExceptionHandler[][] handlers;
+
   private int[] instructionsToBytecodes;
+
   final private ConstantPoolReader constantPool;
 
   // Holds the input to decode
-  @NonNull
   private final byte[] code;
-  @NonNull
+
   private final int[] rawHandlers;
 
   // Temporary working data
   private int[] decodedOffset;
+
   private byte[] decodedSize;
+
   private ArrayList<Instruction> decoded;
+
   private int[] belongsToSub;
+
   private int[] JSRs;
+
   private RetInfo[] retInfo;
 
   /**
    * This constructor is only supposed to be used by subclasses.
    * 
-   * @param code
-   *          the bytecodes for a method as per JVM spec
-   * @param rawHandlers
-   *          flattened array of (startPC, endPC, targetPC, classIndex) tuples
-   *          defined as per the JVM spec
+   * @param code the bytecodes for a method as per JVM spec
+   * @param rawHandlers flattened array of (startPC, endPC, targetPC, classIndex) tuples defined as per the JVM spec
    */
   protected Decoder(byte[] code, int[] rawHandlers, ConstantPoolReader cp) {
     this.code = code;
@@ -233,8 +239,11 @@ public abstract class Decoder implements Constants {
 
   private static class RetInfo {
     int sub;
+
     final int retVar;
+
     final int stackLen;
+
     final byte[] stackWords;
 
     RetInfo(int sub, int retVar, int stackLen, byte[] stackWords) {
@@ -328,8 +337,7 @@ public abstract class Decoder implements Constants {
   }
 
   /**
-   * Locate an instruction that returns from this subroutine; return 0 if one
-   * cannot be found.
+   * Locate an instruction that returns from this subroutine; return 0 if one cannot be found.
    */
   private int findReturn(int subAddr) throws InvalidBytecodeException {
     if (decodedSize[subAddr] < 1) {
@@ -375,7 +383,7 @@ public abstract class Decoder implements Constants {
     if (retAddr > 0) {
       RetInfo r = retInfo[retAddr];
       r.sub = subAddr;
-      byte[] cloneStackWords= new byte[r.stackWords.length];
+      byte[] cloneStackWords = new byte[r.stackWords.length];
       System.arraycopy(r.stackWords, 0, cloneStackWords, 0, cloneStackWords.length);
       decodeAt(retToAddr, r.stackLen, cloneStackWords);
     }
@@ -526,7 +534,8 @@ public abstract class Decoder implements Constants {
       case OP_ifgt:
       case OP_ifge:
         decoded.add(makeZero);
-        i = ConditionalBranchInstruction.make(TYPE_int, ConditionalBranchInstruction.Operator.values()[opcode - OP_ifeq], (index - 1) + decodeShort(index));
+        i = ConditionalBranchInstruction.make(TYPE_int, ConditionalBranchInstruction.Operator.values()[opcode - OP_ifeq],
+            (index - 1) + decodeShort(index));
         index += 2;
         break;
       case OP_if_icmpeq:
@@ -540,8 +549,8 @@ public abstract class Decoder implements Constants {
         break;
       case OP_if_acmpeq:
       case OP_if_acmpne:
-        i = ConditionalBranchInstruction.make(TYPE_Object, ConditionalBranchInstruction.Operator.values()[opcode - OP_if_acmpeq], (index - 1)
-            + decodeShort(index));
+        i = ConditionalBranchInstruction.make(TYPE_Object, ConditionalBranchInstruction.Operator.values()[opcode - OP_if_acmpeq],
+            (index - 1) + decodeShort(index));
         index += 2;
         break;
       case OP_goto:
@@ -661,7 +670,8 @@ public abstract class Decoder implements Constants {
       case OP_ifnull:
       case OP_ifnonnull:
         decoded.add(ConstantInstruction.make(TYPE_Object, null));
-        i = ConditionalBranchInstruction.make(TYPE_Object, ConditionalBranchInstruction.Operator.values()[opcode - OP_ifnull], (index - 1) + decodeShort(index));
+        i = ConditionalBranchInstruction.make(TYPE_Object, ConditionalBranchInstruction.Operator.values()[opcode - OP_ifnull],
+            (index - 1) + decodeShort(index));
         index += 2;
         break;
       case OP_goto_w:
@@ -795,13 +805,13 @@ public abstract class Decoder implements Constants {
   }
 
   /**
-   * This exception is thrown when the Decoder detects invalid incoming bytecode
-   * (code that would not pass the Java verifier). We don't guarantee to perform
-   * full verification in the Decoder, however.
+   * This exception is thrown when the Decoder detects invalid incoming bytecode (code that would not pass the Java verifier). We
+   * don't guarantee to perform full verification in the Decoder, however.
    */
   public static class InvalidBytecodeException extends Exception {
 
     private static final long serialVersionUID = -8807125136613458111L;
+
     private int index;
 
     InvalidBytecodeException(String s) {
@@ -928,9 +938,7 @@ public abstract class Decoder implements Constants {
   /**
    * Perform the decoding.
    * 
-   * @throws InvalidBytecodeException
-   *           the incoming code is invalid and would fail Java bytecode
-   *           verification
+   * @throws InvalidBytecodeException the incoming code is invalid and would fail Java bytecode verification
    */
   final public void decode() throws InvalidBytecodeException {
     byte[] stackWords = new byte[code.length * 2];
@@ -1078,9 +1086,8 @@ public abstract class Decoder implements Constants {
   /**
    * Get the mapping between instructions and input bytecodes.
    * 
-   * @return an array m such that m[i] is the offset of the bytecode instruction
-   *         which gave rise to the Instruction referenced in the instructions
-   *         array at offset i
+   * @return an array m such that m[i] is the offset of the bytecode instruction which gave rise to the Instruction referenced in
+   *         the instructions array at offset i
    */
   final public int[] getInstructionsToBytecodes() {
     if (instructionsToBytecodes == null) {

@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
-import com.ibm.wala.annotations.NonNull;
 import com.ibm.wala.shrikeBT.DupInstruction;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.IInstruction;
@@ -37,7 +36,6 @@ public class Analyzer {
   final protected boolean isStatic;
   final protected String classType;
   final protected String signature;
-  @NonNull
   final protected IInstruction[] instructions;
   final protected ExceptionHandler[][] handlers;
   protected ClassHierarchyProvider hierarchy;

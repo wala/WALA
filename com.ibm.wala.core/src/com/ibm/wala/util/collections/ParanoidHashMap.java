@@ -14,13 +14,11 @@ import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * a debugging aid. This implementation complains if you stick an object in here which appears to use System.identityHashCode()
  */
-@Internal
 public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
   public static final long serialVersionUID = 909018793791787198L;
 

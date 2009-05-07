@@ -19,6 +19,7 @@ package com.ibm.wala.annotations;
  * at the top of the WALA project dependency hierarchy.  It doesn't have
  * anything to do with shrike.
  */
+@Deprecated
 public @interface Internal {
 
 }

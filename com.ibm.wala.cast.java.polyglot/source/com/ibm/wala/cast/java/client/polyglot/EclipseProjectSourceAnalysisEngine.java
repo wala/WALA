@@ -82,7 +82,7 @@ public class EclipseProjectSourceAnalysisEngine extends EclipseProjectAnalysisEn
   }
 
   @Override
-  protected void buildAnalysisScope() {
+  public void buildAnalysisScope() {
     try {
       scope = makeSourceAnalysisScope();
       if (getExclusionsFile() != null) {

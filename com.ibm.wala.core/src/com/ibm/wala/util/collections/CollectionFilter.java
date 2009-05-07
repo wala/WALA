@@ -13,14 +13,12 @@ package com.ibm.wala.util.collections;
 
 import java.util.Collection;
 
-import com.ibm.wala.annotations.NonNull;
 
 /**
  * A filter defined by set membership
  */
 public class CollectionFilter<T> implements Filter<T> {
 
-  @NonNull
   private final Collection<? extends T> S;
 
   public CollectionFilter(Collection<? extends T> S) {

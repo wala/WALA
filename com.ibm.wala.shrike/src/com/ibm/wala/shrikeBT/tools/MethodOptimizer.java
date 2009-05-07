@@ -13,7 +13,6 @@ package com.ibm.wala.shrikeBT.tools;
 import java.util.Arrays;
 import java.util.BitSet;
 
-import com.ibm.wala.annotations.NonNull;
 import com.ibm.wala.shrikeBT.DupInstruction;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.IInstruction;
@@ -30,7 +29,6 @@ public final class MethodOptimizer {
   final private MethodData data;
   private IInstruction[] instructions;
   private ExceptionHandler[][] handlers;
-  @NonNull
   private final MethodEditor editor;
   // The value at index [i][N] is the index of the only instruction which pushes
   // a value onto

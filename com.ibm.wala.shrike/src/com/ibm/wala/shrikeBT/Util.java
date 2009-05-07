@@ -18,7 +18,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.shrikeBT.IInvokeInstruction.Dispatch;
 
 /**
@@ -28,7 +27,6 @@ import com.ibm.wala.shrikeBT.IInvokeInstruction.Dispatch;
  * Class.getName(). A Java class name must use '$' to separate inner class names from their containing class. There is no way to for
  * Shrike to disambiguate 'A.B' otherwise.
  */
-@Internal
 public final class Util {
   private Util() {
     // prevent instantiation

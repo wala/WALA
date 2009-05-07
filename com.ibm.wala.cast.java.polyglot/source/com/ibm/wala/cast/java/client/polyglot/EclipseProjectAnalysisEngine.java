@@ -49,7 +49,7 @@ public class EclipseProjectAnalysisEngine extends AbstractAnalysisEngine {
   }
 
   @Override
-  protected void buildAnalysisScope() throws IOException {
+  public void buildAnalysisScope() throws IOException {
     super.scope = ePath.toAnalysisScope(new File(getExclusionsFile()));
   }
 
