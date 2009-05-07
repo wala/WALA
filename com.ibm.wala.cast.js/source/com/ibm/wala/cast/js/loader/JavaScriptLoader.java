@@ -486,7 +486,6 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     }
 
     public boolean isVoidType(TypeReference type) {
-      Assertions.UNREACHABLE("Implement me");
       return false;
     }
   };
