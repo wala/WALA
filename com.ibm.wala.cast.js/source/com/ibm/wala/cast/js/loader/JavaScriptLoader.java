@@ -485,7 +485,6 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       return type == JavaScriptTypes.String || type == JavaScriptTypes.StringObject;
     }
 
-    @Override
     public boolean isVoidType(TypeReference type) {
       Assertions.UNREACHABLE("Implement me");
       return false;
