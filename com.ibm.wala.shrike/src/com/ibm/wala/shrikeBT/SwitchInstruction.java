@@ -34,8 +34,7 @@ public final class SwitchInstruction extends Instruction {
   }
 
   /**
-   * @return an array of flattened (case, label) pairs, sorted in increasing
-   *         order by case
+   * @return an array of flattened (case, label) pairs, sorted in increasing order by case
    */
   public int[] getCasesAndLabels() {
     return casesAndLabels;
@@ -44,13 +43,9 @@ public final class SwitchInstruction extends Instruction {
   /**
    * Make a switch instruction.
    * 
-   * @param casesAndLabels
-   *          an array of flattened (case, label) pairs, sorted in increasing
-   *          order by case
-   * @param defaultLabel
-   *          the default label to branch to if no cases match
-   * @throws IllegalArgumentException
-   *           if casesAndLabels is null
+   * @param casesAndLabels an array of flattened (case, label) pairs, sorted in increasing order by case
+   * @param defaultLabel the default label to branch to if no cases match
+   * @throws IllegalArgumentException if casesAndLabels is null
    */
   public static SwitchInstruction make(int[] casesAndLabels, int defaultLabel) {
     if (casesAndLabels == null) {

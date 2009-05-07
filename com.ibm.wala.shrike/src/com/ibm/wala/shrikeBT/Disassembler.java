@@ -14,13 +14,14 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * This is a very simple component to disassemble a ShrikeBT method. The
- * disassembly is just the list of ShrikeBT instructions, annotated with
- * exception handler blocks and the mapping back to the original bytecodes.
+ * This is a very simple component to disassemble a ShrikeBT method. The disassembly is just the list of ShrikeBT instructions,
+ * annotated with exception handler blocks and the mapping back to the original bytecodes.
  */
 public class Disassembler {
   final private IInstruction[] instructions;
+
   final private ExceptionHandler[][] handlers;
+
   final private int[] instructionsToBytecodes;
 
   /**
@@ -34,7 +35,8 @@ public class Disassembler {
 
   /**
    * Create a disassembler for a method.
-   * @throws NullPointerException  if data is null
+   * 
+   * @throws NullPointerException if data is null
    */
   public Disassembler(MethodData data) throws NullPointerException {
     this(data.getInstructions(), data.getHandlers(), data.getInstructionsToBytecodes());

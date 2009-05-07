@@ -18,9 +18,8 @@ import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.Util;
 
 /**
- * This method annotation parcels out fresh local variables for use as
- * temporaries by instrumentation code. It assumes that local variables are not
- * allocated by any other mechanism.
+ * This method annotation parcels out fresh local variables for use as temporaries by instrumentation code. It assumes that local
+ * variables are not allocated by any other mechanism.
  */
 public class LocalAllocator implements MethodData.Results {
   private final static String key = LocalAllocator.class.getName();

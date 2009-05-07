@@ -20,9 +20,8 @@ import com.ibm.wala.shrikeCT.ClassWriter;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 
 /**
- * This class provides a convenient way to iterate through a collection of Java
- * classes and instrument their code. This is just a specialization of
- * OfflineInstrumenterBase to use the shrikeCT functionality.
+ * This class provides a convenient way to iterate through a collection of Java classes and instrument their code. This is just a
+ * specialization of OfflineInstrumenterBase to use the shrikeCT functionality.
  */
 final public class OfflineInstrumenter extends OfflineInstrumenterBase {
   /**
@@ -70,17 +69,15 @@ final public class OfflineInstrumenter extends OfflineInstrumenterBase {
   }
 
   /**
-   * Update the original class with some method changes. 'code' should be the
-   * result of out.emitClass(). You can add new fields and methods to 'code' (or
-   * make other changes) before calling this method.
+   * Update the original class with some method changes. 'code' should be the result of out.emitClass(). You can add new fields and
+   * methods to 'code' (or make other changes) before calling this method.
    */
   public void outputModifiedClass(ClassInstrumenter out, ClassWriter code) throws IllegalStateException, IOException {
     internalOutputModifiedClass(out, code);
   }
 
   /**
-   * Update the original class with some method changes. This method calls
-   * out.emitClass() for you.
+   * Update the original class with some method changes. This method calls out.emitClass() for you.
    */
   public void outputModifiedClass(ClassInstrumenter out) throws IllegalArgumentException, IOException {
     if (out == null) {

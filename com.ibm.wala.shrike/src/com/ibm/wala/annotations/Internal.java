@@ -11,12 +11,10 @@
 package com.ibm.wala.annotations;
 
 /**
- * An annotation which indicates a method which although
- * public, should be considered an "internal" method, not exposed
- * to the outside world or an adversary.
+ * An annotation which indicates a method which although public, should be considered an "internal" method, not exposed to the
+ * outside world or an adversary.
  * 
- * This annotation is placed in the shrike project just so it's
- * at the top of the WALA project dependency hierarchy.  It doesn't have
+ * This annotation is placed in the shrike project just so it's at the top of the WALA project dependency hierarchy. It doesn't have
  * anything to do with shrike.
  */
 @Deprecated

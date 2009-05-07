@@ -11,8 +11,7 @@
 package com.ibm.wala.shrikeBT;
 
 /**
- * This class represents instructions that convert from one primitive type to
- * another.
+ * This class represents instructions that convert from one primitive type to another.
  */
 public final class ConversionInstruction extends Instruction implements IConversionInstruction {
   final private String fromType;

@@ -36,7 +36,7 @@ public final class InnerClassesReader extends AttributeReader {
     }
     return r;
   }
-  
+
   /**
    * @return the names of inner classes this attribute holds information about.
    */
@@ -51,15 +51,15 @@ public final class InnerClassesReader extends AttributeReader {
   }
 
   /**
-   * return the name of the outer class recorded as the enclosing class for a class named s.
-   * return null if not found.
-   * @throws InvalidClassFileException 
+   * return the name of the outer class recorded as the enclosing class for a class named s. return null if not found.
+   * 
+   * @throws InvalidClassFileException
    */
   public String getOuterClass(String s) throws InvalidClassFileException {
     String[] inner = getInnerClasses();
-    for (int i =0; i < inner.length; i++) {
+    for (int i = 0; i < inner.length; i++) {
       if (inner[i].equals(s)) {
-        int x = cr.getUShort(attr + 8 + i*8 + 2);
+        int x = cr.getUShort(attr + 8 + i * 8 + 2);
         if (x != 0) {
           ConstantPoolParser cp = cr.getCP();
           return cp.getCPClass(cr.getUShort(attr + 8 + i * 8 + 2));
@@ -68,20 +68,20 @@ public final class InnerClassesReader extends AttributeReader {
     }
     return null;
   }
-  
+
   /**
-   * return the mask of flags recorded in the InnerClasses attribute for a class named s.
-   * return 0 if not found.
-   * @throws InvalidClassFileException 
+   * return the mask of flags recorded in the InnerClasses attribute for a class named s. return 0 if not found.
+   * 
+   * @throws InvalidClassFileException
    */
   public int getAccessFlags(String s) throws InvalidClassFileException {
     String[] inner = getInnerClasses();
-    for (int i =0; i < inner.length; i++) {
+    for (int i = 0; i < inner.length; i++) {
       if (inner[i].equals(s)) {
-        return cr.getUShort(attr + 8 + i*8 + 6);
+        return cr.getUShort(attr + 8 + i * 8 + 6);
       }
     }
     return 0;
   }
-  
+
 }

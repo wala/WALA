@@ -3,9 +3,7 @@ package com.ibm.wala.shrikeBT;
 public interface IComparisonInstruction extends IInstruction {
 
   public enum Operator {
-    CMP,
-    CMPL,
-    CMPG;
+    CMP, CMPL, CMPG;
 
     @Override
     public String toString() {
@@ -14,7 +12,7 @@ public interface IComparisonInstruction extends IInstruction {
   }
 
   Operator getOperator();
-  
+
   String getType();
-  
+
 }

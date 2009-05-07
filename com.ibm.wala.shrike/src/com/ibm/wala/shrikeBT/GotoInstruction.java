@@ -20,7 +20,7 @@ public final class GotoInstruction extends Instruction {
     super(OP_goto);
     int[] l = { label };
     this.label = l;
-   }
+  }
 
   private final static GotoInstruction[] preallocated = preallocate();
 

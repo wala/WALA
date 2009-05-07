@@ -19,7 +19,7 @@ public final class ConstantPoolParser implements ClassConstants {
   private int[] cpOffsets;
 
   private String[] cpItems;
-  
+
   // TODO: use JVM spec limit here?
   private final static int MAX_CP_ITEMS = Integer.MAX_VALUE / 4;
 

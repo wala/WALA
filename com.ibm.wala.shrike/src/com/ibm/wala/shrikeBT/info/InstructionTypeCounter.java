@@ -41,12 +41,10 @@ import com.ibm.wala.shrikeBT.SwitchInstruction;
 import com.ibm.wala.shrikeBT.ThrowInstruction;
 
 /**
- * This method annotation counts the number of instructions of each type
- * (according to each Instruction subclass).
+ * This method annotation counts the number of instructions of each type (according to each Instruction subclass).
  * 
- * The get...Count methods are the only methods needed by clients. These methods
- * check to see if the MethodData object already has an InstructionTypeCounter
- * annotation before recomputing the counts and returning the desired count.
+ * The get...Count methods are the only methods needed by clients. These methods check to see if the MethodData object already has
+ * an InstructionTypeCounter annotation before recomputing the counts and returning the desired count.
  */
 public class InstructionTypeCounter implements MethodData.Results {
   private final static String key = InstructionTypeCounter.class.getName();
@@ -273,8 +271,7 @@ public class InstructionTypeCounter implements MethodData.Results {
   }
 
   /**
-   * Whenever the underlying method is updated, we'll throw away our counts so
-   * they can be reconstructed from scratch next time.
+   * Whenever the underlying method is updated, we'll throw away our counts so they can be reconstructed from scratch next time.
    * 
    * This is not to be called by clients.
    */

@@ -34,22 +34,34 @@ public class Analyzer {
 
   // inputs
   final protected boolean isStatic;
+
   final protected String classType;
+
   final protected String signature;
+
   final protected IInstruction[] instructions;
+
   final protected ExceptionHandler[][] handlers;
+
   protected ClassHierarchyProvider hierarchy;
 
   // working
   protected int maxStack;
+
   protected int maxLocals;
+
   protected String[][] stacks;
+
   protected String[][] locals;
+
   protected int[] stackSizes;
+
   protected BitSet basicBlockStarts;
+
   protected int[][] backEdges;
 
   protected final static String[] noStrings = new String[0];
+
   protected final static int[] noEdges = new int[0];
 
   public Analyzer(boolean isStatic, String classType, String signature, IInstruction[] instructions, ExceptionHandler[][] handlers) {
@@ -72,9 +84,8 @@ public class Analyzer {
   }
 
   /**
-   * Use class hierarchy information in 'h'. If this method is not called or h
-   * provides only partial hierarchy information, the verifier behaves
-   * optimistically.
+   * Use class hierarchy information in 'h'. If this method is not called or h provides only partial hierarchy information, the
+   * verifier behaves optimistically.
    */
   final public void setClassHierarchy(ClassHierarchyProvider h) {
     this.hierarchy = h;
@@ -195,7 +206,8 @@ public class Analyzer {
     return instructions;
   }
 
-  private void getReachableRecursive(int from, BitSet reachable, boolean followHandlers, BitSet mask) throws IllegalArgumentException {
+  private void getReachableRecursive(int from, BitSet reachable, boolean followHandlers, BitSet mask)
+      throws IllegalArgumentException {
     if (from < 0) {
       throw new IllegalArgumentException("from < 0");
     }
@@ -346,8 +358,11 @@ public class Analyzer {
   public static final class FailureException extends Exception {
 
     private static final long serialVersionUID = -7663520961403117526L;
+
     final private int offset;
+
     final private String reason;
+
     private List<PathElement> path;
 
     FailureException(int offset, String reason, List<PathElement> path) {
@@ -372,8 +387,8 @@ public class Analyzer {
     }
 
     /**
-     * @return a list of PathElements describing how the type that caused the
-     *         error was propagated from its origin to the point of the error
+     * @return a list of PathElements describing how the type that caused the error was propagated from its origin to the point of
+     *         the error
      */
     public List<PathElement> getPath() {
       return path;
@@ -414,7 +429,9 @@ public class Analyzer {
 
   public static final class PathElement {
     final int index;
+
     final String[] stack;
+
     final String[] locals;
 
     PathElement(int index, String[] stack, String[] locals) {
@@ -455,8 +472,8 @@ public class Analyzer {
     }
   }
 
-  private boolean mergeTypes(int i, String[] curStack, int curStackSize, String[] curLocals, int curLocalsSize, List<PathElement> path)
-      throws FailureException {
+  private boolean mergeTypes(int i, String[] curStack, int curStackSize, String[] curLocals, int curLocalsSize,
+      List<PathElement> path) throws FailureException {
     boolean changed = false;
 
     if (stacks[i] == null) {
@@ -497,8 +514,7 @@ public class Analyzer {
   }
 
   /**
-   * A PathElement describes a point where a value is moved from one location to
-   * another.
+   * A PathElement describes a point where a value is moved from one location to another.
    */
   private void computeTypes(int i, TypeVisitor visitor, BitSet makeTypesAt, List<PathElement> path) throws FailureException {
     final String[] curStack = new String[maxStack];
@@ -650,8 +666,7 @@ public class Analyzer {
   /**
    * Verify the method and compute types at every program point.
    * 
-   * @throws FailureException
-   *           the method contains invalid bytecode
+   * @throws FailureException the method contains invalid bytecode
    */
   final public void computeTypes(TypeVisitor v, BitSet makeTypesAt, boolean wantPath) throws FailureException {
     initTypeInfo();
@@ -665,17 +680,16 @@ public class Analyzer {
   }
 
   /**
-   * @return an array indexed by instruction index; each entry is an array of
-   *         Strings giving the types of the locals at that instruction.
+   * @return an array indexed by instruction index; each entry is an array of Strings giving the types of the locals at that
+   *         instruction.
    */
   final public String[][] getLocalTypes() {
     return locals;
   }
 
   /**
-   * @return an array indexed by instruction index; each entry is an array of
-   *         Strings giving the types of the stack elements at that instruction.
-   *         The top of the stack is the last element of the array.
+   * @return an array indexed by instruction index; each entry is an array of Strings giving the types of the stack elements at that
+   *         instruction. The top of the stack is the last element of the array.
    */
   final public String[][] getStackTypes() {
     return stacks;
@@ -684,12 +698,12 @@ public class Analyzer {
   protected Analyzer(MethodData info) {
     this(info.getIsStatic(), info.getClassType(), info.getSignature(), info.getInstructions(), info.getHandlers());
   }
-  
+
   public static Analyzer createAnalyzer(MethodData info) {
     if (info == null) {
       throw new IllegalArgumentException("info is null");
     }
     return new Analyzer(info);
   }
-  
+
 }

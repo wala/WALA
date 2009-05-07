@@ -11,19 +11,21 @@
 package com.ibm.wala.shrikeCT;
 
 /**
- * This class builds serializable ConstantValue attributes. These attributes are
- * associated with final fields.
+ * This class builds serializable ConstantValue attributes. These attributes are associated with final fields.
  * 
  * After constructing a ConstantValueWriter, you must call setValueCPIndex.
  */
 public final class ConstantValueWriter extends ClassWriter.Element {
   final private int attrID;
+
   private int index = -1;
+
   final private ClassWriter w;
 
   /**
    * Build an empty writer.
-   * @throws IllegalArgumentException  if w is null
+   * 
+   * @throws IllegalArgumentException if w is null
    */
   public ConstantValueWriter(ClassWriter w) {
     if (w == null) {

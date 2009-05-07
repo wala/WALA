@@ -11,9 +11,8 @@
 package com.ibm.wala.shrikeBT;
 
 /**
- * ShiftInstructions are distinguished from BinaryOpInstructions because most
- * binary operations in the JVM require both parameters to be the same type, but
- * shifts always take one int parameter.
+ * ShiftInstructions are distinguished from BinaryOpInstructions because most binary operations in the JVM require both parameters
+ * to be the same type, but shifts always take one int parameter.
  */
 public final class ShiftInstruction extends Instruction implements IShiftInstruction {
   protected ShiftInstruction(short opcode) {

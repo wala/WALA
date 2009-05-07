@@ -16,12 +16,10 @@ import java.util.Iterator;
 import com.ibm.wala.shrikeBT.Constants;
 
 /**
- * This class takes the raw information from a ClassHierarchyProvider and
- * computes type operations (subtype check, type union). All operations are
- * static.
+ * This class takes the raw information from a ClassHierarchyProvider and computes type operations (subtype check, type union). All
+ * operations are static.
  * 
- * Because ClassHierarchyProvider sometimes only provides partial information,
- * these routines sometimes answer "don't know".
+ * Because ClassHierarchyProvider sometimes only provides partial information, these routines sometimes answer "don't know".
  */
 public final class ClassHierarchy {
   private ClassHierarchy() {
@@ -31,10 +29,12 @@ public final class ClassHierarchy {
    * Equals Constants.NO
    */
   public static final int NO = Constants.NO;
+
   /**
    * Equals Constants.YES
    */
   public static final int YES = Constants.YES;
+
   /**
    * Equals Constants.MAYBE
    */
@@ -148,12 +148,9 @@ public final class ClassHierarchy {
   /**
    * Perform subtype check.
    * 
-   * @param hierarchy
-   *          the hierarchy information to use for the decision
-   * @param t1
-   *          a type in JVM format
-   * @param t2
-   *          a type in JVM format
+   * @param hierarchy the hierarchy information to use for the decision
+   * @param t1 a type in JVM format
+   * @param t2 a type in JVM format
    * @return whether t1 is a subtype of t2 (YES, NO, MAYBE)
    */
   public static int isSubtypeOf(ClassHierarchyProvider hierarchy, String t1, String t2) {
@@ -231,7 +228,8 @@ public final class ClassHierarchy {
     return r;
   }
 
-  private static boolean collectDominatingSuperClasses(ClassHierarchyProvider hierarchy, String t, HashSet<String> matches, HashSet<String> supers) {
+  private static boolean collectDominatingSuperClasses(ClassHierarchyProvider hierarchy, String t, HashSet<String> matches,
+      HashSet<String> supers) {
     String last = t;
 
     for (String c = t; c != null; c = hierarchy.getSuperClass(c)) {
@@ -245,8 +243,8 @@ public final class ClassHierarchy {
     return last.equals(Constants.TYPE_Object);
   }
 
-  private static boolean collectDominatingSuperInterfacesFromClass(ClassHierarchyProvider hierarchy, String t, HashSet<String> matches,
-      HashSet<String> supers) {
+  private static boolean collectDominatingSuperInterfacesFromClass(ClassHierarchyProvider hierarchy, String t,
+      HashSet<String> matches, HashSet<String> supers) {
     String[] ifaces = hierarchy.getSuperInterfaces(t);
     if (ifaces == null) {
       return false;
@@ -340,22 +338,18 @@ public final class ClassHierarchy {
       return Constants.TYPE_Object;
     } else {
       return Constants.TYPE_unknown; // some non-representable combination of
-                                     // class and interfaces
+      // class and interfaces
     }
   }
 
   /**
    * Compute the most specific common supertype.
    * 
-   * @param hierarchy
-   *          the hierarchy information to use for the decision
-   * @param t1
-   *          a type in JVM format
-   * @param t2
-   *          a type in JVM format
-   * @return the most specific common supertype of t1 and t2, or TYPE_unknown if
-   *         it cannot be determined or cannot be represented as a Java type, or
-   *         null if there is no common supertype
+   * @param hierarchy the hierarchy information to use for the decision
+   * @param t1 a type in JVM format
+   * @param t2 a type in JVM format
+   * @return the most specific common supertype of t1 and t2, or TYPE_unknown if it cannot be determined or cannot be represented as
+   *         a Java type, or null if there is no common supertype
    */
   public static String findCommonSupertype(ClassHierarchyProvider hierarchy, String t1, String t2) {
     if (t1 == null || t2 == null) {

@@ -11,8 +11,7 @@
 package com.ibm.wala.shrikeBT;
 
 /**
- * This class represents unary operators where the result is the same type as
- * the operand.
+ * This class represents unary operators where the result is the same type as the operand.
  */
 public final class UnaryOpInstruction extends Instruction implements IUnaryOpInstruction {
   protected UnaryOpInstruction(short opcode) {

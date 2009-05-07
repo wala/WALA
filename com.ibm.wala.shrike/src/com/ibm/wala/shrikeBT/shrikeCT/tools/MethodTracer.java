@@ -30,22 +30,21 @@ import com.ibm.wala.shrikeBT.shrikeCT.OfflineInstrumenter;
 /**
  * This is a demo class.
  * 
- * Class files are taken as input arguments (or if there are none, from standard
- * input). The methods in those files are instrumented: we insert a
- * System.err.println() at ever method call, and a System.err.println() at every
- * method entry.
+ * Class files are taken as input arguments (or if there are none, from standard input). The methods in those files are
+ * instrumented: we insert a System.err.println() at ever method call, and a System.err.println() at every method entry.
  * 
- * In Unix, I run it like this: java -cp ~/dev/shrike/shrike
- * com.ibm.wala.shrikeBT.shrikeCT.tools.MethodTracer test.jar -o output.jar
+ * In Unix, I run it like this: java -cp ~/dev/shrike/shrike com.ibm.wala.shrikeBT.shrikeCT.tools.MethodTracer test.jar -o
+ * output.jar
  * 
- * All modified classes are copied into "output.jar". Some classes may not be
- * modified. To run the resulting code, you should put output.jar and test.jar
- * on the classpath, and put output.jar before test.jar. Disassembled code is
- * written to the file "report" under the current directory.
+ * All modified classes are copied into "output.jar". Some classes may not be modified. To run the resulting code, you should put
+ * output.jar and test.jar on the classpath, and put output.jar before test.jar. Disassembled code is written to the file "report"
+ * under the current directory.
  */
 public class MethodTracer {
   private final static boolean disasm = true;
+
   private final static boolean verify = true;
+
   private final static boolean INSTRUMENT_CALLERS = false;
 
   private static OfflineInstrumenter instrumenter;
@@ -71,6 +70,7 @@ public class MethodTracer {
   // instrumentation tools a bit. It's always safe because Instruction objects
   // are always immutable and shareable.
   static final Instruction getSysErr = Util.makeGet(System.class, "err");
+
   static final Instruction callPrintln = Util.makeInvoke(PrintStream.class, "println", new Class[] { String.class });
 
   private static void doClass(final ClassInstrumenter ci, Writer w) throws Exception {

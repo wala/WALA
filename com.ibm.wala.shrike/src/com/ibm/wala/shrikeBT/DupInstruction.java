@@ -11,8 +11,7 @@
 package com.ibm.wala.shrikeBT;
 
 /**
- * This class represents dup instructions. There are two kinds of dup
- * instructions, dup and dup_x1:
+ * This class represents dup instructions. There are two kinds of dup instructions, dup and dup_x1:
  * 
  * dup: a::rest => a::a::rest dup_x1: a::b::rest => a::b::a::rest
  */
@@ -22,7 +21,7 @@ public final class DupInstruction extends Instruction {
   final private byte delta;
 
   protected DupInstruction(byte size, byte delta) {
-    super((short)-1);
+    super((short) -1);
     this.size = size;
     this.delta = delta;
   }
@@ -39,10 +38,9 @@ public final class DupInstruction extends Instruction {
   }
 
   /**
-   * DupInstructions with size or delta 2 might cause code generation failures
-   * when the working stack contains long or double values, when these
-   * DupInstructions cannot be easily translated into Java bytecode
-   * instructions. For safety, avoid using DupInstructions with size or delta 2.
+   * DupInstructions with size or delta 2 might cause code generation failures when the working stack contains long or double
+   * values, when these DupInstructions cannot be easily translated into Java bytecode instructions. For safety, avoid using
+   * DupInstructions with size or delta 2.
    * 
    * Don't create these outside the shrikeBT decoder.
    */
@@ -57,8 +55,7 @@ public final class DupInstruction extends Instruction {
   }
 
   /**
-   * @param delta
-   *          0 for dup, 1 for dup_x1
+   * @param delta 0 for dup, 1 for dup_x1
    */
   public static DupInstruction make(int delta) {
     if (delta < 0 || delta > 1) {

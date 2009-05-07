@@ -15,13 +15,15 @@ package com.ibm.wala.shrikeCT;
  */
 public final class LineNumberTableWriter extends ClassWriter.Element {
   final private int attrID;
+
   private int[] rawTable = emptyTable;
 
   private static final int[] emptyTable = new int[0];
 
   /**
    * Build an empty LineNumberTable.
-   * @throws IllegalArgumentException  if w is null
+   * 
+   * @throws IllegalArgumentException if w is null
    */
   public LineNumberTableWriter(ClassWriter w) {
     if (w == null) {
@@ -31,11 +33,9 @@ public final class LineNumberTableWriter extends ClassWriter.Element {
   }
 
   /**
-   * Set the raw table entries. Consider calling
-   * LineNumberTableWriter.makeRawTable to build the raw entries.
+   * Set the raw table entries. Consider calling LineNumberTableWriter.makeRawTable to build the raw entries.
    * 
-   * @param table
-   *          a flattened sequence of (startPC, lineNumber) pairs
+   * @param table a flattened sequence of (startPC, lineNumber) pairs
    */
   public void setRawTable(int[] table) {
     if (table == null) {
@@ -78,12 +78,10 @@ public final class LineNumberTableWriter extends ClassWriter.Element {
   }
 
   /**
-   * @param newLineMap
-   *          an array indexed by bytecode offset, mapping each bytecode offset
-   *          to its line number (or 0 if there is no line or it's not known)
-   * @return the line numbers in "raw" format, a flattened sequence of (startPC,
-   *         lineNumber) pairs
-   * @throws IllegalArgumentException  if newLineMap == null
+   * @param newLineMap an array indexed by bytecode offset, mapping each bytecode offset to its line number (or 0 if there is no
+   *          line or it's not known)
+   * @return the line numbers in "raw" format, a flattened sequence of (startPC, lineNumber) pairs
+   * @throws IllegalArgumentException if newLineMap == null
    */
   public static int[] makeRawTable(int[] newLineMap) throws IllegalArgumentException {
     if (newLineMap == null) {
@@ -111,4 +109,3 @@ public final class LineNumberTableWriter extends ClassWriter.Element {
     return rawTable;
   }
 }
-

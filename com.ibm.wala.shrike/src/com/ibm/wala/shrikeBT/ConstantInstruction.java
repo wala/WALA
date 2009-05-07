@@ -14,7 +14,7 @@ package com.ibm.wala.shrikeBT;
  * A ConstantInstruction pushes some constant value onto the stack.
  */
 public abstract class ConstantInstruction extends Instruction {
-  
+
   public static class ClassToken {
     private final String typeName;
 
@@ -50,8 +50,9 @@ public abstract class ConstantInstruction extends Instruction {
     public String getTypeName() {
       return typeName;
     }
-    
+
   }
+
   public ConstantInstruction(short opcode) {
     super(opcode);
   }

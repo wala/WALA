@@ -13,20 +13,25 @@ package com.ibm.wala.shrikeCT;
 /**
  * This class helps emit Code elements.
  * 
- * After constructing a CodeWriter, at least the max stack, max locals and
- * bytecode bytes must be set before it can be used.
+ * After constructing a CodeWriter, at least the max stack, max locals and bytecode bytes must be set before it can be used.
  */
 public final class CodeWriter extends ClassWriter.Element {
   final private int attrID;
+
   private int maxLocals = -1;
+
   private int maxStack = -1;
+
   private byte[] code;
+
   private int[] exnHandlers;
+
   private ClassWriter.Element[] attributes;
 
   /**
    * Build an empty serializable Code attribute.
-   * @throws IllegalArgumentException  if w is null
+   * 
+   * @throws IllegalArgumentException if w is null
    */
   public CodeWriter(ClassWriter w) {
     if (w == null) {
@@ -101,9 +106,10 @@ public final class CodeWriter extends ClassWriter.Element {
 
   /**
    * Set the bytecodes for this Code attribute.
-   * @throws IllegalArgumentException  if code is null
+   * 
+   * @throws IllegalArgumentException if code is null
    */
-  public void setCode(byte[] code) throws IllegalArgumentException{
+  public void setCode(byte[] code) throws IllegalArgumentException {
     if (code == null) {
       throw new IllegalArgumentException("code is null");
     }
@@ -120,10 +126,8 @@ public final class CodeWriter extends ClassWriter.Element {
   /**
    * Set the raw handler data for this Code attribute.
    * 
-   * @param exnHandlers
-   *          a flattened sequence of (startPC, endPC, catchClassIndex, catchPC)
-   *          tuples
-   * @throws IllegalArgumentException  if exnHandlers is null
+   * @param exnHandlers a flattened sequence of (startPC, endPC, catchClassIndex, catchPC) tuples
+   * @throws IllegalArgumentException if exnHandlers is null
    */
   public void setRawHandlers(int[] exnHandlers) {
     if (exnHandlers == null) {
@@ -146,8 +150,7 @@ public final class CodeWriter extends ClassWriter.Element {
   }
 
   /**
-   * Set the maximum number of local variable space used, in words, by this
-   * Code.
+   * Set the maximum number of local variable space used, in words, by this Code.
    */
   public void setMaxLocals(int maxLocals) {
     this.maxLocals = maxLocals;

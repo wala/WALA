@@ -15,6 +15,7 @@ package com.ibm.wala.shrikeCT;
  */
 public final class CodeReader extends AttributeReader {
   final private int codeLen;
+
   final private int exnTableLen;
 
   public CodeReader(ClassReader.AttrIterator iter) throws InvalidClassFileException {
@@ -73,8 +74,7 @@ public final class CodeReader extends AttributeReader {
   }
 
   /**
-   * @return the raw exception handler data, a flattened sequence of (startPC,
-   *         endPC, catchClassIndex, catchPC) tuples
+   * @return the raw exception handler data, a flattened sequence of (startPC, endPC, catchClassIndex, catchPC) tuples
    */
   public int[] getRawHandlers() {
     int[] r = new int[exnTableLen * 4];
@@ -88,7 +88,8 @@ public final class CodeReader extends AttributeReader {
 
   /**
    * Point iter at the list of attributes for this code.
-   * @throws IllegalArgumentException  if iter is null
+   * 
+   * @throws IllegalArgumentException if iter is null
    */
   public void initAttributeIterator(ClassReader.AttrIterator iter) {
     if (iter == null) {

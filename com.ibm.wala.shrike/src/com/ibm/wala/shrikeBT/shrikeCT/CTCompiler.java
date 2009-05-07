@@ -17,12 +17,11 @@ import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeCT.ClassWriter;
 
 /**
- * This class lets you compile ShrikeBT intermediate code into real Java
- * bytecodes using ShrikeCT.
+ * This class lets you compile ShrikeBT intermediate code into real Java bytecodes using ShrikeCT.
  */
 final public class CTCompiler extends Compiler {
   final private ClassWriter cw;
-  
+
   final private Random random = new Random();
 
   /**
@@ -32,7 +31,6 @@ final public class CTCompiler extends Compiler {
     super(md);
     this.cw = cw;
   }
-  
 
   @Override
   protected int allocateConstantPoolInteger(int v) {
@@ -65,9 +63,9 @@ final public class CTCompiler extends Compiler {
   }
 
   /**
-   * Convert a JVM type to the internal JVM class name (e.g., Ljava/lang/Object;
-   * to java/lang/Object)
-   * @throws IllegalArgumentException  if s is null
+   * Convert a JVM type to the internal JVM class name (e.g., Ljava/lang/Object; to java/lang/Object)
+   * 
+   * @throws IllegalArgumentException if s is null
    */
   public static String convertTypeToClass(String s) {
     if (s == null) {
@@ -86,7 +84,6 @@ final public class CTCompiler extends Compiler {
     }
     return new CTCompiler(cw, md);
   }
-
 
   @Override
   protected int allocateConstantPoolField(String c, String name, String type) {

@@ -60,7 +60,7 @@ public class ExtractMatchingClasses {
     }
 
     for (Enumeration<JarEntry> e = inJar.entries(); e.hasMoreElements();) {
-      JarEntry entry =  e.nextElement();
+      JarEntry entry = e.nextElement();
 
       if (matchEntry(matches, entry)) {
         outJar.putNextEntry(entry);

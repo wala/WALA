@@ -7,7 +7,7 @@ public interface IUnaryOpInstruction extends IInstruction {
 
   public static enum Operator implements IOperator {
     NEG;
-  
+
     @Override
     public String toString() {
       return super.toString().toLowerCase();
@@ -15,6 +15,6 @@ public interface IUnaryOpInstruction extends IInstruction {
   }
 
   IOperator getOperator();
-  
+
   String getType();
 }

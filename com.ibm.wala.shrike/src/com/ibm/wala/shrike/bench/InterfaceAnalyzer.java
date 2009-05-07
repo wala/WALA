@@ -28,9 +28,13 @@ import com.ibm.wala.shrikeCT.ClassReader;
 public class InterfaceAnalyzer {
   final static class TypeStats {
     int totalOccurrences;
+
     int methodOccurrences;
+
     int publicMethodOccurrences;
+
     int foreignPublicMethodOccurrences;
+
     int lastMUID;
   }
 
@@ -80,7 +84,6 @@ public class InterfaceAnalyzer {
       }
     }
   }
-
 
   private static void doType(int flags, String type, String containerType, int mUID) {
     TypeStats t = typeStats.get(type);

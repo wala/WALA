@@ -22,12 +22,11 @@ import com.ibm.wala.shrikeBT.analysis.Verifier;
 /**
  * This class generates Java bytecode from ShrikeBT Instructions.
  * 
- * If there are too many instructions to fit into 64K bytecodes, then we break
- * the method up, generating auxiliary methods called by the main method.
+ * If there are too many instructions to fit into 64K bytecodes, then we break the method up, generating auxiliary methods called by
+ * the main method.
  * 
- * This class is abstract; there are subclasses for specific class file access
- * toolkits. These toolkits are responsible for providing ways to allocate
- * constant pool entries.
+ * This class is abstract; there are subclasses for specific class file access toolkits. These toolkits are responsible for
+ * providing ways to allocate constant pool entries.
  */
 public abstract class Compiler implements Constants {
   // input
@@ -81,29 +80,21 @@ public abstract class Compiler implements Constants {
   /**
    * Initialize a Compiler for the given method data.
    * 
-   * @param isStatic
-   *          true iff the method is static
-   * @param classType
-   *          the JVM type of the class the method belongs to
-   * @param signature
-   *          the JVM signature of the method
-   * @param instructions
-   *          the ShrikeBT instructions
-   * @param handlers
-   *          the ShrikeBT exception handlers
-   * @param instructionsToBytecodes
-   *          the map from instructions to original bytecode offsets
-   * @throws IllegalArgumentException
-   *           if handlers is null
-   * @throws IllegalArgumentException
-   *           if instructions is null
-   * @throws IllegalArgumentException  if instructionsToBytecodes is null
+   * @param isStatic true iff the method is static
+   * @param classType the JVM type of the class the method belongs to
+   * @param signature the JVM signature of the method
+   * @param instructions the ShrikeBT instructions
+   * @param handlers the ShrikeBT exception handlers
+   * @param instructionsToBytecodes the map from instructions to original bytecode offsets
+   * @throws IllegalArgumentException if handlers is null
+   * @throws IllegalArgumentException if instructions is null
+   * @throws IllegalArgumentException if instructionsToBytecodes is null
    */
   public Compiler(boolean isStatic, String classType, String signature, IInstruction[] instructions, ExceptionHandler[][] handlers,
       int[] instructionsToBytecodes) {
     if (instructionsToBytecodes == null) {
-          throw new IllegalArgumentException("instructionsToBytecodes is null");
-        }
+      throw new IllegalArgumentException("instructionsToBytecodes is null");
+    }
     if (instructions == null) {
       throw new IllegalArgumentException("instructions is null");
     }
@@ -126,8 +117,7 @@ public abstract class Compiler implements Constants {
   }
 
   /**
-   * Extract the data for the method to be compiled from the MethodData
-   * container.
+   * Extract the data for the method to be compiled from the MethodData container.
    */
   protected Compiler(MethodData info) {
     this(info.getIsStatic(), info.getClassType(), info.getSignature(), info.getInstructions(), info.getHandlers(), info
@@ -142,12 +132,10 @@ public abstract class Compiler implements Constants {
   }
 
   /**
-   * Notify the compiler that the constants appearing in the ConstantPoolReader
-   * cp will appear in the final class file.
+   * Notify the compiler that the constants appearing in the ConstantPoolReader cp will appear in the final class file.
    * 
-   * Instructions which were extracted from a class file with the same
-   * ConstantPoolReader can be written back much more efficiently if the same
-   * constant pool indices are valid in the new class file.
+   * Instructions which were extracted from a class file with the same ConstantPoolReader can be written back much more efficiently
+   * if the same constant pool indices are valid in the new class file.
    */
   final public void setPresetConstants(ConstantPoolReader cp) {
     presetConstants = cp;
@@ -556,7 +544,7 @@ public abstract class Compiler implements Constants {
     };
 
     for (int i = startInstruction; i < endInstruction; i++) {
-      Instruction instr = (Instruction)instructions[i];
+      Instruction instr = (Instruction) instructions[i];
       int opcode = instr.getOpcode();
       int startI = i;
 
@@ -576,7 +564,7 @@ public abstract class Compiler implements Constants {
               code[curOffset - 1] = (byte) (cbr.getOperator().ordinal() + OP_ifeq);
               fallToConditional = true;
               i++;
-              instr = (Instruction)instructions[i];
+              instr = (Instruction) instructions[i];
             }
           }
           if (!fallToConditional) {
@@ -589,7 +577,7 @@ public abstract class Compiler implements Constants {
               code[curOffset - 1] = (byte) (cbr.getOperator().ordinal() + OP_ifnull);
               fallToConditional = true;
               i++;
-              instr = (Instruction)instructions[i];
+              instr = (Instruction) instructions[i];
             }
           }
           if (!fallToConditional) {
@@ -1003,7 +991,7 @@ public abstract class Compiler implements Constants {
       boolean haveStack = true;
 
       while (startI <= i) {
-        instr = (Instruction)instructions[startI];
+        instr = (Instruction) instructions[startI];
         if (instr.isFallThrough() && haveStack) {
           if (stackLen < instr.getPoppedCount()) {
             throw new IllegalArgumentException("Stack underflow in intermediate code, at offset " + startI);
@@ -1690,10 +1678,9 @@ public abstract class Compiler implements Constants {
   /**
    * Do the work of generating new bytecodes.
    * 
-   * In pathological cases this could throw an Error, when the code you passed
-   * in is too large to fit into a single JVM method and Compiler can't find a
-   * way to break it up into helper methods. You probably won't encounter this
-   * unless you try to make it happen :-).
+   * In pathological cases this could throw an Error, when the code you passed in is too large to fit into a single JVM method and
+   * Compiler can't find a way to break it up into helper methods. You probably won't encounter this unless you try to make it
+   * happen :-).
    */
   final public void compile() {
     collectInstructionInfo();
@@ -1729,10 +1716,8 @@ public abstract class Compiler implements Constants {
   }
 
   /**
-   * Get bytecodes and other information for any helper methods that are
-   * required to implement the main method. These helpers represent code that
-   * could not be fit into the main method because of JVM method size
-   * constraints.
+   * Get bytecodes and other information for any helper methods that are required to implement the main method. These helpers
+   * represent code that could not be fit into the main method because of JVM method size constraints.
    */
   final public Output[] getAuxiliaryMethods() {
     if (auxMethods == null) {
@@ -1745,10 +1730,8 @@ public abstract class Compiler implements Constants {
   }
 
   /**
-   * This class represents a method generated by a Compiler. One input method to
-   * the Compiler can generate multiple Outputs (if the input method is too big
-   * to be represented by a single method in the JVM, say if it requires more
-   * than 64K bytecodes).
+   * This class represents a method generated by a Compiler. One input method to the Compiler can generate multiple Outputs (if the
+   * input method is too big to be represented by a single method in the JVM, say if it requires more than 64K bytecodes).
    */
   public final static class Output {
     final private byte[] code;
@@ -1787,9 +1770,8 @@ public abstract class Compiler implements Constants {
     }
 
     /**
-     * @return the name of the method; either "null", if this code takes the
-     *         place of the original method, or some string representing the
-     *         name of a helper method
+     * @return the name of the method; either "null", if this code takes the place of the original method, or some string
+     *         representing the name of a helper method
      */
     public String getMethodName() {
       return name;
@@ -1803,8 +1785,7 @@ public abstract class Compiler implements Constants {
     }
 
     /**
-     * @return the access flags that should be used for this method, or 0 if
-     *         this is the code for the original method
+     * @return the access flags that should be used for this method, or 0 if this is the code for the original method
      */
     public int getAccessFlags() {
       return name != null ? (ACC_PRIVATE | (isStatic ? ACC_STATIC : 0)) : 0;
@@ -1825,9 +1806,8 @@ public abstract class Compiler implements Constants {
     }
 
     /**
-     * @return a map m such that the new bytecode instruction at offset i
-     *         corresponds to the bytecode instruction at m[i] in the original
-     *         method
+     * @return a map m such that the new bytecode instruction at offset i corresponds to the bytecode instruction at m[i] in the
+     *         original method
      */
     public int[] getNewBytecodesToOldBytecodes() {
       return newBytecodesToOldBytecodes;

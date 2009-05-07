@@ -15,5 +15,6 @@ package com.ibm.wala.shrike.bench;
  */
 public class Slots {
   public static Object o;
+
   public static int i;
 }

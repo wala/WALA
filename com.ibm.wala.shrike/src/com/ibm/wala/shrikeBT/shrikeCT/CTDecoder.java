@@ -18,32 +18,32 @@ import com.ibm.wala.shrikeCT.ConstantPoolParser;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 
 /**
- * This class decodes Java bytecodes into ShrikeBT code using a ShrikeCT class
- * reader.
+ * This class decodes Java bytecodes into ShrikeBT code using a ShrikeCT class reader.
  */
 final public class CTDecoder extends Decoder {
 
   /**
    * Decode the code resource 'r'.
-   * @throws NullPointerException  if r is null
+   * 
+   * @throws NullPointerException if r is null
    */
   public CTDecoder(CodeReader r) throws NullPointerException {
     this(r, makeConstantPoolReader(r.getClassReader()));
   }
 
   /**
-   * Decode the code resource 'r' using the predeclared constant pool reader
-   * 'cpr' (obtained by makeConstantPoolReader below).
-   * @throws NullPointerException  if r is null
+   * Decode the code resource 'r' using the predeclared constant pool reader 'cpr' (obtained by makeConstantPoolReader below).
+   * 
+   * @throws NullPointerException if r is null
    */
   public CTDecoder(CodeReader r, ConstantPoolReader cpr) throws NullPointerException {
     super(r.getBytecode(), r.getRawHandlers(), cpr);
   }
 
   /**
-   * Convert the internal JVM class name to a JVM type name (e.g.,
-   * java/lang/Object to Ljava/lang/Object;).
-   * @throws IllegalArgumentException  if s is null
+   * Convert the internal JVM class name to a JVM type name (e.g., java/lang/Object to Ljava/lang/Object;).
+   * 
+   * @throws IllegalArgumentException if s is null
    */
   public static String convertClassToType(String s) {
     if (s == null) {
@@ -57,8 +57,7 @@ final public class CTDecoder extends Decoder {
   }
 
   /**
-   * Build a ConstantPoolReader implementation to read the constant pool from
-   * 'cr'.
+   * Build a ConstantPoolReader implementation to read the constant pool from 'cr'.
    */
   public static ConstantPoolReader makeConstantPoolReader(ClassReader cr) throws IllegalArgumentException {
     if (cr == null) {

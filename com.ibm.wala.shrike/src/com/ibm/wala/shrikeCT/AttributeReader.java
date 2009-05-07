@@ -10,23 +10,21 @@
  *******************************************************************************/
 package com.ibm.wala.shrikeCT;
 
-
 /**
- * This is a base class for "attribute readers", the classes which provide
- * access to the contents of attributes.
+ * This is a base class for "attribute readers", the classes which provide access to the contents of attributes.
  */
 public abstract class AttributeReader {
   protected final ClassReader cr;
+
   final protected int attr;
+
   final protected int length;
 
   /**
    * Construct a reader for a particular attribute.
    * 
-   * @param attr
-   *          a valid attribute iterator pointing at the attribute to read
-   * @param expectedName
-   *          the name the attribute must have
+   * @param attr a valid attribute iterator pointing at the attribute to read
+   * @param expectedName the name the attribute must have
    */
   protected AttributeReader(ClassReader.AttrIterator attr, String expectedName) throws InvalidClassFileException {
     if (attr == null) {
@@ -51,8 +49,7 @@ public abstract class AttributeReader {
   }
 
   /**
-   * @return the offset of the raw attribute data (including the attribute
-   *         header)
+   * @return the offset of the raw attribute data (including the attribute header)
    */
   public final int getRawOffset() {
     return attr;
@@ -66,11 +63,9 @@ public abstract class AttributeReader {
   }
 
   /**
-   * Ensure that the len bytes starting at offset fall within the attribute
-   * data.
+   * Ensure that the len bytes starting at offset fall within the attribute data.
    * 
-   * @throws InvalidClassFileException
-   *           if the bytes fall outside the data
+   * @throws InvalidClassFileException if the bytes fall outside the data
    */
   protected final void checkSize(int offset, int len) throws InvalidClassFileException {
     if (length < offset - attr + len) {
@@ -80,11 +75,9 @@ public abstract class AttributeReader {
   }
 
   /**
-   * Ensure that the len bytes starting at offset end at the end of the
-   * attribute data.
+   * Ensure that the len bytes starting at offset end at the end of the attribute data.
    * 
-   * @throws InvalidClassFileException
-   *           if the bytes do not end at the end of the attribute
+   * @throws InvalidClassFileException if the bytes do not end at the end of the attribute
    */
   protected final void checkSizeEquals(int offset, int len) throws InvalidClassFileException {
     if (length != offset - attr + len) {

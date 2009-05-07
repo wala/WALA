@@ -15,11 +15,13 @@ package com.ibm.wala.shrikeCT;
  */
 public final class InnerClassesWriter extends ClassWriter.Element {
   final private int attrID;
+
   private int[] table;
 
   /**
    * Build an empty writer.
-   * @throws IllegalArgumentException  if w is null
+   * 
+   * @throws IllegalArgumentException if w is null
    */
   public InnerClassesWriter(ClassWriter w) {
     if (w == null) {
@@ -55,7 +57,8 @@ public final class InnerClassesWriter extends ClassWriter.Element {
 
   /**
    * Set the raw values that make up this attribute
-   * @throws IllegalArgumentException  if classes is null
+   * 
+   * @throws IllegalArgumentException if classes is null
    */
   public void setRawTable(int[] classes) throws NullPointerException {
     if (classes == null) {

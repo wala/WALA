@@ -28,23 +28,31 @@ import com.ibm.wala.shrikeBT.info.LocalAllocator;
 @Deprecated
 public final class MethodOptimizer {
   final private MethodData data;
+
   private IInstruction[] instructions;
+
   private ExceptionHandler[][] handlers;
+
   private final MethodEditor editor;
+
   // The value at index [i][N] is the index of the only instruction which pushes
   // a value onto
   // the stack which is #N popped by instruction i, or -2 if there is no such
   // instruction
   // or -1 if there is more than one such instruction.
   private int[][] uniqueStackDefLocations;
+
   // The value at index i[N] is the index of the only instruction which pops a
   // value off
   // the stack which is pushed by instruction i, or -2 if there is no such
   // instruction
   // or -1 if there is more than one such instruction.
   private int[] uniqueStackUseLocations;
+
   private int[] stackSizes;
+
   private int[][] backEdges;
+
   // The value at index i is the index of the only instruction which stores a
   // value onto
   // the stack which is popped by instruction i, or -2 if there is no such

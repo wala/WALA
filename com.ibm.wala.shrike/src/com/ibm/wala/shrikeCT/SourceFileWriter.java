@@ -17,11 +17,13 @@ package com.ibm.wala.shrikeCT;
  */
 public final class SourceFileWriter extends ClassWriter.Element {
   final private int attrID;
+
   private int index = -1;
 
   /**
    * Build an empty writer.
-   * @throws IllegalArgumentException  if w is null
+   * 
+   * @throws IllegalArgumentException if w is null
    */
   public SourceFileWriter(ClassWriter w) {
     if (w == null) {

@@ -22,14 +22,10 @@ public final class NewInstruction extends Instruction {
   }
 
   /**
-   * @param type
-   *          the type of the object that will be returned (in JVM format, e.g.,
-   *          [Ljava/lang/String;)
-   * @param arrayBoundsCount
-   *          the number of array dimensions to preconstruct (equal to the
-   *          number of integer parameters this instruction expects)
-   * @throws IllegalArgumentException
-   *           if type is null
+   * @param type the type of the object that will be returned (in JVM format, e.g., [Ljava/lang/String;)
+   * @param arrayBoundsCount the number of array dimensions to preconstruct (equal to the number of integer parameters this
+   *          instruction expects)
+   * @throws IllegalArgumentException if type is null
    */
   public static NewInstruction make(String type, int arrayBoundsCount) throws IllegalArgumentException {
     if (type == null) {

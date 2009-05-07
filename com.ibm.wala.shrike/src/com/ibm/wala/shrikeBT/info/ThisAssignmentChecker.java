@@ -16,8 +16,7 @@ import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.StoreInstruction;
 
 /**
- * This method annotation checks to see whether "this" is assigned to by the
- * method. The result is cached in an annotation.
+ * This method annotation checks to see whether "this" is assigned to by the method. The result is cached in an annotation.
  */
 public class ThisAssignmentChecker implements MethodData.Results {
   private final static String key = ThisAssignmentChecker.class.getName();

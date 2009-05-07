@@ -13,10 +13,8 @@ package com.ibm.wala.shrikeCT;
 /**
  * This class reads LineNumberTable attributes.
  * 
- * Instead of constructing a LineNumberTableReader directly, consider just
- * calling LineNumberTableReader.makeBytecodeToSourceMap for convenient access
- * to aggregate line number data from all the LineNumberTable attributes for a
- * given Code.
+ * Instead of constructing a LineNumberTableReader directly, consider just calling LineNumberTableReader.makeBytecodeToSourceMap for
+ * convenient access to aggregate line number data from all the LineNumberTable attributes for a given Code.
  */
 public final class LineNumberTableReader extends AttributeReader {
   /**
@@ -33,8 +31,7 @@ public final class LineNumberTableReader extends AttributeReader {
   }
 
   /**
-   * @return the raw line number table data, a flattened sequence of (startPC,
-   *         lineNumber) pairs
+   * @return the raw line number table data, a flattened sequence of (startPC, lineNumber) pairs
    */
   public int[] getRawTable() {
     int count = cr.getUShort(attr + 6);
@@ -48,16 +45,14 @@ public final class LineNumberTableReader extends AttributeReader {
   }
 
   /**
-   * Construct a "bytecode to source" map for the given code. This method
-   * aggregates all the LineNumberTable attributes for the code into one handy
-   * data structure.
+   * Construct a "bytecode to source" map for the given code. This method aggregates all the LineNumberTable attributes for the code
+   * into one handy data structure.
    * 
-   * @return an array mapping each byte of the bytecode bytes to the line number
-   *         that that byte belongs to, or null if there is no line number data
-   *         in the Code
+   * @return an array mapping each byte of the bytecode bytes to the line number that that byte belongs to, or null if there is no
+   *         line number data in the Code
    */
   public static int[] makeBytecodeToSourceMap(CodeReader code) throws InvalidClassFileException, IllegalArgumentException {
-   
+
     if (code == null) {
       throw new IllegalArgumentException();
     }

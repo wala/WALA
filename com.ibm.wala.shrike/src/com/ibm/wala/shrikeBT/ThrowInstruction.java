@@ -15,10 +15,11 @@ package com.ibm.wala.shrikeBT;
  */
 public final class ThrowInstruction extends Instruction {
   private static final ThrowInstruction preallocated = new ThrowInstruction(false);
+
   private static final ThrowInstruction preallocatedRethrow = new ThrowInstruction(true);
 
   private final boolean rethrow;
-  
+
   protected ThrowInstruction(boolean rethrow) {
     super(OP_athrow);
     this.rethrow = rethrow;
@@ -40,7 +41,7 @@ public final class ThrowInstruction extends Instruction {
   public boolean isRethrow() {
     return rethrow;
   }
-  
+
   @Override
   public boolean isFallThrough() {
     return false;

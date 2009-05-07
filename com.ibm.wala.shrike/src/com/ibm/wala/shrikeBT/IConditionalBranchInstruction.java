@@ -6,13 +6,8 @@ public interface IConditionalBranchInstruction extends IInstruction {
   }
 
   public enum Operator implements IConditionalBranchInstruction.IOperator {
-    EQ,
-    NE,
-    LT,
-    GE,
-    GT,
-    LE;
-  
+    EQ, NE, LT, GE, GT, LE;
+
     @Override
     public String toString() {
       return super.toString().toLowerCase();
@@ -20,8 +15,8 @@ public interface IConditionalBranchInstruction extends IInstruction {
   }
 
   int getTarget();
-  
+
   IOperator getOperator();
-  
+
   String getType();
 }

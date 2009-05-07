@@ -16,17 +16,19 @@ import java.util.Iterator;
 import com.ibm.wala.shrikeBT.Constants;
 
 /**
- * This implementation of ClassHierarchyProvider is a simple writable data
- * structure representing a class hierarchy. You call setClassInfo to record
- * information about a class.
+ * This implementation of ClassHierarchyProvider is a simple writable data structure representing a class hierarchy. You call
+ * setClassInfo to record information about a class.
  */
 public final class ClassHierarchyStore implements ClassHierarchyProvider {
   private static final String[] noClasses = new String[0];
 
   final static class ClassInfo {
     final boolean isInterface;
+
     final boolean isFinal;
+
     final String superClass;
+
     final String[] superInterfaces;
 
     ClassInfo(boolean isInterface, boolean isFinal, String superClass, String[] superInterfaces) {
@@ -48,18 +50,14 @@ public final class ClassHierarchyStore implements ClassHierarchyProvider {
   /**
    * Append some class information to the store.
    * 
-   * @param cl
-   *          the JVM type of the class being added (e.g., Ljava/lang/Object;)
-   * @param isInterface
-   *          true iff it's an interface
-   * @param isFinal
-   *          true iff it's final
-   * @param superClass
-   *          the JVM type of the superclass, or null if this is Object
-   * @param superInterfaces
-   *          the JVM types of its implemented interfaces
+   * @param cl the JVM type of the class being added (e.g., Ljava/lang/Object;)
+   * @param isInterface true iff it's an interface
+   * @param isFinal true iff it's final
+   * @param superClass the JVM type of the superclass, or null if this is Object
+   * @param superInterfaces the JVM types of its implemented interfaces
    */
-  public void setClassInfo(String cl, boolean isInterface, boolean isFinal, String superClass, String[] superInterfaces) throws IllegalArgumentException {
+  public void setClassInfo(String cl, boolean isInterface, boolean isFinal, String superClass, String[] superInterfaces)
+      throws IllegalArgumentException {
     if (superClass != null && superClass.equals(cl)) {
       throw new IllegalArgumentException("Class " + cl + " cannot be its own superclass");
     }

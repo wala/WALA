@@ -4,7 +4,7 @@ public interface IPutInstruction extends IInstruction {
 
   public String getClassType();
 
-  public String getFieldType() ;
+  public String getFieldType();
 
   public String getFieldName();
 

@@ -37,12 +37,10 @@ import com.ibm.wala.shrikeCT.SignatureReader;
 import com.ibm.wala.shrikeCT.SourceFileReader;
 
 /**
- * This class prints the contents of a class file. It's like an alternative to
- * javap that shows more information.
+ * This class prints the contents of a class file. It's like an alternative to javap that shows more information.
  * 
- * In Unix I run it like this: java -cp ~/dev/shrike/shrike
- * com.ibm.wala.shrikeBT.shrikeCT.tools.ClassPrinter test.jar This will print
- * the contents of every class in the JAR file.
+ * In Unix I run it like this: java -cp ~/dev/shrike/shrike com.ibm.wala.shrikeBT.shrikeCT.tools.ClassPrinter test.jar This will
+ * print the contents of every class in the JAR file.
  * 
  * @author roca
  */
@@ -68,8 +66,7 @@ public class ClassPrinter {
   }
 
   /**
-   * Controls whether to print all the constant pool entries. The default is
-   * 'true'.
+   * Controls whether to print all the constant pool entries. The default is 'true'.
    */
   public void setPrintConstantPool(boolean b) {
     printConstantPool = b;
@@ -270,10 +267,10 @@ public class ClassPrinter {
         w.write("    signature: " + cr.getCP().getCPUtf8(sr.getSignatureCPIndex()) + "\n");
       } else if (name.equals(RuntimeInvisibleAnnotationsReader.attrName)) {
         AnnotationsReader r = new RuntimeInvisibleAnnotationsReader(attrs);
-        printAnnotations(cr, attrs, r );
+        printAnnotations(cr, attrs, r);
       } else if (name.equals(RuntimeVisibleAnnotationsReader.attrName)) {
         AnnotationsReader r = new RuntimeVisibleAnnotationsReader(attrs);
-        printAnnotations(cr, attrs, r );
+        printAnnotations(cr, attrs, r);
       } else {
         int len = attrs.getDataSize();
         int pos = attrs.getDataOffset();
@@ -287,7 +284,8 @@ public class ClassPrinter {
     }
   }
 
-  private void printAnnotations(ClassReader cr, ClassReader.AttrIterator attrs, AnnotationsReader r) throws InvalidClassFileException {
+  private void printAnnotations(ClassReader cr, ClassReader.AttrIterator attrs, AnnotationsReader r)
+      throws InvalidClassFileException {
     try {
       int[] annotations = r.getAnnotationOffsets();
       for (int j : annotations) {
@@ -375,7 +373,8 @@ public class ClassPrinter {
 
   /**
    * Print a class.
-   * @throws IllegalArgumentException  if cr is null
+   * 
+   * @throws IllegalArgumentException if cr is null
    */
   public void doClass(final ClassReader cr) throws InvalidClassFileException, InvalidBytecodeException, IOException {
     if (cr == null) {

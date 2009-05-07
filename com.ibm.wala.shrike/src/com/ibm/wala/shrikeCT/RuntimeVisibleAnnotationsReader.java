@@ -18,7 +18,7 @@ package com.ibm.wala.shrikeCT;
 public final class RuntimeVisibleAnnotationsReader extends AnnotationsReader {
 
   public final static String attrName = "RuntimeVisibleAnnotations";
-  
+
   public RuntimeVisibleAnnotationsReader(ClassReader.AttrIterator iter) throws InvalidClassFileException {
     super(iter, attrName);
   }

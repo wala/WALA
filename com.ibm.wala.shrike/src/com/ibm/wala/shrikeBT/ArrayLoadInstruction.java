@@ -98,6 +98,7 @@ final public class ArrayLoadInstruction extends Instruction implements IArrayLoa
   public void visit(IInstruction.Visitor v) throws NullPointerException {
     v.visitArrayLoad(this);
   }
+
   public boolean isPEI() {
     return true;
   }

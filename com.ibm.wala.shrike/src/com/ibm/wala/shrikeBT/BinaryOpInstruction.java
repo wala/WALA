@@ -130,6 +130,6 @@ final public class BinaryOpInstruction extends Instruction implements IBinaryOpI
   }
 
   public boolean isUnsigned() {
-     return false;
+    return false;
   }
 }

@@ -35,10 +35,9 @@ import com.ibm.wala.shrikeCT.LocalVariableTableWriter;
 import com.ibm.wala.shrikeCT.ClassWriter.Element;
 
 /**
- * This class provides a convenient way to instrument every method in a class.
- * It assumes you are using ShrikeCT to read and write classes. It's stateful;
- * initially every method is set to the original code read from the class, but
- * you can then go in and modify the methods.
+ * This class provides a convenient way to instrument every method in a class. It assumes you are using ShrikeCT to read and write
+ * classes. It's stateful; initially every method is set to the original code read from the class, but you can then go in and modify
+ * the methods.
  */
 final public class ClassInstrumenter {
   final private boolean[] deletedMethods;
@@ -63,9 +62,8 @@ final public class ClassInstrumenter {
   }
 
   /**
-   * Calling this means that methods without line numbers get fake line numbers
-   * added: each bytecode instruction is treated as at line 'offset' + the
-   * offset of the instruction.
+   * Calling this means that methods without line numbers get fake line numbers added: each bytecode instruction is treated as at
+   * line 'offset' + the offset of the instruction.
    */
   public void enableFakeLineNumbers(int offset) {
     createFakeLineNumbers = true;
@@ -75,8 +73,7 @@ final public class ClassInstrumenter {
   /**
    * Create a class instrumenter from a preinitialized class reader.
    * 
-   * @throws IllegalArgumentException
-   *           if cr is null
+   * @throws IllegalArgumentException if cr is null
    */
   public ClassInstrumenter(ClassReader cr) throws InvalidClassFileException {
     if (cr == null) {
@@ -97,8 +94,7 @@ final public class ClassInstrumenter {
   }
 
   /**
-   * Implement this interface to instrument every method of a class using
-   * visitMethods() below.
+   * Implement this interface to instrument every method of a class using visitMethods() below.
    */
   public static interface MethodExaminer {
     /**
@@ -135,8 +131,7 @@ final public class ClassInstrumenter {
   /**
    * Indicate that the method should be deleted from the class.
    * 
-   * @param i
-   *          the index of the method to delete
+   * @param i the index of the method to delete
    */
   public void deleteMethod(int i) {
     deletedMethods[i] = true;
@@ -170,10 +165,8 @@ final public class ClassInstrumenter {
   /**
    * Xiangyu
    * 
-   * @throws IllegalArgumentException
-   *           if classWriter is null
-   * @throws IllegalArgumentException
-   *           if instructions is null
+   * @throws IllegalArgumentException if classWriter is null
+   * @throws IllegalArgumentException if instructions is null
    * 
    * 
    */
@@ -267,11 +260,9 @@ final public class ClassInstrumenter {
   }
 
   /**
-   * Do something to every method in the class. This will visit all methods,
-   * including those already marked for deletion.
+   * Do something to every method in the class. This will visit all methods, including those already marked for deletion.
    * 
-   * @param me
-   *          the visitor to apply to each method
+   * @param me the visitor to apply to each method
    */
   public void visitMethods(MethodExaminer me) throws InvalidClassFileException {
     for (int i = 0; i < methods.length; i++) {
@@ -285,8 +276,7 @@ final public class ClassInstrumenter {
   /**
    * Get the current state of method i. This can be edited using a MethodEditor.
    * 
-   * @param i
-   *          the index of the method to inspect
+   * @param i the index of the method to inspect
    */
   public MethodData visitMethod(int i) throws InvalidClassFileException {
     prepareMethod(i);
@@ -296,8 +286,7 @@ final public class ClassInstrumenter {
   /**
    * Get the original code resource for the method.
    * 
-   * @param i
-   *          the index of the method to inspect
+   * @param i the index of the method to inspect
    */
   public CodeReader getMethodCode(int i) throws InvalidClassFileException {
     prepareMethod(i);
@@ -305,11 +294,9 @@ final public class ClassInstrumenter {
   }
 
   /**
-   * Reset method i back to the code from the original class, and "undelete" it
-   * if it was marked for deletion.
+   * Reset method i back to the code from the original class, and "undelete" it if it was marked for deletion.
    * 
-   * @param i
-   *          the index of the method to reset
+   * @param i the index of the method to reset
    */
   public void resetMethod(int i) {
     deletedMethods[i] = false;
@@ -317,13 +304,10 @@ final public class ClassInstrumenter {
   }
 
   /**
-   * Replace the code for method i with new code. This also "undeletes" the
-   * method if it was marked for deletion.
+   * Replace the code for method i with new code. This also "undeletes" the method if it was marked for deletion.
    * 
-   * @param i
-   *          the index of the method to replace
-   * @throws IllegalArgumentException
-   *           if md is null
+   * @param i the index of the method to replace
+   * @throws IllegalArgumentException if md is null
    */
   public void replaceMethod(int i, MethodData md) {
     if (md == null) {
@@ -348,12 +332,10 @@ final public class ClassInstrumenter {
   }
 
   /**
-   * Create a class which is a copy of the original class but with the new
-   * method code. We return the ClassWriter used, so more methods and fields
-   * (and other changes) can still be added.
+   * Create a class which is a copy of the original class but with the new method code. We return the ClassWriter used, so more
+   * methods and fields (and other changes) can still be added.
    * 
-   * We fix up any debug information to be consistent with the changes to the
-   * code.
+   * We fix up any debug information to be consistent with the changes to the code.
    */
   public ClassWriter emitClass() throws InvalidClassFileException {
     ClassWriter w = new ClassWriter();
@@ -362,11 +344,9 @@ final public class ClassInstrumenter {
   }
 
   /**
-   * Copy the contents of the old class, plus any method modifications, into a
-   * new ClassWriter. The ClassWriter must be empty!
+   * Copy the contents of the old class, plus any method modifications, into a new ClassWriter. The ClassWriter must be empty!
    * 
-   * @param w
-   *          the classwriter to copy into.
+   * @param w the classwriter to copy into.
    */
   private void emitClassInto(ClassWriter w) throws InvalidClassFileException {
     w.setMajorVersion(cr.getMajorVersion());

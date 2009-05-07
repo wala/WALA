@@ -31,8 +31,8 @@ import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
 
 /**
- * This class provides functionality for performing offline instrumentation. It
- * is subclassed with class-toolkit-specific functionality.
+ * This class provides functionality for performing offline instrumentation. It is subclassed with class-toolkit-specific
+ * functionality.
  */
 public abstract class OfflineInstrumenterBase {
   private int inputIndex;
@@ -56,24 +56,21 @@ public abstract class OfflineInstrumenterBase {
   private ManifestBuilder manifestBuilder;
 
   /**
-   * This installs a ManifestBuilder callback that this class will notify
-   * whenever an entry has been added to the output zip file.
+   * This installs a ManifestBuilder callback that this class will notify whenever an entry has been added to the output zip file.
    */
   public void setManifestBuilder(ManifestBuilder mb) {
     manifestBuilder = mb;
   }
 
   /**
-   * Thiscallback is notified whenever an entry has been added to the output zip
-   * file.
+   * Thiscallback is notified whenever an entry has been added to the output zip file.
    */
   public static interface ManifestBuilder {
     public void addEntry(ZipEntry ze);
   }
 
   /**
-   * This class represents a resource which can be opened and read; either a
-   * file or a JAR entry.
+   * This class represents a resource which can be opened and read; either a file or a JAR entry.
    */
   abstract class Input {
     private String className;
@@ -106,9 +103,8 @@ public abstract class OfflineInstrumenterBase {
   }
 
   /**
-   * This class represents a JAR file entry. It might or might not be a class;
-   * we support non-class JAR resources so that we can copy them to the output
-   * JAR if the client requests that.
+   * This class represents a JAR file entry. It might or might not be a class; we support non-class JAR resources so that we can
+   * copy them to the output JAR if the client requests that.
    */
   final class JarInput extends Input {
     final private File file;
@@ -149,11 +145,9 @@ public abstract class OfflineInstrumenterBase {
   }
 
   /**
-   * Open a JAR/ZIP file. This routine caches the last JAR file opened to save
-   * effort when the same file is accessed again and again. DO NOT close the
-   * file returned by this routine until you've finished with this
-   * OfflineInstrumente completely. Also, this JarFile will be closed the next
-   * time someone calls openCachedJar.
+   * Open a JAR/ZIP file. This routine caches the last JAR file opened to save effort when the same file is accessed again and
+   * again. DO NOT close the file returned by this routine until you've finished with this OfflineInstrumente completely. Also, this
+   * JarFile will be closed the next time someone calls openCachedJar.
    */
   private JarFile openCachedJar(File file) throws IOException {
     if (cachedJarFile != null && cachedJarFile.equals(file)) {
@@ -169,8 +163,7 @@ public abstract class OfflineInstrumenterBase {
   }
 
   /**
-   * This class represents a plain old class file in the filesystem. Non-class
-   * file resources are not supported.
+   * This class represents a plain old class file in the filesystem. Non-class file resources are not supported.
    */
   final class ClassInput extends Input {
     final private File file;
@@ -201,8 +194,7 @@ public abstract class OfflineInstrumenterBase {
   }
 
   /**
-   * Indicate whether classes which are not modified will be put into the output
-   * jar anyway.
+   * Indicate whether classes which are not modified will be put into the output jar anyway.
    */
   final public void setPassUnmodifiedClasses(boolean pass) {
     passUnmodifiedClasses = pass;
@@ -238,11 +230,9 @@ public abstract class OfflineInstrumenterBase {
   }
 
   /**
-   * Add a directory containing class files to instrument. All subdirectories
-   * are also scanned.
+   * Add a directory containing class files to instrument. All subdirectories are also scanned.
    * 
-   * @throws IllegalArgumentException
-   *           if d is null
+   * @throws IllegalArgumentException if d is null
    */
   final public void addInputDirectory(File d) throws IOException, IllegalArgumentException {
     if (d == null) {
@@ -267,12 +257,10 @@ public abstract class OfflineInstrumenterBase {
   }
 
   /**
-   * Add something to instrument --- the name of a JAR file, a class file, a
-   * directory or an entry within a jar file (as filename#entryname). If we
-   * can't identify it, nothing is added and we return false.
+   * Add something to instrument --- the name of a JAR file, a class file, a directory or an entry within a jar file (as
+   * filename#entryname). If we can't identify it, nothing is added and we return false.
    * 
-   * @throws IllegalArgumentException
-   *           if a is null
+   * @throws IllegalArgumentException if a is null
    */
   final public boolean addInputElement(String a) throws IOException {
     if (a == null) {
@@ -304,15 +292,13 @@ public abstract class OfflineInstrumenterBase {
   }
 
   /**
-   * Parse an argument list to find elements to instrument and the name of the
-   * output file. The "-o filename" option selects the output JAR file name. Any
-   * other argument not starting with "-" is added to the list of elements to
-   * instrument, if it appears to be the name of a class file, JAR file, or
-   * directory. If any argument starting with "--" is encountered, the rest of
-   * the command-line is considered leftover
+   * Parse an argument list to find elements to instrument and the name of the output file. The "-o filename" option selects the
+   * output JAR file name. Any other argument not starting with "-" is added to the list of elements to instrument, if it appears to
+   * be the name of a class file, JAR file, or directory. If any argument starting with "--" is encountered, the rest of the
+   * command-line is considered leftover
    * 
    * @return the arguments that were not understood
-   * @throws IllegalArgumentException  if args == null
+   * @throws IllegalArgumentException if args == null
    */
   final public String[] parseStandardArgs(String[] args) throws IllegalArgumentException, IOException {
     if (args == null) {
@@ -355,8 +341,7 @@ public abstract class OfflineInstrumenterBase {
   }
 
   /**
-   * Read a list of class file names from a stream and add them to the list of
-   * things to instrument.
+   * Read a list of class file names from a stream and add them to the list of things to instrument.
    */
   final public void readInputClasses(InputStream s) throws IOException, IllegalArgumentException {
     if (s == null) {
@@ -410,9 +395,8 @@ public abstract class OfflineInstrumenterBase {
   }
 
   /**
-   * Get the name of the resource containing the last class returned. This is
-   * either a file name (e.g., "com/ibm/Main.class"), or a JAR entry name (e.g.,
-   * "apps/app.jar#com/ibm/Main.class").
+   * Get the name of the resource containing the last class returned. This is either a file name (e.g., "com/ibm/Main.class"), or a
+   * JAR entry name (e.g., "apps/app.jar#com/ibm/Main.class").
    * 
    * @return the resource name, or null if no class has been returned yet
    */
@@ -511,8 +495,7 @@ public abstract class OfflineInstrumenterBase {
   }
 
   /**
-   * Add a raw ZipEntry to the output JAR. Call endOutputJarEntry() when you're
-   * done.
+   * Add a raw ZipEntry to the output JAR. Call endOutputJarEntry() when you're done.
    * 
    * @return the OutputStream to be used to write the entry contents
    */
@@ -535,10 +518,8 @@ public abstract class OfflineInstrumenterBase {
   }
 
   /**
-   * Call this to copy any unmodified classes to the output. This is called
-   * automatically by close(); you should only call this if you want to write an
-   * entry to the JAR file *after* the unmodified classes. This will only ever
-   * be called once per output JAR.
+   * Call this to copy any unmodified classes to the output. This is called automatically by close(); you should only call this if
+   * you want to write an entry to the JAR file *after* the unmodified classes. This will only ever be called once per output JAR.
    */
   final public void writeUnmodifiedClasses() throws IOException, IllegalStateException {
     passUnmodifiedClasses = false;

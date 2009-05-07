@@ -13,9 +13,8 @@ package com.ibm.wala.shrikeCT;
 /**
  * This class reads LocalVariableTable attributes.
  * 
- * Instead of constructing a LocalVariableTable directly, consider just calling
- * LocalVariableTable.makeVarMap for convenient access to aggregate local
- * variable data from all the LocalVariableTable attributes for a given Code.
+ * Instead of constructing a LocalVariableTable directly, consider just calling LocalVariableTable.makeVarMap for convenient access
+ * to aggregate local variable data from all the LocalVariableTable attributes for a given Code.
  */
 public final class LocalVariableTableReader extends AttributeReader {
   public LocalVariableTableReader(ClassReader.AttrIterator iter) throws InvalidClassFileException {
@@ -29,8 +28,7 @@ public final class LocalVariableTableReader extends AttributeReader {
   }
 
   /**
-   * @return the raw line number table data, a flattened sequence of (startPC,
-   *         PClength, nameIndex, typeIndex, var) tuples
+   * @return the raw line number table data, a flattened sequence of (startPC, PClength, nameIndex, typeIndex, var) tuples
    */
   public int[] getRawTable() {
     int count = cr.getUShort(attr + 6);
@@ -57,17 +55,15 @@ public final class LocalVariableTableReader extends AttributeReader {
   }
 
   /**
-   * @return an array mapping bytecode offsets to arrays representing the local
-   *         variable maps for each offset; a local variable map is represented
-   *         as an array of localVars*2 elements, containing a pair (nameIndex,
-   *         typeIndex) for each local variable; a pair (0,0) indicates there is
-   *         no information for that local variable at that offset
+   * @return an array mapping bytecode offsets to arrays representing the local variable maps for each offset; a local variable map
+   *         is represented as an array of localVars*2 elements, containing a pair (nameIndex, typeIndex) for each local variable; a
+   *         pair (0,0) indicates there is no information for that local variable at that offset
    */
-  public static int[][] makeVarMap(CodeReader code) throws InvalidClassFileException, IllegalArgumentException{
+  public static int[][] makeVarMap(CodeReader code) throws InvalidClassFileException, IllegalArgumentException {
     if (code == null) {
       throw new IllegalArgumentException();
     }
-    
+
     int[][] r = null;
     ClassReader cr = code.getClassReader();
 

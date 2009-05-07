@@ -11,9 +11,8 @@
 package com.ibm.wala.shrikeBT;
 
 /**
- * This class represents conditional branches. A conditional branch tests two
- * integers or two object references for some relationship, and takes the branch
- * if the relationship holds.
+ * This class represents conditional branches. A conditional branch tests two integers or two object references for some
+ * relationship, and takes the branch if the relationship holds.
  */
 public final class ConditionalBranchInstruction extends Instruction implements IConditionalBranchInstruction {
 

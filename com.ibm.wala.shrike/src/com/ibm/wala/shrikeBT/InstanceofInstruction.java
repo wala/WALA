@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.shrikeBT;
 
-
 /**
  * This class represents instanceof instructions.
  */

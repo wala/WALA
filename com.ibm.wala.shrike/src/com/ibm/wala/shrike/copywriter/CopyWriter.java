@@ -48,11 +48,15 @@ public class CopyWriter {
       + "    -o <jarname>              Put the resulting classes into <jarname>\n"
       + "    -c <copyright>            Make the copyright string be\n"
       + "                              '\u00A9 Copyright <copyright>'";
+
   private static OfflineInstrumenter instrumenter;
+
   public static String copyright;
+
   public static final String copyrightAttrName = "com.ibm.Copyright";
 
   private int replaceWith;
+
   private int replace;
 
   static class UnknownAttributeException extends Exception {
@@ -262,14 +266,11 @@ public class CopyWriter {
 
   private void doClass(final ClassInstrumenter ci) throws Exception {
     /*
-     * Our basic strategy is to make the first element of the constant pool be
-     * the copyright string (as a UTF8 constant pool item). This requires us to
-     * parse and emit any class data which might refer to that constant pool
-     * item (#1). We will assume that any attribute which refers to that
-     * constant pool item must contain the byte sequence '00 01', so we can just
-     * copy over any attributes which don't contain that byte sequence. If we
-     * detect an unknown attribute type containing the sequence '00 01', then we
-     * will abort.
+     * Our basic strategy is to make the first element of the constant pool be the copyright string (as a UTF8 constant pool item).
+     * This requires us to parse and emit any class data which might refer to that constant pool item (#1). We will assume that any
+     * attribute which refers to that constant pool item must contain the byte sequence '00 01', so we can just copy over any
+     * attributes which don't contain that byte sequence. If we detect an unknown attribute type containing the sequence '00 01',
+     * then we will abort.
      */
     ClassReader cr = ci.getReader();
     ClassWriter w = new ClassWriter();

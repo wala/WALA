@@ -38,26 +38,25 @@ import com.ibm.wala.shrikeCT.ClassWriter;
 /**
  * This is a demo class.
  * 
- * Class files are taken as input arguments (or if there are none, from standard
- * input). The methods in those files are instrumented: we insert a
- * System.err.println() at ever method call, and a System.err.println() at every
- * method entry.
+ * Class files are taken as input arguments (or if there are none, from standard input). The methods in those files are
+ * instrumented: we insert a System.err.println() at ever method call, and a System.err.println() at every method entry.
  * 
- * In Unix, I run it like this: java -cp ~/dev/shrike/shrike
- * com.ibm.wala.shrikeBT.shrikeCT.tools.Bench test.jar -o output.jar
+ * In Unix, I run it like this: java -cp ~/dev/shrike/shrike com.ibm.wala.shrikeBT.shrikeCT.tools.Bench test.jar -o output.jar
  * 
- * The instrumented classes are placed in the directory "output" under the
- * current directory. Disassembled code is written to the file "report" under
- * the current directory.
+ * The instrumented classes are placed in the directory "output" under the current directory. Disassembled code is written to the
+ * file "report" under the current directory.
  */
 public class Bench {
   private final static boolean disasm = true;
+
   private final static boolean verify = true;
 
   private static OfflineInstrumenter instrumenter;
 
   final private static boolean doEntry = true;
+
   private static boolean doExit = false;
+
   private static boolean doException = false;
 
   public static void main(String[] args) throws Exception {
@@ -68,12 +67,12 @@ public class Bench {
 
       args = instrumenter.parseStandardArgs(args);
       if (args.length > 0) {
-    	  if (args[0].equals("-doexit")) {
-    		  doExit = true;
-    	  } else if (args[0].equals("-doexception")) {
-    		  doExit = true;
-    		  doException = true;
-    	  }
+        if (args[0].equals("-doexit")) {
+          doExit = true;
+        } else if (args[0].equals("-doexception")) {
+          doExit = true;
+          doException = true;
+        }
       }
       instrumenter.setPassUnmodifiedClasses(true);
       instrumenter.beginTraversal();
@@ -89,6 +88,7 @@ public class Bench {
 
   // Keep these commonly used instructions around
   static final Instruction getSysErr = Util.makeGet(System.class, "err");
+
   static final Instruction callPrintln = Util.makeInvoke(PrintStream.class, "println", new Class[] { String.class });
 
   private static void doClass(final ClassInstrumenter ci, Writer w) throws Exception {
@@ -147,7 +147,8 @@ public class Bench {
                 public void emitTo(MethodEditor.Output w) {
                   w.emit(GetInstruction.make(Constants.TYPE_boolean, CTDecoder.convertClassToType(className), fieldName, true));
                   w.emit(ConstantInstruction.make(0));
-                  w.emit(ConditionalBranchInstruction.make(Constants.TYPE_int, ConditionalBranchInstruction.Operator.EQ, noTraceLabel));
+                  w.emit(ConditionalBranchInstruction.make(Constants.TYPE_int, ConditionalBranchInstruction.Operator.EQ,
+                      noTraceLabel));
                   w.emit(getSysErr);
                   w.emit(ConstantInstruction.makeString(msg0));
                   w.emit(callPrintln);

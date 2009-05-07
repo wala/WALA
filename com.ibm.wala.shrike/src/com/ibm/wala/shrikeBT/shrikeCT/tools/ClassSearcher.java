@@ -22,15 +22,13 @@ import com.ibm.wala.shrikeCT.ConstantPoolParser;
 /**
  * This is a demo class.
  * 
- * Class files are taken as input arguments (or if there are none, from standard
- * input). We search those class files for all references to the Java library
- * classes "SoftReference" or "WeakReference". This is just a demo to show how
- * to write a simple tool like this. Here we're using the OfflineInstrumenter
- * class to manage loading a set of class files and JARs for analysis; we don't
+ * Class files are taken as input arguments (or if there are none, from standard input). We search those class files for all
+ * references to the Java library classes "SoftReference" or "WeakReference". This is just a demo to show how to write a simple tool
+ * like this. Here we're using the OfflineInstrumenter class to manage loading a set of class files and JARs for analysis; we don't
  * actually modify any code.
  * 
- * In Unix, I run it like this: java -cp ~/dev/shrike/shrike
- * com.ibm.wala.shrikeBT.shrikeCT.tools.ClassSearcher test.jar -o output.jar
+ * In Unix, I run it like this: java -cp ~/dev/shrike/shrike com.ibm.wala.shrikeBT.shrikeCT.tools.ClassSearcher test.jar -o
+ * output.jar
  */
 public class ClassSearcher {
   private static OfflineInstrumenter instrumenter;

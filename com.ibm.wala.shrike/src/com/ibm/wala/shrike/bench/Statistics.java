@@ -26,17 +26,13 @@ import com.ibm.wala.shrikeCT.ClassReader;
 /**
  * This is a demo class.
  * 
- * Class files are taken as input arguments (or if there are none, from standard
- * input). The methods in those files are instrumented: we insert a
- * System.err.println() at ever method call, and a System.err.println() at every
- * method entry.
+ * Class files are taken as input arguments (or if there are none, from standard input). The methods in those files are
+ * instrumented: we insert a System.err.println() at ever method call, and a System.err.println() at every method entry.
  * 
- * In Unix, I run it like this: java -cp ~/dev/shrike/shrike
- * com.ibm.wala.shrikeBT.shrikeCT.tools.Bench test.jar -o output.jar
+ * In Unix, I run it like this: java -cp ~/dev/shrike/shrike com.ibm.wala.shrikeBT.shrikeCT.tools.Bench test.jar -o output.jar
  * 
- * The instrumented classes are placed in the directory "output" under the
- * current directory. Disassembled code is written to the file "report" under
- * the current directory.
+ * The instrumented classes are placed in the directory "output" under the current directory. Disassembled code is written to the
+ * file "report" under the current directory.
  */
 public class Statistics {
   private static OfflineInstrumenter instrumenter;
