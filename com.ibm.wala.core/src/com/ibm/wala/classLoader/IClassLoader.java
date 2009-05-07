@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -66,14 +67,44 @@ public interface IClassLoader {
   public abstract int getNumberOfMethods();
 
   /**
-   * @return name of source file corresponding to the class, or null if not available
+   * @param method The method for which information is desired
+   * @param offset an offset into the bytecode of the given method. 
+   * @return name of the source file corresponding to the given offset in the given method.  Note that 
+   * this api allows a single method to arise from multiple source files, which is deliberate as it
+   * can happen in some languages.
    */
-  public abstract String getSourceFileName(IClass klass);
+  public abstract String getSourceFileName(IMethod method, int offset);
+  
+  /**
+   * @param method The method for which information is desired
+   * @param offset an offset into the bytecode of the given method. 
+   * @return input stream representing the source file for a given bytecode index of a given method,
+   * or null if not available
+   */
+  public abstract InputStream getSource(IMethod method, int offset);
+  
+  /**
+   * @param klass the class for which information is desired.
+   * @return name of source file corresponding to the class, or null if not available
+   * @throws NoSuchElementException if this class was generated from more than one source file
+   * @deprecated The assumption that a class is generated from a single source file is java
+   * specific, and will change in the future.  In place of this API, use the version that takes
+   * a method and an offset, since that is now the granularity at which source file information
+   * will be recorded.  
+   */
+  @Deprecated
+  public abstract String getSourceFileName(IClass klass) throws NoSuchElementException;
 
   /**
    * @return input stream representing the source file for a class, or null if not available
+   * @throws NoSuchElementException if this class was generated from more than one source file
+   * @deprecated The assumption that a class is generated from a single source file is java
+   * specific, and will change in the future.  In place of this API, use the version that takes
+   * a method and an offset, since that is now the granularity at which source file information
+   * will be recorded.
    */
-  public abstract InputStream getSource(IClass klass);
+  @Deprecated
+  public abstract InputStream getSource(IClass klass) throws NoSuchElementException;
 
   /**
    * @return the parent IClassLoader, if any, or null

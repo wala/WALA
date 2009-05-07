@@ -13,6 +13,7 @@ package com.ibm.wala.classLoader;
 
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
 import com.ibm.wala.ipa.cha.IClassHierarchyDweller;
 import com.ibm.wala.types.Selector;
@@ -92,13 +93,21 @@ public interface IClass extends IClassHierarchyDweller {
 
   /**
    * @return String holding the name of the source file that defined this class, or null if none found
+   * @throws NoSuchElementException if this class was generated from more than one source file
+   * @deprecated The assumption that a class is generated from a single source file is java
+   * specific, and will change in the future.  In place of this API, use the APIs in IClassLoader.    
    */
-  String getSourceFileName();
+  @Deprecated
+  String getSourceFileName() throws NoSuchElementException;
 
   /**
    * @return String representing the source file holding this class, or null if not found
+   * @throws NoSuchElementException if this class was generated from more than one source file
+   * @deprecated The assumption that a class is generated from a single source file is java
+   * specific, and will change in the future.   In place of this API, use the APIs in IClassLoader.    
    */
-  InputStream getSource();
+  @Deprecated
+  InputStream getSource() throws NoSuchElementException;
 
   /**
    * @return the method that is this class's initializer, or null if none

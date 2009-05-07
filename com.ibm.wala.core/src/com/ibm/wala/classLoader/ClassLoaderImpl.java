@@ -436,6 +436,14 @@ public class ClassLoaderImpl implements IClassLoader {
     return e == null ? null : e.getName();
   }
 
+  public InputStream getSource(IMethod method, int offset) {
+    return getSource(method.getDeclaringClass());
+  }
+
+  public String getSourceFileName(IMethod method, int offset) {
+    return getSourceFileName(method.getDeclaringClass());
+  }
+
   public InputStream getSource(IClass klass) {
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");

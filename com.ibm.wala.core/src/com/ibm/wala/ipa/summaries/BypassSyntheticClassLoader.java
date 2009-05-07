@@ -19,6 +19,7 @@ import java.util.List;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
@@ -188,5 +189,13 @@ public class BypassSyntheticClassLoader implements IClassLoader {
 
   public SSAInstructionFactory getInstructionFactory() {
     return getLanguage().instructionFactory();
+  }
+
+  public InputStream getSource(IMethod method, int offset) {
+    return null;
+  }
+
+  public String getSourceFileName(IMethod method, int offset) {
+    return null;
   }
 }
