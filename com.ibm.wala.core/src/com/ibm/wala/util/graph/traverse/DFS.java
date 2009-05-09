@@ -170,7 +170,7 @@ public class DFS {
    * @param N root of traversal
    * @return iterator of nodes of G in order of DFS discover time
    */
-  public static <T> DFSDiscoverTimeIterator iterateDiscoverTime(Graph<T> G, T N) {
+  public static <T> DFSDiscoverTimeIterator<T> iterateDiscoverTime(Graph<T> G, T N) {
     if (G == null) {
       throw new IllegalArgumentException("G == null");
     }
