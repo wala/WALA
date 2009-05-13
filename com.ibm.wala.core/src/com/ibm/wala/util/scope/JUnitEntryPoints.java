@@ -145,7 +145,7 @@ public class JUnitEntryPoints {
    * 
    * @throws IllegalArgumentException if klass is null
    */
-  public static boolean isJUnitTestCase(IClass klass) throws ClassHierarchyException {
+  public static boolean isJUnitTestCase(IClass klass)  {
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");
     }
