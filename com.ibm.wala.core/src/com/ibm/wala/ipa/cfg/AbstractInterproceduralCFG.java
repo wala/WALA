@@ -77,23 +77,47 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /**
    * CGNodes whose intraprocedural edges have been added to IPCFG
    */
-  private final MutableIntSet cgNodesVisited = new BitVectorIntSet();
+  private MutableIntSet cgNodesVisited = new BitVectorIntSet();
 
   /**
    * those cg nodes whose edges to callers have been added
    */
-  private final MutableIntSet cgNodesWithCallerEdges = new BitVectorIntSet();
+  private MutableIntSet cgNodesWithCallerEdges = new BitVectorIntSet();
 
   /**
    * those call nodes whose successor edges (interprocedural) have been added
    */
-  private final MutableIntSet handledCalls = new BitVectorIntSet();
+  private MutableIntSet handledCalls = new BitVectorIntSet();
 
   /**
    * those return nodes whose predecessor edges (interprocedural) have been added
    */
-  private final MutableIntSet handledReturns = new BitVectorIntSet();
+  private MutableIntSet handledReturns = new BitVectorIntSet();
 
+  /**
+   * those nodes whose successor edges (intra- and inter-procedural) have been added 
+   */
+  private MutableIntSet addedSuccs = new BitVectorIntSet();
+
+  /**
+   * those nodes whose predecessor edges (intra- and inter-procedural) have been added 
+   */
+  private MutableIntSet addedPreds = new BitVectorIntSet();
+
+  /**
+   * Should be invoked when the underlying call graph has changed.  This will cause certain successor
+   * and predecessor edges to be recomputed.  USE WITH EXTREME CARE.  
+   */
+  public void callGraphUpdated() {
+    cgNodesVisited = new BitVectorIntSet();
+    cgNodesWithCallerEdges = new BitVectorIntSet();
+    handledCalls = new BitVectorIntSet();
+    handledReturns = new BitVectorIntSet();
+    addedSuccs = new BitVectorIntSet();
+    addedPreds = new BitVectorIntSet();
+  }
+  
+  
   protected abstract ControlFlowGraph<SSAInstruction, T> getCFG(CGNode n);
 
   /**
@@ -542,8 +566,6 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     return g.getPredNodes(N);
   }
 
-  private final MutableIntSet addedPreds = new BitVectorIntSet();
-
   /**
    * add enough nodes and edges to the graph to allow for computing predecessors of N
    */
@@ -561,8 +583,6 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
       }
     }
   }
-
-  private final MutableIntSet addedSuccs = new BitVectorIntSet();
 
   /**
    * add enough nodes and edges to the graph to allow for computing successors of N
