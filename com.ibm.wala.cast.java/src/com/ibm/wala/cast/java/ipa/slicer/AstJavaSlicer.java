@@ -18,6 +18,7 @@ import com.ibm.wala.ipa.slicer.SDG;
 import com.ibm.wala.ipa.slicer.Slicer;
 import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAArrayStoreInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.util.collections.Filter;
@@ -71,7 +72,7 @@ public class AstJavaSlicer extends Slicer {
   public static Set<Statement> gatherWrites(CallGraph CG, Collection<CGNode> partialRoots) {
     return gatherStatements(CG, partialRoots, new Filter<SSAInstruction>() {
       public boolean accepts(SSAInstruction o) {
-        return o instanceof SSAPutInstruction;
+        return (o instanceof SSAPutInstruction) || (o instanceof SSAArrayStoreInstruction);
       }
     });
   }
