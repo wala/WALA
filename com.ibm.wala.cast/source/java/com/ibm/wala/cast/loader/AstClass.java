@@ -64,6 +64,10 @@ abstract public class AstClass implements IClass, ClassConstants {
   public boolean isPublic() {
     return (modifiers & ACC_PUBLIC) != 0;
   }
+  
+  public boolean isPrivate() {
+    return (modifiers & ACC_PRIVATE) != 0;
+  }
 
   public boolean isReferenceType() {
     return true;

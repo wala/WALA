@@ -77,6 +77,10 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
     return true;
   }
   
+  public boolean isPrivate() {
+    return false;
+  }
+  
   public boolean isStatic() {
     return false;
   }
