@@ -63,7 +63,7 @@ public class AstField implements IField {
   }
 
   public boolean isFinal() {
-    return qualifiers.contains(CAstQualifier.CONST);
+    return qualifiers.contains(CAstQualifier.CONST) || qualifiers.contains(CAstQualifier.FINAL);
   }
 
   public boolean isPrivate() {
