@@ -129,10 +129,12 @@ import com.ibm.wala.cast.tree.CAstSymbol;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.CAstTypeDictionary;
 import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
+import com.ibm.wala.cast.tree.impl.CAstCloner;
 import com.ibm.wala.cast.tree.impl.CAstControlFlowRecorder;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.tree.impl.CAstNodeTypeMapRecorder;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
+import com.ibm.wala.cast.tree.impl.CAstRewriter;
 import com.ibm.wala.cast.tree.impl.CAstSourcePositionRecorder;
 import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -174,6 +176,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
   protected PolyglotIdentityMapper fIdentityMapper;
 
+  protected boolean replicateForDoLoop = false;
+  
   protected final boolean DEBUG = true;
 
   final protected TranslatingVisitor getTranslator() {
@@ -1086,23 +1090,46 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     public CAstNode visit(Do d, WalkContext wc) {
-      Node header = fNodeFactory.Empty(Position.COMPILER_GENERATED);
       Node breakTarget = makeBreakTarget(d);
       Node continueTarget = makeContinueTarget(d);
 
-      CAstNode loopGoto = makeNode(wc, fFactory, d, CAstNode.IFGOTO, walkNodes(d.cond(), wc));
-
-      wc.cfg().map(loopGoto, loopGoto);
-      wc.cfg().add(loopGoto, header, Boolean.TRUE);
-
       String loopLabel = (String) wc.getLabelMap().get(d);
 
-      WalkContext lc = new LoopContext(wc, loopLabel, breakTarget, continueTarget);
-
       CAstNode continueNode = walkNodes(continueTarget, wc);
+      CAstNode breakBody = walkNodes(breakTarget, wc);
 
-      return makeNode(wc, fFactory, d, CAstNode.BLOCK_STMT, walkNodes(header, wc), makeNode(wc, fFactory, d, CAstNode.BLOCK_STMT,
-          walkNodes(d.body(), lc), continueNode), loopGoto, walkNodes(breakTarget, wc));
+      WalkContext lc = new LoopContext(wc, loopLabel, breakTarget, continueTarget);
+      CAstNode loopBody =  walkNodes(d.body(), lc);
+      
+       if (replicateForDoLoop) {
+        CAstRewriter.Rewrite x = (new CAstCloner(fFactory, false)).copy(loopBody, wc.cfg(), wc.pos(), wc.getNodeTypeMap(), null);
+        CAstNode otherBody = x.newRoot();
+        
+        wc.cfg().addAll(x.newCfg());
+        wc.pos().addAll(x.newPos());
+        wc.getNodeTypeMap().addAll(x.newTypes());
+ 
+        return makeNode(wc, fFactory, d, CAstNode.BLOCK_STMT, 
+            loopBody,
+            makeNode(wc, fFactory, d, CAstNode.LOOP, 
+                walkNodes(d.cond(), wc), 
+                makeNode(wc, fFactory, d, CAstNode.BLOCK_STMT, otherBody, continueNode)),
+            breakBody);
+        
+      } else {
+        Node header = fNodeFactory.Empty(Position.COMPILER_GENERATED);
+ 
+        CAstNode loopGoto = makeNode(wc, fFactory, d, CAstNode.IFGOTO, walkNodes(d.cond(), wc));
+
+        wc.cfg().map(loopGoto, loopGoto);
+        wc.cfg().add(loopGoto, header, Boolean.TRUE);
+
+        return makeNode(wc, fFactory, d, CAstNode.BLOCK_STMT, 
+            walkNodes(header, wc), 
+            makeNode(wc, fFactory, d, CAstNode.BLOCK_STMT, loopBody, continueNode), 
+            loopGoto, 
+            breakBody);
+      }
     }
 
     public CAstNode visit(For f, WalkContext wc) {
@@ -1560,6 +1587,10 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       // This entity has no AST nodes, really.
       return new CAstNodeTypeMap() {
         public CAstType getNodeType(CAstNode node) {
+          throw new UnsupportedOperationException();
+        }
+
+        public Collection<CAstNode> getMappedNodes() {
           throw new UnsupportedOperationException();
         }
       };

@@ -328,6 +328,10 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
         public CAstType getNodeType(CAstNode node) {
           throw new UnsupportedOperationException();
         }
+
+		public Collection<CAstNode> getMappedNodes() {
+			throw new UnsupportedOperationException();
+		}
       };
     }
 

@@ -13,6 +13,7 @@
  */
 package com.ibm.wala.cast.tree.impl;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import com.ibm.wala.cast.tree.CAstNode;
@@ -33,4 +34,13 @@ public class CAstNodeTypeMapRecorder
     put(node, type);
   }
 
+  public Collection<CAstNode> getMappedNodes() {
+    return keySet();
+  }
+
+  public void addAll(CAstNodeTypeMap other) {
+    for(CAstNode o : other.getMappedNodes()) {
+      put(o, other.getNodeType(o));
+    }
+  }
 }
