@@ -226,8 +226,6 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getDeclaredStaticFields()
    */
   public Collection<IField> getDeclaredStaticFields() {
@@ -304,8 +302,6 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
   public boolean equals(Object arg0) {
@@ -313,8 +309,6 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.lang.Object#hashCode()
    */
   public int hashCode() {
@@ -322,8 +316,6 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getModifiers()
    */
   public int getModifiers() {
@@ -333,8 +325,6 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getAllImplementedInterfaces()
    */
   public Collection<IClass> getAllImplementedInterfaces() {
@@ -342,8 +332,6 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getAllAncestorInterfaces()
    */
   public Collection<IClass> getAllAncestorInterfaces() {
@@ -353,8 +341,6 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getName()
    */
   public TypeName getName() {
@@ -362,8 +348,6 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#isReferenceType()
    */
   public boolean isReferenceType() {
@@ -371,8 +355,6 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getDirectInterfaces()
    */
   public Collection<IClass> getDirectInterfaces() {
@@ -394,6 +376,10 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
   }
 
   public boolean isPublic() {
+    return false;
+  }
+  
+  public boolean isPrivate() {
     return false;
   }
 

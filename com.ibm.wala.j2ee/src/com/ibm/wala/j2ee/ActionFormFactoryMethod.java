@@ -132,13 +132,17 @@ public class ActionFormFactoryMethod extends SummarizedMethod {
     }
 
     public boolean isPublic() {
+      assert false;
+      return false;
+    }
+    
+    public boolean isPrivate() {
       // TODO Auto-generated method stub
       assert false;
       return false;
     }
 
     public boolean isReferenceType() {
-      // TODO Auto-generated method stub
       assert false;
       return false;
     }

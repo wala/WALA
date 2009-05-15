@@ -306,6 +306,10 @@ public class ArrayClass implements IClass, Constants {
   public boolean isPublic() {
     return true;
   }
+  
+  public boolean isPrivate() {
+    return false;
+  }
 
   public InputStream getSource() {
     return null;

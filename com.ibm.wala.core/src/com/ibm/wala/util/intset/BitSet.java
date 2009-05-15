@@ -14,9 +14,8 @@ import java.util.Iterator;
 
 import com.ibm.wala.util.debug.Assertions;
 
-/** 
- * A bit set is a set of elements, each of which corresponds to a unique
- * integer from [0,MAX].  
+/**
+ * A bit set is a set of elements, each of which corresponds to a unique integer from [0,MAX].
  */
 public final class BitSet<T> {
 
@@ -26,13 +25,14 @@ public final class BitSet<T> {
   final private BitVector vector;
 
   /**
-   * The bijection between integer to object. 
+   * The bijection between integer to object.
    */
   private OrdinalSetMapping<T> map;
 
   /**
    * Constructor: create an empty set corresponding to a given mapping
-   * @throws IllegalArgumentException  if map is null
+   * 
+   * @throws IllegalArgumentException if map is null
    */
   public BitSet(OrdinalSetMapping<T> map) {
     if (map == null) {
@@ -43,22 +43,22 @@ public final class BitSet<T> {
     this.map = map;
   }
 
-
   public static <T> BitSet<T> createBitSet(BitSet<T> B) {
     if (B == null) {
       throw new IllegalArgumentException("null B");
     }
     return new BitSet<T>(B);
   }
-  
-  private BitSet(BitSet<T> B){
+
+  private BitSet(BitSet<T> B) {
     this(B.map);
     addAll(B);
   }
 
   /**
    * Add all elements in bitset B to this bit set
-   * @throws IllegalArgumentException  if B is null
+   * 
+   * @throws IllegalArgumentException if B is null
    */
   public void addAll(BitSet<?> B) {
     if (B == null) {
@@ -84,6 +84,7 @@ public final class BitSet<T> {
 
   /**
    * Remove an object from this bit set.
+   * 
    * @param o the object to remove
    */
   public void clear(T o) {
@@ -114,9 +115,10 @@ public final class BitSet<T> {
   }
 
   /**
-   * Method copy.  Copies the bits in the bit vector, but only assigns the object map.  No need to create
-   * a new object/bit bijection object.
-   * @throws IllegalArgumentException  if other is null
+   * Method copy. Copies the bits in the bit vector, but only assigns the object map. No need to create a new object/bit bijection
+   * object.
+   * 
+   * @throws IllegalArgumentException if other is null
    */
   public void copyBits(BitSet<T> other) {
     if (other == null) {
@@ -128,7 +130,8 @@ public final class BitSet<T> {
 
   /**
    * Does this object hold the same bits as other?
-   * @throws IllegalArgumentException  if other is null
+   * 
+   * @throws IllegalArgumentException if other is null
    */
   public boolean sameBits(BitSet<?> other) {
     if (other == null) {
@@ -151,9 +154,11 @@ public final class BitSet<T> {
           }
         }
       }
+
       public boolean hasNext() {
         return (next != -1);
       }
+
       public Object next() {
         Object result = map.getMappedObject(next);
         int start = next + 1;
@@ -166,16 +171,13 @@ public final class BitSet<T> {
         }
         return result;
       }
+
       public void remove() {
         Assertions.UNREACHABLE();
       }
     };
   }
 
-  /**
-   * Method size.
-   * @return int
-   */
   public int size() {
     return vector.populationCount();
   }
@@ -200,8 +202,9 @@ public final class BitSet<T> {
 
   /**
    * Perform intersection of two bitsets
+   * 
    * @param other the other bitset in the operation
-   * @throws IllegalArgumentException  if other is null
+   * @throws IllegalArgumentException if other is null
    */
   public void intersect(BitSet<?> other) {
     if (other == null) {
@@ -212,8 +215,9 @@ public final class BitSet<T> {
 
   /**
    * Perform the difference of two bit sets
-   * @param other
-   * @throws IllegalArgumentException  if other is null
+   * 
+   * @param other the other bitset in the operation
+   * @throws IllegalArgumentException if other is null
    */
   public void difference(BitSet<T> other) {
     if (other == null) {

@@ -35,6 +35,11 @@ public abstract class JVMClass<T extends IClassLoader> extends BytecodeClass<T> 
     boolean result = ((modifiers & Constants.ACC_PUBLIC) != 0);
     return result;
   }
+  
+  public boolean isPrivate() {
+    boolean result = ((modifiers & Constants.ACC_PRIVATE) != 0);
+    return result;
+  }
 
   public boolean isInterface() {
     boolean result = ((modifiers & Constants.ACC_INTERFACE) != 0);

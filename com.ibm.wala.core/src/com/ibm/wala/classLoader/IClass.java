@@ -47,6 +47,11 @@ public interface IClass extends IClassHierarchyDweller {
    * @return true iff this class is public
    */
   boolean isPublic();
+  
+  /**
+   * @return true iff this class is private
+   */
+  boolean isPrivate();
 
   /**
    * Return the integer that encodes the class's modifiers, as defined by the JVM specification

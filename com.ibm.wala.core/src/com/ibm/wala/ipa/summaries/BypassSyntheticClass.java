@@ -234,6 +234,10 @@ public class BypassSyntheticClass extends SyntheticClass {
   public boolean isPublic() {
     return realType.isPublic();
   }
+  
+  public boolean isPrivate() {
+    return realType.isPrivate();
+  }
 
   @Override
   public InputStream getSource() {

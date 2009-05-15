@@ -236,6 +236,10 @@ public class FakeRootClass extends SyntheticClass {
   public boolean isPublic() {
     return false;
   }
+  
+  public boolean isPrivate() {
+    return false;
+  }
 
   @Override
   public InputStream getSource() {
