@@ -29,6 +29,7 @@ import com.ibm.wala.ssa.SSACFG.ExceptionHandlerBasicBlock;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.collections.SimpleVector;
 import com.ibm.wala.util.debug.Assertions;
@@ -38,8 +39,7 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 
 /**
- * A view of a control flow graph where each basic block corresponds to exactly
- * one SSA instruction index.
+ * A view of a control flow graph where each basic block corresponds to exactly one SSA instruction index.
  * 
  * Prototype: Not terribly efficient.
  */
@@ -52,8 +52,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
   private final IR ir;
 
   /**
-   * The ith element of this vector is the basic block holding instruction i.
-   * this basic block has number i+1.
+   * The ith element of this vector is the basic block holding instruction i. this basic block has number i+1.
    */
   private final SimpleVector<ExplodedBasicBlock> normalNodes = new SimpleVector<ExplodedBasicBlock>();
 
@@ -304,8 +303,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
   }
 
   public int getSuccNodeCount(ExplodedBasicBlock N) throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return 0;
+    return Iterator2Collection.toSet(getSuccNodes(N)).size();
   }
 
   /*
@@ -318,7 +316,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
     }
     if (b.isEntryBlock()) {
       ExplodedBasicBlock z = normalNodes.get(0);
-      return z == null ? EmptyIterator.<ExplodedBasicBlock>instance() : NonNullSingletonIterator.make(z);
+      return z == null ? EmptyIterator.<ExplodedBasicBlock> instance() : NonNullSingletonIterator.make(z);
     }
     if (b.instructionIndex == b.original.getLastInstructionIndex()) {
       List<ExplodedBasicBlock> result = new ArrayList<ExplodedBasicBlock>();
@@ -405,12 +403,12 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
   }
 
   /**
-   * A basic block with exactly one normal instruction (which may be null),
-   * corresponding to a single instruction index in the SSA instruction array.
+   * A basic block with exactly one normal instruction (which may be null), corresponding to a single instruction index in the SSA
+   * instruction array.
    * 
    * The block may also have phis.
    */
-  public class ExplodedBasicBlock implements ISSABasicBlock {
+  public class ExplodedBasicBlock implements IExplodedBasicBlock {
 
     private final int instructionIndex;
 
@@ -464,7 +462,9 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
     }
 
     public SSAGetCaughtExceptionInstruction getCatchInstruction() {
-      assert (original instanceof ExceptionHandlerBasicBlock);
+      if (!(original instanceof ExceptionHandlerBasicBlock)) {
+        throw new IllegalArgumentException("block does not represent an exception handler");
+      }
       ExceptionHandlerBasicBlock e = (ExceptionHandlerBasicBlock) original;
       return e.getCatchInstruction();
     }
@@ -478,8 +478,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
     }
 
     public int getGraphNodeId() {
-      Assertions.UNREACHABLE();
-      return 0;
+      return getNumber();
     }
 
     public void setGraphNodeId(int number) {
