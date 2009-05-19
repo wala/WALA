@@ -576,4 +576,12 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       return value;
     }
   }
+
+  public TypeReference getMetadataType() {
+    return TypeReference.JavaLangClass;
+  }
+
+  public TypeReference getStringType() {
+    return TypeReference.JavaLangString;
+  }
 }

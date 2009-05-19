@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.dataflow.ssa.SSAInference;
 import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.eclipse.util.CancelRuntimeException;
@@ -69,6 +70,8 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
    * The governing class hierarchy
    */
   final protected IClassHierarchy cha;
+  
+  final protected Language language;
 
   /**
    * A singleton instance of the phi operator.
@@ -98,6 +101,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     if (ir == null) {
       throw new IllegalArgumentException("ir is null");
     }
+    this.language = ir.getMethod().getDeclaringClass().getClassLoader().getLanguage();
     this.cha = ir.getMethod().getDeclaringClass().getClassHierarchy();
     this.ir = ir;
     this.doPrimitives = doPrimitives;
@@ -180,7 +184,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
         if (defaultExceptions.size() == 0) {
           continue;
         }
-        assert defaultExceptions.size() == 1;
+        assert (defaultExceptions.size() == 1);
         // t should be NullPointerException
         TypeReference t = defaultExceptions.iterator().next();
         IClass klass = cha.lookupClass(t);
@@ -510,7 +514,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
     @Override
     public void visitLoadMetadata(SSALoadMetadataInstruction instruction) {
-      IClass jlClassKlass = cha.lookupClass(TypeReference.JavaLangClass);
+      IClass jlClassKlass = cha.lookupClass(language.getMetadataType());
       assert jlClassKlass != null;
       result = new DeclaredTypeOperator(new ConeType(jlClassKlass));
     }
@@ -689,7 +693,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
   public TypeAbstraction getConstantType(int valueNumber) {
     if (ir.getSymbolTable().isStringConstant(valueNumber)) {
-      return new PointType(cha.lookupClass(TypeReference.JavaLangString));
+      return new PointType(cha.lookupClass(language.getStringType()));
     } else {
       return getConstantPrimitiveType(valueNumber);
     }

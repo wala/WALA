@@ -77,4 +77,8 @@ public interface Language {
   SSAInstructionFactory instructionFactory();
 
   Collection<TypeReference> inferInvokeExceptions(MethodReference target, IClassHierarchy cha) throws InvalidClassFileException;
+
+  TypeReference getStringType();
+
+  TypeReference getMetadataType();
 }
