@@ -20,6 +20,7 @@ import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAMonitorInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.Pair;
@@ -69,6 +70,14 @@ public class AstJavaSlicer extends Slicer {
     });
   }
 
+  public static Set<Statement> gatherMonitors(CallGraph CG, Collection<CGNode> partialRoots) {
+    return gatherStatements(CG, partialRoots, new Filter<SSAInstruction>() {
+      public boolean accepts(SSAInstruction o) {
+        return o instanceof SSAMonitorInstruction;
+      }
+    });
+  }
+
   public static Set<Statement> gatherWrites(CallGraph CG, Collection<CGNode> partialRoots) {
     return gatherStatements(CG, partialRoots, new Filter<SSAInstruction>() {
       public boolean accepts(SSAInstruction o) {
@@ -85,6 +94,7 @@ public class AstJavaSlicer extends Slicer {
     Set<Statement> stmts = gatherAssertions(CG, partialRoots);
     if (multiThreadedCode) {
       stmts.addAll(gatherWrites(CG, partialRoots));
+      stmts.addAll(gatherMonitors(CG, partialRoots));
     }
     return Pair.make(AstJavaSlicer.computeBackwardSlice(sdg, stmts), sdg);
   }
