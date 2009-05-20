@@ -225,7 +225,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   }
 
   public static CallSiteReference makeCallSiteReference(ClassLoaderReference loader, int pc, SSAAbstractInvokeInstruction call)
-      throws IllegalArgumentException, IllegalArgumentException {
+      throws IllegalArgumentException {
 
     if (call == null) {
       throw new IllegalArgumentException("call == null");
