@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.loader;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +71,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction.IOperator;
 import com.ibm.wala.shrikeBT.IComparisonInstruction.Operator;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.ssa.SSAAddressOfInstruction;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
@@ -85,6 +87,7 @@ import com.ibm.wala.ssa.SSAInstanceofInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.ssa.SSALoadIndirectInstruction;
 import com.ibm.wala.ssa.SSALoadMetadataInstruction;
 import com.ibm.wala.ssa.SSAMonitorInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
@@ -92,6 +95,7 @@ import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
+import com.ibm.wala.ssa.SSAStoreIndirectInstruction;
 import com.ibm.wala.ssa.SSASwitchInstruction;
 import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.ssa.SSAUnaryOpInstruction;
@@ -175,6 +179,10 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     public Object getMetadataToken(Object value) {
       assert false;
       return null;
+    }
+
+    public TypeReference getPointerType(TypeReference pointee) throws UnsupportedOperationException {
+      throw new UnsupportedOperationException("JavaScript does not permit explicit pointers");
     }
 
     public JSInstructionFactory instructionFactory() {
@@ -458,6 +466,26 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
           return new SSAUnaryOpInstruction(operator, result, val);
         }
 
+        public SSAAddressOfInstruction AddressOfInstruction(int lval, int local) {
+          throw new UnsupportedOperationException();
+        }
+
+        public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, int indexVal) {
+          throw new UnsupportedOperationException();
+       }
+
+        public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, FieldReference field) {
+          throw new UnsupportedOperationException();
+        }
+
+        public SSALoadIndirectInstruction LoadIndirectInstruction(int lval, int addressVal) {
+          throw new UnsupportedOperationException();
+        }
+
+        public SSAStoreIndirectInstruction StoreIndirectInstruction(int addressVal, int rval) {
+          throw new UnsupportedOperationException();
+        }
+
       };
     }
 
@@ -487,6 +515,14 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
     public boolean isVoidType(TypeReference type) {
       return false;
+    }
+
+    public TypeReference getMetadataType() {
+       return null;
+    }
+
+    public TypeReference getStringType() {
+      return JavaScriptTypes.String;
     }
   };
 
@@ -781,4 +817,13 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     return true;
   }
 
+  @Override
+  protected void finishTranslation() {
+    Iterator<ModuleEntry> ms = getModulesWithParseErrors();
+    while (ms.hasNext()) {
+      ModuleEntry m = ms.next();
+      System.err.println(m);
+      System.err.println(getMessages(m));
+    }
+  }
 }
