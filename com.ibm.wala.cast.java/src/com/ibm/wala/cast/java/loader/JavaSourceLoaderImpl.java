@@ -52,6 +52,8 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.ClassLoaderImpl;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -89,10 +91,9 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 
     private final Collection superTypeNames;
 
-    @SuppressWarnings("unchecked")
     public JavaClass(String typeName, Collection superTypeNames, CAstSourcePositionMap.Position position, Collection qualifiers,
         JavaSourceLoaderImpl loader, IClass enclosingClass) {
-      super(position, TypeName.string2TypeName(typeName), loader, (short) mapToInt(qualifiers), new HashMap(), new HashMap());
+      super(position, TypeName.string2TypeName(typeName), loader, (short) mapToInt(qualifiers), new HashMap<Atom, IField>(), new HashMap<Selector, IMethod>());
       this.superTypeNames = superTypeNames;
       this.enclosingClass = enclosingClass;
     }
