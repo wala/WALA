@@ -10,8 +10,10 @@
  *****************************************************************************/
 package com.ibm.wala.cast.loader;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -135,10 +137,13 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
             }         
           });
         } catch (final RuntimeException e) {
+          final ByteArrayOutputStream s = new ByteArrayOutputStream();
+          PrintStream ps = new PrintStream(s);
+          e.printStackTrace(ps);
           addMessage(moduleEntry, new Warning(Warning.SEVERE) {
             @Override
             public String getMsg() {
-               return "Parsing issue: " + e.getMessage();
+               return "Parsing issue: " + new String(s.toByteArray());
             }         
           });
         }
