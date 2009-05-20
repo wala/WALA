@@ -18,7 +18,9 @@ import com.ibm.wala.ipa.slicer.SDG;
 import com.ibm.wala.ipa.slicer.Slicer;
 import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
+import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAMonitorInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
@@ -86,6 +88,14 @@ public class AstJavaSlicer extends Slicer {
     });
   }
 
+  public static Set<Statement> gatherReads(CallGraph CG, Collection<CGNode> partialRoots) {
+    return gatherStatements(CG, partialRoots, new Filter<SSAInstruction>() {
+      public boolean accepts(SSAInstruction o) {
+        return (o instanceof SSAGetInstruction) || (o instanceof SSAArrayLoadInstruction);
+      }
+    });
+  }
+
   public static Pair<Collection<Statement>, SDG> computeAssertionSlice(CallGraph CG, PointerAnalysis pa,
       Collection<CGNode> partialRoots, boolean multiThreadedCode) throws IllegalArgumentException, CancelException {
     CallGraph pcg = PartialCallGraph.make(CG, new LinkedHashSet<CGNode>(partialRoots));
@@ -93,6 +103,8 @@ public class AstJavaSlicer extends Slicer {
     System.err.println(("SDG:\n" + sdg));
     Set<Statement> stmts = gatherAssertions(CG, partialRoots);
     if (multiThreadedCode) {
+      // Grab anything that has "side effects" under JMM
+      stmts.addAll(gatherReads(CG, partialRoots));
       stmts.addAll(gatherWrites(CG, partialRoots));
       stmts.addAll(gatherMonitors(CG, partialRoots));
     }
