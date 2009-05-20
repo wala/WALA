@@ -19,6 +19,7 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSACFG;
+import com.ibm.wala.ssa.SSAIndirectionData;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAPhiInstruction;
@@ -124,5 +125,10 @@ public class SyntheticIR extends IR {
   @Override
   public SSA2LocalMap getLocalMap() {
     return null;
+  }
+
+  @Override
+  protected SSAIndirectionData getIndirectionData() {
+     return null;
   }
 }

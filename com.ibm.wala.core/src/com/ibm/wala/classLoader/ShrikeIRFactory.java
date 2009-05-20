@@ -19,8 +19,10 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSABuilder;
 import com.ibm.wala.ssa.SSACFG;
+import com.ibm.wala.ssa.SSAIndirectionData;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
+import com.ibm.wala.ssa.ShrikeIndirectionData;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.analysis.DeadAssignmentElimination;
 import com.ibm.wala.util.debug.Assertions;
@@ -58,6 +60,8 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod> {
     return new IR(method, newInstrs, symbolTable, newCfg, options) {
       private final SSA2LocalMap localMap;
 
+      private final ShrikeIndirectionData indirectionData;
+      
       /**
        * Remove any phis that are dead assignments.
        * 
@@ -97,9 +101,16 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod> {
         else
           localMap = null;
 
+        indirectionData = builder.getIndirectionData();
+        
         eliminateDeadPhis();
 
         setupLocationMap();
+      }
+
+      @Override
+      protected SSAIndirectionData getIndirectionData() {
+         return indirectionData;
       }
     };
   }

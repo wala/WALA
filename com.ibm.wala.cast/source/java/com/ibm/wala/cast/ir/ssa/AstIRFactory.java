@@ -22,6 +22,7 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
+import com.ibm.wala.ssa.SSAIndirectionData;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
@@ -88,6 +89,12 @@ public class AstIRFactory implements IRFactory {
       setupCatchTypes(getControlFlowGraph(), method.catchTypes());
 
       setupLocationMap();
+    }
+
+    @Override
+    protected SSAIndirectionData getIndirectionData() {
+      // TODO Auto-generated method stub
+      return null;
     }
   }
 

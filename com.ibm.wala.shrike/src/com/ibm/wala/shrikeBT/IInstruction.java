@@ -99,6 +99,11 @@ public interface IInstruction {
     public void visitInstanceof(InstanceofInstruction instruction) {
     }
 
+    public void visitLoadIndirect(ILoadIndirectInstruction instruction) { 
+    }
+
+    public void visitStoreIndirect(IStoreIndirectInstruction instruction) {  
+    }
   }
 
   /**

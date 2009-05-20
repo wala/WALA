@@ -25,6 +25,12 @@ import com.ibm.wala.types.TypeReference;
  */
 public interface SSAInstructionFactory {
 
+  SSAAddressOfInstruction AddressOfInstruction(int lval, int local);
+
+  SSAAddressOfInstruction AddressOfInstruction(int lval, int local, int indexVal) ;
+
+  SSAAddressOfInstruction AddressOfInstruction(int lval, int local, FieldReference field);
+  
   SSAArrayLengthInstruction ArrayLengthInstruction(int result, int arrayref);
 
   SSAArrayLoadInstruction ArrayLoadInstruction(int result, int arrayref, int index, TypeReference declaredType);
@@ -57,9 +63,11 @@ public interface SSAInstructionFactory {
 
   SSAInvokeInstruction InvokeInstruction(int[] params, int exception, CallSiteReference site);
 
-  SSAMonitorInstruction MonitorInstruction(int ref, boolean isEnter);
-
+  SSALoadIndirectInstruction LoadIndirectInstruction(int lval, int addressVal);
+  
   SSALoadMetadataInstruction LoadMetadataInstruction(int lval, TypeReference entityType, Object token);
+
+  SSAMonitorInstruction MonitorInstruction(int ref, boolean isEnter);
 
   SSANewInstruction NewInstruction(int result, NewSiteReference site);
 
@@ -77,6 +85,8 @@ public interface SSAInstructionFactory {
 
   SSAReturnInstruction ReturnInstruction(int result, boolean isPrimitive);
 
+  SSAStoreIndirectInstruction StoreIndirectInstruction(int addressVal, int rval);
+  
   SSASwitchInstruction SwitchInstruction(int val, int defaultLabel, int[] casesAndLabels);
 
   SSAThrowInstruction ThrowInstruction(int exception);

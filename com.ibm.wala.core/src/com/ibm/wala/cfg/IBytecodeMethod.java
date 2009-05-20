@@ -16,6 +16,7 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.IInstruction;
+import com.ibm.wala.shrikeBT.IndirectionData;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 
 /**
@@ -43,4 +44,9 @@ public interface IBytecodeMethod extends IMethod {
    */
   Collection<CallSiteReference> getCallSites() throws InvalidClassFileException;
 
+  /**
+   * @return information about any indirect uses of local variables
+   */
+  IndirectionData getIndirectionData();
+  
 }

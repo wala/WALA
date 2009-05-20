@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -92,6 +93,11 @@ public abstract class IR {
   protected abstract SSA2LocalMap getLocalMap();
 
   /**
+   * subclasses must provide information about indirect use of values, if appropriate, and otherwise null 
+   */
+  protected abstract <T extends SSAIndirectionData.Name> SSAIndirectionData<T> getIndirectionData();
+  
+  /**
    * Simple constructor when someone else has already computed the symbol table and cfg.
    */
   protected IR(IMethod method, SSAInstruction[] instructions, SymbolTable symbolTable, SSACFG cfg, SSAOptions options) {
@@ -132,6 +138,10 @@ public abstract class IR {
 
   @Override
   public String toString() {
+    Collection<? extends SSAIndirectionData.Name> names = null;
+    if (getIndirectionData() != null) {
+      names = getIndirectionData().getNames();
+    }
     StringBuffer result = new StringBuffer(method.toString());
     result.append("\nCFG:\n");
     result.append(cfg.toString());
@@ -162,11 +172,35 @@ public abstract class IR {
       }
       for (int j = start; j <= end; j++) {
         if (instructions[j] != null) {
+          if (names != null) {
+            boolean any = false;
+            for(SSAIndirectionData.Name n : names) {
+              if (getIndirectionData().getUse(j, n) != -1) {
+                result.append(" " + n + " -> " + getIndirectionData().getUse(j, n));
+                any = true;
+              }
+            }
+            if (any) {
+              result.append("\n");
+            }
+          }
           StringBuffer x = new StringBuffer(j + "   " + instructions[j].toString(symbolTable));
           StringStuff.padWithSpaces(x, 45);
           result.append(x);
           result.append(instructionPosition(j));
           result.append("\n");
+          if (names != null) {
+            boolean any = false;
+            for(SSAIndirectionData.Name n : names) {
+              if (getIndirectionData().getDef(j, n) != -1) {
+                result.append(" " + n + " <- " + getIndirectionData().getDef(j, n));
+                any = true;
+              }
+            }
+            if (any) {
+              result.append("\n");
+            }
+          }
         }
       }
       for (Iterator it = bb.iteratePis(); it.hasNext();) {

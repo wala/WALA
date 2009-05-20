@@ -157,4 +157,12 @@ public class GetInstruction extends Instruction implements IGetInstruction {
   public boolean isPEI() {
     return !isStatic();
   }
+
+  /**
+   * Java does not permit this
+   */
+  public boolean isAddressOf() {
+    return false;
+  }
+
 }

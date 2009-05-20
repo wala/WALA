@@ -27,6 +27,7 @@ import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.Instruction;
 import com.ibm.wala.shrikeBT.ConstantInstruction.ClassToken;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.ssa.SSAAddressOfInstruction;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
@@ -42,6 +43,7 @@ import com.ibm.wala.ssa.SSAInstanceofInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.ssa.SSALoadIndirectInstruction;
 import com.ibm.wala.ssa.SSALoadMetadataInstruction;
 import com.ibm.wala.ssa.SSAMonitorInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
@@ -49,6 +51,7 @@ import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
+import com.ibm.wala.ssa.SSAStoreIndirectInstruction;
 import com.ibm.wala.ssa.SSASwitchInstruction;
 import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.ssa.SSAUnaryOpInstruction;
@@ -294,6 +297,26 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
 
     public SSAPiInstruction PiInstruction(int result, int val, int piBlock, int successorBlock, SSAInstruction cause) {
       return new SSAPiInstruction(result, val, piBlock, successorBlock, cause);
+    }
+
+    public SSAAddressOfInstruction AddressOfInstruction(int lval, int local) {
+      throw new UnsupportedOperationException();
+    }
+
+    public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, int indexVal) {
+      throw new UnsupportedOperationException();
+   }
+
+    public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, FieldReference field) {
+      throw new UnsupportedOperationException();
+    }
+
+    public SSALoadIndirectInstruction LoadIndirectInstruction(int lval, int addressVal) {
+      throw new UnsupportedOperationException();
+    }
+
+    public SSAStoreIndirectInstruction StoreIndirectInstruction(int addressVal, int rval) {
+      throw new UnsupportedOperationException();
     }
   }
 
@@ -577,6 +600,10 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     }
   }
 
+  public TypeReference getPointerType(TypeReference pointee) throws UnsupportedOperationException {
+    throw new UnsupportedOperationException("Java does not permit explicit pointers");
+  }
+
   public TypeReference getMetadataType() {
     return TypeReference.JavaLangClass;
   }
@@ -584,4 +611,5 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   public TypeReference getStringType() {
     return TypeReference.JavaLangString;
   }
+
 }

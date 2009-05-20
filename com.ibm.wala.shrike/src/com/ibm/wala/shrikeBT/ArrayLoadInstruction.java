@@ -102,4 +102,13 @@ final public class ArrayLoadInstruction extends Instruction implements IArrayLoa
   public boolean isPEI() {
     return true;
   }
+
+  /**
+   * Java bytecode does not permit this. 
+   * @see com.ibm.wala.shrikeBT.IMemoryOperation#isAddressOf()
+   */
+  public boolean isAddressOf() {
+    return false;
+  }
+
 }

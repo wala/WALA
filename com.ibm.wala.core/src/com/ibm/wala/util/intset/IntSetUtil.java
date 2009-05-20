@@ -233,4 +233,15 @@ public class IntSetUtil {
       return result;
     }
   }
+  
+  public static int[] toArray(IntSet s) {
+    int i = 0;
+    int[] result = new int[ s.size() ];
+    IntIterator x = s.intIterator();
+    while (x.hasNext()) {
+      result[i++] = x.next();
+    }
+    assert ! x.hasNext();
+    return result;
+  }
 }

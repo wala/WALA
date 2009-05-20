@@ -17,6 +17,7 @@ import java.util.HashMap;
 import com.ibm.wala.cfg.IBytecodeMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.Decoder;
+import com.ibm.wala.shrikeBT.IndirectionData;
 import com.ibm.wala.shrikeBT.shrikeCT.CTDecoder;
 import com.ibm.wala.shrikeCT.AnnotationsReader;
 import com.ibm.wala.shrikeCT.ClassReader;
@@ -386,5 +387,23 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     HashMap<String, String> res = r.getAnnotationValues(curOffset);
 
     return res;
+  }
+
+  private static final IndirectionData NO_INDIRECTIONS = new IndirectionData() {
+
+    private final int[] NOTHING = new int[0];
+    
+    public int[] indirectlyReadLocals(int instructionIndex) {
+      return NOTHING;
+    }
+
+    public int[] indirectlyWrittenLocals(int instructionIndex) {
+      return NOTHING;
+    }
+    
+  };
+  
+  public IndirectionData getIndirectionData() {
+    return NO_INDIRECTIONS;
   }
 }

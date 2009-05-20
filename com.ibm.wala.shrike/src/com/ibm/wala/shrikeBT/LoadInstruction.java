@@ -101,4 +101,13 @@ public final class LoadInstruction extends Instruction implements ILoadInstructi
   public boolean isPEI() {
     return false;
   }
-}
+
+  /**
+   * Java does not permit this.
+   * @see com.ibm.wala.shrikeBT.IMemoryOperation#isAddressOf()
+   */
+  public boolean isAddressOf() {
+    return false;
+  }
+
+ }

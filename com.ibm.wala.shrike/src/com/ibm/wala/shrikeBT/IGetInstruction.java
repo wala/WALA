@@ -1,6 +1,6 @@
 package com.ibm.wala.shrikeBT;
 
-public interface IGetInstruction extends IInstruction {
+public interface IGetInstruction extends IInstruction, IMemoryOperation {
 
   public String getClassType();
 
@@ -9,5 +9,5 @@ public interface IGetInstruction extends IInstruction {
   public String getFieldType();
 
   public boolean isStatic();
-
+  
 }
