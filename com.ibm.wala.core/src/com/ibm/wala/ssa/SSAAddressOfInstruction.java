@@ -79,7 +79,12 @@ public class SSAAddressOfInstruction extends SSAInstruction {
     assert i == 0;
     return lval;
   }
-  
+
+  @Override
+  public int getDef() {
+    return lval;
+  }
+
   @Override
   public int getNumberOfUses() {
     return (indexVal == -1)? 1: 2;
