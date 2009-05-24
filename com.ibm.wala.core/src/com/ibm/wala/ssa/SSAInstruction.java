@@ -18,7 +18,7 @@ import com.ibm.wala.types.TypeReference;
 /**
  * An instruction in SSA form.
  */
-public abstract class SSAInstruction  {
+public abstract class SSAInstruction {
 
   /**
    * prevent instantiation by the outside
@@ -27,17 +27,15 @@ public abstract class SSAInstruction  {
   }
 
   /**
-   * This method is meant to be used during SSA conversion for an IR that is not in SSA form. It creates a new
-   * SSAInstruction of the same type as the receiver, with a combination of the receiver's uses and defs and those from
-   * the method parameters.
+   * This method is meant to be used during SSA conversion for an IR that is not in SSA form. It creates a new SSAInstruction of the
+   * same type as the receiver, with a combination of the receiver's uses and defs and those from the method parameters.
    * 
-   * In particular, if the 'defs' parameter is null, then the new instruction has the same defs as the receiver. If
-   * 'defs' is not null, it must be an array with a size equal to the number of defs that the receiver instruction has.
-   * In this case, the new instruction has defs taken from the array. The uses of the new instruction work in the same
-   * way with the 'uses' parameter.
+   * In particular, if the 'defs' parameter is null, then the new instruction has the same defs as the receiver. If 'defs' is not
+   * null, it must be an array with a size equal to the number of defs that the receiver instruction has. In this case, the new
+   * instruction has defs taken from the array. The uses of the new instruction work in the same way with the 'uses' parameter.
    * 
-   * Note that this only applies to CAst-based IR translation, since Java bytecode-based IR generation uses a different
-   * SSA construction mechanism.
+   * Note that this only applies to CAst-based IR translation, since Java bytecode-based IR generation uses a different SSA
+   * construction mechanism.
    * 
    * TODO: move this into the SSAInstructionFactory
    */
@@ -59,8 +57,7 @@ public abstract class SSAInstruction  {
   }
 
   /**
-   * Apply an IVisitor to this instruction. We invoke the appropriate IVisitor method according to the type of this
-   * instruction.
+   * Apply an IVisitor to this instruction. We invoke the appropriate IVisitor method according to the type of this instruction.
    */
   public abstract void visit(IVisitor v);
 
@@ -93,8 +90,10 @@ public abstract class SSAInstruction  {
     void visitPut(SSAPutInstruction instruction);
 
     void visitInvoke(SSAInvokeInstruction instruction);
-    
-    void visitAddressOf(SSAAddressOfInstruction instruction);
+
+    // This would be a significant API change since any implementors of IVisitor
+    // will break. We need to announce and discuss such API changes. -- SJF
+    // void visitAddressOf(SSAAddressOfInstruction instruction);
 
     void visitNew(SSANewInstruction instruction);
 
@@ -122,9 +121,9 @@ public abstract class SSAInstruction  {
    */
   public static abstract class Visitor implements IVisitor {
     public void visitAddressOf(SSAAddressOfInstruction instruction) {
-      
+
     }
-    
+
     public void visitGoto(SSAGotoInstruction instruction) {
     }
 
@@ -196,8 +195,8 @@ public abstract class SSAInstruction  {
   }
 
   /**
-   * Does this instruction define a normal value, as distinct from a set of exceptions possibly thrown by it (e.g. for
-   * invoke instructions).
+   * Does this instruction define a normal value, as distinct from a set of exceptions possibly thrown by it (e.g. for invoke
+   * instructions).
    * 
    * @return true if the instruction does define a proper value.
    */
@@ -211,6 +210,7 @@ public abstract class SSAInstruction  {
 
   /**
    * Return the ith def
+   * 
    * @param i number of the def, starting at 0.
    */
   public int getDef(int i) {
@@ -248,7 +248,7 @@ public abstract class SSAInstruction  {
    * @return the set of exception types that an instruction might throw ... disregarding athrows and invokes.
    */
   public Collection<TypeReference> getExceptionTypes() {
-    assert ! isPEI();
+    assert !isPEI();
     return Collections.emptySet();
   }
 

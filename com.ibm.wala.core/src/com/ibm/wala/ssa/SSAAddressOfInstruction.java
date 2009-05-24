@@ -15,10 +15,13 @@ import com.ibm.wala.types.FieldReference;
 public class SSAAddressOfInstruction extends SSAInstruction {
 
   private final int lval;
+
   private final int addressVal;
+
   private final int indexVal;
+
   private final FieldReference field;
-  
+
   public SSAAddressOfInstruction(int lval, int local) {
     this.lval = lval;
     this.addressVal = local;
@@ -48,7 +51,7 @@ public class SSAAddressOfInstruction extends SSAInstruction {
 
   @Override
   public int hashCode() {
-     return lval * 99701 * addressVal;
+    return lval * 99701 * addressVal;
   }
 
   @Override
@@ -58,21 +61,24 @@ public class SSAAddressOfInstruction extends SSAInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return getValueString(symbolTable, lval) + " = &" + getValueString(symbolTable, addressVal) +
-      ( (indexVal != -1)? "[" + getValueString(symbolTable, indexVal) + "]":
-        (field != null)? "." + field.getName().toString(): "");
+    return getValueString(symbolTable, lval)
+        + " = &"
+        + getValueString(symbolTable, addressVal)
+        + ((indexVal != -1) ? "[" + getValueString(symbolTable, indexVal) + "]" : (field != null) ? "."
+            + field.getName().toString() : "");
   }
 
   @Override
   public void visit(IVisitor v) {
-    v.visitAddressOf(this);
+    // SJF ... the API change to IVisitor temporarily rolled back since it breaks clients.
+    // v.visitAddressOf(this);
   }
 
   @Override
   public int getNumberOfDefs() {
     return 1;
   }
-  
+
   @Override
   public int getDef(int i) {
     assert i == 0;
@@ -86,13 +92,13 @@ public class SSAAddressOfInstruction extends SSAInstruction {
 
   @Override
   public int getNumberOfUses() {
-    return (indexVal == -1)? 1: 2;
+    return (indexVal == -1) ? 1 : 2;
   }
-  
+
   @Override
   public int getUse(int i) {
     assert i == 0 || (i == 1 && indexVal != -1);
-    if (i == 0) { 
+    if (i == 0) {
       return addressVal;
     } else {
       return indexVal;
