@@ -65,8 +65,7 @@ public class SSAAddressOfInstruction extends SSAInstruction {
 
   @Override
   public void visit(IVisitor v) {
-    // TODO Auto-generated method stub
-
+    v.visitAddressOf(this);
   }
 
   @Override

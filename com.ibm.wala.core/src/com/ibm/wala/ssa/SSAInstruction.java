@@ -93,6 +93,8 @@ public abstract class SSAInstruction  {
     void visitPut(SSAPutInstruction instruction);
 
     void visitInvoke(SSAInvokeInstruction instruction);
+    
+    void visitAddressOf(SSAAddressOfInstruction instruction);
 
     void visitNew(SSANewInstruction instruction);
 
@@ -119,6 +121,10 @@ public abstract class SSAInstruction  {
    * A base visitor implementation that does nothing.
    */
   public static abstract class Visitor implements IVisitor {
+    public void visitAddressOf(SSAAddressOfInstruction instruction) {
+      
+    }
+    
     public void visitGoto(SSAGotoInstruction instruction) {
     }
 
