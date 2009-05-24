@@ -91,10 +91,6 @@ public abstract class SSAInstruction {
 
     void visitInvoke(SSAInvokeInstruction instruction);
 
-    // This would be a significant API change since any implementors of IVisitor
-    // will break. We need to announce and discuss such API changes. -- SJF
-    // void visitAddressOf(SSAAddressOfInstruction instruction);
-
     void visitNew(SSANewInstruction instruction);
 
     void visitArrayLength(SSAArrayLengthInstruction instruction);
@@ -120,10 +116,6 @@ public abstract class SSAInstruction {
    * A base visitor implementation that does nothing.
    */
   public static abstract class Visitor implements IVisitor {
-    public void visitAddressOf(SSAAddressOfInstruction instruction) {
-
-    }
-
     public void visitGoto(SSAGotoInstruction instruction) {
     }
 

@@ -70,8 +70,8 @@ public class SSAAddressOfInstruction extends SSAInstruction {
 
   @Override
   public void visit(IVisitor v) {
-    // SJF ... the API change to IVisitor temporarily rolled back since it breaks clients.
-    // v.visitAddressOf(this);
+    assert (v instanceof IVisitorWithAddresses) : "expected an instance of IVisitorWithAddresses";
+    ((IVisitorWithAddresses) v).visitAddressOf(this);
   }
 
   @Override
