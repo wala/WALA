@@ -49,27 +49,22 @@ public class JUnitEntryPoints {
     final HashSet<Entrypoint> result = HashSetFactory.make();
     for (IClass klass : cha) {
       if (klass.getClassLoader().getReference().equals(ClassLoaderReference.Application)) {
-        try {
-          // if the class is a subclass of the Junit TestCase
-          if (isJUnitTestCase(klass)) {
+        // if the class is a subclass of the Junit TestCase
+        if (isJUnitTestCase(klass)) {
 
-            System.out.println("application class: " + klass);
+          System.out.println("application class: " + klass);
 
-            // return all the tests methods
-            Collection methods = klass.getAllMethods();
-            Iterator methodsIt = methods.iterator();
+          // return all the tests methods
+          Collection methods = klass.getAllMethods();
+          Iterator methodsIt = methods.iterator();
 
-            while (methodsIt.hasNext()) {
-              IMethod m = (IMethod) methodsIt.next();
-              if (isJUnitMethod(m)) {
-                result.add(new DefaultEntrypoint(m, cha));
-                System.out.println("- adding test method as entry point: " + m.getName().toString());
-              }
+          while (methodsIt.hasNext()) {
+            IMethod m = (IMethod) methodsIt.next();
+            if (isJUnitMethod(m)) {
+              result.add(new DefaultEntrypoint(m, cha));
+              System.out.println("- adding test method as entry point: " + m.getName().toString());
             }
           }
-        } catch (ClassHierarchyException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
         }
       }
     }
@@ -145,7 +140,7 @@ public class JUnitEntryPoints {
    * 
    * @throws IllegalArgumentException if klass is null
    */
-  public static boolean isJUnitTestCase(IClass klass)  {
+  public static boolean isJUnitTestCase(IClass klass) {
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");
     }
@@ -170,11 +165,9 @@ public class JUnitEntryPoints {
    * Check if the given method is a JUnit test method, assuming that it is declared in a JUnit test class. A method is a JUnit test
    * method if the name has the prefix "test", or its name is "setUp" or "tearDown".
    * 
-   * @throws ClassHierarchyException Note that this is only good for JUnit 3.
-   * 
    * @throws IllegalArgumentException if m is null
    */
-  public static boolean isJUnitMethod(IMethod m) throws ClassHierarchyException {
+  public static boolean isJUnitMethod(IMethod m) {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
