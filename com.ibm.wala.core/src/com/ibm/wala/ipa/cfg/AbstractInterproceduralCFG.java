@@ -785,8 +785,12 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
 
   public BasicBlockInContext<T> getEntry(CGNode n) {
     ControlFlowGraph<SSAInstruction, ? extends T> cfg = getCFG(n);
-    T entry = cfg.entry();
-    return new BasicBlockInContext<T>(n, entry);
+    if (cfg != null) {
+      T entry = cfg.entry();
+      return new BasicBlockInContext<T>(n, entry);
+    } else {
+      return null;
+    }
   }
 
   public BasicBlockInContext<T> getExit(CGNode n) {
