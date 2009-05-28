@@ -44,4 +44,8 @@ public class JSCallSiteReference extends CallSiteReference {
     return "JSCall@" + getProgramCounter();
   }
 
+  public CallSiteReference cloneReference(int pc) {
+    return new JSCallSiteReference(pc);
+  }
+
 }
