@@ -16,26 +16,28 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.BytecodeConstants;
 
 /****
- * Provides minimal abstraction layer to a stream of bytecodes
- * from the code attribute of a method.
- * 
- * @author Igor Pechtchanski
- * @author Stephen Fink
+ * Provides minimal abstraction layer to a stream of bytecodes from the code attribute of a method.
  */
 public class BytecodeStream implements BytecodeConstants {
   private final IMethod method;
+
   private final IClass declaringClass;
+
   private final int bcLength;
+
   private final byte[] bcodes;
+
   private int bcIndex;
+
   private int opcode;
+
   private boolean wide;
 
   /**
    * @param m the method containing the bytecodes
    * @param bc the array of bytecodes
-   * @throws IllegalArgumentException  if bc is null
-   * @throws IllegalArgumentException  if m is null
+   * @throws IllegalArgumentException if bc is null
+   * @throws IllegalArgumentException if m is null
    */
   public BytecodeStream(IMethod m, byte[] bc) {
     if (m == null) {
@@ -53,6 +55,7 @@ public class BytecodeStream implements BytecodeConstants {
 
   /**
    * Returns the method that this bytecode stream is from
+   * 
    * @return method
    */
   public final IMethod method() {
@@ -61,17 +64,13 @@ public class BytecodeStream implements BytecodeConstants {
 
   /**
    * Returns the declaring class that this bytecode stream is from
-   * @return method
    */
   public final IClass declaringClass() {
     return declaringClass;
   }
 
   /**
-   * Returns the length of the bytecode stream
-   * Returns 0 if the method doesn't have any bytecodes
-   *         (i.e. is abstract or native)
-   * @return bytecode stream length
+   * Returns the length of the bytecode stream Returns 0 if the method doesn't have any bytecodes (i.e. is abstract or native)
    */
   public final int length() {
     return bcLength;
@@ -79,7 +78,6 @@ public class BytecodeStream implements BytecodeConstants {
 
   /**
    * Returns the current bytecode index
-   * @return the current bytecode index
    */
   public final int index() {
     return bcIndex;
@@ -87,17 +85,15 @@ public class BytecodeStream implements BytecodeConstants {
 
   /**
    * Resets the stream to the beginning
-   * @see #reset(int)
    */
   public final void reset() {
     reset(0);
   }
 
   /**
-   * Resets the stream to a given position
-   * Use with caution
+   * Resets the stream to a given position Use with caution
+   * 
    * @param index the position to reset the stream to
-   * @see #reset()
    */
   public final void reset(int index) {
     bcIndex = index;
@@ -105,15 +101,14 @@ public class BytecodeStream implements BytecodeConstants {
 
   /**
    * Does the stream have more bytecodes in it?
-   * @return whether there are more bytecodes
    */
   public final boolean hasMoreBytecodes() {
     return bcIndex < bcLength;
   }
 
   /**
-   * Returns the opcode of the next instruction in the sequence
-   * without advancing to it
+   * Returns the opcode of the next instruction in the sequence without advancing to it
+   * 
    * @return the opcode of the next instruction
    * @see #nextInstruction()
    */
@@ -123,6 +118,7 @@ public class BytecodeStream implements BytecodeConstants {
 
   /**
    * Sets up the next instruction in the sequence
+   * 
    * @return the opcode of the next instruction
    * @see #peekNextOpcode()
    */
@@ -133,9 +129,9 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns the opcode of the current instruction in the sequence
-   * Note: if skipInstruction has been called, but nextInstruction has not,
-   *       this method will return the opcode of the skipped instruction!
+   * Returns the opcode of the current instruction in the sequence Note: if skipInstruction has been called, but nextInstruction has
+   * not, this method will return the opcode of the skipped instruction!
+   * 
    * @return the opcode of the current instruction
    * @see #nextInstruction()
    * @see #isWide()
@@ -146,6 +142,7 @@ public class BytecodeStream implements BytecodeConstants {
 
   /**
    * Are we currently processing a wide instruction?
+   * 
    * @return true if current instruction is wide
    * @see #nextInstruction()
    * @see #getOpcode()
@@ -156,6 +153,7 @@ public class BytecodeStream implements BytecodeConstants {
 
   /**
    * Skips the current instruction
+   * 
    * @see #skipInstruction(int,boolean)
    */
   public final void skipInstruction() {
@@ -170,8 +168,8 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Skips the current instruction (without using the opcode field)
-   * A slightly optimized version of skipInstruction()
+   * Skips the current instruction (without using the opcode field) A slightly optimized version of skipInstruction()
+   * 
    * @param opc current opcode
    * @param w whether current instruction follows wide
    * @see #skipInstruction()
@@ -187,8 +185,8 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns a signed byte value
-   * Used for bipush
+   * Returns a signed byte value Used for bipush
+   * 
    * @return signed byte value
    */
   public final int getByteValue() {
@@ -196,8 +194,8 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns a signed short value
-   * Used for sipush
+   * Returns a signed short value Used for sipush
+   * 
    * @return signed short value
    */
   public final int getShortValue() {
@@ -205,10 +203,9 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns the number of the local (as an unsigned byte)
-   * Used for iload, lload, fload, dload, aload,
-   *          istore, lstore, fstore, dstore, astore,
-   *          iinc, ret
+   * Returns the number of the local (as an unsigned byte) Used for iload, lload, fload, dload, aload, istore, lstore, fstore,
+   * dstore, astore, iinc, ret
+   * 
    * @return local number
    * @see #getWideLocalNumber()
    */
@@ -217,10 +214,9 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns the wide number of the local (as an unsigned short)
-   * Used for iload, lload, fload, dload, aload,
-   *          istore, lstore, fstore, dstore, astore,
-   *          iinc prefixed by wide
+   * Returns the wide number of the local (as an unsigned short) Used for iload, lload, fload, dload, aload, istore, lstore, fstore,
+   * dstore, astore, iinc prefixed by wide
+   * 
    * @return wide local number
    * @see #getLocalNumber()
    */
@@ -229,8 +225,8 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns an increment value (as a signed byte)
-   * Used for iinc
+   * Returns an increment value (as a signed byte) Used for iinc
+   * 
    * @return increment
    * @see #getWideIncrement()
    */
@@ -239,8 +235,8 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns an increment value (as a signed short)
-   * Used for iinc prefixed by wide
+   * Returns an increment value (as a signed short) Used for iinc prefixed by wide
+   * 
    * @return wide increment
    * @see #getIncrement()
    */
@@ -249,8 +245,8 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns the offset of the branch (as a signed short)
-   * Used for if<cond>, ificmp<cond>, ifacmp<cond>, goto, jsr
+   * Returns the offset of the branch (as a signed short) Used for if<cond>, ificmp<cond>, ifacmp<cond>, goto, jsr
+   * 
    * @return branch offset
    * @see #getWideBranchOffset()
    */
@@ -259,8 +255,8 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns the wide offset of the branch (as a signed int)
-   * Used for goto_w, jsr_w
+   * Returns the wide offset of the branch (as a signed int) Used for goto_w, jsr_w
+   * 
    * @return wide branch offset
    * @see #getBranchOffset()
    */
@@ -269,8 +265,7 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Skips the padding of a switch instruction
-   * Used for tableswitch, lookupswitch
+   * Skips the padding of a switch instruction Used for tableswitch, lookupswitch
    */
   public final void alignSwitch() {
     int align = bcIndex & 3;
@@ -279,8 +274,8 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns the default offset of the switch (as a signed int)
-   * Used for tableswitch, lookupswitch
+   * Returns the default offset of the switch (as a signed int) Used for tableswitch, lookupswitch
+   * 
    * @return default switch offset
    */
   public final int getDefaultSwitchOffset() {
@@ -288,8 +283,8 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns the lowest value of the tableswitch (as a signed int)
-   * Used for tableswitch
+   * Returns the lowest value of the tableswitch (as a signed int) Used for tableswitch
+   * 
    * @return lowest switch value
    * @see #getHighSwitchValue()
    */
@@ -298,8 +293,8 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns the highest value of the tableswitch (as a signed int)
-   * Used for tableswitch
+   * Returns the highest value of the tableswitch (as a signed int) Used for tableswitch
+   * 
    * @return highest switch value
    * @see #getLowSwitchValue()
    */
@@ -308,8 +303,8 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Skips the offsets of a tableswitch instruction
-   * Used for tableswitch
+   * Skips the offsets of a tableswitch instruction Used for tableswitch
+   * 
    * @param num the number of offsets to skip
    * @see #getTableSwitchOffset(int)
    */
@@ -318,10 +313,9 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns the numbered offset of the tableswitch (as a signed int)
-   * Used for tableswitch
-   * The "cursor" has to be positioned at the start of the offset table
-   * NOTE: Will NOT advance cursor
+   * Returns the numbered offset of the tableswitch (as a signed int) Used for tableswitch The "cursor" has to be positioned at the
+   * start of the offset table NOTE: Will NOT advance cursor
+   * 
    * @param num the number of the offset to retrieve
    * @return switch offset
    */
@@ -330,11 +324,9 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns the offset for a given value of the tableswitch (as a signed int)
-   * or 0 if the value is out of range.
-   * Used for tableswitch
-   * The "cursor" has to be positioned at the start of the offset table
-   * NOTE: Will NOT advance cursor
+   * Returns the offset for a given value of the tableswitch (as a signed int) or 0 if the value is out of range. Used for
+   * tableswitch The "cursor" has to be positioned at the start of the offset table NOTE: Will NOT advance cursor
+   * 
    * @param value the value to retrieve offset for
    * @param low the lowest value of the tableswitch
    * @param high the highest value of the tableswitch
@@ -347,9 +339,8 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns the number of match-offset pairs in the lookupswitch
-   *         (as a signed int)
-   * Used for lookupswitch
+   * Returns the number of match-offset pairs in the lookupswitch (as a signed int) Used for lookupswitch
+   * 
    * @return number of switch pairs
    */
   public final int getSwitchLength() {
@@ -357,8 +348,8 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Skips the match-offset pairs of a lookupswitch instruction
-   * Used for lookupswitch
+   * Skips the match-offset pairs of a lookupswitch instruction Used for lookupswitch
+   * 
    * @param num the number of match-offset pairs to skip
    * @see #getLookupSwitchValue(int)
    * @see #getLookupSwitchOffset(int)
@@ -368,10 +359,9 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns the numbered offset of the lookupswitch (as a signed int)
-   * Used for lookupswitch
-   * The "cursor" has to be positioned at the start of the pair table
-   * NOTE: Will NOT advance cursor
+   * Returns the numbered offset of the lookupswitch (as a signed int) Used for lookupswitch The "cursor" has to be positioned at
+   * the start of the pair table NOTE: Will NOT advance cursor
+   * 
    * @param num the number of the offset to retrieve
    * @return switch offset
    * @see #getLookupSwitchValue(int)
@@ -381,10 +371,9 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns the numbered value of the lookupswitch (as a signed int)
-   * Used for lookupswitch
-   * The "cursor" has to be positioned at the start of the pair table
-   * NOTE: Will NOT advance cursor
+   * Returns the numbered value of the lookupswitch (as a signed int) Used for lookupswitch The "cursor" has to be positioned at the
+   * start of the pair table NOTE: Will NOT advance cursor
+   * 
    * @param num the number of the value to retrieve
    * @return switch value
    * @see #getLookupSwitchOffset(int)
@@ -394,13 +383,10 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns the offset for a given value of the lookupswitch
-   *         (as a signed int) or 0 if the value is not in the table.
-   * Used for lookupswitch
-   * The "cursor" has to be positioned at the start of the offset table
-   * NOTE: Will NOT advance cursor
-   * WARNING: Uses LINEAR search.  Whoever has time on their hands can
-   *          re-implement this as a binary search.
+   * Returns the offset for a given value of the lookupswitch (as a signed int) or 0 if the value is not in the table. Used for
+   * lookupswitch The "cursor" has to be positioned at the start of the offset table NOTE: Will NOT advance cursor WARNING: Uses
+   * LINEAR search. Whoever has time on their hands can re-implement this as a binary search.
+   * 
    * @param value the value to retrieve offset for
    * @param num the number of match-offset pairs in the lookupswitch
    * @return switch offset
@@ -412,105 +398,25 @@ public class BytecodeStream implements BytecodeConstants {
     return 0;
   }
 
-  //  /**
-  //   * Returns a reference to a field
-  //   * Used for getstatic, putstatic, getfield, putfield
-  //   * @return field reference
-  //   */
-  //  public final FieldReference getFieldReference() {
-  //    // TODO: generalize IClass to handle constant pools?
-  //    ShrikeCTClassWrapper klass = (ShrikeCTClassWrapper) declaringClass;
-  //    return klass.getFieldRef(readUnsignedShort());
-  //  }
-
-  //  /**
-  //   * Returns a reference to a method
-  //   * Used for invokevirtual, invokespecial, invokestatic, invokeinterface
-  //   * @return method reference
-  //   */
-  //  public final MethodReference getMethodReference() {
-  //    // TODO: generalize IClass to handle constant pools?
-  //    ShrikeCTClassWrapper klass = (ShrikeCTClassWrapper) declaringClass;
-  //    return klass.getMethodRef(readUnsignedShort());
-  //  }
-
   /**
-   * Skips the extra stuff after an invokeinterface instruction
-   * Used for invokeinterface
+   * Skips the extra stuff after an invokeinterface instruction Used for invokeinterface
    */
   public final void alignInvokeInterface() {
     bcIndex += 2; // eat superfluous stuff
   }
 
   /**
-   * Returns the type reference (as a Type)
-   * Used for new, anewarray, checkcast, instanceof, multianewarray
-   * @return type reference
-   */
-  //  public final TypeReference getTypeReference() {
-  //    int index = readUnsignedShort();
-  //    return declaringClass.getTypeRef(index);
-  //  }
-
-  /**
-   * Returns the element type (primitive) of the array (as an unsigned byte)
-   * Used for newarray
+   * Returns the element type (primitive) of the array (as an unsigned byte) Used for newarray
+   * 
    * @return array element type
    */
   public final int getArrayElementType() {
     return readUnsignedByte();
   }
 
-  //  /**
-  //   * Returns the type of the array of given primitive type (as a Type)
-  //   * Used for newarray
-  //   * @param etype element type
-  //   * @return array type
-  //   * @see #getArrayElementType()
-  //   * @see #getPrimitiveArrayType()
-  //   */
-  //  public final Array getPrimitiveArrayType(int etype) {
-  //    return Array.getPrimitiveArrayType(etype);
-  //  }
-  //
-  //  /**
-  //   * Returns the type of the primitive array (as a Type)
-  //   * Used for newarray
-  //   * @return array type
-  //   * @see #getArrayElementType()
-  //   * @see #getPrimitiveArrayType(int)
-  //   */
-  //  public final Type getPrimitiveArrayType() {
-  //    int etype = readUnsignedByte();
-  //    return Array.getPrimitiveArrayType(etype);
-  //  }
-  //
-  //  /**
-  //   * Returns the type of the array of given object type (as a Type)
-  //   * Used for anewarray
-  //   * @param klass element type
-  //   * @return array type
-  //   * @see #getTypeReference()
-  //   * @see #getObjectArrayType()
-  //   */
-  //  public final Type getObjectArrayType(Type klass) {
-  //    return klass.getArrayTypeForElementType();
-  //  }
-
   /**
-   * Returns the type of the object array (as a Type)
-   * Used for anewarray
-   * @return array type
-  //   * @see #getObjectArrayType(Type)
-  //   */
-  //  public final TypeReference getObjectArrayType() {
-  //    TypeReference klass = getTypeReference();
-  //    return klass.getArrayTypeForElementType();
-  //  }
-
-  /**
-   * Returns the dimension of the array (as an unsigned byte)
-   * Used for multianewarray
+   * Returns the dimension of the array (as an unsigned byte) Used for multianewarray
+   * 
    * @return array dimension
    */
   public final int getArrayDimension() {
@@ -518,10 +424,9 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns the opcode of the wide instruction
-   * Used for wide
-   * Can be one of iload, lload, fload, dload, aload,
-   *               istore, lstore, fstore, dstore, astore, iinc
+   * Returns the opcode of the wide instruction Used for wide Can be one of iload, lload, fload, dload, aload, istore, lstore,
+   * fstore, dstore, astore, iinc
+   * 
    * @return the opcode of the wide instruction
    */
   public final int getWideOpcode() {
@@ -530,8 +435,8 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns the constant pool index of a constant (as an unsigned byte)
-   * Used for ldc
+   * Returns the constant pool index of a constant (as an unsigned byte) Used for ldc
+   * 
    * @return constant index
    * @see #getWideConstantIndex()
    */
@@ -540,8 +445,8 @@ public class BytecodeStream implements BytecodeConstants {
   }
 
   /**
-   * Returns the wide constant pool index of a constant (as an unsigned short)
-   * Used for ldc_w, ldc2_w
+   * Returns the wide constant pool index of a constant (as an unsigned short) Used for ldc_w, ldc2_w
+   * 
    * @return wide constant index
    * @see #getConstantIndex()
    */
@@ -549,150 +454,46 @@ public class BytecodeStream implements BytecodeConstants {
     return readUnsignedShort();
   }
 
-//  /**
-//   * Returns the type of a constant at a given constant pool index (as a byte)
-//   * Used for ldc, ldc_w, ldc2_w
-//   * @return constant type
-//   * @see #getConstantIndex()
-//   * @see #getWideConstantIndex()
-//   * @see #getIntConstant(int)
-//   * @throws UnimplementedError  unconditionally
-//   */
-//  public final byte getConstantType(int index) throws UnimplementedError {
-//    throw new UnimplementedError();
-//    //    byte desc = declaringClass.getLiteralDescription(index);
-//    //    return desc;
-//  }
-
-//  /**
-//   * Returns the constant at a given constant pool index (as an int)
-//   * Used for ldc, ldc_w
-//   * @return int constant
-//   * @see #getConstantIndex()
-//   * @see #getWideConstantIndex()
-//   * @see #getConstantType(int)
-//   * @throws UnimplementedError  unconditionally
-//   */
-//  public final int getIntConstant(int index) throws UnimplementedError {
-//    throw new UnimplementedError();
-//    //    int offset = declaringClass.getLiteralOffset(index) >> 2;
-//    //    int val = Statics.getSlotContentsAsInt(offset);
-//    //    return val;
-//  }
-
-//  /**
-//   * Returns the constant at a given constant pool index (as a long)
-//   * Used for ldc2_w
-//   * @return long constant
-//   * @see #getConstantIndex()
-//   * @see #getWideConstantIndex()
-//   * @see #getConstantType(int)
-//   * @see #getIntConstant(int)
-//
-//  //   */
-  //  public final long getLongConstant(int index) {
-  //    int offset = declaringClass.getLiteralOffset(index) >> 2;
-  //    long val = Statics.getSlotContentsAsLong(offset);
-  //    return val;
-  //  }
-
-//  /**
-//   * Returns the constant at a given constant pool index (as a float)
-//   * Used for ldc, ldc_w
-//   * @return float constant
-//   * @see #getConstantIndex()
-//   * @see #getWideConstantIndex()
-//   * @see #getConstantType(int)
-//   * @see #getIntConstant(int)
-//   * @see #getLongConstant(int)
-//   * @see #getDoubleConstant(int)
-//   * @see #getStringConstant(int)
-  //   */
-  //  public final float getFloatConstant(int index) {
-  //    int offset = declaringClass.getLiteralOffset(index) >> 2;
-  //    int val_raw = Statics.getSlotContentsAsInt(offset);
-  //    float val = Float.intBitsToFloat(val_raw);
-  //    return val;
-  //  }
-
-  // /**
-  // * Returns the constant at a given constant pool index (as a double)
-  // * Used for ldc2_w
-  // * @return double constant
-  // * @see #getConstantIndex()
-  // * @see #getWideConstantIndex()
-  // * @see #getConstantType(int)
-  // * @see #getIntConstant(int)
-  // * @see #getLongConstant(int)
-  // * @see #getFloatConstant(int)
-  // * @see #getStringConstant(int)
-  //   */
-  //  public final double getDoubleConstant(int index) {
-  //    int offset = declaringClass.getLiteralOffset(index) >> 2;
-  //    long val_raw = Statics.getSlotContentsAsLong(offset);
-  //    double val = Double.longBitsToDouble(val_raw);
-  //    return val;
-  //  }
-
-//  /**
-//   * Returns the constant at a given constant pool index (as a String)
-//   * Used for ldc, ldc_w
-//   * @return String constant
-//   * @see #getConstantIndex()
-//   * @see #getWideConstantIndex()
-//   * @see #getConstantType(int)
-//   * @see #getIntConstant(int)
-//   * @see #getLongConstant(int)
-//   * @see #getFloatConstant(int)
-//  //   * @see #getDoubleConstant(int)
-//  //   */
-  //  public final String getStringConstant(int index) {
-  //    int offset = declaringClass.getLiteralOffset(index) >> 2;
-  //    String val = (String) Statics.getSlotContentsAsObject(offset);
-  //    return val;
-  //  }
-
-  //// HELPER FUNCTIONS
+  // // HELPER FUNCTIONS
 
   // Skip a tableswitch or a lookupswitch instruction
   private void skipSpecialInstruction(int opcode) {
     switch (opcode) {
-      case JBC_tableswitch :
-        {
-          alignSwitch();
-          getDefaultSwitchOffset();
-          int l = getLowSwitchValue();
-          int h = getHighSwitchValue();
-          skipTableSwitchOffsets(h - l + 1); // jump offsets
-        }
-        break;
-      case JBC_lookupswitch :
-        {
-          alignSwitch();
-          getDefaultSwitchOffset();
-          int n = getSwitchLength();
-          skipLookupSwitchPairs(n); // match-offset pairs
-        }
-        break;
-      case JBC_wide :
-        {
-          int oc = getWideOpcode();
-          int len = JBC_length[oc] - 1;
-          bcIndex += len + len;
-        }
-        break;
-      default :
-        throw new NullPointerException();
+    case JBC_tableswitch: {
+      alignSwitch();
+      getDefaultSwitchOffset();
+      int l = getLowSwitchValue();
+      int h = getHighSwitchValue();
+      skipTableSwitchOffsets(h - l + 1); // jump offsets
+    }
+      break;
+    case JBC_lookupswitch: {
+      alignSwitch();
+      getDefaultSwitchOffset();
+      int n = getSwitchLength();
+      skipLookupSwitchPairs(n); // match-offset pairs
+    }
+      break;
+    case JBC_wide: {
+      int oc = getWideOpcode();
+      int len = JBC_length[oc] - 1;
+      bcIndex += len + len;
+    }
+      break;
+    default:
+      throw new NullPointerException();
     }
   }
 
-  //// READ BYTECODES
+  // // READ BYTECODES
   private final byte readSignedByte() {
     return bcodes[bcIndex++];
   }
+
   private final int readUnsignedByte() {
     return (bcodes[bcIndex++] & 0xFF);
   }
+
   private final int getUnsignedByte(int index) {
     return (bcodes[index] & 0xFF);
   }
@@ -702,11 +503,13 @@ public class BytecodeStream implements BytecodeConstants {
     i |= (bcodes[bcIndex++] & 0xFF);
     return i;
   }
+
   private final int readUnsignedShort() {
     int i = (bcodes[bcIndex++] & 0xFF) << 8;
     i |= (bcodes[bcIndex++] & 0xFF);
     return i;
   }
+
   private final int readSignedInt() {
     int i = bcodes[bcIndex++] << 24;
     i |= (bcodes[bcIndex++] & 0xFF) << 16;
@@ -714,6 +517,7 @@ public class BytecodeStream implements BytecodeConstants {
     i |= (bcodes[bcIndex++] & 0xFF);
     return i;
   }
+
   private final int getSignedInt(int index) {
     int i = bcodes[index++] << 24;
     i |= (bcodes[index++] & 0xFF) << 16;
