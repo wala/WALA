@@ -55,8 +55,6 @@ public class BytecodeStream implements BytecodeConstants {
 
   /**
    * Returns the method that this bytecode stream is from
-   * 
-   * @return method
    */
   public final IMethod method() {
     return method;
