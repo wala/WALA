@@ -10,15 +10,26 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
+import com.ibm.wala.util.debug.Assertions;
+
+/**
+ * A load from a pointer. 
+ * 
+ * v = *p
+ */
 public class SSALoadIndirectInstruction extends SSAAbstractUnaryInstruction {
 
+  /**
+   * @param lval the value number which is def'fed by this instruction.
+   * @param addressVal the value number holding the pointer p deferenced (*p)
+   */
   public SSALoadIndirectInstruction(int lval, int addressVal) {
     super(lval, addressVal);
   }
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    // TODO Auto-generated method stub
+    Assertions.UNREACHABLE("not implemented");
     return null;
   }
 
@@ -29,8 +40,6 @@ public class SSALoadIndirectInstruction extends SSAAbstractUnaryInstruction {
 
   @Override
   public void visit(IVisitor v) {
-    // TODO Auto-generated method stub
-
   }
 
 }

@@ -25,6 +25,7 @@ import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.ssa.SSAIndirectionData.Name;
 import com.ibm.wala.util.debug.Assertions;
 
 public class SyntheticIR extends IR {
@@ -128,7 +129,7 @@ public class SyntheticIR extends IR {
   }
 
   @Override
-  protected SSAIndirectionData getIndirectionData() {
+  protected SSAIndirectionData<Name> getIndirectionData() {
      return null;
   }
 }

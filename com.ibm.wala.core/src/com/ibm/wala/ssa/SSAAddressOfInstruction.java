@@ -10,18 +10,44 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
+import com.ibm.wala.ssa.SSAIndirectionData.Name;
 import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.util.debug.Assertions;
 
+/**
+ * An {@link SSAAddressOfInstruction} represents storing the address of some "source" level entity (@see {@link Name}) into an SSA
+ * value number.
+ */
 public class SSAAddressOfInstruction extends SSAInstruction {
 
+  /**
+   * The value number which is def'ed ... this instruction assigns this value to hold an address.
+   */
   private final int lval;
 
+  /**
+   * The SSA value number that represents the entity whose address is being taken.
+   * 
+   * If we're taking the address of a local variable, this is the value number representing that local variable immediately before
+   * this instruction.
+   * 
+   * If we're taking the address of an array element or a field of an object, then this is the base pointer.
+   */
   private final int addressVal;
 
+  /**
+   * If we're taking the address of an array element, this is the array index. Otherwise, this is -1.
+   */
   private final int indexVal;
 
+  /**
+   * If we're taking the address of a field, this is the field reference. Otherwise, this is null.
+   */
   private final FieldReference field;
 
+  /**
+   * Use this constructor when taking the address of a local variable.
+   */
   public SSAAddressOfInstruction(int lval, int local) {
     this.lval = lval;
     this.addressVal = local;
@@ -29,29 +55,35 @@ public class SSAAddressOfInstruction extends SSAInstruction {
     this.field = null;
   }
 
-  public SSAAddressOfInstruction(int lval, int local, int indexVal) {
+  /**
+   * Use this constructor when taking the address of an array element.
+   */
+  public SSAAddressOfInstruction(int lval, int basePointer, int indexVal) {
     this.lval = lval;
-    this.addressVal = local;
+    this.addressVal = basePointer;
     this.indexVal = indexVal;
     this.field = null;
   }
 
-  public SSAAddressOfInstruction(int lval, int local, FieldReference field) {
+  /**
+   * Use this constructor when taking the address of a field in an object.
+   */
+  public SSAAddressOfInstruction(int lval, int basePointer, FieldReference field) {
     this.lval = lval;
-    this.addressVal = local;
+    this.addressVal = basePointer;
     this.indexVal = -1;
     this.field = field;
   }
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    // TODO Auto-generated method stub
+    Assertions.UNREACHABLE("not yet implemented.  to be nuked");
     return null;
   }
 
   @Override
   public int hashCode() {
-    return lval * 99701 * addressVal;
+    return lval * 99701 + addressVal;
   }
 
   @Override

@@ -16,6 +16,11 @@ import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.debug.Assertions;
 
+/**
+ * Note that classes from JVML have some features that are not present in all "bytecode" languages currently supported.
+ * 
+ * @param <T> type of classloader which loads this format of class.
+ */
 public abstract class JVMClass<T extends IClassLoader> extends BytecodeClass<T> {
 
   protected JVMClass(T loader, IClassHierarchy cha) {
@@ -35,7 +40,7 @@ public abstract class JVMClass<T extends IClassLoader> extends BytecodeClass<T> 
     boolean result = ((modifiers & Constants.ACC_PUBLIC) != 0);
     return result;
   }
-  
+
   public boolean isPrivate() {
     boolean result = ((modifiers & Constants.ACC_PRIVATE) != 0);
     return result;
@@ -54,7 +59,7 @@ public abstract class JVMClass<T extends IClassLoader> extends BytecodeClass<T> 
     boolean result = ((modifiers & Constants.ACC_ABSTRACT) != 0);
     return result;
   }
-  
+
   /**
    * @see com.ibm.wala.classLoader.IClass#getClassInitializer()
    */
@@ -69,7 +74,5 @@ public abstract class JVMClass<T extends IClassLoader> extends BytecodeClass<T> 
     }
     return methodMap.get(MethodReference.clinitSelector);
   }
-
-
 
 }

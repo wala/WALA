@@ -23,8 +23,6 @@ import com.ibm.wala.util.config.AnalysisScopeReader;
 
 /**
  * A test of support for source file mapping
- * 
- * @author sfink
  */
 public class SourceMapTest extends WalaTestCase {
   private static final ClassLoader MY_CLASSLOADER = SourceMapTest.class.getClassLoader();

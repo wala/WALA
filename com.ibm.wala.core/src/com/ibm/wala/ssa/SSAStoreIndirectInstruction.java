@@ -10,11 +10,23 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
+import com.ibm.wala.util.debug.Assertions;
+
+/**
+ * A store from a pointer.
+ * 
+ * *p = v
+ */
 public class SSAStoreIndirectInstruction extends SSAInstruction {
 
   private final int addressVal;
+
   private final int rval;
-  
+
+  /**
+   * @param addressVal the value number holding the pointer p deferenced (*p)
+   * @param rval the value number which is stored into the pointer location
+   */
   public SSAStoreIndirectInstruction(int addressVal, int rval) {
     this.addressVal = addressVal;
     this.rval = rval;
@@ -22,7 +34,7 @@ public class SSAStoreIndirectInstruction extends SSAInstruction {
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    // TODO Auto-generated method stub
+    Assertions.UNREACHABLE("unimplemented");
     return null;
   }
 
@@ -33,7 +45,7 @@ public class SSAStoreIndirectInstruction extends SSAInstruction {
 
   @Override
   public boolean isFallThrough() {
-     return true;
+    return true;
   }
 
   @Override
@@ -43,8 +55,6 @@ public class SSAStoreIndirectInstruction extends SSAInstruction {
 
   @Override
   public void visit(IVisitor v) {
-    // TODO Auto-generated method stub
-
   }
 
 }

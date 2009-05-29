@@ -15,8 +15,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+/**
+ * An implementation of {@link SSAIndirectionData} specialized for IRs originated from Shrike.
+ */
 public class ShrikeIndirectionData implements SSAIndirectionData<ShrikeIndirectionData.ShrikeLocalName> {
 
+  /**
+   * In Shrike, the only "source" level entities which have names relevant to indirect pointer operations are bytecode locals.
+   */
   public static class ShrikeLocalName implements Name {
     private final int bytecodeLocalNumber;
 
@@ -45,7 +51,7 @@ public class ShrikeIndirectionData implements SSAIndirectionData<ShrikeIndirecti
         return false;
       return true;
     }
-    
+
     @Override
     public String toString() {
       return "(local:" + bytecodeLocalNumber + ")";
@@ -53,16 +59,17 @@ public class ShrikeIndirectionData implements SSAIndirectionData<ShrikeIndirecti
   }
 
   private final Map<ShrikeLocalName, Integer>[] defs;
+
   private final Map<ShrikeLocalName, Integer>[] uses;
-  
+
   @SuppressWarnings("unchecked")
   public ShrikeIndirectionData(int instructionArrayLength) {
-    defs = new HashMap[ instructionArrayLength ];
-    uses = new HashMap[ instructionArrayLength ];
+    defs = new HashMap[instructionArrayLength];
+    uses = new HashMap[instructionArrayLength];
   }
-  
+
   public int getDef(int instructionIndex, ShrikeLocalName name) {
-    if (defs[instructionIndex] == null || ! defs[instructionIndex].containsKey(name)) {
+    if (defs[instructionIndex] == null || !defs[instructionIndex].containsKey(name)) {
       return -1;
     } else {
       return defs[instructionIndex].get(name);
@@ -70,7 +77,7 @@ public class ShrikeIndirectionData implements SSAIndirectionData<ShrikeIndirecti
   }
 
   public int getUse(int instructionIndex, ShrikeLocalName name) {
-    if (uses[instructionIndex] == null || ! uses[instructionIndex].containsKey(name)) {
+    if (uses[instructionIndex] == null || !uses[instructionIndex].containsKey(name)) {
       return -1;
     } else {
       return uses[instructionIndex].get(name);
@@ -79,7 +86,7 @@ public class ShrikeIndirectionData implements SSAIndirectionData<ShrikeIndirecti
 
   public void setDef(int instructionIndex, ShrikeLocalName name, int newDef) {
     if (defs[instructionIndex] == null) {
-      defs[instructionIndex] = new HashMap<ShrikeLocalName,Integer>(2);
+      defs[instructionIndex] = new HashMap<ShrikeLocalName, Integer>(2);
     }
 
     defs[instructionIndex].put(name, newDef);
@@ -87,15 +94,15 @@ public class ShrikeIndirectionData implements SSAIndirectionData<ShrikeIndirecti
 
   public void setUse(int instructionIndex, ShrikeLocalName name, int newUse) {
     if (uses[instructionIndex] == null) {
-      uses[instructionIndex] = new HashMap<ShrikeLocalName,Integer>(2);
+      uses[instructionIndex] = new HashMap<ShrikeLocalName, Integer>(2);
     }
 
     uses[instructionIndex].put(name, newUse);
   }
-  
+
   public Collection<ShrikeLocalName> getNames() {
     HashSet<ShrikeLocalName> result = new HashSet<ShrikeLocalName>();
-    for(int i = 0; i < uses.length; i++) {
+    for (int i = 0; i < uses.length; i++) {
       if (uses[i] != null) {
         result.addAll(uses[i].keySet());
       }
@@ -105,11 +112,11 @@ public class ShrikeIndirectionData implements SSAIndirectionData<ShrikeIndirecti
     }
     return result;
   }
-  
+
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer();
-    for(int i = 0; i < defs.length; i++) {
+    for (int i = 0; i < defs.length; i++) {
       if (defs[i] != null) {
         result.append(i + " <- " + defs[i] + "\n");
       }

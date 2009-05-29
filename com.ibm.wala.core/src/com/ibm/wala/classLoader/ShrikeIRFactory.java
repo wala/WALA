@@ -19,7 +19,6 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSABuilder;
 import com.ibm.wala.ssa.SSACFG;
-import com.ibm.wala.ssa.SSAIndirectionData;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.ShrikeIndirectionData;
@@ -108,8 +107,9 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod> {
         setupLocationMap();
       }
 
+      @SuppressWarnings("unchecked")
       @Override
-      protected SSAIndirectionData getIndirectionData() {
+      protected ShrikeIndirectionData getIndirectionData() {
          return indirectionData;
       }
     };

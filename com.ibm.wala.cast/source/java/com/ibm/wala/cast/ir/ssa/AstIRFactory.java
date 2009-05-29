@@ -27,6 +27,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.SSACFG.ExceptionHandlerBasicBlock;
+import com.ibm.wala.ssa.SSAIndirectionData.Name;
 import com.ibm.wala.types.TypeReference;
 
 public class AstIRFactory implements IRFactory {
@@ -92,7 +93,7 @@ public class AstIRFactory implements IRFactory {
     }
 
     @Override
-    protected SSAIndirectionData getIndirectionData() {
+    protected SSAIndirectionData<Name> getIndirectionData() {
       // TODO Auto-generated method stub
       return null;
     }
