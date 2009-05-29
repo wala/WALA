@@ -743,8 +743,12 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   /*
    * @see com.ibm.wala.classLoader.IMethod#getLineNumber(int)
    */
-  public int getLineNumber(int bcIndex) throws InvalidClassFileException {
-    return (getBCInfo().lineNumberMap == null) ? -1 : getBCInfo().lineNumberMap[bcIndex];
+  public int getLineNumber(int bcIndex) {
+    try {
+      return (getBCInfo().lineNumberMap == null) ? -1 : getBCInfo().lineNumberMap[bcIndex];
+    } catch (InvalidClassFileException e) {
+      return -1;
+    }
   }
 
   /**
@@ -788,8 +792,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   /*
    * @see com.ibm.wala.classLoader.IMethod#getLocalVariableName(int, int)
    */
-
-  public abstract String getLocalVariableName(int bcIndex, int localNumber) throws InvalidClassFileException;
+  public abstract String getLocalVariableName(int bcIndex, int localNumber);
 
   /*
    * TODO: cache for efficiency?

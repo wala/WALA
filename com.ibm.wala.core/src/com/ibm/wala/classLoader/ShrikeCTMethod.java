@@ -156,8 +156,13 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
   }
 
   @Override
-  public String getLocalVariableName(int bcIndex, int localNumber) throws InvalidClassFileException {
-    int[][] map = getBCInfo().localVariableMap;
+  public String getLocalVariableName(int bcIndex, int localNumber){
+    int[][] map = null;
+    try {
+      map = getBCInfo().localVariableMap;
+    } catch (InvalidClassFileException e1) {
+      return null;
+    }
 
     if (localNumber > getMaxLocals()) {
       throw new IllegalArgumentException("illegal local number: " + localNumber + ", method " + getName() + " uses at most "

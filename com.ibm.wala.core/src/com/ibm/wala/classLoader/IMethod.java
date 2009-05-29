@@ -115,16 +115,14 @@ public interface IMethod extends IMember, ContextItem {
 
   /**
    * @return the source line number corresponding to a particular bytecode index, or -1 if the information is not available.
-   * @throws InvalidClassFileException
    */
-  int getLineNumber(int bcIndex) throws InvalidClassFileException;
+  int getLineNumber(int bcIndex);
 
   /**
    * @return the (source code) name of the local variable of a given number at the specified program counter, or null if the
    *         information is not available.
-   * @throws InvalidClassFileException
    */
-  String getLocalVariableName(int bcIndex, int localNumber) throws InvalidClassFileException;
+  String getLocalVariableName(int bcIndex, int localNumber);
 
   /**
    * something like: com.foo.bar.createLargeOrder(IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer;
