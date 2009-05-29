@@ -18,7 +18,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph;
-import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph.ExplodedBasicBlock;
+import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.HashMapFactory;
 
@@ -28,7 +28,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
  * @author sfink
  * @author Julian Dolby
  */
-public class ExplodedInterproceduralCFG extends AbstractInterproceduralCFG<ExplodedBasicBlock> {
+public class ExplodedInterproceduralCFG extends AbstractInterproceduralCFG<IExplodedBasicBlock> {
 
   /**
    * Caching to improve runtime .. hope it doesn't turn into a memory leak.
@@ -52,7 +52,7 @@ public class ExplodedInterproceduralCFG extends AbstractInterproceduralCFG<Explo
    * @throws IllegalArgumentException if n == null
    */
   @Override
-  public ControlFlowGraph<SSAInstruction, ExplodedBasicBlock> getCFG(CGNode n) throws IllegalArgumentException {
+  public ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> getCFG(CGNode n) throws IllegalArgumentException {
     if (n == null) {
       throw new IllegalArgumentException("n == null");
     }

@@ -22,7 +22,7 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
-import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph.ExplodedBasicBlock;
+import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
@@ -110,8 +110,8 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
       T t = (T) o;
       if (t instanceof BasicBlockInContext) {
         BasicBlockInContext bb = (BasicBlockInContext) t;
-        if (bb.getDelegate() instanceof ExplodedBasicBlock) {
-          ExplodedBasicBlock delegate = (ExplodedBasicBlock) bb.getDelegate();
+        if (bb.getDelegate() instanceof IExplodedBasicBlock) {
+          IExplodedBasicBlock delegate = (IExplodedBasicBlock) bb.getDelegate();
           String s = delegate.getNumber() + " " + result.getResult(t) + "\\n" + stringify(delegate.getInstruction());
           for (Iterator<SSAPhiInstruction> phis = delegate.iteratePhis(); phis.hasNext();) {
             SSAPhiInstruction phi = phis.next();

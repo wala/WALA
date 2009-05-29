@@ -211,8 +211,4 @@ public abstract class CallSiteReference extends ProgramCounter implements Byteco
     return isVirtual() || isInterface();
   }
 
-  public CallSiteReference cloneReference(int pc) {
-    return make(pc, getDeclaredTarget(), getInvocationCode());
-  }
-
 }

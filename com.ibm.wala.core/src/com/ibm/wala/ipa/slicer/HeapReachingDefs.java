@@ -43,7 +43,7 @@ import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph;
-import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph.ExplodedBasicBlock;
+import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -122,12 +122,12 @@ public class HeapReachingDefs {
     Map<Integer, NormalStatement> ssaInstructionIndex2Statement = mapInstructionsToStatements(domain);
 
     // solve reaching definitions as a dataflow problem
-    BitVectorFramework<ExplodedBasicBlock, Statement> rd = new BitVectorFramework<ExplodedBasicBlock, Statement>(cfg, new RD(node,
+    BitVectorFramework<IExplodedBasicBlock, Statement> rd = new BitVectorFramework<IExplodedBasicBlock, Statement>(cfg, new RD(node,
         cfg, pa, domain, ssaInstructionIndex2Statement, exclusions), domain);
     if (VERBOSE) {
       System.err.println("Solve ");
     }
-    BitVectorSolver<? extends ISSABasicBlock> solver = new BitVectorSolver<ExplodedBasicBlock>(rd);
+    BitVectorSolver<? extends ISSABasicBlock> solver = new BitVectorSolver<IExplodedBasicBlock>(rd);
     try {
       solver.solve(null);
     } catch (CancelException e) {
@@ -458,7 +458,7 @@ public class HeapReachingDefs {
   /**
    * Reaching def flow functions
    */
-  private class RD implements ITransferFunctionProvider<ExplodedBasicBlock, BitVectorVariable> {
+  private class RD implements ITransferFunctionProvider<IExplodedBasicBlock, BitVectorVariable> {
 
     private final CGNode node;
 
@@ -507,7 +507,7 @@ public class HeapReachingDefs {
       }
     }
 
-    public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(ExplodedBasicBlock src, ExplodedBasicBlock dst) {
+    public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(IExplodedBasicBlock src, IExplodedBasicBlock dst) {
       if (DEBUG) {
         System.err.println("getEdgeXfer: " + src + " " + dst + " " + src.isEntryBlock());
       }
@@ -552,7 +552,7 @@ public class HeapReachingDefs {
       return BitVectorUnion.instance();
     }
 
-    public UnaryOperator<BitVectorVariable> getNodeTransferFunction(ExplodedBasicBlock node) {
+    public UnaryOperator<BitVectorVariable> getNodeTransferFunction(IExplodedBasicBlock node) {
       return null;
     }
 
@@ -567,7 +567,7 @@ public class HeapReachingDefs {
     /**
      * @return int set representing the heap def statements that are gen'ed by the basic block. null if none.
      */
-    IntSet gen(ExplodedBasicBlock b) {
+    IntSet gen(IExplodedBasicBlock b) {
 
       SSAInstruction s = b.getInstruction();
       if (DEBUG) {
@@ -618,7 +618,7 @@ public class HeapReachingDefs {
     /**
      * @return int set representing the heap def statements that are killed by the basic block. null if none.
      */
-    BitVector kill(ExplodedBasicBlock b) {
+    BitVector kill(IExplodedBasicBlock b) {
       SSAInstruction s = b.getInstruction();
       if (s == null) {
         return null;
