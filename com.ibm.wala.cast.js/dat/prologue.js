@@ -38,14 +38,21 @@ isFinite = function isFinite (number) {
   return primitive("GlobalIsFinite", number);
 };
 
-decodeURI = primitive("GlobalDecodeURI");
+decodeURI = function decodeURI(str) {
+    return new String(primitive("GlobalDecodeURI", str));
+};
 
-decodeURIComponent = primitive("GlobalDecodeURIComponent");
+decodeURIComponent = function decodeURIComponent(str) {
+    return new String(primitive("GlobalDecodeURIComponent", str));
+};
 
-encodeURI = primitive("GlobalEncodeURI");
+encodeURI = function encodeURI(str) {
+    return new String(primitive("GlobalEncodeURI", str));
+};
 
-encodeURIComponent = primitive("GlobalEncodeURIComponent");
-
+encodeURIComponent = function encodeURIComponent(str) {
+    return new String(primitive("GlobalEncodeURIComponent", str));
+};
 
 /************************************************************************/
 /* Object properties, see spec 15.2					*/
