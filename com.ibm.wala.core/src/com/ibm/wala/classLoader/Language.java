@@ -68,6 +68,10 @@ public interface Language {
 
   boolean isMetadataType(TypeReference type);
 
+  boolean isCharType(TypeReference type);
+  
+  boolean isBooleanType(TypeReference type);
+  
   Object getMetadataToken(Object value);
 
   TypeReference[] getArrayInterfaces();

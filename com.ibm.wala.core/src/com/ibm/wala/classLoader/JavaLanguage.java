@@ -590,6 +590,14 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   public boolean isStringType(TypeReference type) {
     return type == TypeReference.JavaLangString;
   }
+  
+  public boolean isBooleanType(TypeReference type) {
+    return type == TypeReference.Boolean;
+  }
+  
+  public boolean isCharType(TypeReference type) {
+    return type == TypeReference.Char;
+  }
 
   public Object getMetadataToken(Object value) {
     if (value instanceof ClassToken) {
@@ -611,5 +619,4 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   public TypeReference getStringType() {
     return TypeReference.JavaLangString;
   }
-
 }
