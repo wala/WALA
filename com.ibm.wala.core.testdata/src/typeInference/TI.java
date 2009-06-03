@@ -16,4 +16,11 @@ public class TI {
     System.out.println(x[0]);
   }
 
+  public void bar(int x) {
+    if (x > Integer.MIN_VALUE) {
+      Integer.toString(x);
+      throw new Error();
+    }
+  }
+
 }

@@ -91,4 +91,17 @@ public class TypeInferenceTest extends WalaTestCase {
     }
   }
 
+  public void test2() {
+    MethodReference method = scope.findMethod(AnalysisScope.APPLICATION, "LtypeInference/TI", Atom.findOrCreateUnicodeAtom("bar"),
+        new ImmutableByteArray(UTF8Convert.toUTF8("(I)V")));
+    assertNotNull("method not found", method);
+    IMethod imethod = cha.resolveMethod(method);
+    assertNotNull("imethod not found", imethod);
+    IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
+    System.out.println(ir);
+
+    TypeInference ti = TypeInference.make(ir, true);
+    assertNotNull("null type abstraction for parameter", ti.getType(2));
+  }
+
 }
