@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.ibm.wala.analysis.typeInference.PrimitiveType;
 import com.ibm.wala.cast.ir.ssa.AssignInstruction;
 import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
 import com.ibm.wala.cast.ir.ssa.AstEchoInstruction;
@@ -30,9 +31,11 @@ import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
 import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
+import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.ir.translator.TranslatorToIR;
 import com.ibm.wala.cast.ir.translator.AstTranslator.AstLexicalInformation;
+import com.ibm.wala.cast.js.analysis.typeInference.JSPrimitiveType;
 import com.ibm.wala.cast.js.ssa.JSInstructionFactory;
 import com.ibm.wala.cast.js.ssa.JavaScriptCheckReference;
 import com.ibm.wala.cast.js.ssa.JavaScriptInstanceOf;
@@ -114,6 +117,10 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
   public final static Language JS = new LanguageImpl() {
 
+    {
+      JSPrimitiveType.init();
+    }
+    
     public Atom getName() {
       return Atom.findOrCreateUnicodeAtom("JavaScript");
     }
@@ -467,23 +474,23 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
           return new SSAUnaryOpInstruction(operator, result, val);
         }
 
-        public SSAAddressOfInstruction AddressOfInstruction(int lval, int local) {
+        public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, TypeReference pointeeType) {
           throw new UnsupportedOperationException();
         }
 
-        public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, int indexVal) {
+        public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, int indexVal, TypeReference pointeeType) {
           throw new UnsupportedOperationException();
        }
 
-        public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, FieldReference field) {
+        public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, FieldReference field, TypeReference pointeeType) {
           throw new UnsupportedOperationException();
         }
 
-        public SSALoadIndirectInstruction LoadIndirectInstruction(int lval, int addressVal) {
+        public SSALoadIndirectInstruction LoadIndirectInstruction(int lval, TypeReference t, int addressVal) {
           throw new UnsupportedOperationException();
         }
 
-        public SSAStoreIndirectInstruction StoreIndirectInstruction(int addressVal, int rval) {
+        public SSAStoreIndirectInstruction StoreIndirectInstruction(int addressVal, int rval, TypeReference t) {
           throw new UnsupportedOperationException();
         }
 
@@ -526,17 +533,18 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       return JavaScriptTypes.String;
     }
 
-    @Override
-    public boolean isBooleanType(TypeReference type) {
-      Assertions.UNREACHABLE("Implement me");
-      return false;
+    public PrimitiveType getPrimitive(TypeReference reference) {
+       return JSPrimitiveType.getPrimitive(reference);
     }
 
-    @Override
-    public boolean isCharType(TypeReference type) {
-      Assertions.UNREACHABLE("Implement me");
-      return false;
+    public boolean isBooleanType(TypeReference type) {
+       return JavaScriptTypes.Boolean.equals(type);
     }
+
+    public boolean isCharType(TypeReference type) {
+       return false;
+    }
+
   };
 
   private static final Map<Selector, IMethod> emptyMap1 = Collections.emptyMap();
@@ -674,7 +682,9 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
           }
         };
 
-        System.err.println(("parent " + result[i].getName() + " is " + result[i].getMethod()));
+        if (AstTranslator.DEBUG_LEXICAL) {
+          System.err.println(("parent " + result[i].getName() + " is " + result[i].getMethod()));
+        }
       }
 
       return result;
