@@ -1,7 +1,9 @@
 function testForIn( x ) {
   var z;
   for(var y in x) {
-    z = (x[y])();
+	if (y in x) {
+      z = (x[y])();
+	}
   }
 }
 

@@ -1,0 +1,19 @@
+<HTML>
+
+<TITLE>encodeURI Sanitation</TITLE>
+
+Hi
+
+<SCRIPT>
+
+var pos=document.URL.indexOf("name=")+5;
+var txt = document.URL.substring(pos,document.URL.length);
+encodedTxt = encodeURI(txt);
+document.write(encodedTxt);
+
+</SCRIPT>
+
+<BR>
+Welcome to our system
+
+</HTML>
