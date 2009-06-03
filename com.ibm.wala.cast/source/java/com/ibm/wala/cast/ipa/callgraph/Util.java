@@ -75,11 +75,11 @@ public class Util {
 
     for (Iterator x = CG.iterator(); x.hasNext();) {
       CGNode N = (CGNode) x.next();
-      System.err.println("\ncallees of node " + N);
+      System.err.println("\ncallees of node " + N.getMethod() + " " + N.getGraphNodeId());
       for(Iterator<? extends CGNode> ns = CG.getSuccNodes(N); ns.hasNext(); ) {
-        System.err.println("\n  " + ns.next());
+        System.err.println("\n  " + ns.next().getGraphNodeId());
       }
-      System.err.println("\nIR of node " + N);
+      System.err.println("\nIR of node " + N.getGraphNodeId());
       IR ir = N.getIR();
       if (ir != null) {
         System.err.println(ir);
@@ -88,6 +88,7 @@ public class Util {
       }
     }
 
+    /*
     PointerAnalysis PA = builder.getPointerAnalysis();
     for (Iterator x = PA.getPointerKeys().iterator(); x.hasNext();) {
       PointerKey n = (PointerKey) x.next();
@@ -97,6 +98,7 @@ public class Util {
         System.err.println(("error computing set for " + n));
       }
     }
+    */
   }
 
   public static SourceFileModule[] handleFileNames(String[] fileNameArgs) {
