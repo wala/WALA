@@ -47,7 +47,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
         Name[] names = (Name[]) assertionData[i][1];
         for (int j = 0; j < names.length; j++) {
 
-          System.err.println(("looking for " + names[j].name + ", " + names[j].vn + " in " + N));
+          System.err.println("looking for " + names[j].name + ", " + names[j].vn + " in " + N);
 
           String[] localNames = ir.getLocalNames(names[j].instructionIndex, names[j].vn);
 
@@ -65,7 +65,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
   }
 
   protected void verifyGraphAssertions(CallGraph CG, Object[][] assertionData) {
-    System.err.println(CG);
+    // System.err.println(CG);
 
     if (assertionData == null) {
       return;
