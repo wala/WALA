@@ -181,6 +181,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       return null;
     }
 
+    @SuppressWarnings("unused")
     public TypeReference getPointerType(TypeReference pointee) throws UnsupportedOperationException {
       throw new UnsupportedOperationException("JavaScript does not permit explicit pointers");
     }
@@ -523,6 +524,18 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
     public TypeReference getStringType() {
       return JavaScriptTypes.String;
+    }
+
+    @Override
+    public boolean isBooleanType(TypeReference type) {
+      Assertions.UNREACHABLE("Implement me");
+      return false;
+    }
+
+    @Override
+    public boolean isCharType(TypeReference type) {
+      Assertions.UNREACHABLE("Implement me");
+      return false;
     }
   };
 
