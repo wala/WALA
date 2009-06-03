@@ -21,5 +21,11 @@ import com.ibm.wala.ssa.SSAInstruction.IVisitor;
  *  TODO: Add 'visitAddressOf' to {@link IVisitor}.
  */
 public interface IVisitorWithAddresses extends IVisitor {
+  
   void visitAddressOf(SSAAddressOfInstruction instruction);
+  
+  void visitLoadIndirect(SSALoadIndirectInstruction instruction);
+
+  void visitStoreIndirect(SSAStoreIndirectInstruction instruction);
+
 }

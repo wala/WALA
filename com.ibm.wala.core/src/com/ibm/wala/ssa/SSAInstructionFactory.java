@@ -25,11 +25,11 @@ import com.ibm.wala.types.TypeReference;
  */
 public interface SSAInstructionFactory {
 
-  SSAAddressOfInstruction AddressOfInstruction(int lval, int local);
+  SSAAddressOfInstruction AddressOfInstruction(int lval, int local, TypeReference pointeeType);
 
-  SSAAddressOfInstruction AddressOfInstruction(int lval, int local, int indexVal) ;
+  SSAAddressOfInstruction AddressOfInstruction(int lval, int local, int indexVal, TypeReference pointeeType);
 
-  SSAAddressOfInstruction AddressOfInstruction(int lval, int local, FieldReference field);
+  SSAAddressOfInstruction AddressOfInstruction(int lval, int local, FieldReference field, TypeReference pointeeType);
   
   SSAArrayLengthInstruction ArrayLengthInstruction(int result, int arrayref);
 
@@ -63,7 +63,7 @@ public interface SSAInstructionFactory {
 
   SSAInvokeInstruction InvokeInstruction(int[] params, int exception, CallSiteReference site);
 
-  SSALoadIndirectInstruction LoadIndirectInstruction(int lval, int addressVal);
+  SSALoadIndirectInstruction LoadIndirectInstruction(int lval, TypeReference t, int addressVal);
   
   SSALoadMetadataInstruction LoadMetadataInstruction(int lval, TypeReference entityType, Object token);
 
@@ -85,7 +85,7 @@ public interface SSAInstructionFactory {
 
   SSAReturnInstruction ReturnInstruction(int result, boolean isPrimitive);
 
-  SSAStoreIndirectInstruction StoreIndirectInstruction(int addressVal, int rval);
+  SSAStoreIndirectInstruction StoreIndirectInstruction(int addressVal, int rval, TypeReference pointeeType);
   
   SSASwitchInstruction SwitchInstruction(int val, int defaultLabel, int[] casesAndLabels);
 

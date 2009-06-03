@@ -336,6 +336,8 @@ public class SSABuilder extends AbstractIntStackMachine {
           creators = arr;
         }
 
+        assert s.getDef(i) != -1 : "invalid def " + i + " for " + s;
+        
         creators[s.getDef(i)] = s;
       }
     }
@@ -400,11 +402,11 @@ public class SSABuilder extends AbstractIntStackMachine {
         int arrayRef = workingState.pop();
         int result = reuseOrCreateDef();
         workingState.push(result);
+        TypeReference t = ShrikeUtil.makeTypeReference(loader, instruction.getType());
         if (instruction.isAddressOf()) {
-          emitInstruction(insts.AddressOfInstruction(result, arrayRef, index));
+          emitInstruction(insts.AddressOfInstruction(result, arrayRef, index, t));
         } else {
-          TypeReference t = ShrikeUtil.makeTypeReference(loader, instruction.getType());
-          emitInstruction(insts.ArrayLoadInstruction(result, arrayRef, index, t));
+           emitInstruction(insts.ArrayLoadInstruction(result, arrayRef, index, t));
         }
       }
 
@@ -518,8 +520,8 @@ public class SSABuilder extends AbstractIntStackMachine {
         int result = reuseOrCreateDef();
         workingState.push(result);
 
-        TypeReference fromType = ShrikeUtil.makeTypeReference(ClassLoaderReference.Primordial, instruction.getFromType());
-        TypeReference toType = ShrikeUtil.makeTypeReference(ClassLoaderReference.Primordial, instruction.getToType());
+        TypeReference fromType = ShrikeUtil.makeTypeReference(loader, instruction.getFromType());
+        TypeReference toType = ShrikeUtil.makeTypeReference(loader, instruction.getToType());
 
         emitInstruction(insts.ConversionInstruction(result, val, fromType, toType, instruction.throwsExceptionOnOverflow()));
       }
@@ -533,8 +535,8 @@ public class SSABuilder extends AbstractIntStackMachine {
         FieldReference f = FieldReference.findOrCreate(loader, instruction.getClassType(), instruction.getFieldName(),
             instruction.getFieldType());
         if (instruction.isAddressOf()) {
-          int ref = workingState.pop();
-          emitInstruction(insts.AddressOfInstruction(result, ref, f));
+          int ref = instruction.isStatic()? -1: workingState.pop();
+          emitInstruction(insts.AddressOfInstruction(result, ref, f, f.getFieldType()));
         } else if (instruction.isStatic()) {
           emitInstruction(insts.GetInstruction(result, f));
         } else {
@@ -597,7 +599,8 @@ public class SSABuilder extends AbstractIntStackMachine {
         if (instruction.isAddressOf()) {
           int result = reuseOrCreateDef();
           int t = workingState.getLocal(instruction.getVarIndex());
-          emitInstruction(insts.AddressOfInstruction(result, t));
+          TypeReference type = ShrikeUtil.makeTypeReference(loader, instruction.getType());
+          emitInstruction(insts.AddressOfInstruction(result, t, type));
           workingState.push(result);
         } else {
           super.visitLocalLoad(instruction);
@@ -770,7 +773,8 @@ public class SSABuilder extends AbstractIntStackMachine {
         int addressVal = workingState.pop();
         int result = reuseOrCreateDef();
         doIndirectReads(bytecodeIndirections.indirectlyReadLocals(getCurrentInstructionIndex()));
-        emitInstruction(insts.LoadIndirectInstruction(result, addressVal));
+        TypeReference t = ShrikeUtil.makeTypeReference(loader, instruction.getPushedType(null));
+        emitInstruction(insts.LoadIndirectInstruction(result, t, addressVal));
         workingState.push(result);
       }
 
@@ -790,7 +794,8 @@ public class SSABuilder extends AbstractIntStackMachine {
         int val = workingState.pop();        
         int addressVal = workingState.pop();
         doIndirectWrites(bytecodeIndirections.indirectlyWrittenLocals(getCurrentInstructionIndex()), val);     
-        emitInstruction(insts.StoreIndirectInstruction(addressVal, val));
+        TypeReference t = ShrikeUtil.makeTypeReference(loader, instruction.getType());
+        emitInstruction(insts.StoreIndirectInstruction(addressVal, val, t));
       }
 
     }

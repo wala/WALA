@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -19,14 +20,21 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class SSALoadIndirectInstruction extends SSAAbstractUnaryInstruction {
 
+  private final TypeReference loadedType;
+  
   /**
    * @param lval the value number which is def'fed by this instruction.
    * @param addressVal the value number holding the pointer p deferenced (*p)
    */
-  public SSALoadIndirectInstruction(int lval, int addressVal) {
+  public SSALoadIndirectInstruction(int lval, TypeReference t, int addressVal) {
     super(lval, addressVal);
+    this.loadedType = t;
   }
 
+  public TypeReference getLoadedType() {
+    return loadedType;
+  }
+  
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     Assertions.UNREACHABLE("not implemented");
@@ -35,11 +43,12 @@ public class SSALoadIndirectInstruction extends SSAAbstractUnaryInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return getValueString(symbolTable, getDef(0)) + " =  *"  + getValueString(symbolTable, getUse(0));
+    return getValueString(symbolTable, getDef(0)) + " =  *"  + getValueString(symbolTable, getUse(0)) + ": " + loadedType;
   }
 
   @Override
   public void visit(IVisitor v) {
+    ((IVisitorWithAddresses)v).visitLoadIndirect(this);
   }
 
 }

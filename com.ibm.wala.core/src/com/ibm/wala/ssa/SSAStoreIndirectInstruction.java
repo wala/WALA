@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -23,15 +24,22 @@ public class SSAStoreIndirectInstruction extends SSAInstruction {
 
   private final int rval;
 
+  private final TypeReference pointeeType;
+  
   /**
    * @param addressVal the value number holding the pointer p deferenced (*p)
    * @param rval the value number which is stored into the pointer location
    */
-  public SSAStoreIndirectInstruction(int addressVal, int rval) {
+  public SSAStoreIndirectInstruction(int addressVal, int rval, TypeReference pointeeType) {
     this.addressVal = addressVal;
     this.rval = rval;
+    this.pointeeType = pointeeType;
   }
 
+  public TypeReference getPointeeType() {
+    return pointeeType;
+  }
+  
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     Assertions.UNREACHABLE("unimplemented");
@@ -55,6 +63,7 @@ public class SSAStoreIndirectInstruction extends SSAInstruction {
 
   @Override
   public void visit(IVisitor v) {
+    ((IVisitorWithAddresses)v).visitStoreIndirect(this);
   }
 
 }

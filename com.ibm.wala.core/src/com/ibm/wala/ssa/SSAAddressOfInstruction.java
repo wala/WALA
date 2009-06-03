@@ -12,6 +12,7 @@ package com.ibm.wala.ssa;
 
 import com.ibm.wala.ssa.SSAIndirectionData.Name;
 import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -45,36 +46,45 @@ public class SSAAddressOfInstruction extends SSAInstruction {
    */
   private final FieldReference field;
 
+  private final TypeReference pointeeType;
+  
   /**
    * Use this constructor when taking the address of a local variable.
    */
-  public SSAAddressOfInstruction(int lval, int local) {
+  public SSAAddressOfInstruction(int lval, int local, TypeReference pointeeType) {
     this.lval = lval;
     this.addressVal = local;
     this.indexVal = -1;
     this.field = null;
+    this.pointeeType = pointeeType;
   }
 
   /**
    * Use this constructor when taking the address of an array element.
    */
-  public SSAAddressOfInstruction(int lval, int basePointer, int indexVal) {
+   public SSAAddressOfInstruction(int lval, int basePointer, int indexVal, TypeReference pointeeType) {
     this.lval = lval;
     this.addressVal = basePointer;
     this.indexVal = indexVal;
     this.field = null;
+    this.pointeeType = pointeeType;
   }
 
   /**
    * Use this constructor when taking the address of a field in an object.
    */
-  public SSAAddressOfInstruction(int lval, int basePointer, FieldReference field) {
+  public SSAAddressOfInstruction(int lval, int basePointer, FieldReference field, TypeReference pointeeType) {
     this.lval = lval;
     this.addressVal = basePointer;
     this.indexVal = -1;
     this.field = field;
+    this.pointeeType = pointeeType;
   }
 
+  public TypeReference getType() {
+    return pointeeType;
+  }
+  
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     Assertions.UNREACHABLE("not yet implemented.  to be nuked");
@@ -94,6 +104,7 @@ public class SSAAddressOfInstruction extends SSAInstruction {
   @Override
   public String toString(SymbolTable symbolTable) {
     return getValueString(symbolTable, lval)
+        + " (" + pointeeType.getName() + ") " 
         + " = &"
         + getValueString(symbolTable, addressVal)
         + ((indexVal != -1) ? "[" + getValueString(symbolTable, indexVal) + "]" : (field != null) ? "."
