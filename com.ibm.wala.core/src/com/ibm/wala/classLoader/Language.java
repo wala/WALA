@@ -3,6 +3,7 @@ package com.ibm.wala.classLoader;
 import java.util.Collection;
 import java.util.Set;
 
+import com.ibm.wala.analysis.typeInference.PrimitiveType;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.SSAInstructionFactory;
@@ -85,4 +86,8 @@ public interface Language {
   TypeReference getStringType();
 
   TypeReference getMetadataType();
+  
+  TypeReference getPointerType(TypeReference pointee);
+  
+  PrimitiveType getPrimitive(TypeReference reference);
 }

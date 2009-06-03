@@ -17,47 +17,22 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 
-public class PrimitiveType extends TypeAbstraction {
+public abstract class PrimitiveType extends TypeAbstraction {
 
-  final private static Map<TypeReference, PrimitiveType> refernceToType = HashMapFactory.make();
+  final protected static Map<TypeReference, PrimitiveType> referenceToType = HashMapFactory.make();
 
-  public static final PrimitiveType BOOLEAN = makePrimitive(TypeReference.Boolean, 1);
-
-  public static final PrimitiveType CHAR = makePrimitive(TypeReference.Char, 16);
-
-  public static final PrimitiveType BYTE = makePrimitive(TypeReference.Byte, 8);
-
-  public static final PrimitiveType SHORT = makePrimitive(TypeReference.Short, 16);
-
-  public static final PrimitiveType INT = makePrimitive(TypeReference.Int, 32);
-
-  public static final PrimitiveType LONG = makePrimitive(TypeReference.Long, 64);
-
-  public static final PrimitiveType FLOAT = makePrimitive(TypeReference.Float, 32);
-
-  public static final PrimitiveType DOUBLE = makePrimitive(TypeReference.Double, 64);
-
-  final private static HashMap<String, String> primitiveNameMap;
-  static {
-    primitiveNameMap = HashMapFactory.make(9);
-    primitiveNameMap.put("I", "int");
-    primitiveNameMap.put("J", "long");
-    primitiveNameMap.put("S", "short");
-    primitiveNameMap.put("B", "byte");
-    primitiveNameMap.put("C", "char");
-    primitiveNameMap.put("D", "double");
-    primitiveNameMap.put("F", "float");
-    primitiveNameMap.put("Z", "boolean");
-    primitiveNameMap.put("V", "void");
+  public static PrimitiveType getPrimitive(TypeReference reference) {
+    return referenceToType.get(reference);
   }
 
-  private final TypeReference reference;
+  protected final TypeReference reference;
 
-  private final int size;
+  protected final int size;
 
-  private PrimitiveType(TypeReference reference, int size) {
+  protected PrimitiveType(TypeReference reference, int size) {
     this.reference = reference;
     this.size = size;
+    referenceToType.put(reference, this);
   }
 
   @Override
@@ -103,20 +78,9 @@ public class PrimitiveType extends TypeAbstraction {
     return reference;
   }
 
-  public static PrimitiveType getPrimitive(TypeReference reference) {
-    return refernceToType.get(reference);
-  }
-
-  private static PrimitiveType makePrimitive(TypeReference reference, int size) {
-    PrimitiveType newType = new PrimitiveType(reference, size);
-    refernceToType.put(reference, newType);
-    return newType;
-  }
-
   @Override
   public String toString() {
-    String result = primitiveNameMap.get(reference.getName().toString());
-    return (result != null) ? result : "PrimitiveType";
+     return reference.getName().toString();
   }
 
 }

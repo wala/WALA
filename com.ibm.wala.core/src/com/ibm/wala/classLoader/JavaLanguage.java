@@ -16,6 +16,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
+import com.ibm.wala.analysis.typeInference.JavaPrimitiveType;
+import com.ibm.wala.analysis.typeInference.PrimitiveType;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.Constants;
@@ -299,23 +301,23 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       return new SSAPiInstruction(result, val, piBlock, successorBlock, cause);
     }
 
-    public SSAAddressOfInstruction AddressOfInstruction(int lval, int local) {
+    public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, TypeReference pointeeType) {
       throw new UnsupportedOperationException();
     }
 
-    public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, int indexVal) {
+    public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, int indexVal, TypeReference pointeeType) {
       throw new UnsupportedOperationException();
    }
 
-    public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, FieldReference field) {
+    public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, FieldReference field, TypeReference pointeeType) {
       throw new UnsupportedOperationException();
     }
 
-    public SSALoadIndirectInstruction LoadIndirectInstruction(int lval, int addressVal) {
+    public SSALoadIndirectInstruction LoadIndirectInstruction(int lval, TypeReference t, int addressVal) {
       throw new UnsupportedOperationException();
     }
 
-    public SSAStoreIndirectInstruction StoreIndirectInstruction(int addressVal, int rval) {
+    public SSAStoreIndirectInstruction StoreIndirectInstruction(int addressVal, int rval, TypeReference pointeeType) {
       throw new UnsupportedOperationException();
     }
   }
@@ -619,4 +621,10 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   public TypeReference getStringType() {
     return TypeReference.JavaLangString;
   }
+  @SuppressWarnings("static-access")
+  public PrimitiveType getPrimitive(TypeReference reference) {
+    return JavaPrimitiveType.getPrimitive(reference);
+  }
+
+ 
 }

@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.java.analysis.typeInference;
 
 import com.ibm.wala.analysis.typeInference.ConeType;
+import com.ibm.wala.analysis.typeInference.JavaPrimitiveType;
 import com.ibm.wala.analysis.typeInference.PointType;
 import com.ibm.wala.analysis.typeInference.PrimitiveType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
@@ -40,7 +41,7 @@ public class AstJavaTypeInference extends AstTypeInference {
         IBinaryOpInstruction.IOperator op = instruction.getOperator();
         if (op == AstConstants.BinaryOp.EQ || op == AstConstants.BinaryOp.NE || op == AstConstants.BinaryOp.LT
             || op == AstConstants.BinaryOp.GE || op == AstConstants.BinaryOp.GT || op == AstConstants.BinaryOp.LE) {
-          result = new DeclaredTypeOperator(PrimitiveType.BOOLEAN);
+          result = new DeclaredTypeOperator(language.getPrimitive(language.getConstantType(Boolean.TRUE)));
         } else {
           result = new PrimAndStringOp();
         }
@@ -94,7 +95,7 @@ public class AstJavaTypeInference extends AstTypeInference {
   }
 
   public AstJavaTypeInference(IR ir, IClassHierarchy cha, boolean doPrimitives) {
-    super(ir, cha, PrimitiveType.BOOLEAN, doPrimitives);
+    super(ir, cha, JavaPrimitiveType.BOOLEAN, doPrimitives);
     this.stringClass = cha.lookupClass(TypeReference.JavaLangString);
   }
 
@@ -105,7 +106,7 @@ public class AstJavaTypeInference extends AstTypeInference {
   public TypeAbstraction getConstantPrimitiveType(int valueNumber) {
     SymbolTable st = ir.getSymbolTable();
     if (st.isBooleanConstant(valueNumber)) {
-      return PrimitiveType.BOOLEAN;
+      return language.getPrimitive(language.getConstantType(Boolean.TRUE));
     } else {
       return super.getConstantPrimitiveType(valueNumber);
     }

@@ -28,7 +28,9 @@ import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.IVisitorWithAddresses;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAAddressOfInstruction;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSABinaryOpInstruction;
@@ -40,10 +42,12 @@ import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstanceofInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.ssa.SSALoadIndirectInstruction;
 import com.ibm.wala.ssa.SSALoadMetadataInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
+import com.ibm.wala.ssa.SSAStoreIndirectInstruction;
 import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.SSACFG.ExceptionHandlerBasicBlock;
@@ -184,14 +188,22 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
         if (defaultExceptions.size() == 0) {
           continue;
         }
-        assert (defaultExceptions.size() == 1);
-        // t should be NullPointerException
-        TypeReference t = defaultExceptions.iterator().next();
+
+        Iterator<TypeReference> types = defaultExceptions.iterator();
+        TypeReference t = types.next();
         IClass klass = cha.lookupClass(t);
         if (klass == null) {
           v.setType(BOTTOM);
         } else {
           v.setType(new PointType(klass));
+        }
+        
+        while(types.hasNext()) {
+          t = types.next();
+          klass = cha.lookupClass(t);
+          if (klass != null) {
+            v.setType(v.getType().meet(new PointType(klass)));
+          }        
         }
 
         IMethod m = cha.resolveMethod(call.getDeclaredTarget());
@@ -202,6 +214,8 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
           } catch (InvalidClassFileException e) {
             e.printStackTrace();
             Assertions.UNREACHABLE();
+          } catch (UnsupportedOperationException e) {
+            x = new TypeReference[]{ language.getThrowableType() };
           }
           if (x != null) {
             for (int i = 0; i < x.length; i++) {
@@ -229,6 +243,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     private final TypeAbstraction type;
 
     public DeclaredTypeOperator(TypeAbstraction type) {
+      assert type != null;
       this.type = type;
     }
 
@@ -295,7 +310,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       TypeAbstraction lhsType = lhs.getType();
       TypeAbstraction meet = TypeAbstraction.TOP;
       for (int i = 0; i < rhs.length; i++) {
-        if (rhs[i] != null) {
+        if (rhs[i] != null && ((TypeVariable)rhs[i]).getType() != null) {
           TypeVariable r = (TypeVariable) rhs[i];
           meet = meet.meet(r.getType());
         }
@@ -487,7 +502,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     }
   }
 
-  protected class TypeOperatorFactory extends SSAInstruction.Visitor implements OperatorFactory<TypeVariable> {
+  protected class TypeOperatorFactory extends SSAInstruction.Visitor implements IVisitorWithAddresses, OperatorFactory<TypeVariable> {
 
     protected AbstractOperator<TypeVariable> result = null;
 
@@ -508,7 +523,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       if (!doPrimitives) {
         result = null;
       } else {
-        result = new DeclaredTypeOperator(PrimitiveType.INT);
+        result = new DeclaredTypeOperator(language.getPrimitive(language.getConstantType(new Integer(1))));
       }
     }
 
@@ -585,14 +600,14 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     @Override
     public void visitConversion(SSAConversionInstruction instruction) {
       if (doPrimitives) {
-        result = new DeclaredTypeOperator(PrimitiveType.getPrimitive(instruction.getToType()));
+        result = new DeclaredTypeOperator(language.getPrimitive(instruction.getToType()));
       }
     }
 
     @Override
     public void visitComparison(SSAComparisonInstruction instruction) {
       if (doPrimitives) {
-        result = new DeclaredTypeOperator(PrimitiveType.INT);
+        result = new DeclaredTypeOperator(language.getPrimitive(language.getConstantType(Boolean.TRUE)));
       }
     }
 
@@ -613,7 +628,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     @Override
     public void visitInstanceof(SSAInstanceofInstruction instruction) {
       if (doPrimitives) {
-        result = new DeclaredTypeOperator(PrimitiveType.BOOLEAN);
+        result = new DeclaredTypeOperator(language.getPrimitive(language.getConstantType(Boolean.TRUE)));
       }
     }
 
@@ -657,6 +672,34 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       }
       return result;
     }
+
+    private DeclaredTypeOperator getPointerTypeOperator(TypeReference type) {
+      if (type.isPrimitiveType()) {
+        return new DeclaredTypeOperator(PrimitiveType.getPrimitive(type));
+      } else {
+        IClass klass = cha.lookupClass(type);
+        if (klass == null) {
+          // a type that cannot be loaded.
+          // be pessimistic
+          return new DeclaredTypeOperator(BOTTOM);
+        } else {
+          return new DeclaredTypeOperator(new ConeType(klass));
+        }
+      }
+    }
+    
+    public void visitAddressOf(SSAAddressOfInstruction instruction) {
+      TypeReference type = language.getPointerType(instruction.getType());
+      result = getPointerTypeOperator(type);
+     }
+
+    public void visitLoadIndirect(SSALoadIndirectInstruction instruction) {
+      result = getPointerTypeOperator(instruction.getLoadedType());
+    }
+
+    public void visitStoreIndirect(SSAStoreIndirectInstruction instruction) {
+      Assertions.UNREACHABLE();
+    }
   }
 
   public class TypeVarFactory implements VariableFactory {
@@ -666,7 +709,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       if (doPrimitives) {
         if (st.isConstant(valueNumber)) {
           if (st.isBooleanConstant(valueNumber)) {
-            return new TypeVariable(PrimitiveType.BOOLEAN);
+            return new TypeVariable(language.getPrimitive(language.getConstantType(Boolean.TRUE)));
           }
         }
       }
@@ -701,16 +744,11 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
   public TypeAbstraction getConstantPrimitiveType(int valueNumber) {
     SymbolTable st = ir.getSymbolTable();
-    if (!st.isConstant(valueNumber)) {
+    if (!st.isConstant(valueNumber) || st.isNullConstant(valueNumber)) {
       return TypeAbstraction.TOP;
-    } else if (st.isIntegerConstant(valueNumber)) {
-      return PrimitiveType.INT;
-    } else if (st.isFloatConstant(valueNumber)) {
-      return PrimitiveType.FLOAT;
-    } else if (st.isDoubleConstant(valueNumber)) {
-      return PrimitiveType.DOUBLE;
+    } else {
+      return language.getPrimitive(language.getConstantType(st.getConstantValue(valueNumber)));
     }
-    return TypeAbstraction.TOP;
   }
 
   public boolean isUndefined(int valueNumber) {
