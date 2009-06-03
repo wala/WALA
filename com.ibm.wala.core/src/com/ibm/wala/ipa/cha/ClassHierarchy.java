@@ -184,9 +184,9 @@ public class ClassHierarchy implements IClassHierarchy {
       langNames.add(lang.getName());
     }
     for (Language lang : this.languages) {
-      if (lang.getRootType() != null) {
+      if (lang.getRootType() != null && lang.getRootType() != this.rootTypeRef) {
         if (this.rootTypeRef != null) {
-          throw new IllegalArgumentException("AnalysisScope must have only 1 root type");
+          throw new IllegalArgumentException("AnalysisScope must have only 1 root type: " + lang.getRootType() + ", " + rootTypeRef);
         } else {
           this.rootTypeRef = lang.getRootType();
         }
