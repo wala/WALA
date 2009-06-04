@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.analysis.typeInference;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import com.ibm.wala.classLoader.IClass;
