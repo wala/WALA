@@ -23,4 +23,14 @@ public class TI {
     }
   }
 
+  public void inferInt() {
+    if (time() < time()) {
+      throw new Error();
+    }
+  }
+
+  private static long time() {
+    return System.currentTimeMillis();
+  }
+
 }

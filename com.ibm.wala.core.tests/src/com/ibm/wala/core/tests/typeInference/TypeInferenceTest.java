@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.typeInference;
 
+import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
@@ -103,5 +104,21 @@ public class TypeInferenceTest extends WalaTestCase {
     TypeInference ti = TypeInference.make(ir, true);
     assertNotNull("null type abstraction for parameter", ti.getType(2));
   }
+
+  public void test3() {
+    MethodReference method = scope.findMethod(AnalysisScope.APPLICATION, "LtypeInference/TI", Atom.findOrCreateUnicodeAtom("inferInt"),
+        new ImmutableByteArray(UTF8Convert.toUTF8("()V")));
+    assertNotNull("method not found", method);
+    IMethod imethod = cha.resolveMethod(method);
+    assertNotNull("imethod not found", imethod);
+    IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
+    System.out.println(ir);
+
+    TypeInference ti = TypeInference.make(ir, true);
+    TypeAbstraction type = ti.getType(7);
+    assertNotNull("null type abstraction", type);
+    assertTrue("inferred wrong type", type.toString().equals("int"));
+  }
+
 
 }
