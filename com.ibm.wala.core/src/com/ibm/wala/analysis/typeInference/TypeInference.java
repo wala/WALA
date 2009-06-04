@@ -607,7 +607,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     @Override
     public void visitComparison(SSAComparisonInstruction instruction) {
       if (doPrimitives) {
-        result = new DeclaredTypeOperator(language.getPrimitive(language.getConstantType(Boolean.TRUE)));
+        result = new DeclaredTypeOperator(language.getPrimitive(language.getConstantType(new Integer(0))));
       }
     }
 
