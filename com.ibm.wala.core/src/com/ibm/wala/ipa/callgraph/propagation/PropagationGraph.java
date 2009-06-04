@@ -17,7 +17,6 @@ import java.util.Map;
 
 import com.ibm.wala.fixedpoint.impl.AbstractOperator;
 import com.ibm.wala.fixedpoint.impl.AbstractStatement;
-import com.ibm.wala.fixedpoint.impl.DefaultFixedPointSystem;
 import com.ibm.wala.fixedpoint.impl.GeneralStatement;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixedpoint.impl.UnaryStatement;
@@ -41,6 +40,7 @@ import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.graph.impl.DelegatingNumberedNodeManager;
 import com.ibm.wala.util.graph.impl.SparseNumberedEdgeManager;
+import com.ibm.wala.util.graph.traverse.Topological;
 import com.ibm.wala.util.heapTrace.HeapTracer;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
@@ -429,7 +429,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   public void reorder() {
     VariableGraphView graph = new VariableGraphView();
 
-    Iterator<PointsToSetVariable> order = DefaultFixedPointSystem.makeSCCTopOrder(graph);
+    Iterator<PointsToSetVariable> order = Topological.makeTopologicalIter(graph);
 
     int number = 0;
     while (order.hasNext()) {
