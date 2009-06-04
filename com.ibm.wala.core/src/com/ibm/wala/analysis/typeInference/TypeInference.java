@@ -165,7 +165,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
           v.setType(BOTTOM);
         }
       } else if (doPrimitives) {
-        v.setType(PrimitiveType.getPrimitive(t));
+        v.setType(language.getPrimitive(t));
       }
     }
 
@@ -539,7 +539,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       TypeReference type = instruction.getDeclaredFieldType();
 
       if (doPrimitives && type.isPrimitiveType()) {
-        result = new DeclaredTypeOperator(PrimitiveType.getPrimitive(type));
+        result = new DeclaredTypeOperator(language.getPrimitive(type));
       } else {
         IClass klass = cha.lookupClass(type);
         if (klass == null) {
@@ -565,7 +565,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
           result = new DeclaredTypeOperator(new ConeType(klass));
         }
       } else if (doPrimitives && type.isPrimitiveType()) {
-        result = new DeclaredTypeOperator(PrimitiveType.getPrimitive(type));
+        result = new DeclaredTypeOperator(language.getPrimitive(type));
       } else {
         result = null;
       }
@@ -675,7 +675,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
     private DeclaredTypeOperator getPointerTypeOperator(TypeReference type) {
       if (type.isPrimitiveType()) {
-        return new DeclaredTypeOperator(PrimitiveType.getPrimitive(type));
+        return new DeclaredTypeOperator(language.getPrimitive(type));
       } else {
         IClass klass = cha.lookupClass(type);
         if (klass == null) {

@@ -33,6 +33,10 @@ public class JavaPrimitiveType extends PrimitiveType {
 
   public static final PrimitiveType DOUBLE = makePrimitive(TypeReference.Double, 64);
 
+  public static void init() {
+    
+  }
+  
   private JavaPrimitiveType(TypeReference reference, int size) {
     super(reference, size);
   }
