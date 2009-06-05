@@ -659,7 +659,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /**
    * @return true iff basic block B ends in a call instuction
    */
-  protected boolean hasCall(BasicBlockInContext B, ControlFlowGraph<SSAInstruction, T> cfg) {
+  protected boolean hasCall(BasicBlockInContext<T> B, ControlFlowGraph<SSAInstruction, T> cfg) {
     SSAInstruction[] statements = cfg.getInstructions();
 
     int lastIndex = B.getLastInstructionIndex();
@@ -693,7 +693,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /**
    * @return the set of CGNodes that B may call, according to the governing call graph.
    */
-  private Set<CGNode> getCallTargets(IBasicBlock B, ControlFlowGraph<SSAInstruction, T> cfg, CGNode Bnode) {
+  private Set<CGNode> getCallTargets(IBasicBlock<SSAInstruction> B, ControlFlowGraph<SSAInstruction, T> cfg, CGNode Bnode) {
     CallSiteReference site = getCallSiteForCallBlock(B, cfg);
     return cg.getPossibleTargets(Bnode, site);
   }
@@ -701,7 +701,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /**
    * get the {@link CallSiteReference} corresponding to the last instruction in B (assumed to be a call)
    */
-  protected CallSiteReference getCallSiteForCallBlock(IBasicBlock B, ControlFlowGraph<SSAInstruction, T> cfg) {
+  protected CallSiteReference getCallSiteForCallBlock(IBasicBlock<SSAInstruction> B, ControlFlowGraph<SSAInstruction, T> cfg) {
     SSAInstruction[] statements = cfg.getInstructions();
     SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) statements[B.getLastInstructionIndex()];
     int pc = cfg.getProgramCounter(B.getLastInstructionIndex());
