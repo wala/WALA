@@ -36,6 +36,8 @@ public class IFDSExplorer {
    */
   protected static String viewerExe = null;
 
+  private static final boolean PRINT_DOMAIN = true;
+
   public static void setDotExe(String newDotExe) {
     dotExe = newDotExe;
   }
@@ -69,7 +71,9 @@ public class IFDSExplorer {
     assert dotExe != null;
 
     // dump the domain to stderr
-    System.err.println("Domain:\n" + r.getProblem().getDomain().toString());
+    if (PRINT_DOMAIN) {
+      System.err.println("Domain:\n" + r.getProblem().getDomain().toString());
+    }
 
     String irFileName = null;
     switch (DotUtil.getOutputType()) {
