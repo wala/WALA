@@ -196,7 +196,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
       if (f != null) {
         fieldMap.put(name, f);
         return f;
-      } else if (superClass != null) {
+      } else if ((superClass = getSuperclass()) != null) {
         f = superClass.getField(name);
         if (f != null) {
           fieldMap.put(name, f);
