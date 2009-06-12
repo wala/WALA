@@ -17,7 +17,6 @@ import com.ibm.wala.types.TypeReference;
 
 /**
  * General interface for a type hierarchy
- * 
  */
 public interface IClassHierarchy extends Iterable<IClass> {
 

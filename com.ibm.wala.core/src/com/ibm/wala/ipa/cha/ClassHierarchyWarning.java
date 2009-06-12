@@ -13,10 +13,7 @@ package com.ibm.wala.ipa.cha;
 import com.ibm.wala.util.warnings.Warning;
 
 /**
- * 
  * A warning for when we get a class not found exception
- * 
- * @author sfink
  */
 public class ClassHierarchyWarning extends Warning {
 
