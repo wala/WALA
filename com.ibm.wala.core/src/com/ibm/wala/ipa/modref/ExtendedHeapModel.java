@@ -15,16 +15,12 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 
 /**
- * An extension of a heap model that returns a {@link PointerKey}
- * to represent an array length field
+ * An extension of a heap model that returns a {@link PointerKey} to represent an array length field
  */
 public interface ExtendedHeapModel extends HeapModel {
   /**
-   * 
-   * @param I
-   *          an InstanceKey representing an abstract array
-   * @return the PointerKey that acts as a representation for the arraylength
-   * field of this abstract array
+   * @param I an InstanceKey representing an abstract array
+   * @return the PointerKey that acts as a representation for the arraylength field of this abstract array
    */
   PointerKey getPointerKeyForArrayLength(InstanceKey I);
 }

@@ -45,9 +45,6 @@ import com.ibm.wala.util.intset.OrdinalSet;
  * 
  * For each call graph node, what heap locations (as determined by a heap model) may it read or write, including it's callees
  * transitively
- * 
- * @author sjfink
- * 
  */
 public class ModRef {
 
