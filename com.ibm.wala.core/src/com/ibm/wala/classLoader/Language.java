@@ -90,4 +90,6 @@ public interface Language {
   TypeReference getPointerType(TypeReference pointee);
   
   PrimitiveType getPrimitive(TypeReference reference);
+
+  boolean isObjectType(TypeReference reference);
 }

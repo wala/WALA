@@ -588,6 +588,11 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   public boolean isMetadataType(TypeReference type) {
     return type == TypeReference.JavaLangClass;
   }
+  
+  public boolean isObjectType(TypeReference type) {
+    return type == TypeReference.JavaLangObject;
+  }
+
 
   public boolean isStringType(TypeReference type) {
     return type == TypeReference.JavaLangString;
@@ -630,6 +635,4 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   public PrimitiveType getPrimitive(TypeReference reference) {
     return JavaPrimitiveType.getPrimitive(reference);
   }
-
- 
 }

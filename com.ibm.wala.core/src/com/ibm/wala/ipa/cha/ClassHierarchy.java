@@ -713,7 +713,8 @@ public class ClassHierarchy implements IClassHierarchy {
    * @throws IllegalArgumentException if A is null
    */
   public IClass getLeastCommonSuperclass(IClass A, IClass B) {
-
+    assert (A.getClassLoader().getLanguage().equals(B.getClassLoader().getLanguage()));
+    Language lang = A.getClassLoader().getLanguage();
     if (A == null) {
       throw new IllegalArgumentException("A is null");
     }
@@ -724,7 +725,7 @@ public class ClassHierarchy implements IClassHierarchy {
       return B;
     } else if (B.getReference().equals(TypeReference.Null)) {
       return A;
-    } else if (B.getReference().equals(TypeReference.JavaLangObject)) {
+    } else if (lang.isObjectType(B.getReference())) {
       return B;
     } else {
       Node n = map.get(B);
