@@ -33,9 +33,6 @@ import com.ibm.wala.util.strings.Atom;
 /**
  * Method representing a factory that creates ActionForm objects. We extend {@link SummarizedMethod} to allow for re-use of the
  * machinery in FactoryBypassInterpreter.
- * 
- * @author manu
- * 
  */
 public class ActionFormFactoryMethod extends SummarizedMethod {
 

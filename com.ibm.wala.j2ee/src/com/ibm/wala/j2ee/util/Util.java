@@ -25,7 +25,6 @@ import com.ibm.wala.j2ee.J2EEClassTargetSelector;
 import com.ibm.wala.j2ee.J2EEMethodTargetSelector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -60,9 +59,7 @@ public class Util {
         result.addAll(B.getCMRFields());
       }
       IClass klass = cha.lookupClass(T);
-      if (Assertions.verifyAssertions) {
-        assert klass != null;
-      }
+      assert klass != null;
       IClass superKlass = klass.getSuperclass();
       T = (superKlass == null) ? null : superKlass.getReference();
     }

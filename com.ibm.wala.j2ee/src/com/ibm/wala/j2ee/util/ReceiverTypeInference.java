@@ -25,21 +25,16 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
  * Holds results of type inference for call site receivers.
- * 
- * @author sfink
  */
 public class ReceiverTypeInference {
 
   final private TypeInference ti;
 
   /**
-   * Mapping from call site reference to InvokeInstruction. TODO: this kind of
-   * sucks. Redesign?
+   * Mapping from call site reference to InvokeInstruction. TODO: this kind of sucks. Redesign?
    */
   private HashMap<CallSiteReference, SSAInvokeInstruction> invokeMap;
-
 
   public ReceiverTypeInference(TypeInference ti) {
     this.ti = ti;
@@ -53,10 +48,8 @@ public class ReceiverTypeInference {
   }
 
   /**
-   * Method setupInvokeMap. TODO: redesign stuff so that all this is not
-   * necessary. TODO: has that time come .. is this unnecesary yet?
-   * 
-   * @throws InvalidClassFileException
+   * Method setupInvokeMap. TODO: redesign stuff so that all this is not necessary. TODO: has that time come .. is this unnecesary
+   * yet?
    */
   private void setupInvokeMap() throws InvalidClassFileException {
 
@@ -65,7 +58,7 @@ public class ReceiverTypeInference {
     IMethod method = ir.getMethod();
     // set up mapping from Integer (program counter) -> CallSiteReference
     HashMap<Integer, CallSiteReference> intMap = HashMapFactory.make(5);
-    for (CallSiteReference site :  CodeScanner.getCallSites(method)) {
+    for (CallSiteReference site : CodeScanner.getCallSites(method)) {
       int pc = site.getProgramCounter();
       intMap.put(Integer.valueOf(pc), site);
     }
@@ -95,12 +88,6 @@ public class ReceiverTypeInference {
     }
   }
 
-  /**
-   * Method getInvokeInstruction.
-   * 
-   * @param site
-   * @return InvokeInstruction
-   */
   private SSAInvokeInstruction getInvokeInstruction(CallSiteReference site) {
     return invokeMap.get(site);
   }

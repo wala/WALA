@@ -22,8 +22,6 @@ import com.ibm.wala.util.ref.CacheReference;
 
 /**
  * A soft cache of results of type inference
- * 
- * @author sfink
  */
 public class ReceiverTypeInferenceCache {
 
@@ -34,14 +32,12 @@ public class ReceiverTypeInferenceCache {
   }
 
   /**
-   * A cache of TypeInference results; a mapping from CGNode ->
-   * ReceiverTypeInference
+   * A cache of TypeInference results; a mapping from CGNode -> ReceiverTypeInference
    */
   private final Map<CGNode, Object> typeInferenceMap = HashMapFactory.make();
 
   /**
-   * @param n
-   *          node
+   * @param n node
    * @return null if unable to perform type inference
    */
   public ReceiverTypeInference findOrCreate(CGNode n) {
@@ -50,8 +46,8 @@ public class ReceiverTypeInferenceCache {
     try {
       if (result == null) {
         SSAOptions options = SSAOptions.defaultOptions();
-//        options.setUsePiNodes(true);
-        IR ir = analysisCache.getSSACache().findOrCreateIR(n.getMethod(), n.getContext(),  options);
+        // options.setUsePiNodes(true);
+        IR ir = analysisCache.getSSACache().findOrCreateIR(n.getMethod(), n.getContext(), options);
         TypeInference T = TypeInference.make(ir, false);
 
         result = new ReceiverTypeInference(T);

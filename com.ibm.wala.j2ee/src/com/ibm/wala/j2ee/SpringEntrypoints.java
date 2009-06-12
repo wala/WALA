@@ -30,8 +30,6 @@ import com.ibm.wala.util.strings.Atom;
 
 /**
  * This class provides an iterator of entrypoints that are implementations of Spring methods.
- * 
- * @author OmriW
  */
 public class SpringEntrypoints implements Iterable<Entrypoint> {
 
