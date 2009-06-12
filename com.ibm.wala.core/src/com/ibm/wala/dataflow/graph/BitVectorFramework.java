@@ -15,10 +15,7 @@ import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 
 /**
- * 
  * a basic implementation of the dataflow framework
- * 
- * @author sfink
  */
 public class BitVectorFramework<T,L> extends BasicFramework<T, BitVectorVariable> {
 
