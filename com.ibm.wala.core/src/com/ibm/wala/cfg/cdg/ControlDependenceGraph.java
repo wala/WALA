@@ -29,9 +29,6 @@ import com.ibm.wala.util.graph.impl.GraphInverter;
 
 /**
  * Control Dependence Graph
- * 
- * @author Julian Dolby
- * 
  */
 public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends AbstractNumberedGraph<T> {
 
