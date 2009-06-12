@@ -11,18 +11,15 @@
 package com.ibm.wala.eclipse.util;
 
 /**
- * An exception for when work is canceled in eclipse.
- * This version forces every API that uses it to declare it.   Use {@link CancelRuntimeException} to avoid the
- * need to declare a cancel exception.
- * 
- * @author sjfink
+ * An exception for when work is canceled in eclipse. This version forces every API that uses it to declare it. Use
+ * {@link CancelRuntimeException} to avoid the need to declare a cancel exception.
  */
 public class CancelException extends Exception {
 
   protected CancelException(String msg) {
     super(msg);
   }
-  
+
   public CancelException(Exception cause) {
     super(cause);
   }

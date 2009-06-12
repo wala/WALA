@@ -16,9 +16,6 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 
 /**
  * Simple utilities for Eclipse progress monitors
- * 
- * @author sjfink
- * 
  */
 public class MonitorUtil {
 
