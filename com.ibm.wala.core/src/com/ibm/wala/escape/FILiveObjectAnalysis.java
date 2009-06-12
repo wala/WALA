@@ -37,9 +37,6 @@ import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * A simple liveness analysis based on flow-insensitive pointer analysis
- * 
- * @author sfink
- * 
  */
 public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
 
@@ -78,7 +75,8 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
     this.expensiveIntraproceduralAnalysis = expensiveIntraproceduralAnalysis;
   }
 
-  public boolean mayBeLive(CGNode allocMethod, int allocPC, CGNode m, int instructionIndex) throws IllegalArgumentException, WalaException {
+  public boolean mayBeLive(CGNode allocMethod, int allocPC, CGNode m, int instructionIndex) throws IllegalArgumentException,
+      WalaException {
     if (allocMethod == null) {
       throw new IllegalArgumentException("allocMethod == null");
     }
@@ -88,8 +86,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
   }
 
   /**
-   * @param instructionIndex
-   *          index of an SSA instruction
+   * @param instructionIndex index of an SSA instruction
    */
   public boolean mayBeLive(InstanceKey ik, CGNode m, int instructionIndex) {
     if (liveEverywhere.contains(ik)) {
@@ -139,8 +136,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
    * 
    * precondition: !mayBeLiveInSomeCaller(ik, m)
    * 
-   * @param instructionIndex
-   *          index of an SSA instruction
+   * @param instructionIndex index of an SSA instruction
    */
   private boolean mayBeLiveIntraprocedural(InstanceKey ik, CGNode m, int instructionIndex) {
 
@@ -162,9 +158,8 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
   }
 
   /**
-   * Compute the set of nodes in which ik may be live. If it's live everywhere,
-   * return an EMPTY_SET, but also record this fact in the "liveEverywhere" set
-   * as a side effect
+   * Compute the set of nodes in which ik may be live. If it's live everywhere, return an EMPTY_SET, but also record this fact in
+   * the "liveEverywhere" set as a side effect
    */
   private Set<CGNode> computeLiveNodes(InstanceKey ik) {
     Set<CGNode> localRootNodes = HashSetFactory.make();

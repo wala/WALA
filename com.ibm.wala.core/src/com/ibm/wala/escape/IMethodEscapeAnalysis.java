@@ -15,23 +15,15 @@ import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * Basic interface from which to execute and get the results of escape analysis
- * 
- * @author Mangala Gowri Nanda
- * @author Stephen Fink
  */
 public interface IMethodEscapeAnalysis {
 
   /**
-   * @param allocMethod
-   *          a method which holds an allocation site
-   * @param allocPC
-   *          bytecode index of allocation site
-   * @param m
-   *          method in question
-   * @throws WalaException
-   * @returns true if an object allocated at the allocation site
-   *          &lt;allocMethod,allocPC> may escape from an activation of method
-   *          m, false otherwise
+   * @param allocMethod a method which holds an allocation site
+   * @param allocPC bytecode index of allocation site
+   * @param m method in question
+   * @returns true if an object allocated at the allocation site &lt;allocMethod,allocPC> may escape from an activation of method m,
+   *          false otherwise
    */
   public boolean mayEscape(MethodReference allocMethod, int allocPC, MethodReference m) throws WalaException;
 
