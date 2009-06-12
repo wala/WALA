@@ -24,10 +24,7 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * 
  * 0-1-CFA Call graph builder, optimized to not disambiguate instances of "uninteresting" types
- * 
- * @author sfink
  */
 public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
 
@@ -41,8 +38,10 @@ public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
     setContextSelector(contextSelector);
 
     SSAContextInterpreter c = new DefaultSSAInterpreter(options, cache);
-    c = new DelegatingSSAContextInterpreter(ReflectionContextInterpreter.createReflectionContextInterpreter(cha, options, getAnalysisCache(), reflect), c);
-    SSAContextInterpreter contextInterpreter = appContextInterpreter == null ? c : new DelegatingSSAContextInterpreter(appContextInterpreter, c);
+    c = new DelegatingSSAContextInterpreter(ReflectionContextInterpreter.createReflectionContextInterpreter(cha, options,
+        getAnalysisCache(), reflect), c);
+    SSAContextInterpreter contextInterpreter = appContextInterpreter == null ? c : new DelegatingSSAContextInterpreter(
+        appContextInterpreter, c);
     setContextInterpreter(contextInterpreter);
 
     ZeroXInstanceKeys zik = makeInstanceKeys(cha, options, contextInterpreter, instancePolicy);
@@ -59,21 +58,14 @@ public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
   }
 
   /**
-   * @param options
-   *            options that govern call graph construction
-   * @param cha
-   *            governing class hierarchy
-   * @param cl
-   *            classloader that can find WALA resources
-   * @param scope
-   *            representation of the analysis scope
-   * @param xmlFiles
-   *            set of Strings that are names of XML files holding bypass logic specifications.
+   * @param options options that govern call graph construction
+   * @param cha governing class hierarchy
+   * @param cl classloader that can find WALA resources
+   * @param scope representation of the analysis scope
+   * @param xmlFiles set of Strings that are names of XML files holding bypass logic specifications.
    * @return a 0-1-Opt-CFA Call Graph Builder.
-   * @throws IllegalArgumentException
-   *             if options is null
-   * @throws IllegalArgumentException
-   *             if xmlFiles == null
+   * @throws IllegalArgumentException if options is null
+   * @throws IllegalArgumentException if xmlFiles == null
    */
   public static SSAPropagationCallGraphBuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
       ClassLoader cl, AnalysisScope scope, String[] xmlFiles, byte instancePolicy) throws IllegalArgumentException {

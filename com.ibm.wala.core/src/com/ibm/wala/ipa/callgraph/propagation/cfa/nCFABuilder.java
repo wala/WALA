@@ -25,8 +25,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
  * nCFA Call graph builder
- * 
- * @author Julian Dolby (dolby@us.ibm.com)
  */
 public class nCFABuilder extends SSAPropagationCallGraphBuilder {
 

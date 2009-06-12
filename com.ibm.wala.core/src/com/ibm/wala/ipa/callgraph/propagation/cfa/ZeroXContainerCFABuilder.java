@@ -19,29 +19,21 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * 0-X-CFA Call graph builder which analyzes calls to "container methods" in a
- * context which is defined by the receiver instance.
- * 
- * @author sfink
+ * 0-X-CFA Call graph builder which analyzes calls to "container methods" in a context which is defined by the receiver instance.
  */
 public class ZeroXContainerCFABuilder extends ZeroXCFABuilder {
 
   /**
-   * @param cha
-   *            governing class hierarchy
-   * @param options
-   *            call graph construction options
-   * @param appContextSelector
-   *            application-specific logic to choose contexts
-   * @param appContextInterpreter
-   *            application-specific logic to interpret a method in context
-   * @param reflect
-   *            reflection specification
-   * @throws IllegalArgumentException
-   *             if options is null
+   * @param cha governing class hierarchy
+   * @param options call graph construction options
+   * @param appContextSelector application-specific logic to choose contexts
+   * @param appContextInterpreter application-specific logic to interpret a method in context
+   * @param reflect reflection specification
+   * @throws IllegalArgumentException if options is null
    */
   public ZeroXContainerCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
-      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect, int instancePolicy) {
+      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect,
+      int instancePolicy) {
 
     super(cha, options, cache, appContextSelector, appContextInterpreter, reflect, instancePolicy);
 
@@ -50,10 +42,8 @@ public class ZeroXContainerCFABuilder extends ZeroXCFABuilder {
     setContextSelector(DCS);
   }
 
-
   /**
-   * @return an object which creates contexts for call graph nodes based on the
-   *         container disambiguation policy
+   * @return an object which creates contexts for call graph nodes based on the container disambiguation policy
    */
   protected ContextSelector makeContainerContextSelector(IClassHierarchy cha, ZeroXInstanceKeys keys) {
     return new ContainerContextSelector(cha, keys);

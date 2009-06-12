@@ -29,8 +29,6 @@ import com.ibm.wala.ssa.SSAInstruction;
 
 /**
  * Basic analysis; context-insensitive except for newInstance and clone
- * 
- * @author sfink
  */
 public class DefaultSSAInterpreter extends DefaultRTAInterpreter implements SSAContextInterpreter {
 

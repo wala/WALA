@@ -39,8 +39,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 /**
  * Flexible class to create {@link InstanceKey}s depending on various policies ranging from class-based (i.e. 0-CFA) to
  * allocation-site-based (0-1-CFA variants).
- * 
- * @author sfink
  */
 public class ZeroXInstanceKeys implements InstanceKeyFactory {
 

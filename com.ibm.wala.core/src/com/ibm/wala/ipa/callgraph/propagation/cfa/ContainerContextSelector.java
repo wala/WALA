@@ -30,7 +30,6 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * 
  * This context selector returns a context customized for the {@link InstanceKey} of the receiver if
  * <ul>
  * <li>receiver is a container, or</li>
@@ -39,8 +38,6 @@ import com.ibm.wala.util.strings.Atom;
  * </ul>
  * 
  * Additionally, we add one level of call string context to a few well-known static factory methods from the standard libraries.
- * 
- * @author sfink
  */
 public class ContainerContextSelector implements ContextSelector {
 
