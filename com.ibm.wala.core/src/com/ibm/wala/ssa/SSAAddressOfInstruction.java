@@ -52,6 +52,9 @@ public class SSAAddressOfInstruction extends SSAInstruction {
    * Use this constructor when taking the address of a local variable.
    */
   public SSAAddressOfInstruction(int lval, int local, TypeReference pointeeType) {
+    if (local <= 0) {
+      throw new IllegalArgumentException("Invalid local address load of " + local);
+    }
     this.lval = lval;
     this.addressVal = local;
     this.indexVal = -1;
