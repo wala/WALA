@@ -598,7 +598,13 @@ public class SSABuilder extends AbstractIntStackMachine {
       public void visitLocalLoad(ILoadInstruction instruction) {
         if (instruction.isAddressOf()) {
           int result = reuseOrCreateDef();
-          int t = workingState.getLocal(instruction.getVarIndex());
+ 
+          int t = workingState.getLocal(instruction.getVarIndex()); 
+          if (t == -1) {
+            doIndirectWrites(new int[]{instruction.getVarIndex()}, -1);
+            t = workingState.getLocal(instruction.getVarIndex());
+          }
+          
           TypeReference type = ShrikeUtil.makeTypeReference(loader, instruction.getType());
           emitInstruction(insts.AddressOfInstruction(result, t, type));
           workingState.push(result);
