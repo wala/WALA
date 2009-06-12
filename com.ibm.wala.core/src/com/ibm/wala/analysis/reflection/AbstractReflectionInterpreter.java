@@ -42,8 +42,6 @@ import com.ibm.wala.util.warnings.Warning;
 
 /**
  * An abstract superclass of various {@link SSAContextInterpreter}s that deal with reflection methods.
- * 
- * @author pistoia
  */
 public abstract class AbstractReflectionInterpreter implements SSAContextInterpreter {
 

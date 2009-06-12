@@ -22,12 +22,9 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.CallStringContext;
 
 /**
  * For synthetic methods marked as "Factories", we analyze in a context defined by the caller.
- *
- * @author sfink
  */
 class FactoryContextSelector implements ContextSelector {
 
-  
   public FactoryContextSelector() {
   }
   

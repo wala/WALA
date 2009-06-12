@@ -22,8 +22,6 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 
 /**
  * A {@link ContextSelector} to intercept calls to Class.newInstance()
- * 
- * @author pistoia
  */
 class ClassNewInstanceContextSelector implements ContextSelector {
 

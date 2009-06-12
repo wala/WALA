@@ -21,8 +21,6 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 
 /**
  * A {@link ContextSelector} to handle default reflection logic.
- * 
- * @author sjfink
  */
 public class ReflectionContextSelector {
 

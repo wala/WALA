@@ -58,9 +58,6 @@ import com.ibm.wala.util.debug.Assertions;
  * <li>getDeclaredMethod
  * <li>getDeclaredMethods
  * </ul>
- * 
- * @author pistoia
- * @author sfink
  */
 public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
 

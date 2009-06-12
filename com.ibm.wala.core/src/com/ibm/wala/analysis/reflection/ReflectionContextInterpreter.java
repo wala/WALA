@@ -31,7 +31,6 @@ import com.ibm.wala.types.FieldReference;
 
 /**
  * {@link SSAContextInterpreter} to handle all reflection procession.
- * 
  */
 public class ReflectionContextInterpreter {
 

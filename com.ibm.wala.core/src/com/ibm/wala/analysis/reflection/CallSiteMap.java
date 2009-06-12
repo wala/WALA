@@ -20,10 +20,7 @@ import com.ibm.wala.ssa.SSAInstruction.Visitor;
 import com.ibm.wala.util.collections.HashMapFactory;
 
 /**
- * 
- * A mapping from CallSiteReference to SSA InvokeInstruction.
- * 
- * @author sfink
+ * A mapping from {@link CallSiteReference} to {@link SSAInvokeInstruction}
  */
 public class CallSiteMap {
 
@@ -33,7 +30,6 @@ public class CallSiteMap {
   private final Map<CallSiteReference, SSAInvokeInstruction> map = HashMapFactory.make();
 
   /**
-   * @param ir
    * @throws IllegalArgumentException  if ir is null
    */
   public CallSiteMap(final IR ir) {
@@ -56,7 +52,6 @@ public class CallSiteMap {
   }
 
   /**
-   * @param site
    * @return the InvokeInstruction corresponding to the call site.
    */
   public SSAInvokeInstruction getInstructionForSite(CallSiteReference site) {

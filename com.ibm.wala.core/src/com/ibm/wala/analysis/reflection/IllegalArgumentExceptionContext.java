@@ -14,10 +14,7 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 
-/**
- * @author fink
- * @author pistoia
- */
+
 public class IllegalArgumentExceptionContext implements Context {
 
   public ContextItem get(ContextKey name) {

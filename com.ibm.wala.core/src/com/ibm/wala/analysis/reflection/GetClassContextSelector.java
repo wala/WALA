@@ -21,20 +21,17 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * A {@link ContextSelector} to intercept calls to Object.getClass() 
- * 
- * @author sjfink
+ * A {@link ContextSelector} to intercept calls to Object.getClass()
  */
 class GetClassContextSelector implements ContextSelector {
-  
-  public final static MethodReference GET_CLASS = MethodReference.findOrCreate(TypeReference.JavaLangObject, "getClass", "()Ljava/lang/Class;");
+
+  public final static MethodReference GET_CLASS = MethodReference.findOrCreate(TypeReference.JavaLangObject, "getClass",
+      "()Ljava/lang/Class;");
 
   public GetClassContextSelector() {
   }
 
-
-  /**
-   * 
+  /*
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#getCalleeTarget(com.ibm.wala.ipa.callgraph.CGNode,
    *      com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod,
    *      com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
