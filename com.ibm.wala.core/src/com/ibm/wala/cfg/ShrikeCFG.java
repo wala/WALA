@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.ibm.wala.classLoader.BytecodeLanguage;
+import com.ibm.wala.classLoader.IBytecodeMethod;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;

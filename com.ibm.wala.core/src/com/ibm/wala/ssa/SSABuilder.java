@@ -14,10 +14,10 @@ import java.util.Iterator;
 
 import com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine;
 import com.ibm.wala.cfg.IBasicBlock;
-import com.ibm.wala.cfg.IBytecodeMethod;
 import com.ibm.wala.cfg.ShrikeCFG;
 import com.ibm.wala.cfg.ShrikeCFG.BasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IBytecodeMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.shrikeBT.ArrayLengthInstruction;

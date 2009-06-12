@@ -11,7 +11,6 @@
 package com.ibm.wala.classLoader;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
-import com.ibm.wala.cfg.IBytecodeMethod;
 import com.ibm.wala.cfg.ShrikeCFG;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;

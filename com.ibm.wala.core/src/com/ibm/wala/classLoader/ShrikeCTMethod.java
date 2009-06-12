@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 
-import com.ibm.wala.cfg.IBytecodeMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.Decoder;
 import com.ibm.wala.shrikeBT.IndirectionData;

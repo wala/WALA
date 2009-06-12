@@ -41,7 +41,7 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.SimpleIntVector;
 
 /**
- * A graph of basic blocks.
+ * Commong functionality for {@link ControlFlowGraph} implementations.
  */
 public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements ControlFlowGraph<I, T>, Constants {
 

@@ -11,7 +11,7 @@
 package com.ibm.wala.ssa;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
-import com.ibm.wala.cfg.IBytecodeMethod;
+import com.ibm.wala.classLoader.IBytecodeMethod;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.classLoader.ShrikeIRFactory;

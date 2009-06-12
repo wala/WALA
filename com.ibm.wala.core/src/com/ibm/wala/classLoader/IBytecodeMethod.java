@@ -8,12 +8,10 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.cfg;
+package com.ibm.wala.classLoader;
 
 import java.util.Collection;
 
-import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.IndirectionData;
