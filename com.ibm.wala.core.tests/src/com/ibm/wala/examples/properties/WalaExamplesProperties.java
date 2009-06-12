@@ -16,7 +16,6 @@ import java.util.Properties;
 
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.util.io.FileProvider;
-import com.ibm.wala.util.warnings.WalaException;
 
 public final class WalaExamplesProperties {
 
@@ -26,7 +25,7 @@ public final class WalaExamplesProperties {
 
   public final static String PROPERTY_FILENAME = "wala.examples.properties"; //$NON-NLS-1$
 
-  public static Properties loadProperties() throws WalaException {
+  public static Properties loadProperties()  {
 
     try {
       Properties result = WalaProperties.loadPropertiesFromFile(WalaExamplesProperties.class.getClassLoader(), PROPERTY_FILENAME);
@@ -34,14 +33,14 @@ public final class WalaExamplesProperties {
       return result;
     } catch (Exception e) {
       e.printStackTrace();
-      throw new WalaException("Unable to set up wala examples properties ", e);
+      throw new IllegalStateException("Unable to set up wala examples properties ", e);
     }
   }
 
-  public static String getWalaCoreTestsHomeDirectory() throws WalaException {
+  public static String getWalaCoreTestsHomeDirectory()  {
     final URL url = WalaExamplesProperties.class.getClassLoader().getResource(PROPERTY_FILENAME);
     if (url == null) {
-      throw new WalaException("failed to find URL for wala.examples.properties");
+      throw new IllegalStateException("failed to find URL for wala.examples.properties");
     }
 
     return new File(FileProvider.filePathFromURL(url)).getParentFile().getParentFile().getAbsolutePath();
