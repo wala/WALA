@@ -21,7 +21,10 @@ import com.ibm.wala.util.collections.HashMapFactory;
 
 /**
  * A mapping from {@link CallSiteReference} to {@link SSAInvokeInstruction}
+ * 
+ * @deprecated since no one currently uses this.
  */
+@Deprecated
 public class CallSiteMap {
 
   /** 
