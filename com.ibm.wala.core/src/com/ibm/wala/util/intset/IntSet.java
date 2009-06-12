@@ -16,7 +16,6 @@ package com.ibm.wala.util.intset;
 public interface IntSet {
 
   /**
-   * @param i
    * @return true iff this set contains integer i
    */
   public boolean contains(int i);
@@ -71,8 +70,7 @@ public interface IntSet {
   public int max();
 
   /**
-   * @return true iff <code>this</code> has the same value as
-   *         <code>that</code>.
+   * @return true iff <code>this</code> has the same value as <code>that</code>.
    */
   public boolean sameValue(IntSet that);
 

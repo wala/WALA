@@ -11,10 +11,7 @@
 package com.ibm.wala.util.intset;
 
 /**
- *
  * An object that creates some flavor of mutable int set.
- * 
- * @author sfink
  */
 public interface MutableIntSetFactory {
   /**

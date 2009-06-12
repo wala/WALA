@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.TreeSet;
 
 /**
- * @author Julian Dolby (dolby@us.ibm.com)
  */
 public class SemiSparseMutableIntSetFactory implements MutableIntSetFactory {
 

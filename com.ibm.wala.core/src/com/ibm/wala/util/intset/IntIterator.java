@@ -12,10 +12,7 @@ package com.ibm.wala.util.intset;
 
 
 /**
- *
  * a more efficient iterator for sets of integers
- * 
- * @author sfink
  */
 public interface IntIterator {
 

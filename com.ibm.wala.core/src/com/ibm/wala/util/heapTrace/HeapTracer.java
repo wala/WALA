@@ -32,10 +32,7 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
  * Simple utility that uses reflection to trace memory
- * 
- * @author sfink
  */
 public class HeapTracer {
 

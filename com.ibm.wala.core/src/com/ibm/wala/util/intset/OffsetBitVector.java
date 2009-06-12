@@ -10,10 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-
 /**
- * @author Julian Dolby (dolby@us.ibm.com)
- * 
  */
 public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
 

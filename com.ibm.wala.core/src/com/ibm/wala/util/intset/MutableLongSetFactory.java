@@ -11,29 +11,15 @@
 package com.ibm.wala.util.intset;
 
 /**
- *
  * An object that creates some flavor of mutable int set.
- * 
- * @author sfink
  */
 public interface MutableLongSetFactory {
-  /**
-   * @param set
-   */
+
   public MutableLongSet make(long[] set);
 
-  /**
-   * @param string
-   */
   public MutableLongSet parse(String string);
 
-  /*
-   * @param x
-   */
   public MutableLongSet makeCopy(LongSet x);
 
-  /**
-   *
-   */
   public MutableLongSet make();
 }

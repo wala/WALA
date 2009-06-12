@@ -18,10 +18,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.MapUtil;
 
 /**
- * 
  * A repository for shared bit vectors as described by Heintze
- * 
- * @author sfink
  */
 public class BitVectorRepository {
 

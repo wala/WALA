@@ -63,8 +63,6 @@ import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;
 
 /**
- * @author manu
- * @author Stephen Fink
  */
 public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEdgeManager<T, U> {
 

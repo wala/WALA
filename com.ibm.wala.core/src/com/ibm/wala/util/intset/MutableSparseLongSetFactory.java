@@ -14,10 +14,7 @@ import java.util.Iterator;
 import java.util.TreeSet;
 
 /**
- * 
  * An object that creates mutable sparse int sets.
- * 
- * @author sfink
  */
 public class MutableSparseLongSetFactory implements MutableLongSetFactory {
 

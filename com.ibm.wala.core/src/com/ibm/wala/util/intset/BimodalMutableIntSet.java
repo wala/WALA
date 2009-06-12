@@ -14,10 +14,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- * 
- * An implementation of mutable int set that delegates to either a {@link MutableSparseIntSet} or a {@link BitVectorIntSet}
- * 
- * @author sfink
+ * An implementation of {@link MutableIntSet} that delegates to either a {@link MutableSparseIntSet} or a {@link BitVectorIntSet}
  */
 public class BimodalMutableIntSet implements MutableIntSet {
 

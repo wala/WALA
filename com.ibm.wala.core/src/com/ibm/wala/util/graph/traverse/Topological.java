@@ -18,7 +18,6 @@ import com.ibm.wala.util.graph.impl.GraphInverter;
 
 /**
  * Utilities for iterating over graphs in topological order.
- * 
  */
 public class Topological {
 

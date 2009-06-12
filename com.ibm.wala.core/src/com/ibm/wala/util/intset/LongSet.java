@@ -13,8 +13,6 @@ package com.ibm.wala.util.intset;
 
 /**
  * Set of longs; not necessary mutable TODO: extract a smaller interface?
- * 
- * @author sfink
  */
 public interface LongSet {
 

@@ -19,11 +19,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- * A sparse ordered, duplicate-free, fully-encapsulated set of longs; not
- * necessary mutable
- * 
- * @author Alan Donovan
- * @author Stephen Fink
+ * A sparse ordered, duplicate-free, fully-encapsulated set of longs; not necessary mutable
  */
 public class SparseLongSet implements LongSet {
 
@@ -62,8 +58,7 @@ public class SparseLongSet implements LongSet {
   }
 
   /**
-   * Subclasses should use this with extreme care. Do not allow the backing
-   * array to escape elsewhere.
+   * Subclasses should use this with extreme care. Do not allow the backing array to escape elsewhere.
    * 
    * @param backingArray
    */
@@ -180,7 +175,7 @@ public class SparseLongSet implements LongSet {
   /**
    * @return true iff <code>this</code> is a subset of <code>that</code>.
    * 
-   * Faster than: <code>this.diff(that) == EMPTY</code>.
+   *         Faster than: <code>this.diff(that) == EMPTY</code>.
    */
   private boolean isSubsetInternal(SparseLongSet that) {
 
@@ -224,8 +219,7 @@ public class SparseLongSet implements LongSet {
   /**
    * Compute the asymmetric difference of two sets, a \ b.
    * 
-   * @throws IllegalArgumentException
-   *           if A is null
+   * @throws IllegalArgumentException if A is null
    */
   public static SparseLongSet diff(SparseLongSet A, SparseLongSet B) {
 
@@ -301,8 +295,7 @@ public class SparseLongSet implements LongSet {
   /**
    * Reverse of toString(): "{2,3}" -> [2,3]
    * 
-   * @throws IllegalArgumentException
-   *           if str is null
+   * @throws IllegalArgumentException if str is null
    */
   public static long[] parseLongArray(String str) throws NumberFormatException, IllegalArgumentException {
     if (str == null) {

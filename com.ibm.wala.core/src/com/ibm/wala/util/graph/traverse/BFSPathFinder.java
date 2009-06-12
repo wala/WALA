@@ -31,8 +31,6 @@ import com.ibm.wala.util.graph.Graph;
  * getConnected method.
  * 
  * TODO: if finding many paths, use a dynamic programming algorithm instead of calling this repeatedly.
- * 
- * @author Stephen Fink
  */
 public class BFSPathFinder<T> {
 

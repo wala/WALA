@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.TreeSet;
 
 /**
- * @author sfink
  */
 public class BitVectorIntSetFactory implements MutableIntSetFactory {
 

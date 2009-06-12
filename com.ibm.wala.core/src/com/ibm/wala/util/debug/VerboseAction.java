@@ -11,8 +11,6 @@
 package com.ibm.wala.util.debug;
 
 /**
- * @author sfink
- *
  * An optional interface for data structures that provide a 
  * verbose option for debugging purposes.
  */

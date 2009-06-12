@@ -11,22 +11,17 @@
 package com.ibm.wala.util.intset;
 
 /**
- * @author sfink
- *
  */
 public interface MutableLongSet extends LongSet {
 
   /**
    * Set the value of this to be the same as the value of set
-   * 
-   * @param set
    */
   void copySet(LongSet set);
 
   /**
    * Add all members of set to this.
    * 
-   * @param set
    * @return true iff the value of this changes.
    */
   boolean addAll(LongSet set);
@@ -34,22 +29,17 @@ public interface MutableLongSet extends LongSet {
   /**
    * Add an integer value to this set.
    * 
-   * @param i
    * @return true iff the value of this changes.
    */
   boolean add(long i);
 
   /**
    * Remove an integer from this set.
-   * 
-   * @param i
    */
   void remove(long i);
 
   /**
    * Interset this with another set.
-   * 
-   * @param set
    */
   void intersectWith(LongSet set);
 

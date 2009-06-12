@@ -12,22 +12,17 @@ package com.ibm.wala.util.intset;
 
 import java.util.NoSuchElementException;
 
-
-/** 
- * An object that implements a bijection between whole numbers and
- * objects.
- *
- * @author Stephen Fink
+/**
+ * An object that implements a bijection between whole numbers and objects.
  */
 public interface OrdinalSetMapping<T> extends Iterable<T> {
   /**
-   * @return the object numbered n.  
+   * @return the object numbered n.
    */
   public T getMappedObject(int n) throws NoSuchElementException;
 
   /**
-   * @return the number of a given object, or -1 if the object is not
-   * currently in the range.
+   * @return the number of a given object, or -1 if the object is not currently in the range.
    */
   public int getMappedIndex(T o);
 
@@ -40,14 +35,15 @@ public interface OrdinalSetMapping<T> extends Iterable<T> {
    * @return the maximum integer mapped to an object
    */
   public int getMaximumIndex();
-  
+
   /**
    * @return the current size of the bijection
    */
   public int getSize();
-  
+
   /**
    * Add an Object to the set of mapped objects.
+   * 
    * @return the integer to which the object is mapped.
    */
   public int add(T o);

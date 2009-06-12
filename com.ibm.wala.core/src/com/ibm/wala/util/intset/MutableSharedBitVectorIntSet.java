@@ -16,10 +16,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- * 
  * The shared bit vector implementation described by [Heintze 1999] TODO: much optimization possible.
- * 
- * @author sfink
  */
 public class MutableSharedBitVectorIntSet implements MutableIntSet {
 

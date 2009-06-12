@@ -13,10 +13,7 @@ package com.ibm.wala.util.intset;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- * 
  * An object that creates some bimodal mutable int sets.
- * 
- * @author sfink
  */
 public class BimodalMutableIntSetFactory implements MutableIntSetFactory {
 

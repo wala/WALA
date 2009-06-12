@@ -20,9 +20,6 @@ import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * A sparse ordered, duplicate-free, fully-encapsulated set of integers; not necessary mutable
- * 
- * @author Alan Donovan
- * @author Stephen Fink
  */
 public class SparseIntSet implements IntSet {
 

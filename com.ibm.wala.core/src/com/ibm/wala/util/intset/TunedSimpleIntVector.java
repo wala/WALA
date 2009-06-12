@@ -11,19 +11,14 @@
 package com.ibm.wala.util.intset;
 
 /**
- * a simple implementation of int vector that can be tuned to control
- * space usage
+ * a simple implementation of int vector that can be tuned to control space usage
  */
 public class TunedSimpleIntVector extends SimpleIntVector {
 
   private final int initialSize;
+
   private final float expansion;
-  
-  /**
-   * @param defaultValue
-   * @param initialSize
-   * @param expansion
-   */
+
   TunedSimpleIntVector(int defaultValue, int initialSize, float expansion) {
     super(defaultValue, initialSize);
     this.initialSize = initialSize;

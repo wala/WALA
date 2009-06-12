@@ -53,11 +53,6 @@ import com.ibm.wala.util.graph.impl.SlowNumberedNodeManager;
 
 /**
  * A labeled graph implementation suitable for sparse graphs.
- * 
- * @author Manu Sridharan
- * 
- * @param <T>
- * @param <U>
  */
 public class SlowSparseNumberedLabeledGraph<T, U> extends AbstractNumberedLabeledGraph<T, U> {
 

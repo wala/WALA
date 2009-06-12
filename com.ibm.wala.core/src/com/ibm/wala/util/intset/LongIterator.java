@@ -13,8 +13,6 @@ package com.ibm.wala.util.intset;
 
 /**
  * a more efficient iterator for sets of longs
- * 
- * @author sfink
  */
 public interface LongIterator {
 

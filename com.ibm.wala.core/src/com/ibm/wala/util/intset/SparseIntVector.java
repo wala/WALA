@@ -12,14 +12,11 @@ package com.ibm.wala.util.intset;
 
 
 /**
- * 
  * an int vector implementation designed for low occupancy. Note that get() from
  * this vector is a binary search.
  * 
  * This should only be used for small sets ... insertion and deletion are linear
  * in size of set.
- * 
- * @author sfink
  */
 public class SparseIntVector implements IntVector {
 

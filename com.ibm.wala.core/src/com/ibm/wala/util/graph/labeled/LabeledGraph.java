@@ -52,9 +52,6 @@ import com.ibm.wala.util.graph.Graph;
 
 /**
  * A graph with labeled edges.
- * 
- * @author manu
- * 
  */
 public interface LabeledGraph<T, U> extends Graph<T>, LabeledEdgeManager<T, U> {
 

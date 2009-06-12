@@ -12,7 +12,6 @@ package com.ibm.wala.util.intset;
 
 
 /**
- * 
  * an int vector implementation designed for low occupancy. Note that get() from
  * this vector is a binary search.
  * 
@@ -20,8 +19,6 @@ package com.ibm.wala.util.intset;
  * in size of set.
  * 
  * In this optimizations, the indices are longs.
- * 
- * @author sfink
  */
 public class SparseLongIntVector {
 

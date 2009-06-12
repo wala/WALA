@@ -19,9 +19,6 @@ import com.ibm.wala.util.debug.UnimplementedError;
  * This implementation will be inefficient if these sets get large.
  * 
  * TODO: even for small sets, we probably want to work on this to reduce the allocation activity.
- * 
- * @author Alan Donovan
- * @author Stephen Fink
  */
 public final class MutableSparseLongSet extends SparseLongSet implements MutableLongSet {
 

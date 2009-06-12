@@ -19,8 +19,6 @@ import com.ibm.wala.util.graph.NumberedGraph;
  * This class implements depth-first search over a NumberedGraph, return an enumeration of the nodes of the graph in order of
  * increasing discover time. This class follows the outNodes of the graph nodes to define the graph, but this behavior can be
  * changed by overriding the getConnected method.
- * 
- * @author Stephen Fink
  */
 public class NumberedDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIterator<T> implements Iterator<T> {
 

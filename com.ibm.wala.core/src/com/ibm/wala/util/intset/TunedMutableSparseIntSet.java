@@ -11,18 +11,17 @@
 package com.ibm.wala.util.intset;
 
 /**
- * A {@link MutableSparseIntSet} that allows for tuning of
- * its initial size and expansion factor.
+ * A {@link MutableSparseIntSet} that allows for tuning of its initial size and expansion factor.
+ * 
  * @see #getInitialNonEmptySize()
  * @see #getExpansionFactor()
- * @author sfink
- *
  */
 public class TunedMutableSparseIntSet extends MutableSparseIntSet {
 
   private final int initialSize;
+
   private final float expansion;
-  
+
   public TunedMutableSparseIntSet(int initialSize, float expansion) throws IllegalArgumentException {
     super();
     if (initialSize <= 0) {

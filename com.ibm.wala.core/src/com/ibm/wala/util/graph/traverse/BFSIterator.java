@@ -21,13 +21,9 @@ import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.Graph;
 
 /**
- * This class implements breadth-first search over a Graph,
- * returning an Iterator of the nodes of the graph in order of
- * discovery.  This class follows the outNodes of the
- * graph nodes to define the graph, but this behavior can be changed
- * by overriding the getConnected method.
- *
- * @author Stephen Fink
+ * This class implements breadth-first search over a Graph, returning an Iterator of the nodes of the graph in order of discovery.
+ * This class follows the outNodes of the graph nodes to define the graph, but this behavior can be changed by overriding the
+ * getConnected method.
  */
 public class BFSIterator<T> implements Iterator<T> {
 
@@ -45,18 +41,17 @@ public class BFSIterator<T> implements Iterator<T> {
    * index of the node currently being searched
    */
   private int index = 0;
-  
+
   /**
    * Governing Graph
    */
   protected Graph<T> G;
 
   /**
-   * Construct a breadth-first iterator starting with a particular node
-   * in a directed graph. 
-   *
+   * Construct a breadth-first iterator starting with a particular node in a directed graph.
+   * 
    * @param G the graph whose nodes to enumerate
-   * @throws IllegalArgumentException  if G is null
+   * @throws IllegalArgumentException if G is null
    */
   public BFSIterator(Graph<T> G, T N) {
     if (G == null) {
@@ -66,12 +61,11 @@ public class BFSIterator<T> implements Iterator<T> {
   }
 
   /**
-   * Construct a breadth-first enumerator across the (possibly
-   * improper) subset of nodes reachable from the nodes in the given
-   * enumeration. 
-   *
+   * Construct a breadth-first enumerator across the (possibly improper) subset of nodes reachable from the nodes in the given
+   * enumeration.
+   * 
    * @param nodes the set of nodes from which to start searching
-   * @throws IllegalArgumentException  if G is null
+   * @throws IllegalArgumentException if G is null
    */
   public BFSIterator(Graph<T> G, Iterator<? extends T> nodes) {
     if (G == null) {
@@ -85,8 +79,9 @@ public class BFSIterator<T> implements Iterator<T> {
 
   /**
    * Constructor DFSFinishTimeIterator.
+   * 
    * @param G
-   * @throws NullPointerException  if G is null
+   * @throws NullPointerException if G is null
    */
   public BFSIterator(Graph<T> G) throws NullPointerException {
     this(G, G == null ? null : G.iterator());
@@ -121,7 +116,7 @@ public class BFSIterator<T> implements Iterator<T> {
 
   /**
    * Return whether there are any more nodes left to enumerate.
-   *
+   * 
    * @return true if there nodes left to enumerate.
    */
   public boolean hasNext() {
@@ -129,9 +124,9 @@ public class BFSIterator<T> implements Iterator<T> {
   }
 
   /**
-   *  Find the next graph node in discover time order.
-   *
-   *  @return the next graph node in discover time order.
+   * Find the next graph node in discover time order.
+   * 
+   * @return the next graph node in discover time order.
    */
   public T next() throws NoSuchElementException {
     if (index >= Q.size()) {
@@ -148,14 +143,15 @@ public class BFSIterator<T> implements Iterator<T> {
 
   /**
    * get the out edges of a given node
-   *
+   * 
    * @param n the node of which to get the out edges
    * @return the out edges
-   *
+   * 
    */
   protected Iterator<? extends T> getConnected(T n) {
     return G.getSuccNodes(n);
   }
+
   /**
    * @see java.util.Iterator#remove()
    */

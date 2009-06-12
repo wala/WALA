@@ -12,10 +12,7 @@ package com.ibm.wala.util.intset;
 
 
 /**
- * 
  * A factory for mutable shared bit vector int sets
- * 
- * @author sfink
  */
 public class MutableSharedBitVectorIntSetFactory implements MutableIntSetFactory {
 
