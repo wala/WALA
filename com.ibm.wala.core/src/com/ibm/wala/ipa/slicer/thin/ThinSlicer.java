@@ -23,11 +23,9 @@ import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
  * 
  * Currently supports backward slices only.
  * 
- * TODO: Introduce a slicer interface common between this and the CS slicer.
- * TODO: This hasn't been tested much.   Need regression tests.
+ * TODO: Introduce a slicer interface common between this and the CS slicer. TODO: This hasn't been tested much. Need regression
+ * tests.
  * 
- * @author sjfink
- *
  */
 public class ThinSlicer extends CISlicer {
 

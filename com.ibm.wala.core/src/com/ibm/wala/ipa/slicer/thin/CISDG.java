@@ -31,9 +31,8 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSet;
 
 /**
- * A context-insensitive SDG. This class assumes that it is given a normal NO_HEAP SDG. It adds context-insensitive heap
- * information directly from heap stores to corresponding loads, based on an underlying pointer analysis.
- * 
+ * A context-insensitive SDG. This class assumes that it is given a normal NO_HEAP SDG. It adds context-insensitive heap information
+ * directly from heap stores to corresponding loads, based on an underlying pointer analysis.
  */
 public class CISDG implements ISDG {
 

@@ -41,11 +41,8 @@ import com.ibm.wala.util.graph.traverse.DFS;
  * 
  * Currently supports backward slices only.
  * 
- * TODO: Introduce a slicer interface common between this and the CS slicer. TODO: This hasn't been tested much. Need
- * regression tests.
- * 
- * @author sjfink
- * 
+ * TODO: Introduce a slicer interface common between this and the CS slicer. TODO: This hasn't been tested much. Need regression
+ * tests.
  */
 public class CISlicer {
 
@@ -75,7 +72,7 @@ public class CISlicer {
     depGraph = GraphInverter.invert(new CISDG(sdg, mod, ref));
 
   }
-  
+
   public CISlicer(final SDG sdg, final PointerAnalysis pa, final ModRef modRef) {
     Map<Statement, Set<PointerKey>> mod = scanForMod(sdg, pa, modRef);
     Map<Statement, Set<PointerKey>> ref = scanForRef(sdg, pa, modRef);
@@ -92,14 +89,14 @@ public class CISlicer {
     Collection<Statement> slice = DFS.getReachableNodes(depGraph, seeds);
     return slice;
   }
-  
+
   /**
    * Compute the set of pointer keys each statement mods
    */
   public static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis pa) {
     return scanForMod(sdg, pa, false, ModRef.make());
   }
-  
+
   /**
    * Compute the set of pointer keys each statement refs
    */
@@ -118,8 +115,8 @@ public class CISlicer {
   }
 
   /**
-   * Compute the set of pointer keys each statement mods. Be careful to avoid eager PDG construction here! That means ..
-   * don't iterate over SDG statements!
+   * Compute the set of pointer keys each statement mods. Be careful to avoid eager PDG construction here! That means .. don't
+   * iterate over SDG statements!
    */
   public static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis pa, boolean ignoreAllocHeapDefs, ModRef modRef) {
     if (pa == null) {
@@ -146,8 +143,8 @@ public class CISlicer {
   }
 
   /**
-   * Compute the set of PointerKeys each statement refs.Be careful to avoid eager PDG construction here! That means ..
-   * don't iterate over SDG statements!
+   * Compute the set of PointerKeys each statement refs.Be careful to avoid eager PDG construction here! That means .. don't iterate
+   * over SDG statements!
    */
   public static Map<Statement, Set<PointerKey>> scanForRef(SDG sdg, PointerAnalysis pa, ModRef modRef) {
     if (pa == null) {
