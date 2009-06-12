@@ -52,9 +52,6 @@ import com.ibm.wala.util.intset.OrdinalSet;
  * An SDG comprises a set of PDGs, one for each method. We compute these lazily.
  * 
  * Prototype implementation. Not efficient.
- * 
- * @author sjfink
- * 
  */
 public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
 

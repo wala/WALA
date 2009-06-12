@@ -14,16 +14,13 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ssa.SSAInstruction;
 
 /**
- * A {@link Statement} which carries an instruction index, representing the
- * index of an {@link SSAInstruction} in the IR instruction array.
- * 
- * @author sjfink
- *
+ * A {@link Statement} which carries an instruction index, representing the index of an {@link SSAInstruction} in the IR instruction
+ * array.
  */
 public abstract class StatementWithInstructionIndex extends Statement {
 
   private final int instructionIndex;
-  
+
   protected StatementWithInstructionIndex(CGNode node, int instructionIndex) {
     super(node);
     this.instructionIndex = instructionIndex;
@@ -32,7 +29,7 @@ public abstract class StatementWithInstructionIndex extends Statement {
   public int getInstructionIndex() {
     return instructionIndex;
   }
-  
+
   public SSAInstruction getInstruction() {
     return getNode().getIR().getInstructions()[instructionIndex];
   }
@@ -58,10 +55,10 @@ public abstract class StatementWithInstructionIndex extends Statement {
       return false;
     return true;
   }
-  
+
   @Override
   public String toString() {
     return super.toString() + "[" + getInstructionIndex() + "]" + getInstruction();
   }
-  
+
 }

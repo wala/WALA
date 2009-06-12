@@ -14,9 +14,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 
 /**
  * Identifier of a statement in an SDG.
- * 
- * @author sjfink
- * 
  */
 public abstract class Statement {
   public static enum Kind {

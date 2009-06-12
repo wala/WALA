@@ -64,8 +64,6 @@ import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
  * Computation of reaching definitions for heap locations, relying on pointer analysis
- * 
- * @author sjfink
  */
 public class HeapReachingDefs {
 

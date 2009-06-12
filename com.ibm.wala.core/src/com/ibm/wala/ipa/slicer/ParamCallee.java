@@ -14,8 +14,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 
 /**
  * A {@link Statement} representing a formal parameter
- * 
- * @author sjfink
  */
 public class ParamCallee extends Statement implements ValueNumberCarrier {
   /**

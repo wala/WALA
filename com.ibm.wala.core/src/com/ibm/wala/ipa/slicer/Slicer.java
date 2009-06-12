@@ -32,13 +32,9 @@ import com.ibm.wala.util.collections.HashSetFactory;
 /**
  * A demand-driven context-sensitive slicer.
  * 
- * This computes a context-sensitive slice, building an SDG and finding realizable paths to a statement using
- * tabulation.
+ * This computes a context-sensitive slice, building an SDG and finding realizable paths to a statement using tabulation.
  * 
  * This implementation uses a preliminary pointer analysis to compute data dependence between heap locations in the SDG.
- * 
- * @author sjfink
- * 
  */
 public class Slicer {
 
@@ -50,21 +46,16 @@ public class Slicer {
    * options to control data dependence edges in the SDG
    */
   public static enum DataDependenceOptions {
-    FULL("full", false, false, false, false),
-    NO_BASE_PTRS("no_base_ptrs", true, false, false, false),
-    NO_BASE_NO_HEAP("no_base_no_heap", true, true, false, false),
-    NO_BASE_NO_EXCEPTIONS("no_base_no_exceptions", true, false, false, true),
-    NO_BASE_NO_HEAP_NO_EXCEPTIONS("no_base_no_heap_no_exceptions", true, true, false, true),
-    NO_HEAP("no_heap", false, true, false, false),
-    NO_HEAP_NO_EXCEPTIONS("no_heap_no_exceptions", false, true, false, true),
-    NONE("none", true, true, true, true),
-    REFLECTION("no_base_no_heap_no_cast", true, true, true, true);
+    FULL("full", false, false, false, false), NO_BASE_PTRS("no_base_ptrs", true, false, false, false), NO_BASE_NO_HEAP(
+        "no_base_no_heap", true, true, false, false), NO_BASE_NO_EXCEPTIONS("no_base_no_exceptions", true, false, false, true), NO_BASE_NO_HEAP_NO_EXCEPTIONS(
+        "no_base_no_heap_no_exceptions", true, true, false, true), NO_HEAP("no_heap", false, true, false, false), NO_HEAP_NO_EXCEPTIONS(
+        "no_heap_no_exceptions", false, true, false, true), NONE("none", true, true, true, true), REFLECTION(
+        "no_base_no_heap_no_cast", true, true, true, true);
 
     private final String name;
 
     /**
-     * Ignore data dependence edges representing base pointers? e.g for a statement y = x.f, ignore the data dependence
-     * edges for x
+     * Ignore data dependence edges representing base pointers? e.g for a statement y = x.f, ignore the data dependence edges for x
      */
     private final boolean ignoreBasePtrs;
 
@@ -74,8 +65,7 @@ public class Slicer {
     private final boolean ignoreHeap;
 
     /**
-     * Ignore outgoing data dependence edges from a cast statements? [This is a special case option used for reflection
-     * processing]
+     * Ignore outgoing data dependence edges from a cast statements? [This is a special case option used for reflection processing]
      */
     private final boolean terminateAtCast;
 
@@ -105,8 +95,8 @@ public class Slicer {
     }
 
     /**
-     * Should data dependence chains terminate at casts? This is used for reflection processing ... we only track flow
-     * into casts ... but not out.
+     * Should data dependence chains terminate at casts? This is used for reflection processing ... we only track flow into casts
+     * ... but not out.
      */
     public final boolean isTerminateAtCast() {
       return terminateAtCast;
@@ -121,9 +111,7 @@ public class Slicer {
    * options to control control dependence edges in the sdg
    */
   public static enum ControlDependenceOptions {
-    FULL("full"),
-    NONE("none"),
-    NO_EXCEPTIONAL_EDGES("no_exceptional_edges");
+    FULL("full"), NONE("none"), NO_EXCEPTIONAL_EDGES("no_exceptional_edges");
 
     private final String name;
 
@@ -210,8 +198,9 @@ public class Slicer {
     }
 
     SliceProblem p = makeSliceProblem(roots, sdg, backward);
-    
-    PartiallyBalancedTabulationSolver<Statement, PDG, Object> solver = PartiallyBalancedTabulationSolver.createPartiallyBalancedTabulationSolver(p, null);
+
+    PartiallyBalancedTabulationSolver<Statement, PDG, Object> solver = PartiallyBalancedTabulationSolver
+        .createPartiallyBalancedTabulationSolver(p, null);
     TabulationResult<Statement, PDG, Object> tr = solver.solve();
 
     Collection<Statement> slice = tr.getSupergraphNodesReached();
@@ -224,8 +213,8 @@ public class Slicer {
   }
 
   /**
-   * Return an object which encapsulates the tabulation logic for the slice problem. Subclasses can override this method
-   * to implement special semantics.
+   * Return an object which encapsulates the tabulation logic for the slice problem. Subclasses can override this method to
+   * implement special semantics.
    */
   protected SliceProblem makeSliceProblem(Collection<Statement> roots, ISDG sdgView, boolean backward) {
     return new SliceProblem(roots, sdgView, backward);

@@ -17,10 +17,7 @@ import com.ibm.wala.dataflow.IFDS.IdentityFlowFunction;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * flow functions for FSCS slicer
- * 
- * @author sjfink
- * 
+ * flow functions for flow-sensitive context-sensitive slicer
  */
 public class SliceFunctions implements IPartiallyBalancedFlowFunctions<Statement> {
 

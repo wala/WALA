@@ -69,9 +69,6 @@ import com.ibm.wala.util.intset.OrdinalSet;
 
 /**
  * Program dependence graph for a single call graph node
- * 
- * @author sjfink
- * 
  */
 public class PDG implements NumberedGraph<Statement> {
 

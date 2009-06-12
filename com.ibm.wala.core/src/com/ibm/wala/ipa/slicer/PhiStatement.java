@@ -15,9 +15,6 @@ import com.ibm.wala.ssa.SSAPhiInstruction;
 
 /**
  * identifier of a phi instruction
- * 
- * @author sjfink
- *
  */
 public class PhiStatement extends Statement {
   private final SSAPhiInstruction phi;

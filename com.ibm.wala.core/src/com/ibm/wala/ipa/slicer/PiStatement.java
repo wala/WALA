@@ -14,10 +14,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ssa.SSAPiInstruction;
 
 /**
- * identifier of a phi instruction
- * 
- * @author sjfink
- * 
+ * identifier of a Pi instruction
  */
 public class PiStatement extends Statement {
   private final SSAPiInstruction pi;

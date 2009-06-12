@@ -15,8 +15,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 /**
  * A {@link Statement} representing the normal return value in a callee,
  * immediately before returning to the caller.
- * 
- * @author sjfink
  */
 public class NormalReturnCallee extends Statement {
 

@@ -19,9 +19,6 @@ import com.ibm.wala.util.intset.SparseIntSet;
 /**
  * Trivial flow functions to represent simple reachability. All functions simply
  * return "0"
- * 
- * @author sjfink
- * 
  */
 public class ReachabilityFunctions<T> implements IFlowFunctionMap<T> {
 

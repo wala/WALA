@@ -16,8 +16,6 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 /**
  * A {@link Statement} representing the exceptional return value in a caller,
  * immediately after returning to the caller.
- * 
- * @author sjfink
  */
 public class ExceptionalReturnCaller extends StatementWithInstructionIndex implements ValueNumberCarrier {
 
