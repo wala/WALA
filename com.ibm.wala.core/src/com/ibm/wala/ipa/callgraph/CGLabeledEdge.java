@@ -20,7 +20,10 @@ import com.ibm.wala.classLoader.CallSiteReference;
  * utility.
  * 
  * This abstraction does not include a call site reference, so this edge might actually represent several distinct call sites.
+ *
+ * @deprecated because no one seems to use this currently.
  */
+@Deprecated
 public class CGLabeledEdge extends CGEdge {
 
   private final CallSiteReference label;

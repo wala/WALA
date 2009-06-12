@@ -21,7 +21,10 @@ import com.ibm.wala.util.collections.Pair;
  * utility.
  * 
  * This abstraction does not include a call site reference, so this edge might actually represent several distinct call sites.
+ *
+ * @deprecated because no one seems to use this currently.
  */
+@Deprecated
 public class CGEdge extends Pair<CGNode, CGNode> {
 
   public CGEdge(CGNode src, CGNode dest) {
