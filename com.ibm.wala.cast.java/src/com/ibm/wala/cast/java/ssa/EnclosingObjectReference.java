@@ -9,7 +9,7 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * The CAst source language front end for Java has explicit support for lexicallly-enclosing objects, rather than compiling them
+ * The CAst source language front end for Java has explicit support for lexically-enclosing objects, rather than compiling them
  * away into extra fields and access-control thwarting accessor methods as is done in bytecode. This instruction represents a read
  * of the object of the given type that lexically encloses its use value.
  * 
