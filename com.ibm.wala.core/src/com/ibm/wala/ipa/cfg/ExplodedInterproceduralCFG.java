@@ -24,9 +24,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 
 /**
  * Exploded interprocedural control-flow graph, constructed lazily.
- * 
- * @author sfink
- * @author Julian Dolby
  */
 public class ExplodedInterproceduralCFG extends AbstractInterproceduralCFG<IExplodedBasicBlock> {
 

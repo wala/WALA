@@ -38,22 +38,17 @@ import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 
 /**
- * A pruned view of a {@link ControlFlowGraph}. Use this class along with an
- * {@link EdgeFilter} to produce a custom view of a CFG.
+ * A pruned view of a {@link ControlFlowGraph}. Use this class along with an {@link EdgeFilter} to produce a custom view of a CFG.
  * 
- * For example, you can use this class to produce a CFG view that ignores
- * certain types of exceptional edges.
+ * For example, you can use this class to produce a CFG view that ignores certain types of exceptional edges.
  */
 public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGraph<T> implements ControlFlowGraph<I, T> {
 
   /**
-   * @param cfg
-   *            the original CFG that you want a view of
-   * @param filter
-   *            an object that selectively filters edges in the original CFG
+   * @param cfg the original CFG that you want a view of
+   * @param filter an object that selectively filters edges in the original CFG
    * @return a view of cfg that includes only edges accepted by the filter.
-   * @throws IllegalArgumentException
-   *             if cfg is null
+   * @throws IllegalArgumentException if cfg is null
    */
   public static <I, T extends IBasicBlock<I>> PrunedCFG<I, T> make(final ControlFlowGraph<I, T> cfg, final EdgeFilter<T> filter) {
     if (cfg == null) {
@@ -62,14 +57,14 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
     return new PrunedCFG<I, T>(cfg, filter);
   }
 
-  private static class FilteredCFGEdges<I,T extends IBasicBlock<I>> implements NumberedEdgeManager<T> {
-    private final ControlFlowGraph<I, T > cfg;
+  private static class FilteredCFGEdges<I, T extends IBasicBlock<I>> implements NumberedEdgeManager<T> {
+    private final ControlFlowGraph<I, T> cfg;
 
     private final NumberedNodeManager<T> currentCFGNodes;
 
     private final EdgeFilter<T> filter;
 
-    FilteredCFGEdges(ControlFlowGraph<I, T > cfg, NumberedNodeManager<T> currentCFGNodes, EdgeFilter<T> filter) {
+    FilteredCFGEdges(ControlFlowGraph<I, T> cfg, NumberedNodeManager<T> currentCFGNodes, EdgeFilter<T> filter) {
       this.cfg = cfg;
       this.filter = filter;
       this.currentCFGNodes = currentCFGNodes;
@@ -110,8 +105,7 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
     public Iterator<T> getSuccNodes(final T N) {
       return new FilterIterator<T>(cfg.getSuccNodes(N), new Filter<T>() {
         public boolean accepts(T o) {
-          return currentCFGNodes.containsNode(o) && 
-	      (filter.hasNormalEdge(N, o) || filter.hasExceptionalEdge(N, o));
+          return currentCFGNodes.containsNode(o) && (filter.hasNormalEdge(N, o) || filter.hasExceptionalEdge(N, o));
         }
       });
     }
@@ -132,8 +126,7 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
     public Iterator<T> getPredNodes(final T N) {
       return new FilterIterator<T>(cfg.getPredNodes(N), new Filter<T>() {
         public boolean accepts(T o) {
-          return currentCFGNodes.containsNode(o) && 
-	      (filter.hasNormalEdge(o, N) || filter.hasExceptionalEdge(o, N));
+          return currentCFGNodes.containsNode(o) && (filter.hasNormalEdge(o, N) || filter.hasExceptionalEdge(o, N));
         }
       });
     }
@@ -294,7 +287,7 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
 
   public List<T> getExceptionalSuccessors(final T N) {
     ArrayList<T> result = new ArrayList<T>();
-    for (Iterator<T> it = edges.getExceptionalSuccessors(N); it.hasNext(); ) {
+    for (Iterator<T> it = edges.getExceptionalSuccessors(N); it.hasNext();) {
       result.add(it.next());
     }
     return result;
@@ -352,12 +345,12 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
   public IntSet getPhiIndices(T bb) {
     assert containsNode(bb);
     assert cfg.containsNode(bb);
-    
+
     int i = 0;
     MutableIntSet valid = IntSetUtil.make();
-    for(Iterator<? extends T> pbs = cfg.getPredNodes(bb); pbs.hasNext(); i++) {
+    for (Iterator<? extends T> pbs = cfg.getPredNodes(bb); pbs.hasNext(); i++) {
       if (nodes.containsNode(pbs.next())) {
-	valid.add(i);
+        valid.add(i);
       }
     }
 

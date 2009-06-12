@@ -18,30 +18,23 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.collections.Filtersection;
 
 /**
- * 
  * Interprocedural control-flow graph.
  * 
- * TODO: think about a better implementation; perhaps a lazy view of the
- * constituent CFGs Lots of ways this can be optimized?
- * 
- * @author sfink
- * @author Julian Dolby
+ * TODO: think about a better implementation; perhaps a lazy view of the constituent CFGs Lots of ways this can be optimized?
  */
 public class InterproceduralCFG extends AbstractInterproceduralCFG<ISSABasicBlock> {
-
 
   public InterproceduralCFG(CallGraph CG) {
     super(CG);
   }
 
   public InterproceduralCFG(CallGraph cg, Filtersection<CGNode> filtersection) {
-    super(cg,filtersection);
+    super(cg, filtersection);
   }
 
   /**
    * @return the cfg for n, or null if none found
-   * @throws IllegalArgumentException
-   *             if n == null
+   * @throws IllegalArgumentException if n == null
    */
   @Override
   public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode n) throws IllegalArgumentException {
