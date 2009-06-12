@@ -188,7 +188,6 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       return null;
     }
 
-    @SuppressWarnings("unused")
     public TypeReference getPointerType(TypeReference pointee) throws UnsupportedOperationException {
       throw new UnsupportedOperationException("JavaScript does not permit explicit pointers");
     }
