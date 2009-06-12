@@ -18,7 +18,7 @@ import com.ibm.wala.types.TypeReference;
 /**
  * Abstraction of a Java type. These are immutable.
  * 
- * @author sfink
+ * @see TypeInference
  */
 public abstract class TypeAbstraction implements ContextItem {
 

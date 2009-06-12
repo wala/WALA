@@ -18,18 +18,13 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
  * Represents a type and its subtypes.
- * 
- * @author sfink
  */
 public class ConeType extends TypeAbstraction {
 
   private final IClass type;
 
   /**
-   * default constructor
-   * 
    * @throws IllegalArgumentException if type is null
    */
   public ConeType(IClass type) {
@@ -64,19 +59,12 @@ public class ConeType extends TypeAbstraction {
     }
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
+
   @Override
   public String toString() {
     return "cone:" + type.toString();
   }
-
-  /**
-   * Method getType.
-   * 
-   * @return TypeReference
-   */
+  
   @Override
   public IClass getType() {
     return type;
@@ -102,9 +90,6 @@ public class ConeType extends TypeAbstraction {
     return type.equals(other.type);
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return 39 * type.hashCode();
@@ -119,7 +104,7 @@ public class ConeType extends TypeAbstraction {
   }
 
   /**
-   * @return an Iteration of IClass that implement this interface
+   * @return an Iterator of IClass that implement this interface
    */
   public Iterator iterateImplementors() {
     return type.getClassHierarchy().getImplementors(getType().getReference()).iterator();

@@ -7,12 +7,15 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *******************************************************************************/package com.ibm.wala.analysis.typeInference;
+ *******************************************************************************/
+package com.ibm.wala.analysis.typeInference;
 
 import com.ibm.wala.fixedpoint.impl.AbstractVariable;
 
 /**
- * A type variable in the dataflow system.
+ * A type variable in the dataflow system for type inference.
+ * 
+ * @see TypeInference
  */
 public class TypeVariable extends AbstractVariable<TypeVariable> {
 
@@ -31,7 +34,6 @@ public class TypeVariable extends AbstractVariable<TypeVariable> {
     }
     this.type = other.type;
   }
-
 
   public TypeAbstraction getType() {
     return type;

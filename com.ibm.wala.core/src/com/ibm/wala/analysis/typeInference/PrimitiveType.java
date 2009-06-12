@@ -16,6 +16,11 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 
+/**
+ * Abstraction of a primitive type. Subclasses will define the primitive type abstractions for a particular language.
+ * 
+ * @see JavaPrimitiveType
+ */
 public abstract class PrimitiveType extends TypeAbstraction {
 
   final protected static Map<TypeReference, PrimitiveType> referenceToType = HashMapFactory.make();
@@ -79,7 +84,7 @@ public abstract class PrimitiveType extends TypeAbstraction {
 
   @Override
   public String toString() {
-     return reference.getName().toString();
+    return reference.getName().toString();
   }
 
 }

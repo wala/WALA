@@ -22,8 +22,6 @@ public class PointType extends TypeAbstraction {
   private final IClass type;
 
   /**
-   * Private constructor ... only for internal use.
-   * 
    * @throws IllegalArgumentException if type is null
    */
   public PointType(IClass type) {
@@ -74,19 +72,11 @@ public class PointType extends TypeAbstraction {
     }
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "point: " + type.toString();
   }
 
-  /**
-   * Method getType.
-   * 
-   * @return TypeReference
-   */
   @Override
   public IClass getType() {
     return type;
@@ -97,9 +87,6 @@ public class PointType extends TypeAbstraction {
     return type.getReference();
   }
 
-  /**
-   * @see java.lang.Object#equals(Object)
-   */
   @Override
   public boolean equals(Object obj) {
     if (!(obj instanceof PointType)) {
@@ -112,9 +99,6 @@ public class PointType extends TypeAbstraction {
     return type.equals(other.type);
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return 37 * type.hashCode();

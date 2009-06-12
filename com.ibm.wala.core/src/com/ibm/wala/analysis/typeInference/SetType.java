@@ -19,8 +19,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- * Abstraction of a set of PointTypes. These are immutable. TODO: fix for
- * efficiency if needed.
+ * Abstraction of a set of {@link PointType}. These are immutable. TODO: fix for efficiency if needed.
  */
 public class SetType extends TypeAbstraction {
 

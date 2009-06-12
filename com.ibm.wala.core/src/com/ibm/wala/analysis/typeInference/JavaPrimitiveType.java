@@ -15,6 +15,9 @@ import java.util.HashMap;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 
+/**
+ * Abstraction of a primitive type in Java.
+ */
 public class JavaPrimitiveType extends PrimitiveType {
 
   public static final PrimitiveType BOOLEAN = makePrimitive(TypeReference.Boolean, 1);
