@@ -24,9 +24,6 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileProvider;
 
 /**
- * @author sfink
- * @author Eran Yahav
- * @author Alexey Loginov
  */
 public class StringTable extends Table<String> implements Cloneable {
 

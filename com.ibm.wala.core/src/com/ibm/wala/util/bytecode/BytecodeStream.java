@@ -15,7 +15,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.BytecodeConstants;
 
-/****
+/**
  * Provides minimal abstraction layer to a stream of bytecodes from the code attribute of a method.
  */
 public class BytecodeStream implements BytecodeConstants {

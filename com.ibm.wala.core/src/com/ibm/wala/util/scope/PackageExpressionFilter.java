@@ -17,8 +17,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.util.collections.Filter;
 
 /**
- * A file which accepts an IClass only if the package name matches
- * a regular expression
+ * A file which accepts an {@link IClass} only if the package name matches a regular expression
  */
 public class PackageExpressionFilter implements Filter<IClass> {
 
@@ -38,7 +37,7 @@ public class PackageExpressionFilter implements Filter<IClass> {
     if (c.getName().getPackage() == null) {
       return false;
     }
-    CharSequence packageName =  c.getName().getPackage().toString();
+    CharSequence packageName = c.getName().getPackage().toString();
     Matcher m = pattern.matcher(packageName);
     return m.matches();
   }

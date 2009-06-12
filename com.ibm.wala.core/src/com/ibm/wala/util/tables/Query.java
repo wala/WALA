@@ -19,9 +19,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
  * Misc SQL-like support for queries on tables
- * 
- * @author sjfink
- *
  */
 public class Query {
 

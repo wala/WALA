@@ -13,10 +13,7 @@ package com.ibm.wala.util.warnings;
 import com.ibm.wala.types.MemberReference;
 
 /**
- *
  * A warning associated with a method
- * 
- * @author sfink
  */
 public abstract class MethodWarning extends Warning {
 

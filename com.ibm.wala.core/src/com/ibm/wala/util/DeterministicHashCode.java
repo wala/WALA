@@ -16,8 +16,6 @@ import java.util.Random;
  * a simple pseudo-random number generator.
  * 
  * This is too expensive to use in inner loops.  Deprecating.
- * 
- * @author sfink
  */
 @Deprecated
 public class DeterministicHashCode {

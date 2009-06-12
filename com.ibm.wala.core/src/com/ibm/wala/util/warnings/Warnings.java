@@ -18,21 +18,18 @@ import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
  * A global, static dictionary of warnings
- * 
- * @author sfink
  */
 public class Warnings {
-  
+
   private final static Collection<Warning> warnings = HashSetFactory.make();
-  
+
   public static synchronized boolean add(Warning w) {
     return warnings.add(w);
   }
-  
+
   public static synchronized void clear() {
     warnings.clear();
   }
-
 
   public static String asString() {
     TreeSet<Warning> T = new TreeSet<Warning>();

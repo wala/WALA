@@ -20,8 +20,6 @@ import com.ibm.wala.util.config.AnalysisScopeReader;
 /**
  * A serializable version of {@link AnalysisScope}. Note: any information about the array class loader is lost using this
  * representation.
- * 
- * @author dpikus, yinnonh
  */
 public class ShallowAnalysisScope implements Serializable {
 

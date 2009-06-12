@@ -13,10 +13,7 @@ package com.ibm.wala.types;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * Abstract superclass of MethodReference and FieldReference
- * 
- * @author sjfink
- *
+ * Abstract superclass of {@link MethodReference} and {@link FieldReference}
  */
 public abstract class MemberReference {
 
@@ -35,11 +32,6 @@ public abstract class MemberReference {
    */
   private final int hash;
 
-  /**
-   * @param type
-   * @param name
-   * @param hash
-   */
   protected MemberReference(TypeReference type, Atom name, int hash) {
     this.declaringClass = type;
     this.name = name;

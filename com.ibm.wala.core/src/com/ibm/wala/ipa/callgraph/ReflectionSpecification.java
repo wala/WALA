@@ -20,8 +20,6 @@ import com.ibm.wala.types.MemberReference;
 public interface ReflectionSpecification {
 
   /**
-   * @param method
-   * @param bcIndex
    * @return the TypeAbstraction which represents the set of types allocated by the new instance at the specified bytecode index; or
    *         null if not specified.
    */

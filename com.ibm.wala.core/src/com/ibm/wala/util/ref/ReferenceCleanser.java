@@ -26,9 +26,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  * doesn't work. Help it out.
  * 
  * It's unfortunate that this class exits.
- * 
- * @author sfink
- * 
  */
 public class ReferenceCleanser {
   

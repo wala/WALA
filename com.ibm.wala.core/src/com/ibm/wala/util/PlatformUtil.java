@@ -12,9 +12,6 @@ package com.ibm.wala.util;
 
 /**
  * Platform-specific utility functions.
- * 
- * @author manu
- * 
  */
 public class PlatformUtil {
 

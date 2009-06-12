@@ -16,51 +16,43 @@ import java.io.UTFDataFormatException;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * Abstract class that contains conversion routines to/from utf8
- * and/or pseudo-utf8.  It does not support utf8 encodings of
- * more than 3 bytes.
- *
- * The difference between utf8 and pseudo-utf8 is the special
- * treatment of null.  In utf8, null is encoded as a single byte
- * directly, whereas in pseudo-utf8, it is encoded as a two-byte 
- * sequence.  See the JVM spec for more information.
- *
- * @author John Whaley
+ * Abstract class that contains conversion routines to/from utf8 and/or pseudo-utf8. It does not support utf8 encodings of more than
+ * 3 bytes.
+ * 
+ * The difference between utf8 and pseudo-utf8 is the special treatment of null. In utf8, null is encoded as a single byte directly,
+ * whereas in pseudo-utf8, it is encoded as a two-byte sequence. See the JVM spec for more information.
  */
 public abstract class UTF8Convert {
 
   /**
-   * Strictly check the format of the utf8/pseudo-utf8 byte array in
-   * fromUTF8.
+   * Strictly check the format of the utf8/pseudo-utf8 byte array in fromUTF8.
    */
   static final boolean STRICTLY_CHECK_FORMAT = false;
+
   /**
-   * Set fromUTF8 to not throw an exception when given a normal utf8
-   * byte array.
+   * Set fromUTF8 to not throw an exception when given a normal utf8 byte array.
    */
   static final boolean ALLOW_NORMAL_UTF8 = false;
+
   /**
-   * Set fromUTF8 to not throw an exception when given a pseudo utf8
-   * byte array.
+   * Set fromUTF8 to not throw an exception when given a pseudo utf8 byte array.
    */
   static final boolean ALLOW_PSEUDO_UTF8 = true;
+
   /**
    * Set toUTF8 to write in pseudo-utf8 (rather than normal utf8).
    */
   static final boolean WRITE_PSEUDO_UTF8 = true;
 
   /**
-   * Convert the given sequence of (pseudo-)utf8 formatted bytes
-   * into a String.
-   *
-   * The acceptable input formats are controlled by the
-   * STRICTLY_CHECK_FORMAT, ALLOW_NORMAL_UTF8, and ALLOW_PSEUDO_UTF8
-   * flags.
-   *
+   * Convert the given sequence of (pseudo-)utf8 formatted bytes into a String.
+   * 
+   * The acceptable input formats are controlled by the STRICTLY_CHECK_FORMAT, ALLOW_NORMAL_UTF8, and ALLOW_PSEUDO_UTF8 flags.
+   * 
    * @param utf8 (pseudo-)utf8 byte array
    * @throws UTFDataFormatException if the (pseudo-)utf8 byte array is not valid (pseudo-)utf8
    * @returns unicode string
-   * @throws IllegalArgumentException  if utf8 is null
+   * @throws IllegalArgumentException if utf8 is null
    */
   public static String fromUTF8(byte[] utf8) throws UTFDataFormatException {
     if (utf8 == null) {
@@ -88,11 +80,11 @@ public abstract class UTF8Convert {
               throw new UTFDataFormatException("invalid marker bits for double byte char at location " + (i - 2));
             if (c < '\200') {
               if (!ALLOW_PSEUDO_UTF8 || (c != '\000'))
-                throw new UTFDataFormatException(
-                  "encountered double byte char that should have been single byte at location " + (i - 2));
+                throw new UTFDataFormatException("encountered double byte char that should have been single byte at location "
+                    + (i - 2));
             } else if (c > '\u07FF')
-              throw new UTFDataFormatException(
-                "encountered double byte char that should have been triple byte at location " + (i - 2));
+              throw new UTFDataFormatException("encountered double byte char that should have been triple byte at location "
+                  + (i - 2));
           }
         } else {
           byte nnb = utf8[i++];
@@ -102,8 +94,8 @@ public abstract class UTF8Convert {
             if (((b & 0xf0) != 0xe0) || ((nb & 0xc0) != 0x80) || ((nnb & 0xc0) != 0x80))
               throw new UTFDataFormatException("invalid marker bits for triple byte char at location " + (i - 3));
             if (c < '\u0800')
-              throw new UTFDataFormatException(
-                "encountered triple byte char that should have been fewer bytes at location " + (i - 3));
+              throw new UTFDataFormatException("encountered triple byte char that should have been fewer bytes at location "
+                  + (i - 3));
           }
         }
       } catch (ArrayIndexOutOfBoundsException e) {
@@ -114,14 +106,13 @@ public abstract class UTF8Convert {
   }
 
   /**
-   * Convert the given String into a sequence of (pseudo-)utf8
-   * formatted bytes.
-   *
+   * Convert the given String into a sequence of (pseudo-)utf8 formatted bytes.
+   * 
    * The output format is controlled by the WRITE_PSEUDO_UTF8 flag.
-   *
+   * 
    * @param s String to convert
    * @returns array containing sequence of (pseudo-)utf8 formatted bytes
-   * @throws IllegalArgumentException  if s is null
+   * @throws IllegalArgumentException if s is null
    */
   public static byte[] toUTF8(String s) {
     if (s == null) {
@@ -149,7 +140,8 @@ public abstract class UTF8Convert {
 
   /**
    * Returns the length of a string's UTF encoded form.
-   * @throws IllegalArgumentException  if s is null
+   * 
+   * @throws IllegalArgumentException if s is null
    */
   public static int utfLength(String s) {
     if (s == null) {
@@ -170,10 +162,10 @@ public abstract class UTF8Convert {
 
   /**
    * Check whether the given sequence of bytes is valid (pseudo-)utf8.
-   *
+   * 
    * @param bytes byte array to check
    * @returns true iff the given sequence is valid (pseudo-)utf8.
-   * @throws IllegalArgumentException  if bytes is null
+   * @throws IllegalArgumentException if bytes is null
    */
   public static boolean check(byte[] bytes) {
     if (bytes == null) {
@@ -216,7 +208,7 @@ public abstract class UTF8Convert {
     return true;
   }
 
-  public static String fromUTF8(ImmutableByteArray s){
+  public static String fromUTF8(ImmutableByteArray s) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }

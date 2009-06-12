@@ -13,11 +13,7 @@ package com.ibm.wala.util.warnings;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
- * A warning message. These are ordered first by severity, and then by
- * lexicographic order.
- * 
- * @author sfink
+ * A warning message. These are ordered first by severity, and then by lexicographic order.
  */
 public abstract class Warning implements Comparable {
 
@@ -36,7 +32,7 @@ public abstract class Warning implements Comparable {
   public final static byte N_LEVELS = 6;
 
   private byte level;
-  
+
   public Warning(byte level) {
     this.level = level;
   }
@@ -112,8 +108,7 @@ public abstract class Warning implements Comparable {
   }
 
   /**
-   * Must return the same String always -- this is required by the
-   * implementation of hashCode.
+   * Must return the same String always -- this is required by the implementation of hashCode.
    */
   public abstract String getMsg();
 
