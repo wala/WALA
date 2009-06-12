@@ -133,7 +133,6 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
   }
 
   /**
-   * 
    * precondition: !mayBeLiveInSomeCaller(ik, m)
    * 
    * @param instructionIndex index of an SSA instruction
