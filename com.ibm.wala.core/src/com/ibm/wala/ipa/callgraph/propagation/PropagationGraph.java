@@ -49,10 +49,7 @@ import com.ibm.wala.util.intset.IntPair;
 import com.ibm.wala.util.intset.IntSet;
 
 /**
- * 
  * A dataflow graph implementation specialized for propagation-based pointer analysis
- * 
- * @author sfink
  */
 public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> {
 

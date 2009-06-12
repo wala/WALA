@@ -22,11 +22,8 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * This class provides instance keys where for a given type T in a CGNode N,
- * there is one "abstract allocation site" instance for all T allocations in
- * node N.
- * 
- * @author sfink
+ * This class provides instance keys where for a given type T in a CGNode N, there is one "abstract allocation site" instance for
+ * all T allocations in node N.
  */
 public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
 
@@ -43,8 +40,7 @@ public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
   private final ClassBasedInstanceKeys classBased;
 
   /**
-   * @param options
-   *          Governing call graph construction options
+   * @param options Governing call graph construction options
    */
   public SmushedAllocationSiteInstanceKeys(AnalysisOptions options, IClassHierarchy cha) {
     this.options = options;

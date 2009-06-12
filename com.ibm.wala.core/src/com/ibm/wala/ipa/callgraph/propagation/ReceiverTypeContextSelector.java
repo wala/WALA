@@ -19,11 +19,7 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 
 /**
- * 
- * This context selector selects a context based on the concrete type of the
- * receiver.
- * 
- * @author sfink
+ * This context selector selects a context based on the concrete type of the receiver.
  */
 public class ReceiverTypeContextSelector implements ContextSelector {
 

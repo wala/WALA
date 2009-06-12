@@ -37,8 +37,6 @@ import com.ibm.wala.util.collections.Iterator2Collection;
 
 /**
  * a helper class which can modify a {@link PropagationCallGraphBuilder} to deal with reflective factory methods.
- * 
- * @author sfink
  */
 public class ReflectionHandler {
   private final static boolean VERBOSE = false;

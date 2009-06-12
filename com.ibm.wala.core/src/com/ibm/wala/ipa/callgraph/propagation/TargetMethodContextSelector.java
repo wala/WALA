@@ -21,11 +21,8 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.Selector;
 
 /**
- * 
  * This context selector selects a context based on whether the receiver type
  * dispatches to a given method.
- * 
- * @author Julian Dolby (dolby@us.ibm.com)
  */
 public class TargetMethodContextSelector implements ContextSelector {
 

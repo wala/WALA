@@ -86,9 +86,6 @@ import com.ibm.wala.util.warnings.Warnings;
  * 
  * TODO: This implementation currently keeps all points to sets live ... even those for local variables that do not span
  * interprocedural boundaries. This may be too space-inefficient .. we can consider recomputing local sets on demand.
- * 
- * @author sfink
- * @author adonovan
  */
 public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGraphBuilder implements HeapModel {
   private final static boolean DEBUG = false;
@@ -159,7 +156,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   protected SSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       PointerKeyFactory pointerKeyFactory) {
     super(cha, options, cache, pointerKeyFactory);
-//    this.usePreTransitiveSolver = options.usePreTransitiveSolver();
+    // this.usePreTransitiveSolver = options.usePreTransitiveSolver();
   }
 
   public SSAContextInterpreter getCFAContextInterpreter() {
@@ -2062,7 +2059,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   @Override
   protected IPointsToSolver makeSolver() {
     return new StandardSolver(system, this);
-//    return usePreTransitiveSolver ? (IPointsToSolver) new PreTransitiveSolver(system, this) : new StandardSolver(system, this);
+    // return usePreTransitiveSolver ? (IPointsToSolver) new PreTransitiveSolver(system, this) : new StandardSolver(system, this);
     // return true ? (IPointsToSolver)new PreTransitiveSolver(system,this) : new
     // StandardSolver(system,this);
   }

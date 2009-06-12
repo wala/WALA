@@ -19,29 +19,22 @@ import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 
 /**
- * 
- * An object that provides an interface to local method information needed for
- * CFA.
- * 
- * @author sfink
+ * An object that provides an interface to local method information needed for CFA.
  */
 public interface SSAContextInterpreter extends RTAContextInterpreter {
 
   /**
-   * @return the IR that models the method context, or null if it's an
-   *         unmodelled native method
+   * @return the IR that models the method context, or null if it's an unmodelled native method
    */
   public IR getIR(CGNode node);
 
   /**
-   * @return DefUse for the IR that models the method context, or null if it's
-   *         an unmodelled native method
+   * @return DefUse for the IR that models the method context, or null if it's an unmodelled native method
    */
   public DefUse getDU(CGNode node);
 
   /**
-   * @return the number of the statements in the IR, or -1 if it's an unmodelled
-   *         native method.
+   * @return the number of the statements in the IR, or -1 if it's an unmodelled native method.
    */
   public int getNumberOfStatements(CGNode node);
 

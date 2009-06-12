@@ -53,10 +53,7 @@ import com.ibm.wala.util.ref.ReferenceCleanser;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
- * 
  * System of constraints that define propagation for call graph construction
- * 
- * @author sfink
  */
 public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariable> {
 

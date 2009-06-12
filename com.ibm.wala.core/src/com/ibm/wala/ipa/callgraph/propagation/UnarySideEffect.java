@@ -13,18 +13,12 @@ package com.ibm.wala.ipa.callgraph.propagation;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 
 /**
+ * A SideEffect is a constraint which carries a points-to-set which is def'fed or used in created constraints.
  * 
- * A SideEffect is a constraint which carries a points-to-set which is def'fed
- * or used in created constraints.
+ * The side effect doesn't actually def or use the fixedSet itself ... rather, the side effect creates <em>new</em> constraints that
+ * def or use the fixed set.
  * 
- * The side effect doesn't actually def or use the fixedSet itself ... rather,
- * the side effect creates <em>new</em> constraints that def or use the fixed
- * set.
- * 
- * A "load" operator generates defs of the fixed set. A "store" operator
- * generates uses of the fixed set.
- * 
- * @author sfink
+ * A "load" operator generates defs of the fixed set. A "store" operator generates uses of the fixed set.
  */
 public abstract class UnarySideEffect extends UnaryOperator<PointsToSetVariable> {
   private PointsToSetVariable fixedSet;
@@ -32,14 +26,14 @@ public abstract class UnarySideEffect extends UnaryOperator<PointsToSetVariable>
   public UnarySideEffect(PointsToSetVariable fixedSet) {
     this.fixedSet = fixedSet;
   }
-  
+
   @Override
   public final byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
     return evaluate(rhs);
   }
 
   public abstract byte evaluate(PointsToSetVariable rhs);
-  
+
   /**
    * @return Returns the fixed points-to-set associated with this side effect.
    */
@@ -66,8 +60,7 @@ public abstract class UnarySideEffect extends UnaryOperator<PointsToSetVariable>
   }
 
   /**
-   * A "load" operator generates defs of the fixed set. A "store" operator
-   * generates uses of the fixed set.
+   * A "load" operator generates defs of the fixed set. A "store" operator generates uses of the fixed set.
    */
   abstract protected boolean isLoadOperator();
 

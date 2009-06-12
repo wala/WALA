@@ -23,8 +23,7 @@ public class ReceiverInstanceContext implements Context {
   private final InstanceKey ik;
 
   /**
-   * @param I
-   *          the instance key that represents the receiver
+   * @param I the instance key that represents the receiver
    */
   public ReceiverInstanceContext(InstanceKey I) {
     if (I == null) {
@@ -48,8 +47,6 @@ public class ReceiverInstanceContext implements Context {
   public String toString() {
     return "ReceiverInstanceContext<" + ik + ">";
   }
-
-
 
   @Override
   public int hashCode() {
