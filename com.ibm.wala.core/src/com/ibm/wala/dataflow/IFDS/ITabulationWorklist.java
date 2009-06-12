@@ -11,7 +11,7 @@
 package com.ibm.wala.dataflow.IFDS;
 
 /**
- * Type parameter T represents type of nodes in the supergraph.
+ * @param <T> represents type of nodes in the supergraph.
  */
 public interface ITabulationWorklist<T> {
 

@@ -13,12 +13,11 @@ package com.ibm.wala.dataflow.IFDS;
 import com.ibm.wala.util.intset.MutableMapping;
 
 /**
- * @author sfink
- *
+ * A {@link TabulationDomain} with no build-in partial order defining priority.
  */
-public class UnorderedDomain<T,U> extends MutableMapping<T> implements TabulationDomain<T,U> {
+public class UnorderedDomain<T, U> extends MutableMapping<T> implements TabulationDomain<T, U> {
 
-  /* 
+  /*
    * @see com.ibm.wala.dataflow.IFDS.TabulationDomain#isWeakerThan(int, int)
    */
   public boolean hasPriorityOver(PathEdge<U> p1, PathEdge<U> p2) {

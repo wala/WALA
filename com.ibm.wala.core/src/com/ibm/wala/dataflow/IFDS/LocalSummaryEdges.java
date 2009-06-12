@@ -22,37 +22,29 @@ import com.ibm.wala.util.intset.SparseLongIntVector;
 import com.ibm.wala.util.math.LongUtil;
 
 /**
- * 
  * A set of summary edges for a particular procedure.
- * 
- * @author sfink
- * 
  */
 public class LocalSummaryEdges {
 
   /**
    * A map from integer n -> (IBinaryNonNegativeIntRelation)
    * 
-   * Let s_p be an entry to this procedure, and x be an exit. n is a integer
-   * which uniquely identifies an (s_p,x) relation. For any such n, summaries[n]
-   * gives a relation R=(d1,d2) s.t. (<s_p, d1> -> <x,d2>) is a summary edge.
+   * Let s_p be an entry to this procedure, and x be an exit. n is a integer which uniquely identifies an (s_p,x) relation. For any
+   * such n, summaries[n] gives a relation R=(d1,d2) s.t. (<s_p, d1> -> <x,d2>) is a summary edge.
    * 
-   * Note that this representation is a little different from the representation
-   * described in the PoPL 95 paper. We cache summary edges at the CALLEE, not
-   * at the CALLER!!! This allows us to avoid eagerly installing summary edges
-   * at all call sites to a procedure, which may be a win.
+   * Note that this representation is a little different from the representation described in the PoPL 95 paper. We cache summary
+   * edges at the CALLEE, not at the CALLER!!! This allows us to avoid eagerly installing summary edges at all call sites to a
+   * procedure, which may be a win.
    * 
-   * we don't technically need this class, since this information is redundantly
-   * stored in LocalPathEdges.  However, we're keeping it cached for now for
-   * more efficient access when looking up summary edges.
+   * we don't technically need this class, since this information is redundantly stored in LocalPathEdges. However, we're keeping it
+   * cached for now for more efficient access when looking up summary edges.
    * 
    * TODO: more representation optimization.
    */
   private final SparseVector<IBinaryNaturalRelation> summaries = new SparseVector<IBinaryNaturalRelation>(1, 1.1f);
 
   /**
-   * Let (s_p,x) be an entry-exit pair, and let l := the long whose high word is
-   * s_p and low word is x.
+   * Let (s_p,x) be an entry-exit pair, and let l := the long whose high word is s_p and low word is x.
    * 
    * Then callReturnMap(l) is an int which uniquely identifies (s_p,x)
    * 
@@ -73,41 +65,32 @@ public class LocalSummaryEdges {
   /**
    * Record a summary edge for the flow d1 -> d2 from an entry s_p to an exit x.
    * 
-   * @param s_p
-   *          local block number an entry
-   * @param x
-   *          local block number of an exit block
-   * @param d1
-   *          source dataflow fact
-   * @param d2
-   *          target dataflow fact
+   * @param s_p local block number an entry
+   * @param x local block number of an exit block
+   * @param d1 source dataflow fact
+   * @param d2 target dataflow fact
    */
   public void insertSummaryEdge(int s_p, int x, int d1, int d2) {
     int n = getIndexForEntryExitPair(s_p, x);
     IBinaryNaturalRelation R = summaries.get(n);
     if (R == null) {
       // we expect R to usually be sparse
-      R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
-          BasicNaturalRelation.SIMPLE);
+      R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY }, BasicNaturalRelation.SIMPLE);
       summaries.set(n, R);
     }
     R.add(d1, d2);
     if (TabulationSolver.DEBUG_LEVEL > 1) {
-//      System.err.println("recording summary edge, now n=" + n + " summarized by " + R);
+      // System.err.println("recording summary edge, now n=" + n + " summarized by " + R);
     }
   }
 
   /**
    * Does a particular summary edge exist?
    * 
-   * @param s_p
-   *          local block number an entry
-   * @param x
-   *          local block number of an exit block
-   * @param d1
-   *          source dataflow fact
-   * @param d2
-   *          target dataflow fact
+   * @param s_p local block number an entry
+   * @param x local block number of an exit block
+   * @param d1 source dataflow fact
+   * @param d2 target dataflow fact
    */
   public boolean contains(int s_p, int x, int d1, int d2) {
     int n = getIndexForEntryExitPair(s_p, x);
@@ -120,14 +103,10 @@ public class LocalSummaryEdges {
   }
 
   /**
-   * @param s_p
-   *          local block number an entry
-   * @param x
-   *          local block number of an exit block
-   * @param d1
-   *          source dataflow fact
-   * @return set of d2 s.t. d1->d2 recorded as a summary edge for (s_p,x), or
-   *         null if none
+   * @param s_p local block number an entry
+   * @param x local block number of an exit block
+   * @param d1 source dataflow fact
+   * @return set of d2 s.t. d1->d2 recorded as a summary edge for (s_p,x), or null if none
    */
   public IntSet getSummaryEdges(int s_p, int x, int d1) {
     int n = getIndexForEntryExitPair(s_p, x);
@@ -142,14 +121,10 @@ public class LocalSummaryEdges {
   /**
    * Note: This is inefficient. Use with care.
    * 
-   * @param s_p
-   *          local block number an entry
-   * @param x
-   *          local block number of an exit block
-   * @param d2
-   *          target dataflow fact
-   * @return set of d1 s.t. d1->d2 recorded as a summary edge for (s_p,x), or
-   *         null if none
+   * @param s_p local block number an entry
+   * @param x local block number of an exit block
+   * @param d2 target dataflow fact
+   * @return set of d1 s.t. d1->d2 recorded as a summary edge for (s_p,x), or null if none
    */
   public IntSet getInvertedSummaryEdgesForTarget(int s_p, int x, int d2) {
     int n = getIndexForEntryExitPair(s_p, x);
@@ -158,8 +133,8 @@ public class LocalSummaryEdges {
       return null;
     } else {
       MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
-      for (Iterator it = R.iterator(); it.hasNext(); ) {
-        IntPair p = (IntPair)it.next();
+      for (Iterator it = R.iterator(); it.hasNext();) {
+        IntPair p = (IntPair) it.next();
         if (p.getY() == d2) {
           result.add(p.getX());
         }

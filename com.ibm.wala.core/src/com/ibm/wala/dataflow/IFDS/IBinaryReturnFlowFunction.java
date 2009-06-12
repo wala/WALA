@@ -13,30 +13,20 @@ package com.ibm.wala.dataflow.IFDS;
 import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
+ * A binary flow function corresponding to a return statements combining information from the call site and the exit site.
  * 
- * A binary flow function corresponding to a return statements combining
- * information from the call site and the exit site.
+ * This function should be pairwise distributive for use with the Tabulation algorithm.
  * 
- * This function should be pairwise distributive for use with the Tabulation
- * algorithm.
- * 
- * SJF: I have made this extend IFlowFunction to minimize damage to the extant
- * class hierarchy.   But calling super.getTargets() will be a problem, so be
- * very careful in how you implement and use this.   The Tabulation solver will do the 
- * right thing.
- * 
- * @author noam rinetzky
+ * SJF: I have made this extend IFlowFunction to minimize damage to the extant class hierarchy. But calling super.getTargets() will
+ * be a problem, so be very careful in how you implement and use this. The Tabulation solver will do the right thing.
  */
 public interface IBinaryReturnFlowFunction extends IFlowFunction {
 
   /**
-   * @param call_d
-   *          factoid of the caller at the call site
-   * @param exit_d
-   *          factoid of the callee at the exit site
-   * @return set of ret_d such that (<call_d, exit_d>, ret_d) is an edge in
-   *         this distributive function's graph representation, or null if there
-   *         are none
+   * @param call_d factoid of the caller at the call site
+   * @param exit_d factoid of the callee at the exit site
+   * @return set of ret_d such that (<call_d, exit_d>, ret_d) is an edge in this distributive function's graph representation, or
+   *         null if there are none
    */
   public SparseIntSet getTargets(int call_d, int exit_d);
 }

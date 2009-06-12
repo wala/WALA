@@ -14,13 +14,11 @@ import com.ibm.wala.dataflow.IFDS.TabulationSolver.Result;
 import com.ibm.wala.eclipse.util.CancelException;
 
 /**
- * A {@link CancelException} thrown during tabulation; holds a pointer to a partial {@link Result}.
- * Use with care, this can hold on to a lot of memory.
- * 
- * @author sjfink
+ * A {@link CancelException} thrown during tabulation; holds a pointer to a partial {@link Result}. Use with care, this can hold on
+ * to a lot of memory.
  */
 public class TabulationCancelException extends CancelException {
-  
+
   private final Result result;
 
   protected TabulationCancelException(Exception cause, Result r) {

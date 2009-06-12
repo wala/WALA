@@ -11,12 +11,9 @@
 package com.ibm.wala.dataflow.IFDS;
 
 /**
- * 
  * A map from an edge in a supergraph to a flow function
  * 
- * T type of node in the supergraph
- * 
- * @author sfink
+ * @param <T> type of node in the supergraph
  */
 public interface IFlowFunctionMap<T> {
 

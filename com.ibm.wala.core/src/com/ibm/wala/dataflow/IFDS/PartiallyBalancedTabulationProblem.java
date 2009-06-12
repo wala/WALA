@@ -14,9 +14,7 @@ package com.ibm.wala.dataflow.IFDS;
  * A {@link TabulationProblem} with additional support for computing with partially balanced parentheses.
  * 
  * @param <T> type of node in the supergraph
- * @param
- *            <P>
- *            type of a procedure (like a box in an RSM)
+ * @param <P> type of a procedure (like a box in an RSM)
  * @param <F> type of factoids propagated when solving this problem
  * 
  */

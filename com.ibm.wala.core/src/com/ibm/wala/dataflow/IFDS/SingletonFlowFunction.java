@@ -13,12 +13,7 @@ package com.ibm.wala.dataflow.IFDS;
 import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
- *
- * TODO: make the '0' element implicit in every flow function
- * 
  * A flow function which has only the edge 0 -> dest
- * 
- * @author sfink
  */
 public class SingletonFlowFunction implements IReversibleFlowFunction {
 

@@ -13,10 +13,7 @@ package com.ibm.wala.dataflow.IFDS;
 import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
- *  
  * A flow function where out == in
- * 
- * @author sfink
  */
 public class IdentityFlowFunction implements IReversibleFlowFunction {
 

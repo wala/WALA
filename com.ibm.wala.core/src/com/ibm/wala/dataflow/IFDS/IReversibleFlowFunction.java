@@ -13,21 +13,15 @@ package com.ibm.wala.dataflow.IFDS;
 import com.ibm.wala.util.intset.IntSet;
 
 /**
- * A flow function corresponding to an edge in the supergraph.
- * A reversible flow-function supports a getSources operation that allows
- * computing backwards flow. At the very least, this is required in IFDS by 
- * call functions for which sources need to be found to handle insertion of 
- * summary edges.
- *  
- *  @author Stephen Fink
- *  @author Eran Yahav (yahave)
+ * A flow function corresponding to an edge in the supergraph. A reversible flow-function supports a getSources operation that
+ * allows computing backwards flow. At the very least, this is required in IFDS by call functions for which sources need to be found
+ * to handle insertion of summary edges.
  */
 public interface IReversibleFlowFunction extends IUnaryFlowFunction {
 
   /**
    * @param d2
-   * @return set of d1 such that (d1,d2) is an edge in this distributive
-   * function's graph representation, or null if there are none
+   * @return set of d1 such that (d1,d2) is an edge in this distributive function's graph representation, or null if there are none
    */
   public IntSet getSources(int d2);
 

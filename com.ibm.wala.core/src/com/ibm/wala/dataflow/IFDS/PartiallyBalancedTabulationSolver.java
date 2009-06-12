@@ -27,7 +27,6 @@ import com.ibm.wala.util.intset.IntSet;
  * @param <T> type of node in the supergraph 
  * @param <P> type of a procedure (like a box in an RSM)
  * @param <F> type of factoids propagated when solving this problem
- * 
  */
 public class PartiallyBalancedTabulationSolver<T, P, F> extends TabulationSolver<T, P, F> {
 

@@ -19,15 +19,12 @@ import com.ibm.wala.util.graph.NumberedGraph;
  * 
  * A supergraph as defined by Reps, Horwitz, and Sagiv POPL95
  * <p>
- * In our implementation we don't require explicit entry and exit nodes. So, the first basic block in a method is
- * implicitly the entry node, but might also be a call node too. Similarly for exit nodes. The solver is coded to deal
- * with this appropriately.
+ * In our implementation we don't require explicit entry and exit nodes. So, the first basic block in a method is implicitly the
+ * entry node, but might also be a call node too. Similarly for exit nodes. The solver is coded to deal with this appropriately.
  * <p>
  * Additionally, due to exceptional control flow, each method might have multiple exits or multiple entries.
  * 
  * T type of node in the supergraph P type of a procedure (like a box in an RSM)
- * 
- * @author sfink
  */
 public interface ISupergraph<T, P> extends NumberedGraph<T> {
 
@@ -58,21 +55,21 @@ public interface ISupergraph<T, P> extends NumberedGraph<T> {
 
   /**
    * @param call a "call" node in the supergraph
-   * @return an Iterator of nodes that are normal (non-call) successors of this call. This should only apply to
-   *         backwards problems, where we might have, say, a call and a goto flow into a return site.
+   * @return an Iterator of nodes that are normal (non-call) successors of this call. This should only apply to backwards problems,
+   *         where we might have, say, a call and a goto flow into a return site.
    */
   Iterator<T> getNormalSuccessors(T call);
 
   /**
    * @param call a "call" node in the supergraph
-   * @param callee a "called" "procedure" in the supergraph.  if callee is null, answer return sites for which no callee was found.
+   * @param callee a "called" "procedure" in the supergraph. if callee is null, answer return sites for which no callee was found.
    * @return the corresponding return nodes. There may be many, because of exceptional control flow.
    */
   Iterator<? extends T> getReturnSites(T call, P callee);
 
   /**
    * @param r a "return" node in the supergraph
-   * @param callee a "called" "procedure" in the supergraph.  if callee is null, answer return sites for which no callee was found.
+   * @param callee a "called" "procedure" in the supergraph. if callee is null, answer return sites for which no callee was found.
    * @return the corresponding call nodes. There may be many.
    */
   Iterator<? extends T> getCallSites(T ret, P callee);

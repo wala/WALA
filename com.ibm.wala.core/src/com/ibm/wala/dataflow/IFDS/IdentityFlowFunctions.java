@@ -11,10 +11,7 @@
 package com.ibm.wala.dataflow.IFDS;
 
 /**
- * 
  * A silly debugging aid that always returns the identity flow function 
- *
- * @author sfink
  */
 public class IdentityFlowFunctions<T> implements IFlowFunctionMap<T> {
 

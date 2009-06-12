@@ -20,16 +20,12 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
- * 
  * A set of call flow edges which lead to a particular procedure entry s_p.
- * 
- * @author sfink
  */
 public class CallFlowEdges {
 
   /**
    * A map from integer -> (IBinaryNonNegativeIntRelation)
-   * 
    * 
    * For a fact d2, edges[d2] gives a relation R=(c,d1) s.t. (<c, d1> -> <s_p,d2>) was recorded as a call flow edge.
    * 
