@@ -13,10 +13,7 @@ package com.ibm.wala.client;
 import com.ibm.wala.util.perf.StopwatchGC;
 
 /**
- *
  * An object to track performance of an analysis engine
- * 
- * @author sfink
  */
 public abstract class AbstractEngineStopwatch implements EngineStopwatch {
 

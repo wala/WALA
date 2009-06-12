@@ -42,13 +42,10 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileProvider;
 
 /**
- * 
  * Abstract base class for analysis engine implementations
  * 
  * Some clients choose to build on this, but many don't. I usually don't in new code; I usually don't find the re-use enabled by
  * this class compelling. I would probably nuke this except for some legacy code that uses it.
- * 
- * @author sfink
  */
 public abstract class AbstractAnalysisEngine implements AnalysisEngine {
 

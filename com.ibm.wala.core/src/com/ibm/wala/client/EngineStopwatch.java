@@ -14,10 +14,7 @@ import com.ibm.wala.util.perf.StopwatchGC;
 
 
 /**
- *
  * An object to track performance of analysis engine
- * 
- * @author sfink
  */
 public interface EngineStopwatch {
 
