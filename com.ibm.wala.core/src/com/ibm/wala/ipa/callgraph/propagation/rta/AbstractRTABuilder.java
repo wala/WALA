@@ -57,8 +57,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
  * Abstract superclass of various RTA flavors
- * 
- * @author sfink
  */
 public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
 

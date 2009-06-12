@@ -37,9 +37,7 @@ import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 
 /**
- * @author sfink
- * 
- *         TODO: refactor to eliminate more redundancy with SSACallGraphBuilder
+ * TODO: refactor to eliminate more redundancy with SSACallGraphBuilder
  */
 public class BasicRTABuilder extends AbstractRTABuilder {
 
@@ -50,8 +48,6 @@ public class BasicRTABuilder extends AbstractRTABuilder {
 
   /**
    * Perform needed bookkeeping when a new class is discovered.
-   * 
-   * @param klass
    */
   @Override
   protected void updateSetsForNewClass(IClass klass, InstanceKey iKey, CGNode node, NewSiteReference n) {

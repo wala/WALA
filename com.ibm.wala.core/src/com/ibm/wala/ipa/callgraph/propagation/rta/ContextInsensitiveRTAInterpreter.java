@@ -25,26 +25,19 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * Default implementation of MethodContextInterpreter for context-insensitive
- * analysis
- * 
- * @author sfink
+ * Default implementation of MethodContextInterpreter for context-insensitive analysis
  */
 public abstract class ContextInsensitiveRTAInterpreter implements RTAContextInterpreter, SSAContextInterpreter {
-  
+
   private final AnalysisCache analysisCache;
-  
+
   public ContextInsensitiveRTAInterpreter(AnalysisCache cache) {
     this.analysisCache = cache;
   }
-  
-  
-  
+
   public AnalysisCache getAnalysisCache() {
     return analysisCache;
   }
-
-
 
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
     if (node == null) {

@@ -38,15 +38,12 @@ import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.OrdinalSet;
 
 /**
- * 
  * A trivial field-based pointer analysis solution, which only uses the information of which types (classes) are live.
- * 
- * @author sfink
  */
 public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
 
   private final Collection<IClass> klasses;
-  
+
   private final TypeBasedHeapModel heapModel;
 
   /**

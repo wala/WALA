@@ -24,10 +24,7 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ContextInsensitiveSSAInterpret
 import com.ibm.wala.types.FieldReference;
 
 /**
- *
  * Basic analysis; context-insensitive
- * 
- * @author sfink
  */
 public class DefaultRTAInterpreter implements RTAContextInterpreter {
 
@@ -43,16 +40,16 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
   }
 
   private RTAContextInterpreter getNodeInterpreter(CGNode node) {
-    
+
     if (node.getMethod() instanceof FakeRootMethod) {
-      FakeRootMethod f = (FakeRootMethod)node.getMethod();
+      FakeRootMethod f = (FakeRootMethod) node.getMethod();
       return f.getInterpreter();
     } else {
       if (DEBUG) {
         System.err.println(("providing context insensitive interpreter for node " + node));
       }
       return defaultInterpreter;
-    } 
+    }
   }
 
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
@@ -83,11 +80,10 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
     return getNodeInterpreter(node).iterateFieldsWritten(node);
   }
 
-
   public boolean understands(CGNode node) {
     return true;
   }
-  
+
   public boolean recordFactoryType(CGNode node, IClass klass) {
     // not a factory type
     return false;
