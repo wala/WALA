@@ -334,7 +334,7 @@ public final class TypeReference implements Serializable {
    * Could name a represent a primitive type?
    */
   public static boolean isPrimitiveType(TypeName name) {
-    return primitiveMap.get(name) != null;
+    return name.isPrimitiveType();
   }
 
   /**

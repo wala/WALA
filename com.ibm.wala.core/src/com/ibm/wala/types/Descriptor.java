@@ -239,11 +239,15 @@ public final class Descriptor {
     private void appendSemicolonIfNeeded(StringBuffer result, TypeName p) {
       if (p.isArrayType()) {
         TypeName e = p.getInnermostElementType();
-        if (!TypeReference.isPrimitiveType(e)) {
+        String x = e.toUnicodeString();
+        if (x.startsWith("L") || x.startsWith("P")) {
           result.append(";");
         }
-      } else if (!TypeReference.isPrimitiveType(p)) {
-        result.append(";");
+      } else {
+        String x = p.toUnicodeString();
+        if (x.startsWith("L") || x.startsWith("P")) {
+          result.append(";");
+        }
       }
     }
   }
