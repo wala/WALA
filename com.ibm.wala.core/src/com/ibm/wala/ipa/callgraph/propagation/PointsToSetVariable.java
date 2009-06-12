@@ -24,8 +24,7 @@ import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 
 /**
- * @author sfink
- * 
+ * Representation of a points-to set during an andersen-style analysis.
  */
 public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
 
@@ -49,9 +48,6 @@ public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
     this.pointerKey = key;
   }
 
-  /**
-   * @return Returns the pointerKey.
-   */
   public PointerKey getPointerKey() {
     return pointerKey;
   }

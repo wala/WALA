@@ -16,9 +16,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 
 /**
- * Embodies how a pointer analysis abstracts heap locations.
- * 
- * @author sfink
+ * A {@link HeapModel} embodies how a pointer analysis abstracts heap locations.
  */
 public interface HeapModel extends InstanceKeyFactory, PointerKeyFactory {
 

@@ -15,8 +15,6 @@ import com.ibm.wala.fixedpoint.impl.UnaryStatement;
 
 /**
  * A specialized equation class introduced for efficiency
- * 
- * @author sfink
  */
 public final class AssignEquation extends UnaryStatement<PointsToSetVariable> {
 

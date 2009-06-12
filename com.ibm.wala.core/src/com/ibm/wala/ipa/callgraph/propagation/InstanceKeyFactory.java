@@ -17,8 +17,6 @@ import com.ibm.wala.types.TypeReference;
 
 /**
  * An object that abstracts how to model instances in the heap.
- * 
- * @author sfink
  */
 public interface InstanceKeyFactory {
   /**

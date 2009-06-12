@@ -12,8 +12,11 @@ package com.ibm.wala.ipa.callgraph.propagation;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
 
+/**
+ * A {@link PointerKey} representing a local variable must carry at least a {@link CGNode}.
+ *
+ */
 public abstract class AbstractLocalPointerKey extends AbstractPointerKey {
-
 
     abstract public CGNode getNode();
 

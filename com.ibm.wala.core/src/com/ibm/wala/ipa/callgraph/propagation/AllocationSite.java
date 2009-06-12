@@ -15,12 +15,13 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 
 /**
- * An {@link InstanceKey} which represents a {@link NewSiteReference} in some
- * {@link IMethod}.
+ * An {@link InstanceKey} which represents a {@link NewSiteReference} in some {@link IMethod}.
  */
 public class AllocationSite implements InstanceKey {
   private final NewSiteReference site;
+
   private final IMethod method;
+
   private final IClass concreteType;
 
   public AllocationSite(IMethod method, NewSiteReference allocation, IClass type) {
@@ -31,7 +32,7 @@ public class AllocationSite implements InstanceKey {
 
   @Override
   public String toString() {
-    return "SITE{" + getMethod() + ":" + site  + "}";
+    return "SITE{" + getMethod() + ":" + site + "}";
   }
 
   public NewSiteReference getSite() {
@@ -77,4 +78,3 @@ public class AllocationSite implements InstanceKey {
     return true;
   }
 }
-

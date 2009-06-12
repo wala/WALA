@@ -13,7 +13,7 @@ package com.ibm.wala.ipa.callgraph.propagation;
 import com.ibm.wala.classLoader.ArrayClass;
 
 /**
- * A pointer key which represents the contents of an array instance.
+ * A {@link PointerKey} which represents the contents of an array instance.
  */
 public final class ArrayContentsKey extends AbstractFieldPointerKey implements FilteredPointerKey {
   public ArrayContentsKey(InstanceKey instance) {

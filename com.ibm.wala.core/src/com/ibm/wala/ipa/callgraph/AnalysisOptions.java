@@ -407,10 +407,12 @@ public class AnalysisOptions {
   /**
    * @return true iff we should solve with the sub-transitive solver
    */
+  @Deprecated
   public boolean usePreTransitiveSolver() {
     return usePreTransitiveSolver;
   }
 
+  @Deprecated
   public void setUsePreTransitiveSolver(boolean b) {
     usePreTransitiveSolver = b;
   }

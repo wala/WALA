@@ -14,62 +14,49 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.callgraph.CGNode;
 
 /**
- * 
  * An object that abstracts how to model pointers in the heap.
- * 
- * @author sfink
  */
 public interface PointerKeyFactory {
   /**
-   * @param node
-   * @param valueNumber
-   * @return the PointerKey that acts as a representative for the class of
-   *         pointers that includes the local variable identified by the value
-   *         number parameter.
+   * @return the PointerKey that acts as a representative for the class of pointers that includes the local variable identified by
+   *         the value number parameter.
    * 
    */
   PointerKey getPointerKeyForLocal(CGNode node, int valueNumber);
 
   /**
-   * @return the PointerKey that acts as a representative for the class of
-   *         pointers that includes the local variable identified by the value
-   *         number parameter.
+   * @return the PointerKey that acts as a representative for the class of pointers that includes the local variable identified by
+   *         the value number parameter.
    * 
    */
   FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter);
 
   /**
    * @param node
-   * @return the PointerKey that acts as a representative for the class of
-   *         pointers that includes the return value for a node
+   * @return the PointerKey that acts as a representative for the class of pointers that includes the return value for a node
    */
   PointerKey getPointerKeyForReturnValue(CGNode node);
 
   /**
-   * @return the PointerKey that acts as a representative for the class of
-   *         pointers that includes the exceptional return value
+   * @return the PointerKey that acts as a representative for the class of pointers that includes the exceptional return value
    */
   PointerKey getPointerKeyForExceptionalReturnValue(CGNode node);
 
   /**
-   * @return the PointerKey that acts as a representative for the class of
-   *         pointers that includes the contents of the static field
+   * @return the PointerKey that acts as a representative for the class of pointers that includes the contents of the static field
    */
   PointerKey getPointerKeyForStaticField(IField f);
 
   /**
-   * @return the PointerKey that acts as a representation for the class of
-   *         pointers that includes the given instance field.
+   * @return the PointerKey that acts as a representation for the class of pointers that includes the given instance field.
    */
   PointerKey getPointerKeyForInstanceField(InstanceKey I, IField field);
 
   /**
    * TODO: expand this API to differentiate between different array indices
    * 
-   * @param I
-   *          an InstanceKey representing an abstract array
-   * @return the PointerKey that acts as a representation for the class of
-   *         pointers that includes the given array contents.
+   * @param I an InstanceKey representing an abstract array
+   * @return the PointerKey that acts as a representation for the class of pointers that includes the given array contents.
    */
   PointerKey getPointerKeyForArrayContents(InstanceKey I);
 }

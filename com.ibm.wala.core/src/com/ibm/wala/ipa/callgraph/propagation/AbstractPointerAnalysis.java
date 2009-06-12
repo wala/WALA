@@ -20,8 +20,7 @@ import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 
 /**
- * @author sfink
- *
+ * Abstract superclass for {@link PointerAnalysis} implementations.
  */
 public abstract class AbstractPointerAnalysis implements PointerAnalysis {
 
@@ -51,9 +50,6 @@ public abstract class AbstractPointerAnalysis implements PointerAnalysis {
     return heapGraph;
   }
 
-  /**
-   * @return Returns the callgraph.
-   */
   protected CallGraph getCallGraph() {
     return cg;
   }
@@ -65,5 +61,4 @@ public abstract class AbstractPointerAnalysis implements PointerAnalysis {
   public OrdinalSetMapping<InstanceKey> getInstanceKeyMapping() {
     return instanceKeys;
   }
-
 }

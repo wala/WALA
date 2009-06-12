@@ -17,12 +17,8 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 
-
 /**
- *
  * Abstract definition of pointer analysis
- * 
- * @author sfink
  */
 public interface PointerAnalysis {
   

@@ -17,15 +17,14 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 
 /**
- * An {@link InstanceKey} which represents a multinewarray allocation
- * site in a {@link CGNode}.
+ * An {@link InstanceKey} which represents a multinewarray allocation site in a {@link CGNode}.
  */
 public final class MultiNewArrayInNode extends AllocationSiteInNode {
   private final int dim;
 
   /**
    * @return null if the element type is a primitive
-   * @throws IllegalArgumentException  if T == null
+   * @throws IllegalArgumentException if T == null
    */
   private static IClass myElementType(ArrayClass T, int d) throws IllegalArgumentException, IllegalArgumentException {
     if (T == null) {
@@ -38,7 +37,7 @@ public final class MultiNewArrayInNode extends AllocationSiteInNode {
       if (element == null) {
         return null;
       } else {
-        return myElementType(element, d-1);
+        return myElementType(element, d - 1);
       }
     }
   }

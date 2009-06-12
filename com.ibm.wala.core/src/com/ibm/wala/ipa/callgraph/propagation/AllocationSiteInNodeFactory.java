@@ -23,19 +23,16 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * A factory which tries by default to create {@link InstanceKey}s which are
- * {@link AllocationSiteInNode}s.
+ * A factory which tries by default to create {@link InstanceKey}s which are {@link AllocationSiteInNode}s.
  * 
  * Notes:
  * <ul>
- * <li> This class checks to avoid creating recursive contexts when {@link CGNode}s
- * are based on {@link ReceiverInstanceContext}, as in object-sensitivity.
- * <li> Up till recursion, this class will happily create unlimited object sensitivity, so be careful.
- * <li> This class resorts to {@link ClassBasedInstanceKeys} for exceptions from PEIs and class objects.
- * <li> This class consults the {@link AnalysisOptions} to determine whether to disambiguate individual constants.
+ * <li>This class checks to avoid creating recursive contexts when {@link CGNode}s are based on {@link ReceiverInstanceContext}, as
+ * in object-sensitivity.
+ * <li>Up till recursion, this class will happily create unlimited object sensitivity, so be careful.
+ * <li>This class resorts to {@link ClassBasedInstanceKeys} for exceptions from PEIs and class objects.
+ * <li>This class consults the {@link AnalysisOptions} to determine whether to disambiguate individual constants.
  * </ul>
- * 
- * @author sfink
  */
 public class AllocationSiteInNodeFactory implements InstanceKeyFactory {
 
@@ -52,8 +49,7 @@ public class AllocationSiteInNodeFactory implements InstanceKeyFactory {
   private final ClassBasedInstanceKeys classBased;
 
   /**
-   * @param options
-   *            Governing call graph construction options
+   * @param options Governing call graph construction options
    */
   public AllocationSiteInNodeFactory(AnalysisOptions options, IClassHierarchy cha) {
     this.options = options;
@@ -75,9 +71,9 @@ public class AllocationSiteInNodeFactory implements InstanceKeyFactory {
         return new NormalAllocationInNode(n, allocation, type);
       }
     }
-    
+
     InstanceKey key = new NormalAllocationInNode(node, allocation, type);
-    
+
     return key;
   }
 
@@ -98,7 +94,6 @@ public class AllocationSiteInNodeFactory implements InstanceKeyFactory {
       return new ConcreteTypeKey(cha.lookupClass(type));
     }
   }
-
 
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter pei, TypeReference type) {
     return classBased.getInstanceKeyForPEI(node, pei, type);

@@ -46,10 +46,7 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
 
 /**
- * 
  * General representation of the results of pointer analysis
- * 
- * @author sfink
  */
 public class PointerAnalysisImpl extends AbstractPointerAnalysis {
 

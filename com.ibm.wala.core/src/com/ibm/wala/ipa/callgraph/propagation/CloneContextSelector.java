@@ -18,11 +18,8 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 
 /**
- *
  * This context selector selects a context based on the concrete type of
  * the receiver to a call of java.lang.Object.clone
- * 
- * @author sfink
  */
 public class CloneContextSelector implements ContextSelector {
 

@@ -23,8 +23,6 @@ package com.ibm.wala.ipa.callgraph.propagation;
  * A PointerKey for 0-1-CFA, with 1-level of InstanceVar context in the Grove et
  * al. terminology, would instead of FieldReference, use a - <InstanceKey,
  * FieldReference> pair
- * 
- * @author sfink
  */
 public interface PointerKey {
 

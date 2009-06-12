@@ -16,9 +16,6 @@ import com.ibm.wala.eclipse.util.CancelException;
 
 /**
  * Basic interface for a pointer analysis solver.
- * 
- * @author sfink
- *
  */
 public interface IPointsToSolver {
 

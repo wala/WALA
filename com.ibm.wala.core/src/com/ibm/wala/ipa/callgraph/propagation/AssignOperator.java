@@ -18,9 +18,8 @@ import com.ibm.wala.fixedpoint.impl.UnaryStatement;
  * 
  * Unary op: <lhs>:= Assign( <rhs>)
  * 
- * (Technically, it's a binary op, since it includes lhs as an implicit input;
- * this allows it to compose with other ops that define the same lhs, so long as
- * they're all Assign ops)
+ * (Technically, it's a binary op, since it includes lhs as an implicit input; this allows it to compose with other ops that define
+ * the same lhs, so long as they're all Assign ops)
  */
 class AssignOperator extends UnaryOperator<PointsToSetVariable> implements IPointerOperator {
 
@@ -61,7 +60,7 @@ class AssignOperator extends UnaryOperator<PointsToSetVariable> implements IPoin
     return (this == o);
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
    */
   public boolean isComplex() {

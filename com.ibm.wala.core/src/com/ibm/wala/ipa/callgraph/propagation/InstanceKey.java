@@ -14,7 +14,6 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 
 /**
- * 
  * An InstanceKey serves as the representative for an equivalence class of
  * objects in the heap, that can be pointed to.
  * 
@@ -23,8 +22,6 @@ import com.ibm.wala.ipa.callgraph.ContextItem;
  * 
  * For 0-1-CFA, an InstanceKey could be <IMethod,statement #>, representing a
  * particular allocation statement in a particular method.
- * 
- * @author sfink
  */
 public interface InstanceKey extends ContextItem {
 

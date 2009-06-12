@@ -34,7 +34,6 @@ import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 
 /**
- * 
  * pre-transitive solver incorporating concepts from Heintze and Tardieu, PLDI 2001
  * 
  * In this implementation, there are two types of points-to-sets, "transitive roots", and "not-roots".
@@ -46,8 +45,9 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
  * 
  * TODO: fix points-to solution to use demand-driven
  * 
- * @author sfink
+ * @deprecated this has never been finished and will probably go away soon.
  */
+@Deprecated
 public class PreTransitiveSolver extends AbstractPointsToSolver {
 
   public PreTransitiveSolver(PropagationSystem system, PropagationCallGraphBuilder builder) {

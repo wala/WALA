@@ -14,8 +14,7 @@ package com.ibm.wala.ipa.callgraph.propagation;
 import com.ibm.wala.classLoader.IField;
 
 /**
- * An pointer key which represents a unique set for a field associated with a
- * set of instances.
+ * An pointer key which represents a unique set for a field associated with a set of instances.
  */
 public class InstanceFieldKey extends AbstractFieldPointerKey {
   private final IField field;

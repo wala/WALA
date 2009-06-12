@@ -19,10 +19,7 @@ import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 
 /**
- * 
- * A PointerKey which carries a type filter, used during pointer analysis
- * 
- * @author sfink
+ * A {@link PointerKey} which carries a type filter, used during pointer analysis
  */
 public interface FilteredPointerKey extends PointerKey {
 
@@ -200,8 +197,7 @@ public interface FilteredPointerKey extends PointerKey {
   }
 
   /**
-   * @return the class which should govern filtering of instances to which this
-   *         pointer points, or null if no filtering needed
+   * @return the class which should govern filtering of instances to which this pointer points, or null if no filtering needed
    */
   public TypeFilter getTypeFilter();
 }

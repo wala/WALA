@@ -16,10 +16,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * 
- * a instance field pointer key key that carries a type filter
- * 
- * @author sfink
+ * an instance field pointer key key that carries a type filter
  */
 public class InstanceFieldKeyWithFilter extends InstanceFieldKey implements FilteredPointerKey {
 

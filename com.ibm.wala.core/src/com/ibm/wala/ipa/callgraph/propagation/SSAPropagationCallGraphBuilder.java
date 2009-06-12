@@ -152,12 +152,14 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   /**
    * Should we use the pre-transitive solver?
    */
-  private final boolean usePreTransitiveSolver;
+  @SuppressWarnings("unused")
+  @Deprecated
+  private final boolean usePreTransitiveSolver = false;
 
   protected SSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       PointerKeyFactory pointerKeyFactory) {
     super(cha, options, cache, pointerKeyFactory);
-    this.usePreTransitiveSolver = options.usePreTransitiveSolver();
+//    this.usePreTransitiveSolver = options.usePreTransitiveSolver();
   }
 
   public SSAContextInterpreter getCFAContextInterpreter() {
@@ -2059,7 +2061,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    */
   @Override
   protected IPointsToSolver makeSolver() {
-    return usePreTransitiveSolver ? (IPointsToSolver) new PreTransitiveSolver(system, this) : new StandardSolver(system, this);
+    return new StandardSolver(system, this);
+//    return usePreTransitiveSolver ? (IPointsToSolver) new PreTransitiveSolver(system, this) : new StandardSolver(system, this);
     // return true ? (IPointsToSolver)new PreTransitiveSolver(system,this) : new
     // StandardSolver(system,this);
   }

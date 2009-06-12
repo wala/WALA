@@ -12,13 +12,12 @@ package com.ibm.wala.ipa.callgraph.propagation;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
 
-
 /**
- * A pointer key which provides a unique set for each local in
- * each call graph node.
+ * A pointer key which provides a unique set for each local in each call graph node.
  */
 public class LocalPointerKey extends AbstractLocalPointerKey {
   private final CGNode node;
+
   private final int valueNumber;
 
   public LocalPointerKey(CGNode node, int valueNumber) {

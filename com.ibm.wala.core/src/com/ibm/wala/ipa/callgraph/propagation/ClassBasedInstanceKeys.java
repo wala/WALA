@@ -23,8 +23,6 @@ import com.ibm.wala.util.debug.Assertions;
 /**
  * This class provides Instance Key call backs where each instance is in the same equivalence class as all other instances of the
  * same concrete type.
- * 
- * @author sfink
  */
 public class ClassBasedInstanceKeys implements InstanceKeyFactory {
 

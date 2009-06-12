@@ -12,7 +12,6 @@ package com.ibm.wala.ipa.callgraph.propagation;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
 
-
 /**
  * A key which represents a set corresponding to a call graph node.
  */
