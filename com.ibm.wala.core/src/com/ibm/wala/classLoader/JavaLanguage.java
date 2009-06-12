@@ -589,11 +589,6 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     return type == TypeReference.JavaLangClass;
   }
   
-  public boolean isObjectType(TypeReference type) {
-    return type == TypeReference.JavaLangObject;
-  }
-
-
   public boolean isStringType(TypeReference type) {
     return type == TypeReference.JavaLangString;
   }

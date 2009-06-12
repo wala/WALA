@@ -725,7 +725,7 @@ public class ClassHierarchy implements IClassHierarchy {
       return B;
     } else if (B.getReference().equals(TypeReference.Null)) {
       return A;
-    } else if (lang.isObjectType(B.getReference())) {
+    } else if (B.getReference().equals(lang.getRootType())) {
       return B;
     } else {
       Node n = map.get(B);
@@ -770,7 +770,13 @@ public class ClassHierarchy implements IClassHierarchy {
     IClass BClass = lookupClass(B);
     if (AClass == null || BClass == null) {
       // One of the classes is not in scope. Give up.
-      return TypeReference.JavaLangObject;
+      if (AClass != null) {
+        return AClass.getClassLoader().getLanguage().getRootType();
+      } else if (BClass != null) {
+        return BClass.getClassLoader().getLanguage().getRootType();
+      } else {
+        return getRootClass().getReference();
+      }
     }
     return getLeastCommonSuperclass(AClass, BClass).getReference();
   }
