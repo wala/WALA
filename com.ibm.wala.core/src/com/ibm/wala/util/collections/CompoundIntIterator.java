@@ -15,10 +15,7 @@ import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.intset.IntIterator;
 
 /**
- * 
  * An Iterator which provides a concatenation of two IntIterators.
- * 
- * @author sfink
  */
 public class CompoundIntIterator implements IntIterator {
 

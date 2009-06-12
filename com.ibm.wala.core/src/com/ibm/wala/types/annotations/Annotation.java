@@ -14,9 +14,6 @@ import com.ibm.wala.types.TypeReference;
 
 /**
  * Represents a Java 5.0 class file annotation
- * 
- * @author sjfink
- *
  */
 public class Annotation {
   

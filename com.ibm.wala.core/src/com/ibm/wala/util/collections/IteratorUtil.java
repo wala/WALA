@@ -14,15 +14,11 @@ import java.util.Iterator;
 
 /**
  * utilities dealing with Iterators
- * 
- * @author sfink
- * 
  */
 public class IteratorUtil {
 
   /**
-   * @return true iff the Iterator returns some elements which equals() the
-   *         object o
+   * @return true iff the Iterator returns some elements which equals() the object o
    */
   public static <T> boolean contains(Iterator<? extends T> it, T o) {
     if (it == null) {

@@ -13,10 +13,7 @@ package com.ibm.wala.util.collections;
 import java.util.EmptyStackException;
 
 /**
- *
  * A stack of integer primitives.  This should be more efficient than a java.util.Stack
- * 
- * @author unknown
  */
 public class IntStack {
 

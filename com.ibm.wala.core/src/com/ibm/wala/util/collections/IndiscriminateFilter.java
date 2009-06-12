@@ -13,10 +13,7 @@ package com.ibm.wala.util.collections;
 
 
 /**
- * 
  * A filter that accepts everything.
- * 
- * @author sfink
  */
 public class IndiscriminateFilter<T> implements Filter<T> {
 

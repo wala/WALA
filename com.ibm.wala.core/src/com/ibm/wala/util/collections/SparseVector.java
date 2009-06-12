@@ -19,13 +19,11 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.TunedMutableSparseIntSet;
 
 /**
- * a vector implementation designed for low occupancy. Note that get() from this
+ * An {@link IVector} implementation designed for low occupancy. Note that get() from this
  * vector is a binary search.
  * 
  * This should only be used for small sets ... insertion and deletion are linear
  * in size of set.
- * 
- * @author sfink
  */
 public class SparseVector<T> implements IVector<T> {
 

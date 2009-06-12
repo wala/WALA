@@ -10,13 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
-
 /**
  * simple interface for a vector.
  * 
  * TODO: get rid of this and use java.util.collection.RandomAccess
- * 
- * @author sfink
  */
 public interface IVector<T> extends Iterable<T> {
   /*

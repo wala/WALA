@@ -14,10 +14,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Simple Heap data structure.
- * 
- * @author Julian Dolby
  */
-
 public abstract class Heap<T> {
 
   /**

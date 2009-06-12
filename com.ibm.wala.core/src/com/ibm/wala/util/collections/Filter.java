@@ -12,8 +12,6 @@ package com.ibm.wala.util.collections;
 
 /**
  * Simple interface for an intensional set definition
- * 
- * @author sfink
  */
 public interface Filter<T> {
   /**

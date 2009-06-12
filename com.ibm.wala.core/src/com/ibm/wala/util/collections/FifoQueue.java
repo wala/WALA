@@ -16,12 +16,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-
 /**
  * FIFO work queue management of Objects that prevents an object from being
  * added to the queue if it is already enqueued and has not yet been popped.
- * 
- * @author Marco Pistoia
  */
 public class FifoQueue<T> {
   /**

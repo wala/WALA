@@ -14,11 +14,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- *
  * A singleton instance of an empty iterator; this is better than
  * Collections.EMPTY_SET.iterator(), which allocates an iterator object;
- * 
- * @author sfink
  */
 public final class EmptyIterator<T> implements Iterator<T> {
 

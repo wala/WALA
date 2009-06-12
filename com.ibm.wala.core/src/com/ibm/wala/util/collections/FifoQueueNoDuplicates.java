@@ -18,8 +18,6 @@ import java.util.Set;
 /**
  * FIFO work queue management of Objects that prevents an Object from being
  * added to the queue if it was ever previously enqueued.
- * 
- * @author Marco Pistoia
  */
 public class FifoQueueNoDuplicates<T> extends FifoQueue<T> {
   /**

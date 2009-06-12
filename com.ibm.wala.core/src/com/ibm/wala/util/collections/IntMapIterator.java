@@ -16,11 +16,11 @@ import com.ibm.wala.util.functions.IntFunction;
 import com.ibm.wala.util.intset.IntIterator;
 
 /**
- * An <code>IntMapIterator</code> maps an
- * <code>Iterator</code> contents to produce a new Iterator
+ * An <code>IntMapIterator</code> maps an <code>Iterator</code> contents to produce a new Iterator
  */
 public class IntMapIterator<T> implements Iterator<T> {
   final IntIterator i;
+
   final IntFunction<T> f;
 
   public IntMapIterator(IntIterator i, IntFunction<T> f) {
@@ -33,7 +33,6 @@ public class IntMapIterator<T> implements Iterator<T> {
     this.i = i;
     this.f = f;
   }
-
 
   public T next() {
     return f.apply(i.next());

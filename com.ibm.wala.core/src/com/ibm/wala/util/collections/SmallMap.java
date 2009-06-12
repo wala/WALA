@@ -21,8 +21,6 @@ import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * A simple implementation of Map; intended for Maps with few elements. Optimized for space, not time -- use with care.
- * 
- * @author sfink
  */
 public class SmallMap<K, V> implements Map<K, V> {
 

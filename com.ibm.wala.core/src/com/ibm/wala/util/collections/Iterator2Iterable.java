@@ -14,9 +14,6 @@ import java.util.Iterator;
 
 /**
  * Converts an {@link Iterator} to an {@link Iterable}.
- * 
- * @author manu
- * 
  */
 public class Iterator2Iterable<T> implements Iterable<T> {
 

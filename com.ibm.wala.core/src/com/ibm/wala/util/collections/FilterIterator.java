@@ -15,10 +15,6 @@ import java.util.NoSuchElementException;
 
 /**
  * A <code>FilterIterator</code> filters an <code>Iterator</code> to generate a new one.
- * 
- * @author Mauricio J. Serrano
- * @author John Whaley
- * @author sfink
  */
 public class FilterIterator<T> implements java.util.Iterator<T> {
   final Iterator<?> i;

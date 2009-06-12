@@ -17,9 +17,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.math.Logs;
 
 /**
- * a vector implementation which delegates to pages of int vectors.
- * 
- * @author sfink
+ * An {@link IVector} implementation which delegates to pages of int vectors.
  */
 public class TwoLevelVector<T> implements IVector<T> {
 

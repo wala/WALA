@@ -13,10 +13,7 @@ package com.ibm.wala.util.collections;
 import java.util.Iterator;
 
 /**
- *
  * A 2-level iterator.  has not been tested yet!
- * 
- * @author sfink
  */
 public abstract class ComposedIterator<O,I> implements Iterator<I> {
 

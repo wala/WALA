@@ -15,11 +15,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * 
  * A debugging aid.  When HashSetFactory.DEBUG is set, this class creates ParanoidHashMaps.  Otherwise,
  * it returns {@link LinkedHashMap}
- * 
- * @author sfink
  */
 public class HashMapFactory {
 
