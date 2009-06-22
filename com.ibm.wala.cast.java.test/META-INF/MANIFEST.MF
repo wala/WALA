@@ -5,12 +5,13 @@ Bundle-SymbolicName: com.ibm.wala.cast.java.test
 Bundle-Version: 1.0.0
 Bundle-Activator: com.ibm.wala.cast.java.test.TestPlugin
 Bundle-Vendor: IBM
-Require-Bundle: com.ibm.wala.core.tests,
+Require-Bundle: org.junit4,
+ com.ibm.wala.core.tests,
  com.ibm.wala.cast.java,
  com.ibm.wala.cast,
  com.ibm.wala.core,
- org.eclipse.core.runtime,
- org.junit4
+ com.ibm.wala.shrike,
+ org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
 Export-Package: com.ibm.wala.cast.java.test
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

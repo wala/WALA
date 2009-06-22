@@ -13,6 +13,7 @@ package com.ibm.wala.util.io;// 5724-D15
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -22,11 +23,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipException;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
 
@@ -40,22 +38,46 @@ import com.ibm.wala.util.debug.Assertions;
  * This class provides files that are packaged with this plug-in
  */
 public class FileProvider {
+  
+  /**
+   * This class uses reflection to access classes and methods that are only available when Eclipse is
+   * running as an IDE environment. The choice to use reflection is related to builds: with this design
+   * the build doesn't need to provide IDE bundles during compilation and hence can spot invalid uses of
+   * such classes through this bundle.
+   * 
+   * Because of this class, this bundle must OPTIONALY require 'org.eclipse.core.resources'.
+   */
+  private static final class EclipseUtil {
+    private static Object workspaceRoot = null;
+    private static Method workspaceRoot_getFile = null;
+    
+    public static Module getJarFileModule(String fileName, ClassLoader loader) {
+      // Using reflection to enable this code to be built without the org.eclipse.core.resources bundle
+      //
+      try {
+        if (workspaceRoot_getFile == null) {
+          Class<?> cls = Class.forName("org.eclipse.core.resources.ResourcesPlugin");
+          Method getWorkspaceMethod = cls.getDeclaredMethod("getWorkspace");
+          Object workspace = getWorkspaceMethod.invoke(null);
+          Method getRoot = workspace.getClass().getDeclaredMethod("getRoot");
+          workspaceRoot = getRoot.invoke(workspace);
+          workspaceRoot_getFile = workspaceRoot.getClass().getMethod("getFile", IPath.class);
+        }
+        
+        IPath path = new Path(fileName);
+        if (workspaceRoot_getFile.invoke(workspaceRoot, path) != null) {
+          return new JarFileModule(new JarFile(fileName, false));
+        }
+      } catch (Exception e) {
+      }
+      return null;
+    }
+  }  
 
   private final static int DEBUG_LEVEL = 0;
 
   public FileProvider() {
     super();
-  }
-
-  /**
-   * @return null if there's a problem
-   */
-  public static IWorkspace getWorkspace() {
-    try {
-      return ResourcesPlugin.getWorkspace();
-    } catch (Throwable t) {
-      return null;
-    }
   }
 
   /**
@@ -69,21 +91,13 @@ public class FileProvider {
   public static Module getJarFileModule(String fileName, ClassLoader loader) throws IOException {
     if (CorePlugin.getDefault() == null) {
       return getJarFileFromClassLoader(fileName, loader);
-    } else {
-      // try to load the path as a full path
-      try {
-        IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-        IFile file = workspaceRoot.getFile(new Path(fileName));
-        if (file != null) {
-          return new JarFileModule(new JarFile(fileName, false));
-        }
-      } catch (Exception e) {
+    } else if (CorePlugin.IS_RESOURCES_BUNDLE_AVAILABLE){
+      Module module = EclipseUtil.getJarFileModule(fileName, loader);
+      if (module != null) {
+        return module;
       }
-
-      // otherwise load from plugin
-      return getFromPlugin(CorePlugin.getDefault(), fileName);
     }
-
+    return getFromPlugin(CorePlugin.getDefault(), fileName);
   }
 
   public static URL getResource(String fileName) throws IOException {

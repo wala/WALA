@@ -20,13 +20,16 @@ import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
+import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.CollectionFilter;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphSlicer;
+import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.viz.DotUtil;
@@ -40,6 +43,8 @@ import com.ibm.wala.viz.PDFViewUtil;
  * @author sfink
  */
 public class PDFTypeHierarchy {
+  // This example takes one command-line argument, so args[1] should be the "-classpath" parameter
+  final static int CLASSPATH_INDEX = 1;  
 
   public final static String DOT_FILE = "temp.dt";
 
@@ -64,16 +69,16 @@ public class PDFTypeHierarchy {
 
   public static Process run(String[] args) throws IOException {
     try {
-      SWTTypeHierarchy.validateCommandLine(args);
-      String classpath = args[SWTTypeHierarchy.CLASSPATH_INDEX];
+      validateCommandLine(args);
+      String classpath = args[CLASSPATH_INDEX];
       AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(classpath, FileProvider.getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // invoke WALA to build a class hierarchy
       ClassHierarchy cha = ClassHierarchy.make(scope);
 
-      Graph<IClass> g = SWTTypeHierarchy.typeHierarchy2Graph(cha);
+      Graph<IClass> g = typeHierarchy2Graph(cha);
 
-      g = SWTTypeHierarchy.pruneForAppLoader(g);
+      g = pruneForAppLoader(g);
       String dotFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + DOT_FILE;
       String pdfFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + PDF_FILE;
       String dotExe = p.getProperty(WalaExamplesProperties.DOT_EXE);
@@ -92,4 +97,53 @@ public class PDFTypeHierarchy {
     Collection<T> slice = GraphSlicer.slice(g, f);
     return GraphSlicer.prune(g, new CollectionFilter<T>(slice));
   }
+  
+  /**
+   * Restrict g to nodes from the Application loader
+   */
+  public static Graph<IClass> pruneForAppLoader(Graph<IClass> g) throws WalaException {
+    Filter<IClass> f = new Filter<IClass>() {
+      public boolean accepts(IClass c) {
+        return (c.getClassLoader().getReference().equals(ClassLoaderReference.Application));
+      }
+    };
+    return pruneGraph(g, f);
+  }
+  
+  /**
+   * Validate that the command-line arguments obey the expected usage.
+   * 
+   * Usage: args[0] : "-classpath" args[1] : String, a ";"-delimited class path
+   * 
+   * @throws UnsupportedOperationException if command-line is malformed.
+   */
+  public static void validateCommandLine(String[] args) {
+    if (args.length < 2) {
+      throw new UnsupportedOperationException("must have at least 2 command-line arguments");
+    }
+    if (!args[0].equals("-classpath")) {
+      throw new UnsupportedOperationException("invalid command-line, args[0] should be -classpath, but is " + args[0]);
+    }
+  }
+  
+  /**
+   * Return a view of an {@link IClassHierarchy} as a {@link Graph}, with edges from classes to immediate subtypes
+   */
+  public static Graph<IClass> typeHierarchy2Graph(IClassHierarchy cha) throws WalaException {
+    Graph<IClass> result = SlowSparseNumberedGraph.make();
+    for (IClass c : cha) {
+      result.addNode(c);
+    }
+    for (IClass c : cha) {
+      for (IClass x : cha.getImmediateSubclasses(c)) {
+        result.addEdge(c, x);
+      }
+      if (c.isInterface()) {
+        for (IClass x : cha.getImplementors(c.getReference())) {
+          result.addEdge(c, x);
+        }
+      }
+    }
+    return result;
+  }  
 }

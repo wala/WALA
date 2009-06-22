@@ -14,8 +14,8 @@ import java.io.IOException;
 import java.net.URL;
 
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
-import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.util.CancelException;
 
 public class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
 

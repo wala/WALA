@@ -15,12 +15,12 @@ import java.util.LinkedList;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import com.ibm.wala.eclipse.util.CancelException;
-import com.ibm.wala.eclipse.util.MonitorUtil;
 import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.IFixedPointSolver;
 import com.ibm.wala.fixpoint.IFixedPointStatement;
 import com.ibm.wala.fixpoint.IVariable;
+import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.MonitorUtil;
 import com.ibm.wala.util.debug.VerboseAction;
 
 /**

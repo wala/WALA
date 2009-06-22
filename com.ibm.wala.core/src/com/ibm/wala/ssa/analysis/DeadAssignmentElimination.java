@@ -15,8 +15,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
-import com.ibm.wala.eclipse.util.CancelException;
-import com.ibm.wala.eclipse.util.CancelRuntimeException;
 import com.ibm.wala.fixedpoint.impl.DefaultFixedPointSolver;
 import com.ibm.wala.fixpoint.BooleanVariable;
 import com.ibm.wala.fixpoint.UnaryOr;
@@ -25,6 +23,8 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
+import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 

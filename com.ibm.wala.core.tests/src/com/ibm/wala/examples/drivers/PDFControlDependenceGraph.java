@@ -84,8 +84,8 @@ public class PDFControlDependenceGraph {
    */
   public static Process run(String appJar, String methodSig) throws IOException {
     try {
-      if (SWTCallGraph.isDirectory(appJar)) {
-        appJar = SWTCallGraph.findJarFiles(new String[] { appJar });
+      if (PDFCallGraph.isDirectory(appJar)) {
+        appJar = PDFCallGraph.findJarFiles(new String[] { appJar });
       }
       AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, FileProvider.getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 

@@ -17,7 +17,6 @@ import java.util.Set;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.SyntheticMethod;
-import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -30,6 +29,7 @@ import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
 import com.ibm.wala.ipa.slicer.Statement.Kind;
 import com.ibm.wala.ssa.SSACheckCastInstruction;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;

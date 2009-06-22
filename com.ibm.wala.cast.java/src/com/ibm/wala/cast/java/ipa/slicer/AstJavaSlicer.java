@@ -8,7 +8,6 @@ import java.util.Set;
 
 import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
 import com.ibm.wala.cast.java.ipa.modref.AstJavaModRef;
-import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.impl.PartialCallGraph;
@@ -24,6 +23,7 @@ import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAMonitorInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
+import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.traverse.DFS;

@@ -43,8 +43,8 @@ import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
 import com.ibm.wala.demandpa.alg.refinepolicy.AlwaysRefineCGPolicy;
 import com.ibm.wala.demandpa.alg.refinepolicy.AlwaysRefineFieldsPolicy;
 import com.ibm.wala.demandpa.alg.refinepolicy.SinglePassRefinementPolicy;
-import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.util.CancelException;
 
 public class OnTheFlyPtrTest extends AbstractPtrTest {
 

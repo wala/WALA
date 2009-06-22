@@ -13,9 +13,9 @@ package com.ibm.wala.cast.js.test;
 import java.io.IOException;
 
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
-import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
+import com.ibm.wala.util.CancelException;
 
 public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 

@@ -23,7 +23,6 @@ import junit.framework.TestCase;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
-import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.examples.drivers.PDFSlice;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -53,6 +52,7 @@ import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.strings.Atom;

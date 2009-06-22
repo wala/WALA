@@ -12,7 +12,7 @@ package com.ibm.wala.fixpoint;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import com.ibm.wala.eclipse.util.CancelException;
+import com.ibm.wala.util.CancelException;
 
 /**
  * Solves a set of constraints

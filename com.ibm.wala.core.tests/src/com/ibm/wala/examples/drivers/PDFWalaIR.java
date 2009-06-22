@@ -78,8 +78,8 @@ public class PDFWalaIR {
    */
   public static Process run(String appJar, String methodSig) throws IOException {
     try {
-      if (SWTCallGraph.isDirectory(appJar)) {
-        appJar = SWTCallGraph.findJarFiles(new String[] { appJar });
+      if (PDFCallGraph.isDirectory(appJar)) {
+        appJar = PDFCallGraph.findJarFiles(new String[] { appJar });
       }
       AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, FileProvider.getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
@@ -138,7 +138,7 @@ public class PDFWalaIR {
    * @throws UnsupportedOperationException
    *             if command-line is malformed.
    */
-  static void validateCommandLine(String[] args) {
+  public static void validateCommandLine(String[] args) {
     if (args.length != 4) {
       throw new UnsupportedOperationException("must have at exactly 4 command-line arguments");
     }

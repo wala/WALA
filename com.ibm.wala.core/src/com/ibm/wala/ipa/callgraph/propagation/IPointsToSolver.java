@@ -12,7 +12,7 @@ package com.ibm.wala.ipa.callgraph.propagation;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import com.ibm.wala.eclipse.util.CancelException;
+import com.ibm.wala.util.CancelException;
 
 /**
  * Basic interface for a pointer analysis solver.

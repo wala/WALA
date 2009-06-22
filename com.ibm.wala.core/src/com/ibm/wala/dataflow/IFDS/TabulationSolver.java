@@ -23,9 +23,9 @@ import java.util.Map.Entry;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.ibm.wala.cfg.IBasicBlock;
-import com.ibm.wala.eclipse.util.CancelException;
-import com.ibm.wala.eclipse.util.CancelRuntimeException;
-import com.ibm.wala.eclipse.util.MonitorUtil;
+import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.CancelRuntimeException;
+import com.ibm.wala.util.MonitorUtil;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Heap;

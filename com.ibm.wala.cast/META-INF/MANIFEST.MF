@@ -5,8 +5,9 @@ Bundle-SymbolicName: com.ibm.wala.cast
 Bundle-Version: 1.0.0
 Bundle-Activator: com.ibm.wala.cast.plugin.AstPlugin
 Bundle-Vendor: IBM
-Require-Bundle: org.eclipse.core.runtime,
- com.ibm.wala.core
+Require-Bundle: com.ibm.wala.core,
+ com.ibm.wala.shrike,
+ org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
 Export-Package: com.ibm.wala.cast.analysis.typeInference,
  com.ibm.wala.cast.ipa.callgraph,

@@ -10,9 +10,8 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.translator;
 
-import org.eclipse.core.resources.ResourcesPlugin;
-
 import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.core.plugin.CorePlugin;
 
 public class NativeBridge {
 
@@ -26,19 +25,9 @@ public class NativeBridge {
 
   protected static native void initialize();
   
-  private static boolean amRunningInEclipse() {
-    try {
-      return ResourcesPlugin.getWorkspace() != null;
-    } catch (IllegalStateException e) {
-      return false;
-    } catch (Error e) {
-      return false;
-    }
-  }
-  
   static {
     isInitialized = false;
-    if (amRunningInEclipse()) {
+    if (CorePlugin.IS_RESOURCES_BUNDLE_AVAILABLE) {
       System.loadLibrary("cast");
       initialize();
       isInitialized = true;

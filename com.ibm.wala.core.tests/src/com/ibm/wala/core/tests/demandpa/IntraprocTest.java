@@ -42,8 +42,8 @@ import java.io.IOException;
 import com.ibm.wala.demandpa.alg.IntraProcFilter;
 import com.ibm.wala.demandpa.alg.statemachine.StateMachineFactory;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
-import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.util.CancelException;
 
 public class IntraprocTest extends AbstractPtrTest {
 

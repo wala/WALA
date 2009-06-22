@@ -5,8 +5,10 @@ Bundle-SymbolicName: com.ibm.wala.cast.java
 Bundle-Version: 1.0.0
 Bundle-Activator: com.ibm.wala.cast.java.JavaSourcePlugin
 Bundle-Vendor: rfuhrer@watson.ibm.com
-Require-Bundle: com.ibm.wala.cast;visibility:=reexport,
- com.ibm.wala.core;visibility:=reexport 
+Require-Bundle: com.ibm.wala.cast,
+ com.ibm.wala.core,
+ com.ibm.wala.shrike,
+ org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
 Export-Package: com.ibm.wala.cast.java,
  com.ibm.wala.cast.java.analysis.typeInference,

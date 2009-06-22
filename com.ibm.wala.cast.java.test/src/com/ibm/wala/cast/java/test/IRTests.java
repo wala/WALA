@@ -27,14 +27,8 @@ import java.util.jar.JarFile;
 
 import junit.framework.Assert;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jdt.core.IJavaProject;
-
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
-import com.ibm.wala.classLoader.EclipseSourceFileModule;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
@@ -42,7 +36,6 @@ import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.classLoader.SourceFileModule;
-import com.ibm.wala.core.tests.util.EclipseTestUtil;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -391,36 +384,14 @@ public abstract class IRTests extends WalaTestCase {
     }
     assert foundLib : "couldn't find library file from " + libs;
 
-     IWorkspace w = null;
-     IJavaProject project = null;
-     try {
-       if (projectName != null) {
-         w = ResourcesPlugin.getWorkspace();
-         project = EclipseTestUtil.getNamedProject(projectName);
-       }
-     } catch (IllegalStateException e) {
-      // use Workspace only if it exists
-    }
-    
     for (String srcFilePath : sources) {
-
-      if (w != null) {
-        IFile file = project.getProject().getFile(srcFilePath);
-        try {
-          engine.addSourceModule(EclipseSourceFileModule.createEclipseSourceFileModule(file));
-        } catch (IllegalArgumentException e) {
-          assertTrue(e.getMessage(), false);
-        }
-        
+      String srcFileName = srcFilePath.substring(srcFilePath.lastIndexOf(File.separator) + 1);
+      File f = new File(srcFilePath);
+      Assert.assertTrue("couldn't find " + srcFilePath, f.exists());
+      if (f.isDirectory()) {
+        engine.addSourceModule(new SourceDirectoryTreeModule(f));
       } else {
-        String srcFileName = srcFilePath.substring(srcFilePath.lastIndexOf(File.separator) + 1);
-        File f = new File(srcFilePath);
-        Assert.assertTrue("couldn't find " + srcFilePath, f.exists());
-        if (f.isDirectory()) {
-          engine.addSourceModule(new SourceDirectoryTreeModule(f));
-        } else {
-          engine.addSourceModule(new SourceFileModule(f, srcFileName));
-        }
+        engine.addSourceModule(new SourceFileModule(f, srcFileName));
       }
     }
   }

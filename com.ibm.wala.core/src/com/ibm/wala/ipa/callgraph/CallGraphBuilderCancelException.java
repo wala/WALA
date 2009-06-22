@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph;
 
-import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.util.CancelException;
 
 /**
  * An exception to throw when call graph construction is canceled. This exception allows clients to retrieve the partially-built

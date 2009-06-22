@@ -12,10 +12,11 @@ package com.ibm.wala.examples.drivers;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Properties;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
-import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -29,12 +30,15 @@ import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.io.FileProvider;
+import com.ibm.wala.util.io.FileUtil;
 import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.viz.DotUtil;
 import com.ibm.wala.viz.PDFViewUtil;
@@ -45,7 +49,34 @@ import com.ibm.wala.viz.PDFViewUtil;
  * @author sfink
  */
 public class PDFCallGraph {
+  public static boolean isDirectory(String appJar) {
+    return (new File(appJar).isDirectory());
+  }
 
+  public static String findJarFiles(String[] directories) throws WalaException {
+    Collection<String> result = HashSetFactory.make();
+    for (int i = 0; i < directories.length; i++) {
+      for (Iterator<File> it = FileUtil.listFiles(directories[i], ".*\\.jar", true).iterator(); it.hasNext();) {
+        File f = (File) it.next();
+        result.add(f.getAbsolutePath());
+      }
+    }
+    return composeString(result);
+  }
+  
+  private static String composeString(Collection<String> s) {
+    StringBuffer result = new StringBuffer();
+    Iterator<String> it = s.iterator();
+    for (int i = 0; i < s.size() - 1; i++) {
+      result.append(it.next());
+      result.append(';');
+    }
+    if (it.hasNext()) {
+      result.append(it.next());
+    }
+    return result.toString();
+  }  
+  
   private final static String PDF_FILE = "cg.pdf";
 
   /**
@@ -136,7 +167,7 @@ public class PDFCallGraph {
     return g;
   }
 
-  static Graph<CGNode> pruneForAppLoader(CallGraph g) throws WalaException {
+  public static Graph<CGNode> pruneForAppLoader(CallGraph g) throws WalaException {
     return PDFTypeHierarchy.pruneGraph(g, new ApplicationLoaderFilter());
   }
 

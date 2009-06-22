@@ -10,8 +10,11 @@
  *******************************************************************************/
 package com.ibm.wala.core.plugin;
 
-import org.eclipse.core.runtime.Plugin;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Plugin;
 
 
 /**
@@ -19,6 +22,40 @@ import org.osgi.framework.BundleContext;
  */
 public class CorePlugin extends Plugin {
 
+  public static final boolean IS_ECLIPSE_RUNNING;
+  static
+  {
+    boolean result = false;
+    try
+    {
+      result = Platform.isRunning();
+    }
+    catch (Throwable exception)
+    {
+      // Assume that we aren't running.
+    }
+    IS_ECLIPSE_RUNNING = result;
+  }
+
+  public static final boolean IS_RESOURCES_BUNDLE_AVAILABLE;
+  static
+  {
+    boolean result = false;
+    if (IS_ECLIPSE_RUNNING)
+    {
+      try
+      {
+        Bundle resourcesBundle = Platform.getBundle("org.eclipse.core.resources");
+        result = resourcesBundle != null && (resourcesBundle.getState() & (Bundle.ACTIVE | Bundle.STARTING | Bundle.RESOLVED)) != 0;
+      }
+      catch (Throwable exception)
+      {
+        // Assume that it's not available.
+      }
+    }
+    IS_RESOURCES_BUNDLE_AVAILABLE = result;
+  }
+  
   // The shared instance.
   private static CorePlugin plugin;
 

@@ -19,8 +19,6 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.dataflow.ssa.SSAInference;
-import com.ibm.wala.eclipse.util.CancelException;
-import com.ibm.wala.eclipse.util.CancelRuntimeException;
 import com.ibm.wala.fixedpoint.impl.AbstractOperator;
 import com.ibm.wala.fixedpoint.impl.NullaryOperator;
 import com.ibm.wala.fixpoint.FixedPointConstants;
@@ -52,6 +50,8 @@ import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.SSACFG.ExceptionHandlerBasicBlock;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.debug.Assertions;
 
 /**

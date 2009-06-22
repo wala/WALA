@@ -20,7 +20,7 @@ import org.eclipse.jdt.core.IJavaProject;
 
 import com.ibm.wala.cast.java.client.impl.ZeroCFABuilderFactory;
 import com.ibm.wala.client.AbstractAnalysisEngine;
-import com.ibm.wala.eclipse.util.EclipseProjectPath;
+import com.ibm.wala.ide.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;

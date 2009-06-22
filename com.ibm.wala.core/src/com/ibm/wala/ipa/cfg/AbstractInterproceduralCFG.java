@@ -34,7 +34,6 @@ import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableIntSet;
-import com.ibm.wala.viz.IFDSExplorer;
 
 /**
  * Interprocedural control-flow graph, constructed lazily.

@@ -48,12 +48,12 @@ import com.ibm.wala.demandpa.alg.refinepolicy.AlwaysRefineFieldsPolicy;
 import com.ibm.wala.demandpa.alg.refinepolicy.SinglePassRefinementPolicy;
 import com.ibm.wala.demandpa.alg.statemachine.StateMachineFactory;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
-import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.strings.Atom;
 
 public class ContextSensitiveTest extends AbstractPtrTest {

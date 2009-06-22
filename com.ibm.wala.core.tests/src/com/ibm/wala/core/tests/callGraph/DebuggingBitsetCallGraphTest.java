@@ -13,8 +13,8 @@ package com.ibm.wala.core.tests.callGraph;
 import java.io.IOException;
 
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.intset.BimodalMutableIntSetFactory;
 import com.ibm.wala.util.intset.BitVectorIntSetFactory;
 import com.ibm.wala.util.intset.DebuggingMutableIntSetFactory;

@@ -19,8 +19,6 @@ import com.ibm.wala.dataflow.graph.BasicFramework;
 import com.ibm.wala.dataflow.graph.DataflowSolver;
 import com.ibm.wala.dataflow.graph.IKilldallFramework;
 import com.ibm.wala.dataflow.graph.ITransferFunctionProvider;
-import com.ibm.wala.eclipse.util.CancelException;
-import com.ibm.wala.eclipse.util.CancelRuntimeException;
 import com.ibm.wala.fixedpoint.impl.AbstractStatement;
 import com.ibm.wala.fixedpoint.impl.AbstractVariable;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
@@ -54,6 +52,8 @@ import com.ibm.wala.shrikeBT.ThrowInstruction;
 import com.ibm.wala.shrikeBT.Util;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.shrike.ShrikeUtil;
 
 /**

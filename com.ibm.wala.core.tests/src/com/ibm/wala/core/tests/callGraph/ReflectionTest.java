@@ -15,13 +15,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.eclipse.jdt.core.JavaModelException;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -36,6 +33,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.util.warnings.Warning;
@@ -210,8 +208,7 @@ public class ReflectionTest extends WalaTestCase {
   }
 
   @SuppressWarnings("unchecked")
-  public void testReflect7() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException,
-      JavaModelException {
+  public void testReflect7() throws Exception {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
     ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,

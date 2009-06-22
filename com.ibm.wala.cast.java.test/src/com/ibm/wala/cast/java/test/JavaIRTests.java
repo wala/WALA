@@ -29,7 +29,6 @@ import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.core.tests.slicer.SlicerTest;
-import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -49,6 +48,7 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.strings.Atom;
 

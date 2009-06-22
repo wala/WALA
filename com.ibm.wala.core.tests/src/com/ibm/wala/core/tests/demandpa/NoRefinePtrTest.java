@@ -39,8 +39,8 @@ package com.ibm.wala.core.tests.demandpa;
 
 import java.io.IOException;
 
-import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.util.CancelException;
 
 public class NoRefinePtrTest extends AbstractPtrTest {
 

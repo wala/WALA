@@ -5,8 +5,9 @@ Bundle-SymbolicName: com.ibm.wala.core.tests;singleton:=true
 Bundle-Version: 1.1.3.qualifier
 Bundle-Vendor: %providerName
 Require-Bundle: org.junit,
- org.eclipse.ui.ide,
- com.ibm.wala.core;bundle-version="1.1.3"
+ com.ibm.wala.shrike,
+ com.ibm.wala.core,
+ org.eclipse.core.runtime
 Bundle-Localization: plugin
 Export-Package: com.ibm.wala.core.tests.basic,
  com.ibm.wala.core.tests.callGraph,
@@ -17,7 +18,6 @@ Export-Package: com.ibm.wala.core.tests.basic,
  com.ibm.wala.core.tests.slicer,
  com.ibm.wala.core.tests.util,
  com.ibm.wala.demandpa.driver,
- com.ibm.wala.eclipse.headless,
  com.ibm.wala.examples.drivers,
  com.ibm.wala.examples.properties
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
