@@ -35,7 +35,9 @@ import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.viz.NodeDecorator;
 
 /**
+ * A class to view a WALA {@link Graph} with an SWT {@link TreeViewer}
  */
+@SuppressWarnings("unchecked")
 public class SWTTreeViewer extends AbstractJFaceRunner {
 
   protected Graph graphInput;
@@ -231,7 +233,6 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
       /*
        * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
        */
-      @SuppressWarnings("unchecked")
       public Object[] getChildren(Object parentElement) {
 
         Object[] result = new Object[graph.getSuccNodeCount(parentElement)];
@@ -254,7 +255,6 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
       /*
        * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
        */
-      @SuppressWarnings("unchecked")
       public boolean hasChildren(Object element) {
         return graph.getSuccNodeCount(element) > 0;
       }
