@@ -244,6 +244,7 @@ public class EclipseProjectPath {
   /**
    * traverse a bundle description and populate the analysis scope accordingly
    */
+  @SuppressWarnings("unchecked")
   private void resolveBundleDescriptionClassPath(BundleDescription bd, Loader loader, boolean includeSource) throws CoreException,
       IOException {
     assert bd != null;
