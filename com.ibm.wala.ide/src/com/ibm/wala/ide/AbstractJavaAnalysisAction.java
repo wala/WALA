@@ -70,6 +70,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
 
   /**
    * Compute an analysis scope for the current selection
+   * 
    * @param includeSource should files from the source folders in Eclipse projects be included
    * @param includeClassFiles should class files built by Eclipse, in the project output folders, be include?
    */
@@ -81,6 +82,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
     final Collection<EclipseProjectPath> projectPaths = new LinkedList<EclipseProjectPath>();
     Job job = new Job("Compute project paths") {
 
+      @SuppressWarnings("unchecked")
       @Override
       protected IStatus run(IProgressMonitor monitor) {
         for (Iterator it = selection.iterator(); it.hasNext();) {
@@ -114,9 +116,9 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
       if (result.getSeverity() == IStatus.ERROR) {
         Throwable exception = result.getException();
         if (exception instanceof IOException) {
-          throw (IOException)exception;
+          throw (IOException) exception;
         } else if (exception instanceof RuntimeException) {
-          throw (RuntimeException)exception;
+          throw (RuntimeException) exception;
         }
       }
     } catch (InterruptedException e) {
@@ -130,6 +132,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
   /**
    * compute the java projects represented by the current selection
    */
+  @SuppressWarnings("unchecked")
   protected Collection<IJavaProject> computeJavaProjects() {
     IStructuredSelection selection = (IStructuredSelection) currentSelection;
     Collection<IJavaProject> projects = HashSetFactory.make();
@@ -153,7 +156,8 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
     AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
 
     Collection<Module> seen = HashSetFactory.make();
-    // to avoid duplicates, we first add all application modules, then extension
+    // to avoid duplicates, we first add all application modules, then
+    // extension
     // modules, then primordial
     buildScope(ClassLoaderReference.Application, projectPaths, scope, seen);
     buildScope(ClassLoaderReference.Extension, projectPaths, scope, seen);
@@ -163,9 +167,10 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
 
   /**
    * Enhance an {@link AnalysisScope} to include in a particular loader, elements from a set of Eclipse projects
+   * 
    * @param loader the class loader in which new {@link Module}s will live
    * @param projectPaths Eclipse project paths to add to the analysis scope
-   * @param scope the {@link AnalysisScope} under construction.  This will be mutated.
+   * @param scope the {@link AnalysisScope} under construction. This will be mutated.
    * @param seen set of {@link Module}s which have already been seen, and should not be added to the analysis scope
    */
   private static void buildScope(ClassLoaderReference loader, Collection<EclipseProjectPath> projectPaths, AnalysisScope scope,
