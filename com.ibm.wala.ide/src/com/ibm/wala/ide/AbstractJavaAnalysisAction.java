@@ -97,7 +97,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
               // skip and continue
             } catch (IOException e2) {
               e2.printStackTrace();
-              return new Status(IStatus.ERROR, "", "", e2);
+              return new Status(IStatus.ERROR, "", 0, "", e2);
             }
           } else {
             Assertions.UNREACHABLE(object.getClass());
