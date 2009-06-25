@@ -43,7 +43,7 @@ package com.ibm.wala.demandpa.genericutil;
 public abstract class Predicate<T> {
   public static final Predicate FALSE = new Predicate() {
     @Override
-    public boolean test(Object obj_) {
+    public boolean test(Object o) {
       return false;
     }
   };
@@ -61,15 +61,15 @@ public abstract class Predicate<T> {
   }
 
   /** Test whether an {@link Object} satisfies this {@link Predicate} */
-  public abstract boolean test(T obj_);
+  public abstract boolean test(T t);
 
   /** Return a predicate that is a negation of this predicate */
   public Predicate<T> not() {
     final Predicate<T> originalPredicate = this;
     return new Predicate<T>() {
       @Override
-      public boolean test(T obj_) {
-        return !originalPredicate.test(obj_);
+      public boolean test(T t) {
+        return !originalPredicate.test(t);
       }
     };
   }
@@ -77,12 +77,12 @@ public abstract class Predicate<T> {
   /**
    * Return a predicate that is a conjunction of this predicate and another predicate
    */
-  public Predicate<T> and(final Predicate<T> conjunct_) {
+  public Predicate<T> and(final Predicate<T> conjunct) {
     final Predicate<T> originalPredicate = this;
     return new Predicate<T>() {
       @Override
-      public boolean test(T obj_) {
-        return originalPredicate.test(obj_) && conjunct_.test(obj_);
+      public boolean test(T t) {
+        return originalPredicate.test(t) && conjunct.test(t);
       }
     };
   }
@@ -90,14 +90,14 @@ public abstract class Predicate<T> {
   /**
    * Return a predicate that is a conjunction of this predicate and another predicate
    */
-  public Predicate<T> or(final Predicate<T> disjunct_) {
+  public Predicate<T> or(final Predicate<T> disjunct) {
     final Predicate<T> originalPredicate = this;
     return new Predicate<T>() {
       @Override
-      public boolean test(T obj_) {
-        return originalPredicate.test(obj_) || disjunct_.test(obj_);
+      public boolean test(T t) {
+        return originalPredicate.test(t) || disjunct.test(t);
       }
     };
   }
-} // class Predicate
+}
 
