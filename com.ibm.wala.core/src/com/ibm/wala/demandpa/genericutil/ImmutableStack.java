@@ -70,7 +70,7 @@ public class ImmutableStack<T> implements Iterable<T> {
 
   protected ImmutableStack(T[] entries) {
     this.entries = entries;
-    this.cachedHashCode = Util.hashArray(entries);
+    this.cachedHashCode = Arrays.hashCode(entries);
   }
 
   @Override
@@ -163,7 +163,7 @@ public class ImmutableStack<T> implements Iterable<T> {
 
   @Override
   public String toString() {
-    String objArrayToString = Util.objArrayToString(entries);
+    String objArrayToString = Arrays.toString(entries);
     assert entries.length <= MAX_SIZE : objArrayToString;
     return objArrayToString;
   }

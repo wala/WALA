@@ -65,7 +65,9 @@ public class Util {
    * Convert an int[] to a {@link String} for printing
    * 
    * @throws IllegalArgumentException if ints == null
+   * @deprecated  Use Arrays.toString() instead
    */
+  @Deprecated
   public static String str(int[] ints) throws IllegalArgumentException {
     if (ints == null) {
       throw new IllegalArgumentException("ints == null");
@@ -81,10 +83,12 @@ public class Util {
     return s.toString();
   }
 
+  @Deprecated
   public static String objArrayToString(Object[] o) {
     return objArrayToString(o, "[", "]", ", ");
   }
 
+  @Deprecated
   public static String objArrayToString(Object[] o, String start, String end, String sep) throws IllegalArgumentException {
     if (o == null) {
       throw new IllegalArgumentException("o == null");
@@ -160,7 +164,9 @@ public class Util {
    * 
    * @return All the elements satisfying the predicate
    * @throws IllegalArgumentException if c == null
+   * @deprecated  use filter() instead
    */
+  @Deprecated
   public static <T> Collection<T> findAll(Collection<T> c, Predicate<T> p) throws IllegalArgumentException {
     if (c == null) {
       throw new IllegalArgumentException("c == null");
@@ -223,9 +229,7 @@ public class Util {
   }
 
   /**
-   * Filter a collection: generate a new list from an existing collection, consisting of the elements satisfying some predicate. The
-   * new list is always an {@link ArrayList}; it would have been more precise to use {@link java.lang.reflect reflection} to create
-   * a list of the same type as 'srcList', but reflection works really slowly in some implementations, so it's best to avoid it.
+   * Filter a collection: generate a new list from an existing collection, consisting of the elements satisfying some predicate.
    * 
    * @throws IllegalArgumentException if src == null
    */
@@ -250,6 +254,7 @@ public class Util {
    * @param result the list for the result. assumed to be empty
    * @throws IllegalArgumentException if src == null
    */
+  @Deprecated
   public static <T> void filter(Collection<T> src, Predicate<T> pred, List<T> result) throws IllegalArgumentException {
     if (src == null) {
       throw new IllegalArgumentException("src == null");
@@ -298,7 +303,9 @@ public class Util {
    * Clear a {@link BitSet}.
    * 
    * @throws IllegalArgumentException if bitSet == null
+   * @deprecated use BitSet.clear() instead.
    */
+  @Deprecated
   public static void clear(BitSet bitSet) throws IllegalArgumentException {
     if (bitSet == null) {
       throw new IllegalArgumentException("bitSet == null");
@@ -310,7 +317,9 @@ public class Util {
    * Replace all occurrences of a given substring in a given {@link String}.
    * 
    * @throws IllegalArgumentException if str == null
+   * @Deprecated use String.replaceAll() instead
    */
+  @Deprecated
   public static String replaceAll(String str, String sub, String newSub) throws IllegalArgumentException {
     if (str == null) {
       throw new IllegalArgumentException("str == null");
@@ -327,6 +336,7 @@ public class Util {
   }
 
   /** Remove all occurrences of a given substring in a given {@link String} */
+  @Deprecated
   public static String removeAll(String str, String sub) {
     return replaceAll(str, sub, "");
   }
@@ -405,7 +415,9 @@ public class Util {
   /**
    * @return a hash code for the array
    * @throws IllegalArgumentException if objs == null
+   * @Deprecated use Arrays.hashCode() instead
    */
+  @Deprecated
   public static int hashArray(Object[] objs) throws IllegalArgumentException {
     if (objs == null) {
       throw new IllegalArgumentException("objs == null");
@@ -419,6 +431,7 @@ public class Util {
 
   }
 
+  @Deprecated
   public static String toStringNull(Object o) {
     return o == null ? "" : "[" + o.toString() + "]";
   }
@@ -426,8 +439,6 @@ public class Util {
   /**
    * checks if two sets have a non-empty intersection
    * 
-   * @param s1
-   * @param s2
    * @return <code>true</code> if the sets intersect; <code>false</code> otherwise
    */
   public static <T> boolean intersecting(final Set<T> s1, final Set<T> s2) {
@@ -439,6 +450,7 @@ public class Util {
     });
   }
 
+  @Deprecated
   public static int getInt(Integer i) {
     return (i == null) ? 0 : i;
   }
@@ -465,6 +477,7 @@ public class Util {
     }
   }
 
+  @Deprecated
   public static <T> List<T> pickNAtRandom(List<T> vals, int n, long seed) throws IllegalArgumentException {
     if (vals == null) {
       throw new IllegalArgumentException("vals == null");
