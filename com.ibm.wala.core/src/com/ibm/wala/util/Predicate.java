@@ -37,6 +37,10 @@
  */
 package com.ibm.wala.util;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * Interface for defining an arbitrary predicate on {@link Object}s.
  */
@@ -98,6 +102,24 @@ public abstract class Predicate<T> {
         return originalPredicate.test(t) || disjunct.test(t);
       }
     };
+  }
+  
+  /**
+   * Filter a collection: generate a new list from an existing collection, consisting of the elements satisfying some predicate.
+   * 
+   * @throws IllegalArgumentException if src == null
+   */
+  public static <T> List<T> filter(Iterator<T> src, Predicate<T> pred) throws IllegalArgumentException {
+    if (src == null) {
+      throw new IllegalArgumentException("src == null");
+    }
+    ArrayList<T> result = new ArrayList<T>();
+    for (; src.hasNext();) {
+      T curElem = src.next();
+      if (pred.test(curElem))
+        result.add(curElem);
+    }
+    return result;
   }
 }
 

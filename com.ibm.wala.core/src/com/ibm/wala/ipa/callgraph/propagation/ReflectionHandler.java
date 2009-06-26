@@ -30,10 +30,8 @@ import com.ibm.wala.ipa.slicer.Statement.Kind;
 import com.ibm.wala.ssa.SSACheckCastInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.collections.Filter;
-import com.ibm.wala.util.collections.FilterIterator;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.Iterator2Collection;
 
 /**
  * a helper class which can modify a {@link PropagationCallGraphBuilder} to deal with reflective factory methods.
@@ -69,9 +67,9 @@ public class ReflectionHandler {
           System.err.println(" " + x);
         }
       }
-      Filter f = new Filter() {
-        public boolean accepts(Object o) {
-          Statement s = (Statement) o;
+      Predicate<Statement> f = new Predicate<Statement>() {
+        @Override
+        public boolean test(Statement s) {
           if (s.getKind() == Kind.NORMAL) {
             return ((NormalStatement) s).getInstruction() instanceof SSACheckCastInstruction;
           } else {
@@ -79,7 +77,7 @@ public class ReflectionHandler {
           }
         }
       };
-      Collection<Statement> casts = Iterator2Collection.toSet(new FilterIterator<Statement>(slice.iterator(), f));
+      Collection<Statement> casts = Predicate.filter(slice.iterator(), f);
       changedNodes.addAll(modifyFactoryInterpreter(st, casts, builder.getContextInterpreter(), builder.getClassHierarchy()));
     }
     for (Iterator<CGNode> it = changedNodes.iterator(); it.hasNext();) {

@@ -233,18 +233,11 @@ public class Util {
    * Filter a collection: generate a new list from an existing collection, consisting of the elements satisfying some predicate.
    * 
    * @throws IllegalArgumentException if src == null
+   * @deprecated use Predicate.filter instead
    */
+  @Deprecated
   public static <T> List<T> filter(Collection<T> src, Predicate<T> pred) throws IllegalArgumentException {
-    if (src == null) {
-      throw new IllegalArgumentException("src == null");
-    }
-    ArrayList<T> result = new ArrayList<T>();
-    for (Iterator<T> srcIter = src.iterator(); srcIter.hasNext();) {
-      T curElem = srcIter.next();
-      if (pred.test(curElem))
-        result.add(curElem);
-    }
-    return result;
+   return Predicate.filter(src.iterator(), pred);
   }
 
   /**

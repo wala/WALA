@@ -39,7 +39,6 @@ package com.ibm.wala.demandpa.alg;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 
 import com.ibm.wala.demandpa.flowgraph.SimpleDemandPointerFlowGraph;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
@@ -51,9 +50,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.collections.Filter;
-import com.ibm.wala.util.collections.FilterIterator;
-import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.traverse.SlowDFSDiscoverTimeIterator;
 
@@ -95,16 +92,15 @@ public class SimpleDemandPointsTo extends AbstractDemandPointsTo {
       System.err.println(g.toString());
     }
 
-    Filter iKeyFilter = new Filter() {
-      public boolean accepts(Object o) {
+    Predicate iKeyFilter = new Predicate() {
+      @Override
+      public boolean test(Object o) {
         return o instanceof InstanceKey;
       }
     };
 
     SlowDFSDiscoverTimeIterator<Object> dfs = new SlowDFSDiscoverTimeIterator<Object>(g, pk);
-    // Collection reached =
-    // DFS.getReachableNodes(g,Collections.singleton(pk));
-    return Iterator2Collection.toSet((Iterator<? extends InstanceKey>)(Iterator)new FilterIterator<Object>(dfs, iKeyFilter));
+    return Predicate.filter(dfs, iKeyFilter);
   }
 
 }

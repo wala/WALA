@@ -18,10 +18,9 @@ import java.util.List;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.Constants;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
-import com.ibm.wala.util.collections.Filter;
-import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.IteratorPlusOne;
@@ -41,7 +40,7 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.SimpleIntVector;
 
 /**
- * Commong functionality for {@link ControlFlowGraph} implementations.
+ * Common functionality for {@link ControlFlowGraph} implementations.
  */
 public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements ControlFlowGraph<I, T>, Constants {
 
@@ -224,12 +223,13 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
       throw new IllegalArgumentException("N is null");
     }
     if (N.equals(exit())) {
-      return new FilterIterator<T>(iterator(), new Filter<T>() {
-        public boolean accepts(T o) {
+      return Predicate.filter(iterator(), new Predicate<T>() {
+        @Override
+        public boolean test(T o) {
           int i = getNumber(o);
           return normalToExit.get(i) || exceptionalToExit.get(i);
         }
-      });
+      }).iterator();
     } else {
       int number = getNumber(N);
       boolean normalIn = getNumberOfNormalIn(N) > 0;
@@ -334,12 +334,13 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
 
   Iterator<T> iterateExceptionalPredecessors(T N) {
     if (N.equals(exit())) {
-      return new FilterIterator<T>(iterator(), new Filter<T>() {
-        public boolean accepts(T o) {
+      return Predicate.filter(iterator(), new Predicate<T>() {
+        @Override
+        public boolean test(T o) {
           int i = getNumber(o);
           return exceptionalToExit.get(i);
         }
-      });
+      }).iterator();
     } else {
       return exceptionalEdgeManager.getPredNodes(N);
     }
@@ -347,12 +348,13 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
 
   Iterator<T> iterateNormalPredecessors(T N) {
     if (N.equals(exit())) {
-      return new FilterIterator<T>(iterator(), new Filter<T>() {
-        public boolean accepts(T o) {
+      return Predicate.filter(iterator(), new Predicate<T>() {
+        @Override
+        public boolean test(T o) {
           int i = getNumber(o);
           return normalToExit.get(i);
         }
-      });
+      }).iterator();
     } else {
       int number = getNumber(N);
       if (number > 0 && fallThru.get(number - 1)) {
