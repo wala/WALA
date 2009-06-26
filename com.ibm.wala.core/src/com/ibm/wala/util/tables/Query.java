@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-import com.ibm.wala.demandpa.genericutil.Predicate;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 /**

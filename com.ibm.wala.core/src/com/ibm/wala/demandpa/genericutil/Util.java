@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 /**

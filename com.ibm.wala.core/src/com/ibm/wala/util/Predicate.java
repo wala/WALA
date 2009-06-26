@@ -35,7 +35,7 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.demandpa.genericutil;
+package com.ibm.wala.util;
 
 /**
  * Interface for defining an arbitrary predicate on {@link Object}s.
