@@ -274,7 +274,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
     }
   }
 
-  public Iterator<? extends IExplodedBasicBlock> getPredNodes(IExplodedBasicBlock bb) throws IllegalArgumentException {
+  public Iterator<IExplodedBasicBlock> getPredNodes(IExplodedBasicBlock bb) throws IllegalArgumentException {
     ExplodedBasicBlock eb = (ExplodedBasicBlock) bb;
     if (eb == null) {
       throw new IllegalArgumentException("eb == null");
@@ -315,7 +315,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
    */
-  public Iterator<? extends IExplodedBasicBlock> getSuccNodes(IExplodedBasicBlock bb) {
+  public Iterator<IExplodedBasicBlock> getSuccNodes(IExplodedBasicBlock bb) {
     ExplodedBasicBlock eb = (ExplodedBasicBlock) bb;
     assert eb != null;
     if (eb.isExitBlock()) {

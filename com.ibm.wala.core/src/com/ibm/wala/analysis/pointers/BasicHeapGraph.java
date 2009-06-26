@@ -146,7 +146,7 @@ public class BasicHeapGraph extends HeapGraph {
           return pred.getRelatedCount(n);
         }
 
-        public Iterator<? extends Object> getSuccNodes(Object N) {
+        public Iterator<Object> getSuccNodes(Object N) {
           int[] succ = computeSuccNodeNumbers(N, nodeMgr);
           if (succ == null) {
             return EmptyIterator.instance();
@@ -381,7 +381,7 @@ public class BasicHeapGraph extends HeapGraph {
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(com.ibm.wala.util.graph.Node)
    */
-  public Iterator<? extends Object> getPredNodes(Object N) {
+  public Iterator<Object> getPredNodes(Object N) {
     return G.getPredNodes(N);
   }
 
@@ -395,7 +395,7 @@ public class BasicHeapGraph extends HeapGraph {
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(com.ibm.wala.util.graph.Node)
    */
-  public Iterator<? extends Object> getSuccNodes(Object N) {
+  public Iterator<Object> getSuccNodes(Object N) {
     return G.getSuccNodes(N);
   }
 

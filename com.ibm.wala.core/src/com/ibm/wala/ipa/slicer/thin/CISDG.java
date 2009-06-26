@@ -127,7 +127,7 @@ public class CISDG implements ISDG {
     return noHeap.getPredNodeNumbers(node);
   }
 
-  public Iterator<? extends Statement> getPredNodes(Statement N) {
+  public Iterator<Statement> getPredNodes(Statement N) {
     if (DEBUG) {
       System.err.println("getPredNodes " + N);
     }
@@ -154,7 +154,7 @@ public class CISDG implements ISDG {
     return noHeap.getSuccNodeNumbers(node);
   }
 
-  public Iterator<? extends Statement> getSuccNodes(Statement N) {
+  public Iterator<Statement> getSuccNodes(Statement N) {
     if (DEBUG) {
       System.err.println("getSuccNodes " + N);
     }

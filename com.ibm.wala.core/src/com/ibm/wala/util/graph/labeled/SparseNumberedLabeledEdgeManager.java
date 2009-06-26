@@ -113,7 +113,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
    * @see util.LabelledEdgeManager#getPredNodes(java.lang.Object,
    *      java.lang.Object)
    */
-  public Iterator<? extends T> getPredNodes(T N, U label) {
+  public Iterator<T> getPredNodes(T N, U label) {
     return getManagerForLabel(label).getPredNodes(N);
   }
 
@@ -225,7 +225,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
     return count;
   }
 
-  public Iterator<? extends T> getPredNodes(T N) {
+  public Iterator<T> getPredNodes(T N) {
     Collection<T> preds = HashSetFactory.make();
     for (U label : nodeToPredLabels.get(N)) {
       preds.addAll(Iterator2Collection.toSet(getPredNodes(N, label)));
@@ -241,7 +241,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
     return count;
   }
 
-  public Iterator<? extends T> getSuccNodes(T N) {
+  public Iterator<T> getSuccNodes(T N) {
     Collection<T> succs = HashSetFactory.make();
     for (U label : nodeToSuccLabels.get(N)) {
       succs.addAll(Iterator2Collection.toSet(getSuccNodes(N, label)));

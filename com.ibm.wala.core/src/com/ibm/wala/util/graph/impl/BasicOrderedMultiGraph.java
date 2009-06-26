@@ -79,7 +79,7 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
   /**
    * For now, this returns nodes in no particular order! Fix this when needed.
    */
-  public Iterator<? extends T> getPredNodes(T N) throws IllegalArgumentException {
+  public Iterator<T> getPredNodes(T N) throws IllegalArgumentException {
     return delegate.getPredNodes(N);
   }
 
@@ -87,7 +87,7 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
     return delegate.getSuccNodeCount(N);
   }
 
-  public Iterator<? extends T> getSuccNodes(T N) throws IllegalArgumentException {
+  public Iterator<T> getSuccNodes(T N) throws IllegalArgumentException {
     return delegate.getSuccNodes(N);
   }
 

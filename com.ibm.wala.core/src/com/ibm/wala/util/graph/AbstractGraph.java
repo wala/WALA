@@ -54,7 +54,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
   /* 
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
    */
-  public Iterator<? extends T> getPredNodes(T n) throws IllegalArgumentException {
+  public Iterator<T> getPredNodes(T n) throws IllegalArgumentException {
     if (n == null) {
       throw new IllegalArgumentException("n cannot be null");
     }
@@ -74,7 +74,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
   /* 
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
    */
-  public Iterator<? extends T> getSuccNodes(T n) throws IllegalArgumentException {
+  public Iterator<T> getSuccNodes(T n) throws IllegalArgumentException {
     if (n == null) {
       throw new IllegalArgumentException("n cannot be null");
     }

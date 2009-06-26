@@ -10,9 +10,11 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import com.ibm.wala.fixedpoint.impl.AbstractOperator;
@@ -504,16 +506,15 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     public Iterator<PointsToSetVariable> getPredNodes(PointsToSetVariable v) {
       final Iterator eqs = getStatementsThatDef(v);
       return new Iterator<PointsToSetVariable>() {
-        Iterator<PointsToSetVariable> inner;
+        Iterator<INodeWithNumber> inner;
 
         public boolean hasNext() {
           return eqs.hasNext() || (inner != null);
         }
 
-        @SuppressWarnings("unchecked")
         public PointsToSetVariable next() {
           if (inner != null) {
-            PointsToSetVariable result = inner.next();
+            PointsToSetVariable result = (PointsToSetVariable)inner.next();
             if (!inner.hasNext()) {
               inner = null;
             }
@@ -523,7 +524,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
             if (useImplicitRepresentation(eq)) {
               return (PointsToSetVariable) ((UnaryStatement) eq).getRightHandSide();
             } else {
-              inner = (Iterator<PointsToSetVariable>) delegateGraph.getPredNodes(eq);
+              inner = delegateGraph.getPredNodes(eq);
               return next();
             }
           }
@@ -653,16 +654,20 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     if (number == -1) {
       return EmptyIterator.instance();
     }
-    Iterator<AbstractStatement> result = (Iterator<AbstractStatement>) delegateGraph.getSuccNodes(v);
+    Iterator<INodeWithNumber> result = delegateGraph.getSuccNodes(v);
     for (int i = 0; i < invImplicitUnaryMap.size(); i++) {
       UnaryOperator op = invImplicitUnaryMap.getKey(i);
       IBinaryNaturalRelation R = (IBinaryNaturalRelation) invImplicitUnaryMap.getValue(i);
       IntSet s = R.getRelated(number);
       if (s != null) {
-        result = new CompoundIterator<AbstractStatement>(new ImplicitUseIterator(op, v, s), result);
+        result = new CompoundIterator<INodeWithNumber>(new ImplicitUseIterator(op, v, s), result);
       }
     }
-    return result;
+    List<AbstractStatement> list = new ArrayList<AbstractStatement>();
+    while (result.hasNext()) {
+      list.add((AbstractStatement) result.next());
+    }
+    return list.iterator();
   }
 
   @SuppressWarnings("unchecked")
@@ -674,17 +679,21 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     if (number == -1) {
       return EmptyIterator.instance();
     }
-    Iterator<AbstractStatement> result = (Iterator<AbstractStatement>) delegateGraph.getPredNodes(v);
+    Iterator<INodeWithNumber> result = delegateGraph.getPredNodes(v);
     for (int i = 0; i < implicitUnaryMap.size(); i++) {
       UnaryOperator op = implicitUnaryMap.getKey(i);
       IBinaryNaturalRelation R = (IBinaryNaturalRelation) implicitUnaryMap.getValue(i);
       IntSet s = R.getRelated(number);
       if (s != null) {
-        result = new CompoundIterator<AbstractStatement>(new ImplicitDefIterator(op, s, v), result);
+        result = new CompoundIterator<INodeWithNumber>(new ImplicitDefIterator(op, s, v), result);
       }
     }
 
-    return result;
+    List<AbstractStatement> list = new ArrayList<AbstractStatement>();
+    while (result.hasNext()) {
+      list.add((AbstractStatement) result.next());
+    }
+    return list.iterator();
   }
 
   /**
@@ -919,7 +928,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
      * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
      */
     @Override
-    public Iterator<? extends PointsToSetVariable> getPredNodes(PointsToSetVariable v) {
+    public Iterator<PointsToSetVariable> getPredNodes(PointsToSetVariable v) {
       final Iterator eqs = getStatementsThatDef(v);
       return new Iterator<PointsToSetVariable>() {
         PointsToSetVariable nextResult;

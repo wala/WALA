@@ -551,7 +551,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(com.ibm.wala.util.graph.Node)
    */
-  public Iterator<? extends BasicBlockInContext<T>> getPredNodes(BasicBlockInContext<T> N) {
+  public Iterator<BasicBlockInContext<T>> getPredNodes(BasicBlockInContext<T> N) {
     initForPred(N);
     return g.getPredNodes(N);
   }
@@ -603,7 +603,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(com.ibm.wala.util.graph.Node)
    */
-  public Iterator<? extends BasicBlockInContext<T>> getSuccNodes(BasicBlockInContext<T> N) {
+  public Iterator<BasicBlockInContext<T>> getSuccNodes(BasicBlockInContext<T> N) {
     initForSucc(N);
     return g.getSuccNodes(N);
   }

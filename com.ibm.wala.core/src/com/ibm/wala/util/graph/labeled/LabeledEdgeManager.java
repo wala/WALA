@@ -74,7 +74,7 @@ public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
    * 
    * @return an Iterator over the immediate predecessor nodes of this Node.
    */
-  public Iterator<? extends T> getPredNodes(T N, U label);
+  public Iterator<T> getPredNodes(T N, U label);
 
   /**
    * 

@@ -1052,7 +1052,7 @@ public class PDG implements NumberedGraph<Statement> {
     return delegate.getPredNodeCount(N);
   }
 
-  public Iterator<? extends Statement> getPredNodes(Statement N) {
+  public Iterator<Statement> getPredNodes(Statement N) {
     populate();
     if (!dOptions.isIgnoreHeap()) {
       computeIncomingHeapDependencies(N);
@@ -1106,7 +1106,7 @@ public class PDG implements NumberedGraph<Statement> {
     return delegate.getSuccNodeCount(N);
   }
 
-  public Iterator<? extends Statement> getSuccNodes(Statement N) {
+  public Iterator<Statement> getSuccNodes(Statement N) {
     populate();
     if (!dOptions.isIgnoreHeap()) {
       computeOutgoingHeapDependencies(N);

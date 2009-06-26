@@ -225,7 +225,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
    * @see com.ibm.capa.util.graph.AbstractGraph#getPredNodes(java.lang.Object)
    */
   @Override
-  public Iterator<? extends Object> getPredNodes(Object N) throws IllegalArgumentException {
+  public Iterator<Object> getPredNodes(Object N) throws IllegalArgumentException {
     if (N instanceof com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey) {
       throw new IllegalArgumentException("N instanceof com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey");
     }
@@ -246,12 +246,10 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.capa.util.graph.AbstractGraph#getSuccNodes(java.lang.Object)
    */
   @Override
-  public Iterator<? extends Object> getSuccNodes(Object N) {
+  public Iterator<Object> getSuccNodes(Object N) {
     if (N instanceof StaticFieldKey) {
       addNodesThatWriteToStaticField(((StaticFieldKey) N).getField());
     } else {

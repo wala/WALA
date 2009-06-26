@@ -26,7 +26,7 @@ public interface EdgeManager<T> {
    * 
    * @return an {@link Iterator} over the immediate predecessor nodes of this Node.
    */
-  public Iterator<? extends T> getPredNodes(T n);
+  public Iterator<T> getPredNodes(T n);
 
   /**
    * Return the number of {@link #getPredNodes immediate predecessor} nodes of n
@@ -42,7 +42,7 @@ public interface EdgeManager<T> {
    * 
    * @return an Iterator over the immediate successor nodes of n
    */
-  public Iterator<? extends T> getSuccNodes(T n);
+  public Iterator<T> getSuccNodes(T n);
 
   /**
    * Return the number of {@link #getSuccNodes immediate successor} nodes of this Node in the Graph

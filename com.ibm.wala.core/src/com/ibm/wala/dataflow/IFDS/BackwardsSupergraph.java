@@ -185,7 +185,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
    */
-  public Iterator<? extends T> getPredNodes(T N) {
+  public Iterator<T> getPredNodes(T N) {
     return delegate.getSuccNodes(N);
   }
 
@@ -199,7 +199,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
    */
-  public Iterator<? extends T> getSuccNodes(T N) {
+  public Iterator<T> getSuccNodes(T N) {
     return delegate.getPredNodes(N);
   }
 

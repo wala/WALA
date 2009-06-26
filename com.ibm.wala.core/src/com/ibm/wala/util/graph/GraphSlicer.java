@@ -239,7 +239,7 @@ public class GraphSlicer {
         return preds.get(N).size();
       }
 
-      public Iterator<? extends E> getPredNodes(E N) {
+      public Iterator<E> getPredNodes(E N) {
         if (!preds.containsKey(N)) {
           setPredNodes(N);
         }
@@ -253,7 +253,7 @@ public class GraphSlicer {
         return succs.get(N).size();
       }
 
-      public Iterator<? extends E> getSuccNodes(E N) {
+      public Iterator<E> getSuccNodes(E N) {
         if (!succs.containsKey(N)) {
           setSuccNodes(N);
         }

@@ -155,7 +155,7 @@ public class Acyclic {
         return 0;
       }
 
-      public Iterator<? extends T> getPredNodes(T N) {
+      public Iterator<T> getPredNodes(T N) {
         Assertions.UNREACHABLE();
         return null;
       }
@@ -165,7 +165,7 @@ public class Acyclic {
         return 0;
       }
 
-      public Iterator<? extends T> getSuccNodes(T N) {
+      public Iterator<T> getSuccNodes(T N) {
         Assertions.UNREACHABLE();
         return null;
       }

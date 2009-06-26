@@ -355,7 +355,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     return 0;
   }
 
-  public Iterator<? extends Statement> getPredNodes(Statement N) {
+  public Iterator<Statement> getPredNodes(Statement N) {
     return sdg.getPredNodes(N);
   }
 
@@ -364,7 +364,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     return 0;
   }
 
-  public Iterator<? extends Statement> getSuccNodes(Statement N) {
+  public Iterator<Statement> getSuccNodes(Statement N) {
     return sdg.getSuccNodes(N);
   }
 

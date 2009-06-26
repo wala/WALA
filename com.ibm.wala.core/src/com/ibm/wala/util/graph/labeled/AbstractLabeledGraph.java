@@ -73,7 +73,7 @@ public abstract class AbstractLabeledGraph<T, U> extends AbstractGraph<T> implem
     return getEdgeManager().getPredNodeCount(N, label);
   }
 
-  public Iterator<? extends T> getPredNodes(T N, U label) {
+  public Iterator<T> getPredNodes(T N, U label) {
     return getEdgeManager().getPredNodes(N, label);
   }
 

@@ -36,7 +36,7 @@ public abstract class AbstractNumberedLabeledGraph<T, U> extends AbstractNumbere
     return getEdgeManager().getPredNodeCount(N, label);
   }
 
-  public Iterator<? extends T> getPredNodes(T N, U label) {
+  public Iterator<T> getPredNodes(T N, U label) {
     return getEdgeManager().getPredNodes(N, label);
   }
 

@@ -288,7 +288,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
       return IteratorUtil.count(getPredNodes(N));
     }
 
-    public Iterator<? extends Statement> getPredNodes(Statement N) {
+    public Iterator<Statement> getPredNodes(Statement N) {
       if (dOptions.isIgnoreExceptions()) {
         assert !N.getKind().equals(Kind.EXC_RET_CALLEE);
         assert !N.getKind().equals(Kind.EXC_RET_CALLER);
@@ -446,7 +446,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
       return IteratorUtil.count(getSuccNodes(N));
     }
 
-    public Iterator<? extends Statement> getSuccNodes(Statement N) {
+    public Iterator<Statement> getSuccNodes(Statement N) {
       if (dOptions.isTerminateAtCast() && isUninformativeForReflection(N.getNode())) {
         return EmptyIterator.instance();
       }
