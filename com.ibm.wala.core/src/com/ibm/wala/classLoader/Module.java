@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 /**
  * A {@link Module} represents a set of files to analyze.  eg., a Jar file.
- * These are persistent (hung onto by ClassLoaderReference) .. so,
+ * These are persistent (hung onto by {@link ClassLoaderImpl}) .. so,
  * a Module should not hold onto a lot of data.
  */
 public interface Module {

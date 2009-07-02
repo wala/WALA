@@ -52,7 +52,10 @@ import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
- * Simple implementation of a class hierarchy
+ * Simple implementation of a class hierarchy.
+ * 
+ * Note that this class hierarchy implementation is mutable. You can add classes via addClass().  You can add
+ * a class even if c.getClassLoader() does not appear in getLoaders().
  */
 public class ClassHierarchy implements IClassHierarchy {
 
@@ -761,8 +764,9 @@ public class ClassHierarchy implements IClassHierarchy {
     return result;
   }
 
-  /* 
-   * @see com.ibm.wala.ipa.cha.IClassHierarchy#getLeastCommonSuperclass(com.ibm.wala.types.TypeReference, com.ibm.wala.types.TypeReference)
+  /*
+   * @see com.ibm.wala.ipa.cha.IClassHierarchy#getLeastCommonSuperclass(com.ibm.wala.types.TypeReference,
+   * com.ibm.wala.types.TypeReference)
    */
   public TypeReference getLeastCommonSuperclass(TypeReference a, TypeReference b) {
     if (a == null) {
@@ -786,7 +790,7 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Find a class in this class hierarchy.  
+   * Find a class in this class hierarchy.
    * 
    * @return the {@link IClass} for a if found; null if can't find the class.
    * @throws IllegalArgumentException if A is null
@@ -796,7 +800,7 @@ public class ClassHierarchy implements IClassHierarchy {
       throw new IllegalArgumentException("a is null");
     }
     ClassLoaderReference loader = a.getClassLoader();
-    
+
     ClassLoaderReference parent = loader.getParent();
     // first delegate lookup to the parent loader.
     if (parent != null) {
@@ -806,8 +810,8 @@ public class ClassHierarchy implements IClassHierarchy {
         return c;
       }
     }
-    
-    // lookup in the parent failed.  lookup based on the declared loader of a.
+
+    // lookup in the parent failed. lookup based on the declared loader of a.
     if (a.isArrayType()) {
       TypeReference elt = a.getInnermostElementType();
       if (elt.isPrimitiveType()) {
@@ -1040,7 +1044,7 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   public Iterator<IClass> iterator() {
-    Function<Node,IClass> toClass = new Function<Node, IClass>() {
+    Function<Node, IClass> toClass = new Function<Node, IClass>() {
       public IClass apply(Node n) {
         return n.klass;
       }

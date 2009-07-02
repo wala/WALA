@@ -57,6 +57,8 @@ import com.ibm.wala.util.strings.ImmutableByteArray;
  * <li>Extension (for extension libraries in $JRE/lib/ext)
  * <li>Application (for the classes of the application)
  * </ul>
+ * 
+ * Each class loader will load a set of classes described by a {@link Module}.
  */
 public class AnalysisScope {
 
