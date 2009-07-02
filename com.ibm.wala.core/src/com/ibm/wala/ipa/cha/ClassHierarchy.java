@@ -86,8 +86,6 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * The loaders used to define this class hierarchy.
-   * 
-   * XXX is order significant??
    */
   final private IClassLoader[] loaders;
 
@@ -763,25 +761,28 @@ public class ClassHierarchy implements IClassHierarchy {
     return result;
   }
 
-  public TypeReference getLeastCommonSuperclass(TypeReference A, TypeReference B) {
-    if (A == null) {
-      throw new IllegalArgumentException("A is null");
+  /* 
+   * @see com.ibm.wala.ipa.cha.IClassHierarchy#getLeastCommonSuperclass(com.ibm.wala.types.TypeReference, com.ibm.wala.types.TypeReference)
+   */
+  public TypeReference getLeastCommonSuperclass(TypeReference a, TypeReference b) {
+    if (a == null) {
+      throw new IllegalArgumentException("a is null");
     }
-    if (A.equals(B))
-      return A;
-    IClass AClass = lookupClass(A);
-    IClass BClass = lookupClass(B);
-    if (AClass == null || BClass == null) {
+    if (a.equals(b))
+      return a;
+    IClass aClass = lookupClass(a);
+    IClass bClass = lookupClass(b);
+    if (aClass == null || bClass == null) {
       // One of the classes is not in scope. Give up.
-      if (AClass != null) {
-        return AClass.getClassLoader().getLanguage().getRootType();
-      } else if (BClass != null) {
-        return BClass.getClassLoader().getLanguage().getRootType();
+      if (aClass != null) {
+        return aClass.getClassLoader().getLanguage().getRootType();
+      } else if (bClass != null) {
+        return bClass.getClassLoader().getLanguage().getRootType();
       } else {
         return getRootClass().getReference();
       }
     }
-    return getLeastCommonSuperclass(AClass, BClass).getReference();
+    return getLeastCommonSuperclass(aClass, bClass).getReference();
   }
 
   /**
@@ -795,32 +796,41 @@ public class ClassHierarchy implements IClassHierarchy {
       throw new IllegalArgumentException("a is null");
     }
     ClassLoaderReference loader = a.getClassLoader();
-    for (int i = 0; i < loaders.length; i++) {
-      if (loaders[i].getReference().equals(loader)) {
-        IClass klass = loaders[i].lookupClass(a.getName());
-        if (klass != null) {
-          if (findNode(klass) != null) {
-            // it's a scalar type in the class hierarchy
-            return klass;
-          }
-          if (klass.isArrayClass()) {
-            // check that we know how to handle the element type
-            TypeReference t = klass.getReference().getInnermostElementType();
-            if (t.isPrimitiveType()) {
-              return klass;
-            } else {
-              IClass tClass = lookupClass(t);
-              if (tClass != null) {
-                return klass;
-              } else {
-                return null;
-              }
-            }
-          }
-        }
+    
+    ClassLoaderReference parent = loader.getParent();
+    // first delegate lookup to the parent loader.
+    if (parent != null) {
+      TypeReference p = TypeReference.findOrCreate(parent, a.getName());
+      IClass c = lookupClass(p);
+      if (c != null) {
+        return c;
       }
     }
-    return null;
+    
+    // lookup in the parent failed.  lookup based on the declared loader of a.
+    if (a.isArrayType()) {
+      TypeReference elt = a.getInnermostElementType();
+      if (elt.isPrimitiveType()) {
+        // look it up with the primordial loader.
+        return getRootClass().getClassLoader().lookupClass(a.getName());
+      } else {
+        IClass c = lookupClass(elt);
+        if (c == null) {
+          // can't load the element class, so give up.
+          return null;
+        } else {
+          // we know it comes from c's class loader.
+          return c.getClassLoader().lookupClass(a.getName());
+        }
+      }
+    } else {
+      Node n = map.get(a);
+      if (n != null) {
+        return n.klass;
+      } else {
+        return null;
+      }
+    }
   }
 
   private boolean slowIsSubclass(IClass sub, IClass sup) {
