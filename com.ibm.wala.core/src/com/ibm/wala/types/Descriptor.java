@@ -144,9 +144,7 @@ public final class Descriptor {
   }
 
   /**
-   * @author sfink
-   * 
-   *         value that defines a descriptor: used to canonicalize instances
+   * value that defines a descriptor: used to canonicalize instances
    */
   private static class Key {
     final private TypeName returnType;
