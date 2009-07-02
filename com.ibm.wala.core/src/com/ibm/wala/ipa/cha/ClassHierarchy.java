@@ -64,7 +64,10 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   private final Set<Language> languages = HashSetFactory.make();
 
-  final private HashMap<IClass, Node> map = HashMapFactory.make();
+  /**
+   * For each {@link IClass} c in this class hierarchy, this map maps c.getReference() to the {@link Node}
+   */
+  final private HashMap<TypeReference, Node> map = HashMapFactory.make();
 
   /**
    * {@link TypeReference} for the root type
@@ -593,14 +596,14 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   private Node findNode(IClass klass) {
-    return map.get(klass);
+    return map.get(klass.getReference());
   }
 
   private Node findOrCreateNode(IClass klass) {
-    Node result = map.get(klass);
+    Node result = map.get(klass.getReference());
     if (result == null) {
       result = new Node(klass);
-      map.put(klass, result);
+      map.put(klass.getReference(), result);
     }
     return result;
   }
@@ -712,41 +715,41 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * @throws IllegalArgumentException if A is null
    */
-  public IClass getLeastCommonSuperclass(IClass A, IClass B) {
-    assert (A.getClassLoader().getLanguage().equals(B.getClassLoader().getLanguage()));
-    Language lang = A.getClassLoader().getLanguage();
-    if (A == null) {
+  public IClass getLeastCommonSuperclass(IClass a, IClass b) {
+    assert (a.getClassLoader().getLanguage().equals(b.getClassLoader().getLanguage()));
+    Language lang = a.getClassLoader().getLanguage();
+    if (a == null) {
       throw new IllegalArgumentException("A is null");
     }
-    TypeReference tempA = A.getReference();
-    if (A.equals(B)) {
-      return A;
+    TypeReference tempA = a.getReference();
+    if (a.equals(b)) {
+      return a;
     } else if (tempA.equals(TypeReference.Null)) {
-      return B;
-    } else if (B.getReference().equals(TypeReference.Null)) {
-      return A;
-    } else if (B.getReference().equals(lang.getRootType())) {
-      return B;
+      return b;
+    } else if (b.getReference().equals(TypeReference.Null)) {
+      return a;
+    } else if (b.getReference().equals(lang.getRootType())) {
+      return b;
     } else {
-      Node n = map.get(B);
+      Node n = map.get(b.getReference());
       if (n == null) {
-        assert n != null : "null n for " + B;
+        assert n != null : "null n for " + b;
       }
       Set<IClass> superB;
       try {
-        superB = getSuperclasses(B);
+        superB = getSuperclasses(b);
       } catch (ClassHierarchyException e1) {
         e1.printStackTrace();
         Assertions.UNREACHABLE();
         superB = null;
       }
-      while (A != null) {
-        if (superB.contains(A)) {
-          return A;
+      while (a != null) {
+        if (superB.contains(a)) {
+          return a;
         }
-        A = A.getSuperclass();
+        a = a.getSuperclass();
       }
-      Assertions.UNREACHABLE("getLeastCommonSuperclass " + tempA + " " + B);
+      Assertions.UNREACHABLE("getLeastCommonSuperclass " + tempA + " " + b);
       return null;
     }
   }
@@ -782,19 +785,19 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Load a class using one of the loaders specified for this class hierarchy
+   * Find a class in this class hierarchy.  
    * 
-   * @return null if can't find the class.
+   * @return the {@link IClass} for a if found; null if can't find the class.
    * @throws IllegalArgumentException if A is null
    */
-  public IClass lookupClass(TypeReference A) {
-    if (A == null) {
-      throw new IllegalArgumentException("A is null");
+  public IClass lookupClass(TypeReference a) {
+    if (a == null) {
+      throw new IllegalArgumentException("a is null");
     }
-    ClassLoaderReference loaderRef = A.getClassLoader();
+    ClassLoaderReference loader = a.getClassLoader();
     for (int i = 0; i < loaders.length; i++) {
-      if (loaders[i].getReference().equals(loaderRef)) {
-        IClass klass = loaders[i].lookupClass(A.getName());
+      if (loaders[i].getReference().equals(loader)) {
+        IClass klass = loaders[i].lookupClass(a.getName());
         if (klass != null) {
           if (findNode(klass) != null) {
             // it's a scalar type in the class hierarchy
@@ -838,17 +841,17 @@ public class ClassHierarchy implements IClassHierarchy {
    * 
    * @throws IllegalArgumentException if c is null
    */
-  public boolean isSubclassOf(IClass c, IClass T) {
+  public boolean isSubclassOf(IClass c, IClass t) {
     if (c == null) {
       throw new IllegalArgumentException("c is null");
     }
-    assert T != null : "null T";
+    assert t != null : "null T";
 
     if (c.isArrayClass()) {
-      if (T.getReference() == TypeReference.JavaLangObject) {
+      if (t.getReference() == TypeReference.JavaLangObject) {
         return true;
-      } else if (T.getReference().isArrayType()) {
-        TypeReference elementType = T.getReference().getArrayElementType();
+      } else if (t.getReference().isArrayType()) {
+        TypeReference elementType = t.getReference().getArrayElementType();
         if (elementType.isPrimitiveType()) {
           return elementType.equals(c.getReference().getArrayElementType());
         } else {
@@ -872,26 +875,26 @@ public class ClassHierarchy implements IClassHierarchy {
         return false;
       }
     } else {
-      if (T.getReference().isArrayType()) {
+      if (t.getReference().isArrayType()) {
         return false;
       }
-      if (c.getReference().equals(T.getReference())) {
+      if (c.getReference().equals(t.getReference())) {
         return true;
       }
-      Node n1 = map.get(c);
+      Node n1 = map.get(c.getReference());
       if (n1 == null) {
         // some wacky case, like a FakeRootClass
         return false;
       }
-      Node n2 = map.get(T);
+      Node n2 = map.get(t.getReference());
       if (n2 == null) {
         // some wacky case, like a FakeRootClass
         return false;
       }
       if (n1.left == -1) {
-        return slowIsSubclass(c, T);
+        return slowIsSubclass(c, t);
       } else if (n2.left == -1) {
-        return slowIsSubclass(c, T);
+        return slowIsSubclass(c, t);
       } else {
         return (n2.left <= n1.left) && (n1.left <= n2.right);
       }
@@ -1027,7 +1030,12 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   public Iterator<IClass> iterator() {
-    return map.keySet().iterator();
+    Function<Node,IClass> toClass = new Function<Node, IClass>() {
+      public IClass apply(Node n) {
+        return n.klass;
+      }
+    };
+    return new MapIterator<Node, IClass>(map.values().iterator(), toClass);
   }
 
   /**
@@ -1187,7 +1195,7 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   public int getNumber(IClass c) {
-    return map.get(c).left;
+    return map.get(c.getReference()).left;
   }
 
   /**
