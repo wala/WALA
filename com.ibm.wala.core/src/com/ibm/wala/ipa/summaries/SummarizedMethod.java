@@ -85,34 +85,6 @@ public class SummarizedMethod extends SyntheticMethod {
     return summary.getStatements();
   }
 
-  // /*
-  // *
-  // * @see com.ibm.wala.classLoader.IMethod#getIR(com.ibm.wala.util.WarningSet)
-  // */
-  // public IR getIR(SSAOptions options, WarningSet warnings) {
-  // if (DEBUG) {
-  // Trace.println("Get IR: " + this);
-  // }
-  // return findOrCreateIR(options, warnings);
-  // }
-
-  // /**
-  // * @return
-  // */
-  // private IR findOrCreateIR(SSAOptions options, WarningSet warnings) {
-  // IR result = (IR) CacheReference.get(ir);
-  // if (result == null) {
-  // if (DEBUG) {
-  // Trace.println("Create IR for " + this);
-  // }
-  // SSAInstruction instrs[] = getStatements(options, warnings);
-  // result = new SyntheticIR(this, Everywhere.EVERYWHERE,
-  // makeControlFlowGraph(), instrs, options, summary.getConstants(),
-  // warnings);
-  // ir = CacheReference.make(result);
-  // }
-  // return result;
-  // }
   @Override
   public IR makeIR(Context context, SSAOptions options) {
     SSAInstruction instrs[] = getStatements(options);
