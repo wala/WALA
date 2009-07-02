@@ -27,13 +27,14 @@ import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.strings.Atom;
 
 /**
+ * An implementation of {@link IMethod}, usually for a synthesized method that is not read directly from any source {@link Module}.
  */
 public class SyntheticMethod implements IMethod {
 
   public final static SSAInstruction[] NO_STATEMENTS = new SSAInstruction[0];
 
   private final MethodReference method;
-  
+
   protected final IMethod resolvedMethod;
 
   protected final IClass declaringClass;
@@ -41,7 +42,6 @@ public class SyntheticMethod implements IMethod {
   private final boolean isStatic;
 
   private final boolean isFactory;
-
 
   public SyntheticMethod(MethodReference method, IClass declaringClass, boolean isStatic, boolean isFactory) {
     super();
@@ -54,7 +54,6 @@ public class SyntheticMethod implements IMethod {
     this.isStatic = isStatic;
     this.isFactory = isFactory;
   }
-  
 
   public SyntheticMethod(IMethod method, IClass declaringClass, boolean isStatic, boolean isFactory) {
     super();
@@ -124,7 +123,7 @@ public class SyntheticMethod implements IMethod {
   public boolean isFinal() {
     return false;
   }
-  
+
   /**
    * @see com.ibm.wala.classLoader.IMethod#isVolatile()
    */
@@ -162,28 +161,29 @@ public class SyntheticMethod implements IMethod {
     return new InducedCFG(instructions, this, Everywhere.EVERYWHERE);
   }
 
-  public BytecodeStream getBytecodeStream() throws UnsupportedOperationException  {
+  public BytecodeStream getBytecodeStream() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
   /*
    * TODO: why isn't this abstract?
+   * 
    * @see com.ibm.wala.classLoader.IMethod#getMaxLocals()
-   * @throws UnsupportedOperationException  unconditionally
+   * 
+   * @throws UnsupportedOperationException unconditionally
    */
   public int getMaxLocals() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-
-  /* 
+  /*
    * TODO: why isn't this abstract?
+   * 
    * @see com.ibm.wala.classLoader.IMethod#getMaxStackHeight()
    */
   public int getMaxStackHeight() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
-
 
   public IClass getDeclaringClass() {
     return declaringClass;
@@ -199,7 +199,6 @@ public class SyntheticMethod implements IMethod {
     return s.toString();
   }
 
-
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -208,7 +207,6 @@ public class SyntheticMethod implements IMethod {
     result = prime * result + ((method == null) ? 0 : method.hashCode());
     return result;
   }
-
 
   @Override
   public boolean equals(Object obj) {
@@ -232,7 +230,6 @@ public class SyntheticMethod implements IMethod {
     return true;
   }
 
-
   public boolean hasExceptionHandler() {
     return false;
   }
@@ -251,15 +248,17 @@ public class SyntheticMethod implements IMethod {
 
   /*
    * TODO: why isn't this abstract?
+   * 
    * @param options options governing SSA construction
    */
+  @Deprecated
   public SSAInstruction[] getStatements(SSAOptions options) {
     return NO_STATEMENTS;
   }
 
-
   /**
    * Most subclasses should override this.
+   * 
    * @param context TODO
    * @param options options governing IR conversion
    */
@@ -354,14 +353,12 @@ public class SyntheticMethod implements IMethod {
     return getStatements(SSAOptions.defaultOptions());
   }
 
-
   /*
    * @see com.ibm.wala.classLoader.IMethod#getReturnType()
    */
   public TypeReference getReturnType() {
     return getReference().getReturnType();
   }
-
 
   public IClassHierarchy getClassHierarchy() {
     return getDeclaringClass().getClassHierarchy();

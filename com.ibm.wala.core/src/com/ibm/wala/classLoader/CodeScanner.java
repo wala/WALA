@@ -26,7 +26,6 @@ import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
-import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SSAInstruction.Visitor;
 import com.ibm.wala.types.FieldReference;
@@ -48,7 +47,7 @@ public class CodeScanner {
     }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
-      return getCallSites(sm.getStatements(SSAOptions.defaultOptions()));
+      return getCallSites(sm.getStatements());
     } else {
       return getCallSitesFromShrikeBT((IBytecodeMethod) m);
     }
@@ -64,7 +63,7 @@ public class CodeScanner {
     }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
-      return getFieldsRead(sm.getStatements(SSAOptions.defaultOptions()));
+      return getFieldsRead(sm.getStatements());
     } else {
       return getFieldsReadFromShrikeBT((ShrikeCTMethod) m);
     }
@@ -80,7 +79,7 @@ public class CodeScanner {
     }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
-      return getFieldsWritten(sm.getStatements(SSAOptions.defaultOptions()));
+      return getFieldsWritten(sm.getStatements());
     } else {
       return getFieldsWrittenFromShrikeBT((ShrikeCTMethod) m);
     }
@@ -97,7 +96,7 @@ public class CodeScanner {
     }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
-      return getArraysWritten(sm.getStatements(SSAOptions.defaultOptions()));
+      return getArraysWritten(sm.getStatements());
     } else {
       return getArraysWrittenFromShrikeBT((ShrikeCTMethod) m);
     }
@@ -113,7 +112,7 @@ public class CodeScanner {
     }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
-      return getNewSites(sm.getStatements(SSAOptions.defaultOptions()));
+      return getNewSites(sm.getStatements());
     } else {
       return getNewSitesFromShrikeBT((ShrikeCTMethod) m);
     }
@@ -125,7 +124,7 @@ public class CodeScanner {
     }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
-      return hasObjectArrayLoad(sm.getStatements(SSAOptions.defaultOptions()));
+      return hasObjectArrayLoad(sm.getStatements());
     } else {
       return hasShrikeBTObjectArrayLoad((ShrikeCTMethod) m);
     }
@@ -137,7 +136,7 @@ public class CodeScanner {
     }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
-      return hasObjectArrayStore(sm.getStatements(SSAOptions.defaultOptions()));
+      return hasObjectArrayStore(sm.getStatements());
     } else {
       return hasShrikeBTObjectArrayStore((ShrikeCTMethod) m);
     }
@@ -149,7 +148,7 @@ public class CodeScanner {
     }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
-      return getCaughtExceptions(m.getDeclaringClass().getClassLoader().getLanguage(), sm.getStatements(SSAOptions.defaultOptions()));
+      return getCaughtExceptions(m.getDeclaringClass().getClassLoader().getLanguage(), sm.getStatements());
     } else {
       return getShrikeBTCaughtExceptions((ShrikeCTMethod) m);
     }
@@ -168,7 +167,7 @@ public class CodeScanner {
     }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
-      return iterateCastTypes(sm.getStatements(SSAOptions.defaultOptions()));
+      return iterateCastTypes(sm.getStatements());
     } else {
       return iterateShrikeBTCastTypes((ShrikeCTMethod) m);
     }
