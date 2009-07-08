@@ -37,9 +37,14 @@
  */
 package com.ibm.wala.demandpa.genericutil;
 
+import com.ibm.wala.util.functions.Function;
+
 /**
  * A simple interface for defining a function that maps objects.
+ * 
+ * @deprecated use {@link Function} instead
  */
+@Deprecated
 public interface Mapper<T,U> {
     public U map(T obj_);
  }

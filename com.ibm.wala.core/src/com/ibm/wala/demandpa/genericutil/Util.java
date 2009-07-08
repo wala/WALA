@@ -53,6 +53,7 @@ import java.util.Set;
 
 import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.functions.Function;
 
 /**
  * Miscellaneous utility functions.
@@ -218,13 +219,13 @@ public class Util {
    * 
    * @throws IllegalArgumentException if srcList == null
    */
-  public static <T, U> List<U> map(List<T> srcList, Mapper<T, U> mapper) throws IllegalArgumentException {
+  public static <T, U> List<U> map(List<T> srcList, Function<T, U> f) throws IllegalArgumentException {
     if (srcList == null) {
       throw new IllegalArgumentException("srcList == null");
     }
     ArrayList<U> result = new ArrayList<U>();
     for (Iterator<T> srcIter = srcList.iterator(); srcIter.hasNext();) {
-      result.add(mapper.map(srcIter.next()));
+      result.add(f.apply(srcIter.next()));
     }
     return result;
   }
@@ -267,13 +268,13 @@ public class Util {
    * 
    * @throws IllegalArgumentException if srcSet == null
    */
-  public static <T, U> Set<U> mapToSet(Collection<T> srcSet, Mapper<T, U> mapper) throws IllegalArgumentException {
+  public static <T, U> Set<U> mapToSet(Collection<T> srcSet, Function<T, U> f) throws IllegalArgumentException {
     if (srcSet == null) {
       throw new IllegalArgumentException("srcSet == null");
     }
     HashSet<U> result = HashSetFactory.make();
     for (Iterator<T> srcIter = srcSet.iterator(); srcIter.hasNext();) {
-      result.add(mapper.map(srcIter.next()));
+      result.add(f.apply(srcIter.next()));
     }
     return result;
   }
