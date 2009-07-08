@@ -37,15 +37,15 @@
  */
 package com.ibm.wala.demandpa.flowgraph;
 
-import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 
 public class ParamLabel extends CallLabel {
 
-  private ParamLabel(CallSiteAndCGNode callSite) {
+  private ParamLabel(CallerSiteContext callSite) {
     super(callSite);
   }
 
-  public static ParamLabel make(CallSiteAndCGNode callSite) {
+  public static ParamLabel make(CallerSiteContext callSite) {
     return new ParamLabel(callSite);
   }
 

@@ -37,16 +37,16 @@
  */
 package com.ibm.wala.demandpa.flowgraph;
 
-import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 
 public abstract class CallLabel implements IFlowLabel {
 
-  protected final CallSiteAndCGNode callSite;
+  protected final CallerSiteContext callSite;
 
-  protected CallLabel(CallSiteAndCGNode callSite) {
+  protected CallLabel(CallerSiteContext callSite) {
     this.callSite = callSite;
   }
-  public CallSiteAndCGNode getCallSite() {
+  public CallerSiteContext getCallSite() {
     return callSite;
   }
 

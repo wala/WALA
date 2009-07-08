@@ -39,32 +39,30 @@ package com.ibm.wala.demandpa.alg;
 
 import com.ibm.wala.demandpa.alg.statemachine.StateMachine.State;
 import com.ibm.wala.demandpa.genericutil.ImmutableStack;
-import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 
 /**
  * Representation for a calling context.
- * 
- * @author Manu Sridharan
  */
-public class CallStack extends ImmutableStack<CallSiteAndCGNode> implements State {
+public class CallStack extends ImmutableStack<CallerSiteContext> implements State {
 
   public static CallStack emptyCallStack() {
-    CallStack ret = new CallStack(new CallSiteAndCGNode[0]);
+    CallStack ret = new CallStack(new CallerSiteContext[0]);
     return ret;
   }
 
-  protected CallStack(CallSiteAndCGNode[] entries) {
+  protected CallStack(CallerSiteContext[] entries) {
     super(entries);
   }
 
   @Override
-  protected CallStack makeStack(CallSiteAndCGNode[] tmpEntries) {
+  protected CallStack makeStack(CallerSiteContext[] tmpEntries) {
     return new CallStack(tmpEntries);
   }
 
   @Override
-  protected CallSiteAndCGNode[] makeInternalArray(int size) {
-    return new CallSiteAndCGNode[size];
+  protected CallerSiteContext[] makeInternalArray(int size) {
+    return new CallerSiteContext[size];
   }
 
   @Override
@@ -74,7 +72,7 @@ public class CallStack extends ImmutableStack<CallSiteAndCGNode> implements Stat
   }
 
   @Override
-  public CallStack push(CallSiteAndCGNode entry) {
+  public CallStack push(CallerSiteContext entry) {
     final CallStack ret = (CallStack) super.push(entry);
     return ret;
   }

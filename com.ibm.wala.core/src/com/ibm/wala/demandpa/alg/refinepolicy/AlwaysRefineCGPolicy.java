@@ -37,16 +37,14 @@
  */
 package com.ibm.wala.demandpa.alg.refinepolicy;
 
-import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 
 /**
  * A policy that always refines the call graph.
- * @author Manu Sridharan
- *
  */
 public class AlwaysRefineCGPolicy implements CallGraphRefinePolicy {
 
-  public boolean shouldRefine(CallSiteAndCGNode callSiteAndCGNode) {
+  public boolean shouldRefine(CallerSiteContext callSiteAndCGNode) {
     return true;
   }
 

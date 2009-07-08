@@ -39,9 +39,14 @@ package com.ibm.wala.demandpa.util;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.Pair;
 
+/**
+ * Deprecated: use {@link CallerSiteContext} instead
+ */
+@Deprecated
 public class CallSiteAndCGNode extends Pair<CallSiteReference, CGNode> {
 
   public CallSiteAndCGNode(CallSiteReference fst, CGNode snd) {

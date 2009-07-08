@@ -86,7 +86,6 @@ import com.ibm.wala.demandpa.genericutil.HashSetMultiMap;
 import com.ibm.wala.demandpa.genericutil.MultiMap;
 import com.ibm.wala.demandpa.genericutil.Util;
 import com.ibm.wala.demandpa.util.ArrayContents;
-import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
 import com.ibm.wala.demandpa.util.MemoryAccess;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.demandpa.util.PointerParamValueNumIterator;
@@ -106,6 +105,7 @@ import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.SingleClassFilter;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.SingleInstanceFilter;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.TypeFilter;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ExceptionReturnValueKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IInstruction;
@@ -137,9 +137,6 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
 
 /**
  * Demand-driven refinement-based points-to analysis.
- * 
- * @author Manu Sridharan
- * 
  */
 public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
@@ -625,12 +622,12 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     /**
      * maps a pointer key to those on-the-fly virtual calls for which it is the receiver
      */
-    private final MultiMap<PointerKeyAndState, CallSiteAndCGNode> pkToOTFCalls = HashSetMultiMap.make();
+    private final MultiMap<PointerKeyAndState, CallerSiteContext> pkToOTFCalls = HashSetMultiMap.make();
 
     /**
      * cache of the targets discovered for a call site during on-the-fly call graph construction
      */
-    private final MultiMap<CallSiteAndCGNode, IMethod> callToOTFTargets = ArraySetMultiMap.make();
+    private final MultiMap<CallerSiteContext, IMethod> callToOTFTargets = ArraySetMultiMap.make();
 
     // alloc nodes to the fields we're looking to match on them,
     // matching getfield with putfield
@@ -856,13 +853,11 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     /**
      * should only be called when pk's points-to set has just been updated. add pk to the points-to worklist, and re-propagate and
      * calls that had pk as the receiver.
-     * 
-     * @param pkAndState
      */
     void addToPToWorklist(PointerKeyAndState pkAndState) {
       pointsToWorklist.add(pkAndState);
-      Set<CallSiteAndCGNode> otfCalls = pkToOTFCalls.get(pkAndState);
-      for (CallSiteAndCGNode callSiteAndCGNode : otfCalls) {
+      Set<CallerSiteContext> otfCalls = pkToOTFCalls.get(pkAndState);
+      for (CallerSiteContext callSiteAndCGNode : otfCalls) {
         propTargets(pkAndState, callSiteAndCGNode);
       }
     }
@@ -909,9 +904,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      * @param receiverAndState the receiver
      * @param callSiteAndCGNode the call
      */
-    void propTargets(PointerKeyAndState receiverAndState, CallSiteAndCGNode callSiteAndCGNode) {
-      final CGNode caller = callSiteAndCGNode.getCGNode();
-      CallSiteReference call = callSiteAndCGNode.getCallSiteReference();
+    void propTargets(PointerKeyAndState receiverAndState, CallerSiteContext callSiteAndCGNode) {
+      final CGNode caller = callSiteAndCGNode.getCaller();
+      CallSiteReference call = callSiteAndCGNode.getCallSite();
       final State receiverState = receiverAndState.getState();
       OrdinalSet<InstanceKeyAndState> p2set = makeOrdinalSet(find(pkToP2Set, receiverAndState));
       for (InstanceKeyAndState ikAndState : p2set) {
@@ -942,7 +937,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           // in direction of value flow and reverse
           SSAAbstractInvokeInstruction[] calls = getCallInstrs(caller, call);
           for (final SSAAbstractInvokeInstruction invokeInstr : calls) {
-            final ReturnLabel returnLabel = ReturnLabel.make(new CallSiteAndCGNode(call, caller));
+            final ReturnLabel returnLabel = ReturnLabel.make(new CallerSiteContext(caller, call));
             if (invokeInstr.hasDef()) {
               final PointerKeyAndState defAndState = new PointerKeyAndState(heapModel.getPointerKeyForLocal(caller, invokeInstr
                   .getDef()), receiverState);
@@ -970,7 +965,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             for (Iterator<Integer> iter = new PointerParamValueNumIterator(targetForCall); iter.hasNext();) {
               final int formalNum = iter.next();
               final int actualNum = formalNum - 1;
-              final ParamBarLabel paramBarLabel = ParamBarLabel.make(new CallSiteAndCGNode(call, caller));
+              final ParamBarLabel paramBarLabel = ParamBarLabel.make(new CallerSiteContext(caller, call));
               doTransition(receiverState, paramBarLabel, new Function<State, Object>() {
 
                 public Object apply(State formalState) {
@@ -1115,9 +1110,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           // System.err.println("at param");
           final CGNode callee = localPk.getNode();
           final int paramPos = localPk.getValueNumber() - 1;
-          for (final CallSiteAndCGNode callSiteAndCGNode : g.getPotentialCallers(localPk)) {
-            final CGNode caller = callSiteAndCGNode.getCGNode();
-            final CallSiteReference call = callSiteAndCGNode.getCallSiteReference();
+          for (final CallerSiteContext callSiteAndCGNode : g.getPotentialCallers(localPk)) {
+            final CGNode caller = callSiteAndCGNode.getCaller();
+            final CallSiteReference call = callSiteAndCGNode.getCallSite();
             // final IR ir = getIR(caller);
             if (hasNullIR(caller))
               continue;
@@ -1170,7 +1165,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           boolean isExceptional = localPk.getValueNumber() == callInstr.getException();
 
           CallSiteReference callSiteRef = callInstr.getCallSite();
-          CallSiteAndCGNode callSiteAndCGNode = new CallSiteAndCGNode(callSiteRef, caller);
+          CallerSiteContext callSiteAndCGNode = new CallerSiteContext(caller, callSiteRef);
           // get call targets
           Set<CGNode> possibleCallees = g.getPossibleTargets(caller, callSiteRef, localPk);
 
@@ -1213,8 +1208,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               }
             } else {
               // if necessary, raise a query for the call site
-              queryCallTargets(callSiteAndCGNode, getCallInstrs(caller, callSiteAndCGNode.getCallSiteReference()), curPkAndState
-                  .getState());
+              queryCallTargets(callSiteAndCGNode, getCallInstrs(caller, callSiteAndCGNode.getCallSite()), curPkAndState.getState());
             }
           }
         }
@@ -1249,8 +1243,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      * Initiates a query for the targets of some virtual call, by asking for points-to set of receiver. NOTE: if receiver has
      * already been queried, will not do any additional propagation for already-discovered virtual call targets
      */
-    private void queryCallTargets(CallSiteAndCGNode callSiteAndCGNode, SSAAbstractInvokeInstruction[] callInstrs, State callerState) {
-      final CGNode caller = callSiteAndCGNode.getCGNode();
+    private void queryCallTargets(CallerSiteContext callSiteAndCGNode, SSAAbstractInvokeInstruction[] callInstrs, State callerState) {
+      final CGNode caller = callSiteAndCGNode.getCaller();
       for (SSAAbstractInvokeInstruction callInstr : callInstrs) {
         PointerKey thisArg = heapModel.getPointerKeyForLocal(caller, callInstr.getUse(0));
         PointerKeyAndState thisArgAndState = new PointerKeyAndState(thisArg, callerState);
@@ -1266,7 +1260,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             propTargets(thisArgAndState, callSiteAndCGNode);
           } else {
             if (DEBUG) {
-              final CallSiteReference call = callSiteAndCGNode.getCallSiteReference();
+              final CallSiteReference call = callSiteAndCGNode.getCallSite();
               System.err.println("querying for targets of call " + call + " in " + caller);
             }
           }
@@ -1401,11 +1395,11 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         }
         final boolean isExceptional = returnKey instanceof ExceptionReturnValueKey;
         // iterate over callers
-        for (final CallSiteAndCGNode callSiteAndCGNode : g.getPotentialCallers(returnKey)) {
-          final CGNode caller = callSiteAndCGNode.getCGNode();
+        for (final CallerSiteContext callSiteAndCGNode : g.getPotentialCallers(returnKey)) {
+          final CGNode caller = callSiteAndCGNode.getCaller();
           if (hasNullIR(caller))
             continue;
-          final CallSiteReference call = callSiteAndCGNode.getCallSiteReference();
+          final CallSiteReference call = callSiteAndCGNode.getCallSite();
           if (!addGraphs) {
             // shouldn't need to add the graph, so check if it is present;
             // if not, terminate
@@ -1468,7 +1462,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             if (localPk.getValueNumber() != callInstr.getUse(i))
               continue;
             CallSiteReference callSiteRef = callInstr.getCallSite();
-            CallSiteAndCGNode callSiteAndCGNode = new CallSiteAndCGNode(callSiteRef, caller);
+            CallerSiteContext callSiteAndCGNode = new CallerSiteContext(caller, callSiteRef);
             // get call targets
             Set<CGNode> possibleCallees = g.getPossibleTargets(caller, callSiteRef, localPk);
             // construct graph for each target
@@ -1507,7 +1501,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                 }
               } else {
                 // if necessary, raise a query for the call site
-                queryCallTargets(callSiteAndCGNode, getCallInstrs(caller, callSiteAndCGNode.getCallSiteReference()), curState);
+                queryCallTargets(callSiteAndCGNode, getCallInstrs(caller, callSiteAndCGNode.getCallSite()), curState);
               }
             }
           }
@@ -1830,7 +1824,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       /**
        * cache of the targets discovered for a call site during on-the-fly call graph construction
        */
-      private final MultiMap<CallSiteAndCGNode, IMethod> callToOTFTargets = ArraySetMultiMap.make();
+      private final MultiMap<CallerSiteContext, IMethod> callToOTFTargets = ArraySetMultiMap.make();
 
       void propagate(PointerKeyAndState pkAndState) {
         if (visited.add(pkAndState)) {
@@ -1847,13 +1841,13 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         return true;
       }
 
-      private Collection<IMethod> getOTFTargets(CallSiteAndCGNode callSiteAndCGNode, SSAAbstractInvokeInstruction[] callInstrs,
+      private Collection<IMethod> getOTFTargets(CallerSiteContext callSiteAndCGNode, SSAAbstractInvokeInstruction[] callInstrs,
           State callerState) {
         if (DEBUG_TOPLEVEL) {
           System.err.println("toplevel refining call site " + callSiteAndCGNode);
         }
-        final CallSiteReference call = callSiteAndCGNode.getCallSiteReference();
-        final CGNode caller = callSiteAndCGNode.getCGNode();
+        final CallSiteReference call = callSiteAndCGNode.getCallSite();
+        final CGNode caller = callSiteAndCGNode.getCaller();
         Collection<IMethod> result = HashSetFactory.make();
         for (SSAAbstractInvokeInstruction callInstr : callInstrs) {
           PointerKey thisArg = heapModel.getPointerKeyForLocal(caller, callInstr.getUse(0));
@@ -1882,9 +1876,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             // System.err.println("at param");
             final CGNode callee = localPk.getNode();
             final int paramPos = localPk.getValueNumber() - 1;
-            for (final CallSiteAndCGNode callSiteAndCGNode : g.getPotentialCallers(localPk)) {
-              final CGNode caller = callSiteAndCGNode.getCGNode();
-              final CallSiteReference call = callSiteAndCGNode.getCallSiteReference();
+            for (final CallerSiteContext callSiteAndCGNode : g.getPotentialCallers(localPk)) {
+              final CGNode caller = callSiteAndCGNode.getCaller();
+              final CallSiteReference call = callSiteAndCGNode.getCallSite();
               // final IR ir = getIR(caller);
               if (hasNullIR(caller))
                 continue;
@@ -1941,7 +1935,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             boolean isExceptional = localPk.getValueNumber() == callInstr.getException();
 
             CallSiteReference callSiteRef = callInstr.getCallSite();
-            CallSiteAndCGNode callSiteAndCGNode = new CallSiteAndCGNode(callSiteRef, caller);
+            CallerSiteContext callSiteAndCGNode = new CallerSiteContext(caller, callSiteRef);
             // get call targets
             Set<CGNode> possibleCallees = g.getPossibleTargets(caller, callSiteRef, localPk);
             if (noOnTheFlyNeeded(callSiteAndCGNode, possibleCallees)) {
@@ -1964,7 +1958,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               }
             } else {
               Collection<IMethod> otfTargets = getOTFTargets(callSiteAndCGNode, getCallInstrs(caller, callSiteAndCGNode
-                  .getCallSiteReference()), curPkAndState.getState());
+                  .getCallSite()), curPkAndState.getState());
               for (CGNode callee : possibleCallees) {
                 if (otfTargets.contains(callee.getMethod())) {
                   if (hasNullIR(callee)) {
@@ -2251,7 +2245,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     return shouldRefine;
   }
 
-  private boolean noOnTheFlyNeeded(CallSiteAndCGNode call, Set<CGNode> possibleTargets) {
+  private boolean noOnTheFlyNeeded(CallerSiteContext call, Set<CGNode> possibleTargets) {
     // NOTE: if we want to be more precise for queries in dead code,
     // we shouldn't rely on possibleTargets here (since there may be
     // zero targets)

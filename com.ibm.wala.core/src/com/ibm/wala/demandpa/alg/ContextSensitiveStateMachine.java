@@ -61,14 +61,12 @@ import com.ibm.wala.demandpa.flowgraph.PutFieldLabel;
 import com.ibm.wala.demandpa.flowgraph.ReturnBarLabel;
 import com.ibm.wala.demandpa.flowgraph.ReturnLabel;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel.IFlowLabelVisitor;
-import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
  * A state machine for tracking calling context during a points-to query.
  * Filters unrealizable paths.
- * 
- * @author Manu Sridharan
  * 
  */
 public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
@@ -143,7 +141,7 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
       handleMethodExit(label.getCallSite());
     }
 
-    private void handleMethodExit(CallSiteAndCGNode callSite) {
+    private void handleMethodExit(CallerSiteContext callSite) {
       if (recursionHandler.isRecursive(callSite)) {
         nextState = prevStack;
       } else if (prevStack.isEmpty()) {
@@ -160,7 +158,7 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
       handleMethodEntry(label.getCallSite());
     }
 
-    private void handleMethodEntry(CallSiteAndCGNode callSite) {
+    private void handleMethodEntry(CallerSiteContext callSite) {
       if (recursionHandler.isRecursive(callSite)) {
         // just ignore it; we don't track recursive calls
         nextState = prevStack;
@@ -169,11 +167,11 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
           System.err.println("FOUND RECURSION");
           System.err.println("stack " + prevStack + " contains " + callSite);
         }
-        CallSiteAndCGNode topCallSite = null;
+        CallerSiteContext topCallSite = null;
         CallStack tmpStack = prevStack;
         // mark the appropriate call sites as recursive
         // and pop them
-        Collection<CallSiteAndCGNode> newRecursiveSites = HashSetFactory.make();
+        Collection<CallerSiteContext> newRecursiveSites = HashSetFactory.make();
         do {
           topCallSite = tmpStack.peek();
           newRecursiveSites.add(topCallSite);
@@ -262,9 +260,9 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
   
   public static interface RecursionHandler {
  
-    public boolean isRecursive(CallSiteAndCGNode callSite);
+    public boolean isRecursive(CallerSiteContext callSite);
     
-    public void makeRecursive(Collection<CallSiteAndCGNode> callSites);
+    public void makeRecursive(Collection<CallerSiteContext> callSites);
     
     /**
      * in lieu of creating factories
@@ -275,18 +273,16 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
   /**
    * handles method recursion by only collapsing cycles of recursive
    * calls observed during analysis
-   * @author manu
-   *
    */
   public static class BasicRecursionHandler implements RecursionHandler {
 
-    private final HashSet<CallSiteAndCGNode> recursiveCallSites = HashSetFactory.make();
+    private final HashSet<CallerSiteContext> recursiveCallSites = HashSetFactory.make();
 
-    public boolean isRecursive(CallSiteAndCGNode callSite) {
+    public boolean isRecursive(CallerSiteContext callSite) {
       return recursiveCallSites.contains(callSite);
     }
 
-    public void makeRecursive(Collection<CallSiteAndCGNode> callSites) {
+    public void makeRecursive(Collection<CallerSiteContext> callSites) {
       recursiveCallSites.addAll(callSites);
     }
     

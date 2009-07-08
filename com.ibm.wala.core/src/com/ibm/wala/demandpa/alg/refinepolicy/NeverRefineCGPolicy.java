@@ -37,11 +37,11 @@
  */
 package com.ibm.wala.demandpa.alg.refinepolicy;
 
-import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 
 public class NeverRefineCGPolicy implements CallGraphRefinePolicy {
 
-  public boolean shouldRefine(CallSiteAndCGNode callSiteAndCGNode) {
+  public boolean shouldRefine(CallerSiteContext callSiteAndCGNode) {
     return false;
   }
 

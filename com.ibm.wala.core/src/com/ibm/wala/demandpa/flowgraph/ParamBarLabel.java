@@ -37,25 +37,21 @@
  */
 package com.ibm.wala.demandpa.flowgraph;
 
-import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 
 /**
- * @author Manu Sridharan
- * 
  */
 public class ParamBarLabel extends CallLabel {
 
-  private ParamBarLabel(CallSiteAndCGNode callSite) {
+  private ParamBarLabel(CallerSiteContext callSite) {
     super(callSite);
   }
 
-  public static ParamBarLabel make(CallSiteAndCGNode callSite) {
+  public static ParamBarLabel make(CallerSiteContext callSite) {
     return new ParamBarLabel(callSite);
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see demandGraph.IFlowLabel#bar()
    */
   public ParamLabel bar() {
@@ -63,8 +59,6 @@ public class ParamBarLabel extends CallLabel {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see demandGraph.IFlowLabel#visit(demandGraph.IFlowLabel.IFlowLabelVisitor,
    *      java.lang.Object)
    */

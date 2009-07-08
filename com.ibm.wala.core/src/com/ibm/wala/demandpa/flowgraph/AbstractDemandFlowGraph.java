@@ -46,7 +46,6 @@ import java.util.Set;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -55,6 +54,7 @@ import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
@@ -350,9 +350,9 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     }
   }
 
-  final Map<CGNode, Set<CallSiteAndCGNode>> callerCache = HashMapFactory.make();
+  final Map<CGNode, Set<CallerSiteContext>> callerCache = HashMapFactory.make();
 
-  public Set<CallSiteAndCGNode> getPotentialCallers(PointerKey formalPk) {
+  public Set<CallerSiteContext> getPotentialCallers(PointerKey formalPk) {
     CGNode callee = null;
     if (formalPk instanceof LocalPointerKey) {
       callee = ((LocalPointerKey) formalPk).getNode();
@@ -361,14 +361,14 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     } else {
       throw new IllegalArgumentException("formalPk must represent a local");
     }
-    Set<CallSiteAndCGNode> ret = callerCache.get(callee);
+    Set<CallerSiteContext> ret = callerCache.get(callee);
     if (ret == null) {
       ret = HashSetFactory.make();
       for (Iterator<? extends CGNode> predNodes = cg.getPredNodes(callee); predNodes.hasNext();) {
         CGNode caller = predNodes.next();
         for (Iterator<CallSiteReference> iterator = cg.getPossibleSites(caller, callee); iterator.hasNext();) {
           CallSiteReference call = iterator.next();
-          ret.add(new CallSiteAndCGNode(call, caller));
+          ret.add(new CallerSiteContext(caller, call));
         }
       }
       callerCache.put(callee, ret);

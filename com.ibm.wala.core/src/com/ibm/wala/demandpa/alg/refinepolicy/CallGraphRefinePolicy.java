@@ -37,29 +37,22 @@
  */
 package com.ibm.wala.demandpa.alg.refinepolicy;
 
-import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 
 /**
  * Interface for specifying a policy for refining the call graph.
- * 
- * @author Manu Sridharan
- * 
  */
 public interface CallGraphRefinePolicy {
 
   /**
-   * 
    * @param callSiteAndCGNode
-   * @return <code>true</code> if the analysis should attempt to determine
-   *         targets for the virtual call on-the-fly, and <code>false</code>
-   *         otherwise
+   * @return <code>true</code> if the analysis should attempt to determine targets for the virtual call on-the-fly, and
+   *         <code>false</code> otherwise
    */
-  public boolean shouldRefine(CallSiteAndCGNode callSiteAndCGNode);
+  public boolean shouldRefine(CallerSiteContext callSiteAndCGNode);
 
   /**
-   * 
-   * @return <code>true</code> if more refinement can be done, and hence
-   *         another pass can be attempted; <code>false</code> otherwise
+   * @return <code>true</code> if more refinement can be done, and hence another pass can be attempted; <code>false</code> otherwise
    */
   public boolean nextPass();
 

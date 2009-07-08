@@ -37,23 +37,21 @@
  */
 package com.ibm.wala.demandpa.alg.refinepolicy;
 
-import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 import com.ibm.wala.types.MethodReference;
 
 /**
  * A call graph refinement policy with manual annotations for which
  * virtual call sites to refine.
- * 
- * @author Manu Sridharan
  *
  */
 public class ManualCGRefinePolicy implements CallGraphRefinePolicy {
 
-  public boolean shouldRefine(CallSiteAndCGNode callSiteAndCGNode) throws IllegalArgumentException {
+  public boolean shouldRefine(CallerSiteContext callSiteAndCGNode) throws IllegalArgumentException {
     if (callSiteAndCGNode == null) {
       throw new IllegalArgumentException("callSiteAndCGNode == null");
     }
-    MethodReference declaredTarget = callSiteAndCGNode.getCallSiteReference().getDeclaredTarget();
+    MethodReference declaredTarget = callSiteAndCGNode.getCallSite().getDeclaredTarget();
     if (declaredTarget.toString().indexOf("toString()Ljava/lang/String") != -1) {
       return false;
     }

@@ -37,19 +37,17 @@
  */
 package com.ibm.wala.demandpa.flowgraph;
 
-import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 
 /**
- * @author Manu Sridharan
- * 
  */
 public class ReturnBarLabel extends CallLabel {
 
-  private ReturnBarLabel(CallSiteAndCGNode callSite) {
+  private ReturnBarLabel(CallerSiteContext callSite) {
     super(callSite);
   }
 
-  public static ReturnBarLabel make(CallSiteAndCGNode callSite) {
+  public static ReturnBarLabel make(CallerSiteContext callSite) {
     return new ReturnBarLabel(callSite);
   }
 
