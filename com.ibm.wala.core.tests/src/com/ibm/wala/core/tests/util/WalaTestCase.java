@@ -18,8 +18,6 @@ import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * Simple extension to JUnit test case.
- * 
- * @author sfink
  */
 public abstract class WalaTestCase extends TestCase {
 
