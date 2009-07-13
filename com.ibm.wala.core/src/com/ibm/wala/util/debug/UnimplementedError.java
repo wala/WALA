@@ -13,8 +13,6 @@ package com.ibm.wala.util.debug;
 
 /**
  * Something that's not implemented yet.
- *
- * @author sfink
  */
 public class UnimplementedError extends Error {
   public static final long serialVersionUID = 20981098918191L;
