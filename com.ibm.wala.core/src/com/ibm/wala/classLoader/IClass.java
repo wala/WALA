@@ -99,19 +99,19 @@ public interface IClass extends IClassHierarchyDweller {
   /**
    * @return String holding the name of the source file that defined this class, or null if none found
    * @throws NoSuchElementException if this class was generated from more than one source file
-   * @deprecated The assumption that a class is generated from a single source file is java
-   * specific, and will change in the future.  In place of this API, use the APIs in IClassLoader.    
+   * The assumption that a class is generated from a single source file is java
+   * specific, and will change in the future.  In place of this API, use the APIs in IClassLoader.  
+   * SJF .. we should think about this deprecation.  postponing deprecation for now.  
    */
-  @Deprecated
   String getSourceFileName() throws NoSuchElementException;
 
   /**
    * @return String representing the source file holding this class, or null if not found
    * @throws NoSuchElementException if this class was generated from more than one source file
-   * @deprecated The assumption that a class is generated from a single source file is java
-   * specific, and will change in the future.   In place of this API, use the APIs in IClassLoader.    
+   * The assumption that a class is generated from a single source file is java
+   * specific, and will change in the future.   In place of this API, use the APIs in IClassLoader.  
+   * SJF .. we should think about this deprecation.  postponing deprecation for now.    
    */
-  @Deprecated
   InputStream getSource() throws NoSuchElementException;
 
   /**
