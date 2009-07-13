@@ -19,6 +19,7 @@ import com.ibm.wala.util.collections.Filter;
 /**
  * A file which accepts an {@link IClass} only if the package name matches a regular expression
  */
+@Deprecated
 public class PackageExpressionFilter implements Filter<IClass> {
 
   private final Pattern pattern;
