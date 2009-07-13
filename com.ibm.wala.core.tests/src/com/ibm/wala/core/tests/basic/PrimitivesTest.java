@@ -54,8 +54,6 @@ import com.ibm.wala.util.intset.SparseLongSet;
 
 /**
  * JUnit tests for some primitive operations.
- * 
- * @author sfink
  */
 public class PrimitivesTest extends WalaTestCase {
 

@@ -15,8 +15,6 @@ import com.ibm.wala.util.intset.OrdinalSet;
 
 /**
  * JUnit tests for some {@link OrdinalSet} operations.
- * 
- * @author sfink
  */
 public class OrdinalSetTest extends WalaTestCase {
 

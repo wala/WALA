@@ -38,8 +38,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * @author Julian Dolby
- * 
  */
 public class PiNodeCallGraphTest extends WalaTestCase {
 

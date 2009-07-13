@@ -33,8 +33,6 @@ import com.ibm.wala.util.CancelException;
 
 /**
  * Check properties of a call to clone() in RTA
- * 
- * @author Bruno Dufour
  */
 public class CloneTest extends WalaTestCase {
 

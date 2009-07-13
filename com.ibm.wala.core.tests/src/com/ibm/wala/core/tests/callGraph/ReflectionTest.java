@@ -40,10 +40,7 @@ import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
- * 
  * Tests for Call Graph construction
- * 
- * @author sfink
  */
 
 public class ReflectionTest extends WalaTestCase {

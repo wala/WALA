@@ -33,10 +33,7 @@ import com.ibm.wala.util.CancelException;
 
 /**
  * Tests for synthetic methods
- * 
- * @author sfink
  */
-
 public class SyntheticTest extends WalaTestCase {
 
   public void testMultiSubtypes() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {

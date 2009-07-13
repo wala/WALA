@@ -30,12 +30,7 @@ import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 
 /**
- * 
  * Simple Regression test for a graph-based dataflow problem
- * 
- * @author Donald P Pazel
- * @author sfink
- * @author Julian Dolby (dolby@us.ibm.com)
  */
 public class GraphDataflowTest extends WalaTestCase {
 

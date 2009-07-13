@@ -33,8 +33,6 @@ import com.ibm.wala.util.CancelException;
 
 /**
  * Check handling of class constants (test for part of 1.5 support)
- * 
- * @author Julian Dolby (dolby@us.ibm.com)
  */
 public class ClassConstantTest extends WalaTestCase {
 

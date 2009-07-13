@@ -27,8 +27,6 @@ import com.ibm.wala.util.perf.StopwatchGC;
 
 /**
  * Utilities for call graph tests
- * 
- * @author sfink
  */
 public class CallGraphTestUtil {
 

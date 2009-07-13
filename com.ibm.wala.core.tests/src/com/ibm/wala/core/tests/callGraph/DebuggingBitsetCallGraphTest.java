@@ -25,10 +25,7 @@ import com.ibm.wala.util.intset.MutableSparseIntSetFactory;
 import com.ibm.wala.util.intset.SemiSparseMutableIntSetFactory;
 
 /**
- * 
  * Run the call graph only test with paranoid debugging bit vectors
- * 
- * @author Julian Dolby
  */
 public class DebuggingBitsetCallGraphTest extends WalaTestCase {
 
