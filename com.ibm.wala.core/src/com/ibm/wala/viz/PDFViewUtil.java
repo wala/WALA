@@ -31,8 +31,6 @@ import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * utilities for integrating with ghostview (or another PS/PDF viewer)
- * 
- * @author sfink
  */
 public class PDFViewUtil {
 
@@ -50,8 +48,7 @@ public class PDFViewUtil {
    * spawn a process to view a WALA IR
    * 
    * @return a handle to the pdf viewer process
-   * @throws IllegalArgumentException
-   *             if ir is null
+   * @throws IllegalArgumentException if ir is null
    */
   public static Process ghostviewIR(IClassHierarchy cha, IR ir, String pdfFile, String dotFile, String dotExe, String pdfViewExe,
       NodeDecorator annotations) throws WalaException {
@@ -91,8 +88,7 @@ public class PDFViewUtil {
   }
 
   /**
-   * A node decorator which concatenates the labels from two other node
-   * decorators
+   * A node decorator which concatenates the labels from two other node decorators
    */
   private final static class ConcatenatingNodeDecorator implements NodeDecorator {
 
@@ -158,7 +154,7 @@ public class PDFViewUtil {
     }
     return result.toString();
   }
-  
+
   /**
    * Launch a process to view a PDF file
    */

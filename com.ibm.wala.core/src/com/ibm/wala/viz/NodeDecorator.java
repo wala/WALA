@@ -13,7 +13,6 @@ package com.ibm.wala.viz;
 import com.ibm.wala.util.warnings.WalaException;
 
 /**
- * @author sfink
  */
 public interface NodeDecorator {
   
