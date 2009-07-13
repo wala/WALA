@@ -15,6 +15,7 @@ import com.ibm.wala.types.MemberReference;
 /**
  * A warning associated with a method
  */
+@Deprecated
 public abstract class MethodWarning extends Warning {
 
   private final MemberReference method;

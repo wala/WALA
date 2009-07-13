@@ -17,6 +17,7 @@ import com.ibm.wala.util.warnings.MethodWarning;
 /**
  * A warning about a failure to resolve reflection relating to a particular {@link IMethod}.
  */
+@Deprecated
 public class UnresolvedReflectionWarning extends MethodWarning {
 
   public UnresolvedReflectionWarning(CGNode node) throws NullPointerException {
