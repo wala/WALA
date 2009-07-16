@@ -23,10 +23,6 @@ public class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
     justThisTest(TestAjaxsltCallGraphShape.class);
   }
 
-  public void setUp() {
-    Util.setTranslatorFactory(new JavaScriptTranslatorFactory.CAstRhinoFactory());
-  }
-
   private static final Object[][] assertionsForAjaxslt = new Object[][] {
 
   };

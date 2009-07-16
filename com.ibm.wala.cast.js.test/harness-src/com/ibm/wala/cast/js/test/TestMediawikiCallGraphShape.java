@@ -23,10 +23,6 @@ public class TestMediawikiCallGraphShape extends TestJSCallGraphShape {
     justThisTest(TestMediawikiCallGraphShape.class);
   }
 
-  public void setUp() {
-    Util.setTranslatorFactory(new JavaScriptTranslatorFactory.CAstRhinoFactory());
-  }
-
   private static final Object[][] assertionsForSwineFlu = new Object[][] {
 
   };

@@ -23,10 +23,6 @@ public class TestSimplePageCallGraphShape extends TestJSCallGraphShape {
     justThisTest(TestSimplePageCallGraphShape.class);
   }
 
-  public void setUp() {
-    Util.setTranslatorFactory(new JavaScriptTranslatorFactory.CAstRhinoFactory());
-  }
-
   private static final Object[][] assertionsForPage1 = new Object[][] {
     new Object[] { ROOT, new String[] { "page1.html" } },
     new Object[] { "page1.html",

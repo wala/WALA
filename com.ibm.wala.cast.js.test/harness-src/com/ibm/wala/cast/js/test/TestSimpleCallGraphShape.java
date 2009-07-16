@@ -23,10 +23,6 @@ public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     justThisTest(TestSimpleCallGraphShape.class);
   }
 
-  public void setUp() {
-    Util.setTranslatorFactory(new JavaScriptTranslatorFactory.CAstRhinoFactory());
-  }
-
   protected static final Object[][] assertionsForSimple = new Object[][] {
       new Object[] { ROOT, new String[] { "tests/simple.js" } },
       new Object[] {

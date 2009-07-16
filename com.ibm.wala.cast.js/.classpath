@@ -4,8 +4,6 @@
 	<classpathentry kind="src" path="source"/>
 	<classpathentry kind="src" path="dat"/>
 	<classpathentry exported="true" kind="lib" path="bin" sourcepath="bin"/>
-	<classpathentry exported="true" kind="lib" path="lib/js.jar" sourcepath="com.ibm.wala.cast.jssrc.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/xalan.jar" sourcepath="com.ibm.wala.cast.jssrc.zip"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

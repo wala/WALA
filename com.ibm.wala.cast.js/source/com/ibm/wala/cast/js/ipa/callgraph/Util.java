@@ -33,7 +33,7 @@ import com.ibm.wala.types.TypeReference;
 
 public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
 
-  private static JavaScriptTranslatorFactory translatorFactory = new JavaScriptTranslatorFactory.CAstRhinoFactory();
+  private static JavaScriptTranslatorFactory translatorFactory;
 
   public static void setTranslatorFactory(JavaScriptTranslatorFactory translatorFactory) {
     Util.translatorFactory = translatorFactory;

@@ -47,10 +47,6 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
   @SuppressWarnings("unchecked")
   public void buildAnalysisScope() {
     try {
-      if (translatorFactory == null) {
-        translatorFactory = new JavaScriptTranslatorFactory.CAstRhinoFactory();
-      }
-
       loaderFactory = new JavaScriptLoaderFactory(translatorFactory);
 
       SourceFileModule[] files = (SourceFileModule[]) moduleFiles.toArray(new SourceFileModule[moduleFiles.size()]);

@@ -20,11 +20,4 @@ public interface JavaScriptTranslatorFactory {
 
   TranslatorToCAst make(CAst ast, ModuleEntry M, URL sourceURL, String localFileName);
 
-  public static class CAstRhinoFactory implements JavaScriptTranslatorFactory {
-
-    public TranslatorToCAst make(CAst ast, ModuleEntry M, URL sourceURL, String localFileName) {
-       return new CAstRhinoTranslator(M);
-    }
-  }
-
 }
