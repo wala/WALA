@@ -27,20 +27,15 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jdt.core.IJavaProject;
 
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
-import com.ibm.wala.cast.java.test.IRTests;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.ide.classloader.EclipseSourceFileModule;
 import com.ibm.wala.ide.tests.util.EclipseTestUtil;
 
-public abstract class IDEIRTests extends IRTests {
-	public IDEIRTests(String name, String projectName) {
-		super(name, projectName);
-	}
+public class IDEIRTestUtil {
 
-	@Override
-	protected void populateScope(JavaSourceAnalysisEngine engine, Collection<String> sources, List<String> libs) throws IOException {
+	public static void populateScope(String projectName, JavaSourceAnalysisEngine engine, Collection<String> sources, List<String> libs) throws IOException {
 		boolean foundLib = false;
 		for (String lib : libs) {
 			File libFile = new File(lib);
@@ -69,7 +64,7 @@ public abstract class IDEIRTests extends IRTests {
 				try {
 					engine.addSourceModule(EclipseSourceFileModule.createEclipseSourceFileModule(file));
 				} catch (IllegalArgumentException e) {
-					assertTrue(e.getMessage(), false);
+					Assert.assertTrue(e.getMessage(), false);
 				}
 
 			} else {

@@ -38,6 +38,8 @@
 package com.ibm.wala.cast.java.test;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -45,6 +47,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
+import com.ibm.wala.cast.java.test.ide.IDEIRTestUtil;
 import com.ibm.wala.cast.java.translator.jdt.JDTJavaSourceAnalysisEngine;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.plugin.CoreTestsPlugin;
@@ -59,6 +62,10 @@ public class JDTJavaIRTests extends JavaIRTests {
 
   public JDTJavaIRTests() {
     super("Test for JDT front end for WALA CAst", "com.ibm.wala.cast.java.test.data");
+  }
+
+  protected void populateScope(JavaSourceAnalysisEngine engine, Collection<String> sources, List<String> libs) throws IOException {
+	  IDEIRTestUtil.populateScope(projectName, engine, sources, libs);
   }
 
   @Override

@@ -109,7 +109,7 @@ public abstract class IRTests extends WalaTestCase {
     }
   }
 
-  interface IRAssertion {
+  public interface IRAssertion {
 
     void check(CallGraph cg) throws Exception;
 
