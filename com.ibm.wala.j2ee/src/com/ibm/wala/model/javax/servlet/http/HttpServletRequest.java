@@ -12,9 +12,7 @@ package com.ibm.wala.model.javax.servlet.http;
 
 import javax.servlet.http.Cookie;
 
-import com.ibm.wala.annotations.Internal;
 
-@Internal
 public class HttpServletRequest
   extends com.ibm.wala.model.javax.servlet.ServletRequest
   implements javax.servlet.http.HttpServletRequest {

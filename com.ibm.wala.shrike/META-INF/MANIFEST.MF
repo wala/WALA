@@ -6,10 +6,8 @@ Bundle-Version: 1.1.3.qualifier
 Bundle-Vendor: %providerName
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
-Export-Package: com.ibm.wala.annotations,
- com.ibm.wala.shrike.bench,
+Export-Package: com.ibm.wala.shrike.bench,
  com.ibm.wala.shrike.copywriter,
- com.ibm.wala.shrike.tools,
  com.ibm.wala.shrikeBT,
  com.ibm.wala.shrikeBT.analysis,
  com.ibm.wala.shrikeBT.info,
