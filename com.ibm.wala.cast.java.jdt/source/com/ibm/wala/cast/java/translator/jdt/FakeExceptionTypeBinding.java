@@ -372,4 +372,14 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
     return false;
   }
 
+  public ITypeBinding getGenericTypeOfWildcardType() {
+    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
+    return null;
+  }
+
+  public int getRank() {
+    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
+    return 0;
+  }
+
 }

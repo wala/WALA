@@ -138,4 +138,9 @@ public class ServletContext implements javax.servlet.ServletContext {
   public void setAttribute(String name, Object object) {
     values.put(name, object);
   }
+
+
+  public String getContextPath() {
+    return "";
+  }
 }
