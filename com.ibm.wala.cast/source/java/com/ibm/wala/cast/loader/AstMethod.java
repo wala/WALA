@@ -62,6 +62,7 @@ public abstract class AstMethod implements IMethod {
   private final SymbolTable symtab; 
   private final MethodReference ref;
   private final boolean hasCatchBlock;
+  private final boolean hasMonitorOp;
   private final TypeReference[][] catchTypes;
   private final AstLexicalInformation lexicalInfo;
   private final DebuggingInformation debugInfo;
@@ -73,8 +74,8 @@ public abstract class AstMethod implements IMethod {
 	      MethodReference ref,
 	      boolean hasCatchBlock,
 	      TypeReference[][] catchTypes,
-	      AstLexicalInformation lexicalInfo,
-	      DebuggingInformation debugInfo)
+          boolean hasMonitorOp,
+	      AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo)
   {
     this.cls = cls;
     this.cfg = cfg;
@@ -83,6 +84,7 @@ public abstract class AstMethod implements IMethod {
     this.qualifiers = qualifiers;
     this.catchTypes = catchTypes;
     this.hasCatchBlock = hasCatchBlock;
+    this.hasMonitorOp = hasMonitorOp;
     this.lexicalInfo = lexicalInfo;
     this.debugInfo = debugInfo;
   }
@@ -99,6 +101,7 @@ public abstract class AstMethod implements IMethod {
     this.symtab = null;
     this.catchTypes = null;
     this.hasCatchBlock = false;
+    this.hasMonitorOp = false;
     this.lexicalInfo = null;
     this.debugInfo = null;
     
@@ -237,6 +240,10 @@ public abstract class AstMethod implements IMethod {
 
   public boolean hasExceptionHandler() {
     return hasCatchBlock;
+  }
+
+  public boolean hasMonitorOp() {
+    return hasMonitorOp;
   }
 
   public int getNumberOfParameters() {

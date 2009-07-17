@@ -123,6 +123,7 @@ public class JSAstTranslator extends AstTranslator {
 				SymbolTable symtab, 
 				boolean hasCatchBlock, 
 				TypeReference[][] caughtTypes,
+				boolean hasMonitorOp,
 				AstLexicalInformation LI,
 				DebuggingInformation debugInfo)
   {
@@ -138,6 +139,7 @@ public class JSAstTranslator extends AstTranslator {
 			      symtab, 
 			      hasCatchBlock, 
 			      caughtTypes,
+			      hasMonitorOp,
 			      LI,
 			      debugInfo);
   }

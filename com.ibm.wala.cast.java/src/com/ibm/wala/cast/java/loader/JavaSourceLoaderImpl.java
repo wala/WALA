@@ -142,9 +142,9 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     }
 
     private void addMethod(CAstEntity methodEntity, IClass owner, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
-        TypeReference[][] catchTypes, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
+        TypeReference[][] catchTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
       declaredMethods.put(Util.methodEntityToSelector(methodEntity), new ConcreteJavaMethod(methodEntity, owner, cfg, symtab,
-          hasCatchBlock, catchTypes, lexicalInfo, debugInfo));
+          hasCatchBlock, catchTypes, hasMonitorOp, lexicalInfo, debugInfo));
     }
 
     private void addMethod(CAstEntity methodEntity, IClass owner) {
@@ -193,9 +193,9 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     private final TypeReference[] exceptionTypes;
 
     public JavaEntityMethod(CAstEntity methodEntity, IClass owner, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
-        TypeReference[][] catchTypes, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
+        TypeReference[][] catchTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
       super(owner, methodEntity.getQualifiers(), cfg, symtab, MethodReference.findOrCreate(owner.getReference(), Util
-          .methodEntityToSelector(methodEntity)), hasCatchBlock, catchTypes, lexicalInfo, debugInfo);
+          .methodEntityToSelector(methodEntity)), hasCatchBlock, catchTypes, hasMonitorOp, lexicalInfo, debugInfo);
       this.parameterTypes = computeParameterTypes(methodEntity);
       this.exceptionTypes = computeExceptionTypes(methodEntity);
     }
@@ -304,8 +304,8 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
    */
   public class ConcreteJavaMethod extends JavaEntityMethod {
     public ConcreteJavaMethod(CAstEntity methodEntity, IClass owner, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
-        TypeReference[][] catchTypes, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
-      super(methodEntity, owner, cfg, symtab, hasCatchBlock, catchTypes, lexicalInfo, debugInfo);
+        TypeReference[][] catchTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
+      super(methodEntity, owner, cfg, symtab, hasCatchBlock, catchTypes, hasMonitorOp, lexicalInfo, debugInfo);
     }
 
     public IClassHierarchy getClassHierarchy() {
@@ -428,8 +428,8 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
   protected abstract SourceModuleTranslator getTranslator();
   
   public void defineFunction(CAstEntity n, IClass owner, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
-      TypeReference[][] catchTypes, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
-    ((JavaClass) owner).addMethod(n, owner, cfg, symtab, hasCatchBlock, catchTypes, lexicalInfo, debugInfo);
+      TypeReference[][] catchTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
+    ((JavaClass) owner).addMethod(n, owner, cfg, symtab, hasCatchBlock, catchTypes, hasMonitorOp, lexicalInfo, debugInfo);
   }
 
   public void defineAbstractFunction(CAstEntity n, IClass owner) {

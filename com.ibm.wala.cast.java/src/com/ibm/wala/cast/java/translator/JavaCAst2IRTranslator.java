@@ -249,6 +249,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 				  SymbolTable symtab,
 				  boolean hasCatchBlock,
 				  TypeReference[][] caughtTypes,
+				  boolean hasMonitorOp,
 				  AstLexicalInformation lexicalInfo,
 				  DebuggingInformation debugInfo) {
       // N.B.: base class may actually ask to create a synthetic type to wrap
@@ -262,7 +263,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
         assert owner != null : typeName.toString() + " not found in " + loader;
       }
 
-      ((JavaSourceLoaderImpl)loader).defineFunction(N, owner, cfg, symtab, hasCatchBlock, caughtTypes, lexicalInfo, debugInfo);
+      ((JavaSourceLoaderImpl)loader).defineFunction(N, owner, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo, debugInfo);
     }
 
     protected void doPrimitive(int resultVal, WalkContext context, CAstNode primitiveCall) {

@@ -66,6 +66,7 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
+import com.ibm.wala.ssa.SSAMonitorInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeName;
@@ -100,7 +101,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
   protected abstract void declareFunction(CAstEntity N, WalkContext context);
 
   protected abstract void defineFunction(CAstEntity N, WalkContext definingContext, AbstractCFG cfg, SymbolTable symtab,
-      boolean hasCatchBlock, TypeReference[][] caughtTypes, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo);
+      boolean hasCatchBlock, TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo);
 
   protected abstract void defineField(CAstEntity topEntity, WalkContext context, CAstEntity n);
 
@@ -623,6 +624,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
     private boolean hasCatchBlock = false;
 
+    private boolean hasMonitorOp = false;
+    
     private int currentInstruction = 0;
 
     private Position currentPosition = null;
@@ -639,6 +642,10 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
     boolean hasCatchBlock() {
       return hasCatchBlock;
+    }
+    
+    boolean hasMonitorOp() {
+      return hasMonitorOp;
     }
 
     void noteCatchBlock() {
@@ -845,6 +852,10 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         System.err.println(("adding " + n + " at " + inst + " to " + currentBlock));
       }
 
+      if (n instanceof SSAMonitorInstruction) {
+        hasMonitorOp = true;
+      }
+      
       currentBlock.instructions().add(n);
 
       currentBlock.setLastIndex(inst);
@@ -2420,6 +2431,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     AstCFG cfg = new AstCFG(n, functionContext.cfg(), symtab);
     Position[] line = functionContext.cfg().getLinePositionMap();
     boolean katch = functionContext.cfg().hasCatchBlock();
+    boolean monitor = functionContext.cfg().hasMonitorOp();
     String[] nms = makeNameMap(n, functionContext.entityScopes());
 
     /*
@@ -2438,7 +2450,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     DebuggingInformation DBG = new AstDebuggingInformation(n.getPosition(), line, nms);
 
     // actually make code body
-    defineFunction(n, parentContext, cfg, symtab, katch, catchTypes, LI, DBG);
+    defineFunction(n, parentContext, cfg, symtab, katch, catchTypes, monitor, LI, DBG);
     
     results = resultStack.pop();
   }
