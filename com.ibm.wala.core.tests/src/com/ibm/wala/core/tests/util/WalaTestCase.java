@@ -10,8 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.util;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.runner.JUnitCore;
 
 import com.ibm.wala.util.heapTrace.HeapTracer;
 import com.ibm.wala.util.warnings.Warnings;
@@ -19,7 +21,7 @@ import com.ibm.wala.util.warnings.Warnings;
 /**
  * Simple extension to JUnit test case.
  */
-public abstract class WalaTestCase extends TestCase {
+public abstract class WalaTestCase {
 
   final private static boolean ANALYZE_LEAKS = false;
 
@@ -35,51 +37,56 @@ public abstract class WalaTestCase extends TestCase {
   /*
    * @see junit.framework.TestCase#setUp()
    */
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
   }
 
   /*
    * @see junit.framework.TestCase#tearDown()
    */
-  protected void tearDown() throws Exception {
+  @After
+  public void tearDown() throws Exception {
     Warnings.clear();
     if (ANALYZE_LEAKS) {
       HeapTracer.analyzeLeaks();
     }
   }
 
-  public WalaTestCase() {
-    super("WalaTestCase");
+  /**
+   * Utility function: each DetoxTestCase subclass can have a main() method that calls this, to create a test suite consisting of
+   * just this test. Useful when investigating a single failing test.
+   */
+  protected static void justThisTest(Class<?> testClass) {
+    JUnitCore.runClasses(testClass);
   }
 
-  /**
-   * Utility function: each DetoxTestCase subclass can have a main() method that
-   * calls this, to create a test suite consisting of just this test. Useful
-   * when investigating a single failing test.
-   */
-  protected static void justThisTest(Class<? extends TestCase> testClass) {
-    TestSuite suite = new TestSuite(testClass.getName());
-    suite.addTestSuite(testClass);
-    junit.textui.TestRunner.run(suite);
-  }
+  private final String name;
 
   /**
    * @param arg0
    */
   public WalaTestCase(String arg0) {
-    super(arg0);
+    this.name = arg0;
+  }
+
+  public WalaTestCase() {
+    this(null);
+  }
+
+  protected String getName() {
+    return name;
   }
 
   protected static void assertBound(String tag, double quantity, double bound) {
     String msg = tag + ", quantity: " + quantity + ", bound:" + bound;
     System.err.println(msg);
-    assertTrue(msg, quantity <= bound);
+    Assert.assertTrue(msg, quantity <= bound);
   }
 
   protected static void assertBound(String tag, int quantity, int bound) {
     String msg = tag + ", quantity: " + quantity + ", bound:" + bound;
     System.err.println(msg);
-    assertTrue(msg, quantity <= bound);
+    Assert.assertTrue(msg, quantity <= bound);
   }
 
 }

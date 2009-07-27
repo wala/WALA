@@ -7,6 +7,9 @@
  */
 package com.ibm.wala.core.tests.collections;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.util.collections.TwoLevelVector;
 
@@ -23,12 +26,12 @@ public final class TwoLevelVectorTest extends WalaTestCase {
   
   // --- Test cases
   
-  public void testCase1() {
+  @Test public void testCase1() {
     final TwoLevelVector<Integer> tlVector = new TwoLevelVector<Integer>();
     tlVector.iterator();
     tlVector.set(2147483647, 56);
-    assertNotNull(tlVector.iterator());
-    assertEquals(Integer.valueOf(56), tlVector.get(2147483647));
+    Assert.assertNotNull(tlVector.iterator());
+    Assert.assertEquals(Integer.valueOf(56), tlVector.get(2147483647));
   }
 
 }

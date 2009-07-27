@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -36,7 +39,7 @@ import com.ibm.wala.util.CancelException;
  */
 public class CloneTest extends WalaTestCase {
 
-  public void testClone() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testClone() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
 
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -62,7 +65,7 @@ public class CloneTest extends WalaTestCase {
             for (Iterator<CGNode> k = targets.iterator(); k.hasNext();) {
               System.err.println("  " + k.next());
             }
-            fail("found " + targets.size() + " targets for " + site + " in " + node);
+            Assert.fail("found " + targets.size() + " targets for " + site + " in " + node);
           }
         }
       }

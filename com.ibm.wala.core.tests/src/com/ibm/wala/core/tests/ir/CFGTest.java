@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.ir;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
@@ -67,7 +70,7 @@ public class CFGTest extends WalaTestCase {
       } catch (UnsoundGraphException e) {
         e.printStackTrace();
         System.err.println(ir);
-        assertTrue(" failed cfg integrity check for " + methodSig, false);
+        Assert.assertTrue(" failed cfg integrity check for " + methodSig, false);
       }
 
       try {
@@ -76,7 +79,7 @@ public class CFGTest extends WalaTestCase {
         e.printStackTrace();
         System.err.println(ir);
         System.err.println(cfg);
-        assertTrue(" failed 2-exit cfg integrity check for " + methodSig, false);
+        Assert.assertTrue(" failed 2-exit cfg integrity check for " + methodSig, false);
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -85,11 +88,11 @@ public class CFGTest extends WalaTestCase {
   }
 
   /**
-   * this method does not exist in 1.5 libraries public void testFDBigInt() {
+   * this method does not exist in 1.5 libraries @Test public void testFDBigInt() {
    * doMethod("java.lang.FDBigInt.class$(Ljava/lang/String;)Ljava/lang/Class;"); }
    */
 
-  public void testResolveProxyClass() {
+  @Test public void testResolveProxyClass() {
     doMethod("java.io.ObjectInputStream.resolveProxyClass([Ljava/lang/String;)Ljava/lang/Class;");
   }
 }

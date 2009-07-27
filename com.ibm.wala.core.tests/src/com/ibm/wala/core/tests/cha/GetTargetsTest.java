@@ -12,6 +12,11 @@ package com.ibm.wala.core.tests.cha;
 
 import java.util.Collection;
 
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.IMethod;
@@ -40,7 +45,8 @@ public class GetTargetsTest extends WalaTestCase {
     justThisTest(GetTargetsTest.class);
   }
 
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
 
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
 
@@ -58,35 +64,35 @@ public class GetTargetsTest extends WalaTestCase {
    * 
    * @see junit.framework.TestCase#tearDown()
    */
-  protected void tearDown() throws Exception {
+  @After
+  public void tearDown() throws Exception {
     scope = null;
     cha = null;
-    super.tearDown();
   }
 
 
   /**
    * Test for bug 1714480, reported OOM on {@link ClassHierarchy} getPossibleTargets()
    */
-  public void testCell() {
+  @Test public void testCell() {
     TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lcell/Cell");
     MethodReference m = MethodReference.findOrCreate(t, "<init>", "(Ljava/lang/Object;)V");
     Collection<IMethod> c = cha.getPossibleTargets(m);
     for (IMethod method : c) {
       System.err.println(method);
     }
-    assertEquals(1, c.size());
+    Assert.assertEquals(1, c.size());
   }
 
   /**
    * test that calls to <init> methods are treated specially 
    */
-  public void testObjInit() {
+  @Test public void testObjInit() {
     MethodReference m = MethodReference.findOrCreate(TypeReference.JavaLangObject, MethodReference.initSelector);
     Collection<IMethod> c = cha.getPossibleTargets(m);
     for (IMethod method : c) {
       System.err.println(method);
     }
-    assertEquals(1, c.size());
+    Assert.assertEquals(1, c.size());
   }
 }

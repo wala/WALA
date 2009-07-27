@@ -13,6 +13,9 @@ package com.ibm.wala.core.tests.ptrs;
 import java.io.IOException;
 import java.util.Iterator;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -53,8 +56,12 @@ public class MultiDimArrayTest extends WalaTestCase {
   public MultiDimArrayTest(String arg0) {
     super(arg0);
   }
+  
+  public MultiDimArrayTest() {
+    
+  }
 
-  public void testMultiDim() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testMultiDim() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util
@@ -69,7 +76,7 @@ public class MultiDimArrayTest extends WalaTestCase {
     CGNode node = findDoNothingNode(cg);
     PointerKey pk = pa.getHeapModel().getPointerKeyForLocal(node, 1);
     OrdinalSet<InstanceKey> ptsTo = pa.getPointsToSet(pk);
-    assertEquals(1, ptsTo.size());
+    Assert.assertEquals(1, ptsTo.size());
   }
   
   private final static CGNode findDoNothingNode(CallGraph cg) {

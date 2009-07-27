@@ -12,6 +12,9 @@ package com.ibm.wala.core.tests.ir;
 
 import java.io.IOException;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
@@ -36,24 +39,24 @@ public class MultiNewArrayTest extends WalaTestCase {
 
   private static final ClassLoader MY_CLASSLOADER = MultiNewArrayTest.class.getClassLoader();
   
-  public void testMultiNewArray1() throws IOException, ClassHierarchyException {
+  @Test public void testMultiNewArray1() throws IOException, ClassHierarchyException {
     AnalysisScope scope = null;
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
     ClassHierarchy cha = ClassHierarchy.make(scope);
     IClass klass = cha.lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Application, TestConstants.MULTI_DIM_MAIN));
-    assertTrue(klass != null);
+    Assert.assertTrue(klass != null);
     IMethod m = klass.getMethod(Selector.make(Language.JAVA, "testNewMultiArray()V"));
-    assertTrue(m != null);
+    Assert.assertTrue(m != null);
     AnalysisCache cache = new AnalysisCache();
     IR ir = cache.getIRFactory().makeIR(m, Everywhere.EVERYWHERE, new SSAOptions());
-    assertTrue(ir != null);
+    Assert.assertTrue(ir != null);
     SSAInstruction[] instructions = ir.getInstructions();
     for (SSAInstruction instr : instructions) {
       if (instr instanceof SSANewInstruction) {
         System.err.println(instr.toString(ir.getSymbolTable()));
-        assertTrue(instr.getNumberOfUses() == 2);
-        assertTrue(ir.getSymbolTable().getIntValue(instr.getUse(0)) == 3);
-        assertTrue(ir.getSymbolTable().getIntValue(instr.getUse(1)) == 4);
+        Assert.assertTrue(instr.getNumberOfUses() == 2);
+        Assert.assertTrue(ir.getSymbolTable().getIntValue(instr.getUse(0)) == 3);
+        Assert.assertTrue(ir.getSymbolTable().getIntValue(instr.getUse(1)) == 4);
       }
     }
   }

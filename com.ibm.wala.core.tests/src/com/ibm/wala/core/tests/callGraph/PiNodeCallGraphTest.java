@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.junit.Test;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -102,11 +104,11 @@ public class PiNodeCallGraphTest extends WalaTestCase {
     assert numberOfCalls == desiredNumberOfCalls;
   }
 
-  public void testNoPiNodes() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testNoPiNodes() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     checkCallAssertions(doGraph(false), 2, 2);
   }
 
-  public void testPiNodes() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testPiNodes() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     checkCallAssertions(doGraph(true), 1, 2);
   }
 

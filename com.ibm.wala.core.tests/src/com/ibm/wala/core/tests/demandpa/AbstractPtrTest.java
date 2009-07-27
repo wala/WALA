@@ -41,7 +41,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -75,7 +75,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.strings.Atom;
 
-public abstract class AbstractPtrTest extends TestCase {
+public abstract class AbstractPtrTest {
 
   protected boolean debug = false;
 
@@ -152,11 +152,11 @@ public abstract class AbstractPtrTest extends TestCase {
     }
     assert scope != null;
     if (scope.isJava16Libraries()) {
-      assertEquals(expected16Size, pointsTo.size());
+      Assert.assertEquals(expected16Size, pointsTo.size());
     } else if (scope.isJava15Libraries()) {
-      assertEquals(expected15Size, pointsTo.size());
+      Assert.assertEquals(expected15Size, pointsTo.size());
     } else if (scope.isJava14Libraries()) {
-      assertEquals(expected14Size, pointsTo.size());
+      Assert.assertEquals(expected14Size, pointsTo.size());
     } else {
       Assertions.UNREACHABLE("unexpected library version");
     }

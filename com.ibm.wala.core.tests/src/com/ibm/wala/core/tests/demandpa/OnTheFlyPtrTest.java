@@ -39,6 +39,8 @@ package com.ibm.wala.core.tests.demandpa;
 
 import java.io.IOException;
 
+import org.junit.Test;
+
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
 import com.ibm.wala.demandpa.alg.refinepolicy.AlwaysRefineCGPolicy;
 import com.ibm.wala.demandpa.alg.refinepolicy.AlwaysRefineFieldsPolicy;
@@ -48,7 +50,7 @@ import com.ibm.wala.util.CancelException;
 
 public class OnTheFlyPtrTest extends AbstractPtrTest {
 
-  public void testOnTheFlySimple() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testOnTheFlySimple() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_ONTHEFLY_SIMPLE, 1);
   }
 

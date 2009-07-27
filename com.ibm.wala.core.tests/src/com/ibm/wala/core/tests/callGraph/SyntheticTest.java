@@ -13,6 +13,9 @@ package com.ibm.wala.core.tests.callGraph;
 import java.io.IOException;
 import java.util.Collections;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -36,7 +39,7 @@ import com.ibm.wala.util.CancelException;
  */
 public class SyntheticTest extends WalaTestCase {
 
-  public void testMultiSubtypes() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testMultiSubtypes() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -53,12 +56,12 @@ public class SyntheticTest extends WalaTestCase {
     MethodReference barA = MethodReference.findOrCreate(tA, "bar", "()V");
     TypeReference tB = TypeReference.findOrCreate(ClassLoaderReference.Application, "LmultiTypes/Foo$B");
     MethodReference barB = MethodReference.findOrCreate(tB, "bar", "()V");
-    assertTrue(cg.getNodes(barA).size() == 1);
-    assertTrue(cg.getNodes(barB).size() == 1);
+    Assert.assertTrue(cg.getNodes(barA).size() == 1);
+    Assert.assertTrue(cg.getNodes(barB).size() == 1);
     
     CGNode root = cg.getFakeRootNode();
     IR ir = root.getIR();
-    assertTrue(ir.iteratePhis().hasNext());
+    Assert.assertTrue(ir.iteratePhis().hasNext());
   }
 
 }

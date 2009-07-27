@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.basic;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.dataflow.graph.BitVectorFilter;
@@ -45,7 +48,7 @@ public class GraphDataflowTest extends WalaTestCase {
    * A simple test of the GraphBitVectorDataflow system
    * @throws CancelException 
    */
-  public void testSolverNodeEdge() throws CancelException {
+  @Test public void testSolverNodeEdge() throws CancelException {
     Graph<String> G = buildGraph();
     String result = solveNodeEdge(G);
     System.err.println(result);
@@ -53,14 +56,14 @@ public class GraphDataflowTest extends WalaTestCase {
       System.err.println("Uh oh.");
       System.err.println(expectedStringNodeEdge());
     }
-    assertEquals(expectedStringNodeEdge(), result);
+    Assert.assertEquals(expectedStringNodeEdge(), result);
   }
 
-  public void testSolverNodeOnly() throws CancelException {
+  @Test public void testSolverNodeOnly() throws CancelException {
     Graph<String> G = buildGraph();
     String result = solveNodeOnly(G);
     System.err.println(result);
-    assertEquals(expectedStringNodeOnly(), result);
+    Assert.assertEquals(expectedStringNodeOnly(), result);
   }
 
   /**

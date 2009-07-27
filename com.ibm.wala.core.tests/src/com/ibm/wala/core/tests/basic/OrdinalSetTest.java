@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.basic;
 
+import org.junit.Test;
+
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.util.intset.OrdinalSet;
 
@@ -18,7 +20,7 @@ import com.ibm.wala.util.intset.OrdinalSet;
  */
 public class OrdinalSetTest extends WalaTestCase {
 
-  public void test1() {
+  @Test public void test1() {
     OrdinalSet.unify(OrdinalSet.empty(), OrdinalSet.empty());
   }
 }

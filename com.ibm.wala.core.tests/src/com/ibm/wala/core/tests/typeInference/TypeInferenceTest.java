@@ -10,6 +10,11 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.typeInference;
 
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
@@ -55,7 +60,8 @@ public class TypeInferenceTest extends WalaTestCase {
     justThisTest(TypeInferenceTest.class);
   }
 
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
 
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
 
@@ -70,19 +76,19 @@ public class TypeInferenceTest extends WalaTestCase {
     }
   }
 
-  protected void tearDown() throws Exception {
+  @After
+  public void tearDown() throws Exception {
     Warnings.clear();
     scope = null;
     cha = null;
-    super.tearDown();
   }
 
-  public void test1() {
+  @Test public void test1() {
     MethodReference method = scope.findMethod(AnalysisScope.APPLICATION, "LtypeInference/TI", Atom.findOrCreateUnicodeAtom("foo"),
         new ImmutableByteArray(UTF8Convert.toUTF8("()V")));
-    assertNotNull("method not found", method);
+    Assert.assertNotNull("method not found", method);
     IMethod imethod = cha.resolveMethod(method);
-    assertNotNull("imethod not found", imethod);
+    Assert.assertNotNull("imethod not found", imethod);
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     System.out.println(ir);
 
@@ -92,32 +98,32 @@ public class TypeInferenceTest extends WalaTestCase {
     }
   }
 
-  public void test2() {
+  @Test public void test2() {
     MethodReference method = scope.findMethod(AnalysisScope.APPLICATION, "LtypeInference/TI", Atom.findOrCreateUnicodeAtom("bar"),
         new ImmutableByteArray(UTF8Convert.toUTF8("(I)V")));
-    assertNotNull("method not found", method);
+    Assert.assertNotNull("method not found", method);
     IMethod imethod = cha.resolveMethod(method);
-    assertNotNull("imethod not found", imethod);
+    Assert.assertNotNull("imethod not found", imethod);
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     System.out.println(ir);
 
     TypeInference ti = TypeInference.make(ir, true);
-    assertNotNull("null type abstraction for parameter", ti.getType(2));
+    Assert.assertNotNull("null type abstraction for parameter", ti.getType(2));
   }
 
-  public void test3() {
+  @Test public void test3() {
     MethodReference method = scope.findMethod(AnalysisScope.APPLICATION, "LtypeInference/TI", Atom.findOrCreateUnicodeAtom("inferInt"),
         new ImmutableByteArray(UTF8Convert.toUTF8("()V")));
-    assertNotNull("method not found", method);
+    Assert.assertNotNull("method not found", method);
     IMethod imethod = cha.resolveMethod(method);
-    assertNotNull("imethod not found", imethod);
+    Assert.assertNotNull("imethod not found", imethod);
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     System.out.println(ir);
 
     TypeInference ti = TypeInference.make(ir, true);
     TypeAbstraction type = ti.getType(7);
-    assertNotNull("null type abstraction", type);
-    assertTrue("inferred wrong type", type.toString().equals("int"));
+    Assert.assertNotNull("null type abstraction", type);
+    Assert.assertTrue("inferred wrong type", type.toString().equals("int"));
   }
 
 

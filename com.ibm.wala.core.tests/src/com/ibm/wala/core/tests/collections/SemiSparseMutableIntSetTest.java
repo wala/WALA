@@ -7,6 +7,8 @@
  */
 package com.ibm.wala.core.tests.collections;
 
+import org.junit.Test;
+
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.util.intset.SemiSparseMutableIntSet;
 
@@ -23,7 +25,7 @@ public final class SemiSparseMutableIntSetTest extends WalaTestCase {
   
   // --- Test cases
   
-  public void testCase1() {
+  @Test public void testCase1() {
     final SemiSparseMutableIntSet ssmIntSet = new SemiSparseMutableIntSet();
     ssmIntSet.add(1);
     final SemiSparseMutableIntSet ssmIntSet2 = SemiSparseMutableIntSet.diff(ssmIntSet, ssmIntSet);

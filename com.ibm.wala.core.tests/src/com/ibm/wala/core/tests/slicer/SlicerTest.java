@@ -19,7 +19,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Test;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -57,9 +58,9 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.strings.Atom;
 
-public class SlicerTest extends TestCase {
+public class SlicerTest {
 
-  public void testSlice1() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testSlice1() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -86,10 +87,10 @@ public class SlicerTest extends TestCase {
         i++;
       }
     }
-    assertEquals(16, i);
+    Assert.assertEquals(16, i);
   }
 
-  public void testSlice2() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testSlice2() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -109,10 +110,10 @@ public class SlicerTest extends TestCase {
         DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     Collection<Statement> slice = computeBackwardSlice;
     dumpSlice(slice);
-    assertEquals(30, slice.size());
+    Assert.assertEquals(30, slice.size());
   }
 
-  public void testSlice3() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testSlice3() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -131,10 +132,10 @@ public class SlicerTest extends TestCase {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    assertEquals(1, countAllocations(slice));
+    Assert.assertEquals(1, countAllocations(slice));
   }
 
-  public void testSlice4() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testSlice4() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -153,10 +154,10 @@ public class SlicerTest extends TestCase {
     Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    assertEquals(4, slice.size());
+    Assert.assertEquals(4, slice.size());
   }
 
-  public void testSlice5() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testSlice5() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -175,7 +176,7 @@ public class SlicerTest extends TestCase {
     Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    assertEquals(7, slice.size());
+    Assert.assertEquals(7, slice.size());
   }
 
   /**
@@ -184,7 +185,7 @@ public class SlicerTest extends TestCase {
    * @throws IllegalArgumentException
    * @throws IOException
    */
-  public void testSlice7() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testSlice7() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -204,7 +205,7 @@ public class SlicerTest extends TestCase {
     dumpSlice(slice);
   }
 
-  public void testTestCD1() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testTestCD1() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -223,10 +224,10 @@ public class SlicerTest extends TestCase {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.NONE,
         ControlDependenceOptions.FULL);
     dumpSlice(slice);
-    assertEquals(2, countConditionals(slice));
+    Assert.assertEquals(2, countConditionals(slice));
   }
 
-  public void testTestCD2() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testTestCD2() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -245,10 +246,10 @@ public class SlicerTest extends TestCase {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.NONE,
         ControlDependenceOptions.FULL);
     dumpSlice(slice);
-    assertEquals(1, countConditionals(slice));
+    Assert.assertEquals(1, countConditionals(slice));
   }
 
-  public void testTestCD3() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testTestCD3() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -267,10 +268,10 @@ public class SlicerTest extends TestCase {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.NONE,
         ControlDependenceOptions.FULL);
     dumpSlice(slice);
-    assertEquals(0, countConditionals(slice));
+    Assert.assertEquals(0, countConditionals(slice));
   }
 
-  public void testTestCD4() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testTestCD4() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -289,15 +290,15 @@ public class SlicerTest extends TestCase {
     // compute a no-data slice
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.NONE, ControlDependenceOptions.FULL);
     dumpSlice(slice);
-    assertEquals(0, countConditionals(slice));
+    Assert.assertEquals(0, countConditionals(slice));
 
     // compute a full slice
     slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
     dumpSlice(slice);
-    assertEquals(1, countConditionals(slice));
+    Assert.assertEquals(1, countConditionals(slice));
   }
 
-  public void testTestId() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testTestId() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -316,10 +317,10 @@ public class SlicerTest extends TestCase {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    assertEquals(1, countAllocations(slice));
+    Assert.assertEquals(1, countAllocations(slice));
   }
 
-  public void testTestArrays() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testTestArrays() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -338,11 +339,11 @@ public class SlicerTest extends TestCase {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    assertEquals(2, countAllocations(slice));
-    assertEquals(1, countAloads(slice));
+    Assert.assertEquals(2, countAllocations(slice));
+    Assert.assertEquals(1, countAloads(slice));
   }
 
-  public void testTestFields() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testTestFields() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -361,11 +362,11 @@ public class SlicerTest extends TestCase {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    assertEquals(2, countAllocations(slice));
-    assertEquals(1, countPutfields(slice));
+    Assert.assertEquals(2, countAllocations(slice));
+    Assert.assertEquals(1, countPutfields(slice));
   }
 
-  public void testThin1() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testThin1() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -386,19 +387,19 @@ public class SlicerTest extends TestCase {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    assertEquals(3, countAllocations(slice));
-    assertEquals(2, countPutfields(slice));
+    Assert.assertEquals(3, countAllocations(slice));
+    Assert.assertEquals(2, countPutfields(slice));
 
     // compute thin slice .. ignore base pointers
     Collection<Statement> computeBackwardSlice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(),
         DataDependenceOptions.NO_BASE_PTRS, ControlDependenceOptions.NONE);
     slice = computeBackwardSlice;
     dumpSlice(slice);
-    assertEquals(2, countAllocations(slice));
-    assertEquals(1, countPutfields(slice));
+    Assert.assertEquals(2, countAllocations(slice));
+    Assert.assertEquals(1, countPutfields(slice));
   }
 
-  public void testTestGlobal() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testTestGlobal() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -417,12 +418,12 @@ public class SlicerTest extends TestCase {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    assertEquals(1, countAllocations(slice));
-    assertEquals(2, countPutstatics(slice));
-    assertEquals(2, countGetstatics(slice));
+    Assert.assertEquals(1, countAllocations(slice));
+    Assert.assertEquals(2, countPutstatics(slice));
+    Assert.assertEquals(2, countGetstatics(slice));
   }
 
-  public void testTestMultiTarget() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testTestMultiTarget() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -441,10 +442,10 @@ public class SlicerTest extends TestCase {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    assertEquals(2, countAllocations(slice));
+    Assert.assertEquals(2, countAllocations(slice));
   }
 
-  public void testTestRecursion() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testTestRecursion() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -464,11 +465,11 @@ public class SlicerTest extends TestCase {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    assertEquals(3, countAllocations(slice));
-    assertEquals(2, countPutfields(slice));
+    Assert.assertEquals(3, countAllocations(slice));
+    Assert.assertEquals(2, countPutfields(slice));
   }
 
-  public void testPrimGetterSetter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testPrimGetterSetter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -490,11 +491,11 @@ public class SlicerTest extends TestCase {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, pcg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.FULL);
     dumpSlice(slice);
-    assertEquals(0, countAllocations(slice));
-    assertEquals(1, countPutfields(slice));
+    Assert.assertEquals(0, countAllocations(slice));
+    Assert.assertEquals(1, countPutfields(slice));
   }
 
-  public void testTestThrowCatch() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testTestThrowCatch() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -513,12 +514,12 @@ public class SlicerTest extends TestCase {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    assertEquals(1, countAllocations(slice));
-    assertEquals(1, countThrows(slice));
-    assertEquals(1, countGetfields(slice));
+    Assert.assertEquals(1, countAllocations(slice));
+    Assert.assertEquals(1, countThrows(slice));
+    Assert.assertEquals(1, countGetfields(slice));
   }
 
-  public void testTestMessageFormat() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testTestMessageFormat() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
         CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);

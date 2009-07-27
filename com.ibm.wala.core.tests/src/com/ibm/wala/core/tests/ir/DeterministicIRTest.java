@@ -12,6 +12,11 @@ package com.ibm.wala.core.tests.ir;
 
 import java.util.Iterator;
 
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.IMethod;
@@ -57,7 +62,8 @@ public class DeterministicIRTest extends WalaTestCase {
     justThisTest(DeterministicIRTest.class);
   }
 
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
 
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
         FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
@@ -72,20 +78,20 @@ public class DeterministicIRTest extends WalaTestCase {
     }
   }
 
-  protected void tearDown() throws Exception {
+  @After
+  public void tearDown() throws Exception {
     Warnings.clear();
     scope = null;
     cha = null;
-    super.tearDown();
   }
 
   /**
    * @param method
    */
   private IR doMethod(MethodReference method) {
-    assertNotNull("method not found", method);
+    Assert.assertNotNull("method not found", method);
     IMethod imethod = cha.resolveMethod(method);
-    assertNotNull("imethod not found", imethod);
+    Assert.assertNotNull("imethod not found", imethod);
     IR ir1 = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     cache.getSSACache().wipe();
 
@@ -96,7 +102,7 @@ public class DeterministicIRTest extends WalaTestCase {
     } catch (UnsoundGraphException e) {
       System.err.println(ir1);
       e.printStackTrace();
-      assertTrue("unsound CFG for ir1", false);
+      Assert.assertTrue("unsound CFG for ir1", false);
     }
 
     IR ir2 = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
@@ -107,10 +113,10 @@ public class DeterministicIRTest extends WalaTestCase {
     } catch (UnsoundGraphException e1) {
       System.err.println(ir2);
       e1.printStackTrace();
-      assertTrue("unsound CFG for ir2", false);
+      Assert.assertTrue("unsound CFG for ir2", false);
     }
 
-    assertEquals(ir1.toString(), ir2.toString());
+    Assert.assertEquals(ir1.toString(), ir2.toString());
     return ir1;
   }
 
@@ -121,7 +127,7 @@ public class DeterministicIRTest extends WalaTestCase {
    */
   private void checkNoneNull(Iterator<?> iterator) {
     while (iterator.hasNext()) {
-      assertTrue(iterator.next() != null);
+      Assert.assertTrue(iterator.next() != null);
     }
 
   }
@@ -135,32 +141,31 @@ public class DeterministicIRTest extends WalaTestCase {
         return;
       }
     }
-    assertTrue("no instructions generated", false);
+    Assert.assertTrue("no instructions generated", false);
   }
 
-  public void testIR1() {
+  @Test public void testIR1() {
     // 'remove' is a nice short method
     doMethod(scope.findMethod(AnalysisScope.APPLICATION, "Ljava/util/HashMap", Atom.findOrCreateUnicodeAtom("remove"),
         new ImmutableByteArray(UTF8Convert.toUTF8("(Ljava/lang/Object;)Ljava/lang/Object;"))));
   }
 
-  public void testIR2() {
+  @Test public void testIR2() {
     // 'equals' is a nice medium-sized method
     doMethod(scope.findMethod(AnalysisScope.APPLICATION, "Ljava/lang/String", Atom.findOrCreateUnicodeAtom("equals"),
         new ImmutableByteArray(UTF8Convert.toUTF8("(Ljava/lang/Object;)Z"))));
   }
 
-  public void testIR3() {
+  @Test public void testIR3() {
     // 'resolveProxyClass' is a nice long method (at least in Sun libs)
     doMethod(scope.findMethod(AnalysisScope.APPLICATION, "Ljava/io/ObjectInputStream", Atom
         .findOrCreateUnicodeAtom("resolveProxyClass"), new ImmutableByteArray(UTF8Convert
         .toUTF8("([Ljava/lang/String;)Ljava/lang/Class;"))));
   }
-  
-  public void testIR4() {
+
+  @Test public void testIR4() {
     // test some corner cases with try-finally
-    doMethod(scope.findMethod(AnalysisScope.APPLICATION, "LcornerCases/TryFinally", Atom
-        .findOrCreateUnicodeAtom("test1"), new ImmutableByteArray(UTF8Convert
-        .toUTF8("(Ljava/io/InputStream;Ljava/io/InputStream;)V"))));
+    doMethod(scope.findMethod(AnalysisScope.APPLICATION, "LcornerCases/TryFinally", Atom.findOrCreateUnicodeAtom("test1"),
+        new ImmutableByteArray(UTF8Convert.toUTF8("(Ljava/io/InputStream;Ljava/io/InputStream;)V"))));
   }
 }

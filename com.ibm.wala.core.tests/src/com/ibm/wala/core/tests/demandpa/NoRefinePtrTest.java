@@ -39,68 +39,66 @@ package com.ibm.wala.core.tests.demandpa;
 
 import java.io.IOException;
 
+import org.junit.Test;
+
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.CancelException;
 
 public class NoRefinePtrTest extends AbstractPtrTest {
 
-  @Override
-  protected void setUp() {
-  }
-
-  public void testOnTheFlySimple() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testOnTheFlySimple() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_ONTHEFLY_SIMPLE, 1);
   }
 
-  public void testArraySet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testArraySet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_ARRAY_SET, 2);
   }
 
-  public void testArraySetIter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testArraySetIter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_ARRAY_SET_ITER, 2);
   }
 
-  public void testHashSet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testHashSet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_HASH_SET, 3, 3, 2);
   }
 
-  public void testMethodRecursion() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testMethodRecursion() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_METHOD_RECURSION, 2);
   }
 
-  public void testFooId() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testFooId() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_ID, 2);
   }
 
-  public void testLocals() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testLocals() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_LOCALS, 1);
   }
 
-  public void testArrays() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testArrays() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_ARRAYS, 2);
   }
 
-  public void testFields() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testFields() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_FIELDS, 2);
   }
 
-  public void testFieldsHarder() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testFieldsHarder() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_FIELDS_HARDER, 2);
   }
 
-  public void testGetterSetter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testGetterSetter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_GETTER_SETTER, 2);
   }
 
-  public void testException() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testException() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_EXCEPTION, 4);
   }
 
-  public void testMultiDim() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testMultiDim() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_MULTI_DIM, 2);
   }
 
-  public void testGlobal() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test public void testGlobal() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_GLOBAL, 1);
   }
 

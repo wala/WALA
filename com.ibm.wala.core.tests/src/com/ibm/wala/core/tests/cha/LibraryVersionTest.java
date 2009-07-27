@@ -14,6 +14,8 @@ import java.io.IOException;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
+
 import com.ibm.wala.core.tests.ir.DeterministicIRTest;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -31,7 +33,7 @@ public class LibraryVersionTest extends WalaTestCase {
   
   private static final ClassLoader MY_CLASSLOADER = DeterministicIRTest.class.getClassLoader();
 
-  public void testLibraryVersion() throws IOException {
+  @Test public void testLibraryVersion() throws IOException {
     AnalysisScope scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
     System.err.println("java library version is " + scope.getJavaLibraryVersion());
     Assert.assertTrue(scope.isJava16Libraries() || scope.isJava15Libraries()||scope.isJava14Libraries());

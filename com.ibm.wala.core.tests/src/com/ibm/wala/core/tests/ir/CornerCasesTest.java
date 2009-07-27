@@ -12,6 +12,9 @@ package com.ibm.wala.core.tests.ir;
 
 import java.io.IOException;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -48,15 +51,15 @@ public class CornerCasesTest extends WalaTestCase {
    * @throws ClassHierarchyException
    * @throws IOException 
    */
-  public void testBug38484() throws ClassHierarchyException, IOException {
+  @Test public void testBug38484() throws ClassHierarchyException, IOException {
     AnalysisScope scope = null;
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
     ClassHierarchy cha = ClassHierarchy.make(scope);
     TypeReference t = TypeReference.findOrCreateClass(scope.getApplicationLoader(), "cornerCases", "YuckyInterface");
     IClass klass = cha.lookupClass(t);
-    assertTrue(klass != null);
+    Assert.assertTrue(klass != null);
     IMethod m = klass.getMethod(new Selector(Atom.findOrCreateAsciiAtom("x"), Descriptor.findOrCreateUTF8("()V")));
-    assertTrue(m == null);
+    Assert.assertTrue(m == null);
   }
 
   /**
@@ -66,17 +69,17 @@ public class CornerCasesTest extends WalaTestCase {
    * @throws ClassHierarchyException
    * @throws IOException 
    */
-  public void testBug38540() throws ClassHierarchyException, IOException {
+  @Test public void testBug38540() throws ClassHierarchyException, IOException {
     AnalysisScope scope = null;
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
     AnalysisOptions options = new AnalysisOptions();
     ClassHierarchy cha = ClassHierarchy.make(scope);
     TypeReference t = TypeReference.findOrCreateClass(scope.getApplicationLoader(), "cornerCases", "Main");
     IClass klass = cha.lookupClass(t);
-    assertTrue(klass != null);
+    Assert.assertTrue(klass != null);
     ShrikeCTMethod m = (ShrikeCTMethod) klass.getMethod(new Selector(Atom.findOrCreateAsciiAtom("foo"), Descriptor
         .findOrCreateUTF8("()Ljava/lang/Object;")));
-    assertTrue(m != null);
+    Assert.assertTrue(m != null);
     IR ir = new AnalysisCache().getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions());
     TypeInference.make(ir, false);
   }

@@ -10,6 +10,11 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.cha;
 
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.IClass;
@@ -41,7 +46,8 @@ public class InnerClassesTest extends WalaTestCase {
     justThisTest(InnerClassesTest.class);
   }
 
-  protected void setUp() throws Exception {
+  @Before
+  public void setUp() throws Exception {
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.txt"),
         MY_CLASSLOADER);
 
@@ -54,39 +60,39 @@ public class InnerClassesTest extends WalaTestCase {
     }
   }
 
-  protected void tearDown() throws Exception {
+  @After
+  public void tearDown() throws Exception {
     scope = null;
     cha = null;
-    super.tearDown();
   }
 
-  public void test1() throws InvalidClassFileException {
+  @Test public void test1() throws InvalidClassFileException {
     TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Application, TypeName
         .string2TypeName("Linner/TestStaticInner"));
     IClass klass = cha.lookupClass(t);
     assert klass != null;
     ShrikeClass s = (ShrikeClass)klass;
-    assertFalse(s.isInnerClass());
+    Assert.assertFalse(s.isInnerClass());
   }
   
-  public void test2() throws InvalidClassFileException {
+  @Test public void test2() throws InvalidClassFileException {
     TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Application, TypeName
         .string2TypeName("Linner/TestStaticInner$A"));
     IClass klass = cha.lookupClass(t);
     assert klass != null;
     ShrikeClass s = (ShrikeClass)klass;
-    assertTrue(s.isInnerClass());
-    assertTrue(s.isStaticInnerClass());
+    Assert.assertTrue(s.isInnerClass());
+    Assert.assertTrue(s.isStaticInnerClass());
   }
   
-  public void test3() throws InvalidClassFileException {
+  @Test public void test3() throws InvalidClassFileException {
     TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Application, TypeName
         .string2TypeName("Linner/TestInner$A"));
     IClass klass = cha.lookupClass(t);
     assert klass != null;
     ShrikeClass s = (ShrikeClass)klass;
-    assertTrue(s.isInnerClass());
-    assertFalse(s.isStaticInnerClass());
+    Assert.assertTrue(s.isInnerClass());
+    Assert.assertFalse(s.isStaticInnerClass());
   }
 
 }

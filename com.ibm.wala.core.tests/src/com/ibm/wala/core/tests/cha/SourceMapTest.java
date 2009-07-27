@@ -12,6 +12,9 @@ package com.ibm.wala.core.tests.cha;
 
 import java.io.IOException;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -29,7 +32,7 @@ public class SourceMapTest extends WalaTestCase {
 
   private final static String CLASS_IN_PRIMORDIAL_JAR = "Lcom/ibm/wala/model/SyntheticFactory";
 
-  public void testHello() throws ClassHierarchyException, IOException {
+  @Test public void testHello() throws ClassHierarchyException, IOException {
     AnalysisScope scope = null;
     scope = AnalysisScopeReader.readJavaScope(TestConstants.HELLO, null, MY_CLASSLOADER);
     // TODO: it's annoying to have to build a class hierarchy here.
@@ -37,13 +40,13 @@ public class SourceMapTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchy.make(scope);
     TypeReference t = TypeReference.findOrCreate(scope.getApplicationLoader(), TestConstants.HELLO_MAIN);
     IClass klass = cha.lookupClass(t);
-    assertTrue("failed to load " + t, klass != null);
+    Assert.assertTrue("failed to load " + t, klass != null);
     String sourceFile = klass.getSourceFileName();
     System.err.println("Source file: " + sourceFile);
-    assertTrue(sourceFile != null);
+    Assert.assertTrue(sourceFile != null);
   }
 
-  public void testFromJar() throws ClassHierarchyException, IOException {
+  @Test public void testFromJar() throws ClassHierarchyException, IOException {
     AnalysisScope scope = null;
     scope = AnalysisScopeReader.readJavaScope(TestConstants.HELLO, null, MY_CLASSLOADER);
     // TODO: it's annoying to have to build a class hierarchy here.
@@ -51,9 +54,9 @@ public class SourceMapTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchy.make(scope);
     TypeReference t = TypeReference.findOrCreate(scope.getPrimordialLoader(), CLASS_IN_PRIMORDIAL_JAR);
     IClass klass = cha.lookupClass(t);
-    assertTrue(klass != null);
+    Assert.assertTrue(klass != null);
     String sourceFile = klass.getSourceFileName();
-    assertTrue(sourceFile != null);
+    Assert.assertTrue(sourceFile != null);
     System.err.println("Source file: " + sourceFile);
   }
 }

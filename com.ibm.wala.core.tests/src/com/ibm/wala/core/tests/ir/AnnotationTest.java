@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.ShrikeClass;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -26,7 +29,7 @@ public class AnnotationTest extends WalaTestCase {
     justThisTest(AnnotationTest.class);
   }
 
-  public void testClassAnnotations1() throws Exception {
+  @Test public void testClassAnnotations1() throws Exception {
     TypeReference typeUnderTest = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lannotations/AnnotatedClass1");
 
     Collection<Annotation> expectedRuntimeInvisibleAnnotations = HashSetFactory.make();
@@ -39,7 +42,7 @@ public class AnnotationTest extends WalaTestCase {
     testClassAnnontations(typeUnderTest, expectedRuntimeInvisibleAnnotations, expectedRuntimeVisibleAnnotations);
   }
 
-  public void testClassAnnotations2() throws Exception {
+  @Test public void testClassAnnotations2() throws Exception {
     TypeReference typeUnderTest = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lannotations/AnnotatedClass2");
 
     Collection<Annotation> expectedRuntimeInvisibleAnnotations = HashSetFactory.make();
@@ -60,8 +63,8 @@ public class AnnotationTest extends WalaTestCase {
     ClassHierarchy cha = ClassHierarchy.make(scope);
 
     IClass classUnderTest = cha.lookupClass(typeUnderTest);
-    assertNotNull(typeUnderTest.toString() + " not found", classUnderTest);
-    assertTrue(classUnderTest instanceof ShrikeClass);
+    Assert.assertNotNull(typeUnderTest.toString() + " not found", classUnderTest);
+    Assert.assertTrue(classUnderTest instanceof ShrikeClass);
     ShrikeClass shrikeClassUnderTest = (ShrikeClass) classUnderTest;
 
     Collection<Annotation> runtimeInvisibleAnnotations = shrikeClassUnderTest.getRuntimeInvisibleAnnotations();
@@ -81,10 +84,10 @@ public class AnnotationTest extends WalaTestCase {
     }
     
     if (expected.size() != actual.size()){
-      assertTrue("expected=" + expected + " actual=" + actual, false);
+      Assert.assertTrue("expected=" + expected + " actual=" + actual, false);
     }
     for (T a : expected){
-      assertTrue ("missing " + a.toString(), actual.contains(a));
+      Assert.assertTrue ("missing " + a.toString(), actual.contains(a));
     }
   }
 //  String methodSig = "annotations.AnnotatedClass1.m1()V;";
