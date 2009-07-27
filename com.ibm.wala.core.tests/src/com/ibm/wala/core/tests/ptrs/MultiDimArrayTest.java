@@ -50,12 +50,7 @@ public class MultiDimArrayTest extends WalaTestCase {
     justThisTest(MultiDimArrayTest.class);
   }
 
-  /**
-   * @param arg0
-   */
-  public MultiDimArrayTest(String arg0) {
-    super(arg0);
-  }
+
   
   public MultiDimArrayTest() {
     

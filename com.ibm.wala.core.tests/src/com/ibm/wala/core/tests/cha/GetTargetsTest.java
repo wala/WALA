@@ -12,9 +12,9 @@ package com.ibm.wala.core.tests.cha;
 
 import java.util.Collection;
 
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.ibm.wala.classLoader.ClassLoaderFactory;
@@ -38,15 +38,15 @@ public class GetTargetsTest extends WalaTestCase {
 
   private static final ClassLoader MY_CLASSLOADER = GetTargetsTest.class.getClassLoader();
 
-  private AnalysisScope scope;
-  private ClassHierarchy cha;
+  private static AnalysisScope scope;
+  private static ClassHierarchy cha;
 
   public static void main(String[] args) {
     justThisTest(GetTargetsTest.class);
   }
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeClass
+  public static void beforeClass() throws Exception {
 
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
 
@@ -64,8 +64,8 @@ public class GetTargetsTest extends WalaTestCase {
    * 
    * @see junit.framework.TestCase#tearDown()
    */
-  @After
-  public void tearDown() throws Exception {
+  @AfterClass
+  public static void afterClass() throws Exception {
     scope = null;
     cha = null;
   }

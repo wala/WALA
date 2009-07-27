@@ -40,10 +40,6 @@ public class GraphDataflowTest extends WalaTestCase {
   public static final String nodeNames = "ABCDEFGH";
   protected final static String[] nodes = new String[nodeNames.length()];
 
-  public GraphDataflowTest() {
-    super("GraphDataflowTest");
-  }
-
   /**
    * A simple test of the GraphBitVectorDataflow system
    * @throws CancelException 

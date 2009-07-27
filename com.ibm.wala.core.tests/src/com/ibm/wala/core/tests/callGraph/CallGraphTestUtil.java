@@ -32,13 +32,17 @@ public class CallGraphTestUtil {
 
   private static final ClassLoader MY_CLASSLOADER = CallGraphTestUtil.class.getClassLoader();
 
-
   public static AnalysisOptions makeAnalysisOptions(AnalysisScope scope, Iterable<Entrypoint> entrypoints) {
     AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
     return options;
   }
 
   public static String REGRESSION_EXCLUSIONS = "Java60RegressionExclusions.txt";
+
+  /**
+   * should we check the heap footprint before and after CG construction?
+   */
+  private static final boolean CHECK_FOOTPRINT = false;
 
   public static AnalysisScope makeJ2SEAnalysisScope(String scopeFile, String exclusionsFile) throws IOException {
     AnalysisScope scope = AnalysisScopeReader.readJavaScope(scopeFile, FileProvider.getFile(exclusionsFile), MY_CLASSLOADER);
@@ -47,21 +51,29 @@ public class CallGraphTestUtil {
 
   public static CallGraph buildRTA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope)
       throws IllegalArgumentException, CancelException {
-    StopwatchGC S = new StopwatchGC("build RTA graph");
-    S.start();
+    StopwatchGC S = null;
+    if (CHECK_FOOTPRINT) {
+      S = new StopwatchGC("build RTA graph");
+      S.start();
+    }
 
     CallGraphBuilder builder = Util.makeRTABuilder(options, cache, cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    S.stop();
-    System.err.println(S.report());
+    if (CHECK_FOOTPRINT) {
+      S.stop();
+      System.err.println(S.report());
+    }
     return cg;
   }
 
   public static CallGraph buildZeroCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope,
       boolean testPAtoString) throws IllegalArgumentException, CancelException {
-    StopwatchGC S = new StopwatchGC("build ZeroCFA graph");
-    S.start();
+    StopwatchGC S = null;
+    if (CHECK_FOOTPRINT) {
+      S = new StopwatchGC("build RTA graph");
+      S.start();
+    }
 
     CallGraphBuilder builder = Util.makeZeroCFABuilder(options, cache, cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
@@ -69,28 +81,38 @@ public class CallGraphTestUtil {
       builder.getPointerAnalysis().toString();
     }
 
-    S.stop();
-    System.err.println(S.report());
+    if (CHECK_FOOTPRINT) {
+      S.stop();
+      System.err.println(S.report());
+    }
     return cg;
   }
 
   public static CallGraph buildVanillaZeroOneCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha,
       AnalysisScope scope) throws IllegalArgumentException, CancelException {
-    StopwatchGC S = new StopwatchGC("build Vanilla 0-1-CFA graph");
-    S.start();
+    StopwatchGC S = null;
+    if (CHECK_FOOTPRINT) {
+      S = new StopwatchGC("build RTA graph");
+      S.start();
+    }
 
     CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, cache, cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    S.stop();
-    System.err.println(S.report());
+    if (CHECK_FOOTPRINT) {
+      S.stop();
+      System.err.println(S.report());
+    }
     return cg;
   }
 
   public static CallGraph buildZeroOneCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope,
       boolean testPAtoString) throws IllegalArgumentException, CancelException {
-    StopwatchGC S = new StopwatchGC("build 0-1-CFA graph");
-    S.start();
+    StopwatchGC S = null;
+    if (CHECK_FOOTPRINT) {
+      S = new StopwatchGC("build RTA graph");
+      S.start();
+    }
 
     CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, cache, cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
@@ -98,34 +120,46 @@ public class CallGraphTestUtil {
       builder.getPointerAnalysis().toString();
     }
 
-    S.stop();
-    System.err.println(S.report());
+    if (CHECK_FOOTPRINT) {
+      S.stop();
+      System.err.println(S.report());
+    }
     return cg;
   }
 
   public static CallGraph buildZeroContainerCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha,
       AnalysisScope scope) throws IllegalArgumentException, CancelException {
-    StopwatchGC S = new StopwatchGC("build 0-1-Container-CFA graph");
-    S.start();
+    StopwatchGC S = null;
+    if (CHECK_FOOTPRINT) {
+      S = new StopwatchGC("build RTA graph");
+      S.start();
+    }
 
     CallGraphBuilder builder = Util.makeZeroContainerCFABuilder(options, cache, cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    S.stop();
-    System.err.println(S.report());
+    if (CHECK_FOOTPRINT) {
+      S.stop();
+      System.err.println(S.report());
+    }
     return cg;
   }
 
   public static CallGraph buildZeroOneContainerCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha,
       AnalysisScope scope) throws IllegalArgumentException, CancelException {
-    StopwatchGC S = new StopwatchGC("build 0-1-Container-CFA graph");
-    S.start();
+    StopwatchGC S = null;
+    if (CHECK_FOOTPRINT) {
+      S = new StopwatchGC("build RTA graph");
+      S.start();
+    }
 
     CallGraphBuilder builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
-    S.stop();
-    System.err.println(S.report());
+    if (CHECK_FOOTPRINT) {
+      S.stop();
+      System.err.println(S.report());
+    }
     return cg;
   }
 

@@ -60,13 +60,6 @@ import com.ibm.wala.util.intset.SparseLongSet;
  */
 public class PrimitivesTest extends WalaTestCase {
 
-  public PrimitivesTest() {
-    super("PrimitivesTest");
-  }
-
-  public PrimitivesTest(String arg0) {
-    super(arg0);
-  }
 
   /**
    * Test the MutableSparseIntSet implementation

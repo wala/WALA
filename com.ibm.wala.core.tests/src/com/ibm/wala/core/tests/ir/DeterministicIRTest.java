@@ -12,9 +12,9 @@ package com.ibm.wala.core.tests.ir;
 
 import java.util.Iterator;
 
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.ibm.wala.classLoader.ClassLoaderFactory;
@@ -50,20 +50,20 @@ public class DeterministicIRTest extends WalaTestCase {
 
   private static final ClassLoader MY_CLASSLOADER = DeterministicIRTest.class.getClassLoader();
 
-  private AnalysisScope scope;
+  private static AnalysisScope scope;
 
-  private ClassHierarchy cha;
+  private static ClassHierarchy cha;
 
-  private AnalysisOptions options;
+  private static AnalysisOptions options;
 
-  private AnalysisCache cache;
+  private static AnalysisCache cache;
 
   public static void main(String[] args) {
     justThisTest(DeterministicIRTest.class);
   }
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeClass
+  public static void beforeClass() throws Exception {
 
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
         FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
@@ -78,11 +78,13 @@ public class DeterministicIRTest extends WalaTestCase {
     }
   }
 
-  @After
-  public void tearDown() throws Exception {
+  @AfterClass
+  public static void afterClass() throws Exception {
     Warnings.clear();
     scope = null;
     cha = null;
+    options = null;
+    cache = null;
   }
 
   /**

@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.util;
 
-import junit.framework.TestCase;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,7 +21,7 @@ import com.ibm.wala.util.warnings.Warnings;
 /**
  * Simple extension to JUnit test case.
  */
-public abstract class WalaTestCase extends TestCase {
+public abstract class WalaTestCase {
 
   final private static boolean ANALYZE_LEAKS = false;
 
@@ -60,17 +58,6 @@ public abstract class WalaTestCase extends TestCase {
    */
   protected static void justThisTest(Class<?> testClass) {
     JUnitCore.runClasses(testClass);
-  }
-
-  /**
-   * @param arg0
-   */
-  public WalaTestCase(String arg0) {
-    super(arg0);
-  }
-
-  public WalaTestCase() {
-    this("WalaTestCase");
   }
 
   protected static void assertBound(String tag, double quantity, double bound) {
