@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
 
 import com.ibm.wala.classLoader.IClass;
@@ -66,6 +67,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
@@ -79,6 +81,25 @@ public abstract class AbstractPtrTest {
 
   protected boolean debug = false;
 
+  /**
+   * file holding analysis scope specification
+   */
+  protected final String scopeFile;
+  
+  /**
+   * analysis scope from latest test
+   */
+  private AnalysisScope scope = null;
+
+
+  protected AbstractPtrTest(String scopeFile) {
+    this.scopeFile = scopeFile;
+  }
+  
+  private static AnalysisScope cachedScope;
+  
+  private static IClassHierarchy cachedCHA;
+  
   public static CGNode findMainMethod(CallGraph cg) {
     Descriptor d = Descriptor.findOrCreateUTF8("([Ljava/lang/String;)V");
     Atom name = Atom.findOrCreateUnicodeAtom("main");
@@ -138,15 +159,10 @@ public abstract class AbstractPtrTest {
     return null;
   }
 
-  /**
-   * analysis scope from latest test
-   */
-  protected AnalysisScope scope = null;
-
-  protected void doPointsToSizeTest(String scopeFile, String mainClass, int expected14Size, int expected15Size, int expected16Size)
+  protected void doPointsToSizeTest(String mainClass, int expected14Size, int expected15Size, int expected16Size)
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     assert scope == null;
-    Collection<InstanceKey> pointsTo = getPointsToSetToTest(scopeFile, mainClass);
+    Collection<InstanceKey> pointsTo = getPointsToSetToTest(mainClass);
     if (debug) {
       System.err.println("points-to for " + mainClass + ": " + pointsTo);
     }
@@ -164,14 +180,14 @@ public abstract class AbstractPtrTest {
     scope = null;
   }
 
-  protected void doPointsToSizeTest(String scopeFile, String mainClass, int expectedSize) throws ClassHierarchyException,
+  protected void doPointsToSizeTest(String mainClass, int expectedSize) throws ClassHierarchyException,
       IllegalArgumentException, CancelException, IOException {
-    doPointsToSizeTest(scopeFile, mainClass, expectedSize, expectedSize, expectedSize);
+    doPointsToSizeTest(mainClass, expectedSize, expectedSize, expectedSize);
   }
 
-  protected Collection<InstanceKey> getPointsToSetToTest(String scopeFile, String mainClass) throws ClassHierarchyException,
+  private Collection<InstanceKey> getPointsToSetToTest(String mainClass) throws ClassHierarchyException,
       IllegalArgumentException, CancelException, IOException {
-    final DemandRefinementPointsTo dmp = makeDemandPointerAnalysis(scopeFile, mainClass);
+    final DemandRefinementPointsTo dmp = makeDemandPointerAnalysis(mainClass);
 
     // find the testThisVar call, and check the parameter's points-to set
     CGNode mainMethod = AbstractPtrTest.findMainMethod(dmp.getBaseCallGraph());
@@ -180,12 +196,12 @@ public abstract class AbstractPtrTest {
     return pointsTo;
   }
 
-  protected DemandRefinementPointsTo makeDemandPointerAnalysis(String scopeFile, String mainClass) throws ClassHierarchyException,
+  protected DemandRefinementPointsTo makeDemandPointerAnalysis(String mainClass) throws ClassHierarchyException,
       IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(scopeFile, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    AnalysisScope scope = findOrCreateAnalysisScope();
     this.scope = scope;
     // build a type hierarchy
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+    IClassHierarchy cha = findOrCreateCHA(scope);
 
     // set up call graph construction options; mainly what should be considered
     // entrypoints?
@@ -204,6 +220,36 @@ public abstract class AbstractPtrTest {
         cha, options, getStateMachineFactory());
 
     return fullDemandPointsTo;
+  }
+
+  /**
+   * @param scope
+   * @return
+   * @throws ClassHierarchyException
+   */
+  private IClassHierarchy findOrCreateCHA(AnalysisScope scope) throws ClassHierarchyException {
+    if (cachedCHA == null) {
+      cachedCHA = ClassHierarchy.make(scope); 
+    }
+    return cachedCHA;
+  }
+
+  /**
+   * @param scopeFile
+   * @return
+   * @throws IOException
+   */
+  private AnalysisScope findOrCreateAnalysisScope() throws IOException {
+    if (cachedScope == null) {
+      cachedScope = CallGraphTestUtil.makeJ2SEAnalysisScope(scopeFile, CallGraphTestUtil.REGRESSION_EXCLUSIONS); 
+    }
+    return cachedScope; 
+  }
+  
+  @AfterClass
+  public static void cleanup() {
+    cachedScope = null;
+    cachedCHA = null;
   }
 
   protected StateMachineFactory<IFlowLabel> getStateMachineFactory() {

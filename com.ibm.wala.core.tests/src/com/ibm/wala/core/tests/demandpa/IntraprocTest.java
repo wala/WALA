@@ -49,8 +49,12 @@ import com.ibm.wala.util.CancelException;
 
 public class IntraprocTest extends AbstractPtrTest {
 
+  public IntraprocTest() {
+    super(TestInfo.SCOPE_FILE);
+  }
+  
   @Test public void testId() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_ID, 0);
+    doPointsToSizeTest(TestInfo.TEST_ID, 0);
   }
 
   @Override

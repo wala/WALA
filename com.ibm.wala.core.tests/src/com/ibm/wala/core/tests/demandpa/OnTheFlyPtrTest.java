@@ -50,13 +50,19 @@ import com.ibm.wala.util.CancelException;
 
 public class OnTheFlyPtrTest extends AbstractPtrTest {
 
-  @Test public void testOnTheFlySimple() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_ONTHEFLY_SIMPLE, 1);
+  public OnTheFlyPtrTest() {
+    super(TestInfo.SCOPE_FILE);
+  }
+
+  @Test
+  public void testOnTheFlySimple() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    doPointsToSizeTest(TestInfo.TEST_ONTHEFLY_SIMPLE, 1);
   }
 
   @Override
-  protected DemandRefinementPointsTo makeDemandPointerAnalysis(String scopeFile, String mainClass) throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    DemandRefinementPointsTo dmp = super.makeDemandPointerAnalysis(scopeFile, mainClass);
+  protected DemandRefinementPointsTo makeDemandPointerAnalysis(String mainClass) throws ClassHierarchyException,
+      IllegalArgumentException, CancelException, IOException {
+    DemandRefinementPointsTo dmp = super.makeDemandPointerAnalysis(mainClass);
     dmp.setRefinementPolicyFactory(new SinglePassRefinementPolicy.Factory(new AlwaysRefineFieldsPolicy(),
         new AlwaysRefineCGPolicy()));
     return dmp;
