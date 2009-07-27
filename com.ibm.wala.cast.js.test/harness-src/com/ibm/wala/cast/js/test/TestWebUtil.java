@@ -14,20 +14,22 @@ import java.net.URL;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
+
 import com.ibm.wala.cast.js.util.WebUtil;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 
 public class TestWebUtil extends WalaTestCase {
 
-  public void testAjaxslt() {
+  @Test public void testAjaxslt() {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xslt.html");
     Assert.assertTrue(url != null);
     Module mod = WebUtil.extractScriptFromHTML( url );
     Assert.assertTrue(mod != null);
   }
 
-  public void testAjaxpath() {
+  @Test public void testAjaxpath() {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xpath.html");
     Assert.assertTrue(url != null);
     Module mod = WebUtil.extractScriptFromHTML( url );

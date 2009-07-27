@@ -521,7 +521,7 @@ public class RhinoToAstTranslator {
   // code is fishy.   This should be cleaned up and the unchecked suppressWarnings
   // should be removed.
   private CAstEntity walkEntity(final ScriptOrFnNode n, WalkContext context) {
-    final FunctionContext child = (n instanceof FunctionNode) ? new FunctionContext(context, (FunctionNode) n) : new ScriptContext(
+    final FunctionContext child = (n instanceof FunctionNode) ? new FunctionContext(context, n) : new ScriptContext(
         context, n, n.getSourceName());
 
     CAstNode[] stmts = gatherChildren(n, child);
@@ -549,7 +549,7 @@ public class RhinoToAstTranslator {
       if (v instanceof Collection)
         subs.put(k, (Set<CAstEntity>) v);
       else {
-        Set<CAstEntity> s = (Set<CAstEntity>)Collections.singleton((CAstEntity)v);
+        Set<CAstEntity> s = Collections.singleton((CAstEntity)v);
         subs.put(k, s);
       }
     }

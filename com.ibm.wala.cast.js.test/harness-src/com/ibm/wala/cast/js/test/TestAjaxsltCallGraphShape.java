@@ -13,11 +13,12 @@ package com.ibm.wala.cast.js.test;
 import java.io.IOException;
 import java.net.URL;
 
-import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
+import org.junit.Test;
+
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 
-public class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
+public abstract class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
 
   public static void main(String[] args) {
     justThisTest(TestAjaxsltCallGraphShape.class);
@@ -27,7 +28,7 @@ public class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
 
   };
 
-  public void testAjaxslt() throws IOException, IllegalArgumentException, CancelException {
+  @Test public void testAjaxslt() throws IOException, IllegalArgumentException, CancelException {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xslt.html");
     CallGraph CG = Util.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForAjaxslt);
@@ -37,7 +38,7 @@ public class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
 
   };
 
-  public void testAjaxpath() throws IOException, IllegalArgumentException, CancelException {
+  @Test public void testAjaxpath() throws IOException, IllegalArgumentException, CancelException {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xpath.html");
     CallGraph CG = Util.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForAjaxpath);

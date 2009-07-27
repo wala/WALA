@@ -10,6 +10,8 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.test;
 
+import org.junit.Before;
+
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 
 public class TestMediawikiCallGraphShapeRhino extends TestMediawikiCallGraphShape {
@@ -18,8 +20,9 @@ public class TestMediawikiCallGraphShapeRhino extends TestMediawikiCallGraphShap
     justThisTest(TestMediawikiCallGraphShapeRhino.class);
   }
 
+  @Before
   public void setUp() {
-	    Util.setTranslatorFactory(new CAstRhinoTranslatorFactory());
+	    com.ibm.wala.cast.js.ipa.callgraph.Util.setTranslatorFactory(new CAstRhinoTranslatorFactory());
   }
   
 }

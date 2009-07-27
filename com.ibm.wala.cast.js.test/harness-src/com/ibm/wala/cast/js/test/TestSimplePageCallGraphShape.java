@@ -13,11 +13,12 @@ package com.ibm.wala.cast.js.test;
 import java.io.IOException;
 import java.net.URL;
 
-import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
+import org.junit.Test;
+
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 
-public class TestSimplePageCallGraphShape extends TestJSCallGraphShape {
+public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape {
 
   public static void main(String[] args) {
     justThisTest(TestSimplePageCallGraphShape.class);
@@ -34,7 +35,7 @@ public class TestSimplePageCallGraphShape extends TestJSCallGraphShape {
     }
   };
 
-  public void testPage1() throws IOException, IllegalArgumentException, CancelException {
+  @Test public void testPage1() throws IOException, IllegalArgumentException, CancelException {
     URL url = getClass().getClassLoader().getResource("pages/page1.html");
     CallGraph CG = Util.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForPage1);

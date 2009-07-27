@@ -13,11 +13,12 @@ package com.ibm.wala.cast.js.test;
 import java.io.IOException;
 import java.net.URL;
 
-import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
+import org.junit.Test;
+
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 
-public class TestMediawikiCallGraphShape extends TestJSCallGraphShape {
+public abstract class TestMediawikiCallGraphShape extends TestJSCallGraphShape {
 
   public static void main(String[] args) {
     justThisTest(TestMediawikiCallGraphShape.class);
@@ -27,7 +28,7 @@ public class TestMediawikiCallGraphShape extends TestJSCallGraphShape {
 
   };
 
-  public void testSwineFlu() throws IOException, IllegalArgumentException, CancelException {
+  @Test public void testSwineFlu() throws IOException, IllegalArgumentException, CancelException {
     URL url = new URL("http://en.wikipedia.org/wiki/2009_swine_flu_outbreak");
     CallGraph CG = Util.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForSwineFlu);

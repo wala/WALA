@@ -10,21 +10,18 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.test;
 
-import java.io.IOException;
-import java.net.URL;
+import org.junit.Before;
 
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
-import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
-import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.util.CancelException;
 
-public class TestSimplePageCallGraphShapeRhino extends TestJSCallGraphShape {
+public class TestSimplePageCallGraphShapeRhino extends TestSimplePageCallGraphShape {
 
   public static void main(String[] args) {
     justThisTest(TestSimplePageCallGraphShapeRhino.class);
   }
 
+  @Before
   public void setUp() {
-	    Util.setTranslatorFactory(new CAstRhinoTranslatorFactory());
+	    com.ibm.wala.cast.js.ipa.callgraph.Util.setTranslatorFactory(new CAstRhinoTranslatorFactory());
   }
 }

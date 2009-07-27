@@ -11,6 +11,8 @@ Require-Bundle: com.ibm.wala.cast.js,
  com.ibm.wala.core,
  org.eclipse.core.runtime,
  com.ibm.wala.core.tests,
- org.junit
+ org.junit4;bundle-version="4.3.1",
+ com.ibm.wala.cast.test;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: com.ibm.wala.cast.js.test
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
