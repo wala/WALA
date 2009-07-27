@@ -20,6 +20,10 @@ public class PolyglotJavaIRTests extends JavaIRTests {
   public PolyglotJavaIRTests(String name) {
     super(name);
   }
+  
+  public PolyglotJavaIRTests() {
+    super("PolyglotJavaIRTests");
+  }
 
   @Override
   protected JavaSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors) {

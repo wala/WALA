@@ -10,6 +10,8 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.test;
 
+import org.junit.Test;
+
 public abstract class JLexTest extends IRTests {
 
   public JLexTest(String name) {
@@ -20,7 +22,7 @@ public abstract class JLexTest extends IRTests {
     return "JLex";
   }
 
-  public void testJLex() {
+  @Test public void testJLex() {
     runTest(singleTestSrc(), rtJar, new String[] { "LJLex/Main" }, emptyList, false);
   }
 

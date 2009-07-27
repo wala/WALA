@@ -25,6 +25,9 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.jar.JarFile;
 
+import org.junit.Before;
+import org.junit.runner.RunWith;
+
 import junit.framework.Assert;
 
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
@@ -52,10 +55,22 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
+@RunWith(NameAwareTestClassRunner.class)
 public abstract class IRTests extends WalaTestCase {
+  protected String name;
+
   public IRTests(String name, String projectName) {
-    super(name);
+    this.name = name;
     this.projectName = projectName;
+  }
+
+  protected String getName() {
+    return name;
+  }
+
+  @Before
+  public void before() {
+    this.name = NameAwareTestClassRunner.getTestName();
   }
 
   protected final String projectName;
@@ -246,7 +261,7 @@ public abstract class IRTests extends WalaTestCase {
       return false;
     }
   }
-  
+
   protected Collection<String> singleTestSrc() {
     return Collections.singletonList(getTestSrcPath() + File.separator + singleJavaInputForTest());
   }
@@ -330,9 +345,8 @@ public abstract class IRTests extends WalaTestCase {
 
   /**
    * 
-   * @param srcMethodDescriptor
-   *            a full method descriptor of the form ldr#type#methName#methSig
-   *            example: Source#Simple1#main#([Ljava/lang/String;)V
+   * @param srcMethodDescriptor a full method descriptor of the form ldr#type#methName#methSig example:
+   *          Source#Simple1#main#([Ljava/lang/String;)V
    * @param cha
    * @return
    */
@@ -369,11 +383,7 @@ public abstract class IRTests extends WalaTestCase {
     return null;
   }
 
-  protected void populateScope(JavaSourceAnalysisEngine engine, 
-      Collection<String> sources, 
-      List<String> libs) 
-    throws IOException 
-  {
+  protected void populateScope(JavaSourceAnalysisEngine engine, Collection<String> sources, List<String> libs) throws IOException {
     boolean foundLib = false;
     for (String lib : libs) {
       File libFile = new File(lib);
@@ -403,7 +413,7 @@ public abstract class IRTests extends WalaTestCase {
   protected String getTestSrcPath() {
     return testSrcPath;
   }
-  
+
   protected String singleJavaInputForTest() {
     return getName().substring(4) + ".java";
   }

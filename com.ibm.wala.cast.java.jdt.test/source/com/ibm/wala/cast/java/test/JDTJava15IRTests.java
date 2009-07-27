@@ -13,6 +13,9 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
@@ -34,16 +37,17 @@ public class JDTJava15IRTests extends IRTests {
   }
 
   protected void populateScope(JavaSourceAnalysisEngine engine, Collection<String> sources, List<String> libs) throws IOException {
-	  IDEIRTestUtil.populateScope(projectName, engine, sources, libs);
+    IDEIRTestUtil.populateScope(projectName, engine, sources, libs);
   }
-  
-  @Override
-  public void setUp() {
+
+  @BeforeClass
+  public static void beforeClass() {
     EclipseTestUtil.importZippedProject(TestPlugin.getDefault(), "test_project.zip", new NullProgressMonitor());
     System.err.println("finish importing project");
   }
 
-  public void tearDown() {
+  @AfterClass
+  public static void afterClass() {
     EclipseTestUtil.destroyProject("com.ibm.wala.cast.java.test.data");
   }
 
@@ -70,82 +74,102 @@ public class JDTJava15IRTests extends IRTests {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), assertions, true);
   }
 
+  @Test
   public void testAnonGeneNullarySimple() {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }
 
+  @Test
   public void testAnonymousGenerics() {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }
 
+  @Test
   public void testBasicsGenerics() {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }
 
+  @Test
   public void testCocovariant() {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }
 
+  @Test
   public void testCustomGenericsAndFields() {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }
 
+  @Test
   public void testEnumSwitch() {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }
 
+  @Test
   public void testExplicitBoxingTest() {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }
 
+  @Test
   public void testGenericArrays() {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }
 
+  @Test
   public void testGenericMemberClasses() {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }
 
+  @Test
   public void testGenericSuperSink() {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }
 
+  @Test
   public void testMethodGenerics() {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }
 
+  @Test
   public void testMoreOverriddenGenerics() {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }
 
+  @Test
   public void testNotSoSimpleEnums() {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }
 
+  @Test
   public void testOverridesOnePointFour() {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }
 
+  @Test
   public void testSimpleEnums() {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }
 
+  @Test
   public void testSimpleEnums2() {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }
 
+  @Test
   public void testVarargs() {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }
 
+  @Test
   public void testVarargsCovariant() {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }
 
+  @Test
   public void testVarargsOverriding() {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }
 
+  @Test
   public void testWildcards() {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }

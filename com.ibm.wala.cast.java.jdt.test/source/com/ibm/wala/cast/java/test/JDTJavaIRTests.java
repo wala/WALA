@@ -44,6 +44,8 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
@@ -68,13 +70,14 @@ public class JDTJavaIRTests extends JavaIRTests {
 	  IDEIRTestUtil.populateScope(projectName, engine, sources, libs);
   }
 
-  @Override
-  public void setUp() {
+  @BeforeClass
+  public static void beforeClass() {
     EclipseTestUtil.importZippedProject(TestPlugin.getDefault(), "test_project.zip", new NullProgressMonitor());
     System.err.println("finish importing project");
   }
 
-  public void tearDown() {
+  @AfterClass
+  public static void afterClass() {
     EclipseTestUtil.destroyProject("com.ibm.wala.cast.java.test.data");
   }
 

@@ -22,6 +22,8 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
+
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.java.ipa.slicer.AstJavaSlicer;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
@@ -62,7 +64,7 @@ public abstract class JavaIRTests extends IRTests {
     this(name, null);
   }
  
-  public void testSimple1() {
+  @Test public void testSimple1() {
 
     List<? extends IRAssertion> assertions = Arrays.asList(
         new SourceMapAssertion("Source#Simple1#doStuff#(I)V", "prod", 24),
@@ -77,7 +79,7 @@ public abstract class JavaIRTests extends IRTests {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), assertions, true);
   }
 
-  public void testTwoClasses() {
+  @Test public void testTwoClasses() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
     new IRAssertion() {
@@ -103,7 +105,7 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  public void testInterfaceTest1() {
+  @Test public void testInterfaceTest1() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
     /**
@@ -146,7 +148,7 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  public void testInheritance1() {
+  @Test public void testInheritance1() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
     /**
      * 'Derived' extends 'Base'
@@ -174,7 +176,7 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  public void testArray1() {
+  @Test public void testArray1() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
     /**
      * 'foo' has four array instructions: - 2 SSAArrayLengthInstruction - 1
@@ -203,7 +205,7 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  public void testArrayLiteral1() {
+  @Test public void testArrayLiteral1() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
     /**
      * 'foo' has four array instructions: - 2 SSAArrayLengthInstruction - 1
@@ -224,7 +226,7 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  public void testArrayLiteral2() {
+  @Test public void testArrayLiteral2() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
     /**
      * int[] y= { 1, 2, 3, 4 } is represented in the IR as four array store
@@ -280,13 +282,13 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  public void testInheritedField() {
+  @Test public void testInheritedField() {
     List<EdgeAssertions> edgeAssertionses = Arrays.asList(EdgeAssertions.make("Source#InheritedField#main#([Ljava/lang/String;)V",
         "Source#B#foo#()V"), EdgeAssertions.make("Source#InheritedField#main#([Ljava/lang/String;)V", "Source#B#bar#()V"));
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), edgeAssertionses, true);
   }
 
-  public void testQualifiedStatic() {
+  @Test public void testQualifiedStatic() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
     /**
      * 
@@ -310,7 +312,7 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  public void testStaticNesting() {
+  @Test public void testStaticNesting() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
     new IRAssertion() {
@@ -336,11 +338,11 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  public void testCastFromNull() {
+  @Test public void testCastFromNull() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true);
   }
   
-  public void testInnerClass() {
+  @Test public void testInnerClass() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
     new IRAssertion() {
@@ -360,11 +362,11 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  public void testNullArrayInit() {
+  @Test public void testNullArrayInit() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true);
   }
 
-  public void testInnerClassA() {
+  @Test public void testInnerClassA() {
     Pair x = runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true);
     
     // can't do an IRAssertion() -- we need the pointer analysis
@@ -422,7 +424,7 @@ public abstract class JavaIRTests extends IRTests {
 
   }
 
-  public void testInnerClassSuper() {
+  @Test public void testInnerClassSuper() {
     Pair x = runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true);
     
     // can't do an IRAssertion() -- we need the pointer analysis
@@ -452,7 +454,7 @@ public abstract class JavaIRTests extends IRTests {
 
   }
 
-  public void testLocalClass() {
+  @Test public void testLocalClass() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
     new IRAssertion() {
@@ -492,7 +494,7 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  public void testAnonymousClass() {
+  @Test public void testAnonymousClass() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
     new IRAssertion() {
@@ -511,59 +513,59 @@ public abstract class JavaIRTests extends IRTests {
     }), true);
   }
 
-  public void testWhileTest1() {
+  @Test public void testWhileTest1() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  public void testSwitch1() {
+  @Test public void testSwitch1() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  public void testException1() {
+  @Test public void testException1() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  public void testException2() {
+  @Test public void testException2() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  public void testFinally1() {
+  @Test public void testFinally1() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  public void testScoping1() {
+  @Test public void testScoping1() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  public void testScoping2() {
+  @Test public void testScoping2() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  public void testNonPrimaryTopLevel() {
+  @Test public void testNonPrimaryTopLevel() {
     runTest(singlePkgTestSrc("p"), rtJar, simplePkgTestEntryPoint("p"), emptyList, true);
   }
 
-  public void testMiniaturList() {
+  @Test public void testMiniaturList() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  public void testMonitor() {
+  @Test public void testMonitor() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  public void testStaticInitializers() {
+  @Test public void testStaticInitializers() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  public void testThread1() {
+  @Test public void testThread1() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  public void testCasts() {
+  @Test public void testCasts() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  public void testBreaks() {
+  @Test public void testBreaks() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
@@ -577,7 +579,7 @@ public abstract class JavaIRTests extends IRTests {
     return MethodReference.findOrCreate(clsRef, nameAtom, descr);
   }
 
-  public void testMiniaturSliceBug() throws IllegalArgumentException, CancelException {
+  @Test public void testMiniaturSliceBug() throws IllegalArgumentException, CancelException {
     Pair<?, ?> x = runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
 
     PointerAnalysis pa = (PointerAnalysis) x.snd;
@@ -589,8 +591,8 @@ public abstract class JavaIRTests extends IRTests {
     Pair<Collection<Statement>, SDG> y = AstJavaSlicer.computeAssertionSlice(cg, pa, roots, false);
     Collection<Statement> slice = y.fst;
     SlicerTest.dumpSlice(slice);
-    assertEquals(0, SlicerTest.countAllocations(slice));
-    assertEquals(1, SlicerTest.countPutfields(slice));
+    Assert.assertEquals(0, SlicerTest.countAllocations(slice));
+    Assert.assertEquals(1, SlicerTest.countPutfields(slice));
 
     // test slice from main
     sliceRootRef = getSliceRootReference("MiniaturSliceBug", "main", "([Ljava/lang/String;)V");
@@ -598,8 +600,8 @@ public abstract class JavaIRTests extends IRTests {
     y = AstJavaSlicer.computeAssertionSlice(cg, pa, roots, false);
     slice = y.fst;
     SlicerTest.dumpSlice(slice);
-    assertEquals(2, SlicerTest.countAllocations(slice));
-    assertEquals(2, SlicerTest.countPutfields(slice));
+    Assert.assertEquals(2, SlicerTest.countAllocations(slice));
+    Assert.assertEquals(2, SlicerTest.countPutfields(slice));
   }
 
 }

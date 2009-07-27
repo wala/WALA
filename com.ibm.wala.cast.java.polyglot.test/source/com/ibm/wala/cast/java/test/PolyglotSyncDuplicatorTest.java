@@ -27,6 +27,10 @@ public class PolyglotSyncDuplicatorTest extends SyncDuplicatorTest {
     super(name);
   }
 
+  public PolyglotSyncDuplicatorTest() {
+    super("PolyglotSyncDuplicatorTest");
+  }
+
   protected JavaSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors) {
     JavaSourceAnalysisEngine engine = new PolyglotJavaSourceAnalysisEngine() {
       protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {

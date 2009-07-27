@@ -10,6 +10,8 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.test;
 
+import org.junit.Test;
+
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.Language;
@@ -30,7 +32,7 @@ public abstract class SyncDuplicatorTest extends IRTests {
       .findOrCreate(JavaSourceAnalysisScope.SOURCE, TypeName.string2TypeName("LMonitor2")), Atom.findOrCreateUnicodeAtom("test"),
       Descriptor.findOrCreateUTF8(Language.JAVA, "(Ljava/lang/Object;)Z")), IInvokeInstruction.Dispatch.STATIC);
 
-  public void testMonitor2() {
+  @Test public void testMonitor2() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 

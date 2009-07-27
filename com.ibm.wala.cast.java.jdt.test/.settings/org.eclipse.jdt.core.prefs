@@ -1,5 +1,10 @@
-#Mon Apr 13 10:03:21 EDT 2009
+#Mon Jul 27 15:51:58 MDT 2009
 eclipse.preferences.version=1
+org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.5
+org.eclipse.jdt.core.compiler.compliance=1.5
+org.eclipse.jdt.core.compiler.problem.assertIdentifier=error
+org.eclipse.jdt.core.compiler.problem.enumIdentifier=error
+org.eclipse.jdt.core.compiler.source=1.5
 org.eclipse.jdt.core.formatter.align_type_members_on_columns=false
 org.eclipse.jdt.core.formatter.alignment_for_arguments_in_allocation_expression=16
 org.eclipse.jdt.core.formatter.alignment_for_arguments_in_enum_constant=16

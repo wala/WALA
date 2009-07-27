@@ -18,6 +18,8 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
+
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.util.CAstPattern;
@@ -101,7 +103,7 @@ public class TestCAstPattern extends WalaTestCase {
     simpleNameMap = Ast.testNameMap;
   }
 
-  public void testSimpleName() {
+  @Test public void testSimpleName() {
     test(simpleNamePattern, simpleNameAst, simpleNameMap);
   }
 
@@ -121,7 +123,7 @@ public class TestCAstPattern extends WalaTestCase {
     simpleStarNameMap = Ast.testNameMap;
   }
 
-  public void testSimpleStarName() {
+  @Test public void testSimpleStarName() {
     test(simpleStarNamePattern, simpleStarNameAst, simpleStarNameMap);
   }
 
@@ -141,7 +143,7 @@ public class TestCAstPattern extends WalaTestCase {
     simpleRepeatedMapOne = Ast.testNameMap;
   }
 
-  public void testSimpleRepeatedOne() {
+  @Test public void testSimpleRepeatedOne() {
     test(simpleRepeatedPattern, simpleRepeatedAstOne, simpleRepeatedMapOne);
   }
 
@@ -160,7 +162,7 @@ public class TestCAstPattern extends WalaTestCase {
     simpleRepeatedMapTwo = Ast.testNameMap;
   }
 
-  public void testSimpleRepeatedTwo() {
+  @Test public void testSimpleRepeatedTwo() {
     test(simpleRepeatedPattern, simpleRepeatedAstTwo, simpleRepeatedMapTwo);
   }
 
@@ -180,7 +182,7 @@ public class TestCAstPattern extends WalaTestCase {
     simpleRepeatedMapThree = Ast.testNameMap;
   }
 
-  public void testSimpleRepeatedThree() {
+  @Test public void testSimpleRepeatedThree() {
     test(simpleRepeatedPattern, simpleRepeatedAstThree, simpleRepeatedMapThree);
   }
 
@@ -201,7 +203,7 @@ public class TestCAstPattern extends WalaTestCase {
     simpleDoubleStarMap = Ast.testNameMap;
   }
 
-  public void testSimpleDoubleStar() {
+  @Test public void testSimpleDoubleStar() {
     test(simpleDoubleStarPattern, simpleDoubleStarAst, simpleDoubleStarMap);
   }
 
@@ -222,7 +224,7 @@ public class TestCAstPattern extends WalaTestCase {
     simpleAlternativeMap = Ast.testNameMap;
   }
 
-  public void testSimpleAlternative() {
+  @Test public void testSimpleAlternative() {
     test(simpleAlternativePattern, simpleAlternativeAst, simpleAlternativeMap);
   }
 
@@ -243,7 +245,7 @@ public class TestCAstPattern extends WalaTestCase {
     simpleOptionalMapWith = Ast.testNameMap;
   }
 
-  public void testSimpleOptionalWith() {
+  @Test public void testSimpleOptionalWith() {
     test(simpleOptionalPattern, simpleOptionalAstWith, simpleOptionalMapWith);
   }
 
@@ -261,7 +263,7 @@ public class TestCAstPattern extends WalaTestCase {
     simpleOptionalMapNot = Ast.testNameMap;
   }
 
-  public void testSimpleOptionalNot() {
+  @Test public void testSimpleOptionalNot() {
     test(simpleOptionalPattern, simpleOptionalAstNot, simpleOptionalMapNot);
   }
 
@@ -283,7 +285,7 @@ public class TestCAstPattern extends WalaTestCase {
     recursiveTreeOneMap = Ast.testNameMap;
   }
 
-  public void testRecursiveTreeOne() {
+  @Test public void testRecursiveTreeOne() {
     test(recursiveTreePattern, recursiveTreeOneAst, recursiveTreeOneMap);
   }
 
@@ -303,7 +305,7 @@ public class TestCAstPattern extends WalaTestCase {
     recursiveTreeTwoMap = Ast.testNameMap;
   }
 
-  public void testRecursiveTreeTwo() {
+  @Test public void testRecursiveTreeTwo() {
     test(recursiveTreePattern, recursiveTreeTwoAst, recursiveTreeTwoMap);
   }
 
@@ -327,22 +329,22 @@ public class TestCAstPattern extends WalaTestCase {
     recursiveTreeFiveMap = Ast.testNameMap;
   }
 
-  public void testRecursiveTreeFive() {
+  @Test public void testRecursiveTreeFive() {
     test(recursiveTreePattern, recursiveTreeFiveAst, recursiveTreeFiveMap);
   }
 
   private final CAstPattern buggyRecursiveTreePattern = CAstPattern
       .parse("|({leaf}|(<const>CONSTANT()||VAR(<vars>*))|||{node}BINARY_EXPR(\"+\",`leaf`,`node`))|");
 
-  public void testBuggyRecursiveTreeOne() {
+  @Test public void testBuggyRecursiveTreeOne() {
     test(buggyRecursiveTreePattern, recursiveTreeOneAst, null);
   }
 
-  public void testBuggyRecursiveTreeTwo() {
+  @Test public void testBuggyRecursiveTreeTwo() {
     test(buggyRecursiveTreePattern, recursiveTreeTwoAst, null);
   }
 
-  public void testBuggyRecursiveTreeFive() {
+  @Test public void testBuggyRecursiveTreeFive() {
     test(buggyRecursiveTreePattern, recursiveTreeFiveAst, null);
   }
 
@@ -351,15 +353,15 @@ public class TestCAstPattern extends WalaTestCase {
   private final CAstPattern testedTreePattern = CAstPattern.parse("{top}|(" + recursiveTreeStr + "||BINARY_EXPR(\",\","
       + extraTestsStr + ",`top`))|");
 
-  public void testTestedTreeOne() {
+  @Test public void testTestedTreeOne() {
     test(testedTreePattern, recursiveTreeOneAst, recursiveTreeOneMap);
   }
 
-  public void testTestedTreeTwo() {
+  @Test public void testTestedTreeTwo() {
     test(testedTreePattern, recursiveTreeTwoAst, recursiveTreeTwoMap);
   }
 
-  public void testTestedTreeFive() {
+  @Test public void testTestedTreeFive() {
     test(testedTreePattern, recursiveTreeFiveAst, recursiveTreeFiveMap);
   }
 
@@ -379,7 +381,7 @@ public class TestCAstPattern extends WalaTestCase {
     testedTreeOneMap = Ast.testNameMap;
   }
 
-  public void testTestedTreeOneWithTest() {
+  @Test public void testTestedTreeOneWithTest() {
     test(testedTreePattern, testedTreeOneAst, testedTreeOneMap);
   }
 
