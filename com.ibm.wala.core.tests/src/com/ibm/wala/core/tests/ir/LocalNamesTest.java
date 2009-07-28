@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.ir;
 
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.ibm.wala.classLoader.ClassLoaderFactory;
@@ -49,13 +49,13 @@ public class LocalNamesTest extends WalaTestCase {
 
   private static final ClassLoader MY_CLASSLOADER = LocalNamesTest.class.getClassLoader();
 
-  private AnalysisScope scope;
+  private static AnalysisScope scope;
 
-  private ClassHierarchy cha;
+  private static ClassHierarchy cha;
 
-  private AnalysisOptions options;
+  private static AnalysisOptions options;
 
-  private AnalysisCache cache;
+  private static AnalysisCache cache;
 
   public static void main(String[] args) {
     justThisTest(LocalNamesTest.class);
@@ -64,11 +64,11 @@ public class LocalNamesTest extends WalaTestCase {
   /*
    * @see junit.framework.TestCase#setUp()
    */
-  @Before
-  public void setUp() throws Exception {
+  @BeforeClass
+  public static void beforeClass() throws Exception {
 
-    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.txt"),
-        MY_CLASSLOADER);
+    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
+        FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
 
     options = new AnalysisOptions(scope, null);
     cache = new AnalysisCache();
@@ -86,16 +86,19 @@ public class LocalNamesTest extends WalaTestCase {
    * 
    * @see junit.framework.TestCase#tearDown()
    */
-  @After
-  public void tearDown() throws Exception {
+  @AfterClass
+  public static void afterClass() throws Exception {
     scope = null;
     cha = null;
+    options = null;
+    cache = null;
   }
 
   /**
    * Build an IR, then check getLocalNames
    */
-  @Test public void testAliasNames() {
+  @Test
+  public void testAliasNames() {
     try {
       AnalysisScope scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, FileProvider
           .getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
@@ -116,8 +119,8 @@ public class LocalNamesTest extends WalaTestCase {
           String[] localNames = ir.getLocalNames(offsetIndex, instr.getDef());
           if (localNames != null && localNames.length > 0 && localNames[0] == null) {
             System.err.println(ir);
-            Assert.assertTrue(" getLocalNames() returned [null,...] for the def of instruction at offset " + offsetIndex + "\n\tinstr",
-                false);
+            Assert.assertTrue(" getLocalNames() returned [null,...] for the def of instruction at offset " + offsetIndex
+                + "\n\tinstr", false);
           }
         }
       }
@@ -127,7 +130,8 @@ public class LocalNamesTest extends WalaTestCase {
     }
   }
 
-  @Test public void testLocalNamesWithoutPiNodes() {
+  @Test
+  public void testLocalNamesWithoutPiNodes() {
     SSAPiNodePolicy save = options.getSSAOptions().getPiNodePolicy();
     options.getSSAOptions().setPiNodePolicy(null);
     MethodReference mref = scope.findMethod(AnalysisScope.APPLICATION, "LcornerCases/Locals", Atom.findOrCreateUnicodeAtom("foo"),
@@ -155,7 +159,8 @@ public class LocalNamesTest extends WalaTestCase {
     Assert.assertTrue("incorrect local name resolution #1 for v1@5: " + names[1], names[1].equals("b"));
   }
 
-  @Test public void testLocalNamesWithPiNodes() {
+  @Test
+  public void testLocalNamesWithPiNodes() {
     SSAPiNodePolicy save = options.getSSAOptions().getPiNodePolicy();
     options.getSSAOptions().setPiNodePolicy(SSAOptions.getAllBuiltInPiNodes());
     MethodReference mref = scope.findMethod(AnalysisScope.APPLICATION, "LcornerCases/Locals", Atom.findOrCreateUnicodeAtom("foo"),
