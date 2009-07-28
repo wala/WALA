@@ -20,6 +20,7 @@ import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.io.FileProvider;
@@ -49,7 +50,7 @@ public class CallGraphTestUtil {
     return scope;
   }
 
-  public static CallGraph buildRTA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope)
+  public static CallGraph buildRTA(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope)
       throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
     if (CHECK_FOOTPRINT) {
@@ -67,7 +68,7 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildZeroCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope,
+  public static CallGraph buildZeroCFA(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope,
       boolean testPAtoString) throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
     if (CHECK_FOOTPRINT) {
@@ -106,7 +107,7 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildZeroOneCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope,
+  public static CallGraph buildZeroOneCFA(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope,
       boolean testPAtoString) throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
     if (CHECK_FOOTPRINT) {
@@ -127,7 +128,7 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildZeroContainerCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha,
+  public static CallGraph buildZeroContainerCFA(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
       AnalysisScope scope) throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
     if (CHECK_FOOTPRINT) {
@@ -145,7 +146,7 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildZeroOneContainerCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha,
+  public static CallGraph buildZeroOneContainerCFA(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
       AnalysisScope scope) throws IllegalArgumentException, CancelException {
     StopwatchGC S = null;
     if (CHECK_FOOTPRINT) {

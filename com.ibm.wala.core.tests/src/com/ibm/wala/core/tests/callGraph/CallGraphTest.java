@@ -35,6 +35,7 @@ import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ipa.cfg.InterproceduralCFG;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
@@ -223,7 +224,7 @@ public class CallGraphTest extends WalaTestCase {
     };
   }
 
-  public static void doCallGraphs(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope)
+  public static void doCallGraphs(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope)
       throws IllegalArgumentException, CancelException {
     doCallGraphs(options, cache, cha, scope, false);
   }
@@ -234,7 +235,7 @@ public class CallGraphTest extends WalaTestCase {
    * @throws CancelException
    * @throws IllegalArgumentException
    */
-  public static void doCallGraphs(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope,
+  public static void doCallGraphs(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope,
       boolean testPAToString) throws IllegalArgumentException, CancelException {
 
     // ///////////////

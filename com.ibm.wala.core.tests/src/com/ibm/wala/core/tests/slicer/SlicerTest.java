@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -36,6 +37,7 @@ import com.ibm.wala.ipa.callgraph.impl.PartialCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.slicer.NormalStatement;
 import com.ibm.wala.ipa.slicer.Slicer;
 import com.ibm.wala.ipa.slicer.Statement;
@@ -60,10 +62,34 @@ import com.ibm.wala.util.strings.Atom;
 
 public class SlicerTest {
 
-  @Test public void testSlice1() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+  private static AnalysisScope cachedScope;
+
+  private static AnalysisScope findOrCreateAnalysisScope() throws IOException {
+    if (cachedScope == null) {
+      cachedScope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
+    }
+    return cachedScope;
+  }
+
+  private static IClassHierarchy cachedCHA;
+
+  private static IClassHierarchy findOrCreateCHA(AnalysisScope scope) throws ClassHierarchyException {
+    if (cachedCHA == null) {
+      cachedCHA = ClassHierarchy.make(scope);
+    }
+    return cachedCHA;
+  }
+
+  @AfterClass
+  public static void afterClass() {
+    cachedCHA = null;
+    cachedScope = null;
+  }
+
+  @Test
+  public void testSlice1() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+    IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.SLICE1_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
@@ -90,10 +116,10 @@ public class SlicerTest {
     Assert.assertEquals(16, i);
   }
 
-  @Test public void testSlice2() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+  @Test
+  public void testSlice2() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+    IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.SLICE2_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
@@ -113,10 +139,10 @@ public class SlicerTest {
     Assert.assertEquals(30, slice.size());
   }
 
-  @Test public void testSlice3() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+  @Test
+  public void testSlice3() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+    IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.SLICE3_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
@@ -135,10 +161,11 @@ public class SlicerTest {
     Assert.assertEquals(1, countAllocations(slice));
   }
 
-  @Test public void testSlice4() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+  @Test
+  public void testSlice4() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.SLICE4_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
@@ -157,10 +184,11 @@ public class SlicerTest {
     Assert.assertEquals(4, slice.size());
   }
 
-  @Test public void testSlice5() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+  @Test
+  public void testSlice5() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.SLICE5_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
@@ -181,14 +209,16 @@ public class SlicerTest {
 
   /**
    * test unreproduced bug reported on mailing list by Sameer Madan, 7/3/2007
+   * 
    * @throws CancelException
    * @throws IllegalArgumentException
    * @throws IOException
    */
-  @Test public void testSlice7() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+  @Test
+  public void testSlice7() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.SLICE7_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
@@ -205,10 +235,11 @@ public class SlicerTest {
     dumpSlice(slice);
   }
 
-  @Test public void testTestCD1() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+  @Test
+  public void testTestCD1() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.SLICE_TESTCD1);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
@@ -227,10 +258,11 @@ public class SlicerTest {
     Assert.assertEquals(2, countConditionals(slice));
   }
 
-  @Test public void testTestCD2() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+  @Test
+  public void testTestCD2() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.SLICE_TESTCD2);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
@@ -249,10 +281,11 @@ public class SlicerTest {
     Assert.assertEquals(1, countConditionals(slice));
   }
 
-  @Test public void testTestCD3() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+  @Test
+  public void testTestCD3() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.SLICE_TESTCD3);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
@@ -271,10 +304,11 @@ public class SlicerTest {
     Assert.assertEquals(0, countConditionals(slice));
   }
 
-  @Test public void testTestCD4() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+  @Test
+  public void testTestCD4() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.SLICE_TESTCD4);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
@@ -288,20 +322,23 @@ public class SlicerTest {
     System.err.println("Statement: " + s);
 
     // compute a no-data slice
-    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.NONE, ControlDependenceOptions.FULL);
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.NONE,
+        ControlDependenceOptions.FULL);
     dumpSlice(slice);
     Assert.assertEquals(0, countConditionals(slice));
 
     // compute a full slice
-    slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
+    slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
+        ControlDependenceOptions.FULL);
     dumpSlice(slice);
     Assert.assertEquals(1, countConditionals(slice));
   }
 
-  @Test public void testTestId() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+  @Test
+  public void testTestId() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.SLICE_TESTID);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
@@ -320,10 +357,11 @@ public class SlicerTest {
     Assert.assertEquals(1, countAllocations(slice));
   }
 
-  @Test public void testTestArrays() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+  @Test
+  public void testTestArrays() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.SLICE_TESTARRAYS);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
@@ -343,16 +381,17 @@ public class SlicerTest {
     Assert.assertEquals(1, countAloads(slice));
   }
 
-  @Test public void testTestFields() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+  @Test
+  public void testTestFields() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.SLICE_TESTFIELDS);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
-    CallGraph cg = builder.makeCallGraph(options,null);
+    CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
 
@@ -366,16 +405,17 @@ public class SlicerTest {
     Assert.assertEquals(1, countPutfields(slice));
   }
 
-  @Test public void testThin1() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+  @Test
+  public void testThin1() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.SLICE_TESTTHIN1);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
-    CallGraph cg = builder.makeCallGraph(options,null);
+    CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
 
@@ -399,16 +439,17 @@ public class SlicerTest {
     Assert.assertEquals(1, countPutfields(slice));
   }
 
-  @Test public void testTestGlobal() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+  @Test
+  public void testTestGlobal() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.SLICE_TESTGLOBAL);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
-    CallGraph cg = builder.makeCallGraph(options,null);
+    CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
 
@@ -423,10 +464,11 @@ public class SlicerTest {
     Assert.assertEquals(2, countGetstatics(slice));
   }
 
-  @Test public void testTestMultiTarget() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+  @Test
+  public void testTestMultiTarget() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.SLICE_TESTMULTITARGET);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
@@ -445,16 +487,17 @@ public class SlicerTest {
     Assert.assertEquals(2, countAllocations(slice));
   }
 
-  @Test public void testTestRecursion() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+  @Test
+  public void testTestRecursion() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.SLICE_TESTRECURSION);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
-    CallGraph cg = builder.makeCallGraph(options,null);
+    CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
 
@@ -469,10 +512,11 @@ public class SlicerTest {
     Assert.assertEquals(2, countPutfields(slice));
   }
 
-  @Test public void testPrimGetterSetter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+  @Test
+  public void testPrimGetterSetter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.SLICE_TEST_PRIM_GETTER_SETTER);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
@@ -495,16 +539,17 @@ public class SlicerTest {
     Assert.assertEquals(1, countPutfields(slice));
   }
 
-  @Test public void testTestThrowCatch() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+  @Test
+  public void testTestThrowCatch() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.SLICE_TESTTHROWCATCH);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
-    CallGraph cg = builder.makeCallGraph(options,null);
+    CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
 
@@ -519,16 +564,17 @@ public class SlicerTest {
     Assert.assertEquals(1, countGetfields(slice));
   }
 
-  @Test public void testTestMessageFormat() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
-        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
+  @Test
+  public void testTestMessageFormat() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.SLICE_TESTMESSAGEFORMAT);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCache(), cha, scope);
-    CallGraph cg = builder.makeCallGraph(options,null);
+    CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode main = findMainMethod(cg);
     Statement seed = new NormalStatement(main, 2);
