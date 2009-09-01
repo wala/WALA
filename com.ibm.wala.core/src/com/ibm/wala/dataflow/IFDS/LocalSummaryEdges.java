@@ -46,7 +46,7 @@ public class LocalSummaryEdges {
   /**
    * Let (s_p,x) be an entry-exit pair, and let l := the long whose high word is s_p and low word is x.
    * 
-   * Then callReturnMap(l) is an int which uniquely identifies (s_p,x)
+   * Then entryExitMap(l) is an int which uniquely identifies (s_p,x)
    * 
    * we populate this map on demand!
    */
