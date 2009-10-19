@@ -16,88 +16,65 @@ package com.ibm.wala.util.io;
 public class FileSuffixes {
 
   private static final String CLASS_SUFFIX = ".class";
+
   private static final String JAR_SUFFIX = ".jar";
+
   private static final String WAR_SUFFIX = ".war";
-  private static final String CLASSPATH = ".classpath";
 
   /**
    * Does the file name represent a .class file?
    * 
-   * @param fileName
-   *          name of a file
+   * @param fileName name of a file
    * @return boolean
-   * @throws IllegalArgumentException  if fileName is null
+   * @throws IllegalArgumentException if fileName is null
    */
   public static boolean isClassFile(String fileName) {
     if (fileName == null) {
       throw new IllegalArgumentException("fileName is null");
     }
-    int suffixIndex = fileName.indexOf(CLASS_SUFFIX);
-    if (suffixIndex > -1 && fileName.indexOf(CLASSPATH) == -1) {
-      return true;
-    } else {
-      return false;
-    }
+    return fileName.endsWith(CLASS_SUFFIX);
   }
 
   /**
    * Does the file name represent a .java file?
    * 
-   * @param fileName
-   *          name of a file
+   * @param fileName name of a file
    * @return boolean
-   * @throws IllegalArgumentException  if fileName is null
+   * @throws IllegalArgumentException if fileName is null
    */
   public static boolean isSourceFile(String fileName) {
     if (fileName == null) {
       throw new IllegalArgumentException("fileName is null");
     }
-    int suffixIndex = fileName.indexOf(".java");
-    if (suffixIndex > -1 && fileName.indexOf(CLASSPATH) == -1) {
-      return true;
-    } else {
-      return false;
-    }
+    return fileName.endsWith(".java");
   }
 
   /**
    * Does the file name represent a .jar file?
    * 
-   * @param fileName
-   *          name of a file
+   * @param fileName name of a file
    * @return boolean
-   * @throws IllegalArgumentException  if fileName is null
+   * @throws IllegalArgumentException if fileName is null
    */
   public static boolean isJarFile(String fileName) {
     if (fileName == null) {
       throw new IllegalArgumentException("fileName is null");
     }
-    int suffixIndex = fileName.indexOf(JAR_SUFFIX);
-    if (suffixIndex > -1) {
-      return true;
-    } else {
-      return false;
-    }
+    return fileName.endsWith(JAR_SUFFIX);
   }
 
   /**
    * Does the file name represent a .war file?
    * 
-   * @param fileName
-   *          name of a file
+   * @param fileName name of a file
    * @return boolean
-   * @throws IllegalArgumentException  if fileName is null
+   * @throws IllegalArgumentException if fileName is null
    */
   public static boolean isWarFile(String fileName) {
     if (fileName == null) {
       throw new IllegalArgumentException("fileName is null");
     }
-    int suffixIndex = fileName.indexOf(WAR_SUFFIX);
-    if (suffixIndex > -1) {
-      return true;
-    } else {
-      return false;
-    }
+    return fileName.endsWith(WAR_SUFFIX);
   }
 
   /**
@@ -105,9 +82,8 @@ public class FileSuffixes {
    * 
    * TODO: generalize for all suffixes
    * 
-   * @param fileName
-   *          the file name
-   * @throws IllegalArgumentException  if fileName is null
+   * @param fileName the file name
+   * @throws IllegalArgumentException if fileName is null
    */
   public static String stripSuffix(String fileName) {
     if (fileName == null) {
