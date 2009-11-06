@@ -445,6 +445,11 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
           TypeReference type = it2.next();
           if (type != null) {
             InstanceKey ik = heapModel.getInstanceKeyForPEI(node, peiLoc, type);
+            if (ik == null) {
+              // ugh.  hope someone somewhere else knows what they are doing.
+              // this is probably due to analysis scope exclusions.
+              continue;
+            }
             if (!(ik instanceof ConcreteTypeKey)) {
               assert ik instanceof ConcreteTypeKey : "uh oh: need to implement getCaughtException constraints for instance " + ik;
             }

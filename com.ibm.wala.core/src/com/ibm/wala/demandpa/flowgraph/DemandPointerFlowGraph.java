@@ -448,6 +448,10 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
             TypeReference type = it2.next();
             if (type != null) {
               InstanceKey ik = heapModel.getInstanceKeyForPEI(node, peiLoc, type);
+              if (ik == null) {
+                // probably due to exclusions
+                continue;
+              }
               assert ik instanceof ConcreteTypeKey : "uh oh: need to implement getCaughtException constraints for instance " + ik;
               ConcreteTypeKey ck = (ConcreteTypeKey) ik;
               IClass klass = ck.getType();
