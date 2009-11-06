@@ -49,7 +49,6 @@ public class DummyStateMachine<T> implements StateMachine<T> {
   public static class Factory<T> implements StateMachineFactory<T> {
 
     public StateMachine<T> make() {
-      // TODO Auto-generated method stub
       return new DummyStateMachine<T>();
     }
 
