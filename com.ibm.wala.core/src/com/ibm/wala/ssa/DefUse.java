@@ -181,17 +181,4 @@ public class DefUse {
   public int getNumberOfUses(int v) {
     return uses[v] == null ? 0 : uses[v].size();
   }
-
-  /**
-   * Return the actual, honest-to-goodness IR object used to compute the {@link DefUse} information. By doing this, you ensure that
-   * for any SSAInstruction returned by getUses() or getDefs(), the instruction actually == (equals()) an SSAInstruction in the IR.
-   * 
-   * This is pretty horrible. TODO: Should think about redesigning instruction identity to avoid this.
-   * 
-   * This is deprecated since there is rarely a good reason to use this.
-   */
-  @Deprecated
-  public IR getIR() {
-    return ir;
-  }
 }

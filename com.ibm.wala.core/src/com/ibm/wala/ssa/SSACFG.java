@@ -86,14 +86,6 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock> 
    */
   private BasicBlock exit;
 
-  @Deprecated
-  protected SSACFG(SSACFG aCFG) {
-    this.delegate = aCFG.delegate;
-    this.method = aCFG.method;
-    this.basicBlocks = aCFG.basicBlocks;
-    this.instructions = aCFG.instructions;
-  }
-
   /**
    * @throws IllegalArgumentException if method is null
    */

@@ -146,12 +146,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    */
   private final Set<IClass> clinitVisited = HashSetFactory.make();
 
-  /**
-   * Should we use the pre-transitive solver?
-   */
-  @SuppressWarnings("unused")
-  @Deprecated
-  private final boolean usePreTransitiveSolver = false;
 
   protected SSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       PointerKeyFactory pointerKeyFactory) {

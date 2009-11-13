@@ -15,7 +15,6 @@ import com.ibm.wala.classLoader.IClassLoader;
 /**
  * Statistics about a class hierarchy.
  */
-@Deprecated
 public class ClassHierarchyStats {
 
   /**

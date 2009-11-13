@@ -1263,15 +1263,4 @@ public class ClassHierarchy implements IClassHierarchy {
     }
   }
 
-  /**
-   * Does it look like an inner class? [TODO: is this definitive?]
-   */
-  @Deprecated
-  public static boolean isInnerClass(IClass klass) throws NullPointerException {
-    if (klass == null) {
-      throw new IllegalArgumentException("null klass");
-    }
-    return klass.getName().toString().indexOf("$") > -1;
-  }
-
 }

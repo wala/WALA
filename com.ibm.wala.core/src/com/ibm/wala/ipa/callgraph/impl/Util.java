@@ -11,8 +11,6 @@
 package com.ibm.wala.ipa.callgraph.impl;
 
 import java.io.InputStream;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -22,8 +20,6 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.ClassTargetSelector;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
@@ -47,7 +43,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
-import com.ibm.wala.util.graph.traverse.SlowDFSDiscoverTimeIterator;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -70,78 +65,6 @@ public class Util {
     }
     options.setSelector(new ClassHierarchyMethodTargetSelector(cha));
     options.setSelector(new ClassHierarchyClassTargetSelector(cha));
-  }
-
-  /**
-   * Not terribly efficient
-   * 
-   * @throws IllegalArgumentException if g1 is null
-   * @throws IllegalArgumentException if g2 is null
-   */
-  @Deprecated
-  public static <T> boolean areEqual(Graph<T> g1, Graph<T> g2) {
-    if (g2 == null) {
-      throw new IllegalArgumentException("g2 is null");
-    }
-    if (g1 == null) {
-      throw new IllegalArgumentException("g1 is null");
-    }
-    if (g1.getNumberOfNodes() != g2.getNumberOfNodes()) {
-      return false;
-    }
-    Set<T> n1 = setify(g1.iterator());
-    Set<T> n2 = setify(g2.iterator());
-    if (!n1.equals(n2)) {
-      return false;
-    }
-    for (Iterator<T> it = n1.iterator(); it.hasNext();) {
-      T x = it.next();
-      if (g1.getSuccNodeCount(x) != g2.getSuccNodeCount(x)) {
-        return false;
-      }
-      Set s1 = setify(g1.getSuccNodes(x));
-      Set s2 = setify(g2.getSuccNodes(x));
-      if (!s1.equals(s2)) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  /**
-   * Is g1 a subset of g2? Not terribly efficient
-   * 
-   * @throws IllegalArgumentException if g1 is null
-   * @throws IllegalArgumentException if g2 is null
-   */
-  @Deprecated
-  public static <T> boolean isSubset(Graph<T> g1, Graph<T> g2) {
-    if (g2 == null) {
-      throw new IllegalArgumentException("g2 is null");
-    }
-    if (g1 == null) {
-      throw new IllegalArgumentException("g1 is null");
-    }
-    if (g1.getNumberOfNodes() > g2.getNumberOfNodes()) {
-      return false;
-    }
-    Set<T> n1 = setify(g1.iterator());
-    Set<T> n2 = setify(g2.iterator());
-    if (!n2.containsAll(n1)) {
-      return false;
-    }
-    for (Iterator<T> it = n1.iterator(); it.hasNext();) {
-      T x = it.next();
-      if (g1.getSuccNodeCount(x) > g2.getSuccNodeCount(x)) {
-        return false;
-      }
-      Set<T> s1 = setify(g1.getSuccNodes(x));
-      Set<T> s2 = setify(g2.getSuccNodes(x));
-      if (!s2.containsAll(s1)) {
-        return false;
-      }
-    }
-    return true;
   }
 
   /**
@@ -177,47 +100,6 @@ public class Util {
     ClassTargetSelector cs = new BypassClassTargetSelector(options.getClassTargetSelector(), summary.getAllocatableClasses(), cha,
         cha.getLoader(scope.getLoader(Atom.findOrCreateUnicodeAtom("Synthetic"))));
     options.setSelector(cs);
-  }
-
-  /**
-   * @return the Set of CGNodes in the call graph that are reachable without traversing any entrypoint node
-   * @throws IllegalArgumentException if cg is null
-   */
-  @Deprecated
-  public static Collection<CGNode> computeDarkEntrypointNodes(final CallGraph cg, final Collection<CGNode> entrypoints) {
-
-    if (cg == null) {
-      throw new IllegalArgumentException("cg is null");
-    }
-    final class DarkIterator extends SlowDFSDiscoverTimeIterator<CGNode> {
-
-      private static final long serialVersionUID = -7554905808017614372L;
-
-      // this is a yucky kludge .. purposely avoid calling a super() ctor to
-      // avoid calling getConnected() before this call is fully initialized.
-      DarkIterator() {
-        init(cg, Collections.singleton(cg.getFakeRootNode()).iterator());
-      }
-
-      @Override
-      public Iterator<CGNode> getConnected(CGNode N) {
-        HashSet<CGNode> result = HashSetFactory.make(5);
-        for (Iterator it = super.getConnected(N); it.hasNext();) {
-          CGNode X = (CGNode) it.next();
-          if (!entrypoints.contains(X)) {
-            result.add(X);
-          }
-        }
-        return result.iterator();
-      }
-    }
-
-    HashSet<CGNode> result = HashSetFactory.make();
-    for (DarkIterator D = new DarkIterator(); D.hasNext();) {
-      CGNode N = D.next();
-      result.add(N);
-    }
-    return result;
   }
 
   /**

@@ -138,11 +138,6 @@ public class AnalysisOptions {
   private boolean handleStaticInit = true;
 
   /**
-   * Should we use the pretransitive solver for pointer analysis? Not yet ready for prime-time.
-   */
-  private boolean usePreTransitiveSolver = false;
-
-  /**
    * Options governing SSA construction
    */
   private SSAOptions ssaOptions = new SSAOptions();
@@ -402,19 +397,6 @@ public class AnalysisOptions {
    */
   public boolean getTraceStringConstants() {
     return traceStringConstants;
-  }
-
-  /**
-   * @return true iff we should solve with the sub-transitive solver
-   */
-  @Deprecated
-  public boolean usePreTransitiveSolver() {
-    return usePreTransitiveSolver;
-  }
-
-  @Deprecated
-  public void setUsePreTransitiveSolver(boolean b) {
-    usePreTransitiveSolver = b;
   }
 
   /**
