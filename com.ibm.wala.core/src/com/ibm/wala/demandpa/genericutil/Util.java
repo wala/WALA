@@ -46,9 +46,7 @@ import java.util.BitSet;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 import com.ibm.wala.util.Predicate;
@@ -62,51 +60,6 @@ public class Util {
 
   /** The empty {@link BitSet}. */
   public static final BitSet EMPTY_BITSET = new BitSet();
-
-  /**
-   * Convert an int[] to a {@link String} for printing
-   * 
-   * @throws IllegalArgumentException if ints == null
-   * @deprecated  Use Arrays.toString() instead
-   */
-  @Deprecated
-  public static String str(int[] ints) throws IllegalArgumentException {
-    if (ints == null) {
-      throw new IllegalArgumentException("ints == null");
-    }
-    StringBuffer s = new StringBuffer();
-    s.append("[");
-    for (int i = 0; i < ints.length; i++) {
-      if (i > 0)
-        s.append(", ");
-      s.append(ints[i]);
-    }
-    s.append("]");
-    return s.toString();
-  }
-
-  @Deprecated
-  public static String objArrayToString(Object[] o) {
-    return objArrayToString(o, "[", "]", ", ");
-  }
-
-  @Deprecated
-  public static String objArrayToString(Object[] o, String start, String end, String sep) throws IllegalArgumentException {
-    if (o == null) {
-      throw new IllegalArgumentException("o == null");
-    }
-    StringBuffer s = new StringBuffer();
-    s.append(start);
-    for (int i = 0; i < o.length; i++) {
-      if (o[i] != null) {
-        if (i > 0)
-          s.append(sep);
-        s.append(o[i].toString());
-      }
-    }
-    s.append(end);
-    return s.toString();
-  }
 
   /**
    * Get a {@link String} representation of a {@link Throwable}.
@@ -162,29 +115,6 @@ public class Util {
   }
 
   /**
-   * Test whether <em>some</em> element of the given {@link Collection} satisfies the given {@link Predicate}.
-   * 
-   * @return All the elements satisfying the predicate
-   * @throws IllegalArgumentException if c == null
-   * @deprecated  use filter() instead
-   */
-  @Deprecated
-  public static <T> Collection<T> findAll(Collection<T> c, Predicate<T> p) throws IllegalArgumentException {
-    if (c == null) {
-      throw new IllegalArgumentException("c == null");
-    }
-    Collection<T> result = new LinkedList<T>();
-
-    for (Iterator<T> iter = c.iterator(); iter.hasNext();) {
-      T obj = iter.next();
-      if (p.test(obj))
-        result.add(obj);
-    }
-
-    return result;
-  }
-
-  /**
    * Test whether <em>all</em> elements of the given {@link Collection} satisfy the given {@link Predicate}.
    * 
    * @throws NullPointerException if c == null
@@ -231,37 +161,6 @@ public class Util {
   }
 
   /**
-   * Filter a collection: generate a new list from an existing collection, consisting of the elements satisfying some predicate.
-   * 
-   * @throws IllegalArgumentException if src == null
-   * @deprecated use Predicate.filter instead
-   */
-  @Deprecated
-  public static <T> List<T> filter(Collection<T> src, Predicate<T> pred) throws IllegalArgumentException {
-   return Predicate.filter(src.iterator(), pred);
-  }
-
-  /**
-   * Filter a collection according to some predicate, placing the result in a List
-   * 
-   * @param src collection to be filtered
-   * @param pred the predicate
-   * @param result the list for the result. assumed to be empty
-   * @throws IllegalArgumentException if src == null
-   */
-  @Deprecated
-  public static <T> void filter(Collection<T> src, Predicate<T> pred, List<T> result) throws IllegalArgumentException {
-    if (src == null) {
-      throw new IllegalArgumentException("src == null");
-    }
-    for (T t : src) {
-      if (pred.test(t)) {
-        result.add(t);
-      }
-    }
-  }
-
-  /**
    * Map a set: generate a new set with each element mapped. The new set is always a {@link HashSet}; it would have been more
    * precise to use {@link java.lang.reflect reflection} to create a set of the same type as 'srcSet', but reflection works really
    * slowly in some implementations, so it's best to avoid it.
@@ -292,48 +191,6 @@ public class Util {
       return newData;
     } else
       return data;
-  }
-
-  /**
-   * Clear a {@link BitSet}.
-   * 
-   * @throws IllegalArgumentException if bitSet == null
-   * @deprecated use BitSet.clear() instead.
-   */
-  @Deprecated
-  public static void clear(BitSet bitSet) throws IllegalArgumentException {
-    if (bitSet == null) {
-      throw new IllegalArgumentException("bitSet == null");
-    }
-    bitSet.and(EMPTY_BITSET);
-  }
-
-  /**
-   * Replace all occurrences of a given substring in a given {@link String}.
-   * 
-   * @throws IllegalArgumentException if str == null
-   * @Deprecated use String.replaceAll() instead
-   */
-  @Deprecated
-  public static String replaceAll(String str, String sub, String newSub) throws IllegalArgumentException {
-    if (str == null) {
-      throw new IllegalArgumentException("str == null");
-    }
-    if (str.indexOf(sub) == -1) {
-      return str;
-    }
-    int subLen = sub.length();
-    int idx;
-    StringBuffer result = new StringBuffer(str);
-    while ((idx = result.toString().indexOf(sub)) >= 0)
-      result.replace(idx, idx + subLen, newSub);
-    return result.toString();
-  }
-
-  /** Remove all occurrences of a given substring in a given {@link String} */
-  @Deprecated
-  public static String removeAll(String str, String sub) {
-    return replaceAll(str, sub, "");
   }
 
   /** Generate strings with fully qualified names or not */
@@ -408,30 +265,6 @@ public class Util {
   }
 
   /**
-   * @return a hash code for the array
-   * @throws IllegalArgumentException if objs == null
-   * @Deprecated use Arrays.hashCode() instead
-   */
-  @Deprecated
-  public static int hashArray(Object[] objs) throws IllegalArgumentException {
-    if (objs == null) {
-      throw new IllegalArgumentException("objs == null");
-    }
-    // stolen from java.util.AbstractList
-    int ret = 1;
-    for (int i = 0; i < objs.length; i++) {
-      ret = 31 * ret + (objs[i] == null ? 0 : objs[i].hashCode());
-    }
-    return ret;
-
-  }
-
-  @Deprecated
-  public static String toStringNull(Object o) {
-    return o == null ? "" : "[" + o.toString() + "]";
-  }
-
-  /**
    * checks if two sets have a non-empty intersection
    * 
    * @return <code>true</code> if the sets intersect; <code>false</code> otherwise
@@ -443,11 +276,6 @@ public class Util {
         return s2.contains(obj);
       }
     });
-  }
-
-  @Deprecated
-  public static int getInt(Integer i) {
-    return (i == null) ? 0 : i;
   }
 
   /**
@@ -470,27 +298,6 @@ public class Util {
     if (val != null) {
       vals.add(val);
     }
-  }
-
-  @Deprecated
-  public static <T> List<T> pickNAtRandom(List<T> vals, int n, long seed) throws IllegalArgumentException {
-    if (vals == null) {
-      throw new IllegalArgumentException("vals == null");
-    }
-    if (vals.size() <= n) {
-      return vals;
-    }
-    HashSet<T> elems = HashSetFactory.make();
-    Random rand = new Random(seed);
-    for (int i = 0; i < n; i++) {
-      boolean added = true;
-      do {
-        int randIndex = rand.nextInt(n);
-        added = elems.add(vals.get(randIndex));
-      } while (!added);
-
-    }
-    return new ArrayList<T>(elems);
   }
 
   /**

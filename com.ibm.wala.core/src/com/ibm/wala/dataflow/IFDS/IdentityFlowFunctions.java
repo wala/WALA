@@ -33,14 +33,6 @@ public class IdentityFlowFunctions<T> implements IFlowFunctionMap<T> {
   }
 
   /* 
-   * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getCallFlowFunction(java.lang.Object, java.lang.Object)
-   */
-  @Deprecated
-  public IUnaryFlowFunction getCallFlowFunction(T src, T dest) {
-    return IdentityFlowFunction.identity();
-  }
-
-  /* 
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getReturnFlowFunction(java.lang.Object, java.lang.Object, java.lang.Object)
    */
   public IFlowFunction getReturnFlowFunction(T call, T src, T dest) {
