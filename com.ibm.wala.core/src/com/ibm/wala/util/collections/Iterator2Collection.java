@@ -27,16 +27,6 @@ public abstract class Iterator2Collection<T> implements Collection<T> {
 
   protected abstract Collection<T> getDelegate();
   /**
-   * Just calls {@link #toSet(Iterator)}
-   * 
-   * @deprecated
-   */
-  @Deprecated
-  public static <T> Iterator2Collection<T> toCollection(Iterator<? extends T> i) throws IllegalArgumentException {
-    return toSet(i);
-  }
-
-  /**
    * Returns a {@link Set} containing all elements in i. Note that duplicates will be removed.
    */
   public static <T> Iterator2Set<T> toSet(Iterator<? extends T> i) throws IllegalArgumentException {
