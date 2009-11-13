@@ -21,7 +21,7 @@ import com.ibm.wala.util.strings.ImmutableByteArray;
 /**
  * A module which is a wrapper around a .class file
  */
-public class ClassFileModule extends FileModule implements Module, ModuleEntry {
+public class ClassFileModule extends FileModule {
 
   private final String className;
 
@@ -46,28 +46,15 @@ public class ClassFileModule extends FileModule implements Module, ModuleEntry {
     return "ClassFileModule:" + getFile();
   }
 
-
-  /* 
-   * @see com.ibm.wala.classLoader.ModuleEntry#isClassFile()
-   */
   public boolean isClassFile() {
     return true;
   }
 
-  /* 
-   * @see com.ibm.wala.classLoader.ModuleEntry#getClassName()
-   */
   public String getClassName() {
     return className;
   }
 
-
-  /* 
-   * @see com.ibm.wala.classLoader.ModuleEntry#isSourceFile()
-   */
   public boolean isSourceFile() {
     return false;
   }
-
-
 }
