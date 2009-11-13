@@ -46,9 +46,6 @@ public abstract class HeapGraph implements NumberedGraph<Object> {
     this.pa = pa;
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.NumberedNodeManager#iterateNodes(com.ibm.wala.util.intset.IntSet)
-   */
   public Iterator<Object> iterateNodes(IntSet s) {
     return new NumberedNodeIterator<Object>(s, this);
   }
@@ -62,15 +59,12 @@ public abstract class HeapGraph implements NumberedGraph<Object> {
     return DFS.getReachableNodes(this, roots, f);
   }
 
-  /*
-   * @see com.ibm.wala.util.graph.Graph#removeNode(com.ibm.wala.util.graph.Node)
-   */
   public void removeNodeAndEdges(Object N) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
   /**
-   * @return Returns the heap model used in this pointer analysis.
+   * @return the heap model used in this pointer analysis.
    */
   public HeapModel getHeapModel() {
     return pa.getHeapModel();
