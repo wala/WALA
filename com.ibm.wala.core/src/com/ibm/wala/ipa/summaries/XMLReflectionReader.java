@@ -40,8 +40,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * This class reads reflection summaries from an XML Stream. TODO: share part of
- * the implementation with XMLMethodSummaryReader
+ * This class reads reflection summaries from an XML Stream. TODO: share part of the implementation with XMLMethodSummaryReader
  */
 @Deprecated
 public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecification {
@@ -51,8 +50,7 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
   final private AnalysisScope scope;
 
   /**
-   * Method summaries collected for methods. Mapping MethodReference ->
-   * ReflectionSummary
+   * Method summaries collected for methods. Mapping MethodReference -> ReflectionSummary
    */
   final private HashMap<MethodReference, ReflectionSummary> summaries = HashMapFactory.make();
 
@@ -110,17 +108,14 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
   private void readXML(InputStream xml) throws SAXException, IOException, ParserConfigurationException {
     SAXHandler handler = new SAXHandler();
 
-    if (Assertions.verifyAssertions) {
-      assert xml != null : "Null xml stream";
-    }
+    assert xml != null : "Null xml stream";
 
     SAXParserFactory factory = SAXParserFactory.newInstance();
     factory.newSAXParser().parse(new InputSource(xml), handler);
   }
 
   /**
-   * @return Method summaries collected for methods. Mapping MethodReference ->
-   *         ReflectionSummary
+   * @return Method summaries collected for methods. Mapping MethodReference -> ReflectionSummary
    */
   public Map<MethodReference, ReflectionSummary> getSummaries() {
     return summaries;
@@ -151,14 +146,12 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
     private Atom governingPackage = null;
 
     /**
-     * The current bytecode index of the current newInstance call being
-     * processed
+     * The current bytecode index of the current newInstance call being processed
      */
     private int bcIndex = -1;
 
     /*
-     * @see org.xml.sax.ContentHandler#startElement(java.lang.String,
-     *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
+     * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
      */
     @Override
     public void startElement(String uri, String name, String qName, Attributes atts) {
@@ -199,8 +192,7 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
     }
 
     /**
-     * record that the currently active newInstance may allocate a particular
-     * concrete type.
+     * record that the currently active newInstance may allocate a particular concrete type.
      * 
      * @param tName
      */
@@ -215,8 +207,7 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
     }
 
     /*
-     * @see org.xml.sax.ContentHandler#endElement(java.lang.String,
-     *      java.lang.String, java.lang.String)
+     * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
      */
     @Override
     public void endElement(String uri, String name, String qName) {
@@ -250,8 +241,7 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
     }
 
     /**
-     * Begin processing of a method. 1. Set the governing method. 2. Initialize
-     * the nextLocal variable
+     * Begin processing of a method. 1. Set the governing method. 2. Initialize the nextLocal variable
      * 
      * @param atts
      */

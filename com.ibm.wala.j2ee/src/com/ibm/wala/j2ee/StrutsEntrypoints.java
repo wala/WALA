@@ -34,7 +34,6 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -306,9 +305,7 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
         return new TypeReference[] { receiver };
       } else {
         TypeReference[] tarray = super.getParameterTypes(i);
-        if (Assertions.verifyAssertions) {
-          assert tarray.length == 1;
-        }
+        assert tarray.length == 1;
         TypeReference T = tarray[0];
         TypeName n = T.getName();
         TypeReference Tprime = concreteParameterMap.get(n);
@@ -351,9 +348,7 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
         return new TypeReference[] { receiver };
       } else {
         TypeReference[] tarray = super.getParameterTypes(i);
-        if (Assertions.verifyAssertions) {
-          assert tarray.length == 1;
-        }
+        assert tarray.length == 1;
         TypeReference T = tarray[0];
         TypeName n = T.getName();
         TypeReference Tprime = concreteParameterMap.get(n);

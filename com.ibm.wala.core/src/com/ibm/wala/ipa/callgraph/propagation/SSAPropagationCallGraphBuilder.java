@@ -1493,10 +1493,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             }
           }
         } else {
-          if (Assertions.verifyAssertions) {
-            if (instruction.getUse(i) < 0) {
-              Assertions.UNREACHABLE("unexpected " + instruction + " in " + caller);
-            }
+          if (instruction.getUse(i) < 0) {
+            Assertions.UNREACHABLE("unexpected " + instruction + " in " + caller);
           }
           PointerKey actual = getPointerKeyForLocal(caller, instruction.getUse(i));
           if (needsFilter && (i == 0)) {

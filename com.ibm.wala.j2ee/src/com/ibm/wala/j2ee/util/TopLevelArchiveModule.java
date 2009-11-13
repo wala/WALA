@@ -49,20 +49,22 @@ public class TopLevelArchiveModule implements Module {
   private static final String ORG_APACHE_JSP = "org/apache/jsp/";
 
   public final static byte WAR_FILE = 0;
+
   public final static byte OTHER_JAR_FILE = 1;
+
   public final static byte APPLICATION_CLIENT_FILE = 2;
+
   public final static byte EAR_FILE = 3;
+
   public final static byte EJB_JAR_FILE = 4;
-  
+
   private boolean ignoreDependentJars = false;
-  
 
   private static final boolean DEBUG = false;
+
   /**
-   * The JarFileModule that represents this archive.
-   * If this is null, it means that this is a nested archive.
-   * TODO: We'll need to clean up the class hierarchy so that BloatedArchive
-   * does not extend TopLevelArchive ... in which case we can assert that
+   * The JarFileModule that represents this archive. If this is null, it means that this is a nested archive. TODO: We'll need to
+   * clean up the class hierarchy so that BloatedArchive does not extend TopLevelArchive ... in which case we can assert that
    * jarFile != null;
    */
   private final JarFileModule jarFile;
@@ -89,7 +91,9 @@ public class TopLevelArchiveModule implements Module {
     }
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#toString()
    */
   public String toString() {
@@ -103,10 +107,12 @@ public class TopLevelArchiveModule implements Module {
     return getTypeCode(materializeArchive());
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.classLoader.Module#getEntries()
    */
-  @SuppressWarnings({ "unchecked" })
+  @SuppressWarnings( { "unchecked" })
   public Iterator<ModuleEntry> getEntries() {
     if (DEBUG) {
       System.err.println(("ArchiveModule.getEntries(): " + this));
@@ -114,10 +120,10 @@ public class TopLevelArchiveModule implements Module {
     Archive A = materializeArchive();
     Collection files = A.getFiles();
     Collection<ModuleEntry> entries = HashSetFactory.make(files.size());
-    for (Iterator<File> it = files.iterator(); it.hasNext(); ) {
-      File f = (File)it.next();
+    for (Iterator<File> it = files.iterator(); it.hasNext();) {
+      File f = (File) it.next();
       if (f.isArchive()) {
-        byte code = getTypeCode((Archive)f);
+        byte code = getTypeCode((Archive) f);
         if (ignoreDependentJars && code == OTHER_JAR_FILE) {
           continue;
         }
@@ -145,7 +151,7 @@ public class TopLevelArchiveModule implements Module {
     }
     return jarFile.getJarFile().getName().indexOf(".war") > -1;
   }
-  
+
   /**
    * @param b
    */
@@ -161,21 +167,27 @@ public class TopLevelArchiveModule implements Module {
       this.F = F;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.ibm.wala.classLoader.ModuleEntry#getName()
      */
     public String getName() {
       return F.getURI();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.ibm.wala.classLoader.ModuleEntry#isClassFile()
      */
     public boolean isClassFile() {
       return FileSuffixes.isClassFile(F.getName());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.ibm.wala.classLoader.ModuleEntry#getInputStream()
      */
     public InputStream getInputStream() {
@@ -192,31 +204,30 @@ public class TopLevelArchiveModule implements Module {
       }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#toString()
      */
     public String toString() {
       return getName();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.ibm.wala.classLoader.ModuleEntry#isModuleFile()
      */
     public boolean isModuleFile() {
       return F.isArchive();
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.classLoader.ModuleEntry#asModule()
-     */
     public Module asModule() {
-      if (Assertions.verifyAssertions) {
-        assert isModuleFile();
-      }
+      assert isModuleFile();
       return new BloatedArchiveModule((Archive) F);
     }
 
-    /* (non-Javadoc)
+    /*
      * @see com.ibm.wala.classLoader.ModuleEntry#getClassName()
      */
     public String getClassName() {
@@ -239,14 +250,19 @@ public class TopLevelArchiveModule implements Module {
       }
       return FileSuffixes.stripSuffix(name);
     }
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     public int hashCode() {
       return F.hashCode() * 593;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.ibm.wala.classLoader.ModuleEntry#isSourceFile()
      */
     public boolean isSourceFile() {
@@ -266,28 +282,36 @@ public class TopLevelArchiveModule implements Module {
       this.A = A;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.ibm.wala.j2ee.util.TopLevelArchiveModule#materializeArchive()
      */
     public Archive materializeArchive() {
       return A;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.ibm.wala.j2ee.util.TopLevelArchiveModule#isWarFile()
      */
     protected boolean isWarFile() {
       return getTypeCode(A) == WAR_FILE;
     }
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.ibm.wala.j2ee.util.TopLevelArchiveModule#isWarFile()
      */
     protected boolean isApplicationClientFile() {
       return getTypeCode(A) == APPLICATION_CLIENT_FILE;
     }
-    
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     public int hashCode() {
@@ -295,6 +319,5 @@ public class TopLevelArchiveModule implements Module {
     }
 
   }
-
 
 }

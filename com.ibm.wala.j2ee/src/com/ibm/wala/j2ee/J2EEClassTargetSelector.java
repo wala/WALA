@@ -70,10 +70,8 @@ public class J2EEClassTargetSelector implements ClassTargetSelector {
     if (DEBUG) {
       System.err.println(("J2EEClassTargetSelector getAllocatedTarget: " + nominalRef));
     }
-    if (Assertions.verifyAssertions) {
-      if (nominalRef == null) {
-        assert nominalRef != null : "null declared type in site " + site;
-      }
+    if (nominalRef == null) {
+      assert nominalRef != null : "null declared type in site " + site;
     }
     IClass realType = cha.lookupClass(nominalRef);
     if (realType == null) {
@@ -96,10 +94,8 @@ public class J2EEClassTargetSelector implements ClassTargetSelector {
           return x;
         }
       } else {
-        if (Assertions.verifyAssertions) {
-          if (realType.isInterface()) {
-            Assertions.UNREACHABLE("did not hijack allocation of " + realType);
-          }
+        if (realType.isInterface()) {
+          Assertions.UNREACHABLE("did not hijack allocation of " + realType);
         }
         return realType;
       }

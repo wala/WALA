@@ -25,7 +25,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -111,9 +110,7 @@ public class SpringEntrypoints implements Iterable<Entrypoint> {
                     return new TypeReference[] { type };
                   } else {
                     TypeReference[] tArray = super.getParameterTypes(i);
-                    if (Assertions.verifyAssertions) {
-                      assert tArray.length == 1;
-                    }
+                    assert tArray.length == 1;
                     TypeReference T = tArray[0];
                     TypeName n = T.getName();
                     TypeReference Tp = ServletEntrypoints.getConcreteServletParameterType(n);

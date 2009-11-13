@@ -17,25 +17,6 @@ package com.ibm.wala.util.debug;
  */
 public class Assertions {
 
-  @Deprecated
-  public static final boolean verifyAssertions = true;
-
-  /**
-   * @throws UnimplementedError if b == false
-   */
-  @Deprecated
-  public static void _assert(boolean b) throws UnimplementedError {
-    assert b;
-  }
-
-  /**
-   * @throws UnimplementedError if b == false
-   */
-  @Deprecated
-  public static void _assert(boolean b, String string) throws UnimplementedError {
-    assert b : string;
-  }
-
   /**
    * An assertion which does not need to be guarded by verifyAssertions. These assertions will be enabled in production!
    * 
@@ -81,49 +62,5 @@ public class Assertions {
    */
   public static void UNREACHABLE(Object o) {
     throw new UnimplementedError(o == null ? "" : o.toString());
-  }
-
-  /**
-   * This is only a convenience method, identical to _assert. Allows the programmer to distinguish preconditions from other
-   * assertions.
-   * 
-   * @throws UnimplementedError if b == false
-   */
-  @Deprecated
-  public static void precondition(boolean b) throws UnimplementedError {
-    assert b;
-  }
-
-  /**
-   * This is only a convenience method, identical to _assert. It allows the programmer to distinguish preconditions from other
-   * assertions.
-   * 
-   * @throws UnimplementedError if b == false
-   */
-  @Deprecated
-  public static void precondition(boolean b, String string) throws UnimplementedError {
-    assert b : string;
-  }
-
-  /**
-   * This is only a convenience method, identical to _assert. Allows the programmer to distinguish postconditions from other
-   * assertions.
-   * 
-   * @throws UnimplementedError if b == false
-   */
-  @Deprecated
-  public static void postcondition(boolean b) throws UnimplementedError {
-    assert b;
-  }
-
-  /**
-   * This is only a convenience method, identical to _assert. It allows the programmer to distinguish postconditions from other
-   * assertions.
-   * 
-   * @throws UnimplementedError if b == false
-   */
-  @Deprecated
-  public static void postcondition(boolean b, String string) throws UnimplementedError {
-    assert b : string;
   }
 }

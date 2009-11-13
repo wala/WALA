@@ -174,16 +174,12 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       if (DEBUG) {
         System.err.println(("EJBBypass: create Synthetic case A for " + m));
       }
-      if (Assertions.verifyAssertions) {
-        if (bean == null) {
-          assert false : "no bean bound for " + entityType;
-        }
+      if (bean == null) {
+        assert false : "no bean bound for " + entityType;
       }
       IMethod ejbMethod = cha.resolveMethod(MethodReference.findOrCreate(bean.getEJBClass(), m.getName(), m.getDescriptor()));
 
-      if (Assertions.verifyAssertions) {
-        assert ejbMethod != null : "Could not find method " + bean.getEJBClass() + " " + m.getName() + " " + m.getDescriptor();
-      }
+      assert ejbMethod != null : "Could not find method " + bean.getEJBClass() + " " + m.getName() + " " + m.getDescriptor();
 
       MethodSummary summ = new MethodSummary(m);
       int nextLocal = summ.getNumberOfParameters() + 1;
@@ -257,10 +253,8 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       if (DEBUG) {
         System.err.println(("EJBBypass: create Synthetic case A for " + m));
       }
-      if (Assertions.verifyAssertions) {
-        if (bean == null) {
-          assert false : "no bean bound for " + mdbType;
-        }
+      if (bean == null) {
+        assert false : "no bean bound for " + mdbType;
       }
       MethodSummary summ = new MethodSummary(m);
       int nextLocal = summ.getNumberOfParameters() + 1;
@@ -376,9 +370,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
     TypeReference type = m.getDeclaringClass();
     IClass C = cha.lookupClass(type);
     BeanMetaData bean = deployment.getBeanForInterface(type);
-    if (Assertions.verifyAssertions) {
-      assert bean != null : "null bean for " + type;
-    }
+    assert bean != null : "null bean for " + type;
     boolean local = deployment.isLocalHomeInterface(type);
 
     if (deployment.isFinder(m)) {
@@ -574,9 +566,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
    */
   private MethodReference makeEntityContractMethod(BeanMetaData bean, MethodReference ifaceMethod, TypeReference ejbType,
       Atom methodName) {
-    if (Assertions.verifyAssertions) {
-      assert bean != null;
-    }
+    assert bean != null;
     TypeName returnType = TypeReference.VoidName;
     if (methodName.equals(EJB_CREATE) && bean.isContainerManagedEntity()) {
       // ejbCreate returns the primary key type.
@@ -641,9 +631,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
         // temp fix: Try Ojbect instead ...
         finderDesc = Descriptor.findOrCreate(new TypeName[] { TypeReference.JavaLangObject.getName() }, getteeType.getName());
         finder = cha.resolveMethod(MethodReference.findOrCreate(getteeHomeType, finderName, finderDesc));
-        if (Assertions.verifyAssertions) {
-          assert finder != null : "failed to find findByPrimaryKey for " + getteeType;
-        }
+        assert finder != null : "failed to find findByPrimaryKey for " + getteeType;
       }
 
       // allocate type of primary key
