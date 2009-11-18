@@ -99,4 +99,12 @@ public class TestInfo {
 
   public static final String FLOWSTO_TEST_ID = "Ldemandpa/FlowsToTestId";
 
+  public static final String FLOWSTO_TEST_FIELDS = "Ldemandpa/FlowsToTestFields";
+
+  public static final String FLOWSTO_TEST_FIELDS_HARDER = "Ldemandpa/FlowsToTestFieldsHarder";
+
+  public static final String FLOWSTO_TEST_ARRAYSET_ITER = "Ldemandpa/FlowsToTestArraySetIter";
+
+  public static final String FLOWSTO_TEST_HASHSET = "Ldemandpa/FlowsToTestHashSet";
+
 }

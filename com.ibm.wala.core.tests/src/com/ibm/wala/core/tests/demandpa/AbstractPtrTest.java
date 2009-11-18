@@ -234,7 +234,9 @@ public abstract class AbstractPtrTest {
     // TODO Auto-generated method stub
     TypeReference flowsToTypeRef = TypeReference.findOrCreate(ClassLoaderReference.Application, StringStuff
         .deployment2CanonicalTypeString("demandpa.FlowsToType"));
-    for (NewSiteReference n : Iterator2Iterable.make(mainMethod.getIR().iterateNewSites())) {
+    final IR mainIR = mainMethod.getIR();
+//    System.err.println(mainIR);
+    for (NewSiteReference n : Iterator2Iterable.make(mainIR.iterateNewSites())) {
       if (n.getDeclaredType().equals(flowsToTypeRef)) {
         return heapModel.getInstanceKeyForAllocation(mainMethod, n);
       }
