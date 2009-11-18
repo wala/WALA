@@ -122,6 +122,12 @@ public class NoRefinePtrTest extends AbstractPtrTest {
   
   @Test
   public void testFlowsToLocals() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_LOCALS, 1);
+    // local var, init of FlowsToType, init of Object, and param of TestUtil.makeVarUsed()
+    doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_LOCALS, 4);
+  }
+
+  @Test
+  public void testFlowsToId() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_ID, 8);
   }
 }

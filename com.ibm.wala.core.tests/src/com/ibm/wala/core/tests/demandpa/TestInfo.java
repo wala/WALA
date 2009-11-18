@@ -96,5 +96,7 @@ public class TestInfo {
   public static final String TEST_CLONE = "Ldemandpa/TestClone";
   
   public static final String FLOWSTO_TEST_LOCALS = "Ldemandpa/FlowsToTestLocals";
-  
+
+  public static final String FLOWSTO_TEST_ID = "Ldemandpa/FlowsToTestId";
+
 }

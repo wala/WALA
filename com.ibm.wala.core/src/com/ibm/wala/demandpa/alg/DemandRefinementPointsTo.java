@@ -469,6 +469,10 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
   /**
    * get all the pointer keys that some instance key can flow to
+   * 
+   * @return a pair consisting of (1) a {@link PointsToResult} indicating whether a flows-to set was computed, and (2) the last
+   *         computed flows-to set for the instance key (possibly <code>null</code> if no flows-to set could be computed in the
+   *         budget)
    */
   public Pair<PointsToResult, Collection<PointerKey>> getFlowsTo(InstanceKey ik) {
     if (!(ik instanceof InstanceKeyWithNode)) {
@@ -1500,12 +1504,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           if (hasNullIR(caller))
             continue;
           final CallSiteReference call = callSiteAndCGNode.getCallSite();
-          if (!addGraphs) {
-            // shouldn't need to add the graph, so check if it is present;
-            // if not, terminate
-            if (!g.hasSubgraphForNode(caller)) {
-              continue;
-            }
+          if (calleeSubGraphMissingAndShouldNotBeAdded(addGraphs, callee, curPkAndState)) {
+            continue;
           }
           final ReturnBarLabel returnBarLabel = ReturnBarLabel.make(callSiteAndCGNode);
           doTransition(curState, returnBarLabel, new Function<State, Object>() {
@@ -1568,12 +1568,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             // construct graph for each target
             if (noOnTheFlyNeeded(callSiteAndCGNode, possibleCallees)) {
               for (CGNode callee : possibleCallees) {
-                if (!addGraphs) {
-                  // shouldn't need to add the graph, so check if it is present;
-                  // if not, terminate
-                  if (!g.hasSubgraphForNode(callee)) {
-                    continue;
-                  }
+                if (calleeSubGraphMissingAndShouldNotBeAdded(addGraphs, callee, curPkAndState)) {
+                  continue;
                 }
                 if (hasNullIR(callee)) {
                   continue;
@@ -1607,6 +1603,19 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           }
         }
       }
+    }
+
+    /**
+     * when doing backward interprocedural propagation, is it true that we should not add a graph representation for a callee _and_
+     * that the subgraph for the callee is missing?
+     * 
+     * @param addGraphs whether graphs should always be added
+     * @param callee
+     * @param pkAndState
+     * @return
+     */
+    protected boolean calleeSubGraphMissingAndShouldNotBeAdded(boolean addGraphs, CGNode callee, PointerKeyAndState pkAndState) {
+      return !addGraphs && !g.hasSubgraphForNode(callee);
     }
 
     public void handleTrackedPointsToWorklist() {
@@ -2422,6 +2431,18 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       } else {
         // treat as usual
         super.handleBackCopy(curPkAndState, predPk, label);
+      }
+    }
+
+    /**
+     * here, we want to add the graph unconditionally if pkAndState can point to the queried instance key
+     */
+    @Override
+    protected boolean calleeSubGraphMissingAndShouldNotBeAdded(boolean addGraphs, CGNode callee, PointerKeyAndState pkAndState) {
+      if (find(pkToP2Set, pkAndState).contains(queriedIkAndStateNum)) {
+        return false;
+      } else {
+        return super.calleeSubGraphMissingAndShouldNotBeAdded(addGraphs, callee, pkAndState);
       }
     }
 
