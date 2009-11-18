@@ -45,6 +45,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
 import com.ibm.wala.demandpa.alg.ThisFilteringHeapModel;
@@ -71,11 +72,15 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.strings.Atom;
+import com.ibm.wala.util.strings.StringStuff;
 
 public abstract class AbstractPtrTest {
 
@@ -85,21 +90,20 @@ public abstract class AbstractPtrTest {
    * file holding analysis scope specification
    */
   protected final String scopeFile;
-  
+
   /**
    * analysis scope from latest test
    */
   private AnalysisScope scope = null;
 
-
   protected AbstractPtrTest(String scopeFile) {
     this.scopeFile = scopeFile;
   }
-  
+
   private static AnalysisScope cachedScope;
-  
+
   private static IClassHierarchy cachedCHA;
-  
+
   public static CGNode findMainMethod(CallGraph cg) {
     Descriptor d = Descriptor.findOrCreateUTF8("([Ljava/lang/String;)V");
     Atom name = Atom.findOrCreateUnicodeAtom("main");
@@ -159,6 +163,19 @@ public abstract class AbstractPtrTest {
     return null;
   }
 
+  /**
+   * Test if the computed size of some points-to test matches what is expected.
+   * 
+   * @param mainClass the main class of the test; we choose a variable from its main() method that is passed to the method
+   *          TestUtil.testThisVar()
+   * @param expected14Size expected p2set size when using 1.4 libraries
+   * @param expected15Size expected p2set size when using 1.4 libraries
+   * @param expected16Size expected p2set size when using 1.4 libraries
+   * @throws ClassHierarchyException
+   * @throws IllegalArgumentException
+   * @throws CancelException
+   * @throws IOException
+   */
   protected void doPointsToSizeTest(String mainClass, int expected14Size, int expected15Size, int expected16Size)
       throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     assert scope == null;
@@ -167,26 +184,72 @@ public abstract class AbstractPtrTest {
       System.err.println("points-to for " + mainClass + ": " + pointsTo);
     }
     assert scope != null;
-    if (scope.isJava16Libraries()) {
-      Assert.assertEquals(expected16Size, pointsTo.size());
-    } else if (scope.isJava15Libraries()) {
-      Assert.assertEquals(expected15Size, pointsTo.size());
-    } else if (scope.isJava14Libraries()) {
-      Assert.assertEquals(expected14Size, pointsTo.size());
-    } else {
-      Assertions.UNREACHABLE("unexpected library version");
+    try {
+      if (scope.isJava16Libraries()) {
+        Assert.assertEquals(expected16Size, pointsTo.size());
+      } else if (scope.isJava15Libraries()) {
+        Assert.assertEquals(expected15Size, pointsTo.size());
+      } else if (scope.isJava14Libraries()) {
+        Assert.assertEquals(expected14Size, pointsTo.size());
+      } else {
+        Assertions.UNREACHABLE("unexpected library version");
+      }
+    } finally {
+      // don't hold on to a scope pointer
+      scope = null;
     }
-    // don't hold on to a scope pointer
-    scope = null;
   }
 
-  protected void doPointsToSizeTest(String mainClass, int expectedSize) throws ClassHierarchyException,
-      IllegalArgumentException, CancelException, IOException {
+  protected void doFlowsToSizeTest(String mainClass, int size) throws ClassHierarchyException, IllegalArgumentException,
+      CancelException, IOException {
+    assert scope == null;
+    Collection<PointerKey> flowsTo = getFlowsToSetToTest(mainClass);
+    if (debug) {
+      System.err.println("flows-to for " + mainClass + ": " + flowsTo);
+    }
+    assert scope != null;
+    try {
+      Assert.assertEquals(size, flowsTo.size());
+    } finally {
+      // don't hold on to a scope pointer
+      scope = null;
+    }
+  }
+
+  private Collection<PointerKey> getFlowsToSetToTest(String mainClass) throws ClassHierarchyException, IllegalArgumentException,
+      CancelException, IOException {
+    final DemandRefinementPointsTo dmp = makeDemandPointerAnalysis(mainClass);
+
+    // find the single allocation site of FlowsToType, make an InstanceKey, and query it
+    CGNode mainMethod = AbstractPtrTest.findMainMethod(dmp.getBaseCallGraph());
+    InstanceKey keyToQuery = AbstractPtrTest.getFlowsToInstanceKey(mainMethod, dmp.getHeapModel());
+    Collection<PointerKey> flowsTo = dmp.getFlowsTo(keyToQuery).snd;
+    return flowsTo;
+  }
+
+  /**
+   * returns the instance key corresponding to the single allocation site of type FlowsToType
+   */
+  private static InstanceKey getFlowsToInstanceKey(CGNode mainMethod, HeapModel heapModel) {
+    // TODO Auto-generated method stub
+    TypeReference flowsToTypeRef = TypeReference.findOrCreate(ClassLoaderReference.Application, StringStuff
+        .deployment2CanonicalTypeString("demandpa.FlowsToType"));
+    for (NewSiteReference n : Iterator2Iterable.make(mainMethod.getIR().iterateNewSites())) {
+      if (n.getDeclaredType().equals(flowsToTypeRef)) {
+        return heapModel.getInstanceKeyForAllocation(mainMethod, n);
+      }
+    }
+    assert false : "could not find appropriate allocation";
+    return null;
+  }
+
+  protected void doPointsToSizeTest(String mainClass, int expectedSize) throws ClassHierarchyException, IllegalArgumentException,
+      CancelException, IOException {
     doPointsToSizeTest(mainClass, expectedSize, expectedSize, expectedSize);
   }
 
-  private Collection<InstanceKey> getPointsToSetToTest(String mainClass) throws ClassHierarchyException,
-      IllegalArgumentException, CancelException, IOException {
+  private Collection<InstanceKey> getPointsToSetToTest(String mainClass) throws ClassHierarchyException, IllegalArgumentException,
+      CancelException, IOException {
     final DemandRefinementPointsTo dmp = makeDemandPointerAnalysis(mainClass);
 
     // find the testThisVar call, and check the parameter's points-to set
@@ -229,7 +292,7 @@ public abstract class AbstractPtrTest {
    */
   private IClassHierarchy findOrCreateCHA(AnalysisScope scope) throws ClassHierarchyException {
     if (cachedCHA == null) {
-      cachedCHA = ClassHierarchy.make(scope); 
+      cachedCHA = ClassHierarchy.make(scope);
     }
     return cachedCHA;
   }
@@ -241,11 +304,11 @@ public abstract class AbstractPtrTest {
    */
   private AnalysisScope findOrCreateAnalysisScope() throws IOException {
     if (cachedScope == null) {
-      cachedScope = CallGraphTestUtil.makeJ2SEAnalysisScope(scopeFile, CallGraphTestUtil.REGRESSION_EXCLUSIONS); 
+      cachedScope = CallGraphTestUtil.makeJ2SEAnalysisScope(scopeFile, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     }
-    return cachedScope; 
+    return cachedScope;
   }
-  
+
   @AfterClass
   public static void cleanup() {
     cachedScope = null;

@@ -94,4 +94,7 @@ public class TestInfo {
   public static final String TEST_WITHIN_METHOD_CALL = "Ldemandpa/TestWithinMethodCall";
 
   public static final String TEST_CLONE = "Ldemandpa/TestClone";
+  
+  public static final String FLOWSTO_TEST_LOCALS = "Ldemandpa/FlowsToTestLocals";
+  
 }

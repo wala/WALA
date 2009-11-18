@@ -46,6 +46,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import com.ibm.wala.analysis.reflection.InstanceKeyWithNode;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -121,6 +122,7 @@ import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
@@ -279,7 +281,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           try {
             computer = new PointsToComputer(queriedPk);
             computer.compute();
-            curP2Set = computer.getP2Set(queriedPk);
+            curP2Set = computer.getComputedP2Set(queriedPk);
             // System.err.println("completed pass");
             if (DEBUG) {
               System.err.println("traversed " + getNumNodesTraversed() + " nodes");
@@ -346,6 +348,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     return Pair.make(result, lastP2Set);
   }
 
+  /**
+   * to measure memory usage
+   */
   public long lastQueryMemoryUse;
 
   /**
@@ -447,13 +452,11 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     return result;
   }
 
+  /**
+   * do all instance keys in p2set pass ikeyPred?
+   */
   private boolean passesPred(Collection<InstanceKey> p2set, Predicate<InstanceKey> ikeyPred) {
-    for (InstanceKey ik : p2set) {
-      if (!ikeyPred.test(ik)) {
-        return false;
-      }
-    }
-    return true;
+    return Util.forAll(p2set, ikeyPred);
   }
 
   /**
@@ -462,6 +465,91 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    */
   public Collection<InstanceKey> getPointsTo(PointerKey pk) {
     return getPointsTo(pk, Predicate.<InstanceKey> falsePred()).snd;
+  }
+
+  /**
+   * get all the pointer keys that some instance key can flow to
+   */
+  public Pair<PointsToResult, Collection<PointerKey>> getFlowsTo(InstanceKey ik) {
+    if (!(ik instanceof InstanceKeyWithNode)) {
+      assert false : "TODO: handle " + ik.getClass();
+    }
+    InstanceKeyWithNode queriedIk = (InstanceKeyWithNode) ik;
+    if (DEBUG) {
+      System.err.println("answering flows-to query for " + queriedIk);
+    }
+    Collection<PointerKey> lastFlowsToSet = null;
+    boolean succeeded = false;
+    startNewQuery();
+    int numPasses = refinementPolicy.getNumPasses();
+    int passNum = 0;
+    for (; passNum < numPasses; passNum++) {
+      setNumNodesTraversed(0);
+      setTraversalBudget(refinementPolicy.getBudgetForPass(passNum));
+      Collection<PointerKey> curFlowsToSet = null;
+      FlowsToComputer computer = null;
+      try {
+        while (true) {
+          try {
+            computer = new FlowsToComputer(queriedIk);
+            computer.compute();
+            curFlowsToSet = computer.getComputedFlowsToSet(queriedIk);
+            // System.err.println("completed pass");
+            if (DEBUG) {
+              System.err.println("traversed " + getNumNodesTraversed() + " nodes");
+              System.err.println("FLOWS-TO SET " + curFlowsToSet);
+            }
+            break;
+          } catch (StatesMergedException e) {
+            if (DEBUG) {
+              System.err.println("restarting...");
+            }
+          }
+        }
+      } catch (BudgetExceededException e) {
+
+      }
+      if (curFlowsToSet != null) {
+        if (lastFlowsToSet == null) {
+          lastFlowsToSet = curFlowsToSet;
+        } else if (lastFlowsToSet.size() > curFlowsToSet.size()) {
+          // got a more precise set
+          assert lastFlowsToSet.containsAll(curFlowsToSet);
+          lastFlowsToSet = curFlowsToSet;
+        } else {
+          // new set size is >= lastP2Set, so don't update
+          assert curFlowsToSet.containsAll(lastFlowsToSet);
+        }
+        // TODO add predicate support
+        if (curFlowsToSet.isEmpty() /* || passesPred(curFlowsToSet, ikeyPred) */) {
+          succeeded = true;
+          break;
+        }
+      }
+      // if we get here, means either budget for pass was exceeded,
+      // or points-to set wasn't good enough
+      // so, start new pass, if more refinement to do
+      if (!refinementPolicy.nextPass()) {
+        break;
+      }
+    }
+    PointsToResult result = null;
+    if (succeeded) {
+      result = PointsToResult.SUCCESS;
+    } else if (passNum == numPasses) {
+      // we ran all the passes without succeeding and
+      // without the refinement policy giving up
+      result = PointsToResult.BUDGETEXCEEDED;
+    } else {
+      if (lastFlowsToSet != null) {
+        result = PointsToResult.NOMOREREFINE;
+      } else {
+        // we stopped before the maximum number of passes, but we never
+        // actually finished a pass, so we count this as BUDGETEXCEEDED
+        result = PointsToResult.BUDGETEXCEEDED;
+      }
+    }
+    return Pair.make(result, lastFlowsToSet);
   }
 
   /**
@@ -637,7 +725,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     private final MultiMap<InstanceKeyAndState, IField> backInstKeyToFields = HashSetMultiMap.make();
 
     // points-to sets and tracked points-to sets
-    private final Map<PointerKeyAndState, MutableIntSet> pkToP2Set = HashMapFactory.make();
+    protected final Map<PointerKeyAndState, MutableIntSet> pkToP2Set = HashMapFactory.make();
 
     protected final Map<PointerKeyAndState, MutableIntSet> pkToTrackedSet = HashMapFactory.make();
 
@@ -664,6 +752,13 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      */
     private final HashSet<LoadEdge> encounteredLoads = HashSetFactory.make();
 
+    /**
+     * use this with care! only for subclasses that aren't computing points-to information exactly (e.g., {@link FlowsToComputer})
+     */
+    protected PointsToComputer() {
+      queriedPkAndState = null;
+    }
+
     protected PointsToComputer(PointerKey pk) {
       queriedPkAndState = new PointerKeyAndState(pk, stateMachine.getStartState());
     }
@@ -674,7 +769,11 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       return new OrdinalSet<InstanceKeyAndState>(intSetFactory.makeCopy(intSet), ikAndStates);
     }
 
-    public Collection<InstanceKey> getP2Set(LocalPointerKey lpk) {
+    /**
+     * get a points-to set that has already been computed via some previous call to {@link #compute()}; does _not_ do any fresh
+     * demand-driven computation.
+     */
+    public Collection<InstanceKey> getComputedP2Set(LocalPointerKey lpk) {
       return Iterator2Collection.toSet(new MapIterator<InstanceKeyAndState, InstanceKey>(makeOrdinalSet(
           find(pkToP2Set, new PointerKeyAndState(lpk, stateMachine.getStartState()))).iterator(),
           new Function<InstanceKeyAndState, InstanceKey>() {
@@ -686,7 +785,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           }));
     }
 
-    private boolean addAllToP2Set(Map<PointerKeyAndState, MutableIntSet> p2setMap, PointerKeyAndState pkAndState, IntSet vals,
+    protected boolean addAllToP2Set(Map<PointerKeyAndState, MutableIntSet> p2setMap, PointerKeyAndState pkAndState, IntSet vals,
         IFlowLabel label) {
       final PointerKey pk = pkAndState.getPointerKey();
       if (pk instanceof FilteredPointerKey) {
@@ -806,7 +905,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      * @return those {@link PointerKeyAndState}s whose points-to sets have been queried, such that the {@link PointerKey} is predPk,
      *         and transitioning from its state on <code>label.bar()</code> yields the state of <code>curPkAndState</code>
      */
-    Collection<PointerKeyAndState> matchingPToQueried(PointerKeyAndState curPkAndState, PointerKey predPk, IFlowLabel label) {
+    protected Collection<PointerKeyAndState> matchingPToQueried(PointerKeyAndState curPkAndState, PointerKey predPk,
+        IFlowLabel label) {
       Collection<PointerKeyAndState> ret = ArraySet.make();
       assert label.isBarred();
       IFlowLabel unbarredLabel = label.bar();
@@ -836,7 +936,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       return ret;
     }
 
-    void handleBackCopy(PointerKeyAndState curPkAndState, PointerKey predPk, IFlowLabel label) {
+    protected void handleBackCopy(PointerKeyAndState curPkAndState, PointerKey predPk, IFlowLabel label) {
       for (PointerKeyAndState predPkAndState : matchingPToQueried(curPkAndState, predPk, label)) {
         if (addAllToP2Set(pkToP2Set, predPkAndState, find(pkToP2Set, curPkAndState), label)) {
           addToPToWorklist(predPkAndState);
@@ -1760,7 +1860,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
     private final MutableIntSet emptySet = intSetFactory.make();
 
-    private <K> MutableIntSet find(Map<K, MutableIntSet> M, K key) {
+    protected <K> MutableIntSet find(Map<K, MutableIntSet> M, K key) {
       MutableIntSet result = M.get(key);
       if (result == null) {
         result = emptySet;
@@ -2260,6 +2360,71 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       methodTargets.add(node.getMethod());
     }
     return methodTargets.size() <= 1;
+  }
+
+  /**
+   * used to compute "flows-to sets," i.e., all the pointers that can point to some instance key
+   * 
+   */
+  protected class FlowsToComputer extends PointsToComputer {
+
+    private final InstanceKeyAndState queriedIkAndState;
+
+    private final int queriedIkAndStateNum;
+
+    /**
+     * holds the desired flows-to set
+     */
+    private final Collection<PointerKeyAndState> theFlowsToSet = HashSetFactory.make();
+
+    public FlowsToComputer(InstanceKeyWithNode queriedIk) {
+      this.queriedIkAndState = new InstanceKeyAndState(queriedIk, stateMachine.getStartState());
+      this.queriedIkAndStateNum = ikAndStates.add(queriedIkAndState);
+    }
+
+    @Override
+    protected void compute() {
+      // seed the points-to worklist
+
+      InstanceKey ik = queriedIkAndState.getInstanceKey();
+      g.addSubgraphForNode(((InstanceKeyWithNode) ik).getNode());
+      for (Object pred : Iterator2Iterable.make(g.getPredNodes(ik, NewLabel.v()))) {
+        PointerKey predPk = (PointerKey) pred;
+        PointerKeyAndState predPkAndState = new PointerKeyAndState(predPk, queriedIkAndState.getState());
+        theFlowsToSet.add(predPkAndState);
+        findOrCreate(pkToP2Set, predPkAndState).add(queriedIkAndStateNum);
+        addToPToWorklist(predPkAndState);
+      }
+      worklistLoop();
+    }
+
+    public Collection<PointerKey> getComputedFlowsToSet(InstanceKeyWithNode queriedIk) {
+      return Iterator2Collection.toSet(new MapIterator<PointerKeyAndState, PointerKey>(theFlowsToSet.iterator(),
+          new Function<PointerKeyAndState, PointerKey>() {
+
+            public PointerKey apply(PointerKeyAndState object) {
+              return object.getPointerKey();
+            }
+          }));
+    }
+
+    @Override
+    protected void handleBackCopy(PointerKeyAndState curPkAndState, PointerKey predPk, IFlowLabel label) {
+      // if curPkAndState can point to the queried instance key...
+      final MutableIntSet curPkP2Set = find(pkToP2Set, curPkAndState);
+      if (curPkP2Set.contains(queriedIkAndStateNum)) {
+        // propagate back everywhere
+        PointerKeyAndState predPkAndState = new PointerKeyAndState(predPk, stateMachine.transition(curPkAndState.getState(), label));
+        if (addAllToP2Set(pkToP2Set, predPkAndState, curPkP2Set, label)) {
+          theFlowsToSet.add(predPkAndState);
+          addToPToWorklist(predPkAndState);
+        }
+      } else {
+        // treat as usual
+        super.handleBackCopy(curPkAndState, predPk, label);
+      }
+    }
+
   }
 
 }

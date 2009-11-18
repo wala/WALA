@@ -119,5 +119,9 @@ public class NoRefinePtrTest extends AbstractPtrTest {
   public void testGlobal() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_GLOBAL, 1);
   }
-
+  
+  @Test
+  public void testFlowsToLocals() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_LOCALS, 1);
+  }
 }
