@@ -149,6 +149,10 @@ public class ContextSensitiveTest extends AbstractPtrTest {
     doPointsToSizeTest(TestInfo.TEST_LINKED_LIST, 1);
   }
 
+  @Test public void testFlowsToArraySetIter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_ARRAYSET_ITER, 7);
+  }
+
   @Override
   protected StateMachineFactory<IFlowLabel> getStateMachineFactory() {
     return new ContextSensitiveStateMachine.Factory();
