@@ -1659,16 +1659,14 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         IFlowLabelVisitor predVisitor = new AbstractFlowLabelVisitor() {
 
           @Override
-          public void visitAssignGlobal(AssignGlobalLabel label, Object dst) {
+          public void visitAssignGlobal(final AssignGlobalLabel label, Object dst) {
             for (Iterator<? extends Object> readIter = g.getReadsOfStaticField((StaticFieldKey) dst); readIter.hasNext();) {
               final PointerKey predPk = (PointerKey) readIter.next();
               doTransition(curState, AssignGlobalBarLabel.v(), new Function<State, Object>() {
 
                 public Object apply(State predPkState) {
                   PointerKeyAndState predPkAndState = new PointerKeyAndState(predPk, predPkState);
-                  if (findOrCreate(pkToTrackedSet, predPkAndState).addAll(trackedSet)) {
-                    addToTrackedPToWorklist(predPkAndState);
-                  }
+                  handleTrackedPred(trackedSet, predPkAndState, AssignGlobalBarLabel.v());
                   return null;
                 }
 
@@ -1699,9 +1697,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
                   public Object apply(State predPkState) {
                     PointerKeyAndState predPkAndState = new PointerKeyAndState(predPk, predPkState);
-                    if (findOrCreate(pkToTrackedSet, predPkAndState).addAll(trackedSet)) {
-                      addToTrackedPToWorklist(predPkAndState);
-                    }
+                    handleTrackedPred(trackedSet, predPkAndState, MatchBarLabel.v());
                     return null;
                   }
 
@@ -1725,24 +1721,21 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                 addEncounteredLoad(new LoadEdge(curPkAndState, field, loadedVal));
                 if (needField) {
                   InstanceFieldKeyAndState ifk = getInstFieldKey(ikAndState, field);
-                  if (findOrCreate(pkToTrackedSet, loadedVal).addAll(find(instFieldKeyToTrackedSet, ifk))) {
-                    addToTrackedPToWorklist(loadedVal);
-                  }
+                  // use an assign bar label with no filter here, since filtering only happens at casts
+                  handleTrackedPred(find(instFieldKeyToTrackedSet, ifk), loadedVal, AssignBarLabel.noFilter());
                 }
               }
             }
           }
 
           @Override
-          public void visitAssign(AssignLabel label, Object dst) {
+          public void visitAssign(final AssignLabel label, Object dst) {
             final PointerKey predPk = (PointerKey) dst;
-            doTransition(curState, AssignBarLabel.noFilter(), new Function<State, Object>() {
+            doTransition(curState, label.bar(), new Function<State, Object>() {
 
               public Object apply(State predPkState) {
                 PointerKeyAndState predPkAndState = new PointerKeyAndState(predPk, predPkState);
-                if (findOrCreate(pkToTrackedSet, predPkAndState).addAll(trackedSet)) {
-                  addToTrackedPToWorklist(predPkAndState);
-                }
+                handleTrackedPred(trackedSet, predPkAndState, label.bar());
                 return null;
               }
 
@@ -1754,14 +1747,12 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         handleBackInterproc(curPkAndState, new CopyHandler() {
 
           @Override
-          void handle(PointerKeyAndState src, final PointerKey dst, IFlowLabel label) {
+          void handle(PointerKeyAndState src, final PointerKey dst, final IFlowLabel label) {
             assert src == curPkAndState;
             doTransition(curState, label, new Function<State, Object>() {
               public Object apply(State dstState) {
                 PointerKeyAndState dstAndState = new PointerKeyAndState(dst, dstState);
-                if (findOrCreate(pkToTrackedSet, dstAndState).addAll(trackedSet)) {
-                  addToTrackedPToWorklist(dstAndState);
-                }
+                handleTrackedPred(trackedSet, dstAndState, label);
                 return null;
               }
 
@@ -1875,6 +1866,19 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         result = emptySet;
       }
       return result;
+    }
+
+    /**
+     * Handle a predecessor when processing some tracked locations
+     * @param curTrackedSet the tracked locations
+     * @param predPkAndState the predecessor
+     */
+    protected boolean handleTrackedPred(final MutableIntSet curTrackedSet, PointerKeyAndState predPkAndState, IFlowLabel label) {
+      if (addAllToP2Set(pkToTrackedSet, predPkAndState, curTrackedSet, label)) {
+        addToTrackedPToWorklist(predPkAndState);
+        return true;
+      }        
+      return false;
     }
   }
 
@@ -2401,8 +2405,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         PointerKey predPk = (PointerKey) pred;
         PointerKeyAndState predPkAndState = new PointerKeyAndState(predPk, queriedIkAndState.getState());
         theFlowsToSet.add(predPkAndState);
-        findOrCreate(pkToP2Set, predPkAndState).add(queriedIkAndStateNum);
-        addToPToWorklist(predPkAndState);
+        findOrCreate(pkToTrackedSet, predPkAndState).add(queriedIkAndStateNum);
+        addToTrackedPToWorklist(predPkAndState);
       }
       worklistLoop();
     }
@@ -2417,34 +2421,20 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           }));
     }
 
-    @Override
-    protected void handleBackCopy(PointerKeyAndState curPkAndState, PointerKey predPk, IFlowLabel label) {
-      // if curPkAndState can point to the queried instance key...
-      final MutableIntSet curPkP2Set = find(pkToP2Set, curPkAndState);
-      if (curPkP2Set.contains(queriedIkAndStateNum)) {
-        // propagate back everywhere
-        PointerKeyAndState predPkAndState = new PointerKeyAndState(predPk, stateMachine.transition(curPkAndState.getState(), label));
-        if (addAllToP2Set(pkToP2Set, predPkAndState, curPkP2Set, label)) {
-          theFlowsToSet.add(predPkAndState);
-          addToPToWorklist(predPkAndState);
-        }
-      } else {
-        // treat as usual
-        super.handleBackCopy(curPkAndState, predPk, label);
-      }
-    }
-
     /**
-     * here, we want to add the graph unconditionally if pkAndState can point to the queried instance key
+     * also update the flows-to set of interest if necessary
      */
     @Override
-    protected boolean calleeSubGraphMissingAndShouldNotBeAdded(boolean addGraphs, CGNode callee, PointerKeyAndState pkAndState) {
-      if (find(pkToP2Set, pkAndState).contains(queriedIkAndStateNum)) {
-        return false;
-      } else {
-        return super.calleeSubGraphMissingAndShouldNotBeAdded(addGraphs, callee, pkAndState);
+    protected boolean handleTrackedPred(MutableIntSet curTrackedSet, PointerKeyAndState predPkAndState, IFlowLabel label) {
+      boolean result = super.handleTrackedPred(curTrackedSet, predPkAndState, label);
+      if (result && find(pkToTrackedSet,predPkAndState).contains(queriedIkAndStateNum)) {
+        theFlowsToSet.add(predPkAndState);
       }
+      return result;
     }
+
+    
+
 
   }
 

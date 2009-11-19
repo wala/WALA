@@ -222,7 +222,7 @@ public abstract class AbstractPtrTest {
 
     // find the single allocation site of FlowsToType, make an InstanceKey, and query it
     CGNode mainMethod = AbstractPtrTest.findMainMethod(dmp.getBaseCallGraph());
-    InstanceKey keyToQuery = AbstractPtrTest.getFlowsToInstanceKey(mainMethod, dmp.getHeapModel());
+    InstanceKey keyToQuery = getFlowsToInstanceKey(mainMethod, dmp.getHeapModel());
     Collection<PointerKey> flowsTo = dmp.getFlowsTo(keyToQuery).snd;
     return flowsTo;
   }
@@ -230,12 +230,14 @@ public abstract class AbstractPtrTest {
   /**
    * returns the instance key corresponding to the single allocation site of type FlowsToType
    */
-  private static InstanceKey getFlowsToInstanceKey(CGNode mainMethod, HeapModel heapModel) {
+  private InstanceKey getFlowsToInstanceKey(CGNode mainMethod, HeapModel heapModel) {
     // TODO Auto-generated method stub
     TypeReference flowsToTypeRef = TypeReference.findOrCreate(ClassLoaderReference.Application, StringStuff
         .deployment2CanonicalTypeString("demandpa.FlowsToType"));
     final IR mainIR = mainMethod.getIR();
-//    System.err.println(mainIR);
+    if (debug) {
+      System.err.println(mainIR);
+    }
     for (NewSiteReference n : Iterator2Iterable.make(mainIR.iterateNewSites())) {
       if (n.getDeclaredType().equals(flowsToTypeRef)) {
         return heapModel.getInstanceKeyForAllocation(mainMethod, n);
