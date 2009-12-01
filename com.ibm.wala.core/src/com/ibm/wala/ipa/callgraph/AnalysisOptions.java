@@ -205,6 +205,9 @@ public class AnalysisOptions {
     this.analysisScope = analysisScope;
   }
 
+  /**
+   * TODO: this really should go away.   The entrypoints don't belong here.
+   */
   public Iterable<? extends Entrypoint> getEntrypoints() {
     return entrypoints;
   }
