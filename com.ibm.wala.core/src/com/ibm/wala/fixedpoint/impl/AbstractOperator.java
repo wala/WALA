@@ -23,6 +23,9 @@ public abstract class AbstractOperator<T extends IVariable> implements FixedPoin
   /**
    * Evaluate this equation, setting a new value for the left-hand side.
    * 
+   * Note that the RHS is an IVariable[] and not a T[] because the framework may be need to allocate an array for the rhs, and we
+   * cannot do new T[] in Java.
+   * 
    * @return a code that indicates: 1) has the lhs value changed? 2) has this equation reached a fixed-point, in that we never have
    *         to evaluate the equation again, even if rhs operands change?
    */

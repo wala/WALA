@@ -14,6 +14,7 @@ import com.ibm.wala.fixedpoint.impl.AbstractOperator;
 import com.ibm.wala.fixpoint.IVariable;
 
 /**
+ * Abstract superclass for meet operators
  */
 public abstract class AbstractMeetOperator<T extends IVariable> extends AbstractOperator<T> {
 
