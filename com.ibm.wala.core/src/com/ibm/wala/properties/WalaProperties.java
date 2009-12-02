@@ -77,7 +77,7 @@ public final class WalaProperties {
     return getJarsInDirectory(dir);
   }
 
-  private static String[] getJarsInDirectory(String dir) {
+  public static String[] getJarsInDirectory(String dir) {
     File f = new File(dir);
     Assertions.productionAssertion(f.isDirectory(), "not a directory: " + dir);
     Collection<File> col = FileUtil.listFiles(dir, ".*\\.jar$", true);
