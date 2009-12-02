@@ -193,9 +193,7 @@ public final class MethodReference extends MemberReference {
   }
 
   /**
-   * Method getSignature. something like: com.foo.bar.createLargeOrder(IILjava/lang/String;Ljava/sql/Date;)Ljava/lang/Integer;
-   * 
-   * @return String
+   * @return something like: com.foo.bar.createLargeOrder(IILjava/lang/String;Ljava/sql/Date;)Ljava/lang/Integer;
    */
   @Override
   public String getSignature() {
@@ -205,18 +203,14 @@ public final class MethodReference extends MemberReference {
   }
 
   /**
-   * Method getSelector. something like: createLargeOrder(IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer;
-   * 
-   * @return Atom
+   * @return something like: createLargeOrder(IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer;
    */
   public Selector getSelector() {
     return selector;
   }
 
   /**
-   * Method getNumberOfParameters. This method does NOT include the implicit "this" parameter
-   * 
-   * @return int
+   * This method does NOT include the implicit "this" parameter
    */
   public int getNumberOfParameters() {
     return parameterTypes == null ? 0 : parameterTypes.length;
