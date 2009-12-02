@@ -302,6 +302,9 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
    * @return an object that knows how to interpret information about the node
    */
   protected SSAContextInterpreter getInterpreter(CGNode node) {
+    if (interpreter == null) {
+      throw new IllegalStateException("must register an interpreter for this call graph");
+    }
     return interpreter;
   }
 
