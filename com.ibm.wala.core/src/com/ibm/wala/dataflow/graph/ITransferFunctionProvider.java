@@ -17,6 +17,9 @@ import com.ibm.wala.fixpoint.IVariable;
  * The {@link DataflowSolver} builds system over graphs, with dataflow transfer
  * functions on the nodes, the edges or both. In any case, it takes an
  * {@link ITransferFunctionProvider} to tell it what functions to use.
+ * 
+ * @param <T> type of node in the graph 
+ * @param <V> type of abstract states computed 
  */
 public interface ITransferFunctionProvider<T, V extends IVariable> {
 
