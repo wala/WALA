@@ -90,7 +90,10 @@ public class PolyglotSourceModuleTranslator implements SourceModuleTranslator {
     Set<ClassLoaderReference> parentLoaders = new HashSet<ClassLoaderReference>();
 
     for (ClassLoaderReference loader : scope.getLoaders()) {
-      parentLoaders.add(loader.getParent());
+      ClassLoaderReference parent = loader.getParent();
+      if (parent != null) {
+        parentLoaders.add(parent);
+      }
     }
     for (ClassLoaderReference child : scope.getLoaders()) {
       if (!parentLoaders.contains(child)) {
