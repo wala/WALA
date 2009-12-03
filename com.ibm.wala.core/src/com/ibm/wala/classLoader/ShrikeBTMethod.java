@@ -367,7 +367,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     return ((getModifiers() & Constants.ACC_FINAL) != 0);
   }
 
-  public boolean isVolatile() {
+  public boolean isBridge() {
     return ((getModifiers() & Constants.ACC_VOLATILE) != 0);
   }
 

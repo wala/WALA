@@ -230,7 +230,7 @@ public abstract class AstMethod implements IMethod {
     return qualifiers.contains(CAstQualifier.FINAL);
   }
 
-  public boolean isVolatile() {
+  public boolean isBridge() {
     return qualifiers.contains(CAstQualifier.VOLATILE);
   }
 

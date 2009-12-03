@@ -71,6 +71,11 @@ public interface IMethod extends IMember, ContextItem {
    * Is this method final?
    */
   boolean isFinal();
+  
+  /**
+   * Is this method a bridge method?  See JLS 3rd Edition 15.12.4.5
+   */
+  boolean isBridge();
 
   /**
    * @return canonical MethodReference corresponding to this method

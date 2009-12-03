@@ -38,9 +38,4 @@ public interface IMember extends IClassHierarchyDweller {
    */
   boolean isStatic();
   
-  /**
-   * Is this member volatile?
-   */
-  boolean isVolatile();
-
 }

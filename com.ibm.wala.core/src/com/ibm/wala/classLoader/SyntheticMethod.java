@@ -125,9 +125,9 @@ public class SyntheticMethod implements IMethod {
   }
 
   /**
-   * @see com.ibm.wala.classLoader.IMethod#isVolatile()
+   * @see com.ibm.wala.classLoader.IMethod#isBridge()
    */
-  public boolean isVolatile() {
+  public boolean isBridge() {
     return false;
   }
 

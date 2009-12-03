@@ -37,4 +37,10 @@ public interface IField extends IMember {
   public boolean isPublic();
   public boolean isStatic();
 
+  /**
+   * Is this member volatile?
+   */
+  boolean isVolatile();
+
+
 }
