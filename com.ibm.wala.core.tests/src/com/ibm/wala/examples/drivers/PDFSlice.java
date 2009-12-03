@@ -65,7 +65,7 @@ import com.ibm.wala.viz.PDFViewUtil;
  * 
  * This is an example program on how to use the slicer.
  * 
- * See the 'GVSlice' launcher included in the 'launchers' directory.
+ * See the 'PDFSlice' launcher included in the 'launchers' directory.
  * 
  * @author sfink
  */
