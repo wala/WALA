@@ -13,11 +13,13 @@ package com.ibm.wala.ipa.cha;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -54,8 +56,8 @@ import com.ibm.wala.util.warnings.Warnings;
 /**
  * Simple implementation of a class hierarchy.
  * 
- * Note that this class hierarchy implementation is mutable. You can add classes via addClass().  You can add
- * a class even if c.getClassLoader() does not appear in getLoaders().
+ * Note that this class hierarchy implementation is mutable. You can add classes via addClass(). You can add a class even if
+ * c.getClassLoader() does not appear in getLoaders().
  */
 public class ClassHierarchy implements IClassHierarchy {
 
@@ -69,8 +71,14 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * For each {@link IClass} c in this class hierarchy, this map maps c.getReference() to the {@link Node}
+   * 
+   * Note that this class provides an iterator() over this map, and that some WALA utilities (e.g. ReferenceCleanser) must iterate
+   * over all classes. But also note that the class hierarchy is mutable (addClass()). So, when trying to run multiple threads, we
+   * could see a race condition between iterator() and addClass(). With a normal {@link HashMap}, this would result in a
+   * {@link ConcurrentModificationException}. But with a {@link ConcurrentHashMap}, at least the code merrily chugs along,
+   * tolerating the race.
    */
-  final private HashMap<TypeReference, Node> map = HashMapFactory.make();
+  final private Map<TypeReference, Node> map = new ConcurrentHashMap<TypeReference, Node>();
 
   /**
    * {@link TypeReference} for the root type
@@ -358,9 +366,6 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * Record that a klass implements a particular interface
-   * 
-   * @param klass
-   * @param iface
    */
   private void recordImplements(IClass klass, IClass iface) {
     Set<IClass> impls = MapUtil.findOrCreateSet(implementors, iface);
@@ -1078,7 +1083,6 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * @param klass
    * @return the number of classes that immediately extend klass. if klass is an array class A[][]...[], we return number of
    *         immediate subclasses of A. If A is primitive, we return 0.
    */
