@@ -37,7 +37,6 @@ import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
-import com.ibm.wala.ipa.callgraph.impl.FakeWorldClinitMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
@@ -1365,7 +1364,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         }
 
         // add an invocation from the fake root method to the <clinit>
-        FakeWorldClinitMethod fakeWorldClinitMethod = (FakeWorldClinitMethod) callGraph.getFakeWorldClinitNode().getMethod();
+        AbstractRootMethod fakeWorldClinitMethod = (AbstractRootMethod) callGraph.getFakeWorldClinitNode().getMethod();
         MethodReference m = klass.getClassInitializer().getReference();
         CallSiteReference site = CallSiteReference.make(1, m, IInvokeInstruction.Dispatch.STATIC);
         IMethod targetMethod = getOptions().getMethodTargetSelector().getCalleeTarget(callGraph.getFakeRootNode(), site, null);
