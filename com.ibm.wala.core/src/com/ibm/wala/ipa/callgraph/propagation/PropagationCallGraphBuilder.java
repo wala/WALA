@@ -444,7 +444,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     // "typed local" for each catch class, and coalesce the results using
     // assignment
     for (IClass c : catchClasses) {
-      if (c.getReference().equals(TypeReference.JavaLangThrowable)) {
+      if (c.getReference().equals(c.getClassLoader().getLanguage().getThrowableType())) {
         system.newConstraint(exceptionVar, assignOperator, e);
       } else {
         FilteredPointerKey typedException = TypedPointerKey.make(exceptionVar, c);
