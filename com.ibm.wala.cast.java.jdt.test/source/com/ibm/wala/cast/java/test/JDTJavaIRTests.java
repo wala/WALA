@@ -63,7 +63,7 @@ import com.ibm.wala.util.io.FileProvider;
 public class JDTJavaIRTests extends JavaIRTests {
 
   public JDTJavaIRTests() {
-    super("Test for JDT front end for WALA CAst", "com.ibm.wala.cast.java.test.data");
+    super("com.ibm.wala.cast.java.test.data");
   }
 
   protected void populateScope(JavaSourceAnalysisEngine engine, Collection<String> sources, List<String> libs) throws IOException {

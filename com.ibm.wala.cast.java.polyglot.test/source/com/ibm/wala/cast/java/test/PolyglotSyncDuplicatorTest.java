@@ -23,14 +23,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 public class PolyglotSyncDuplicatorTest extends SyncDuplicatorTest {
 
-  public PolyglotSyncDuplicatorTest(String name) {
-    super(name);
-  }
-
-  public PolyglotSyncDuplicatorTest() {
-    super("PolyglotSyncDuplicatorTest");
-  }
-
   protected JavaSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors) {
     JavaSourceAnalysisEngine engine = new PolyglotJavaSourceAnalysisEngine() {
       protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {

@@ -56,12 +56,12 @@ import com.ibm.wala.util.strings.Atom;
 
 public abstract class JavaIRTests extends IRTests {
    
-  public JavaIRTests(String name, String projectName)  {
-    super(name, projectName);
+  public JavaIRTests(String projectName)  {
+    super(projectName);
   }
   
-  public JavaIRTests(String name) {
-    this(name, null);
+  public JavaIRTests() {
+    this(null);
   }
  
   @Test public void testSimple1() {

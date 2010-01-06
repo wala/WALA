@@ -14,8 +14,8 @@ import org.junit.Test;
 
 public abstract class JLexTest extends IRTests {
 
-  public JLexTest(String name) {
-    super(name, null);
+  public JLexTest() {
+    super(null);
   }
 
   protected String singleJavaInputForTest() {

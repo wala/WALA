@@ -17,14 +17,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 public class PolyglotJLexTest extends JLexTest {
 
-  public PolyglotJLexTest(String name) {
-    super(name);
-  }
-  
-  public PolyglotJLexTest() {
-    super("PolyglotJLexTest");
-  }
-
   @Override
   protected JavaSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors) {
     JavaSourceAnalysisEngine engine = new PolyglotJavaSourceAnalysisEngine() {

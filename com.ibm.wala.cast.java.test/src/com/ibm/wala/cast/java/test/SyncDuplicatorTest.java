@@ -24,8 +24,8 @@ import com.ibm.wala.util.strings.Atom;
 
 public abstract class SyncDuplicatorTest extends IRTests {
 
-  public SyncDuplicatorTest(String name) {
-    super(name, null);
+  public SyncDuplicatorTest() {
+    super(null);
   }
 
   protected final static CallSiteReference testMethod = CallSiteReference.make(0, MethodReference.findOrCreate(TypeReference

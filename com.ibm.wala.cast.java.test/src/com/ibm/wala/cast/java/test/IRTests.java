@@ -25,52 +25,25 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.jar.JarFile;
 
-import org.junit.Before;
-import org.junit.runner.RunWith;
-
-import junit.framework.Assert;
+import org.junit.*;
 
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IClassLoader;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.JarFileModule;
-import com.ibm.wala.classLoader.Language;
-import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
-import com.ibm.wala.classLoader.SourceFileModule;
-import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.classLoader.*;
+import com.ibm.wala.ipa.callgraph.*;
+import com.ibm.wala.ipa.cha.*;
 import com.ibm.wala.properties.WalaProperties;
-import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.types.TypeName;
-import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.ssa.*;
+import com.ibm.wala.types.*;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
-@RunWith(NameAwareTestClassRunner.class)
-public abstract class IRTests extends WalaTestCase {
-  protected String name;
+public abstract class IRTests {
 
-  public IRTests(String name, String projectName) {
-    this.name = name;
+  protected IRTests(String projectName) {
     this.projectName = projectName;
-  }
-
-  protected String getName() {
-    return name;
-  }
-
-  @Before
-  public void before() {
-    this.name = NameAwareTestClassRunner.getTestName();
   }
 
   protected final String projectName;
@@ -274,12 +247,23 @@ public abstract class IRTests extends WalaTestCase {
     return Collections.singletonList(getTestSrcPath() + File.separator + singleJavaPkgInputForTest(pkgName));
   }
 
+  protected String getTestName() {
+    StackTraceElement stack[] = new Throwable().getStackTrace();
+    for(int i = 0; i <= stack.length; i++) {
+      if (stack[i].getMethodName().startsWith("test")) {
+        return stack[i].getMethodName();    
+      }
+    }
+    
+    throw new Error("test method not found");
+  }
+  
   protected String[] simpleTestEntryPoint() {
-    return new String[] { "L" + getName().substring(4) };
+    return new String[] { "L" + getTestName().substring(4) };
   }
 
   protected String[] simplePkgTestEntryPoint(String pkgName) {
-    return new String[] { "L" + pkgName + "/" + getName().substring(4) };
+    return new String[] { "L" + pkgName + "/" + getTestName().substring(4) };
   }
 
   protected abstract JavaSourceAnalysisEngine getAnalysisEngine(String[] mainClassDescriptors);
@@ -415,15 +399,15 @@ public abstract class IRTests extends WalaTestCase {
   }
 
   protected String singleJavaInputForTest() {
-    return getName().substring(4) + ".java";
+    return getTestName().substring(4) + ".java";
   }
 
   protected String singleInputForTest() {
-    return getName().substring(4);
+    return getTestName().substring(4);
   }
 
   protected String singleJavaPkgInputForTest(String pkgName) {
-    return pkgName + File.separator + getName().substring(4) + ".java";
+    return pkgName + File.separator + getTestName().substring(4) + ".java";
   }
 
 }

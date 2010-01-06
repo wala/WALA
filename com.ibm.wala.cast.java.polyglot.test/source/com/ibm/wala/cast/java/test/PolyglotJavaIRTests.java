@@ -16,13 +16,9 @@ import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 public class PolyglotJavaIRTests extends JavaIRTests {
-
-  public PolyglotJavaIRTests(String name) {
-    super(name);
-  }
   
   public PolyglotJavaIRTests() {
-    super("PolyglotJavaIRTests");
+    super(null);
   }
 
   @Override
