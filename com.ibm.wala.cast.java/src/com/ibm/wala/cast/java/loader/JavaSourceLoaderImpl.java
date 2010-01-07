@@ -87,9 +87,9 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
    * @author rfuhrer
    */
   public class JavaClass extends AstClass {
-    private final IClass enclosingClass;
+    protected final IClass enclosingClass;
 
-    private final Collection superTypeNames;
+    protected final Collection superTypeNames;
 
     public JavaClass(String typeName, Collection superTypeNames, CAstSourcePositionMap.Position position, Collection qualifiers,
         JavaSourceLoaderImpl loader, IClass enclosingClass) {
