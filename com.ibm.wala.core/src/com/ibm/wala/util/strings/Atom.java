@@ -418,8 +418,4 @@ public final class Atom implements Serializable {
     return b.get(0) == '[';
   }
 
-  private Object readResolve() {
-    return findOrCreate(this.val);
-  }
-
 }
