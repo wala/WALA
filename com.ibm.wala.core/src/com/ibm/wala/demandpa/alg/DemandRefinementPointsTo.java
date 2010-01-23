@@ -265,23 +265,45 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     if (DEBUG) {
       System.err.println("answering query for " + pk);
     }
-    Collection<InstanceKey> lastP2Set = null;
-    boolean succeeded = false;
     startNewQuery();
+    Pair<PointsToResult, Collection<InstanceKeyAndState>> p = outerRefinementLoop(new PointerKeyAndState(queriedPk, stateMachine.getStartState()),
+        ikeyPred);
+    final Collection<InstanceKeyAndState> p2SetWithStates = p.snd;
+    Collection<InstanceKey> finalP2Set = removeStates(p2SetWithStates);
+    return Pair.make(p.fst, finalP2Set);
+  }
+
+  /**
+   * Unwrap a Collection of WithState<T> objects, returning a Collection containing the wrapped objects
+   */
+  private static <T> Collection<T> removeStates(final Collection<? extends WithState<T>> p2SetWithStates) {
+    Collection<T> finalP2Set = Iterator2Collection.toSet(new MapIterator<WithState<T>, T>(p2SetWithStates
+        .iterator(), new Function<WithState<T>, T>() {
+
+      public T apply(WithState<T> object) {
+        return object.getWrapped();
+      }
+    }));
+    return finalP2Set;
+  }
+
+  private Pair<PointsToResult, Collection<InstanceKeyAndState>> outerRefinementLoop(PointerKeyAndState queried, Predicate<InstanceKey> ikeyPred) {
+    Collection<InstanceKeyAndState> lastP2Set = null;
+    boolean succeeded = false;
     int numPasses = refinementPolicy.getNumPasses();
     int passNum = 0;
     for (; passNum < numPasses; passNum++) {
       setNumNodesTraversed(0);
       setTraversalBudget(refinementPolicy.getBudgetForPass(passNum));
-      Collection<InstanceKey> curP2Set = null;
+      Collection<InstanceKeyAndState> curP2Set = null;
       PointsToComputer computer = null;
       boolean completedPassInBudget = false;
       try {
         while (true) {
           try {
-            computer = new PointsToComputer(queriedPk);
+            computer = new PointsToComputer(queried);
             computer.compute();
-            curP2Set = computer.getComputedP2Set(queriedPk);
+            curP2Set = computer.getComputedP2Set(queried);
             // System.err.println("completed pass");
             if (DEBUG) {
               System.err.println("traversed " + getNumNodesTraversed() + " nodes");
@@ -303,7 +325,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           lastP2Set = curP2Set;
         } else if (lastP2Set.size() > curP2Set.size()) {
           // got a more precise set
-          assert lastP2Set.containsAll(curP2Set);
+          assert removeStates(lastP2Set).containsAll(removeStates(curP2Set));
           lastP2Set = curP2Set;
         } else {
           // new set size is >= lastP2Set, so don't update
@@ -317,9 +339,6 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           succeeded = true;
           break;
         } else if (completedPassInBudget) {
-          // if (computer.isHopeless(ikeyPred)) {
-          // break;
-          // }
         }
       }
       // if we get here, means either budget for pass was exceeded,
@@ -455,8 +474,14 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
   /**
    * do all instance keys in p2set pass ikeyPred?
    */
-  private boolean passesPred(Collection<InstanceKey> p2set, Predicate<InstanceKey> ikeyPred) {
-    return Util.forAll(p2set, ikeyPred);
+  private boolean passesPred(Collection<InstanceKeyAndState> curP2Set, final Predicate<InstanceKey> ikeyPred) {
+    return Util.forAll(curP2Set, new Predicate<InstanceKeyAndState>() {
+
+      @Override
+      public boolean test(InstanceKeyAndState t) {
+        return ikeyPred.test(t.getInstanceKey());
+      }
+    });
   }
 
   /**
@@ -767,6 +792,10 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       queriedPkAndState = new PointerKeyAndState(pk, stateMachine.getStartState());
     }
 
+    protected PointsToComputer(PointerKeyAndState pkAndState) {
+      this.queriedPkAndState = pkAndState;
+    }
+
     private OrdinalSet<InstanceKeyAndState> makeOrdinalSet(IntSet intSet) {
       // make a copy here, to avoid comodification during iteration
       // TODO remove the copying, do it only at necessary call sites
@@ -777,16 +806,17 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      * get a points-to set that has already been computed via some previous call to {@link #compute()}; does _not_ do any fresh
      * demand-driven computation.
      */
-    public Collection<InstanceKey> getComputedP2Set(LocalPointerKey lpk) {
-      return Iterator2Collection.toSet(new MapIterator<InstanceKeyAndState, InstanceKey>(makeOrdinalSet(
-          find(pkToP2Set, new PointerKeyAndState(lpk, stateMachine.getStartState()))).iterator(),
-          new Function<InstanceKeyAndState, InstanceKey>() {
-
-            public InstanceKey apply(InstanceKeyAndState object) {
-              return object.getInstanceKey();
-            }
-
-          }));
+    public Collection<InstanceKeyAndState> getComputedP2Set(PointerKeyAndState queried) {
+      return Iterator2Collection.toSet(makeOrdinalSet(find(pkToP2Set, queried)).iterator());
+      // return Iterator2Collection.toSet(new MapIterator<InstanceKeyAndState, InstanceKey>(makeOrdinalSet(
+      // find(pkToP2Set, new PointerKeyAndState(lpk, stateMachine.getStartState()))).iterator(),
+      // new Function<InstanceKeyAndState, InstanceKey>() {
+      //
+      // public InstanceKey apply(InstanceKeyAndState object) {
+      // return object.getInstanceKey();
+      // }
+      //
+      // }));
     }
 
     protected boolean addAllToP2Set(Map<PointerKeyAndState, MutableIntSet> p2setMap, PointerKeyAndState pkAndState, IntSet vals,
@@ -1870,6 +1900,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
     /**
      * Handle a predecessor when processing some tracked locations
+     * 
      * @param curTrackedSet the tracked locations
      * @param predPkAndState the predecessor
      */
@@ -1877,7 +1908,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       if (addAllToP2Set(pkToTrackedSet, predPkAndState, curTrackedSet, label)) {
         addToTrackedPToWorklist(predPkAndState);
         return true;
-      }        
+      }
       return false;
     }
   }
@@ -2427,14 +2458,11 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     @Override
     protected boolean handleTrackedPred(MutableIntSet curTrackedSet, PointerKeyAndState predPkAndState, IFlowLabel label) {
       boolean result = super.handleTrackedPred(curTrackedSet, predPkAndState, label);
-      if (result && find(pkToTrackedSet,predPkAndState).contains(queriedIkAndStateNum)) {
+      if (result && find(pkToTrackedSet, predPkAndState).contains(queriedIkAndStateNum)) {
         theFlowsToSet.add(predPkAndState);
       }
       return result;
     }
-
-    
-
 
   }
 
