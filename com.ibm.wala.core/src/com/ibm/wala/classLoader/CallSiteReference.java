@@ -10,9 +10,11 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.shrikeBT.BytecodeConstants;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.ssa.IR;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -20,17 +22,17 @@ import com.ibm.wala.util.debug.Assertions;
  * Simple object that represents a static call site (ie., an invoke instruction in the bytecode)
  * 
  * Note that the identity of a call site reference depends on two things: the program counter, and the containing IR. Thus, it
- * suffices to defines equals() and hashCode() from ProgramCounter, since this class does not maintain a pointer to the containing
- * IR (or CGNode) anyway. If using a hashtable of CallSiteReference from different IRs, you probably want to use a wrapper which
- * also holds a pointer to the governing CGNode.
+ * suffices to define equals() and hashCode() from {@link ProgramCounter}, since this class does not maintain a pointer to the
+ * containing {@link IR} (or {@link CGNode}) anyway. If using a hashtable of CallSiteReference from different IRs, you probably want
+ * to use a wrapper which also holds a pointer to the governing CGNode.
  */
 public abstract class CallSiteReference extends ProgramCounter implements BytecodeConstants, ContextItem {
 
   final private MethodReference declaredTarget;
 
   /**
-   * @param programCounter
-   * @param declaredTarget
+   * @param programCounter Index into bytecode describing this instruction
+   * @param declaredTarget The method target as declared at the call site
    */
   protected CallSiteReference(int programCounter, MethodReference declaredTarget) {
     super(programCounter);
@@ -143,20 +145,11 @@ public abstract class CallSiteReference extends ProgramCounter implements Byteco
    */
   abstract public IInvokeInstruction.IDispatch getInvocationCode();
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "invoke" + getInvocationString(getInvocationCode()) + " " + declaredTarget + "@" + getProgramCounter();
   }
 
-  /**
-   * Method getInvocationString.
-   * 
-   * @param invocationCode
-   * @return String
-   */
   protected String getInvocationString(IInvokeInstruction.IDispatch invocationCode) {
     if (invocationCode == IInvokeInstruction.Dispatch.STATIC)
       return "static";
