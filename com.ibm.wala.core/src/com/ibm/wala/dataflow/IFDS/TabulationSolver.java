@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.dataflow.IFDS;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -882,23 +883,21 @@ public class TabulationSolver<T, P, F> {
     T[] entries = supergraph.getEntriesForProcedure(proc);
     MutableIntSet result = MutableSparseIntSet.makeEmpty();
 
-    for (int i = 0; i < entries.length; i++) {
-      T s_p = entries[i];
-      LocalPathEdges lp = pathEdges.get(s_p);
-      if (lp != null) {
-        result.addAll(lp.getReachable(n));
-      }
-    }
-
+    Set<T> allEntries = HashSetFactory.make(Arrays.asList(entries));
     Set<PathEdge<T>> pSeeds = seeds.get(proc);
     if (pSeeds != null) {
-      for (PathEdge<T> seed : pSeeds) {
-        LocalPathEdges lp = pathEdges.get(seed.entry);
-        if (lp != null) {
-          result.addAll(lp.getReachable(n));
-        }
-      }
-    }
+    	for (PathEdge<T> seed : pSeeds) {
+    		allEntries.add(seed.entry);
+    	}
+    }    
+
+    for (T entry : allEntries){
+    	LocalPathEdges lp = pathEdges.get(entry);
+    	if (lp != null) {
+    		result.addAll(lp.getReachable(n));
+    	}
+    }    	
+    
     return result;
   }
 
