@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  *  The assumption is that abstract syntax trees pertain to particular
  * programming language constructs, such as classes, methods, programs
- * and the like.  Thus, the expectation is that users of CAPA AST will
+ * and the like.  Thus, the expectation is that users of CAst will
  * typically be communicating such entities, and this interface is
  * meant to give them a mechanism to do this.
  *

@@ -28,8 +28,15 @@ import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 
+/**
+ * An {@link InstanceKeyFactory} that returns {@link ScopeMappingInstanceKey}s as necessary to handle interprocedural lexical
+ * scoping
+ */
 abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
 
+  /**
+   * return all {@link LexicalParent}s of methods that can be invoked on base. (Is this right? --MS)
+   */
   protected abstract LexicalParent[] getParents(InstanceKey base);
 
   protected abstract boolean needsScopeMappingKey(InstanceKey base);
@@ -41,11 +48,14 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
   public class ScopeMappingInstanceKey implements InstanceKey {
     private final InstanceKey base;
 
+    /**
+     * the node in which this is allocated
+     */
     private final CGNode creator;
 
     private final ScopeMap map;
 
-    private class ScopeMap extends HashMap<String,CGNode> {
+    private class ScopeMap extends HashMap<String, CGNode> {
 
       private static final long serialVersionUID = 3645910671551712906L;
 
@@ -72,7 +82,7 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
                 put(parents[i].getName(), node);
                 if (AstTranslator.DEBUG_LEXICAL)
                   System.err.println((level + ": Adding lexical parent " + parents[i].getName() + " for " + base + " at " + creator
-                  + "(toDo is now " + toDo + ")"));
+                      + "(toDo is now " + toDo + ")"));
               }
 
               toDo--;
