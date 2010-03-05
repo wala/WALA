@@ -169,6 +169,10 @@ public final class TypeReference implements Serializable {
   public final static TypeReference JavaLangReflectMethod = findOrCreate(ClassLoaderReference.Primordial,
       JavaLangReflectMethodName);
 
+  private final static TypeName JavaLangEnumName = TypeName.string2TypeName("Ljava/lang/Enum");
+
+  public final static TypeReference JavaLangEnum = findOrCreate(ClassLoaderReference.Primordial, JavaLangEnumName);
+  
   private final static TypeName JavaLangErrorName = TypeName.string2TypeName("Ljava/lang/Error");
 
   public final static TypeReference JavaLangError = findOrCreate(ClassLoaderReference.Primordial, JavaLangErrorName);
