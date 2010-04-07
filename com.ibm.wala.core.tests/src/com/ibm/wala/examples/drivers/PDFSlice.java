@@ -60,13 +60,14 @@ import com.ibm.wala.viz.PDFViewUtil;
 
 /**
  * 
- * This simple example WALA application computes a slice (@see com.ibm.wala.ipa.slicer.Slicer) and fires off ghostview
- * to view a dot-ted representation of the slice.
+ * This simple example WALA application computes a slice (see {@link Slicer}) and fires off the PDF viewer to view a dot-ted
+ * representation of the slice.
  * 
  * This is an example program on how to use the slicer.
  * 
  * See the 'PDFSlice' launcher included in the 'launchers' directory.
  * 
+ * @see Slicer
  * @author sfink
  */
 public class PDFSlice {
@@ -77,25 +78,23 @@ public class PDFSlice {
   private final static String PDF_FILE = "slice.pdf";
 
   /**
-   * Usage: GVSlice -appJar [jar file name] -mainClass [main class] -srcCaller [method name] -srcCallee [method name]
-   * -dd [data dependence options] -cd [control dependence options] -dir [forward|backward]
+   * Usage: PDFSlice -appJar [jar file name] -mainClass [main class] -srcCaller [method name] -srcCallee [method name] -dd [data
+   * dependence options] -cd [control dependence options] -dir [forward|backward]
    * 
    * <ul>
-   * <li> "jar file name" should be something like "c:/temp/testdata/java_cup.jar"
-   * <li> "main class" should beshould be something like "c:/temp/testdata/java_cup.jar"
-   * <li> "method name" should be the name of a method. This takes a slice from the statement that calls "srcCallee"
-   * from "srcCaller"
-   * <li> "data dependence options" can be one of "-full", "-no_base_ptrs", "-no_base_no_heap", "-no_heap",
+   * <li>"jar file name" should be something like "c:/temp/testdata/java_cup.jar"
+   * <li>"main class" should beshould be something like "c:/temp/testdata/java_cup.jar"
+   * <li>"method name" should be the name of a method. This takes a slice from the statement that calls "srcCallee" from "srcCaller"
+   * <li>"data dependence options" can be one of "-full", "-no_base_ptrs", "-no_base_no_heap", "-no_heap",
    * "-no_base_no_heap_no_cast", or "-none".
+   * </ul>
    * 
    * @throws CancelException
    * @throws IllegalArgumentException
-   * @throws IOException 
+   * @throws IOException
    * 
-   * @see com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions
-   *      <li> "control dependence options" can be "-full" or "-none"
-   *      <li> the -dir argument tells whether to compute a forwards or backwards slice.
-   *      </ul>
+   * @see com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions <li>"control dependence options" can be "-full" or "-none" <li>the
+   *      -dir argument tells whether to compute a forwards or backwards slice. </ul>
    * 
    */
   public static void main(String[] args) throws WalaException, IllegalArgumentException, CancelException, IOException {
@@ -103,11 +102,11 @@ public class PDFSlice {
   }
 
   /**
-   * see main(), above, for command-line arguments
+   * see {@link #main(String[])} for command-line arguments
    * 
    * @throws CancelException
    * @throws IllegalArgumentException
-   * @throws IOException 
+   * @throws IOException
    */
   public static Process run(String[] args) throws WalaException, IllegalArgumentException, CancelException, IOException {
     // parse the command-line into a Properties object
@@ -128,7 +127,7 @@ public class PDFSlice {
   }
 
   /**
-   * Compute a slice from a call statements, dot it, and fire off ghostview to visualize the result
+   * Compute a slice from a call statements, dot it, and fire off the PDF viewer to visualize the result
    * 
    * @param appJar should be something like "c:/temp/testdata/java_cup.jar"
    * @param mainClass should be something like "c:/temp/testdata/java_cup.jar"
@@ -137,16 +136,17 @@ public class PDFSlice {
    * @param goBackward do a backward slice?
    * @param dOptions options controlling data dependence
    * @param cOptions options controlling control dependence
-   * @return a Process running ghostview to visualize the dot'ted representation of the slice
+   * @return a Process running the PDF viewer to visualize the dot'ted representation of the slice
    * @throws CancelException
    * @throws IllegalArgumentException
    */
   public static Process run(String appJar, String mainClass, String srcCaller, String srcCallee, boolean goBackward,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException, IOException {
+      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException,
+      IOException {
     try {
       // create an analysis scope representing the appJar as a J2SE application
-      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, FileProvider.getFile(
-          CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, FileProvider
+          .getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // build a class hierarchy, call graph, and system dependence graph
       ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -155,7 +155,7 @@ public class PDFSlice {
       CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
       // CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new
       // AnalysisCache(), cha, scope);
-      CallGraph cg = builder.makeCallGraph(options,null);
+      CallGraph cg = builder.makeCallGraph(options, null);
       SDG sdg = new SDG(cg, builder.getPointerAnalysis(), dOptions, cOptions);
 
       // find the call statement of interest
@@ -194,7 +194,7 @@ public class PDFSlice {
       String dotExe = p.getProperty(WalaExamplesProperties.DOT_EXE);
       DotUtil.dotify(g, makeNodeDecorator(), PDFTypeHierarchy.DOT_FILE, psFile, dotExe);
 
-      // fire off ghostview
+      // fire off the PDF viewer
       String gvExe = p.getProperty(WalaExamplesProperties.PDFVIEW_EXE);
       return PDFViewUtil.launchPDFView(psFile, gvExe);
 
@@ -223,7 +223,7 @@ public class PDFSlice {
    */
   public static Statement getReturnStatementForCall(Statement s) {
     if (s.getKind() == Kind.NORMAL) {
-      NormalStatement n = (NormalStatement)s;
+      NormalStatement n = (NormalStatement) s;
       SSAInstruction st = n.getInstruction();
       if (st instanceof SSAInvokeInstruction) {
         SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) st;
@@ -294,14 +294,15 @@ public class PDFSlice {
    * 
    * Usage:
    * <ul>
-   * <li> args[0] : "-appJar"
-   * <li> args[1] : something like "c:/temp/testdata/java_cup.jar"
-   * <li> args[2] : "-mainClass"
-   * <li> args[3] : something like "Lslice/TestRecursion" *
-   * <li> args[4] : "-srcCallee"
-   * <li> args[5] : something like "print" *
-   * <li> args[4] : "-srcCaller"
-   * <li> args[5] : something like "main"
+   * <li>args[0] : "-appJar"
+   * <li>args[1] : something like "c:/temp/testdata/java_cup.jar"
+   * <li>args[2] : "-mainClass"
+   * <li>args[3] : something like "Lslice/TestRecursion" *
+   * <li>args[4] : "-srcCallee"
+   * <li>args[5] : something like "print" *
+   * <li>args[4] : "-srcCaller"
+   * <li>args[5] : something like "main"
+   * </ul>
    * 
    * @throws UnsupportedOperationException if command-line is malformed.
    */
