@@ -85,6 +85,9 @@ public class PDG implements NumberedGraph<Statement> {
   /**
    * TODO: using CallSiteReference is sloppy. clean it up.
    */
+
+  private final Map<CallSiteReference, Statement> callSite2Statement = HashMapFactory.make();
+
   private final Map<CallSiteReference, Set<Statement>> callerParamStatements = HashMapFactory.make();
 
   private final Map<CallSiteReference, Set<Statement>> callerReturnStatements = HashMapFactory.make();
@@ -115,7 +118,7 @@ public class PDG implements NumberedGraph<Statement> {
 
   /**
    * @param mod the set of heap locations which may be written (transitively) by this node. These are logically return values in the
-   *            SDG.
+   *          SDG.
    * @param ref the set of heap locations which may be read (transitively) by this node. These are logically parameters in the SDG.
    * @throws IllegalArgumentException if node is null
    */
@@ -127,7 +130,7 @@ public class PDG implements NumberedGraph<Statement> {
 
   /**
    * @param mod the set of heap locations which may be written (transitively) by this node. These are logically return values in the
-   *            SDG.
+   *          SDG.
    * @param ref the set of heap locations which may be read (transitively) by this node. These are logically parameters in the SDG.
    * @throws IllegalArgumentException if node is null
    */
@@ -187,6 +190,18 @@ public class PDG implements NumberedGraph<Statement> {
   }
 
   /**
+   * return the set of all PARAM_CALLER, HEAP_PARAM_CALLER, and NORMAL statements (i.e., the actual call statement) associated with
+   * a given call
+   */
+  public Set<Statement> getCallStatements(SSAAbstractInvokeInstruction call) throws IllegalArgumentException {
+    Set<Statement> callerParamStatements = getCallerParamStatements(call);
+    Set<Statement> result = HashSetFactory.make(callerParamStatements.size() + 1);
+    result.addAll(callerParamStatements);
+    result.add(callSite2Statement.get(call.getCallSite()));
+    return result;
+  }
+
+  /**
    * return the set of all NORMAL_RETURN_CALLER and HEAP_RETURN_CALLER statements associated with a given call.
    */
   public Set<Statement> getCallerReturnStatements(SSAAbstractInvokeInstruction call) throws IllegalArgumentException {
@@ -222,7 +237,8 @@ public class PDG implements NumberedGraph<Statement> {
       Assertions.productionAssertion(cOptions.equals(ControlDependenceOptions.FULL));
     }
 
-    ControlDependenceGraph<SSAInstruction, ISSABasicBlock> cdg = new ControlDependenceGraph<SSAInstruction, ISSABasicBlock>(controlFlowGraph);
+    ControlDependenceGraph<SSAInstruction, ISSABasicBlock> cdg = new ControlDependenceGraph<SSAInstruction, ISSABasicBlock>(
+        controlFlowGraph);
     for (ISSABasicBlock bb : cdg) {
       if (bb.isExitBlock()) {
         // nothing should be control-dependent on the exit block.
@@ -547,7 +563,7 @@ public class PDG implements NumberedGraph<Statement> {
   private static class SingletonSet extends SetOfClasses implements Serializable {
 
     /* Serial version */
-    private static final long serialVersionUID = -3256390509887654324L;  
+    private static final long serialVersionUID = -3256390509887654324L;
 
     private final TypeReference t;
 
@@ -575,7 +591,7 @@ public class PDG implements NumberedGraph<Statement> {
   private static class SetComplement extends SetOfClasses implements Serializable {
 
     /* Serial version */
-    private static final long serialVersionUID = -3256390509887654323L;  
+    private static final long serialVersionUID = -3256390509887654323L;
 
     private final SetOfClasses set;
 
@@ -756,8 +772,8 @@ public class PDG implements NumberedGraph<Statement> {
 
   /**
    * Wrap an {@link SSAInstruction} in a {@link Statement}. WARNING: Since we're using a {@link HashMap} of {@link SSAInstruction}s,
-   * and equals() of {@link SSAInstruction} assumes a canonical representative for each instruction, we <bf>must</bf> ensure that
-   * we use the same IR object throughout initialization!!
+   * and equals() of {@link SSAInstruction} assumes a canonical representative for each instruction, we <bf>must</bf> ensure that we
+   * use the same IR object throughout initialization!!
    */
   private Statement ssaInstruction2Statement(SSAInstruction s, IR ir, Map<SSAInstruction, Integer> instructionIndices) {
     return ssaInstruction2Statement(node, s, instructionIndices, ir);
@@ -854,7 +870,7 @@ public class PDG implements NumberedGraph<Statement> {
    * create nodes representing defs of the return values
    * 
    * @param mod the set of heap locations which may be written (transitively) by this node. These are logically parameters in the
-   *            SDG.
+   *          SDG.
    * @param dOptions
    */
   private void createReturnStatements() {
@@ -908,8 +924,8 @@ public class PDG implements NumberedGraph<Statement> {
   /**
    * Create nodes corresponding to
    * <ul>
-   * <li> phi instructions
-   * <li> getCaughtExceptions
+   * <li>phi instructions
+   * <li>getCaughtExceptions
    * </ul>
    */
   private void createSpecialStatements(IR ir) {
@@ -940,10 +956,12 @@ public class PDG implements NumberedGraph<Statement> {
       }
 
       if (s != null) {
-        delegate.addNode(new NormalStatement(node, i));
-      }
-      if (s instanceof SSAAbstractInvokeInstruction) {
-        addParamPassingStatements(i, ref, ir);
+        final NormalStatement statement = new NormalStatement(node, i);
+        delegate.addNode(statement);
+        if (s instanceof SSAAbstractInvokeInstruction) {
+          callSite2Statement.put(((SSAAbstractInvokeInstruction) s).getCallSite(), statement);
+          addParamPassingStatements(i, ref, ir);
+        }
       }
     }
   }

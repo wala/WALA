@@ -67,19 +67,19 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
       ExceptionalReturnCaller n = (ExceptionalReturnCaller) r;
       SSAAbstractInvokeInstruction call = n.getInstruction();
       PDG pdg = getProcOf(r);
-      return pdg.getCallerParamStatements(call).iterator();
+      return pdg.getCallStatements(call).iterator();
     }
     case NORMAL_RET_CALLER: {
       NormalReturnCaller n = (NormalReturnCaller) r;
       SSAAbstractInvokeInstruction call = n.getInstruction();
       PDG pdg = getProcOf(r);
-      return pdg.getCallerParamStatements(call).iterator();
+      return pdg.getCallStatements(call).iterator();
     }
     case HEAP_RET_CALLER: {
       HeapStatement.HeapReturnCaller n = (HeapStatement.HeapReturnCaller) r;
       SSAAbstractInvokeInstruction call = n.getCall();
       PDG pdg = getProcOf(r);
-      return pdg.getCallerParamStatements(call).iterator();
+      return pdg.getCallStatements(call).iterator();
     }
     default:
       Assertions.UNREACHABLE(r.getKind().toString());

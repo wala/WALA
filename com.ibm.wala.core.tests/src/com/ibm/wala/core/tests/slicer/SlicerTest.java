@@ -45,6 +45,7 @@ import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
 import com.ibm.wala.ipa.slicer.thin.ThinSlicer;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAAbstractThrowInstruction;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAConditionalBranchInstruction;
@@ -233,6 +234,39 @@ public class SlicerTest {
     Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
+  }
+
+  /**
+   * test bug reported on mailing list by Ravi Chandhran, 4/16/2010
+   * 
+   * @throws CancelException
+   * @throws IllegalArgumentException
+   * @throws IOException
+   */
+  @Test
+  public void testSlice8() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.SLICE8_MAIN);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraphBuilder builder = Util.makeVanillaZeroOneContainerCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraph cg = builder.makeCallGraph(options, null);
+
+    CGNode process = findMethod(cg, Descriptor.findOrCreateUTF8("()V"), Atom.findOrCreateUnicodeAtom("process"));
+    Statement s = findCallToDoNothing(process);
+    System.err.println("Statement: " + s);
+    // compute a backward slice, with data dependence and no exceptional control dependence
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
+        ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
+    dumpSlice(slice);
+    Assert.assertEquals(4, countInvokes(slice));
+    // should only get 4 statements total when ignoring control dependences completely
+    slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
+        ControlDependenceOptions.NONE);
+    Assert.assertEquals(4, slice.size());
   }
 
   @Test
@@ -639,6 +673,19 @@ public class SlicerTest {
     return count;
   }
 
+  public static int countInvokes(Collection<Statement> slice) {
+    int count = 0;
+    for (Statement s : slice) {
+      if (s.getKind().equals(Statement.Kind.NORMAL)) {
+        NormalStatement ns = (NormalStatement) s;
+        if (ns.getInstruction() instanceof SSAAbstractInvokeInstruction) {
+          count++;
+        }
+      }
+    }
+    return count;
+  }
+
   public static int countPutfields(Collection<Statement> slice) {
     int count = 0;
     for (Statement s : slice) {
@@ -727,13 +774,29 @@ public class SlicerTest {
   public static CGNode findMainMethod(CallGraph cg) {
     Descriptor d = Descriptor.findOrCreateUTF8("([Ljava/lang/String;)V");
     Atom name = Atom.findOrCreateUnicodeAtom("main");
+    return findMethod(cg, d, name);
+  }
+
+  /**
+   * @param cg
+   * @param d
+   * @param name
+   * @return
+   */
+  private static CGNode findMethod(CallGraph cg, Descriptor d, Atom name) {
     for (Iterator<? extends CGNode> it = cg.getSuccNodes(cg.getFakeRootNode()); it.hasNext();) {
       CGNode n = it.next();
       if (n.getMethod().getName().equals(name) && n.getMethod().getDescriptor().equals(d)) {
         return n;
       }
     }
-    Assertions.UNREACHABLE("failed to find main() method");
+    // if it's not a successor of fake root, just iterate over everything
+    for (CGNode n : cg) {
+      if (n.getMethod().getName().equals(name) && n.getMethod().getDescriptor().equals(d)) {
+        return n;
+      }
+    }
+    Assertions.UNREACHABLE("failed to find method " + name);
     return null;
   }
 

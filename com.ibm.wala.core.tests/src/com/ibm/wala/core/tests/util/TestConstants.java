@@ -98,6 +98,9 @@ public interface TestConstants {
 
   public final static String SLICE7_MAIN = "Lslice/Slice7";
 
+  public final static String SLICE8_MAIN = "Lslice/Slice8";
+
+
   public final static String SLICE_TESTCD1 = "Lslice/TestCD1";
 
   public final static String SLICE_TESTCD2 = "Lslice/TestCD2";
