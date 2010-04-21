@@ -137,7 +137,9 @@ public class SlicerTest {
         DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     Collection<Statement> slice = computeBackwardSlice;
     dumpSlice(slice);
-    Assert.assertEquals(30, slice.size());
+    
+    
+    Assert.assertEquals(9, countNormals(slice));
   }
 
   @Test
@@ -655,6 +657,17 @@ public class SlicerTest {
         if (ns.getInstruction() instanceof SSAArrayLoadInstruction) {
           count++;
         }
+      }
+    }
+    return count;
+  }
+
+  public static int countNormals(Collection<Statement> slice) {
+    int count = 0;
+    for (Statement s : slice) {
+      if (s.getKind().equals(Statement.Kind.NORMAL)) {
+        NormalStatement ns = (NormalStatement) s;
+        count++;
       }
     }
     return count;
