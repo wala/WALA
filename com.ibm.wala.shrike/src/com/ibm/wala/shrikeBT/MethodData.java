@@ -112,9 +112,7 @@ public final class MethodData {
   }
 
   /**
-   * Xiangyu,
-   * 
-   * @return the method access
+   * @return the method access flags
    */
   public int getAccess() {
     return access;
