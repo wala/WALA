@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.shrikeBT.shrikeCT;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.ibm.wala.shrikeBT.Compiler;
@@ -32,7 +31,6 @@ import com.ibm.wala.shrikeCT.LineNumberTableReader;
 import com.ibm.wala.shrikeCT.LineNumberTableWriter;
 import com.ibm.wala.shrikeCT.LocalVariableTableReader;
 import com.ibm.wala.shrikeCT.LocalVariableTableWriter;
-import com.ibm.wala.shrikeCT.ClassWriter.Element;
 
 /**
  * This class provides a convenient way to instrument every method in a class. It assumes you are using ShrikeCT to read and write
@@ -160,103 +158,6 @@ final public class ClassInstrumenter {
     }
     return md;
 
-  }
-
-  /**
-   * Xiangyu
-   * 
-   * @throws IllegalArgumentException if classWriter is null
-   * @throws IllegalArgumentException if instructions is null
-   * 
-   * 
-   */
-  public void newMethod(String name, String sig, ArrayList<Instruction> instructions, int access, ClassWriter classWriter,
-      ClassWriter.Element rawLines) {
-    if (instructions == null) {
-      throw new IllegalArgumentException("instructions is null");
-    }
-    if (classWriter == null) {
-      throw new IllegalArgumentException("classWriter is null");
-    }
-    Instruction[] ins = instructions.toArray(new Instruction[instructions.size()]);
-    ExceptionHandler[][] handlers = new ExceptionHandler[ins.length][];
-    Arrays.fill(handlers, noHandlers);
-    int[] i2b = new int[ins.length];
-    for (int i = 0; i < i2b.length; i++) {
-      i2b[i] = i;
-    }
-    MethodData md = null;
-    try {
-      md = new MethodData(access, Util.makeType(cr.getName()), name, sig, ins, handlers, i2b);
-    } catch (InvalidClassFileException ex) {
-      ex.printStackTrace();
-    }
-    CTCompiler compiler = CTCompiler.make(classWriter, md);
-    compiler.compile();
-    CTCompiler.Output output = compiler.getOutput();
-    CodeWriter code = new CodeWriter(classWriter);
-    code.setMaxStack(output.getMaxStack());
-    code.setMaxLocals(output.getMaxLocals());
-    code.setCode(output.getCode());
-    code.setRawHandlers(output.getRawHandlers());
-
-    LineNumberTableWriter lines = null;
-    // I guess it is the line numbers in the java files.
-    if (rawLines == null) {
-      // add fake line numbers: just map each bytecode instruction to its own
-      // 'line'
-      int[] newLineMap = new int[instructions.size()];
-      for (int i = 0; i < newLineMap.length; i++) {
-        newLineMap[i] = i;
-      }
-      int[] rawTable = LineNumberTableWriter.makeRawTable(newLineMap);
-      lines = new LineNumberTableWriter(classWriter);
-      lines.setRawTable(rawTable);
-    }
-    code.setAttributes(new ClassWriter.Element[] { rawLines == null ? lines : rawLines });
-    Element[] elements = { code };
-    classWriter.addMethod(access, name, sig, elements);
-  }
-
-  public void newMethod(MethodData md, ClassWriter classWriter, ClassWriter.Element rawLines) {
-    if (classWriter == null) {
-      throw new IllegalArgumentException("classWriter is null");
-    }
-    if (md == null) {
-      throw new IllegalArgumentException("md is null");
-    }
-    CTCompiler compiler = CTCompiler.make(classWriter, md);
-    compiler.compile();
-    CTCompiler.Output output = compiler.getOutput();
-    CodeWriter code = new CodeWriter(classWriter);
-    code.setMaxStack(output.getMaxStack());
-    code.setMaxLocals(output.getMaxLocals());
-    code.setCode(output.getCode());
-    code.setRawHandlers(output.getRawHandlers());
-
-    LineNumberTableWriter lines = null;
-    // I guess it is the line numbers in the java files.
-    if (rawLines == null) {
-      // add fake line numbers: just map each bytecode instruction to its own
-      // 'line'
-
-      // NOTE:Should not use md.getInstructions().length, because the
-      // the length of the created code can be smaller than the md's instruction
-      // length
-
-      // WRONG: int[] newLineMap = new int[md.getInstructions().length];
-      int[] newLineMap = new int[code.getCodeLength()];
-      for (int i = 0; i < newLineMap.length; i++) {
-        newLineMap[i] = i;
-      }
-      int[] rawTable = LineNumberTableWriter.makeRawTable(newLineMap);
-      lines = new LineNumberTableWriter(classWriter);
-      lines.setRawTable(rawTable);
-    }
-    code.setAttributes(new ClassWriter.Element[] { rawLines == null ? lines : rawLines });
-    Element[] elements = { code };
-    // System.out.println("Name:"+md.getName()+" Sig:"+md.getSignature());
-    classWriter.addMethod(md.getAccess(), md.getName(), md.getSignature(), elements);
   }
 
   /**

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.shrikeBT;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -40,6 +41,24 @@ public final class MethodData {
 
   private boolean hasChanged = false;
 
+  /**
+   * Create information for a method, with no exception handlers and a dummy mapping of instructions to original bytecodes. 
+   * @param access the access flags
+   * @param classType the class in which the method is defined, in JVM type format (e.g., Ljava/lang/Object;)
+   * @param name the method name
+   * @param signature the method signature, in JVM type format (e.g., (ILjava/lang/Object;)V)
+   * @param instructions the instructions making up the method
+   */
+  public static MethodData makeWithDefaultHandlersAndInstToBytecodes(int access, String classType, String name, String signature, IInstruction[] instructions) {
+    ExceptionHandler[][] handlers = new ExceptionHandler[instructions.length][];
+    Arrays.fill(handlers, new ExceptionHandler[0]);
+    int[] i2b = new int[instructions.length];
+    for (int i = 0; i < i2b.length; i++) {
+      i2b[i] = i;
+    }
+    return new MethodData(access, classType, name, signature, instructions, handlers, i2b);    
+  }
+  
   /**
    * Gather the information for a method "from scratch".
    * 
