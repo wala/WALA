@@ -291,8 +291,10 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
       for (Iterator<ISSABasicBlock> it = ir.getControlFlowGraph().getPredNodes(original); it.hasNext();) {
         ISSABasicBlock s = it.next();
         if (s.isEntryBlock()) {
-          if (s.getFirstInstructionIndex() == 0) {
-            result.add(normalNodes.get(0));
+          // it's possible for an entry block to have instructions; in this case, add
+          // the exploded basic block for the last instruction in the entry block
+          if (s.getLastInstructionIndex() >= 0) {
+            result.add(normalNodes.get(s.getLastInstructionIndex()));
           } else {
             result.add(entry);
           }
@@ -426,6 +428,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
       this.original = original;
     }
 
+    @SuppressWarnings("unused")
     public ExplodedControlFlowGraph getExplodedCFG() {
       return ExplodedControlFlowGraph.this;
     }
