@@ -13,24 +13,21 @@ package com.ibm.wala.cast.js.ipa.callgraph;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Map;
 
-import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummarizedFunction;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummary;
 import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.ssa.JSInstructionFactory;
-import com.ibm.wala.cast.js.translator.JSAstTranslator;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
-import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -410,18 +407,17 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
       fun.append("}");
 
       try {
-        String fileName = "ctor " + ++ctorCount;
+        String fileName = "ctor$" + ++ctorCount;
         File f = new File(System.getProperty("java.io.tmpdir") + File.separator + fileName);
         FileWriter FO = new FileWriter(f);
         FO.write(fun.toString());
         FO.close();
-        SourceFileModule M = new SourceFileModule(f, fileName);
-        TranslatorToCAst toCAst = Util.getTranslatorFactory().make(new CAstImpl(), M, null, null);
-        JSAstTranslator toIR = new JSAstTranslator(cl);
-        toIR.translate(toCAst.translateToCAst(), fileName);
+        
+        Util.loadAdditionalFile(cha, cl, fileName, new URL("file://" + f.getAbsolutePath()));
+        
+        IClass fcls = cl.lookupClass("L" + f.getAbsolutePath() + "/_fromctor", cha);
+ 
         f.delete();
-        IClass fcls = cl.lookupClass("Lctor " + ctorCount + "/_fromctor", cha);
-        cha.addClass(fcls);
 
         if (DEBUG)
           System.err.println(("looking for ctor " + ctorCount + " and got " + fcls));
@@ -437,6 +433,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     }
   }
 
+ 
   private IMethod makeFunctionObjectConstructor(IClass cls, int nargs) {
     JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
    Object key = Pair.make(cls, new Integer(nargs));

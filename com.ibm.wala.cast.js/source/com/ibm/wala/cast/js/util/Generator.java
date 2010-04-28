@@ -49,10 +49,12 @@ public class Generator {
     this(true, defaultCallbackFactory);
   }
   
+  /*
   private InputStreamReader getStream(String url) throws IOException {
     return getStream( Generator.class.getClassLoader().getResource( url ) );
   }
-
+  */
+  
   private InputStreamReader getStream(URL url) throws IOException {
     URLConnection conn = url.openConnection();
     conn.setDefaultUseCaches(false);
@@ -95,7 +97,7 @@ public class Generator {
     out2.close();
     out3.close();
     
-    generatePreamble(out, cb);
+    // generatePreamble(out, cb);
     
     out.write("\n\ndocument.URL = new String('" + input + "');\n\n");
     
@@ -103,13 +105,18 @@ public class Generator {
 
     writeRegion(out, "DOM Tree", temp1);
     
-    writeRegion(out, "Entrypoints", temp3);
+    out.write("while (true) {\n\n");
     
+    writeRegion(out, "Entrypoints", temp3);
+
+    out.write("\n}\n\n");
+
     generateTrailer(out, cb);
     
     out.close();
   }
 
+  /*
   protected void generatePreamble(FileWriter out, HTMLEditorKit.ParserCallback cb) throws IOException {
     InputStreamReader pm = getStream( preamble );
     BufferedReader pmIn = new BufferedReader(pm);
@@ -122,6 +129,7 @@ public class Generator {
     }
     out.write("//Preamble End\n\n\n");
   }
+  */
   
   protected void generateTrailer(FileWriter out, HTMLEditorKit.ParserCallback cb) throws IOException {
     out.write("//Trailer Begin\n");

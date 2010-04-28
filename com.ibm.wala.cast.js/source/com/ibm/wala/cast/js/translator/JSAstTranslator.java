@@ -72,8 +72,11 @@ public class JSAstTranslator extends AstTranslator {
     context.cfg().addInstruction(((JSInstructionFactory)insts).CheckReference(readVn));
     
     CAstNode target = context.getControlFlow().getTarget(n, JavaScriptTypes.ReferenceError);
-    assert target != null;
-    context.cfg().addPreEdge(n, target, true);
+    if (target != null) {
+      context.cfg().addPreEdge(n, target, true);
+    } else {
+      context.cfg().addPreEdgeToExit(n, true);
+    }
     context.cfg().newBlock(true);    
   }
   

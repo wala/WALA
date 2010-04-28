@@ -293,7 +293,12 @@ String.prototype = {
 
   replace: function replace(regex, withStr) {
     return new String(primitive("StringReplace", this, regex, withStr));
+  },
+  
+  loadFile: function loadFile() {
+		// magic function body handled in analysis.
   }
+
 };
 
 

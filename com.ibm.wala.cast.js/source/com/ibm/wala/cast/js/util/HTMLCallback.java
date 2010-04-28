@@ -122,7 +122,20 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
       }
     }
 
-    String varName = "node" + (counter++);
+    String varName = null;
+    Enumeration enu = a.getAttributeNames();
+    while(enu.hasMoreElements()) {
+      Object attrObj = enu.nextElement(); 
+      String attr = attrObj.toString();
+      String value = a.getAttribute(attrObj).toString();
+      if (attr.equalsIgnoreCase("id")) {
+        varName = value;
+        break;
+      }
+    }
+    if (varName == null) {
+      varName = "node" + (counter++);
+    }
     
     String cons = constructors.get(tag);
     if(cons == null) cons = "DOMHTMLElement";
@@ -139,7 +152,7 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
   
     protected void writeElement(HTML.Tag t, MutableAttributeSet a, String tag, String cons, String varName) throws IOException {
       Enumeration enu = a.getAttributeNames();
-      indent(); domTreeFile.write("function make_" + varName + "(parent, dom_nodes) {\n");
+      indent(); domTreeFile.write("function make_" + varName + "(parent) {\n");
       indent(); domTreeFile.write("  this.temp = " + cons + ";\n");
       indent(); domTreeFile.write("  this.temp(" + tag + ");\n");
       while(enu.hasMoreElements()) {
@@ -149,6 +162,8 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
         domTreeFile.write("  ");
         writeAttribute(t, a, attr, value, "this", varName);
       }
+
+      indent(); domTreeFile.write("  " + varName + " = this;\n");
       indent(); domTreeFile.write("  dom_nodes." + varName + " = this;\n");
       indent(); domTreeFile.write("  parent.appendChild(this);\n");
    }
@@ -160,8 +175,9 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
   
     protected void writeEventAttribute(HTML.Tag t, MutableAttributeSet a, String attr, String value, String varName, String varName2) throws IOException {
       if(attr.substring(0,2).equals("on")) {
-        indent(); domTreeFile.write(varName + "." + attr + " = function " + attr + "_" + varName + "(event) {" + value + "};\n");
-        entrypointFile.write("\n\ndom_nodes." + varName2 + "." + attr + "(null);\n\n");
+        indent(); domTreeFile.write("function " + attr + "_" + varName2 + "(event) {" + value + "};\n");
+        indent(); domTreeFile.write(varName + "." + attr + " = " + attr + "_" + varName2 + ";\n");
+        entrypointFile.write("\n\n  " + varName2 + "." + attr + "(null);\n\n");
       } else if (value.startsWith("javascript:") || value.startsWith("javaScript:")) {
         indent(); domTreeFile.write("var " + varName + attr + " = " + value.substring(11) + "\n");
         indent(); domTreeFile.write(varName + ".setAttribute('" + attr + "', " + varName + attr + ");\n");
@@ -196,9 +212,9 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
       indent(); domTreeFile.write("};\n");
       indent();
       if (stack.isEmpty()) {
-        domTreeFile.write("make_" + name + "(document, dom_nodes);\n\n\n");
+        domTreeFile.write("new make_" + name + "(document);\n\n\n");
       } else {
-        domTreeFile.write("make_" + name + "(this, dom_nodes);\n\n");
+        domTreeFile.write("new make_" + name + "(this);\n\n");
       }
     } catch (IOException e) {
       System.exit(-1);

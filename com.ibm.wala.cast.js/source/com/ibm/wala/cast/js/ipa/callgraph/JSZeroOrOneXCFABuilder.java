@@ -37,7 +37,8 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     setContextInterpreter(contextInterpreter);
 
     options.setSelector(new JavaScriptConstructTargetSelector(cha, options.getMethodTargetSelector()));
-
+    options.setSelector(new LoadFileTargetSelector(options.getMethodTargetSelector(), this));
+    
     ContextSelector def = new DefaultContextSelector(options);
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
     contextSelector = new ScopeMappingKeysContextSelector(contextSelector);

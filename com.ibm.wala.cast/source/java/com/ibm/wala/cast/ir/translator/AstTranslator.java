@@ -1164,6 +1164,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         return getUnderlyingSymtab().getConstant(((Character) o).charValue());
       } else if (o instanceof Byte) {
         return getUnderlyingSymtab().getConstant(((Byte) o).byteValue());
+      } else if (o instanceof Short) {
+          return getUnderlyingSymtab().getConstant(((Short) o).shortValue());
       } else if (o == null) {
         return getUnderlyingSymtab().getNullConstant();
       } else if (o == CAstControlFlowMap.SWITCH_DEFAULT) {
@@ -2525,8 +2527,11 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     int result = processFunctionExpr(n, c);
     CAstEntity fn = (CAstEntity) n.getChild(0).getValue();
     // FIXME: handle redefinitions of functions
+    Symbol s = context.currentScope().lookup(fn.getName());
     if (!context.currentScope().contains(fn.getName())) {
       context.currentScope().declare(new FinalCAstSymbol(fn.getName()), result);
+    } else {
+      assignValue(n, context, s, fn.getName(), result);
     }
   }
 
@@ -3109,20 +3114,24 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     return false;
   }
 
+  protected void assignValue(CAstNode n, WalkContext context, Symbol ls, String nm, int rval) {
+    if (context.currentScope().isGlobal(ls))
+      doGlobalWrite(context, nm, rval);
+    else if (context.currentScope().isLexicallyScoped(ls)) {
+      doLexicallyScopedWrite(context, nm, rval);
+    } else {
+      assert rval != -1 : CAstPrinter.print(n, context.top().getSourceMap());
+      doLocalWrite(context, nm, rval);
+    }
+  }
+
   protected void leaveVarAssign(CAstNode n, CAstNode v, CAstNode a, Context c, CAstVisitor visitor) {
     WalkContext context = (WalkContext) c;
     int rval = getValue(v);
     String nm = (String) n.getChild(0).getValue();
     Symbol ls = context.currentScope().lookup(nm);
     setValue(n, rval);
-    if (context.currentScope().isGlobal(ls))
-      doGlobalWrite(context, nm, rval);
-    else if (context.currentScope().isLexicallyScoped(ls)) {
-      doLexicallyScopedWrite(context, nm, rval);
-    } else {
-      assert rval != -1 : CAstPrinter.print(n, c.top().getSourceMap());
-      doLocalWrite(context, nm, rval);
-    }
+    assignValue(n, context, ls, nm, rval);
   }
 
   protected boolean visitVarAssignOp(CAstNode n, CAstNode v, CAstNode a, boolean pre, Context c, CAstVisitor visitor) { /* empty */

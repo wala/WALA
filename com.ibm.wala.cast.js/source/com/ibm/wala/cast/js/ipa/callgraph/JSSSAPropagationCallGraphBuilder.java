@@ -10,6 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ipa.callgraph;
 
+import java.net.URL;
 import java.util.Set;
 
 import com.ibm.wala.analysis.typeInference.TypeInference;
@@ -69,6 +70,12 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
   public static final boolean DEBUG_TYPE_INFERENCE = false;
 
+  URL scriptBaseURL;
+  
+  public void setBaseURL(URL url) {
+    this.scriptBaseURL = url;
+  }
+  
   protected JSSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       PointerKeyFactory pointerKeyFactory) {
     super(cha, options, cache, pointerKeyFactory);

@@ -22,7 +22,7 @@ function NamedNodeList() {
 		}
 	}
 
-        this.get = function get(index) {
+        this.get = function _get(index) {
                 return local[ index ];
 	}
 
@@ -134,7 +134,7 @@ function DOMHTMLDocument() {
 }
 
 // Creating the root document object
-var document = new DOMHTMLDocument();
+document = new DOMHTMLDocument();
 
 function DOMElement() { // An impostor for the Element class
 	// inherits from Node
@@ -198,15 +198,24 @@ function DOMHTMLElement() { // An impostor for the HTMLElement class
 		}
 }
 
+var dynamic_node = 0;
+
 // Just a hack until all HTML elements have corresponding constructors
 function DOMHTMLGenericElement(tagName) {
 	// inherits from Element
-	this.temp = DOMElement;
+	this.temp = DOMHTMLElement;
 	this.temp();
 
 	// Set just the tag name
 	this.nodeName = tagName;
 	this.nodeValue = null;
+	
+	// record new node in dom_nodes
+	dom_nodes[dynamic_node++] = this;
+	
+	// load 'src' if appropriate
+	this.src.loadFile = String.prototype.loadFile;
+	this.src.loadFile();
 }
 
 function DOMHTMLFormElement() {
@@ -217,12 +226,12 @@ function DOMHTMLFormElement() {
 	// Set Javascript properties
 	this.nodeName = "FORM";
 	this.elements = new NamedNodeList();
-	this.length = function() {
+	this.length = function form_elt_length() {
 		return this.elements.length;
 	}
-	this.submit = function() {
+	this.submit = function form_elt_submit() {
 	}
-	this.reset = function() {
+	this.reset = function form_elt_reset () {
 	}
 
 	// Set HTML Attribute Defaults
@@ -270,6 +279,51 @@ function DOMHTMLTableElement () {
 	this.temp = DOMHTMLElement;
 	this.temp();
 
-	this.rows = function() {
+	this.rows = function table_elt_rows() {
 	}	
 }
+
+dom_nodes = new Object();
+
+XMLHttpRequest = function _XMLHttpRequest() {
+
+	this.UNSENT = 0;
+	this.OPENED = 1;
+	this.HEADERS_RECEIVED = 2;
+	this.LOADING = 3;
+	this.DONE = 4;
+
+	this.orsc_handler = function xhr_orsc_handler() {
+		this.onreadystatechange();
+	}
+		  
+	this.open = function xhr_open(method, url, async, user, password) {
+		this.orsc_handler();
+	}
+
+	this.setRequestHeader = function xhr_setRequestHeader(header, value) {
+		
+	}
+
+	this.send = function xhr_send(data) {
+		this.orsc_handler();
+	}
+
+	this.abort = function xhr_abort() {
+		this.orsc_handler();
+	}
+
+	this.getResponseHeader = function xhr_getResponseHeader(header) {
+
+	}	
+
+	this.getAllResponseHeaders = function xhr_getAllResponseHeaders() {
+
+	}
+
+};
+
+for(var n in dom_nodes) {
+	dom_nodes[n].onload();
+}
+

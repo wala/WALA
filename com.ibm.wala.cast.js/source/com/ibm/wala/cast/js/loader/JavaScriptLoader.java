@@ -340,8 +340,20 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
           };
         }
 
-        public SSACheckCastInstruction CheckCastInstruction(int result, int val, TypeReference type) {
+        public SSACheckCastInstruction CheckCastInstruction(int result, int val, TypeReference[] types) {
           throw new UnsupportedOperationException();
+        }
+
+        public SSACheckCastInstruction CheckCastInstruction(int result, int val, int[] typeValues) {
+          throw new UnsupportedOperationException();
+        }
+
+        public SSACheckCastInstruction CheckCastInstruction(int result, int val, int typeValue) {
+          return CheckCastInstruction(result, val, new int[]{ typeValue });
+        }
+
+        public SSACheckCastInstruction CheckCastInstruction(int result, int val, TypeReference type) {
+          return CheckCastInstruction(result, val, new TypeReference[]{ type });
         }
 
         public SSAComparisonInstruction ComparisonInstruction(Operator operator, int result, int val1, int val2) {
