@@ -189,13 +189,18 @@ public class CallGraphTest extends WalaTestCase {
       }
     };
   }
-
+  
   @Test public void testPrimordial() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     if (useShortProfile()) {
       return;
     }
 
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("primordial.txt", "GUIExclusions.txt");
+    AnalysisScope scope = 
+      CallGraphTestUtil.makeJ2SEAnalysisScope(
+          "primordial.txt", 
+          (System.getProperty("os.name").equals("Mac OS X"))?
+          "Java60RegressionExclusions.txt":
+          "GUIExclusions.txt");
     ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = makePrimordialMainEntrypoints(scope, cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
