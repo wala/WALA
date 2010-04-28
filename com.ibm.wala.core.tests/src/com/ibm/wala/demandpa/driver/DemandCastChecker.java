@@ -234,9 +234,18 @@ public class DemandCastChecker {
         SSAInstruction instruction = instrs[i];
         if (instruction instanceof SSACheckCastInstruction) {
           SSACheckCastInstruction castInstr = (SSACheckCastInstruction) instruction;
-          final TypeReference declaredResultType = castInstr.getDeclaredResultType();
-          if (declaredResultType.isPrimitiveType())
+          final TypeReference[] declaredResultTypes = castInstr.getDeclaredResultTypes();
+     
+          boolean primOnly = true;
+          for (TypeReference t : declaredResultTypes) {
+            if (! t.isPrimitiveType()) {
+              primOnly = false;
+            }
+          }
+          if (primOnly) {
             continue;
+          }
+          
           System.err.println("CHECKING " + castInstr + " in " + node.getMethod());
           PointerKey castedPk = heapModel.getPointerKeyForLocal(node, castInstr.getUse(0));
           Predicate<InstanceKey> castPred = new Predicate<InstanceKey>() {
@@ -244,10 +253,12 @@ public class DemandCastChecker {
             @Override
             public boolean test(InstanceKey ik) {
               TypeReference ikTypeRef = ik.getConcreteType().getReference();
-              if (!cha.isAssignableFrom(cha.lookupClass(declaredResultType), cha.lookupClass(ikTypeRef))) {
-                return false;
+              for (TypeReference t : declaredResultTypes) {
+                if (cha.isAssignableFrom(cha.lookupClass(t), cha.lookupClass(ikTypeRef))) {
+                  return true;
+                }
               }
-              return true;
+              return false;
             }
 
           };
