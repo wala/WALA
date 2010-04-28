@@ -121,8 +121,8 @@ public class CrossLanguageCallGraph extends AstCallGraph {
       return root.addGetStatic(ref);
     }
 
-    public int addCheckcast(TypeReference type, int rv) {
-      Atom language = type.getClassLoader().getLanguage();
+    public int addCheckcast(TypeReference[] type, int rv) {
+      Atom language = type[0].getClassLoader().getLanguage();
       AbstractRootMethod root = getLanguageRoot(language);
       return root.addCheckcast(type, rv);
     }
