@@ -35,6 +35,7 @@ import com.ibm.wala.shrikeBT.IComparisonInstruction;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IConversionInstruction;
 import com.ibm.wala.shrikeBT.IGetInstruction;
+import com.ibm.wala.shrikeBT.IInstanceofInstruction;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.ILoadInstruction;
@@ -42,7 +43,6 @@ import com.ibm.wala.shrikeBT.IPutInstruction;
 import com.ibm.wala.shrikeBT.IShiftInstruction;
 import com.ibm.wala.shrikeBT.IStoreInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
-import com.ibm.wala.shrikeBT.InstanceofInstruction;
 import com.ibm.wala.shrikeBT.MonitorInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
 import com.ibm.wala.shrikeBT.PopInstruction;
@@ -1023,10 +1023,10 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitInstanceof(InstanceofInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitInstanceof(IInstanceofInstruction)
        */
       @Override
-      public void visitInstanceof(InstanceofInstruction instruction) {
+      public void visitInstanceof(IInstanceofInstruction instruction) {
         workingState.pop();
         workingState.push(UNANALYZED);
       }

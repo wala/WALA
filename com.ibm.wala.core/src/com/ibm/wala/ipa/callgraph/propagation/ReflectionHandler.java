@@ -113,11 +113,13 @@ public class ReflectionHandler {
 
     for (Statement st : casts) {
       SSACheckCastInstruction c = (SSACheckCastInstruction) ((NormalStatement) st).getInstruction();
-      TypeReference type = c.getDeclaredResultType();
-      IClass klass = cha.lookupClass(type);
-      if (klass != null) {
-        if (contextInterpreter.recordFactoryType(returnStatement.getNode(), klass)) {
-          result.add(returnStatement.getNode());
+
+      for (TypeReference type : c.getDeclaredResultTypes()) {
+        IClass klass = cha.lookupClass(type);
+        if (klass != null) {
+          if (contextInterpreter.recordFactoryType(returnStatement.getNode(), klass)) {
+            result.add(returnStatement.getNode());
+          }
         }
       }
     }

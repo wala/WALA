@@ -16,11 +16,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.ibm.wala.analysis.reflection.JavaTypeContext;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.propagation.ReceiverInstanceContext;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
@@ -349,6 +351,38 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
   @Override
   protected NodeManager<CGNode> getNodeManager() {
     return nodeManager;
+  }
+  
+  public void summarizeByPackage() {
+   Map<String, Integer> packages = HashMapFactory.make();
+   for(CGNode n : this) { 
+     String nm = n.getMethod().getDeclaringClass().getName().toString() + "/" + n.getMethod().getName() + "/" + n.getContext().getClass().toString();
+  
+     if (n.getContext() instanceof ReceiverInstanceContext) {
+       nm = nm + "/" + ((ReceiverInstanceContext)n.getContext()).getReceiver().getConcreteType().getName();
+     } else if (n.getContext() instanceof JavaTypeContext) {
+       nm = nm + "/" + ((JavaTypeContext)n.getContext()).getType().getTypeReference().getName();
+     }
+     
+     do {
+       if (packages.containsKey(nm)) {
+         packages.put(nm, 1 + packages.get(nm));
+       } else {
+         packages.put(nm, 1);
+       }
+       
+       if (nm.indexOf('/') < 0) {
+         break;
+       }
+       
+       nm = nm.substring(0, nm.lastIndexOf('/'));
+     } while (true);
+   }
+   
+   System.err.println("dump of CG");
+   for(Map.Entry<String, Integer> e : packages.entrySet()) {
+     System.err.println(e.getValue().intValue() + " " + e.getKey());
+   }
   }
 
 }

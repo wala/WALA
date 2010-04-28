@@ -378,23 +378,25 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     PointerKey rhs = pointerKeys.getPointerKeyForLocal(node, instruction.getVal());
     OrdinalSet<InstanceKey> rhsSet = getPointsToSet(rhs);
     MutableSparseIntSet S = MutableSparseIntSet.makeEmpty();
-    IClass klass = getCallGraph().getClassHierarchy().lookupClass(instruction.getDeclaredResultType());
-    if (klass == null) {
-      // could not find the type. conservatively assume Object
-      return rhsSet;
-    } else {
-      if (klass.isInterface()) {
-        for (Iterator it = rhsSet.iterator(); it.hasNext();) {
-          InstanceKey ik = (InstanceKey) it.next();
-          if (getCallGraph().getClassHierarchy().implementsInterface(ik.getConcreteType(), klass)) {
-            S.add(getInstanceKeyMapping().getMappedIndex(ik));
-          }
-        }
+    for (TypeReference t : instruction.getDeclaredResultTypes()) {
+      IClass klass = getCallGraph().getClassHierarchy().lookupClass(t);
+      if (klass == null) {
+        // could not find the type. conservatively assume Object
+        return rhsSet;
       } else {
-        for (Iterator it = rhsSet.iterator(); it.hasNext();) {
-          InstanceKey ik = (InstanceKey) it.next();
-          if (getCallGraph().getClassHierarchy().isSubclassOf(ik.getConcreteType(), klass)) {
-            S.add(getInstanceKeyMapping().getMappedIndex(ik));
+        if (klass.isInterface()) {
+          for (Iterator it = rhsSet.iterator(); it.hasNext();) {
+            InstanceKey ik = (InstanceKey) it.next();
+            if (getCallGraph().getClassHierarchy().implementsInterface(ik.getConcreteType(), klass)) {
+              S.add(getInstanceKeyMapping().getMappedIndex(ik));
+            }
+          }
+        } else {
+          for (Iterator it = rhsSet.iterator(); it.hasNext();) {
+            InstanceKey ik = (InstanceKey) it.next();
+            if (getCallGraph().getClassHierarchy().isSubclassOf(ik.getConcreteType(), klass)) {
+              S.add(getInstanceKeyMapping().getMappedIndex(ik));
+            }
           }
         }
       }

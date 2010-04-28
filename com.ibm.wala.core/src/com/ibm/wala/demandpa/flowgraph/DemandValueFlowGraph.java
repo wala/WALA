@@ -79,6 +79,8 @@ import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.SSAInstruction.Visitor;
 import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -186,32 +188,24 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
      */
     @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
-      // Assertions.UNREACHABLE();
-
-      IClass cls = cha.lookupClass(instruction.getDeclaredResultType());
-      PointerKey result = null;
-      if (cls == null) {
-        // warnings.add(
-        // CheckcastFailure.create(instruction.getDeclaredResultType()));
-        // we failed to find the type.
-        // conservatively it would make sense to ignore the filter and
-        // be
-        // conservative, assuming
-        // java.lang.Object.
-        // however, this breaks the invariants downstream that assume
-        // every
-        // variable is
-        // strongly typed ... we can't have bad types flowing around.
-        // since things are broken anyway, just give up.
-        // result = getPointerKeyForLocal(node,
-        // instruction.getResult());
-        return;
-      } else {
-        result = heapModel.getFilteredPointerKeyForLocal(node, instruction.getResult(), new FilteredPointerKey.SingleClassFilter(
-            cls));
+     Set<IClass> types = HashSetFactory.make();
+      
+      for(TypeReference t : instruction.getDeclaredResultTypes()) {
+        IClass cls = cha.lookupClass(t);
+        if (cls == null) {
+          return;
+        } else {
+          types.add(cls);
+        }
       }
+      
+
+      PointerKey result = heapModel.getFilteredPointerKeyForLocal(node, 
+          instruction.getResult(), 
+          new FilteredPointerKey.MultipleClassesFilter(types.toArray(new IClass[ types.size() ])) );
+        
       PointerKey value = heapModel.getPointerKeyForLocal(node, instruction.getVal());
-      // TODO actually use the cast type
+
       addNode(result);
       addNode(value);
       addEdge(result, value, AssignLabel.noFilter());

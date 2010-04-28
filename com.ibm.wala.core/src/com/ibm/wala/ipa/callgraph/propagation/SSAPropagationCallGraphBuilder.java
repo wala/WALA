@@ -739,23 +739,24 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      */
     @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
-      IClass cls = getClassHierarchy().lookupClass(instruction.getDeclaredResultType());
-      PointerKey result = null;
-      if (cls == null) {
-        Warnings.add(CheckcastFailure.create(instruction.getDeclaredResultType()));
-        // we failed to find the type.
-        // conservatively it would make sense to ignore the filter and be
-        // conservative, assuming
-        // java.lang.Object.
-        // however, this breaks the invariants downstream that assume every
-        // variable is
-        // strongly typed ... we can't have bad types flowing around.
-        // since things are broken anyway, just give up.
-        // result = getPointerKeyForLocal(node, instruction.getResult());
-        return;
-      } else {
-        result = getFilteredPointerKeyForLocal(instruction.getResult(), new FilteredPointerKey.SingleClassFilter(cls));
+ 
+      boolean isRoot = false;
+    Set<IClass> types = HashSetFactory.make();
+      
+      for(TypeReference t : instruction.getDeclaredResultTypes()) {
+        IClass cls = getClassHierarchy().lookupClass(t);
+        if (cls == null) {
+          Warnings.add(CheckcastFailure.create(t));
+         return;
+        } else {
+          if (isRootType(cls)) {
+            isRoot = true;
+          }
+          types.add(cls);
+        }
       }
+      
+      PointerKey result = getFilteredPointerKeyForLocal(instruction.getResult(), new FilteredPointerKey.MultipleClassesFilter(types.toArray(new IClass[ types.size() ])));
       PointerKey value = getPointerKeyForLocal(instruction.getVal());
 
       if (hasNoInterestingUses(instruction.getDef())) {
@@ -764,23 +765,27 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         if (contentsAreInvariant(symbolTable, du, instruction.getVal())) {
           system.recordImplicitPointsToSet(value);
           InstanceKey[] ik = getInvariantContents(instruction.getVal());
-          if (cls.isInterface()) {
-            for (int i = 0; i < ik.length; i++) {
-              system.findOrCreateIndexForInstanceKey(ik[i]);
-              if (getClassHierarchy().implementsInterface(ik[i].getConcreteType(), cls)) {
-                system.newConstraint(result, ik[i]);
+          for(TypeReference t : instruction.getDeclaredResultTypes()) {
+            IClass cls = getClassHierarchy().lookupClass(t);
+
+            if (cls.isInterface()) {
+              for (int i = 0; i < ik.length; i++) {
+                system.findOrCreateIndexForInstanceKey(ik[i]);
+                if (getClassHierarchy().implementsInterface(ik[i].getConcreteType(), cls)) {
+                  system.newConstraint(result, ik[i]);
+                }
               }
-            }
-          } else {
-            for (int i = 0; i < ik.length; i++) {
-              system.findOrCreateIndexForInstanceKey(ik[i]);
-              if (getClassHierarchy().isSubclassOf(ik[i].getConcreteType(), cls)) {
-                system.newConstraint(result, ik[i]);
+            } else {
+              for (int i = 0; i < ik.length; i++) {
+                system.findOrCreateIndexForInstanceKey(ik[i]);
+                if (getClassHierarchy().isSubclassOf(ik[i].getConcreteType(), cls)) {
+                  system.newConstraint(result, ik[i]);
+                }
               }
             }
           }
         } else {
-          if (isRootType(cls)) {
+          if (isRoot) {
             system.newConstraint(result, assignOperator, value);
           } else {
             system.newConstraint(result, getBuilder().filterOperator, value);

@@ -72,6 +72,75 @@ public interface FilteredPointerKey extends PointerKey {
     }
   }
 
+  public class MultipleClassesFilter implements TypeFilter {
+    private final IClass[] concreteType;
+
+    public MultipleClassesFilter(IClass[] concreteType) {
+      this.concreteType = concreteType;
+    }
+
+    @Override
+    public String toString() {
+      return "SingleClassFilter: " + concreteType;
+    }
+
+    public IClass[] getConcreteTypes() {
+      return concreteType;
+    }
+
+    @Override
+    public int hashCode() {
+      return concreteType[0].hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (! (o instanceof MultipleClassesFilter)) {
+        return false;
+      }
+     
+      MultipleClassesFilter f = (MultipleClassesFilter)o;
+      
+      if (concreteType.length != f.concreteType.length) {
+        return false;
+      }
+      
+      for(int i = 0; i < concreteType.length; i++) {
+        if (! (concreteType[i].equals(f.concreteType[i]))) {
+          return false;
+        }
+      }
+      
+      return true;
+    }
+
+    private IntSet bits(PropagationSystem system) {
+      IntSet f = null;
+      for(IClass cls : concreteType) {
+        if (f == null) {
+          f = system.getInstanceKeysForClass(cls);
+        } else {
+          f = f.union(system.getInstanceKeysForClass(cls));
+        }
+      }
+      return f;
+    }
+    
+    public boolean addFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
+      IntSet f = bits(system);
+      return (f == null) ? false : L.addAllInIntersection(R, f);
+    }
+
+    public boolean addInverseFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
+      IntSet f = bits(system);
+
+      // SJF: this is horribly inefficient. we really don't want to do
+      // diffs in here. TODO: fix it. probably keep not(f) cached and
+      // use addAllInIntersection
+      return (f == null) ? L.addAll(R) : L.addAll(IntSetUtil.diff(R.getValue(), f));
+    }
+  }
+
   public class SingleInstanceFilter implements TypeFilter {
     private final InstanceKey concreteType;
 

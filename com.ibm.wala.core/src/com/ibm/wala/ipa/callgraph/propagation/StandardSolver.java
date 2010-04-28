@@ -55,6 +55,8 @@ public class StandardSolver extends AbstractPointsToSolver {
       }
       getBuilder().addConstraintsFromNewNodes();
 
+      // getBuilder().callGraph.summarizeByPackage();
+      
       if (DEBUG) {
         System.err.println("handling reflection");
       }

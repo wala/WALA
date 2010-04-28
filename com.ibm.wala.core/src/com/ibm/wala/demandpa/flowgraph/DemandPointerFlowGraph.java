@@ -213,34 +213,23 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
      */
     @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
-      // Assertions.UNREACHABLE();
-
-      IClass cls = cha.lookupClass(instruction.getDeclaredResultType());
-      PointerKey result = null;
-      if (cls == null) {
-        // warnings.add(
-        // CheckcastFailure.create(instruction.getDeclaredResultType()));
-        // we failed to find the type.
-        // conservatively it would make sense to ignore the filter and
-        // be
-        // conservative, assuming
-        // java.lang.Object.
-        // however, this breaks the invariants downstream that assume
-        // every
-        // variable is
-        // strongly typed ... we can't have bad types flowing around.
-        // since things are broken anyway, just give up.
-        // result = getPointerKeyForLocal(node,
-        // instruction.getResult());
-        return;
-      } else {
-        FilteredPointerKey.SingleClassFilter singleClassFilter = new FilteredPointerKey.SingleClassFilter(cls);
-        result = heapModel.getPointerKeyForLocal(node, instruction.getResult());
-        PointerKey value = heapModel.getPointerKeyForLocal(node, instruction.getVal());
-        g.addNode(result);
-        g.addNode(value);
-        g.addEdge(result, value, AssignLabel.make(singleClassFilter));
+      Set<IClass> types = HashSetFactory.make();
+      
+      for(TypeReference t : instruction.getDeclaredResultTypes()) {
+        IClass cls = cha.lookupClass(t);
+        if (cls == null) {
+          return;
+        } else {
+          types.add(cls);
+        }
       }
+      
+      FilteredPointerKey.MultipleClassesFilter filter = new FilteredPointerKey.MultipleClassesFilter(types.toArray(new IClass[ types.size() ]));
+      PointerKey result = heapModel.getPointerKeyForLocal(node, instruction.getResult());
+      PointerKey value = heapModel.getPointerKeyForLocal(node, instruction.getVal());
+      g.addNode(result);
+      g.addNode(value);
+      g.addEdge(result, value, AssignLabel.make(filter));
     }
 
     /*

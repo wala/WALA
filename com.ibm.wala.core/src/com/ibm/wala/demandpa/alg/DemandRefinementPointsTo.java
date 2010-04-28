@@ -103,6 +103,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
+import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.MultipleClassesFilter;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.SingleClassFilter;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.SingleInstanceFilter;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.TypeFilter;
@@ -903,6 +904,21 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
         });
         vals = tmp;
+      } else if (typeFilter instanceof MultipleClassesFilter) {
+           final MutableIntSet tmp = intSetFactory.make();
+          vals.foreach(new IntSetAction() {
+
+            public void act(int x) {
+              InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
+              for (IClass t : ((MultipleClassesFilter)typeFilter).getConcreteTypes()) {
+                if (cha.isAssignableFrom(t, ikAndState.getInstanceKey().getConcreteType())) {
+                  tmp.add(x);
+                }
+              }
+            }
+
+          });
+          vals = tmp;
       } else if (typeFilter instanceof SingleInstanceFilter) {
         final InstanceKey theOnlyInstanceKey = ((SingleInstanceFilter) typeFilter).getInstance();
         final MutableIntSet tmp = intSetFactory.make();

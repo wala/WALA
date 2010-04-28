@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.ibm.wala.shrikeBT.BytecodeConstants;
-import com.ibm.wala.shrikeBT.CheckCastInstruction;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.Decoder;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
@@ -30,6 +29,7 @@ import com.ibm.wala.shrikeBT.IGetInstruction;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.IPutInstruction;
+import com.ibm.wala.shrikeBT.ITypeTestInstruction;
 import com.ibm.wala.shrikeBT.MonitorInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
@@ -647,10 +647,11 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
 
     @Override
-    public void visitCheckCast(CheckCastInstruction instruction) {
-      castTypes.add(ShrikeUtil.makeTypeReference(getDeclaringClass().getClassLoader().getReference(), instruction.getType()));
+    public void visitCheckCast(ITypeTestInstruction instruction) {
+      for(String t : instruction.getTypes()) {
+        castTypes.add(ShrikeUtil.makeTypeReference(getDeclaringClass().getClassLoader().getReference(), t));
+      }
     }
-
   }
 
   /**

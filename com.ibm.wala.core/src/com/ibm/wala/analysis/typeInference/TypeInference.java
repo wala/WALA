@@ -586,14 +586,20 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
     @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
-      TypeReference type = instruction.getDeclaredResultType();
-      IClass klass = cha.lookupClass(type);
-      if (klass == null) {
-        // a type that cannot be loaded.
-        // be pessimistic
-        result = new DeclaredTypeOperator(BOTTOM);
-      } else {
-        result = new DeclaredTypeOperator(new ConeType(klass));
+      TypeAbstraction typeAbs = null;
+      for (TypeReference type : instruction.getDeclaredResultTypes()) {
+        IClass klass = cha.lookupClass(type);
+        if (klass == null) {
+          // a type that cannot be loaded.
+          // be pessimistic
+          typeAbs = BOTTOM;
+        } else {
+          if (typeAbs == null) {
+            typeAbs = new ConeType(klass);
+          } else {
+            typeAbs = typeAbs.meet(new ConeType(klass));           
+          }
+        }
       }
     }
 

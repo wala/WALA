@@ -278,7 +278,9 @@ public class CodeScanner {
       if (statements[i] != null) {
         if (statements[i] instanceof SSACheckCastInstruction) {
           SSACheckCastInstruction c = (SSACheckCastInstruction) statements[i];
-          result.add(c.getDeclaredResultType());
+          for(TypeReference t : c.getDeclaredResultTypes()) {
+            result.add(t);
+          }
         }
       }
     }

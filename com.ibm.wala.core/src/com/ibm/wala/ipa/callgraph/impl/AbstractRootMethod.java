@@ -330,10 +330,10 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     return result;
   }
 
-  public int addCheckcast(TypeReference type, int rv) {
+  public int addCheckcast(TypeReference[] types, int rv) {
     int lv = nextLocal++;
 
-    statements.add(insts.CheckCastInstruction(lv, rv, type));
+    statements.add(insts.CheckCastInstruction(lv, rv, types));
     return lv;
   }
 

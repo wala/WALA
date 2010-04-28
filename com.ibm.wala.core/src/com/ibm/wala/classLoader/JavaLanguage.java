@@ -16,6 +16,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
+import javax.naming.OperationNotSupportedException;
+
 import com.ibm.wala.analysis.typeInference.JavaPrimitiveType;
 import com.ibm.wala.analysis.typeInference.PrimitiveType;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -62,6 +64,7 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.shrike.ShrikeUtil;
 import com.ibm.wala.util.shrike.Exceptions.MethodResolutionFailure;
 import com.ibm.wala.util.strings.Atom;
@@ -128,13 +131,26 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
-    public SSACheckCastInstruction CheckCastInstruction(int result, int val, TypeReference type) {
-      return new SSACheckCastInstruction(result, val, type) {
+    public SSACheckCastInstruction CheckCastInstruction(int result, int val, int[] typeValues) {
+      throw new UnsupportedOperationException();
+    }
+       
+    public SSACheckCastInstruction CheckCastInstruction(int result, int val, TypeReference[] types) {
+       assert types.length == 1;
+      return new SSACheckCastInstruction(result, val, types) {
         @Override
         public Collection<TypeReference> getExceptionTypes() {
           return getClassCastException();
         }
       };
+    }
+     
+    public SSACheckCastInstruction CheckCastInstruction(int result, int val, int typeValue) {
+      return CheckCastInstruction(result, val, new int[]{ typeValue });
+    }
+
+    public SSACheckCastInstruction CheckCastInstruction(int result, int val, TypeReference type) {
+      return CheckCastInstruction(result, val, new TypeReference[]{ type });
     }
 
     public SSAComparisonInstruction ComparisonInstruction(IComparisonInstruction.Operator operator, int result, int val1, int val2) {
