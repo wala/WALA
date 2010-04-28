@@ -40,6 +40,12 @@ public interface SSAInstructionFactory {
   SSABinaryOpInstruction BinaryOpInstruction(IBinaryOpInstruction.IOperator operator, boolean overflow, boolean unsigned,
       int result, int val1, int val2, boolean mayBeInteger);
 
+  SSACheckCastInstruction CheckCastInstruction(int result, int val, int[] typeValues);
+
+  SSACheckCastInstruction CheckCastInstruction(int result, int val, int typeValue);
+
+  SSACheckCastInstruction CheckCastInstruction(int result, int val, TypeReference[] types);
+
   SSACheckCastInstruction CheckCastInstruction(int result, int val, TypeReference type);
 
   SSAComparisonInstruction ComparisonInstruction(IComparisonInstruction.Operator operator, int result, int val1, int val2);

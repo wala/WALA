@@ -13,7 +13,7 @@ package com.ibm.wala.shrikeBT;
 /**
  * This class represents instanceof instructions.
  */
-public final class InstanceofInstruction extends Instruction {
+public final class InstanceofInstruction extends Instruction implements IInstanceofInstruction {
   final private String type;
 
   protected InstanceofInstruction(String type) {
@@ -76,6 +76,10 @@ public final class InstanceofInstruction extends Instruction {
   }
 
   public boolean isPEI() {
+    return false;
+  }
+
+  public boolean firstClassType() {
     return false;
   }
 }

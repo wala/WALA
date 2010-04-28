@@ -15,6 +15,11 @@ import com.ibm.wala.types.TypeReference;
 /**
  * A checkcast (dynamic type test) instruction. This instruction produces a new value number (like an assignment) if the check
  * succeeds.
+ * 
+ * Note that this instruction generalizes the meaning of checkcast in Java since it supports
+ * multiple types for which to check.  The meaning is that the case succeeds if the object
+ * is of any of the desired types.
+ *  
  */
 public abstract class SSACheckCastInstruction extends SSAInstruction {
 
@@ -29,20 +34,20 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
   private final int val;
 
   /**
-   * The type which this instruction checks; the assignment succeeds if the val is a subtype of this type
+   * The types for which this instruction checks; the assignment succeeds if the val is a subtype of one of these types
    */
-  private final TypeReference declaredResultType;
+  private final TypeReference[] declaredResultTypes;
 
   /**
    * @param result A new value number def'fed by this instruction when the type check succeeds.
    * @param val The value being checked by this instruction
    * @param type The type which this instruction checks
    */
-  protected SSACheckCastInstruction(int result, int val, TypeReference type) {
+  protected SSACheckCastInstruction(int result, int val, TypeReference[] types) {
     super();
     this.result = result;
     this.val = val;
-    this.declaredResultType = type;
+    this.declaredResultTypes = types;
   }
 
   @Override
@@ -53,13 +58,16 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
     if (uses != null && uses.length == 0) {
       throw new IllegalArgumentException("(uses != null) and (uses.length == 0)");
     }
-    return insts.CheckCastInstruction(defs == null ? result : defs[0], uses == null ? val : uses[0], declaredResultType);
+    return insts.CheckCastInstruction(defs == null ? result : defs[0], uses == null ? val : uses[0], declaredResultTypes);
   }
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return getValueString(symbolTable, result) + " = checkcast " + declaredResultType.getName() + " "
-        + getValueString(symbolTable, val);
+    String v = getValueString(symbolTable, result) + " = checkcast";
+    for (TypeReference t : declaredResultTypes) {
+        v = v + " " + t;
+    }
+    return v + getValueString(symbolTable, val);
   }
 
   /*
@@ -122,8 +130,18 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
     return val;
   }
 
+  /**
+   * @deprecated the system now supports multiple types, so this
+   * accessor will not work for all languages.
+   */
+  @Deprecated
   public TypeReference getDeclaredResultType() {
-    return declaredResultType;
+    assert declaredResultTypes.length == 1;
+    return declaredResultTypes[0];
+  }
+
+  public TypeReference[] getDeclaredResultTypes() {
+    return declaredResultTypes;
   }
 
   public int getResult() {
@@ -157,7 +175,11 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
 
   @Override
   public String toString() {
-    return super.toString() + " " + declaredResultType;
+    String s = super.toString();
+    for (TypeReference t : declaredResultTypes) {
+      s = s + " " + t;
+    }
+    return s;
   }
 
 }

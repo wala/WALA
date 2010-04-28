@@ -93,10 +93,10 @@ public interface IInstruction {
     public void visitMonitor(MonitorInstruction instruction) {
     }
 
-    public void visitCheckCast(CheckCastInstruction instruction) {
+    public void visitCheckCast(ITypeTestInstruction instruction) {
     }
 
-    public void visitInstanceof(InstanceofInstruction instruction) {
+    public void visitInstanceof(IInstanceofInstruction instruction) {
     }
 
     public void visitLoadIndirect(ILoadIndirectInstruction instruction) { 

@@ -21,7 +21,6 @@ import com.ibm.wala.classLoader.IBytecodeMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.shrikeBT.ArrayLengthInstruction;
-import com.ibm.wala.shrikeBT.CheckCastInstruction;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.GotoInstruction;
 import com.ibm.wala.shrikeBT.IArrayLoadInstruction;
@@ -31,6 +30,7 @@ import com.ibm.wala.shrikeBT.IComparisonInstruction;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IConversionInstruction;
 import com.ibm.wala.shrikeBT.IGetInstruction;
+import com.ibm.wala.shrikeBT.IInstanceofInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.ILoadIndirectInstruction;
 import com.ibm.wala.shrikeBT.ILoadInstruction;
@@ -38,9 +38,9 @@ import com.ibm.wala.shrikeBT.IPutInstruction;
 import com.ibm.wala.shrikeBT.IShiftInstruction;
 import com.ibm.wala.shrikeBT.IStoreIndirectInstruction;
 import com.ibm.wala.shrikeBT.IStoreInstruction;
+import com.ibm.wala.shrikeBT.ITypeTestInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.IndirectionData;
-import com.ibm.wala.shrikeBT.InstanceofInstruction;
 import com.ibm.wala.shrikeBT.MonitorInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
 import com.ibm.wala.shrikeBT.ReturnInstruction;
@@ -438,16 +438,21 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitCheckCast(CheckCastInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitCheckCast(ITypeTestInstruction)
        */
       @Override
-      public void visitCheckCast(com.ibm.wala.shrikeBT.CheckCastInstruction instruction) {
-
+      public void visitCheckCast(ITypeTestInstruction instruction) {
         int val = workingState.pop();
         int result = reuseOrCreateDef();
         workingState.push(result);
-        TypeReference t = ShrikeUtil.makeTypeReference(loader, instruction.getType());
-        emitInstruction(insts.CheckCastInstruction(result, val, t));
+        if (! instruction.firstClassTypes()) {
+          String[] typeNames = instruction.getTypes();
+          TypeReference[] t = new TypeReference[ typeNames.length ];
+          for(int i = 0; i < typeNames.length; i++) {
+            t[i] = ShrikeUtil.makeTypeReference(loader, typeNames[i]);
+          }
+          emitInstruction(insts.CheckCastInstruction(result, val, t));
+        }
       }
 
       /**
@@ -555,10 +560,10 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitInstanceof(InstanceofInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitInstanceof(IInstanceofInstruction)
        */
       @Override
-      public void visitInstanceof(com.ibm.wala.shrikeBT.InstanceofInstruction instruction) {
+      public void visitInstanceof(IInstanceofInstruction instruction) {
 
         int ref = workingState.pop();
         int result = reuseOrCreateDef();

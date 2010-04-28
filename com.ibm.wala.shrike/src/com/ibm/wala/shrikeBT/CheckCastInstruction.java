@@ -13,7 +13,7 @@ package com.ibm.wala.shrikeBT;
 /**
  * This class represents checkcast instructions.
  */
-final public class CheckCastInstruction extends Instruction {
+final public class CheckCastInstruction extends Instruction implements ITypeTestInstruction {
   final private String type;
 
   protected CheckCastInstruction(String type) {
@@ -51,8 +51,8 @@ final public class CheckCastInstruction extends Instruction {
   /**
    * @return the type to which the operand is cast
    */
-  public String getType() {
-    return type;
+  public String[] getTypes() {
+    return new String[]{ type };
   }
 
   @Override
@@ -80,5 +80,9 @@ final public class CheckCastInstruction extends Instruction {
 
   public boolean isPEI() {
     return true;
+  }
+
+  public boolean firstClassTypes() {
+    return false;
   }
 }

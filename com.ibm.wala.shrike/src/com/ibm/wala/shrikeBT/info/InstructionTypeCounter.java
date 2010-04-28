@@ -11,7 +11,6 @@
 package com.ibm.wala.shrikeBT.info;
 
 import com.ibm.wala.shrikeBT.ArrayLengthInstruction;
-import com.ibm.wala.shrikeBT.CheckCastInstruction;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.DupInstruction;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
@@ -23,14 +22,15 @@ import com.ibm.wala.shrikeBT.IComparisonInstruction;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IConversionInstruction;
 import com.ibm.wala.shrikeBT.IGetInstruction;
+import com.ibm.wala.shrikeBT.IInstanceofInstruction;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.ILoadInstruction;
 import com.ibm.wala.shrikeBT.IPutInstruction;
 import com.ibm.wala.shrikeBT.IShiftInstruction;
 import com.ibm.wala.shrikeBT.IStoreInstruction;
+import com.ibm.wala.shrikeBT.ITypeTestInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
-import com.ibm.wala.shrikeBT.InstanceofInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.MonitorInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
@@ -145,7 +145,7 @@ public class InstructionTypeCounter implements MethodData.Results {
       }
 
       @Override
-      public void visitCheckCast(CheckCastInstruction instruction) {
+      public void visitCheckCast(ITypeTestInstruction instruction) {
         countCheckCasts++;
       }
 
@@ -180,7 +180,7 @@ public class InstructionTypeCounter implements MethodData.Results {
       }
 
       @Override
-      public void visitInstanceof(InstanceofInstruction instruction) {
+      public void visitInstanceof(IInstanceofInstruction instruction) {
         countInstanceOfs++;
       }
 

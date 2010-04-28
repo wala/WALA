@@ -971,7 +971,7 @@ public abstract class Compiler implements Constants {
           break;
         }
         case OP_checkcast:
-          writeShort(curOffset, allocateConstantPoolClassType(((CheckCastInstruction) instr).getType()));
+          writeShort(curOffset, allocateConstantPoolClassType(((CheckCastInstruction) instr).getTypes()[0]));
           curOffset += 2;
           break;
         case OP_instanceof:
