@@ -31,6 +31,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ipa.cfg.ExplodedInterproceduralCFG;
@@ -38,6 +39,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -88,7 +90,7 @@ public class DataflowTest extends WalaTestCase {
     final MethodReference ref = MethodReference.findOrCreate(ClassLoaderReference.Application, "Ldataflow/StaticDataflow", "test1",
         "()V");
     IMethod method = cha.resolveMethod(ref);
-    IR ir = cache.getIR(method);
+    IR ir = cache.getIRFactory().makeIR(method, Everywhere.EVERYWHERE, SSAOptions.defaultOptions());
     ExplodedControlFlowGraph ecfg = ExplodedControlFlowGraph.make(ir);
     IntraprocReachingDefs reachingDefs = new IntraprocReachingDefs(ecfg, cha);
     BitVectorSolver<IExplodedBasicBlock> solver = reachingDefs.analyze();
@@ -107,7 +109,7 @@ public class DataflowTest extends WalaTestCase {
     final MethodReference ref = MethodReference.findOrCreate(ClassLoaderReference.Application, "Ldataflow/StaticDataflow", "test2",
         "()V");
     IMethod method = cha.resolveMethod(ref);
-    IR ir = cache.getIR(method);
+    IR ir = cache.getIRFactory().makeIR(method, Everywhere.EVERYWHERE, SSAOptions.defaultOptions());
     ExplodedControlFlowGraph ecfg = ExplodedControlFlowGraph.make(ir);
     IntraprocReachingDefs reachingDefs = new IntraprocReachingDefs(ecfg, cha);
     BitVectorSolver<IExplodedBasicBlock> solver = reachingDefs.analyze();
