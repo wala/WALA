@@ -33,7 +33,7 @@ public class IdentityFlowFunction implements IReversibleFlowFunction {
 
   @Override
   public String toString() {
-    return "Identify Flow";
+    return "Identity Flow";
   }
 
 }
