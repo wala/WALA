@@ -1,0 +1,173 @@
+/*******************************************************************************
+ * Copyright (c) 2008 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package com.ibm.wala.examples.analysis.dataflow;
+
+import java.util.ArrayList;
+import java.util.Map;
+
+import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
+import com.ibm.wala.dataflow.graph.BitVectorFramework;
+import com.ibm.wala.dataflow.graph.BitVectorIdentity;
+import com.ibm.wala.dataflow.graph.BitVectorKillGen;
+import com.ibm.wala.dataflow.graph.BitVectorSolver;
+import com.ibm.wala.dataflow.graph.BitVectorUnion;
+import com.ibm.wala.dataflow.graph.ITransferFunctionProvider;
+import com.ibm.wala.fixedpoint.impl.UnaryOperator;
+import com.ibm.wala.fixpoint.BitVectorVariable;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.cfg.BasicBlockInContext;
+import com.ibm.wala.ipa.cfg.ExplodedInterproceduralCFG;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAPutInstruction;
+import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
+import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.ObjectArrayMapping;
+import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.intset.BitVector;
+import com.ibm.wala.util.intset.OrdinalSetMapping;
+
+/**
+ * Computes interprocedural reaching definitions for static fields in a context-insensitive manner.
+ */
+public class ContextInsensitiveReachingDefs {
+
+  /**
+   * the exploded control-flow graph on which to compute the analysis
+   */
+  private final ExplodedInterproceduralCFG icfg;
+
+  /**
+   * maps method and instruction index of putstatic to more compact numbering for bitvectors
+   */
+  private final OrdinalSetMapping<Pair<CGNode, Integer>> putInstrNumbering;
+
+  private final IClassHierarchy cha;
+
+  /**
+   * maps each static field to the numbers of the statements that define it
+   */
+  private final Map<IField, BitVector> staticField2DefStatements = HashMapFactory.make();
+
+  public ContextInsensitiveReachingDefs(ExplodedInterproceduralCFG icfg, IClassHierarchy cha) {
+    this.icfg = icfg;
+    this.cha = cha;
+    this.putInstrNumbering = numberPutStatics();
+  }
+
+  @SuppressWarnings("unchecked")
+  private OrdinalSetMapping<Pair<CGNode, Integer>> numberPutStatics() {
+    ArrayList<Pair<CGNode, Integer>> putInstrs = new ArrayList<Pair<CGNode, Integer>>();
+    for (CGNode node : icfg.getCallGraph()) {
+      IR ir = node.getIR();
+      if (ir == null) {
+        continue;
+      }
+      SSAInstruction[] instructions = ir.getInstructions();
+      for (int i = 0; i < instructions.length; i++) {
+        SSAInstruction instruction = instructions[i];
+        if (instruction instanceof SSAPutInstruction && ((SSAPutInstruction) instruction).isStatic()) {
+          SSAPutInstruction putInstr = (SSAPutInstruction) instruction;
+          int instrNum = putInstrs.size();
+          putInstrs.add(Pair.make(node, i));
+          IField field = cha.resolveField(putInstr.getDeclaredField());
+          assert field != null;
+          BitVector bv = staticField2DefStatements.get(field);
+          if (bv == null) {
+            bv = new BitVector();
+            staticField2DefStatements.put(field, bv);
+          }
+          bv.set(instrNum);
+        }
+      }
+    }
+    return new ObjectArrayMapping<Pair<CGNode, Integer>>(putInstrs.toArray(new Pair[putInstrs.size()]));
+  }
+
+  private class TransferFunctions implements ITransferFunctionProvider<BasicBlockInContext<IExplodedBasicBlock>, BitVectorVariable> {
+
+    public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
+      // meet is union
+      return BitVectorUnion.instance();
+    }
+
+    public UnaryOperator<BitVectorVariable> getNodeTransferFunction(BasicBlockInContext<IExplodedBasicBlock> node) {
+      IExplodedBasicBlock ebb = node.getDelegate();
+      SSAInstruction instruction = ebb.getInstruction();
+      int instructionIndex = ebb.getFirstInstructionIndex();
+      CGNode cgNode = node.getNode();
+      if (instruction instanceof SSAPutInstruction && ((SSAPutInstruction) instruction).isStatic()) {
+        // kill all defs of the same static field
+        final SSAPutInstruction putInstr = (SSAPutInstruction) instruction;
+        final IField field = cha.resolveField(putInstr.getDeclaredField());
+        assert field != null;
+        BitVector kill = staticField2DefStatements.get(field);
+        BitVector gen = new BitVector();
+        gen.set(putInstrNumbering.getMappedIndex(Pair.make(cgNode, instructionIndex)));
+        return new BitVectorKillGen(kill, gen);
+      } else {
+        // nothing defined
+        return BitVectorIdentity.instance();
+      }
+    }
+
+    public boolean hasEdgeTransferFunctions() {
+      return true;
+    }
+
+    public boolean hasNodeTransferFunctions() {
+      return true;
+    }
+
+    public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(BasicBlockInContext<IExplodedBasicBlock> src,
+        BasicBlockInContext<IExplodedBasicBlock> dst) {
+      if (isCallToReturnEdge(src,dst)) {
+        return BitVectorKillAll.instance();
+      } else {
+        return BitVectorIdentity.instance();
+      }
+    }
+
+    private boolean isCallToReturnEdge(BasicBlockInContext<IExplodedBasicBlock> src, BasicBlockInContext<IExplodedBasicBlock> dst) {
+      SSAInstruction srcInst = src.getDelegate().getInstruction();
+      return srcInst instanceof SSAAbstractInvokeInstruction && src.getNode().equals(dst.getNode());
+    }
+
+  }
+
+  public BitVectorSolver<BasicBlockInContext<IExplodedBasicBlock>> analyze() {
+    BitVectorFramework<BasicBlockInContext<IExplodedBasicBlock>, Pair<CGNode, Integer>> framework = new BitVectorFramework<BasicBlockInContext<IExplodedBasicBlock>, Pair<CGNode, Integer>>(
+        icfg, new TransferFunctions(), putInstrNumbering);
+    BitVectorSolver<BasicBlockInContext<IExplodedBasicBlock>> solver = new BitVectorSolver<BasicBlockInContext<IExplodedBasicBlock>>(
+        framework);
+    try {
+      solver.solve(null);
+    } catch (CancelException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    for (BasicBlockInContext<IExplodedBasicBlock> ebb : icfg) {
+      System.out.println(ebb);
+      System.out.println(ebb.getDelegate().getInstruction());
+      System.out.println(solver.getIn(ebb));
+      System.out.println(solver.getOut(ebb));
+    }
+    return solver;
+  }
+
+  public Pair<CGNode, Integer> getNodeAndInstrForNumber(int num) {
+    return putInstrNumbering.getMappedObject(num);
+  }
+}
