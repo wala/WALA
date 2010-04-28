@@ -47,16 +47,22 @@ public class IntraprocReachingDefs {
   private final ExplodedControlFlowGraph ecfg;
 
   /**
-   * maps instruction index of putstatic to more compact numbering for bitvectors
+   * maps the index of a putstatic IR instruction to a more compact numbering for use in bitvectors
    */
   private final OrdinalSetMapping<Integer> putInstrNumbering;
 
+  /**
+   * used to resolve references to fields in putstatic instructions
+   */
   private final IClassHierarchy cha;
 
   /**
-   * maps each static field to the numbers of the statements that define it
+   * maps each static field to the numbers of the statements (in {@link #putInstrNumbering}) that define it; used for kills in flow
+   * functions
    */
   private final Map<IField, BitVector> staticField2DefStatements = HashMapFactory.make();
+
+  private static final boolean VERBOSE = true;
 
   public IntraprocReachingDefs(ExplodedControlFlowGraph ecfg, IClassHierarchy cha) {
     this.ecfg = ecfg;
@@ -64,6 +70,9 @@ public class IntraprocReachingDefs {
     this.putInstrNumbering = numberPutStatics();
   }
 
+  /**
+   * generate a numbering of the putstatic instructions
+   */
   private OrdinalSetMapping<Integer> numberPutStatics() {
     ArrayList<Integer> putInstrs = new ArrayList<Integer>();
     IR ir = ecfg.getIR();
@@ -72,8 +81,10 @@ public class IntraprocReachingDefs {
       SSAInstruction instruction = instructions[i];
       if (instruction instanceof SSAPutInstruction && ((SSAPutInstruction) instruction).isStatic()) {
         SSAPutInstruction putInstr = (SSAPutInstruction) instruction;
+        // instrNum is the number that will be assigned to this putstatic
         int instrNum = putInstrs.size();
         putInstrs.add(i);
+        // also update the mapping of static fields to def'ing statements
         IField field = cha.resolveField(putInstr.getDeclaredField());
         assert field != null;
         BitVector bv = staticField2DefStatements.get(field);
@@ -93,8 +104,10 @@ public class IntraprocReachingDefs {
       throw new UnsupportedOperationException();
     }
 
+    /**
+     * our meet operator is set union
+     */
     public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
-      // meet is union
       return BitVectorUnion.instance();
     }
 
@@ -102,7 +115,7 @@ public class IntraprocReachingDefs {
       SSAInstruction instruction = node.getInstruction();
       int instructionIndex = node.getFirstInstructionIndex();
       if (instruction instanceof SSAPutInstruction && ((SSAPutInstruction) instruction).isStatic()) {
-        // kill all defs of the same static field
+        // kill all defs of the same static field, and gen this instruction
         final SSAPutInstruction putInstr = (SSAPutInstruction) instruction;
         final IField field = cha.resolveField(putInstr.getDeclaredField());
         assert field != null;
@@ -111,12 +124,13 @@ public class IntraprocReachingDefs {
         gen.set(putInstrNumbering.getMappedIndex(instructionIndex));
         return new BitVectorKillGen(kill, gen);
       } else {
-        // nothing defined
+        // identity function for non-putstatic instructions
         return BitVectorIdentity.instance();
       }
     }
 
     public boolean hasEdgeTransferFunctions() {
+      // we only need transfer functions on nodes
       return false;
     }
 
@@ -126,21 +140,29 @@ public class IntraprocReachingDefs {
 
   }
 
+  /**
+   * run the analysis
+   * 
+   * @return the solver used for the analysis, which contains the analysis result
+   */
   public BitVectorSolver<IExplodedBasicBlock> analyze() {
-    BitVectorFramework<IExplodedBasicBlock, Integer> framework = new BitVectorFramework<IExplodedBasicBlock, Integer>(
-        ecfg, new TransferFunctions(), putInstrNumbering);
+    // the framework describes the dataflow problem, in particular the underlying graph and the transfer functions
+    BitVectorFramework<IExplodedBasicBlock, Integer> framework = new BitVectorFramework<IExplodedBasicBlock, Integer>(ecfg,
+        new TransferFunctions(), putInstrNumbering);
     BitVectorSolver<IExplodedBasicBlock> solver = new BitVectorSolver<IExplodedBasicBlock>(framework);
     try {
       solver.solve(null);
     } catch (CancelException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      // this shouldn't happen
+      assert false;
     }
-    for (IExplodedBasicBlock ebb : ecfg) {
-      System.out.println(ebb);
-      System.out.println(ebb.getInstruction());
-      System.out.println(solver.getIn(ebb));
-      System.out.println(solver.getOut(ebb));
+    if (VERBOSE) {
+      for (IExplodedBasicBlock ebb : ecfg) {
+        System.out.println(ebb);
+        System.out.println(ebb.getInstruction());
+        System.out.println(solver.getIn(ebb));
+        System.out.println(solver.getOut(ebb));
+      }
     }
     return solver;
   }

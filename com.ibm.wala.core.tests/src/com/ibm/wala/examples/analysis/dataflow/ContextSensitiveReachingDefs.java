@@ -48,17 +48,30 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
  */
 public class ContextSensitiveReachingDefs {
 
+  /**
+   * used for resolving field references in putstatic instructions
+   */
   private final IClassHierarchy cha;
 
-  private final ISupergraph<BasicBlockInContext<IExplodedBasicBlock>, CGNode> supergraph; 
+  /**
+   * the supergraph over which tabulation is performed
+   */
+  private final ISupergraph<BasicBlockInContext<IExplodedBasicBlock>, CGNode> supergraph;
 
-  private ReachingDefsDomain domain = new ReachingDefsDomain();
+  /**
+   * the tabulation domain
+   */
+  private final ReachingDefsDomain domain = new ReachingDefsDomain();
 
   public ContextSensitiveReachingDefs(CallGraph cg, AnalysisCache cache) {
     this.cha = cg.getClassHierarchy();
+    // we use an ICFGSupergraph, which basically adapts ExplodedInterproceduralCFG to the ISupergraph interface
     this.supergraph = ICFGSupergraph.make(cg, cache);
   }
 
+  /**
+   * controls numbering of putstatic instructions for use in tabulation
+   */
   private class ReachingDefsDomain extends MutableMapping<Pair<CGNode, Integer>> implements
       TabulationDomain<Pair<CGNode, Integer>, BasicBlockInContext<IExplodedBasicBlock>> {
 
@@ -78,29 +91,45 @@ public class ContextSensitiveReachingDefs {
       this.domain = domain;
     }
 
+    /**
+     * the flow function for flow from a callee to caller where there was no flow from caller to callee; just the identity function
+     * 
+     * @see ReachingDefsProblem
+     */
     public IFlowFunction getUnbalancedReturnFlowFunction(BasicBlockInContext<IExplodedBasicBlock> src,
         BasicBlockInContext<IExplodedBasicBlock> dest) {
       return IdentityFlowFunction.identity();
     }
 
+    /**
+     * flow function from caller to callee; just the identity function
+     */
     public IUnaryFlowFunction getCallFlowFunction(BasicBlockInContext<IExplodedBasicBlock> src,
         BasicBlockInContext<IExplodedBasicBlock> dest, BasicBlockInContext<IExplodedBasicBlock> ret) {
-      // just send the fact into the callee
       return IdentityFlowFunction.identity();
     }
 
+    /**
+     * flow function from call node to return node when there are no targets for the call site; not a case we are expecting
+     */
     public IUnaryFlowFunction getCallNoneToReturnFlowFunction(BasicBlockInContext<IExplodedBasicBlock> src,
         BasicBlockInContext<IExplodedBasicBlock> dest) {
       // if we're missing callees, just give up and kill everything
       return KillEverything.singleton();
     }
 
+    /**
+     * flow function from call node to return node at a call site when callees exist. We kill everything; surviving facts should
+     * flow out of the callee
+     */
     public IUnaryFlowFunction getCallToReturnFlowFunction(BasicBlockInContext<IExplodedBasicBlock> src,
         BasicBlockInContext<IExplodedBasicBlock> dest) {
-      // kill everything; surviving facts should flow out of the callee
       return KillEverything.singleton();
     }
 
+    /**
+     * flow function for normal intraprocedural edges
+     */
     public IUnaryFlowFunction getNormalFlowFunction(final BasicBlockInContext<IExplodedBasicBlock> src,
         BasicBlockInContext<IExplodedBasicBlock> dest) {
       final IExplodedBasicBlock ebb = src.getDelegate();
@@ -111,15 +140,16 @@ public class ContextSensitiveReachingDefs {
           return new IUnaryFlowFunction() {
 
             public IntSet getTargets(int d1) {
+              // first, gen this statement
               int factNum = domain.getMappedIndex(Pair.make(src.getNode(), ebb.getFirstInstructionIndex()));
-              IField staticField = cha.resolveField(putInstr.getDeclaredField());
-              assert staticField != null;
               assert factNum != -1;
               MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
               result.add(factNum);
+              // if incoming statement is some different statement that defs the same static field, kill it; otherwise, keep it
               if (d1 != factNum) {
+                IField staticField = cha.resolveField(putInstr.getDeclaredField());
+                assert staticField != null;
                 Pair<CGNode, Integer> otherPutInstrAndNode = domain.getMappedObject(d1);
-                // if it writes the same field, kill it
                 SSAPutInstruction otherPutInstr = (SSAPutInstruction) otherPutInstrAndNode.fst.getIR().getInstructions()[otherPutInstrAndNode.snd];
                 IField otherStaticField = cha.resolveField(otherPutInstr.getDeclaredField());
                 if (!staticField.equals(otherStaticField)) {
@@ -135,9 +165,13 @@ public class ContextSensitiveReachingDefs {
           };
         }
       }
+      // identity function when src block isn't for a putstatic
       return IdentityFlowFunction.identity();
     }
 
+    /**
+     * standard flow function from callee to caller; just identity
+     */
     public IFlowFunction getReturnFlowFunction(BasicBlockInContext<IExplodedBasicBlock> call,
         BasicBlockInContext<IExplodedBasicBlock> src, BasicBlockInContext<IExplodedBasicBlock> dest) {
       return IdentityFlowFunction.identity();
@@ -145,11 +179,24 @@ public class ContextSensitiveReachingDefs {
 
   }
 
+  /**
+   * Definition of the reaching definitions tabulation problem. Note that we choose to make the problem a <em>partially</em>
+   * balanced tabulation problem, where the solver is seeded with the putstatic instructions themselves. The problem is partially
+   * balanced since a definition in a callee used as a seed for the analysis may then reach a caller, yielding a "return" without a
+   * corresponding "call." An alternative to this approach, used in the Reps-Horwitz-Sagiv POPL95 paper, would be to "lift" the
+   * domain of putstatic instructions with a 0 (bottom) element, have a 0->0 transition in all transfer functions, and then seed the
+   * analysis with the path edge (main_entry, 0) -> (main_entry, 0). We choose the partially-balanced approach to avoid pollution of
+   * the flow functions.
+   * 
+   */
   private class ReachingDefsProblem implements
       PartiallyBalancedTabulationProblem<BasicBlockInContext<IExplodedBasicBlock>, CGNode, Pair<CGNode, Integer>> {
 
     private ReachingDefsFlowFunctions flowFunctions = new ReachingDefsFlowFunctions(domain);
 
+    /**
+     * path edges corresponding to all putstatic instructions, used as seeds for the analysis
+     */
     private Collection<PathEdge<BasicBlockInContext<IExplodedBasicBlock>>> initialSeeds = collectInitialSeeds();
 
     /**
@@ -161,7 +208,7 @@ public class ContextSensitiveReachingDefs {
     }
 
     /**
-     * we use the entry block of the CGNode as the fake entry when propagating from callee to caller with unbalanced parens
+     * we use the entry block of the CGNode as the "fake" entry when propagating from callee to caller with unbalanced parens
      */
     private BasicBlockInContext<IExplodedBasicBlock> getFakeEntry(final CGNode cgNode) {
       BasicBlockInContext<IExplodedBasicBlock>[] entriesForProcedure = supergraph.getEntriesForProcedure(cgNode);
@@ -169,6 +216,9 @@ public class ContextSensitiveReachingDefs {
       return entriesForProcedure[0];
     }
 
+    /**
+     * collect the putstatic instructions in the call graph as {@link PathEdge} seeds for the analysis
+     */
     private Collection<PathEdge<BasicBlockInContext<IExplodedBasicBlock>>> collectInitialSeeds() {
       Collection<PathEdge<BasicBlockInContext<IExplodedBasicBlock>>> result = HashSetFactory.make();
       for (BasicBlockInContext<IExplodedBasicBlock> bb : supergraph) {
@@ -181,6 +231,7 @@ public class ContextSensitiveReachingDefs {
             Pair<CGNode, Integer> fact = Pair.make(cgNode, ebb.getFirstInstructionIndex());
             int factNum = domain.add(fact);
             BasicBlockInContext<IExplodedBasicBlock> fakeEntry = getFakeEntry(cgNode);
+            // note that the fact number used for the source of this path edge doesn't really matter
             result.add(PathEdge.createPathEdge(fakeEntry, factNum, bb, factNum));
 
           }
@@ -197,6 +248,9 @@ public class ContextSensitiveReachingDefs {
       return domain;
     }
 
+    /**
+     * we don't need a merge function; the default unioning of tabulation works fine
+     */
     public IMergeFunction getMergeFunction() {
       return null;
     }
@@ -211,19 +265,28 @@ public class ContextSensitiveReachingDefs {
 
   }
 
-  public TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, Pair<CGNode, Integer>> analyze() throws CancelException {
+  /**
+   * perform the tabulation analysis and return the {@link TabulationResult}
+   */
+  public TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, Pair<CGNode, Integer>> analyze() {
     PartiallyBalancedTabulationSolver<BasicBlockInContext<IExplodedBasicBlock>, CGNode, Pair<CGNode, Integer>> solver = PartiallyBalancedTabulationSolver
         .createPartiallyBalancedTabulationSolver(new ReachingDefsProblem(), null);
-    TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, Pair<CGNode, Integer>> result = solver.solve();
+    TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, Pair<CGNode, Integer>> result = null;
+    try {
+      result = solver.solve();
+    } catch (CancelException e) {
+      // this shouldn't happen 
+      assert false;
+    }
     return result;
 
   }
-  
+
   public ISupergraph<BasicBlockInContext<IExplodedBasicBlock>, CGNode> getSupergraph() {
     return supergraph;
   }
-  
-  public TabulationDomain<Pair<CGNode,Integer>, BasicBlockInContext<IExplodedBasicBlock>> getDomain() {
+
+  public TabulationDomain<Pair<CGNode, Integer>, BasicBlockInContext<IExplodedBasicBlock>> getDomain() {
     return domain;
   }
 }
