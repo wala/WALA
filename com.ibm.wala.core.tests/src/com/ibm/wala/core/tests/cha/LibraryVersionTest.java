@@ -27,7 +27,7 @@ import com.ibm.wala.util.io.FileProvider;
  * Test code that attempts to find the library version from
  * the analysis scope.
  *
- * @author JulianDolby (dolby@us.ibm.com)
+ * @author Julian Dolby (dolby@us.ibm.com)
  */
 public class LibraryVersionTest extends WalaTestCase {
   
