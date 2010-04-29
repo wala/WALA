@@ -13,9 +13,13 @@ package com.ibm.wala.ipa.callgraph.propagation;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.Context;
 
 /**
- * An {@link InstanceKey} which represents a {@link NewSiteReference} in some {@link IMethod}.
+ * An {@link InstanceKey} which represents a {@link NewSiteReference} in some {@link IMethod}. Note that this differs from
+ * {@link AllocationSiteInNode}, which represents an allocation in a {@link CGNode} that may carry some {@link Context}. This type
+ * is useful for a context-<em>insensitive</em> heap abstraction.
  */
 public class AllocationSite implements InstanceKey {
   private final NewSiteReference site;
