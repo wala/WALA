@@ -175,14 +175,6 @@ public class DataflowTest extends WalaTestCase {
           Assert.assertEquals(3, solution.size());
         }
       }
-
     }
-
-    // ExplodedInterproceduralCFG icfg = ExplodedInterproceduralCFG.make(cg);
-    // ContextInsensitiveReachingDefs reachingDefs = new ContextInsensitiveReachingDefs(icfg , cha);
-    // BitVectorSolver<BasicBlockInContext<IExplodedBasicBlock>> solver = reachingDefs.analyze();
-    // for (BasicBlockInContext<IExplodedBasicBlock> bb : icfg) {
-    // }
-
   }
 }
