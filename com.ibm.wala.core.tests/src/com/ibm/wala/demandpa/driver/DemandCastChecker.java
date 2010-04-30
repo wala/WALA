@@ -42,7 +42,6 @@ import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.demandpa.alg.ContextSensitiveStateMachine;
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
-import com.ibm.wala.demandpa.alg.ThisFilteringHeapModel;
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo.PointsToResult;
 import com.ibm.wala.demandpa.alg.refinepolicy.FieldRefinePolicy;
 import com.ibm.wala.demandpa.alg.refinepolicy.ManualFieldPolicy;
@@ -147,8 +146,7 @@ public class DemandCastChecker {
     System.err.println("done");
     System.err.println(CallGraphStats.getStats(cg));
     MemoryAccessMap fam = new SimpleMemoryAccessMap(cg, cgAndPA.snd.getHeapModel(), false);
-    DemandRefinementPointsTo fullDemandPointsTo = new DemandRefinementPointsTo(cg, new ThisFilteringHeapModel(heapModel, cha), fam,
-        cha, options, makeStateMachineFactory());
+    DemandRefinementPointsTo fullDemandPointsTo = DemandRefinementPointsTo.makeWithDefaultFlowGraph(cg, heapModel, fam, cha, options, makeStateMachineFactory());
     fullDemandPointsTo.setRefinementPolicyFactory(chooseRefinePolicyFactory(cha));
     return fullDemandPointsTo;
   }

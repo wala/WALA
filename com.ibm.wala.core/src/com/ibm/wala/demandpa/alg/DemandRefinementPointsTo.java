@@ -168,12 +168,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     return refinementPolicy;
   }
 
-  public DemandRefinementPointsTo(CallGraph cg, ThisFilteringHeapModel model, MemoryAccessMap mam, IClassHierarchy cha,
-      AnalysisOptions options, StateMachineFactory<IFlowLabel> stateMachineFactory) {
-    this(cg, model, mam, cha, options, stateMachineFactory, new DemandPointerFlowGraph(cg, model, mam, cha));
-  }
-
-  public DemandRefinementPointsTo(CallGraph cg, ThisFilteringHeapModel model, MemoryAccessMap fam, IClassHierarchy cha,
+  private DemandRefinementPointsTo(CallGraph cg, ThisFilteringHeapModel model, MemoryAccessMap fam, IClassHierarchy cha,
       AnalysisOptions options, StateMachineFactory<IFlowLabel> stateMachineFactory, IFlowGraph flowGraph) {
     super(cg, model, fam, cha, options);
     this.stateMachineFactory = stateMachineFactory;
@@ -296,6 +291,34 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           }
         }));
     return finalP2Set;
+  }
+
+  /**
+   * create a demand points-to analysis runner using a {@link DemandPointerFlowGraph} as the underlying flow graph.
+   * 
+   * @see #make(CallGraph, HeapModel, MemoryAccessMap, IClassHierarchy, AnalysisOptions, StateMachineFactory, IFlowGraph)
+   */
+  public static DemandRefinementPointsTo makeWithDefaultFlowGraph(CallGraph cg, HeapModel model, MemoryAccessMap mam,
+      IClassHierarchy cha, AnalysisOptions options, StateMachineFactory<IFlowLabel> stateMachineFactory) {
+    return make(cg, new ThisFilteringHeapModel(model, cha), mam, cha, options, stateMachineFactory, new DemandPointerFlowGraph(cg,
+        model, mam, cha));
+  }
+
+  /**
+   * create a demand points-to analysis runner
+   * 
+   * @param cg the underlying call graph for the analysis
+   * @param model the heap model to be used for the analysis
+   * @param mam indicates what code reads or writes each field
+   * @param cha
+   * @param options
+   * @param stateMachineFactory factory for state machines to track additional properties like calling context
+   * @param flowGraph the underlying labelled graph data structure indicating data flow in each method
+   */
+  public static DemandRefinementPointsTo make(CallGraph cg, HeapModel model, MemoryAccessMap mam, IClassHierarchy cha,
+      AnalysisOptions options, StateMachineFactory<IFlowLabel> stateMachineFactory, IFlowGraph flowGraph) {
+    return new DemandRefinementPointsTo(cg, new ThisFilteringHeapModel(model, cha), mam, cha, options, stateMachineFactory,
+        flowGraph);
   }
 
   private Pair<PointsToResult, Collection<InstanceKeyAndState>> outerRefinementLoop(PointerKeyAndState queried,
@@ -588,7 +611,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         } else {
           // new set size is >= lastP2Set, so don't update
           // TODO what is wrong with this assertion?!? --MS
-          //assert removeStates(curFlowsToSet).containsAll(removeStates(lastFlowsToSet));
+          // assert removeStates(curFlowsToSet).containsAll(removeStates(lastFlowsToSet));
         }
         // TODO add predicate support
         if (curFlowsToSet.isEmpty() /* || passesPred(curFlowsToSet, ikeyPred) */) {
@@ -905,20 +928,20 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         });
         vals = tmp;
       } else if (typeFilter instanceof MultipleClassesFilter) {
-           final MutableIntSet tmp = intSetFactory.make();
-          vals.foreach(new IntSetAction() {
+        final MutableIntSet tmp = intSetFactory.make();
+        vals.foreach(new IntSetAction() {
 
-            public void act(int x) {
-              InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
-              for (IClass t : ((MultipleClassesFilter)typeFilter).getConcreteTypes()) {
-                if (cha.isAssignableFrom(t, ikAndState.getInstanceKey().getConcreteType())) {
-                  tmp.add(x);
-                }
+          public void act(int x) {
+            InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
+            for (IClass t : ((MultipleClassesFilter) typeFilter).getConcreteTypes()) {
+              if (cha.isAssignableFrom(t, ikAndState.getInstanceKey().getConcreteType())) {
+                tmp.add(x);
               }
             }
+          }
 
-          });
-          vals = tmp;
+        });
+        vals = tmp;
       } else if (typeFilter instanceof SingleInstanceFilter) {
         final InstanceKey theOnlyInstanceKey = ((SingleInstanceFilter) typeFilter).getInstance();
         final MutableIntSet tmp = intSetFactory.make();

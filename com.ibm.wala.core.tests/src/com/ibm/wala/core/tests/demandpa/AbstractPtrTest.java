@@ -48,7 +48,6 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
-import com.ibm.wala.demandpa.alg.ThisFilteringHeapModel;
 import com.ibm.wala.demandpa.alg.statemachine.DummyStateMachine;
 import com.ibm.wala.demandpa.alg.statemachine.StateMachineFactory;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
@@ -283,8 +282,7 @@ public abstract class AbstractPtrTest {
     // MemoryAccessMap mam = new SimpleMemoryAccessMap(cg, cgBuilder.getPointerAnalysis().getHeapModel(), false);
     MemoryAccessMap mam = new PABasedMemoryAccessMap(cg, cgBuilder.getPointerAnalysis());
     SSAPropagationCallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, analysisCache, cha, scope);
-    DemandRefinementPointsTo fullDemandPointsTo = new DemandRefinementPointsTo(cg, new ThisFilteringHeapModel(builder, cha), mam,
-        cha, options, getStateMachineFactory());
+    DemandRefinementPointsTo fullDemandPointsTo = DemandRefinementPointsTo.makeWithDefaultFlowGraph(cg, builder, mam, cha, options, getStateMachineFactory());
 
     return fullDemandPointsTo;
   }
