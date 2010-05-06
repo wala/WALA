@@ -294,17 +294,6 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
   }
 
   /**
-   * create a demand points-to analysis runner using a {@link DemandPointerFlowGraph} as the underlying flow graph.
-   * 
-   * @see #make(CallGraph, HeapModel, MemoryAccessMap, IClassHierarchy, AnalysisOptions, StateMachineFactory, IFlowGraph)
-   */
-  public static DemandRefinementPointsTo makeWithDefaultFlowGraph(CallGraph cg, HeapModel model, MemoryAccessMap mam,
-      IClassHierarchy cha, AnalysisOptions options, StateMachineFactory<IFlowLabel> stateMachineFactory) {
-    return make(cg, new ThisFilteringHeapModel(model, cha), mam, cha, options, stateMachineFactory, new DemandPointerFlowGraph(cg,
-        model, mam, cha));
-  }
-
-  /**
    * create a demand points-to analysis runner
    * 
    * @param cg the underlying call graph for the analysis
@@ -313,12 +302,12 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    * @param cha
    * @param options
    * @param stateMachineFactory factory for state machines to track additional properties like calling context
-   * @param flowGraph the underlying labelled graph data structure indicating data flow in each method
    */
-  public static DemandRefinementPointsTo make(CallGraph cg, HeapModel model, MemoryAccessMap mam, IClassHierarchy cha,
-      AnalysisOptions options, StateMachineFactory<IFlowLabel> stateMachineFactory, IFlowGraph flowGraph) {
-    return new DemandRefinementPointsTo(cg, new ThisFilteringHeapModel(model, cha), mam, cha, options, stateMachineFactory,
-        flowGraph);
+  public static DemandRefinementPointsTo makeWithDefaultFlowGraph(CallGraph cg, HeapModel model, MemoryAccessMap mam,
+      IClassHierarchy cha, AnalysisOptions options, StateMachineFactory<IFlowLabel> stateMachineFactory) {
+    final ThisFilteringHeapModel thisFilteringHeapModel = new ThisFilteringHeapModel(model, cha);
+    return new DemandRefinementPointsTo(cg, thisFilteringHeapModel, mam, cha, options, stateMachineFactory,
+        new DemandPointerFlowGraph(cg, thisFilteringHeapModel, mam, cha));
   }
 
   private Pair<PointsToResult, Collection<InstanceKeyAndState>> outerRefinementLoop(PointerKeyAndState queried,
