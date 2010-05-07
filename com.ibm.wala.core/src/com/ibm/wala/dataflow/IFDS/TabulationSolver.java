@@ -610,6 +610,7 @@ public class TabulationSolver<T, P, F> {
     if (DEBUG_LEVEL > 0) {
       System.err.println(" process callee: " + calleeEntry);
     }
+    // reached := {d1} that reach the callee
     MutableSparseIntSet reached = MutableSparseIntSet.makeEmpty();
     final Collection<T> returnSitesForCallee = Iterator2Collection.toSet(supergraph.getReturnSites(edge.target, supergraph
         .getProcOf(calleeEntry)));
@@ -618,7 +619,6 @@ public class TabulationSolver<T, P, F> {
     // compute different flow functions for each return site.
     for (final T returnSite : returnSitesForCallee) {
       IUnaryFlowFunction f = flowFunctionMap.getCallFlowFunction(edge.target, calleeEntry, returnSite);
-      // reached := {d1} that reach the callee
       IntSet r = computeFlow(edge.d2, f);
       if (r != null) {
         reached.addAll(r);
@@ -627,7 +627,6 @@ public class TabulationSolver<T, P, F> {
     // in some problems, we also want to consider flow into a callee that can never flow out
     // via a return. in this case, the return site is null.
     IUnaryFlowFunction f = flowFunctionMap.getCallFlowFunction(edge.target, calleeEntry, null);
-    // reached := {d1} that reach the callee
     IntSet r = computeFlow(edge.d2, f);
     if (r != null) {
       reached.addAll(r);
@@ -656,18 +655,18 @@ public class TabulationSolver<T, P, F> {
             T[] exits = supergraph.getExitsForProcedure(p);
             for (int e = 0; e < exits.length; e++) {
               final T exit = exits[e];
-              // if "exit" is a valid exit from the callee to the return
-              // site being processed
               if (DEBUG_LEVEL > 0) {
                 assert supergraph.containsNode(exit);
               }
               int x_num = supergraph.getLocalBlockNumber(exit);
+              // reachedBySummary := {d2} s.t. <callee,d1> -> <exit,d2>
+              // was recorded as a summary edge
               IntSet reachedBySummary = summaries.getSummaryEdges(s_p_num, x_num, d1);
               if (reachedBySummary != null) {
                 for (final T returnSite : returnSitesForCallee) {
+                  // if "exit" is a valid exit from the callee to the return
+                  // site being processed
                   if (supergraph.hasEdge(exit, returnSite)) {
-                    // reachedBySummary := {d2} s.t. <callee,d1> -> <exit,d2>
-                    // was recorded as a summary edge
                     final IFlowFunction retf = flowFunctionMap.getReturnFlowFunction(edge.target, exit, returnSite);
                     reachedBySummary.foreach(new IntSetAction() {
                       public void act(int d2) {

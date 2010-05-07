@@ -23,8 +23,8 @@ public interface PartiallyBalancedTabulationProblem<T, P, F> extends TabulationP
   public IPartiallyBalancedFlowFunctions<T> getFunctionMap();
 
   /**
-   * If "node" is reached by a partially balanced parenthesis, what is the entry node we should use as the root of the
-   * {@link PathEdge} to node?
+   * If n is reached by a partially balanced parenthesis, what is the entry node we should use as the root of the {@link PathEdge}
+   * to n? Note that the result <em>must</em> in fact be an entry node of the procedure containing n.
    */
-  public T getFakeEntry(T node);
+  public T getFakeEntry(T n);
 }
