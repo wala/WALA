@@ -25,7 +25,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  * bad policy in the GC), leaving soft reference caches to clear themselves out
  * doesn't work. Help it out.
  * 
- * It's unfortunate that this class exits.
+ * It's unfortunate that this class exists.
  */
 public class ReferenceCleanser {
   
