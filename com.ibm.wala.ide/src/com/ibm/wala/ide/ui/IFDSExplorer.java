@@ -83,6 +83,7 @@ public class IFDSExplorer {
       irFileName = "ir.pdf";
       break;
     case PS:
+    case EPS:
       irFileName = "ir.ps";
       break;
     case SVG:

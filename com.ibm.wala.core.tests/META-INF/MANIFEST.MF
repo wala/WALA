@@ -18,6 +18,7 @@ Export-Package: com.ibm.wala.core.tests.basic,
  com.ibm.wala.core.tests.slicer,
  com.ibm.wala.core.tests.util,
  com.ibm.wala.demandpa.driver,
+ com.ibm.wala.examples.analysis.dataflow,
  com.ibm.wala.examples.drivers,
  com.ibm.wala.examples.properties
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
