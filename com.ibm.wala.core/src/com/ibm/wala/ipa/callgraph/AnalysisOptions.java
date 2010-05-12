@@ -72,7 +72,7 @@ public class AnalysisOptions {
     private final String name;
 
     /**
-     * should flows from calls to newInstance() to casts be ignored?
+     * how many times should flows from newInstance() calls to casts be analyzed?
      */
     private final int numFlowToCastIterations;
 
