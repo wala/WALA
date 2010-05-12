@@ -268,7 +268,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   }
 
   protected PropagationSystem makeSystem(AnalysisOptions options) {
-    return new PropagationSystem(callGraph, pointerKeyFactory, instanceKeyFactory, options.getSupportRefinement());
+    return new PropagationSystem(callGraph, pointerKeyFactory, instanceKeyFactory);
   }
 
   protected abstract IPointsToSolver makeSolver();

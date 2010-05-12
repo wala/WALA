@@ -117,8 +117,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
   private int periodicMaintainInterval = DEFAULT_PERIODIC_MAINTENANCE_INTERVAL;
 
-  public PropagationSystem(CallGraph cg, PointerKeyFactory pointerKeyFactory, InstanceKeyFactory instanceKeyFactory,
-      boolean refinement) {
+  public PropagationSystem(CallGraph cg, PointerKeyFactory pointerKeyFactory, InstanceKeyFactory instanceKeyFactory) {
     if (cg == null) {
       throw new IllegalArgumentException("null cg");
     }

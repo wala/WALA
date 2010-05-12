@@ -61,13 +61,6 @@ public class AnalysisOptions {
   private int maxEvalBetweenTopo = 1000000000;
 
   /**
-   * Should pointer analysis retain information to support iterative refinement?
-   * 
-   * Maybe this flag can go away with the new post-mortem pointer-flow graph?
-   */
-  private boolean supportRefinement = false;
-
-  /**
    * options for handling reflection during call graph construction
    */
   public static enum ReflectionOptions {
@@ -299,19 +292,6 @@ public class AnalysisOptions {
     topologicalGrowthFactor = d;
   }
 
-  /**
-   * @returns whether the call graph builder should support Julian's iterative refinement
-   */
-  public boolean getSupportRefinement() {
-    return supportRefinement;
-  }
-
-  /**
-   * @param supportRefinement whether the call graph builder should contruct a pointer-flow graph as it solves
-   */
-  public void setSupportRefinement(boolean supportRefinement) {
-    this.supportRefinement = supportRefinement;
-  }
 
   /**
    * @return options governing SSA construction

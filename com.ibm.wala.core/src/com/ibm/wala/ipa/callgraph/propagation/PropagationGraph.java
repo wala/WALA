@@ -540,6 +540,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     /*
      * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
      */
+    @SuppressWarnings("unused")
     public int getPredNodeCount(INodeWithNumber N) {
       PointsToSetVariable v = (PointsToSetVariable) N;
       int result = 0;

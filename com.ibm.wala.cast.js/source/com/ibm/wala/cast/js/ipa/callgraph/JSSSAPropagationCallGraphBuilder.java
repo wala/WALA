@@ -227,7 +227,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   };
 
   protected PropagationSystem makeSystem(AnalysisOptions options) {
-    return new PropagationSystem(callGraph, pointerKeyFactory, instanceKeyFactory, options.getSupportRefinement()) {
+    return new PropagationSystem(callGraph, pointerKeyFactory, instanceKeyFactory) {
       public PointerAnalysis makePointerAnalysis(PropagationCallGraphBuilder builder) {
         return new JSPointerAnalysisImpl(builder, cg, pointsToMap, instanceKeys, pointerKeyFactory, instanceKeyFactory);
       }
