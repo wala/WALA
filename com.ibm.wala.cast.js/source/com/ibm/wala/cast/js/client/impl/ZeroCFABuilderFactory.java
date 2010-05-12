@@ -31,6 +31,6 @@ public class ZeroCFABuilderFactory  {
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     options.setSelector(new StandardFunctionTargetSelector(cha, options.getMethodTargetSelector()));
 
-    return new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, null, ZeroXInstanceKeys.NONE, false);
+    return new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, ZeroXInstanceKeys.NONE, false);
   }
 }

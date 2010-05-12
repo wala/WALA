@@ -29,6 +29,6 @@ public class ZeroCFABuilderFactory  {
   public CallGraphBuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope, boolean keepPointsTo) {
     Util.addDefaultSelectors(options, cha);
     Util.addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
-    return new AstJavaZeroXCFABuilder(cha, options, cache, null, null, options.getReflectionSpec(), ZeroXInstanceKeys.NONE);
+    return new AstJavaZeroXCFABuilder(cha, options, cache, null, null, ZeroXInstanceKeys.NONE);
   }
 }

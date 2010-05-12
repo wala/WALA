@@ -24,7 +24,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
 import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
@@ -98,11 +97,11 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
       TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/NullPointerException") };
 
   protected AbstractRTABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
-      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
+      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter) {
     super(cha, options, cache, new DefaultPointerKeyFactory());
     setInstanceKeys(new ClassBasedInstanceKeys(options, cha));
     setContextSelector(makeContextSelector(appContextSelector));
-    setContextInterpreter(makeContextInterpreter(appContextInterpreter, reflect));
+    setContextInterpreter(makeContextInterpreter(appContextInterpreter));
   }
 
   protected RTAContextInterpreter getRTAContextInterpreter() {
@@ -378,12 +377,11 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     return contextSelector;
   }
 
-  protected SSAContextInterpreter makeContextInterpreter(SSAContextInterpreter appContextInterpreter,
-      ReflectionSpecification reflect) {
+  protected SSAContextInterpreter makeContextInterpreter(SSAContextInterpreter appContextInterpreter) {
 
     SSAContextInterpreter defI = new DefaultSSAInterpreter(getOptions(), getAnalysisCache());
     defI = new DelegatingSSAContextInterpreter(ReflectionContextInterpreter.createReflectionContextInterpreter(cha, getOptions(),
-        getAnalysisCache(), reflect), defI);
+        getAnalysisCache()), defI);
     SSAContextInterpreter contextInterpreter = appContextInterpreter == null ? defI : new DelegatingSSAContextInterpreter(
         appContextInterpreter, defI);
     return contextInterpreter;

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.analysis.reflection;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -24,7 +25,6 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SyntheticMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
@@ -63,10 +63,6 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
    */
   protected AnalysisCache cache;
 
-  /**
-   * User-defined reflection specification
-   */
-  protected ReflectionSpecification userSpec;
 
   protected int getLocalForType(TypeReference T) {
     Integer I = typeIndexMap.get(T);

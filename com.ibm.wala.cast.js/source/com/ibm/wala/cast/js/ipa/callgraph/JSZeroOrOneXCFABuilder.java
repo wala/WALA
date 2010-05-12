@@ -15,7 +15,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
 import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
@@ -29,11 +28,11 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
 
   public JSZeroOrOneXCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
-      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect,
-      int instancePolicy, boolean doOneCFA) {
+      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy,
+      boolean doOneCFA) {
     super(cha, options, cache);
 
-    SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha, reflect);
+    SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha);
     setContextInterpreter(contextInterpreter);
 
     options.setSelector(new JavaScriptConstructTargetSelector(cha, options.getMethodTargetSelector()));
@@ -68,7 +67,7 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
       com.ibm.wala.ipa.callgraph.impl.Util.addBypassLogic(options, scope, cl, xmlFiles[i], cha);
     }
 
-    return new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, options.getReflectionSpec(), instancePolicy, doOneCFA);
+    return new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, instancePolicy, doOneCFA);
   }
 
 }

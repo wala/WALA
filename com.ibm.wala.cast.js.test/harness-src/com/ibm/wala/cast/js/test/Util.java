@@ -103,7 +103,7 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
       AnalysisOptions options = makeOptions(scope, cha, roots);
       AnalysisCache cache = makeCache();
 
-      JSCFABuilder builder = new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, null, ZeroXInstanceKeys.ALLOCATIONS, useOneCFA);
+      JSCFABuilder builder = new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, ZeroXInstanceKeys.ALLOCATIONS, useOneCFA);
 
       return builder;
     } catch (ClassHierarchyException e) {

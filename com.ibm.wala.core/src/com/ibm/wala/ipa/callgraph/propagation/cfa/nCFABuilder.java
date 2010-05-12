@@ -15,7 +15,6 @@ import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
 import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.ClassBasedInstanceKeys;
@@ -29,7 +28,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 public class nCFABuilder extends SSAPropagationCallGraphBuilder {
 
   public nCFABuilder(int n, IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, ContextSelector appContextSelector,
-      SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
+      SSAContextInterpreter appContextInterpreter) {
 
     super(cha, options, cache, new DefaultPointerKeyFactory());
     if (options == null) {
@@ -44,7 +43,7 @@ public class nCFABuilder extends SSAPropagationCallGraphBuilder {
     setContextSelector(contextSelector);
 
     SSAContextInterpreter defI = new DefaultSSAInterpreter(options, cache);
-    defI = new DelegatingSSAContextInterpreter(ReflectionContextInterpreter.createReflectionContextInterpreter(cha, options, getAnalysisCache(), reflect), defI);
+    defI = new DelegatingSSAContextInterpreter(ReflectionContextInterpreter.createReflectionContextInterpreter(cha, options, getAnalysisCache()), defI);
     SSAContextInterpreter contextInterpreter = new DelegatingSSAContextInterpreter(appContextInterpreter, defI);
     setContextInterpreter(contextInterpreter);
   }

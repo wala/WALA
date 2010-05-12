@@ -35,7 +35,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.SummarizedMethod;
 import com.ibm.wala.ipa.summaries.SyntheticIR;
@@ -77,9 +76,8 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
   /**
    * @param options governing analysis options
    */
-  public FactoryBypassInterpreter(AnalysisOptions options, AnalysisCache cache, ReflectionSpecification userSpec) {
+  public FactoryBypassInterpreter(AnalysisOptions options, AnalysisCache cache) {
     this.options = options;
-    this.userSpec = userSpec;
     this.cache = cache;
   }
 

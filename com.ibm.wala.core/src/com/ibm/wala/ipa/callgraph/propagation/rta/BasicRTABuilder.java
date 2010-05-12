@@ -43,7 +43,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
 
   public BasicRTABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, ContextSelector contextSelector,
       SSAContextInterpreter contextInterpreter) {
-    super(cha, options, cache, contextSelector, contextInterpreter, null);
+    super(cha, options, cache, contextSelector, contextInterpreter);
   }
 
   /**

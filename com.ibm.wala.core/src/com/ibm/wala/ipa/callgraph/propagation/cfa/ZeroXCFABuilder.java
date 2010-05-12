@@ -15,7 +15,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
 import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.Util;
@@ -29,7 +28,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
 
   public ZeroXCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, ContextSelector appContextSelector,
-      SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect, int instancePolicy) {
+      SSAContextInterpreter appContextInterpreter, int instancePolicy) {
 
     super(cha, options, cache, new DefaultPointerKeyFactory());
 
@@ -39,7 +38,7 @@ public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
 
     SSAContextInterpreter c = new DefaultSSAInterpreter(options, cache);
     c = new DelegatingSSAContextInterpreter(ReflectionContextInterpreter.createReflectionContextInterpreter(cha, options,
-        getAnalysisCache(), reflect), c);
+        getAnalysisCache()), c);
     SSAContextInterpreter contextInterpreter = appContextInterpreter == null ? c : new DelegatingSSAContextInterpreter(
         appContextInterpreter, c);
     setContextInterpreter(contextInterpreter);
@@ -81,16 +80,15 @@ public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
       Util.addBypassLogic(options, scope, cl, xmlFiles[i], cha);
     }
 
-    return new ZeroXCFABuilder(cha, options, cache, null, null, options.getReflectionSpec(), instancePolicy);
+    return new ZeroXCFABuilder(cha, options, cache, null, null, instancePolicy);
   }
 
   public static ZeroXCFABuilder make(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
-      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect,
-      int instancePolicy) throws IllegalArgumentException {
+      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy) throws IllegalArgumentException {
     if (options == null) {
       throw new IllegalArgumentException("options == null");
     }
-    return new ZeroXCFABuilder(cha, options, cache, appContextSelector, appContextInterpreter, reflect, instancePolicy);
+    return new ZeroXCFABuilder(cha, options, cache, appContextSelector, appContextInterpreter, instancePolicy);
   }
 
 }

@@ -14,7 +14,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
 import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
@@ -27,11 +26,10 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 public class AstJavaZeroXCFABuilder extends AstJavaCFABuilder {
 
   public AstJavaZeroXCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
-      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect,
-      int instancePolicy) {
+      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy) {
     super(cha, options, cache);
 
-    SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha, reflect);
+    SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha);
     setContextInterpreter(contextInterpreter);
 
     ContextSelector def = new DefaultContextSelector(options);
@@ -60,7 +58,7 @@ public class AstJavaZeroXCFABuilder extends AstJavaCFABuilder {
       com.ibm.wala.ipa.callgraph.impl.Util.addBypassLogic(options, scope, cl, xmlFiles[i], cha);
     }
 
-    return new AstJavaZeroXCFABuilder(cha, options, cache, null, null, options.getReflectionSpec(), instancePolicy);
+    return new AstJavaZeroXCFABuilder(cha, options, cache, null, null, instancePolicy);
   }
 
 }

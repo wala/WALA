@@ -13,7 +13,6 @@ package com.ibm.wala.ipa.callgraph.propagation.cfa;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -28,14 +27,12 @@ public class ZeroXContainerCFABuilder extends ZeroXCFABuilder {
    * @param options call graph construction options
    * @param appContextSelector application-specific logic to choose contexts
    * @param appContextInterpreter application-specific logic to interpret a method in context
-   * @param reflect reflection specification
    * @throws IllegalArgumentException if options is null
    */
   public ZeroXContainerCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
-      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect,
-      int instancePolicy) {
+      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy) {
 
-    super(cha, options, cache, appContextSelector, appContextInterpreter, reflect, instancePolicy);
+    super(cha, options, cache, appContextSelector, appContextInterpreter, instancePolicy);
 
     ContextSelector CCS = makeContainerContextSelector(cha, (ZeroXInstanceKeys) getInstanceKeys());
     DelegatingContextSelector DCS = new DelegatingContextSelector(CCS, contextSelector);

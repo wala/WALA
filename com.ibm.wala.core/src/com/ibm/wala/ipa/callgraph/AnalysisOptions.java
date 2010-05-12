@@ -33,10 +33,6 @@ public class AnalysisOptions {
    */
   private Iterable<? extends Entrypoint> entrypoints;
 
-  /**
-   * An object which represents the user specification for reflection
-   */
-  private ReflectionSpecification reflection;
 
   /**
    * Policy that determines types allocated at new statements.
@@ -224,19 +220,6 @@ public class AnalysisOptions {
     this.maxNumberOfNodes = maxNumberOfNodes;
   }
 
-  /**
-   * @return An object which represents the user specification for reflection
-   */
-  public ReflectionSpecification getReflectionSpec() {
-    return reflection;
-  }
-
-  /**
-   * @param specification An object which represents the user specification for reflection
-   */
-  public void setReflectionSpec(ReflectionSpecification specification) {
-    reflection = specification;
-  }
 
   /**
    * @return Policy that determines methods called at call sites.

@@ -19,7 +19,6 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -35,7 +34,7 @@ import com.ibm.wala.types.FieldReference;
 public class ReflectionContextInterpreter {
 
   public static SSAContextInterpreter createReflectionContextInterpreter(IClassHierarchy cha, AnalysisOptions options,
-      AnalysisCache cache, ReflectionSpecification userSpec) {
+      AnalysisCache cache) {
     
     if (options == null) {
       throw new IllegalArgumentException("null options");
@@ -95,7 +94,7 @@ public class ReflectionContextInterpreter {
 
     if (options.getReflectionOptions().getNumFlowToCastIterations() > 0) {
       // need the factory bypass interpreter
-      result = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, cache, userSpec), result);
+      result = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, cache), result);
     }
     if (!options.getReflectionOptions().isIgnoreStringConstants()) {
       result = new DelegatingSSAContextInterpreter(new GetClassContextInterpeter(), new DelegatingSSAContextInterpreter(
