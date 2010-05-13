@@ -13,8 +13,7 @@ Require-Bundle: com.ibm.wala.shrike,
  org.eclipse.jdt.core,
  org.eclipse.ui,
  org.eclipse.ui.ide,
- org.junit4;bundle-version="4.3.1",
- com.ibm.wala.core.testdata;bundle-version="1.0.0"
+ org.junit4;bundle-version="4.3.1"
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
