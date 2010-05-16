@@ -53,7 +53,6 @@ public class TestClone {
   }
 
   private static class B extends A {
-    Object f;
   }
 
   // private static class C extends A {

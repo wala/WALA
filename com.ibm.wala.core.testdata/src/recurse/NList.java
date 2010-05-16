@@ -135,7 +135,6 @@ public class NList implements Collection {
   }
 
 
-  @SuppressWarnings("unchecked")
   public Object[] toArray(Object[] a) {
     // TODO Auto-generated method stub
     return null;
