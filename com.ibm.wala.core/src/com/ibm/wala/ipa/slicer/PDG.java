@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.cdg.ControlDependenceGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -324,8 +325,14 @@ public class PDG implements NumberedGraph<Statement> {
         for (Iterator<SSAPhiInstruction> ps = bb.iteratePhis(); ps.hasNext();) {
           SSAPhiInstruction phi = ps.next();
           Statement phiSt = ssaInstruction2Statement(phi, ir, instructionIndices);
+          int phiUseIndex = 0;
           for (Iterator<? extends ISSABasicBlock> preds = controlFlowGraph.getPredNodes(bb); preds.hasNext();) {
             ISSABasicBlock pb = preds.next();
+            int use = phi.getUse(phiUseIndex);
+            if (use == AbstractIntStackMachine.TOP) {
+              // the predecessor is part of some infeasible bytecode. we probably don't want slices to include such code, so ignore.
+              continue;
+            }
             if (controlFlowGraph.getSuccNodeCount(pb) > 1) {
               // in this case, there is more than one edge from the
               // predecessor block, hence the phi node actually
@@ -340,11 +347,12 @@ public class PDG implements NumberedGraph<Statement> {
               for (Iterator<? extends ISSABasicBlock> cdps = cdg.getPredNodes(pb); cdps.hasNext();) {
                 ISSABasicBlock cpb = cdps.next();
                 SSAInstruction cps = ir.getInstructions()[cpb.getLastInstructionIndex()];
-                assert cps != null;
+                assert cps != null : "unexpected null final instruction for CDG predecessor " + cpb + " in node " + node;
                 Statement cpst = ssaInstruction2Statement(cps, ir, instructionIndices);
                 delegate.addEdge(cpst, phiSt);
               }
             }
+            phiUseIndex++;
           }
         }
       }

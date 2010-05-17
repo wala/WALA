@@ -129,4 +129,6 @@ public interface TestConstants {
 
   public final static String SLICE_TESTMESSAGEFORMAT = "Lslice/TestMessageFormat";
 
+  public final static String SLICE_TESTINETADDR = "Lslice/TestInetAddr";
+
 }

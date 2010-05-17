@@ -39,6 +39,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.slicer.NormalStatement;
+import com.ibm.wala.ipa.slicer.SDG;
 import com.ibm.wala.ipa.slicer.Slicer;
 import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
@@ -58,6 +59,8 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.graph.GraphIntegrity;
+import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.strings.Atom;
 
@@ -137,8 +140,7 @@ public class SlicerTest {
         DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     Collection<Statement> slice = computeBackwardSlice;
     dumpSlice(slice);
-    
-    
+
     Assert.assertEquals(9, countNormals(slice));
   }
 
@@ -623,6 +625,24 @@ public class SlicerTest {
 
   }
 
+  /**
+   * test for bug reported on mailing list by Joshua Garcia, 5/16/2010
+   */
+  @Test
+  public void testTestInetAddr() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, UnsoundGraphException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.SLICE_TESTINETADDR);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraph cg = builder.makeCallGraph(options, null);
+    SDG sdg = new SDG(cg, builder.getPointerAnalysis(), DataDependenceOptions.NO_BASE_NO_HEAP, ControlDependenceOptions.FULL);
+    GraphIntegrity.check(sdg);
+  }
+
   public static int countAllocations(Collection<Statement> slice) {
     int count = 0;
     for (Statement s : slice) {
@@ -666,7 +686,6 @@ public class SlicerTest {
     int count = 0;
     for (Statement s : slice) {
       if (s.getKind().equals(Statement.Kind.NORMAL)) {
-        NormalStatement ns = (NormalStatement) s;
         count++;
       }
     }
