@@ -15,6 +15,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.ibm.wala.analysis.typeInference.ConeType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
@@ -126,6 +127,21 @@ public class TypeInferenceTest extends WalaTestCase {
     TypeAbstraction type = ti.getType(7);
     Assert.assertNotNull("null type abstraction", type);
     Assert.assertTrue("inferred wrong type", type.toString().equals("int"));
+  }
+
+  @Test public void test4() {
+    MethodReference method = scope.findMethod(AnalysisScope.APPLICATION, "LtypeInference/TI", Atom.findOrCreateUnicodeAtom("useCast"),
+        new ImmutableByteArray(UTF8Convert.toUTF8("(Ljava/lang/Object;)V")));
+    Assert.assertNotNull("method not found", method);
+    IMethod imethod = cha.resolveMethod(method);
+    Assert.assertNotNull("imethod not found", imethod);
+    IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
+    System.out.println(ir);
+
+    TypeInference ti = TypeInference.make(ir, false);
+    TypeAbstraction type = ti.getType(4);
+    Assert.assertNotNull("null type abstraction", type);
+    Assert.assertTrue("inferred wrong type " + type, type instanceof ConeType && ((ConeType)type).getTypeReference().getName().toString().equals("Ljava/lang/String"));
   }
 
 
