@@ -601,6 +601,8 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
           }
         }
       }
+      
+      result = new DeclaredTypeOperator(typeAbs);
     }
 
     @Override
