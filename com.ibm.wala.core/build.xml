@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="com.ibm.wala.core" default="build.jars" basedir=".">
 
+        <property file="antbuild.properties"/>
 	<property name="basews" value="${ws}"/>
 	<property name="baseos" value="${os}"/>
 	<property name="basearch" value="${arch}"/>
@@ -63,46 +64,13 @@
 		<delete dir="${temp.folder}/@dot.bin"/>
 		<mkdir dir="${temp.folder}/@dot.bin"/>
 		<path id="@dot.classpath">
-			<pathelement path="../com.ibm.wala.shrike/bin/"/>
-			<pathelement path="../com.ibm.wala.shrike/@dot"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.core.resources_3.3.1.R33x_v20080205.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.core.resources.compatibility_3.2.100.v20070502.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.ant.core_3.1.200.v20070522.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.core.variables_3.2.0.v20070426.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.core.runtime_3.3.100.v20070530.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.osgi_3.3.2.R33x_v20080105.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.equinox.common_3.3.0.v20070426.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.core.jobs_3.3.1.R33x_v20070709.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.100.v20070316/runtime_registry_compatibility.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.100.v20070316"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.equinox.registry_3.3.1.R33x_v20070802.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.equinox.preferences_3.2.101.R33x_v20080117.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.100.v20070316/@dot"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.core.contenttype_3.2.100.v20070319.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.core.runtime.compatibility.auth_3.2.100.v20070502.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.equinox.app_1.0.1.R33x_v20070828.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.osgi.services_3.1.200.v20070605.jar"/>
-			<pathelement path="../../../eclipse/plugins/javax.servlet_2.4.0.v200706111738.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.core.expressions_3.3.0.v20070606-0010.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.core.filesystem_1.1.0.v20070606.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.core.filesystem.linux.x86_1.1.0.v20070416.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.jface_3.3.2.M20080207-0800.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.swt_3.3.2.v3349d.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.swt.gtk.linux.x86_3.3.2.v3349.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.core.commands_3.3.0.I20070605-0010.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.jdt.core_3.3.3.v_793_R33x.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.jdt.compiler.tool_1.0.1.v_793_R33x.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.jdt.compiler.apt_1.0.1.R33x_v20071002-2100.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.text_3.3.0.v20070606-0010.jar"/>
-			<pathelement path="../../../eclipse/plugins/com.ibm.icu_3.6.1.v20070906.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.team.core_3.3.1.r33x_20080128.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.ui_3.3.1.M20071128-0800.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.ui.workbench_3.3.2.M20080207-0800.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.ui.workbench.compatibility_3.2.0.I20070319-0010/@dot"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.ui.workbench.compatibility_3.2.0.I20070319-0010/compatibility.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.help_3.3.2.v20071126_33x.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.jface.databinding_1.1.1.M20080207-0800.jar"/>
-			<pathelement path="../../../eclipse/plugins/org.eclipse.core.databinding_1.0.1.M20070822-0800.jar"/>
+			<pathelement path="${shrike.root}/bin/"/>
+			<pathelement path="${shrike.root}/@dot"/>
+			<pathelement path="${eclipse35.root}/plugins/org.eclipse.core.runtime_3.5.0.v20090525.jar"/>
+                        <pathelement path="${eclipse35.root}/plugins/org.eclipse.equinox.common_3.5.1.R35x_v20090807-1100.jar"/>
+                        <pathelement path="${eclipse35.root}/plugins/org.eclipse.core.resources_3.5.2.R35x_v20091203-1235.jar"/>
+                        <pathelement path="${eclipse35.root}/plugins/org.eclipse.osgi_3.5.2.R35x_v20100126.jar"/>
+                        <pathelement path="${eclipse35.root}/plugins/org.eclipse.core.jobs_3.4.100.v20090429-1800.jar"/>
 		</path>
 		<!-- compile the source code -->
 		<javac destdir="${temp.folder}/@dot.bin" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bundleBootClasspath}" source="${bundleJavacSource}" target="${bundleJavacTarget}"		>
