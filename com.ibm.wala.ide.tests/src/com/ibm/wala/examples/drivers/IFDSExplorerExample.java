@@ -34,26 +34,27 @@ import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.io.CommandLine;
-import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.warnings.WalaException;
 
 /**
- * An example of using {@link IFDSExplorer}. We visualize the result of running {@link ContextSensitiveReachingDefs} on a simple test example.
+ * An example of using {@link IFDSExplorer}. We visualize the result of running {@link ContextSensitiveReachingDefs} on a simple
+ * test example.
  */
 public class IFDSExplorerExample {
 
   /**
    * Usage: IFDSExplorerExample -dotExe <path_to_dot_exe> -viewerExe <path_to_viewer_exe>
+   * 
    * @param args
-   * @throws IOException 
-   * @throws CallGraphBuilderCancelException 
-   * @throws IllegalArgumentException 
-   * @throws WalaException 
+   * @throws IOException
+   * @throws CallGraphBuilderCancelException
+   * @throws IllegalArgumentException
+   * @throws WalaException
    */
-  public static void main(String[] args) throws IOException, IllegalArgumentException, CallGraphBuilderCancelException, WalaException {
+  public static void main(String[] args) throws IOException, IllegalArgumentException, CallGraphBuilderCancelException,
+      WalaException {
     Properties p = CommandLine.parse(args);
-    AnalysisScope scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
-        FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), IFDSExplorer.class.getClassLoader());
+    AnalysisScope scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, null, IFDSExplorer.class.getClassLoader());
     IClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         "Ldataflow/StaticDataflow");
