@@ -23,7 +23,7 @@ public class ShrikeIndirectionData implements SSAIndirectionData<ShrikeIndirecti
   /**
    * In Shrike, the only "source" level entities which have names relevant to indirect pointer operations are bytecode locals.
    */
-  public static class ShrikeLocalName implements Name {
+  public static class ShrikeLocalName implements com.ibm.wala.ssa.SSAIndirectionData.Name {
     private final int bytecodeLocalNumber;
 
     public ShrikeLocalName(int bytecodeLocalNumber) {
