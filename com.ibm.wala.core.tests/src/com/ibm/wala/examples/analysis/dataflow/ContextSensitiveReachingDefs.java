@@ -114,8 +114,8 @@ public class ContextSensitiveReachingDefs {
      */
     public IUnaryFlowFunction getCallNoneToReturnFlowFunction(BasicBlockInContext<IExplodedBasicBlock> src,
         BasicBlockInContext<IExplodedBasicBlock> dest) {
-      // if we're missing callees, just give up and kill everything
-      return KillEverything.singleton();
+      // if we're missing callees, just keep what information we have
+      return IdentityFlowFunction.identity();
     }
 
     /**
