@@ -60,8 +60,7 @@ public class Logs {
   }
 
   /**
-   * @param x
-   *            where x == 2^n for some integral n
+   * @param x where x == 2^n for some integral n
    */
   public static int log2(int x) throws IllegalArgumentException {
     if (!isPowerOf2(x)) {
