@@ -1677,15 +1677,30 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
    */
   private ITypeBinding findClosestEnclosingClassSubclassOf(ITypeBinding typeOfThis, ITypeBinding owningType, boolean isPrivate) {
     // GENERICS
-    if (owningType.isParameterizedType())
-      owningType = owningType.getTypeDeclaration();
-    if (typeOfThis.isParameterizedType())
-      typeOfThis = typeOfThis.getTypeDeclaration();
-    // typeOfThis.getTypeDeclaration()
+//    if (owningType.isParameterizedType())
+//      owningType = owningType.getTypeDeclaration();
+//    if (typeOfThis.isParameterizedType())
+//      typeOfThis = typeOfThis.getTypeDeclaration();
+//    // typeOfThis.getTypeDeclaration()
+    owningType = owningType.getErasure();
 
     ITypeBinding current = typeOfThis;
     while (current != null) {
-      boolean isInSubtype = current.isSubTypeCompatible(owningType);
+      current = current.getErasure();
+      // Walk the hierarchy rather than using isSubTypeCompatible to handle
+      // generics -- we need to perform erasure of super types
+      boolean isInSubtype = false;//current.isSubTypeCompatible(owningType);
+      ITypeBinding supertp = current;
+      while (supertp != null){
+        supertp = supertp.getErasure();
+        // Use isSubTypeCompatible even though we are manually walking type hierarchy --
+        // that way interfaces are handled without us having to do it manually.
+        if (supertp.isSubTypeCompatible(owningType)){
+          isInSubtype = true;
+          break;
+        }
+        supertp = supertp.getSuperclass();
+      }
 
       // how could it be in the subtype and private? this only happens the supertype is also an
       // enclosing type. in that case the variable refers to the field in the enclosing instance.

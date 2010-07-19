@@ -65,17 +65,17 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
    * Compute an analysis scope for the current selection
    */
   public static AnalysisScope computeScope(IStructuredSelection selection) throws IOException {
-    return computeScope(selection, false, true);
+    return computeScope(selection, EclipseProjectPath.AnalysisScopeType.NO_SOURCE);
   }
 
   /**
    * Compute an analysis scope for the current selection
    * 
-   * @param includeSource should files from the source folders in Eclipse projects be included
-   * @param includeClassFiles should class files built by Eclipse, in the project output folders, be include?
+   * @param scopeType should analysis use the source files in the Eclipse projects rather than the class files.
    */
-  public static AnalysisScope computeScope(final IStructuredSelection selection, final boolean includeSource,
-      final boolean includeClassFiles) throws IOException {
+  public static AnalysisScope computeScope(final IStructuredSelection selection, 
+		  final EclipseProjectPath.AnalysisScopeType scopeType) throws IOException 
+  {
     if (selection == null) {
       throw new IllegalArgumentException("null selection");
     }
@@ -91,7 +91,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
             IJavaElement e = (IJavaElement) object;
             IJavaProject jp = e.getJavaProject();
             try {
-              projectPaths.add(EclipseProjectPath.make(jp, includeSource, includeClassFiles));
+              projectPaths.add(EclipseProjectPath.make(jp, scopeType));
             } catch (CoreException e1) {
               e1.printStackTrace();
               // skip and continue

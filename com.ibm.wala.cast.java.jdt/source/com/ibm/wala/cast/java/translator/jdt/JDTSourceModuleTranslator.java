@@ -132,11 +132,11 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
     }
 
     final ASTParser parser = ASTParser.newParser(AST.JLS3);
-    parser.setResolveBindings(true);
-
+ 
     for (IProject proj : projectsFiles.keySet()) {
       parser.setProject(JavaCore.create(proj));
-      ArrayList<ICompilationUnit> files = projectsFiles.get(proj);
+      parser.setResolveBindings(true);
+     ArrayList<ICompilationUnit> files = projectsFiles.get(proj);
       parser.createASTs(files.toArray(new ICompilationUnit[files.size()]), new String[0], new ASTRequestor() {
         public void acceptAST(ICompilationUnit source, CompilationUnit ast) {
 

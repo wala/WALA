@@ -103,21 +103,29 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     }
 
     public IClass getSuperclass() {
+      boolean excludedSupertype=false;
       for (Iterator iter = superTypeNames.iterator(); iter.hasNext();) {
         TypeName name = (TypeName) iter.next();
         IClass domoType = lookupClass(name);
         if (domoType != null && !domoType.isInterface()) {
           return domoType;
         }
+        if (domoType == null && getClassHierarchy().getScope().getExclusions().contains(name.toString().substring(1))){
+          excludedSupertype = true;
+        }
       }
 
       // The following test allows the root class to reside in source; without
       // it, the assertion requires all classes represented by a JavaClass to
       // have a superclass.
-      if (!getName().equals(JavaSourceLoaderImpl.this.getLanguage().getRootType().getName())) {
+      if (!getName().equals(JavaSourceLoaderImpl.this.getLanguage().getRootType().getName()) && !excludedSupertype) {
         Assertions.UNREACHABLE("Cannot find super class for " + this + " in " + superTypeNames);
       }
-
+      
+      if (excludedSupertype){
+        System.err.println("Not tracking calls through excluded superclass of " + getName() + " extends " + superTypeNames);
+      }
+      
       return null;
     }
 
@@ -127,15 +135,11 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
         TypeName name = (TypeName) iter.next();
         IClass domoType = lookupClass(name);
         if (domoType != null && domoType.isInterface()) {
-          result.add(domoType);
+            result.add(domoType);
         }
-      }
-      // The following computation allows the root class to reside in source
-      int numSuperClasses = (getName().equals(JavaSourceLoaderImpl.this.getLanguage().getRootType().getName())) ? 0 : 1; // 0 if the root class
-
-      if (result.size() != (superTypeNames.size() - numSuperClasses)) {
-        assert result.size() == superTypeNames.size() - numSuperClasses : "found " + result + " interfaces for " + superTypeNames
-            + " for " + this;
+        if (domoType == null && !getClassHierarchy().getScope().getExclusions().contains(name.toString().substring(1))){
+          assert false : "Failed to find all non-excluded interfaces.";
+        }
       }
 
       return result;
