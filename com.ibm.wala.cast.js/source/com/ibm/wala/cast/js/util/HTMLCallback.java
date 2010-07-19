@@ -51,15 +51,7 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
       domTreeFile.write("  ");
     }
   }
-  
-  protected FileWriter getWriter() {
-    return domTreeFile;
-  }
-  
-  protected FileWriter getWriter2() {
-    return embeddedScriptFile;
-  }
-	
+  	
   public void flush() throws BadLocationException {
       
   }
@@ -68,10 +60,20 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
     getScript(data);
   }
     
+  private void writeEmbeddedScript(char[] text) throws IOException {
+    embeddedScriptFile.write(text);
+    embeddedScriptFile.write("\n");
+  }
+
+  private void writeEmbeddedScript(String text) throws IOException {
+    embeddedScriptFile.write(text);
+    embeddedScriptFile.write("\n");
+ }
+
   private void getScript(char [] data) {
     if(script) {
       try {
-	embeddedScriptFile.write(data);
+        writeEmbeddedScript(data);
       } catch (IOException e) {
 	System.out.println("Error writing to second file");
       }
@@ -85,7 +87,7 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
   public void handleEndOfLineString(String eol) {
     if (script) {
       try {
-        embeddedScriptFile.write("\n");
+        writeEmbeddedScript("\n");
       } catch (IOException e) {
 	System.out.println("Error writing to second file");
       }
@@ -95,33 +97,37 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
   protected String createElement(HTML.Tag t, MutableAttributeSet a) {
     String tag = t.toString().toUpperCase();
     if(tag.equals("SCRIPT")) {
-      Object value = a.getAttribute( HTML.Attribute.SRC );
-	
-      // script is out-of-line
-      if (value != null) {
-        try {
-          URL scriptSrc = new URL(input, value.toString());
-          InputStreamReader scriptReader =
-            new InputStreamReader(
-                scriptSrc.openConnection().getInputStream());
-  		    
-          int read;
-          char[] buffer = new char[ 1024 ];
-          while ( (read = scriptReader.read(buffer)) != -1 ) {
-            embeddedScriptFile.write(buffer, 0, read);
+      Object l = a.getAttribute(HTML.Attribute.LANGUAGE);
+      if (l == null || l.toString().toUpperCase().indexOf("VB") < 0) {
+        Object value = a.getAttribute( HTML.Attribute.SRC );
+
+        // script is out-of-line
+        if (value != null) {
+          try {
+            URL scriptSrc = new URL(input, value.toString());
+            InputStreamReader scriptReader =
+              new InputStreamReader(
+                  scriptSrc.openConnection().getInputStream());
+
+            int read;
+            char[] buffer = new char[ 1024 ];
+            while ( (read = scriptReader.read(buffer)) != -1 ) {
+              writeEmbeddedScript(buffer);
+              writeEmbeddedScript("\n");
+            }
+            scriptReader.close();
+          } catch (IOException e) {
+            System.out.println("bad input script " + value);
           }
-          scriptReader.close();
-        } catch (IOException e) {
-          System.out.println("bad input script " + value);
+
+          // script is inline
+        } else {
+          System.out.println("Entering Script");
+          script = true;
         }
-  	
-        // script is inline
-      } else {
-        System.out.println("Entering Script");
-        script = true;
       }
     }
-
+    
     String varName = null;
     Enumeration enu = a.getAttributeNames();
     while(enu.hasMoreElements()) {
@@ -225,7 +231,7 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
     if(t.toString().toUpperCase().equals("SCRIPT")) {
       System.out.println("Exiting Script");
       try {
-        embeddedScriptFile.write("\n\n");
+        writeEmbeddedScript("\n\n");
       } catch (IOException e) {
         
       }
@@ -238,14 +244,14 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
     System.out.println("Simple" + t);
     if (script) {
       try {
-        embeddedScriptFile.write("<" + t);
+        writeEmbeddedScript("<" + t);
         Enumeration names = a.getAttributeNames();
         while (names.hasMoreElements()) {
           Object name = names.nextElement();
           Object val = a.getAttribute(name);
-          embeddedScriptFile.write(" " + name + "='" + val + "'");
+          writeEmbeddedScript(" " + name + "='" + val + "'");
         }
-        embeddedScriptFile.write("></" + t + ">");
+        writeEmbeddedScript("></" + t + ">");
       } catch (IOException e) {
         
       }
