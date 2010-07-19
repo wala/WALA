@@ -41,7 +41,7 @@ public interface NodeManager<T> extends Iterable<T> {
   /**
    * remove a node from this graph
    */
-  public void removeNode(T n);
+  public void removeNode(T n) throws UnsupportedOperationException;
 
   /**
    * @return true iff the graph contains the specified node
