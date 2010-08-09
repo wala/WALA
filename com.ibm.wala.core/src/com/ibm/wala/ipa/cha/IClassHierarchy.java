@@ -120,7 +120,7 @@ public interface IClassHierarchy extends Iterable<IClass> {
   /**
    * Does c implement i?
    * 
-   * @return true iff i is an interface and c is a class that implements i,
+   * @return true iff i is an interface and c is a class that implements i, or c is an interface that extends i.
    */
   public boolean implementsInterface(IClass c, IClass i);
 
