@@ -61,4 +61,14 @@ public class ShallowAnalysisScope implements Serializable {
 
     return analysisScope;
   }
+  
+  @Override
+  public String toString() {
+    StringBuilder result = new StringBuilder();
+    for (String moduleLine : moduleLinesList) {
+      result.append(moduleLine);
+      result.append("\n");
+    }
+    return result.toString();
+  }
 }
