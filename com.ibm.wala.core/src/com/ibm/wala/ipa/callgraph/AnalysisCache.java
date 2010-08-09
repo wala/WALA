@@ -12,6 +12,7 @@ package com.ibm.wala.ipa.callgraph;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
+import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.DefaultIRFactory;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
@@ -60,5 +61,16 @@ public class AnalysisCache {
       throw new IllegalArgumentException("method is null");
     }
     return ssaCache.findOrCreateIR(method, Everywhere.EVERYWHERE, new AnalysisOptions().getSSAOptions());
+  }
+
+
+  /**
+   * Find or create a DefUse for the IR using the {@link Everywhere} context 
+   */
+  public DefUse getDefUse(IR ir) {
+    if (ir == null) {
+      throw new IllegalArgumentException("ir is null");
+    }
+    return ssaCache.findOrCreateDU(ir, Everywhere.EVERYWHERE);
   }
 }
