@@ -28,10 +28,12 @@ public class CallString implements ContextItem {
   }
 
   CallString(CallSiteReference site, IMethod method, int length, CallString base) {
-    sites = new CallSiteReference[length];
+    int sitesLength = Math.min(length, base.sites.length + 1);
+    int methodsLength = Math.min(length, base.methods.length + 1);
+    sites = new CallSiteReference[sitesLength];
     sites[0] = site;
     System.arraycopy(base.sites, 0, sites, 1, Math.min(length - 1, base.sites.length));
-    methods = new IMethod[length];
+    methods = new IMethod[methodsLength];
     methods[0] = method;
     System.arraycopy(base.methods, 0, methods, 1, Math.min(length - 1, base.methods.length));
   }
