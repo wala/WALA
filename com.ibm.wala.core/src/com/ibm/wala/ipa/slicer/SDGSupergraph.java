@@ -271,6 +271,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     switch (n.getKind()) {
     case PARAM_CALLEE:
     case HEAP_PARAM_CALLEE:
+    case HEAP_PARAM_CALLER:
     case PHI:
     case PI:
     case NORMAL_RET_CALLER:
