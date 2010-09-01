@@ -36,6 +36,9 @@ import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 
 /**
+ * Compute intraprocedural reaching defs of global variables, i.e., the defs are
+ * {@link SSAPutInstruction}s on static state.
+ * 
  * @author manu
  * 
  */
