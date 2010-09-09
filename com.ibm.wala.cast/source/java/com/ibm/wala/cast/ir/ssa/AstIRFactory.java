@@ -102,13 +102,13 @@ public class AstIRFactory implements IRFactory {
   public IR makeIR(final IMethod method, final Context context, final SSAOptions options) {
     assert method instanceof AstMethod : method.toString();
 //    Pair<IMethod,Context> key = Pair.make(method, context);
-
+  
     AbstractCFG oldCfg = ((AstMethod) method).cfg();
     SSAInstruction[] oldInstrs = (SSAInstruction[]) oldCfg.getInstructions();
     SSAInstruction[] instrs = new SSAInstruction[ oldInstrs.length ];
     System.arraycopy(oldInstrs, 0, instrs, 0, instrs.length);
     
-    IR newIR = new AstIR((AstMethod) method, instrs, ((AstMethod) method).symbolTable(), new SSACFG(method, oldCfg, instrs),
+    IR newIR = new AstIR((AstMethod) method, instrs, ((AstMethod) method).symbolTable().copy(), new SSACFG(method, oldCfg, instrs),
         options);
 
     return newIR;

@@ -478,7 +478,8 @@ public class SSAConversion extends AbstractSSAConversion {
     while (symtab.isConstant(nextSSAValue) || skip(nextSSAValue))
       ++nextSSAValue;
     symtab.ensureSymbol(nextSSAValue);
-    return nextSSAValue++;
+    int v = nextSSAValue++;
+    return v;
   }
 
   private void copyNames(int to, int from) {
