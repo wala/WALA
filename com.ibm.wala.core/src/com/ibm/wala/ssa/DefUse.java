@@ -76,11 +76,15 @@ public class DefUse {
       }
       for (int j = 0; j < getNumberOfUses(s); j++) {
         int use = getUse(s, j);
-        if (use != -1) {
-          if (uses[use] == null) {
-            uses[use] = IntSetUtil.make();
+        try {
+          if (use != -1) {
+            if (uses[use] == null) {
+              uses[use] = IntSetUtil.make();
+            }
+            uses[use].add(i);
           }
-          uses[use].add(i);
+        } catch (ArrayIndexOutOfBoundsException e) {
+          throw new InternalError("unexpected value number " + use);
         }
       }
     }
