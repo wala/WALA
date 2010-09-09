@@ -47,8 +47,8 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     }
     setContextSelector(contextSelector);
 
-    setInstanceKeys(new JavaScriptScopeMappingInstanceKeys(cha, this, new ZeroXInstanceKeys(options, cha, contextInterpreter,
-        instancePolicy)));
+    setInstanceKeys(new JavaScriptScopeMappingInstanceKeys(cha, this, new JavaScriptConstructorInstanceKeys(new ZeroXInstanceKeys(options, cha, contextInterpreter,
+        instancePolicy))));
   }
 
   /**
