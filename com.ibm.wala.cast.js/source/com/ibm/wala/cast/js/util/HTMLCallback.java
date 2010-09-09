@@ -37,6 +37,8 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
 	
   protected final Stack<String> stack;
 
+  private int scriptStart;
+  
   public HTMLCallback(URL input, FileWriter out, FileWriter out2, FileWriter entrypointFile) {
     this.input = input;
     this.domTreeFile = out;
@@ -56,46 +58,16 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
   public void flush() throws BadLocationException {
       
   }
-    
-  public void handleText(char[] data, int pos) {
-    getScript(data);
-  }
-    
+        
   private void writeEmbeddedScript(char[] text, int length) throws IOException {
     embeddedScriptFile.write(text, 0, length);
-    embeddedScriptFile.write("\n");
   }
 
   private void writeEmbeddedScript(String text) throws IOException {
     embeddedScriptFile.write(text);
-    embeddedScriptFile.write("\n");
  }
-
-  private void getScript(char [] data) {
-    if(script) {
-      try {
-        writeEmbeddedScript(data, data.length);
-      } catch (IOException e) {
-	System.out.println("Error writing to second file");
-      }
-    }    	
-  }
-    
-  public void handleComment(char[] data, int pos) {
-     getScript(data);
-  }
-    
-  public void handleEndOfLineString(String eol) {
-    if (script) {
-      try {
-        writeEmbeddedScript("\n");
-      } catch (IOException e) {
-	System.out.println("Error writing to second file");
-      }
-    }
-  }
-
-  protected String createElement(HTML.Tag t, MutableAttributeSet a) {
+        
+  protected String createElement(HTML.Tag t, MutableAttributeSet a, int pos) {
     String tag = t.toString().toUpperCase();
     if(tag.equals("SCRIPT")) {
       Object l = a.getAttribute(HTML.Attribute.LANGUAGE);
@@ -125,6 +97,7 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
         } else {
           System.out.println("Entering Script");
           script = true;
+          scriptStart = pos;
         }
       }
     }
@@ -210,7 +183,7 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
   }
   
   public void handleStartTag(HTML.Tag t, MutableAttributeSet a, int pos) {
-    String varName = createElement(t,a);
+    String varName = createElement(t,a,pos);
     stack.push(varName);
   }
  
@@ -231,8 +204,13 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
   public void handleEndTag(HTML.Tag t, int pos) {
     if(t.toString().toUpperCase().equals("SCRIPT")) {
       System.out.println("Exiting Script");
-      try {
-        writeEmbeddedScript("\n\n");
+      if (script) try {
+        int scriptEnd = pos;
+        InputStreamReader script = new InputStreamReader(input.openStream());
+        char[] buf = new char[ scriptEnd ];
+        script.read(buf);
+        String s = String.valueOf(buf, scriptStart, scriptEnd-scriptStart);
+        writeEmbeddedScript(s.substring(s.indexOf('>')+1));
       } catch (IOException e) {
         
       }
@@ -244,6 +222,7 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
   public void handleSimpleTag(HTML.Tag t, MutableAttributeSet a, int pos) {
     System.out.println("Simple" + t);
     if (script) {
+      /*
       try {
         writeEmbeddedScript("<" + t);
         Enumeration names = a.getAttributeNames();
@@ -256,8 +235,9 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
       } catch (IOException e) {
         
       }
+      */
     } else {
-      String nm = createElement(t,a);
+      String nm = createElement(t, a, pos);
       endElement(nm);
     }
   }
