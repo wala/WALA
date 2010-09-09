@@ -17,10 +17,6 @@ public class JavaScriptConstructorContextSelector implements ContextSelector {
   }
   
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {   
-    if (caller.getMethod().getDeclaringClass().getName().toString().indexOf("f/ff") != -1) {
-      System.err.println("got hete");
-    }
-    
     if (callee instanceof JavaScriptConstructor && caller.getContext() instanceof ScopeMappingContext) {
       return caller.getContext();
     } else {
