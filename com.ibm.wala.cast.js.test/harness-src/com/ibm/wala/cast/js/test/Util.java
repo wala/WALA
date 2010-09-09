@@ -21,6 +21,7 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSZeroOrOneXCFABuilder;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
+import com.ibm.wala.cast.js.util.Generator;
 import com.ibm.wala.cast.js.util.WebUtil;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -36,7 +37,7 @@ import com.ibm.wala.util.CancelException;
 
 public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
 
-  public static PropagationCallGraphBuilder makeScriptCGBuilder(String dir, String name, boolean useOneCFA) throws IOException {
+  public static JSCFABuilder makeScriptCGBuilder(String dir, String name, boolean useOneCFA) throws IOException {
     JavaScriptLoaderFactory loaders = Util.makeLoaders();
 
     URL script = Util.class.getClassLoader().getResource(dir + File.separator + name);
@@ -55,7 +56,7 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
     return makeCG(loaders, scope, useOneCFA);
   }
 
-  public static PropagationCallGraphBuilder makeScriptCGBuilder(String dir, String name) throws IOException {
+  public static JSCFABuilder makeScriptCGBuilder(String dir, String name) throws IOException {
     return makeScriptCGBuilder(dir, name, false);
   }
 
@@ -77,9 +78,12 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
     return CG;
   }
 
-  public static PropagationCallGraphBuilder makeHTMLCGBuilder(URL url) throws IOException {
+  public static JSCFABuilder makeHTMLCGBuilder(URL url) throws IOException {
+    JavaScriptLoader.addBootstrapFile(Generator.preamble);
     SourceFileModule script = WebUtil.extractScriptFromHTML(url);
-    return makeCGBuilder(new SourceFileModule[] { script }, false);
+    JSCFABuilder builder = makeCGBuilder(new SourceFileModule[] { script }, false);
+    builder.setBaseURL(url);
+    return builder;
   }
 
   public static CallGraph makeHTMLCG(URL url) throws IOException, IllegalArgumentException, CancelException {
@@ -89,13 +93,13 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
     return CG;
   }
 
-  public static PropagationCallGraphBuilder makeCGBuilder(SourceFileModule[] scripts, boolean useOneCFA) throws IOException {
+  public static JSCFABuilder makeCGBuilder(SourceFileModule[] scripts, boolean useOneCFA) throws IOException {
     JavaScriptLoaderFactory loaders = makeLoaders();
     AnalysisScope scope = makeScope(scripts, loaders, JavaScriptLoader.JS);
     return makeCG(loaders, scope, useOneCFA);
   }
 
-  protected static PropagationCallGraphBuilder makeCG(JavaScriptLoaderFactory loaders, AnalysisScope scope, boolean useOneCFA)
+  protected static JSCFABuilder makeCG(JavaScriptLoaderFactory loaders, AnalysisScope scope, boolean useOneCFA)
       throws IOException {
     try {
       IClassHierarchy cha = makeHierarchy(scope, loaders);

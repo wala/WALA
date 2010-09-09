@@ -74,7 +74,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   }
 
   private static final Object[][] assertionsForNewfn = new Object[][] { new Object[] { ROOT, new String[] { "tests/newfn.js" } },
-      new Object[] { "tests/newfn.js", new String[] { "ctor 1/_fromctor", "ctor 2/_fromctor", "ctor 3/_fromctor" } } };
+      new Object[] { "tests/newfn.js", new String[] { "suffix:ctor$1/_fromctor", "suffix:ctor$2/_fromctor", "suffix:ctor$3/_fromctor" } } };
 
   @Test public void testNewfn() throws IOException, IllegalArgumentException, CancelException {
     CallGraph CG = Util.makeScriptCG("tests", "newfn.js");
@@ -163,7 +163,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
       new Object[] { ROOT, new String[] { "tests/upward.js" } },
       new Object[] {
           "tests/upward.js",
-          new String[] { "tests/upward.js/Obj/set", "tests/upward.js/Obj/get", "tests/upward.js/tester1", "tests/upward.js/tester2" } } };
+          new String[] { "tests/upward.js/Obj/setit", "tests/upward.js/Obj/getit", "tests/upward.js/tester1", "tests/upward.js/tester2" } } };
 
   @Test public void testUpward() throws IOException, IllegalArgumentException, CancelException {
     CallGraph CG = Util.makeScriptCG("tests", "upward.js");
