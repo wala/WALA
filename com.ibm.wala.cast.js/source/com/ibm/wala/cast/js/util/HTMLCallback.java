@@ -14,6 +14,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Stack;
@@ -60,8 +61,8 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
     getScript(data);
   }
     
-  private void writeEmbeddedScript(char[] text) throws IOException {
-    embeddedScriptFile.write(text);
+  private void writeEmbeddedScript(char[] text, int length) throws IOException {
+    embeddedScriptFile.write(text, 0, length);
     embeddedScriptFile.write("\n");
   }
 
@@ -73,7 +74,7 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
   private void getScript(char [] data) {
     if(script) {
       try {
-        writeEmbeddedScript(data);
+        writeEmbeddedScript(data, data.length);
       } catch (IOException e) {
 	System.out.println("Error writing to second file");
       }
@@ -112,9 +113,9 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
             int read;
             char[] buffer = new char[ 1024 ];
             while ( (read = scriptReader.read(buffer)) != -1 ) {
-              writeEmbeddedScript(buffer);
-              writeEmbeddedScript("\n");
+              writeEmbeddedScript(buffer, read);
             }
+            embeddedScriptFile.flush();
             scriptReader.close();
           } catch (IOException e) {
             System.out.println("bad input script " + value);

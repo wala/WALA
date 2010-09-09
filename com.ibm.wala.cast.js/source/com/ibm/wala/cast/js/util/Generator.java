@@ -26,11 +26,11 @@ public class Generator {
   public static final String preamble = "preamble.js", temp1 = "temp1.js", temp2 = "temp2.js", temp3 = "temp3.js";
   
   public static interface CallbackFactory {
-    HTMLEditorKit.ParserCallback createCallback(URL input, FileWriter domTreeFile, FileWriter embeddedScriptFile, FileWriter entrypointFile);
+    HTMLCallback createCallback(URL input, FileWriter domTreeFile, FileWriter embeddedScriptFile, FileWriter entrypointFile);
   }
   
   public static class HTMLCallbackFactory implements CallbackFactory {
-    public HTMLEditorKit.ParserCallback createCallback(URL input, FileWriter domTreeFile, FileWriter embeddedScriptFile, FileWriter entrypointFile) {
+    public HTMLCallback createCallback(URL input, FileWriter domTreeFile, FileWriter embeddedScriptFile, FileWriter entrypointFile) {
       return new HTMLCallback(input, domTreeFile, embeddedScriptFile, entrypointFile);
     }
   }
@@ -91,10 +91,13 @@ public class Generator {
     FileWriter out3 = new FileWriter(temp3);
     
     ParserDelegator pd = new ParserDelegator();
-    HTMLEditorKit.ParserCallback cb = callbackFactory.createCallback(input, out1, out2, out3);
+    HTMLCallback cb = callbackFactory.createCallback(input, out1, out2, out3);
     pd.parse(fr, cb, ignoreCharset);
+    out1.flush();
     out1.close();
+    out2.flush();
     out2.close();
+    out3.flush();
     out3.close();
     
     // generatePreamble(out, cb);
