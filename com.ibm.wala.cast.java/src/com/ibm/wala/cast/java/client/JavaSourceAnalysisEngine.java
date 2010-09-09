@@ -30,6 +30,7 @@ import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.Value;
@@ -150,11 +151,7 @@ public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
     SSAOptions ssaOptions = new SSAOptions();
     ssaOptions.setDefaultValues(new SSAOptions.DefaultValues() {
       public int getDefaultValue(SymbolTable symtab, int valueNumber) {
-        Value v = symtab.getValue(valueNumber);
-        if (v == null) {
-          assert v != null : "no default for " + valueNumber;
-        }
-        return v.getDefaultValue(symtab);
+        return symtab.getDefaultValue(valueNumber);
       }
     });
 
