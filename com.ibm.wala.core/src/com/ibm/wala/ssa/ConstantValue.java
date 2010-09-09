@@ -106,11 +106,4 @@ public class ConstantValue implements Value {
     return constant == null ? 74 : 91 * constant.hashCode();
   }
 
-  public int getDefaultValue(SymbolTable st) {
-    if (st == null) {
-      throw new IllegalArgumentException("st is null");
-    }
-    return st.findOrCreateConstant( constant );
-  }
-
 }

@@ -27,9 +27,4 @@ public interface Value {
    */
   public boolean isNullConstant();
 
-  /**
-   * TODO: what is this????   It's only used by CAst....
-   */
-  public int getDefaultValue(SymbolTable symtab);
-
-}
+ }

@@ -11,8 +11,10 @@
 package com.ibm.wala.ssa;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.debug.Assertions;
 
 /**
  * A symbol table which associates information with each variable (value number) in an SSA IR.
@@ -21,7 +23,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
  * 
  * This class is used heavily during SSA construction by {@link SSABuilder}.
  */
-public class SymbolTable {
+public class SymbolTable implements Cloneable {
 
   private final static int MAX_VALUE_NUMBER = Integer.MAX_VALUE / 4;
 
@@ -33,7 +35,7 @@ public class SymbolTable {
   /**
    * Mapping from Constant -> value number
    */
-  final private HashMap<ConstantValue, Integer> constants = HashMapFactory.make(10);
+  private HashMap<ConstantValue, Integer> constants = HashMapFactory.make(10);
 
   /**
    * @param numberOfParameters in the IR .. should be ir.getNumberOfParameters()
@@ -77,7 +79,10 @@ public class SymbolTable {
       int r = getNewValueNumber();
       result = Integer.valueOf(r);
       constants.put(v, result);
+      assert r < nextFreeValueNumber;
       values[r] = v;
+    } else {
+      assert values[result.intValue()] instanceof ConstantValue;
     }
     return result.intValue();
 
@@ -85,41 +90,44 @@ public class SymbolTable {
 
   public void setConstantValue(int vn, ConstantValue val) {
     try {
+      assert vn < nextFreeValueNumber;
       values[vn] = val;
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("invalid vn: " + vn);
     }
   }
 
+  private Object[] defaultValues;
+  
   /**
-   * set the default value for a value number.
-   * 
-   * @throws IllegalStateException if that value number value is already assigned
+   * Set the default value for a value number.  The notion of a default value
+   * is for use by languages that do not require variables to be defined 
+   * before they are used.  In this situation, SSA conversion can fail
+   * since it depends on the assumption that values are always defined when
+   * used.  The default value is the constant to be used in cases when a given
+   * value is used without having been defined.  Currently, this is used only
+   * by CAst front ends for languages with this "feature".
    */
   public void setDefaultValue(int vn, final Object defaultValue) {
-    try {
-      if (values[vn] != null) {
-        throw new IllegalStateException("cannot set default value of vn " + vn);
+      assert vn < nextFreeValueNumber;
+ 
+      if (defaultValues == null) {
+        defaultValues = new Object[vn*2 + 1];
       }
+      
+      if (defaultValues.length <= vn) {
+        Object temp[] = defaultValues;
+        defaultValues = new Object[ vn*2 + 1];
+        System.arraycopy(temp, 0, defaultValues, 0, temp.length);
+      }
+      
+      defaultValues[vn] = defaultValue;
+   }
 
-      values[vn] = new Value() {
-        public boolean isStringConstant() {
-          return false;
-        }
-
-        public boolean isNullConstant() {
-          return false;
-        }
-
-        public int getDefaultValue(SymbolTable symtab) {
-          return findOrCreateConstant(defaultValue);
-        }
-      };
-    } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("invalid ivn: " + vn);
-    }
+  public int getDefaultValue(int vn) {
+    return findOrCreateConstant(defaultValues[vn]);
   }
-
+  
   public int getNullConstant() {
     return findOrCreateConstant(null);
   }
@@ -333,6 +341,7 @@ public class SymbolTable {
     }
     int result = getNewValueNumber();
     SSAPhiInstruction phi = new SSAPhiInstruction(result, rhs.clone());
+    assert result < nextFreeValueNumber;
     values[result] = new PhiValue(phi);
     return result;
   }
@@ -428,5 +437,20 @@ public class SymbolTable {
    */
   public boolean isParameter(int valueNumber) {
     return valueNumber <= getNumberOfParameters();
+  }
+  
+  public SymbolTable copy() {
+    try {
+      SymbolTable nt = (SymbolTable) clone();
+      nt.values = this.values.clone();
+      if (this.defaultValues != null) {
+        nt.defaultValues = this.defaultValues.clone();
+      }
+      nt.constants = HashMapFactory.make(this.constants);
+      return nt;
+    } catch (CloneNotSupportedException e) {
+      Assertions.UNREACHABLE();
+      return null;
+    }
   }
 }

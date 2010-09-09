@@ -56,16 +56,4 @@ class PhiValue implements Value {
     return false;
   }
 
-  public int getDefaultValue(SymbolTable st) {
-    for (int i = 0; i < phi.getNumberOfUses(); i++) {
-      Value v = st.getValue(phi.getUse(i));
-      if (v != null) {
-        return v.getDefaultValue(st);
-      }
-    }
-
-    Assertions.UNREACHABLE();
-    return -1;
-  }
-
 }
