@@ -151,11 +151,7 @@ public class EclipseProjectSourceAnalysisEngine extends EclipseProjectAnalysisEn
     SSAOptions ssaOptions = new SSAOptions();
     ssaOptions.setDefaultValues(new SSAOptions.DefaultValues() {
       public int getDefaultValue(SymbolTable symtab, int valueNumber) {
-        Value v = symtab.getValue(valueNumber);
-        if (v == null) {
-          assert v != null : "no default for " + valueNumber;
-        }
-        return v.getDefaultValue(symtab);
+        return symtab.getDefaultValue(valueNumber);
       }
     });
 
