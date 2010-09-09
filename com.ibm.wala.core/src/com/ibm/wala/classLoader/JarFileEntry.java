@@ -28,7 +28,7 @@ public class JarFileEntry implements ModuleEntry {
 
   private final JarFile jarFile;
 
-  JarFileEntry(String entryName, JarFileModule jarFile) {
+  protected JarFileEntry(String entryName, JarFileModule jarFile) {
     this.entryName = entryName;
     this.jarFileModule = jarFile;
     this.jarFile = jarFile.getJarFile();
@@ -92,6 +92,10 @@ public class JarFileEntry implements ModuleEntry {
 
   public JarFile getJarFile() {
     return jarFile;
+  }
+  
+  protected JarFileModule getJarFileModule() {
+    return jarFileModule;
   }
 
   @Override

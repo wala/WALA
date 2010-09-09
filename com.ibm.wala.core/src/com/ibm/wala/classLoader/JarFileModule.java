@@ -53,6 +53,10 @@ public class JarFileModule implements Module {
     return "JarFileModule:" + file.getName();
   }
 
+  protected ModuleEntry createEntry(ZipEntry z) {
+    return new JarFileEntry(z.getName(), this);
+  }
+  
   /*
    * @see com.ibm.wala.classLoader.Module#getEntries()
    */
@@ -60,7 +64,7 @@ public class JarFileModule implements Module {
     HashSet<ModuleEntry> result = HashSetFactory.make();
     for (Enumeration e = file.entries(); e.hasMoreElements();) {
       ZipEntry Z = (ZipEntry) e.nextElement();
-      result.add(new JarFileEntry(Z.getName(), this));
+      result.add(createEntry(Z));
     }
     return result.iterator();
   }
