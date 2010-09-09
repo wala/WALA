@@ -39,14 +39,11 @@ import org.eclipse.ui.wizards.datatransfer.ZipFileStructureProvider;
 public class EclipseTestUtil {
 
   @SuppressWarnings("unchecked")
-  public static void importZippedProject(Plugin plugin, String zipFileName, IProgressMonitor monitor) {
+  public static void importZippedProject(Plugin plugin, String projectName, String zipFileName, IProgressMonitor monitor) {
     ZipFile zipFile = getZipFile(plugin, zipFileName);
     ZipFileStructureProvider zp = new ZipFileStructureProvider(zipFile);
-    List children = zp.getChildren(zp.getRoot());
-    Object element = children.get(0);
-    String projectName = zp.getLabel(element);
     createOpenProject(projectName);
-    importZipfile(zipFile, zp, monitor);
+    importZipfile(projectName, zipFile, zp, monitor);
   }
 
   public static void createOpenProject(String projectName) {
@@ -70,8 +67,8 @@ public class EclipseTestUtil {
     }
   }
 
-  protected static void importZipfile(ZipFile sourceZip, ZipFileStructureProvider provider, IProgressMonitor monitor) {
-    IPath containerPath = getWorkspacePath();
+  protected static void importZipfile(String projectName, ZipFile sourceZip, ZipFileStructureProvider provider, IProgressMonitor monitor) {
+    IPath containerPath = getWorkspacePath().append(projectName).addTrailingSeparator();
 
     ImportOperation importOp = new ImportOperation(containerPath, provider.getRoot(), provider, new IOverwriteQuery() {
       public String queryOverwrite(String pathString) {

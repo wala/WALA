@@ -62,8 +62,12 @@ import com.ibm.wala.util.io.FileProvider;
 
 public class JDTJavaIRTests extends JavaIRTests {
 
+  public static final String PROJECT_NAME = "com.ibm.wala.cast.java.test.data";
+ 
+  public static final String PROJECT_ZIP = "test_project.zip";
+  
   public JDTJavaIRTests() {
-    super("com.ibm.wala.cast.java.test.data");
+    super(PROJECT_NAME);
   }
 
   protected void populateScope(JavaSourceAnalysisEngine engine, Collection<String> sources, List<String> libs) throws IOException {
@@ -72,13 +76,13 @@ public class JDTJavaIRTests extends JavaIRTests {
 
   @BeforeClass
   public static void beforeClass() {
-    EclipseTestUtil.importZippedProject(TestPlugin.getDefault(), "test_project.zip", new NullProgressMonitor());
+    EclipseTestUtil.importZippedProject(TestPlugin.getDefault(), PROJECT_NAME, PROJECT_ZIP, new NullProgressMonitor());
     System.err.println("finish importing project");
   }
 
   @AfterClass
   public static void afterClass() {
-    EclipseTestUtil.destroyProject("com.ibm.wala.cast.java.test.data");
+    EclipseTestUtil.destroyProject(PROJECT_NAME);
   }
 
   @Override
