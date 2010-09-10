@@ -95,7 +95,6 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
 
           // script is inline
         } else {
-          System.out.println("Entering Script");
           script = true;
           scriptStart = pos;
         }
@@ -203,7 +202,6 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
 
   public void handleEndTag(HTML.Tag t, int pos) {
     if(t.toString().toUpperCase().equals("SCRIPT")) {
-      System.out.println("Exiting Script");
       if (script) try {
         int scriptEnd = pos;
         InputStreamReader script = new InputStreamReader(input.openStream());
@@ -220,23 +218,7 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
  }
     
   public void handleSimpleTag(HTML.Tag t, MutableAttributeSet a, int pos) {
-    System.out.println("Simple" + t);
-    if (script) {
-      /*
-      try {
-        writeEmbeddedScript("<" + t);
-        Enumeration names = a.getAttributeNames();
-        while (names.hasMoreElements()) {
-          Object name = names.nextElement();
-          Object val = a.getAttribute(name);
-          writeEmbeddedScript(" " + name + "='" + val + "'");
-        }
-        writeEmbeddedScript("></" + t + ">");
-      } catch (IOException e) {
-        
-      }
-      */
-    } else {
+    if (! script) {
       String nm = createElement(t, a, pos);
       endElement(nm);
     }
