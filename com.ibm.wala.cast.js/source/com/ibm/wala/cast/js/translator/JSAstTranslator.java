@@ -137,6 +137,12 @@ public class JSAstTranslator extends AstTranslator {
     if (DEBUG)
       System.err.println(cfg);
 
+    symtab.getConstant("arguments");
+    symtab.getConstant("length");
+    for(int i = 0; i < 15; i++) {
+      symtab.getConstant(i);
+    }
+
     ((JavaScriptLoader)loader).defineCodeBodyCode("L"+fnName, 
 			      cfg, 
 			      symtab, 
@@ -211,8 +217,11 @@ public class JSAstTranslator extends AstTranslator {
     context.cfg().addInstruction(((JSInstructionFactory)insts).AssignInstruction(x, receiver));
 
     if (elt.getKind()==CAstNode.CONSTANT && elt.getValue() instanceof String) {
+      String field = (String)elt.getValue();
+      // symtab needs to have this value
+      context.currentScope().getConstantValue(field);
       context.cfg().addInstruction(
-        ((JSInstructionFactory)insts).GetInstruction(result, x, (String)elt.getValue()));
+        ((JSInstructionFactory)insts).GetInstruction(result, x, field));
     } else {
       context.cfg().addInstruction(
           ((JSInstructionFactory)insts).PropertyRead(result, x, getValue(elt) ));
@@ -236,6 +245,7 @@ public class JSAstTranslator extends AstTranslator {
   {
     doNewObject(context, null, resultVal, typeName + "Object", null);
     int rval = context.currentScope().getConstantValue(typeName);
+    context.currentScope().getConstantValue("class");
     context.cfg().addInstruction(
         ((JSInstructionFactory)insts).PutInstruction(resultVal, rval, "class"));
   } 
