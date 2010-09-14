@@ -10,6 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.loader;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
@@ -234,8 +235,14 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         public SSAPutInstruction PutInstruction(int ref, int value, String field) {
-          return PutInstruction(ref, value, FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreateUnicodeAtom(field),
-              JavaScriptTypes.Root));
+          try {
+            byte[] utf8 = field.getBytes("UTF-8");
+            return PutInstruction(ref, value, FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreate(utf8, 0, utf8.length),
+                JavaScriptTypes.Root));
+          } catch (UnsupportedEncodingException e) {
+            Assertions.UNREACHABLE();
+            return null;
+          }
         }
 
         public JavaScriptTypeOfInstruction TypeOfInstruction(int lval, int object) {

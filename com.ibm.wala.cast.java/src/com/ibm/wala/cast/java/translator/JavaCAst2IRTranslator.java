@@ -263,6 +263,9 @@ public class JavaCAst2IRTranslator extends AstTranslator {
         assert owner != null : typeName.toString() + " not found in " + loader;
       }
 
+      symtab.getConstant(0);
+      symtab.getNullConstant();
+      
       ((JavaSourceLoaderImpl)loader).defineFunction(N, owner, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo, debugInfo);
     }
 

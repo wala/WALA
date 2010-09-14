@@ -10,6 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
+import java.io.UTFDataFormatException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
@@ -370,7 +371,12 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       SymbolTable symtab = ir.getSymbolTable();
 
       int objVn = inst.getRef();
-      String fieldName = inst.getDeclaredField().getName().toString();
+      String fieldName = null;
+      try {
+        fieldName = inst.getDeclaredField().getName().toUnicodeString();
+      } catch (UTFDataFormatException e) {
+        Assertions.UNREACHABLE();
+      }
       int fieldNameVn = symtab.getConstant(fieldName);
 
       final PointerKey objKey = getPointerKeyForLocal(objVn);

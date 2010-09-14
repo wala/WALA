@@ -10,6 +10,8 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.translator;
 
+import java.io.UTFDataFormatException;
+
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
@@ -27,6 +29,7 @@ import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
@@ -139,7 +142,7 @@ public class JSAstTranslator extends AstTranslator {
 
     symtab.getConstant("arguments");
     symtab.getConstant("length");
-    for(int i = 0; i < 15; i++) {
+    for(int i = 0; i < 20; i++) {
       symtab.getConstant(i);
     }
 
@@ -232,8 +235,15 @@ public class JSAstTranslator extends AstTranslator {
     this.visit(elt, context, this);
     if (elt.getKind() == CAstNode.CONSTANT && elt.getValue() instanceof String)
     {
-      context.cfg().addInstruction(
-          ((JSInstructionFactory)insts).PutInstruction(receiver, rval, (String)elt.getValue()));
+      String field = (String)elt.getValue();
+      context.currentScope().getConstantValue(field);
+      SSAPutInstruction put = ((JSInstructionFactory)insts).PutInstruction(receiver, rval, field);
+      try {
+        assert field.equals(put.getDeclaredField().getName().toUnicodeString());
+      } catch (UTFDataFormatException e) {
+        Assertions.UNREACHABLE();
+      }
+      context.cfg().addInstruction(put);
     } else {
       context.cfg().addInstruction(
           ((JSInstructionFactory)insts).PropertyWrite(receiver, getValue(elt), rval));
