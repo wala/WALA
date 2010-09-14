@@ -72,6 +72,10 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
       return (o instanceof Key) && from == ((Key) o).from
           && ((label == null) ? ((Key) o).label == null : label.equals(((Key) o).label));
     }
+    
+    public String toString() {
+      return "<key " + label + " : " + from + ">";
+    }
   }
 
   public CAstControlFlowRecorder(CAstSourcePositionMap src) {
@@ -80,10 +84,13 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
   }
 
   public CAstNode getTarget(CAstNode from, Object label) {
+    assert CAstToNode.get(from) != null;
     Key key = new Key(label, CAstToNode.get(from));
-    if (table.containsKey(key))
-      return (CAstNode) nodeToCAst.get(table.get(key));
-    else
+    if (table.containsKey(key)) {
+      Object target = table.get(key);
+      assert nodeToCAst.containsKey(target);
+      return (CAstNode) nodeToCAst.get(target);
+    } else
       return null;
   }
 
@@ -105,8 +112,10 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
 
   public Collection<CAstNode> getMappedNodes() {
     Set<CAstNode> nodes = new LinkedHashSet<CAstNode>();
-    for (Iterator keys = table.keySet().iterator(); keys.hasNext();) {
-      nodes.add((CAstNode) nodeToCAst.get(((Key) keys.next()).from));
+    for (Iterator<Key> keys = table.keySet().iterator(); keys.hasNext();) {
+      Key key = keys.next();
+      nodes.add((CAstNode) nodeToCAst.get(key.from));
+      nodes.add((CAstNode) nodeToCAst.get(table.get(key)));
     }
 
     return nodes;
@@ -119,6 +128,9 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
    * this add call.
    */
   public void add(Object from, Object to, Object label) {
+    assert from != null;
+    assert to != null;
+    
     table.put(new Key(label, from), to);
 
     Set<Object> ls = labelMap.get(from);
@@ -134,7 +146,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
 
   /**
    * Establish a mapping between some object `node' and the ast node `ast'.
-   * Objects used a endpoints in a control flow edge must be mapped to ast nodes
+   * Objects used as endpoints in a control flow edge must be mapped to ast nodes
    * using this call.
    */
   public void map(Object node, CAstNode ast) {

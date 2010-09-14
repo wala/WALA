@@ -85,6 +85,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
 
   private CAstControlFlowMap copyFlow(Map<Pair, CAstNode> nodeMap, CAstControlFlowMap orig, CAstSourcePositionMap newSrc) {
     Set<CAstNode> mappedOutsideNodes = HashSetFactory.make(1);
+    Set<CAstNode> allNewTargetNodes = HashSetFactory.make(1);
     CAstControlFlowRecorder newMap = new CAstControlFlowRecorder(newSrc);
     Collection oldSources = orig.getMappedNodes();
 
@@ -112,6 +113,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
         while (LS.hasNext()) {
           Object label = LS.next();
           CAstNode oldTarget = orig.getTarget(oldSource, label);
+          assert oldTarget != null;
 
           if (DEBUG) {
             System.err.println(("old: " + label + " --> " + CAstPrinter.print(oldTarget)));
@@ -132,9 +134,11 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
           if (nodeMap.containsKey(targetKey)) {
             newTarget = (CAstNode) nodeMap.get(targetKey);
             newMap.add(newSource, newTarget, label);
+            allNewTargetNodes.add(newTarget);
 
           } else {
             newTarget = flowOutTo(nodeMap, oldSource, label, oldTarget, orig, newSrc);
+            allNewTargetNodes.add(newTarget);
             newMap.add(newSource, newTarget, label);
             if (newTarget != CAstControlFlowMap.EXCEPTION_TO_EXIT && !mappedOutsideNodes.contains(newTarget)) {
               mappedOutsideNodes.add(newTarget);
@@ -150,6 +154,11 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
       }
     }
 
+    allNewTargetNodes.removeAll(newMap.getMappedNodes());
+    for(CAstNode newTarget : allNewTargetNodes) {
+      newMap.map(newTarget, newTarget);
+    }
+    
     return newMap;
   }
 
@@ -269,9 +278,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
   }
 
   public CAstEntity rewrite(final CAstEntity root) {
-
-    System.err.println(("Rewriting " + root.getName()));
-
+    
     if (root.getAST() != null) {
       final Rewrite rewrite = rewrite(root.getAST(), root.getControlFlow(), root.getSourceMap(), root.getNodeTypeMap(), root
           .getAllScopedEntities());
