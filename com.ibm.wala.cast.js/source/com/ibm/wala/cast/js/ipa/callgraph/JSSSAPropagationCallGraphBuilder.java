@@ -439,7 +439,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       // pass actual arguments to formals in the normal way
       for (int i = 0; i < Math.min(paramCount, argCount); i++) {
         int fn = targetST.getConstant(i);
-        PointerKey F = (i == 0) ? getBuilder().getFilteredPointerKeyForLocal(target, targetST.getParameter(i), function)
+        PointerKey F = (i == 0) ? getBuilder().getFilteredPointerKeyForLocal(target, targetST.getParameter(i), function.getConcreteType())
             : getBuilder().getPointerKeyForLocal(target, targetST.getParameter(i));
 
         if (constParams != null && constParams[i] != null) {
