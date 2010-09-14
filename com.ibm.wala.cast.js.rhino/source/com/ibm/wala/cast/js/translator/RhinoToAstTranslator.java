@@ -287,6 +287,9 @@ public class RhinoToAstTranslator {
       initializers.add(n);
     }
 
+    public CAstNode getCatchTarget() {
+        return CAstControlFlowMap.EXCEPTION_TO_EXIT;
+    }
   }
 
   private static class ScriptContext extends FunctionContext {
