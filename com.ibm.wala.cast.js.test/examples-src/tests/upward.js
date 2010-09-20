@@ -1,9 +1,9 @@
 function Obj(x) {
   var state = x;
 
-  this.set = function set(x) { state = x; };
+  this.set = function setit(x) { state = x; };
 
-  this.get = function get() { return state; };
+  this.get = function getit() { return state; };
 
 };
 
