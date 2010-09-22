@@ -12,8 +12,9 @@ package com.ibm.wala.util.config;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 import java.util.jar.JarFile;
 
@@ -66,7 +67,9 @@ public class AnalysisScopeReader {
       assert scopeFile.exists();
 
       String line;
-      r = new BufferedReader(new FileReader(scopeFile));
+      // assume the scope file is UTF-8 encoded; ASCII files will also be handled properly
+      // TODO allow specifying encoding as a parameter?
+      r = new BufferedReader(new InputStreamReader(new FileInputStream(scopeFile), "UTF-8"));
       while ((line = r.readLine()) != null) {
         processScopeDefLine(scope, javaLoader, line);
       }
