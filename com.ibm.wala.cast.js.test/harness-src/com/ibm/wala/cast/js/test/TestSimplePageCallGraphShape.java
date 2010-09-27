@@ -51,8 +51,8 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     verifyGraphAssertions(CG, assertionsForPage2);
   }
 
-  @Test public void testWatchfire1() throws IOException, IllegalArgumentException, CancelException {
-    URL url = getClass().getClassLoader().getResource("pages/watchfire1.html");
+  @Test public void testCrawl() throws IOException, IllegalArgumentException, CancelException {
+    URL url = getClass().getClassLoader().getResource("pages/crawl.html");
     CallGraph CG = Util.makeHTMLCG(url);
     verifyGraphAssertions(CG, null);
   }

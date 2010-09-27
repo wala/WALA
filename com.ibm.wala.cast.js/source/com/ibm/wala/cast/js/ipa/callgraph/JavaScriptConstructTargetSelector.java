@@ -13,8 +13,8 @@ package com.ibm.wala.cast.js.ipa.callgraph;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Map;
+import java.util.Set;
 
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummarizedFunction;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummary;
@@ -418,9 +418,10 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
         FO.write(fun.toString());
         FO.close();
         
-        Util.loadAdditionalFile(cha, cl, fileName, new URL("file://" + f.getAbsolutePath()));
-        
-        IClass fcls = cl.lookupClass("L" + f.getAbsolutePath() + "/_fromctor", cha);
+        Set<String> fnNames = Util.loadAdditionalFile(cha, cl, fileName, f.toURI().toURL(), f.getAbsolutePath());
+        assert fnNames.size() == 1;
+        String fnName = fnNames.iterator().next();
+        IClass fcls = cl.lookupClass(fnName + "/_fromctor", cha);
  
         f.delete();
 

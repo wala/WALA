@@ -77,7 +77,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
             File f = ((SourceFileModule) moduleEntry).getFile();
             String fn = f.toString();
 
-             TranslatorToCAst xlatorToCAst = getTranslatorToCAst(ast, moduleEntry, new URL("file://" + f), fn);
+             TranslatorToCAst xlatorToCAst = getTranslatorToCAst(ast, moduleEntry, f.toURI().toURL(), fn);
 
              CAstEntity fileEntity = xlatorToCAst.translateToCAst();
 

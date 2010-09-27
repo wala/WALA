@@ -20,8 +20,6 @@ import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
-import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
@@ -60,7 +58,7 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
         try {
           JavaScriptLoader cl = (JavaScriptLoader) builder.getClassHierarchy().getLoader(JavaScriptTypes.jsLoader);
           URL url = new URL(builder.scriptBaseURL, str);
-          Util.loadAdditionalFile(builder.getClassHierarchy() , cl, str, url);
+          Util.loadAdditionalFile(builder.getClassHierarchy() , cl, str, url, url.getFile());
           IClass script = builder.getClassHierarchy().lookupClass(TypeReference.findOrCreate(cl.getReference(), "L" + url.getFile()));
           return script.getMethod(JavaScriptMethods.fnSelector);
         } catch (MalformedURLException e1) {

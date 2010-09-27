@@ -34,3 +34,18 @@ if [[ ! -e $MY_DIR/xalan.jar ]]; then
   cd $MY_DIR
   rm -rf $TMP
 fi
+
+if [[ ! -e $MY_DIR/jericho-html-2.6.jar ]]; then
+  mkdir -p $TMP
+
+  cd $TMP
+
+  wget -O jericho-html-2.6.zip http://sourceforge.net/projects/jerichohtml/files/jericho-html/2.6/jericho-html-2.6.zip/download
+
+  jar xf jericho-html-2.6.zip jericho-html-2.6/lib/jericho-html-2.6.jar
+
+  cp jericho-html-2.6/lib/jericho-html-2.6.jar $MY_DIR/jericho-html-2.6.jar
+
+  cd $MY_DIR
+  rm -rf $TMP
+fi

@@ -19,18 +19,19 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.parser.ParserDelegator;
+import com.ibm.wala.cast.js.html.IHtmlParser;
+import com.ibm.wala.cast.js.html.IHtmlCallback;
+import com.ibm.wala.cast.js.html.jericho.HTMLJerichoParser;
 
 public class Generator {
   public static final String preamble = "preamble.js", temp1 = "temp1.js", temp2 = "temp2.js", temp3 = "temp3.js";
   
   public static interface CallbackFactory {
-    HTMLCallback createCallback(URL input, FileWriter domTreeFile, FileWriter embeddedScriptFile, FileWriter entrypointFile);
+    IHtmlCallback createCallback(URL input, FileWriter domTreeFile, FileWriter embeddedScriptFile, FileWriter entrypointFile);
   }
   
   public static class HTMLCallbackFactory implements CallbackFactory {
-    public HTMLCallback createCallback(URL input, FileWriter domTreeFile, FileWriter embeddedScriptFile, FileWriter entrypointFile) {
+    public IHtmlCallback createCallback(URL input, FileWriter domTreeFile, FileWriter embeddedScriptFile, FileWriter entrypointFile) {
       return new HTMLCallback(input, domTreeFile, embeddedScriptFile, entrypointFile);
     }
   }
@@ -90,9 +91,9 @@ public class Generator {
     FileWriter out2 = new FileWriter(temp2);
     FileWriter out3 = new FileWriter(temp3);
     
-    ParserDelegator pd = new ParserDelegator();
-    HTMLCallback cb = callbackFactory.createCallback(input, out1, out2, out3);
-    pd.parse(fr, cb, ignoreCharset);
+    IHtmlParser parser = new HTMLJerichoParser();
+    IHtmlCallback parseHandler = callbackFactory.createCallback(input, out1, out2, out3);
+    parser.parse(fr, parseHandler, input.getFile());
     out1.flush();
     out1.close();
     out2.flush();
@@ -114,7 +115,7 @@ public class Generator {
 
     out.write("\n}\n\n");
 
-    generateTrailer(out, cb);
+    generateTrailer(out, parseHandler);
     
     out.close();
   }
@@ -134,7 +135,7 @@ public class Generator {
   }
   */
   
-  protected void generateTrailer(FileWriter out, HTMLEditorKit.ParserCallback cb) throws IOException {
+  protected void generateTrailer(FileWriter out, IHtmlCallback parseHandler) throws IOException {
     out.write("//Trailer Begin\n");
     out.write("//Trailer End\n");
   }

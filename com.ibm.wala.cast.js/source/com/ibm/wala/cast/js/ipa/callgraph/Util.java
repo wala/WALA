@@ -49,6 +49,7 @@ import com.ibm.wala.types.TypeReference;
 
 public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
 
+  private static final boolean DEBUG = false;
   private static JavaScriptTranslatorFactory translatorFactory;
 
   public static void setTranslatorFactory(JavaScriptTranslatorFactory translatorFactory) {
@@ -111,9 +112,18 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
     }
   }
 
-  public static void loadAdditionalFile(IClassHierarchy cha, JavaScriptLoader cl, String fileName, URL f) throws IOException {
-    SourceURLModule M = new SourceURLModule(f);
-    TranslatorToCAst toCAst = getTranslatorFactory().make(new CAstImpl(), M, f, f.getFile());
+  /**
+   * @param cha
+   * @param cl
+   * @param fileName
+   * @param url
+   * @param file
+   * @return The set of class names that where defined in the CHA as a result loading process.
+   * @throws IOException
+   */
+  public static Set<String> loadAdditionalFile(IClassHierarchy cha, JavaScriptLoader cl, String fileName, URL url, String file) throws IOException {
+    SourceURLModule M = new SourceURLModule(url);
+    TranslatorToCAst toCAst = getTranslatorFactory().make(new CAstImpl(), M, url, file);
     final Set<String> names = new HashSet<String>();
     JSAstTranslator toIR = new JSAstTranslator(cl) {
       protected void defineFunction(CAstEntity N, 
@@ -132,11 +142,14 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
       }
     };
     CAstEntity tree = toCAst.translateToCAst();
-    CAstPrinter.printTo(tree, new PrintWriter(System.err));
+    if (DEBUG){
+      CAstPrinter.printTo(tree, new PrintWriter(System.err));
+    }
     toIR.translate(tree, fileName);
     for(String name : names) {
       IClass fcls = cl.lookupClass(name, cha);
       cha.addClass(fcls);
     }
+    return names;
   }
 }
