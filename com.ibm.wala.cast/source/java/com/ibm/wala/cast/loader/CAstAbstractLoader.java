@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
@@ -117,7 +118,14 @@ public abstract class CAstAbstractLoader implements IClassLoader {
   }
 
   public String getSourceFileName(IMethod method, int bcOffset) {
-    return ((AstMethod)method).getSourcePosition(bcOffset).getURL().getFile();
+    if (!(method instanceof AstMethod)){
+      return null;
+    }
+    Position pos = ((AstMethod)method).getSourcePosition(bcOffset);
+    if (null == pos){
+      return null;
+    } 
+    return pos.getURL().getFile();
   }
   
   public String getSourceFileName(IClass klass) {
