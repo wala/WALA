@@ -36,4 +36,8 @@ public class ObjectPropertyCatalogKey extends AbstractPointerKey {
   public String toString() {
     return "[" + getName() + "]";
   }
+
+  public InstanceKey getObject() {
+    return object;
+  }
 }

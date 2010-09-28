@@ -76,5 +76,6 @@ Export-Package: .,
  com.ibm.wala.util.strings,
  com.ibm.wala.util.tables,
  com.ibm.wala.util.warnings,
- com.ibm.wala.viz
+ com.ibm.wala.viz,
+ com.ibm.wala.viz.viewer
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
