@@ -208,9 +208,9 @@ public abstract class TestCAstTranslator extends WalaTestCase {
     SourceFileModule[] fileNames = new SourceFileModule[args.length];
     for (int i = 0; i < args.length; i++) {
       if (new File(args[i]).exists()) {
-        fileNames[i] = Util.makeSourceModule(new URL("file:" + args[i]), args[i]);
+        fileNames[i] = Util.makeSourceModule(new File(args[i]).toURI().toURL(), args[i]);
       } else if (new File(testPath + args[i]).exists()) {
-        fileNames[i] = Util.makeSourceModule(new URL("file:" + testPath + args[i]), args[i]);
+        fileNames[i] = Util.makeSourceModule(new File(testPath + args[i]).toURI().toURL(), args[i]);
       } else {
         URL url = getClass().getClassLoader().getResource(args[i]);
         fileNames[i] = Util.makeSourceModule(url, args[i]);

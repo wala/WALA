@@ -696,7 +696,7 @@ public class RhinoToAstTranslator {
     URL url;
     if (sourceModule instanceof SourceFileModule) {
       try {
-        url = new URL("file://" + ((SourceFileModule) sourceModule).getFile());
+        url = ((SourceFileModule) sourceModule).getFile().toURI().toURL();
       } catch (MalformedURLException e) {
         Assertions.UNREACHABLE();
         return null;

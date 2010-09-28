@@ -104,7 +104,7 @@ public class Util {
     for (int i = 0; i < fileNameArgs.length; i++) {
       if (new File(fileNameArgs[i]).exists()) {
         try {
-          fileNames[i] = Util.makeSourceModule(new URL("file:" + fileNameArgs[i]), fileNameArgs[i]);
+          fileNames[i] = Util.makeSourceModule(new File(fileNameArgs[i]).toURI().toURL(), fileNameArgs[i]);
         } catch (MalformedURLException e) {
           Assertions.UNREACHABLE(e.toString());
         }

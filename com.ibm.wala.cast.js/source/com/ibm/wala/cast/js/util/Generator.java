@@ -67,7 +67,7 @@ public class Generator {
   public static void main(String args[]) throws IOException {
     Generator g = new Generator();
     if (new File(args[0]).exists()) {
-      g.generate(new URL("file:" + args[0]), new File(args[1]));
+      g.generate(new File(args[0]).toURI().toURL(), new File(args[1]));
     }
   }
   
