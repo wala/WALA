@@ -42,6 +42,8 @@ import com.ibm.wala.util.warnings.Warning;
 
 public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
 
+  private static final boolean DEBUG = false;
+
   public CAstAbstractModuleLoader(IClassHierarchy cha, IClassLoader parent) {
     super(cha, parent);
   }
@@ -82,8 +84,9 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
              CAstEntity fileEntity = xlatorToCAst.translateToCAst();
 
              if (fileEntity != null) {
-               CAstPrinter.printTo(fileEntity, new PrintWriter(System.err));
-
+               if(DEBUG){
+                 CAstPrinter.printTo(fileEntity, new PrintWriter(System.err));
+               }
                topLevelEntities.add(Pair.make(fileEntity, fn));
              
              }  else {
@@ -107,8 +110,9 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
             CAstEntity fileEntity = xlatorToCAst.translateToCAst();
 
             if (fileEntity != null) {
-              System.err.println(CAstPrinter.print(fileEntity));
-
+              if(DEBUG){
+                System.err.println(CAstPrinter.print(fileEntity));
+              }
               topLevelEntities.add(Pair.make(fileEntity, fileName));
             
             } else {
@@ -174,7 +178,9 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
     for (Iterator ts = types.keySet().iterator(); ts.hasNext();) {
       TypeName tn = (TypeName) ts.next();
       try {
-        System.err.println(("found type " + tn + " : " + types.get(tn) + " < " + ((IClass) types.get(tn)).getSuperclass()));
+        if(DEBUG){
+          System.err.println(("found type " + tn + " : " + types.get(tn) + " < " + ((IClass) types.get(tn)).getSuperclass()));
+        }
       } catch (Exception e) {
         System.err.println(e);
       }
