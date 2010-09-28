@@ -51,6 +51,22 @@ public abstract class AbstractLexicalInvoke extends MultiReturnValueInvokeInstru
     else
       return getNumberOfParameters() + lexicalReads.length;
   }
+  
+  public int getNumberOfLexicalWrites(){
+    if(lexicalWrites == null){
+      return 0;
+    } else {
+      return lexicalWrites.length;
+    }
+  }
+  
+  public int getNumberOfLexicalReads() {
+    if(lexicalReads == null){
+      return 0;
+    } else {
+      return lexicalReads.length;
+    }
+  }
 
   public final int getLastLexicalUse() {
     if (lexicalReads == null) {
