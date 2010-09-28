@@ -984,6 +984,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   protected final static int TYPE_TYPE = 5;
 
+  private static final boolean DEBUG = false;
+
   protected class FinalCAstSymbol implements CAstSymbol {
     private final String _name;
 
@@ -2139,7 +2141,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     if (results.containsKey(n))
       return results.get(n).intValue();
     else {
-      System.err.println(("no value for " + n.getKind()));
+      if (DEBUG){
+        System.err.println(("no value for " + n.getKind()));
+      }
       return -1;
     }
   }
