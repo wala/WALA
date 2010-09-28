@@ -418,4 +418,14 @@ public final class Atom implements Serializable {
     return b.get(0) == '[';
   }
 
+  /**
+   * Special method that is called by Java deserialization process. Any HashCons'ed object should implement it, in order to make
+   * sure that all equal objects are consolidated.
+   * 
+   * @return
+   */
+  private Object readResolve() {
+    return findOrCreate(this.val);
+  }
+
 }
