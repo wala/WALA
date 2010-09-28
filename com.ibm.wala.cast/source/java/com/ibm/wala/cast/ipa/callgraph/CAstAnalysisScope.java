@@ -38,7 +38,7 @@ public class CAstAnalysisScope extends AnalysisScope {
     this(loaders, languages);
     for (int i = 0; i < sourceFileNames.length; i++) {
       File F = new File(sourceFileNames[i]);
-      addSourceFileToScope(theLoader, F, F.getParent());
+      addSourceFileToScope(theLoader, F, F.getPath());
     }
   }
 
