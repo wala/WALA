@@ -419,10 +419,15 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
         FO.close();
         
         Set<String> fnNames = Util.loadAdditionalFile(cha, cl, fileName, f.toURI().toURL(), f.getAbsolutePath());
-        assert fnNames.size() == 1;
-        String fnName = fnNames.iterator().next();
-        IClass fcls = cl.lookupClass(fnName + "/_fromctor", cha);
- 
+        IClass fcls = null;
+        for(String nm : fnNames) {
+          if (nm.endsWith("_fromctor")) {
+            fcls = cl.lookupClass(nm, cha);
+          }
+        }
+
+        assert fcls != null : "cannot find class for " + fileName + " in " + f;
+        
         f.delete();
 
         if (DEBUG)
