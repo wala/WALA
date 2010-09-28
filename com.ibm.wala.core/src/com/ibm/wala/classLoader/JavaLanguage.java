@@ -16,8 +16,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-import javax.naming.OperationNotSupportedException;
-
 import com.ibm.wala.analysis.typeInference.JavaPrimitiveType;
 import com.ibm.wala.analysis.typeInference.PrimitiveType;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -64,7 +62,6 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.shrike.ShrikeUtil;
 import com.ibm.wala.util.shrike.Exceptions.MethodResolutionFailure;
 import com.ibm.wala.util.strings.Atom;
