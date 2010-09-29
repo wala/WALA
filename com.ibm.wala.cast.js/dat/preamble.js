@@ -97,6 +97,8 @@ function DOMNode() { // An impostor for the Node class
 			}
 	
 	this.ownerDocument = document;
+	this.ownerWindow = window;
+	this.ownerWindow.XMLHttpRequest = XMLHttpRequest;
 
 	this.collect = function collect(predicate, result) {
           if (predicate(this)) {
@@ -127,15 +129,72 @@ function DOMDocument() {
 	};
 }
 
+function HTMLBody(){
+	this.innerHTML = new String();
+}
+
 function DOMHTMLDocument() {
 	this.temp = DOMDocument;
 	this.temp();
-
+	this.URL = new String();
+	this.body = new HTMLBody();
 }
+
+
+function Location(){
+	this.host = new String();
+	this.hostname = new String();
+	this.href = new String();
+	this.search = new String();
+	this.protocol = new String();
+	this.pathname = new String();
+	this.toString = function Location_to_string(){
+		return new String();
+	}
+}
+function XMLHttpRequest(){
+	this.sUrl = new String();
+	this.open = function XMLHttpRequest_open(sMethod, sUrl){
+		this.sUrl = sUrl;
+	}
+	this.sendAsBinary = function XMLHttpRequest_sendAsBinary(){
+		
+	}
+
+	this.send = function XMLHttpRequest_send(){
+		
+	}
+	
+	return this;
+}
+
+
+function DOMWindow(){
+	this.name = new String();
+}
+
+function DOJOObj(){
+	this.moduleUrl = function module_url(str1, str2){
+		return str1 + str2;
+	}
+}
+
+// Creating the root Location object
+var location = new Location();
 
 // Creating the root document object
 document = new DOMHTMLDocument();
 
+// Creating the root window object
+window = new DOMWindow();
+
+document.location = location;
+window.location = location;
+
+window.document = document;
+window.XMLHttpRequest = XMLHttpRequest;
+
+var dojo = new DOJOObj();
 function DOMElement() { // An impostor for the Element class
 	// inherits from Node
 	this.temp = DOMNode;
