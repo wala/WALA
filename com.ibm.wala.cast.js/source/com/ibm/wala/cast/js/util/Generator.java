@@ -21,7 +21,7 @@ import java.net.URLConnection;
 
 import com.ibm.wala.cast.js.html.IHtmlParser;
 import com.ibm.wala.cast.js.html.IHtmlCallback;
-import com.ibm.wala.cast.js.html.jericho.HTMLJerichoParser;
+import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
 
 public class Generator {
   public static final String preamble = "preamble.js", temp1 = "temp1.js", temp2 = "temp2.js", temp3 = "temp3.js";
@@ -91,7 +91,7 @@ public class Generator {
     FileWriter out2 = new FileWriter(temp2);
     FileWriter out3 = new FileWriter(temp3);
     
-    IHtmlParser parser = new HTMLJerichoParser();
+    IHtmlParser parser = new JerichoHtmlParser();
     IHtmlCallback parseHandler = callbackFactory.createCallback(input, out1, out2, out3);
     parser.parse(fr, parseHandler, input.getFile());
     out1.flush();

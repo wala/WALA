@@ -18,7 +18,7 @@ import com.ibm.wala.cast.js.html.IHtmlParser;
  * @author danielk
  * Uses the Jericho parser to go over the HTML
  */
-public class HTMLJerichoParser implements IHtmlParser{
+public class JerichoHtmlParser implements IHtmlParser{
     static{
       Config.LoggerProvider = LoggerProvider.STDERR;
     }

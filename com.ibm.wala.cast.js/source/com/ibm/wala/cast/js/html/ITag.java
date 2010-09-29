@@ -34,11 +34,4 @@ public interface ITag {
 	 * @return null if no known
 	 */
 	public int getStartingLineNum();
-
-	/**
-	 * @return path to the file containing the tag.
-	 */
-	public String getFilePath();
-	
-
 }
