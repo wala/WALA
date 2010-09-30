@@ -133,6 +133,8 @@ public class IrViewer extends JPanel{
     if (lineNum != null){
       irLines.ensureIndexIsVisible(lineNum);
       irLines.setSelectedIndex(lineNum);
+    } else {
+      removeSelection();
     }
   }
 
@@ -141,9 +143,13 @@ public class IrViewer extends JPanel{
     if (pc != NA){
       setPc(pc);
     } else {
-      int curSelectedIndex = irLines.getSelectedIndex();
-      irLines.removeSelectionInterval(curSelectedIndex, curSelectedIndex);
+      removeSelection();
     }
+  }
+
+  private void removeSelection() {
+    int curSelectedIndex = irLines.getSelectedIndex();
+    irLines.removeSelectionInterval(curSelectedIndex, curSelectedIndex);
   }
 
 

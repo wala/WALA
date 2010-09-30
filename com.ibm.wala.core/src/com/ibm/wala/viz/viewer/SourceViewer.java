@@ -32,12 +32,16 @@ public class SourceViewer extends JPanel{
   }
 
   public void setSource(URL url, int sourceLine) {
-    sourceCodeLocation.setText("Source code: " + url);
-    loadSource(url);
-    if (sourceLine != IrViewer.NA){
-      sourceCodeLines.ensureIndexIsVisible(sourceLine-1);
-      sourceCodeLines.setSelectedIndex(sourceLine-1);
-      sourceCodeLines.validate();
+    boolean succsess = loadSource(url);
+    if (succsess){
+      sourceCodeLocation.setText("Source code: " + url);
+      if (sourceLine != IrViewer.NA){
+        sourceCodeLines.ensureIndexIsVisible(sourceLine-1);
+        sourceCodeLines.setSelectedIndex(sourceLine-1);
+        sourceCodeLines.validate();
+      }
+    } else {
+      sourceCodeLocation.setText("Error loading source code from: " + url);
     }
   }
   
@@ -76,7 +80,7 @@ public class SourceViewer extends JPanel{
 
   public void removeSource() {
     sourceURL = null;
-    sourceCodeLocation = new JTextField("Source code");
+    sourceCodeLocation.setText("Source code");
     sourceCodeLinesList.clear();
     sourceCodeLines.validate();
   }
