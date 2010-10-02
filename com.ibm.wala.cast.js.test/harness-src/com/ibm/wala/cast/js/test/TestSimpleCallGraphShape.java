@@ -259,7 +259,12 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   }
   
   @Test public void testRewriterDoesNotChangeLablesBug() throws IOException, IllegalArgumentException, CancelException {
-    CallGraph CG = Util.makeScriptCG("tests", "rewrite_does_not_change_lables_bug.js");
+    Util.makeScriptCG("tests", "rewrite_does_not_change_lables_bug.js");
+    // all we need is for it to finish building CG successfully.
+  }
+
+  @Test public void testStackOverflowOnSsaConversionBug() throws IOException, IllegalArgumentException, CancelException {
+    Util.makeScriptCG("tests", "stack_overflow_on_ssa_conversion.js");
     // all we need is for it to finish building CG successfully.
   }
   

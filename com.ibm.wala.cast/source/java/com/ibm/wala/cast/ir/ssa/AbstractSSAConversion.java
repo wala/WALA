@@ -13,6 +13,7 @@ package com.ibm.wala.cast.ir.ssa;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.Stack;
 
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -262,7 +263,50 @@ public abstract class AbstractSSAConversion {
     SEARCH((SSACFG.BasicBlock) CFG.entry());
   }
 
+  
+  /**
+   * Stack frames for the SEARCH recursion.
+   * Used for converting the recursion to an iteration and avoiding stack overflow. 
+   * @author yinnonh
+   *
+   */
+  private static class Frame{
+    public final SSACFG.BasicBlock X;
+    public final Iterator<ISSABasicBlock> i; // iterator o
+    public Frame(SSACFG.BasicBlock X, Iterator<ISSABasicBlock> i) {
+      this.X = X;
+      this.i = i;
+    }
+  }
   private void SEARCH(SSACFG.BasicBlock X) {
+    // original method was recursive:
+    //   SearchPreRec(X)
+    //   for (BasicBlock Y: childs(X))
+    //     SEARCH(Y)
+    //   SearchPostRec(X)
+    
+    Stack<Frame> stack = new Stack<Frame>();
+    
+    SearchPreRec(X);
+    stack.push(new Frame(X, dominatorTree.getSuccNodes(X)));
+    
+    // invariant: pre-rec phase was performed for elements in the queue. 
+    while (!stack.isEmpty()){
+      Frame f = stack.peek();
+      if (f.i.hasNext()){
+        // iterate next child
+        BasicBlock next = (BasicBlock) f.i.next();
+        SearchPreRec(next);
+        stack.push(new Frame(next, dominatorTree.getSuccNodes(next)));
+      } else {
+        // finished iterating children, time to "return"
+        SearchPostRec(f.X);
+        stack.pop();
+      }
+    }
+  }
+
+  private void SearchPreRec(SSACFG.BasicBlock X) {
     int id = X.getGraphNodeId();
     int Xf = X.getFirstInstructionIndex();
 
@@ -308,10 +352,11 @@ public abstract class AbstractSSAConversion {
         repairPhiUse(Y, i, j, newUse);
       }
     }
+  }
 
-    for (Iterator YS = dominatorTree.getSuccNodes(X); YS.hasNext();) {
-      SEARCH((SSACFG.BasicBlock) YS.next());
-    }
+  private void SearchPostRec(SSACFG.BasicBlock X) {
+    int id = X.getGraphNodeId();
+    int Xf = X.getFirstInstructionIndex();
 
     for (int i = 0; i < phiCounts[id]; i++) {
       SSAInstruction A = getPhi(X, i);
