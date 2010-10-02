@@ -54,6 +54,14 @@ encodeURIComponent = function encodeURIComponent(str) {
     return new String(primitive("GlobalEncodeURIComponent", str));
 };
 
+nescape = function unescape(str){
+	return new String(primitive("GlobalUnEscape", str));
+};
+
+escape = function escape(str){
+	return new String(primitive("GlobalEscape", str));
+};
+
 /************************************************************************/
 /* Object properties, see spec 15.2					*/
 /************************************************************************/
@@ -288,7 +296,11 @@ String.prototype = {
   },
 
   substring: function substring(from, to) {
-    return new String(primitive("StringSubString", this, from, to));
+	return new String(primitive("StringSubString", this, from, to)); 
+  },
+	  
+  substr: function substr(from, to) {
+	return new String(primitive("StringSubStr", this, from, to));
   },
 
   replace: function replace(regex, withStr) {
