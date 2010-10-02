@@ -896,35 +896,44 @@ public class RhinoToAstTranslator {
     case Token.FINALLY:
     case Token.BLOCK:
     case Token.LABEL: {
-//      CAstNode ast; 
-      Node c1 = n.getFirstChild();
-      if (c1 != null && c1.getType() == Token.SWITCH) {
-        Node switchValue = c1.getFirstChild();
+        Node c1 = n.getFirstChild();
+        if (c1 != null && c1.getType() == Token.SWITCH) {
+          Node switchValue = c1.getFirstChild();
 
-        CAstNode defaultLabel = Ast.makeNode(CAstNode.LABEL_STMT, Ast.makeNode(CAstNode.EMPTY));
-        context.cfg().map(defaultLabel, defaultLabel);
+          CAstNode defaultLabel = Ast.makeNode(CAstNode.LABEL_STMT, Ast.makeNode(CAstNode.EMPTY));
+          context.cfg().map(defaultLabel, defaultLabel);
 
-        for (Node kase = switchValue.getNext(); kase != null; kase = kase.getNext()) {
-          assert kase.getType() == Token.CASE;
-          Node caseLbl = kase.getFirstChild();
-          Node target = ((Node.Jump) kase).target;
-          context.cfg().add(c1, target, walkNodes(caseLbl, context));
+          List<CAstNode> labelCasts = new ArrayList<CAstNode>();
+          for (Node kase = switchValue.getNext(); kase != null; kase = kase.getNext()) {
+            assert kase.getType() == Token.CASE;
+            Node caseLbl = kase.getFirstChild();
+            Node target = ((Node.Jump) kase).target;
+            CAstNode labelCast = walkNodes(caseLbl, context);
+            labelCasts.add(labelCast);
+            context.cfg().add(c1, target, labelCast);
+          }
+          CAstNode[] children = new CAstNode[labelCasts.size()+1];
+          int i = 0;
+          children[i++] = Ast.makeNode(CAstNode.BLOCK_STMT, defaultLabel, gatherChildren(n, context, 1));
+          
+          // Note that we are placing the labels as children in the AST
+          // even if they are not used, because we want them copied when AST is re-written.
+          for (CAstNode labelCast : labelCasts){
+          	children[i++] = labelCast;
+          }
+          
+          context.cfg().add(c1, defaultLabel, CAstControlFlowMap.SWITCH_DEFAULT);
+          CAstNode switchAst = Ast.makeNode(CAstNode.SWITCH, walkNodes(switchValue, context), children);
+
+          noteSourcePosition(context, switchAst, c1);
+          context.cfg().map(c1, switchAst);
+          return switchAst;
         }
 
-        context.cfg().add(c1, defaultLabel, CAstControlFlowMap.SWITCH_DEFAULT);
-
-        CAstNode switchAst = Ast.makeNode(CAstNode.SWITCH, walkNodes(switchValue, context), Ast.makeNode(CAstNode.BLOCK_STMT,
-            defaultLabel, gatherChildren(n, context, 1)));
-
-        noteSourcePosition(context, switchAst, c1);
-        context.cfg().map(c1, switchAst);
-        return switchAst;
+        else {
+          return Ast.makeNode(CAstNode.BLOCK_STMT, gatherChildren(n, context));
+        }
       }
-
-      else {
-        return Ast.makeNode(CAstNode.BLOCK_STMT, gatherChildren(n, context));
-      }
-    }
     
     case Token.EXPR_VOID:
     case Token.EXPR_RESULT: {

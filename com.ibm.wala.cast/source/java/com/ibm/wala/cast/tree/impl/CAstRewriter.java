@@ -111,12 +111,12 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
         }
 
         while (LS.hasNext()) {
-          Object label = LS.next();
-          CAstNode oldTarget = orig.getTarget(oldSource, label);
+          Object origLabel = LS.next();
+          CAstNode oldTarget = orig.getTarget(oldSource, origLabel);
           assert oldTarget != null;
 
           if (DEBUG) {
-            System.err.println(("old: " + label + " --> " + CAstPrinter.print(oldTarget)));
+            System.err.println(("old: " + origLabel + " --> " + CAstPrinter.print(oldTarget)));
           }
 
           Pair targetKey;
@@ -130,16 +130,23 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
             }
           } while (!nodeMap.containsKey(targetKey));
 
+          Object newLabel;
+          if (nodeMap.containsKey(Pair.make(origLabel, targetKey.snd))){ // label is mapped too
+              newLabel = nodeMap.get(Pair.make(origLabel, targetKey.snd));  
+          } else {
+              newLabel = origLabel;
+          }
+          
           CAstNode newTarget;
           if (nodeMap.containsKey(targetKey)) {
             newTarget = (CAstNode) nodeMap.get(targetKey);
-            newMap.add(newSource, newTarget, label);
+            newMap.add(newSource, newTarget, newLabel);
             allNewTargetNodes.add(newTarget);
 
           } else {
-            newTarget = flowOutTo(nodeMap, oldSource, label, oldTarget, orig, newSrc);
+            newTarget = flowOutTo(nodeMap, oldSource, origLabel, oldTarget, orig, newSrc);
             allNewTargetNodes.add(newTarget);
-            newMap.add(newSource, newTarget, label);
+            newMap.add(newSource, newTarget, newLabel);
             if (newTarget != CAstControlFlowMap.EXCEPTION_TO_EXIT && !mappedOutsideNodes.contains(newTarget)) {
               mappedOutsideNodes.add(newTarget);
               newMap.map(newTarget, newTarget);
@@ -147,8 +154,8 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
           }
 
           if (DEBUG) {
-            System.err.println(("mapping:old: " + CAstPrinter.print(oldSource) + "-- " + label + " --> " + CAstPrinter.print(oldTarget)));
-            System.err.println(("mapping:new: " + CAstPrinter.print(newSource) + "-- " + label + " --> " + CAstPrinter.print(newTarget)));
+            System.err.println(("mapping:old: " + CAstPrinter.print(oldSource) + "-- " + origLabel + " --> " + CAstPrinter.print(oldTarget)));
+            System.err.println(("mapping:new: " + CAstPrinter.print(newSource) + "-- " + newLabel + " --> " + CAstPrinter.print(newTarget)));
           }
         }
       }

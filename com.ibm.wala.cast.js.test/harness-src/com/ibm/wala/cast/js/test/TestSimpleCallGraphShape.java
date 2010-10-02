@@ -256,8 +256,11 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForPrototypeContamination);
     verifyNoEdges(CG, "suffix:test1", "suffix:foo_of_B");
     verifyNoEdges(CG, "suffix:test2", "suffix:foo_of_A");
-    
   }
   
+  @Test public void testRewriterDoesNotChangeLablesBug() throws IOException, IllegalArgumentException, CancelException {
+    CallGraph CG = Util.makeScriptCG("tests", "rewrite_does_not_change_lables_bug.js");
+    // all we need is for it to finish building CG successfully.
+  }
   
 }
