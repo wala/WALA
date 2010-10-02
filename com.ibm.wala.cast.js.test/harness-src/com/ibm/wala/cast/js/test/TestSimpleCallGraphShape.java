@@ -243,4 +243,21 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForMultivar);
   }
 
+  private static final Object[][] assertionsForPrototypeContamination = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/prototype_contamination_bug.js" } },
+    new Object[] { "suffix:test1", 
+        new String[] { "suffix:foo_of_A"} },
+    new Object[] { "suffix:test2", 
+        new String[] { "suffix:foo_of_B"} }
+  };
+
+  @Test public void testProtoypeContamination() throws IOException, IllegalArgumentException, CancelException {
+    CallGraph CG = Util.makeScriptCG("tests", "prototype_contamination_bug.js");
+    verifyGraphAssertions(CG, assertionsForPrototypeContamination);
+    verifyNoEdges(CG, "suffix:test1", "suffix:foo_of_B");
+    verifyNoEdges(CG, "suffix:test2", "suffix:foo_of_A");
+    
+  }
+  
+  
 }

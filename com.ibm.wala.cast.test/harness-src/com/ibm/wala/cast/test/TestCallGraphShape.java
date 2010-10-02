@@ -104,6 +104,29 @@ public abstract class TestCallGraphShape extends WalaTestCase {
     }
   }
 
+
+  /**
+   * Verifies that non of the nodes that match the source description has an edge to any of the nodes that match the destination
+   * description. (Used for checking for false connections in the callgraph)
+   * 
+   * @param CG
+   * @param sourceDescription
+   * @param destDescription
+   */
+  protected void verifyNoEdges(CallGraph CG, String sourceDescription, String destDescription) {
+    Collection sources = getNodes(CG, sourceDescription);
+    Collection dests = getNodes(CG, destDescription);
+    for (Object source : sources) {
+      for (Object dest : dests) {
+        for (Iterator<CGNode> i = CG.getSuccNodes((CGNode) source); i.hasNext();) {
+          if (i.next().equals(dest)) {
+            Assert.fail("Found a link from " + source + " to " + dest);
+          }
+        }
+      }
+    }
+  }
+  
   protected static final Object ROOT = new Object();
 
   protected abstract Collection getNodes(CallGraph CG, String functionIdentifier);

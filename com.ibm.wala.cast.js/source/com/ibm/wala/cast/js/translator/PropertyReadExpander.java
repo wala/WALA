@@ -81,17 +81,36 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
   private CAstNode makeConstRead(CAstNode receiver, CAstNode element, RewriteContext context) {
     String receiverTemp = TEMP_NAME + (readTempCounter++);
     String elt = (String) element.getValue();
-
-    if (context.inAssignment()) {
-      context.setAssign(Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)), Ast.makeConstant(elt));
+    if (elt.equals("prototype")){
+      return Ast.makeNode(CAstNode.BLOCK_EXPR, 
+                Ast.makeNode(CAstNode.OBJECT_REF,
+                  receiver, 
+        		  Ast.makeConstant("prototype")));
+    } else {
+      
+      if (context.inAssignment()) {
+        context.setAssign(Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)), Ast.makeConstant(elt));
+      }
+      
+      return Ast.makeNode(CAstNode.BLOCK_EXPR, 
+          Ast.makeNode(CAstNode.DECL_STMT, 
+              Ast.makeConstant(new InternalCAstSymbol(receiverTemp,false, false)), 
+              receiver), 
+          Ast.makeNode(CAstNode.LOOP, 
+              Ast.makeNode(CAstNode.UNARY_EXPR, 
+            		  CAstOperator.OP_NOT, 
+            		  Ast.makeNode(CAstNode.IS_DEFINED_EXPR, 
+            		      Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)), 
+            		      Ast.makeConstant(elt))), 
+              Ast.makeNode(CAstNode.ASSIGN, 
+                  Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)), 
+                  Ast.makeNode(CAstNode.OBJECT_REF,
+                      Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)), 
+                      Ast.makeConstant("prototype")))), 
+          Ast.makeNode(CAstNode.OBJECT_REF, 
+        		  Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)), 
+        		  Ast.makeConstant(elt)));
     }
-
-    return Ast.makeNode(CAstNode.BLOCK_EXPR, Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(receiverTemp,
-        false, false)), receiver), Ast.makeNode(CAstNode.LOOP, Ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, Ast.makeNode(
-        CAstNode.IS_DEFINED_EXPR, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)), Ast.makeConstant(elt))), Ast
-        .makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)), Ast.makeNode(CAstNode.OBJECT_REF,
-            Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)), Ast.makeConstant("prototype")))), Ast.makeNode(
-        CAstNode.OBJECT_REF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)), Ast.makeConstant(elt)));
   }
 
   private CAstNode makeVarRead(CAstNode receiver, CAstNode element, RewriteContext context) {

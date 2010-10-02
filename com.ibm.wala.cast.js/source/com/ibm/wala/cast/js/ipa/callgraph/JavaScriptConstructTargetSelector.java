@@ -349,11 +349,11 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     
     S.addStatement(insts.NewInstruction(5, NewSiteReference.make(S.getNextProgramCounter(), cls.getReference())));
 
-    S.addStatement(insts.PutInstruction(5, 4, "prototype"));
-    S.getNextProgramCounter();
-    
     S.addStatement(insts.NewInstruction(7, NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Object)));
 
+    S.addStatement(insts.PutInstruction(7, 4, "prototype"));
+    S.getNextProgramCounter();
+    
     S.addStatement(insts.PutInstruction(5, 7, "prototype"));
     S.getNextProgramCounter();
     
