@@ -171,16 +171,17 @@ public class DomLessSourceExtractor implements JSSourceExtractor {
       finalRegion.println("document.URL = new String(\"" + entrypointUrl + "\");");
 
       // wrapping the embedded scripts with a fake method of the window. Required for making this == window.
-      finalRegion.println("window.__MAIN__ = function(){");
+      finalRegion.println("window.__MAIN__ = function __WINDOW_MAIN__(){");
       finalRegion.write(scriptRegion);
+
+      finalRegion.println("while (true){ ");
+      finalRegion.write(entrypointRegion);
+      finalRegion.println("} // while (true)");
+      
       finalRegion.println("} // end of window.__MAIN__");
       finalRegion.println("window.__MAIN__();");
   
       finalRegion.write(domRegion);
-      
-      finalRegion.println("while (true){ ");
-      finalRegion.write(entrypointRegion);
-      finalRegion.println("} // while (true)");
     }
   }
 
