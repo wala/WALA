@@ -295,15 +295,27 @@ public class PDG implements NumberedGraph<Statement> {
 
     // the CDG does not represent control dependences from the entry node.
     // add these manually
+    // We add control dependences to all instructions in all basic blocks B that _must_ execute.  
+    // A basic block is in B iff (1) it is the entry or (2) it is the sole successor of a block
+    // in B
     Statement methodEntry = new MethodEntryStatement(node);
-    for (Iterator<? extends ISSABasicBlock> it = cdg.iterator(); it.hasNext();) {
-      ISSABasicBlock bb = it.next();
-      if (cdg.getPredNodeCount(bb) == 0) {
-        // this is control dependent on the method entry.
-        for (SSAInstruction st : bb) {
-          Statement dest = ssaInstruction2Statement(st, ir, instructionIndices);
-          delegate.addEdge(methodEntry, dest);
+    ISSABasicBlock curBB = controlFlowGraph.entry();
+    Set<ISSABasicBlock> handledBlocks = HashSetFactory.make(2);
+    handledBlocks.add(curBB);
+    while (curBB != null) {
+      for (SSAInstruction st : curBB) {
+        Statement dest = ssaInstruction2Statement(st, ir, instructionIndices);
+        delegate.addEdge(methodEntry, dest);
+      }
+      if (controlFlowGraph.getSuccNodeCount(curBB) == 1) {
+        ISSABasicBlock succBlock = controlFlowGraph.getSuccNodes(curBB).next();
+        if (handledBlocks.add(succBlock)) {
+          curBB = succBlock;
+        } else {
+          curBB = null;
         }
+      } else {
+        curBB = null;
       }
     }
     // add CD from method entry to all callee parameter assignments
