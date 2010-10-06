@@ -392,9 +392,33 @@ public class SlicerTest {
 
     // compute a no-data slice
     Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.NONE,
-        ControlDependenceOptions.FULL);
+        ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     dumpSlice(slice);
     Assert.assertTrue(slice.size() > 1);
+  }
+
+  @Test
+  public void testTestCD6() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.SLICE_TESTCD6);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraph cg = builder.makeCallGraph(options, null);
+
+    CGNode main = findMainMethod(cg);
+
+    Statement s = new MethodEntryStatement(main);
+    System.err.println("Statement: " + s);
+
+    // compute a no-data slice
+    Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.NONE,
+        ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
+    dumpSlice(slice);
+    Assert.assertEquals(2, countInvokes(slice));
   }
 
   @Test

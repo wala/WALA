@@ -58,10 +58,12 @@ import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.NumberedGraph;
+import com.ibm.wala.util.graph.dominators.Dominators;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntIterator;
@@ -295,27 +297,14 @@ public class PDG implements NumberedGraph<Statement> {
 
     // the CDG does not represent control dependences from the entry node.
     // add these manually
-    // We add control dependences to all instructions in all basic blocks B that _must_ execute.  
-    // A basic block is in B iff (1) it is the entry or (2) it is the sole successor of a block
-    // in B
+    // We add control dependences to all instructions in all basic blocks B that _must_ execute.
+    // B is the set of blocks that dominate the exit basic block
     Statement methodEntry = new MethodEntryStatement(node);
-    ISSABasicBlock curBB = controlFlowGraph.entry();
-    Set<ISSABasicBlock> handledBlocks = HashSetFactory.make(2);
-    handledBlocks.add(curBB);
-    while (curBB != null) {
-      for (SSAInstruction st : curBB) {
+    Dominators<ISSABasicBlock> dom = Dominators.make(controlFlowGraph, controlFlowGraph.entry());
+    for (ISSABasicBlock exitDom : Iterator2Iterable.make(dom.dominators(controlFlowGraph.exit()))) {
+      for (SSAInstruction st : exitDom) {
         Statement dest = ssaInstruction2Statement(st, ir, instructionIndices);
         delegate.addEdge(methodEntry, dest);
-      }
-      if (controlFlowGraph.getSuccNodeCount(curBB) == 1) {
-        ISSABasicBlock succBlock = controlFlowGraph.getSuccNodes(curBB).next();
-        if (handledBlocks.add(succBlock)) {
-          curBB = succBlock;
-        } else {
-          curBB = null;
-        }
-      } else {
-        curBB = null;
       }
     }
     // add CD from method entry to all callee parameter assignments
