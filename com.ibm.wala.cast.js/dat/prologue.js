@@ -54,7 +54,7 @@ encodeURIComponent = function encodeURIComponent(str) {
     return new String(primitive("GlobalEncodeURIComponent", str));
 };
 
-nescape = function unescape(str){
+unescape = function unescape(str){
 	return new String(primitive("GlobalUnEscape", str));
 };
 
