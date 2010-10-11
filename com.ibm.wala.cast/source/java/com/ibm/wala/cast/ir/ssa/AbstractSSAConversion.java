@@ -10,6 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.ssa;
 
+import java.util.EmptyStackException;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -18,12 +19,12 @@ import java.util.Stack;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSACFG;
+import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
+import com.ibm.wala.ssa.SSAOptions.DefaultValues;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.ssa.SSACFG.BasicBlock;
-import com.ibm.wala.ssa.SSAOptions.DefaultValues;
 import com.ibm.wala.util.collections.ArrayIterator;
 import com.ibm.wala.util.collections.IntStack;
 import com.ibm.wala.util.graph.Graph;
@@ -447,7 +448,11 @@ public abstract class AbstractSSAConversion {
       }
     }
 
-    return (isConstant(v)) ? v : S[v].peek();
+    try {
+      return (isConstant(v)) ? v : S[v].peek();
+    } catch (EmptyStackException e) {
+      throw new RuntimeException("while looking at " + v, e);
+    }
   }
 
 }
