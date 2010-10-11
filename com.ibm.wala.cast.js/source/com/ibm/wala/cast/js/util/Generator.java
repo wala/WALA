@@ -103,7 +103,8 @@ public class Generator {
     
     // generatePreamble(out, cb);
     
-    out.write("\n\ndocument.URL = new String('" + input + "');\n\n");
+    out.write("\n\ndocument.URL = new String('" + input + "');\n");
+    out.write("document.URL.note_url();\n\n");
     
     writeRegion(out, "Embedded Script", temp2);
 
