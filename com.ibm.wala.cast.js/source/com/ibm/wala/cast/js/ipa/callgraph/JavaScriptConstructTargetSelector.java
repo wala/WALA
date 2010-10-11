@@ -124,14 +124,18 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   }
 
   private IMethod makeValueConstructor(IClass cls, int nargs, Object value) {
-    assert nargs == 0 || nargs == 1;
+    if (nargs == 0 || nargs == 1) {
 
-    Object key = Pair.make(cls, new Integer(nargs));
-    if (constructors.containsKey(key))
-      return constructors.get(key);
+      Object key = Pair.make(cls, new Integer(nargs));
+      if (constructors.containsKey(key))
+        return constructors.get(key);
 
-    else
-      return record(key, (nargs == 0) ? makeNullaryValueConstructor(cls, value) : makeUnaryValueConstructor(cls));
+      else
+        return record(key, (nargs == 0) ? makeNullaryValueConstructor(cls, value) : makeUnaryValueConstructor(cls));
+    } else {
+        // not a legal call, likely due to dataflow imprecision
+        return null;
+    }
   }
 
   private IMethod makeNullaryObjectConstructor(IClass cls) {
