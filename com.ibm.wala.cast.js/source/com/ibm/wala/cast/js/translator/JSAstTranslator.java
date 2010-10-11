@@ -91,7 +91,7 @@ public class JSAstTranslator extends AstTranslator {
   
   protected int doGlobalRead(CAstNode n, WalkContext context, String name) {
     int readVn = super.doGlobalRead(n, context, name);
-    if (! "undefined".equals(name)) {
+    if (! ("undefined".equals(name) || "$$undefined".equals(name))) {
       addDefinedCheck(n, context, readVn);
     }
     return readVn;
