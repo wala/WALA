@@ -17,6 +17,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.ibm.wala.cast.js.html.IHtmlCallback;
 import com.ibm.wala.cast.js.html.ITag;
@@ -52,8 +54,11 @@ public class HTMLCallback implements IHtmlCallback {
     embeddedScriptFile.write(text, 0, length);
   }
 
+  private final Pattern ctrl = Pattern.compile("[\\p{Cntrl}&&[^\\p{Space}]]");
+
   private void writeEmbeddedScript(String text) throws IOException {
-    embeddedScriptFile.write(text);
+    Matcher m = ctrl.matcher(text);
+    embeddedScriptFile.write(m.replaceAll(" "));
  }
         
   protected String createElement(ITag tag) {
@@ -115,7 +120,9 @@ public class HTMLCallback implements IHtmlCallback {
       String attr = e.getKey();
       String value = e.getValue();
       if (attr.equalsIgnoreCase("id")) {
-        varName = value;
+        if (value.indexOf('-') == -1) {
+          varName = value;
+        }
         break;
       }
     }
@@ -129,7 +136,7 @@ public class HTMLCallback implements IHtmlCallback {
     
       indent(); domTreeFile.write("function make_" + varName + "(parent) {\n");
       indent(); domTreeFile.write("  this.temp = " + cons + ";\n");
-      indent(); domTreeFile.write("  this.temp(" + tag.getName() + ");\n");
+      indent(); domTreeFile.write("  this.temp('" + tag.getName() + "');\n");
       for (Map.Entry<String, String> e : tag.getAllAttributes().entrySet()){
         String attr = e.getKey();
         String value = e.getValue();
