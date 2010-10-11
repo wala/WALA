@@ -17,6 +17,7 @@ NaN = primitive("GlobalNaN");
 Infinity = primitive("GlobalInfinity");
 
 undefined = primitive("NewUndefined");
+$$undefined = undefined;
 
 eval = function eval (x) {
   return primitive("GlobalEval", x); 
@@ -308,7 +309,15 @@ String.prototype = {
   },
   
   loadFile: function loadFile() {
-		// magic function body handled in analysis.
+    // magic function body handled in analysis.
+  },
+
+ note_url: function noteURL() {
+    // hook for analysis of Web pages
+  },
+
+ note_post_parameters: function notePostParameters() {
+    // hook for analysis of Web pages
   }
 
 };
