@@ -40,6 +40,18 @@ public class GraphDataflowTest extends WalaTestCase {
   public static final String nodeNames = "ABCDEFGH";
   protected final static String[] nodes = new String[nodeNames.length()];
 
+  private static BitVector zero() {
+    BitVector b = new BitVector();
+    b.set(0);
+    return b;
+  }
+
+  private static BitVector one() {
+    BitVector b = new BitVector();
+    b.set(1);
+    return b;
+  }
+
   /**
    * A simple test of the GraphBitVectorDataflow system
    * @throws CancelException 
@@ -114,7 +126,7 @@ public class GraphDataflowTest extends WalaTestCase {
    * Solve the dataflow system and return the result as a string
    * @throws CancelException 
    */
-  private String solveNodeOnly(Graph<String> G) throws CancelException {
+  private static String solveNodeOnly(Graph<String> G) throws CancelException {
     final OrdinalSetMapping<String> values = new MutableMapping<String>(nodes);
     ITransferFunctionProvider<String, BitVectorVariable> functions = new ITransferFunctionProvider<String, BitVectorVariable>() {
 
@@ -147,7 +159,7 @@ public class GraphDataflowTest extends WalaTestCase {
     return result2String(s);
   }
 
-  private String solveNodeEdge(Graph<String> G) throws CancelException {
+  private static String solveNodeEdge(Graph<String> G) throws CancelException {
     final OrdinalSetMapping<String> values = new MutableMapping<String>(nodes);
     ITransferFunctionProvider<String, BitVectorVariable> functions = new ITransferFunctionProvider<String, BitVectorVariable>() {
 
@@ -157,18 +169,6 @@ public class GraphDataflowTest extends WalaTestCase {
 
       public boolean hasNodeTransferFunctions() {
         return true;
-      }
-
-      private BitVector zero() {
-        BitVector b = new BitVector();
-        b.set(0);
-        return b;
-      }
-
-      private BitVector one() {
-        BitVector b = new BitVector();
-        b.set(1);
-        return b;
       }
 
       public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(String from, String to) {
