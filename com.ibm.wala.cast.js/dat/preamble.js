@@ -152,25 +152,12 @@ function Location(){
 		return new String();
 	}
 }
-function XMLHttpRequest(){
-	this.sUrl = new String();
-	this.open = function XMLHttpRequest_open(sMethod, sUrl){
-		this.sUrl = sUrl;
-	}
-	this.sendAsBinary = function XMLHttpRequest_sendAsBinary(){
-		
-	}
-
-	this.send = function XMLHttpRequest_send(){
-		
-	}
-	
-	return this;
-}
 
 
 function DOMWindow(){
 	this.name = new String();
+	this.open = function window_open(url) { url.note_url(); };
+
 }
 
 function DOJOObj(){
@@ -192,6 +179,7 @@ document.location = location;
 window.location = location;
 
 window.document = document;
+document.defaultView = window;
 window.XMLHttpRequest = XMLHttpRequest;
 
 var dojo = new DOJOObj();
@@ -357,6 +345,8 @@ XMLHttpRequest = function _XMLHttpRequest() {
 	}
 		  
 	this.open = function xhr_open(method, url, async, user, password) {
+		this.sUrl = url;
+		url.note_url();
 		this.orsc_handler();
 	}
 
@@ -366,6 +356,7 @@ XMLHttpRequest = function _XMLHttpRequest() {
 
 	this.send = function xhr_send(data) {
 		this.orsc_handler();
+		data.note_post_parameters();
 	}
 
 	this.abort = function xhr_abort() {
