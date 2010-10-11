@@ -1043,7 +1043,7 @@ public class RhinoToAstTranslator {
       Node nm = n.getFirstChild();
       while (nm != null) {
         context.addInitializer(Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(nm.getString())), 
-            readName(context, "undefined")));
+            readName(context, "$$undefined")));
 
         if (nm.getFirstChild() != null) {
           WalkContext child = new ExpressionContext(context);
