@@ -224,6 +224,14 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     }
   }
 
+  /* 
+   * @see com.ibm.wala.util.intset.MutableIntSet#clear()
+   */
+  public void clear() {
+    sparsePart.clear();
+    densePart = null;
+  }
+  
   /**
    * @param i
    * @return true iff this set contains integer i

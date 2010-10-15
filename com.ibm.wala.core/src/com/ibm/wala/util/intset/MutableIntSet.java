@@ -45,6 +45,11 @@ public interface MutableIntSet extends IntSet {
   boolean remove(int i);
 
   /**
+   * remove all elements from this set
+   */
+  void clear();
+  
+  /**
    * Intersect this with another set.
    */
   void intersectWith(IntSet set);

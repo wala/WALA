@@ -262,6 +262,9 @@ public class PrimitivesTest extends WalaTestCase {
     b.add(0);
     Assert.assertTrue(!a.sameValue(b));
 
+    a.clear();
+    Assert.assertTrue(a.isEmpty());
+
     a = factory.parse("{1}");
     Assert.assertFalse(a.isSubset(b));
     b.remove(0);
@@ -288,6 +291,9 @@ public class PrimitivesTest extends WalaTestCase {
       System.err.println(temp2);
     }
 
+    temp2.clear();
+    Assert.assertTrue(temp2.isEmpty());
+    
     temp2 = factory.make();
     Assert.assertTrue(temp2.sameValue(a));
 
@@ -303,6 +309,8 @@ public class PrimitivesTest extends WalaTestCase {
       System.err.println(temp2);
     }
 
+    temp2.clear();
+    Assert.assertTrue(temp2.isEmpty());
   }
 
   /**

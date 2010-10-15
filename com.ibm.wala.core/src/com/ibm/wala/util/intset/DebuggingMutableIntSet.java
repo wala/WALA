@@ -34,6 +34,14 @@ class DebuggingMutableIntSet implements MutableIntSet {
     assert primaryImpl.sameValue(secondaryImpl);
   }
 
+  /* 
+   * @see com.ibm.wala.util.intset.MutableIntSet#clear()
+   */
+  public void clear() {
+    primaryImpl.clear();
+    secondaryImpl.clear();
+  }
+  
   /**
    * @return true iff this set contains integer i
    */

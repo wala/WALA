@@ -62,6 +62,13 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     super();
   }
 
+  /* 
+   * @see com.ibm.wala.util.intset.MutableIntSet#clear()
+   */
+  public void clear() {
+    size = 0;
+  }
+  
   /**
    */
   public boolean remove(int value) {

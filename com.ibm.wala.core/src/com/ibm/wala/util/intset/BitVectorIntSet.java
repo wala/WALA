@@ -45,6 +45,14 @@ public final class BitVectorIntSet implements MutableIntSet {
     copySet(S);
   }
 
+  /* 
+   * @see com.ibm.wala.util.intset.MutableIntSet#clear()
+   */
+  public void clear() {
+    bitVector.clearAll();
+    populationCount = 0;
+  }
+  
   /*
    * @see com.ibm.wala.util.intset.MutableIntSet#copySet(com.ibm.wala.util.intset.IntSet)
    */

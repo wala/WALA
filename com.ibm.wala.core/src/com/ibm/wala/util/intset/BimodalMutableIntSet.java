@@ -256,6 +256,13 @@ public class BimodalMutableIntSet implements MutableIntSet {
     impl = new TunedMutableSparseIntSet(initialSize, expansionFactor);
   }
 
+  /* 
+   * @see com.ibm.wala.util.intset.MutableIntSet#clear()
+   */
+  public void clear() {
+    impl = MutableSparseIntSet.makeEmpty();
+  }
+  
   /**
    * @param x
    * @throws IllegalArgumentException if x is null
