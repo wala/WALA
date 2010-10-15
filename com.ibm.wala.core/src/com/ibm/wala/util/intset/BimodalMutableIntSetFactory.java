@@ -15,14 +15,14 @@ import com.ibm.wala.util.debug.UnimplementedError;
 /**
  * An object that creates some bimodal mutable int sets.
  */
-public class BimodalMutableIntSetFactory implements MutableIntSetFactory {
+public class BimodalMutableIntSetFactory implements MutableIntSetFactory<BimodalMutableIntSet> {
 
   private final MutableSparseIntSetFactory factory = new MutableSparseIntSetFactory();
 
   /**
    * @param set
    */
-  public MutableIntSet make(int[] set) {
+  public BimodalMutableIntSet make(int[] set) {
     BimodalMutableIntSet result = new BimodalMutableIntSet();
     result.impl = factory.make(set);
     return result;
@@ -31,7 +31,7 @@ public class BimodalMutableIntSetFactory implements MutableIntSetFactory {
   /**
    * @param string
    */
-  public MutableIntSet parse(String string) throws NumberFormatException {
+  public BimodalMutableIntSet parse(String string) throws NumberFormatException {
     BimodalMutableIntSet result = new BimodalMutableIntSet();
     result.impl = factory.parse(string);
     return result;
@@ -40,7 +40,7 @@ public class BimodalMutableIntSetFactory implements MutableIntSetFactory {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#make(com.ibm.wala.util.intset.IntSet)
    */
-  public MutableIntSet makeCopy(IntSet x) throws UnimplementedError, IllegalArgumentException {
+  public BimodalMutableIntSet makeCopy(IntSet x) throws UnimplementedError, IllegalArgumentException {
     if (x == null) {
       throw new IllegalArgumentException("x == null");
     }
@@ -50,7 +50,7 @@ public class BimodalMutableIntSetFactory implements MutableIntSetFactory {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#make()
    */
-  public MutableIntSet make() {
+  public BimodalMutableIntSet make() {
     return new BimodalMutableIntSet();
   }
 }

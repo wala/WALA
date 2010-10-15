@@ -13,20 +13,20 @@ package com.ibm.wala.util.intset;
 /**
  * An object that creates some flavor of mutable int set.
  */
-public interface MutableIntSetFactory {
+public interface MutableIntSetFactory<T extends MutableIntSet> {
   /**
   	* @param set
   	*/
-  public MutableIntSet make(int[] set);
+  public T make(int[] set);
   /**
   	* @param string
   	*/
-  public MutableIntSet parse(String string);
+  public T parse(String string);
   /**
    * @param x
    */
-  public MutableIntSet makeCopy(IntSet x);
+  public T makeCopy(IntSet x);
   /**
    */
-  public MutableIntSet make();
+  public T make();
 }

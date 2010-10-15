@@ -15,25 +15,25 @@ import java.util.TreeSet;
 
 /**
  */
-public class SemiSparseMutableIntSetFactory implements MutableIntSetFactory {
+public class SemiSparseMutableIntSetFactory implements MutableIntSetFactory<SemiSparseMutableIntSet> {
 
   /**
    * @param set
    * @throws IllegalArgumentException  if set is null
    */
-  public MutableIntSet make(int[] set) {
+  public SemiSparseMutableIntSet make(int[] set) {
     if (set == null) {
       throw new IllegalArgumentException("set is null");
     }
     if (set.length == 0) {
-      return new BitVectorIntSet();
+      return make();
     } else {
       // XXX not very efficient.
       TreeSet<Integer> T = new TreeSet<Integer>();
       for (int i = 0; i < set.length; i++) {
         T.add(Integer.valueOf(set[i]));
       }
-      MutableIntSet result = new SemiSparseMutableIntSet();
+      SemiSparseMutableIntSet result = new SemiSparseMutableIntSet();
       for (Iterator<Integer> it = T.iterator(); it.hasNext();) {
         Integer I = it.next();
         result.add(I.intValue());
@@ -45,9 +45,9 @@ public class SemiSparseMutableIntSetFactory implements MutableIntSetFactory {
   /**
    * @param string
    */
-  public MutableIntSet parse(String string) throws NumberFormatException {
+  public SemiSparseMutableIntSet parse(String string) throws NumberFormatException {
     int[] data = SparseIntSet.parseIntArray(string);
-    MutableIntSet result = new SemiSparseMutableIntSet();
+    SemiSparseMutableIntSet result = new SemiSparseMutableIntSet();
     for (int i = 0; i < data.length; i++)
       result.add(data[i]);
     return result;
@@ -56,8 +56,8 @@ public class SemiSparseMutableIntSetFactory implements MutableIntSetFactory {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#make(com.ibm.wala.util.intset.IntSet)
    */
-  public MutableIntSet makeCopy(IntSet x) {
-    MutableIntSet y = new SemiSparseMutableIntSet();
+  public SemiSparseMutableIntSet makeCopy(IntSet x) {
+    SemiSparseMutableIntSet y = new SemiSparseMutableIntSet();
     y.copySet(x);
     return y;
   }
@@ -65,7 +65,7 @@ public class SemiSparseMutableIntSetFactory implements MutableIntSetFactory {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#make()
    */
-  public MutableIntSet make() {
+  public SemiSparseMutableIntSet make() {
     return new SemiSparseMutableIntSet();
   }
 

@@ -17,7 +17,7 @@ import com.ibm.wala.util.debug.UnimplementedError;
  * A debugging factory that creates debugging bitsets that are implemented as
  * two bitsets that perform consistency checks for every operation.
  */
-public class DebuggingMutableIntSetFactory implements MutableIntSetFactory {
+public class DebuggingMutableIntSetFactory implements MutableIntSetFactory<DebuggingMutableIntSet> {
 
   private MutableIntSetFactory primary;
 
@@ -38,19 +38,19 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory {
     this(new MutableSparseIntSetFactory(), new MutableSharedBitVectorIntSetFactory());
   }
 
-  public MutableIntSet make(int[] set) {
+  public DebuggingMutableIntSet make(int[] set) {
     if (set == null) {
       throw new IllegalArgumentException("null set");
     }
     return new DebuggingMutableIntSet(primary.make(set), secondary.make(set));
   }
 
-  public MutableIntSet parse(String string) {
+  public DebuggingMutableIntSet parse(String string) {
     int[] backingStore = SparseIntSet.parseIntArray(string);
     return make(backingStore);
   }
 
-  public MutableIntSet makeCopy(IntSet x) throws UnimplementedError {
+  public DebuggingMutableIntSet makeCopy(IntSet x) throws UnimplementedError {
     if (x == null) {
       throw new IllegalArgumentException("null x");
     }
@@ -70,7 +70,7 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory {
     }
   }
 
-  public MutableIntSet make() {
+  public DebuggingMutableIntSet make() {
     return new DebuggingMutableIntSet(primary.make(), secondary.make());
   }
 

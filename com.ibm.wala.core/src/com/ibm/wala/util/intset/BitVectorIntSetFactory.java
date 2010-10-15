@@ -15,13 +15,13 @@ import java.util.TreeSet;
 
 /**
  */
-public class BitVectorIntSetFactory implements MutableIntSetFactory {
+public class BitVectorIntSetFactory implements MutableIntSetFactory<BitVectorIntSet> {
 
   /**
    * @param set
    * @throws IllegalArgumentException  if set is null
    */
-  public MutableIntSet make(int[] set) {
+  public BitVectorIntSet make(int[] set) {
     if (set == null) {
       throw new IllegalArgumentException("set is null");
     }
@@ -45,9 +45,9 @@ public class BitVectorIntSetFactory implements MutableIntSetFactory {
   /**
    * @param string
    */
-  public MutableIntSet parse(String string) throws NumberFormatException {
+  public BitVectorIntSet parse(String string) throws NumberFormatException {
     int[] data = SparseIntSet.parseIntArray(string);
-    MutableIntSet result = new BitVectorIntSet();
+    BitVectorIntSet result = new BitVectorIntSet();
     for (int i = 0; i < data.length; i++) {
       result.add(data[i]);
     }
@@ -57,7 +57,7 @@ public class BitVectorIntSetFactory implements MutableIntSetFactory {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#make(com.ibm.wala.util.intset.IntSet)
    */
-  public MutableIntSet makeCopy(IntSet x) throws IllegalArgumentException {
+  public BitVectorIntSet makeCopy(IntSet x) throws IllegalArgumentException {
     if (x == null) {
       throw new IllegalArgumentException("x == null");
     }
@@ -67,7 +67,7 @@ public class BitVectorIntSetFactory implements MutableIntSetFactory {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#make()
    */
-  public MutableIntSet make() {
+  public BitVectorIntSet make() {
     return new BitVectorIntSet();
   }
 
