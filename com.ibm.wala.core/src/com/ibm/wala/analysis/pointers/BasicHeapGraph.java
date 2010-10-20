@@ -40,6 +40,7 @@ import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
+import com.ibm.wala.util.intset.MutableSparseIntSetFactory;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 import com.ibm.wala.util.intset.SparseIntSet;
@@ -53,6 +54,8 @@ public class BasicHeapGraph extends HeapGraph {
 
   private final static int VERBOSE_INTERVAL = 10000;
 
+  private final static MutableSparseIntSetFactory factory = new MutableSparseIntSetFactory();
+  
   /**
    * The backing graph
    */
@@ -151,7 +154,7 @@ public class BasicHeapGraph extends HeapGraph {
           if (succ == null) {
             return EmptyIterator.instance();
           }
-          SparseIntSet s = new MutableSparseIntSet(succ);
+          SparseIntSet s = factory.make(succ);
           return new IntMapIterator<Object>(s.intIterator(), toNode);
         }
 

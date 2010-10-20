@@ -43,7 +43,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     copySet(set);
   }
 
-  public MutableSparseIntSet(int[] backingStore) {
+  protected MutableSparseIntSet(int[] backingStore) {
     super(backingStore);
   }
 
