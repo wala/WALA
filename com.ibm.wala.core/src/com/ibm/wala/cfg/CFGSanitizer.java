@@ -76,8 +76,9 @@ public class CFGSanitizer {
         // TODO: this shouldn't happen?
         continue;
       }
-      if (s instanceof SSAReturnInstruction || s instanceof SSAThrowInstruction) {
-        // return or athrow: add edge to exit
+      if (s instanceof SSAReturnInstruction || s instanceof SSAThrowInstruction || cfg.getSuccNodeCount(b) == 1) {
+        // return or athrow, or some statement which is not an athrow or return whose only successor is the exit node (can only
+        // occur in synthetic methods without a return statement? --MS); add edge to exit
         g.addEdge(b, exit);
       } else {
         // compute types of exceptions the pei may throw
