@@ -129,8 +129,6 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
 
     PointsToSetVariable v = pointsToMap.getPointsToSet(key);
 
-    assert key != null;
-
     if (v == null) {
       return OrdinalSet.empty();
     } else {
@@ -314,10 +312,12 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       for (Iterator it = refs.iterator(); it.hasNext();) {
         InstanceKey ik = (InstanceKey) it.next();
         PointerKey fkey = pointerKeys.getPointerKeyForInstanceField(ik, f);
-        OrdinalSet pointees = getPointsToSet(fkey);
-        IntSet set = pointees.getBackingSet();
-        if (set != null) {
-          S.addAll(set);
+        if (fkey != null) {
+          OrdinalSet pointees = getPointsToSet(fkey);
+          IntSet set = pointees.getBackingSet();
+          if (set != null) {
+            S.addAll(set);
+          }
         }
       }
       return new OrdinalSet<InstanceKey>(S, instanceKeys);

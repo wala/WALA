@@ -10,10 +10,18 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ipa.callgraph;
 
+import java.util.Iterator;
+
 import com.ibm.wala.cast.ipa.callgraph.AstCFAPointerKeys;
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.EmptyIterator;
 
 /**
  * Common utilities for CFA-style call graph builders.
@@ -21,7 +29,58 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 public class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
 
   public JSCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
-    super(cha, options, cache, new AstCFAPointerKeys());
+    super(cha, options, cache, new AstCFAPointerKeys() {
+
+      private boolean isBogusKey(InstanceKey K) {
+        TypeReference t = K.getConcreteType().getReference();
+        return t == JavaScriptTypes.Null || t == JavaScriptTypes.Undefined;
+      }
+      
+      @Override
+      public PointerKey getPointerKeyForObjectCatalog(InstanceKey I) {
+        if (isBogusKey(I)) {
+          return null;
+        } else {
+          return super.getPointerKeyForObjectCatalog(I);
+        }
+      }
+
+      @Override
+      public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField f) {
+        if (isBogusKey(I)) {
+          return null;
+        } else {
+          return super.getPointerKeyForInstanceField(I, f);
+        }
+      }
+
+      @Override
+      public PointerKey getPointerKeyForArrayContents(InstanceKey I) {
+        if (isBogusKey(I)) {
+          return null;
+        } else {
+          return super.getPointerKeyForArrayContents(I);
+        }
+      }
+
+      @Override
+      public Iterator<PointerKey> getPointerKeysForReflectedFieldRead(InstanceKey I, InstanceKey F) {
+        if (isBogusKey(I)) {
+          return EmptyIterator.instance();
+        } else {
+          return super.getPointerKeysForReflectedFieldRead(I, F);
+        }
+      }
+
+      @Override
+      public Iterator<PointerKey> getPointerKeysForReflectedFieldWrite(InstanceKey I, InstanceKey F) {
+        if (isBogusKey(I)) {
+          return EmptyIterator.instance();
+        } else {
+          return super.getPointerKeysForReflectedFieldWrite(I, F);
+        }
+      }
+    });
   }
 
 }

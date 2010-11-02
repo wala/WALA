@@ -94,17 +94,17 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
 
           CallGraph CG = builder.getCallGraph();
 
-          // Assertions._assert(CG.getPredNodes(node).hasNext() || toDo == 0);
-
-          for (Iterator PS = CG.getPredNodes(node); PS.hasNext();) {
-            CGNode pred = (CGNode) PS.next();
-            if (pred != creator && !parentNodes.contains(pred)) {
-              parentNodes.add(pred);
-              scan(level + 1, toDo, parents, pred, parentNodes);
-              parentNodes.remove(pred);
+          if (CG.getPredNodes(node).hasNext() && toDo > 0) {
+            for (Iterator PS = CG.getPredNodes(node); PS.hasNext();) {
+              CGNode pred = (CGNode) PS.next();
+              if (pred != creator && !parentNodes.contains(pred)) {
+                parentNodes.add(pred);
+                scan(level + 1, toDo, parents, pred, parentNodes);
+                parentNodes.remove(pred);
+              }
             }
           }
-
+          
           if (restoreIndex != -1) {
             parents[restoreIndex] = restoreParent;
           }

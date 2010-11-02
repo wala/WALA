@@ -98,6 +98,13 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     return true;
   }
 
+  protected boolean isUncataloguedField(IClass type, String fieldName) {
+    if (! type.getReference().equals(JavaScriptTypes.Object)) {
+      return true;
+    }
+    return "prototype".equals(fieldName) || "constructor".equals(fieldName) || "arguments".equals(fieldName) || "class".equals(fieldName) || "$value".equals(fieldName);
+  }
+
   // ///////////////////////////////////////////////////////////////////////////
   //
   // top-level node constraint generation
