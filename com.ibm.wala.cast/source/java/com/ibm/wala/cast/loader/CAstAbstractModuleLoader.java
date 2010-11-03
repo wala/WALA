@@ -54,6 +54,10 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
 
   protected abstract TranslatorToCAst getTranslatorToCAst(CAst ast, ModuleEntry M, URL sourceURL, String localFileName);
 
+  protected TranslatorToCAst getTranslatorToCAst(CAst ast, ModuleEntry M, File sourceFile, String localFileName) throws MalformedURLException {
+    return getTranslatorToCAst(ast, M, sourceFile.toURI().toURL(), localFileName);
+  }
+
   protected abstract boolean shouldTranslate(CAstEntity entity);
 
   protected abstract TranslatorToIR initTranslator();
@@ -79,7 +83,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
             File f = ((SourceFileModule) moduleEntry).getFile();
             String fn = f.toString();
 
-             TranslatorToCAst xlatorToCAst = getTranslatorToCAst(ast, moduleEntry, f.toURI().toURL(), fn);
+             TranslatorToCAst xlatorToCAst = getTranslatorToCAst(ast, moduleEntry, f, fn);
 
              CAstEntity fileEntity = xlatorToCAst.translateToCAst();
 

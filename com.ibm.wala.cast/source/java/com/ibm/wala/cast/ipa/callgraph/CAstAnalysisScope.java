@@ -18,7 +18,7 @@ import java.util.Collections;
 import com.ibm.wala.cast.loader.SingleClassLoaderFactory;
 import com.ibm.wala.classLoader.ArrayClassLoader;
 import com.ibm.wala.classLoader.Language;
-import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -49,7 +49,7 @@ public class CAstAnalysisScope extends AnalysisScope {
     }
   }
 
-  public CAstAnalysisScope(SourceFileModule[] sources, SingleClassLoaderFactory loaders, Collection<Language> languages)
+  public CAstAnalysisScope(Module[] sources, SingleClassLoaderFactory loaders, Collection<Language> languages)
       throws IOException {
     this(loaders, languages);
     for (int i = 0; i < sources.length; i++) {
