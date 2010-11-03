@@ -87,7 +87,13 @@ public class FileOfClasses extends SetOfClasses implements Serializable {
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");
     }
-    return contains(klass.getName().toString());
+    if (klass.isPrimitiveType()) {
+      // can't exclude primitives
+      return false;
+    }
+    // get rid of the initial 'L' 
+    final String klassName = klass.getName().toString().substring(1);
+    return contains(klassName);
   }
 
   /*
