@@ -19,8 +19,6 @@ import java.util.Iterator;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipEntry;
 
-import com.ibm.wala.shrikeCT.ClassReader;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileSuffixes;
@@ -33,14 +31,14 @@ public class NestedJarFileModule implements Module {
   private static final boolean DEBUG = false;
 
   private final JarFileModule parent;
+
   private final ZipEntry entry;
 
   /**
-   * For efficiency, we cache the byte[] holding each ZipEntry's contents; this
-   * will help avoid multiple unzipping TODO: use a soft reference?
+   * For efficiency, we cache the byte[] holding each ZipEntry's contents; this will help avoid multiple unzipping TODO: use a soft
+   * reference?
    */
   private HashMap<String, byte[]> cache = null;
-
 
   public NestedJarFileModule(JarFileModule parent, ZipEntry entry) {
     this.parent = parent;
@@ -79,24 +77,13 @@ public class NestedJarFileModule implements Module {
             out.write(temp, 0, n);
             n = stream.read(temp);
           }
-
           byte[] bb = out.toByteArray();
-          try {
-            if (FileSuffixes.isClassFile(z.getName())) {
-              // check that we can read without an InvalidClassFileException
-              new ClassReader(bb);
-            }
-            cache.put(z.getName(), bb);
-          } catch (InvalidClassFileException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-            Assertions.UNREACHABLE();
-          }
+          cache.put(z.getName(), bb);
         }
       }
     } catch (IOException e) {
       e.printStackTrace();
-      Assertions.UNREACHABLE();
+      assert false;
     }
   }
 
@@ -143,8 +130,7 @@ public class NestedJarFileModule implements Module {
   }
 
   /**
-   * @author sfink
-   * an entry in a nested jar file.
+   * @author sfink an entry in a nested jar file.
    */
   private class Entry implements ModuleEntry {
 
@@ -168,18 +154,14 @@ public class NestedJarFileModule implements Module {
       return FileSuffixes.isClassFile(getName());
     }
 
-    /* 
+    /*
      * @see com.ibm.wala.classLoader.ModuleEntry#getInputStream()
      */
     public InputStream getInputStream() {
       return NestedJarFileModule.this.getInputStream(name);
     }
 
-    public long getSize() {
-      return NestedJarFileModule.this.getEntrySize(name);
-    }
-
-    /* 
+    /*
      * @see com.ibm.wala.classLoader.ModuleEntry#isModuleFile()
      */
     public boolean isModuleFile() {
@@ -245,7 +227,6 @@ public class NestedJarFileModule implements Module {
       return NestedJarFileModule.this;
     }
 
-    
   }
 
   @Override
@@ -278,6 +259,4 @@ public class NestedJarFileModule implements Module {
     return true;
   }
 
-   
-  
 }
