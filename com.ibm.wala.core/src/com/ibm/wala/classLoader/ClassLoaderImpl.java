@@ -10,7 +10,11 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
@@ -20,9 +24,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.jar.JarEntry;
+import java.util.jar.JarInputStream;
 
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -31,6 +38,10 @@ import com.ibm.wala.util.collections.HashCodeComparator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.Iterator2Iterable;
+import com.ibm.wala.util.io.FileProvider;
+import com.ibm.wala.util.io.FileSuffixes;
+import com.ibm.wala.util.io.FileUtil;
 import com.ibm.wala.util.shrike.ShrikeClassReaderHandle;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warning;
@@ -41,6 +52,8 @@ import com.ibm.wala.util.warnings.Warnings;
  */
 public class ClassLoaderImpl implements IClassLoader {
   private static final int DEBUG_LEVEL = 0;
+
+  private static final boolean OPTIMIZE_JAR_FILE_IO = true;
 
   /**
    * classes to ignore
@@ -198,10 +211,42 @@ public class ClassLoaderImpl implements IClassLoader {
     return loadedClasses.values();
   }
 
+  static class ByteArrayReaderHandle extends ShrikeClassReaderHandle {
+    public ByteArrayReaderHandle(ModuleEntry entry, byte[] contents) {
+      super(entry);
+      assert contents != null && contents.length > 0;
+      this.contents = contents;
+    }
+
+    private byte[] contents;
+
+    private boolean cleared;
+
+    @Override
+    public ClassReader get() throws InvalidClassFileException {
+      if (cleared) {
+        return super.get();
+      } else {
+        return new ClassReader(contents);
+      }
+    }
+
+    @Override
+    public void clear() {
+      if (cleared) {
+        super.clear();
+      } else {
+        contents = null;
+        cleared = true;
+      }
+    }
+
+  }
+
   /**
    * Set up the set of classes loaded by this object.
    */
-  private void loadAllClasses(Collection<ModuleEntry> moduleEntries) {
+  private void loadAllClasses(Collection<ModuleEntry> moduleEntries, Map<String, Object> fileContents) {
     for (Iterator<ModuleEntry> it = moduleEntries.iterator(); it.hasNext();) {
       ModuleEntry entry = it.next();
       if (!entry.isClassFile()) {
@@ -221,7 +266,7 @@ public class ClassLoaderImpl implements IClassLoader {
         continue;
       }
 
-      ShrikeClassReaderHandle reader = new ShrikeClassReaderHandle(entry);
+      ShrikeClassReaderHandle entryReader = new ShrikeClassReaderHandle(entry);
 
       className = "L" + className;
       if (DEBUG_LEVEL > 0) {
@@ -234,9 +279,20 @@ public class ClassLoaderImpl implements IClassLoader {
         } else if (parent != null && parent.lookupClass(T) != null) {
           Warnings.add(MultipleImplementationsWarning.create(className));
         } else {
-          ShrikeClass klass = new ShrikeClass(reader, this, cha);
-          if (klass.getReference().getName().equals(T)) {
-            loadedClasses.put(T, klass); // new ShrikeClass(reader, this, cha));
+          // try to read from memory
+          ShrikeClassReaderHandle reader = entryReader;
+          if (fileContents != null) {
+            final Object contents = fileContents.get(entry.getName());
+            if (contents != null) {
+              // reader that uses the in-memory bytes
+              reader = new ByteArrayReaderHandle(entry, (byte[]) contents);
+            }
+          }
+          ShrikeClass tmpKlass = new ShrikeClass(reader, this, cha);
+          if (tmpKlass.getReference().getName().equals(T)) {
+            // always used the reader based on the entry after this point,
+            // so we can null out and re-read class file contents
+            loadedClasses.put(T, new ShrikeClass(entryReader, this, cha));
             if (DEBUG_LEVEL > 1) {
               System.err.println("put " + T + " ");
             }
@@ -251,6 +307,64 @@ public class ClassLoaderImpl implements IClassLoader {
         Warnings.add(InvalidClassFile.create(className));
       }
     }
+  }
+
+  @SuppressWarnings("unused")
+  private Map<String, Object> getAllClassAndSourceFileContents(byte[] jarFileContents, String fileName,
+      Map<String, Map<String, Long>> entrySizes) {
+    if (jarFileContents == null) {
+      return null;
+    }
+    Map<String, Long> entrySizesForFile = entrySizes.get(fileName);
+    if (entrySizesForFile == null) {
+      return null;
+    }
+    Map<String, Object> result = HashMapFactory.make();
+    try {
+      JarInputStream s = new JarInputStream(new ByteArrayInputStream(jarFileContents));
+      JarEntry entry = null;
+      while ((entry = s.getNextJarEntry()) != null) {
+        byte[] entryBytes = getEntryBytes(entry, entrySizesForFile.get(entry.getName()), s);
+        if (entryBytes == null) {
+          return null;
+        }
+        String name = entry.getName();
+        if (FileSuffixes.isJarFile(name) || FileSuffixes.isWarFile(name)) {
+          Map<String, Object> nestedResult = getAllClassAndSourceFileContents(entryBytes, name, entrySizes);
+          if (nestedResult == null) {
+            return null;
+          }
+          for (String entryName : nestedResult.keySet()) {
+            if (!result.containsKey(entryName)) {
+              result.put(entryName, nestedResult.get(entryName));
+            }
+          }
+        } else if (FileSuffixes.isClassFile(name) || FileSuffixes.isSourceFile(name)) {
+          result.put(name, entryBytes);
+        }
+      }
+    } catch (IOException e) {
+      assert false;
+    }
+    return result;
+  }
+
+  private byte[] getEntryBytes(JarEntry entry, Long size, InputStream is) throws IOException {
+    if (size == null) {
+      return null;
+    }
+    ByteArrayOutputStream S = new ByteArrayOutputStream();
+    int n = 0;
+    long count = 0;
+    byte[] buffer = new byte[1024];
+    while (n > -1 && count < size) {
+      n = is.read(buffer, 0, 1024);
+      if (n > -1) {
+        S.write(buffer, 0, n);
+        count += n;
+      }
+    }
+    return S.toByteArray();
   }
 
   /**
@@ -330,23 +444,83 @@ public class ClassLoaderImpl implements IClassLoader {
     Set<ModuleEntry> sourceModuleEntries = HashSetFactory.make();
     for (Iterator<Module> it = modules.iterator(); it.hasNext();) {
       Module archive = it.next();
-      Set<ModuleEntry> classFiles = getClassFiles(archive);
       if (DEBUG_LEVEL > 0) {
         System.err.println("add archive: " + archive);
       }
+      // byte[] jarFileContents = null;
+      if (OPTIMIZE_JAR_FILE_IO && archive instanceof JarFileModule) {
+        // if we have a jar file, we read the whole thing into memory and operate on that; enables more
+        // efficient sequential I/O
+        // this is work in progress; for now, we read the file into memory and throw away the contents, which
+        // still gives a speedup for large jar files since it reads sequentially and warms up the FS cache. we get a small slowdown
+        // for smaller jar files or for jar files already in the FS cache. eventually, we should
+        // actually use the bytes read and eliminate the slowdown
+        // jarFileContents = archive instanceof JarFileModule ? getJarFileContents((JarFileModule) archive) : null;
+        getJarFileContents((JarFileModule) archive);
+      }
+      Set<ModuleEntry> classFiles = getClassFiles(archive);
       removeClassFiles(classFiles, classModuleEntries);
+      Set<ModuleEntry> sourceFiles = getSourceFiles(archive);
+      Map<String, Object> allClassAndSourceFileContents = null;
+      if (OPTIMIZE_JAR_FILE_IO) {
+        // work in progress --MS
+        // if (archive instanceof JarFileModule) {
+        // final JarFileModule jfModule = (JarFileModule) archive;
+        // final String name = jfModule.getJarFile().getName();
+        // Map<String, Map<String, Long>> entrySizes = getEntrySizes(jfModule, name);
+        // allClassAndSourceFileContents = getAllClassAndSourceFileContents(jarFileContents, name, entrySizes);
+        // }
+        // jarFileContents = null;
+      }
+      loadAllClasses(classFiles, allClassAndSourceFileContents);
+      loadAllSources(sourceFiles);
       for (Iterator<ModuleEntry> it2 = classFiles.iterator(); it2.hasNext();) {
         ModuleEntry file = it2.next();
         classModuleEntries.add(file);
       }
-      Set<ModuleEntry> sourceFiles = getSourceFiles(archive);
       for (Iterator<ModuleEntry> it2 = sourceFiles.iterator(); it2.hasNext();) {
         ModuleEntry file = it2.next();
         sourceModuleEntries.add(file);
       }
     }
-    loadAllClasses(classModuleEntries);
-    loadAllSources(sourceModuleEntries);
+  }
+
+  @SuppressWarnings("unused")
+  private Map<String, Map<String, Long>> getEntrySizes(Module module, String name) {
+    Map<String, Map<String, Long>> result = HashMapFactory.make();
+    Map<String, Long> curFileResult = HashMapFactory.make();
+    for (ModuleEntry e : Iterator2Iterable.make(module.getEntries())) {
+      if (e.isModuleFile()) {
+        result.putAll(getEntrySizes(e.asModule(), e.getName()));
+      } else {
+        if (e instanceof JarFileEntry) {
+          curFileResult.put(e.getName(), ((JarFileEntry) e).getSize());
+        }
+      }
+    }
+    result.put(name, curFileResult);
+    return result;
+  }
+
+  /**
+   * get the contents of a jar file. if any IO exceptions occur, catch and return null.
+   */
+  private byte[] getJarFileContents(JarFileModule archive) {
+    String jarFileName = archive.getJarFile().getName();
+    InputStream s = null;
+    try {
+      File jarFile = FileProvider.getFile(jarFileName);
+      int bufferSize = 65536;
+      s = new BufferedInputStream(new FileInputStream(jarFile), bufferSize);
+      return FileUtil.readBytes(s);
+    } catch (IOException e) {
+      return null;
+    } finally {
+      try {
+        s.close();
+      } catch (IOException e) {
+      }
+    }
   }
 
   public ClassLoaderReference getReference() {
