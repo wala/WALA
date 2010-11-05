@@ -77,7 +77,6 @@ function NamedNodeList() {
 }
 
 function DOMNode() { // An impostor for the Node class
-	this.attributes = new NamedNodeList();
 	this.childNodes = new NamedNodeList();
 	this.insertBefore = function insertBefore(newChild, refChild) {
 				this.childNodes.insertBefore(newChild, refChild);
@@ -138,6 +137,7 @@ function DOMHTMLDocument() {
 	this.temp();
 	this.URL = new String();
 	this.body = new HTMLBody();
+	this.forms = new Array();
 }
 
 
@@ -183,6 +183,7 @@ document.defaultView = window;
 window.XMLHttpRequest = XMLHttpRequest;
 
 var dojo = new DOJOObj();
+
 function DOMElement() { // An impostor for the Element class
 	// inherits from Node
 	this.temp = DOMNode;
@@ -192,14 +193,14 @@ function DOMElement() { // An impostor for the Element class
 	// since that would be used as a workaround for eval
 
 	this.getAttribute = function getAttribute(name) {
-		this.attributes.get(name);
+		return this[name];
 	}
 	this.setAttribute = function setAttribute(name, value) {
-		this.attributes.set(name, value);
+		this[name] = value;
 	}
 
 	this.removeAttribute = function removeAttribute(name) {
-		this.attributes.remove(name);
+	        this[name] = undefined;
 	}
 
 }
@@ -215,34 +216,6 @@ function DOMHTMLElement() { // An impostor for the HTMLElement class
 	this.lang = null;
 	this.dir = null;
 	this.className = null;
-
-	// Set Javascript properties
-	this.getAttribute = function getAttribute(name) {
-			if(name == "id") return this.id;
-			else if(name == "title") return this.title;
-			else if(name == "lang") return this.lang;
-			else if(name == "dir") return this.dir;
-			else if(name == "class") return this.className;
-			else return this.attributes.get(name);
-		}
-
-	this.setAttribute = function setAttribute(name, value) {
-			if(name == "id") this.id = value;
-			else if(name == "title") this.title = value;
-			else if(name == "lang")  this.lang = value;
-			else if(name == "dir")  this.dir = value;
-			else if(name == "class") this.className = value;
-			else return this.attributes.set(name, value);
-		}
-
-	this.removeAttribute = function removeAttribute(name) {
-			if(name == "id") this.id = null;
-			else if(name == "title") this.title = null;
-			else if(name == "lang")  this.lang = null;
-			else if(name == "dir") this.dir = null;
-			else if(name == "class") this.className = null;
-			else return this.attributes.remove(name);
-		}
 }
 
 var dynamic_node = 0;
@@ -265,10 +238,15 @@ function DOMHTMLGenericElement(tagName) {
 	this.src.loadFile();
 }
 
+var formCount = 0;
+
 function DOMHTMLFormElement() {
 	// inherits from HTMLElement
 	this.temp = DOMHTMLElement;
 	this.temp();
+
+        // add to 'forms' property
+        document.forms[formCount++] = this;
 
 	// Set Javascript properties
 	this.nodeName = "FORM";
@@ -288,37 +266,6 @@ function DOMHTMLFormElement() {
 	this.enctype = "application/x-www-form-urlencoded";
 	this.method = "get";
 	this.target = null;
-
-	// Set Javascript properties
-	this.getAttribute = function getAttribute(name) {
-			if(name == "name") return this.name;
-			else if(name == "accept-charset") return this.acceptCharset;
-			else if(name == "action") return this.action;
-			else if(name == "enctype") return this.enctype;
-			else if(name == "method") return this.method;
-			else if(name == "target") return this.target;
-			else return this.prototype.getAttribute(name);
-		}
-
-	this.setAttribute = function setAttribute(name, value) {
-			if(name == "name") this.name = value;
-			else if(name == "accept-charset") this.acceptCharset = value;
-			else if(name == "action") this.action = value;
-			else if(name == "enctype") this.enctype = value;
-			else if(name == "method") this.method = value;
-			else if(name == "target") this.target = value;
-			else return this.prototype.setAttribute(name, value);
-		}
-
-	this.removeAttribute = function removeAttribute(name) {
-			if(name == "name") this.name = null;
-			else if(name == "accept-charset") this.acceptCharset = null;
-			else if(name == "action") this.action = null;
-			else if(name == "enctype") this.enctype = null;
-			else if(name == "method") this.method = null;
-			else if(name == "target") this.target = null;
-			else return this.prototype.removeAttribute(name);
-		}
 }
 
 function DOMHTMLTableElement () {

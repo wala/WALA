@@ -51,6 +51,16 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     verifyGraphAssertions(CG, assertionsForPage2);
   }
 
+  private static final Object[][] assertionsForPage3 = new Object[][] {
+    new Object[] { ROOT, new String[] { "page3.html" } }
+  };
+  
+  @Test public void testPage3() throws IOException, IllegalArgumentException, CancelException {
+    URL url = getClass().getClassLoader().getResource("pages/page3.html");
+    CallGraph CG = Util.makeHTMLCG(url);
+    verifyGraphAssertions(CG, assertionsForPage3);
+  }
+
   @Test public void testCrawl() throws IOException, IllegalArgumentException, CancelException {
     URL url = getClass().getClassLoader().getResource("pages/crawl.html");
     CallGraph CG = Util.makeHTMLCG(url);
@@ -190,6 +200,26 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     URL url = getClass().getClassLoader().getResource("pages/crawl/page17.html");
     CallGraph CG = Util.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForPage17);
+  }
+
+  /*
+  @Test public void testDojoTest() throws IllegalArgumentException, IOException, CancelException {
+    URL url = getClass().getClassLoader().getResource("pages/dojo/test.html");
+    CallGraph CG = Util.makeHTMLCG(url);
+    verifyGraphAssertions(CG, null);
+  }
+    */
+  
+  private static final Object[][] assertionsForApolloExample = new Object[][] {
+    new Object[] { ROOT, new String[] { "apollo-example.html" } },
+    new Object[] { "apollo-example.html", new String[] { "apollo-example.html/signon" } },
+    new Object[] { "apollo-example.html/signon", new String[] { "preamble.js/DOMWindow/window_open" } }
+  };
+  
+  @Test public void testApolloExample() throws IOException, IllegalArgumentException, CancelException {
+    URL url = getClass().getClassLoader().getResource("pages/apollo-example.html");
+    CallGraph CG = Util.makeHTMLCG(url);
+    verifyGraphAssertions(CG, assertionsForApolloExample);
   }
 
 }

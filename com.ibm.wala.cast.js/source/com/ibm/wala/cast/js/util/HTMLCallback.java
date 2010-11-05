@@ -15,7 +15,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,6 +25,8 @@ import java.util.regex.Pattern;
 import com.ibm.wala.cast.js.html.IHtmlCallback;
 import com.ibm.wala.cast.js.html.ITag;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.debug.Assertions;
 
 public class HTMLCallback implements IHtmlCallback {
   private final URL input;
@@ -132,6 +136,9 @@ public class HTMLCallback implements IHtmlCallback {
     return varName;
   }
   
+  private Stack<ITag> forms = new Stack<ITag>();
+  private Set<Pair<ITag,String>> sets = new HashSet<Pair<ITag,String>>();
+  
   protected void writeElement(ITag tag, String cons, String varName) throws IOException {
     
       indent(); domTreeFile.write("function make_" + varName + "(parent) {\n");
@@ -144,6 +151,34 @@ public class HTMLCallback implements IHtmlCallback {
         writeAttribute(tag, attr, value, "this", varName);
       }
 
+      if (tag.getName().equalsIgnoreCase("FORM")) {
+        forms.push(tag);
+        indent(); domTreeFile.write("  var currentForm = this;\n");
+      } if (tag.getName().equalsIgnoreCase("INPUT")) {
+        String prop = tag.getAttributeByName("NAME");
+        if (prop == null) {
+          prop = tag.getAttributeByName("name");
+        }
+        assert prop != null;
+        
+        String type = tag.getAttributeByName("TYPE");
+        if (type == null) {
+          type = tag.getAttributeByName("type");
+        }
+        assert type != null;
+        
+        if (type.equalsIgnoreCase("RADIO")) {
+          if (! sets.contains(Pair.make(forms.peek(), prop))) {
+            sets.add(Pair.make(forms.peek(), prop));
+            indent(); domTreeFile.write("  currentForm." + prop + " = new Array();\n");
+            indent(); domTreeFile.write("  currentForm." + prop + "Counter = 0;\n");
+          }
+          indent(); domTreeFile.write("  currentForm." + prop + "[currentForm." + prop + "Counter++] = this;\n");
+        } else {
+          indent(); domTreeFile.write("  currentForm." + prop + " = this;\n");          
+        }
+      }
+      
       indent(); domTreeFile.write("  " + varName + " = this;\n");
       indent(); domTreeFile.write("  dom_nodes." + varName + " = this;\n");
       indent(); domTreeFile.write("  parent.appendChild(this);\n");
@@ -159,17 +194,21 @@ public class HTMLCallback implements IHtmlCallback {
         indent(); domTreeFile.write("function " + attr + "_" + varName2 + "(event) {" + value + "};\n");
         indent(); domTreeFile.write(varName + "." + attr + " = " + attr + "_" + varName2 + ";\n");
         entrypointFile.write("\n\n  " + varName2 + "." + attr + "(null);\n\n");
-      } else if (value.startsWith("javascript:") || value.startsWith("javaScript:")) {
+      /*} else if (value.startsWith("javascript:") || value.startsWith("javaScript:")) {
         indent(); domTreeFile.write("var " + varName + attr + " = " + value.substring(11) + "\n");
         indent(); domTreeFile.write(varName + ".setAttribute('" + attr + "', " + varName + attr + ");\n");
-      } else {
+      */} else {
         if (value.indexOf('\'') > 0) {
           value = value.replaceAll("\\'", "\\\\'");
       }
       if (value.indexOf('\n') > 0) {
         value = value.replaceAll("\\n", "\\\\n");
       }
-      indent(); domTreeFile.write(varName + ".setAttribute('" + attr + "', '" + value + "');\n");
+      if (attr.equals(attr.toUpperCase())) {
+        attr = attr.toLowerCase();
+      }
+      // indent(); domTreeFile.write(varName + ".setAttribute('" + attr + "', '" + value + "');\n");
+      indent(); domTreeFile.write(varName + "['" + attr + "'] = '" + value + "';\n");
     }
   }
 
@@ -200,6 +239,18 @@ public class HTMLCallback implements IHtmlCallback {
 
   public void handleEndTag(ITag tag) {
     endElement(stack.pop());
+    if (tag.getName().equalsIgnoreCase("FORM")) {
+      forms.pop();
+    }
+    for(String v : tag.getAllAttributes().values()) {
+      if (v.startsWith("javascript:")) {
+        try {
+          entrypointFile.write( v.substring(11) );
+        } catch (IOException e) {
+          Assertions.UNREACHABLE(e.toString());
+        }
+      }
+    }
   }
 
   public void handleStartTag(ITag tag) {
