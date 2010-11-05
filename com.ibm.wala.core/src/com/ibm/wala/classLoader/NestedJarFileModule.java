@@ -22,6 +22,8 @@ import java.util.zip.ZipEntry;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileSuffixes;
+import com.ibm.wala.util.warnings.Warning;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * A Jar file nested in a parent jar file
@@ -61,15 +63,16 @@ public class NestedJarFileModule implements Module {
     if (cache != null) {
       return;
     }
+    cache = HashMapFactory.make();
+    final byte[] b = parent.getContents(entry);
     try {
-      cache = HashMapFactory.make();
-      final byte[] b = parent.getContents(entry);
       final JarInputStream stream = new JarInputStream(new ByteArrayInputStream(b));
       for (ZipEntry z = stream.getNextEntry(); z != null; z = stream.getNextEntry()) {
+        final String name = z.getName();
         if (DEBUG) {
-          System.err.println(("got entry: " + z.getName()));
+          System.err.println(("got entry: " + name));
         }
-        if (FileSuffixes.isClassFile(z.getName()) || FileSuffixes.isSourceFile(z.getName())) {
+        if (FileSuffixes.isClassFile(name) || FileSuffixes.isSourceFile(name)) {
           ByteArrayOutputStream out = new ByteArrayOutputStream();
           byte[] temp = new byte[1024];
           int n = stream.read(temp);
@@ -78,13 +81,20 @@ public class NestedJarFileModule implements Module {
             n = stream.read(temp);
           }
           byte[] bb = out.toByteArray();
-          cache.put(z.getName(), bb);
+          cache.put(name, bb);
         }
       }
     } catch (IOException e) {
-      e.printStackTrace();
-      assert false;
+      // just go with what we have
+      Warnings.add(new Warning() {
+
+        @Override
+        public String getMsg() {
+          return "could not read contents of nested jar file " + entry.getName() + ", parent " + parent.getAbsolutePath();
+        }
+      });
     }
+
   }
 
   protected long getEntrySize(String name) {
