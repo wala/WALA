@@ -159,14 +159,13 @@ public class HTMLCallback implements IHtmlCallback {
         if (prop == null) {
           prop = tag.getAttributeByName("name");
         }
-        assert prop != null;
         
         String type = tag.getAttributeByName("TYPE");
         if (type == null) {
           type = tag.getAttributeByName("type");
         }
-        assert type != null;
-        
+ 
+        if (type != null && prop != null) {
         if (type.equalsIgnoreCase("RADIO")) {
           if (! sets.contains(Pair.make(forms.peek(), prop))) {
             sets.add(Pair.make(forms.peek(), prop));
@@ -177,6 +176,7 @@ public class HTMLCallback implements IHtmlCallback {
         } else {
           indent(); domTreeFile.write("  currentForm." + prop + " = this;\n");          
         }
+      }
       }
       
       indent(); domTreeFile.write("  " + varName + " = this;\n");
