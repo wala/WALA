@@ -49,7 +49,7 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
     try {
       loaderFactory = new JavaScriptLoaderFactory(translatorFactory);
 
-      SourceFileModule[] files = (SourceFileModule[]) moduleFiles.toArray(new SourceFileModule[moduleFiles.size()]);
+      Module[] files = (Module[]) moduleFiles.toArray(new Module[moduleFiles.size()]);
 
       scope = new CAstAnalysisScope(files, loaderFactory, Collections.singleton(JavaScriptLoader.JS));
     } catch (IOException e) {
