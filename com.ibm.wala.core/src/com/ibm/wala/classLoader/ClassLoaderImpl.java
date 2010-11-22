@@ -41,7 +41,6 @@ import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.io.FileSuffixes;
-import com.ibm.wala.util.io.FileUtil;
 import com.ibm.wala.util.shrike.ShrikeClassReaderHandle;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warning;
@@ -455,6 +454,9 @@ public class ClassLoaderImpl implements IClassLoader {
         // still gives a speedup for large jar files since it reads sequentially and warms up the FS cache. we get a small slowdown
         // for smaller jar files or for jar files already in the FS cache. eventually, we should
         // actually use the bytes read and eliminate the slowdown
+        // 11/22/10: I can't figure out a way to actually use the bytes without hurting performance.  Apparently,
+        // extracting files from a jar stored in memory via a JarInputStream is really slow compared to using
+        // a JarFile.  Will leave this as is for now.  --MS
         // jarFileContents = archive instanceof JarFileModule ? getJarFileContents((JarFileModule) archive) : null;
         getJarFileContents((JarFileModule) archive);
       }
@@ -505,19 +507,24 @@ public class ClassLoaderImpl implements IClassLoader {
   /**
    * get the contents of a jar file. if any IO exceptions occur, catch and return null.
    */
-  private byte[] getJarFileContents(JarFileModule archive) {
+  private void getJarFileContents(JarFileModule archive) {
     String jarFileName = archive.getJarFile().getName();
     InputStream s = null;
     try {
       File jarFile = FileProvider.getFile(jarFileName);
       int bufferSize = 65536;
       s = new BufferedInputStream(new FileInputStream(jarFile), bufferSize);
-      return FileUtil.readBytes(s);
+      byte[] b = new byte[1024];
+      int n = s.read(b);
+      while (n != -1) {
+        n = s.read(b);
+      }
     } catch (IOException e) {
-      return null;
     } finally {
       try {
-        s.close();
+        if (s != null) {
+          s.close();
+        }
       } catch (IOException e) {
       }
     }
