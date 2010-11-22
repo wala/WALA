@@ -194,23 +194,20 @@ public class HTMLCallback implements IHtmlCallback {
         indent(); domTreeFile.write("function " + attr + "_" + varName2 + "(event) {" + value + "};\n");
         indent(); domTreeFile.write(varName + "." + attr + " = " + attr + "_" + varName2 + ";\n");
         entrypointFile.write("\n\n  " + varName2 + "." + attr + "(null);\n\n");
-      /*} else if (value.startsWith("javascript:") || value.startsWith("javaScript:")) {
-        indent(); domTreeFile.write("var " + varName + attr + " = " + value.substring(11) + "\n");
-        indent(); domTreeFile.write(varName + ".setAttribute('" + attr + "', " + varName + attr + ");\n");
-      */} else {
+      } else if (value != null) {
         if (value.indexOf('\'') > 0) {
           value = value.replaceAll("\\'", "\\\\'");
+        }
+        if (value.indexOf('\n') > 0) {
+          value = value.replaceAll("\\n", "\\\\n");
+        }
+        if (attr.equals(attr.toUpperCase())) {
+          attr = attr.toLowerCase();
+        }
+        // indent(); domTreeFile.write(varName + ".setAttribute('" + attr + "', '" + value + "');\n");
+        indent(); domTreeFile.write(varName + "['" + attr + "'] = '" + value + "';\n");
       }
-      if (value.indexOf('\n') > 0) {
-        value = value.replaceAll("\\n", "\\\\n");
-      }
-      if (attr.equals(attr.toUpperCase())) {
-        attr = attr.toLowerCase();
-      }
-      // indent(); domTreeFile.write(varName + ".setAttribute('" + attr + "', '" + value + "');\n");
-      indent(); domTreeFile.write(varName + "['" + attr + "'] = '" + value + "';\n");
     }
-  }
 
   protected void writePortletAttribute(ITag tag, String attr, String value, String varName) throws IOException {
     if(attr.equals("portletid")) {
@@ -243,7 +240,7 @@ public class HTMLCallback implements IHtmlCallback {
       forms.pop();
     }
     for(String v : tag.getAllAttributes().values()) {
-      if (v.startsWith("javascript:")) {
+      if (v != null && v.startsWith("javascript:")) {
         try {
           entrypointFile.write( v.substring(11) );
         } catch (IOException e) {
