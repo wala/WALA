@@ -222,4 +222,10 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     verifyGraphAssertions(CG, assertionsForApolloExample);
   }
 
+  @Test public void testNojs() throws IOException, IllegalArgumentException, CancelException {
+    URL url = getClass().getClassLoader().getResource("pages/nojs.html");
+    CallGraph CG = Util.makeHTMLCG(url);
+    // all we need is for it to finish building CG successfully.
+  }
+
 }
