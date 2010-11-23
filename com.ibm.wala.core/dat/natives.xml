@@ -429,6 +429,19 @@
 					<new def="x" class="Ljava/util/Properties" />
 					<return value="x" />
 				</method>
+				<method name="getProperty"
+				    descriptor="(Ljava/lang/String;)Ljava/lang/String;"
+				    static="true">
+				    <new def="x" class="Ljava/lang/String" />
+				    <return value="x" />
+				</method>
+				<method name="getProperty"
+				    descriptor="(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
+				    static="true">
+				    <return value="arg1" />
+				    <new def="x" class="Ljava/lang/String" />
+				    <return value="x" />
+				</method>
 				<method name="mapLibraryName"
 					descriptor="(Ljava/lang/String;)Ljava/lang/String;"
 					static="true">

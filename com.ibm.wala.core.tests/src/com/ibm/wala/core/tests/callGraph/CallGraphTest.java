@@ -31,6 +31,8 @@ import com.ibm.wala.ipa.callgraph.CallGraphStats;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.AllApplicationEntrypoints;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
+import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ipa.cfg.InterproceduralCFG;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -41,6 +43,7 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphIntegrity;
@@ -138,6 +141,30 @@ public class CallGraphTest extends WalaTestCase {
     cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(), cha, scope, false);
     for (CGNode n : cg) {
       Assert.assertTrue(!n.toString().contains("doNothing"));
+    }
+  }
+
+  @Test public void testSystemProperties() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
+        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        "LstaticInit/TestSystemProperties");
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    SSAPropagationCallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCache(), cha, scope);    
+    CallGraph cg = builder.makeCallGraph(options);
+    for (CGNode n : cg) {
+      if (n.toString().equals("Node: < Application, LstaticInit/TestSystemProperties, main([Ljava/lang/String;)V > Context: Everywhere")) {
+        boolean foundToCharArray = false;
+        for (CGNode callee : Iterator2Iterable.make(cg.getSuccNodes(n))) {
+          if (callee.getMethod().getName().toString().equals("toCharArray")) {
+            foundToCharArray = true;
+            break;
+          }
+        }
+        Assert.assertTrue(foundToCharArray);
+        break;
+      }
     }
   }
 
