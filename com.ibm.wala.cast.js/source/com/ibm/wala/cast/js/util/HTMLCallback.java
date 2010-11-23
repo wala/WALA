@@ -191,8 +191,7 @@ public class HTMLCallback implements IHtmlCallback {
   
     protected void writeEventAttribute(ITag tag, String attr, String value, String varName, String varName2) throws IOException {
       if(attr.substring(0,2).equals("on")) {
-        indent(); domTreeFile.write("function " + attr + "_" + varName2 + "(event) {" + value + "};\n");
-        indent(); domTreeFile.write(varName + "." + attr + " = " + attr + "_" + varName2 + ";\n");
+        indent(); domTreeFile.write(varName + "." + attr + " = function " + attr + "_" + varName2 + "(event) {" + value + "};\n");
         entrypointFile.write("\n\n  " + varName2 + "." + attr + "(null);\n\n");
       } else if (value != null) {
         if (value.indexOf('\'') > 0) {

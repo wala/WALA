@@ -6,6 +6,15 @@
 
 // A combination of interfaces NodeList, NamedNodeMap, HTMLCollection
 // implement a list of Nodes, accessible through names as well
+
+note_url = function noteURL(url) {
+	// hook for analysis of Web pages
+};
+
+note_post_parameters = function notePostParameters(url) {
+	// hook for analysis of Web pages
+};
+
 function NamedNodeList() {
 	var maxLength = 10;
 	var local = new Array(10);
@@ -156,8 +165,9 @@ function Location(){
 
 function DOMWindow(){
 	this.name = new String();
-	this.open = function window_open(url) { url.note_url(); };
-
+	this.open = function window_open(url, stuff) { 
+		note_url(url); 
+	};
 }
 
 function DOJOObj(){
@@ -293,7 +303,7 @@ XMLHttpRequest = function _XMLHttpRequest() {
 		  
 	this.open = function xhr_open(method, url, async, user, password) {
 		this.sUrl = url;
-		url.note_url();
+		note_url(url);
 		this.orsc_handler();
 	}
 
@@ -303,7 +313,7 @@ XMLHttpRequest = function _XMLHttpRequest() {
 
 	this.send = function xhr_send(data) {
 		this.orsc_handler();
-		data.note_post_parameters();
+		note_post_parameters(data);
 	}
 
 	this.abort = function xhr_abort() {

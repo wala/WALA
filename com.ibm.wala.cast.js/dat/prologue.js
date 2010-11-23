@@ -310,14 +310,6 @@ String.prototype = {
   
   loadFile: function loadFile() {
     // magic function body handled in analysis.
-  },
-
- note_url: function noteURL() {
-    // hook for analysis of Web pages
-  },
-
- note_post_parameters: function notePostParameters() {
-    // hook for analysis of Web pages
   }
 
 };
