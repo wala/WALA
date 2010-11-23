@@ -228,4 +228,9 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     // all we need is for it to finish building CG successfully.
   }
 
+  @Test public void testPage4() throws IOException, IllegalArgumentException, CancelException {
+    URL url = getClass().getClassLoader().getResource("pages/page4.html");
+    CallGraph CG = Util.makeHTMLCG(url);
+  }
+
 }
