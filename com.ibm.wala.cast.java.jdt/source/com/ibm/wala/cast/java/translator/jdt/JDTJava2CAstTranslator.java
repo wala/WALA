@@ -55,6 +55,8 @@ import java.util.Map;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
+import org.eclipse.jdt.core.dom.AnnotationTypeMemberDeclaration;
 import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
 import org.eclipse.jdt.core.dom.ArrayAccess;
 import org.eclipse.jdt.core.dom.ArrayCreation;
@@ -346,9 +348,14 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
 
   }
 
-  private CAstEntity visit(TypeDeclaration n, WalkContext context) {
+  private boolean isInterface(AbstractTypeDeclaration decl) {
+    return decl instanceof AnnotationTypeDeclaration ||
+      (decl instanceof TypeDeclaration && ((TypeDeclaration)decl).isInterface());
+  }
+  
+  private CAstEntity visitTypeDecl(AbstractTypeDeclaration n, WalkContext context) {
     return createClassDeclaration(n, n.bodyDeclarations(), null, n.resolveBinding(), n.getName().getIdentifier(), n.getModifiers(),
-        n.isInterface(), context);
+        isInterface(n), n instanceof AnnotationTypeDeclaration, context);
   }
 
   /**
@@ -362,8 +369,8 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
    * @return
    */
   private CAstEntity createClassDeclaration(ASTNode n, List/* <BodyDeclaration> */bodyDecls,
-      List/* EnumConstantDeclaration */enumConstants, ITypeBinding typeBinding, String name, int modifiers, boolean isInterface,
-      WalkContext context) {
+      List/* EnumConstantDeclaration */enumConstants, ITypeBinding typeBinding, String name, int modifiers, 
+      boolean isInterface, boolean isAnnotation, WalkContext context) {
     final List<CAstEntity> memberEntities = new ArrayList<CAstEntity>();
 
     // find and collect all initializers (type Initializer) and field initializers (type VariableDeclarationFragment).
@@ -408,7 +415,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
       BodyDeclaration decl = (BodyDeclaration) d;
       if (decl instanceof FieldDeclaration) {
         FieldDeclaration fieldDecl = (FieldDeclaration) decl;
-        Collection<CAstQualifier> quals = JDT2CAstUtils.mapModifiersToQualifiers(fieldDecl.getModifiers(), false);
+        Collection<CAstQualifier> quals = JDT2CAstUtils.mapModifiersToQualifiers(fieldDecl.getModifiers(), false, false);
         for (Object f : fieldDecl.fragments()) {
           VariableDeclarationFragment fieldFrag = (VariableDeclarationFragment) f;
           memberEntities.add(new FieldEntity(fieldFrag.getName().getIdentifier(), fieldFrag.resolveBinding().getType(), quals,
@@ -434,6 +441,8 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
         }
       } else if (decl instanceof AbstractTypeDeclaration) {
         memberEntities.add(visit((AbstractTypeDeclaration) decl, context));
+      } else if (decl instanceof AnnotationTypeMemberDeclaration) {
+        // TODO: need to decide what to do with these
       } else {
         Assertions.UNREACHABLE("BodyDeclaration not Field, Initializer, or Method");
       }
@@ -470,20 +479,20 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
       memberEntities.add(new ProcedureEntity(staticInitAst, typeBinding, childEntities, newContext));
     }
 
-    Collection<CAstQualifier> quals = JDT2CAstUtils.mapModifiersToQualifiers(modifiers, isInterface);
+    Collection<CAstQualifier> quals = JDT2CAstUtils.mapModifiersToQualifiers(modifiers, isInterface, isAnnotation);
     return new ClassEntity(typeBinding, name, quals, memberEntities, makePosition(n));
   }
 
   private CAstEntity visit(AnonymousClassDeclaration n, WalkContext context) {
     return createClassDeclaration(n, n.bodyDeclarations(), null, n.resolveBinding(),
-        JDT2CAstUtils.anonTypeName(n.resolveBinding()), 0 /* no modifiers */, false, context);
+        JDT2CAstUtils.anonTypeName(n.resolveBinding()), 0 /* no modifiers */, false, false, context);
   }
 
   private CAstNode visit(TypeDeclarationStatement n, WalkContext context) {
     // TODO 1.6: enums of course...
     AbstractTypeDeclaration decl = n.getDeclaration();
     assert decl instanceof TypeDeclaration : "Local enum declaration not yet supported";
-    CAstEntity classEntity = visit((TypeDeclaration) decl, context);
+    CAstEntity classEntity = visitTypeDecl((TypeDeclaration) decl, context);
 
     // these statements doin't actually do anything, just define a type
     final CAstNode lcdNode = makeNode(context, fFactory, n, CAstNode.EMPTY);
@@ -908,9 +917,9 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
 
     public Collection getQualifiers() {
       if (fDecl == null)
-        return JDT2CAstUtils.mapModifiersToQualifiers(Modifier.STATIC, false); // static init
+        return JDT2CAstUtils.mapModifiersToQualifiers(Modifier.STATIC, false, false); // static init
       else
-        return JDT2CAstUtils.mapModifiersToQualifiers(fModifiers, false);
+        return JDT2CAstUtils.mapModifiersToQualifiers(fModifiers, false, false);
     }
 
     public CAstType getType() {
@@ -2635,13 +2644,15 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
   private CAstEntity visit(AbstractTypeDeclaration n, WalkContext context) {
     // handling of compilationunit in translate()
     if (n instanceof TypeDeclaration) {
-      return visit((TypeDeclaration) n, context);
+      return visitTypeDecl(n, context);
     } else if (n instanceof EnumDeclaration) {
       return visit((EnumDeclaration) n, context);
-      // TODO: enumdeclaration and annotationtypedeclaration
+    } else if (n instanceof AnnotationTypeDeclaration) {
+      return visitTypeDecl(n, context);
+    } else {
+      Assertions.UNREACHABLE("Unhandled type declaration type");
+      return null;
     }
-    Assertions.UNREACHABLE("Unhandled type declaration type");
-    return null;
   }
 
   /**
@@ -3416,7 +3427,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
 
     // JDT contains correct type info / class / subclass info for the enum
     return createClassDeclaration(n, n.bodyDeclarations(), n.enumConstants(), n.resolveBinding(), n.getName().getIdentifier(), n
-        .resolveBinding().getModifiers(), false, context);
+        .resolveBinding().getModifiers(), false, false, context);
   }
 
   /**

@@ -60,12 +60,15 @@ import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.util.debug.Assertions;
 
 public class JDT2CAstUtils {
-  public static Collection<CAstQualifier> mapModifiersToQualifiers(int modifiers, boolean isInterface) {
+  public static Collection<CAstQualifier> mapModifiersToQualifiers(int modifiers, boolean isInterface, boolean isAnnotation) {
     Set<CAstQualifier> quals = new LinkedHashSet<CAstQualifier>();
 
     if (isInterface)
       quals.add(CAstQualifier.INTERFACE);
 
+    if (isAnnotation)
+      quals.add(CAstQualifier.ANNOTATION);
+    
     if ((modifiers & Modifier.ABSTRACT) != 0)
       quals.add(CAstQualifier.ABSTRACT);
     if ((modifiers & Modifier.FINAL) != 0)

@@ -176,7 +176,7 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl {
     }
 
     public Collection<CAstQualifier> getQualifiers() {
-      return JDT2CAstUtils.mapModifiersToQualifiers(fType.getModifiers(), fType.isInterface());
+      return JDT2CAstUtils.mapModifiersToQualifiers(fType.getModifiers(), fType.isInterface(), fType.isAnnotation());
     }
 
     public boolean isInterface() {

@@ -174,4 +174,9 @@ public class JDTJava15IRTests extends IRTests {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }
 
+  @Test
+  public void testAnnotations() {
+    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
+  }
+
 }
