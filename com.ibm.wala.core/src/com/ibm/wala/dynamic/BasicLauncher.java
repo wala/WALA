@@ -44,15 +44,14 @@ public class BasicLauncher extends Launcher {
   }
 
   /**
-   * Launch the process and wait until it is finished.
+   * Launch the process and wait until it is finished.  Returns the exit value of the process.
    * 
    * @throws WalaException
    * @throws IllegalArgumentException
    * @throws IOException
    */
-  public void launch() throws WalaException, IllegalArgumentException, IOException {
+  public int launch() throws WalaException, IllegalArgumentException, IOException {
     Process p = spawnProcess(getCmd());
-
     Thread d1 = isCaptureErr() ? captureStdErr(p) : drainStdErr(p);
     Thread d2 = isCaptureOutput() ? captureStdOut(p) : drainStdOut(p);
     if (getInput() != null) {
@@ -80,5 +79,6 @@ public class BasicLauncher extends Launcher {
       Drainer d = (Drainer) d2;
       setStdOut(d.getCapture().toByteArray());
     }
+    return p.exitValue();
   }
 }
