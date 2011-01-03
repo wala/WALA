@@ -17,6 +17,7 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.dataflow.graph.BitVectorFramework;
 import com.ibm.wala.dataflow.graph.BitVectorIdentity;
+import com.ibm.wala.dataflow.graph.BitVectorKillAll;
 import com.ibm.wala.dataflow.graph.BitVectorKillGen;
 import com.ibm.wala.dataflow.graph.BitVectorSolver;
 import com.ibm.wala.dataflow.graph.BitVectorUnion;
