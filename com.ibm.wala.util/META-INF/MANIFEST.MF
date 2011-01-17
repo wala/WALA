@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Util
+Bundle-SymbolicName: com.ibm.wala.util
+Bundle-Version: 1.0.0.qualifier
+Export-Package: com.ibm.wala.util.collections,
+ com.ibm.wala.util.debug,
+ com.ibm.wala.util.functions,
+ com.ibm.wala.util.intset,
+ com.ibm.wala.util.math
