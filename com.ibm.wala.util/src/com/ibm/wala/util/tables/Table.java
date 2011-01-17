@@ -16,7 +16,6 @@ import java.util.Map;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.SimpleVector;
 import com.ibm.wala.util.intset.BitVector;
-import com.ibm.wala.util.strings.StringStuff;
 
 /**
  */
@@ -71,7 +70,7 @@ public class Table<T> {
     StringBuffer result = new StringBuffer();
     for (int i = 0; i < getNumberOfColumns(); i++) {
       StringBuffer heading = new StringBuffer(getColumnHeading(i));
-      StringStuff.padWithSpaces(heading, format[i]);
+      padWithSpaces(heading, format[i]);
       result.append(heading);
     }
     result.append("\n");
@@ -79,7 +78,7 @@ public class Table<T> {
       for (int i = 0; i < getNumberOfColumns(); i++) {
         T e = getElement(j, i);
         StringBuffer element = e == null ? new StringBuffer() : new StringBuffer(e.toString());
-        StringStuff.padWithSpaces(element, format[i]);
+        padWithSpaces(element, format[i]);
         result.append(element);
       }
       result.append("\n");
@@ -161,5 +160,16 @@ public class Table<T> {
       }
     }
 
+  }
+  
+  public static void padWithSpaces(StringBuffer b, int length) {
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
+    if (b.length() < length) {
+      for (int i = b.length(); i < length; i++) {
+        b.append(" ");
+      }
+    }
   }
 }

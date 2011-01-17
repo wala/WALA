@@ -60,7 +60,6 @@ Export-Package: .,
  com.ibm.wala.util.scope,
  com.ibm.wala.util.shrike,
  com.ibm.wala.util.strings,
- com.ibm.wala.util.tables,
  com.ibm.wala.util.warnings,
  com.ibm.wala.viz,
  com.ibm.wala.viz.viewer

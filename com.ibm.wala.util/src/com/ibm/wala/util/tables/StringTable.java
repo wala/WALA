@@ -21,7 +21,6 @@ import java.util.StringTokenizer;
 
 import com.ibm.wala.util.collections.SimpleVector;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.io.FileProvider;
 
 /**
  */
@@ -64,16 +63,16 @@ public class StringTable extends Table<String> implements Cloneable {
     return readFromTextFile(f, comment);
   }
 
-  /**
-   * read from a text file obtained as a resource
-   */
-  public static StringTable readFromTextFile(String fileName, Character comment) throws IOException {
-    if (fileName == null) {
-      throw new IllegalArgumentException("null fileName");
-    }
-    File f = FileProvider.getFile(fileName);
-    return readFromTextFile(f, comment);
-  }
+//  /**
+//   * read from a text file obtained as a resource
+//   */
+//  public static StringTable readFromTextFile(String fileName, Character comment) throws IOException {
+//    if (fileName == null) {
+//      throw new IllegalArgumentException("null fileName");
+//    }
+//    File f = FileProvider.getFile(fileName);
+//    return readFromTextFile(f, comment);
+//  }
 
   /**
    * @param f a file containing a table in text format, whitespace delimited
