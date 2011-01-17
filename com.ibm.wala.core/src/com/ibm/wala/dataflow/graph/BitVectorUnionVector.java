@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.dataflow.graph;
 
-import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.BitVectorVariable;
+import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.util.intset.BitVector;
 
 

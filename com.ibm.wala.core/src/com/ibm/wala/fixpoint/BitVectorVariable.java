@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.fixpoint;
 
-import com.ibm.wala.fixedpoint.impl.AbstractVariable;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;

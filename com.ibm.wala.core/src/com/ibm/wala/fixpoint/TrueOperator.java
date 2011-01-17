@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.fixpoint;
 
-import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 
 /**
  * Operator U(n) = true

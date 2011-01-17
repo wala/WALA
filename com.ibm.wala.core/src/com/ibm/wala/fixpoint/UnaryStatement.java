@@ -8,17 +8,12 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.fixedpoint.impl;
+package com.ibm.wala.fixpoint;
 
-import com.ibm.wala.fixpoint.IVariable;
 
 
 /**
- * Represents a single step, restricted to a unary
- * operator.
- *
- * @author Stephen Fink
- * @author Julian Dolby
+ * Represents a single step, restricted to a unary operator.
  */
 public abstract class UnaryStatement<T extends IVariable> extends AbstractStatement<T, UnaryOperator<T>> {
 

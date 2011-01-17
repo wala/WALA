@@ -8,9 +8,8 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.fixedpoint.impl;
+package com.ibm.wala.fixpoint;
 
-import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
 
 /**

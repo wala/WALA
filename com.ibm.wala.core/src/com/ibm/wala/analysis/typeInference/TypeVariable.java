@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.analysis.typeInference;
 
-import com.ibm.wala.fixedpoint.impl.AbstractVariable;
+import com.ibm.wala.fixpoint.AbstractVariable;
 
 /**
  * A type variable in the dataflow system for type inference.

@@ -8,15 +8,11 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.fixedpoint.impl;
+package com.ibm.wala.fixpoint;
 
-import com.ibm.wala.fixpoint.IVariable;
 
 /**
- *
- * An implementation of UnaryStep that carries its operator explicitly
- * 
- * @author sfink
+ * An implementation of UnaryStatement that carries its operator explicitly
  */
 public class BasicUnaryStatement<T extends IVariable> extends UnaryStatement<T> {
 

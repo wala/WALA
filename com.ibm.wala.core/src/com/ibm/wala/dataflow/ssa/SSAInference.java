@@ -14,9 +14,9 @@ package com.ibm.wala.dataflow.ssa;
 import java.util.Iterator;
 
 import com.ibm.wala.analysis.typeInference.TypeInference;
-import com.ibm.wala.fixedpoint.impl.AbstractOperator;
 import com.ibm.wala.fixedpoint.impl.DefaultFixedPointSolver;
 import com.ibm.wala.fixedpoint.impl.NullaryOperator;
+import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;

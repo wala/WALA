@@ -14,8 +14,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.ibm.wala.fixedpoint.impl.DefaultFixedPointSolver;
-import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.IVariable;
+import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.ObjectArrayMapping;
 import com.ibm.wala.util.collections.Pair;

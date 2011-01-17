@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.dataflow.graph;
 
-import com.ibm.wala.fixedpoint.impl.AbstractOperator;
+import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.fixpoint.IVariable;
 
 /**

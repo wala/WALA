@@ -17,14 +17,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.ibm.wala.fixedpoint.impl.AbstractOperator;
-import com.ibm.wala.fixedpoint.impl.AbstractStatement;
 import com.ibm.wala.fixedpoint.impl.GeneralStatement;
-import com.ibm.wala.fixedpoint.impl.UnaryOperator;
-import com.ibm.wala.fixedpoint.impl.UnaryStatement;
+import com.ibm.wala.fixpoint.AbstractOperator;
+import com.ibm.wala.fixpoint.AbstractStatement;
 import com.ibm.wala.fixpoint.IFixedPointStatement;
 import com.ibm.wala.fixpoint.IFixedPointSystem;
 import com.ibm.wala.fixpoint.IVariable;
+import com.ibm.wala.fixpoint.UnaryOperator;
+import com.ibm.wala.fixpoint.UnaryStatement;
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Filter;

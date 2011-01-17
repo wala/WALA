@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import com.ibm.wala.fixedpoint.impl.UnaryOperator;
+import com.ibm.wala.fixpoint.UnaryOperator;
 
 /**
  * A SideEffect is a constraint which carries a points-to-set which is def'fed or used in created constraints.

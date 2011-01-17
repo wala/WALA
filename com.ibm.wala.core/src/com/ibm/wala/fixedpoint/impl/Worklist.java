@@ -13,6 +13,7 @@ package com.ibm.wala.fixedpoint.impl;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 
+import com.ibm.wala.fixpoint.AbstractStatement;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Heap;
 

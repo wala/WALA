@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.fixedpoint.impl;
 
+import com.ibm.wala.fixpoint.AbstractStatement;
 import com.ibm.wala.fixpoint.IVariable;
 
 /**

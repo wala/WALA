@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.fixpoint;
 
-import com.ibm.wala.fixedpoint.impl.AbstractVariable;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;

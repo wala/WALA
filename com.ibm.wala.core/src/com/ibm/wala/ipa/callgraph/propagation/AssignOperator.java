@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import com.ibm.wala.fixedpoint.impl.UnaryOperator;
-import com.ibm.wala.fixedpoint.impl.UnaryStatement;
+import com.ibm.wala.fixpoint.UnaryOperator;
+import com.ibm.wala.fixpoint.UnaryStatement;
 
 /**
  * Corresponds to: "is a superset of". Used for assignment.

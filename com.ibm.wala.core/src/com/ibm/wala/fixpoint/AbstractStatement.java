@@ -8,17 +8,12 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.fixedpoint.impl;
+package com.ibm.wala.fixpoint;
 
-import com.ibm.wala.fixpoint.IFixedPointStatement;
-import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
 
 /**
  * Represents a single step in an iterative solver
- * 
- * @author Stephen Fink
- * @author Julian Dolby
  */
 public abstract class AbstractStatement<T extends IVariable, O extends AbstractOperator<T>> extends NodeWithNumber implements IFixedPointStatement<T>{
 

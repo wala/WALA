@@ -13,9 +13,11 @@ package com.ibm.wala.fixedpoint.impl;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.ibm.wala.fixpoint.AbstractStatement;
 import com.ibm.wala.fixpoint.IFixedPointStatement;
 import com.ibm.wala.fixpoint.IFixedPointSystem;
 import com.ibm.wala.fixpoint.IVariable;
+import com.ibm.wala.fixpoint.UnaryStatement;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;

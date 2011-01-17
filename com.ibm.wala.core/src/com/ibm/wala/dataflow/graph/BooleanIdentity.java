@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.dataflow.graph;
 
-import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.BooleanVariable;
+import com.ibm.wala.fixpoint.UnaryOperator;
 
 
 /**

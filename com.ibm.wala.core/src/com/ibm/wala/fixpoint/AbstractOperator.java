@@ -8,10 +8,8 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.fixedpoint.impl;
+package com.ibm.wala.fixpoint;
 
-import com.ibm.wala.fixpoint.FixedPointConstants;
-import com.ibm.wala.fixpoint.IVariable;
 
 /**
  * operator for a step in an iterative solver
