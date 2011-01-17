@@ -8,13 +8,11 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.dynamic;
+package com.ibm.wala.util.processes;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.util.logging.Logger;
-
-import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * A generic process launcher
@@ -50,7 +48,7 @@ public class BasicLauncher extends Launcher {
    * @throws IllegalArgumentException
    * @throws IOException
    */
-  public int launch() throws WalaException, IllegalArgumentException, IOException {
+  public int launch() throws  IllegalArgumentException, IOException {
     Process p = spawnProcess(getCmd());
     Thread d1 = isCaptureErr() ? captureStdErr(p) : drainStdErr(p);
     Thread d2 = isCaptureOutput() ? captureStdOut(p) : drainStdOut(p);
@@ -62,14 +60,14 @@ public class BasicLauncher extends Launcher {
         input.close();
       } catch (IOException e) {
         e.printStackTrace();
-        throw new WalaException("error priming stdin", e);
+        throw new IOException("error priming stdin", e);
       }
     }
     try {
       d1.join();
       d2.join();
     } catch (InterruptedException e) {
-      throw new WalaException("Internal error", e);
+      throw new Error("Internal error", e);
     }
     if (isCaptureErr()) {
       Drainer d = (Drainer) d1;

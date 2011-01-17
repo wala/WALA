@@ -8,4 +8,5 @@ Export-Package: com.ibm.wala.util,
  com.ibm.wala.util.debug,
  com.ibm.wala.util.functions,
  com.ibm.wala.util.intset,
- com.ibm.wala.util.math
+ com.ibm.wala.util.math,
+ com.ibm.wala.util.processes

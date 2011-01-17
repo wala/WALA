@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.dynamic;
+package com.ibm.wala.util.processes;
 
 import java.io.File;
 import java.io.IOException;
