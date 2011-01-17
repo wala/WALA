@@ -78,6 +78,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.ProgressMaster;
+import com.ibm.wala.util.ProgressMonitorDelegate;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.WalaException;
@@ -188,7 +189,7 @@ public class DemandCastChecker {
     master.setMillisPerWorkItem(360000);
     master.beginTask("runSolver", 1);
     try {
-      retCG = builder.makeCallGraph(options, master);
+      retCG = builder.makeCallGraph(options, ProgressMonitorDelegate.createProgressMonitorDelegate(master));
       retPA = builder.getPointerAnalysis();
     } catch (CallGraphBuilderCancelException e) {
       System.err.println("TIMED OUT!!");

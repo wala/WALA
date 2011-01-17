@@ -10,14 +10,26 @@
  *******************************************************************************/
 package com.ibm.wala.util;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
 
 
 /**
  * Simple utilities for Eclipse progress monitors
  */
 public class MonitorUtil {
+  
+  /**
+   * Use this interface to decouple core utilities from the Eclipse layer
+   */
+  public interface IProgressMonitor {
+
+    void beginTask(String task, int totalWork);
+
+    boolean isCanceled();
+
+    void done();
+
+    void worked(int units);
+  }
 
   public static void beginTask(IProgressMonitor monitor, String task, int totalWork) throws CancelException {
     if (monitor != null) {
@@ -54,11 +66,11 @@ public class MonitorUtil {
     }
   }
 
-  public static IProgressMonitor subProgress(ProgressMaster progress, int i) {
-    if (progress == null) {
-      return null;
-    } else {
-      return new SubProgressMonitor(progress, i);
-    }
-  }
+//  public static IProgressMonitor subProgress(ProgressMaster progress, int i) {
+//    if (progress == null) {
+//      return null;
+//    } else {
+//      return new SubProgressMonitor(progress, i);
+//    }
+//  }
 }

@@ -10,9 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.fixpoint;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+
 
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
 /**
  * Solves a set of constraints

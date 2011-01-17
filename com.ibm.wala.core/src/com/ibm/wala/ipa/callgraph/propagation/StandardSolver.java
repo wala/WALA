@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
 /**
  * standard fixed-point iterative solver for pointer analysis

@@ -13,8 +13,6 @@ package com.ibm.wala.fixedpoint.impl;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-
 import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.fixpoint.AbstractStatement;
 import com.ibm.wala.fixpoint.FixedPointConstants;
@@ -25,6 +23,7 @@ import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.fixpoint.UnaryStatement;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.debug.VerboseAction;
 
 /**

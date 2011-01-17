@@ -21,8 +21,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
@@ -39,6 +37,7 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
@@ -1169,7 +1168,7 @@ public class ClassHierarchy implements IClassHierarchy {
     if (factory == null) {
       throw new IllegalArgumentException("null factory");
     }
-    return new ClassHierarchy(scope, factory, new NullProgressMonitor());
+    return new ClassHierarchy(scope, factory, null);
   }
 
   /**
@@ -1182,12 +1181,12 @@ public class ClassHierarchy implements IClassHierarchy {
 
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, Set<Language> languages)
       throws ClassHierarchyException {
-    return new ClassHierarchy(scope, factory, languages, new NullProgressMonitor());
+    return new ClassHierarchy(scope, factory, languages, null);
   }
 
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, Language language)
       throws ClassHierarchyException {
-    return new ClassHierarchy(scope, factory, language, new NullProgressMonitor());
+    return new ClassHierarchy(scope, factory, language, null);
   }
 
   /**

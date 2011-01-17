@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
 /**
  * Basic interface for an object that can build a call graph.

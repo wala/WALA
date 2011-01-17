@@ -10,7 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.dataflow.IFDS;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
+
+
 
 /**
  * A {@link TabulationSolver} that gives up after a finite bound.

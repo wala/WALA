@@ -16,8 +16,6 @@ import com.ibm.wala.fixpoint.IVariable;
 
 /**
  * Default implementation of a fixed point solver.
- * 
- * @author sfink
  */
 public abstract class DefaultFixedPointSolver<T extends IVariable> extends AbstractFixedPointSolver<T> {
 
