@@ -3,10 +3,18 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Util
 Bundle-SymbolicName: com.ibm.wala.util
 Bundle-Version: 1.0.0.qualifier
-Export-Package: com.ibm.wala.util,
+Export-Package: com.ibm.wala.dataflow.graph,
+ com.ibm.wala.fixedpoint.impl,
+ com.ibm.wala.fixpoint,
+ com.ibm.wala.util,
  com.ibm.wala.util.collections,
  com.ibm.wala.util.debug,
  com.ibm.wala.util.functions,
+ com.ibm.wala.util.graph,
+ com.ibm.wala.util.graph.dominators,
+ com.ibm.wala.util.graph.impl,
+ com.ibm.wala.util.graph.labeled,
+ com.ibm.wala.util.graph.traverse,
  com.ibm.wala.util.intset,
  com.ibm.wala.util.math,
  com.ibm.wala.util.processes

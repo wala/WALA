@@ -8,15 +8,21 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.util.collections;
+package com.ibm.wala.dataflow.graph;
+
+import com.ibm.wala.fixpoint.AbstractOperator;
+import com.ibm.wala.fixpoint.IVariable;
 
 /**
- * Simple interface for an intensional set definition
+ * Abstract superclass for meet operators
  */
-@Deprecated
-public interface Filter<T> {
+public abstract class AbstractMeetOperator<T extends IVariable> extends AbstractOperator<T> {
+
   /**
-   * @return true iff o is in the set defined by this filter
+   * subclasses can override if needed
+   * @return true iff this meet is a noop when applied to one argument
    */
-  public boolean accepts(T o);
+  public boolean isUnaryNoOp() {
+    return true;
+  }
 }

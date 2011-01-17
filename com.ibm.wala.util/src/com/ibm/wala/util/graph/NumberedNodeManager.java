@@ -8,15 +8,29 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.util.collections;
+package com.ibm.wala.util.graph;
+
+import java.util.Iterator;
+
+import com.ibm.wala.util.intset.IntSet;
 
 /**
- * Simple interface for an intensional set definition
+ * An object which tracks nodes with numbers.
  */
-@Deprecated
-public interface Filter<T> {
+public interface NumberedNodeManager<T> extends NodeManager<T> {
+
+  public abstract int getNumber(T N);
+
+
+  public abstract T getNode(int number);
+
+
+  public abstract int getMaxNumber();
+
   /**
-   * @return true iff o is in the set defined by this filter
+   * @param s
+   * @return iterator of nodes with the numbers in set s
    */
-  public boolean accepts(T o);
+  public abstract Iterator<T> iterateNodes(IntSet s);
+
 }

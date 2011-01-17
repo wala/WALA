@@ -8,15 +8,11 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.util.collections;
+package com.ibm.wala.util.graph;
 
 /**
- * Simple interface for an intensional set definition
+ * A numbered graph is a {@link Graph} where each node has a unique persistent non-negative integer id.
  */
-@Deprecated
-public interface Filter<T> {
-  /**
-   * @return true iff o is in the set defined by this filter
-   */
-  public boolean accepts(T o);
+public interface NumberedGraph<T> extends Graph<T>, NumberedNodeManager<T>, NumberedEdgeManager<T> {
+
 }

@@ -8,15 +8,21 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.util.collections;
+package com.ibm.wala.util.graph;
 
 /**
- * Simple interface for an intensional set definition
+ * 
  */
-@Deprecated
-public interface Filter<T> {
+public interface OrderedMultiGraph<T> extends Graph<T> {
+
   /**
-   * @return true iff o is in the set defined by this filter
+   * get the ith successor of a node
    */
-  public boolean accepts(T o);
+  public T getSuccessor(T node, int i);
+
+  /**
+   * add an edge and record it so dst is the ith successor of src
+   */
+  public void addEdge(int i, T src, T dst);
+
 }

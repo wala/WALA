@@ -8,15 +8,23 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.util.collections;
+package com.ibm.wala.util.graph;
+
+import com.ibm.wala.util.intset.IntSet;
+
 
 /**
- * Simple interface for an intensional set definition
+ * Additional functionality for edges in numbered graphs
  */
-@Deprecated
-public interface Filter<T> {
+public interface NumberedEdgeManager<T> extends EdgeManager<T> {
+
   /**
-   * @return true iff o is in the set defined by this filter
+   * @return the numbers identifying the immediate successors of node
    */
-  public boolean accepts(T o);
+  public IntSet getSuccNodeNumbers(T node);
+  
+  /**
+   * @return the numbers identifying the immediate predecessors of node
+   */
+  public IntSet getPredNodeNumbers(T node);
 }

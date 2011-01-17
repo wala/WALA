@@ -8,15 +8,26 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.util.collections;
+package com.ibm.wala.util.graph.impl;
+
+import com.ibm.wala.util.graph.Graph;
+import com.ibm.wala.util.graph.NumberedGraph;
 
 /**
- * Simple interface for an intensional set definition
+ * A graph view that reverses the edges in a graph
  */
-@Deprecated
-public interface Filter<T> {
+public class GraphInverter {
+
   /**
-   * @return true iff o is in the set defined by this filter
+   * @param G
+   * @return A graph view that reverses the edges in G
    */
-  public boolean accepts(T o);
+  public static <T> Graph<T> invert(final Graph<T> G) {
+    if (G instanceof NumberedGraph) {
+      return new InvertedNumberedGraph<T>((NumberedGraph<T>) G);
+    } else {
+      return new InvertedGraph<T>(G);
+    }
+  }
+
 }

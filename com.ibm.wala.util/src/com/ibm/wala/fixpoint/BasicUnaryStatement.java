@@ -8,15 +8,23 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.util.collections;
+package com.ibm.wala.fixpoint;
+
 
 /**
- * Simple interface for an intensional set definition
+ * An implementation of UnaryStatement that carries its operator explicitly
  */
-@Deprecated
-public interface Filter<T> {
-  /**
-   * @return true iff o is in the set defined by this filter
-   */
-  public boolean accepts(T o);
+public class BasicUnaryStatement<T extends IVariable> extends UnaryStatement<T> {
+
+  private final UnaryOperator<T> operator;
+
+  BasicUnaryStatement(T lhs, UnaryOperator<T> operator, T rhs) {
+    super(lhs, rhs);
+    this.operator = operator;
+  }
+
+  @Override
+  public UnaryOperator<T> getOperator() {
+    return operator;
+  }
 }
