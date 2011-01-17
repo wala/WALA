@@ -35,14 +35,13 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.demandpa.genericutil;
+package com.ibm.wala.util.collections;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import com.ibm.wala.util.collections.HashMapFactory;
 
 abstract class AbstractMultiMap<K, V> implements MultiMap<K, V> {
 

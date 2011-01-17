@@ -36,14 +36,12 @@
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
 
-package com.ibm.wala.demandpa.genericutil;
+package com.ibm.wala.util.collections;
 
 import java.util.Arrays;
 import java.util.EmptyStackException;
 import java.util.Iterator;
 
-import com.ibm.wala.util.collections.ArrayIterator;
-import com.ibm.wala.util.collections.EmptyIterator;
 
 /**
  * An immutable stack of objects. The {@link #push(Object)} and {@link #pop()} operations create new stacks.

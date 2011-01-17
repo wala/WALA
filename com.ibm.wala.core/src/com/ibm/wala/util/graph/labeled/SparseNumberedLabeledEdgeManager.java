@@ -53,7 +53,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.ibm.wala.demandpa.genericutil.ArraySetMultiMap;
+import com.ibm.wala.util.collections.ArraySetMultiMap;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;

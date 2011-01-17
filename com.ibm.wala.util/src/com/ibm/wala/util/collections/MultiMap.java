@@ -35,29 +35,32 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.demandpa.genericutil;
+package com.ibm.wala.util.collections;
 
+import java.util.Collection;
 import java.util.Set;
 
-import com.ibm.wala.util.collections.HashSetFactory;
+public interface MultiMap<K, V> {
 
-public class HashSetMultiMap<K, V> extends AbstractMultiMap<K, V> {
+    public Set<V> get(K key);
 
-  public HashSetMultiMap() {
-    super(false);
-  }
+    public boolean put(K key, V val);
 
-  public HashSetMultiMap(boolean create) {
-    super(create);
-  }
+    public boolean remove(K key, V val);
 
-  @Override
-  protected Set<V> createSet() {
-    return HashSetFactory.make();
-  }
+    public Set<K> keySet();
 
-  public static <K, V> HashSetMultiMap<K, V> make() {
-    return new HashSetMultiMap<K, V>();
-  }
+    public boolean containsKey(K key);
 
+    public int size();
+
+    public String toString();
+
+    public boolean putAll(K key, Collection<? extends V> vals);
+
+    public Set<V> removeAll(K key);
+    
+    public void clear();
+
+  public boolean isEmpty();
 }

@@ -35,10 +35,28 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.demandpa.genericutil;
+package com.ibm.wala.util.collections;
 
-public interface ObjectVisitor<T> {
+import java.util.Set;
 
-    public void visit(T obj_);
+
+public class HashSetMultiMap<K, V> extends AbstractMultiMap<K, V> {
+
+  public HashSetMultiMap() {
+    super(false);
+  }
+
+  public HashSetMultiMap(boolean create) {
+    super(create);
+  }
+
+  @Override
+  protected Set<V> createSet() {
+    return HashSetFactory.make();
+  }
+
+  public static <K, V> HashSetMultiMap<K, V> make() {
+    return new HashSetMultiMap<K, V>();
+  }
 
 }

@@ -38,8 +38,8 @@
 package com.ibm.wala.demandpa.alg;
 
 import com.ibm.wala.demandpa.alg.statemachine.StateMachine.State;
-import com.ibm.wala.demandpa.genericutil.ImmutableStack;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
+import com.ibm.wala.util.collections.ImmutableStack;
 
 /**
  * Representation for a calling context.

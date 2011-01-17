@@ -35,7 +35,7 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.demandpa.genericutil;
+package com.ibm.wala.util.collections;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
@@ -50,7 +50,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.ibm.wala.util.Predicate;
-import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.functions.Function;
 
 /**
