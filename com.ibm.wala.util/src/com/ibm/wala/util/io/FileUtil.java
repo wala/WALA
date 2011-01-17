@@ -25,7 +25,6 @@ import java.util.Iterator;
 import java.util.regex.Pattern;
 
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * Simple utilities for accessing files.
@@ -67,7 +66,7 @@ public class FileUtil {
     return result;
   }
 
-  public static void copy(String srcFileName, String destFileName) throws WalaException {
+  public static void copy(String srcFileName, String destFileName)  throws IOException {
     if (srcFileName == null) {
       throw new IllegalArgumentException("srcFileName is null");
     }
@@ -82,12 +81,6 @@ public class FileUtil {
       long n = src.size();
       MappedByteBuffer buf = src.map(FileChannel.MapMode.READ_ONLY, 0, n);
       dest.write(buf);
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-      throw new WalaException("Failed to copy " + srcFileName + " to " + destFileName);
-    } catch (IOException e) {
-      e.printStackTrace();
-      throw new WalaException("Failed to copy " + srcFileName + " to " + destFileName);
     } finally {
       if (dest != null) {
         try {
