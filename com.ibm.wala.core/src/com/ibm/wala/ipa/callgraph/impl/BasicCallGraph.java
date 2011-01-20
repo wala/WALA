@@ -34,7 +34,7 @@ import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
-import com.ibm.wala.util.graph.NodeManager;
+import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.graph.impl.DelegatingNumberedNodeManager;
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
 import com.ibm.wala.util.graph.traverse.DFS;
@@ -349,7 +349,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
   }
 
   @Override
-  protected NodeManager<CGNode> getNodeManager() {
+  protected NumberedNodeManager<CGNode> getNodeManager() {
     return nodeManager;
   }
   

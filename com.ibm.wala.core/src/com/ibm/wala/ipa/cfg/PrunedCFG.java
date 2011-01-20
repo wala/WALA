@@ -254,15 +254,15 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
   private PrunedCFG(final ControlFlowGraph<I, T> cfg, final EdgeFilter<T> filter) {
     this.cfg = cfg;
     Graph<T> temp = new AbstractNumberedGraph<T>() {
-      private final EdgeManager<T> edges = new FilteredCFGEdges<I, T>(cfg, cfg, filter);
+      private final NumberedEdgeManager<T> edges = new FilteredCFGEdges<I, T>(cfg, cfg, filter);
 
       @Override
-      protected NodeManager<T> getNodeManager() {
+      protected NumberedNodeManager<T> getNodeManager() {
         return cfg;
       }
 
       @Override
-      protected EdgeManager<T> getEdgeManager() {
+      protected NumberedEdgeManager<T> getEdgeManager() {
         return edges;
       }
     };
@@ -276,12 +276,12 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
   }
 
   @Override
-  protected NodeManager<T> getNodeManager() {
+  protected NumberedNodeManager<T> getNodeManager() {
     return nodes;
   }
 
   @Override
-  protected EdgeManager<T> getEdgeManager() {
+  protected NumberedEdgeManager<T> getEdgeManager() {
     return edges;
   }
 

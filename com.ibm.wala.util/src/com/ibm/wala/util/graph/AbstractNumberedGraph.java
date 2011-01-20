@@ -20,18 +20,28 @@ import com.ibm.wala.util.intset.IntSet;
  */
 public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implements NumberedGraph<T> {
 
+  /**
+   * @return the object which manages nodes in the graph
+   */
+  protected abstract NumberedNodeManager<T> getNodeManager();
+
+  /**
+   * @return the object which manages edges in the graph
+   */
+  protected abstract NumberedEdgeManager<T> getEdgeManager();
+
   /*
    * @see com.ibm.wala.util.graph.NumberedNodeManager#getMaxNumber()
    */
   public int getMaxNumber() {
-    return ((NumberedNodeManager<T>) getNodeManager()).getMaxNumber();
+    return getNodeManager().getMaxNumber();
   }
 
   /*
    * @see com.ibm.wala.util.graph.NumberedNodeManager#getNode(int)
    */
   public T getNode(int number) {
-    return ((NumberedNodeManager<T>) getNodeManager()).getNode(number);
+    return getNodeManager().getNode(number);
   }
 
   /*
@@ -41,7 +51,7 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implemen
     if (N == null) {
       throw new IllegalArgumentException("N cannot be null");
     }
-    return ((NumberedNodeManager<T>) getNodeManager()).getNumber(N);
+    return getNodeManager().getNumber(N);
   }
 
   /*
@@ -56,13 +66,13 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implemen
    */
   public IntSet getPredNodeNumbers(T node) throws IllegalArgumentException {
     assert getEdgeManager() != null;
-    return ((NumberedEdgeManager<T>) getEdgeManager()).getPredNodeNumbers(node);
+    return getEdgeManager().getPredNodeNumbers(node);
   }
 
   /* 
    * @see com.ibm.wala.util.graph.NumberedEdgeManager#getSuccNodeNumbers(java.lang.Object)
    */
   public IntSet getSuccNodeNumbers(T node) throws IllegalArgumentException {
-    return ((NumberedEdgeManager<T>) getEdgeManager()).getSuccNodeNumbers(node);
+    return getEdgeManager().getSuccNodeNumbers(node);
   }
 }

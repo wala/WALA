@@ -31,13 +31,14 @@ import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.functions.IntFunction;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
 import com.ibm.wala.util.graph.EdgeManager;
-import com.ibm.wala.util.graph.NodeManager;
+import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.graph.impl.NumberedNodeIterator;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSetFactory;
@@ -133,7 +134,7 @@ public class BasicHeapGraph extends HeapGraph {
     };
 
     this.G = new AbstractNumberedGraph<Object>() {
-      private final EdgeManager<Object> edgeMgr = new EdgeManager<Object>() {
+      private final NumberedEdgeManager<Object> edgeMgr = new NumberedEdgeManager<Object>() {
         public Iterator<Object> getPredNodes(Object N) {
           int n = nodeMgr.getNumber(N);
           IntSet p = pred.getRelated(n);
@@ -141,6 +142,16 @@ public class BasicHeapGraph extends HeapGraph {
             return EmptyIterator.instance();
           } else {
             return new IntMapIterator<Object>(p.intIterator(), toNode);
+          }
+        }
+
+        public IntSet getPredNodeNumbers(Object N) {
+          int n = nodeMgr.getNumber(N);
+          IntSet p = pred.getRelated(n);
+          if (p != null) {
+            return p;
+          } else {
+            return IntSetUtil.make();
           }
         }
 
@@ -158,6 +169,15 @@ public class BasicHeapGraph extends HeapGraph {
           return new IntMapIterator<Object>(s.intIterator(), toNode);
         }
 
+        public IntSet getSuccNodeNumbers(Object N) {
+          int[] succ = computeSuccNodeNumbers(N, nodeMgr);
+          if (succ == null) {
+            return IntSetUtil.make();
+          } else {
+            return IntSetUtil.make(succ);
+          }
+        }
+        
         public int getSuccNodeCount(Object N) {
           int[] succ = computeSuccNodeNumbers(N, nodeMgr);
           return succ == null ? 0 : succ.length;
@@ -190,12 +210,12 @@ public class BasicHeapGraph extends HeapGraph {
       };
 
       @Override
-      protected NodeManager<Object> getNodeManager() {
+      protected NumberedNodeManager<Object> getNodeManager() {
         return nodeMgr;
       }
 
       @Override
-      protected EdgeManager<Object> getEdgeManager() {
+      protected NumberedEdgeManager<Object> getEdgeManager() {
         return edgeMgr;
       }
     };

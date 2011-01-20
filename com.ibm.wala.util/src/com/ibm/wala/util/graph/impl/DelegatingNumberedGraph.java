@@ -11,9 +11,9 @@
 package com.ibm.wala.util.graph.impl;
 
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
-import com.ibm.wala.util.graph.EdgeManager;
 import com.ibm.wala.util.graph.INodeWithNumberedEdges;
-import com.ibm.wala.util.graph.NodeManager;
+import com.ibm.wala.util.graph.NumberedEdgeManager;
+import com.ibm.wala.util.graph.NumberedNodeManager;
 
 /**
  * Basic functionality for a graph that delegates node and edge management, and
@@ -29,7 +29,7 @@ public class DelegatingNumberedGraph<T extends INodeWithNumberedEdges> extends A
    * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
    */
   @Override
-  protected NodeManager<T> getNodeManager() {
+  protected NumberedNodeManager<T> getNodeManager() {
     return nodeManager;
   }
 
@@ -37,7 +37,7 @@ public class DelegatingNumberedGraph<T extends INodeWithNumberedEdges> extends A
    * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
    */
   @Override
-  protected EdgeManager<T> getEdgeManager() {
+  protected NumberedEdgeManager<T> getEdgeManager() {
     return edgeManager;
   }
 }

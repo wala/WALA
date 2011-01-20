@@ -37,9 +37,8 @@ import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.IteratorUtil;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
-import com.ibm.wala.util.graph.EdgeManager;
-import com.ibm.wala.util.graph.NodeManager;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
+import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.graph.impl.SlowNumberedNodeManager;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
@@ -766,12 +765,12 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
   }
 
   @Override
-  protected EdgeManager<Statement> getEdgeManager() {
+  protected NumberedEdgeManager<Statement> getEdgeManager() {
     return edgeMgr;
   }
 
   @Override
-  public NodeManager<Statement> getNodeManager() {
+  public NumberedNodeManager<Statement> getNodeManager() {
     return nodeMgr;
   }
 

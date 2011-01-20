@@ -38,6 +38,7 @@ import com.ibm.wala.util.graph.EdgeManager;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.INodeWithNumber;
 import com.ibm.wala.util.graph.NodeManager;
+import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.graph.impl.DelegatingNumberedNodeManager;
@@ -67,7 +68,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   /**
    * Track edges (equations) that are not represented implicitly
    */
-  private final EdgeManager<INodeWithNumber> edgeManager = new SparseNumberedEdgeManager<INodeWithNumber>(nodeManager, 2,
+  private final NumberedEdgeManager<INodeWithNumber> edgeManager = new SparseNumberedEdgeManager<INodeWithNumber>(nodeManager, 2,
       BasicNaturalRelation.SIMPLE);
 
   private final DelegateGraph delegateGraph = new DelegateGraph();
@@ -158,7 +159,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
      * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
      */
     @Override
-    protected NodeManager<INodeWithNumber> getNodeManager() {
+    protected NumberedNodeManager<INodeWithNumber> getNodeManager() {
       return nodeManager;
     }
 
@@ -166,7 +167,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
      * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
      */
     @Override
-    protected EdgeManager<INodeWithNumber> getEdgeManager() {
+    protected NumberedEdgeManager<INodeWithNumber> getEdgeManager() {
       return edgeManager;
     }
 
@@ -629,7 +630,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
      */
     @Override
     @SuppressWarnings("unchecked")
-    protected NodeManager getNodeManager() {
+    protected NumberedNodeManager getNodeManager() {
       return nodeManager;
     }
 
@@ -638,7 +639,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
      */
     @Override
     @SuppressWarnings("unchecked")
-    protected EdgeManager getEdgeManager() {
+    protected NumberedEdgeManager getEdgeManager() {
       // TODO Auto-generated method stub
       Assertions.UNREACHABLE();
       return null;
@@ -1053,7 +1054,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
      */
     @Override
     @SuppressWarnings("unchecked")
-    protected NodeManager getNodeManager() {
+    protected NumberedNodeManager getNodeManager() {
       return nodeManager;
     }
 
@@ -1061,7 +1062,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
      * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
      */
     @Override
-    protected EdgeManager<PointsToSetVariable> getEdgeManager() {
+    protected NumberedEdgeManager<PointsToSetVariable> getEdgeManager() {
       Assertions.UNREACHABLE();
       return null;
     }

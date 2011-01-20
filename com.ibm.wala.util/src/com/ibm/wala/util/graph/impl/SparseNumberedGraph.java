@@ -11,9 +11,9 @@
 package com.ibm.wala.util.graph.impl;
 
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
-import com.ibm.wala.util.graph.EdgeManager;
 import com.ibm.wala.util.graph.INodeWithNumber;
-import com.ibm.wala.util.graph.NodeManager;
+import com.ibm.wala.util.graph.NumberedEdgeManager;
+import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 
 /**
@@ -50,7 +50,7 @@ public class SparseNumberedGraph<T extends INodeWithNumber> extends AbstractNumb
    * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
    */
   @Override
-  protected NodeManager<T> getNodeManager() {
+  protected NumberedNodeManager<T> getNodeManager() {
     return nodeManager;
   }
 
@@ -58,7 +58,7 @@ public class SparseNumberedGraph<T extends INodeWithNumber> extends AbstractNumb
    * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
    */
   @Override
-  protected EdgeManager<T> getEdgeManager() {
+  protected NumberedEdgeManager<T> getEdgeManager() {
     return edgeManager;
   }
 }

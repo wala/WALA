@@ -17,8 +17,8 @@ import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
-import com.ibm.wala.util.graph.EdgeManager;
-import com.ibm.wala.util.graph.NodeManager;
+import com.ibm.wala.util.graph.NumberedEdgeManager;
+import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.intset.BitVector;
 
 public class DelegatingCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGraph<T> implements ControlFlowGraph<I, T> {
@@ -29,11 +29,11 @@ public class DelegatingCFG<I, T extends IBasicBlock<I>> extends AbstractNumbered
     this.parent = parent;
   }
 
-  protected NodeManager<T> getNodeManager() {
+  protected NumberedNodeManager<T> getNodeManager() {
     return parent;
   }
 
-  protected EdgeManager<T> getEdgeManager() {
+  protected NumberedEdgeManager<T> getEdgeManager() {
     return parent;
   }
 

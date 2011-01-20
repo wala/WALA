@@ -13,9 +13,9 @@ package com.ibm.wala.util.graph.impl;
 import java.util.Iterator;
 
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
-import com.ibm.wala.util.graph.EdgeManager;
 import com.ibm.wala.util.graph.Graph;
-import com.ibm.wala.util.graph.NodeManager;
+import com.ibm.wala.util.graph.NumberedEdgeManager;
+import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 
 /**
@@ -45,7 +45,7 @@ public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> {
    * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
    */
   @Override
-  public NodeManager<T> getNodeManager() {
+  public NumberedNodeManager<T> getNodeManager() {
     return nodeManager;
   }
 
@@ -53,7 +53,7 @@ public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> {
    * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
    */
   @Override
-  public EdgeManager<T> getEdgeManager() {
+  public NumberedEdgeManager<T> getEdgeManager() {
     return edgeManager;
   }
 

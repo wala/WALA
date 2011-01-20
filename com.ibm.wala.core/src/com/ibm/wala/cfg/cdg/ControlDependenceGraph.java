@@ -22,10 +22,13 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
-import com.ibm.wala.util.graph.EdgeManager;
-import com.ibm.wala.util.graph.NodeManager;
+import com.ibm.wala.util.graph.NumberedEdgeManager;
+import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.graph.dominators.DominanceFrontiers;
 import com.ibm.wala.util.graph.impl.GraphInverter;
+import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.IntSetUtil;
+import com.ibm.wala.util.intset.MutableIntSet;
 
 /**
  * Control Dependence Graph
@@ -41,7 +44,7 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
    * the EdgeManager for the CDG. It implements the edge part of the standard Graph abstraction, using the control-dependence edges
    * of the cdg.
    */
-  private final EdgeManager<T> edgeManager;
+  private final NumberedEdgeManager<T> edgeManager;
 
   /**
    * If requested, this is a map from parentXchild Pairs representing edges in the CDG to the labels of the control flow edges that
@@ -94,8 +97,8 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
    * Given the control-dependence edges in a forward direction (i.e. edges from control parents to control children), this method
    * creates an EdgeManager that provides the edge half of the Graph abstraction.
    */
-  private EdgeManager<T> constructGraphEdges(final Map<T, Set<T>> forwardEdges) {
-    return new EdgeManager<T>() {
+  private NumberedEdgeManager<T> constructGraphEdges(final Map<T, Set<T>> forwardEdges) {
+    return new NumberedEdgeManager<T>() {
       Map<T, Set<T>> backwardEdges = HashMapFactory.make(forwardEdges.size());
       {
         for (Iterator<? extends T> x = cfg.iterator(); x.hasNext();) {
@@ -118,6 +121,16 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
           return EmptyIterator.instance();
       }
 
+      public IntSet getPredNodeNumbers(T node) {
+        MutableIntSet x = IntSetUtil.make();
+        if (backwardEdges.containsKey(node)) {
+          for(T pred : backwardEdges.get(node)) {
+            x.add(pred.getNumber());
+          }
+        }
+        return x;
+      }
+
       public int getPredNodeCount(T N) {
         if (backwardEdges.containsKey(N))
           return ((Set) backwardEdges.get(N)).size();
@@ -130,6 +143,16 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
           return forwardEdges.get(N).iterator();
         else
           return EmptyIterator.instance();
+      }
+
+      public IntSet getSuccNodeNumbers(T node) {
+        MutableIntSet x = IntSetUtil.make();
+        if (forwardEdges.containsKey(node)) {
+          for(T succ : forwardEdges.get(node)) {
+            x.add(succ.getNumber());
+          }
+        }
+        return x;
       }
 
       public int getSuccNodeCount(T N) {
@@ -216,12 +239,12 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
   }
 
   @Override
-  public NodeManager<T> getNodeManager() {
+  public NumberedNodeManager<T> getNodeManager() {
     return cfg;
   }
 
   @Override
-  public EdgeManager<T> getEdgeManager() {
+  public NumberedEdgeManager<T> getEdgeManager() {
     return edgeManager;
   }
 

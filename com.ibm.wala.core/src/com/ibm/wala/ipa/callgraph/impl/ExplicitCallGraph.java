@@ -423,7 +423,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
    * @return Returns the edgeManger.
    */
   @Override
-  public EdgeManager<CGNode> getEdgeManager() {
+  public NumberedEdgeManager<CGNode> getEdgeManager() {
     return edgeManager;
   }
 

@@ -48,7 +48,7 @@
  */
 package com.ibm.wala.util.graph.labeled;
 
-import com.ibm.wala.util.graph.NodeManager;
+import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.graph.impl.SlowNumberedNodeManager;
 
 /**
@@ -74,7 +74,7 @@ public class SlowSparseNumberedLabeledGraph<T, U> extends AbstractNumberedLabele
   }
 
   @Override
-  protected NodeManager<T> getNodeManager() {
+  protected NumberedNodeManager<T> getNodeManager() {
     return nodeManager;
   }
 

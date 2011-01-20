@@ -11,8 +11,6 @@
 package com.ibm.wala.util.graph.impl;
 
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
-import com.ibm.wala.util.graph.EdgeManager;
-import com.ibm.wala.util.graph.NodeManager;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.NumberedNodeManager;
@@ -26,12 +24,12 @@ public class InvertedNumberedGraph<T> extends AbstractNumberedGraph<T> {
   final private NumberedEdgeManager<T> edges;
 
   @Override
-  protected NodeManager<T> getNodeManager() {
+  protected NumberedNodeManager<T> getNodeManager() {
     return nodes;
   }
 
   @Override
-  protected EdgeManager<T> getEdgeManager() {
+  protected NumberedEdgeManager<T> getEdgeManager() {
     return edges;
   }
 

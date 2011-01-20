@@ -140,7 +140,7 @@ public class Acyclic {
     }
 
     @Override
-    protected EdgeManager<T> getEdgeManager() {
+    protected NumberedEdgeManager<T> getEdgeManager() {
       return edges;
     }
 
@@ -211,7 +211,7 @@ public class Acyclic {
     }
 
     @Override
-    protected NodeManager<T> getNodeManager() {
+    protected NumberedNodeManager<T> getNodeManager() {
       return delegate;
     }
   }
