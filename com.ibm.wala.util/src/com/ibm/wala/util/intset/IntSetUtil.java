@@ -43,6 +43,10 @@ public class IntSetUtil {
     return defaultIntSetFactory.make();
   }
 
+  public static MutableIntSet make(int[] initial) {
+	    return defaultIntSetFactory.make(initial);
+	  }
+
   private final static boolean DEBUG = false;
 
   // there's no reason to instantiate this class
