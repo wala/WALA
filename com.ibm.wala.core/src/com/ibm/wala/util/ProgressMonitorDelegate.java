@@ -18,6 +18,9 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 public class ProgressMonitorDelegate implements IProgressMonitor {
 
   public static ProgressMonitorDelegate createProgressMonitorDelegate(org.eclipse.core.runtime.IProgressMonitor d) {
+    if (d == null) {
+      throw new IllegalArgumentException("d is null");
+    }
     return new ProgressMonitorDelegate(d);
   }
 
