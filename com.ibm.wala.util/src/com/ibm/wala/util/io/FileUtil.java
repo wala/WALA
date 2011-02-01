@@ -12,7 +12,6 @@ package com.ibm.wala.util.io;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -103,9 +102,9 @@ public class FileUtil {
    * @throws IOException if there's a problem deleting some file
    */
   public static void deleteContents(String directory) throws IOException  {
-    Collection fl = listFiles(directory, null, true);
+    Collection<File> fl = listFiles(directory, null, true);
 
-    for (Iterator it = fl.iterator(); it.hasNext();) {
+    for (Iterator<File> it = fl.iterator(); it.hasNext();) {
       File f = (File) it.next();
       if (!f.isDirectory()) {
         boolean result = f.delete();
@@ -116,13 +115,13 @@ public class FileUtil {
     } 
     int lastCount = Integer.MAX_VALUE;
     do {
-      Collection f2 = listFiles(directory, null, true);
+      Collection<File> f2 = listFiles(directory, null, true);
       if (f2.size() == lastCount) {
         throw new IOException("got stuck deleting directories. Probably some other process is preventing deletion.");
       }
       lastCount = f2.size();
 
-      for (Iterator it = f2.iterator(); it.hasNext();) {
+      for (Iterator<File> it = f2.iterator(); it.hasNext();) {
         File f = (File) it.next();
         f.delete();
       }
