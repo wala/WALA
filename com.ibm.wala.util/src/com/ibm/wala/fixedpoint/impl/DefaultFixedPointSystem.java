@@ -33,6 +33,7 @@ import com.ibm.wala.util.graph.traverse.Topological;
 /**
  * Default implementation of a dataflow graph
  */
+@SuppressWarnings("rawtypes")
 public class DefaultFixedPointSystem<T extends IVariable> implements IFixedPointSystem<T>  {
   static final boolean DEBUG = false;
 

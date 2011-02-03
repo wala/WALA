@@ -15,6 +15,7 @@ import com.ibm.wala.util.graph.impl.NodeWithNumber;
 /**
  * Represents a single variable in a fixed-point system.
  */
+@SuppressWarnings("rawtypes")
 public abstract class AbstractVariable<T extends AbstractVariable> extends NodeWithNumber implements IVariable<T> {
 
   private static int nextHashCode = 0;

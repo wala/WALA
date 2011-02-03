@@ -20,6 +20,7 @@ import com.ibm.wala.util.collections.Heap;
 /**
  * Worklist for fixed-point solver implementation
  */
+@SuppressWarnings("rawtypes")
 public class Worklist extends Heap<AbstractStatement> {
 
   private final HashSet<AbstractStatement> contents = HashSetFactory.make();

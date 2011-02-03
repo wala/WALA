@@ -16,9 +16,8 @@ import com.ibm.wala.fixpoint.IVariable;
 /**
  * Represents a single step, restricted to a nullary
  * operator.
- *
- * @author Stephen Fink
  */
+@SuppressWarnings("rawtypes")
 public abstract class NullaryStatement<T extends IVariable> extends AbstractStatement<T, NullaryOperator<T>> {
 
   /**

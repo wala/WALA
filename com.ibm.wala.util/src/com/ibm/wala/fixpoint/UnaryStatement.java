@@ -15,6 +15,7 @@ package com.ibm.wala.fixpoint;
 /**
  * Represents a single step, restricted to a unary operator.
  */
+@SuppressWarnings("rawtypes")
 public abstract class UnaryStatement<T extends IVariable> extends AbstractStatement<T, UnaryOperator<T>> {
 
   /**

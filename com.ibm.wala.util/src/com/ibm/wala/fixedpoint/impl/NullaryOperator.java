@@ -16,11 +16,9 @@ import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.IVariable;
 
 /**
- *
  * An operator of the form lhs = op
- *
- * @author Stephen Fink
  */
+@SuppressWarnings("rawtypes")
 public abstract class NullaryOperator<T extends IVariable> extends AbstractOperator<T> implements FixedPointConstants {
 
   @Override

@@ -15,6 +15,7 @@ import java.io.Serializable;
 /**
  * Abstract base class for implementations of bitvectors
  */
+@SuppressWarnings("rawtypes")
 abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneable, Serializable {
 
   protected final static boolean DEBUG = false;

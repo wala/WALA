@@ -36,6 +36,7 @@ import com.ibm.wala.util.debug.VerboseAction;
  * step produces a variable that is used by another step, the graph has a directed edge from the producer to the consumer.
  * Fixed-point iteration proceeds in a topological order according to these edges.
  */
+@SuppressWarnings("rawtypes")
 public abstract class AbstractFixedPointSolver<T extends IVariable> implements IFixedPointSolver<T>, FixedPointConstants,
     VerboseAction {
 
