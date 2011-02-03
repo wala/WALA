@@ -42,15 +42,12 @@ public class GraphIntegrity {
     checkEdgeCounts(G);
   }
 
-  /**
-   * @param G
-   */
   private static <T> void checkEdgeCounts(Graph<T> G) throws UnsoundGraphException {
     for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
       T N = it.next();
       int count1 = G.getSuccNodeCount(N);
       int count2 = 0;
-      for (Iterator it2 = G.getSuccNodes(N); it2.hasNext();) {
+      for (Iterator<T> it2 = G.getSuccNodes(N); it2.hasNext();) {
         it2.next();
         count2++;
       }
@@ -60,7 +57,7 @@ public class GraphIntegrity {
 
       int count3 = G.getPredNodeCount(N);
       int count4 = 0;
-      for (Iterator it2 = G.getPredNodes(N); it2.hasNext();) {
+      for (Iterator<T> it2 = G.getPredNodes(N); it2.hasNext();) {
         it2.next();
         count4++;
       }
@@ -70,9 +67,6 @@ public class GraphIntegrity {
     }
   }
 
-  /**
-   * @param G
-   */
   private static <T> void checkEdges(Graph<T> G) throws UnsoundGraphException {
     for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
       T N = it.next();
@@ -113,9 +107,7 @@ public class GraphIntegrity {
 
   }
 
-  /**
-   * @param G
-   */
+  @SuppressWarnings("unused")
   private static <T> void checkNodeCount(Graph<T> G) throws UnsoundGraphException {
     int n1 = 0;
     int n2 = 0;
@@ -125,7 +117,7 @@ public class GraphIntegrity {
     try {
       n1 = G.getNumberOfNodes();
       n2 = 0;
-      for (Iterator it = G.iterator(); it.hasNext();) {
+      for (Iterator<T> it = G.iterator(); it.hasNext();) {
         Object n = it.next();
         if (DEBUG_LEVEL > 1) {
           System.err.println(("n2 loop: " + n));
@@ -133,17 +125,17 @@ public class GraphIntegrity {
         n2++;
       }
       n3 = 0;
-      for (Iterator it = new BFSIterator<T>(G); it.hasNext();) {
+      for (Iterator<T> it = new BFSIterator<T>(G); it.hasNext();) {
         it.next();
         n3++;
       }
       n4 = 0;
-      for (Iterator it = DFS.iterateDiscoverTime(G); it.hasNext();) {
+      for (Iterator<T> it = DFS.iterateDiscoverTime(G); it.hasNext();) {
         it.next();
         n4++;
       }
       n5 = 0;
-      for (Iterator it = DFS.iterateFinishTime(G); it.hasNext();) {
+      for (Iterator<T> it = DFS.iterateFinishTime(G); it.hasNext();) {
         it.next();
         n5++;
       }
@@ -185,7 +177,8 @@ public class GraphIntegrity {
     }
     GraphIntegrity.printCollection("set 1 ", set1);
     GraphIntegrity.printCollection("set 2 ", set2);
-    HashSet s1clone = (HashSet) set1.clone();
+    @SuppressWarnings("unchecked")
+    HashSet<T> s1clone = (HashSet<T>) set1.clone();
     set1.removeAll(set2);
     if (set1.size() > 0) {
       Object first = set1.iterator().next();
@@ -222,7 +215,8 @@ public class GraphIntegrity {
   /**
    * @param string
    * @param c
-   * @throws IllegalArgumentException  if c is null
+   * @throws IllegalArgumentException
+   *           if c is null
    */
   public static void printCollection(String string, Collection c) {
     if (c == null) {

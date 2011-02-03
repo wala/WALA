@@ -31,10 +31,7 @@ import com.ibm.wala.util.graph.impl.SparseNumberedGraph;
 import com.ibm.wala.util.graph.traverse.Topological;
 
 /**
- * 
  * Default implementation of a dataflow graph
- * 
- * @author sfink
  */
 public class DefaultFixedPointSystem<T extends IVariable> implements IFixedPointSystem<T>  {
   static final boolean DEBUG = false;

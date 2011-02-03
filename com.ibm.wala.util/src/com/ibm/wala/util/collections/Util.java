@@ -212,7 +212,7 @@ public class Util {
       }
     });
 
-    Class c = obj.getClass();
+    Class<?> c = obj.getClass();
     StringBuffer buf = new StringBuffer(FULLY_QUALIFIED_NAMES ? c.getName() : removePackageName(c.getName()));
     while (c != Object.class) {
       Field[] fields = c.getDeclaredFields();
@@ -225,7 +225,7 @@ public class Util {
         fields[i].setAccessible(true);
 
         try {
-          Class type = fields[i].getType();
+          Class<?> type = fields[i].getType();
           String name = fields[i].getName();
           Object value = fields[i].get(obj);
 

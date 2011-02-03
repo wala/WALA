@@ -226,7 +226,7 @@ public class JavaLauncher extends Launcher {
     if (getXtraClassPath() == null || getXtraClassPath().isEmpty()) {
       return " -classpath " + quoteStringIfNeeded(cp);
     } else {
-      for (Iterator it = getXtraClassPath().iterator(); it.hasNext();) {
+      for (Iterator<String> it = getXtraClassPath().iterator(); it.hasNext();) {
         cp += File.pathSeparatorChar;
         cp += (String) it.next();
       }

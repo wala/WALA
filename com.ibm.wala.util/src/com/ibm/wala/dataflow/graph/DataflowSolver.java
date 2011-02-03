@@ -67,7 +67,7 @@ public abstract class DataflowSolver<T, V extends IVariable> extends DefaultFixe
   @Override
   protected void initializeVariables() {
     Graph<T> G = problem.getFlowGraph();
-    ITransferFunctionProvider functions = problem.getTransferFunctionProvider();
+    ITransferFunctionProvider<T,V> functions = problem.getTransferFunctionProvider();
     // create a variable for each node.
     for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
       T N = it.next();
@@ -121,7 +121,7 @@ public abstract class DataflowSolver<T, V extends IVariable> extends DefaultFixe
   private class UnionFind {
     final IntegerUnionFind uf;
 
-    final ObjectArrayMapping map;
+    final ObjectArrayMapping<Object> map;
 
     boolean didSomething = false;
 
@@ -203,7 +203,7 @@ public abstract class DataflowSolver<T, V extends IVariable> extends DefaultFixe
         // todo: optimize further using unary operators when possible?
         V[] rhs = (V[]) new IVariable[nPred];
         int i = 0;
-        for (Iterator it2 = G.getPredNodes(node); it2.hasNext();) {
+        for (Iterator<?> it2 = G.getPredNodes(node); it2.hasNext();) {
           rhs[i++] = (functions.hasEdgeTransferFunctions()) ? getEdge(it2.next(), node) : getOut(it2.next());
         }
         newStatement(getIn(node), meet, rhs, toWorkList, eager);
@@ -244,7 +244,7 @@ public abstract class DataflowSolver<T, V extends IVariable> extends DefaultFixe
     if (functions.hasNodeTransferFunctions()) {
       for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
         T node = it.next();
-        UnaryOperator f = functions.getNodeTransferFunction(node);
+        UnaryOperator<V> f = functions.getNodeTransferFunction(node);
         if (f.isIdentity()) {
           uf.union(getIn(node), getOut(node));
         }
@@ -256,7 +256,7 @@ public abstract class DataflowSolver<T, V extends IVariable> extends DefaultFixe
         T node = it.next();
         for (Iterator<? extends T> it2 = G.getSuccNodes(node); it2.hasNext();) {
           T succ = it2.next();
-          UnaryOperator f = functions.getEdgeTransferFunction(node, succ);
+          UnaryOperator<V> f = functions.getEdgeTransferFunction(node, succ);
           if (f.isIdentity()) {
             uf.union(getEdge(node, succ), (functions.hasNodeTransferFunctions()) ? getOut(node) : getIn(node));
           }
@@ -305,7 +305,7 @@ public abstract class DataflowSolver<T, V extends IVariable> extends DefaultFixe
     }
   }
 
-  private void shortCircuitUnaryMeets(Graph<T> G, ITransferFunctionProvider functions, UnionFind uf) {
+  private void shortCircuitUnaryMeets(Graph<T> G, ITransferFunctionProvider<T,V> functions, UnionFind uf) {
     for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
       T node = it.next();
       assert node != null;
@@ -322,7 +322,7 @@ public abstract class DataflowSolver<T, V extends IVariable> extends DefaultFixe
     }
   }
 
-  public IKilldallFramework getProblem() {
+  public IKilldallFramework<T,V> getProblem() {
     return problem;
   }
 }

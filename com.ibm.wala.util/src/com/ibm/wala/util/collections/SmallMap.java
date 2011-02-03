@@ -149,7 +149,7 @@ public class SmallMap<K, V> implements Map<K, V> {
   /*
    * @see java.util.Map#put(java.lang.Object, java.lang.Object)
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "unused" })
   public V put(Object key, Object value) {
     if (key == null) {
       throw new IllegalArgumentException("null key");
