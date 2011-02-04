@@ -43,10 +43,6 @@ public class BasicLauncher extends Launcher {
 
   /**
    * Launch the process and wait until it is finished.  Returns the exit value of the process.
-   * 
-   * @throws WalaException
-   * @throws IllegalArgumentException
-   * @throws IOException
    */
   public int launch() throws  IllegalArgumentException, IOException {
     Process p = spawnProcess(getCmd());
