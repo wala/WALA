@@ -24,6 +24,9 @@ import java.util.logging.Logger;
  * Abstract base class for a process launcher
  */
 public abstract class Launcher {
+  
+  // use a fairly big buffer size to avoid performance problems with the default
+  private final static int BUFFER_SIZE = 32 * 1024;
 
   protected File workingDir = null;
 
@@ -57,7 +60,7 @@ public abstract class Launcher {
   protected Launcher(boolean captureOutput, boolean captureErr, Logger logger) {
     super();
     this.captureOutput = captureOutput;
-    this.captureErr = true;
+    this.captureErr = captureErr;
     this.logger = logger;
   }
 
@@ -92,9 +95,6 @@ public abstract class Launcher {
    * Spawn a process to execute the given command
    * 
    * @return an object representing the process
-   * @throws WalaException
-   * @throws IllegalArgumentException
-   * @throws IOException
    */
   protected Process spawnProcess(String cmd) throws IllegalArgumentException, IOException {
     if (cmd == null) {
@@ -119,7 +119,7 @@ public abstract class Launcher {
   }
 
   protected Thread drainStdOut(Process p) {
-    final BufferedInputStream out = new BufferedInputStream(p.getInputStream());
+    final BufferedInputStream out = new BufferedInputStream(p.getInputStream(), BUFFER_SIZE);
     Thread result = new Drainer(p) {
       @Override
       void drain() throws IOException {
@@ -131,8 +131,8 @@ public abstract class Launcher {
   }
 
   protected Drainer captureStdOut(Process p) {
-    final BufferedInputStream out = new BufferedInputStream(p.getInputStream());
-    final ByteArrayOutputStream b = new ByteArrayOutputStream();
+    final BufferedInputStream out = new BufferedInputStream(p.getInputStream(), BUFFER_SIZE);
+    final ByteArrayOutputStream b = new ByteArrayOutputStream(BUFFER_SIZE);
     Drainer result = new Drainer(p) {
       @Override
       void drain() throws IOException {
@@ -145,7 +145,7 @@ public abstract class Launcher {
   }
 
   protected Thread drainStdErr(Process p) {
-    final BufferedInputStream err = new BufferedInputStream(p.getErrorStream());
+    final BufferedInputStream err = new BufferedInputStream(p.getErrorStream(), BUFFER_SIZE);
     Thread result = new Drainer(p) {
       @Override
       void drain() throws IOException {
@@ -157,8 +157,8 @@ public abstract class Launcher {
   }
 
   protected Drainer captureStdErr(Process p) {
-    final BufferedInputStream out = new BufferedInputStream(p.getErrorStream());
-    final ByteArrayOutputStream b = new ByteArrayOutputStream();
+    final BufferedInputStream out = new BufferedInputStream(p.getErrorStream(), BUFFER_SIZE);
+    final ByteArrayOutputStream b = new ByteArrayOutputStream(BUFFER_SIZE);
     Drainer result = new Drainer(p) {
       @Override
       void drain() throws IOException {
