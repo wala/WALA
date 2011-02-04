@@ -27,7 +27,7 @@ public abstract class Launcher {
 
   protected File workingDir = null;
 
-  protected Map env = null;
+  protected Map<String,String> env = null;
 
   protected byte[] stdOut = null;
 
@@ -69,11 +69,11 @@ public abstract class Launcher {
     workingDir = newWorkingDir;
   }
 
-  public Map getEnv() {
+  public Map<String,String> getEnv() {
     return env;
   }
 
-  public void setEnv(Map newEnv) {
+  public void setEnv(Map<String,String> newEnv) {
     env = newEnv;
   }
 
@@ -108,11 +108,11 @@ public abstract class Launcher {
     return p;
   }
 
-  private String[] buildEnv(Map ev) {
+  private String[] buildEnv(Map<String,String> ev) {
     String[] result = new String[ev.size()];
     int i = 0;
-    for (Iterator it = ev.entrySet().iterator(); it.hasNext();) {
-      Map.Entry e = (Map.Entry) it.next();
+    for (Iterator<Map.Entry<String,String>> it = ev.entrySet().iterator(); it.hasNext();) {
+      Map.Entry<String,String> e = it.next();
       result[i++] = e.getKey() + "=" + e.getValue();
     }
     return result;
