@@ -175,6 +175,9 @@ public abstract class Launcher {
    */
   abstract class Drainer extends Thread {
 
+    // how many ms to sleep before waking up to check the streams?
+    private static final int SLEEP_MS = 5;
+
     private final Process p;
 
     private ByteArrayOutputStream capture;
@@ -191,7 +194,7 @@ public abstract class Launcher {
         boolean repeat = true;
         while (repeat) {
           try {
-            Thread.sleep(500);
+            Thread.sleep(SLEEP_MS);
           } catch (InterruptedException e1) {
             // e1.printStackTrace();
             // just ignore and continue
