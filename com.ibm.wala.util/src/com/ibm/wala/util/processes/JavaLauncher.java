@@ -189,7 +189,7 @@ public class JavaLauncher extends Launcher {
     if (libPath == null) {
       return "";
     } else {
-      return "-Djava.library.path=" + libPath;
+      return "-Djava.library.path=" + quoteStringIfNeeded(libPath);
     }
   }
 
