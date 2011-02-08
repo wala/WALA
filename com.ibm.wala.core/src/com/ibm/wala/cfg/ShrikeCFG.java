@@ -303,6 +303,9 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
             exceptionTypes = HashSetFactory.make(exceptionTypes);
           }
 
+          // this var gets set to false if goToAllHandlers is true but some enclosing exception handler catches all
+          // exceptions.  in such a case, we need not add an exceptional edge to the method exit
+          boolean needEdgeToExitForAllHandlers = true;
           for (int j = 0; j < hs.length; j++) {
             if (DEBUG) {
               System.err.println(" handler " + hs[j]);
@@ -317,6 +320,10 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
                 System.err.println(" gotoAllHandlers " + b);
               }
               addExceptionalEdgeTo(b);
+              // if the handler catches all exceptions, we don't need to add an edge to the exit
+              if (hs[j].getCatchClass() == null) {
+                needEdgeToExitForAllHandlers = false;
+              }
             } else {
               TypeReference caughtException = null;
               if (hs[j].getCatchClass() != null) {
@@ -376,7 +383,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
             }
           }
           // if needed, add an edge to the exit block.
-          if (exceptionTypes == null || !exceptionTypes.isEmpty()) {
+          if ((exceptionTypes == null && needEdgeToExitForAllHandlers) || (exceptionTypes != null && !exceptionTypes.isEmpty())) {
             BasicBlock exit = exit();
             addExceptionalEdgeTo(exit);
           }
