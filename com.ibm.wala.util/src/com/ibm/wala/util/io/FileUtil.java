@@ -106,7 +106,8 @@ public class FileUtil {
 
     for (Iterator<File> it = fl.iterator(); it.hasNext();) {
       File f = (File) it.next();
-      if (!f.isDirectory()) {
+      // add the check for f.exists(), just in case there's a race going on.
+      if (!f.isDirectory() && f.exists()) {
         boolean result = f.delete();
         if (!result) {
           throw new IOException("Failed to delete " + f);
