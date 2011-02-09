@@ -173,7 +173,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
     for (Iterator<? extends T> ns = iterator(); ns.hasNext();) {
       T n = ns.next();
       sb.append(n.toString()).append("\n");
-      for (Iterator ss = getSuccNodes(n); ss.hasNext();) {
+      for (Iterator<?> ss = getSuccNodes(n); ss.hasNext();) {
         Object s = ss.next();
         sb.append("  --> ").append(s);
         sb.append("\n");

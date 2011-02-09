@@ -28,7 +28,7 @@ public class SlowDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
   /**
    * An iterator of child nodes for each node being searched
    */
-  final private Map<T, Iterator<? extends T>> pendingChildren = HashMapFactory.make(25);
+  final private Map<T, Iterator<T>> pendingChildren = HashMapFactory.make(25);
 
   /**
    * Construct a depth-first enumerator starting with a particular node in a directed graph.
@@ -71,12 +71,12 @@ public class SlowDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
   }
 
   @Override
-  Iterator<? extends T> getPendingChildren(T n) {
+  Iterator<T> getPendingChildren(T n) {
     return pendingChildren.get(n);
   }
 
   @Override
-  void setPendingChildren(T v, Iterator<? extends T> iterator) {
+  void setPendingChildren(T v, Iterator<T> iterator) {
     pendingChildren.put(v, iterator);
   }
 

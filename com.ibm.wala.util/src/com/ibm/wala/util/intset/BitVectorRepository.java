@@ -56,9 +56,9 @@ public class BitVectorRepository {
     }
     int size = value.size();
     for (int i = size; i > size - SUBSET_DELTA; i--) {
-      WeakHashMap m = buckets.get(Integer.valueOf(i));
+      WeakHashMap<?, ?> m = buckets.get(Integer.valueOf(i));
       if (m != null) {
-        for (Iterator it = m.keySet().iterator(); it.hasNext();) {
+        for (Iterator<?> it = m.keySet().iterator(); it.hasNext();) {
           BitVectorIntSet bv = (BitVectorIntSet) it.next();
           if (bv.isSubset(value)) {
             // FOUND ONE!
@@ -91,7 +91,7 @@ public class BitVectorRepository {
   private static int countEntries() {
     int result = 0;
     for (Iterator<WeakHashMap<BitVectorIntSet,Object>> it = buckets.values().iterator(); it.hasNext();) {
-      WeakHashMap m = it.next();
+      WeakHashMap<?, ?> m = it.next();
       result += m.size();
     }
     return result;

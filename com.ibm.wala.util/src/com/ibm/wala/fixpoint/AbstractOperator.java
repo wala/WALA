@@ -16,6 +16,7 @@ package com.ibm.wala.fixpoint;
  * 
  * This is an abstract class and not an interface in order to force subclasses to re-implement equals(), hashCode(), and toString()
  */
+@SuppressWarnings("rawtypes")
 public abstract class AbstractOperator<T extends IVariable> implements FixedPointConstants {
 
   /**

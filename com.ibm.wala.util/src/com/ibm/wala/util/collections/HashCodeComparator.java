@@ -17,6 +17,7 @@ import java.util.Comparator;
  */
 public class HashCodeComparator<T> implements Comparator<T> {
 
+  @SuppressWarnings("rawtypes")
   private static final HashCodeComparator INSTANCE = new HashCodeComparator();
 
   /*

@@ -158,7 +158,7 @@ public class TwoLevelVector<T> implements IVector<T> {
     if (maxPage == -1) {
       return -1;
     } else {
-      IVector v = data.get(maxPage);
+      IVector<T> v = data.get(maxPage);
       int localMax = v.getMaxIndex();
       return maxPage * PAGE_SIZE + localMax;
     }

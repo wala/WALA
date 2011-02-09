@@ -19,6 +19,7 @@ import java.util.NoSuchElementException;
 public class FilterIterator<T> implements java.util.Iterator<T> {
   final Iterator<?> i;
 
+  @SuppressWarnings("rawtypes")
   final Filter f;
 
   private T next = null;
@@ -29,6 +30,7 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
    * @param i the original iterator
    * @param f a filter which defines which elements belong to the generated iterator
    */
+  @SuppressWarnings("rawtypes")
   public FilterIterator(Iterator<?> i, Filter f) {
     if (i == null) {
       throw new IllegalArgumentException("null i");

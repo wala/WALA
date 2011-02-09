@@ -50,7 +50,7 @@ public class BitVectorUnion extends AbstractMeetOperator<BitVectorVariable> impl
    * @see com.ibm.wala.dataflow.fixpoint.Operator#evaluate(com.ibm.wala.dataflow.fixpoint.IVariable[])
    */
   @Override
-  public byte evaluate(BitVectorVariable lhs, IVariable[] rhs) throws IllegalArgumentException {
+  public byte evaluate(BitVectorVariable lhs, @SuppressWarnings("rawtypes") IVariable[] rhs) throws IllegalArgumentException {
     if (lhs == null) {
       throw new IllegalArgumentException("null lhs");
     }

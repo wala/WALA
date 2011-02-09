@@ -62,20 +62,9 @@ public abstract class DFSFinishTimeIterator<T> extends Stack<T> implements Itera
     return (!empty() || (theNextElement != null && getPendingChildren(theNextElement) == null));
   }
 
-  /**
-   * Method getPendingChildren.
-   * 
-   * @return Object
-   */
-  abstract Iterator getPendingChildren(T n);
+  abstract Iterator<T> getPendingChildren(T n);
 
-  /**
-   * Method setPendingChildren.
-   * 
-   * @param v
-   * @param iterator
-   */
-  abstract void setPendingChildren(T v, Iterator<? extends T> iterator);
+  abstract void setPendingChildren(T v, Iterator<T> iterator);
 
   /**
    * Find the next graph node in finishing time order.
@@ -98,7 +87,7 @@ public abstract class DFSFinishTimeIterator<T> extends Stack<T> implements Itera
       for (Iterator<? extends T> e = pc; e.hasNext();) {
         T n = e.next();
         assert n != null : "null node in pc";
-        Iterator nChildren = getPendingChildren(n);
+        Iterator<T> nChildren = getPendingChildren(n);
         if (nChildren == null) {
           // found a new child: recurse to it.
           setPendingChildren(n, getConnected(n));
@@ -126,7 +115,7 @@ public abstract class DFSFinishTimeIterator<T> extends Stack<T> implements Itera
    * @return the out edges
    * 
    */
-  protected Iterator<? extends T> getConnected(T n) {
+  protected Iterator<T> getConnected(T n) {
     return G.getSuccNodes(n);
   }
 

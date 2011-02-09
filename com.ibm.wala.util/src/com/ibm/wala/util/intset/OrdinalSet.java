@@ -26,6 +26,7 @@ public class OrdinalSet<T> implements Iterable<T> {
 
   private final OrdinalSetMapping<T> mapping;
 
+  @SuppressWarnings("rawtypes")
   private final static OrdinalSet EMPTY = new OrdinalSet();
 
   @SuppressWarnings("unchecked")

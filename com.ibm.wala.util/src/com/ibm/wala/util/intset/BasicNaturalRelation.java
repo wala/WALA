@@ -394,7 +394,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
    */
   private int countPairs() {
     int result = 0;
-    for (Iterator it = iterator(); it.hasNext();) {
+    for (Iterator<?> it = iterator(); it.hasNext();) {
       it.next();
       result++;
     }

@@ -17,6 +17,7 @@ import java.util.Comparator;
  */
 public class ToStringComparator<T> implements Comparator<T> {
 
+  @SuppressWarnings("rawtypes")
   private static final ToStringComparator INSTANCE = new ToStringComparator();
   
   private ToStringComparator() {}

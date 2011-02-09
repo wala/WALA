@@ -20,14 +20,14 @@ public class IntSetUtil {
 
   public static final String INT_SET_FACTORY_CONFIG_PROPERTY_NAME = "com.ibm.wala.mutableIntSetFactory";
 
-  private static MutableIntSetFactory defaultIntSetFactory;
+  private static MutableIntSetFactory<?> defaultIntSetFactory;
 
   static {
-    MutableIntSetFactory defaultFactory = new MutableSharedBitVectorIntSetFactory();
+    MutableIntSetFactory<?> defaultFactory = new MutableSharedBitVectorIntSetFactory();
     if (System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME) != null) {
       try {
         Class<?> intSetFactoryClass = Class.forName(System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
-        MutableIntSetFactory intSetFactory = (MutableIntSetFactory) intSetFactoryClass.newInstance();
+        MutableIntSetFactory<?> intSetFactory = (MutableIntSetFactory<?>) intSetFactoryClass.newInstance();
         setDefaultIntSetFactory(intSetFactory);
       } catch (Exception e) {
         System.err.println(("Cannot use int set factory " + System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME)));
@@ -97,7 +97,7 @@ public class IntSetUtil {
     return diff(A, B, IntSetUtil.getDefaultIntSetFactory());
   }
 
-  private static IntSet defaultSlowDiff(IntSet A, IntSet B, MutableIntSetFactory factory) {
+  private static IntSet defaultSlowDiff(IntSet A, IntSet B, MutableIntSetFactory<?> factory) {
     // TODO: this is slow ... optimize please.
     MutableIntSet result = factory.makeCopy(A);
     if (DEBUG) {
@@ -119,7 +119,7 @@ public class IntSetUtil {
   /**
    * Compute the asymmetric difference of two sets, a \ b.
    */
-  public static IntSet diff(IntSet A, IntSet B, MutableIntSetFactory factory) {
+  public static IntSet diff(IntSet A, IntSet B, MutableIntSetFactory<?> factory) {
     if (factory == null) {
       throw new IllegalArgumentException("null factory");
     }
@@ -205,14 +205,14 @@ public class IntSetUtil {
   /**
    * @return Returns the defaultIntSetFactory.
    */
-  public static MutableIntSetFactory getDefaultIntSetFactory() {
+  public static MutableIntSetFactory<?> getDefaultIntSetFactory() {
     return defaultIntSetFactory;
   }
 
   /**
    * @param defaultIntSetFactory The defaultIntSetFactory to set.
    */
-  public static void setDefaultIntSetFactory(MutableIntSetFactory defaultIntSetFactory) {
+  public static void setDefaultIntSetFactory(MutableIntSetFactory<?> defaultIntSetFactory) {
     if (defaultIntSetFactory == null) {
       throw new IllegalArgumentException("null defaultIntSetFactory");
     }

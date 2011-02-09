@@ -44,6 +44,7 @@ public class NumberedDominators<T> extends Dominators<T> {
    */
   private final Object[] infoMap;
 
+  @SuppressWarnings("unchecked")
   @Override
   protected final DominatorInfo getInfo(T node) {
     assert node != null;

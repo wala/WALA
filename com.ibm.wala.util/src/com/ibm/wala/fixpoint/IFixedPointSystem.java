@@ -15,6 +15,7 @@ import java.util.Iterator;
 /**
  * Represents a set of {@link IFixedPointStatement}s to be solved by a {@link IFixedPointSolver}
  */
+@SuppressWarnings("rawtypes")
 public interface IFixedPointSystem<T extends IVariable> {
 
   /**

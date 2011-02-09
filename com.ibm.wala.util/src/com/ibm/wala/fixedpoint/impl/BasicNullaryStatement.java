@@ -13,11 +13,9 @@ package com.ibm.wala.fixedpoint.impl;
 import com.ibm.wala.fixpoint.IVariable;
 
 /**
- *
  * An implementation of NullaryStep that carries its operator explicitly
- * 
- * @author sfink
  */
+@SuppressWarnings("rawtypes")
 public class BasicNullaryStatement<T extends IVariable> extends NullaryStatement<T> {
 
   /**

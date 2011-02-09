@@ -45,6 +45,7 @@ import java.util.List;
  * Interface for defining an arbitrary predicate on {@link Object}s.
  */
 public abstract class Predicate<T> {
+  @SuppressWarnings("rawtypes")
   public static final Predicate FALSE = new Predicate() {
     @Override
     public boolean test(Object o) {
@@ -52,6 +53,7 @@ public abstract class Predicate<T> {
     }
   };
 
+  @SuppressWarnings("rawtypes")
   public static final Predicate TRUE = FALSE.not();
 
   @SuppressWarnings("unchecked")

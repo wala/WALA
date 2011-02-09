@@ -78,7 +78,7 @@ public class GraphIntegrity {
         if (!G.containsNode(pred)) {
           throw new UnsoundGraphException(pred + " is a predecessor of " + N + " but is not contained in the graph");
         }
-        for (Iterator s = G.getSuccNodes(pred); s.hasNext();) {
+        for (Iterator<?> s = G.getSuccNodes(pred); s.hasNext();) {
           Object succ = s.next();
           if (succ.equals(N)) {
             continue PRED;
@@ -94,7 +94,7 @@ public class GraphIntegrity {
         if (!G.containsNode(succ)) {
           throw new UnsoundGraphException(succ + " is a successor of " + N + " but is not contained in the graph");
         }
-        for (Iterator p = G.getPredNodes(succ); p.hasNext();) {
+        for (Iterator<?> p = G.getPredNodes(succ); p.hasNext();) {
           Object pred = p.next();
           if (pred.equals(N)) {
             continue SUCC;
@@ -213,12 +213,10 @@ public class GraphIntegrity {
   }
 
   /**
-   * @param string
-   * @param c
    * @throws IllegalArgumentException
    *           if c is null
    */
-  public static void printCollection(String string, Collection c) {
+  public static void printCollection(String string, Collection<?> c) {
     if (c == null) {
       throw new IllegalArgumentException("c is null");
     }
@@ -226,7 +224,7 @@ public class GraphIntegrity {
     if (c.isEmpty()) {
       System.err.println("none\n");
     } else {
-      for (Iterator it = c.iterator(); it.hasNext();) {
+      for (Iterator<?> it = c.iterator(); it.hasNext();) {
         System.err.println(it.next().toString());
       }
       System.err.println("\n");

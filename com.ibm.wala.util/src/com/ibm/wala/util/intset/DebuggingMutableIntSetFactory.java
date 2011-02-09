@@ -19,11 +19,11 @@ import com.ibm.wala.util.debug.UnimplementedError;
  */
 public class DebuggingMutableIntSetFactory implements MutableIntSetFactory<DebuggingMutableIntSet> {
 
-  private MutableIntSetFactory primary;
+  private MutableIntSetFactory<?> primary;
 
-  private MutableIntSetFactory secondary;
+  private MutableIntSetFactory<?> secondary;
 
-  public DebuggingMutableIntSetFactory(MutableIntSetFactory p, MutableIntSetFactory s) {
+  public DebuggingMutableIntSetFactory(MutableIntSetFactory<?> p, MutableIntSetFactory<?> s) {
     primary = p;
     secondary = s;
     if (p == null) {
@@ -74,7 +74,7 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory<Debug
     return new DebuggingMutableIntSet(primary.make(), secondary.make());
   }
 
-  public void setPrimaryFactory(MutableIntSetFactory x) {
+  public void setPrimaryFactory(MutableIntSetFactory<?> x) {
     if (x == null) {
       throw new IllegalArgumentException("null x");
     }
@@ -84,7 +84,7 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory<Debug
     primary = x;
   }
 
-  public void setSecondaryFactory(MutableIntSetFactory x) {
+  public void setSecondaryFactory(MutableIntSetFactory<?> x) {
     if (x == null) {
       throw new IllegalArgumentException("null x");
     }

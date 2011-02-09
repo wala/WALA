@@ -143,8 +143,8 @@ public final class BitSet<T> {
   /**
    * Not very efficient.
    */
-  public Iterator iterator() {
-    return new Iterator() {
+  public Iterator<T> iterator() {
+    return new Iterator<T>() {
       private int next = -1;
       {
         for (int i = 0; i < vector.length(); i++) {
@@ -159,8 +159,8 @@ public final class BitSet<T> {
         return (next != -1);
       }
 
-      public Object next() {
-        Object result = map.getMappedObject(next);
+      public T next() {
+        T result = map.getMappedObject(next);
         int start = next + 1;
         next = -1;
         for (int i = start; i < vector.length(); i++) {

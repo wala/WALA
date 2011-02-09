@@ -29,6 +29,7 @@ public class Pair<T,U> {
     return (x == null) ? (y == null) : x.equals(y);
   }
 
+  @SuppressWarnings("rawtypes")
   @Override
   public boolean equals(Object o) {
     return (o instanceof Pair) && check(fst, ((Pair) o).fst) && check(snd, ((Pair) o).snd);

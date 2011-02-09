@@ -41,7 +41,7 @@ public class DFS {
    * @throws IllegalArgumentException if C is null
    */
   @SuppressWarnings("serial")
-  public static <T> Collection<T> getReachableNodes(final Graph<T> G, Collection<? extends T> C, final Filter filter) {
+  public static <T> Collection<T> getReachableNodes(final Graph<T> G, Collection<? extends T> C, @SuppressWarnings("rawtypes") final Filter filter) {
     if (C == null) {
       throw new IllegalArgumentException("C is null");
     }
@@ -142,7 +142,7 @@ public class DFS {
    * @param G
    * @return iterator of nodes of G in order of DFS discover time
    */
-  public static <T> DFSDiscoverTimeIterator iterateDiscoverTime(Graph<T> G) {
+  public static <T> DFSDiscoverTimeIterator<T> iterateDiscoverTime(Graph<T> G) {
     if (G instanceof NumberedGraph) {
       return new NumberedDFSDiscoverTimeIterator<T>((NumberedGraph<T>) G);
     } else {

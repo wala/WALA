@@ -47,7 +47,7 @@ public class BooleanUnion extends AbstractMeetOperator<BooleanVariable> implemen
   }
 
   @Override
-  public byte evaluate(BooleanVariable lhs, IVariable[] rhs) throws NullPointerException {
+  public byte evaluate(BooleanVariable lhs, @SuppressWarnings("rawtypes") IVariable[] rhs) throws NullPointerException {
     if (rhs == null) {
       throw new IllegalArgumentException("null rhs");
     }

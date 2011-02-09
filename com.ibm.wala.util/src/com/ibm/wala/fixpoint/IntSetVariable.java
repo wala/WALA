@@ -19,6 +19,7 @@ import com.ibm.wala.util.intset.MutableIntSet;
  * 
  * TODO: optimize the representation more; e.g. BitVectors with non-zero lower bound.
  */
+@SuppressWarnings("rawtypes")
 public abstract class IntSetVariable<T extends IntSetVariable> extends AbstractVariable<T> {
 
   private MutableIntSet V;

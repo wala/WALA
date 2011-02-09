@@ -26,7 +26,7 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> i
   /**
    * An iterator of child nodes for each node being searched
    */
-  private Iterator[] pendingChildren;
+  private Iterator<T>[] pendingChildren;
 
   /**
    * The Graph being traversed
@@ -38,6 +38,7 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> i
    * 
    * @param G the graph whose nodes to enumerate
    */
+  @SuppressWarnings("unchecked")
   NumberedDFSFinishTimeIterator(NumberedGraph<T> G, T N) {
     this.G = G;
     pendingChildren = new Iterator[G.getMaxNumber() + 1];
@@ -51,6 +52,7 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> i
    * @param G the graph whose nodes to enumerate
    * @param nodes the set of nodes from which to start searching
    */
+  @SuppressWarnings("unchecked")
   NumberedDFSFinishTimeIterator(NumberedGraph<T> G, Iterator<? extends T> nodes) {
     this.G = G;
     pendingChildren = new Iterator[G.getMaxNumber() + 1];
@@ -66,12 +68,13 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> i
     this(G, G.iterator());
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  Iterator getPendingChildren(T n) {
+  Iterator<T> getPendingChildren(T n) {
     int number = G.getNumber(n);
     if (number >= pendingChildren.length) {
       // the graph is probably growing as we travserse
-      Iterator[] old = pendingChildren;
+      Iterator<T>[] old = pendingChildren;
       pendingChildren = new Iterator[number * 2];
       System.arraycopy(old, 0, pendingChildren, 0, old.length);
       return null;
@@ -89,7 +92,7 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> i
    * @param iterator
    */
   @Override
-  void setPendingChildren(T v, Iterator<? extends T> iterator) {
+  void setPendingChildren(T v, Iterator<T> iterator) {
     pendingChildren[G.getNumber(v)] = iterator;
   }
 }

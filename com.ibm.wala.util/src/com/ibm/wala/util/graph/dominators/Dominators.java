@@ -575,7 +575,7 @@ public abstract class Dominators<T> {
     for (Iterator<? extends T> i = G.iterator(); i.hasNext();) {
       T node = i.next();
       sb.append("Dominators of " + node + ":\n");
-      for (Iterator j = dominators(node); j.hasNext();)
+      for (Iterator<T> j = dominators(node); j.hasNext();)
         sb.append("   " + j.next() + "\n");
       sb.append("\n");
     }

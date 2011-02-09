@@ -46,7 +46,7 @@ public class GraphReachability<T> {
   /**
    * Killdall-style dataflow solver
    */
-  private DataflowSolver solver;
+  private DataflowSolver<T, BitVectorVariable> solver;
 
   /**
    * set of "interesting" CGNodes
@@ -58,7 +58,7 @@ public class GraphReachability<T> {
    * @param filter "interesting" node definition
    * @throws IllegalArgumentException if g is null
    */
-  public GraphReachability(Graph<T> g, Filter filter) {
+  public GraphReachability(Graph<T> g, Filter<?> filter) {
     if (g == null) {
       throw new IllegalArgumentException("g is null");
     }
@@ -75,7 +75,7 @@ public class GraphReachability<T> {
     if (solver == null) {
       throw new IllegalStateException("must call solve() before calling getReachableSet()");
     }
-    BitVectorVariable v = (BitVectorVariable) solver.getOut(n);
+    BitVectorVariable v = solver.getOut(n);
     assert v != null : "null variable for node " + n;
     if (v.getValue() == null) {
       return OrdinalSet.empty();
