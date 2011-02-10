@@ -38,6 +38,7 @@ import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
+import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.strings.StringStuff;
 import com.ibm.wala.util.warnings.Warnings;
@@ -135,11 +136,9 @@ public class CFGTest extends WalaTestCase {
     AnalysisCache cache = new AnalysisCache();
     IR ir = cache.getIR(m);
     SSACFG controlFlowGraph = ir.getControlFlowGraph();
-//    System.out.println(ir);
     Assert.assertEquals(1, controlFlowGraph.getSuccNodeCount(controlFlowGraph.getBlockForInstruction(21)));
   }
 
-  /**
   @Test
   public void testSync2() {
     MethodReference mr = StringStuff.makeMethodReference("cfg.MonitorTest.sync2()V");
@@ -148,6 +147,10 @@ public class CFGTest extends WalaTestCase {
     AnalysisCache cache = new AnalysisCache();
     IR ir = cache.getIR(m);
     System.out.println(ir);
+    SSACFG controlFlowGraph = ir.getControlFlowGraph();
+    IntSet succs = controlFlowGraph.getSuccNodeNumbers(controlFlowGraph.getBlockForInstruction(13));
+    Assert.assertEquals(2, succs.size());
+    Assert.assertTrue(succs.contains(6));
+    Assert.assertTrue(succs.contains(7));
   }
-  */
 }
