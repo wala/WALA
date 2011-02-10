@@ -20,7 +20,6 @@ import java.nio.channels.FileChannel;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.regex.Pattern;
 
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -33,8 +32,10 @@ public class FileUtil {
   /**
    * List all the files in a directory that match a regular expression
    * 
-   * @param recurse recurse to subdirectories?
-   * @throws IllegalArgumentException  if dir is null
+   * @param recurse
+   *          recurse to subdirectories?
+   * @throws IllegalArgumentException
+   *           if dir is null
    */
   public static Collection<File> listFiles(String dir, String regex, boolean recurse) {
     if (dir == null) {
@@ -65,7 +66,7 @@ public class FileUtil {
     return result;
   }
 
-  public static void copy(String srcFileName, String destFileName)  throws IOException {
+  public static void copy(String srcFileName, String destFileName) throws IOException {
     if (srcFileName == null) {
       throw new IllegalArgumentException("srcFileName is null");
     }
@@ -97,41 +98,41 @@ public class FileUtil {
   }
 
   /**
-   * delete all files (recursively) in a directory.
-   * This is dangerous. Use with care.
-   * @throws IOException if there's a problem deleting some file
+   * delete all files (recursively) in a directory. This is dangerous. Use with
+   * care.
+   * 
+   * @throws IOException
+   *           if there's a problem deleting some file
    */
-  public static void deleteContents(String directory) throws IOException  {
-    Collection<File> fl = listFiles(directory, null, true);
+  public static void deleteContents(String directory) throws IOException {
+    File f = new File(directory);
+    if (!f.exists()) {
+      return;
+    }
+    if (!f.isDirectory()) {
+      throw new IOException(directory + " is not a vaid directory");
+    }
+    for (String s : f.list()) {
+      deleteRecursively(new File(f, s));
+    }
+  }
 
-    for (Iterator<File> it = fl.iterator(); it.hasNext();) {
-      File f = (File) it.next();
-      // add the check for f.exists(), just in case there's a race going on.
-      if (!f.isDirectory() && f.exists()) {
-        boolean result = f.delete();
-        if (!result) {
-          throw new IOException("Failed to delete " + f);
-        }
+  private static void deleteRecursively(File f) throws IOException{
+    if (f.isDirectory()) {
+      for (String s : f.list()) {
+        deleteRecursively(new File(f, s));
       }
-    } 
-    int lastCount = Integer.MAX_VALUE;
-    do {
-      Collection<File> f2 = listFiles(directory, null, true);
-      if (f2.size() == lastCount) {
-        throw new IOException("got stuck deleting directories. Probably some other process is preventing deletion.");
-      }
-      lastCount = f2.size();
+    }
 
-      for (Iterator<File> it = f2.iterator(); it.hasNext();) {
-        File f = (File) it.next();
-        f.delete();
-      }
-    } while (listFiles(directory, null, true).size() > 0);
-
+    boolean b = f.delete();
+    if (!b) {
+      throw new IOException("failed to delete " + f);
+    }
   }
 
   /**
-   * Create a {@link FileOutputStream} corresponding to a particular file name. Delete the existing file if one exists.
+   * Create a {@link FileOutputStream} corresponding to a particular file name.
+   * Delete the existing file if one exists.
    */
   public static final FileOutputStream createFile(String fileName) throws IOException {
     if (fileName == null) {
@@ -156,6 +157,7 @@ public class FileUtil {
 
   /**
    * read fully the contents of s and return a byte array holding the result
+   * 
    * @throws IOException
    */
   public static byte[] readBytes(InputStream s) throws IOException {
@@ -170,6 +172,7 @@ public class FileUtil {
       n = s.read(b);
     }
     byte[] bb = out.toByteArray();
+    out.close();
     return bb;
   }
 }
