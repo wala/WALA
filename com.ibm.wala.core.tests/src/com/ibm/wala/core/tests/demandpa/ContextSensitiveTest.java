@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.ibm.wala.demandpa.alg.ContextSensitiveStateMachine;
@@ -55,7 +56,9 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.strings.Atom;
 
@@ -64,46 +67,49 @@ public class ContextSensitiveTest extends AbstractPtrTest {
   public ContextSensitiveTest() {
     super(TestInfo.SCOPE_FILE);
   }
-  @Test public void testArraySet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+
+  @Test
+  public void testArraySet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_ARRAY_SET, 1);
   }
 
-  @Test public void testClone() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test
+  public void testClone() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_CLONE, 1);
   }
 
-  @Test public void testFooId() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test
+  public void testFooId() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_ID, 1);
   }
 
-  @Test public void testHashtableEnum() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test
+  public void testHashtableEnum() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     // 3 because
     // can't tell between key, value, and entry enumerators in Hashtable
     doPointsToSizeTest(TestInfo.TEST_HASHTABLE_ENUM, 3);
   }
 
-  // we know this one fails...
-  // @Test public void testOnTheFlyCS() throws ClassHierarchyException {
-  // String mainClass = TestInfo.TEST_ONTHEFLY_CS;
-  // final IDemandPointerAnalysis dmp =
-  // makeDemandPointerAnalysis(TestInfo.SCOPE_FILE, mainClass);
-  // CGNode testMethod =
-  // AbstractPtrTest.findInstanceMethod(dmp.getBaseCallGraph(),
-  // dmp.getClassHierarchy().lookupClass(
-  // TypeReference.findOrCreate(ClassLoaderReference.Application,
-  // "Ltestdata/TestOnTheFlyCS$C2")), Atom
-  // .findOrCreateUnicodeAtom("doSomething"),
-  // Descriptor.findOrCreateUTF8("(Ljava/lang/Object;)V"));
-  // PointerKey keyToQuery = AbstractPtrTest.getParam(testMethod, "testThisVar",
-  // dmp.getHeapModel());
-  // Collection<InstanceKey> pointsTo = dmp.getPointsTo(keyToQuery);
-  // if (debug) {
-  // System.err.println("points-to for " + mainClass + ": " + pointsTo);
-  // }
-  // assertEquals(1, pointsTo.size());
-  // }
+  @Ignore("support for this combination of context sensitivity and on-the-fly call graph refinement is not yet implemented")
+  @Test
+  public void testOnTheFlyCS() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    String mainClass = TestInfo.TEST_ONTHEFLY_CS;
+    final IDemandPointerAnalysis dmp = makeDemandPointerAnalysis(mainClass);
+    CGNode testMethod = AbstractPtrTest.findInstanceMethod(
+        dmp.getBaseCallGraph(),
+        dmp.getClassHierarchy().lookupClass(
+            TypeReference.findOrCreate(ClassLoaderReference.Application, "Ldemandpa/TestOnTheFlyCS$C2")),
+        Atom.findOrCreateUnicodeAtom("doSomething"), Descriptor.findOrCreateUTF8("(Ljava/lang/Object;)V"));
+    PointerKey keyToQuery = AbstractPtrTest.getParam(testMethod, "testThisVar", dmp.getHeapModel());
+    Collection<InstanceKey> pointsTo = dmp.getPointsTo(keyToQuery);
+    if (debug) {
+      System.err.println("points-to for " + mainClass + ": " + pointsTo);
+    }
+    Assert.assertEquals(1, pointsTo.size());
+  }
 
-  @Test public void testWithinMethodCall() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test
+  public void testWithinMethodCall() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     String mainClass = TestInfo.TEST_WITHIN_METHOD_CALL;
     final IDemandPointerAnalysis dmp = makeDemandPointerAnalysis(mainClass);
 
@@ -117,39 +123,48 @@ public class ContextSensitiveTest extends AbstractPtrTest {
     Assert.assertEquals(1, pointsTo.size());
   }
 
-  @Test public void testLinkedListIter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test
+  public void testLinkedListIter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_LINKEDLIST_ITER, 1);
   }
 
-  @Test public void testGlobal() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test
+  public void testGlobal() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_GLOBAL, 1);
   }
 
-  @Test public void testHashSet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test
+  public void testHashSet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_HASH_SET, 2, 2, 1);
   }
 
-  @Test public void testHashMapGet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test
+  public void testHashMapGet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_HASHMAP_GET, 2, 1, 1);
   }
 
-  @Test public void testMethodRecursion() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test
+  public void testMethodRecursion() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_METHOD_RECURSION, 2);
   }
 
-  @Test public void testArraySetIter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test
+  public void testArraySetIter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_ARRAY_SET_ITER, 1);
   }
 
-  @Test public void testArrayList() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test
+  public void testArrayList() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_ARRAY_LIST, 1);
   }
 
-  @Test public void testLinkedList() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test
+  public void testLinkedList() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_LINKED_LIST, 1);
   }
 
-  @Test public void testFlowsToArraySetIter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  @Test
+  public void testFlowsToArraySetIter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doFlowsToSizeTest(TestInfo.FLOWSTO_TEST_ARRAYSET_ITER, 7);
   }
 
@@ -159,7 +174,8 @@ public class ContextSensitiveTest extends AbstractPtrTest {
   }
 
   @Override
-  protected DemandRefinementPointsTo makeDemandPointerAnalysis(String mainClass) throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+  protected DemandRefinementPointsTo makeDemandPointerAnalysis(String mainClass) throws ClassHierarchyException,
+      IllegalArgumentException, CancelException, IOException {
     DemandRefinementPointsTo dmp = super.makeDemandPointerAnalysis(mainClass);
     dmp.setRefinementPolicyFactory(new SinglePassRefinementPolicy.Factory(new AlwaysRefineFieldsPolicy(),
         new AlwaysRefineCGPolicy()));
