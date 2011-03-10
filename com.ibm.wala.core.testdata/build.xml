@@ -32,6 +32,48 @@
 	<property name="bundleJavacTarget" value="${javacTarget}"/>
 	<property name="bundleBootClasspath" value="${bootclasspath}"/>
 
+     <target name="JLexPresent" depends="init">
+        <available file="${plugin.destination}/lib/JLex.jar" property="jlex.present"/>
+     </target>
+
+   <target name="fetchJLex" depends="JLexPresent" unless="jlex.present">
+     <delete dir="${temp.folder}"/>
+     <mkdir dir="${temp.folder}/JLex"/>
+     <get src="http://www.cs.princeton.edu/~appel/modern/java/JLex/current/Main.java" dest="${temp.folder}/JLex/Main.java"/>
+     <javac includeAntRuntime="no" srcdir="${temp.folder}" destdir="${temp.folder}"/>
+     <jar destfile="${plugin.destination}/lib/JLex.jar" basedir="${temp.folder}" />
+     <delete dir="${temp.folder}"/>
+   </target>
+	
+     <target name="javaCupPresent" depends="init">
+        <available file="${plugin.destination}/lib/java-cup-11a.jar" property="javacup.present"/>
+     </target>
+
+   <target name="fetchJavaCup" depends="javaCupPresent" unless="javacup.present">
+     <get src="http://www2.cs.tum.edu/projects/cup/java-cup-11a.jar" dest="${plugin.destination}/lib/java-cup-11a.jar"/>
+   </target>
+
+     <target name="bcelPresent" depends="init">
+        <available file="${plugin.destination}/lib/bcel-5.2.jar" property="bcel.present"/>
+     </target>
+
+   <target name="fetchBcel" depends="bcelPresent" unless="bcel.present">
+     <delete dir="${temp.folder}"/>
+     <mkdir dir="${temp.folder}"/>
+     <get src="http://www.apache.org/dist/jakarta/bcel/binaries/bcel-5.2.tar.gz" dest="${temp.folder}/bcel-5.2.tar.gz"/>
+     <gunzip src="${temp.folder}/bcel-5.2.tar.gz" dest="${temp.folder}/bcel-5.2.tar"/>
+     <untar src="${temp.folder}/bcel-5.2.tar" dest="${temp.folder}"/>
+     <copy file="${temp.folder}/bcel-5.2/bcel-5.2.jar" tofile="${plugin.destination}/lib/bcel-5.2.jar" />
+     <delete dir="${temp.folder}"/>
+   </target>
+
+	<target name="copyJars" depends="fetchJLex,fetchJavaCup,fetchBcel">
+	  <copy todir="${plugin.destination}/bin">
+	  	<fileset dir="${plugin.destination}/lib" />
+	  </copy>
+	</target>
+
+
 	<target name="init" depends="properties">
 		<condition property="pluginTemp" value="${buildTempFolder}/plugins">
 			<isset property="buildTempFolder"/>
@@ -50,7 +92,7 @@
 
 	</target>
 
-	<target name="build.update.jar" depends="init" description="Build the plug-in: com.ibm.wala.core.testdata for an update site.">
+	<target name="build.update.jar" depends="copyJars,init" description="Build the plug-in: com.ibm.wala.core.testdata for an update site.">
 		<delete dir="${temp.folder}"/>
 		<mkdir dir="${temp.folder}"/>
 		<antcall target="build.jars"/>
