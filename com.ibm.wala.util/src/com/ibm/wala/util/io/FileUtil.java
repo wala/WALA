@@ -66,6 +66,13 @@ public class FileUtil {
     return result;
   }
 
+  /**
+   * This may be a resource leak:
+   * http://bugs.sun.com/view_bug.do?bug_id=4724038
+   * 
+   * We may have to reconsider using nio for this, or apply one of the horrible
+   * workarounds listed in the bug report above.
+   */
   public static void copy(String srcFileName, String destFileName) throws IOException {
     if (srcFileName == null) {
       throw new IllegalArgumentException("srcFileName is null");
