@@ -39,7 +39,7 @@ import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * An {@link SSAContextInterpreter} specialized to interpret Class.forName in a {@link JavaTypeContext} which represents the
+ * An {@link SSAContextInterpreter} specialized to interpret Class.newInstance in a {@link JavaTypeContext} which represents the
  * point-type of the class object created by the call.
  */
 public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterpreter {
