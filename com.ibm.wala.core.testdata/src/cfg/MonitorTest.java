@@ -19,6 +19,19 @@ public class MonitorTest {
     }
   }
 
+  void sync3() {
+    Object a = new Object();
+    Object b = new Object();
+    Object c = new Object();
+    synchronized (a) {
+      synchronized (b) {
+        synchronized (c) {
+          dummy();
+        }
+      }
+    }
+  }
+
   void dummy() {
   }
 }

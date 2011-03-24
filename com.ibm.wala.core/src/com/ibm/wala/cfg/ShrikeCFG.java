@@ -320,9 +320,10 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
                 System.err.println(" gotoAllHandlers " + b);
               }
               addExceptionalEdgeTo(b);
-              // if the handler catches all exceptions, we don't need to add an edge to the exit
+              // if the handler catches all exceptions, we don't need to add an edge to the exit or any other handlers
               if (hs[j].getCatchClass() == null) {
                 needEdgeToExitForAllHandlers = false;
+                break;
               }
             } else {
               TypeReference caughtException = null;

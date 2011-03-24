@@ -153,4 +153,15 @@ public class CFGTest extends WalaTestCase {
     Assert.assertTrue(succs.contains(6));
     Assert.assertTrue(succs.contains(7));
   }
+  
+  @Test
+  public void testSync3() {
+    MethodReference mr = StringStuff.makeMethodReference("cfg.MonitorTest.sync3()V");
+
+    IMethod m = cha.resolveMethod(mr);
+    AnalysisCache cache = new AnalysisCache();
+    IR ir = cache.getIR(m);
+    SSACFG controlFlowGraph = ir.getControlFlowGraph();
+    Assert.assertEquals(1, controlFlowGraph.getSuccNodeCount(controlFlowGraph.getBlockForInstruction(33)));
+  }
 }
