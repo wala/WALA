@@ -17,7 +17,7 @@ import com.ibm.wala.util.debug.Assertions;
  * 
  * Clients shouldn't use this ... it's only used internally during SSA construction.
  */
-class PhiValue implements Value {
+public class PhiValue implements Value {
   /**
    * The phi instruction that defines this value
    */
