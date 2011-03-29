@@ -4,5 +4,6 @@
 *.swp
 *.out
 */bin/*
+com.ibm.wala.core/dat/wala.properties
 com.ibm.wala.cast.java.polyglot/lib/java_cup.jar
 com.ibm.wala.cast.java.polyglot/lib/polyglot.jar
