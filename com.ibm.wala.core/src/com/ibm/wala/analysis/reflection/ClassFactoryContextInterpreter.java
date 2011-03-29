@@ -12,6 +12,7 @@ package com.ibm.wala.analysis.reflection;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.InducedCFG;
@@ -34,6 +35,7 @@ import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 
 /**
@@ -44,6 +46,10 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
 
   private static final boolean DEBUG = false;
 
+/** BEGIN Custom change: caching */
+  private final Map<String, IR> cache = HashMapFactory.make();
+  
+/** END Custom change: caching */
   public IR getIR(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -52,7 +58,20 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
     if (DEBUG) {
       System.err.println("generating IR for " + node);
     }
-    IR result = makeIR(node.getMethod(), (JavaTypeContext) node.getContext());
+/** BEGIN Custom change: caching */
+    
+    final JavaTypeContext context = (JavaTypeContext) node.getContext();
+    final IMethod method = node.getMethod();
+    final String hashKey = method.toString() + "@" + context.toString();
+    
+    IR result = cache.get(hashKey);
+    
+    if (result == null) {
+      result = makeIR(method, context);
+      cache.put(hashKey, result);
+    }
+    
+/** END Custom change: caching */
     return result;
   }
 

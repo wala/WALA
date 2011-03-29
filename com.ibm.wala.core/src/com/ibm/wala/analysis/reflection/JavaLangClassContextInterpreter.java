@@ -87,6 +87,10 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
 
   private static final boolean DEBUG = false;
 
+/** BEGIN Custom change: caching */
+  private final Map<String, IR> cache = HashMapFactory.make();
+  
+/** END Custom change: caching */
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getIR(com.ibm.wala.ipa.callgraph.CGNode)
    */
@@ -98,8 +102,26 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     if (DEBUG) {
       System.err.println("generating IR for " + node);
     }
-    IMethod method = node.getMethod();
-    JavaTypeContext context = (JavaTypeContext) node.getContext();
+/** BEGIN Custom change: caching */
+    
+    final JavaTypeContext context = (JavaTypeContext) node.getContext();
+    final IMethod method = node.getMethod();
+    final String hashKey = method.toString() + "@" + context.toString();
+    
+    IR result = cache.get(hashKey);
+    
+    if (result == null) {
+      result = makeIR(method, context);
+      if (result == null) {
+        Assertions.UNREACHABLE("Unexpected method " + node);
+      }
+      cache.put(hashKey, result);
+    }
+    
+    return result;
+  }
+
+  private IR makeIR(IMethod method, JavaTypeContext context) {
     Map<Integer, ConstantValue> constants = HashMapFactory.make();
     if (method.getReference().equals(GET_CONSTRUCTOR)) {
       SSAInstruction instrs[] = makeGetCtorStatements(context, constants);
@@ -141,10 +163,11 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
       return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(),
           constants);
     }
-    Assertions.UNREACHABLE("Unexpected method " + node);
+    Assertions.UNREACHABLE("Unexpected method " + method);
     return null;
   }
-
+/** END Custom change: caching */
+  
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getNumberOfStatements(com.ibm.wala.ipa.callgraph.CGNode)
    */

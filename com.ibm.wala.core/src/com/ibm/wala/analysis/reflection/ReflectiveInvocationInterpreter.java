@@ -52,6 +52,10 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
   public final static MethodReference METHOD_INVOKE = MethodReference.findOrCreate(TypeReference.JavaLangReflectMethod, "invoke",
       "(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;");
 
+/** BEGIN Custom change: caching */
+  private final Map<String, IR> cache = HashMapFactory.make();
+  
+/** END Custom change: caching */
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getIR(com.ibm.wala.ipa.callgraph.CGNode)
    */
@@ -66,7 +70,19 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     ReceiverInstanceContext recv = (ReceiverInstanceContext) node.getContext();
     ConstantKey c = (ConstantKey) recv.getReceiver();
     IMethod m = (IMethod) c.getValue();
-    IR result = makeIR(node.getMethod(), m, recv);
+/** BEGIN Custom change: caching */
+    final IMethod method = node.getMethod();
+    final String hashKey = method.toString() + "@" + recv.toString();
+    
+    IR result = cache.get(hashKey);
+    
+    if (result == null) {
+      result = makeIR(method, m, recv);
+      cache.put(hashKey, result);
+    }
+    
+/** END Custom change: caching */
+    result = makeIR(node.getMethod(), m, recv);
     return result;
   }
 

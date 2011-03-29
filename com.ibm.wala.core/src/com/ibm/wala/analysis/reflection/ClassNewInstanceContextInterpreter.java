@@ -11,6 +11,7 @@
 package com.ibm.wala.analysis.reflection;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.InducedCFG;
@@ -35,6 +36,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.strings.Atom;
 
@@ -59,6 +61,10 @@ public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterp
 
   private final IClassHierarchy cha;
 
+/** BEGIN Custom change: caching */
+  private final Map<String, IR> cache = HashMapFactory.make();
+  
+/** END Custom change: caching */
   public ClassNewInstanceContextInterpreter(IClassHierarchy cha) {
     this.cha = cha;
   }
@@ -71,7 +77,20 @@ public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterp
     if (DEBUG) {
       System.err.println("generating IR for " + node);
     }
-    IR result = makeIR(node.getMethod(), (JavaTypeContext) node.getContext());
+/** BEGIN Custom change: caching */
+    
+    final JavaTypeContext context = (JavaTypeContext) node.getContext();
+    final IMethod method = node.getMethod();
+    final String hashKey = method.toString() + "@" + context.toString();
+    
+    IR result = cache.get(hashKey);
+    
+    if (result == null) {
+      result = makeIR(method, context);
+      cache.put(hashKey, result);
+    }
+    
+/** END Custom change: caching */
     return result;
   }
 
