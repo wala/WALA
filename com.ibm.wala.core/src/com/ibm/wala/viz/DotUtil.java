@@ -85,7 +85,11 @@ public class DotUtil {
       throw new IllegalArgumentException("g is null");
     }
     File f = DotUtil.writeDotFile(g, labels, title, dotFile);
-    spawnDot(dotExe, outputFile, f);
+/** BEGIN Custom change: spawn exe only when set */
+    if (dotExe != null) {
+      spawnDot(dotExe, outputFile, f);
+    }
+/** END Custom change: spawn exe only when set */
   }
 
   public static void spawnDot(String dotExe, String outputFile, File dotFile) throws WalaException {
