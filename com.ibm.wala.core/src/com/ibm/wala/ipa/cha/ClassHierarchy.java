@@ -825,6 +825,9 @@ public class ClassHierarchy implements IClassHierarchy {
         IClass c = lookupClass(elt);
         if (c == null) {
           // can't load the element class, so give up.
+/** BEGIN Custom change: remember unresolved classes */
+          unresolved.add(elt);
+/** END Custom change: remember unresolved classes */
           return null;
         } else {
           // we know it comes from c's class loader.
@@ -836,6 +839,9 @@ public class ClassHierarchy implements IClassHierarchy {
       if (n != null) {
         return n.klass;
       } else {
+/** BEGIN Custom change: remember unresolved classes */
+        unresolved.add(a);
+/** END Custom change: remember unresolved classes */
         return null;
       }
     }
@@ -1266,4 +1272,12 @@ public class ClassHierarchy implements IClassHierarchy {
     }
   }
 
+/** BEGIN Custom change: remember unresolved classes */
+  private final Set<TypeReference> unresolved = HashSetFactory.make();
+
+  public final Set<TypeReference> getUnresolvedClasses() {
+    return unresolved;
+  }
+
+/** END Custom change: remember unresolved classes */
 }
