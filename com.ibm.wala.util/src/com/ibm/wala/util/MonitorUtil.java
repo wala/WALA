@@ -24,6 +24,10 @@ public class MonitorUtil {
 
     void beginTask(String task, int totalWork);
 
+/** BEGIN Custom change: subtasks */
+    void subTask(String subTask);
+
+/** END Custom change: subtasks */
     boolean isCanceled();
 
     void done();
