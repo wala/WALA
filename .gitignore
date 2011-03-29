@@ -1,0 +1,8 @@
+*.class
+*.DS_Store
+*~
+*.swp
+*.out
+*/bin/*
+com.ibm.wala.cast.java.polyglot/lib/java_cup.jar
+com.ibm.wala.cast.java.polyglot/lib/polyglot.jar
