@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.impl;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -52,8 +55,17 @@ public class Util {
   /**
    * TODO: Make these properties?
    */
-  public static final String nativeSpec = "natives.xml";
+  public static String nativeSpec = "natives.xml";
 
+/** BEGIN Custom change: change native spec */
+  public static void setNativeSpec(String xmlFile) {
+    nativeSpec = xmlFile;
+  }
+  
+  public static String getNativeSpec() {
+    return nativeSpec;
+  }
+/** END Custom change: change native spec */  
   /**
    * Set up an AnalysisOptions object with default selectors, corresponding to class hierarchy lookup
    * 
@@ -93,15 +105,37 @@ public class Util {
     InputStream s = cl.getResourceAsStream(xmlFile);
     XMLMethodSummaryReader summary = new XMLMethodSummaryReader(s, scope);
 
-    MethodTargetSelector ms = new BypassMethodTargetSelector(options.getMethodTargetSelector(), summary.getSummaries(), summary
-        .getIgnoredPackages(), cha);
+/** BEGIN Custom change: load xml from file system as a fallback */
+    addBypassLogic(options, scope, cl, summary, cha);
+/** END Custom change: load xml from file system as a fallback */
+  }
+
+/** BEGIN Custom change: load xml from file system as a fallback */
+  public static void addBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, XMLMethodSummaryReader summary,
+      IClassHierarchy cha) throws IllegalArgumentException {
+    if (scope == null) {
+      throw new IllegalArgumentException("scope is null");
+    }
+    if (options == null) {
+      throw new IllegalArgumentException("options is null");
+    }
+    if (cl == null) {
+      throw new IllegalArgumentException("cl is null");
+    }
+    if (cha == null) {
+      throw new IllegalArgumentException("cha cannot be null");
+    }    
+    
+    MethodTargetSelector ms = new BypassMethodTargetSelector(options.getMethodTargetSelector(), summary.getSummaries(), 
+        summary.getIgnoredPackages(), cha);
     options.setSelector(ms);
 
     ClassTargetSelector cs = new BypassClassTargetSelector(options.getClassTargetSelector(), summary.getAllocatableClasses(), cha,
         cha.getLoader(scope.getLoader(Atom.findOrCreateUnicodeAtom("Synthetic"))));
     options.setSelector(cs);
   }
-
+  
+/** END Custom change: load xml from file system as a fallback */
   /**
    * @param scope
    * @param cha
@@ -454,7 +488,23 @@ public class Util {
   }
 
   public static void addDefaultBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, IClassHierarchy cha) {
-    addBypassLogic(options, scope, cl, nativeSpec, cha);
+/** BEGIN Custom change: load xml from file system as a fallback */
+    if (cl.getResourceAsStream(nativeSpec) != null) {
+/** END Custom change: load xml from file system as fallback */
+      addBypassLogic(options, scope, cl, nativeSpec, cha);
+/** BEGIN Custom change: load xml from file system as a fallback */
+    } else {
+      // try to load from filesystem
+      try {
+        BufferedInputStream bIn = new BufferedInputStream(new FileInputStream(nativeSpec));
+        XMLMethodSummaryReader reader = new XMLMethodSummaryReader(bIn, scope);
+        addBypassLogic(options, scope, cl, reader, cha);
+      } catch (FileNotFoundException e) {
+        System.err.println("Could not load natives xml file from: " + nativeSpec);
+        e.printStackTrace();
+      }
+    }
+/** END Custom change: load xml from file system as fallback */
   }
 
 }
