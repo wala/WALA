@@ -96,7 +96,21 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
      * Mapping from instruction index to program counter.
      */
     private int[] pcMap;
-
+/** BEGIN Custom change: precise positions */
+    
+    /**
+     * Cached map representing position information for bytecode instruction
+     * at given index
+     */
+    protected SourcePosition[] positionMap;
+    
+    /**
+     * Sourcecode positions for method parameters
+     */
+    protected SourcePosition[] paramPositionMap;
+    
+/** END Custom change: precise positions */
+    
     /**
      * Cached map representing line number information in ShrikeCT format TODO: do more careful caching than just soft references
      */
@@ -740,6 +754,22 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
       return null;
     }
   }
+/** BEGIN Custom change: precise bytecode positions */
+  
+  /*
+   * @see com.ibm.wala.classLoader.IMethod#getSourcePosition(int)
+   */
+  public SourcePosition getSourcePosition(int bcIndex) throws InvalidClassFileException {
+    return (getBCInfo().positionMap == null) ? null : getBCInfo().positionMap[bcIndex];
+  }
+
+  /*
+   * @see com.ibm.wala.classLoader.IMethod#getParameterSourcePosition(int)
+   */
+  public SourcePosition getParameterSourcePosition(int paramNum) throws InvalidClassFileException {
+    return (getBCInfo().paramPositionMap == null) ? null : getBCInfo().paramPositionMap[paramNum];
+  }
+/** END Custom change: precise bytecode positions */
 
   /*
    * @see com.ibm.wala.classLoader.IMethod#getLineNumber(int)

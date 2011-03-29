@@ -16,3 +16,4 @@ Export-Package: com.ibm.wala.shrike.bench,
  com.ibm.wala.shrikeBT.tools,
  com.ibm.wala.shrikeCT
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: joana.jSDG.SourceInfo;bundle-version="0.0.2"

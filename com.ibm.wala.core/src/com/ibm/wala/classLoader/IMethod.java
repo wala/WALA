@@ -122,7 +122,22 @@ public interface IMethod extends IMember, ContextItem {
    * @return the source line number corresponding to a particular bytecode index, or -1 if the information is not available.
    */
   int getLineNumber(int bcIndex);
+/** BEGIN Custom change: precise positions */
+  
+  public interface SourcePosition extends Comparable {
+    int getFirstLine();
+    int getLastLine();
+    int getFirstCol();
+    int getLastCol();
+    int getFirstOffset();
+    int getLastOffset(); 
+  }
+  
+  SourcePosition getSourcePosition(int instructionIndex) throws InvalidClassFileException;
 
+  SourcePosition getParameterSourcePosition(int paramNum) throws InvalidClassFileException;
+/** END Custom change: precise positions */
+  
   /**
    * @return the (source code) name of the local variable of a given number at the specified program counter, or null if the
    *         information is not available.

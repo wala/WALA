@@ -19,6 +19,7 @@ import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
@@ -249,6 +250,15 @@ public abstract class AstMethod implements IMethod {
   public int getNumberOfParameters() {
     return symtab.getParameterValueNumbers().length;
   }
+/** BEGIN Custom change: precise bytecode positions */
+  
+  /*
+   * @see com.ibm.wala.classLoader.IMethod#getParameterSourcePosition(int)
+   */
+  public SourcePosition getParameterSourcePosition(int paramNum) throws InvalidClassFileException {
+    return null;
+  }
+/** END Custom change: precise bytecode positions */
 
   public int getLineNumber(int instructionIndex) {
     Position pos = debugInfo.getInstructionPosition(instructionIndex);

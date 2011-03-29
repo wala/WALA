@@ -15,6 +15,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Iterator;
 
+import com.ibm.wala.classLoader.IMethod.SourcePosition;
+
 /**
  *  The assumption is that a typical CAst is derived from some kind of
  * textual source file, for which it makes sense to record source
@@ -35,13 +37,7 @@ public interface CAstSourcePositionMap {
    *
    * @author Julian Dolby (dolby@us.ibm.com)
    */
-  public interface Position extends Comparable {
-    int getFirstLine();
-    int getLastLine();
-    int getFirstCol();
-    int getLastCol();
-    int getFirstOffset();
-    int getLastOffset(); 
+  public interface Position extends SourcePosition {
     URL getURL();
     InputStream getInputStream() throws IOException;
   }

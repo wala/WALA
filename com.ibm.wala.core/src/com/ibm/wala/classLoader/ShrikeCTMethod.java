@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,7 +20,9 @@ import com.ibm.wala.shrikeBT.Decoder;
 import com.ibm.wala.shrikeBT.IndirectionData;
 import com.ibm.wala.shrikeBT.shrikeCT.CTDecoder;
 import com.ibm.wala.shrikeCT.AnnotationsReader;
+import com.ibm.wala.shrikeCT.AnnotationsReader.UnimplementedException;
 import com.ibm.wala.shrikeCT.ClassReader;
+import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
 import com.ibm.wala.shrikeCT.CodeReader;
 import com.ibm.wala.shrikeCT.ExceptionsReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
@@ -28,8 +31,8 @@ import com.ibm.wala.shrikeCT.LocalVariableTableReader;
 import com.ibm.wala.shrikeCT.RuntimeInvisibleAnnotationsReader;
 import com.ibm.wala.shrikeCT.RuntimeVisibleAnnotationsReader;
 import com.ibm.wala.shrikeCT.SignatureReader;
-import com.ibm.wala.shrikeCT.AnnotationsReader.UnimplementedException;
-import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
+import com.ibm.wala.shrikeCT.SourcePositionTableReader;
+import com.ibm.wala.shrikeCT.SourcePositionTableReader.Position;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.types.generics.MethodTypeSignature;
@@ -146,12 +149,115 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
       return reader.getClasses();
     }
   }
+/** BEGIN Custom change: precise positions */
+  
+  private static final class SPos implements SourcePosition {
 
+    final int firstLine;
+    final int lastLine;
+    final int firstCol;
+    final int lastCol;
+    
+    private SPos(int firstLine, int lastLine, int firstCol, int lastCol) {
+      this.firstLine = firstLine;
+      this.lastLine = lastLine;
+      this.firstCol = firstCol;
+      this.lastCol = lastCol;
+    }
+
+    
+    public int getFirstCol() {
+      return firstCol;
+    }
+
+    public int getFirstLine() {
+      return firstLine;
+    }
+
+    public int getFirstOffset() {
+      return 0;
+    }
+
+    public int getLastCol() {
+      return lastCol;
+    }
+
+    public int getLastLine() {
+      return lastLine;
+    }
+
+    public int getLastOffset() {
+      return 0;
+    }
+
+    public int compareTo(Object o) {
+      if (o instanceof SourcePosition) {
+        SourcePosition p = (SourcePosition) o;
+        if (firstLine != p.getFirstLine()) {
+          return firstLine - p.getFirstLine();
+        } else if (firstCol != p.getFirstCol()) {
+          return firstCol - p.getFirstCol();
+        } else if (lastLine != p.getLastLine()) {
+          return lastLine - p.getLastLine();
+        } else if (lastCol != p.getLastCol()) {
+          return lastCol - p.getLastCol();
+        } else {
+          return 0;
+        }
+      } else {
+        return -1;
+      }
+    }
+    
+    @Override
+    public String toString() {
+      return "(" + firstLine + "," + firstCol + "-" + lastLine + "," + lastCol + ")";
+    }
+    
+  }
+/** END Custom change: precise positions */
+  
   @Override
   protected void processDebugInfo(BytecodeInfo bcInfo) throws InvalidClassFileException {
     CodeReader cr = getCodeReader();
     bcInfo.lineNumberMap = LineNumberTableReader.makeBytecodeToSourceMap(cr);
     bcInfo.localVariableMap = LocalVariableTableReader.makeVarMap(cr);
+/** BEGIN Custom change: precise bytecode positions */
+    
+    Position param = null;
+    try {
+        param = SourcePositionTableReader.findParameterPosition(shrikeMethodIndex, cr);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    
+    bcInfo.paramPositionMap = new SPos[getNumberOfParameters()];
+    if (param != null) {
+      SPos paramPos = new SPos(param.firstLine, param.lastLine, param.firstCol, param.lastCol);
+      for (int i = 0; i < getNumberOfParameters(); i++) {
+        bcInfo.paramPositionMap[i] = paramPos;
+      }
+    }
+
+    Position pos[] = null;
+    try {
+      pos = SourcePositionTableReader.makeBytecodeToPositionMap(cr);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    
+    if (pos == null && bcInfo.lineNumberMap != null) {
+      pos = SourcePositionTableReader.makeLineNumberToPositionMap(bcInfo.lineNumberMap);
+    }
+    
+    if (pos != null) {
+      bcInfo.positionMap = new SPos[pos.length];
+      for (int i = 0; i < pos.length; i++) {
+        Position p = pos[i];
+        bcInfo.positionMap[i] = new SPos(p.firstLine, p.lastLine, p.firstCol, p.lastCol);
+      }
+    }
+/** END Custom change: : precise bytecode positions */
   }
 
   @Override
