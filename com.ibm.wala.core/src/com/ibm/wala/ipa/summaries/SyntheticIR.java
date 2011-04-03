@@ -20,12 +20,12 @@ import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAIndirectionData;
+import com.ibm.wala.ssa.SSAIndirectionData.Name;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.ssa.SSAIndirectionData.Name;
 import com.ibm.wala.util.debug.Assertions;
 
 public class SyntheticIR extends IR {

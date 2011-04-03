@@ -38,7 +38,6 @@ import com.ibm.wala.util.collections.IntMapIterator;
 import com.ibm.wala.util.collections.SparseVector;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.functions.IntFunction;
-import com.ibm.wala.util.graph.EdgeManager;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;

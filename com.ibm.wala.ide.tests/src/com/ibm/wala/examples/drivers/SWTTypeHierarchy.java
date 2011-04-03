@@ -12,6 +12,7 @@ package com.ibm.wala.examples.drivers;
 
 import java.util.Collection;
 
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.ApplicationWindow;
 
 import com.ibm.wala.classLoader.IClass;

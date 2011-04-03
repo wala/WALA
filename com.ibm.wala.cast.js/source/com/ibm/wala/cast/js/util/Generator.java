@@ -19,8 +19,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-import com.ibm.wala.cast.js.html.IHtmlParser;
 import com.ibm.wala.cast.js.html.IHtmlCallback;
+import com.ibm.wala.cast.js.html.IHtmlParser;
 import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
 
 public class Generator {

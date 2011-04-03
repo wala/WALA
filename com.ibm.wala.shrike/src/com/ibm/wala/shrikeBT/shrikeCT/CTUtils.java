@@ -15,10 +15,10 @@ import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.analysis.ClassHierarchyStore;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.ClassWriter;
+import com.ibm.wala.shrikeCT.ClassWriter.Element;
 import com.ibm.wala.shrikeCT.CodeWriter;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.shrikeCT.LineNumberTableWriter;
-import com.ibm.wala.shrikeCT.ClassWriter.Element;
 
 /**
  * This is a dumping ground for useful functions that manipulate class info.
