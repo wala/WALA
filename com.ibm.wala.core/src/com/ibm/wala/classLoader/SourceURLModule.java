@@ -10,9 +10,11 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
 
-public class SourceURLModule extends AbstractURLModule {
+public class SourceURLModule extends AbstractURLModule implements SourceModule {
 
   public SourceURLModule(URL url) {
     super(url);
@@ -24,6 +26,10 @@ public class SourceURLModule extends AbstractURLModule {
 
   public boolean isSourceFile() {
     return true;
+  }
+
+  public Reader getInputReader() {
+    return new InputStreamReader(getInputStream());
   }
 
 }
