@@ -1,9 +1,20 @@
+/******************************************************************************
+ * Copyright (c) 2002 - 2011 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *****************************************************************************/
 package com.ibm.wala.cast.js.html;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.StringReader;
+import java.net.URL;
 import java.util.StringTokenizer;
 
 import com.ibm.wala.util.collections.Pair;
@@ -17,7 +28,7 @@ public class SourceRegion {
   public SourceRegion() {
   }
 
-  public void print(String text, String originalFile, int originalLine){
+  public void print(String text, URL originalFile, int originalLine){
     source.append(text);
     int numberOfLineDrops = getNumberOfLineDrops(text);
     if (originalFile != null){
@@ -32,7 +43,7 @@ public class SourceRegion {
     }
   }
 
-  public void println(String text, String originalFile, int originalLine){
+  public void println(String text, URL originalFile, int originalLine){
     print(text + "\n", originalFile, originalLine);
   }
   
@@ -57,7 +68,7 @@ public class SourceRegion {
       while ((line = br.readLine()) != null){
         lineNum++;
         
-        Pair<String, Integer> fileAndLine = otherRegion.fileMapping.getAssociatedFileAndLine(lineNum);
+        Pair<URL, Integer> fileAndLine = otherRegion.fileMapping.getAssociatedFileAndLine(lineNum);
         if (fileAndLine!= null){
           this.println(line, fileAndLine.fst, fileAndLine.snd);
         } else {
@@ -77,7 +88,7 @@ public class SourceRegion {
       String line = (String) st.nextElement();
       lineNum++;
       
-      Pair<String, Integer> fileAndLine = fileMapping.getAssociatedFileAndLine(lineNum);
+      Pair<URL, Integer> fileAndLine = fileMapping.getAssociatedFileAndLine(lineNum);
       if (fileAndLine!= null){
         ps.print(fileAndLine.snd + "@" + fileAndLine.fst + "\t:");
       } else {

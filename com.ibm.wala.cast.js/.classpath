@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="source"/>
 	<classpathentry kind="src" path="dat"/>
-	<classpathentry exported="true" kind="lib" path="bin" sourcepath="bin"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/jericho-html-2.6.jar"/>
+	<classpathentry kind="lib" path="lib/htmlparser-1.3.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/JVM 1.5.0 (MacOS X Default)"/>
+	<classpathentry kind="lib" path="lib/jericho-html-3.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

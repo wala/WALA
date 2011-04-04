@@ -1,11 +1,25 @@
+/******************************************************************************
+ * Copyright (c) 2002 - 2011 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *****************************************************************************/
+
 package com.ibm.wala.cast.js.html;
 
 import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.Pair;
 
 public class DefaultSourceExtractor extends DomLessSourceExtractor{
 
@@ -13,6 +27,9 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
 
     private final HashMap<String, String> constructors = HashMapFactory.make();
     protected final Stack<String> stack;
+
+    private final Stack<ITag> forms = new Stack<ITag>();
+    private final Set<Pair<ITag,String>> sets = new HashSet<Pair<ITag,String>>();
 
     public HtmlCallBack(URL entrypointUrl, IUrlResolver urlResolver) {
       super(entrypointUrl, urlResolver);
@@ -27,7 +44,15 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
     public void handleEndTag(ITag tag) {
       super.handleEndTag(tag);
       endElement(stack.pop());
-    }
+      if (tag.getName().equalsIgnoreCase("FORM")) {
+        forms.pop();
+      }
+      for(String v : tag.getAllAttributes().values()) {
+        if (v != null && v.startsWith("javascript:")) {
+          entrypointRegion.println(v.substring(11), entrypointUrl, tag.getStartingLineNum());
+        }
+      }
+   }
 
     @Override
     protected void handleDOM(ITag tag, String funcName) {
@@ -48,7 +73,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
       if (relatedTag == null){
         domRegion.println(indentedLine.toString());
       } else {
-        domRegion.println(indentedLine.toString(), fileName, relatedTag.getStartingLineNum());
+        domRegion.println(indentedLine.toString(), entrypointUrl, relatedTag.getStartingLineNum());
       }
     }
 
@@ -69,7 +94,35 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
         writeAttribute(tag, attr, value, "this", varName);
       }
 
-      printlnIndented("" + varName + " = this;", tag);
+      if (tag.getName().equalsIgnoreCase("FORM")) {
+        forms.push(tag);
+        printlnIndented("  var currentForm = this;", tag);
+      } if (tag.getName().equalsIgnoreCase("INPUT")) {
+        String prop = tag.getAttributeByName("NAME");
+        if (prop == null) {
+          prop = tag.getAttributeByName("name");
+        }
+        
+        String type = tag.getAttributeByName("TYPE");
+        if (type == null) {
+          type = tag.getAttributeByName("type");
+        }
+ 
+        if (type != null && prop != null) {
+        if (type.equalsIgnoreCase("RADIO")) {
+          if (! sets.contains(Pair.make(forms.peek(), prop))) {
+            sets.add(Pair.make(forms.peek(), prop));
+            printlnIndented("  currentForm." + prop + " = new Array();", tag);
+            printlnIndented("  currentForm." + prop + "Counter = 0;", tag);
+          }
+          printlnIndented("  currentForm." + prop + "[currentForm." + prop + "Counter++] = this;", tag);
+        } else {
+          printlnIndented("  currentForm." + prop + " = this;", tag);          
+        }
+      }
+      }
+
+      printlnIndented(varName + " = this;", tag);
       printlnIndented("dom_nodes." + varName + " = this;", tag);
       printlnIndented("parent.appendChild(this);", tag);
     }
@@ -81,21 +134,19 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
 
     protected void writeEventAttribute(ITag tag, String attr, String value, String varName, String varName2){
       if(attr.substring(0,2).equals("on")) {
-        printlnIndented("function " + attr + "_" + varName2 + "(event) {" + value + "};", tag);
-        printlnIndented(varName + "." + attr + " = " + attr + "_" + varName2 + ";", tag);
-        newLine(); newLine();
-        printlnIndented(varName2 + "." + attr + "(null);\n", tag);
-      } else if (value.startsWith("javascript:") || value.startsWith("javaScript:")) {
-        printlnIndented("var " + varName + attr + " = " + value.substring(11), tag);
-        printlnIndented(varName + ".setAttribute('" + attr + "', " + varName + attr + ");", tag);
-      } else {
+        printlnIndented(varName + "." + attr + " = function " + attr + "_" + varName2 + "(event) {" + value + "};", tag);
+        entrypointRegion.println(varName2 + "." + attr + "(null);", entrypointUrl, new Integer(tag.getStartingLineNum()));
+      } else if (value != null) {
         if (value.indexOf('\'') > 0) {
           value = value.replaceAll("\\'", "\\\\'");
         }
         if (value.indexOf('\n') > 0) {
           value = value.replaceAll("\\n", "\\\\n");
         }
-        printlnIndented(varName + ".setAttribute('" + attr + "', '" + value + "');", tag);
+        if (attr.equals(attr.toUpperCase())) {
+          attr = attr.toLowerCase();
+        }
+        printlnIndented(varName + "['" + attr + "'] = '" + value + "';", tag);
       }
     }
 

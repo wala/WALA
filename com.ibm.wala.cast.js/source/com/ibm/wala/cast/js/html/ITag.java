@@ -1,8 +1,16 @@
 package com.ibm.wala.cast.js.html;
 
+/******************************************************************************
+ * Copyright (c) 2002 - 2011 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *****************************************************************************/
 import java.util.Map;
-
-import com.ibm.wala.util.collections.Pair;
 
 /**
  * @author danielk
@@ -23,11 +31,6 @@ public interface ITag {
 	public String getAttributeByName(String name);
 
 	public Map<String, String> getAllAttributes();
-
-	/**
-	 * @return a pair containing the start line of the tag's body and the actual body as a string
-	 */
-	public Pair<Integer, String> getBodyText();
 
 	/**
 	 * Returns the starting line number of the tag.

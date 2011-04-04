@@ -11,7 +11,6 @@
 package com.ibm.wala.cast.js.loader;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -70,6 +69,7 @@ import com.ibm.wala.classLoader.LanguageImpl;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction.IOperator;
@@ -844,8 +844,8 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
   }
 
   @Override
-  protected TranslatorToCAst getTranslatorToCAst(CAst ast, ModuleEntry module, URL sourceURL, String localFileName) {
-    return translatorFactory.make(ast, module, sourceURL, localFileName);
+  protected TranslatorToCAst getTranslatorToCAst(CAst ast, SourceModule module) {
+    return translatorFactory.make(ast, module);
   }
 
   @Override

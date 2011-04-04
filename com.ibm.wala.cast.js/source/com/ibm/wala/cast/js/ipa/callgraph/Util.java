@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -122,34 +123,38 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
    * @throws IOException
    */
   public static Set<String> loadAdditionalFile(IClassHierarchy cha, JavaScriptLoader cl, String fileName, URL url, String file) throws IOException {
-    SourceURLModule M = new SourceURLModule(url);
-    TranslatorToCAst toCAst = getTranslatorFactory().make(new CAstImpl(), M, url, file);
-    final Set<String> names = new HashSet<String>();
-    JSAstTranslator toIR = new JSAstTranslator(cl) {
-      protected void defineFunction(CAstEntity N, 
-          WalkContext definingContext, 
-          AbstractCFG cfg,
-          SymbolTable symtab, 
-          boolean hasCatchBlock, 
-          TypeReference[][] caughtTypes,
-          boolean hasMonitorOp,
-          AstLexicalInformation LI,
-          DebuggingInformation debugInfo)
-      {
-        String fnName = "L" + composeEntityName(definingContext, N);
-        names.add(fnName);
-        super.defineFunction(N, definingContext, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, LI, debugInfo);   
+    try{
+      SourceURLModule M = new SourceURLModule(url);  
+      TranslatorToCAst toCAst = getTranslatorFactory().make(new CAstImpl(), M);
+      final Set<String> names = new HashSet<String>();
+      JSAstTranslator toIR = new JSAstTranslator(cl) {
+        protected void defineFunction(CAstEntity N, 
+           WalkContext definingContext, 
+           AbstractCFG cfg,
+           SymbolTable symtab, 
+           boolean hasCatchBlock, 
+           TypeReference[][] caughtTypes,
+           boolean hasMonitorOp,
+           AstLexicalInformation LI,
+           DebuggingInformation debugInfo)
+        {
+          String fnName = "L" + composeEntityName(definingContext, N);
+          names.add(fnName);
+          super.defineFunction(N, definingContext, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, LI, debugInfo);   
+        }
+      };
+      CAstEntity tree = toCAst.translateToCAst();
+      if (DEBUG){
+        CAstPrinter.printTo(tree, new PrintWriter(System.err));
       }
-    };
-    CAstEntity tree = toCAst.translateToCAst();
-    if (DEBUG){
-      CAstPrinter.printTo(tree, new PrintWriter(System.err));
+      toIR.translate(tree, fileName);
+      for(String name : names) {
+        IClass fcls = cl.lookupClass(name, cha);
+        cha.addClass(fcls);
+      }
+      return names;
+    } catch (RuntimeException e) {
+      return Collections.emptySet();
     }
-    toIR.translate(tree, fileName);
-    for(String name : names) {
-      IClass fcls = cl.lookupClass(name, cha);
-      cha.addClass(fcls);
-    }
-    return names;
   }
 }

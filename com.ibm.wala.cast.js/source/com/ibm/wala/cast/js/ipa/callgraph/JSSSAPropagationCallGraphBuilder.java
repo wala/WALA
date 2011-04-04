@@ -11,7 +11,11 @@
 package com.ibm.wala.cast.js.ipa.callgraph;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.cast.ipa.callgraph.AstSSAPropagationCallGraphBuilder;
@@ -59,6 +63,7 @@ import com.ibm.wala.ssa.SSABinaryOpInstruction;
 import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
@@ -70,10 +75,41 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
   public static final boolean DEBUG_TYPE_INFERENCE = false;
 
-  URL scriptBaseURL;
+  private URL scriptBaseURL;
+  
+  public URL getBaseURL() {
+    return scriptBaseURL;
+  }
   
   public void setBaseURL(URL url) {
     this.scriptBaseURL = url;
+  }
+  
+  private SortedMap<Integer,URL> scriptIndexToFragment;
+  private Map<String, Integer> scriptFragmentToLine;
+  
+  public void setFragments(SortedMap<Integer,URL> map) {
+    int i = 0;
+    scriptIndexToFragment = new TreeMap<Integer,URL>();
+    for(Map.Entry<Integer, URL> e : map.entrySet()) {
+      scriptIndexToFragment.put(i++, e.getValue());
+    }
+    scriptFragmentToLine = new HashMap<String,Integer>(map.size());
+    for(Map.Entry<Integer, URL> e : map.entrySet()) {
+      scriptFragmentToLine.put(e.getValue().toString(), e.getKey());
+    }
+  }
+
+  public URL getFragment(int i) {
+    return scriptIndexToFragment.get(i);
+  }
+  
+  public Pair<URL, Integer> mapPosition(URL fragment, int line) {
+    if (fragment.toString().indexOf("scriptTag") < 0) {
+      return Pair.make(fragment, line);
+    } else {
+      return Pair.make(scriptBaseURL, scriptFragmentToLine.get(fragment) + line);
+    }
   }
   
   protected JSSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,

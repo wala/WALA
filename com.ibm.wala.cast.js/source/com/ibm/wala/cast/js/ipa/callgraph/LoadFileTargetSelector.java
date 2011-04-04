@@ -55,13 +55,15 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
         String str = names.iterator().next();
         try {
           JavaScriptLoader cl = (JavaScriptLoader) builder.getClassHierarchy().getLoader(JavaScriptTypes.jsLoader);
-          URL url = new URL(builder.scriptBaseURL, str);
+          URL url = new URL(builder.getBaseURL(), str);
           Util.loadAdditionalFile(builder.getClassHierarchy() , cl, str, url, url.getFile());
           IClass script = builder.getClassHierarchy().lookupClass(TypeReference.findOrCreate(cl.getReference(), "L" + url.getFile()));
           return script.getMethod(JavaScriptMethods.fnSelector);
         } catch (MalformedURLException e1) {
           // do nothing, fall through and return 'target'
         } catch (IOException e) {
+          // do nothing, fall through and return 'target'
+        } catch (RuntimeException e) {
           // do nothing, fall through and return 'target'
         }
       }

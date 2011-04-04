@@ -23,6 +23,7 @@ import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -43,12 +44,11 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
    public JavaScriptAnalysisEngine() {
   }
 
-  @SuppressWarnings("unchecked")
   public void buildAnalysisScope() {
     try {
       loaderFactory = new JavaScriptLoaderFactory(translatorFactory);
 
-      Module[] files = (Module[]) moduleFiles.toArray(new Module[moduleFiles.size()]);
+      SourceModule[] files = (SourceModule[]) moduleFiles.toArray(new SourceModule[moduleFiles.size()]);
 
       scope = new CAstAnalysisScope(files, loaderFactory, Collections.singleton(JavaScriptLoader.JS));
     } catch (IOException e) {

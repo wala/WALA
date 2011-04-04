@@ -1,10 +1,18 @@
+/******************************************************************************
+ * Copyright (c) 2002 - 2011 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *****************************************************************************/
 package com.ibm.wala.cast.js.html;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Map;
-
-import com.ibm.wala.classLoader.SourceFileModule;
+import java.util.Set;
 
 /**
  * Extracts scripts from a given URL of an HTML. Retrieves also attached js files. 
@@ -13,8 +21,12 @@ import com.ibm.wala.classLoader.SourceFileModule;
  * @author yinnonh
  * @author danielk
  */
-public interface JSSourceExtractor {
+public abstract class JSSourceExtractor {
 
-  public Map<SourceFileModule, FileMapping> extractSources(URL entrypointUrl, IHtmlParser htmlParser, IUrlResolver urlResolver) throws IOException;
+  public static boolean DELETE_UPON_EXIT = true;
+
+  public static boolean USE_TEMP_NAME = true;
+
+  public abstract Set<MappedSourceModule> extractSources(URL entrypointUrl, IHtmlParser htmlParser, IUrlResolver urlResolver) throws IOException;
   
 }

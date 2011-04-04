@@ -10,14 +10,12 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.translator;
 
-import java.net.URL;
-
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.tree.CAst;
-import com.ibm.wala.classLoader.ModuleEntry;
+import com.ibm.wala.classLoader.SourceModule;
 
 public interface JavaScriptTranslatorFactory {
 
-  TranslatorToCAst make(CAst ast, ModuleEntry M, URL sourceURL, String localFileName);
+  TranslatorToCAst make(CAst ast, SourceModule M);
 
 }
