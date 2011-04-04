@@ -11,13 +11,14 @@
 package com.ibm.wala.cast.js.test;
 
 import java.net.URL;
+import java.util.Set;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.ibm.wala.cast.js.util.WebUtil;
-import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.cast.js.html.MappedSourceModule;
+import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 
 public class TestWebUtil extends WalaTestCase {
@@ -25,14 +26,14 @@ public class TestWebUtil extends WalaTestCase {
   @Test public void testAjaxslt() {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xslt.html");
     Assert.assertTrue(url != null);
-    Module mod = WebUtil.extractScriptFromHTML( url );
+    Set<MappedSourceModule> mod = WebUtil.extractScriptFromHTML( url );
     Assert.assertTrue(mod != null);
   }
 
   @Test public void testAjaxpath() {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xpath.html");
     Assert.assertTrue(url != null);
-    Module mod = WebUtil.extractScriptFromHTML( url );
+    Set<MappedSourceModule> mod = WebUtil.extractScriptFromHTML( url );
     Assert.assertTrue(mod != null);
   }
 }
