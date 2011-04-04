@@ -10,14 +10,12 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.html;
 
-import java.net.URL;
-
-import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 
 public class MutableFileMapping extends FileMapping {
 
-  void map(int line, URL originalFile, int originalLine){
-    lineNumberToFileAndLine.put(line, Pair.<URL, Integer> make(originalFile, originalLine));
+  void map(int line, Position originalPos){
+    lineNumberToFileAndLine.put(line, originalPos);
   }
   
 }

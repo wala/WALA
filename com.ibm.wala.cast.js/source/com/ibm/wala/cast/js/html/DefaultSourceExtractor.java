@@ -26,18 +26,16 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
   private static class HtmlCallBack extends DomLessSourceExtractor.HtmlCallback{
 
     private final HashMap<String, String> constructors = HashMapFactory.make();
-    protected final Stack<String> stack;
+ 
+    private final Stack<String> stack = new Stack<String>();
 
     private final Stack<ITag> forms = new Stack<ITag>();
     private final Set<Pair<ITag,String>> sets = new HashSet<Pair<ITag,String>>();
 
     public HtmlCallBack(URL entrypointUrl, IUrlResolver urlResolver) {
       super(entrypointUrl, urlResolver);
-
-      stack = new Stack<String>();
       constructors.put("FORM", "DOMHTMLFormElement");
       constructors.put("TABLE", "DOMHTMLTableElement");
-
     }
 
     @Override
@@ -49,7 +47,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
       }
       for(String v : tag.getAllAttributes().values()) {
         if (v != null && v.startsWith("javascript:")) {
-          entrypointRegion.println(v.substring(11), entrypointUrl, tag.getStartingLineNum());
+          entrypointRegion.println(v.substring(11), makePos(tag.getStartingLineNum(), tag));
         }
       }
    }
@@ -73,7 +71,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
       if (relatedTag == null){
         domRegion.println(indentedLine.toString());
       } else {
-        domRegion.println(indentedLine.toString(), entrypointUrl, relatedTag.getStartingLineNum());
+        domRegion.println(indentedLine.toString(), makePos(relatedTag.getStartingLineNum(), relatedTag));
       }
     }
 
@@ -135,7 +133,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
     protected void writeEventAttribute(ITag tag, String attr, String value, String varName, String varName2){
       if(attr.substring(0,2).equals("on")) {
         printlnIndented(varName + "." + attr + " = function " + attr + "_" + varName2 + "(event) {" + value + "};", tag);
-        entrypointRegion.println(varName2 + "." + attr + "(null);", entrypointUrl, new Integer(tag.getStartingLineNum()));
+        entrypointRegion.println(varName2 + "." + attr + "(null);", makePos(tag.getStartingLineNum(), tag));
       } else if (value != null) {
         if (value.indexOf('\'') > 0) {
           value = value.replaceAll("\\'", "\\\\'");
@@ -162,7 +160,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
       }
     }
 
-    private void endElement(String name) {
+    protected void endElement(String name) {
       printlnIndented("};", null);
       if (stack.isEmpty()) {
         printlnIndented("new make_" + name + "(document);\n\n", null);

@@ -85,33 +85,6 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     this.scriptBaseURL = url;
   }
   
-  private SortedMap<Integer,URL> scriptIndexToFragment;
-  private Map<String, Integer> scriptFragmentToLine;
-  
-  public void setFragments(SortedMap<Integer,URL> map) {
-    int i = 0;
-    scriptIndexToFragment = new TreeMap<Integer,URL>();
-    for(Map.Entry<Integer, URL> e : map.entrySet()) {
-      scriptIndexToFragment.put(i++, e.getValue());
-    }
-    scriptFragmentToLine = new HashMap<String,Integer>(map.size());
-    for(Map.Entry<Integer, URL> e : map.entrySet()) {
-      scriptFragmentToLine.put(e.getValue().toString(), e.getKey());
-    }
-  }
-
-  public URL getFragment(int i) {
-    return scriptIndexToFragment.get(i);
-  }
-  
-  public Pair<URL, Integer> mapPosition(URL fragment, int line) {
-    if (fragment.toString().indexOf("scriptTag") < 0) {
-      return Pair.make(fragment, line);
-    } else {
-      return Pair.make(scriptBaseURL, scriptFragmentToLine.get(fragment) + line);
-    }
-  }
-  
   protected JSSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       PointerKeyFactory pointerKeyFactory) {
     super(cha, options, cache, pointerKeyFactory);

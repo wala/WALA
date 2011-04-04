@@ -14,10 +14,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.StringReader;
-import java.net.URL;
 import java.util.StringTokenizer;
 
-import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
+import com.ibm.wala.util.functions.Function;
 
 public class SourceRegion {
 
@@ -28,27 +28,28 @@ public class SourceRegion {
   public SourceRegion() {
   }
 
-  public void print(String text, URL originalFile, int originalLine){
+  public void print(String text, Function<Integer,Position> originalPos){
     source.append(text);
+    int ln = 0;
     int numberOfLineDrops = getNumberOfLineDrops(text);
-    if (originalFile != null){
+    if (originalPos != null){
       for (int i = 0; i < numberOfLineDrops; i++){
-        fileMapping.map(currentLine++, originalFile, originalLine++);
+        fileMapping.map(currentLine++, originalPos.apply(ln++));
       }
       if (! text.endsWith("\n")){ // avoid mapping one line too much
-        fileMapping.map(currentLine, originalFile, originalLine); // required for handling text with no CRs.
+        fileMapping.map(currentLine, originalPos.apply(ln)); // required for handling text with no CRs.
       }
     } else {
       currentLine += numberOfLineDrops;
     }
   }
 
-  public void println(String text, URL originalFile, int originalLine){
-    print(text + "\n", originalFile, originalLine);
+  public void println(String text, Function<Integer,Position> originalPos){
+    print(text + "\n", originalPos);
   }
   
   public void print(String text){
-    print(text, null, -1);
+    print(text, null);
   }
 
   public void println(String text){
@@ -68,12 +69,12 @@ public class SourceRegion {
       while ((line = br.readLine()) != null){
         lineNum++;
         
-        Pair<URL, Integer> fileAndLine = otherRegion.fileMapping.getAssociatedFileAndLine(lineNum);
+        Position fileAndLine = otherRegion.fileMapping.getAssociatedFileAndLine(lineNum);
         if (fileAndLine!= null){
-          this.println(line, fileAndLine.fst, fileAndLine.snd);
-        } else {
-          this.println(line);
+          fileMapping.map(currentLine, fileAndLine);
         }
+ 
+        this.println(line);
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -88,9 +89,9 @@ public class SourceRegion {
       String line = (String) st.nextElement();
       lineNum++;
       
-      Pair<URL, Integer> fileAndLine = fileMapping.getAssociatedFileAndLine(lineNum);
+      Position fileAndLine = fileMapping.getAssociatedFileAndLine(lineNum);
       if (fileAndLine!= null){
-        ps.print(fileAndLine.snd + "@" + fileAndLine.fst + "\t:");
+        ps.print(fileAndLine + "\t:");
       } else {
         ps.print("N/A \t\t:");
       }

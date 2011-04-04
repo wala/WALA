@@ -25,6 +25,9 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
+import com.ibm.wala.cast.tree.impl.LineNumberPosition;
+import com.ibm.wala.util.functions.Function;
 
 
 public class DomLessSourceExtractor extends JSSourceExtractor {
@@ -41,7 +44,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     protected final SourceRegion domRegion;
     protected final SourceRegion entrypointRegion;
     
-    private boolean inScriptRegion = false;
+    private ITag currentScriptTag;
     
     private int counter = 0;
  
@@ -52,27 +55,39 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       this.domRegion = new SourceRegion();
       this.entrypointRegion = new SourceRegion();
     }
+ 
+    protected Function<Integer,Position> makePos(int lineNumber, ITag governingTag) {
+      return makePos(entrypointUrl, lineNumber, governingTag);
+    }
+     
+    protected Function<Integer,Position> makePos(final URL url, final int lineNumber, ITag governingTag) {
+      final LineNumberPosition includePos = new LineNumberPosition(entrypointUrl, entrypointUrl, governingTag.getStartingLineNum());
+      return new Function<Integer,Position>() {
+        public Position apply(Integer object) {
+          return new IncludedLineNumberPosition(url, url, lineNumber + object.intValue(), includePos);
+        }
+      };
+    }
     
-    //Do nothing
     public void handleEndTag(ITag tag) {
       if (tag.getName().equalsIgnoreCase("script")) {
-        assert inScriptRegion;
-        inScriptRegion = false;
+        assert currentScriptTag != null;
+        currentScriptTag = null;
       }
     }
 
     
-    public void handleText(int lineNumber, String text) {
-      if (inScriptRegion) {
-        scriptRegion.println(text, entrypointUrl, lineNumber);
+    public void handleText(final int lineNumber, String text) {
+      if (currentScriptTag != null) {
+        scriptRegion.println(text, makePos(lineNumber, currentScriptTag));
       }
     }
 
     public void handleStartTag(ITag tag) {
       if (tag.getName().equalsIgnoreCase("script")) {
         handleScript(tag);
-        assert !inScriptRegion;
-        inScriptRegion = true;
+        assert currentScriptTag == null;
+        currentScriptTag = tag;
       }
       handleDOM(tag);
     }
@@ -99,24 +114,25 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     protected void handleDOM(ITag tag, String funcName) {
       Map<String, String> attributeSet = tag.getAllAttributes();
       for (Entry<String, String> a : attributeSet.entrySet()) {
-        handleAttribute(a, funcName, tag.getStartingLineNum());
+        handleAttribute(a, funcName, tag);
       }
     }
 
-    private void handleAttribute(Entry<String, String> a, String funcName, Integer lineNum) {
+    private void handleAttribute(Entry<String, String> a, String funcName, ITag tag) {
+      int lineNum = tag.getStartingLineNum();
       String attName = a.getKey();
       String attValue = a.getValue();
       if (attName.toLowerCase().startsWith("on") || (attValue != null && attValue.toLowerCase().startsWith("javascript:"))) {
         String fName = attName + "_" + funcName;
         String signatureLine = "function " + fName + "(event) {";
-        domRegion.println(signatureLine, entrypointUrl, lineNum);// Defines the function
+        domRegion.println(signatureLine, makePos(lineNum, tag));// Defines the function
         int offset = 0;
         for (String eventContentLine : extructJS(attValue)){
-          domRegion.println("\t" + eventContentLine, entrypointUrl, lineNum + (offset++));
+          domRegion.println("\t" + eventContentLine, makePos(lineNum + (offset++), tag));
         }
-        domRegion.println("}", entrypointUrl, lineNum);// Defines the function
+        domRegion.println("}", makePos(lineNum, tag));// Defines the function
 
-        entrypointRegion.println("\t" + fName + "(null);", entrypointUrl, lineNum);// Run it
+        entrypointRegion.println("\t" + fName + "(null);", makePos(lineNum, tag));// Run it
       }
     }
 
@@ -141,7 +157,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       try {
         if (value != null) {
           // script is out-of-line
-          getScriptFromUrl(value);
+          getScriptFromUrl(value, tag);
         }
 
       } catch (IOException e) {
@@ -149,7 +165,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       }
     }
 
-    private void getScriptFromUrl(String urlAsString) throws IOException, MalformedURLException {
+    private void getScriptFromUrl(String urlAsString, ITag scriptTag) throws IOException, MalformedURLException {
       URL absoluteUrl = UrlManipulator.relativeToAbsoluteUrl(urlAsString, this.entrypointUrl);
       URL scriptSrc = urlResolver.resolve(absoluteUrl);
       if (scriptSrc == null) { //Error resolving URL
@@ -163,7 +179,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
         BufferedReader scriptReader = new BufferedReader(new UnicodeReader(scriptInputStream, "UTF8"));
         
         while ((line = scriptReader.readLine()) != null) {
-          scriptRegion.println(line, scriptSrc, lineNum++);
+          scriptRegion.println(line, makePos(scriptSrc, lineNum++, scriptTag));
         }
       } finally {
         scriptInputStream.close();
