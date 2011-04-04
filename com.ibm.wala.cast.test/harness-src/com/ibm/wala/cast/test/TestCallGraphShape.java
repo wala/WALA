@@ -15,15 +15,58 @@ import java.util.Iterator;
 
 import junit.framework.Assert;
 
+import com.ibm.wala.cast.loader.AstMethod;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 
 public abstract class TestCallGraphShape extends WalaTestCase {
 
+  protected void verifySourceAssertions(CallGraph CG, Object[][] assertionData) {
+    for(Object[] dat : assertionData) {
+      String function = (String) dat[0];
+      for(CGNode N : getNodes(CG, function)) {
+        if (N.getMethod() instanceof AstMethod) {
+          AstMethod M = (AstMethod) N.getMethod();
+          SSAInstruction[] insts = N.getIR().getInstructions();
+          insts: for(int i = 0; i < insts.length; i++) {
+            SSAInstruction inst = insts[i];
+            if (inst != null) {
+              Position pos = M.getSourcePosition(i);
+              if (pos != null) {
+                String fileName = pos.getURL().toString();
+                if (fileName.lastIndexOf('/') >= 0) {
+                  fileName = fileName.substring(fileName.lastIndexOf('/')+1);
+                }
+                for(int j = 0; j < assertionData.length; j++) {
+                  String file = (String) assertionData[j][1];
+                  if (file.indexOf('/') >= 0) {
+                    file = file.substring(file.lastIndexOf('/') + 1);
+                  }
+                  if (file.equalsIgnoreCase(fileName)) {
+                    if (pos.getFirstLine() >= (Integer) assertionData[j][2]
+                                           &&
+                        pos.getLastLine() <= (Integer) assertionData[j][3]) {
+                      System.err.println("found " + inst + " of " + M + " at expected position " + pos);
+                      continue insts;
+                    }
+                  }
+                }
+
+                Assert.assertTrue("unexpected location " + pos + " for " + inst + " of " + M, false);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
   protected static class Name {
     String name;
 
@@ -106,7 +149,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
 
 
   /**
-   * Verifies that non of the nodes that match the source description has an edge to any of the nodes that match the destination
+   * Verifies that none of the nodes that match the source description has an edge to any of the nodes that match the destination
    * description. (Used for checking for false connections in the callgraph)
    * 
    * @param CG
@@ -127,8 +170,13 @@ public abstract class TestCallGraphShape extends WalaTestCase {
     }
   }
   
-  protected static final Object ROOT = new Object();
+  protected static final Object ROOT = new Object() {
+    @Override
+    public String toString() {
+      return "CallGraphRoot";
+    }
+  };
 
-  protected abstract Collection getNodes(CallGraph CG, String functionIdentifier);
+  protected abstract Collection<CGNode> getNodes(CallGraph CG, String functionIdentifier);
 
 }
