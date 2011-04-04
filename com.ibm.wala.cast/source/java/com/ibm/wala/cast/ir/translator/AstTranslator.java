@@ -96,7 +96,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   protected abstract TypeReference makeType(CAstType type);
 
-  protected abstract void defineType(CAstEntity type, WalkContext wc);
+  protected abstract boolean defineType(CAstEntity type, WalkContext wc);
 
   protected abstract void declareFunction(CAstEntity N, WalkContext context);
 
@@ -2382,8 +2382,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
   }
   
   protected boolean visitTypeEntity(CAstEntity n, Context context, Context typeContext, CAstVisitor visitor) {
-    defineType(n, (WalkContext) context);
-    return false;
+    return ! defineType(n, (WalkContext) context);
   }
 
   protected void leaveTypeEntity(CAstEntity n, Context context, Context typeContext, CAstVisitor visitor) { /* empty */

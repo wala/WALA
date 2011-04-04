@@ -453,6 +453,10 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     JavaClass javaClass = new JavaClass(typeName, superTypeNames, type.getPosition(), type.getQualifiers(), this,
         (owner != null) ? (JavaClass) fTypeMap.get(owner) : (JavaClass) null);
 
+    if (getParent().lookupClass(javaClass.getName()) != null) {
+      return null;
+    }
+    
     fTypeMap.put(type, javaClass);
     loadedClasses.put(javaClass.getName(), javaClass);
     return javaClass;
