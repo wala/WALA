@@ -15,16 +15,16 @@ import java.io.IOException;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
-import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.classLoader.SourceModule;
 
 public class CAstRhinoTranslator implements TranslatorToCAst {
 
   private final CAstImpl Ast = new CAstImpl();
 
-  private final ModuleEntry M;
+  private final SourceModule M;
   
-   public CAstRhinoTranslator(ModuleEntry M) {
+   public CAstRhinoTranslator(SourceModule M) {
     this.M = M;
    }
 

@@ -10,8 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.translator;
 
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
+import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,6 +29,7 @@ import org.mozilla.javascript.ScriptOrFnNode;
 import org.mozilla.javascript.Token;
 import org.mozilla.javascript.tools.ToolErrorReporter;
 
+import com.ibm.wala.cast.js.html.MappedSourceModule;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.tree.CAst;
@@ -37,6 +37,7 @@ import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstNodeTypeMap;
+import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.impl.CAstControlFlowRecorder;
@@ -44,12 +45,11 @@ import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.impl.CAstSourcePositionRecorder;
 import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
 import com.ibm.wala.cast.tree.impl.LineNumberPosition;
-import com.ibm.wala.classLoader.ModuleEntry;
-import com.ibm.wala.classLoader.SourceFileModule;
-import com.ibm.wala.classLoader.SourceURLModule;
+import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 
 public class RhinoToAstTranslator {
@@ -271,15 +271,11 @@ public class RhinoToAstTranslator {
       return pos;
     }
 
-    public String getForInVar(String loopVarName, Node initExpr) {
+    public String getForInVar(Node initExpr) {
       return null;
     }
 
     public String getForInInitVar() {
-      return null;
-    }
-
-    public String getForInLoopVar() {
       return null;
     }
 
@@ -625,9 +621,9 @@ public class RhinoToAstTranslator {
         return Collections.unmodifiableMap(subs);
       }
 
-      public Iterator getScopedEntities(CAstNode construct) {
+      public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
         if (subs.containsKey(construct))
-          return ((Set) subs.get(construct)).iterator();
+          return subs.get(construct).iterator();
         else
           return EmptyIterator.instance();
       }
@@ -652,7 +648,7 @@ public class RhinoToAstTranslator {
         return null;
       }
 
-      public Collection getQualifiers() {
+      public Collection<CAstQualifier> getQualifiers() {
         Assertions.UNREACHABLE("JuliansUnnamedCAstEntity$2.getQualifiers()");
         return null;
       }
@@ -693,19 +689,16 @@ public class RhinoToAstTranslator {
   }
 
   private CAstSourcePositionMap.Position makePosition(Node n) {
-    URL url;
-    if (sourceModule instanceof SourceFileModule) {
-      try {
-        url = ((SourceFileModule) sourceModule).getFile().toURI().toURL();
-      } catch (MalformedURLException e) {
-        Assertions.UNREACHABLE();
-        return null;
-      }
-    } else {
-      url = ((SourceURLModule) sourceModule).getURL();
+    URL url = sourceModule.getURL();
+    int line = n.getLineno();
+    if (sourceModule instanceof MappedSourceModule) {
+    	Pair<URL, Integer> loc = ((MappedSourceModule)sourceModule).getMapping().getAssociatedFileAndLine(line);
+    	if (loc != null) {
+    		line = loc.snd;
+    		url = loc.fst;
+    	}
     }
-
-    return new LineNumberPosition(url, url, n.getLineno());
+    return new LineNumberPosition(url, url, line);
   }
 
   private CAstNode noteSourcePosition(WalkContext context, CAstNode n, Node p) {
@@ -1358,18 +1351,22 @@ public class RhinoToAstTranslator {
 
     Parser P = new Parser(compilerEnv, compilerEnv.getErrorReporter());
 
-    return walkEntity(P.parse(new InputStreamReader(sourceModule.getInputStream()), scriptName, 1), new RootContext());
+    sourceReader = sourceModule.getInputReader();
+    
+    return walkEntity(P.parse(sourceReader, scriptName, 1), new RootContext());
   }
 
   private final CAst Ast;
 
   private final String scriptName;
 
-  private final ModuleEntry sourceModule;
+  private final SourceModule sourceModule;
+  
+  private Reader sourceReader;
 
   private int anonymousCounter = 0;
 
-  public RhinoToAstTranslator(CAst Ast, ModuleEntry M, String scriptName) {
+  public RhinoToAstTranslator(CAst Ast, SourceModule M, String scriptName) {
     this.Ast = Ast;
     this.scriptName = scriptName;
     this.sourceModule = M;
