@@ -44,6 +44,8 @@ public class LineNumberPosition extends AbstractSourcePosition {
   }
 
   public String toString() {
-    return "[line:"+lineNumber+"]";
+    String nm = url.getFile();
+    nm = nm.substring(nm.lastIndexOf('/') + 1);
+    return "[" + nm + ":"+lineNumber+"]";
   }
 }
