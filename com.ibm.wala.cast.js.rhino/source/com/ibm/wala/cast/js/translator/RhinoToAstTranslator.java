@@ -39,6 +39,7 @@ import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstNodeTypeMap;
 import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.impl.CAstControlFlowRecorder;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
@@ -49,7 +50,6 @@ import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 
 public class RhinoToAstTranslator {
@@ -688,14 +688,13 @@ public class RhinoToAstTranslator {
     return noteSourcePosition(context, walkNodesInternal(n, context), n);
   }
 
-  private CAstSourcePositionMap.Position makePosition(Node n) {
+  private Position makePosition(Node n) {
     URL url = sourceModule.getURL();
     int line = n.getLineno();
     if (sourceModule instanceof MappedSourceModule) {
-    	Pair<URL, Integer> loc = ((MappedSourceModule)sourceModule).getMapping().getAssociatedFileAndLine(line);
+    	Position loc = ((MappedSourceModule)sourceModule).getMapping().getAssociatedFileAndLine(line);
     	if (loc != null) {
-    		line = loc.snd;
-    		url = loc.fst;
+    		return loc;
     	}
     }
     return new LineNumberPosition(url, url, line);
