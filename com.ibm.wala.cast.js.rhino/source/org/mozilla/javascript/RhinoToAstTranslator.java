@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *****************************************************************************/
-package com.ibm.wala.cast.js.translator;
+package org.mozilla.javascript;
 
 import java.io.Reader;
 import java.net.URL;
@@ -21,12 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.mozilla.javascript.CompilerEnvirons;
-import org.mozilla.javascript.FunctionNode;
-import org.mozilla.javascript.Node;
-import org.mozilla.javascript.Parser;
-import org.mozilla.javascript.ScriptOrFnNode;
-import org.mozilla.javascript.Token;
 import org.mozilla.javascript.tools.ToolErrorReporter;
 
 import com.ibm.wala.cast.js.html.MappedSourceModule;
@@ -573,6 +567,7 @@ public class RhinoToAstTranslator {
 
         if (n instanceof FunctionNode) {
           FunctionNode f = (FunctionNode) n;
+          f.flattenSymbolTable(false);
           int i = 0;
           arguments = new String[f.getParamCount() + 2];
           arguments[i++] = name;
@@ -1352,7 +1347,9 @@ public class RhinoToAstTranslator {
 
     sourceReader = sourceModule.getInputReader();
     
-    return walkEntity(P.parse(sourceReader, scriptName, 1), new RootContext());
+    ScriptOrFnNode top = P.parse(sourceReader, scriptName, 1);
+    
+    return walkEntity(top, new RootContext());
   }
 
   private final CAst Ast;

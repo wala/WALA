@@ -39,9 +39,9 @@
    <target name="fetchRhino" depends="RhinoPresent" unless="rhino.present">
      <delete dir="${temp.folder}"/>
      <mkdir dir="${temp.folder}"/>
-     <get src="ftp://ftp.mozilla.org/pub/mozilla.org/js/rhino1_6R5.zip" dest="${temp.folder}/rhino1_6R5.zip" />
-     <unzip src="${temp.folder}/rhino1_6R5.zip" dest="${temp.folder}"/>
-     <copy file="${temp.folder}/rhino1_6R5/js.jar" tofile="${plugin.destination}/lib/js.jar" />
+     <get src="ftp://ftp.mozilla.org/pub/mozilla.org/js/rhino1_7R2.zip" dest="${temp.folder}/rhino1_7R2.zip" />
+     <unzip src="${temp.folder}/rhino1_7R2.zip" dest="${temp.folder}"/>
+     <copy file="${temp.folder}/rhino1_7R2/js.jar" tofile="${plugin.destination}/lib/js.jar" />
      <delete dir="${temp.folder}"/>
    </target>
 	
