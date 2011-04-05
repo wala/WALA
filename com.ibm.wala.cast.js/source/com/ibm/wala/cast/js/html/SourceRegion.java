@@ -28,7 +28,7 @@ public class SourceRegion {
   public SourceRegion() {
   }
 
-  public void print(String text, Function<Integer,Position> originalPos){
+  public void print(String text, Function<Integer,IncludedPosition> originalPos){
     source.append(text);
     int ln = 0;
     int numberOfLineDrops = getNumberOfLineDrops(text);
@@ -44,7 +44,7 @@ public class SourceRegion {
     }
   }
 
-  public void println(String text, Function<Integer,Position> originalPos){
+  public void println(String text, Function<Integer,IncludedPosition> originalPos){
     print(text + "\n", originalPos);
   }
   
@@ -69,7 +69,7 @@ public class SourceRegion {
       while ((line = br.readLine()) != null){
         lineNum++;
         
-        Position fileAndLine = otherRegion.fileMapping.getAssociatedFileAndLine(lineNum);
+        IncludedPosition fileAndLine = otherRegion.fileMapping.getAssociatedFileAndLine(lineNum);
         if (fileAndLine!= null){
           fileMapping.map(currentLine, fileAndLine);
         }

@@ -37,7 +37,7 @@ public abstract class AbstractEntity implements CAstEntity {
     return sourcePosition;
   }
 
-  public Iterator<?> getScopedEntities(CAstNode construct) {
+  public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
     if (scopedEntities.containsKey(construct)) {
       return scopedEntities.get(construct).iterator();
     } else {

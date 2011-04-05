@@ -22,13 +22,13 @@ import com.ibm.wala.util.collections.HashMapFactory;
  * Maps line numbers to lines of other files (fileName + line).
  */
 public class FileMapping{
-  protected Map<Integer, Position> lineNumberToFileAndLine = HashMapFactory.make(); 
+  protected Map<Integer, IncludedPosition> lineNumberToFileAndLine = HashMapFactory.make(); 
   
   /**
    * @param line
    * @return Null if no mapping for the given line.
    */
-  public Position getAssociatedFileAndLine(int line){
+  public IncludedPosition getAssociatedFileAndLine(int line){
     return lineNumberToFileAndLine.get(line);
   }
   

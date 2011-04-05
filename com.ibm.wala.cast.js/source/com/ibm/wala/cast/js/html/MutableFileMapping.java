@@ -10,11 +10,9 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.html;
 
-import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
-
 public class MutableFileMapping extends FileMapping {
 
-  void map(int line, Position originalPos){
+  void map(int line, IncludedPosition originalPos){
     lineNumberToFileAndLine.put(line, originalPos);
   }
   

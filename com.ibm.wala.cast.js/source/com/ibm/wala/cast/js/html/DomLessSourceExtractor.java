@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
-import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.tree.impl.LineNumberPosition;
 import com.ibm.wala.util.functions.Function;
 
@@ -55,14 +54,14 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       this.entrypointRegion = new SourceRegion();
     }
  
-    protected Function<Integer,Position> makePos(int lineNumber, ITag governingTag) {
+    protected Function<Integer,IncludedPosition> makePos(int lineNumber, ITag governingTag) {
       return makePos(entrypointUrl, lineNumber, governingTag);
     }
      
-    protected Function<Integer,Position> makePos(final URL url, final int lineNumber, ITag governingTag) {
+    protected Function<Integer,IncludedPosition> makePos(final URL url, final int lineNumber, ITag governingTag) {
       final LineNumberPosition includePos = new LineNumberPosition(entrypointUrl, entrypointUrl, governingTag.getStartingLineNum());
-      return new Function<Integer,Position>() {
-        public Position apply(Integer object) {
+      return new Function<Integer,IncludedPosition>() {
+        public IncludedPosition apply(Integer object) {
           return new IncludedLineNumberPosition(url, url, lineNumber + object.intValue(), includePos);
         }
       };

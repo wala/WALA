@@ -139,7 +139,7 @@ public interface CAstEntity {
    *  Enclosed entities not induced by a specific AST node are mapped
    * by the construct 'null'. 
    */
-  Iterator getScopedEntities(CAstNode construct);
+  Iterator<CAstEntity> getScopedEntities(CAstNode construct);
 
   /**
    *  The CAPA AST of this entity.
@@ -171,7 +171,7 @@ public interface CAstEntity {
    * Returns an Iterator over the qualifiers of the given entity, if it has
    * any, e.g., "final", "private".
    */
-  Collection/*<CAstQualifier>*/ getQualifiers();
+  Collection<CAstQualifier> getQualifiers();
 
   /**
    * The CAst type of this entity.
