@@ -17,7 +17,6 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -214,7 +213,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
   public Set<MappedSourceModule> extractSources(URL entrypointUrl, IHtmlParser htmlParser, IUrlResolver urlResolver)
   throws IOException {
 
-    InputStream inputStreamReader = getStream(entrypointUrl);
+    InputStream inputStreamReader = WebUtil.getStream(entrypointUrl);
     IGeneratorCallback htmlCallback = createHtmlCallback(entrypointUrl, urlResolver); 
     htmlParser.parse(inputStreamReader, htmlCallback, entrypointUrl.getFile());
 
@@ -249,14 +248,6 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
   }   
 
 
-  private InputStream getStream(URL url) throws IOException {
-    URLConnection conn = url.openConnection();
-    conn.setDefaultUseCaches(false);
-    conn.setUseCaches(false);
-
-    return conn.getInputStream();
-  }
-  
   public static void main(String[] args) throws IOException {
 //    DomLessSourceExtractor domLessScopeGenerator = new DomLessSourceExtractor();
     JSSourceExtractor domLessScopeGenerator = new DefaultSourceExtractor();

@@ -11,8 +11,10 @@
 package com.ibm.wala.cast.js.html;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Set;
 
 import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
@@ -55,6 +57,14 @@ public class WebUtil {
   
   public static void main(String[] args) throws MalformedURLException {
     System.err.println(extractScriptFromHTML(new URL(args[0])));
+  }
+
+  public static InputStream getStream(URL url) throws IOException {
+    URLConnection conn = url.openConnection();
+    conn.setDefaultUseCaches(false);
+    conn.setUseCaches(false);
+  
+    return conn.getInputStream();
   }
 }
 	
