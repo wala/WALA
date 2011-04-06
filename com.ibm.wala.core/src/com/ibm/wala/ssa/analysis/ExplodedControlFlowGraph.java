@@ -146,9 +146,9 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
       if (eb.isEntryBlock() && orig == null) {
         orig = ir.getControlFlowGraph().entry();
       }
-/** END Custom change: fix */
       
-      for (ISSABasicBlock s : ir.getControlFlowGraph().getExceptionalSuccessors(eb.original)) {
+      for (ISSABasicBlock s : ir.getControlFlowGraph().getExceptionalSuccessors(orig)) {
+/** END Custom change: fix */
         if (s.equals(ir.getControlFlowGraph().exit())) {
           result.add(exit());
         } else {
