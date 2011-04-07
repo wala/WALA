@@ -22,8 +22,6 @@ import com.ibm.wala.classLoader.SourceModule;
 
 public class CAstRhinoTranslator implements TranslatorToCAst {
 
-  private final CAstImpl Ast = new CAstImpl();
-
   private final SourceModule M;
   
    public CAstRhinoTranslator(SourceModule M) {
@@ -38,6 +36,8 @@ public class CAstRhinoTranslator implements TranslatorToCAst {
       N = M.getName();
     }
 
+    CAstImpl Ast = new CAstImpl();
+    
     return
       new PropertyReadExpander(Ast).rewrite(
           new RhinoToAstTranslator(Ast, M, N).translate());
