@@ -1339,6 +1339,7 @@ public class RhinoToAstTranslator {
     ToolErrorReporter reporter = new ToolErrorReporter(true);
     CompilerEnvirons compilerEnv = new CompilerEnvirons();
     compilerEnv.setErrorReporter(reporter);
+    compilerEnv.setReservedKeywordAsIdentifier(true);
 
     if (DEBUG)
       System.err.println(("translating " + scriptName + " with Rhino"));
