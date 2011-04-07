@@ -85,7 +85,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
       stack.push(varName);
       
       printlnIndented("this.temp = " + cons + ";", tag);
-      printlnIndented("this.temp(" + tag.getName() + ");", tag);
+      printlnIndented("this.temp(\"" + tag.getName() + "\");", tag);
       for (Map.Entry<String, String> e : tag.getAllAttributes().entrySet()){
         String attr = e.getKey();
         String value = e.getValue();
