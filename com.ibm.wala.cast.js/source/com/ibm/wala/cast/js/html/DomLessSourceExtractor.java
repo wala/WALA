@@ -77,6 +77,10 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     
     public void handleText(final int lineNumber, String text) {
       if (currentScriptTag != null) {
+        if (text.startsWith("<![CDATA[")) {
+         assert text.endsWith("]]>");
+         text = text.substring(9, text.length()-11);
+        }
         scriptRegion.println(text, makePos(lineNumber, currentScriptTag));
       }
     }
