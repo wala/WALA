@@ -132,7 +132,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
 
     protected void writeEventAttribute(ITag tag, String attr, String value, String varName, String varName2){
       if(attr.substring(0,2).equals("on")) {
-        printlnIndented(varName + "." + attr + " = function " + attr + "_" + varName2 + "(event) {" + value + "};", tag);
+        printlnIndented(varName + "." + attr + " = function " + tag.getName().toLowerCase() + "_" + attr + "(event) {" + value + "};", tag);
         entrypointRegion.println(varName2 + "." + attr + "(null);", makePos(tag.getStartingLineNum(), tag));
       } else if (value != null) {
         if (value.indexOf('\'') > 0) {

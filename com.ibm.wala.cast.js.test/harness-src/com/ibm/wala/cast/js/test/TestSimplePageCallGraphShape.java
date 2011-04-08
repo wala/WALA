@@ -106,8 +106,8 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     new Object[] { ROOT, new String[] { "page12.html" } },
     new Object[] { "page12.html", new String[] { "page12.html/__WINDOW_MAIN__" } },
     new Object[] { "page12.html/__WINDOW_MAIN__",
-        new String[] { "page12.html/make_node0/make_node3/make_node4/onclick_node4" } },
-    new Object[] { "page12.html/make_node0/make_node3/make_node4/onclick_node4",
+        new String[] { "page12.html/make_node0/make_node3/make_node4/button_onclick" } },
+    new Object[] { "page12.html/make_node0/make_node3/make_node4/button_onclick",
         new String[] { "page12.html/__WINDOW_MAIN__/callXHR"
         }
     },
@@ -138,8 +138,8 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     new Object[] { ROOT, new String[] { "page13.html" } },
     new Object[] { "page13.html", new String[] { "page13.html/__WINDOW_MAIN__" } },
     new Object[] { "page13.html/__WINDOW_MAIN__",
-        new String[] { "page13.html/make_node0/make_node3/make_node4/onclick_node4" } },
-    new Object[] { "page13.html/make_node0/make_node3/make_node4/onclick_node4",
+        new String[] { "page13.html/make_node0/make_node3/make_node4/button_onclick" } },
+    new Object[] { "page13.html/make_node0/make_node3/make_node4/button_onclick",
         new String[] { "page13.html/__WINDOW_MAIN__/callXHR"
         }
     },
@@ -171,10 +171,10 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     new Object[] { ROOT, new String[] { "page15.html" } },
     new Object[] { "page15.html", new String[] { "page15.html/__WINDOW_MAIN__" } },
     new Object[] { "page15.html/__WINDOW_MAIN__",
-        new String[] { "suffix:page15.html/make_node0/make_node3/onload_node3"
+        new String[] { "suffix:page15.html/make_node0/make_node3/body_onload"
         }
     },
-    new Object[] { "page15.html/make_node0/make_node3/onload_node3",
+    new Object[] { "page15.html/make_node0/make_node3/body_onload",
         new String[] { "page15.html/__WINDOW_MAIN__/changeUrls" }
     }
   };
@@ -189,10 +189,10 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     new Object[] { ROOT, new String[] { "page16.html" } },
     new Object[] { "page16.html", new String[] { "page16.html/__WINDOW_MAIN__" } },
        new Object[] { "page16.html/__WINDOW_MAIN__",
-        new String[] { "page16.html/make_node0/make_node3/make_node4/onclick_node4"
+        new String[] { "page16.html/make_node0/make_node3/make_node4/a_onclick"
         }
     },
-    new Object[] { "page16.html/make_node0/make_node3/make_node4/onclick_node4",
+    new Object[] { "page16.html/make_node0/make_node3/make_node4/a_onclick",
         new String[] { "page16.html/__WINDOW_MAIN__/changeUrls" }
     }
   };
