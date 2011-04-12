@@ -230,15 +230,15 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
         int dim = t.getDimensionality();
         int[] extents = new int[dim];
         Arrays.fill(extents, 1);
-        SSANewInstruction a = insts.NewInstruction(alloc, ref, extents);
+        SSANewInstruction a = insts.NewInstruction(allInstructions.size(), alloc, ref, extents);
         addInstruction(t, a, true);
       } else {
-        SSANewInstruction a = insts.NewInstruction(alloc, ref);
+        SSANewInstruction a = insts.NewInstruction(allInstructions.size(), alloc, ref);
         addInstruction(t, a, true);
         addCtorInvokeInstruction(t, alloc);
       }
 
-      SSAReturnInstruction r = insts.ReturnInstruction(alloc, false);
+      SSAReturnInstruction r = insts.ReturnInstruction(allInstructions.size(), alloc, false);
       addInstruction(t, r, false);
       return alloc;
     }
@@ -252,7 +252,7 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
       int[] params = new int[1];
       params[0] = alloc;
       int exc = getExceptionsForType(t);
-      SSAInvokeInstruction s = insts.InvokeInstruction(params, exc, site);
+      SSAInvokeInstruction s = insts.InvokeInstruction(allInstructions.size(), params, exc, site);
       calls.add(s);
       allInstructions.add(s);
     }

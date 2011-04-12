@@ -31,12 +31,12 @@ import com.ibm.wala.types.TypeReference;
  */
 public class EachElementHasNextInstruction extends SSAAbstractUnaryInstruction {
 
-  public EachElementHasNextInstruction(int lValue, int objectRef) {
-    super(lValue, objectRef);
+  public EachElementHasNextInstruction(int iindex, int lValue, int objectRef) {
+    super(iindex, lValue, objectRef);
   }
 
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return ((AstInstructionFactory)insts).EachElementHasNextInstruction((defs == null) ? getDef(0) : defs[0], (uses == null) ? getUse(0) : uses[0]);
+    return ((AstInstructionFactory)insts).EachElementHasNextInstruction(iindex, (defs == null) ? getDef(0) : defs[0], (uses == null) ? getUse(0) : uses[0]);
   }
 
   public String toString(SymbolTable symbolTable) {

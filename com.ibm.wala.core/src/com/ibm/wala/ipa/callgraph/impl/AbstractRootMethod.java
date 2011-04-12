@@ -136,9 +136,9 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     CallSiteReference newSite = CallSiteReference.make(statements.size(), site.getDeclaredTarget(), site.getInvocationCode());
     SSAInvokeInstruction s = null;
     if (newSite.getDeclaredTarget().getReturnType().equals(TypeReference.Void)) {
-      s = insts.InvokeInstruction(params, nextLocal++, newSite);
+      s = insts.InvokeInstruction(statements.size(), params, nextLocal++, newSite);
     } else {
-      s = insts.InvokeInstruction(nextLocal++, params, nextLocal++, newSite);
+      s = insts.InvokeInstruction(statements.size(), nextLocal++, params, nextLocal++, newSite);
     }
     statements.add(s);
     cache.invalidate(this, Everywhere.EVERYWHERE);
@@ -149,7 +149,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
    * Add a return statement
    */
   public SSAReturnInstruction addReturn(int vn, boolean isPrimitive) {
-    SSAReturnInstruction s = insts.ReturnInstruction(vn, isPrimitive);
+    SSAReturnInstruction s = insts.ReturnInstruction(statements.size(), vn, isPrimitive);
     statements.add(s);
     cache.invalidate(this, Everywhere.EVERYWHERE);
     return s;
@@ -177,7 +177,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     assert T.getDimensionality() == 1;
     int[] sizes = new int[1];
     Arrays.fill(sizes, getValueNumberForIntConstant(length));
-    SSANewInstruction result = insts.NewInstruction(instance, ref, sizes);
+    SSANewInstruction result = insts.NewInstruction(statements.size(), instance, ref, sizes);
     statements.add(result);
     cache.invalidate(this, Everywhere.EVERYWHERE);
     return result;
@@ -208,9 +208,9 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
       if (T.isArrayType()) {
         int[] sizes = new int[T.getDimensionality()];
         Arrays.fill(sizes, getValueNumberForIntConstant(1));
-        result = insts.NewInstruction(instance, ref, sizes);
+        result = insts.NewInstruction(statements.size(), instance, ref, sizes);
       } else {
-        result = insts.NewInstruction(instance, ref);
+        result = insts.NewInstruction(statements.size(), instance, ref);
       }
       statements.add(result);
 
@@ -231,14 +231,14 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
           if (e.isArrayType()) {
             int[] sizes = new int[T.getDimensionality()];
             Arrays.fill(sizes, getValueNumberForIntConstant(1));
-            ni = insts.NewInstruction(alloc, n, sizes);
+            ni = insts.NewInstruction(statements.size(), alloc, n, sizes);
           } else {
-            ni = insts.NewInstruction(alloc, n);
+            ni = insts.NewInstruction(statements.size(), alloc, n);
           }
           statements.add(ni);
 
           // emit an astore
-          SSAArrayStoreInstruction store = insts.ArrayStoreInstruction(arrayRef, getValueNumberForIntConstant(0), alloc, e);
+          SSAArrayStoreInstruction store = insts.ArrayStoreInstruction(statements.size(), arrayRef, getValueNumberForIntConstant(0), alloc, e);
           statements.add(store);
 
           e = e.isArrayType() ? e.getArrayElementType() : null;
@@ -313,46 +313,46 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
   public int addPhi(int[] values) {
     int result = nextLocal++;
-    SSAPhiInstruction phi = insts.PhiInstruction(result, values);
+    SSAPhiInstruction phi = insts.PhiInstruction(statements.size(), result, values);
     statements.add(phi);
     return result;
   }
 
   public int addGetInstance(FieldReference ref, int object) {
     int result = nextLocal++;
-    statements.add(insts.GetInstruction(result, object, ref));
+    statements.add(insts.GetInstruction(statements.size(), result, object, ref));
     return result;
   }
 
   public int addGetStatic(FieldReference ref) {
     int result = nextLocal++;
-    statements.add(insts.GetInstruction(result, ref));
+    statements.add(insts.GetInstruction(statements.size(), result, ref));
     return result;
   }
 
   public int addCheckcast(TypeReference[] types, int rv) {
     int lv = nextLocal++;
 
-    statements.add(insts.CheckCastInstruction(lv, rv, types));
+    statements.add(insts.CheckCastInstruction(statements.size(), lv, rv, types));
     return lv;
   }
 
 /** BEGIN Custom change: advanced synthetic instructions */
   public void addSetInstance(final FieldReference ref, final int baseObject, final int value) {
-    statements.add(insts.PutInstruction(baseObject, value, ref));
+    statements.add(insts.PutInstruction(statements.size(), baseObject, value, ref));
   }
   
   public void addSetStatic(final FieldReference ref, final int value) {
-    statements.add(insts.PutInstruction(value, ref));
+    statements.add(insts.PutInstruction(statements.size(), value, ref));
   }
   
   public void addSetArrayField(final TypeReference elementType, final int baseObject, final int indexValue, final int value) {
-    statements.add(insts.ArrayStoreInstruction(baseObject, indexValue, value, elementType));
+    statements.add(insts.ArrayStoreInstruction(statements.size(), baseObject, indexValue, value, elementType));
   }
 
   public int addGetArrayField(final TypeReference elementType, final int baseObject, final int indexValue) {
     int result = nextLocal++;
-    statements.add(insts.ArrayLoadInstruction(result, baseObject, indexValue, elementType));
+    statements.add(insts.ArrayLoadInstruction(statements.size(), result, baseObject, indexValue, elementType));
     return result;
   }
 /** END Custom change: advanced synthetic instructions */

@@ -33,8 +33,8 @@ public abstract class SSANewInstruction extends SSAInstruction {
   /**
    * Create a new instruction to allocate a scalar.
    */
-  protected SSANewInstruction(int result, NewSiteReference site) throws IllegalArgumentException {
-    super();
+  protected SSANewInstruction(int index, int result, NewSiteReference site) throws IllegalArgumentException {
+    super(index);
     if (site == null) {
       throw new IllegalArgumentException("site cannot be null");
     }
@@ -51,8 +51,8 @@ public abstract class SSANewInstruction extends SSAInstruction {
    * @throws IllegalArgumentException if site is null
    * @throws IllegalArgumentException if params is null
    */
-  protected SSANewInstruction(int result, NewSiteReference site, int[] params) {
-    super();
+  protected SSANewInstruction(int index, int result, NewSiteReference site, int[] params) {
+    super(index);
     if (params == null) {
       throw new IllegalArgumentException("params is null");
     }
@@ -70,9 +70,9 @@ public abstract class SSANewInstruction extends SSAInstruction {
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (params == null) {
-      return insts.NewInstruction(defs == null ? result : defs[0], site);
+      return insts.NewInstruction(iindex, defs == null ? result : defs[0], site);
     } else {
-      return insts.NewInstruction(defs == null ? result : defs[0], site, uses == null ? params : uses);
+      return insts.NewInstruction(iindex, defs == null ? result : defs[0], site, uses == null ? params : uses);
     }
   }
 

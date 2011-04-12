@@ -339,7 +339,7 @@ public class SymbolTable implements Cloneable {
       throw new IllegalArgumentException("rhs is null");
     }
     int result = getNewValueNumber();
-    SSAPhiInstruction phi = new SSAPhiInstruction(result, rhs.clone());
+    SSAPhiInstruction phi = new SSAPhiInstruction(SSAInstruction.NO_INDEX, result, rhs.clone());
     assert result < nextFreeValueNumber;
     values[result] = new PhiValue(phi);
     return result;

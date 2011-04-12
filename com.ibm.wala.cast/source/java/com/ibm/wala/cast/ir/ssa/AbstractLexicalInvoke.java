@@ -30,17 +30,17 @@ public abstract class AbstractLexicalInvoke extends MultiReturnValueInvokeInstru
 
   protected Access[] lexicalWrites = null;
 
-  protected AbstractLexicalInvoke(int results[], int exception, CallSiteReference site) {
-    super(results, exception, site);
+  protected AbstractLexicalInvoke(int iindex, int results[], int exception, CallSiteReference site) {
+    super(iindex, results, exception, site);
   }
 
-  protected AbstractLexicalInvoke(int result, int exception, CallSiteReference site) {
-    this(new int[] { result }, exception, site);
+  protected AbstractLexicalInvoke(int iindex, int result, int exception, CallSiteReference site) {
+    this(iindex, new int[] { result }, exception, site);
   }
 
-  protected AbstractLexicalInvoke(int results[], int exception, CallSiteReference site, Access[] lexicalReads,
+  protected AbstractLexicalInvoke(int iindex, int results[], int exception, CallSiteReference site, Access[] lexicalReads,
       Access[] lexicalWrites) {
-    this(results, exception, site);
+    this(iindex, results, exception, site);
     this.lexicalReads = lexicalReads;
     this.lexicalWrites = lexicalWrites;
   }

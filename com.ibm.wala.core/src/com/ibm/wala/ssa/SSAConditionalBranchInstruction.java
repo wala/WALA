@@ -26,9 +26,9 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
 
   private final TypeReference type;
 
-  public SSAConditionalBranchInstruction(IConditionalBranchInstruction.IOperator operator, TypeReference type, int val1, int val2)
+  public SSAConditionalBranchInstruction(int index, IConditionalBranchInstruction.IOperator operator, TypeReference type, int val1, int val2)
       throws IllegalArgumentException {
-    super();
+    super(index);
     this.operator = operator;
     this.val1 = val1;
     this.val2 = val2;
@@ -46,7 +46,7 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
     if (uses != null && uses.length < 2) {
       throw new IllegalArgumentException("(uses != null) and (uses.length < 2)");
     }
-    return insts.ConditionalBranchInstruction(operator, type, uses == null ? val1 : uses[0], uses == null ? val2 : uses[1]);
+    return insts.ConditionalBranchInstruction(iindex, operator, type, uses == null ? val1 : uses[0], uses == null ? val2 : uses[1]);
   }
 
   public IConditionalBranchInstruction.IOperator getOperator() {

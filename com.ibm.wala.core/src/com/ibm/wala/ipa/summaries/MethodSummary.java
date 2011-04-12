@@ -75,6 +75,10 @@ public class MethodSummary {
     }
     this.method = method;
   }
+  
+  public int getNumberOfStatements() {
+    return (statements == null ? 0 : statements.size());
+  }
 
   public void addStatement(SSAInstruction statement) {
     if (statements == null) {

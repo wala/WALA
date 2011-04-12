@@ -34,13 +34,13 @@ public abstract class FixedParametersLexicalInvokeInstruction
    */
   private final int[] params;
 
-  public FixedParametersLexicalInvokeInstruction(int results[], int[] params, int exception, CallSiteReference site) {
-    super(results, exception, site);
+  public FixedParametersLexicalInvokeInstruction(int iindex, int results[], int[] params, int exception, CallSiteReference site) {
+    super(iindex, results, exception, site);
     this.params = params;
   }
 
-  public FixedParametersLexicalInvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
-    this(new int[]{result}, params, exception, site);
+  public FixedParametersLexicalInvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site) {
+    this(iindex, new int[]{result}, params, exception, site);
   }
 
   /**
@@ -48,12 +48,12 @@ public abstract class FixedParametersLexicalInvokeInstruction
    * @param i
    * @param params
    */
-  public FixedParametersLexicalInvokeInstruction(int[] params, int exception, CallSiteReference site) {
-    this(null, params, exception, site);
+  public FixedParametersLexicalInvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site) {
+    this(iindex, null, params, exception, site);
   }
 
-  protected FixedParametersLexicalInvokeInstruction(int results[], int[] params, int exception, CallSiteReference site, Access[] lexicalReads, Access[] lexicalWrites) {
-    super(results, exception, site, lexicalReads, lexicalWrites);
+  protected FixedParametersLexicalInvokeInstruction(int iindex, int results[], int[] params, int exception, CallSiteReference site, Access[] lexicalReads, Access[] lexicalWrites) {
+    super(iindex, results, exception, site, lexicalReads, lexicalWrites);
     this.params = params;
   }
 

@@ -43,8 +43,8 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
    * @param val The value being checked by this instruction
    * @param type The type which this instruction checks
    */
-  protected SSACheckCastInstruction(int result, int val, TypeReference[] types) {
-    super();
+  protected SSACheckCastInstruction(int index, int result, int val, TypeReference[] types) {
+    super(index);
     this.result = result;
     this.val = val;
     this.declaredResultTypes = types;
@@ -58,7 +58,7 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
     if (uses != null && uses.length == 0) {
       throw new IllegalArgumentException("(uses != null) and (uses.length == 0)");
     }
-    return insts.CheckCastInstruction(defs == null ? result : defs[0], uses == null ? val : uses[0], declaredResultTypes);
+    return insts.CheckCastInstruction(iindex, defs == null ? result : defs[0], uses == null ? val : uses[0], declaredResultTypes);
   }
 
   @Override

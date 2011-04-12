@@ -21,8 +21,8 @@ public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
 
   private final IUnaryOpInstruction.IOperator operator;
 
-  public SSAUnaryOpInstruction(IUnaryOpInstruction.IOperator operator, int result, int val) {
-    super(result, val);
+  public SSAUnaryOpInstruction(int index, IUnaryOpInstruction.IOperator operator, int result, int val) {
+    super(index, result, val);
     this.operator = operator;
   }
 
@@ -31,7 +31,7 @@ public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
     if (uses != null && uses.length == 0) {
       throw new IllegalArgumentException("(uses != null) and (uses.length == 0)");
     }
-    return insts.UnaryOpInstruction(operator, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val : uses[0]);
+    return insts.UnaryOpInstruction(iindex, operator, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val : uses[0]);
   }
 
   @Override

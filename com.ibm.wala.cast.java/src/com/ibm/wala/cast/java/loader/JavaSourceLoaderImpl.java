@@ -468,96 +468,96 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
   
   public static class InstructionFactory extends JavaInstructionFactory implements AstJavaInstructionFactory {
 
-    public com.ibm.wala.cast.java.ssa.EnclosingObjectReference EnclosingObjectReference(int lval, TypeReference type) {
-      return new EnclosingObjectReference(lval, type);
+    public com.ibm.wala.cast.java.ssa.EnclosingObjectReference EnclosingObjectReference(int iindex, int lval, TypeReference type) {
+      return new EnclosingObjectReference(iindex, lval, type);
     }
 
-    public AstJavaNewEnclosingInstruction JavaNewEnclosingInstruction(int result, NewSiteReference site, int enclosing) {
-      return new AstJavaNewEnclosingInstruction(result, site, enclosing);
+    public AstJavaNewEnclosingInstruction JavaNewEnclosingInstruction(int iindex, int result, NewSiteReference site, int enclosing) {
+      return new AstJavaNewEnclosingInstruction(iindex, result, site, enclosing);
     }
 
-    public AstJavaInvokeInstruction JavaInvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
+    public AstJavaInvokeInstruction JavaInvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site) {
       return new AstJavaInvokeInstruction(result, params, exception, site);
     }
 
-    public AstJavaInvokeInstruction JavaInvokeInstruction(int[] params, int exception, CallSiteReference site) {
-      return new AstJavaInvokeInstruction(params, exception, site);
+    public AstJavaInvokeInstruction JavaInvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site) {
+      return new AstJavaInvokeInstruction(iindex, params, exception, site);
     }
 
-    public AstJavaInvokeInstruction JavaInvokeInstruction(int[] results, int[] params, int exception, CallSiteReference site,
+    public AstJavaInvokeInstruction JavaInvokeInstruction(int iindex, int[] results, int[] params, int exception, CallSiteReference site,
         Access[] lexicalReads, Access[] lexicalWrites) {
-      return new AstJavaInvokeInstruction(results, params, exception, site, lexicalReads, lexicalWrites);
+      return new AstJavaInvokeInstruction(iindex, results, params, exception, site, lexicalReads, lexicalWrites);
     }
 
-    public AstAssertInstruction AssertInstruction(int value, boolean fromSpecification) {
-      return new AstAssertInstruction(value, fromSpecification);
+    public AstAssertInstruction AssertInstruction(int iindex, int value, boolean fromSpecification) {
+      return new AstAssertInstruction(iindex, value, fromSpecification);
     }
 
-    public com.ibm.wala.cast.ir.ssa.AssignInstruction AssignInstruction(int result, int val) {
-       return new AssignInstruction(result, val);
+    public com.ibm.wala.cast.ir.ssa.AssignInstruction AssignInstruction(int iindex, int result, int val) {
+       return new AssignInstruction(iindex, result, val);
     }
 
-    public com.ibm.wala.cast.ir.ssa.EachElementGetInstruction EachElementGetInstruction(int value, int objectRef) {
+    public com.ibm.wala.cast.ir.ssa.EachElementGetInstruction EachElementGetInstruction(int iindex, int value, int objectRef) {
       throw new UnsupportedOperationException();
     }
 
-    public com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction EachElementHasNextInstruction(int value, int objectRef) {
+    public com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction EachElementHasNextInstruction(int iindex, int value, int objectRef) {
       throw new UnsupportedOperationException();
     }
 
-    public AstEchoInstruction EchoInstruction(int[] rvals) {
+    public AstEchoInstruction EchoInstruction(int iindex, int[] rvals) {
       throw new UnsupportedOperationException();
     }
 
-    public AstGlobalRead GlobalRead(int lhs, FieldReference global) {
+    public AstGlobalRead GlobalRead(int iindex, int lhs, FieldReference global) {
       throw new UnsupportedOperationException();
     }
 
-    public AstGlobalWrite GlobalWrite(FieldReference global, int rhs) {
+    public AstGlobalWrite GlobalWrite(int iindex, FieldReference global, int rhs) {
       throw new UnsupportedOperationException();
     }
 
-    public AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval, int fieldVal, FieldReference fieldRef) {
+    public AstIsDefinedInstruction IsDefinedInstruction(int iindex, int lval, int rval, int fieldVal, FieldReference fieldRef) {
       throw new UnsupportedOperationException();
     }
 
-    public AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval, FieldReference fieldRef) {
+    public AstIsDefinedInstruction IsDefinedInstruction(int iindex, int lval, int rval, FieldReference fieldRef) {
       throw new UnsupportedOperationException();
     }
 
-    public AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval, int fieldVal) {
+    public AstIsDefinedInstruction IsDefinedInstruction(int iindex, int lval, int rval, int fieldVal) {
       throw new UnsupportedOperationException();
     }
 
-    public AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval) {
+    public AstIsDefinedInstruction IsDefinedInstruction(int iindex, int lval, int rval) {
       throw new UnsupportedOperationException();
     }
 
-    public AstLexicalRead LexicalRead(Access[] accesses) {
-      return new AstLexicalRead(accesses);
+    public AstLexicalRead LexicalRead(int iindex, Access[] accesses) {
+      return new AstLexicalRead(iindex, accesses);
     }
 
-    public AstLexicalRead LexicalRead(Access access) {
-       return new AstLexicalRead(access);
+    public AstLexicalRead LexicalRead(int iindex, Access access) {
+       return new AstLexicalRead(iindex, access);
     }
 
-    public AstLexicalRead LexicalRead(int lhs, String definer, String globalName) {
-      return new AstLexicalRead(lhs, definer, globalName);
+    public AstLexicalRead LexicalRead(int iindex, int lhs, String definer, String globalName) {
+      return new AstLexicalRead(iindex, lhs, definer, globalName);
     }
 
-    public AstLexicalWrite LexicalWrite(Access[] accesses) {
-      return new AstLexicalWrite(accesses);
+    public AstLexicalWrite LexicalWrite(int iindex, Access[] accesses) {
+      return new AstLexicalWrite(iindex, accesses);
     }
 
-    public AstLexicalWrite LexicalWrite(Access access) {
-      return new AstLexicalWrite(access);
+    public AstLexicalWrite LexicalWrite(int iindex, Access access) {
+      return new AstLexicalWrite(iindex, access);
     }
 
-    public AstLexicalWrite LexicalWrite(String definer, String globalName, int rhs) {
-       return new AstLexicalWrite(definer, globalName, rhs);
+    public AstLexicalWrite LexicalWrite(int iindex, String definer, String globalName, int rhs) {
+       return new AstLexicalWrite(iindex, definer, globalName, rhs);
     }
 
-    public SSAThrowInstruction NonExceptingThrowInstruction(int exception) {
+    public SSAThrowInstruction NonExceptingThrowInstruction(int iindex, int exception) {
       throw new UnsupportedOperationException();
    }    
   }

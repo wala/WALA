@@ -31,30 +31,30 @@ import com.ibm.wala.types.TypeReference;
  */
 public class AstJavaInvokeInstruction extends FixedParametersLexicalInvokeInstruction {
 
-  protected AstJavaInvokeInstruction(int results[], int[] params, int exception, CallSiteReference site) {
-    super(results, params, exception, site);
+  protected AstJavaInvokeInstruction(int iindex, int results[], int[] params, int exception, CallSiteReference site) {
+    super(iindex, results, params, exception, site);
   }
 
-  public AstJavaInvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
-    this(new int[] { result }, params, exception, site);
+  public AstJavaInvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site) {
+    this(iindex, new int[] { result }, params, exception, site);
     SSAInvokeInstruction.assertParamsKosher(result, params, site);
   }
 
   /**
    * Constructor InvokeInstruction. This case for void return values
    */
-  public AstJavaInvokeInstruction(int[] params, int exception, CallSiteReference site) {
-    this(null, params, exception, site);
+  public AstJavaInvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site) {
+    this(iindex, null, params, exception, site);
   }
 
-  public AstJavaInvokeInstruction(int results[], int[] params, int exception, CallSiteReference site, Access[] lexicalReads,
+  public AstJavaInvokeInstruction(int iindex, int results[], int[] params, int exception, CallSiteReference site, Access[] lexicalReads,
       Access[] lexicalWrites) {
-    super(results, params, exception, site, lexicalReads, lexicalWrites);
+    super(iindex, results, params, exception, site, lexicalReads, lexicalWrites);
   }
 
   protected SSAInstruction copyInstruction(SSAInstructionFactory insts, int results[], int[] params, int exception,
       Access[] lexicalReads, Access[] lexicalWrites) {
-    return ((AstJavaInstructionFactory) insts).JavaInvokeInstruction(results, params, exception, getCallSite(), lexicalReads,
+    return ((AstJavaInstructionFactory) insts).JavaInvokeInstruction(iindex, results, params, exception, getCallSite(), lexicalReads,
         lexicalWrites);
   }
 

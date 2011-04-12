@@ -22,8 +22,8 @@ public class SSAInstanceofInstruction extends SSAInstruction {
 
   private final TypeReference checkedType;
 
-  public SSAInstanceofInstruction(int result, int ref, TypeReference checkedType) {
-    super();
+  public SSAInstanceofInstruction(int index, int result, int ref, TypeReference checkedType) {
+    super(index);
     this.result = result;
     this.ref = ref;
     this.checkedType = checkedType;
@@ -37,7 +37,7 @@ public class SSAInstanceofInstruction extends SSAInstruction {
     if (uses != null && uses.length == 0) {
       throw new IllegalArgumentException("uses.length == 0");
     }
-    return insts.InstanceofInstruction(defs == null || defs.length == 0 ? result : defs[0], uses == null ? ref : uses[0],
+    return insts.InstanceofInstruction(iindex, defs == null || defs.length == 0 ? result : defs[0], uses == null ? ref : uses[0],
         checkedType);
   }
 

@@ -24,21 +24,21 @@ import com.ibm.wala.ssa.SymbolTable;
  */
 public class AstLexicalWrite extends AstLexicalAccess {
 
-  public AstLexicalWrite(String definer, String globalName, int rhs) {
-    this(new Access(globalName, definer, rhs));
+  public AstLexicalWrite(int iindex, String definer, String globalName, int rhs) {
+    this(iindex, new Access(globalName, definer, rhs));
   }
 
-  public AstLexicalWrite(Access access) {
-    this(new Access[] { access });
+  public AstLexicalWrite(int iindex, Access access) {
+    this(iindex, new Access[] { access });
   }
 
-  public AstLexicalWrite(Access[] accesses) {
-    super(accesses);
+  public AstLexicalWrite(int iindex, Access[] accesses) {
+    super(iindex, accesses);
   }
 
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (uses == null) {
-      return new AstLexicalWrite(getAccesses());
+      return new AstLexicalWrite(iindex, getAccesses());
     } else {
       Access[] accesses = new Access[getAccessCount()];
       for (int i = 0; i < accesses.length; i++) {
@@ -46,7 +46,7 @@ public class AstLexicalWrite extends AstLexicalAccess {
         accesses[i] = new Access(oldAccess.variableName, oldAccess.variableDefiner, uses[i]);
       }
 
-      return ((AstInstructionFactory)insts).LexicalWrite(accesses);
+      return ((AstInstructionFactory)insts).LexicalWrite(iindex, accesses);
     }
   }
 

@@ -15,13 +15,13 @@ package com.ibm.wala.ssa;
  */
 public class SSAGotoInstruction extends SSAInstruction {
 
-  public SSAGotoInstruction() {
-    super();
+  public SSAGotoInstruction(int index) {
+    super(index);
   }
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return insts.GotoInstruction();
+    return insts.GotoInstruction(iindex);
   }
 
   @Override

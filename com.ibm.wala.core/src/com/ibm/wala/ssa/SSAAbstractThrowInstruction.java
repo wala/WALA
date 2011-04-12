@@ -17,8 +17,8 @@ package com.ibm.wala.ssa;
 public abstract class SSAAbstractThrowInstruction extends SSAInstruction {
   private final int exception;
 
-  public SSAAbstractThrowInstruction(int exception) {
-    super();
+  public SSAAbstractThrowInstruction(int index, int exception) {
+    super(index);
     //assert exception > 0;
     this.exception = exception;
   }

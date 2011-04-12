@@ -12,12 +12,13 @@ import com.ibm.wala.util.debug.Assertions;
 public class AstEchoInstruction extends SSAInstruction {
   private final int[] rvals;
   
-  public AstEchoInstruction(int[] rvals) {
+  public AstEchoInstruction(int iindex, int[] rvals) {
+    super(iindex);
     this.rvals = rvals;
   }
 
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return ((AstInstructionFactory)insts).EchoInstruction(uses==null? rvals: uses);
+    return ((AstInstructionFactory)insts).EchoInstruction(iindex, uses==null? rvals: uses);
   }
 
   public int getNumberOfDefs() {

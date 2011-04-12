@@ -32,7 +32,8 @@ public class AstAssertInstruction extends SSAInstruction {
 
   private final boolean fromSpecification;
 
-  public AstAssertInstruction(int value, boolean fromSpecification) {
+  public AstAssertInstruction(int iindex, int value, boolean fromSpecification) {
+    super(iindex);
     this.value = value;
     this.fromSpecification = fromSpecification;
   }
@@ -47,7 +48,7 @@ public class AstAssertInstruction extends SSAInstruction {
   }
 
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return ((AstInstructionFactory)insts).AssertInstruction(uses == null ? value : uses[0], fromSpecification);
+    return ((AstInstructionFactory)insts).AssertInstruction(iindex, uses == null ? value : uses[0], fromSpecification);
   }
 
   public String toString(SymbolTable symbolTable) {

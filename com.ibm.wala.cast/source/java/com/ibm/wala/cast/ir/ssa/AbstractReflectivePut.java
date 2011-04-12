@@ -23,8 +23,8 @@ import com.ibm.wala.ssa.SymbolTable;
 public abstract class AbstractReflectivePut extends ReflectiveMemberAccess {
   private final int value;
 
-  public AbstractReflectivePut(int objectRef, int memberRef, int value) {
-    super(objectRef, memberRef);
+  public AbstractReflectivePut(int iindex, int objectRef, int memberRef, int value) {
+    super(iindex, objectRef, memberRef);
     this.value = value;
   }
 

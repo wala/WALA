@@ -22,8 +22,8 @@ public class SSAGetCaughtExceptionInstruction extends SSAInstruction {
 
   private final int bbNumber;
 
-  public SSAGetCaughtExceptionInstruction(int bbNumber, int exceptionValueNumber) {
-    super();
+  public SSAGetCaughtExceptionInstruction(int index, int bbNumber, int exceptionValueNumber) {
+    super(index);
     this.exceptionValueNumber = exceptionValueNumber;
     this.bbNumber = bbNumber;
   }
@@ -31,7 +31,7 @@ public class SSAGetCaughtExceptionInstruction extends SSAInstruction {
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     assert defs == null || defs.length == 1;
-    return insts.GetCaughtExceptionInstruction(bbNumber, defs == null ? exceptionValueNumber : defs[0]);
+    return insts.GetCaughtExceptionInstruction(iindex, bbNumber, defs == null ? exceptionValueNumber : defs[0]);
   }
 
   @Override

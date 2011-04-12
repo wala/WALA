@@ -30,8 +30,8 @@ public class AssignInstruction extends SSAUnaryOpInstruction {
    * @param result
    * @param val
    */
-  public AssignInstruction(int result, int val) {
-    super(null, result, val);
+  public AssignInstruction(int iindex, int result, int val) {
+    super(iindex, null, result, val);
     assert result != val;
     assert result != -1;
     assert val != -1;
@@ -42,7 +42,7 @@ public class AssignInstruction extends SSAUnaryOpInstruction {
    */
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((AstInstructionFactory) insts)
-        .AssignInstruction(defs == null ? getDef(0) : defs[0], uses == null ? getUse(0) : uses[0]);
+        .AssignInstruction(iindex, defs == null ? getDef(0) : defs[0], uses == null ? getUse(0) : uses[0]);
   }
 
   /*

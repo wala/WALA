@@ -19,8 +19,8 @@ public abstract class SSAArrayStoreInstruction extends SSAArrayReferenceInstruct
 
   private final int value;
 
-  protected SSAArrayStoreInstruction(int arrayref, int index, int value, TypeReference elementType) {
-    super(arrayref, index, elementType);
+  protected SSAArrayStoreInstruction(int iindex, int arrayref, int index, int value, TypeReference elementType) {
+    super(iindex, arrayref, index, elementType);
     this.value = value;
   }
 
@@ -29,7 +29,7 @@ public abstract class SSAArrayStoreInstruction extends SSAArrayReferenceInstruct
     if (uses != null && uses.length < 3) {
       throw new IllegalArgumentException("uses.length < 3");
     }
-    return insts.ArrayStoreInstruction(uses == null ? getArrayRef() : uses[0], uses == null ? getIndex() : uses[1],
+    return insts.ArrayStoreInstruction(iindex, uses == null ? getArrayRef() : uses[0], uses == null ? getIndex() : uses[1],
         uses == null ? value : uses[2], getElementType());
   }
 

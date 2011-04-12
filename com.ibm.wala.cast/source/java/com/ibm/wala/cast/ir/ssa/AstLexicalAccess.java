@@ -60,7 +60,8 @@ public abstract class AstLexicalAccess extends SSAInstruction {
 
   private Access[] accesses;
 
-  AstLexicalAccess(Access[] accesses) {
+  AstLexicalAccess(int iindex, Access[] accesses) {
+    super(iindex);
     setAccesses( accesses );
   }
 

@@ -26,8 +26,8 @@ public class SSASwitchInstruction extends SSAInstruction {
   /**
    * The labels in casesAndLabels represent <em>instruction indices</em> in the IR that each switch case branches to.
    */
-  public SSASwitchInstruction(int val, int defaultLabel, int[] casesAndLabels) {
-    super();
+  public SSASwitchInstruction(int index, int val, int defaultLabel, int[] casesAndLabels) {
+    super(index);
     this.val = val;
     this.defaultLabel = defaultLabel;
     this.casesAndLabels = casesAndLabels;
@@ -36,7 +36,7 @@ public class SSASwitchInstruction extends SSAInstruction {
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     assert uses == null || uses.length == 1;
-    return insts.SwitchInstruction(uses == null ? val : uses[0], defaultLabel, casesAndLabels);
+    return insts.SwitchInstruction(iindex, uses == null ? val : uses[0], defaultLabel, casesAndLabels);
   }
 
   @Override

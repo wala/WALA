@@ -28,8 +28,8 @@ public class SSAPhiInstruction extends SSAInstruction {
 
   private int[] params;
 
-  public SSAPhiInstruction(int result, int[] params) throws IllegalArgumentException {
-    super();
+  public SSAPhiInstruction(int index, int result, int[] params) throws IllegalArgumentException {
+    super(index);
     if (params == null) {
       throw new IllegalArgumentException("params is null");
     }
@@ -50,7 +50,7 @@ public class SSAPhiInstruction extends SSAInstruction {
     if (defs != null && defs.length == 0) {
       throw new IllegalArgumentException();
     }
-    return insts.PhiInstruction(defs == null ? result : defs[0], uses == null ? params : uses);
+    return insts.PhiInstruction(iindex, defs == null ? result : defs[0], uses == null ? params : uses);
   }
 
   @Override

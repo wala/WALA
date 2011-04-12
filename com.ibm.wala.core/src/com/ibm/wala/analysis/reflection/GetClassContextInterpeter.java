@@ -102,9 +102,9 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
     TypeReference tr = context.getType().getTypeReference();
     SSAInstructionFactory insts = context.getType().getType().getClassLoader().getInstructionFactory();
     if (tr != null) {
-      SSALoadMetadataInstruction l = insts.LoadMetadataInstruction(retValue, TypeReference.JavaLangClass, tr);
+      SSALoadMetadataInstruction l = insts.LoadMetadataInstruction(statements.size(), retValue, TypeReference.JavaLangClass, tr);
       statements.add(l);
-      SSAReturnInstruction R = insts.ReturnInstruction(retValue, false);
+      SSAReturnInstruction R = insts.ReturnInstruction(statements.size(), retValue, false);
       statements.add(R);
     }
     SSAInstruction[] result = new SSAInstruction[statements.size()];

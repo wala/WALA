@@ -23,8 +23,8 @@ import com.ibm.wala.ssa.SymbolTable;
 public abstract class AbstractReflectiveGet extends ReflectiveMemberAccess {
   private final int result;
 
-  public AbstractReflectiveGet(int result, int objectRef, int memberRef) {
-    super(objectRef, memberRef);
+  public AbstractReflectiveGet(int iindex, int result, int objectRef, int memberRef) {
+    super(iindex, objectRef, memberRef);
     this.result = result;
   }
 

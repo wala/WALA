@@ -26,12 +26,12 @@ import com.ibm.wala.types.TypeReference;
  */
 public class AstGlobalWrite extends SSAPutInstruction {
 
-  public AstGlobalWrite(FieldReference global, int rhs) {
-    super(rhs, global);
+  public AstGlobalWrite(int iindex, FieldReference global, int rhs) {
+    super(iindex, rhs, global);
   }
 
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return ((AstInstructionFactory)insts).GlobalWrite(getDeclaredField(), (uses==null)? getVal(): uses[0]);
+    return ((AstInstructionFactory)insts).GlobalWrite(iindex, getDeclaredField(), (uses==null)? getVal(): uses[0]);
   }
 
   public String toString(SymbolTable symbolTable) {

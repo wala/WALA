@@ -475,7 +475,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
       for (int i = 0; i < pis.size(); i++) {
         SSAPiInstruction pi = pis.get(i);
         SSAInstructionFactory insts = getMethod().getDeclaringClass().getClassLoader().getInstructionFactory();
-        pis.set(i, insts.PiInstruction(pi.getDef(), pi.getVal(), getGraphNodeId(), normalSuccNodeNumber, pi.getCause()));
+        pis.set(i, insts.PiInstruction(SSAInstruction.NO_INDEX, pi.getDef(), pi.getVal(), getGraphNodeId(), normalSuccNodeNumber, pi.getCause()));
       }
     }
 

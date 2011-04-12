@@ -140,17 +140,17 @@ public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterp
         TypeReference instantiationExceptionRef = TypeReference.findOrCreateClass(ClassLoaderReference.Primordial, "java/lang",
             "InstantiationException");
         int xobj = method.getNumberOfParameters() + 1;
-        SSAInstruction newStatement = insts.NewInstruction(xobj, NewSiteReference.make(2, instantiationExceptionRef));
+        SSAInstruction newStatement = insts.NewInstruction(m.allInstructions.size(), xobj, NewSiteReference.make(2, instantiationExceptionRef));
         m.addInstruction(tr, newStatement, true);
-        SSAInstruction throwStatement = insts.ThrowInstruction(xobj);
+        SSAInstruction throwStatement = insts.ThrowInstruction(m.allInstructions.size(), xobj);
         m.addInstruction(tr, throwStatement, false);
       } else {
         TypeReference illegalAccessExceptionRef = TypeReference.findOrCreateClass(ClassLoaderReference.Primordial, "java/lang",
             "IllegalAccessException");
         int xobj = method.getNumberOfParameters() + 1;
-        SSAInstruction newStatement = insts.NewInstruction(xobj, NewSiteReference.make(2, illegalAccessExceptionRef));
+        SSAInstruction newStatement = insts.NewInstruction(m.allInstructions.size(), xobj, NewSiteReference.make(2, illegalAccessExceptionRef));
         m.addInstruction(tr, newStatement, true);
-        SSAInstruction throwStatement = insts.ThrowInstruction(xobj);
+        SSAInstruction throwStatement = insts.ThrowInstruction(m.allInstructions.size(), xobj);
         m.addInstruction(tr, throwStatement, false);
       }
 

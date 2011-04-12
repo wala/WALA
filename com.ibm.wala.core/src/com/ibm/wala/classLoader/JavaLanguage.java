@@ -74,8 +74,8 @@ import com.ibm.wala.util.warnings.Warnings;
 public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Constants {
 
   public static class JavaInstructionFactory implements SSAInstructionFactory {
-    public SSAArrayLengthInstruction ArrayLengthInstruction(int result, int arrayref) {
-      return new SSAArrayLengthInstruction(result, arrayref) {
+    public SSAArrayLengthInstruction ArrayLengthInstruction(int iindex, int result, int arrayref) {
+      return new SSAArrayLengthInstruction(iindex, result, arrayref) {
         @Override
         public Collection<TypeReference> getExceptionTypes() {
           return getNullPointerException();
@@ -83,8 +83,8 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
-    public SSAArrayLoadInstruction ArrayLoadInstruction(int result, int arrayref, int index, TypeReference declaredType) {
-      return new SSAArrayLoadInstruction(result, arrayref, index, declaredType) {
+    public SSAArrayLoadInstruction ArrayLoadInstruction(int iindex, int result, int arrayref, int index, TypeReference declaredType) {
+      return new SSAArrayLoadInstruction(iindex, result, arrayref, index, declaredType) {
         @Override
         public Collection<TypeReference> getExceptionTypes() {
           return getArrayAccessExceptions();
@@ -92,8 +92,8 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
-    public SSAArrayStoreInstruction ArrayStoreInstruction(int arrayref, int index, int value, TypeReference declaredType) {
-      return new SSAArrayStoreInstruction(arrayref, index, value, declaredType) {
+    public SSAArrayStoreInstruction ArrayStoreInstruction(int iindex, int arrayref, int index, int value, TypeReference declaredType) {
+      return new SSAArrayStoreInstruction(iindex, arrayref, index, value, declaredType) {
         @Override
         public Collection<TypeReference> getExceptionTypes() {
           if (typeIsPrimitive()) {
@@ -105,15 +105,15 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
-    public SSABinaryOpInstruction BinaryOpInstruction(IBinaryOpInstruction.IOperator operator, boolean overflow, boolean unsigned,
+    public SSABinaryOpInstruction BinaryOpInstruction(int iindex, IBinaryOpInstruction.IOperator operator, boolean overflow, boolean unsigned,
         int result, int val1, int val2, boolean mayBeInteger) {
       assert !overflow;
       assert !unsigned;
-      return new SSABinaryOpInstruction(operator, result, val1, val2, mayBeInteger) {
+      return new SSABinaryOpInstruction(iindex, operator, result, val1, val2, mayBeInteger) {
 
         @Override
         public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-          return insts.BinaryOpInstruction(getOperator(), false, false, defs == null || defs.length == 0 ? getDef(0) : defs[0],
+          return insts.BinaryOpInstruction(iindex, getOperator(), false, false, defs == null || defs.length == 0 ? getDef(0) : defs[0],
               uses == null ? getUse(0) : uses[0], uses == null ? getUse(1) : uses[1], mayBeIntegerOp());
         }
 
@@ -128,13 +128,13 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
-    public SSACheckCastInstruction CheckCastInstruction(int result, int val, int[] typeValues) {
+    public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, int[] typeValues) {
       throw new UnsupportedOperationException();
     }
        
-    public SSACheckCastInstruction CheckCastInstruction(int result, int val, TypeReference[] types) {
+    public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, TypeReference[] types) {
        assert types.length == 1;
-      return new SSACheckCastInstruction(result, val, types) {
+      return new SSACheckCastInstruction(iindex, result, val, types) {
         @Override
         public Collection<TypeReference> getExceptionTypes() {
           return getClassCastException();
@@ -142,49 +142,49 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
      
-    public SSACheckCastInstruction CheckCastInstruction(int result, int val, int typeValue) {
-      return CheckCastInstruction(result, val, new int[]{ typeValue });
+    public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, int typeValue) {
+      return CheckCastInstruction(iindex, result, val, new int[]{ typeValue });
     }
 
-    public SSACheckCastInstruction CheckCastInstruction(int result, int val, TypeReference type) {
-      return CheckCastInstruction(result, val, new TypeReference[]{ type });
+    public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, TypeReference type) {
+      return CheckCastInstruction(iindex, result, val, new TypeReference[]{ type });
     }
 
-    public SSAComparisonInstruction ComparisonInstruction(IComparisonInstruction.Operator operator, int result, int val1, int val2) {
-      return new SSAComparisonInstruction(operator, result, val1, val2);
+    public SSAComparisonInstruction ComparisonInstruction(int iindex, IComparisonInstruction.Operator operator, int result, int val1, int val2) {
+      return new SSAComparisonInstruction(iindex, operator, result, val1, val2);
     }
 
-    public SSAConditionalBranchInstruction ConditionalBranchInstruction(IConditionalBranchInstruction.IOperator operator,
+    public SSAConditionalBranchInstruction ConditionalBranchInstruction(int iindex, IConditionalBranchInstruction.IOperator operator,
         TypeReference type, int val1, int val2) {
-      return new SSAConditionalBranchInstruction(operator, type, val1, val2);
+      return new SSAConditionalBranchInstruction(iindex, operator, type, val1, val2);
     }
 
-    public SSAConversionInstruction ConversionInstruction(int result, int val, TypeReference fromType, TypeReference toType,
+    public SSAConversionInstruction ConversionInstruction(int iindex, int result, int val, TypeReference fromType, TypeReference toType,
         boolean overflow) {
       assert !overflow;
-      return new SSAConversionInstruction(result, val, fromType, toType) {
+      return new SSAConversionInstruction(iindex, result, val, fromType, toType) {
         @Override
         public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) throws IllegalArgumentException {
           if (uses != null && uses.length == 0) {
             throw new IllegalArgumentException("(uses != null) and (uses.length == 0)");
           }
-          return insts.ConversionInstruction(defs == null || defs.length == 0 ? getDef(0) : defs[0], uses == null ? getUse(0)
+          return insts.ConversionInstruction(iindex, defs == null || defs.length == 0 ? getDef(0) : defs[0], uses == null ? getUse(0)
               : uses[0], getFromType(), getToType(), false);
         }
       };
     }
 
-    public SSAGetCaughtExceptionInstruction GetCaughtExceptionInstruction(int bbNumber, int exceptionValueNumber) {
-      return new SSAGetCaughtExceptionInstruction(bbNumber, exceptionValueNumber);
+    public SSAGetCaughtExceptionInstruction GetCaughtExceptionInstruction(int iindex, int bbNumber, int exceptionValueNumber) {
+      return new SSAGetCaughtExceptionInstruction(iindex, bbNumber, exceptionValueNumber);
     }
 
-    public SSAGetInstruction GetInstruction(int result, FieldReference field) {
-      return new SSAGetInstruction(result, field) {
+    public SSAGetInstruction GetInstruction(int iindex, int result, FieldReference field) {
+      return new SSAGetInstruction(iindex, result, field) {
       };
     }
 
-    public SSAGetInstruction GetInstruction(int result, int ref, FieldReference field) {
-      return new SSAGetInstruction(result, ref, field) {
+    public SSAGetInstruction GetInstruction(int iindex, int result, int ref, FieldReference field) {
+      return new SSAGetInstruction(iindex, result, ref, field) {
         @Override
         public Collection<TypeReference> getExceptionTypes() {
           return getNullPointerException();
@@ -192,16 +192,16 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
-    public SSAGotoInstruction GotoInstruction() {
-      return new SSAGotoInstruction();
+    public SSAGotoInstruction GotoInstruction(int iindex) {
+      return new SSAGotoInstruction(iindex);
     }
 
-    public SSAInstanceofInstruction InstanceofInstruction(int result, int ref, TypeReference checkedType) {
-      return new SSAInstanceofInstruction(result, ref, checkedType);
+    public SSAInstanceofInstruction InstanceofInstruction(int iindex, int result, int ref, TypeReference checkedType) {
+      return new SSAInstanceofInstruction(iindex, result, ref, checkedType);
     }
 
-    public SSAInvokeInstruction InvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
-      return new SSAInvokeInstruction(result, params, exception, site) {
+    public SSAInvokeInstruction InvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site) {
+      return new SSAInvokeInstruction(iindex, result, params, exception, site) {
         @Override
         public Collection<TypeReference> getExceptionTypes() {
           if (!isStatic()) {
@@ -213,8 +213,8 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
-    public SSAInvokeInstruction InvokeInstruction(int[] params, int exception, CallSiteReference site) {
-      return new SSAInvokeInstruction(params, exception, site) {
+    public SSAInvokeInstruction InvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site) {
+      return new SSAInvokeInstruction(iindex, params, exception, site) {
         @Override
         public Collection<TypeReference> getExceptionTypes() {
           if (!isStatic()) {
@@ -226,8 +226,8 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
-    public SSAMonitorInstruction MonitorInstruction(int ref, boolean isEnter) {
-      return new SSAMonitorInstruction(ref, isEnter) {
+    public SSAMonitorInstruction MonitorInstruction(int iindex, int ref, boolean isEnter) {
+      return new SSAMonitorInstruction(iindex, ref, isEnter) {
         @Override
         public Collection<TypeReference> getExceptionTypes() {
           return getNullPointerException();
@@ -235,8 +235,8 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
-    public SSANewInstruction NewInstruction(int result, NewSiteReference site) {
-      return new SSANewInstruction(result, site) {
+    public SSANewInstruction NewInstruction(int iindex, int result, NewSiteReference site) {
+      return new SSANewInstruction(iindex, result, site) {
         @Override
         public Collection<TypeReference> getExceptionTypes() {
           if (getNewSite().getDeclaredType().isArrayType()) {
@@ -248,13 +248,13 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
-    public SSAPhiInstruction PhiInstruction(int result, int[] params) throws IllegalArgumentException {
-      return new SSAPhiInstruction(result, params) {
+    public SSAPhiInstruction PhiInstruction(int iindex, int result, int[] params) throws IllegalArgumentException {
+      return new SSAPhiInstruction(iindex, result, params) {
       };
     }
 
-    public SSAPutInstruction PutInstruction(int ref, int value, FieldReference field) {
-      return new SSAPutInstruction(ref, value, field) {
+    public SSAPutInstruction PutInstruction(int iindex, int ref, int value, FieldReference field) {
+      return new SSAPutInstruction(iindex, ref, value, field) {
         @Override
         public Collection<TypeReference> getExceptionTypes() {
           return getNullPointerException();
@@ -262,25 +262,25 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
-    public SSAPutInstruction PutInstruction(int value, FieldReference field) {
-      return new SSAPutInstruction(value, field) {
+    public SSAPutInstruction PutInstruction(int iindex, int value, FieldReference field) {
+      return new SSAPutInstruction(iindex, value, field) {
       };
     }
 
-    public SSAReturnInstruction ReturnInstruction() {
-      return new SSAReturnInstruction();
+    public SSAReturnInstruction ReturnInstruction(int iindex) {
+      return new SSAReturnInstruction(iindex);
     }
 
-    public SSAReturnInstruction ReturnInstruction(int result, boolean isPrimitive) {
-      return new SSAReturnInstruction(result, isPrimitive);
+    public SSAReturnInstruction ReturnInstruction(int iindex, int result, boolean isPrimitive) {
+      return new SSAReturnInstruction(iindex, result, isPrimitive);
     }
 
-    public SSASwitchInstruction SwitchInstruction(int val, int defaultLabel, int[] casesAndLabels) {
-      return new SSASwitchInstruction(val, defaultLabel, casesAndLabels);
+    public SSASwitchInstruction SwitchInstruction(int iindex, int val, int defaultLabel, int[] casesAndLabels) {
+      return new SSASwitchInstruction(iindex, val, defaultLabel, casesAndLabels);
     }
 
-    public SSAThrowInstruction ThrowInstruction(int exception) {
-      return new SSAThrowInstruction(exception) {
+    public SSAThrowInstruction ThrowInstruction(int iindex, int exception) {
+      return new SSAThrowInstruction(iindex, exception) {
         @Override
         public Collection<TypeReference> getExceptionTypes() {
           return getNullPointerException();
@@ -288,12 +288,12 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
-    public SSAUnaryOpInstruction UnaryOpInstruction(IUnaryOpInstruction.IOperator operator, int result, int val) {
-      return new SSAUnaryOpInstruction(operator, result, val);
+    public SSAUnaryOpInstruction UnaryOpInstruction(int iindex, IUnaryOpInstruction.IOperator operator, int result, int val) {
+      return new SSAUnaryOpInstruction(iindex, operator, result, val);
     }
 
-    public SSALoadMetadataInstruction LoadMetadataInstruction(int lval, TypeReference entityType, Object token) {
-      return new SSALoadMetadataInstruction(lval, entityType, token) {
+    public SSALoadMetadataInstruction LoadMetadataInstruction(int iindex, int lval, TypeReference entityType, Object token) {
+      return new SSALoadMetadataInstruction(iindex, lval, entityType, token) {
         @Override
         public Collection<TypeReference> getExceptionTypes() {
           return loadClassExceptions;
@@ -301,8 +301,8 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
-    public SSANewInstruction NewInstruction(int result, NewSiteReference site, int[] params) {
-      return new SSANewInstruction(result, site, params) {
+    public SSANewInstruction NewInstruction(int iindex, int result, NewSiteReference site, int[] params) {
+      return new SSANewInstruction(iindex, result, site, params) {
         @Override
         public Collection<TypeReference> getExceptionTypes() {
           return getNewArrayExceptions();
@@ -310,27 +310,27 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
-    public SSAPiInstruction PiInstruction(int result, int val, int piBlock, int successorBlock, SSAInstruction cause) {
-      return new SSAPiInstruction(result, val, piBlock, successorBlock, cause);
+    public SSAPiInstruction PiInstruction(int iindex, int result, int val, int piBlock, int successorBlock, SSAInstruction cause) {
+      return new SSAPiInstruction(iindex, result, val, piBlock, successorBlock, cause);
     }
 
-    public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, TypeReference pointeeType) {
+    public SSAAddressOfInstruction AddressOfInstruction(int iindex, int lval, int local, TypeReference pointeeType) {
       throw new UnsupportedOperationException();
     }
 
-    public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, int indexVal, TypeReference pointeeType) {
+    public SSAAddressOfInstruction AddressOfInstruction(int iindex, int lval, int local, int indexVal, TypeReference pointeeType) {
       throw new UnsupportedOperationException();
    }
 
-    public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, FieldReference field, TypeReference pointeeType) {
+    public SSAAddressOfInstruction AddressOfInstruction(int iindex, int lval, int local, FieldReference field, TypeReference pointeeType) {
       throw new UnsupportedOperationException();
     }
 
-    public SSALoadIndirectInstruction LoadIndirectInstruction(int lval, TypeReference t, int addressVal) {
+    public SSALoadIndirectInstruction LoadIndirectInstruction(int iindex, int lval, TypeReference t, int addressVal) {
       throw new UnsupportedOperationException();
     }
 
-    public SSAStoreIndirectInstruction StoreIndirectInstruction(int addressVal, int rval, TypeReference pointeeType) {
+    public SSAStoreIndirectInstruction StoreIndirectInstruction(int iindex, int addressVal, int rval, TypeReference pointeeType) {
       throw new UnsupportedOperationException();
     }
   }

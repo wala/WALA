@@ -19,22 +19,22 @@ public abstract class SSAPutInstruction extends SSAFieldAccessInstruction {
 
   private final int val;
 
-  protected SSAPutInstruction(int ref, int val, FieldReference field) {
-    super(field, ref);
+  protected SSAPutInstruction(int index, int ref, int val, FieldReference field) {
+    super(index, field, ref);
     this.val = val;
   }
 
-  protected SSAPutInstruction(int val, FieldReference field) {
-    super(field, -1);
+  protected SSAPutInstruction(int index, int val, FieldReference field) {
+    super(index, field, -1);
     this.val = val;
   }
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (isStatic())
-      return insts.PutInstruction(uses == null ? val : uses[0], getDeclaredField());
+      return insts.PutInstruction(iindex, uses == null ? val : uses[0], getDeclaredField());
     else
-      return insts.PutInstruction(uses == null ? getRef() : uses[0], uses == null ? val : uses[1], getDeclaredField());
+      return insts.PutInstruction(iindex, uses == null ? getRef() : uses[0], uses == null ? val : uses[1], getDeclaredField());
   }
 
   @Override

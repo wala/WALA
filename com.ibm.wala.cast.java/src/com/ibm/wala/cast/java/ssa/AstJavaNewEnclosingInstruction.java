@@ -23,8 +23,8 @@ public class AstJavaNewEnclosingInstruction extends SSANewInstruction {
     return enclosing;
   }
   
-  public AstJavaNewEnclosingInstruction(int result, NewSiteReference site, int enclosing) throws IllegalArgumentException {
-    super(result, site);
+  public AstJavaNewEnclosingInstruction(int iindex, int result, NewSiteReference site, int enclosing) throws IllegalArgumentException {
+    super(iindex, result, site);
     this.enclosing = enclosing;
   }
   
@@ -37,7 +37,7 @@ public class AstJavaNewEnclosingInstruction extends SSANewInstruction {
   }
 
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return ((AstJavaInstructionFactory)insts).JavaNewEnclosingInstruction(defs==null? getDef(0): defs[0], getNewSite(), uses==null? enclosing: uses[0]);
+    return ((AstJavaInstructionFactory)insts).JavaNewEnclosingInstruction(iindex, defs==null? getDef(0): defs[0], getNewSite(), uses==null? enclosing: uses[0]);
   }
   
   public Collection<TypeReference> getExceptionTypes() {

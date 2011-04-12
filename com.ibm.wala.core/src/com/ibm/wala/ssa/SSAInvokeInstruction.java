@@ -26,8 +26,8 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
    */
   private final int[] params;
 
-  protected SSAInvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
-    super(exception, site);
+  protected SSAInvokeInstruction(int index, int result, int[] params, int exception, CallSiteReference site) {
+    super(index, exception, site);
     this.result = result;
     this.params = params;
     assertParamsKosher(result, params, site);
@@ -36,15 +36,15 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
   /**
    * Constructor InvokeInstruction. This case for void return values
    */
-  protected SSAInvokeInstruction(int[] params, int exception, CallSiteReference site) {
-    this(-1, params, exception, site);
+  protected SSAInvokeInstruction(int index, int[] params, int exception, CallSiteReference site) {
+    this(index, -1, params, exception, site);
   }
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     // result == -1 for void-returning methods, which are the only calls
     // that have a single value def.
-    return insts.InvokeInstruction(defs == null || result == -1 ? result : defs[0], uses == null ? params : uses,
+    return insts.InvokeInstruction(iindex, defs == null || result == -1 ? result : defs[0], uses == null ? params : uses,
         defs == null ? exception : defs[result == -1 ? 0 : 1], site);
   }
 

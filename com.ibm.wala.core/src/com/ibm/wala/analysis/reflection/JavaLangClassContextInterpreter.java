@@ -281,7 +281,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
       NewSiteReference site = new NewSiteReference(retValue, arrType);
       int sizeVn = nextLocal++;
       constants.put(sizeVn, new ConstantValue(returnValues.size()));
-      SSANewInstruction allocArr = insts.NewInstruction(retValue, site, new int[] { sizeVn });
+      SSANewInstruction allocArr = insts.NewInstruction(statements.size(), retValue, site, new int[] { sizeVn });
       statements.add(allocArr);
 
       int i = 0;
@@ -292,10 +292,10 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
         int indexVn = nextLocal++;
         constants.put(indexVn, new ConstantValue(index));
         SSAArrayStoreInstruction store = insts
-            .ArrayStoreInstruction(retValue, indexVn, c, TypeReference.JavaLangReflectConstructor);
+            .ArrayStoreInstruction(statements.size(), retValue, indexVn, c, TypeReference.JavaLangReflectConstructor);
         statements.add(store);
       }
-      SSAReturnInstruction R = insts.ReturnInstruction(retValue, false);
+      SSAReturnInstruction R = insts.ReturnInstruction(statements.size(), retValue, false);
       statements.add(R);
     } else {
       // SJF: This is incorrect. TODO: fix and enable.
@@ -326,7 +326,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
       for (IMethod m : returnValues) {
         int c = nextLocal++;
         constants.put(c, new ConstantValue(m));
-        SSAReturnInstruction R = insts.ReturnInstruction(c, false);
+        SSAReturnInstruction R = insts.ReturnInstruction(statements.size(), c, false);
         statements.add(R);
       }
     } else {

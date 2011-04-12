@@ -8,14 +8,14 @@ import com.ibm.wala.types.TypeReference;
 
 public interface AstJavaInstructionFactory extends AstInstructionFactory {
 
-  AstJavaInvokeInstruction JavaInvokeInstruction(int result, int[] params, int exception, CallSiteReference site);
+  AstJavaInvokeInstruction JavaInvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site);
   
-  AstJavaInvokeInstruction JavaInvokeInstruction(int[] params, int exception, CallSiteReference site);
+  AstJavaInvokeInstruction JavaInvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site);
   
-  AstJavaInvokeInstruction JavaInvokeInstruction(int results[], int[] params, int exception, CallSiteReference site, Access[] lexicalReads, Access[] lexicalWrites);
+  AstJavaInvokeInstruction JavaInvokeInstruction(int iindex, int results[], int[] params, int exception, CallSiteReference site, Access[] lexicalReads, Access[] lexicalWrites);
  
-  EnclosingObjectReference EnclosingObjectReference(int lval, TypeReference type);
+  EnclosingObjectReference EnclosingObjectReference(int iidnex, int lval, TypeReference type);
   
-  AstJavaNewEnclosingInstruction JavaNewEnclosingInstruction(int result, NewSiteReference site, int enclosing);
+  AstJavaNewEnclosingInstruction JavaNewEnclosingInstruction(int iindex, int result, NewSiteReference site, int enclosing);
   
 }

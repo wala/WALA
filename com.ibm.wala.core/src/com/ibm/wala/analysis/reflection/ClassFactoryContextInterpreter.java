@@ -124,12 +124,12 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
     int retValue = 2;
     TypeReference tr = context.getType().getTypeReference();
     if (tr != null) {
-      SSALoadMetadataInstruction l = insts.LoadMetadataInstruction(retValue, TypeReference.JavaLangClass, tr);
+      SSALoadMetadataInstruction l = insts.LoadMetadataInstruction(statements.size(), retValue, TypeReference.JavaLangClass, tr);
       statements.add(l);
-      SSAReturnInstruction R = insts.ReturnInstruction(retValue, false);
+      SSAReturnInstruction R = insts.ReturnInstruction(statements.size(), retValue, false);
       statements.add(R);
     } else {
-      SSAThrowInstruction t = insts.ThrowInstruction(retValue);
+      SSAThrowInstruction t = insts.ThrowInstruction(statements.size(), retValue);
       statements.add(t);
     }
     SSAInstruction[] result = new SSAInstruction[statements.size()];
