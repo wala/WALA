@@ -124,7 +124,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     this.declaringClass = klass;
   }
 
-  protected BytecodeInfo getBCInfo() throws InvalidClassFileException {
+  protected synchronized BytecodeInfo getBCInfo() throws InvalidClassFileException {
     BytecodeInfo result = null;
     if (bcInfo != null) {
       result = bcInfo.get();
