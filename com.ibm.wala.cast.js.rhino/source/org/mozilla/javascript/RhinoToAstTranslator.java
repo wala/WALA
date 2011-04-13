@@ -1025,7 +1025,8 @@ public class RhinoToAstTranslator {
       return Ast.makeNode(CAstNode.UNARY_EXPR, translateOpcode(NT), walkNodes(n.getFirstChild(), context));
     }
 
-    case Token.VAR: {
+    case Token.VAR:
+    case Token.CONST: {
       List<CAstNode> result = new ArrayList<CAstNode>();
       Node nm = n.getFirstChild();
       while (nm != null) {
@@ -1234,12 +1235,19 @@ public class RhinoToAstTranslator {
 
       CAstNode elt = walkNodes(element, context);
 
+      CAstNode get, result;
       if (baseVar != null) {
-        return Ast.makeNode(CAstNode.BLOCK_EXPR, Ast.makeNode(CAstNode.ASSIGN, baseVar, rcvr), Ast.makeNode(CAstNode.OBJECT_REF,
-            baseVar, elt));
+        result = Ast.makeNode(CAstNode.BLOCK_EXPR, Ast.makeNode(CAstNode.ASSIGN, baseVar, rcvr), get = Ast.makeNode(CAstNode.OBJECT_REF, baseVar, elt));
       } else {
-        return Ast.makeNode(CAstNode.OBJECT_REF, rcvr, elt);
+        result = get = Ast.makeNode(CAstNode.OBJECT_REF, rcvr, elt);
       }
+      
+      if (context.getCatchTarget() != null) {
+    	context.cfg().map(get, get);
+    	context.cfg().add(get, context.getCatchTarget(), JavaScriptTypes.TypeError);
+      }
+
+      return result;
     }
 
     case Token.SETPROP:
