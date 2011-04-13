@@ -169,10 +169,10 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     return newMap;
   }
 
-  private CAstSourcePositionMap copySource(Map nodeMap, CAstSourcePositionMap orig) {
+  private CAstSourcePositionMap copySource(Map<Pair, CAstNode> nodeMap, CAstSourcePositionMap orig) {
     CAstSourcePositionRecorder newMap = new CAstSourcePositionRecorder();
-    for (Iterator NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
-      Map.Entry entry = (Map.Entry) NS.next();
+    for (Iterator<Map.Entry<Pair, CAstNode>> NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
+      Map.Entry<Pair, CAstNode> entry = NS.next();
       Pair N = (Pair) entry.getKey();
       CAstNode oldNode = (CAstNode) N.fst;
 
@@ -295,10 +295,10 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
           return root.toString() + " (clone)";
         }
 
-        public Iterator getScopedEntities(CAstNode construct) {
-          Map newChildren = getAllScopedEntities();
+        public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
+          Map<CAstNode, Collection<CAstEntity>> newChildren = getAllScopedEntities();
           if (newChildren.containsKey(construct)) {
-            return ((Collection) newChildren.get(construct)).iterator();
+            return newChildren.get(construct).iterator();
           } else {
             return EmptyIterator.instance();
           }
@@ -344,7 +344,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
           return root.toString() + " (clone)";
         }
 
-        public Iterator getScopedEntities(CAstNode construct) {
+        public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
           if (newChildren.containsKey(construct)) {
             return newChildren.get(construct).iterator();
           } else {
