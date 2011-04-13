@@ -14,5 +14,7 @@ Require-Bundle: com.ibm.wala.cast,
  com.ibm.wala.shrike,
  com.ibm.wala.ide
 Bundle-ActivationPolicy: lazy
-Export-Package: com.ibm.wala.cast.java.jdt,
+Export-Package: com.ibm.wala.cast.java.client,
+ com.ibm.wala.cast.java.jdt,
  com.ibm.wala.cast.java.translator.jdt
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
