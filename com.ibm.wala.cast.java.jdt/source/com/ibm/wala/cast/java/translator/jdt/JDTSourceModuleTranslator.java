@@ -72,7 +72,7 @@ import com.ibm.wala.util.debug.Assertions;
  */
 // remove me comment: Jdt little-case = not OK, upper case = OK
 public class JDTSourceModuleTranslator implements SourceModuleTranslator {
-  private JDTSourceLoaderImpl sourceLoader;
+  protected JDTSourceLoaderImpl sourceLoader;
 
   public JDTSourceModuleTranslator(AnalysisScope scope, JDTSourceLoaderImpl sourceLoader) {
     computeClassPath(scope);
@@ -111,12 +111,11 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
    * Project -> AST code from org.eclipse.jdt.core.tests.performance
    */
 
-  @SuppressWarnings("unchecked")
   public void loadAllSources(Set modules) {
     // TODO: we might need one AST (-> "Object" class) for all files.
     // TODO: group by project and send 'em in
-    JDTJava2CAstTranslator jdt2cast = new JDTJava2CAstTranslator(sourceLoader);
-    final Java2IRTranslator java2ir = new Java2IRTranslator(jdt2cast, sourceLoader);
+    JDTJava2CAstTranslator jdt2cast = makeCAstTranslator();
+    final Java2IRTranslator java2ir = makeIRTranslator(jdt2cast);
 
     System.out.println(modules);
 
@@ -161,6 +160,14 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
       }, null);
 
     }
+  }
+
+  protected Java2IRTranslator makeIRTranslator(JDTJava2CAstTranslator jdt2cast) {
+    return new Java2IRTranslator(jdt2cast, sourceLoader);
+  }
+
+  protected JDTJava2CAstTranslator makeCAstTranslator() {
+    return new JDTJava2CAstTranslator(sourceLoader);
   }
 
 }

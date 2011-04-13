@@ -16,7 +16,6 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -273,17 +272,12 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyNoEdges(CG, "suffix:test2", "suffix:foo_of_A");
   }
   
-  @Test public void testRewriterDoesNotChangeLablesBug() throws IOException, IllegalArgumentException, CancelException {
-    Util.makeScriptCG("tests", "rewrite_does_not_change_lables_bug.js");
-    // all we need is for it to finish building CG successfully.
-  }
-
   @Test public void testStackOverflowOnSsaConversionBug() throws IOException, IllegalArgumentException, CancelException {
     Util.makeScriptCG("tests", "stack_overflow_on_ssa_conversion.js");
     // all we need is for it to finish building CG successfully.
   }
 
-  private IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {
+  protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {
 
     // Created by reversing the points to mapping for local pointer keys.
     // Instead of mapping (local) pointer keys to instance keys (with id), we
@@ -327,14 +321,6 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     }
 
     return ret;
-  }
-
-  @Test public void test214631() throws IOException, IllegalArgumentException, CancelException {
-    JSCFABuilder b = Util.makeScriptCGBuilder("tests", "214631.js");
-    b.makeCallGraph(b.getOptions());
-    PointerAnalysis PA = b.getPointerAnalysis();
-    // just make sure this does not crash
-    computeIkIdToVns(PA);
   }
 
 }

@@ -16,7 +16,10 @@ import java.net.URL;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.ibm.wala.cast.js.html.IHtmlParser;
+import com.ibm.wala.cast.js.html.IHtmlParserFactory;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
+import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
@@ -27,6 +30,17 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     justThisTest(TestSimplePageCallGraphShape.class);
   }
     
+  protected abstract IHtmlParser getParser();
+  
+  @Before
+  public void setUp() {
+    WebUtil.setFactory(new IHtmlParserFactory() {
+      public IHtmlParser getParser() {
+        return getParser();
+      }
+    });
+  }
+
   @Before
   public void config() {
     JSSourceExtractor.USE_TEMP_NAME = false;
@@ -60,12 +74,6 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     URL url = getClass().getClassLoader().getResource("pages/page2.html");
     CallGraph CG = Util.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForPage2);
-  }
-
-  @Test public void testCrawl() throws IOException, IllegalArgumentException, CancelException {
-    URL url = getClass().getClassLoader().getResource("pages/crawl.html");
-    CallGraph CG = Util.makeHTMLCG(url);
-    verifyGraphAssertions(CG, null);
   }
 
   private static final Object[][] assertionsForPage11 = new Object[][] {
@@ -106,8 +114,8 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     new Object[] { ROOT, new String[] { "page12.html" } },
     new Object[] { "page12.html", new String[] { "page12.html/__WINDOW_MAIN__" } },
     new Object[] { "page12.html/__WINDOW_MAIN__",
-        new String[] { "page12.html/make_node0/make_node3/make_node4/button_onclick" } },
-    new Object[] { "page12.html/make_node0/make_node3/make_node4/button_onclick",
+        new String[] { "page12.html/__WINDOW_MAIN__/make_node0/make_node3/make_node4/button_onclick" } },
+    new Object[] { "page12.html/__WINDOW_MAIN__/make_node0/make_node3/make_node4/button_onclick",
         new String[] { "page12.html/__WINDOW_MAIN__/callXHR"
         }
     },
@@ -138,8 +146,8 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     new Object[] { ROOT, new String[] { "page13.html" } },
     new Object[] { "page13.html", new String[] { "page13.html/__WINDOW_MAIN__" } },
     new Object[] { "page13.html/__WINDOW_MAIN__",
-        new String[] { "page13.html/make_node0/make_node3/make_node4/button_onclick" } },
-    new Object[] { "page13.html/make_node0/make_node3/make_node4/button_onclick",
+        new String[] { "page13.html/__WINDOW_MAIN__/make_node0/make_node3/make_node4/button_onclick" } },
+    new Object[] { "page13.html/__WINDOW_MAIN__/make_node0/make_node3/make_node4/button_onclick",
         new String[] { "page13.html/__WINDOW_MAIN__/callXHR"
         }
     },
@@ -171,10 +179,10 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     new Object[] { ROOT, new String[] { "page15.html" } },
     new Object[] { "page15.html", new String[] { "page15.html/__WINDOW_MAIN__" } },
     new Object[] { "page15.html/__WINDOW_MAIN__",
-        new String[] { "suffix:page15.html/make_node0/make_node3/body_onload"
+        new String[] { "page15.html/__WINDOW_MAIN__/make_node0/make_node3/body_onload"
         }
     },
-    new Object[] { "page15.html/make_node0/make_node3/body_onload",
+    new Object[] { "page15.html/__WINDOW_MAIN__/make_node0/make_node3/body_onload",
         new String[] { "page15.html/__WINDOW_MAIN__/changeUrls" }
     }
   };
@@ -189,10 +197,10 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     new Object[] { ROOT, new String[] { "page16.html" } },
     new Object[] { "page16.html", new String[] { "page16.html/__WINDOW_MAIN__" } },
        new Object[] { "page16.html/__WINDOW_MAIN__",
-        new String[] { "page16.html/make_node0/make_node3/make_node4/a_onclick"
+        new String[] { "page16.html/__WINDOW_MAIN__/make_node0/make_node3/make_node4/a_onclick"
         }
     },
-    new Object[] { "page16.html/make_node0/make_node3/make_node4/a_onclick",
+    new Object[] { "page16.html/__WINDOW_MAIN__/make_node0/make_node3/make_node4/a_onclick",
         new String[] { "page16.html/__WINDOW_MAIN__/changeUrls" }
     }
   };
@@ -266,6 +274,11 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
     Util.dumpCG(builder, CG);
     verifySourceAssertions(CG, sourceAssertionsForList);
+  }
+
+  @Test public void testIframeTest2() throws IOException, IllegalArgumentException, CancelException {
+    URL url = getClass().getClassLoader().getResource("pages/iframeTest2.html");
+    Util.makeHTMLCG(url);
   }
 
   /*

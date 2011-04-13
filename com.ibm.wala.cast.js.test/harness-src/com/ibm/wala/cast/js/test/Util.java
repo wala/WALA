@@ -105,6 +105,7 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
       throws IOException {
     try {
       IClassHierarchy cha = makeHierarchy(scope, loaders);
+      com.ibm.wala.cast.test.Util.checkForFrontEndErrors(cha);
       Iterable<Entrypoint> roots = makeScriptRoots(cha);
       AnalysisOptions options = makeOptions(scope, cha, roots);
       AnalysisCache cache = makeCache();

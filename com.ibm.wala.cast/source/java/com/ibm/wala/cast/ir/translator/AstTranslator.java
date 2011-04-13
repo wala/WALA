@@ -715,6 +715,10 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       currentBlock.makeHandlerBlock();
     }
 
+    boolean hasDelayedEdges(CAstNode n) {
+      return delayedEdges.containsKey(n);
+    }
+    
     private void checkForRealizedEdges(CAstNode n) {
       if (delayedEdges.containsKey(n)) {
         for (Iterator ss = delayedEdges.get(n).iterator(); ss.hasNext();) {
@@ -2328,6 +2332,21 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   }
 
+  private Position getPosition(CAstSourcePositionMap map, CAstNode n) {
+    if (map.getPosition(n) != null) {
+      return map.getPosition(n);
+    } else {
+      for(int i = 0; i < n.getChildCount(); i++) {
+        Position p = getPosition(map, n.getChild(i));
+        if (p != null) {
+          return p;
+        }
+      }
+      
+      return null;
+    }
+  }
+  
   protected Context makeFileContext(Context c, CAstEntity n) {
     return new FileContext((WalkContext) c, n.getName());
   }
@@ -2530,11 +2549,11 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     int result = processFunctionExpr(n, c);
     CAstEntity fn = (CAstEntity) n.getChild(0).getValue();
     // FIXME: handle redefinitions of functions
-    Symbol s = context.currentScope().lookup(fn.getName());
-    if (!context.currentScope().contains(fn.getName())) {
-      context.currentScope().declare(new FinalCAstSymbol(fn.getName()), result);
+    Scope cs = context.currentScope();
+    if (cs.contains(fn.getName()) && !cs.isLexicallyScoped(cs.lookup(fn.getName())) && !cs.isGlobal(cs.lookup(fn.getName()))) {
+      assignValue(n, context, cs.lookup(fn.getName()), fn.getName(), result);
     } else {
-      assignValue(n, context, s, fn.getName(), result);
+      context.currentScope().declare(new FinalCAstSymbol(fn.getName()), result);
     }
   }
 
@@ -2840,14 +2859,16 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   protected void leaveGoto(CAstNode n, Context c, CAstVisitor visitor) {
     WalkContext context = (WalkContext) c;
-    context.cfg().addPreNode(n, context.getUnwindState());
-    context.cfg().addInstruction(insts.GotoInstruction());
-    context.cfg().newBlock(false);
-    if (context.getControlFlow().getTarget(n, null) == null) {
-      assert context.getControlFlow().getTarget(n, null) != null : context.getControlFlow() + " does not map " + n
-      + " (" + context.getSourceMap().getPosition(n) + ")";
+    if (! context.cfg().isDeadBlock(context.cfg().getCurrentBlock())) {
+      context.cfg().addPreNode(n, context.getUnwindState());
+      context.cfg().addInstruction(insts.GotoInstruction());
+      context.cfg().newBlock(false);
+      if (context.getControlFlow().getTarget(n, null) == null) {
+        assert context.getControlFlow().getTarget(n, null) != null : context.getControlFlow() + " does not map " + n
+        + " (" + context.getSourceMap().getPosition(n) + ")";
+      }
+      context.cfg().addPreEdge(n, context.getControlFlow().getTarget(n, null), false);
     }
-    context.cfg().addPreEdge(n, context.getControlFlow().getTarget(n, null), false);
   }
 
   protected boolean visitLabelStmt(CAstNode n, Context c, CAstVisitor visitor) {
@@ -3384,15 +3405,33 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
   protected void leaveUnwind(CAstNode n, Context c, CAstVisitor visitor) { /* empty */
   }
 
+  private boolean hasIncomingEdges(CAstNode n, WalkContext context) {
+    if (context.cfg().hasDelayedEdges(n)) {
+      return true;
+    } else {
+      for(int i = 0; i < n.getChildCount(); i++) {
+        if (hasIncomingEdges(n.getChild(i), context)) {
+          return true;
+        }
+      }
+      
+      return false;
+    }
+  }
+
   protected boolean visitTry(CAstNode n, Context c, CAstVisitor visitor) {
     WalkContext context = (WalkContext) c;
     boolean addSkipCatchGoto = false;
     visitor.visit(n.getChild(0), context, visitor);
     PreBasicBlock endOfTry = context.cfg().getCurrentBlock();
 
+    if (! hasIncomingEdges(n.getChild(1), context)) {
+      System.err.println("note: dead catch block at " + getPosition(context.getSourceMap(), n.getChild(1)));
+      return true;
+    } 
+    
     if (!context.cfg().isDeadBlock(context.cfg().getCurrentBlock())) {
       addSkipCatchGoto = true;
-      ;
       context.cfg().addInstruction(insts.GotoInstruction());
       context.cfg().newBlock(false);
     }

@@ -17,10 +17,10 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.ibm.wala.cast.java.client.JDTJavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.java.test.ide.IDEIRTestUtil;
-import com.ibm.wala.cast.java.translator.jdt.JDTJavaSourceAnalysisEngine;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.plugin.CoreTestsPlugin;
 import com.ibm.wala.ide.tests.util.EclipseTestUtil;
@@ -36,8 +36,9 @@ public class JDTJava15IRTests extends IRTests {
     super(JDTJavaIRTests.PROJECT_NAME);
   }
 
+  @Override
   protected void populateScope(JavaSourceAnalysisEngine engine, Collection<String> sources, List<String> libs) throws IOException {
-    IDEIRTestUtil.populateScope(projectName, engine, sources, libs);
+    IDEIRTestUtil.populateScope(projectName, (JDTJavaSourceAnalysisEngine)engine, sources, libs);
   }
 
   @BeforeClass
@@ -53,7 +54,8 @@ public class JDTJava15IRTests extends IRTests {
 
   @Override
   protected JavaSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors) {
-    JavaSourceAnalysisEngine engine = new JDTJavaSourceAnalysisEngine() {
+    JavaSourceAnalysisEngine engine = new JDTJavaSourceAnalysisEngine(JDTJavaIRTests.PROJECT_NAME) {
+      @Override
       protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
         return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
       }
@@ -67,11 +69,6 @@ public class JDTJava15IRTests extends IRTests {
     }
 
     return engine;
-  }
-
-  @SuppressWarnings("unused")
-  private void runSimple15Test(List<? extends IRAssertion> assertions) {
-    runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), assertions, true);
   }
 
   @Test

@@ -231,6 +231,17 @@ public class JSAstTranslator extends AstTranslator {
       context.cfg().addInstruction(
           ((JSInstructionFactory)insts).PropertyRead(result, x, getValue(elt) ));
     }
+    
+    if (context.getControlFlow().getMappedNodes().contains(parent)) {
+      context.cfg().addPreNode(parent, context.getUnwindState());
+
+      context.cfg().newBlock( true );
+
+      if (context.getControlFlow().getTarget(parent, JavaScriptTypes.TypeError) != null)
+        context.cfg().addPreEdge(parent, context.getControlFlow().getTarget(parent, JavaScriptTypes.TypeError), true);
+      else
+        context.cfg().addPreEdgeToExit( parent, true );
+    }
   }
     
   protected void doFieldWrite(WalkContext context, int receiver, CAstNode elt, CAstNode parent, int rval) {
