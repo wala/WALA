@@ -8,28 +8,28 @@ import com.ibm.wala.ssa.SSAPutInstruction;
 
 public interface JSInstructionFactory extends AstInstructionFactory {
 
-  JavaScriptCheckReference CheckReference(int ref);
+  JavaScriptCheckReference CheckReference(int iindex, int ref);
   
-  SSAGetInstruction GetInstruction(int result, int ref, String field);
+  SSAGetInstruction GetInstruction(int iindex, int result, int ref, String field);
   
-  JavaScriptInstanceOf InstanceOf(int result, int objVal, int typeVal);
+  JavaScriptInstanceOf InstanceOf(int iindex, int result, int objVal, int typeVal);
   
-  JavaScriptInvoke Invoke(int function, int results[], int[] params, int exception, CallSiteReference site);
+  JavaScriptInvoke Invoke(int iindex, int function, int results[], int[] params, int exception, CallSiteReference site);
   
-  JavaScriptInvoke Invoke(int function, int results[], int[] params, int exception, CallSiteReference site, Access[] lexicalReads, Access[] lexicalWrites);
+  JavaScriptInvoke Invoke(int iindex, int function, int results[], int[] params, int exception, CallSiteReference site, Access[] lexicalReads, Access[] lexicalWrites);
   
-  JavaScriptInvoke Invoke(int function, int result, int[] params, int exception, CallSiteReference site);
+  JavaScriptInvoke Invoke(int iindex, int function, int result, int[] params, int exception, CallSiteReference site);
   
-  JavaScriptInvoke Invoke(int function, int[] params, int exception, CallSiteReference site);
+  JavaScriptInvoke Invoke(int iindex, int function, int[] params, int exception, CallSiteReference site);
  
-  JavaScriptPropertyRead PropertyRead(int result, int objectRef, int memberRef);
+  JavaScriptPropertyRead PropertyRead(int iindex, int result, int objectRef, int memberRef);
   
-  JavaScriptPropertyWrite PropertyWrite(int objectRef, int memberRef, int value);
+  JavaScriptPropertyWrite PropertyWrite(int iindex, int objectRef, int memberRef, int value);
 
-  SSAPutInstruction PutInstruction(int ref, int value, String field);
+  SSAPutInstruction PutInstruction(int iindex, int ref, int value, String field);
   
-  JavaScriptTypeOfInstruction TypeOfInstruction(int lval, int object);
+  JavaScriptTypeOfInstruction TypeOfInstruction(int iindex, int lval, int object);
   
-  JavaScriptWithRegion WithRegion(int expr, boolean isEnter);
+  JavaScriptWithRegion WithRegion(int iindex, int expr, boolean isEnter);
   
 } 

@@ -11,14 +11,15 @@ public class JavaScriptWithRegion extends SSAInstruction {
   private final int expr;
   private final boolean isEnter;
   
-  public JavaScriptWithRegion(int expr, boolean isEnter) {
+  public JavaScriptWithRegion(int iindex, int expr, boolean isEnter) {
+    super(iindex);
     this.expr = expr;
     this.isEnter = isEnter;
   }
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return ((JSInstructionFactory)insts).WithRegion(uses==null? expr: uses[0], isEnter);
+    return ((JSInstructionFactory)insts).WithRegion(iindex, uses==null? expr: uses[0], isEnter);
   }
 
   @Override

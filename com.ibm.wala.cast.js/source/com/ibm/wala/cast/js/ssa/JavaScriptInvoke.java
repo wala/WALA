@@ -29,25 +29,25 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
 
   private int function;
 
-  public JavaScriptInvoke(int function, int results[], int[] params, int exception, CallSiteReference site) {
-    super(results, exception, site);
+  public JavaScriptInvoke(int iindex, int function, int results[], int[] params, int exception, CallSiteReference site) {
+    super(iindex, results, exception, site);
     this.function = function;
     this.params = params;
   }
 
-  public JavaScriptInvoke(int function, int results[], int[] params, int exception, CallSiteReference site, Access[] lexicalReads,
+  public JavaScriptInvoke(int iindex, int function, int results[], int[] params, int exception, CallSiteReference site, Access[] lexicalReads,
       Access[] lexicalWrites) {
-    super(results, exception, site, lexicalReads, lexicalWrites);
+    super(iindex, results, exception, site, lexicalReads, lexicalWrites);
     this.function = function;
     this.params = params;
   }
 
-  public JavaScriptInvoke(int function, int result, int[] params, int exception, CallSiteReference site) {
-    this(function, new int[] { result }, params, exception, site);
+  public JavaScriptInvoke(int iindex, int function, int result, int[] params, int exception, CallSiteReference site) {
+    this(iindex, function, new int[] { result }, params, exception, site);
   }
 
-  public JavaScriptInvoke(int function, int[] params, int exception, CallSiteReference site) {
-    this(function, null, params, exception, site);
+  public JavaScriptInvoke(int iindex, int function, int[] params, int exception, CallSiteReference site) {
+    this(iindex, function, null, params, exception, site);
   }
 
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
@@ -93,7 +93,7 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
       }
     }
 
-    return ((JSInstructionFactory)insts).Invoke(fn, newLvals, newParams, newExp, site, reads, writes);
+    return ((JSInstructionFactory)insts).Invoke(iindex, fn, newLvals, newParams, newExp, site, reads, writes);
   }
 
   public String toString(SymbolTable symbolTable) {

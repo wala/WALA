@@ -20,12 +20,12 @@ import com.ibm.wala.types.TypeReference;
 
 public class JavaScriptTypeOfInstruction extends SSAAbstractUnaryInstruction {
 
-  public JavaScriptTypeOfInstruction(int lval, int object) {
-    super(lval, object);
+  public JavaScriptTypeOfInstruction(int iindex, int lval, int object) {
+    super(iindex, lval, object);
   }
 
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return ((JSInstructionFactory)insts).TypeOfInstruction((defs != null ? defs[0] : getDef(0)), (uses != null ? uses[0] : getUse(0)));
+    return ((JSInstructionFactory)insts).TypeOfInstruction(iindex, (defs != null ? defs[0] : getDef(0)), (uses != null ? uses[0] : getUse(0)));
   }
 
   public String toString(SymbolTable symbolTable) {

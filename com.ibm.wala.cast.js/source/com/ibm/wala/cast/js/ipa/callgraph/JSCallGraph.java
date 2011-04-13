@@ -53,7 +53,7 @@ public class JSCallGraph extends AstCallGraph {
       if (cha.isSubclassOf(cha.lookupClass(T), cha.lookupClass(JavaScriptTypes.Root))) {
         int instance = nextLocal++;
         NewSiteReference ref = NewSiteReference.make(statements.size(), T);
-        SSANewInstruction result = getDeclaringClass().getClassLoader().getInstructionFactory().NewInstruction(instance, ref);
+        SSANewInstruction result = getDeclaringClass().getClassLoader().getInstructionFactory().NewInstruction(statements.size(), instance, ref);
         statements.add(result);
         return result;
       } else {

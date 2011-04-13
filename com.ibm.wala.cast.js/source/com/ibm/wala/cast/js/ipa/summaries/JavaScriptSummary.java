@@ -25,7 +25,7 @@ public class JavaScriptSummary extends MethodSummary {
     super(ref);
     this.declaredParameters = declaredParameters;
     addStatement(
-      JavaScriptLoader.JS.instructionFactory().NewInstruction(
+      JavaScriptLoader.JS.instructionFactory().NewInstruction(getNumberOfStatements(),
         declaredParameters+1,
 	NewSiteReference.make(
           getNextProgramCounter(),
