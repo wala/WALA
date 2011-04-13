@@ -10,6 +10,8 @@
  *****************************************************************************/
 package com.ibm.wala.cast.tree.impl;
 
+import java.net.URL;
+
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 
 public abstract class AbstractSourcePosition implements Position {
@@ -51,7 +53,12 @@ public abstract class AbstractSourcePosition implements Position {
   }
 
   public String toString() {
-    return "["+getFirstLine()+":"+getFirstCol()+"] -> ["+getLastLine()+":"+getLastCol()+"]";
+    URL x = getURL();
+    String xf = x.getPath();
+    if (xf.indexOf('/') >= 0) {
+      xf = xf.substring(xf.lastIndexOf('/')+1);
+    }
+    return xf + "["+getFirstLine()+":"+getFirstCol()+"] -> ["+getLastLine()+":"+getLastCol()+"]";
   }
 
 }
