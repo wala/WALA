@@ -18,6 +18,7 @@ import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstNodeTypeMap;
+import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.cast.tree.CAstType;
 
@@ -56,7 +57,7 @@ public class DelegatingEntity implements CAstEntity {
 	return base.getAllScopedEntities();
     }
 
-    public Iterator getScopedEntities(CAstNode construct) {
+    public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
 	return base.getScopedEntities(construct);
     }
 
@@ -80,7 +81,7 @@ public class DelegatingEntity implements CAstEntity {
 	return base.getNodeTypeMap();
     }
 
-    public Collection getQualifiers() {
+    public Collection<CAstQualifier> getQualifiers() {
 	return base.getQualifiers();
     }
 
