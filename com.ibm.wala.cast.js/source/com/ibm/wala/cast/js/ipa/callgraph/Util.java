@@ -28,7 +28,9 @@ import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
+import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.cfg.AbstractCFG;
@@ -128,6 +130,7 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
       TranslatorToCAst toCAst = getTranslatorFactory().make(new CAstImpl(), M);
       final Set<String> names = new HashSet<String>();
       JSAstTranslator toIR = new JSAstTranslator(cl) {
+        @Override
         protected void defineFunction(CAstEntity N, 
            WalkContext definingContext, 
            AbstractCFG cfg,
@@ -141,6 +144,19 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
           String fnName = "L" + composeEntityName(definingContext, N);
           names.add(fnName);
           super.defineFunction(N, definingContext, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, LI, debugInfo);   
+        }
+                
+        @Override
+        protected void leaveFunctionStmt(CAstNode n, Context c, CAstVisitor visitor) {
+          WalkContext context = (WalkContext) c;
+          CAstEntity fn = (CAstEntity) n.getChild(0).getValue();
+          Scope cs = context.currentScope();
+          if (! cs.contains(fn.getName()) || cs.lookup(fn.getName()).getDefiningScope().getEntity().getKind() == CAstEntity.SCRIPT_ENTITY) {
+            int result = processFunctionExpr(n, c);
+            assignValue(n, context, cs.lookup(fn.getName()), fn.getName(), result);            
+          } else {
+            super.leaveFunctionStmt(n, context, visitor);            
+          }
         }
       };
       CAstEntity tree = toCAst.translateToCAst();
