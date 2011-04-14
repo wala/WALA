@@ -27,10 +27,12 @@ public class Util {
               message.append("error in ").append(errorModule.getName()).append(":\n");
               message.append(w.toString()).append("\n");
             }
-            message.append("end of front end errors\n");
           }
         }
       }
+    }
+    if (message != null) {
+      message.append("end of front end errors\n");
     }
     Assert.assertTrue(String.valueOf(message), message == null);
   }

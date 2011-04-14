@@ -163,7 +163,7 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
       if (DEBUG){
         CAstPrinter.printTo(tree, new PrintWriter(System.err));
       }
-      toIR.translate(tree, fileName);
+      toIR.translate(tree, M);
       for(String name : names) {
         IClass fcls = cl.lookupClass(name, cha);
         cha.addClass(fcls);

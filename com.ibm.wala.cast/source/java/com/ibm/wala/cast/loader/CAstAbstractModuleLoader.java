@@ -75,7 +75,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
   public void init(final List<Module> modules) {
     final CAst ast = new CAstImpl();
 
-    final Set<Pair> topLevelEntities = new LinkedHashSet<Pair>();
+    final Set<Pair<CAstEntity,ModuleEntry>> topLevelEntities = new LinkedHashSet<Pair<CAstEntity,ModuleEntry>>();
 
     final TranslatorToIR xlatorToIR = initTranslator();
 
@@ -94,7 +94,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
               if(DEBUG){
                 CAstPrinter.printTo(fileEntity, new PrintWriter(System.err));
               }
-              topLevelEntities.add(Pair.make(fileEntity, moduleEntry.getName()));
+              topLevelEntities.add(Pair.make(fileEntity, moduleEntry));
              
             }  else {
               addMessage(moduleEntry, new Warning(Warning.SEVERE) {
@@ -139,14 +139,14 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
       }
 
       private void init() {
-        for (Iterator mes = modules.iterator(); mes.hasNext();) {
-          init((Module) mes.next());
+        for (Iterator<Module> mes = modules.iterator(); mes.hasNext();) {
+          init(mes.next());
         }
 
-        for (Iterator tles = topLevelEntities.iterator(); tles.hasNext();) {
-          Pair p = (Pair) tles.next();
-          if (shouldTranslate((CAstEntity) p.fst)) {
-            xlatorToIR.translate((CAstEntity) p.fst, (String) p.snd);
+        for (Iterator<Pair<CAstEntity,ModuleEntry>> tles = topLevelEntities.iterator(); tles.hasNext();) {
+          Pair<CAstEntity,ModuleEntry> p = tles.next();
+          if (shouldTranslate(p.fst)) {
+            xlatorToIR.translate(p.fst, p.snd);
           }
         }
       }

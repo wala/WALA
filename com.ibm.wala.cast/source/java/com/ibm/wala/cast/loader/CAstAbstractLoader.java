@@ -45,7 +45,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
     this(cha, null);
   }
 
-  protected void addMessage(ModuleEntry module, Warning message) {
+  public void addMessage(ModuleEntry module, Warning message) {
     if (! errors.containsKey(module)) {
       errors.put(module, new HashSet<Warning>());
     }

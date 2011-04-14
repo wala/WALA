@@ -11,9 +11,10 @@
 package com.ibm.wala.cast.ir.translator;
 
 import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.classLoader.ModuleEntry;
 
 public interface TranslatorToIR {
 
-  void translate(CAstEntity S, String N);
+  void translate(CAstEntity S, ModuleEntry N);
 
 }

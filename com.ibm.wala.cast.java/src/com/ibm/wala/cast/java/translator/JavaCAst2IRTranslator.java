@@ -32,6 +32,7 @@ import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
@@ -41,14 +42,16 @@ import com.ibm.wala.util.debug.Assertions;
 
 public class JavaCAst2IRTranslator extends AstTranslator {
     private final CAstEntity fSourceEntity;
-
-    public JavaCAst2IRTranslator(CAstEntity sourceFileEntity, JavaSourceLoaderImpl loader) {
+    private final ModuleEntry module;
+    
+    public JavaCAst2IRTranslator(ModuleEntry module, CAstEntity sourceFileEntity, JavaSourceLoaderImpl loader) {
 	super(loader);
 	fSourceEntity= sourceFileEntity;
+	this.module = module;
     }
 
     public void translate() {
-	translate(fSourceEntity, fSourceEntity.getName());
+	translate(fSourceEntity, module);
     }
 
     public CAstEntity sourceFileEntity() { return fSourceEntity; }

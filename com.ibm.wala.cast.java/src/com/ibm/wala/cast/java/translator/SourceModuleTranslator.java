@@ -15,11 +15,13 @@ package com.ibm.wala.cast.java.translator;
 
 import java.util.Set;
 
+import com.ibm.wala.classLoader.ModuleEntry;
+
 /**
  * An interface used by the JavaSourceLoaderImpl to encapsulate the loading of source
  * entities on the compile-time classpath into the DOMO analysis infrastructure.
  * @author rfuhrer
  */
 public interface SourceModuleTranslator {
-    void loadAllSources(Set/*<ModuleEntry>*/ modules);
+    void loadAllSources(Set<ModuleEntry> modules);
 }

@@ -22,6 +22,7 @@ import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.tree.impl.CAstRewriter;
 import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
 import com.ibm.wala.cast.util.CAstPrinter;
+import com.ibm.wala.classLoader.ModuleEntry;
 
 public class Java2IRTranslator {
   private final boolean DEBUG;
@@ -53,7 +54,7 @@ public class Java2IRTranslator {
     this.castRewriterFactory = castRewriterFactory;
   }
 
-  public void translate(Object ast, String N) {
+  public void translate(ModuleEntry module, Object ast, String N) {
     CAstEntity ce = fSourceTranslator.translate(ast, N);
 
     if (DEBUG) {
@@ -73,6 +74,6 @@ public class Java2IRTranslator {
       }
     }
 
-    new JavaCAst2IRTranslator(ce, fLoader).translate();
+    new JavaCAst2IRTranslator(module, ce, fLoader).translate();
   }
 }

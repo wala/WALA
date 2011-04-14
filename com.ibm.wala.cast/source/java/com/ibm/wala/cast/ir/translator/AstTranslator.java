@@ -36,6 +36,7 @@ import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
+import com.ibm.wala.cast.loader.CAstAbstractLoader;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
@@ -56,6 +57,7 @@ import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.shrikeBT.BinaryOpInstruction;
 import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
@@ -80,6 +82,7 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.strings.Atom;
+import com.ibm.wala.util.warnings.Warning;
 
 /**
  * @author Julian Dolby TODO: document me.
@@ -1713,6 +1716,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   public interface WalkContext extends Context {
 
+    ModuleEntry getModule();
+    
     String getName();
 
     String file();
@@ -1743,6 +1748,11 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     DelegatingContext(WalkContext parent) {
       this.parent = parent;
     }
+    
+    public ModuleEntry getModule() {
+      return parent.getModule();
+    }
+
 
     public String getName() {
       return parent.getName();
@@ -3419,14 +3429,23 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   }
 
-  protected boolean visitTry(CAstNode n, Context c, CAstVisitor visitor) {
-    WalkContext context = (WalkContext) c;
+  protected boolean visitTry(final CAstNode n, Context c, CAstVisitor visitor) {
+    final WalkContext context = (WalkContext) c;
     boolean addSkipCatchGoto = false;
     visitor.visit(n.getChild(0), context, visitor);
     PreBasicBlock endOfTry = context.cfg().getCurrentBlock();
 
     if (! hasIncomingEdges(n.getChild(1), context)) {
-      System.err.println("note: dead catch block at " + getPosition(context.getSourceMap(), n.getChild(1)));
+      if (loader instanceof CAstAbstractLoader) {
+        ((CAstAbstractLoader)loader).addMessage(
+            context.getModule(), 
+            new Warning(Warning.MILD) {
+              @Override
+              public String getMsg() {
+                return "Dead catch block at " + getPosition(context.getSourceMap(), n.getChild(1));
+              }
+            });
+      }
       return true;
     } 
     
@@ -3654,16 +3673,20 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
     private final CAstEntity N;
 
-    private final String nm;
+    private final ModuleEntry module;
 
-    public DefaultContext(AstTranslator t, CAstEntity N, String nm) {
+    public DefaultContext(AstTranslator t, CAstEntity N, ModuleEntry module) {
       this.t = t;
       this.N = N;
-      this.nm = nm;
+      this.module = module;
     }
 
+    public ModuleEntry getModule() {
+      return module;
+    }
+    
     public String file() {
-      return nm;
+      return module.getName();
     }
 
     public CAstEntity top() {
@@ -3713,11 +3736,11 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   };
 
-  public void translate(final CAstEntity N, final String nm) {
+  public void translate(final CAstEntity N, final ModuleEntry module) {
     if (DEBUG_TOP)
-      System.err.println(("translating " + nm));
+      System.err.println(("translating " + module.getName()));
 //    this.inlinedSourceMap = inlinedSourceMap;
-    walkEntities(N, new DefaultContext(this, N, nm));
+    walkEntities(N, new DefaultContext(this, N, module));
   }
 
   private CAstSourcePositionMap inlinedSourceMap;
