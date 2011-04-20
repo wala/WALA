@@ -91,7 +91,7 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
   public static CallGraph makeHTMLCG(URL url) throws IOException, IllegalArgumentException, CancelException {
     PropagationCallGraphBuilder b = makeHTMLCGBuilder(url);
     CallGraph CG = b.makeCallGraph(b.getOptions());
-    dumpCG(b, CG);
+//    dumpCG(b, CG);
     return CG;
   }
 

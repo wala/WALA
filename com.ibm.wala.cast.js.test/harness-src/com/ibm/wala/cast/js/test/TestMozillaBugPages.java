@@ -31,21 +31,21 @@ public class TestMozillaBugPages extends TestJSCallGraphShape {
   }
 
   @Test public void testMozilla488233() throws IOException, IllegalArgumentException, CancelException {
-    URL url = getClass().getClassLoader().getResource("pages/mochitest/mozillaBug488233.html");
+    URL url = getClass().getClassLoader().getResource("pages/mochitest/mozillaBug488233NoExtJS.html");
     JSCFABuilder builder = Util.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
     Util.dumpCG(builder, CG);
   }
 
   @Test public void testMozilla490152() throws IOException, IllegalArgumentException, CancelException {
-    URL url = getClass().getClassLoader().getResource("pages/mochitest/mozillaBug490152.html");
+    URL url = getClass().getClassLoader().getResource("pages/mochitest/mozillaBug490152NoExtJS.html");
     JSCFABuilder builder = Util.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
     Util.dumpCG(builder, CG);
   }
 
   @Test public void testMozilla625562() throws IOException, IllegalArgumentException, CancelException {
-    URL url = getClass().getClassLoader().getResource("pages/mochitest/mozillaBug625562.html");
+    URL url = getClass().getClassLoader().getResource("pages/mochitest/mozillaBug625562NoExtJS.html");
     JSCFABuilder builder = Util.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
     Util.dumpCG(builder, CG);
