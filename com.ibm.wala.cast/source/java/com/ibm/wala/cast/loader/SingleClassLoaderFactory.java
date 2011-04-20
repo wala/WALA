@@ -17,24 +17,29 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.debug.Assertions;
 
+/**
+ * Abstract {@link ClassLoaderFactory} for languages modeled as having a single
+ * class loader. Subclasses provide the logic to create the classloader.
+ */
 public abstract class SingleClassLoaderFactory implements ClassLoaderFactory {
+
+  /**
+   * for caching the class loader, so we don't initialize more than once
+   */
   private IClassLoader THE_LOADER = null;
 
-  public IClassLoader getLoader(ClassLoaderReference classLoaderReference,
-				IClassHierarchy cha, 
-				AnalysisScope scope)
-  {
+  public IClassLoader getLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, AnalysisScope scope) {
     if (THE_LOADER == null) {
       THE_LOADER = makeTheLoader(cha);
       try {
-	THE_LOADER.init(scope.getModules(getTheReference()));
+        THE_LOADER.init(scope.getModules(getTheReference()));
       } catch (java.io.IOException e) {
-	Assertions.UNREACHABLE();
+        Assertions.UNREACHABLE();
       }
     }
 
     assert classLoaderReference.equals(getTheReference());
-    
+
     return THE_LOADER;
   }
 
@@ -42,6 +47,9 @@ public abstract class SingleClassLoaderFactory implements ClassLoaderFactory {
     return THE_LOADER;
   }
 
+  /**
+   * get the reference to the single class loader for the language
+   */
   public abstract ClassLoaderReference getTheReference();
 
   protected abstract IClassLoader makeTheLoader(IClassHierarchy cha);

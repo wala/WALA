@@ -17,6 +17,9 @@ import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 
+/**
+ * Creates the single {@link IClassLoader class loader} used for JavaScript.  
+ */
 public class JavaScriptLoaderFactory extends SingleClassLoaderFactory {
   private final JavaScriptTranslatorFactory translatorFactory;
 
