@@ -189,8 +189,8 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
    * in topLevelEntities
    */
   private void translateModuleToCAst(Module module, CAst ast, Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities) {
-    for (Iterator mes = module.getEntries(); mes.hasNext();) {
-      translateModuleEntryToCAst((ModuleEntry) mes.next(), ast, topLevelEntities);
+    for (Iterator<ModuleEntry> mes = module.getEntries(); mes.hasNext();) {
+      translateModuleEntryToCAst(mes.next(), ast, topLevelEntities);
     }
   }
 
