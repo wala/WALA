@@ -85,12 +85,16 @@ import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warning;
 
 /**
- * @author Julian Dolby TODO: document me.
+ * Common code to translate CAst to IR. Must be specialized by each language to
+ * handle semantics appropriately.
  */
 public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandler, TranslatorToIR {
 
   protected abstract boolean useDefaultInitValues();
 
+  /**
+   * can lexical reads / writes access globals?
+   */
   protected abstract boolean treatGlobalsAsLexicallyScoped();
 
   protected abstract boolean useLocalValuesForLexicalVars();
@@ -99,16 +103,33 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   protected abstract TypeReference makeType(CAstType type);
 
+  /**
+   * define a new (presumably nested) type. return true if type was successfully
+   * defined, false otherwise
+   */
   protected abstract boolean defineType(CAstEntity type, WalkContext wc);
 
+  /**
+   * declare a new function, represented by N
+   */
   protected abstract void declareFunction(CAstEntity N, WalkContext context);
 
+  /**
+   * fully define a function. invoked after all the code of the function has
+   * been processed
+   */
   protected abstract void defineFunction(CAstEntity N, WalkContext definingContext, AbstractCFG cfg, SymbolTable symtab,
       boolean hasCatchBlock, TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo,
       DebuggingInformation debugInfo);
 
-  protected abstract void defineField(CAstEntity topEntity, WalkContext context, CAstEntity n);
+  /**
+   * define a new field fieldEntity within topEntity
+   */
+  protected abstract void defineField(CAstEntity topEntity, WalkContext context, CAstEntity fieldEntity);
 
+  /**
+   * create the language-appropriate name for f
+   */
   protected abstract String composeEntityName(WalkContext parent, CAstEntity f);
 
   protected abstract void doThrow(WalkContext context, int exception);
