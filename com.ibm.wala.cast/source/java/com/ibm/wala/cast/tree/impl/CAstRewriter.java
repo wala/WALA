@@ -97,7 +97,8 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
 
   /**
    * rewrite the CAst rooted at root, updating nodeMap with a mapping from
-   * (original node,key) pairs to new nodes
+   * (original node,key) pairs to new nodes. Return the node to which root was
+   * mapped by the call.
    */
   protected abstract CAstNode copyNodes(CAstNode root, C context, Map<Pair<CAstNode, K>, CAstNode> nodeMap);
 
