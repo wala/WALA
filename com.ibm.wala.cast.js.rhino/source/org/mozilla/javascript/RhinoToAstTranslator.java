@@ -130,12 +130,24 @@ public class RhinoToAstTranslator {
      */
     void updateBase(Node from, Node to);
 
+    /**
+     * @see CatchBlockContext
+     */
     String getCatchVar();
 
+    /**
+     * @see CatchBlockContext
+     */
     void setCatchVar(String name);
 
-    String getForInVar(Node initExpr);
+    /**
+     * @see LoopContext
+     */
+    String createForInVar(Node initExpr);
 
+    /**
+     * @see LoopContext
+     */
     String getForInInitVar();
 
     /**
@@ -202,7 +214,7 @@ public class RhinoToAstTranslator {
     public void setCatchVar(String name) {
     }
 
-    public String getForInVar(Node initExpr) {
+    public String createForInVar(Node initExpr) {
       return null;
     }
 
@@ -276,8 +288,8 @@ public class RhinoToAstTranslator {
       parent.setCatchVar(name);
     }
 
-    public String getForInVar(Node initExpr) {
-      return parent.getForInVar(initExpr);
+    public String createForInVar(Node initExpr) {
+      return parent.createForInVar(initExpr);
     }
 
     public String getForInInitVar() {
@@ -290,7 +302,7 @@ public class RhinoToAstTranslator {
   }
 
   /**
-   * context used for function declarations
+   * context used for function / script declarations
    */
   private static class FunctionContext extends DelegatingContext {
     private final ScriptOrFnNode topNode;
@@ -337,10 +349,12 @@ public class RhinoToAstTranslator {
       return pos;
     }
 
-    public String getForInVar(Node initExpr) {
+    // TODO do we really need to override this method?  --MS
+    public String createForInVar(Node initExpr) {
       return null;
     }
 
+    // TODO do we really need to override this method?  --MS
     public String getForInInitVar() {
       return null;
     }
@@ -477,18 +491,38 @@ public class RhinoToAstTranslator {
     }
   }
 
+  /**
+   * Used to model for-in loops. Given a loop "for (x in e) {...}", we generate
+   * a new variable forInVar that should hold the value of e. Then, the
+   * navigation of e is modeled via {@link CAstNode#EACH_ELEMENT_GET} and
+   * {@link CAstNode#EACH_ELEMENT_HAS_NEXT} nodes.
+   */
   private static class LoopContext extends DelegatingContext {
+    /**
+     * for generating fresh loop vars
+     */
     private static int counter = 0;
 
+    /**
+     * the variable holding the value being navigated by the loop
+     */
     private String forInVar = null;
 
+    /**
+     * the expression evaluating to the value being navigated
+     */
     private Node forInInitExpr = null;
 
     private LoopContext(WalkContext parent) {
       super(parent);
     }
 
-    public String getForInVar(Node initExpr) {
+    /**
+     * create a fresh for-in loop variable that should be initialized to
+     * initExpr, and return it
+     */
+    public String createForInVar(Node initExpr) {
+      assert this.forInVar == null;
       this.forInVar = "_forin_tmp" + counter++;
       this.forInInitExpr = initExpr;
       return forInVar;
@@ -1205,7 +1239,7 @@ public class RhinoToAstTranslator {
     }
 
     case Token.ENUM_INIT_KEYS: {
-      context.getForInVar(n.getFirstChild());
+      context.createForInVar(n.getFirstChild());
       return Ast.makeNode(CAstNode.EMPTY);
     }
 
