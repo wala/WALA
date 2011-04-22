@@ -48,6 +48,6 @@ public abstract class CAstBasicRewriter
     super(Ast, recursive, new NonCopyingContext());
   }
 
-  protected abstract CAstNode copyNodes(CAstNode root, NonCopyingContext context, Map<Pair, CAstNode> nodeMap);
+  protected abstract CAstNode copyNodes(CAstNode root, NonCopyingContext context, Map<Pair<CAstNode,NoKey>, CAstNode> nodeMap);
   
 }

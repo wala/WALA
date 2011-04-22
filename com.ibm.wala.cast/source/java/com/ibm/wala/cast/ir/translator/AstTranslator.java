@@ -50,6 +50,7 @@ import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.impl.CAstRewriter;
 import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
 import com.ibm.wala.cast.tree.impl.CAstSymbolImplBase;
+import com.ibm.wala.cast.tree.impl.CAstBasicRewriter.NoKey;
 import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cast.types.AstTypeReference;
 import com.ibm.wala.cast.util.CAstPrinter;
@@ -3632,8 +3633,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
           }
         }
 
-        @SuppressWarnings("unchecked")
-        protected CAstNode copyNodes(CAstNode root, NonCopyingContext c, Map nodeMap) {
+        protected CAstNode copyNodes(CAstNode root, NonCopyingContext c, Map<Pair<CAstNode,NoKey>, CAstNode> nodeMap) {
           if (isMacroExpansion && root.getKind() == CAstNode.MACRO_VAR) {
             int arg = ((Number) root.getChild(0).getValue()).intValue();
             CAstNode expr = copyIncludeExpr(n.getChild(arg));

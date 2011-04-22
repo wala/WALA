@@ -31,6 +31,16 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.IteratorPlusOne;
 import com.ibm.wala.util.collections.Pair;
 
+/**
+ * Abstract superclass for types performing a rewrite operation on a CAst. The
+ * CAst is not mutated; instead, a new CAst is created which delegates to the
+ * original CAst where no transformation was performed.
+ * 
+ * @param <C>
+ *          type of the RewriteContext used when traversing the original CAst
+ *          during the rewrite operation
+ * @param <K>
+ */
 public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K extends CAstRewriter.CopyKey<K>> {
 
   protected static final boolean DEBUG = false;
@@ -51,6 +61,10 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
 
   };
 
+  /**
+   * represents a rewritten CAst
+   * 
+   */
   public interface Rewrite {
 
     CAstNode newRoot();
@@ -67,6 +81,10 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
 
   protected final CAst Ast;
 
+  /**
+   * for CAstEntity nodes r s.t. r.getAst() == null, should the scoped entities
+   * of r be rewritten?
+   */
   protected final boolean recursive;
 
   protected final C rootContext;
@@ -77,6 +95,10 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     this.rootContext = rootContext;
   }
 
+  /**
+   * rewrite the CAst rooted at root, updating nodeMap with a mapping from
+   * (original node,key) pairs to new nodes
+   */
   protected abstract CAstNode copyNodes(CAstNode root, C context, Map<Pair<CAstNode, K>, CAstNode> nodeMap);
 
   protected CAstNode flowOutTo(Map<Pair<CAstNode, K>, CAstNode> nodeMap, CAstNode oldSource, Object label, CAstNode oldTarget,
@@ -89,7 +111,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     Set<CAstNode> mappedOutsideNodes = HashSetFactory.make(1);
     Set<CAstNode> allNewTargetNodes = HashSetFactory.make(1);
     CAstControlFlowRecorder newMap = new CAstControlFlowRecorder(newSrc);
-    Collection oldSources = orig.getMappedNodes();
+    Collection<CAstNode> oldSources = orig.getMappedNodes();
 
     for (Iterator<Entry<Pair<CAstNode, K>, CAstNode>> NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
       Entry<Pair<CAstNode, K>, CAstNode> entry = NS.next();
