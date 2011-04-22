@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.mozilla.javascript.tools.ToolErrorReporter;
 
@@ -129,7 +128,7 @@ public class RhinoToAstTranslator {
     /**
      * @see BaseCollectingContext
      */
-    void copyBase(Node from, Node to);
+    void updateBase(Node from, Node to);
 
     String getCatchVar();
 
@@ -193,7 +192,7 @@ public class RhinoToAstTranslator {
       return false;
     }
 
-    public void copyBase(Node from, Node to) {
+    public void updateBase(Node from, Node to) {
     }
 
     public String getCatchVar() {
@@ -265,8 +264,8 @@ public class RhinoToAstTranslator {
       return parent.foundBase(node);
     }
 
-    public void copyBase(Node from, Node to) {
-      parent.copyBase(from, to);
+    public void updateBase(Node from, Node to) {
+      parent.updateBase(from, to);
     }
 
     public String getCatchVar() {
@@ -427,13 +426,11 @@ public class RhinoToAstTranslator {
    */
   private static class BaseCollectingContext extends DelegatingContext {
     /**
-     * set of nodes for which we actually care about what the base pointer is.
-     * this helps to handle cases like x.y.f(), where we would like to store x.y
-     * in baseVar, but not x when we recurse.
-     * 
-     * Why is this a set? --MS
+     * node for which we actually care about what the base pointer is. this
+     * helps to handle cases like x.y.f(), where we would like to store x.y in
+     * baseVar, but not x when we recurse.
      */
-    private final Set<Node> baseFor = HashSetFactory.make();
+    private Node baseFor;
 
     /**
      * the variable to be used to store the value of the expression passed as
@@ -448,7 +445,7 @@ public class RhinoToAstTranslator {
 
     BaseCollectingContext(WalkContext parent, Node initialBaseFor, CAstNode baseVar) {
       super(parent);
-      baseFor.add(initialBaseFor);
+      baseFor = initialBaseFor;
       this.baseVar = baseVar;
     }
 
@@ -457,7 +454,7 @@ public class RhinoToAstTranslator {
      * set foundBase to true. Otherwise, return <code>null</code>.
      */
     public CAstNode getBaseVarIfRelevant(Node node) {
-      if (baseFor.contains(node)) {
+      if (baseFor.equals(node)) {
         foundBase = true;
         return baseVar;
       } else {
@@ -469,9 +466,14 @@ public class RhinoToAstTranslator {
       return foundBase;
     }
 
-    public void copyBase(Node from, Node to) {
-      if (baseFor.contains(from))
-        baseFor.add(to);
+    /**
+     * if we currently care about the base pointer of from, switch to searching
+     * for the base pointer of to. Used for cases like comma expressions: if we
+     * have (x,y.f)(), we want to assign y to baseVar
+     */
+    public void updateBase(Node from, Node to) {
+      if (baseFor.equals(from))
+        baseFor = to;
     }
   }
 
@@ -823,7 +825,7 @@ public class RhinoToAstTranslator {
   }
 
   private CAstNode walkNodesInternal(final Node n, WalkContext context) {
-    int NT = n.getType();
+    final int NT = n.getType();
     switch (NT) {
 
     case Token.FUNCTION: {
@@ -946,15 +948,16 @@ public class RhinoToAstTranslator {
     }
 
     case Token.COMMA: {
-      int count = 0;
-      for (Node c = n.getFirstChild(); c != null; count++, c = c.getNext())
-        ;
+      int count = countSiblingsStartingFrom(n.getFirstChild());
 
       CAstNode[] cs = new CAstNode[count];
       int i = 0;
       for (Node c = n.getFirstChild(); c != null; i++, c = c.getNext()) {
         if (c.getNext() == null) {
-          context.copyBase(n, c);
+          // for the final sub-expression of the comma, if we care about the
+          // base pointer
+          // of n, we care about the base pointer of c
+          context.updateBase(n, c);
         }
         cs[i] = walkNodes(c, context);
       }
@@ -1038,7 +1041,10 @@ public class RhinoToAstTranslator {
       Node expr = n.getFirstChild();
 
       if (NT == Token.EXPR_RESULT) {
-        child.copyBase(n, expr);
+        // EXPR_RESULT node is just a wrapper, so if we care about base pointer
+        // of n, we
+        // care about child of n
+        child.updateBase(n, expr);
       }
 
       return walkNodes(expr, child);
