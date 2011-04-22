@@ -78,83 +78,80 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
     super(Ast, true, READ);
   }
 
-  private CAstNode makeConstRead(CAstNode root, CAstNode receiver, CAstNode element, RewriteContext context, Map<Pair,CAstNode> nodeMap) {
+  private CAstNode makeConstRead(CAstNode root, CAstNode receiver, CAstNode element, RewriteContext context,
+      Map<Pair, CAstNode> nodeMap) {
     CAstNode get, result;
     String receiverTemp = TEMP_NAME + (readTempCounter++);
     String elt = (String) element.getValue();
-    if (elt.equals("prototype")){
-      result = Ast.makeNode(CAstNode.BLOCK_EXPR, 
-                get = Ast.makeNode(CAstNode.OBJECT_REF,
-                        receiver, 
-                        Ast.makeConstant("prototype")));
+    if (elt.equals("prototype")) {
+      result = Ast.makeNode(CAstNode.BLOCK_EXPR, get = Ast.makeNode(CAstNode.OBJECT_REF, receiver, Ast.makeConstant("prototype")));
     } else {
-      
+
       if (context.inAssignment()) {
         context.setAssign(Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)), Ast.makeConstant(elt));
       }
 
-      result = Ast.makeNode(CAstNode.BLOCK_EXPR, 
-          Ast.makeNode(CAstNode.DECL_STMT, 
-              Ast.makeConstant(new InternalCAstSymbol(receiverTemp,false, false)), 
-              receiver), 
-          Ast.makeNode(CAstNode.LOOP, 
-              Ast.makeNode(CAstNode.UNARY_EXPR, 
-            		  CAstOperator.OP_NOT, 
-            		  Ast.makeNode(CAstNode.IS_DEFINED_EXPR, 
-            		      Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)), 
-            		      Ast.makeConstant(elt))), 
-              Ast.makeNode(CAstNode.ASSIGN, 
-                  Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)), 
-                  Ast.makeNode(CAstNode.OBJECT_REF,
-                      Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)), 
-                      Ast.makeConstant("prototype")))), 
-          get = Ast.makeNode(CAstNode.OBJECT_REF, 
-        		  Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)), 
-        		  Ast.makeConstant(elt)));
+      result = Ast
+          .makeNode(
+              CAstNode.BLOCK_EXPR,
+              Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(receiverTemp, false, false)), receiver),
+              Ast.makeNode(
+                  CAstNode.LOOP,
+                  Ast.makeNode(
+                      CAstNode.UNARY_EXPR,
+                      CAstOperator.OP_NOT,
+                      Ast.makeNode(CAstNode.IS_DEFINED_EXPR, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
+                          Ast.makeConstant(elt))),
+                  Ast.makeNode(
+                      CAstNode.ASSIGN,
+                      Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
+                      Ast.makeNode(CAstNode.OBJECT_REF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
+                          Ast.makeConstant("prototype")))),
+              get = Ast.makeNode(CAstNode.OBJECT_REF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
+                  Ast.makeConstant(elt)));
     }
-    
+
     nodeMap.put(Pair.make(root, context.key()), get);
-    
+
     return result;
   }
 
-  private CAstNode makeVarRead(CAstNode root, CAstNode receiver, CAstNode element, RewriteContext context, Map<Pair,CAstNode> nodeMap) {
+  private CAstNode makeVarRead(CAstNode root, CAstNode receiver, CAstNode element, RewriteContext context,
+      Map<Pair, CAstNode> nodeMap) {
     String receiverTemp = TEMP_NAME + (readTempCounter++);
     String elementTemp = TEMP_NAME + (readTempCounter++);
 
     if (context.inAssignment()) {
-      context.setAssign(Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)), Ast.makeNode(CAstNode.VAR, Ast
-          .makeConstant(elementTemp)));
+      context.setAssign(Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
+          Ast.makeNode(CAstNode.VAR, Ast.makeConstant(elementTemp)));
     }
 
     CAstNode get;
-    CAstNode result = Ast.makeNode(CAstNode.BLOCK_EXPR, 
-        Ast.makeNode(CAstNode.DECL_STMT, 
-            Ast.makeConstant(new InternalCAstSymbol(receiverTemp, false, false)),
-            receiver), 
-        Ast.makeNode(CAstNode.DECL_STMT, 
-            Ast.makeConstant(new InternalCAstSymbol(elementTemp, false, false)), 
-            element), 
-        Ast.makeNode(CAstNode.LOOP, 
-            Ast.makeNode(CAstNode.UNARY_EXPR, CAstOperator.OP_NOT, 
-                Ast.makeNode(CAstNode.IS_DEFINED_EXPR, 
-                    Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)), 
-                    Ast.makeNode(CAstNode.VAR, Ast.makeConstant(elementTemp)))), 
-            Ast.makeNode(CAstNode.ASSIGN,
-                Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)), 
-                Ast.makeNode(CAstNode.OBJECT_REF, 
-                    Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
-                    Ast.makeConstant("prototype")))), 
-        get = Ast.makeNode(CAstNode.OBJECT_REF, 
-            Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)), 
+    CAstNode result = Ast.makeNode(
+        CAstNode.BLOCK_EXPR,
+        Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(receiverTemp, false, false)), receiver),
+        Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(elementTemp, false, false)), element),
+        Ast.makeNode(
+            CAstNode.LOOP,
+            Ast.makeNode(
+                CAstNode.UNARY_EXPR,
+                CAstOperator.OP_NOT,
+                Ast.makeNode(CAstNode.IS_DEFINED_EXPR, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
+                    Ast.makeNode(CAstNode.VAR, Ast.makeConstant(elementTemp)))),
+            Ast.makeNode(
+                CAstNode.ASSIGN,
+                Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
+                Ast.makeNode(CAstNode.OBJECT_REF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
+                    Ast.makeConstant("prototype")))),
+        get = Ast.makeNode(CAstNode.OBJECT_REF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
             Ast.makeNode(CAstNode.VAR, Ast.makeConstant(elementTemp))));
-            
+
     nodeMap.put(Pair.make(root, context.key()), get);
 
     return result;
   }
 
-  protected CAstNode copyNodes(CAstNode root, RewriteContext context, Map<Pair,CAstNode> nodeMap) {
+  protected CAstNode copyNodes(CAstNode root, RewriteContext context, Map<Pair, CAstNode> nodeMap) {
     int kind = root.getKind();
 
     if (kind == CAstNode.OBJECT_REF && context.inRead()) {
@@ -176,12 +173,15 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
       if (ctxt.receiverTemp != null) {
         String temp1 = TEMP_NAME + (readTempCounter++);
         String temp2 = TEMP_NAME + (readTempCounter++);
-        CAstNode copy = Ast.makeNode(CAstNode.BLOCK_EXPR, Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(
-            temp1, true, false)), lval), rval, Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(temp2,
-            true, false)), Ast.makeNode(CAstNode.BINARY_EXPR, op, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(temp1)), rval)), Ast
-            .makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.OBJECT_REF, ctxt.receiverTemp, ctxt.elementTemp), Ast.makeNode(
-                CAstNode.VAR, Ast.makeConstant(temp2))), Ast.makeNode(CAstNode.VAR, Ast
-            .makeConstant((kind == CAstNode.ASSIGN_PRE_OP) ? temp2 : temp1)));
+        CAstNode copy = Ast.makeNode(
+            CAstNode.BLOCK_EXPR,
+            Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(temp1, true, false)), lval),
+            rval,
+            Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(temp2, true, false)),
+                Ast.makeNode(CAstNode.BINARY_EXPR, op, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(temp1)), rval)),
+            Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.OBJECT_REF, ctxt.receiverTemp, ctxt.elementTemp),
+                Ast.makeNode(CAstNode.VAR, Ast.makeConstant(temp2))),
+            Ast.makeNode(CAstNode.VAR, Ast.makeConstant((kind == CAstNode.ASSIGN_PRE_OP) ? temp2 : temp1)));
         nodeMap.put(Pair.make(root, context.key()), copy);
         return copy;
       } else {
@@ -191,8 +191,8 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
       }
 
     } else if (kind == CAstNode.ASSIGN) {
-      CAstNode copy = Ast.makeNode(CAstNode.ASSIGN, copyNodes(root.getChild(0), ASSIGN, nodeMap), copyNodes(root.getChild(1), READ,
-          nodeMap));
+      CAstNode copy = Ast.makeNode(CAstNode.ASSIGN, copyNodes(root.getChild(0), ASSIGN, nodeMap),
+          copyNodes(root.getChild(1), READ, nodeMap));
       nodeMap.put(Pair.make(root, context.key()), copy);
       return copy;
 
