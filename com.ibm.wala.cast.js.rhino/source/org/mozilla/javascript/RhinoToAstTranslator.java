@@ -50,22 +50,42 @@ public class RhinoToAstTranslator {
 
   private final boolean DEBUG = true;
 
+  /**
+   * shared interface for all objects storing contextual information during the
+   * Rhino AST traversal
+   * 
+   */
   private interface WalkContext {
 
+    /**
+     * get the name of the enclosing script
+     */
     String script();
 
+    /**
+     * get the enclosing Rhino {@link ScriptOrFnNode}
+     */
     ScriptOrFnNode top();
 
     /**
-     * The only scoped entities for JavaScript are functions. (Why not
-     * variables? --MS) For a function expression, construct will be the
-     * corresponding {@link CAstNode#FUNCTION_EXPR}. For a function statement,
-     * construct is <code>null</code>.
+     * Add a scoped entity to this context. The only scoped entities for
+     * JavaScript are functions. (Why not variables? --MS) For a function
+     * expression, construct will be the corresponding
+     * {@link CAstNode#FUNCTION_EXPR}. For a function statement, construct is
+     * <code>null</code>.
      */
     void addScopedEntity(CAstNode construct, CAstEntity e);
 
+    /**
+     * get a mapping from CAstNodes to the scoped entities (functions for
+     * JavaScript) introduced by those nodes. Also maps <code>null</code> to
+     * those entities not corresponding to any node
+     */
     Map<CAstNode, Collection<CAstEntity>> getScopedEntities();
 
+    /**
+     * is the current node within an expression?
+     */
     boolean expressionContext();
 
     /**
@@ -73,8 +93,15 @@ public class RhinoToAstTranslator {
      */
     CAstControlFlowRecorder cfg();
 
+    /**
+     * for recording source positions
+     */
     CAstSourcePositionRecorder pos();
 
+    /**
+     * get the current control-flow target if an exception is thrown, or
+     * <code>null</code> if unknown
+     */
     CAstNode getCatchTarget();
 
     CAstNode setBase(Node node);
@@ -100,6 +127,10 @@ public class RhinoToAstTranslator {
     void addNameDecl(CAstNode n);
   }
 
+  /**
+   * default implementation of WalkContext; methods do nothing / return null
+   * 
+   */
   private static class RootContext implements WalkContext {
 
     public String script() {
@@ -163,6 +194,9 @@ public class RhinoToAstTranslator {
     }
   }
 
+  /**
+   * WalkContext that delegates all behavior to a parent
+   */
   private static abstract class DelegatingContext implements WalkContext {
     private final WalkContext parent;
 
@@ -235,6 +269,9 @@ public class RhinoToAstTranslator {
     }
   }
 
+  /**
+   * context used for function declarations
+   */
   private static class FunctionContext extends DelegatingContext {
     private final ScriptOrFnNode topNode;
 
@@ -298,6 +335,9 @@ public class RhinoToAstTranslator {
     }
   }
 
+  /**
+   * context used for top-level script declarations
+   */
   private static class ScriptContext extends FunctionContext {
     private final String script;
 
@@ -482,6 +522,9 @@ public class RhinoToAstTranslator {
     return JavaScriptLoader.bootstrapFileNames.contains(context.script());
   }
 
+  /**
+   * is n a call to "primitive" within our synthetic modeling code?
+   */
   private boolean isPrimitiveCall(WalkContext context, Node n) {
     return isPrologueScript(context) && n.getType() == Token.CALL && n.getFirstChild().getType() == Token.NAME
         && n.getFirstChild().getString().equals("primitive");
