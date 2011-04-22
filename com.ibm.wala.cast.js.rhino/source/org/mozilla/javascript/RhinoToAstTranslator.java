@@ -633,6 +633,129 @@ public class RhinoToAstTranslator {
     return siblings;
   }
 
+  /**
+   * Used to represent a script or function in the CAst; see walkEntity().
+   * 
+   */
+  private class ScriptOrFnEntity implements CAstEntity {
+    private final String[] arguments;
+
+    private final String name;
+
+    private final int kind;
+
+    private final Map<CAstNode, Collection<CAstEntity>> subs;
+
+    private final CAstNode ast;
+
+    private final CAstControlFlowMap map;
+
+    private final CAstSourcePositionMap pos;
+
+    ScriptOrFnEntity(ScriptOrFnNode n, Map<CAstNode, Collection<CAstEntity>> subs, CAstNode ast, CAstControlFlowMap map,
+        CAstSourcePositionMap pos) {
+      if (n instanceof FunctionNode) {
+        String x = ((FunctionNode) n).getFunctionName();
+        if (x == null || "".equals(x)) {
+          name = scriptName + "_anonymous_" + anonymousCounter++;
+        } else {
+          name = x;
+        }
+      } else {
+        name = n.getSourceName();
+      }
+
+      if (n instanceof FunctionNode) {
+        FunctionNode f = (FunctionNode) n;
+        f.flattenSymbolTable(false);
+        int i = 0;
+        arguments = new String[f.getParamCount() + 2];
+        arguments[i++] = name;
+        arguments[i++] = "this";
+        for (int j = 0; j < f.getParamCount(); j++) {
+          arguments[i++] = f.getParamOrVarName(j);
+        }
+      } else {
+        arguments = new String[0];
+      }
+      kind = (n instanceof FunctionNode) ? CAstEntity.FUNCTION_ENTITY : CAstEntity.SCRIPT_ENTITY;
+      this.subs = subs;
+      this.ast = ast;
+      this.map = map;
+      this.pos = pos;
+    }
+
+    public String toString() {
+      return "<JS function " + getName() + ">";
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public String getSignature() {
+      Assertions.UNREACHABLE();
+      return null;
+    }
+
+    public int getKind() {
+      return kind;
+    }
+
+    public String[] getArgumentNames() {
+      return arguments;
+    }
+
+    public CAstNode[] getArgumentDefaults() {
+      return new CAstNode[0];
+    }
+
+    public int getArgumentCount() {
+      return arguments.length;
+    }
+
+    public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
+      return Collections.unmodifiableMap(subs);
+    }
+
+    public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
+      if (subs.containsKey(construct))
+        return subs.get(construct).iterator();
+      else
+        return EmptyIterator.instance();
+    }
+
+    public CAstNode getAST() {
+      return ast;
+    }
+
+    public CAstControlFlowMap getControlFlow() {
+      return map;
+    }
+
+    public CAstSourcePositionMap getSourceMap() {
+      return pos;
+    }
+
+    public CAstSourcePositionMap.Position getPosition() {
+      return null;
+    }
+
+    public CAstNodeTypeMap getNodeTypeMap() {
+      return null;
+    }
+
+    public Collection<CAstQualifier> getQualifiers() {
+      Assertions.UNREACHABLE("JuliansUnnamedCAstEntity$2.getQualifiers()");
+      return null;
+    }
+
+    public CAstType getType() {
+      Assertions.UNREACHABLE("JuliansUnnamedCAstEntity$2.getType()");
+      return null;
+    }
+  }
+
   private CAstEntity walkEntity(final ScriptOrFnNode n, WalkContext context) {
     final FunctionContext child = (n instanceof FunctionNode) ? new FunctionContext(context, n) : new ScriptContext(context, n,
         n.getSourceName());
@@ -658,113 +781,7 @@ public class RhinoToAstTranslator {
     // not sure if we need this copy --MS
     final Map<CAstNode, Collection<CAstEntity>> subs = HashMapFactory.make(child.getScopedEntities());
 
-    // TODO don't store pointer to n
-    return new CAstEntity() {
-      private final String[] arguments;
-
-      private final String name;
-
-      // constructor of inner class
-      {
-        if (n instanceof FunctionNode) {
-          String x = ((FunctionNode) n).getFunctionName();
-          if (x == null || "".equals(x)) {
-            name = scriptName + "_anonymous_" + anonymousCounter++;
-          } else {
-            name = x;
-          }
-        } else {
-          name = n.getSourceName();
-        }
-
-        if (n instanceof FunctionNode) {
-          FunctionNode f = (FunctionNode) n;
-          f.flattenSymbolTable(false);
-          int i = 0;
-          arguments = new String[f.getParamCount() + 2];
-          arguments[i++] = name;
-          arguments[i++] = "this";
-          for (int j = 0; j < f.getParamCount(); j++) {
-            arguments[i++] = f.getParamOrVarName(j);
-          }
-        } else {
-          arguments = new String[0];
-        }
-      }
-
-      public String toString() {
-        return "<JS function " + getName() + ">";
-      }
-
-      public String getName() {
-        return name;
-      }
-
-      public String getSignature() {
-        Assertions.UNREACHABLE();
-        return null;
-      }
-
-      public int getKind() {
-        if (n instanceof FunctionNode)
-          return CAstEntity.FUNCTION_ENTITY;
-        else
-          return CAstEntity.SCRIPT_ENTITY;
-      }
-
-      public String[] getArgumentNames() {
-        return arguments;
-      }
-
-      public CAstNode[] getArgumentDefaults() {
-        return new CAstNode[0];
-      }
-
-      public int getArgumentCount() {
-        return arguments.length;
-      }
-
-      public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
-        return Collections.unmodifiableMap(subs);
-      }
-
-      public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
-        if (subs.containsKey(construct))
-          return subs.get(construct).iterator();
-        else
-          return EmptyIterator.instance();
-      }
-
-      public CAstNode getAST() {
-        return ast;
-      }
-
-      public CAstControlFlowMap getControlFlow() {
-        return map;
-      }
-
-      public CAstSourcePositionMap getSourceMap() {
-        return pos;
-      }
-
-      public CAstSourcePositionMap.Position getPosition() {
-        return null;
-      }
-
-      public CAstNodeTypeMap getNodeTypeMap() {
-        return null;
-      }
-
-      public Collection<CAstQualifier> getQualifiers() {
-        Assertions.UNREACHABLE("JuliansUnnamedCAstEntity$2.getQualifiers()");
-        return null;
-      }
-
-      public CAstType getType() {
-        Assertions.UNREACHABLE("JuliansUnnamedCAstEntity$2.getType()");
-        return null;
-      }
-    };
+    return new ScriptOrFnEntity(n, subs, ast, map, pos);
   }
 
   private CAstNode[] gatherSiblings(Node n, WalkContext context) {
