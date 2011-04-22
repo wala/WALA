@@ -56,12 +56,21 @@ public class RhinoToAstTranslator {
 
     ScriptOrFnNode top();
 
+    /**
+     * The only scoped entities for JavaScript are functions. (Why not
+     * variables? --MS) For a function expression, construct will be the
+     * corresponding {@link CAstNode#FUNCTION_EXPR}. For a function statement,
+     * construct is <code>null</code>.
+     */
     void addScopedEntity(CAstNode construct, CAstEntity e);
 
-    Map<CAstNode, HashSet<CAstEntity>> getScopedEntities();
+    Map<CAstNode, Collection<CAstEntity>> getScopedEntities();
 
     boolean expressionContext();
 
+    /**
+     * for recording control-flow relationships among the CAst nodes
+     */
     CAstControlFlowRecorder cfg();
 
     CAstSourcePositionRecorder pos();
@@ -104,7 +113,7 @@ public class RhinoToAstTranslator {
     public void addScopedEntity(CAstNode construct, CAstEntity e) {
     }
 
-    public Map<CAstNode, HashSet<CAstEntity>> getScopedEntities() {
+    public Map<CAstNode, Collection<CAstEntity>> getScopedEntities() {
       return null;
     }
 
@@ -173,7 +182,7 @@ public class RhinoToAstTranslator {
       parent.addScopedEntity(construct, e);
     }
 
-    public Map<CAstNode, HashSet<CAstEntity>> getScopedEntities() {
+    public Map<CAstNode, Collection<CAstEntity>> getScopedEntities() {
       return parent.getScopedEntities();
     }
 
@@ -229,7 +238,7 @@ public class RhinoToAstTranslator {
   private static class FunctionContext extends DelegatingContext {
     private final ScriptOrFnNode topNode;
 
-    private final Map<CAstNode, HashSet<CAstEntity>> scopedEntities = HashMapFactory.make();
+    private final Map<CAstNode, Collection<CAstEntity>> scopedEntities = HashMapFactory.make();
 
     private final List<CAstNode> nameDecls = new ArrayList<CAstNode>();
 
@@ -255,7 +264,7 @@ public class RhinoToAstTranslator {
       scopedEntities.get(construct).add(e);
     }
 
-    public Map<CAstNode, HashSet<CAstEntity>> getScopedEntities() {
+    public Map<CAstNode, Collection<CAstEntity>> getScopedEntities() {
       return scopedEntities;
     }
 
@@ -516,10 +525,6 @@ public class RhinoToAstTranslator {
     return call;
   }
 
-  @SuppressWarnings("unchecked")
-  // TODO: SJF ... i put unchecked to make the generics compile; but this
-  // code is fishy. This should be cleaned up and the unchecked suppressWarnings
-  // should be removed.
   private CAstEntity walkEntity(final ScriptOrFnNode n, WalkContext context) {
     final FunctionContext child = (n instanceof FunctionNode) ? new FunctionContext(context, n) : new ScriptContext(context, n,
         n.getSourceName());
@@ -528,7 +533,7 @@ public class RhinoToAstTranslator {
 
     // add variable / constant / function declarations, if any
     if (!child.nameDecls.isEmpty()) {
-      // new first statement will be a block declaring all names.  
+      // new first statement will be a block declaring all names.
       CAstNode[] newStmts = new CAstNode[stmts.length + 1];
 
       newStmts[0] = Ast.makeNode(CAstNode.BLOCK_STMT, child.nameDecls.toArray(new CAstNode[child.nameDecls.size()]));
@@ -542,17 +547,8 @@ public class RhinoToAstTranslator {
     final CAstControlFlowMap map = child.cfg();
     final CAstSourcePositionMap pos = child.pos();
 
-    final Map<CAstNode, Collection<CAstEntity>> subs = HashMapFactory.make();
-    for (Iterator<CAstNode> keys = child.getScopedEntities().keySet().iterator(); keys.hasNext();) {
-      CAstNode k = keys.next();
-      Object v = child.getScopedEntities().get(k);
-      if (v instanceof Collection)
-        subs.put(k, (Set<CAstEntity>) v);
-      else {
-        Set<CAstEntity> s = Collections.singleton((CAstEntity) v);
-        subs.put(k, s);
-      }
-    }
+    // not sure if we need this copy --MS
+    final Map<CAstNode, Collection<CAstEntity>> subs = HashMapFactory.make(child.getScopedEntities());
 
     return new CAstEntity() {
       private final String[] arguments;
