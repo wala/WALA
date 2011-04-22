@@ -8,9 +8,15 @@ import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.impl.CAstBasicRewriter;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.impl.CAstRewriter;
+import com.ibm.wala.cast.tree.impl.CAstBasicRewriter.NoKey;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 
+/**
+ * Transforms property reads to make prototype chain operations explicit. Each
+ * read is converted to a do loop that walks up the prototype chain until the
+ * property is found or the chain has ended.
+ */
 public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.RewriteContext, CAstBasicRewriter.NoKey> {
 
   private int readTempCounter = 0;
@@ -79,7 +85,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
   }
 
   private CAstNode makeConstRead(CAstNode root, CAstNode receiver, CAstNode element, RewriteContext context,
-      Map<Pair, CAstNode> nodeMap) {
+      Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     CAstNode get, result;
     String receiverTemp = TEMP_NAME + (readTempCounter++);
     String elt = (String) element.getValue();
@@ -117,7 +123,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
   }
 
   private CAstNode makeVarRead(CAstNode root, CAstNode receiver, CAstNode element, RewriteContext context,
-      Map<Pair, CAstNode> nodeMap) {
+      Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     String receiverTemp = TEMP_NAME + (readTempCounter++);
     String elementTemp = TEMP_NAME + (readTempCounter++);
 
@@ -151,7 +157,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
     return result;
   }
 
-  protected CAstNode copyNodes(CAstNode root, RewriteContext context, Map<Pair, CAstNode> nodeMap) {
+  protected CAstNode copyNodes(CAstNode root, RewriteContext context, Map<Pair<CAstNode,NoKey>, CAstNode> nodeMap) {
     int kind = root.getKind();
 
     if (kind == CAstNode.OBJECT_REF && context.inRead()) {

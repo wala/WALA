@@ -136,7 +136,7 @@ public class SynchronizedBlockDuplicator extends
     return null;
   }
 
-  protected CAstNode copyNodes(CAstNode n, RewriteContext<UnwindKey> c, Map<Pair, CAstNode> nodeMap) {
+  protected CAstNode copyNodes(CAstNode n, RewriteContext<UnwindKey> c, Map<Pair<CAstNode,UnwindKey>, CAstNode> nodeMap) {
     String varName;
     if (n instanceof CAstOperator) {
       return n;
