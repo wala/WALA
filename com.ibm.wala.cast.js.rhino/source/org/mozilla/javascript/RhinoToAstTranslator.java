@@ -48,6 +48,18 @@ import com.ibm.wala.util.debug.Assertions;
 
 public class RhinoToAstTranslator {
 
+  /**
+   * a dummy name to use for standard function calls, only used to distinguish
+   * them from constructor calls
+   */
+  public static final String STANDARD_CALL_FN_NAME = "do";
+
+  /**
+   * name used for constructor calls, used to distinguish them from standard
+   * function calls
+   */
+  public static final String CTOR_CALL_FN_NAME = "ctor";
+
   private final boolean DEBUG = true;
 
   /**
@@ -104,10 +116,19 @@ public class RhinoToAstTranslator {
      */
     CAstNode getCatchTarget();
 
-    CAstNode setBase(Node node);
+    /**
+     * @see BaseCollectingContext
+     */
+    CAstNode getBaseVarIfRelevant(Node node);
 
+    /**
+     * @see BaseCollectingContext
+     */
     boolean foundBase(Node node);
 
+    /**
+     * @see BaseCollectingContext
+     */
     void copyBase(Node from, Node to);
 
     String getCatchVar();
@@ -164,7 +185,7 @@ public class RhinoToAstTranslator {
       return null;
     }
 
-    public CAstNode setBase(Node node) {
+    public CAstNode getBaseVarIfRelevant(Node node) {
       return null;
     }
 
@@ -236,8 +257,8 @@ public class RhinoToAstTranslator {
       return parent.getCatchTarget();
     }
 
-    public CAstNode setBase(Node node) {
-      return parent.setBase(node);
+    public CAstNode getBaseVarIfRelevant(Node node) {
+      return parent.getBaseVarIfRelevant(node);
     }
 
     public boolean foundBase(Node node) {
@@ -393,11 +414,36 @@ public class RhinoToAstTranslator {
 
   }
 
+  /**
+   * Used to determine the value to be passed as the 'this' argument for a
+   * function call. This is needed since in JavaScript, you can write a call
+   * e(...) where e is some arbitrary expression, and in the case where e is a
+   * property access like e'.f, we must discover that the value of expression e'
+   * is passed as the 'this' parameter.
+   * 
+   * The general strategy is to store the value of the expression passed as the
+   * 'this' parameter in baseVar, and then to use baseVar as the actual argument
+   * sub-node for the CAst call node
+   */
   private static class BaseCollectingContext extends DelegatingContext {
+    /**
+     * set of nodes for which we actually care about what the base pointer is.
+     * this helps to handle cases like x.y.f(), where we would like to store x.y
+     * in baseVar, but not x when we recurse.
+     * 
+     * Why is this a set? --MS
+     */
     private final Set<Node> baseFor = HashSetFactory.make();
 
+    /**
+     * the variable to be used to store the value of the expression passed as
+     * the 'this' parameter
+     */
     private final CAstNode baseVar;
 
+    /**
+     * have we discovered a value to be passed as the 'this' parameter?
+     */
     private boolean foundBase = false;
 
     BaseCollectingContext(WalkContext parent, Node initialBaseFor, CAstNode baseVar) {
@@ -406,7 +452,11 @@ public class RhinoToAstTranslator {
       this.baseVar = baseVar;
     }
 
-    public CAstNode setBase(Node node) {
+    /**
+     * if node is one that we care about, return baseVar, and as a side effect
+     * set foundBase to true. Otherwise, return <code>null</code>.
+     */
+    public CAstNode getBaseVarIfRelevant(Node node) {
       if (baseFor.contains(node)) {
         foundBase = true;
         return baseVar;
@@ -506,7 +556,7 @@ public class RhinoToAstTranslator {
     }
   }
 
-  private CAstNode makeBuiltinNew(WalkContext context, String typeName) {
+  private CAstNode makeBuiltinNew(String typeName) {
     return Ast.makeNode(CAstNode.NEW, Ast.makeConstant(typeName));
   }
 
@@ -536,22 +586,25 @@ public class RhinoToAstTranslator {
   }
 
   private CAstNode makeCall(CAstNode fun, CAstNode thisptr, Node firstChild, WalkContext context) {
-    return makeCall(fun, thisptr, firstChild, context, "do");
+    return makeCall(fun, thisptr, firstChild, context, STANDARD_CALL_FN_NAME);
   }
 
   private CAstNode makeCtorCall(CAstNode thisptr, Node firstChild, WalkContext context) {
-    return makeCall(thisptr, null, firstChild, context, "ctor");
+    return makeCall(thisptr, null, firstChild, context, CTOR_CALL_FN_NAME);
   }
 
   private CAstNode makeCall(CAstNode fun, CAstNode thisptr, Node firstChild, WalkContext context, String callee) {
-    int children = 0;
-    for (Node c = firstChild; c != null; c = c.getNext(), children++)
-      ;
+    int children = countSiblingsStartingFrom(firstChild);
 
+    // children of CAst CALL node are the expression that evaluates to the
+    // function, followed by a name (either STANDARD_CALL_FN_NAME or
+    // CTOR_CALL_FN_NAME), followed by the actual
+    // parameters
     int nargs = (thisptr == null) ? children + 2 : children + 3;
     int i = 0;
     CAstNode arguments[] = new CAstNode[nargs];
     arguments[i++] = fun;
+    assert callee.equals(STANDARD_CALL_FN_NAME) || callee.equals(CTOR_CALL_FN_NAME);
     arguments[i++] = Ast.makeConstant(callee);
     if (thisptr != null)
       arguments[i++] = thisptr;
@@ -566,6 +619,16 @@ public class RhinoToAstTranslator {
     }
 
     return call;
+  }
+
+  /**
+   * count the number of successor siblings of n, including n
+   */
+  private int countSiblingsStartingFrom(Node n) {
+    int siblings = 0;
+    for (Node c = n; c != null; c = c.getNext(), siblings++)
+      ;
+    return siblings;
   }
 
   private CAstEntity walkEntity(final ScriptOrFnNode n, WalkContext context) {
@@ -593,6 +656,7 @@ public class RhinoToAstTranslator {
     // not sure if we need this copy --MS
     final Map<CAstNode, Collection<CAstEntity>> subs = HashMapFactory.make(child.getScopedEntities());
 
+    // TODO don't store pointer to n
     return new CAstEntity() {
       private final String[] arguments;
 
@@ -702,9 +766,7 @@ public class RhinoToAstTranslator {
   }
 
   private CAstNode[] gatherSiblings(Node n, WalkContext context) {
-    int cnt = 0;
-    for (Node c = n; c != null; cnt++, c = c.getNext())
-      ;
+    int cnt = countSiblingsStartingFrom(n);
 
     CAstNode[] result = new CAstNode[cnt];
     for (int i = 0; i < result.length; i++, n = n.getNext()) {
@@ -993,14 +1055,17 @@ public class RhinoToAstTranslator {
         WalkContext child = new BaseCollectingContext(context, callee, base);
         CAstNode fun = walkNodes(callee, child);
 
+        // the first actual parameter appearing within the parentheses of the
+        // call (i.e., possibly excluding the 'this' parameter)
+        Node firstParamInParens = callee.getNext();
         if (child.foundBase(callee))
           return Ast.makeNode(
               CAstNode.LOCAL_SCOPE,
               Ast.makeNode(CAstNode.BLOCK_EXPR,
                   Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl("base")), Ast.makeConstant(null)),
-                  makeCall(fun, base, callee.getNext(), context)));
+                  makeCall(fun, base, firstParamInParens, context)));
         else
-          return makeCall(fun, Ast.makeConstant(null), callee.getNext(), context);
+          return makeCall(fun, Ast.makeConstant(null), firstParamInParens, context);
       } else {
         return Ast.makeNode(CAstNode.PRIMITIVE, gatherChildren(n, context, 1));
       }
@@ -1221,7 +1286,7 @@ public class RhinoToAstTranslator {
 
     case Token.NEW: {
       if (isPrimitiveCreation(context, n)) {
-        return makeBuiltinNew(context, n.getFirstChild().getString());
+        return makeBuiltinNew(n.getFirstChild().getString());
       } else {
         Node receiver = n.getFirstChild();
         return handleNew(context, walkNodes(receiver, context), receiver.getNext());
@@ -1235,7 +1300,7 @@ public class RhinoToAstTranslator {
 
       int i = 0;
       CAstNode[] args = new CAstNode[2 * count + 1];
-      args[i++] = (isPrologueScript(context)) ? makeBuiltinNew(context, "Array") : handleNew(context, "Array", null);
+      args[i++] = (isPrologueScript(context)) ? makeBuiltinNew("Array") : handleNew(context, "Array", null);
 
       int[] skips = (int[]) n.getProp(Node.SKIP_INDEXES_PROP);
       int skip = 0;
@@ -1261,7 +1326,7 @@ public class RhinoToAstTranslator {
       Object[] propertyList = (Object[]) n.getProp(Node.OBJECT_IDS_PROP);
       CAstNode[] args = new CAstNode[propertyList.length * 2 + 1];
       int i = 0;
-      args[i++] = ((isPrologueScript(context)) ? makeBuiltinNew(context, "Object") : handleNew(context, "Object", null));
+      args[i++] = ((isPrologueScript(context)) ? makeBuiltinNew("Object") : handleNew(context, "Object", null));
 
       Node val = n.getFirstChild();
       int nameIdx = 0;
@@ -1279,7 +1344,7 @@ public class RhinoToAstTranslator {
       Node element = receiver.getNext();
 
       CAstNode rcvr = walkNodes(receiver, context);
-      CAstNode baseVar = context.setBase(n);
+      CAstNode baseVar = context.getBaseVarIfRelevant(n);
 
       CAstNode elt = walkNodes(element, context);
 
@@ -1316,7 +1381,7 @@ public class RhinoToAstTranslator {
       Node element = receiver.getNext();
 
       CAstNode rcvr = walkNodes(receiver, context);
-      CAstNode baseVar = context.setBase(n);
+      CAstNode baseVar = context.getBaseVarIfRelevant(n);
 
       CAstNode elt = walkNodes(element, context);
 

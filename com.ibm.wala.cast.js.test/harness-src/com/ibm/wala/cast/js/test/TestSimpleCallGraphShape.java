@@ -277,6 +277,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     // all we need is for it to finish building CG successfully.
   }
 
+//  @Test public void testCalls() throws IOException, IllegalArgumentException, CancelException {
+//    CallGraph CG = Util.makeScriptCG("tests", "calls.js");
+//  }
+
   protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {
 
     // Created by reversing the points to mapping for local pointer keys.
