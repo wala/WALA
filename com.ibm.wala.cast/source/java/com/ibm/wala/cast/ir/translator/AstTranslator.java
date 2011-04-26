@@ -132,23 +132,50 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
    */
   protected abstract String composeEntityName(WalkContext parent, CAstEntity f);
 
+  /**
+   * generate IR for a CAst throw expression, updating context.cfg()
+   */
   protected abstract void doThrow(WalkContext context, int exception);
 
+  /**
+   * generate IR for a CAst array read, updating context.cfg()
+   */
   public abstract void doArrayRead(WalkContext context, int result, int arrayValue, CAstNode arrayRef, int[] dimValues);
 
+  /**
+   * generate IR for a CAst array write, updating context.cfg()
+   */
   public abstract void doArrayWrite(WalkContext context, int arrayValue, CAstNode arrayRef, int[] dimValues, int rval);
 
+  /**
+   * generate IR for a CAst field read, updating context.cfg()
+   */
   protected abstract void doFieldRead(WalkContext context, int result, int receiver, CAstNode elt, CAstNode parent);
 
+  /**
+   * generate IR for a CAst field write, updating context.cfg()
+   */
   protected abstract void doFieldWrite(WalkContext context, int receiver, CAstNode elt, CAstNode parent, int rval);
 
+  /**
+   * generate IR for a CAst function expression, updating context.cfg()
+   */
   protected abstract void doMaterializeFunction(CAstNode node, WalkContext context, int result, int exception, CAstEntity fn);
 
+  /**
+   * generate IR for a CAst new expression, updating context.cfg()
+   */
   protected abstract void doNewObject(WalkContext context, CAstNode newNode, int result, Object type, int[] arguments);
 
+  /**
+   * generate IR for a CAst method call expression, updating context.cfg()
+   */
   protected abstract void doCall(WalkContext context, CAstNode call, int result, int exception, CAstNode name, int receiver,
       int[] arguments);
 
+  /**
+   * used to generate instructions for array operations; defaults to this
+   */
   private ArrayOpHandler arrayOpHandler;
 
   protected boolean isExceptionLabel(Object label) {
@@ -186,12 +213,18 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     Assertions.UNREACHABLE();
   }
 
+  /**
+   * generate prologue code for each function body
+   */
   protected void doPrologue(WalkContext context) {
     if (useLocalValuesForLexicalVars()) {
       context.cfg().addInstruction(new AstLexicalRead(new Access[0]));
     }
   }
 
+  /**
+   * generate IR for call modeling creation of primitive value, updating context.cfg()
+   */
   protected abstract void doPrimitive(int resultVal, WalkContext context, CAstNode primitiveCall);
 
   protected int doLocalRead(WalkContext context, String name) {
@@ -1085,6 +1118,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     Object defaultInitValue();
   }
 
+  /**
+   * a scope in the symbol table build during AST traversal
+   */
   public interface Scope {
     int type();
 
