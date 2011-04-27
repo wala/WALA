@@ -23,6 +23,11 @@ import com.ibm.wala.cast.java.translator.Java2IRTranslator;
  * @author rfuhrer
  */
 public class IRGoal extends SourceGoal_c /* PORT1.7 removed 'implements EndGoal' */ {
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -8023929848709826817L;
+
   private JavaSourceLoaderImpl fSourceLoader;
 
   protected Java2IRTranslator fTranslator;

@@ -46,7 +46,8 @@
       <arg value="http://polyglot-compiler.googlecode.com/svn/trunk/"/>
       <arg value="polyglot-compiler-read-only"/>
      </exec>
-     <copy file="${temp.folder}/polyglot-compiler-read-only/updates/plugins/polyglot3_3.2.0.jar" tofile="${plugin.destination}/lib/polyglot.jar" />
+     <ant target="jar" inheritAll="false" dir="${temp.folder}/polyglot-compiler-read-only/polyglot/" />
+     <copy file="${temp.folder}/polyglot-compiler-read-only/polyglot/lib/polyglot.jar" tofile="${plugin.destination}/lib/polyglot.jar" />
      <delete dir="${temp.folder}"/>
    </target>
 	

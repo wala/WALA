@@ -33,8 +33,7 @@ public class JavaIRTranslatorExtension extends JLExtensionInfo implements IRTran
 
   protected PolyglotIdentityMapper fMapper;
 
-  @SuppressWarnings("unchecked")
-  protected CAstRewriterFactory rewriterFactory;
+  protected CAstRewriterFactory<?,?> rewriterFactory;
 
   //PORT1.7 getCompileGoal() no longer exists; set the compile goal by manipulating the End goal for the job
   @Override
@@ -62,13 +61,11 @@ public class JavaIRTranslatorExtension extends JLExtensionInfo implements IRTran
     return fMapper;
   }
 
-  @SuppressWarnings("unchecked")
-  public void setCAstRewriterFactory(CAstRewriterFactory factory) {
+  public void setCAstRewriterFactory(CAstRewriterFactory<?,?> factory) {
     rewriterFactory = factory;
   }
 
-  @SuppressWarnings("unchecked")
-  public CAstRewriterFactory getCAstRewriterFactory() {
+  public CAstRewriterFactory<?,?> getCAstRewriterFactory() {
     return rewriterFactory;
   }
 

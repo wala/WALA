@@ -22,7 +22,6 @@ import polyglot.types.ArrayType;
 import polyglot.types.ClassType;
 import polyglot.types.ObjectType;
 import polyglot.types.PrimitiveType;
-import polyglot.types.ReferenceType;
 import polyglot.types.Type;
 import polyglot.types.TypeSystem;
 
@@ -55,14 +54,13 @@ public class PolyglotTypeDictionary extends CAstTypeDictionaryImpl {
       return "[" + fEltCAstType.getName();
     }
 
-    @SuppressWarnings("unchecked")
-    public Collection getSupertypes() {
+    public Collection<CAstType> getSupertypes() {
       if (fEltPolyglotType.isPrimitive())
         return Collections.singleton(getCAstTypeFor(fTypeSystem.Object()));
       Assertions.productionAssertion(fEltPolyglotType.isReference(), "Non-primitive, non-reference array element type!");
       ObjectType baseRefType = (ObjectType) fEltPolyglotType;
       Collection<CAstType> supers = new ArrayList<CAstType>();
-      for (Iterator superIter = baseRefType.interfaces().iterator(); superIter.hasNext(); ) {
+      for (Iterator<Type> superIter = baseRefType.interfaces().iterator(); superIter.hasNext(); ) {
         supers.add(getCAstTypeFor(superIter.next()));
       }
       if (baseRefType instanceof ClassType) {

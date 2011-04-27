@@ -24,6 +24,11 @@ import polyglot.visit.AscriptionVisitor;
  * @author rfuhrer
  */
 public class AscriptionGoal extends VisitorGoal {
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 7416951196743862079L;
+
   public AscriptionGoal(Job job) {
     super(job,
       new AscriptionVisitor(job, job.extensionInfo().typeSystem(), job.extensionInfo().nodeFactory()) {

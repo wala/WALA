@@ -19,7 +19,6 @@ import polyglot.types.MethodInstance;
 import polyglot.types.PrimitiveType;
 import polyglot.types.ProcedureInstance;
 import polyglot.types.Type;
-import polyglot.types.TypeSystem;
 
 import com.ibm.wala.cast.java.translator.polyglot.PolyglotJava2CAstTranslator.IdentityMapper;
 import com.ibm.wala.cast.java.types.JavaPrimitiveTypeMap;
