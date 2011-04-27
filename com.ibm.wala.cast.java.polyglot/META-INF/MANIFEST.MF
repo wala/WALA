@@ -33,4 +33,3 @@ Export-Package: com.ibm.wala.cast.java.client.polyglot,
    com.ibm.wala.cast.tree.impl,
    com.ibm.wala.cast.java.translator,
    com.ibm.wala.cast.java.types"
-Import-Package: polyglot.frontend
