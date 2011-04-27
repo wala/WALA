@@ -183,7 +183,6 @@ public abstract class DataflowSolver<T, V extends IVariable> extends DefaultFixe
     }
   }
 
-  @SuppressWarnings("unchecked")
   protected void buildEquations(boolean toWorkList, boolean eager) {
     ITransferFunctionProvider<T, V> functions = problem.getTransferFunctionProvider();
     Graph<T> G = problem.getFlowGraph();
