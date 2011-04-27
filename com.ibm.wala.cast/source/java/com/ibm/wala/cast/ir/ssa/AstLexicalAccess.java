@@ -31,13 +31,16 @@ public abstract class AstLexicalAccess extends SSAInstruction {
    */
   public static class Access {
     public final String variableName;
+    /**
+     * name of entity that defines the variable
+     */
     public final String variableDefiner; 
     public final int valueNumber;
 
-    public Access(String name, String definer, int lhsOrRhs) {
+    public Access(String name, String definer, int vn) {
       variableName = name;
       variableDefiner = definer;
-      valueNumber = lhsOrRhs;
+      valueNumber = vn;
     }
 
     public int hashCode() {
