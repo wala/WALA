@@ -74,7 +74,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
   }
 
   protected TypeReference defaultCatchType() {
-    return TypeReference.JavaLangException;
+    return TypeReference.JavaLangThrowable;
   }
 
   protected TypeReference makeType(CAstType type) {

@@ -19,6 +19,9 @@ import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.intset.EmptyIntSet;
+import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.IntSetUtil;
 
 /**
  * A {@link ContextSelector} to intercept calls to Object.getClass()
@@ -36,10 +39,21 @@ class GetClassContextSelector implements ContextSelector {
    *      com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod,
    *      com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
    */
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
+  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (callee.getReference().equals(GET_CLASS)) {
-      return new JavaTypeContext(new PointType(receiver.getConcreteType()));
+      return new JavaTypeContext(new PointType(receiver[0].getConcreteType()));
     }
     return null;
   }
+  
+  private static final IntSet thisParameter = IntSetUtil.make(new int[]{0});
+
+  public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
+    if (site.isDispatch() || site.getDeclaredTarget().getNumberOfParameters() > 0) {
+      return thisParameter;
+    } else {
+      return EmptyIntSet.instance;
+    }
+  }
+
 }

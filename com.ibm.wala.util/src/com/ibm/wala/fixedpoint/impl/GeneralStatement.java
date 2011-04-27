@@ -17,12 +17,11 @@ import com.ibm.wala.fixpoint.IVariable;
 /**
  * Represents a single step in an iterative solver
  */
-@SuppressWarnings("rawtypes")
-public class GeneralStatement<T extends IVariable> extends AbstractStatement<T, AbstractOperator<T>> {
+public abstract class GeneralStatement<T extends IVariable<?>> extends AbstractStatement<T, AbstractOperator<T>> {
 
   protected final T lhs;
 
-  protected final IVariable[] rhs;
+  protected final T[] rhs;
 
   private final int hashCode;
 
@@ -55,7 +54,7 @@ public class GeneralStatement<T extends IVariable> extends AbstractStatement<T, 
    * @param cell the cell in question
    * @return true or false
    */
-  public boolean hasVariable(IVariable cell) {
+  public boolean hasVariable(T cell) {
     if (lhs == cell) {
       return true;
     }
@@ -98,7 +97,7 @@ public class GeneralStatement<T extends IVariable> extends AbstractStatement<T, 
     }
     this.operator = operator;
     this.lhs = lhs;
-    rhs = new IVariable[2];
+    rhs = makeRHS(2);
     rhs[0] = op1;
     rhs[1] = op2;
     this.hashCode = makeHashCode();
@@ -119,7 +118,7 @@ public class GeneralStatement<T extends IVariable> extends AbstractStatement<T, 
       throw new IllegalArgumentException("null operator");
     }
     this.operator = operator;
-    rhs = new IVariable[3];
+    rhs = makeRHS(3);
     this.lhs = lhs;
     rhs[0] = op1;
     rhs[1] = op2;
@@ -135,7 +134,7 @@ public class GeneralStatement<T extends IVariable> extends AbstractStatement<T, 
    * @param rhs the operands of the right-hand side in order
    * @throws IllegalArgumentException if rhs is null
    */
-  public GeneralStatement(T lhs, AbstractOperator<T> operator, IVariable[] rhs) {
+  public GeneralStatement(T lhs, AbstractOperator<T> operator, T[] rhs) {
     super();
     if (operator ==  null) {
       throw new IllegalArgumentException("null operator");
@@ -166,6 +165,8 @@ public class GeneralStatement<T extends IVariable> extends AbstractStatement<T, 
     return result;
   }
 
+  protected abstract T[] makeRHS(int size);
+  
   @Override
   public int hashCode() {
     return hashCode;
@@ -177,7 +178,7 @@ public class GeneralStatement<T extends IVariable> extends AbstractStatement<T, 
       return false;
     }
     if (getClass().equals(o.getClass())) {
-      GeneralStatement other = (GeneralStatement) o;
+      GeneralStatement<?> other = (GeneralStatement<?>) o;
       if (hashCode == other.hashCode) {
         if (lhs == null || other.lhs == null) {
           if (other.lhs != lhs) {
@@ -208,7 +209,7 @@ public class GeneralStatement<T extends IVariable> extends AbstractStatement<T, 
     return operator;
   }
 
-  public IVariable[] getRHS() {
+  public T[] getRHS() {
     return rhs;
   }
 }

@@ -78,6 +78,8 @@ public class IntSetUtil {
       MutableIntSet pCopy = makeMutableCopy(((DebuggingMutableIntSet) set).primaryImpl);
       MutableIntSet sCopy = makeMutableCopy(((DebuggingMutableIntSet) set).secondaryImpl);
       return new DebuggingMutableIntSet(pCopy, sCopy);
+    } else if (set instanceof EmptyIntSet) {
+      return IntSetUtil.make();
     } else {
       Assertions.UNREACHABLE(set.getClass().toString());
       return null;

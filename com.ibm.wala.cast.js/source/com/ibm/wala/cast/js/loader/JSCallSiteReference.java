@@ -48,4 +48,20 @@ public class JSCallSiteReference extends CallSiteReference {
     return new JSCallSiteReference(pc);
   }
 
+  @Override
+  public boolean isDispatch() {
+    return true;
+  }
+
+  @Override
+  public boolean isStatic() {
+    return false;
+  }
+
+  @Override
+  public boolean isFixed() {
+    return false;
+  }
+
+  
 }

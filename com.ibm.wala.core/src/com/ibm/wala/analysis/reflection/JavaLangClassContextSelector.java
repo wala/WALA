@@ -24,6 +24,9 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.intset.EmptyIntSet;
+import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.IntSetUtil;
 
 /**
  * A {@link ContextSelector} to intercept calls to certain methods on java.lang.Class when the receiver is a type constant
@@ -45,9 +48,9 @@ class JavaLangClassContextSelector implements ContextSelector {
    * If the {@link CallSiteReference} invokes a method we understand and c is a type constant, return a {@link JavaTypeContext}
    * representing the type named by s, if we can resolve it in the {@link IClassHierarchy}.
    */
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
-    if (mayUnderstand(caller, site, callee, receiver)) {
-      return new JavaTypeContext(new PointType(getTypeConstant(receiver)));
+  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
+    if (receiver != null && receiver.length > 0 && mayUnderstand(caller, site, callee, receiver[0])) {
+      return new JavaTypeContext(new PointType(getTypeConstant(receiver[0])));
     }
     return null;
   }
@@ -80,5 +83,15 @@ class JavaLangClassContextSelector implements ContextSelector {
    */
   private boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
     return UNDERSTOOD_METHOD_REFS.contains(targetMethod.getReference()) && getTypeConstant(instance) != null;
+  }
+
+  private static final IntSet thisParameter = IntSetUtil.make(new int[]{0});
+
+  public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
+    if (site.isDispatch() || site.getDeclaredTarget().getNumberOfParameters() > 0) {
+      return thisParameter;
+    } else {
+      return EmptyIntSet.instance;
+    }
   }
 }

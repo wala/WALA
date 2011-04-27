@@ -39,7 +39,6 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.fixpoint.AbstractOperator;
-import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.fixpoint.IntSetVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -64,6 +63,8 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterprete
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.collections.EmptyIterator;
@@ -263,7 +264,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
     private final CallGraph cg;
 
-    public AstConstraintVisitor(AstSSAPropagationCallGraphBuilder builder, ExplicitCallGraph.ExplicitNode node) {
+    public AstConstraintVisitor(AstSSAPropagationCallGraphBuilder builder, CGNode node) {
       super(builder, node);
       this.cg = builder.callGraph;
     }
@@ -502,6 +503,30 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
     }
 
+    protected void visitInvokeInternal(final SSAAbstractInvokeInstruction instruction) {
+      super.visitInvokeInternal(instruction);
+      if (instruction instanceof AbstractLexicalInvoke) {
+        AbstractLexicalInvoke I = (AbstractLexicalInvoke) instruction;
+        for(int wi = 0; wi < I.getNumberOfDefs(); wi++) {
+          if (I.isLexicalDef(wi)) {
+            Access w = I.getLexicalDef(wi);
+            for(int ri = 0; ri < I.getNumberOfUses(); ri++) {
+              if (I.isLexicalUse(ri)) {
+                Access r = I.getLexicalUse(ri);
+                if (w.variableName.equals(r.variableName)) {
+                  if (w.variableDefiner==null? r.variableDefiner==null: w.variableDefiner.equals(r.variableDefiner)) {
+                    PointerKey rk = getBuilder().getPointerKeyForLocal(node, r.valueNumber);
+                    PointerKey wk = getBuilder().getPointerKeyForLocal(node, w.valueNumber);
+                    system.newConstraint(wk, assignOperator, rk);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    
     // /////////////////////////////////////////////////////////////////////////
     //
     // lexical scoping handling
@@ -835,17 +860,48 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
               if (values[i] == -1)
                 return null;
 
+              // find calls that may be altered, and clear their caches
+              DefUse newDU = getAnalysisCache().getSSACache().findOrCreateDU(ir, n.getContext());
+              Iterator<SSAInstruction> insts = newDU.getUses(values[i]);
+              while(insts.hasNext()) {
+                SSAInstruction inst = insts.next();
+                if (inst instanceof SSAAbstractInvokeInstruction) {
+                  System.err.println("clearing for " + inst);
+                  CallSiteReference cs = ((SSAAbstractInvokeInstruction)inst).getCallSite();
+                  ((AstCallGraph.AstCGNode)n).clearMutatedCache(cs);
+                }
+              }
+
               // if values[i] was altered by copy propagation, we must undo
               // that to ensure we do not bash the wrong value number in the
               // the next steps.
               SSAConversion.undoCopyPropagation(ir, pc, -i - 1);
+              
               // possibly new instruction due to renames, so get it again
               I = (AbstractLexicalInvoke) ir.getInstructions()[pc];
 
+              // we assume that the callee might not necessarily write,
+              // so the call becomes like a phi node.  hence it needs a
+              // read of the old value
+              ensureRead: {
+                for(int l = 0; l < I.getNumberOfUses(); l++) {
+                  if (I.isLexicalUse(l)) {
+                    Access r = I.getLexicalUse(l);
+                    if (name.equals(r.variableName)) {
+                      if (definer==null? r.variableDefiner == null: definer.equals(r.variableDefiner)) {
+                        break ensureRead;
+                      }
+                    }
+                  }
+                }
+                I.addLexicalUse(new Access(name, definer, values[i]));
+              }
+              
+              // add new lexical definition
               I.addLexicalDef(new Access(name, definer, values[i]));
 
               if (SSAConversion.DEBUG_UNDO)
-                System.err.println(("new def of " + values[i] + " at inst " + pc + ": " + I));
+                System.err.println("new def of " + values[i] + " at inst " + pc + ": " + I);
 
               // new def has broken SSA form for values[i], so fix for that
               // value
@@ -853,14 +909,13 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
               vs.add(values[i]);
               SSAConversion.convert(AstM, ir, getOptions().getSSAOptions());
 
-              // now redo analysis
+              // force analysis to be redone
               // TODO: only values[i] uses need to be re-done.
               ir.lexicalInfo().handleAlteration();
               ((AstCallGraph.AstCGNode)n).setLexicallyMutatedIR(ir);
               getAnalysisCache().getSSACache().invalidateDU(M, n.getContext());
-              // addConstraintsFromChangedNode(n);
               getBuilder().markChanged(n);
-
+                            
               // get SSA-renamed def from call site instruction
               return getLocalWriteKey(n, callSite, name, definer, definingNode);
             }
@@ -1070,7 +1125,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
         } else {
           system.newSideEffect(new AbstractOperator<PointsToSetVariable>() {
-            public byte evaluate(PointsToSetVariable lhs, final IVariable[] rhs) {
+            public byte evaluate(PointsToSetVariable lhs, final PointsToSetVariable[] rhs) {
               final IntSetVariable receivers = (IntSetVariable) rhs[0];
               final IntSetVariable fields = (IntSetVariable) rhs[1];
               if (receivers.getValue() != null && fields.getValue() != null) {
@@ -1124,7 +1179,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       }
     }
 
-    protected void newFieldWrite(CGNode opNode, int objVn, int fieldsVn, int rhsVn) {
+    public void newFieldWrite(CGNode opNode, int objVn, int fieldsVn, int rhsVn) {
       IR ir = getBuilder().getCFAContextInterpreter().getIR(opNode);
       SymbolTable symtab = ir.getSymbolTable();
       DefUse du = getBuilder().getCFAContextInterpreter().getDU(opNode);
@@ -1137,7 +1192,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       }
     }
 
-    protected void newFieldWrite(CGNode opNode, int objVn, int fieldsVn, final InstanceKey[] rhsFixedValues) {
+    public void newFieldWrite(CGNode opNode, int objVn, int fieldsVn, final InstanceKey[] rhsFixedValues) {
       try {
 
         newFieldOperation(opNode, objVn, fieldsVn, false, new ReflectedFieldAction() {
@@ -1165,7 +1220,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       }
     }
 
-    protected void newFieldWrite(CGNode opNode, int objVn, int fieldsVn, final PointerKey rhs) {
+    public void newFieldWrite(CGNode opNode, int objVn, int fieldsVn, final PointerKey rhs) {
       newFieldOperation(opNode, objVn, fieldsVn, false, new ReflectedFieldAction() {
         public void dump(AbstractFieldPointerKey fieldKey, boolean constObj, boolean constProp) {
           System.err.println(("write " + rhs + " to " + fieldKey + " " + constObj + ", " + constProp));

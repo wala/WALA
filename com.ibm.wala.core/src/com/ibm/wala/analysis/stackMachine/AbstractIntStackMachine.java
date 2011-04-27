@@ -233,6 +233,11 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         super.initializeVariables();
         AbstractIntStackMachine.this.initializeVariables();
       }
+
+      @Override
+      protected MachineState[] makeStmtRHS(int size) {
+        return new MachineState[size];
+      }
     };
 
   }
@@ -276,7 +281,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     }
 
     @Override
-    public byte evaluate(MachineState lhs, IVariable[] rhs) {
+    public byte evaluate(MachineState lhs, MachineState[] rhs) {
       BasicBlock bb = lhs.getBasicBlock();
       if (!bb.isCatchBlock()) {
         return meet(lhs, rhs, bb, meeter) ? CHANGED : NOT_CHANGED;

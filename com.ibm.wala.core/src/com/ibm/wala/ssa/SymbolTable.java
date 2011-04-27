@@ -36,6 +36,8 @@ public class SymbolTable implements Cloneable {
    */
   private HashMap<ConstantValue, Integer> constants = HashMapFactory.make(10);
 
+  private boolean copy = false;
+  
   /**
    * @param numberOfParameters in the IR .. should be ir.getNumberOfParameters()
    */
@@ -75,6 +77,7 @@ public class SymbolTable implements Cloneable {
     ConstantValue v = new ConstantValue(o);
     Integer result = constants.get(v);
     if (result == null) {
+      assert ! copy : "making value for " + o;
       int r = getNewValueNumber();
       result = Integer.valueOf(r);
       constants.put(v, result);
@@ -446,6 +449,7 @@ public class SymbolTable implements Cloneable {
         nt.defaultValues = this.defaultValues.clone();
       }
       nt.constants = HashMapFactory.make(this.constants);
+      nt.copy = true;
       return nt;
     } catch (CloneNotSupportedException e) {
       Assertions.UNREACHABLE();

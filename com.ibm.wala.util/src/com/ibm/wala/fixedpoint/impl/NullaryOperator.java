@@ -22,7 +22,7 @@ import com.ibm.wala.fixpoint.IVariable;
 public abstract class NullaryOperator<T extends IVariable> extends AbstractOperator<T> implements FixedPointConstants {
 
   @Override
-  public byte evaluate(T lhs, IVariable[] rhs) throws UnsupportedOperationException {
+  public byte evaluate(T lhs, T[] rhs) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
   /** 

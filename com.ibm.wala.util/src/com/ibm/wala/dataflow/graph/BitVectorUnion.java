@@ -12,7 +12,6 @@ package com.ibm.wala.dataflow.graph;
 
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.fixpoint.FixedPointConstants;
-import com.ibm.wala.fixpoint.IVariable;
 
 /**
  * Operator U(n) = U(n) U U(j)
@@ -50,7 +49,7 @@ public class BitVectorUnion extends AbstractMeetOperator<BitVectorVariable> impl
    * @see com.ibm.wala.dataflow.fixpoint.Operator#evaluate(com.ibm.wala.dataflow.fixpoint.IVariable[])
    */
   @Override
-  public byte evaluate(BitVectorVariable lhs, @SuppressWarnings("rawtypes") IVariable[] rhs) throws IllegalArgumentException {
+  public byte evaluate(BitVectorVariable lhs, BitVectorVariable[] rhs) throws IllegalArgumentException {
     if (lhs == null) {
       throw new IllegalArgumentException("null lhs");
     }

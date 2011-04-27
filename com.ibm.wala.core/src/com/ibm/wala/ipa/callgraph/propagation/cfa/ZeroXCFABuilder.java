@@ -32,7 +32,7 @@ public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
 
     super(cha, options, cache, new DefaultPointerKeyFactory());
 
-    ContextSelector def = new DefaultContextSelector(options);
+    ContextSelector def = new DefaultContextSelector(options, cha);
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
     setContextSelector(contextSelector);
 

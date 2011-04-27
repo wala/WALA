@@ -21,12 +21,13 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.graph.impl.GraphInverter;
+import com.ibm.wala.util.graph.traverse.DFS;
 
 /**
  * An {@link InstanceKeyFactory} that returns {@link ScopeMappingInstanceKey}s as necessary to handle interprocedural lexical
@@ -60,6 +61,27 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
       private static final long serialVersionUID = 3645910671551712906L;
 
       private void scan(int level, int toDo, LexicalParent parents[], CGNode node, Set<CGNode> parentNodes) {
+        Iterator<CGNode> preds = DFS.iterateDiscoverTime(GraphInverter.invert(builder.getCallGraph()), node);
+        while (preds.hasNext()) {
+          CGNode pred = preds.next();
+          for (int i = 0; i < parents.length; i++) {
+            if (parents[i] != null) {
+              if (pred.getMethod() == parents[i].getMethod()) {
+                if (containsKey(parents[i].getName()))
+                  assert get(parents[i].getName()) == pred;
+                else {
+                  toDo--;
+                  put(parents[i].getName(), pred);
+                  if (AstTranslator.DEBUG_LEXICAL)
+                    System.err.println((level + ": Adding lexical parent " + parents[i].getName() + " for " + base + " at " + creator
+                      + "(toDo is now " + toDo + ")"));
+                }
+              }
+            }
+          }
+        }
+        
+        /*
         if (toDo > 0) {
           int restoreIndex = -1;
           LexicalParent restoreParent = null;
@@ -109,6 +131,7 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
             parents[restoreIndex] = restoreParent;
           }
         }
+        */
       }
 
       private ScopeMap() {

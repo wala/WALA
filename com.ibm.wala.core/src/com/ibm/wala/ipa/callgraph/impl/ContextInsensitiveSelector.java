@@ -17,35 +17,20 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.util.intset.EmptyIntSet;
+import com.ibm.wala.util.intset.IntSet;
 
 /**
  * A basic context selector that ignores context.
  */
 public class ContextInsensitiveSelector implements ContextSelector {
 
-  public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
-    return true;
-  }
-
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
+  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     return Everywhere.EVERYWHERE;
   }
 
-  public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference site, IMethod targetMethod) {
-    return 1;
-  }
-  
-  /* 
-   * @see com.ibm.wala.ipa.callgraph.ContextSelector#contextIsIrrelevant(com.ibm.wala.classLoader.CallSiteReference)
-   */
-  public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
-    return true;
+  public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
+    return EmptyIntSet.instance;
   }
 
-  /* 
-   * @see com.ibm.wala.ipa.callgraph.ContextSelector#contextIsIrrelevant(com.ibm.wala.types.MethodReference)
-   */
-  public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
-    return true;
-  }
 }

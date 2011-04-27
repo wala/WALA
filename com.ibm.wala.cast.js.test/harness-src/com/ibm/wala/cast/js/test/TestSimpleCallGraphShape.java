@@ -136,9 +136,9 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
           "tests/simple-lexical.js/outer",
           new String[] { "tests/simple-lexical.js/outer/indirect", "tests/simple-lexical.js/outer/inner",
               "tests/simple-lexical.js/outer/inner2", "tests/simple-lexical.js/outer/inner3" } },
-      new Object[] { "tests/simple-lexical.js/outer/indirect",
-          new String[] { "tests/simple-lexical.js/outer/inner", "tests/simple-lexical.js/outer/inner3" } },
       new Object[] { "tests/simple-lexical.js/outer/inner2",
+          new String[] { "tests/simple-lexical.js/outer/inner", "tests/simple-lexical.js/outer/inner3" } },
+      new Object[] { "tests/simple-lexical.js/outer/indirect",
           new String[] { "tests/simple-lexical.js/outer/inner", "tests/simple-lexical.js/outer/inner3" } } };
 
   @Test public void testSimpleLexical() throws IOException, IllegalArgumentException, CancelException {
@@ -276,10 +276,6 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     Util.makeScriptCG("tests", "stack_overflow_on_ssa_conversion.js");
     // all we need is for it to finish building CG successfully.
   }
-
-//  @Test public void testCalls() throws IOException, IllegalArgumentException, CancelException {
-//    CallGraph CG = Util.makeScriptCG("tests", "calls.js");
-//  }
 
   protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {
 

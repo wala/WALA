@@ -132,7 +132,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
 
     public AstJavaConstraintVisitor(
 			     AstSSAPropagationCallGraphBuilder builder,
-			     ExplicitCallGraph.ExplicitNode node) 
+			     CGNode node) 
     {
       super(builder, node);
     }
@@ -277,7 +277,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
     }
   }
 
-  protected ConstraintVisitor makeVisitor(ExplicitCallGraph.ExplicitNode node) {
+  protected ConstraintVisitor makeVisitor(CGNode node) {
     return new AstJavaConstraintVisitor(this, node);
   }
 }

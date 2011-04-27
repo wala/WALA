@@ -41,7 +41,7 @@ public class AstJavaZeroOneContainerCFABuilder extends AstJavaCFABuilder {
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter) {
     super(cha, options, cache);
 
-    ContextSelector def = new DefaultContextSelector(options);
+    ContextSelector def = new DefaultContextSelector(options, cha);
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
 
     SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha);

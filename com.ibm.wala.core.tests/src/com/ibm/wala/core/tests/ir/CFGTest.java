@@ -135,6 +135,7 @@ public class CFGTest extends WalaTestCase {
     IMethod m = cha.resolveMethod(mr);
     AnalysisCache cache = new AnalysisCache();
     IR ir = cache.getIR(m);
+    System.out.println(ir);
     SSACFG controlFlowGraph = ir.getControlFlowGraph();
     Assert.assertEquals(1, controlFlowGraph.getSuccNodeCount(controlFlowGraph.getBlockForInstruction(21)));
   }
@@ -163,5 +164,15 @@ public class CFGTest extends WalaTestCase {
     IR ir = cache.getIR(m);
     SSACFG controlFlowGraph = ir.getControlFlowGraph();
     Assert.assertEquals(1, controlFlowGraph.getSuccNodeCount(controlFlowGraph.getBlockForInstruction(33)));
+  }
+
+  public static void testCFG(SSACFG cfg, int[][] assertions) {
+  	for(int i = 0; i < assertions.length; i++) {
+  		SSACFG.BasicBlock bb= cfg.getNode(i);
+  		Assert.assertEquals("basic block " + i, assertions[i].length, cfg.getSuccNodeCount(bb));
+  		for(int j = 0; j < assertions[i].length; j++) {
+  			Assert.assertTrue(cfg.hasEdge(bb, cfg.getNode(assertions[i][j])));
+  		}
+  	}
   }
 }

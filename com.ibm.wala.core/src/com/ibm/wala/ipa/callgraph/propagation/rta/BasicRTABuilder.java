@@ -155,7 +155,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
           }
           InstanceKey iKey = system.getInstanceKey(ptr);
 
-          CGNode target = getTargetForCall(caller, site, iKey);
+          CGNode target = getTargetForCall(caller, site, iKey.getConcreteType(), new InstanceKey[]{iKey});
           if (target == null) {
             // This indicates an error; I sure hope getTargetForCall
             // raised a warning about this!

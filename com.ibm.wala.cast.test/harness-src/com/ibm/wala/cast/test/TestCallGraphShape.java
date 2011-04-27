@@ -122,27 +122,40 @@ public abstract class TestCallGraphShape extends WalaTestCase {
 
         Assert.assertTrue("cannot find " + assertionData[i][0], srcs.hasNext());
 
-        while (srcs.hasNext()) {
+        boolean checkAbsence = false;
+        String targetName = ((String[]) assertionData[i][1])[j];
+        if (targetName.startsWith("!")) {
+          checkAbsence = true;
+          targetName = targetName.substring(1);
+        }
+
+        check_edges: while (srcs.hasNext()) {
           CGNode src = (CGNode) srcs.next();
           for (Iterator sites = src.iterateCallSites(); sites.hasNext();) {
             CallSiteReference sr = (CallSiteReference) sites.next();
-
-            Iterator dsts = getNodes(CG, ((String[]) assertionData[i][1])[j]).iterator();
-            Assert.assertTrue("cannot find " + ((String[]) assertionData[i][1])[j], dsts.hasNext());
+           
+            Iterator dsts = getNodes(CG, targetName).iterator();
+            Assert.assertTrue("cannot find " + targetName, dsts.hasNext());
 
             while (dsts.hasNext()) {
               CGNode dst = (CGNode) dsts.next();
               for (Iterator tos = CG.getPossibleTargets(src, sr).iterator(); tos.hasNext();) {
                 if (tos.next().equals(dst)) {
-                  System.err.println(("found expected " + src + " --> " + dst + " at " + sr));
-                  continue check_target;
+                  if (checkAbsence) {
+                    System.err.println(("found unexpected " + src + " --> " + dst + " at " + sr));
+                    Assert.assertTrue("found edge " + assertionData[i][0] + " ---> " + targetName, false);
+                  } else {
+                    System.err.println(("found expected " + src + " --> " + dst + " at " + sr));
+                    continue check_target;
+                  }
                 }
               }
             }
           }
         }
 
-        Assert.assertTrue("cannot find edge " + assertionData[i][0] + " ---> " + ((String[]) assertionData[i][1])[j], false);
+        System.err.println("cannot find edge " + assertionData[i][0] + " ---> " + targetName);
+        Assert.assertTrue("cannot find edge " + assertionData[i][0] + " ---> " + targetName, checkAbsence);
       }
     }
   }

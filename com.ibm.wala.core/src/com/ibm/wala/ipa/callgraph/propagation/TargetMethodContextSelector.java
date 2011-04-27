@@ -19,6 +19,8 @@ import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.Selector;
+import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.IntSetUtil;
 
 /**
  * This context selector selects a context based on whether the receiver type
@@ -32,12 +34,12 @@ public class TargetMethodContextSelector implements ContextSelector {
     this.selector = selector;
   }
 
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey R) {
-    if (R == null) {
+  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] R) {
+    if (R == null || R[0] == null) {
       throw new IllegalArgumentException("R is null");
     }
 
-    final IMethod M = R.getConcreteType().getMethod(selector);
+    final IMethod M = R[0].getConcreteType().getMethod(selector);
 
     class MethodDispatchContext implements Context {
 
@@ -46,7 +48,7 @@ public class TargetMethodContextSelector implements ContextSelector {
       }
 
       public ContextItem get(ContextKey name) {
-        if (name.equals(ContextKey.FILTER)) {
+        if (name.equals(ContextKey.PARAMETERS[0])) {
           return new FilteredPointerKey.TargetMethodFilter(M);
         } else {
           return null;
@@ -73,19 +75,10 @@ public class TargetMethodContextSelector implements ContextSelector {
     return new MethodDispatchContext();
   }
 
-  public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference reference, IMethod targetMethod) {
-    return -1;
+  private static final IntSet thisParameter = IntSetUtil.make(new int[]{0});
+
+  public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
+    return thisParameter;
   }
 
-  public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
-    return true;
-  }
-
-  public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
-    return false;
-  }
-
-  public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
-    return false;
-  }
 }

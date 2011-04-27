@@ -19,6 +19,8 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.CloneContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.util.intset.IntSet;
 
 /**
  * Default object to control context-insensitive context selection, This includes reflection logic.
@@ -27,21 +29,25 @@ public class DefaultContextSelector implements ContextSelector {
 
   private final ContextSelector delegate;
 
-  public DefaultContextSelector(AnalysisOptions options) {
+  public DefaultContextSelector(AnalysisOptions options, IClassHierarchy cha) {
     if (options == null) {
       throw new IllegalArgumentException("null options");
     }
     ContextInsensitiveSelector ci = new ContextInsensitiveSelector();
     ContextSelector r = ReflectionContextSelector.createReflectionContextSelector(options);
     ContextSelector s = new DelegatingContextSelector(r, ci);
-    delegate = new DelegatingContextSelector(new CloneContextSelector(), s);
+    delegate = new DelegatingContextSelector(new CloneContextSelector(cha), s);
   }
 
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
+  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (caller == null) {
       throw new IllegalArgumentException("null caller");
     }
     return delegate.getCalleeTarget(caller, site, callee, receiver);
+  }
+
+  public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
+    return delegate.getRelevantParameters(caller, site);
   }
 
 }

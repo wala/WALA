@@ -19,6 +19,8 @@ import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.util.intset.EmptyIntSet;
+import com.ibm.wala.util.intset.IntSet;
 
 public abstract class CallStringContextSelector implements ContextSelector {
 
@@ -88,7 +90,7 @@ public abstract class CallStringContextSelector implements ContextSelector {
   /* 
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#getCalleeTarget(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
    */
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
+  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     Context baseContext = base.getCalleeTarget(caller, site, callee, receiver);
     CallString cs = getCallString(caller, site, callee);
     if (cs == null) {
@@ -99,4 +101,9 @@ public abstract class CallStringContextSelector implements ContextSelector {
       return new CallStringContextPair(cs, baseContext);
     }
   }
+
+  public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
+    return EmptyIntSet.instance;
+  }
+  
 }

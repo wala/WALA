@@ -296,7 +296,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
      * TODO: work on efficiency shortcuts for this.
      */
     @Override
-    public byte evaluate(TypeVariable lhs, IVariable[] rhs) {
+    public byte evaluate(TypeVariable lhs, TypeVariable[] rhs) {
 
       if (DEBUG) {
         System.err.print("PhiOperator.meet " + lhs + " ");
@@ -347,7 +347,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
      * TODO: work on efficiency shortcuts for this.
      */
     @Override
-    public byte evaluate(TypeVariable lhs, IVariable[] rhsOperands) {
+    public byte evaluate(TypeVariable lhs, TypeVariable[] rhsOperands) {
       TypeAbstraction lhsType = lhs.getType();
 
       TypeVariable rhs = (TypeVariable) rhsOperands[0];
@@ -383,7 +383,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     }
 
     @Override
-    public byte evaluate(TypeVariable lhs, IVariable[] rhs) {
+    public byte evaluate(TypeVariable lhs, TypeVariable[] rhs) {
       TypeAbstraction lhsType = lhs.getType();
       TypeAbstraction meet = TypeAbstraction.TOP;
       for (int i = 0; i < rhs.length; i++) {
@@ -429,7 +429,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     }
 
     @Override
-    public byte evaluate(TypeVariable lhs, IVariable[] rhs) {
+    public byte evaluate(TypeVariable lhs, TypeVariable[] rhs) {
       TypeAbstraction arrayType = getType(load.getArrayRef());
       if (arrayType == null || arrayType.equals(TypeAbstraction.TOP)) {
         return NOT_CHANGED;
@@ -785,5 +785,10 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     }
 
     return ret;
+  }
+
+  @Override
+  protected TypeVariable[] makeStmtRHS(int size) {
+    return new TypeVariable[size];
   }
 }

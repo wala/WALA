@@ -19,6 +19,9 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.util.intset.EmptyIntSet;
+import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.IntSetUtil;
 
 /**
  * A {@link ContextSelector} to intercept calls to Class.newInstance()
@@ -33,9 +36,9 @@ class ClassNewInstanceContextSelector implements ContextSelector {
    * representing the type of the IClass. (This corresponds to the case where we know the exact type that will be
    * allocated by the <code>Class.newInstance()</code> call.)  Otherwise, return <code>null</code>.    
    */
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
-    if (callee.getReference().equals(ClassNewInstanceContextInterpreter.CLASS_NEW_INSTANCE_REF) && isTypeConstant(receiver)) {
-      IClass c = (IClass) ((ConstantKey) receiver).getValue();
+  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
+    if (callee.getReference().equals(ClassNewInstanceContextInterpreter.CLASS_NEW_INSTANCE_REF) && isTypeConstant(receiver[0])) {
+      IClass c = (IClass) ((ConstantKey) receiver[0]).getValue();
       if (!c.isAbstract() && !c.isInterface()) {
         return new JavaTypeContext(new PointType(c));
       }
@@ -51,5 +54,15 @@ class ClassNewInstanceContextSelector implements ContextSelector {
       }
     }
     return false;
+  }
+
+  private static final IntSet thisParameter = IntSetUtil.make(new int[]{0});
+
+  public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
+    if (site.isDispatch() || site.getDeclaredTarget().getNumberOfParameters() > 0) {
+      return thisParameter;
+    } else {
+      return EmptyIntSet.instance;
+    }
   }
 }

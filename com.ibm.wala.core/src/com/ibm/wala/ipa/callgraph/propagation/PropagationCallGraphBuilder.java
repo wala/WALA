@@ -34,14 +34,18 @@ import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder.DispatchOperator;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.functions.VoidFunction;
+import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
@@ -685,9 +689,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @param iKey an abstraction of the receiver of the call (or null if not applicable)
    * @return the CGNode to which this particular call should dispatch.
    */
-  public CGNode getTargetForCall(CGNode caller, CallSiteReference site, InstanceKey iKey) {
+  protected CGNode getTargetForCall(CGNode caller, CallSiteReference site, IClass recv, InstanceKey iKey[]) {
 
-    IClass recv = (iKey != null) ? iKey.getConcreteType() : null;
     IMethod targetMethod = options.getMethodTargetSelector().getCalleeTarget(caller, site, recv);
 
     // this most likely indicates an exclusion at work; the target selector
@@ -696,6 +699,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       return null;
     }
     Context targetContext = contextSelector.getCalleeTarget(caller, site, targetMethod, iKey);
+    
     if (targetContext instanceof IllegalArgumentExceptionContext) {
       return null;
     }
@@ -705,7 +709,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       return null;
     }
   }
-
+  
   /**
    * @return the context selector for this call graph builder
    */

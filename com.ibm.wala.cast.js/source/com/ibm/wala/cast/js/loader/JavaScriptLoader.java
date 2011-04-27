@@ -727,7 +727,11 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     }
 
     public TypeReference getParameterType(int i) {
-      return JavaScriptTypes.Root;
+      if (i == 0) {
+        return getDeclaringClass().getReference();
+      } else {
+        return JavaScriptTypes.Root;
+      }
     }
   }
 

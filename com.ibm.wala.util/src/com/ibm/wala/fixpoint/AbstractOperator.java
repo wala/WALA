@@ -28,7 +28,7 @@ public abstract class AbstractOperator<T extends IVariable> implements FixedPoin
    * @return a code that indicates: 1) has the lhs value changed? 2) has this equation reached a fixed-point, in that we never have
    *         to evaluate the equation again, even if rhs operands change?
    */
-  public abstract byte evaluate(T lhs, IVariable[] rhs);
+  public abstract byte evaluate(T lhs, T[] rhs);
 
   @Override
   public abstract int hashCode();

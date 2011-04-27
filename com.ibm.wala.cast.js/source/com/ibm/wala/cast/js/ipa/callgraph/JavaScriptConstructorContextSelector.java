@@ -8,6 +8,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.util.intset.IntSet;
 
 public class JavaScriptConstructorContextSelector implements ContextSelector {
   private final ContextSelector base;
@@ -16,7 +17,13 @@ public class JavaScriptConstructorContextSelector implements ContextSelector {
     this.base = base;
   }
   
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {   
+  
+  public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
+    return base.getRelevantParameters(caller, site);
+  }
+
+
+  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {   
     if (callee instanceof JavaScriptConstructor && caller.getContext() instanceof ScopeMappingContext) {
       return caller.getContext();
     } else {

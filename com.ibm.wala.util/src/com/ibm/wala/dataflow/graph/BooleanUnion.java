@@ -12,7 +12,6 @@ package com.ibm.wala.dataflow.graph;
 
 import com.ibm.wala.fixpoint.BooleanVariable;
 import com.ibm.wala.fixpoint.FixedPointConstants;
-import com.ibm.wala.fixpoint.IVariable;
 
 /**
  * Operator U(n) = U(n) U U(j)
@@ -47,7 +46,7 @@ public class BooleanUnion extends AbstractMeetOperator<BooleanVariable> implemen
   }
 
   @Override
-  public byte evaluate(BooleanVariable lhs, @SuppressWarnings("rawtypes") IVariable[] rhs) throws NullPointerException {
+  public byte evaluate(BooleanVariable lhs, BooleanVariable[] rhs) throws NullPointerException {
     if (rhs == null) {
       throw new IllegalArgumentException("null rhs");
     }

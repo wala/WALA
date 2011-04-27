@@ -16,6 +16,9 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.util.intset.EmptyIntSet;
+import com.ibm.wala.util.intset.IntSet;
 
 /**
  * This context selector selects a context based on the concrete type of
@@ -25,11 +28,14 @@ public class CloneContextSelector implements ContextSelector {
 
   private final ReceiverTypeContextSelector selector;
   
-  public CloneContextSelector() {
+  private final IClassHierarchy cha;
+  
+  public CloneContextSelector(IClassHierarchy cha) {
     this.selector = new ReceiverTypeContextSelector();
+    this.cha = cha;
   }
 
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
+  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (receiver == null) {
       return null;
     }
@@ -40,37 +46,14 @@ public class CloneContextSelector implements ContextSelector {
     }
   }
 
-  public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference reference, IMethod targetMethod) {
-    return -1;
-  }
-
-  public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
-    if (targetMethod == null) {
-      throw new IllegalArgumentException("targetMethod is null");
-    }
-    return targetMethod.getReference().equals(CloneInterpreter.CLONE);
-  }
-
-  public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
-    if (site == null) {
-      throw new IllegalArgumentException("site is null");
-    }
-    if (!site.getDeclaredTarget().equals(CloneInterpreter.CLONE)) {
-      return true;
+  public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
+    IMethod declaredTarget = cha.resolveMethod(site.getDeclaredTarget());
+    if (declaredTarget != null && declaredTarget.getReference().equals(CloneInterpreter.CLONE)) {
+      return selector.getRelevantParameters(caller, site);
     } else {
-      return false;
+      return EmptyIntSet.instance;
     }
   }
 
-  public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
-    if (site == null) {
-      throw new IllegalArgumentException("site is null");
-    }
-    if (!site.getDeclaredTarget().equals(CloneInterpreter.CLONE)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 
 }

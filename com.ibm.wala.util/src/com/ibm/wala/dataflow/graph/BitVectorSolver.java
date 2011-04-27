@@ -31,4 +31,9 @@ public class BitVectorSolver<T> extends DataflowSolver<T, BitVectorVariable> {
     return new BitVectorVariable();
 
   }
+
+  @Override
+  protected BitVectorVariable[] makeStmtRHS(int size) {
+    return new BitVectorVariable[size];
+  }
 }

@@ -109,7 +109,7 @@ public abstract class AbstractLexicalInvoke extends MultiReturnValueInvokeInstru
   }
 
   public boolean isLexicalUse(int use) {
-    return use >= super.getNumberOfUses();
+    return use >= getNumberOfParameters();
   }
 
   public void addLexicalUse(Access use) {

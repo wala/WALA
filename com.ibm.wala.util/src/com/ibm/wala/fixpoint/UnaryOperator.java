@@ -39,7 +39,7 @@ public abstract class UnaryOperator<T extends IVariable> extends AbstractOperato
   }
 
   @Override
-  public byte evaluate(T lhs, IVariable[] rhs) throws UnimplementedError {
+  public byte evaluate(T lhs, T[] rhs) throws UnimplementedError {
     // this should never be called. Use the other, more efficient form.
     Assertions.UNREACHABLE();
     return 0;

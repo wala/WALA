@@ -117,7 +117,7 @@ public class AstJavaTypeInference extends AstTypeInference {
     private PrimAndStringOp() {
     }
 
-    public byte evaluate(TypeVariable lhs, IVariable[] rhs) {
+    public byte evaluate(TypeVariable lhs, TypeVariable[] rhs) {
       TypeAbstraction meet = null;
 
       for (int i = 0; i < rhs.length; i++) {
