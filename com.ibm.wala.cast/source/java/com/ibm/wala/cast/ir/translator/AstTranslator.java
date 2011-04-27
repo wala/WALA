@@ -34,6 +34,7 @@ import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
 import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
+import com.ibm.wala.cast.ir.ssa.SSAConversion;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
 import com.ibm.wala.cast.loader.CAstAbstractLoader;
@@ -286,7 +287,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
    * @return
    */
   protected int doLexicallyScopedRead(CAstNode node, WalkContext context, String name) {
-    // record in declaring scope that the name is exposed
+    // record in declaring scope that the name is exposed to a nested scope
     Symbol S = context.currentScope().lookup(name);
     CAstEntity E = S.getDefiningScope().getEntity();
     addExposedName(E, E, name, S.getDefiningScope().lookup(name).valueNumber());
@@ -296,10 +297,15 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       // lexically-scoped variables can be given a single vn in a method
       Access A = new Access(name, getEntityName(E), vn);
 
-      // record access at top level; later, the Accesses in the instruction
+      // (context.top() is current entity)
+      // record the name as exposed for the current entity, since if the name is
+      // updated via a call to a nested function, SSA for the current entity may
+      // need to be updated with the new definition
+      addExposedName(context.top(), E, name, vn);
+
+      // record the access; later, the Accesses in the instruction
       // defining vn will be adjusted based on this information; see
       // patchLexicalAccesses()
-      addExposedName(context.top(), E, name, vn);
       addAccess(context.top(), A);
 
       return vn;
@@ -333,6 +339,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       addAccess(context.top(), A);
 
       context.cfg().addInstruction(new AssignInstruction(vn, rval));
+      // we add write instructions at every access for now
+      // eventually, we may restructure the method to do a single combined write
+      // before exit
       context.cfg().addInstruction(new AstLexicalWrite(A));
 
       // lexically-scoped variables can be read from their scope each time
@@ -429,6 +438,10 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   protected final IClassLoader loader;
 
+  /**
+   * for handling languages that let you include other source files named
+   * statically (e.g., ABAP)
+   */
   protected final Map namedEntityResolver;
 
   protected final SSAInstructionFactory insts;
@@ -1166,15 +1179,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   }
 
-  protected final static int TYPE_LOCAL = 1;
-
-  protected final static int TYPE_GLOBAL = 2;
-
-  protected final static int TYPE_SCRIPT = 3;
-
-  protected final static int TYPE_FUNCTION = 4;
-
-  protected final static int TYPE_TYPE = 5;
+  public static enum ScopeType {
+    LOCAL, GLOBAL, SCRIPT, FUNCTION, TYPE
+  };
 
   private static final boolean DEBUG = false;
 
@@ -1255,10 +1262,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
    * a scope in the symbol table built during AST traversal
    */
   public interface Scope {
-    /**
-     * type of the scope, e.g., TYPE_LOCAL or TYPE_SCRIPT
-     */
-    int type();
+
+    ScopeType type();
 
     int allocateTempValue();
 
@@ -1490,8 +1495,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         return s;
       }
 
-      public int type() {
-        return TYPE_SCRIPT;
+      public ScopeType type() {
+        return ScopeType.SCRIPT;
       }
 
       protected Symbol makeSymbol(final String nm, final boolean isFinal, final boolean isInternalName,
@@ -1577,8 +1582,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         return f;
       }
 
-      public int type() {
-        return TYPE_FUNCTION;
+      public ScopeType type() {
+        return ScopeType.FUNCTION;
       }
 
       private int find(String n) {
@@ -1635,8 +1640,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   private Scope makeLocalScope(CAstNode s, final Scope parent) {
     return new AbstractScope(parent) {
-      public int type() {
-        return TYPE_LOCAL;
+      public ScopeType type() {
+        return ScopeType.LOCAL;
       }
 
       public SymbolTable getUnderlyingSymtab() {
@@ -1733,8 +1738,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         throw new UnsupportedOperationException();
       }
 
-      public int type() {
-        return TYPE_GLOBAL;
+      public ScopeType type() {
+        return ScopeType.GLOBAL;
       }
 
       public boolean contains(String name) {
@@ -1859,8 +1864,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         throw new UnsupportedOperationException();
       }
 
-      public int type() {
-        return TYPE_TYPE;
+      public ScopeType type() {
+        return ScopeType.TYPE;
       }
 
       public boolean contains(String name) {
@@ -2163,23 +2168,40 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
   }
 
   /**
-   * keeps track of all possible lexical uses for each instruction
+   * lexical access information for some entity scope. used during call graph
+   * construction to handle lexical accesses.
    */
   public static class AstLexicalInformation implements LexicalInformation {
     /**
-     * names exposed in a nested lexical scope, represented as pairs (name,nameOfDefiningEntity)
+     * names possibly accessed in a nested lexical scope, represented as pairs
+     * (name,nameOfDefiningEntity)
      */
     private final Pair<String, String>[] exposedNames;
 
+    /**
+     * map from instruction index and exposed name (via its index in
+     * {@link #exposedNames}) to the value number for the name at that
+     * instruction index. This can vary at different instructions due to SSA
+     * (and this information is updated during {@link SSAConversion}).
+     */
     private final int[][] instructionLexicalUses;
 
     /**
-     * entry i gives the value number of the name represented by exposedNames[i]
+     * maps each exposed name (via its index in {@link #exposedNames}) to its
+     * value number at method exit.
      */
     private final int[] exitLexicalUses;
 
+    /**
+     * the names of the enclosing methods declaring names that are lexically
+     * accessed by the entity
+     */
     private final String[] scopingParents;
 
+    /**
+     * all value numbers appearing as entries in {@link #instructionLexicalUses}
+     * and {@link #exitLexicalUses}, computed lazily
+     */
     private MutableIntSet allExposedUses = null;
 
     @SuppressWarnings("unchecked")
@@ -2260,6 +2282,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
       this.exposedNames = buildLexicalNamesArray(EN);
 
+      // the value numbers stored in exitLexicalUses and instructionLexicalUses
+      // are identical at first; they will be updated
+      // as needed during the final SSA conversion
       this.exitLexicalUses = buildLexicalUseArray(EN);
 
       this.instructionLexicalUses = new int[instrs.length][];
@@ -2333,7 +2358,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       return allExposedUses;
     }
 
-    public Pair<String,String>[] getExposedNames() {
+    public Pair<String, String>[] getExposedNames() {
       return exposedNames;
     }
 
@@ -2341,6 +2366,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       return scopingParents;
     }
 
+    /**
+     * reset cached info about value numbers that may have changed
+     */
     public void handleAlteration() {
       allExposedUses = null;
     }
@@ -2386,9 +2414,11 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
   private final Map<CAstEntity, Set<Pair<Pair<String, String>, Integer>>> exposedNames = new LinkedHashMap<CAstEntity, Set<Pair<Pair<String, String>, Integer>>>();
 
   /**
-   * maps an entity e to the set of implicit lexical accesses performed within that entity, i.e., lexical accesses that operate on a local representing the lexical value.
+   * maps an entity e to the set of implicit lexical accesses performed within
+   * that entity, i.e., lexical accesses that operate on a local representing
+   * the lexical value.
    * 
-   *  @see #useLocalValuesForLexicalVars()
+   * @see #useLocalValuesForLexicalVars()
    */
   private final Map<CAstEntity, Set<Access>> accesses = new LinkedHashMap<CAstEntity, Set<Access>>();
 
@@ -2396,22 +2426,35 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     entityNames.put(e, name);
   }
 
+  /**
+   * record that in entity e, the access is performed using a local variable. in
+   * {@link #patchLexicalAccesses(SSAInstruction[], Set)}, this information is
+   * used to update an instruction that performs all the accesses at the
+   * beginning of the method and defines the locals.
+   */
   private void addAccess(CAstEntity e, Access access) {
+    assert useLocalValuesForLexicalVars();
     MapUtil.findOrCreateSet(accesses, e).add(access);
   }
 
   /**
-   * record that name, declared in entity, is accessed from a nested lexical
-   * scope
+   * Record that a name assigned a value number in the scope of entity may be
+   * accessed by a lexically nested scope, i.e., the name may be
+   * <em>exposed</em> to lexically nested scopes. This information is needed
+   * during call graph construction to properly model the data flow due to the
+   * access in the nested scope.
    * 
    * @param entity
-   *          an entity holding the declaration of the name
+   *          an entity in whose scope name is assigned a value number
    * @param declaration
-   *          the entity declaring the name (possibly, declaration == entity)
+   *          the declaring entity for name (possibly an enclosing scope of
+   *          entity, in the case where entity
+   *          {@link #useLocalValuesForLexicalVars() accesses the name via a
+   *          local})
    * @param name
    *          the accessed name
    * @param valueNumber
-   *          the name's value number
+   *          the name's value number in the scope of entity
    */
   private void addExposedName(CAstEntity entity, CAstEntity declaration, String name, int valueNumber) {
     Pair<Pair<String, String>, Integer> newVal = Pair.make(Pair.make(name, getEntityName(declaration)), valueNumber);
@@ -2574,6 +2617,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     Access[] AC = accesses == null ? (Access[]) null : (Access[]) accesses.toArray(new Access[accesses.size()]);
     for (int i = 0; i < instrs.length; i++) {
       if (instrs[i] instanceof AstLexicalAccess && ((AstLexicalAccess) instrs[i]).getAccessCount() == 0) {
+        // should just be AstLexicalRead for now; may add support for
+        // AstLexicalWrite later
+        assert instrs[i] instanceof AstLexicalRead;
         if (AC != null) {
           ((AstLexicalAccess) instrs[i]).setAccesses(AC);
         } else {
@@ -2730,6 +2776,12 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     results = resultStack.pop();
   }
 
+  /**
+   * for storing position information for CAstNodes
+   * 
+   * @see #enterNode(CAstNode, Context, CAstVisitor)
+   * @see #postProcessNode(CAstNode, Context, CAstVisitor)
+   */
   private final Stack<Position> positions = new Stack<Position>();
 
   protected Context makeLocalContext(Context context, CAstNode n) {
@@ -2737,11 +2789,18 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
   }
 
   protected Context makeUnwindContext(Context context, CAstNode n, CAstVisitor visitor) {
+    // here, n represents the "finally" block of the unwind
     return new UnwindContext(n, (WalkContext) context, visitor);
   }
 
   // FIXME: should it be possible to override visit() instead to do the below
   // and then call super.visit?
+  /**
+   * to record for which CAstNodes we need to pop the position stack when post-processing
+   * 
+   * @see #enterNode(CAstNode, Context, CAstVisitor)
+   * @see #postProcessNode(CAstNode, Context, CAstVisitor)
+   */
   private Map<CAstNode, Boolean> popPositionM = new LinkedHashMap<CAstNode, Boolean>();
 
   protected boolean enterNode(CAstNode n, Context c, CAstVisitor visitor) {
@@ -2750,6 +2809,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     if (context.getSourceMap() != null) {
       CAstSourcePositionMap.Position p = context.getSourceMap().getPosition(n);
       if (p != null) {
+        // store the current position (if any) on the stack, and then set it to be p
         if (context.cfg().getCurrentPosition() != null) {
           positions.push(context.cfg().getCurrentPosition());
           popPosition = true;
@@ -2802,6 +2862,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     // FIXME: handle redefinitions of functions
     Scope cs = context.currentScope();
     if (cs.contains(fn.getName()) && !cs.isLexicallyScoped(cs.lookup(fn.getName())) && !cs.isGlobal(cs.lookup(fn.getName()))) {
+      // if we already have a local with the function's name, write the function value to that local 
       assignValue(n, context, cs.lookup(fn.getName()), fn.getName(), result);
     } else {
       context.currentScope().declare(new FinalCAstSymbol(fn.getName()), result);
@@ -3387,6 +3448,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     return false;
   }
 
+  /**
+   * assign rval to nm as appropriate, depending on the scope of ls
+   */
   protected void assignValue(CAstNode n, WalkContext context, Symbol ls, String nm, int rval) {
     if (context.currentScope().isGlobal(ls))
       doGlobalWrite(context, nm, rval);

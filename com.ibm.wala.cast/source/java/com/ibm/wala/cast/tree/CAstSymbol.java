@@ -10,6 +10,9 @@ public interface CAstSymbol {
 
   public String name();
 
+  /**
+   * like final in Java; can only be declared / assigned once
+   */
   public boolean isFinal();
 
   public boolean isCaseInsensitive();
