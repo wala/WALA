@@ -28,4 +28,6 @@ public interface IRTranslatorExtension {
    */
   @SuppressWarnings("unchecked")
   CAstRewriterFactory getCAstRewriterFactory();
+
+  boolean getReplicateForDoLoops();
 }

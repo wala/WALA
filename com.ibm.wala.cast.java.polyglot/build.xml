@@ -39,12 +39,14 @@
    <target name="fetchPolyglot" depends="PolyglotPresent" unless="polyglot.present">
      <delete dir="${temp.folder}"/>
      <mkdir dir="${temp.folder}"/>
-     <get src="http://www.cs.cornell.edu/Projects/polyglot/src/polyglot-2.0.2-src.tar.gz" dest="${temp.folder}/polyglot-2.0.2-src.tar.gz" />
-     <gunzip src="${temp.folder}/polyglot-2.0.2-src.tar.gz" dest="${temp.folder}/polyglot-2.0.2-src.tar"/>
-     <untar src="${temp.folder}/polyglot-2.0.2-src.tar" dest="${temp.folder}"/>
-     <ant target="jar" inheritAll="false" dir="${temp.folder}/polyglot-2.0.2-src" />
-     <copy file="${temp.folder}/polyglot-2.0.2-src/lib/polyglot.jar" tofile="${plugin.destination}/lib/polyglot.jar" />
-     <copy file="${temp.folder}/polyglot-2.0.2-src/lib/java_cup.jar" tofile="${plugin.destination}/lib/java_cup.jar" />
+     <exec executable="svn"
+   	       dir="${temp.folder}">
+      <arg value="--quiet"/>
+   	  <arg value="checkout"/>
+      <arg value="http://polyglot-compiler.googlecode.com/svn/trunk/"/>
+      <arg value="polyglot-compiler-read-only"/>
+     </exec>
+     <copy file="${temp.folder}/polyglot-compiler-read-only/updates/plugins/polyglot3_3.2.0.jar" tofile="${plugin.destination}/lib/polyglot.jar" />
      <delete dir="${temp.folder}"/>
    </target>
 	

@@ -24,7 +24,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 
 public class PolyglotSourceLoaderImpl extends JavaSourceLoaderImpl {
-  private final IRTranslatorExtension fExtInfo;
+  protected final IRTranslatorExtension fExtInfo;
 
   public PolyglotSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions,
       IClassHierarchy cha, IRTranslatorExtension extInfo) throws IOException {
@@ -37,6 +37,6 @@ public class PolyglotSourceLoaderImpl extends JavaSourceLoaderImpl {
   }
 
   protected SourceModuleTranslator getTranslator() {
-    return new PolyglotSourceModuleTranslator(cha.getScope(), fExtInfo, this);
+    return new PolyglotSourceModuleTranslator(cha.getScope(), fExtInfo, this, JavaSourceAnalysisScope.SOURCE);
   }
 }

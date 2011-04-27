@@ -24,9 +24,8 @@ import polyglot.frontend.Scheduler;
 import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
 
 /**
- * A Polyglot extension descriptor for a test harness extension that generates DOMO IR for the sources and class files in the
- * classpath.
- * 
+ * A Polyglot extension descriptor for a test harness extension that generates WALA IR for
+ * the sources and class files in the classpath.
  * @author rfuhrer
  */
 public class JavaIRTranslatorExtension extends JLExtensionInfo implements IRTranslatorExtension {
@@ -37,13 +36,26 @@ public class JavaIRTranslatorExtension extends JLExtensionInfo implements IRTran
   @SuppressWarnings("unchecked")
   protected CAstRewriterFactory rewriterFactory;
 
-  public void setSourceLoader(PolyglotSourceLoaderImpl sourceLoader) {
-    fSourceLoader = sourceLoader;
-    fMapper = new PolyglotIdentityMapper(sourceLoader.getReference(), typeSystem());
+  //PORT1.7 getCompileGoal() no longer exists; set the compile goal by manipulating the End goal for the job
+  @Override
+  protected Scheduler createScheduler() {
+    return new JLScheduler(this) {
+      @Override
+      public List<Goal> goals(Job job) {
+        List<Goal> goals= super.goals(job);
+        Goal endGoal = goals.get(goals.size()-1);
+        if (!(endGoal.name().equals("End"))) {
+          throw new IllegalStateException("Last goal is not an End goal?");
+        }
+        endGoal.addPrereq(new IRGoal(job, fSourceLoader));
+        return goals;
+      }
+    };
   }
 
-  public Goal getCompileGoal(Job job) {
-    return new IRGoal(job, fSourceLoader);
+  public void setSourceLoader(PolyglotSourceLoaderImpl sourceLoader) {
+    fSourceLoader= sourceLoader;
+    fMapper= new PolyglotIdentityMapper(sourceLoader.getReference());
   }
 
   public PolyglotIdentityMapper getIdentityMapper() {
@@ -58,5 +70,9 @@ public class JavaIRTranslatorExtension extends JLExtensionInfo implements IRTran
   @SuppressWarnings("unchecked")
   public CAstRewriterFactory getCAstRewriterFactory() {
     return rewriterFactory;
+  }
+
+  public boolean getReplicateForDoLoops() {
+    return false;
   }
 }
