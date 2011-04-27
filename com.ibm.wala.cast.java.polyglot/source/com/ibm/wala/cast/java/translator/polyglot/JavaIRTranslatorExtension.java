@@ -13,9 +13,13 @@
  */
 package com.ibm.wala.cast.java.translator.polyglot;
 
+import java.util.List;
+
+import polyglot.frontend.Goal;
 import polyglot.frontend.JLExtensionInfo;
+import polyglot.frontend.JLScheduler;
 import polyglot.frontend.Job;
-import polyglot.frontend.goals.Goal;
+import polyglot.frontend.Scheduler;
 
 import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
 

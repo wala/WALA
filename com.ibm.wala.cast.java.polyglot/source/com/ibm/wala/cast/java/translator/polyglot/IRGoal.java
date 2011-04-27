@@ -8,24 +8,18 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *****************************************************************************/
-/*
- * Created on Oct 6, 2005
- */
 package com.ibm.wala.cast.java.translator.polyglot;
 
-import polyglot.frontend.CyclicDependencyException;
+import polyglot.frontend.ExtensionInfo;
 import polyglot.frontend.Job;
-import polyglot.frontend.Pass;
 import polyglot.frontend.Scheduler;
-import polyglot.frontend.goals.AbstractGoal;
-import polyglot.frontend.goals.EndGoal;
-import polyglot.util.ErrorInfo;
+import polyglot.frontend.SourceGoal_c;
 
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.java.translator.Java2IRTranslator;
 
 /**
- * A kind of EndGoal that indicates that DOMO IR has been generated for the given compilation unit.
+ * A kind of EndGoal that indicates that WALA IR has been generated for the given compilation unit.
  * 
  * @author rfuhrer
  */

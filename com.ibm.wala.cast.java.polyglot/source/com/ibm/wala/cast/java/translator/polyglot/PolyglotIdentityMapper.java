@@ -14,7 +14,7 @@ import polyglot.types.CodeInstance;
 import polyglot.types.ConstructorInstance;
 import polyglot.types.FieldInstance;
 import polyglot.types.InitializerInstance;
-import polyglot.types.MemberInstance;
+import polyglot.types.MemberDef;
 import polyglot.types.MethodInstance;
 import polyglot.types.PrimitiveType;
 import polyglot.types.ProcedureInstance;

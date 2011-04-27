@@ -15,6 +15,7 @@ package com.ibm.wala.cast.java.translator.polyglot;
 
 import java.io.IOException;
 
+import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.java.translator.SourceModuleTranslator;
 import com.ibm.wala.classLoader.IClassLoader;

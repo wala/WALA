@@ -12,16 +12,11 @@ package com.ibm.wala.cast.java.translator.polyglot;
 
 import polyglot.ast.ArrayInit;
 import polyglot.ast.Expr;
-import polyglot.frontend.CyclicDependencyException;
-import polyglot.frontend.ExtensionInfo;
 import polyglot.frontend.Job;
-import polyglot.frontend.Pass;
 import polyglot.frontend.Scheduler;
-import polyglot.frontend.VisitorPass;
-import polyglot.frontend.goals.AbstractGoal;
+import polyglot.frontend.VisitorGoal;
 import polyglot.types.SemanticException;
 import polyglot.types.Type;
-import polyglot.util.ErrorInfo;
 import polyglot.visit.AscriptionVisitor;
 
 /**
