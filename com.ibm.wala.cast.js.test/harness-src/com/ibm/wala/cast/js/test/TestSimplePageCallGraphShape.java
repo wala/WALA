@@ -272,7 +272,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     URL url = getClass().getClassLoader().getResource("pages/list.html");
     JSCFABuilder builder = Util.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
-    Util.dumpCG(builder, CG);
+    Util.dumpCG(builder.getPointerAnalysis(), CG);
     verifySourceAssertions(CG, sourceAssertionsForList);
   }
 

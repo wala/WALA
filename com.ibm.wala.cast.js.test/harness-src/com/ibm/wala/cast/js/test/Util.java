@@ -69,14 +69,14 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
   public static CallGraph makeScriptCG(String dir, String name, boolean useOneCFA) throws IOException, IllegalArgumentException, CancelException {
     PropagationCallGraphBuilder b = makeScriptCGBuilder(dir, name, useOneCFA);
     CallGraph CG = b.makeCallGraph(b.getOptions());
-    dumpCG(b, CG);
+    dumpCG(b.getPointerAnalysis(), CG);
     return CG;
   }
 
   public static CallGraph makeScriptCG(SourceModule[] scripts, boolean useOneCFA) throws IOException, IllegalArgumentException, CancelException {
     PropagationCallGraphBuilder b = makeCGBuilder(scripts, useOneCFA);
     CallGraph CG = b.makeCallGraph(b.getOptions());
-    dumpCG(b, CG);
+    dumpCG(b.getPointerAnalysis(), CG);
     return CG;
   }
 
