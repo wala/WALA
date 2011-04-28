@@ -48,6 +48,7 @@
      </exec>
      <ant target="jar" inheritAll="false" dir="${temp.folder}/polyglot-compiler-read-only/polyglot/" />
      <copy file="${temp.folder}/polyglot-compiler-read-only/polyglot/lib/polyglot.jar" tofile="${plugin.destination}/lib/polyglot.jar" />
+     <copy file="${temp.folder}/polyglot-compiler-read-only/polyglot/lib/java_cup.jar" tofile="${plugin.destination}/lib/java_cup.jar" />
      <delete dir="${temp.folder}"/>
    </target>
 	
