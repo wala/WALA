@@ -284,7 +284,7 @@ public class JDT2CAstUtils {
       HashMap<ITypeBinding, IMethodBinding> overridden) {
     if (!superclassonly) {
       for (IMethodBinding ourmet : klass.getDeclaredMethods())
-        if (met.isSubsignature(ourmet) && (met.getModifiers() & Modifier.PRIVATE) == 0) {
+        if (met.overrides(ourmet)) {
           overridden.put(ourmet.getMethodDeclaration().getReturnType(), ourmet.getMethodDeclaration());
           break; // there can only be one per class so don't bother looking for more
         }
@@ -308,8 +308,8 @@ public class JDT2CAstUtils {
     return overridden.values();
   }
 
-  public static boolean sameSignatureAndReturnType(IMethodBinding met1, IMethodBinding met2) {
-    if (!met1.getReturnType().isEqualTo(met2.getReturnType()))
+  public static boolean sameErasedSignatureAndReturnType(IMethodBinding met1, IMethodBinding met2) {
+    if (!met1.getReturnType().getErasure().isEqualTo(met2.getReturnType().getErasure()))
       return false;
 
     ITypeBinding[] params1 = met1.getParameterTypes();
@@ -318,7 +318,7 @@ public class JDT2CAstUtils {
       return false;
 
     for (int i = 0; i < params1.length; i++)
-      if (!params1[i].isEqualTo(params2[i]))
+      if (!params1[i].getErasure().isEqualTo(params2[i].getErasure()))
         return false;
 
     return true;

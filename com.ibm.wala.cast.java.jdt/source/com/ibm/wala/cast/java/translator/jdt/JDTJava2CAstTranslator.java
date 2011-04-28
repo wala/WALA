@@ -435,7 +435,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
           Collection<IMethodBinding> overriddenMets = JDT2CAstUtils.getOverriddenMethod(metDecl.resolveBinding());
           if (overriddenMets != null) {
             for (IMethodBinding overridden : overriddenMets)
-              if (!JDT2CAstUtils.sameSignatureAndReturnType(metDecl.resolveBinding(), overridden))
+              if (!JDT2CAstUtils.sameErasedSignatureAndReturnType(metDecl.resolveBinding(), overridden))
                 memberEntities.add(makeSyntheticCovariantRedirect(metDecl, metDecl.resolveBinding(), overridden, context));
           }
         }
@@ -690,7 +690,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
 
     CAstNode calltarget;
     if ((overridingBinding.getModifiers() & Modifier.STATIC) == 0)
-      calltarget = makeNode(context, fFactory, null, CAstNode.THIS);
+      calltarget = makeNode(context, fFactory, null, CAstNode.SUPER);
     else
       calltarget = makeNode(context, fFactory, null, CAstNode.VOID);
 
@@ -703,11 +703,11 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
       CAstNode varNode = makeNode(context, fFactory, null, CAstNode.VAR, fFactory.makeConstant(svd.getName().getIdentifier()));
       ITypeBinding fromType = JDT2CAstUtils.getErasedType(paramTypes[i], ast);
       ITypeBinding toType = JDT2CAstUtils.getErasedType(overridingBinding.getParameterTypes()[i], ast);
-      if (fromType.equals(toType))
+      if (fromType.equals(toType)) {
         arguments.add(varNode);
-      else
+      } else {
         arguments.add(createCast(null, varNode, fromType, toType, context));
-      // add cast if necessary. Should only
+      }
       i++;
     }
     CAstNode callnode = createMethodInvocation(null, overridingBinding, calltarget, arguments, context);
@@ -2569,6 +2569,21 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
     return result;
   }
 
+  private void hookUpNPETargets(ASTNode n, WalkContext wc) {
+    Collection excTargets = wc.getCatchTargets(fNullPointerExcType);
+    if (!excTargets.isEmpty()) {
+      // connect NPE exception edge to relevant catch targets
+      // (presumably only one)
+      for (Iterator iterator = excTargets.iterator(); iterator.hasNext();) {
+        Pair catchPair = (Pair) iterator.next();
+        wc.cfg().add(n, catchPair.snd, fNullPointerExcType);
+      }
+    } else {
+      // connect exception edge to exit
+      wc.cfg().add(n, CAstControlFlowMap.EXCEPTION_TO_EXIT, fNullPointerExcType);
+    }
+  }
+
   //
   // ARRAYS
   //
@@ -2576,9 +2591,14 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
   private CAstNode visit(ArrayAccess n, WalkContext context) {
     TypeReference eltTypeRef = fIdentityMapper.getTypeRef(n.resolveTypeBinding());
 
-    return makeNode(context, fFactory, n, CAstNode.ARRAY_REF, visitNode(n.getArray(), context), fFactory.makeConstant(eltTypeRef),
+    CAstNode cast = makeNode(context, fFactory, n, CAstNode.ARRAY_REF, visitNode(n.getArray(), context), fFactory.makeConstant(eltTypeRef),
         visitNode(n.getIndex(), context));
 
+    hookUpNPETargets(n, context);
+    
+    context.cfg().map(n, cast);
+    
+    return cast;
   }
 
   // FIXME: inner classes here, probably too...
