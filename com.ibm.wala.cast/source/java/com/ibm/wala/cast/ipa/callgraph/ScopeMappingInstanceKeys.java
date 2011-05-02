@@ -11,9 +11,7 @@
 package com.ibm.wala.cast.ipa.callgraph;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.loader.AstMethod.LexicalParent;
@@ -25,43 +23,84 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.graph.impl.GraphInverter;
 import com.ibm.wala.util.graph.traverse.DFS;
 
 /**
- * An {@link InstanceKeyFactory} that returns {@link ScopeMappingInstanceKey}s as necessary to handle interprocedural lexical
- * scoping
+ * An {@link InstanceKeyFactory} that returns {@link ScopeMappingInstanceKey}s
+ * as necessary to handle interprocedural lexical scoping
  */
 abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
 
   /**
-   * return all {@link LexicalParent}s of methods that can be invoked on base. (Is this right? --MS)
+   * return all {@link LexicalParent}s of methods represented by base (a single
+   * method for JavaScript, all instance methods in Java).
    */
   protected abstract LexicalParent[] getParents(InstanceKey base);
 
+  /**
+   * does base require a scope mapping key? Typically, true if base is allocated
+   * in a nested lexical scope
+   */
   protected abstract boolean needsScopeMappingKey(InstanceKey base);
 
   private final PropagationCallGraphBuilder builder;
 
   private final InstanceKeyFactory basic;
 
+  /**
+   * An {@link InstanceKey} carrying information about which {@link CGNode}s
+   * represent lexical parents of the allocating {@link CGNode}.
+   * 
+   * The fact that we discover at most one {@link CGNode} per lexical parent
+   * relies on the following property: in a call graph, the contexts used for a
+   * nested function can be finer than those used for the containing function,
+   * but _not_ coarser. This ensures that there is at most one CGNode
+   * corresponding to a lexical parent (e.g., we don't get two clones of
+   * function f1() invoking a single CGNode representing nested function f2())
+   * 
+   * Note that it is possible to not find a {@link CGNode} corresponding to some
+   * lexical parent; this occurs when a deeply nested function is returned
+   * before being invoked, so some lexical parent is no longer on the call stack
+   * when the function is allocated. See test case nested.js.
+   */
   public class ScopeMappingInstanceKey implements InstanceKey {
+    /**
+     * the underlying instance key
+     */
     private final InstanceKey base;
 
     /**
-     * the node in which this is allocated
+     * the node in which base is allocated
      */
     private final CGNode creator;
 
+    /**
+     * mapping from lexical parent names to the corresponding CGNodes
+     */
     private final ScopeMap map;
 
+    /**
+     * Note that we use a sub-class of HashMap for performance (to save a level
+     * of indirection)
+     * 
+     */
     private class ScopeMap extends HashMap<String, CGNode> {
 
       private static final long serialVersionUID = 3645910671551712906L;
 
-      private void scan(int level, int toDo, LexicalParent parents[], CGNode node, Set<CGNode> parentNodes) {
-        Iterator<CGNode> preds = DFS.iterateDiscoverTime(GraphInverter.invert(builder.getCallGraph()), node);
+      /**
+       * compute the {@link CGNode} correspond to each specified
+       * {@link LexicalParent} of {@link ScopeMappingInstanceKey#base}
+       * 
+       */
+      private void computeLexicalParentCGNodes() {
+        if (AstTranslator.DEBUG_LEXICAL)
+          System.err.println(("starting search for parents at " + creator));
+        final LexicalParent[] parents = getParents(base);
+        Iterator<CGNode> preds = DFS.iterateDiscoverTime(GraphInverter.invert(builder.getCallGraph()), creator);
+        int toDo = parents.length;
         while (preds.hasNext()) {
           CGNode pred = preds.next();
           for (int i = 0; i < parents.length; i++) {
@@ -73,75 +112,17 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
                   toDo--;
                   put(parents[i].getName(), pred);
                   if (AstTranslator.DEBUG_LEXICAL)
-                    System.err.println((level + ": Adding lexical parent " + parents[i].getName() + " for " + base + " at " + creator
-                      + "(toDo is now " + toDo + ")"));
+                    System.err.println(("Adding lexical parent " + parents[i].getName() + " for " + base + " at " + creator
+                        + "(toDo is now " + toDo + ")"));
                 }
               }
             }
           }
         }
-        
-        /*
-        if (toDo > 0) {
-          int restoreIndex = -1;
-          LexicalParent restoreParent = null;
-
-          if (AstTranslator.DEBUG_LEXICAL)
-            System.err.println((level + ": searching " + node + " for parents"));
-
-          for (int i = 0; i < parents.length; i++) {
-
-            if (parents[i] == null)
-              continue;
-
-            if (AstTranslator.DEBUG_LEXICAL)
-              System.err.println((level + ": searching " + parents[i]));
-
-            if (node.getMethod() == parents[i].getMethod()) {
-              if (containsKey(parents[i].getName()))
-                assert get(parents[i].getName()) == node;
-              else {
-                put(parents[i].getName(), node);
-                if (AstTranslator.DEBUG_LEXICAL)
-                  System.err.println((level + ": Adding lexical parent " + parents[i].getName() + " for " + base + " at " + creator
-                      + "(toDo is now " + toDo + ")"));
-              }
-
-              toDo--;
-              restoreIndex = i;
-              restoreParent = parents[i];
-              parents[i] = null;
-            }
-          }
-
-          CallGraph CG = builder.getCallGraph();
-
-          if (CG.getPredNodes(node).hasNext() && toDo > 0) {
-            for (Iterator PS = CG.getPredNodes(node); PS.hasNext();) {
-              CGNode pred = (CGNode) PS.next();
-              if (pred != creator && !parentNodes.contains(pred)) {
-                parentNodes.add(pred);
-                scan(level + 1, toDo, parents, pred, parentNodes);
-                parentNodes.remove(pred);
-              }
-            }
-          }
-          
-          if (restoreIndex != -1) {
-            parents[restoreIndex] = restoreParent;
-          }
-        }
-        */
       }
 
       private ScopeMap() {
-        LexicalParent[] parents = getParents(base);
-
-        if (AstTranslator.DEBUG_LEXICAL)
-          System.err.println(("starting search for parents at " + creator));
-
-        HashSet<CGNode> s = HashSetFactory.make(5);
-        scan(0, parents.length, parents, creator, s);
+        computeLexicalParentCGNodes();
       }
 
       CGNode getDefiningNode(String definer) {
