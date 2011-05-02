@@ -56,7 +56,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
   public CAstAbstractModuleLoader(IClassHierarchy cha) {
     this(cha, null);
   }
-  
+
   /**
    * create the appropriate CAst translator for the language and source module
    */
@@ -112,14 +112,14 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
       }
     }
 
-    for (Iterator ts = types.keySet().iterator(); ts.hasNext();) {
-      TypeName tn = (TypeName) ts.next();
-      try {
-        if (DEBUG) {
+    if (DEBUG) {
+      for (Iterator ts = types.keySet().iterator(); ts.hasNext();) {
+        TypeName tn = (TypeName) ts.next();
+        try {
           System.err.println(("found type " + tn + " : " + types.get(tn) + " < " + ((IClass) types.get(tn)).getSuperclass()));
+        } catch (Exception e) {
+          System.err.println(e);
         }
-      } catch (Exception e) {
-        System.err.println(e);
       }
     }
 

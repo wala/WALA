@@ -22,6 +22,10 @@ public interface AstPointerKeyFactory extends PointerKeyFactory {
 
   Iterator<PointerKey> getPointerKeysForReflectedFieldWrite(InstanceKey I, InstanceKey F);
 
+  /**
+   * get a pointer key for the object catalog of I. The object catalog stores
+   * the names of all known properties of I.
+   */
   PointerKey getPointerKeyForObjectCatalog(InstanceKey I);
 
 }

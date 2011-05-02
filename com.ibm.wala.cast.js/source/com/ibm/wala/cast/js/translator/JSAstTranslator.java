@@ -38,6 +38,10 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
+/**
+ * Specialization of {@link AstTranslator} for JavaScript.
+ *
+ */
 public class JSAstTranslator extends AstTranslator {
   private final static boolean DEBUG = false;
 
@@ -70,6 +74,9 @@ public class JSAstTranslator extends AstTranslator {
     return null;
   }
 
+  /**
+   * generate an instruction that checks if readVn is undefined and throws an exception if it isn't
+   */
   private void addDefinedCheck(CAstNode n, WalkContext context, int readVn) {
     context.cfg().addPreNode(n);
     context.cfg().addInstruction(((JSInstructionFactory) insts).CheckReference(readVn));
@@ -85,12 +92,14 @@ public class JSAstTranslator extends AstTranslator {
 
   protected int doLexicallyScopedRead(CAstNode n, WalkContext context, String name) {
     int readVn = super.doLexicallyScopedRead(n, context, name);
+    // should get an exception if name is undefined
     addDefinedCheck(n, context, readVn);
     return readVn;
   }
 
   protected int doGlobalRead(CAstNode n, WalkContext context, String name) {
     int readVn = super.doGlobalRead(n, context, name);
+    // add a check if name is undefined, unless we're reading the value 'undefined'
     if (!("undefined".equals(name) || "$$undefined".equals(name))) {
       addDefinedCheck(n, context, readVn);
     }
@@ -134,6 +143,7 @@ public class JSAstTranslator extends AstTranslator {
     if (DEBUG)
       System.err.println(cfg);
 
+    // force creation of these constants by calling the getter methods
     symtab.getNullConstant();
     symtab.getConstant("arguments");
     symtab.getConstant("length");
@@ -159,8 +169,10 @@ public class JSAstTranslator extends AstTranslator {
 
     context.cfg().addPreNode(call, context.getUnwindState());
 
+    // this new block is for the normal termination case
     context.cfg().newBlock(true);
 
+    // exceptional case: flow to target given in CAst, or if null, the exit node
     if (context.getControlFlow().getTarget(call, null) != null)
       context.cfg().addPreEdge(call, context.getControlFlow().getTarget(call, null), true);
     else
@@ -177,6 +189,7 @@ public class JSAstTranslator extends AstTranslator {
 
   protected void doMaterializeFunction(CAstNode n, WalkContext context, int result, int exception, CAstEntity fn) {
     int nm = context.currentScope().getConstantValue("L" + composeEntityName(context, fn));
+    // "Function" is the name we use to model the constructor of function values
     int tmp = super.doGlobalRead(n, context, "Function");
     context.cfg().addInstruction(
         ((JSInstructionFactory) insts).Invoke(tmp, result, new int[] { nm }, exception, new JSCallSiteReference(
@@ -191,7 +204,7 @@ public class JSAstTranslator extends AstTranslator {
     Assertions.UNREACHABLE("JSAstTranslator.doArrayWrite() called!");
   }
 
-  protected void doFieldRead(WalkContext context, int result, int receiver, CAstNode elt, CAstNode parent) {
+  protected void doFieldRead(WalkContext context, int result, int receiver, CAstNode elt, CAstNode readNode) {
     this.visit(elt, context, this);
     int x = context.currentScope().allocateTempValue();
 
@@ -206,15 +219,16 @@ public class JSAstTranslator extends AstTranslator {
       context.cfg().addInstruction(((JSInstructionFactory) insts).PropertyRead(result, x, getValue(elt)));
     }
 
-    if (context.getControlFlow().getMappedNodes().contains(parent)) {
-      context.cfg().addPreNode(parent, context.getUnwindState());
+    // generate code to handle read of non-existent property
+    if (context.getControlFlow().getMappedNodes().contains(readNode)) {
+      context.cfg().addPreNode(readNode, context.getUnwindState());
 
       context.cfg().newBlock(true);
 
-      if (context.getControlFlow().getTarget(parent, JavaScriptTypes.TypeError) != null)
-        context.cfg().addPreEdge(parent, context.getControlFlow().getTarget(parent, JavaScriptTypes.TypeError), true);
+      if (context.getControlFlow().getTarget(readNode, JavaScriptTypes.TypeError) != null)
+        context.cfg().addPreEdge(readNode, context.getControlFlow().getTarget(readNode, JavaScriptTypes.TypeError), true);
       else
-        context.cfg().addPreEdgeToExit(parent, true);
+        context.cfg().addPreEdgeToExit(readNode, true);
     }
   }
 
@@ -237,6 +251,7 @@ public class JSAstTranslator extends AstTranslator {
 
   private void doPrimitiveNew(WalkContext context, int resultVal, String typeName) {
     doNewObject(context, null, resultVal, typeName + "Object", null);
+    // set the class property of the new object
     int rval = context.currentScope().getConstantValue(typeName);
     context.currentScope().getConstantValue("class");
     context.cfg().addInstruction(((JSInstructionFactory) insts).PutInstruction(resultVal, rval, "class"));
@@ -344,6 +359,7 @@ public class JSAstTranslator extends AstTranslator {
 
   protected void doPrologue(WalkContext context) {
     super.doPrologue(context);
+    
     int tempVal = context.currentScope().allocateTempValue();
     doNewObject(context, null, tempVal, "Array", null);
     CAstSymbol args = new CAstSymbolImpl("arguments");

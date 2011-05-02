@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.CodeScanner;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -24,12 +25,16 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ContextInsensitiveSSAInterpret
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.collections.EmptyIterator;
 
-public class AstContextInsensitiveSSAContextInterpreter
-  extends ContextInsensitiveSSAInterpreter 
-{
+/**
+ * A version of {@link ContextInsensitiveSSAInterpreter} that uses the IR for
+ * {@link #iterateNewSites(CGNode)} and {@link #iterateCallSites(CGNode)} when
+ * we have an {@link AstMethod}. ({@link ContextInsensitiveSSAInterpreter}
+ * defaults to using {@link CodeScanner}, which only works for bytecodes.)
+ */
+public class AstContextInsensitiveSSAContextInterpreter extends ContextInsensitiveSSAInterpreter {
 
   public AstContextInsensitiveSSAContextInterpreter(AnalysisOptions options, AnalysisCache cache) {
-    super(options,cache);
+    super(options, cache);
   }
 
   public boolean understands(IMethod method, Context context) {
