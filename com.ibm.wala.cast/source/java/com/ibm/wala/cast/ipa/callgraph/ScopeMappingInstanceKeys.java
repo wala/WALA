@@ -23,6 +23,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.graph.impl.GraphInverter;
 import com.ibm.wala.util.graph.traverse.DFS;
 
@@ -78,61 +79,44 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
     /**
      * mapping from lexical parent names to the corresponding CGNodes
      */
-    private final ScopeMap map;
+    private final HashMap<String, CGNode> scopeMap;
 
     /**
-     * Note that we use a sub-class of HashMap for performance (to save a level
-     * of indirection)
+     * compute the {@link CGNode} correspond to each specified
+     * {@link LexicalParent} of {@link #base}, populating {@link #scopeMap}
      * 
      */
-    private class ScopeMap extends HashMap<String, CGNode> {
-
-      private static final long serialVersionUID = 3645910671551712906L;
-
-      /**
-       * compute the {@link CGNode} correspond to each specified
-       * {@link LexicalParent} of {@link ScopeMappingInstanceKey#base}
-       * 
-       */
-      private void computeLexicalParentCGNodes() {
-        if (AstTranslator.DEBUG_LEXICAL)
-          System.err.println(("starting search for parents at " + creator));
-        final LexicalParent[] parents = getParents(base);
-        Iterator<CGNode> preds = DFS.iterateDiscoverTime(GraphInverter.invert(builder.getCallGraph()), creator);
-        int toDo = parents.length;
-        while (preds.hasNext()) {
-          CGNode pred = preds.next();
-          for (int i = 0; i < parents.length; i++) {
-            if (parents[i] != null) {
-              if (pred.getMethod() == parents[i].getMethod()) {
-                if (containsKey(parents[i].getName()))
-                  assert get(parents[i].getName()) == pred;
-                else {
-                  toDo--;
-                  put(parents[i].getName(), pred);
-                  if (AstTranslator.DEBUG_LEXICAL)
-                    System.err.println(("Adding lexical parent " + parents[i].getName() + " for " + base + " at " + creator
-                        + "(toDo is now " + toDo + ")"));
-                }
+    private void computeLexicalParentCGNodes() {
+      if (AstTranslator.DEBUG_LEXICAL)
+        System.err.println(("starting search for parents at " + creator));
+      final LexicalParent[] parents = getParents(base);
+      Iterator<CGNode> preds = DFS.iterateDiscoverTime(GraphInverter.invert(builder.getCallGraph()), creator);
+      int toDo = parents.length;
+      while (preds.hasNext()) {
+        CGNode pred = preds.next();
+        for (int i = 0; i < parents.length; i++) {
+          if (parents[i] != null) {
+            if (pred.getMethod() == parents[i].getMethod()) {
+              if (scopeMap.containsKey(parents[i].getName()))
+                assert scopeMap.get(parents[i].getName()) == pred;
+              else {
+                toDo--;
+                scopeMap.put(parents[i].getName(), pred);
+                if (AstTranslator.DEBUG_LEXICAL)
+                  System.err.println(("Adding lexical parent " + parents[i].getName() + " for " + base + " at " + creator
+                      + "(toDo is now " + toDo + ")"));
               }
             }
           }
         }
-      }
-
-      private ScopeMap() {
-        computeLexicalParentCGNodes();
-      }
-
-      CGNode getDefiningNode(String definer) {
-        return (CGNode) get(definer);
       }
     }
 
     private ScopeMappingInstanceKey(CGNode creator, InstanceKey base) {
       this.creator = creator;
       this.base = base;
-      this.map = new ScopeMap();
+      this.scopeMap = HashMapFactory.make();
+      computeLexicalParentCGNodes();
     }
 
     public IClass getConcreteType() {
@@ -140,7 +124,7 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
     }
 
     CGNode getDefiningNode(String definer) {
-      return map.getDefiningNode(definer);
+      return scopeMap.get(definer);
     }
 
     public int hashCode() {
