@@ -54,8 +54,10 @@ import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSABinaryOpInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.MutableMapping;
@@ -67,15 +69,15 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   public static final boolean DEBUG_TYPE_INFERENCE = false;
 
   private URL scriptBaseURL;
-  
+
   public URL getBaseURL() {
     return scriptBaseURL;
   }
-  
+
   public void setBaseURL(URL url) {
     this.scriptBaseURL = url;
   }
-  
+
   protected JSSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       PointerKeyFactory pointerKeyFactory) {
     super(cha, options, cache, pointerKeyFactory);
@@ -99,10 +101,11 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   }
 
   protected boolean isUncataloguedField(IClass type, String fieldName) {
-    if (! type.getReference().equals(JavaScriptTypes.Object)) {
+    if (!type.getReference().equals(JavaScriptTypes.Object)) {
       return true;
     }
-    return "prototype".equals(fieldName) || "constructor".equals(fieldName) || "arguments".equals(fieldName) || "class".equals(fieldName) || "$value".equals(fieldName);
+    return "prototype".equals(fieldName) || "constructor".equals(fieldName) || "arguments".equals(fieldName)
+        || "class".equals(fieldName) || "$value".equals(fieldName);
   }
 
   // ///////////////////////////////////////////////////////////////////////////
@@ -172,7 +175,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     }
 
     public void visitWithRegion(JavaScriptWithRegion instruction) {
-      
+
     }
   }
 
@@ -216,15 +219,15 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       }
 
       public void visitJavaScriptInstanceOf(JavaScriptInstanceOf instruction) {
-        
+
       }
 
       public void visitCheckRef(JavaScriptCheckReference instruction) {
-        
+
       }
 
       public void visitWithRegion(JavaScriptWithRegion instruction) {
-         
+
       }
     };
 
@@ -259,54 +262,39 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     public void visitUnaryOp(SSAUnaryOpInstruction inst) {
       if (inst.getOpcode() == IUnaryOpInstruction.Operator.NEG) {
-        int lval = inst.getDef(0);
-        PointerKey lk = getPointerKeyForLocal(lval);
-
-        IClass bool = getClassHierarchy().lookupClass(JavaScriptTypes.Boolean);
-        InstanceKey key = new ConcreteTypeKey(bool);
-
-        system.newConstraint(lk, key);
+        addLvalTypeKeyConstraint(inst, JavaScriptTypes.Boolean);
       }
     }
 
-    public void visitIsDefined(AstIsDefinedInstruction inst) {
+    /**
+     * add a constraint indicating that the value def'd by inst can point to a
+     * value of type t
+     */
+    private void addLvalTypeKeyConstraint(SSAInstruction inst, TypeReference t) {
       int lval = inst.getDef(0);
       PointerKey lk = getPointerKeyForLocal(lval);
 
-      IClass bool = getClassHierarchy().lookupClass(JavaScriptTypes.Boolean);
+      IClass bool = getClassHierarchy().lookupClass(t);
       InstanceKey key = new ConcreteTypeKey(bool);
 
       system.newConstraint(lk, key);
+    }
+
+    public void visitIsDefined(AstIsDefinedInstruction inst) {
+      addLvalTypeKeyConstraint(inst, JavaScriptTypes.Boolean);
+
     }
 
     public void visitJavaScriptInstanceOf(JavaScriptInstanceOf inst) {
-      int lval = inst.getDef(0);
-      PointerKey lk = getPointerKeyForLocal(lval);
-
-      IClass bool = getClassHierarchy().lookupClass(JavaScriptTypes.Boolean);
-      InstanceKey key = new ConcreteTypeKey(bool);
-
-      system.newConstraint(lk, key);
+      addLvalTypeKeyConstraint(inst, JavaScriptTypes.Boolean);
     }
 
     public void visitEachElementHasNext(EachElementHasNextInstruction inst) {
-      int lval = inst.getDef(0);
-      PointerKey lk = getPointerKeyForLocal(lval);
-
-      IClass bool = getClassHierarchy().lookupClass(JavaScriptTypes.Boolean);
-      InstanceKey key = new ConcreteTypeKey(bool);
-
-      system.newConstraint(lk, key);
+      addLvalTypeKeyConstraint(inst, JavaScriptTypes.Boolean);
     }
 
     public void visitTypeOf(JavaScriptTypeOfInstruction instruction) {
-      int lval = instruction.getDef(0);
-      PointerKey lk = getPointerKeyForLocal(lval);
-
-      IClass string = getClassHierarchy().lookupClass(JavaScriptTypes.String);
-      InstanceKey key = new ConcreteTypeKey(string);
-
-      system.newConstraint(lk, key);
+      addLvalTypeKeyConstraint(instruction, JavaScriptTypes.String);
     }
 
     public void visitBinaryOp(final SSABinaryOpInstruction instruction) {
@@ -473,12 +461,12 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     public void visitCheckRef(JavaScriptCheckReference instruction) {
       // TODO Auto-generated method stub
-      
+
     }
 
     public void visitWithRegion(JavaScriptWithRegion instruction) {
       // TODO Auto-generated method stub
-      
+
     }
   }
 
@@ -487,11 +475,11 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   // function call handling
   //
   ////////////////////////////////////////////////////////////////////////////
-  
+
   @Override
   protected void processCallingConstraints(CGNode caller, SSAAbstractInvokeInstruction instruction, CGNode target,
       InstanceKey[][] constParams, PointerKey uniqueCatchKey) {
- 
+
     IR sourceIR = getCFAContextInterpreter().getIR(caller);
     SymbolTable sourceST = sourceIR.getSymbolTable();
 
@@ -588,5 +576,4 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     }
   }
 
-  
 }
