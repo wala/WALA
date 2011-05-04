@@ -123,6 +123,11 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
       return base.getConcreteType();
     }
 
+    /**
+     * get the CGNode representing the lexical parent of {@link #creator} with name definer
+     * @param definer
+     * @return
+     */
     CGNode getDefiningNode(String definer) {
       return scopeMap.get(definer);
     }

@@ -309,6 +309,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         system.newSideEffect(op, function);
       }
 
+      // when a new caller is added for node, re-process the lexical access
       class LexicalScopingCallback implements Function<Object, Object> {
         public Object apply(Object ignore) {
           op.doLexicalPointerKeys();
@@ -389,6 +390,9 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
       if (inst.isStatic() || !getBuilder().useObjectCatalog())
         return;
+
+      // update the object catalog corresponding to the base pointer, adding the
+      // name of the field as a property
 
       SymbolTable symtab = ir.getSymbolTable();
 
@@ -531,6 +535,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
                 Access r = I.getLexicalUse(ri);
                 if (w.variableName.equals(r.variableName)) {
                   if (w.variableDefiner == null ? r.variableDefiner == null : w.variableDefiner.equals(r.variableDefiner)) {
+                    // handle the control-flow paths through the (transitive) callees where the name is not written;
+                    // in such cases, the original value (rk) is preserved
                     PointerKey rk = getBuilder().getPointerKeyForLocal(node, r.valueNumber);
                     PointerKey wk = getBuilder().getPointerKeyForLocal(node, w.valueNumber);
                     system.newConstraint(wk, assignOperator, rk);
@@ -561,7 +567,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       private final Access[] accesses;
 
       /**
-       * are the lexical accesses loads?
+       * are all the lexical accesses loads? if false, they are all stores
        */
       private final boolean isLoad;
 
@@ -571,6 +577,21 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         this.accesses = accesses;
       }
 
+      /**
+       * perform the necessary {@link #action(PointerKey, int)}s for the
+       * accesses. For each access, we determine the possible {@link CGNode}s
+       * corresponding to its definer (see
+       * {@link AstConstraintVisitor#getLexicalDefiners(CGNode, String)). For
+       * each such definer node D, we traverse the current call graph backwards,
+       * stopping at either D or the root. For each call edge encountered during
+       * the traversal, check if the caller has a local value number for the
+       * access's name at the relevant call sites (can be functions nested in D
+       * if {@link AstTranslator#useLocalValuesForLexicalVars()} is set). If so,
+       * perform the action. Note that if the root node is reached, we have an
+       * upward funarg; see
+       * {@link AstConstraintVisitor#handleRootLexicalReference(String, String, CGNode)}
+       * .
+       */
       private void doLexicalPointerKeys() {
         for (int i = 0; i < accesses.length; i++) {
           final String name = accesses[i].variableName;
@@ -609,6 +630,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
                 if (n.equals(D))
                   return EmptyIterator.instance();
                 else
+                  // traverse backwards
                   return G.getPredNodes(n);
               }
             };
@@ -718,6 +740,10 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
     private Set<PointerKey> discoveredUpwardFunargs = HashSetFactory.make();
 
+    /**
+     * add constraints that assign the final value of name in definingNode to
+     * the upward funarg (lhs), modeling adding of the state to the closure
+     */
     private void addUpwardFunargConstraints(PointerKey lhs, String name, String definer, CGNode definingNode) {
       discoveredUpwardFunargs.add(lhs);
 
@@ -752,6 +778,10 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       Assertions.UNREACHABLE();
     }
 
+    /**
+     * handle a lexical reference where we found no parent call graph node
+     * defining the name; it's either a global or an upward funarg
+     */
     private PointerKey handleRootLexicalReference(String name, String definer, final CGNode definingNode) {
       // global variable
       if (definer == null) {
@@ -794,6 +824,16 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       }
     }
 
+    /**
+     * if n is the root method, return the result of
+     * {@link #handleRootLexicalReference(String, String, CGNode)}. Otherwise,
+     * if (name,definer) is exposed from the lexical scope for n, get the
+     * corresponding value number at the call site and return the PointerKey
+     * corresponding to that local. possibly adds a use of the value number to
+     * the {@link AbstractLexicalInvoke} instruction at the call site (since we
+     * now know the name is accessed by some transitive callee), thereby
+     * requiring marking of the IR as mutated.
+     */
     private PointerKey getLocalReadKey(CGNode n, CallSiteReference callSite, String name, String definer, CGNode definingNode) {
       IMethod M = n.getMethod();
       if (n == getBuilder().getCallGraph().getFakeRootNode()) {
