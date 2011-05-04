@@ -39,6 +39,7 @@
    <target name="fetchPolyglot" depends="PolyglotPresent" unless="polyglot.present">
      <delete dir="${temp.folder}"/>
      <mkdir dir="${temp.folder}"/>
+   	 <echo message="Getting polyglot from svn; may take a few minutes"/>
      <exec executable="svn"
    	       dir="${temp.folder}">
       <arg value="--quiet"/>
