@@ -40,15 +40,21 @@ import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 public class CAstControlFlowRecorder implements CAstControlFlowMap {
   private final CAstSourcePositionMap src;
 
-  private final Map<CAstNode,Object> CAstToNode = new LinkedHashMap<CAstNode,Object>();
+  private final Map<CAstNode, Object> CAstToNode = new LinkedHashMap<CAstNode, Object>();
 
-  private final Map<Object,CAstNode> nodeToCAst = new LinkedHashMap<Object,CAstNode>();
+  private final Map<Object, CAstNode> nodeToCAst = new LinkedHashMap<Object, CAstNode>();
 
-  private final Map<Key,Object> table = new LinkedHashMap<Key,Object>();
+  private final Map<Key, Object> table = new LinkedHashMap<Key, Object>();
 
-  private final Map<Object,Set<Object>> labelMap = new LinkedHashMap<Object,Set<Object>>();
+  private final Map<Object, Set<Object>> labelMap = new LinkedHashMap<Object, Set<Object>>();
 
-  private final Map<Object,Set<Object>> sourceMap = new LinkedHashMap<Object,Set<Object>>();
+  private final Map<Object, Set<Object>> sourceMap = new LinkedHashMap<Object, Set<Object>>();
+
+  /**
+   * for optimizing {@link #getMappedNodes()}; methods that change the set of
+   * mapped nodes should null out this field
+   */
+  private Collection<CAstNode> cachedMappedNodes = null;
 
   private static class Key {
     private final Object label;
@@ -72,7 +78,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
       return (o instanceof Key) && from == ((Key) o).from
           && ((label == null) ? ((Key) o).label == null : label.equals(((Key) o).label));
     }
-    
+
     public String toString() {
       return "<key " + label + " : " + from + ">";
     }
@@ -111,13 +117,16 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
   }
 
   public Collection<CAstNode> getMappedNodes() {
-    Set<CAstNode> nodes = new LinkedHashSet<CAstNode>();
-    for (Iterator<Key> keys = table.keySet().iterator(); keys.hasNext();) {
-      Key key = keys.next();
-      nodes.add((CAstNode) nodeToCAst.get(key.from));
-      nodes.add((CAstNode) nodeToCAst.get(table.get(key)));
+    Collection<CAstNode> nodes = cachedMappedNodes;
+    if (nodes == null) {
+      nodes = new LinkedHashSet<CAstNode>();
+      for (Iterator<Key> keys = table.keySet().iterator(); keys.hasNext();) {
+        Key key = keys.next();
+        nodes.add((CAstNode) nodeToCAst.get(key.from));
+        nodes.add((CAstNode) nodeToCAst.get(table.get(key)));
+      }
+      cachedMappedNodes = nodes;
     }
-
     return nodes;
   }
 
@@ -130,7 +139,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
   public void add(Object from, Object to, Object label) {
     assert from != null;
     assert to != null;
-    
+
     table.put(new Key(label, from), to);
 
     Set<Object> ls = labelMap.get(from);
@@ -138,7 +147,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
       labelMap.put(from, ls = new LinkedHashSet<Object>(2));
     ls.add(label);
 
-    Set<Object> ss =  sourceMap.get(to);
+    Set<Object> ss = sourceMap.get(to);
     if (ss == null)
       sourceMap.put(to, ss = new LinkedHashSet<Object>(2));
     ss.add(from);
@@ -146,42 +155,40 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
 
   /**
    * Establish a mapping between some object `node' and the ast node `ast'.
-   * Objects used as endpoints in a control flow edge must be mapped to ast nodes
-   * using this call.
+   * Objects used as endpoints in a control flow edge must be mapped to ast
+   * nodes using this call.
    */
   public void map(Object node, CAstNode ast) {
     assert node != null;
     assert ast != null;
-    assert ! nodeToCAst.containsKey(node) : node + " already mapped:\n" + this;
-    assert ! CAstToNode.containsKey(ast) : ast + " already mapped:\n" + this;
+    assert !nodeToCAst.containsKey(node) : node + " already mapped:\n" + this;
+    assert !CAstToNode.containsKey(ast) : ast + " already mapped:\n" + this;
     nodeToCAst.put(node, ast);
+    cachedMappedNodes = null;
     CAstToNode.put(ast, node);
   }
 
   public void addAll(CAstControlFlowMap other) {
-    for(CAstNode n : other.getMappedNodes()) {
-      for(Object l : other.getTargetLabels(n)) {
+    for (CAstNode n : other.getMappedNodes()) {
+      for (Object l : other.getTargetLabels(n)) {
         add(n, l, other.getTarget(n, l));
       }
     }
   }
-  
+
   public boolean isMapped(Object node) {
     return nodeToCAst.containsKey(node);
   }
 
   public String toString() {
     StringBuffer sb = new StringBuffer("control flow map\n");
-    for(Iterator keys = table.keySet().iterator(); keys.hasNext(); ) {
+    for (Iterator keys = table.keySet().iterator(); keys.hasNext();) {
       Key key = (Key) keys.next();
       sb.append(key.from);
-      if (src != null &&
-	  nodeToCAst.get(key.from) != null &&
-	  src.getPosition(nodeToCAst.get(key.from)) != null)
-      {
-	sb.append(" (").append(src.getPosition(nodeToCAst.get(key.from))).append(") ");
+      if (src != null && nodeToCAst.get(key.from) != null && src.getPosition(nodeToCAst.get(key.from)) != null) {
+        sb.append(" (").append(src.getPosition(nodeToCAst.get(key.from))).append(") ");
       }
-      sb.append(" -- "); 
+      sb.append(" -- ");
       sb.append(key.label);
       sb.append(" --> ");
       sb.append(table.get(key));
