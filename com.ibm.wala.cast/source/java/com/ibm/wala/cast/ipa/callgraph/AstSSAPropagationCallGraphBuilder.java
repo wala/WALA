@@ -535,11 +535,19 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
                 Access r = I.getLexicalUse(ri);
                 if (w.variableName.equals(r.variableName)) {
                   if (w.variableDefiner == null ? r.variableDefiner == null : w.variableDefiner.equals(r.variableDefiner)) {
-                    // handle the control-flow paths through the (transitive) callees where the name is not written;
+                    // handle the control-flow paths through the (transitive)
+                    // callees where the name is not written;
                     // in such cases, the original value (rk) is preserved
                     PointerKey rk = getBuilder().getPointerKeyForLocal(node, r.valueNumber);
                     PointerKey wk = getBuilder().getPointerKeyForLocal(node, w.valueNumber);
-                    system.newConstraint(wk, assignOperator, rk);
+                    if (contentsAreInvariant(symbolTable, du, r.valueNumber)) {
+                      system.recordImplicitPointsToSet(rk);
+                      for (InstanceKey ik : getInvariantContents(r.valueNumber)) {
+                        system.newConstraint(wk, ik);
+                      }
+                    } else {
+                      system.newConstraint(wk, assignOperator, rk);
+                    }
                   }
                 }
               }
