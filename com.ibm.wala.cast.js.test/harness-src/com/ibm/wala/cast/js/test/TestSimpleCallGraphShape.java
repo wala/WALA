@@ -241,6 +241,11 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     CallGraph CG = Util.makeScriptCG("tests", "crash2.js");
     verifyGraphAssertions(CG, null);
   }
+  
+  @Test public void testLexicalCtor() throws IOException, IllegalArgumentException, CancelException {
+    CallGraph CG = Util.makeScriptCG("tests", "lexical-ctor.js");
+    verifyGraphAssertions(CG, null);
+  }
 
   private static final Object[][] assertionsForMultivar = new Object[][] {
     new Object[] { ROOT, new String[] { "tests/multivar.js" } },
