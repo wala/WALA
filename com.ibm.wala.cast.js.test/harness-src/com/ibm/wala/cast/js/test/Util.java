@@ -36,6 +36,7 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
 public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
 
@@ -66,14 +67,16 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
     return makeScriptCG(dir, name, false);
   }
 
-  public static CallGraph makeScriptCG(String dir, String name, boolean useOneCFA) throws IOException, IllegalArgumentException, CancelException {
+  public static CallGraph makeScriptCG(String dir, String name, boolean useOneCFA) throws IOException, IllegalArgumentException,
+      CancelException {
     PropagationCallGraphBuilder b = makeScriptCGBuilder(dir, name, useOneCFA);
     CallGraph CG = b.makeCallGraph(b.getOptions());
     dumpCG(b.getPointerAnalysis(), CG);
     return CG;
   }
 
-  public static CallGraph makeScriptCG(SourceModule[] scripts, boolean useOneCFA) throws IOException, IllegalArgumentException, CancelException {
+  public static CallGraph makeScriptCG(SourceModule[] scripts, boolean useOneCFA) throws IOException, IllegalArgumentException,
+      CancelException {
     PropagationCallGraphBuilder b = makeCGBuilder(scripts, useOneCFA);
     CallGraph CG = b.makeCallGraph(b.getOptions());
     dumpCG(b.getPointerAnalysis(), CG);
@@ -91,7 +94,14 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
   public static CallGraph makeHTMLCG(URL url) throws IOException, IllegalArgumentException, CancelException {
     PropagationCallGraphBuilder b = makeHTMLCGBuilder(url);
     CallGraph CG = b.makeCallGraph(b.getOptions());
-//    dumpCG(b, CG);
+    // dumpCG(b, CG);
+    return CG;
+  }
+
+  public static CallGraph makeHTMLCG(URL url, IProgressMonitor monitor) throws IOException, IllegalArgumentException,
+      CancelException {
+    PropagationCallGraphBuilder b = makeHTMLCGBuilder(url);
+    CallGraph CG = b.makeCallGraph(b.getOptions(), monitor);
     return CG;
   }
 
@@ -101,8 +111,7 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
     return makeCG(loaders, scope, useOneCFA);
   }
 
-  protected static JSCFABuilder makeCG(JavaScriptLoaderFactory loaders, AnalysisScope scope, boolean useOneCFA)
-      throws IOException {
+  protected static JSCFABuilder makeCG(JavaScriptLoaderFactory loaders, AnalysisScope scope, boolean useOneCFA) throws IOException {
     try {
       IClassHierarchy cha = makeHierarchy(scope, loaders);
       com.ibm.wala.cast.test.Util.checkForFrontEndErrors(cha);
