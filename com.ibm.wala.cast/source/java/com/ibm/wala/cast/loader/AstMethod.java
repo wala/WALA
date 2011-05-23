@@ -48,7 +48,7 @@ public abstract class AstMethod implements IMethod {
 
     public IntSet getAllExposedUses();
 
-    public Pair[] getExposedNames();
+    public Pair<String, String>[] getExposedNames();
 
     public String[] getScopingParents();
     
@@ -141,7 +141,7 @@ public abstract class AstMethod implements IMethod {
    * methods containing state possibly referenced lexically in this
    * method
    */
-  public abstract class LexicalParent {
+  public static abstract class LexicalParent {
     public abstract String getName();
     public abstract AstMethod getMethod();
 

@@ -482,7 +482,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     IR sourceIR = getCFAContextInterpreter().getIR(caller);
     SymbolTable sourceST = sourceIR.getSymbolTable();
-
+    
     IR targetIR = getCFAContextInterpreter().getIR(target);
     SymbolTable targetST = targetIR.getSymbolTable();
 
@@ -504,7 +504,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     // pass actual arguments to formals in the normal way
     for (int i = 0; i < Math.min(paramCount, argCount); i++) {
-      int fn = targetST.getConstant(i);
+      InstanceKey[] fn = new InstanceKey[]{ getInstanceKeyForConstant(JavaScriptTypes.Number, i) };
       PointerKey F = getTargetPointerKey(target, i);
 
       if (constParams != null && constParams[i] != null) {
@@ -528,7 +528,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     if (paramCount < argCount) {
       if (av != -1) {
         for (int i = paramCount; i < argCount; i++) {
-          int fn = targetST.getConstant(i);
+          InstanceKey[] fn = new InstanceKey[]{ getInstanceKeyForConstant(JavaScriptTypes.Number, i) };
           if (constParams != null && constParams[i] != null) {
             targetVisitor.newFieldWrite(target, av, fn, constParams[i]);
           } else {
@@ -554,8 +554,8 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     // write `length' in argument objects
     if (av != -1) {
-      int svn = targetST.getConstant(argCount);
-      int lnv = targetST.getConstant("length");
+      InstanceKey[] svn = new InstanceKey[]{ getInstanceKeyForConstant(JavaScriptTypes.Number, argCount) };
+      InstanceKey[] lnv = new InstanceKey[]{ getInstanceKeyForConstant(JavaScriptTypes.String, "length") };
       targetVisitor.newFieldWrite(target, av, lnv, svn);
     }
 

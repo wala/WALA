@@ -45,6 +45,24 @@ public class TestForInLoopHack extends TestJSCallGraphShape {
     Util.dumpCG(builder.getPointerAnalysis(), CG);
   }
 
+  @Test public void testJQueryWithHack() throws IOException, IllegalArgumentException, CancelException {
+    URL url = getClass().getClassLoader().getResource("pages/jquery_hacked.html");
+    JSCFABuilder builder = Util.makeHTMLCGBuilder(url);
+    addHackedForInLoopSensitivity(builder);
+    CallGraph CG = builder.makeCallGraph(builder.getOptions());
+    Util.dumpCG(builder.getPointerAnalysis(), CG);
+  }
+
+  /*
+  @Test public void testJQueryEx1WithHack() throws IOException, IllegalArgumentException, CancelException {
+    URL url = getClass().getClassLoader().getResource("pages/jquery/ex1.html");
+    JSCFABuilder builder = Util.makeHTMLCGBuilder(url);
+    addHackedForInLoopSensitivity(builder);
+    CallGraph CG = builder.makeCallGraph(builder.getOptions());
+    Util.dumpCG(builder.getPointerAnalysis(), CG);
+  }
+  */
+  
   private static final Object[][] assertionsForBadForin = new Object[][] { 
     new Object[] { ROOT, 
       new String[] { "tests/badforin.js" } },

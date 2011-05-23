@@ -15,7 +15,7 @@ note_post_parameters = function notePostParameters(url) {
 	// hook for analysis of Web pages
 };
 
-function NamedNodeList() {
+NamedNodeList = function NamedNodeList() {
 	var maxLength = 10;
 	var local = new Array(10);
 	var counter = -1;
@@ -85,7 +85,7 @@ function NamedNodeList() {
         }
 }
 
-function DOMNode() { // An impostor for the Node class
+DOMNode = function DOMNode() { // An impostor for the Node class
 	this.childNodes = new NamedNodeList();
 	this.insertBefore = function insertBefore(newChild, refChild) {
 				this.childNodes.insertBefore(newChild, refChild);
@@ -116,7 +116,7 @@ function DOMNode() { // An impostor for the Node class
         }
 }
 
-function DOMDocument() {
+DOMDocument = function DOMDocument() {
 	this.temp = DOMNode;
 	this.temp();
 
@@ -137,11 +137,11 @@ function DOMDocument() {
 	};
 }
 
-function HTMLBody(){
+HTMLBody = function HTMLBody(){
 	this.innerHTML = new String();
 }
 
-function DOMHTMLDocument() {
+DOMHTMLDocument = function DOMHTMLDocument() {
 	this.temp = DOMDocument;
 	this.temp();
 	this.URL = new String();
@@ -150,7 +150,7 @@ function DOMHTMLDocument() {
 }
 
 
-function Location(){
+Location = function Location(){
 	this.host = new String();
 	this.hostname = new String();
 	this.href = new String();
@@ -163,14 +163,14 @@ function Location(){
 }
 
 
-function DOMWindow(){
+DOMWindow = function DOMWindow(){
 	this.name = new String();
 	this.open = function window_open(url, stuff) { 
 		note_url(url); 
 	};
 }
 
-function DOJOObj(){
+DOJOObj = function DOJOObj(){
 	this.moduleUrl = function module_url(str1, str2){
 		return str1 + str2;
 	}
@@ -194,7 +194,7 @@ window.XMLHttpRequest = XMLHttpRequest;
 
 var dojo = new DOJOObj();
 
-function DOMElement() { // An impostor for the Element class
+DOMElement = function DOMElement() { // An impostor for the Element class
 	// inherits from Node
 	this.temp = DOMNode;
 	this.temp();
@@ -215,7 +215,7 @@ function DOMElement() { // An impostor for the Element class
 
 }
 
-function DOMHTMLElement() { // An impostor for the HTMLElement class
+DOMHTMLElement = function DOMHTMLElement() { // An impostor for the HTMLElement class
 	// inherits from Element
 	this.temp = DOMElement;
 	this.temp();
@@ -234,7 +234,7 @@ function DOMHTMLElement() { // An impostor for the HTMLElement class
 var dynamic_node = 0;
 
 // Just a hack until all HTML elements have corresponding constructors
-function DOMHTMLGenericElement(tagName) {
+DOMHTMLGenericElement = function DOMHTMLGenericElement(tagName) {
 	// inherits from Element
 	this.temp = DOMHTMLElement;
 	this.temp();
@@ -253,7 +253,7 @@ function DOMHTMLGenericElement(tagName) {
 
 var formCount = 0;
 
-function DOMHTMLFormElement() {
+DOMHTMLFormElement = function DOMHTMLFormElement() {
 	// inherits from HTMLElement
 	this.temp = DOMHTMLElement;
 	this.temp();
@@ -281,7 +281,7 @@ function DOMHTMLFormElement() {
 	this.target = null;
 }
 
-function DOMHTMLTableElement () {
+DOMHTMLTableElement = function DOMHTMLTableElement () {
 	// inherits from HTMLElement
 	this.temp = DOMHTMLElement;
 	this.temp();

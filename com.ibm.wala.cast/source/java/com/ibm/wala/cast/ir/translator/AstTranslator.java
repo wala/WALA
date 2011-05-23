@@ -2245,11 +2245,15 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       }
     }
 
-    private int[] buildLexicalUseArray(Pair<Pair<String, String>, Integer>[] exposedNames) {
+    private int[] buildLexicalUseArray(Pair<Pair<String, String>, Integer>[] exposedNames, String entityName) {
       if (exposedNames != null) {
         int[] lexicalUses = new int[exposedNames.length];
         for (int j = 0; j < exposedNames.length; j++) {
-          lexicalUses[j] = exposedNames[j].snd;
+          if (entityName == null || entityName.equals(exposedNames[j].fst.snd)) {
+            lexicalUses[j] = exposedNames[j].snd;
+          } else {
+            lexicalUses[j] = -1;
+          }
         }
 
         return lexicalUses;
@@ -2273,7 +2277,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
 
     @SuppressWarnings("unchecked")
-    AstLexicalInformation(Scope scope, SSAInstruction[] instrs, Set<Pair<Pair<String, String>, Integer>> exposedNamesSet,
+    AstLexicalInformation(String entityName, Scope scope, SSAInstruction[] instrs, Set<Pair<Pair<String, String>, Integer>> exposedNamesSet,
         Set<Access> accesses) {
       Pair<Pair<String, String>, Integer>[] EN = null;
       if (exposedNamesSet != null) {
@@ -2285,12 +2289,12 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       // the value numbers stored in exitLexicalUses and instructionLexicalUses
       // are identical at first; they will be updated
       // as needed during the final SSA conversion
-      this.exitLexicalUses = buildLexicalUseArray(EN);
+      this.exitLexicalUses = buildLexicalUseArray(EN, entityName);
 
       this.instructionLexicalUses = new int[instrs.length][];
       for (int i = 0; i < instrs.length; i++) {
         if (instrs[i] instanceof SSAAbstractInvokeInstruction) {
-          this.instructionLexicalUses[i] = buildLexicalUseArray(EN);
+          this.instructionLexicalUses[i] = buildLexicalUseArray(EN, null);
         }
       }
 
@@ -2330,8 +2334,10 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       return exitLexicalUses;
     }
 
+    private static final int[] NONE = new int[0];
+    
     public int[] getExposedUses(int instructionOffset) {
-      return instructionLexicalUses[instructionOffset];
+      return instructionLexicalUses[instructionOffset]==null? NONE: instructionLexicalUses[instructionOffset];
     }
 
     public IntSet getAllExposedUses() {
@@ -2339,7 +2345,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         allExposedUses = IntSetUtil.make();
         if (exitLexicalUses != null) {
           for (int i = 0; i < exitLexicalUses.length; i++) {
-            allExposedUses.add(exitLexicalUses[i]);
+            if (exitLexicalUses[i] > 0) {
+              allExposedUses.add(exitLexicalUses[i]);
+            }
           }
         }
         if (instructionLexicalUses != null) {
@@ -2765,7 +2773,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     // (put here to allow subclasses to handle stuff in scoped entities)
     // assemble lexical information
     patchLexicalAccesses(cfg.getInstructions(), accesses.get(n));
-    AstLexicalInformation LI = new AstLexicalInformation((AbstractScope) functionContext.currentScope(), cfg.getInstructions(),
+    AstLexicalInformation LI = new AstLexicalInformation(getEntityName(n), (AbstractScope) functionContext.currentScope(), cfg.getInstructions(),
         exposedNames.get(n), accesses.get(n));
 
     DebuggingInformation DBG = new AstDebuggingInformation(n.getPosition(), line, nms);

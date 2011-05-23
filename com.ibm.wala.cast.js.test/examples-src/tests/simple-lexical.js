@@ -69,4 +69,46 @@ function outer( x ) {
   return x+z;
 }
 
+function c2() {
+	
+}
+
+function c3() {
+	
+}
+
+function fa2(x) {
+	x();
+}
+
+function fa3(x) {
+	x();
+}
+
+function aa() {
+	var c1 = function _c1() {
+		
+	}
+	
+	var fa = function _fa1(x) {
+		x();
+	}
+	
+	function bb(x) {
+		fa = x;
+	}
+	
+	fa(c1);
+	
+	bb(fa2);
+	
+	fa(c2);
+	
+	bb(fa3);
+	
+	fa(c3);
+}
+
 var result = outer( 5 );
+
+aa();

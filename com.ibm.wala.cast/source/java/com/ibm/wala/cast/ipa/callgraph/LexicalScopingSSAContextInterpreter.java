@@ -34,7 +34,7 @@ public class LexicalScopingSSAContextInterpreter extends AstContextInsensitiveSS
       }
     }
     
-    return getAnalysisCache().getSSACache().findOrCreateIR(node.getMethod(), node.getContext(), options.getSSAOptions());
+    return super.getIR(node);
   }
   
   public DefUse getDU(CGNode node) {
@@ -45,7 +45,7 @@ public class LexicalScopingSSAContextInterpreter extends AstContextInsensitiveSS
       }
     }
 
-    return getAnalysisCache().getSSACache().findOrCreateDU(node.getMethod(), node.getContext(), options.getSSAOptions());
+    return super.getDU(node);
   }
   
 }

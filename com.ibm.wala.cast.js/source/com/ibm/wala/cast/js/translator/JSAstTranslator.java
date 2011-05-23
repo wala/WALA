@@ -58,7 +58,7 @@ public class JSAstTranslator extends AstTranslator {
   }
 
   protected boolean treatGlobalsAsLexicallyScoped() {
-    return true;
+    return false;
   }
 
   protected boolean useLocalValuesForLexicalVars() {
@@ -145,12 +145,7 @@ public class JSAstTranslator extends AstTranslator {
 
     // force creation of these constants by calling the getter methods
     symtab.getNullConstant();
-    symtab.getConstant("arguments");
-    symtab.getConstant("length");
-    for (int i = 0; i < 20; i++) {
-      symtab.getConstant(i);
-    }
-
+ 
     ((JavaScriptLoader) loader).defineCodeBodyCode("L" + fnName, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, LI,
         debugInfo);
   }

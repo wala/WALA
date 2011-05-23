@@ -21,7 +21,7 @@ import com.ibm.wala.types.ClassLoaderReference;
  * Creates the single {@link IClassLoader class loader} used for JavaScript.  
  */
 public class JavaScriptLoaderFactory extends SingleClassLoaderFactory {
-  private final JavaScriptTranslatorFactory translatorFactory;
+  protected final JavaScriptTranslatorFactory translatorFactory;
 
   public JavaScriptLoaderFactory(JavaScriptTranslatorFactory factory) {
     this.translatorFactory = factory;
