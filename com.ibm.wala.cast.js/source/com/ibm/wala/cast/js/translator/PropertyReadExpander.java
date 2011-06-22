@@ -120,8 +120,8 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
     CAstNode get, result;
     String receiverTemp = TEMP_NAME + (readTempCounter++);
     String elt = (String) element.getValue();
-    if (elt.equals("prototype")) {
-      result = Ast.makeNode(CAstNode.BLOCK_EXPR, get = Ast.makeNode(CAstNode.OBJECT_REF, receiver, Ast.makeConstant("prototype")));
+    if (elt.equals("prototype") || elt.equals("__proto__")) {
+      result = Ast.makeNode(CAstNode.BLOCK_EXPR, get = Ast.makeNode(CAstNode.OBJECT_REF, receiver, Ast.makeConstant(elt)));
     } else {
 
       if (context.inAssignment()) {
@@ -146,7 +146,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
                       CAstNode.ASSIGN,
                       Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
                       Ast.makeNode(CAstNode.OBJECT_REF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
-                          Ast.makeConstant("prototype")))),
+                          Ast.makeConstant("__proto__")))),
               get = Ast.makeNode(CAstNode.OBJECT_REF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
                   Ast.makeConstant(elt)));
     }
@@ -188,7 +188,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
                 CAstNode.ASSIGN,
                 Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
                 Ast.makeNode(CAstNode.OBJECT_REF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
-                    Ast.makeConstant("prototype")))),
+                    Ast.makeConstant("__proto__")))),
         get = Ast.makeNode(CAstNode.OBJECT_REF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
             Ast.makeNode(CAstNode.VAR, Ast.makeConstant(elementTemp))));
 

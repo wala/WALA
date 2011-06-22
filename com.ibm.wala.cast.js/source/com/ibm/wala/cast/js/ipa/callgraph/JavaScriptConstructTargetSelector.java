@@ -42,6 +42,10 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
 
+/**
+ * generates instructions to simulate the semantics of JS constructor invocations
+ *
+ */
 public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   private static final boolean DEBUG = false;
 
@@ -88,7 +92,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     
     S.addStatement(insts.NewInstruction(5, NewSiteReference.make(S.getNextProgramCounter(), cls.getReference())));
 
-    S.addStatement(insts.PutInstruction(5, 4, "prototype"));
+    S.addStatement(insts.PutInstruction(5, 4, "__proto__"));
     S.getNextProgramCounter();
     
     S.addConstant(new Integer(8), new ConstantValue(value));
@@ -111,7 +115,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     
     S.addStatement(insts.NewInstruction(6, NewSiteReference.make(S.getNextProgramCounter(), cls.getReference())));
 
-    S.addStatement(insts.PutInstruction(6, 5, "prototype"));
+    S.addStatement(insts.PutInstruction(6, 5, "__proto__"));
     S.getNextProgramCounter();
     
     S.addStatement(insts.PutInstruction(6, 2, "$value"));
@@ -138,6 +142,9 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     }
   }
 
+  /**
+   * create a method for constructing an Object with no arguments passed
+   */
   private IMethod makeNullaryObjectConstructor(IClass cls) {
     JSInstructionFactory insts = (JSInstructionFactory)cls.getClassLoader().getInstructionFactory();
     MethodReference ref = JavaScriptMethods.makeCtorReference(JavaScriptTypes.Object);
@@ -148,7 +155,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     
     S.addStatement(insts.NewInstruction(5, NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Object)));
 
-    S.addStatement(insts.PutInstruction(5, 4, "prototype"));
+    S.addStatement(insts.PutInstruction(5, 4, "__proto__"));
     S.getNextProgramCounter();
     
     S.addStatement(insts.ReturnInstruction(5, false));
@@ -205,7 +212,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     
     S.addStatement(insts.NewInstruction(6, NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Array)));
 
-    S.addStatement(insts.PutInstruction(6, 5, "prototype"));
+    S.addStatement(insts.PutInstruction(6, 5, "__proto__"));
     S.getNextProgramCounter();
     
     S.addStatement(insts.PutInstruction(6, 2, "length"));
@@ -230,7 +237,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
         insts.NewInstruction(nargs + 5, NewSiteReference.make(S.getNextProgramCounter(),
             JavaScriptTypes.Array)));
 
-    S.addStatement(insts.PutInstruction(nargs + 5, nargs + 4, "prototype"));
+    S.addStatement(insts.PutInstruction(nargs + 5, nargs + 4, "__proto__"));
     S.getNextProgramCounter();
     
     S.addConstant(new Integer(nargs + 7), new ConstantValue(nargs));
@@ -355,6 +362,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
 
     S.addStatement(insts.NewInstruction(7, NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Object)));
 
+    // TODO fix these writes to operate on __proto__, once we're sure we're doing the right thing here
     S.addStatement(insts.PutInstruction(7, 4, "prototype"));
     S.getNextProgramCounter();
     
@@ -466,7 +474,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
                                      NewSiteReference.make(S.getNextProgramCounter(),
                                      JavaScriptTypes.Object)));
 
-    S.addStatement(insts.PutInstruction(nargs + 5, nargs + 4, "prototype"));
+    S.addStatement(insts.PutInstruction(nargs + 5, nargs + 4, "__proto__"));
     S.getNextProgramCounter();
     
     CallSiteReference cs = new JSCallSiteReference(S.getNextProgramCounter());

@@ -1420,6 +1420,26 @@ public class RhinoToAstTranslator {
 
       return result;
     }
+    
+    case Token.GET_REF: {
+      // read of __proto__
+      // first and only child c1 is of type Token.REF_SPECIAL whose NAME_PROP property should be "__proto__".  
+      // c1 has a single child, the base pointer for the reference
+      Node child1 = n.getFirstChild();
+      assert child1.getType() == Token.REF_SPECIAL;
+      assert child1.getProp(Node.NAME_PROP).equals("__proto__");
+      Node receiver = child1.getFirstChild();     
+      assert child1.getNext() == null;
+      CAstNode rcvr = walkNodes(receiver, context);
+      final CAstNode result = Ast.makeNode(CAstNode.OBJECT_REF, rcvr, Ast.makeConstant("__proto__"));
+      
+      if (context.getCatchTarget() != null) {
+        context.cfg().map(result, result);
+        context.cfg().add(result, context.getCatchTarget(), JavaScriptTypes.TypeError);
+      }
+      
+      return result;
+    }
 
     case Token.SETPROP:
     case Token.SETELEM: {
@@ -1432,6 +1452,23 @@ public class RhinoToAstTranslator {
       return Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.OBJECT_REF, rcvr, walkNodes(elt, context)),
           walkNodes(val, context));
     }
+    
+    case Token.SET_REF: {
+      // first child c1 is of type Token.REF_SPECIAL whose NAME_PROP property should be "__proto__".  
+      // c1 has a single child, the base pointer for the reference
+      // second child c2 is RHS of assignment
+      Node child1 = n.getFirstChild();
+      assert child1.getType() == Token.REF_SPECIAL;
+      assert child1.getProp(Node.NAME_PROP).equals("__proto__");
+      Node receiver = child1.getFirstChild();
+      Node val = child1.getNext();
+
+      CAstNode rcvr = walkNodes(receiver, context);
+
+      return Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.OBJECT_REF, rcvr, Ast.makeConstant("__proto__")),
+          walkNodes(val, context));
+    }
+      
 
     case Token.DELPROP: {
       Node receiver = n.getFirstChild();
