@@ -13,6 +13,7 @@ package com.ibm.wala.cast.ir.translator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -114,6 +115,10 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
    */
   protected abstract boolean useLocalValuesForLexicalVars();
 
+  protected boolean topLevelFunctionsInGlobalScope() {
+    return true;
+  }
+  
   /**
    * for a block that catches all exceptions, what is the root exception type
    * that it can catch? E.g., for Java, java.lang.Throwable
@@ -290,7 +295,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     // record in declaring scope that the name is exposed to a nested scope
     Symbol S = context.currentScope().lookup(name);
     CAstEntity E = S.getDefiningScope().getEntity();
-    addExposedName(E, E, name, S.getDefiningScope().lookup(name).valueNumber());
+    addExposedName(E, E, name, S.getDefiningScope().lookup(name).valueNumber(), false);
 
     int vn = S.valueNumber();
     if (useLocalValuesForLexicalVars()) {
@@ -301,7 +306,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       // record the name as exposed for the current entity, since if the name is
       // updated via a call to a nested function, SSA for the current entity may
       // need to be updated with the new definition
-      addExposedName(context.top(), E, name, vn);
+      addExposedName(context.top(), E, name, vn, false);
 
       // record the access; later, the Accesses in the instruction
       // defining vn will be adjusted based on this information; see
@@ -328,14 +333,14 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     // record in declaring scope that the name is exposed
     Symbol S = context.currentScope().lookup(name);
     CAstEntity E = S.getDefiningScope().getEntity();
-    addExposedName(E, E, name, S.getDefiningScope().lookup(name).valueNumber());
+    addExposedName(E, E, name, S.getDefiningScope().lookup(name).valueNumber(), true);
 
     // lexically-scoped variables can be given a single vn in a method, or
     if (useLocalValuesForLexicalVars()) {
       int vn = S.valueNumber();
       Access A = new Access(name, getEntityName(E), vn);
 
-      addExposedName(context.top(), E, name, vn);
+      addExposedName(context.top(), E, name, vn, true);
       addAccess(context.top(), A);
 
       context.cfg().addInstruction(new AssignInstruction(vn, rval));
@@ -365,7 +370,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         int vn = S.valueNumber();
         Access A = new Access(name, null, vn);
 
-        addExposedName(context.top(), null, name, vn);
+        addExposedName(context.top(), null, name, vn, false);
         addAccess(context.top(), A);
 
         return vn;
@@ -401,7 +406,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         int vn = S.valueNumber();
         Access A = new Access(name, null, vn);
 
-        addExposedName(context.top(), null, name, vn);
+        addExposedName(context.top(), null, name, vn, true);
         addAccess(context.top(), A);
 
         context.cfg().addInstruction(new AssignInstruction(vn, rval));
@@ -2173,6 +2178,11 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
    */
   public static class AstLexicalInformation implements LexicalInformation {
     /**
+     * the name of this function, as it appears in the definer portion of a lexical name
+     */
+    private final String functionLexicalName;
+    
+    /**
      * names possibly accessed in a nested lexical scope, represented as pairs
      * (name,nameOfDefiningEntity)
      */
@@ -2204,8 +2214,15 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
      */
     private MutableIntSet allExposedUses = null;
 
+    /** 
+     * names of exposed variables of this method that cannot be written outside
+     */
+    private final Set<String> readOnlyNames;
+    
     @SuppressWarnings("unchecked")
     public AstLexicalInformation(AstLexicalInformation original) {
+      this.functionLexicalName = original.functionLexicalName;
+      
       if (original.exposedNames != null) {
         exposedNames = new Pair[original.exposedNames.length];
         for (int i = 0; i < exposedNames.length; i++) {
@@ -2243,6 +2260,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       } else {
         scopingParents = null;
       }
+      
+      readOnlyNames = original.readOnlyNames;
     }
 
     private int[] buildLexicalUseArray(Pair<Pair<String, String>, Integer>[] exposedNames, String entityName) {
@@ -2277,13 +2296,42 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
 
     @SuppressWarnings("unchecked")
-    AstLexicalInformation(String entityName, Scope scope, SSAInstruction[] instrs, Set<Pair<Pair<String, String>, Integer>> exposedNamesSet,
+    AstLexicalInformation(String entityName, Scope scope, SSAInstruction[] instrs, Set<Pair<Pair<String, String>, Integer>> exposedNamesForReadSet,
+        Set<Pair<Pair<String, String>, Integer>> exposedNamesForWriteSet,
         Set<Access> accesses) {
+      this.functionLexicalName = entityName;
+      
       Pair<Pair<String, String>, Integer>[] EN = null;
-      if (exposedNamesSet != null) {
+      if (exposedNamesForReadSet != null || exposedNamesForWriteSet != null) {
+        Set<Pair<Pair<String, String>, Integer>> exposedNamesSet = new HashSet<Pair<Pair<String, String>, Integer>>();
+        if (exposedNamesForReadSet != null) {
+          exposedNamesSet.addAll(exposedNamesForReadSet);
+        }
+        if (exposedNamesForWriteSet != null) {
+          exposedNamesSet.addAll(exposedNamesForWriteSet);
+        }
         EN = exposedNamesSet.toArray(new Pair[exposedNamesSet.size()]);
       }
 
+      if (exposedNamesForReadSet != null) {
+        Set<String> readOnlyNames = new HashSet<String>();
+        for(Pair<Pair<String,String>,Integer> v : exposedNamesForReadSet) {
+          if (entityName != null && entityName.equals(v.fst.snd)) {
+            readOnlyNames.add(v.fst.fst);
+          }
+        }
+        if (exposedNamesForWriteSet != null) {
+          for(Pair<Pair<String,String>,Integer> v : exposedNamesForWriteSet) {
+            if (entityName != null && entityName.equals(v.fst.snd)) {
+              readOnlyNames.remove(v.fst.fst);
+            }
+          }
+        }
+        this.readOnlyNames = readOnlyNames;
+      } else {
+        this.readOnlyNames = null;
+      }
+   
       this.exposedNames = buildLexicalNamesArray(EN);
 
       // the value numbers stored in exitLexicalUses and instructionLexicalUses
@@ -2380,6 +2428,14 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     public void handleAlteration() {
       allExposedUses = null;
     }
+
+    public boolean isReadOnly(String name) {
+      return readOnlyNames != null && readOnlyNames.contains(name);
+    }
+
+    public String getScopingName() {
+        return functionLexicalName;
+    }
   };
 
   /**
@@ -2419,7 +2475,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
    * maps entities to the names of their declared entities accessed in a nested
    * lexical scope, represented as (name, nameOfDeclaringEntity, valueNumber)
    */
-  private final Map<CAstEntity, Set<Pair<Pair<String, String>, Integer>>> exposedNames = new LinkedHashMap<CAstEntity, Set<Pair<Pair<String, String>, Integer>>>();
+  private final Map<CAstEntity, Set<Pair<Pair<String, String>, Integer>>> exposedNamesForRead = new LinkedHashMap<CAstEntity, Set<Pair<Pair<String, String>, Integer>>>();
+
+  private final Map<CAstEntity, Set<Pair<Pair<String, String>, Integer>>> exposedNamesForWrite = new LinkedHashMap<CAstEntity, Set<Pair<Pair<String, String>, Integer>>>();
 
   /**
    * maps an entity e to the set of implicit lexical accesses performed within
@@ -2464,9 +2522,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
    * @param valueNumber
    *          the name's value number in the scope of entity
    */
-  private void addExposedName(CAstEntity entity, CAstEntity declaration, String name, int valueNumber) {
+  private void addExposedName(CAstEntity entity, CAstEntity declaration, String name, int valueNumber, boolean isWrite) {
     Pair<Pair<String, String>, Integer> newVal = Pair.make(Pair.make(name, getEntityName(declaration)), valueNumber);
-    MapUtil.findOrCreateSet(exposedNames, entity).add(newVal);
+    MapUtil.findOrCreateSet(isWrite? exposedNamesForWrite: exposedNamesForRead, entity).add(newVal);
   }
 
   private String getEntityName(CAstEntity e) {
@@ -2774,7 +2832,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     // assemble lexical information
     patchLexicalAccesses(cfg.getInstructions(), accesses.get(n));
     AstLexicalInformation LI = new AstLexicalInformation(getEntityName(n), (AbstractScope) functionContext.currentScope(), cfg.getInstructions(),
-        exposedNames.get(n), accesses.get(n));
+        exposedNamesForRead.get(n), exposedNamesForWrite.get(n), accesses.get(n));
 
     DebuggingInformation DBG = new AstDebuggingInformation(n.getPosition(), line, nms);
 
@@ -2872,6 +2930,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     if (cs.contains(fn.getName()) && !cs.isLexicallyScoped(cs.lookup(fn.getName())) && !cs.isGlobal(cs.lookup(fn.getName()))) {
       // if we already have a local with the function's name, write the function value to that local 
       assignValue(n, context, cs.lookup(fn.getName()), fn.getName(), result);
+    } else if (topLevelFunctionsInGlobalScope() && context.top().getKind() == CAstEntity.SCRIPT_ENTITY) {
+      globalScope.declare(new FinalCAstSymbol(fn.getName()));
+      assignValue(n, context, cs.lookup(fn.getName()), fn.getName(), result);      
     } else {
       context.currentScope().declare(new FinalCAstSymbol(fn.getName()), result);
     }

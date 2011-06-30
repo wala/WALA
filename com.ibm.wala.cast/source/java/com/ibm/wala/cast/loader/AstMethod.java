@@ -52,7 +52,11 @@ public abstract class AstMethod implements IMethod {
 
     public String[] getScopingParents();
     
+    public boolean isReadOnly(String name);
+    
     public void handleAlteration();
+    
+    public String getScopingName();
 
   }
 

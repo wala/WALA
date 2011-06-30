@@ -12,7 +12,7 @@ package com.ibm.wala.cast.ipa.callgraph;
 
 import java.util.Iterator;
 
-import com.ibm.wala.cast.ipa.callgraph.LexicalScopingResolverContexts.Resolver;
+import com.ibm.wala.cast.ipa.callgraph.LexicalScopingResolverContexts.LexicalScopingResolver;
 import com.ibm.wala.cast.loader.AstMethod.LexicalParent;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -96,9 +96,9 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
     Iterator<CGNode> getFunargNodes(Pair<String,String> name) {
       Iterator<CGNode> result = EmptyIterator.instance();
       
-      Resolver r = (Resolver)creator.getContext().get(LexicalScopingResolverContexts.RESOLVER);
+      LexicalScopingResolver r = (LexicalScopingResolver)creator.getContext().get(LexicalScopingResolverContexts.RESOLVER);
       if (r != null) {
-        CGNode def = r.getFunarg(name);
+        CGNode def = r.getOriginalDefiner(name);
         if (def != null) {
           result = new NonNullSingletonIterator<CGNode>(def);
         }
