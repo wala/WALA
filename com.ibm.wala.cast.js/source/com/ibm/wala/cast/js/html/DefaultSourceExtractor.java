@@ -122,7 +122,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
       }
 
       printlnIndented(varName + " = this;", tag);
-      printlnIndented("dom_nodes." + varName + " = this;", tag);
+      printlnIndented("document." + varName + " = this;", tag);
       printlnIndented("parent.appendChild(this);", tag);
     }
 
