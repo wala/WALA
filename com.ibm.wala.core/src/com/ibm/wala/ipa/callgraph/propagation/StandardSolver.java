@@ -19,6 +19,8 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
  */
 public class StandardSolver extends AbstractPointsToSolver {
 
+  private static final boolean DEBUG_PHASES = DEBUG || false;
+  
   public StandardSolver(PropagationSystem system, PropagationCallGraphBuilder builder) {
     super(system, builder);
   }
@@ -32,11 +34,11 @@ public class StandardSolver extends AbstractPointsToSolver {
     do {
       i++;
 
-      if (DEBUG) {
+      if (DEBUG_PHASES) {
         System.err.println("Iteration " + i);
       }
       getSystem().solve(monitor);
-      if (DEBUG) {
+      if (DEBUG_PHASES) {
         System.err.println("Solved " + i);
       }
 
@@ -50,24 +52,24 @@ public class StandardSolver extends AbstractPointsToSolver {
       }
 
       // Add constraints until there are no new discovered nodes
-      if (DEBUG) {
+      if (DEBUG_PHASES) {
         System.err.println("adding constraints");
       }
-      getBuilder().addConstraintsFromNewNodes();
+      getBuilder().addConstraintsFromNewNodes(monitor);
 
       // getBuilder().callGraph.summarizeByPackage();
       
-      if (DEBUG) {
+      if (DEBUG_PHASES) {
         System.err.println("handling reflection");
       }
       if (i <= getBuilder().getOptions().getReflectionOptions().getNumFlowToCastIterations()) {
-        getReflectionHandler().updateForReflection();
+        getReflectionHandler().updateForReflection(monitor);
       }
       // Handling reflection may have discovered new nodes!
-      if (DEBUG) {
+      if (DEBUG_PHASES) {
         System.err.println("adding constraints again");
       }
-      getBuilder().addConstraintsFromNewNodes();
+      getBuilder().addConstraintsFromNewNodes(monitor);
       // Note that we may have added stuff to the
       // worklist; so,
     } while (!getSystem().emptyWorkList());

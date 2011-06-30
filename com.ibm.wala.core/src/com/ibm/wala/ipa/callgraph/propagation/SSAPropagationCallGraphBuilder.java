@@ -68,6 +68,9 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.MonitorUtil;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.functions.VoidFunction;
@@ -173,21 +176,22 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   /**
    * Visit all instructions in a node, and add dataflow constraints induced by each statement in the SSA form.
+   * @throws CancelException 
    * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#addConstraintsFromNode(com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
-  protected boolean addConstraintsFromNode(CGNode node) {
+  protected boolean addConstraintsFromNode(CGNode node, IProgressMonitor monitor) throws CancelException {
     if (haveAlreadyVisited(node)) {
       return false;
     } else {
       markAlreadyVisited(node);
     }
-    return unconditionallyAddConstraintsFromNode(node);
+    return unconditionallyAddConstraintsFromNode(node, monitor);
   }
 
   @Override
-  protected boolean unconditionallyAddConstraintsFromNode(CGNode node) {
+  protected boolean unconditionallyAddConstraintsFromNode(CGNode node, IProgressMonitor monitor) throws CancelException {
 
     if (PERIODIC_WIPE_SOFT_CACHES) {
       wipeCount++;
@@ -217,7 +221,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       return false;
     }
 
-    addNodeInstructionConstraints(node);
+    addNodeInstructionConstraints(node, monitor);
 
     DefUse du = getCFAContextInterpreter().getDU(node);
     addNodePassthruExceptionConstraints(node, ir, du);
@@ -234,15 +238,16 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   /**
    * Add pointer flow constraints based on instructions in a given node
+   * @throws CancelException 
    */
-  protected void addNodeInstructionConstraints(CGNode node) {
+  protected void addNodeInstructionConstraints(CGNode node, IProgressMonitor monitor) throws CancelException {
     ConstraintVisitor v = makeVisitor(node);
 
     IR ir = getCFAContextInterpreter().getIR(node);
     ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = ir.getControlFlowGraph();
     for (Iterator<ISSABasicBlock> x = cfg.iterator(); x.hasNext();) {
       BasicBlock b = (BasicBlock) x.next();
-      addBlockInstructionConstraints(node, cfg, b, v);
+      addBlockInstructionConstraints(node, cfg, b, v, monitor);
       if (wasChanged(node)) {
         return;
       }
@@ -251,13 +256,15 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   /**
    * Add constraints for a particular basic block.
+   * @throws CancelException 
    */
   protected void addBlockInstructionConstraints(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, BasicBlock b,
-      ConstraintVisitor v) {
+      ConstraintVisitor v, IProgressMonitor monitor) throws CancelException {
     v.setBasicBlock(b);
 
     // visit each instruction in the basic block.
     for (Iterator<SSAInstruction> it = b.iterator(); it.hasNext();) {
+      MonitorUtil.throwExceptionIfCanceled(monitor);      
       SSAInstruction s = it.next();
       if (s != null) {
         s.visit(v);
@@ -1881,6 +1888,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @param instruction
    * @return true if we need to filter the receiver type to account for virtual dispatch
    */
+  @SuppressWarnings("unused")
   private boolean needsFilterForReceiver(SSAAbstractInvokeInstruction instruction, CGNode target) {
 
     FilteredPointerKey.TypeFilter f = (FilteredPointerKey.TypeFilter) target.getContext().get(ContextKey.PARAMETERS[0]);
@@ -1911,6 +1919,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     return klass.getClassHierarchy().isRootClass(klass);
   }
 
+  @SuppressWarnings("unused")
   private boolean isRootType(FilteredPointerKey.TypeFilter filter) {
     if (filter instanceof FilteredPointerKey.SingleClassFilter) {
       return isRootType(((FilteredPointerKey.SingleClassFilter) filter).getConcreteType());
