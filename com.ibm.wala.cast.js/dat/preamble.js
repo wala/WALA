@@ -7,6 +7,9 @@
 // A combination of interfaces NodeList, NamedNodeMap, HTMLCollection
 // implement a list of Nodes, accessible through names as well
 
+dynamic_node = 0;
+dom_nodes = new Array();
+
 note_url = function noteURL(url) {
 	// hook for analysis of Web pages
 };
@@ -110,7 +113,7 @@ DOMNode = function DOMNode() { // An impostor for the Node class
 
 	this.collect = function collect(predicate, result) {
           if (predicate(this)) {
-            result.add(this);
+            result.push(this);
           }
           this.childNodes.collect(predicate, result);
         }
@@ -126,10 +129,10 @@ DOMDocument = function DOMDocument() {
 		return toReturn;
 	}
 
-    this.getElementById = function getElementById(id) {
-          var result = new NamedNodeList();
+        this.getElementById = function getElementById(id) {
+          var result = new Array();
           this.collect(function check_id(x) { return x.id == id; }, result);
-          return result.get(0);
+          return result[0];
 	}
 	
 	this.write = function write_to_dom (stuff) {
@@ -213,6 +216,13 @@ DOMElement = function DOMElement() { // An impostor for the Element class
 	        this[name] = undefined;
 	}
 
+    this.getElementsByTagName = function _getElementsByTagName(tagName) {
+        var result = new Array();
+        this.collect(function check_tag(x) { return x.name == tagName; }, result);
+        return result;
+
+    }
+
 }
 
 DOMHTMLElement = function DOMHTMLElement() { // An impostor for the HTMLElement class
@@ -227,11 +237,12 @@ DOMHTMLElement = function DOMHTMLElement() { // An impostor for the HTMLElement 
 	this.dir = null;
 	this.className = null;
     
+	// record new node in dom_nodes
+	dom_nodes[dynamic_node++] = this;
+	
     this.forms = new Array();
     this.formCount = 0;
 }
-
-var dynamic_node = 0;
 
 // Just a hack until all HTML elements have corresponding constructors
 DOMHTMLGenericElement = function DOMHTMLGenericElement(tagName) {
@@ -242,9 +253,6 @@ DOMHTMLGenericElement = function DOMHTMLGenericElement(tagName) {
 	// Set just the tag name
 	this.nodeName = tagName;
 	this.nodeValue = null;
-	
-	// record new node in dom_nodes
-	dom_nodes[dynamic_node++] = this;
 	
 	// load 'src' if appropriate
 	this.src.loadFile = String.prototype.loadFile;
@@ -290,8 +298,6 @@ DOMHTMLTableElement = function DOMHTMLTableElement () {
 	}	
 }
 
-dom_nodes = new Object();
-
 XMLHttpRequest = function _XMLHttpRequest() {
 
 	this.UNSENT = 0;
@@ -333,7 +339,8 @@ XMLHttpRequest = function _XMLHttpRequest() {
 
 };
 
-for(var n in dom_nodes) {
+for(var n = 0; n < dom_nodes.length; n++) {
 	dom_nodes[n].onload();
+	dom_nodes[n].onreadystatechange();
 }
 
