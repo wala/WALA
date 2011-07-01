@@ -1087,12 +1087,14 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     private void newFieldFullOperation(final boolean isLoadOperation, final ReflectedFieldAction action, PointerKey objKey,
         final PointerKey fieldKey) {
       system.newSideEffect(new AbstractOperator<PointsToSetVariable>() {
+        private final MutableIntSet doneReceiver = IntSetUtil.make();
+        private final MutableIntSet doneField = IntSetUtil.make();
         public byte evaluate(PointsToSetVariable lhs, final PointsToSetVariable[] rhs) {
           final IntSetVariable receivers = (IntSetVariable) rhs[0];
           final IntSetVariable fields = (IntSetVariable) rhs[1];
           if (receivers.getValue() != null && fields.getValue() != null) {
             receivers.getValue().foreach(new IntSetAction() {
-              public void act(int rptr) {
+              public void act(final int rptr) {
                 final InstanceKey receiver = system.getInstanceKey(rptr);
 
                 if (!isLoadOperation) {
@@ -1104,18 +1106,25 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
                 fields.getValue().foreach(new IntSetAction() {
                   public void act(int fptr) {
-                    InstanceKey field = system.getInstanceKey(fptr);
-                    for (Iterator keys = isLoadOperation ? getPointerKeysForReflectedFieldRead(receiver, field)
-                        : getPointerKeysForReflectedFieldWrite(receiver, field); keys.hasNext();) {
-                      AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
-                      if (DEBUG_PROPERTIES)
-                        action.dump(key, false, false);
-                      action.action(key);
+                    if (!doneField.contains(fptr) || !doneReceiver.contains(rptr)) {
+                      InstanceKey field = system.getInstanceKey(fptr);
+                      for (Iterator keys = isLoadOperation ? 
+                              getPointerKeysForReflectedFieldRead(receiver, field)
+                              : getPointerKeysForReflectedFieldWrite(receiver, field); 
+                           keys.hasNext();) 
+                      {
+                        AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
+                        if (DEBUG_PROPERTIES)
+                          action.dump(key, false, false);
+                        action.action(key);
+                      }
                     }
                   }
                 });
               }
             });
+            doneReceiver.addAll(receivers.getValue());
+            doneField.addAll(fields.getValue());
           }
 
           return NOT_CHANGED;
