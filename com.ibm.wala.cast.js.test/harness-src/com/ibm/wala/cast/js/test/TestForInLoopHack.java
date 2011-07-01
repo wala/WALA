@@ -7,20 +7,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
+import com.ibm.wala.cast.js.ipa.callgraph.ForInContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
-import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.callgraph.ContextItem;
-import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.intset.IntSetUtil;
 
 public class TestForInLoopHack extends TestJSCallGraphShape {
 
@@ -109,47 +101,7 @@ public class TestForInLoopHack extends TestJSCallGraphShape {
   
   private void addHackedForInLoopSensitivity(JSCFABuilder builder) {
     final ContextSelector orig = builder.getContextSelector();
-    builder.setContextSelector(new ContextSelector() {
-      public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, final InstanceKey[] receiver) {
-        final Context origContext = orig.getCalleeTarget(caller, site, callee, receiver);
-        if (callee.getDeclaringClass().getName().toString().contains("_forin_body")) {
-          class ForInContext implements Context {
-            private final InstanceKey obj = receiver[2];
-            public ContextItem get(ContextKey name) {
-              if (name.equals(ContextKey.PARAMETERS[2])) {
-                return new FilteredPointerKey.SingleInstanceFilter(obj);
-              } else {
-                return origContext.get(name);
-              }
-            }
-            @Override
-            public int hashCode() {
-              return obj.hashCode();
-            }
-            @Override
-            public boolean equals(Object other) {
-              return other != null &&
-                  getClass().equals(other.getClass()) &&
-                  obj.equals(((ForInContext)other).obj);
-            }     
-            @Override
-            public String toString() {
-              return "for in hack filter for " + obj;
-            }
-          };
-          return new ForInContext();
-        } else {
-          return origContext;
-        }
-      }
-      public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
-        if (caller.getIR().getCalls(site)[0].getNumberOfUses() > 2) {
-          return IntSetUtil.make(new int[]{2}).union(orig.getRelevantParameters(caller, site));
-        } else {
-          return orig.getRelevantParameters(caller, site);
-        }
-      }
-    });
+    builder.setContextSelector(new DelegatingContextSelector(new ForInContextSelector(), orig));
   }
 
 }

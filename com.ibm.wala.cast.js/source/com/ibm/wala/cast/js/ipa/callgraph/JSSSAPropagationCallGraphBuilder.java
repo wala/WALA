@@ -27,7 +27,10 @@ import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
 import com.ibm.wala.cast.js.ssa.JavaScriptTypeOfInstruction;
 import com.ibm.wala.cast.js.ssa.JavaScriptWithRegion;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.loader.AstMethod;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -251,7 +254,27 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   // ///////////////////////////////////////////////////////////////////////////
 
   protected JSConstraintVisitor makeVisitor(CGNode node) {
+    if (AstSSAPropagationCallGraphBuilder.DEBUG_PROPERTIES) {
+      final IMethod method = node.getMethod();
+      if (method instanceof AstMethod) {
+        System.err.println("\n\nNode: " + node);
+        final IR ir = node.getIR();
+        System.err.println("Position: " + getSomePositionForMethod(ir, (AstMethod) method));
+        // System.err.println(ir);
+      }
+    }
     return new JSConstraintVisitor(this, node);
+  }
+
+  private Position getSomePositionForMethod(IR ir, AstMethod method) {
+    SSAInstruction[] instructions = ir.getInstructions();
+    for (int i = 0; i < instructions.length; i++) {
+      Position p = method.getSourcePosition(i);
+      if (p != null) {
+        return p;
+      }
+    }
+    return null;
   }
 
   public static class JSConstraintVisitor extends AstConstraintVisitor implements InstructionVisitor {
@@ -470,11 +493,11 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     }
   }
 
-  /////////////////////////////////////////////////////////////////////////////
+  // ///////////////////////////////////////////////////////////////////////////
   //
   // function call handling
   //
-  ////////////////////////////////////////////////////////////////////////////
+  // //////////////////////////////////////////////////////////////////////////
 
   @Override
   protected void processCallingConstraints(CGNode caller, SSAAbstractInvokeInstruction instruction, CGNode target,
@@ -482,7 +505,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     IR sourceIR = getCFAContextInterpreter().getIR(caller);
     SymbolTable sourceST = sourceIR.getSymbolTable();
-    
+
     IR targetIR = getCFAContextInterpreter().getIR(target);
     SymbolTable targetST = targetIR.getSymbolTable();
 
@@ -504,7 +527,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     // pass actual arguments to formals in the normal way
     for (int i = 0; i < Math.min(paramCount, argCount); i++) {
-      InstanceKey[] fn = new InstanceKey[]{ getInstanceKeyForConstant(JavaScriptTypes.Number, i) };
+      InstanceKey[] fn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.Number, i) };
       PointerKey F = getTargetPointerKey(target, i);
 
       if (constParams != null && constParams[i] != null) {
@@ -528,7 +551,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     if (paramCount < argCount) {
       if (av != -1) {
         for (int i = paramCount; i < argCount; i++) {
-          InstanceKey[] fn = new InstanceKey[]{ getInstanceKeyForConstant(JavaScriptTypes.Number, i) };
+          InstanceKey[] fn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.Number, i) };
           if (constParams != null && constParams[i] != null) {
             targetVisitor.newFieldWrite(target, av, fn, constParams[i]);
           } else {
@@ -554,8 +577,8 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     // write `length' in argument objects
     if (av != -1) {
-      InstanceKey[] svn = new InstanceKey[]{ getInstanceKeyForConstant(JavaScriptTypes.Number, argCount) };
-      InstanceKey[] lnv = new InstanceKey[]{ getInstanceKeyForConstant(JavaScriptTypes.String, "length") };
+      InstanceKey[] svn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.Number, argCount) };
+      InstanceKey[] lnv = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.String, "length") };
       targetVisitor.newFieldWrite(target, av, lnv, svn);
     }
 
