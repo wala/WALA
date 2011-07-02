@@ -325,10 +325,35 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     }
 
     public void visitJavaScriptPropertyRead(JavaScriptPropertyRead instruction) {
+      if (AstSSAPropagationCallGraphBuilder.DEBUG_PROPERTIES) {
+        Position instructionPosition = getInstructionPosition(instruction);
+        if (instructionPosition != null) {
+          System.err.println("processing read instruction " + instruction + ", position " + instructionPosition);
+        }
+      }
       newFieldRead(node, instruction.getUse(0), instruction.getUse(1), instruction.getDef(0));
     }
 
+    private Position getInstructionPosition(SSAInstruction instruction) {
+      IMethod method = node.getMethod();
+      if (method instanceof AstMethod) {
+        SSAInstruction[] instructions = ir.getInstructions();
+        for (int ind = basicBlock.getFirstInstructionIndex(); ind <= basicBlock.getLastInstructionIndex(); ind++) {
+          if (instruction.equals(instructions[ind])) {
+            return ((AstMethod)method).getSourcePosition(ind);
+          }
+        }
+      }
+      return null;
+    }
+
     public void visitJavaScriptPropertyWrite(JavaScriptPropertyWrite instruction) {
+      if (AstSSAPropagationCallGraphBuilder.DEBUG_PROPERTIES) {
+        Position instructionPosition = getInstructionPosition(instruction);
+        if (instructionPosition != null) {
+          System.err.println("processing write instruction " + instruction + ", position " + instructionPosition);
+        }
+      }
       newFieldWrite(node, instruction.getUse(0), instruction.getUse(1), instruction.getUse(2));
     }
 
