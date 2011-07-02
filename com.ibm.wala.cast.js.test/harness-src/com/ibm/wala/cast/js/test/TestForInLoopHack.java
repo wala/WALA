@@ -98,10 +98,62 @@ public class TestForInLoopHack extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForBadForin);
     verifyGraphAssertions(CG, assertionsForBadForinHackPrecision);
   }
+
+  private static final Object[][] assertionsForbadforin2 = new Object[][] { 
+    new Object[] { ROOT, 
+      new String[] { "tests/badforin2.js" } },
+    new Object[] { "tests/badforin2.js", 
+      new String[] { "tests/badforin2.js/testForIn", "tests/badforin2.js/_check_obj_foo", "tests/badforin2.js/_check_obj_bar", "tests/badforin2.js/_check_copy_foo", "tests/badforin2.js/_check_copy_bar"} },
+    new Object[] { "tests/badforin2.js/testForIn",
+      new String[] { "tests/badforin2.js/testForIn1", "tests/badforin2.js/testForIn2" } },
+    new Object[] { "tests/badforin2.js/_check_obj_foo",
+      new String[] { "tests/badforin2.js/testForIn1" } },
+    new Object[] { "tests/badforin2.js/_check_copy_foo",
+      new String[] { "tests/badforin2.js/testForIn1" } },
+    new Object[] { "tests/badforin2.js/_check_obj_bar",
+      new String[] { "tests/badforin2.js/testForIn2" } },
+    new Object[] { "tests/badforin2.js/_check_copy_bar",
+      new String[] { "tests/badforin2.js/testForIn2" } }
+  };
+
+  @Test public void testbadforin2WithoutHack() throws IOException, IllegalArgumentException, CancelException {
+    JSCFABuilder B = Util.makeScriptCGBuilder("tests", "badforin2.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    Util.dumpCG(B.getPointerAnalysis(), CG);
+    verifyGraphAssertions(CG, assertionsForbadforin2);
+  }
+
+  private static final Object[][] assertionsForbadforin2HackPrecision = new Object[][] { 
+    new Object[] { "tests/badforin2.js/_check_obj_foo",
+      new String[] { "!tests/badforin2.js/testForIn2" } },
+    new Object[] { "tests/badforin2.js/_check_copy_foo",
+      new String[] { "!tests/badforin2.js/testForIn2" } },
+    new Object[] { "tests/badforin2.js/_check_obj_bar",
+      new String[] { "!tests/badforin2.js/testForIn1" } },
+    new Object[] { "tests/badforin2.js/_check_copy_bar",
+      new String[] { "!tests/badforin2.js/testForIn1" } }
+  };
+
+  @Test public void testbadforin2WithHack() throws IOException, IllegalArgumentException, CancelException {
+    JSCFABuilder B = Util.makeScriptCGBuilder("tests", "badforin2.js");
+    addHackedForInLoopSensitivity(B);
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    Util.dumpCG(B.getPointerAnalysis(), CG);
+    verifyGraphAssertions(CG, assertionsForbadforin2);
+    verifyGraphAssertions(CG, assertionsForbadforin2HackPrecision);
+  }
+
+  /*
+  @Test public void testYahooWithoutHack() throws IOException, IllegalArgumentException, CancelException {
+    JSCFABuilder B = Util.makeScriptCGBuilder("frameworks", "yahoo.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    Util.dumpCG(B.getPointerAnalysis(), CG);
+  }
+  */
   
   private void addHackedForInLoopSensitivity(JSCFABuilder builder) {
     final ContextSelector orig = builder.getContextSelector();
-    builder.setContextSelector(new DelegatingContextSelector(new ForInContextSelector(), orig));
+    builder.setContextSelector(new ForInContextSelector(orig));
   }
 
 }
