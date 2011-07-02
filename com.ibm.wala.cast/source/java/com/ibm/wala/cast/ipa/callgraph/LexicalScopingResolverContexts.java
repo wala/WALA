@@ -42,7 +42,7 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
     
     Iterator<Pair<CallSiteReference,CGNode>> getLexicalSites(Pair<String,String> name);
   
-    Set<LexicalScopingResolver> children();
+    Map<Object,LexicalScopingResolver> children();
     
     CGNode getOriginalDefiner(Pair<String,String> name);
   }
@@ -71,30 +71,25 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
           }
         }
       }
-    
-      for(LexicalScopingResolver c : parent.children()) {
-        if (! names.isEmpty()) {
-          if (c instanceof SiteResolver) {
-            if (((SiteResolver)c).mySite.equals(callSite) && ((SiteResolver)c).myNode.equals(caller)) {
-              return c;
-            }
-          }
-        } else {
-          if (c instanceof ReadOnlyResolver) {
-            if (((ReadOnlyResolver)c).myReadOnlyDefs.keySet().containsAll(readOnlyNames.keySet())) {
-              return c;
-            }
-          }
-        }
+
+      Object key;
+      if (! names.isEmpty()) {
+        key = Pair.make(caller, callSite);
+      } else {
+        key = readOnlyNames.keySet();
       }
+      
+      if (parent.children().containsKey(key)) {
+        return parent.children().get(key);
+      } 
       
       if (! names.isEmpty()) {
         SiteResolver result = new SiteResolver(parent, caller, readOnlyNames, callSite, names);
-        parent.children().add(result);
+        parent.children().put(key,result);
         return result;
       } else {
         ReadOnlyResolver result = new ReadOnlyResolver(parent, caller, readOnlyNames);
-        parent.children().add(result);
+        parent.children().put(key,result);
         return result;
       }
     }
@@ -120,11 +115,11 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
       }
     }
     
-    private Set<LexicalScopingResolver> children;
+    private Map<Object,LexicalScopingResolver> children;
     
-    public Set<LexicalScopingResolver> children() {
+    public Map<Object,LexicalScopingResolver> children() {
       if (children == null) { 
-        children = new HashSet<LexicalScopingResolver>();
+        children = new HashMap<Object,LexicalScopingResolver>();
       }
       return children;
     }
@@ -144,7 +139,7 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
   
   class ReadOnlyResolver implements LexicalScopingResolver {
     final protected LexicalScopingResolver parent;
-    protected Set<LexicalScopingResolver> children;
+    protected Map<Object,LexicalScopingResolver> children;
     final protected String myDefiner;
     final private Map<String,LocalPointerKey> myReadOnlyDefs;
     final protected CGNode myNode;
@@ -172,9 +167,9 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
       }
     }
 
-    public Set<LexicalScopingResolver> children() {
+    public Map<Object,LexicalScopingResolver> children() {
       if (children == null) { 
-        children = new HashSet<LexicalScopingResolver>();
+        children = new HashMap<Object,LexicalScopingResolver>();
       }
       return children;
     }
