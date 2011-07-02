@@ -520,7 +520,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     /**
      * The basic block currently being processed
      */
-    private ISSABasicBlock basicBlock;
+    protected ISSABasicBlock basicBlock;
 
     /**
      * Governing symbol table
