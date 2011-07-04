@@ -11,7 +11,6 @@ import com.ibm.wala.cast.js.ipa.callgraph.ForInContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.util.CancelException;
 
 public class TestForInLoopHack extends TestJSCallGraphShape {

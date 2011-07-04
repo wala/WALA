@@ -282,6 +282,11 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     // all we need is for it to finish building CG successfully.
   }
 
+  @Test public void textExtJSSwitch() throws IOException, IllegalArgumentException, CancelException {
+    Util.makeScriptCG("tests", "extjs_switch.js");
+    // all we need is for it to finish building CG successfully.
+  }
+
   protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {
 
     // Created by reversing the points to mapping for local pointer keys.
