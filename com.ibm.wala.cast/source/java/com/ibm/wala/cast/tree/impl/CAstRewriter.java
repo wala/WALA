@@ -156,7 +156,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
       Entry<Pair<CAstNode, K>, CAstNode> entry = NS.next();
       Pair<CAstNode, K> N = entry.getKey();
       CAstNode oldSource = N.fst;
-      CopyKey key = N.snd;
+      K key = N.snd;
 
       CAstNode newSource = (CAstNode) entry.getValue();
       assert newSource != null;
