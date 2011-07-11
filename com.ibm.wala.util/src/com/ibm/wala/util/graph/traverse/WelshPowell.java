@@ -11,11 +11,9 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.Graph;
 
 public class WelshPowell<T> {
-    
+
   public Pair<Map<T,Integer>, Integer>  color(final Graph<T> G) {
-    Map<T, Integer> colors = HashMapFactory.make();
-    
-    SortedSet<T> vertices = new TreeSet<T>(new Comparator<T>() {
+    return color(G, new Comparator<T>() {
 
       @Override
       public int compare(T o1, T o2) {
@@ -29,6 +27,12 @@ public class WelshPowell<T> {
       }
       
     });
+  }
+  
+  public Pair<Map<T,Integer>, Integer>  color(final Graph<T> G, Comparator<T> order) {
+    Map<T, Integer> colors = HashMapFactory.make();
+    
+    SortedSet<T> vertices = new TreeSet<T>(order);
     
     for(T n : G) {
       vertices.add(n);
