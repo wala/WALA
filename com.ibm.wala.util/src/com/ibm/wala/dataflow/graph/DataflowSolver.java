@@ -25,8 +25,7 @@ import com.ibm.wala.util.intset.IntegerUnionFind;
 /**
  * Iterative solver for a Killdall dataflow framework
  */
-@SuppressWarnings("rawtypes")
-public abstract class DataflowSolver<T, V extends IVariable> extends DefaultFixedPointSolver<V> {
+public abstract class DataflowSolver<T, V extends IVariable<?>> extends DefaultFixedPointSolver<V> {
 
   /**
    * the dataflow problem to solve
