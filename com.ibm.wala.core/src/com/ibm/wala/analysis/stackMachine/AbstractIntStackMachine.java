@@ -78,7 +78,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
   /**
    * The solver
    */
-  private DataflowSolver solver;
+  private DataflowSolver<BasicBlock,MachineState> solver;
 
   /**
    * The control flow graph to analyze
@@ -257,14 +257,14 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
   }
 
   public MachineState getEntryState() {
-    return (MachineState) solver.getIn(cfg.entry());
+    return solver.getIn(cfg.entry());
   }
 
   /**
    * @return the state at the entry to a given block
    */
   public MachineState getIn(ShrikeCFG.BasicBlock bb) {
-    return (MachineState) solver.getIn(bb);
+    return solver.getIn(bb);
   }
 
   private class MeetOperator extends AbstractMeetOperator<MachineState> {
@@ -547,7 +547,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
   /**
    * Representation of the state of the JVM stack machine at some program point.
    */
-  public class MachineState extends AbstractVariable {
+  public class MachineState extends AbstractVariable<MachineState> {
     private int[] stack;
 
     private int[] locals;
@@ -711,8 +711,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       return result;
     }
 
-    public void copyState(IVariable v) {
-      MachineState other = (MachineState) v;
+    public void copyState(MachineState other) {
       if (other.stack == null) {
         stack = null;
       } else {
