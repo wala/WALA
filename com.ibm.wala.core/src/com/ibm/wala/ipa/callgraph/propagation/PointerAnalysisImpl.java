@@ -38,7 +38,7 @@ import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableMapping;
@@ -538,8 +538,8 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#iteratePointerKeys()
    */
-  public Collection<PointerKey> getPointerKeys() {
-    return Iterator2Collection.toSet(pointsToMap.iterateKeys());
+  public Iterable<PointerKey> getPointerKeys() {
+    return Iterator2Iterable.make(pointsToMap.iterateKeys());
   }
 
   public IClassHierarchy getClassHierarchy() {

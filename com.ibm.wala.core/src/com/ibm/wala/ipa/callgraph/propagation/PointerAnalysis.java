@@ -48,7 +48,8 @@ public interface PointerAnalysis {
   /**
    * @return all pointer keys known
    */
-  Collection<PointerKey> getPointerKeys();
+  Iterable<PointerKey> getPointerKeys();
+  
   
   /**
    * @return all instance keys known
