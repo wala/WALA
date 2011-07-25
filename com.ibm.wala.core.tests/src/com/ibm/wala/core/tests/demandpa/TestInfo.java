@@ -85,8 +85,6 @@ public class TestInfo {
 
   public static final String TEST_ARRAY_LIST = "Ldemandpa/TestArrayList";
 
-  public static final String TEST_HASHTABLE_GET = "Ldemandpa/TestHashtableGet";
-
   public static final String TEST_HASHTABLE_ENUM = "Ldemandpa/TestHashtableEnum";
 
   public static final String TEST_NASTY_PTRS = "Ldemandpa/TestNastyPtrs";

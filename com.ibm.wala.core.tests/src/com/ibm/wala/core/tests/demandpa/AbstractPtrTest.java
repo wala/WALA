@@ -90,11 +90,6 @@ public abstract class AbstractPtrTest {
    */
   protected final String scopeFile;
 
-  /**
-   * analysis scope from latest test
-   */
-  private AnalysisScope scope = null;
-
   protected AbstractPtrTest(String scopeFile) {
     this.scopeFile = scopeFile;
   }
@@ -162,64 +157,22 @@ public abstract class AbstractPtrTest {
     return null;
   }
 
-  /**
-   * Test if the computed size of some points-to test matches what is expected.
-   * 
-   * @param mainClass the main class of the test; we choose a variable from its main() method that is passed to the method
-   *          TestUtil.testThisVar()
-   * @param expected14Size expected p2set size when using 1.4 libraries
-   * @param expected15Size expected p2set size when using 1.4 libraries
-   * @param expected16Size expected p2set size when using 1.4 libraries
-   * @throws ClassHierarchyException
-   * @throws IllegalArgumentException
-   * @throws CancelException
-   * @throws IOException
-   */
-  protected void doPointsToSizeTest(String mainClass, int expected14Size, int expected15Size, int expected16Size)
-      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    assert scope == null;
-    Collection<InstanceKey> pointsTo = getPointsToSetToTest(mainClass);
-    if (debug) {
-      System.err.println("points-to for " + mainClass + ": " + pointsTo);
-    }
-    assert scope != null;
-    try {
-      if (scope.isJava16Libraries()) {
-        Assert.assertEquals(expected16Size, pointsTo.size());
-      } else if (scope.isJava15Libraries()) {
-        Assert.assertEquals(expected15Size, pointsTo.size());
-      } else if (scope.isJava14Libraries()) {
-        Assert.assertEquals(expected14Size, pointsTo.size());
-      } else {
-        Assertions.UNREACHABLE("unexpected library version");
-      }
-    } finally {
-      // don't hold on to a scope pointer
-      scope = null;
-    }
-  }
 
   protected void doFlowsToSizeTest(String mainClass, int size) throws ClassHierarchyException, IllegalArgumentException,
       CancelException, IOException {
-    assert scope == null;
     Collection<PointerKey> flowsTo = getFlowsToSetToTest(mainClass);
     if (debug) {
       System.err.println("flows-to for " + mainClass + ": " + flowsTo);
     }
-    assert scope != null;
-    try {
-      Assert.assertEquals(size, flowsTo.size());
-    } finally {
-      // don't hold on to a scope pointer
-      scope = null;
-    }
+    Assert.assertEquals(size, flowsTo.size());
   }
 
   private Collection<PointerKey> getFlowsToSetToTest(String mainClass) throws ClassHierarchyException, IllegalArgumentException,
       CancelException, IOException {
     final DemandRefinementPointsTo dmp = makeDemandPointerAnalysis(mainClass);
 
-    // find the single allocation site of FlowsToType, make an InstanceKey, and query it
+    // find the single allocation site of FlowsToType, make an InstanceKey, and
+    // query it
     CGNode mainMethod = AbstractPtrTest.findMainMethod(dmp.getBaseCallGraph());
     InstanceKey keyToQuery = getFlowsToInstanceKey(mainMethod, dmp.getHeapModel());
     Collection<PointerKey> flowsTo = dmp.getFlowsTo(keyToQuery).snd;
@@ -227,12 +180,13 @@ public abstract class AbstractPtrTest {
   }
 
   /**
-   * returns the instance key corresponding to the single allocation site of type FlowsToType
+   * returns the instance key corresponding to the single allocation site of
+   * type FlowsToType
    */
   private InstanceKey getFlowsToInstanceKey(CGNode mainMethod, HeapModel heapModel) {
     // TODO Auto-generated method stub
-    TypeReference flowsToTypeRef = TypeReference.findOrCreate(ClassLoaderReference.Application, StringStuff
-        .deployment2CanonicalTypeString("demandpa.FlowsToType"));
+    TypeReference flowsToTypeRef = TypeReference.findOrCreate(ClassLoaderReference.Application,
+        StringStuff.deployment2CanonicalTypeString("demandpa.FlowsToType"));
     final IR mainIR = mainMethod.getIR();
     if (debug) {
       System.err.println(mainIR);
@@ -248,7 +202,11 @@ public abstract class AbstractPtrTest {
 
   protected void doPointsToSizeTest(String mainClass, int expectedSize) throws ClassHierarchyException, IllegalArgumentException,
       CancelException, IOException {
-    doPointsToSizeTest(mainClass, expectedSize, expectedSize, expectedSize);
+    Collection<InstanceKey> pointsTo = getPointsToSetToTest(mainClass);
+    if (debug) {
+      System.err.println("points-to for " + mainClass + ": " + pointsTo);
+    }
+    Assert.assertEquals(expectedSize, pointsTo.size());
   }
 
   private Collection<InstanceKey> getPointsToSetToTest(String mainClass) throws ClassHierarchyException, IllegalArgumentException,
@@ -265,7 +223,6 @@ public abstract class AbstractPtrTest {
   protected DemandRefinementPointsTo makeDemandPointerAnalysis(String mainClass) throws ClassHierarchyException,
       IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();
-    this.scope = scope;
     // build a type hierarchy
     IClassHierarchy cha = findOrCreateCHA(scope);
 
@@ -279,10 +236,12 @@ public abstract class AbstractPtrTest {
     final CallGraph cg = cgBuilder.makeCallGraph(options, null);
     // System.err.println(cg.toString());
 
-    // MemoryAccessMap mam = new SimpleMemoryAccessMap(cg, cgBuilder.getPointerAnalysis().getHeapModel(), false);
+    // MemoryAccessMap mam = new SimpleMemoryAccessMap(cg,
+    // cgBuilder.getPointerAnalysis().getHeapModel(), false);
     MemoryAccessMap mam = new PABasedMemoryAccessMap(cg, cgBuilder.getPointerAnalysis());
     SSAPropagationCallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, analysisCache, cha, scope);
-    DemandRefinementPointsTo fullDemandPointsTo = DemandRefinementPointsTo.makeWithDefaultFlowGraph(cg, builder, mam, cha, options, getStateMachineFactory());
+    DemandRefinementPointsTo fullDemandPointsTo = DemandRefinementPointsTo.makeWithDefaultFlowGraph(cg, builder, mam, cha, options,
+        getStateMachineFactory());
 
     return fullDemandPointsTo;
   }

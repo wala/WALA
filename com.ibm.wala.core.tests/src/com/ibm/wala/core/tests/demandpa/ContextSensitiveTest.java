@@ -86,8 +86,8 @@ public class ContextSensitiveTest extends AbstractPtrTest {
   @Test
   public void testHashtableEnum() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     // 3 because
-    // can't tell between key, value, and entry enumerators in Hashtable
-    doPointsToSizeTest(TestInfo.TEST_HASHTABLE_ENUM, 3);
+    // can't tell between key and value enumerators in Hashtable
+    doPointsToSizeTest(TestInfo.TEST_HASHTABLE_ENUM, 2);
   }
 
   @Ignore("support for this combination of context sensitivity and on-the-fly call graph refinement is not yet implemented")
@@ -135,12 +135,12 @@ public class ContextSensitiveTest extends AbstractPtrTest {
 
   @Test
   public void testHashSet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    doPointsToSizeTest(TestInfo.TEST_HASH_SET, 2, 2, 1);
+    doPointsToSizeTest(TestInfo.TEST_HASH_SET,  1);
   }
 
   @Test
   public void testHashMapGet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    doPointsToSizeTest(TestInfo.TEST_HASHMAP_GET, 2, 1, 1);
+    doPointsToSizeTest(TestInfo.TEST_HASHMAP_GET, 1);
   }
 
   @Test

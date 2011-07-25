@@ -37,14 +37,12 @@
  */
 package demandpa;
 
-import java.util.HashSet;
 
 public class TestHashSet {
 
-  @SuppressWarnings("unchecked")
   public static void main(String[] args) {
-    HashSet s1 = new HashSet();
-    HashSet s2 = new HashSet();
+    DummyHashSet s1 = new DummyHashSet();
+    DummyHashSet s2 = new DummyHashSet();
     s1.add(new Object());
     s2.add(new Object());
     Object o1 = s1.iterator().next();

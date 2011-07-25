@@ -37,17 +37,15 @@
  */
 package demandpa;
 
-import java.util.LinkedList;
 
 public class TestLinkedList {
 
   /**
    * @param args
    */
-  @SuppressWarnings("unchecked")
   public static void main(String[] args) {
-    LinkedList l1 = new LinkedList();
-    LinkedList l2 = new LinkedList();
+    DummyLinkedList l1 = new DummyLinkedList();
+    DummyLinkedList l2 = new DummyLinkedList();
     l1.add(new Object());
     l2.add(new Object());
     Object o1 = l1.get(0);

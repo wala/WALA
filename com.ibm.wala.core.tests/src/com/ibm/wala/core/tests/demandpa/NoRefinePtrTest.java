@@ -67,7 +67,7 @@ public class NoRefinePtrTest extends AbstractPtrTest {
 
   @Test
   public void testHashSet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    doPointsToSizeTest(TestInfo.TEST_HASH_SET, 3, 3, 2);
+    doPointsToSizeTest(TestInfo.TEST_HASH_SET, 2);
   }
 
   @Test
