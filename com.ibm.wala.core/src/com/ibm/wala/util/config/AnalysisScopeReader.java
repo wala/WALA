@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 import java.util.jar.JarFile;
@@ -69,7 +70,15 @@ public class AnalysisScopeReader {
       String line;
       // assume the scope file is UTF-8 encoded; ASCII files will also be handled properly
       // TODO allow specifying encoding as a parameter?
-      r = new BufferedReader(new InputStreamReader(new FileInputStream(scopeFile), "UTF-8"));
+/** BEGIN Custom change: try to load from jar as fallback */
+      if (scopeFile.exists()) {
+        r = new BufferedReader(new InputStreamReader(new FileInputStream(scopeFile), "UTF-8"));
+      } else {
+        // try to read from jar
+        InputStream inFromJar = scope.getClass().getClassLoader().getResourceAsStream(scopeFileName);
+        r = new BufferedReader(new InputStreamReader(inFromJar));
+      }
+/** END Custom change: try to load from jar as fallback */
       while ((line = r.readLine()) != null) {
         processScopeDefLine(scope, javaLoader, line);
       }
