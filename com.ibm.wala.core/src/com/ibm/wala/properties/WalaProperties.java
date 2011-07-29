@@ -122,13 +122,39 @@ public final class WalaProperties {
     }
     final InputStream propertyStream = loader.getResourceAsStream(fileName);
     if (propertyStream == null) {
-      throw new IOException("property_file_unreadable " + fileName);
+/** BEGIN Custom change: create default properties if no file exists */
+      // create default properties
+      Properties defprop = new Properties();
+      defprop.setProperty(OUTPUT_DIR, "./out");
+      defprop.setProperty(INPUT_DIR, "./in");
+      defprop.setProperty(ECLIPSE_PLUGINS_DIR, "./plugins");
+      defprop.setProperty(WALA_REPORT, "./wala_report.txt");
+      defprop.setProperty(J2EE_DIR, "./j2ee");
+      final String j2selib = guessJavaLib();
+      defprop.setProperty(J2SE_DIR, j2selib);
+      
+      return defprop;
+/** END Custom change: create default properties if no file exists */
     }
     Properties result = new Properties();
     result.load(propertyStream);
     return result;
   }
 
+/** BEGIN Custom change: create default properties if no file exists */
+  public static String guessJavaLib() {
+    final Properties p = System.getProperties();
+    final String os = p.getProperty("os.name");
+    
+    if (os.contains("Mac OS X")) {
+      return "/System/Library/Frameworks/JavaVM.framework/Classes";
+    } else {
+      final String home = System.getProperty("java.home");
+      return home + File.separator + "lib";
+    }
+  }
+  
+/** END Custom change: create default properties if no file exists */
   /**
    * @deprecated because when running under eclipse, there may be no such directory.
    * Need to handle that case.
