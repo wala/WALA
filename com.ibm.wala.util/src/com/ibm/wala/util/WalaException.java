@@ -8,23 +8,25 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.viz;
-
-import com.ibm.wala.util.warnings.WalaException;
+package com.ibm.wala.util;
 
 /**
+ * An exception to raise for some WALA failure
  */
-public interface NodeDecorator {
-  
-  public static final NodeDecorator DEFAULT = new NodeDecorator() {
-    public String getLabel(Object o) {
-      return o.toString();
-    } };
-  
+public class WalaException extends Exception {
+
+  private static final long serialVersionUID = 3959226859263419122L;
   /**
-   * @param o
-   * @return the String label for node o
+   * @param s a message describing the failure
    */
-  String getLabel(Object o) throws WalaException;
-  
+  public WalaException(String s, Throwable cause) {
+    super(s, cause);
+  }
+  /**
+   * @param string a message describing the failure
+   */
+  public WalaException(String string) {
+    super(string);
+  }
+
 }

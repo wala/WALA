@@ -16,10 +16,10 @@ import java.util.Properties;
 
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
 import com.ibm.wala.properties.WalaProperties;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.InferGraphRoots;
-import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.viz.DotUtil;
 import com.ibm.wala.viz.NodeDecorator;
 

@@ -18,10 +18,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
-import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * utilities for interfacing with DOT

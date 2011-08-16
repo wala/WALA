@@ -34,7 +34,7 @@ public class DFSPathFinder<T> extends Stack<T> {
   /**
    * The graph to search
    */
-  final private Graph<T> G;
+  protected final Graph<T> G;
 
   /**
    * The Filter which defines the target set of nodes to find
@@ -49,7 +49,7 @@ public class DFSPathFinder<T> extends Stack<T> {
   /**
    * An iterator of child nodes for each node being searched
    */
-  final private Map<T, Iterator<? extends T>> pendingChildren = HashMapFactory.make(25);
+  final protected Map<Object, Iterator<? extends T>> pendingChildren = HashMapFactory.make(25);
 
   /**
    * Flag recording whether initialization has happened.
@@ -124,7 +124,7 @@ public class DFSPathFinder<T> extends Stack<T> {
     return null;
   }
 
-  private List<T> currentPath() {
+  protected List<T> currentPath() {
     ArrayList<T> result = new ArrayList<T>();
     for (Iterator<T> path = iterator(); path.hasNext();) {
       result.add(0, path.next());
@@ -146,7 +146,7 @@ public class DFSPathFinder<T> extends Stack<T> {
    * 
    * @return Object
    */
-  private Iterator<? extends T> getPendingChildren(T n) {
+  protected Iterator<? extends T> getPendingChildren(T n) {
     return pendingChildren.get(n);
   }
 
@@ -156,7 +156,7 @@ public class DFSPathFinder<T> extends Stack<T> {
    * @param v
    * @param iterator
    */
-  private void setPendingChildren(T v, Iterator<? extends T> iterator) {
+  protected void setPendingChildren(T v, Iterator<? extends T> iterator) {
     pendingChildren.put(v, iterator);
   }
 
@@ -176,8 +176,8 @@ public class DFSPathFinder<T> extends Stack<T> {
         T child = it.next();
         if (getPendingChildren(child) == null) {
           // found a new child.
-          setPendingChildren(child, getConnected(child));
           push(child);
+          setPendingChildren(child, getConnected(child));
           return;
         }
       }
