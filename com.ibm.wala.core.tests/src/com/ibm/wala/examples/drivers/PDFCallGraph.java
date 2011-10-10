@@ -45,8 +45,6 @@ import com.ibm.wala.viz.PDFViewUtil;
 
 /**
  * This simple example WALA application builds a call graph and fires off ghostview to visualize a DOT representation.
- * 
- * @author sfink
  */
 public class PDFCallGraph {
   public static boolean isDirectory(String appJar) {
@@ -69,7 +67,7 @@ public class PDFCallGraph {
     Iterator<String> it = s.iterator();
     for (int i = 0; i < s.size() - 1; i++) {
       result.append(it.next());
-      result.append(';');
+      result.append(File.pathSeparator);
     }
     if (it.hasNext()) {
       result.append(it.next());
