@@ -2,11 +2,10 @@ package com.ibm.wala.shrikeCT;
 
 import java.io.IOException;
 
-import joana.sourceinfo.CRTable;
-import joana.sourceinfo.MethodPositions;
-import joana.sourceinfo.Range;
-
 import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
+import com.ibm.wala.sourcepos.CRTable;
+import com.ibm.wala.sourcepos.MethodPositions;
+import com.ibm.wala.sourcepos.Range;
 
 public final class SourcePositionTableReader extends AttributeReader {
 
@@ -138,8 +137,8 @@ public final class SourcePositionTableReader extends AttributeReader {
     Position pos = null;
     
     if (r != null) {
-      joana.sourceinfo.Position start = r.getStartPosition();
-      joana.sourceinfo.Position end = r.getEndPosition();
+      com.ibm.wala.sourcepos.Position start = r.getStartPosition();
+      com.ibm.wala.sourcepos.Position end = r.getEndPosition();
       
       if (start != null && !start.isUndefined()) {
         if (end != null && !end.isUndefined()) {
