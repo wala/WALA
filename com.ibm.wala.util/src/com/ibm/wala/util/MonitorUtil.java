@@ -69,6 +69,25 @@ public class MonitorUtil {
       }
     }
   }
+/** BEGIN Custom change: more on subtasks */
+
+  public static void subTask(IProgressMonitor progressMonitor, String subTask) throws CancelException {
+    if (progressMonitor != null) {
+      progressMonitor.subTask(subTask);
+      if (progressMonitor.isCanceled()) {
+        throw CancelException.make("cancelled in " + subTask);
+      }
+    }
+  }
+
+  public static boolean isCanceled(IProgressMonitor progressMonitor) {
+    if (progressMonitor == null) {
+      return false;
+    } else {
+      return progressMonitor.isCanceled();
+    }
+  }
+/** END Custom change: more on subtasks */
 
 //  public static IProgressMonitor subProgress(ProgressMaster progress, int i) {
 //    if (progress == null) {
