@@ -91,7 +91,7 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
 
   public static JavaScriptLoaderFactory makeLoaders() {
     if (translatorFactory == null) {
-      throw new IllegalStateException("setTranslatorFactory() must be invoked before makeLoaders()");
+      throw new IllegalStateException("com.ibm.wala.cast.js.ipa.callgraph.Util.setTranslatorFactory() must be invoked before makeLoaders()");
     }
     return new JavaScriptLoaderFactory(translatorFactory);
   }
