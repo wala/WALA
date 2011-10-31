@@ -11,7 +11,7 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 
-public class TestMozillaBugPages extends TestJSCallGraphShape {
+public abstract class TestMozillaBugPages extends TestJSCallGraphShape {
 
   public static void main(String[] args) {
     justThisTest(TestMozillaBugPages.class);
