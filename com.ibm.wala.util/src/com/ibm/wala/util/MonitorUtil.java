@@ -24,10 +24,12 @@ public class MonitorUtil {
 
     void beginTask(String task, int totalWork);
 
-/** BEGIN Custom change: subtasks */
+/** BEGIN Custom change: subtasks and canceling */
     void subTask(String subTask);
 
-/** END Custom change: subtasks */
+    void cancel();
+
+/** END Custom change: subtasks and canceling */
     boolean isCanceled();
 
     void done();
@@ -85,6 +87,12 @@ public class MonitorUtil {
       return false;
     } else {
       return progressMonitor.isCanceled();
+    }
+  }
+  
+  public static void cancel(IProgressMonitor progress) {
+    if (progress != null) {
+      progress.cancel();
     }
   }
 /** END Custom change: more on subtasks */

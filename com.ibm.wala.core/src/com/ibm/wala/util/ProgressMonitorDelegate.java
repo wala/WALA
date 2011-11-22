@@ -47,10 +47,13 @@ public class ProgressMonitorDelegate implements IProgressMonitor {
     delegate.worked(units);
   }
 
-/** BEGIN Custom change: subtasks */
+/** BEGIN Custom change: subtasks and canceling */
   public void subTask(String subTask) {
     delegate.subTask(subTask);
   }
 
-/** END Custom change: subtasks */
+  public void cancel() {
+    delegate.setCanceled(true);
+  }
+/** END Custom change: subtasks and canceling */
 }
