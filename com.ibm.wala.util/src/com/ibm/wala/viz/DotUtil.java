@@ -205,7 +205,7 @@ public class DotUtil {
     result.append(fontnameStr);
     result.append("]; \n");
 
-    Collection dotNodes = computeDotNodes(g);
+    Collection<?> dotNodes = computeDotNodes(g);
 
     outputNodes(labels, result, dotNodes);
 
@@ -225,8 +225,8 @@ public class DotUtil {
     return result;
   }
 
-  private static void outputNodes(NodeDecorator labels, StringBuffer result, Collection dotNodes) throws WalaException {
-    for (Iterator it = dotNodes.iterator(); it.hasNext();) {
+  private static void outputNodes(NodeDecorator labels, StringBuffer result, Collection<?> dotNodes) throws WalaException {
+    for (Iterator<?> it = dotNodes.iterator(); it.hasNext();) {
       outputNode(labels, result, it.next());
     }
   }
