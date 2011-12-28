@@ -1019,7 +1019,9 @@ public class SSABuilder extends AbstractIntStackMachine {
      *         array of the local numbers. else return null.
      */
     private int[] findLocalsForValueNumber(int pc, int vn) {
-
+      if (vn < 0) {
+        return null;
+      }
       IBasicBlock bb = shrikeCFG.getBlockForInstruction(pc);
       int firstInstruction = bb.getFirstInstructionIndex();
       // walk forward from the first instruction to reconstruct the
@@ -1028,16 +1030,17 @@ public class SSABuilder extends AbstractIntStackMachine {
       for (int i = firstInstruction; i <= pc; i++) {
         if (localStoreMap[i] != null) {
           IntPair p = localStoreMap[i];
-          setLocal(locals, p.getY(), p.getX());
+          locals = setLocal(locals, p.getY(), p.getX());
         }
       }
-      return extractIndices(locals, vn);
+      return locals == null ? null : extractIndices(locals, vn);
     }
 
     /**
      * @return the indices i s.t. x[i] == y, or null if none found.
      */
     private int[] extractIndices(int[] x, int y) {
+      assert x != null;
       int count = 0;
       for (int i = 0; i < x.length; i++) {
         if (x[i] == y) {
