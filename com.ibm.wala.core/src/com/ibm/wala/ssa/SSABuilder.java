@@ -105,8 +105,8 @@ public class SSABuilder extends AbstractIntStackMachine {
   private SSABuilder(IBytecodeMethod method, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions, SymbolTable symbolTable,
       boolean buildLocalMap, SSAPiNodePolicy piNodePolicy) {
     super(scfg);
-    localMap = buildLocalMap ? new SSA2LocalMap(scfg, instructions.length, cfg.getNumberOfNodes(), maxLocals) : null;
-    init(new SymbolTableMeeter(symbolTable, cfg, instructions, scfg), new SymbolicPropagator(scfg, instructions, symbolTable,
+    localMap = buildLocalMap ? new SSA2LocalMap(scfg, instructions.length, cfg.getNumberOfNodes()) : null;
+    init(new SymbolTableMeeter(symbolTable, cfg, scfg), new SymbolicPropagator(scfg, instructions, symbolTable,
         localMap, cfg, piNodePolicy));
     this.method = method;
     this.symbolTable = symbolTable;
@@ -120,15 +120,13 @@ public class SSABuilder extends AbstractIntStackMachine {
 
     final SSACFG cfg;
 
-    final SSAInstruction[] instructions;
 
     final SymbolTable symbolTable;
 
     final ShrikeCFG shrikeCFG;
 
-    SymbolTableMeeter(SymbolTable symbolTable, SSACFG cfg, SSAInstruction[] instructions, ShrikeCFG shrikeCFG) {
+    SymbolTableMeeter(SymbolTable symbolTable, SSACFG cfg, ShrikeCFG shrikeCFG) {
       this.cfg = cfg;
-      this.instructions = instructions;
       this.symbolTable = symbolTable;
       this.shrikeCFG = shrikeCFG;
     }
@@ -328,17 +326,19 @@ public class SSABuilder extends AbstractIntStackMachine {
     }
 
     private void emitInstruction(SSAInstruction s) {
-      instructions[getCurrentInstructionIndex()] = s;
-      for (int i = 0; i < s.getNumberOfDefs(); i++) {
-        if (creators.length < (s.getDef(i) + 1)) {
-          SSAInstruction[] arr = new SSAInstruction[2 * s.getDef(i)];
-          System.arraycopy(creators, 0, arr, 0, creators.length);
-          creators = arr;
-        }
+      if (s != null) {
+        instructions[getCurrentInstructionIndex()] = s;
+        for (int i = 0; i < s.getNumberOfDefs(); i++) {
+          if (creators.length < (s.getDef(i) + 1)) {
+            SSAInstruction[] arr = new SSAInstruction[2 * s.getDef(i)];
+            System.arraycopy(creators, 0, arr, 0, creators.length);
+            creators = arr;
+          }
 
-        assert s.getDef(i) != -1 : "invalid def " + i + " for " + s;
+          assert s.getDef(i) != -1 : "invalid def " + i + " for " + s;
         
-        creators[s.getDef(i)] = s;
+          creators[s.getDef(i)] = s;
+        }
       }
     }
 
@@ -451,7 +451,7 @@ public class SSABuilder extends AbstractIntStackMachine {
           for(int i = 0; i < typeNames.length; i++) {
             t[i] = ShrikeUtil.makeTypeReference(loader, typeNames[i]);
           }
-          emitInstruction(insts.CheckCastInstruction(result, val, t));
+          emitInstruction(insts.CheckCastInstruction(result, val, t, instruction.isPEI()));
         }
       }
 
@@ -934,19 +934,13 @@ public class SSABuilder extends AbstractIntStackMachine {
     private final int[][] block2LocalState;
 
     /**
-     * maximum number of locals used at any program point
-     */
-    private final int maxLocals;
-
-    /**
      * @param nInstructions number of instructions in the bytecode for this method
      * @param nBlocks number of basic blocks in the CFG
      */
-    SSA2LocalMap(ShrikeCFG shrikeCfg, int nInstructions, int nBlocks, int maxLocals) {
+    SSA2LocalMap(ShrikeCFG shrikeCfg, int nInstructions, int nBlocks) {
       shrikeCFG = shrikeCfg;
       localStoreMap = new IntPair[nInstructions];
       block2LocalState = new int[nBlocks][];
-      this.maxLocals = maxLocals;
     }
 
     /**
@@ -954,11 +948,6 @@ public class SSABuilder extends AbstractIntStackMachine {
      * a particular local number
      */
     void startRange(int pc, int localNumber, int valueNumber) {
-      int max = shrikeCFG.getMethod().getMaxLocals();
-      if (localNumber >= max) {
-        assert false : "invalid local " + localNumber + ">" + max;
-      }
-
       localStoreMap[pc] = new IntPair(valueNumber, localNumber);
     }
 
@@ -1002,6 +991,27 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
     }
 
+    public int[] allocateNewLocalsArray(int maxLocals) {
+      int[] result = new int[maxLocals];
+      for (int i = 0; i < maxLocals; i++) {
+        result[i] = OPTIMISTIC ? TOP : BOTTOM;
+      }
+      return result;
+    }
+    
+    private int[] setLocal(int[] locals, int localNumber, int valueNumber) {
+      if (locals == null) {
+        locals = allocateNewLocalsArray(localNumber + 1);
+      } else if (locals.length <= localNumber) {
+        int[] newLocals = allocateNewLocalsArray(2 * Math.max(locals.length, localNumber) + 1);
+        System.arraycopy(locals, 0, newLocals, 0, locals.length);
+        locals = newLocals;
+      }
+      
+      locals[localNumber] = valueNumber;
+      
+      return locals;
+    }
     /**
      * @param pc a program counter (index into ShrikeBT instruction array)
      * @param vn a value number
@@ -1015,24 +1025,13 @@ public class SSABuilder extends AbstractIntStackMachine {
       // walk forward from the first instruction to reconstruct the
       // state of the locals at this pc
       int[] locals = block2LocalState[bb.getNumber()];
-      if (locals == null) {
-        locals = allocateNewLocalsArray();
-      }
       for (int i = firstInstruction; i <= pc; i++) {
         if (localStoreMap[i] != null) {
           IntPair p = localStoreMap[i];
-          locals[p.getY()] = p.getX();
+          setLocal(locals, p.getY(), p.getX());
         }
       }
       return extractIndices(locals, vn);
-    }
-
-    public int[] allocateNewLocalsArray() {
-      int[] result = new int[maxLocals];
-      for (int i = 0; i < maxLocals; i++) {
-        result[i] = OPTIMISTIC ? TOP : BOTTOM;
-      }
-      return result;
     }
 
     /**

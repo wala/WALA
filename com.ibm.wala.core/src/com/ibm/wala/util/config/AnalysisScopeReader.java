@@ -26,6 +26,7 @@ import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.core.plugin.CorePlugin;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.properties.WalaProperties;
+import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileProvider;
@@ -108,7 +109,11 @@ public class AnalysisScopeReader {
     String entryPathname = toks.nextToken();
     if ("classFile".equals(entryType)) {
       File cf = FileProvider.getFile(entryPathname, javaLoader);
-      scope.addClassFileToScope(walaLoader, cf);
+      try {
+        scope.addClassFileToScope(walaLoader, cf);
+      } catch (InvalidClassFileException e) {
+        Assertions.UNREACHABLE(e.toString());
+      }
     } else if ("sourceFile".equals(entryType)) {
       File sf = FileProvider.getFile(entryPathname, javaLoader);
       scope.addSourceFileToScope(walaLoader, sf, entryPathname);
@@ -196,6 +201,8 @@ public class AnalysisScopeReader {
         }
       }
     } catch (IOException e) {
+      Assertions.UNREACHABLE(e.toString());
+    } catch (InvalidClassFileException e) {
       Assertions.UNREACHABLE(e.toString());
     }
   }

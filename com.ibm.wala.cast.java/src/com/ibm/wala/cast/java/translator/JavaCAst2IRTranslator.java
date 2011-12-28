@@ -316,14 +316,13 @@ public class JavaCAst2IRTranslator extends AstTranslator {
   }
 
   protected boolean visitCast(CAstNode n, Context c, CAstVisitor visitor) {
-    WalkContext context = (WalkContext) c;
+    WalkContext context = (WalkContext)c;
     int result = context.currentScope().allocateTempValue();
     setValue(n, result);
     return false;
   }
-
   protected void leaveCast(CAstNode n, Context c, CAstVisitor visitor) {
-    WalkContext context = (WalkContext) c;
+    WalkContext context = (WalkContext)c;
     int result = getValue(n);
     CAstType toType = (CAstType) n.getChild(0).getValue();
     TypeReference toRef = makeType(toType);
@@ -332,29 +331,42 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     TypeReference fromRef = makeType(fromType);
 
     if (toRef.isPrimitiveType()) {
-      context.cfg().addInstruction(insts.ConversionInstruction(result, getValue(n.getChild(1)), fromRef, toRef, false));
-
+    context.cfg().addInstruction(
+      insts.ConversionInstruction(
+          result, 
+          getValue(n.getChild(1)), 
+          fromRef,
+          toRef,
+          false));
+   
     } else {
-      context.cfg().addInstruction(insts.CheckCastInstruction(result, getValue(n.getChild(1)), toRef));
+      context.cfg().addInstruction(
+        insts.CheckCastInstruction(
+          result, 
+          getValue(n.getChild(1)), 
+          toRef,
+          true));
 
-      processExceptions(n, context);
+processExceptions(n, context);
     }
   }
-
   protected boolean visitInstanceOf(CAstNode n, Context c, CAstVisitor visitor) {
-    WalkContext context = (WalkContext) c;
+    WalkContext context = (WalkContext)c;
     int result = context.currentScope().allocateTempValue();
     setValue(n, result);
     return false;
   }
-
   protected void leaveInstanceOf(CAstNode n, Context c, CAstVisitor visitor) {
-    WalkContext context = (WalkContext) c;
+    WalkContext context = (WalkContext)c;
     int result = getValue(n);
     CAstType type = (CAstType) n.getChild(0).getValue();
 
-    TypeReference ref = makeType(type);
-    context.cfg().addInstruction(insts.InstanceofInstruction(result, getValue(n.getChild(1)), ref));
+    TypeReference ref = makeType( type );
+    context.cfg().addInstruction(
+      insts.InstanceofInstruction(
+        result, 
+        getValue(n.getChild(1)), 
+        ref));
   }
 
   protected boolean doVisit(CAstNode n, Context context, CAstVisitor visitor) {
@@ -369,7 +381,6 @@ public class JavaCAst2IRTranslator extends AstTranslator {
       visitor.visit(n.getChild(0), wc, visitor);
       wc.cfg().addInstruction(insts.MonitorInstruction(getValue(n.getChild(0)), false));
       processExceptions(n, wc);
-
       return true;
     } else {
       return super.doVisit(n, wc, visitor);

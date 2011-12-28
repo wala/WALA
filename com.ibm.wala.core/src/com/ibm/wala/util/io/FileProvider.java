@@ -13,6 +13,7 @@ package com.ibm.wala.util.io;// 5724-D15
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
@@ -261,6 +262,23 @@ public class FileProvider {
     } else {
       return new File(filePathFromURL(url));
     }
+  }
+
+  /**
+   * @throws FileNotFoundException
+   */
+  public static InputStream getInputStreamFromClassLoader(String fileName, ClassLoader loader) throws FileNotFoundException {
+    if (loader == null) {
+      throw new IllegalArgumentException("null loader");
+    }
+    if (fileName == null) {
+      throw new IllegalArgumentException("null fileName");
+    }
+    InputStream is = loader.getResourceAsStream(fileName);
+    if (is == null) {
+      throw new FileNotFoundException(fileName);
+    }
+    return is;
   }
 
   /**

@@ -21,6 +21,7 @@ import java.util.Iterator;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -220,6 +221,7 @@ public class SlicerTest {
    * @throws IllegalArgumentException
    * @throws IOException
    */
+  @Ignore
   @Test
   public void testSlice7() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = findOrCreateAnalysisScope();

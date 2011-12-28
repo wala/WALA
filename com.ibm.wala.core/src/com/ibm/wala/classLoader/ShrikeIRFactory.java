@@ -33,7 +33,7 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod> {
   public final static boolean buildLocalMap = true;
 
   public ControlFlowGraph makeCFG(final IBytecodeMethod method, Context C) {
-    return new ShrikeCFG(method);
+    return ShrikeCFG.make(method);
   }
 
   public IR makeIR(final IBytecodeMethod method, Context C, final SSAOptions options) throws IllegalArgumentException {

@@ -157,7 +157,6 @@ public class ClassLoaderImpl implements IClassLoader {
     }
     TreeSet<ModuleEntry> sortedEntries = new TreeSet<ModuleEntry>(HashCodeComparator.instance());
     sortedEntries.addAll(Iterator2Collection.toSet(M.getEntries()));
-
     HashSet<ModuleEntry> result = HashSetFactory.make();
     for (Iterator it = sortedEntries.iterator(); it.hasNext();) {
       ModuleEntry entry = (ModuleEntry) it.next();

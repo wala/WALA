@@ -10,7 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.types.annotations;
 
+import java.util.Arrays;
+
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.Pair;
 
 /**
  * Represents a Java 5.0 class file annotation
@@ -18,25 +21,40 @@ import com.ibm.wala.types.TypeReference;
 public class Annotation {
   
   private final TypeReference type;
+  private final Pair<TypeReference, Object>[] arguments;
   
-  private Annotation(TypeReference type) {
+  private Annotation(TypeReference type, Pair<TypeReference, Object>[] arguments) {
     this.type = type;
+    this.arguments = arguments;
+  }
+  
+  public static Annotation make(TypeReference t, Pair<TypeReference, Object>[] arguments) {
+    return new Annotation(t, arguments);
   }
 
   public static Annotation make(TypeReference t) {
-    return new Annotation(t);
+    return make(t, null);
   }
 
   @Override
   public String toString() {
-    return "Annotation type " + type;
+    StringBuffer sb = new StringBuffer("Annotation type " + type);
+    if (arguments != null) {
+      sb.append("[");
+      for(Pair<TypeReference, Object> arg : arguments) {
+        sb.append(" " + arg.fst.getName().getClassName() + ":" + arg.snd);
+      }
+      sb.append(" ]");
+    }
+    return sb.toString();
   }
 
   @Override
   public int hashCode() {
-    final int PRIME = 31;
+    final int prime = 31;
     int result = 1;
-    result = PRIME * result + ((type == null) ? 0 : type.hashCode());
+    result = prime * result + Arrays.hashCode(arguments);
+    result = prime * result + ((type == null) ? 0 : type.hashCode());
     return result;
   }
 
@@ -48,7 +66,9 @@ public class Annotation {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    final Annotation other = (Annotation) obj;
+    Annotation other = (Annotation) obj;
+    if (!Arrays.equals(arguments, other.arguments))
+      return false;
     if (type == null) {
       if (other.type != null)
         return false;
@@ -57,7 +77,10 @@ public class Annotation {
     return true;
   }
 
-  
+  public Pair<TypeReference, Object>[] getArguments() {
+    return arguments;
+  }
+
   public TypeReference getType() {
     return type;
   }

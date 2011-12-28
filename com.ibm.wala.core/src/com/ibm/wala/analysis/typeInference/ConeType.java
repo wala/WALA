@@ -31,7 +31,7 @@ public class ConeType extends TypeAbstraction {
     if (type == null) {
       throw new IllegalArgumentException("type is null");
     }
-    assert type.getReference().isReferenceType();
+    assert type.getReference().isReferenceType() : type;
     this.type = type;
   }
 

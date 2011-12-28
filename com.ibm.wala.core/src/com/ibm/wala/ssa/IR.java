@@ -125,7 +125,7 @@ public abstract class IR {
           newSiteMapping.put(((SSANewInstruction) x).getNewSite(), new Integer(i));
         }
         if (x.isPEI()) {
-          peiMapping.put(new ProgramCounter(cfg.getProgramCounter(i)), new Integer(i));
+           peiMapping.put(new ProgramCounter(cfg.getProgramCounter(i)), new Integer(i));
         }
       }
     }

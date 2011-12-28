@@ -83,16 +83,6 @@ public interface IMethod extends IMember, ContextItem {
   MethodReference getReference();
 
   /**
-   * @return maximum number of JVM locals used by this method
-   */
-  int getMaxLocals();
-
-  /**
-   * @return maximum height of JVM stack used by this method
-   */
-  int getMaxStackHeight();
-
-  /**
    * @return true iff this method has at least one exception handler
    */
   boolean hasExceptionHandler();

@@ -138,7 +138,7 @@ public abstract class JavaIRTests extends IRTests {
         final IClass iClass = cg.getClassHierarchy().lookupClass(type);
         Assert.assertNotNull("Could not find class " + typeStr, iClass);
 
-        final Collection<IClass> interfaces = iClass.getDirectInterfaces();
+        final Collection<? extends IClass> interfaces = iClass.getDirectInterfaces();
 
         Assert.assertEquals("Expected one single interface.", interfaces.size(), 1);
 

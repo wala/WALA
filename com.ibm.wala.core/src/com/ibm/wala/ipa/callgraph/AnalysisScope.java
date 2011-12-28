@@ -35,6 +35,7 @@ import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
+import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
@@ -202,8 +203,9 @@ public class AnalysisScope {
 
   /**
    * Add a class file to the scope for a loader
+   * @throws InvalidClassFileException 
    */
-  public void addClassFileToScope(ClassLoaderReference loader, File file) throws IllegalArgumentException {
+  public void addClassFileToScope(ClassLoaderReference loader, File file) throws IllegalArgumentException, InvalidClassFileException {
     List<Module> s = MapUtil.findOrCreateList(moduleMap, loader);
     s.add(new ClassFileModule(file));
   }

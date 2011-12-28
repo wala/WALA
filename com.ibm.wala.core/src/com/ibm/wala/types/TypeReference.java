@@ -329,7 +329,11 @@ public final class TypeReference implements Serializable {
   public final static TypeReference Unknown = findOrCreate(ClassLoaderReference.Primordial, UnknownName);
 
   private static TypeReference makePrimitive(TypeName n) {
-    TypeReference t = new TypeReference(ClassLoaderReference.Primordial, n);
+    return makePrimitive(ClassLoaderReference.Primordial, n);
+  }
+
+  public static TypeReference makePrimitive(ClassLoaderReference cl, TypeName n) {
+    TypeReference t = new TypeReference(cl, n);
     primitiveMap.put(t.name, t);
     return t;
   }

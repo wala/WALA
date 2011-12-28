@@ -261,7 +261,10 @@ public final class TypeName implements Serializable {
       }
       if (!innermostPrimitive) {
         result.append("L");
+      } else if (packageName != null && innermostPrimitive) {
+        result.append("P");        
       }
+      
       if (packageName != null) {
         result.append(packageName.toString());
         result.append("/");
@@ -279,7 +282,10 @@ public final class TypeName implements Serializable {
         }
         if (!innermostPrimitive) {
           result.append("L");
+        } else if (packageName != null && innermostPrimitive) {
+          result.append("P");        
         }
+        
         if (packageName != null) {
           result.append(packageName.toUnicodeString());
           result.append("/");
