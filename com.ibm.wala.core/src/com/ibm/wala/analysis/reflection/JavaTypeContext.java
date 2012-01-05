@@ -17,7 +17,6 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * Implement a Context which corresponds to a given type abstraction. Thus, this maps the name "TYPE" to a JavaTypeAbstraction.

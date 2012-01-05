@@ -13,7 +13,6 @@ package com.ibm.wala.ipa.callgraph.propagation;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * This is a context which is customized for the {@link InstanceKey} of the receiver.
