@@ -28,7 +28,7 @@ import com.ibm.wala.util.collections.EmptyIterator;
 /**
  * Common utilities for CFA-style call graph builders.
  */
-public class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
+public abstract class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
 
   public JSCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
     super(cha, options, cache, new AstCFAPointerKeys() {
