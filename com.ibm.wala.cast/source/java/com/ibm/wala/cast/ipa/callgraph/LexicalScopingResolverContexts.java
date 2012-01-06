@@ -171,6 +171,10 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
         return null;
       }
     }
+    
+    public String toString() {
+      return "GLOBAL_RESOLVER";
+    }
   };
 
   /**
@@ -184,7 +188,7 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
      * definer name for corresponding scope
      */
     final protected String myDefiner;
-    final private Map<String, LocalPointerKey> myReadOnlyDefs;
+    final protected Map<String, LocalPointerKey> myReadOnlyDefs;
     final protected CGNode myNode;
 
     private ReadOnlyResolver(LexicalScopingResolver parent, CGNode caller, Map<String, LocalPointerKey> readOnlyDefs) {
@@ -233,12 +237,20 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
       }
     }
 
-    // @Override
-    // public String toString() {
-    // return "ReadOnlyResolver [parent=" + parent + ", myDefiner=" + myDefiner
-    // + ", myReadOnlyDefs="
-    // + myReadOnlyDefs + ", myNode=" + myNode + "]";
-    // }
+    @Override
+    public String toString() {
+      StringBuilder result = new StringBuilder();
+      result.append("ReadOnlyResolver[myDefiner=");
+      result.append(myDefiner);
+//      result.append(", myNode=");
+//      result.append(myNode);
+      result.append(",\n myReadOnlyDefs=");
+      result.append(myReadOnlyDefs);
+      result.append(",\n parent=");
+      result.append(parent);
+      result.append("]");
+      return result.toString();
+    }
 
   }
 
@@ -275,7 +287,21 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
 
     @Override
     public String toString() {
-      return "SiteResolver [myDefs=" + myDefs + ", mySite=" + mySite + ", toString()=" + super.toString() + "]";
+      StringBuilder result = new StringBuilder();
+      result.append("SiteResolver[myDefiner=");
+      result.append(myDefiner);
+//      result.append(", myNode=");
+//      result.append(myNode);
+      result.append(",\n mySite=");
+      result.append(mySite);
+      result.append(",\n myReadOnlyDefs=");
+      result.append(myReadOnlyDefs);
+      result.append(",\n myDefs=");
+      result.append(myDefs);
+      result.append(",\n parent=");
+      result.append(parent);
+      result.append("]");
+      return result.toString();
     }
 
   }
