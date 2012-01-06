@@ -483,6 +483,11 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForLexicalBroken);
   }
   
+  @Test
+  public void testDeadPhi() throws IllegalArgumentException, IOException, CancelException {
+    Util.makeScriptCG("tests", "dead_phi.js");
+  }
+  
   protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {
 
     // Created by reversing the points to mapping for local pointer keys.
