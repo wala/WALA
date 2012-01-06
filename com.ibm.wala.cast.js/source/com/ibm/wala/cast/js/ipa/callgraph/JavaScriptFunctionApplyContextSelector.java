@@ -22,6 +22,45 @@ import com.ibm.wala.util.intset.IntSetUtil;
  */
 public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
 
+  public static final ContextKey APPLY_NON_NULL_ARGS = new ContextKey() {
+  };
+
+  public static class BooleanContextItem implements ContextItem {
+    final boolean val;
+
+    BooleanContextItem(boolean val) {
+      this.val = val;
+    }
+
+    @Override
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + (val ? 1231 : 1237);
+      return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      BooleanContextItem other = (BooleanContextItem) obj;
+      if (val != other.val)
+        return false;
+      return true;
+    }
+
+    @Override
+    public String toString() {
+      return "BooleanContextItem [val=" + val + "]";
+    }
+
+  }
+
   private final ContextSelector base;
 
   public JavaScriptFunctionApplyContextSelector(ContextSelector base) {
@@ -42,35 +81,31 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
   public static class ApplyContext implements Context {
     private final Context delegate;
 
-    private final CallSiteReference site;
-
     /**
      * was the argsList argument a non-null Array?
      */
-    private final boolean isNonNullArray;
+    private final BooleanContextItem isNonNullArray;
 
-    ApplyContext(Context delegate, CallSiteReference site, boolean isNonNullArray) {
+    ApplyContext(Context delegate, boolean isNonNullArray) {
       this.delegate = delegate;
-      this.site = site;
-      this.isNonNullArray = isNonNullArray;
+      this.isNonNullArray = new BooleanContextItem(isNonNullArray);
     }
 
     @Override
     public ContextItem get(ContextKey name) {
-      return delegate.get(name);
-    }
-
-    public boolean isNonNullArray() {
-      return isNonNullArray;
+      if (APPLY_NON_NULL_ARGS.equals(name)) {
+        return isNonNullArray;
+      } else {
+        return delegate.get(name);
+      }
     }
 
     @Override
     public int hashCode() {
       final int prime = 31;
       int result = 1;
-      result = prime * result + ((delegate == null) ? 0 : delegate.hashCode());
-      result = prime * result + (isNonNullArray ? 1231 : 1237);
-      result = prime * result + ((site == null) ? 0 : site.hashCode());
+      result = prime * result + delegate.hashCode();
+      result = prime * result + isNonNullArray.hashCode();
       return result;
     }
 
@@ -83,25 +118,19 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
       if (getClass() != obj.getClass())
         return false;
       ApplyContext other = (ApplyContext) obj;
-      if (delegate == null) {
-        if (other.delegate != null)
-          return false;
-      } else if (!delegate.equals(other.delegate))
+      if (!delegate.equals(other.delegate))
         return false;
-      if (isNonNullArray != other.isNonNullArray)
-        return false;
-      if (site == null) {
-        if (other.site != null)
-          return false;
-      } else if (!site.equals(other.site))
+      if (!isNonNullArray.equals(other.isNonNullArray))
         return false;
       return true;
     }
 
     @Override
     public String toString() {
-      return "ApplyContext [delegate=" + delegate + ", site=" + site + ", isNonNullArray=" + isNonNullArray + "]";
+      return "ApplyContext [delegate=" + delegate + ", isNonNullArray=" + isNonNullArray + "]";
     }
+    
+    
 
   }
 
@@ -118,7 +147,7 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
             isNonNullArray = true;
           }
         }
-        return new ApplyContext(base.getCalleeTarget(caller, site, callee, receiver), site, isNonNullArray);
+        return new ApplyContext(base.getCalleeTarget(caller, site, callee, receiver), isNonNullArray);
       }
     }
     return base.getCalleeTarget(caller, site, callee, receiver);

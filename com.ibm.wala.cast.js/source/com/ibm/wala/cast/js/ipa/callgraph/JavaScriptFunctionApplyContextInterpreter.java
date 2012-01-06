@@ -1,7 +1,7 @@
 package com.ibm.wala.cast.js.ipa.callgraph;
 
 import com.ibm.wala.cast.ipa.callgraph.AstContextInsensitiveSSAContextInterpreter;
-import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptFunctionApplyContextSelector.ApplyContext;
+import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptFunctionApplyContextSelector.BooleanContextItem;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummarizedFunction;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummary;
 import com.ibm.wala.cast.js.loader.JSCallSiteReference;
@@ -30,15 +30,14 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
 
   @Override
   public boolean understands(CGNode node) {
-    return node.getContext() instanceof ApplyContext;
+    return node.getContext().get(JavaScriptFunctionApplyContextSelector.APPLY_NON_NULL_ARGS) != null;
   }
 
   @Override
   public IR getIR(CGNode node) {
     assert understands(node);
-    ApplyContext applyContext = (ApplyContext) node.getContext();
-    boolean isNonNullArray = applyContext.isNonNullArray();
-    if (isNonNullArray) {
+    BooleanContextItem isNonNullArray = (BooleanContextItem) node.getContext().get(JavaScriptFunctionApplyContextSelector.APPLY_NON_NULL_ARGS);
+    if (isNonNullArray.val) {
       return makeIRForArgList(node);
     } else {
       return makeIRForNoArgList(node);
