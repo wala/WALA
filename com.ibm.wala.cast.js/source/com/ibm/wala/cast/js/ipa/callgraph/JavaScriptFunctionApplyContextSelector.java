@@ -16,7 +16,7 @@ import com.ibm.wala.util.intset.IntSetUtil;
  * 
  * @see <a
  *      href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/Apply">MDN
- *      Function.apply() docs</a>
+ *      Function.prototype.apply() docs</a>
  */
 public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
 
