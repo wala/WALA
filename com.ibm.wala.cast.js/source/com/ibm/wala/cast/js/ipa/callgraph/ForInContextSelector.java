@@ -12,9 +12,12 @@ package com.ibm.wala.cast.js.ipa.callgraph;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import com.ibm.wala.cast.ir.ssa.AbstractReflectiveGet;
+import com.ibm.wala.cast.ir.ssa.AstIRFactory;
+import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -24,15 +27,21 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.OneLevelSiteContextSelector;
 import com.ibm.wala.ssa.DefUse;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAOptions;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
@@ -168,11 +177,32 @@ public class ForInContextSelector implements ContextSelector {
     this.oneLevel = new OneLevelSiteContextSelector(base);
   }
   
+  private final HashMap<IMethod, Boolean> forInOnFirstArg_cache = HashMapFactory.make();
+  private final IRFactory<IMethod> factory = AstIRFactory.makeDefaultFactory();
+  private boolean forInOnFirstArg(IMethod method) {
+    if(method.getNumberOfParameters() < 2)
+      return false;
+    Boolean b = forInOnFirstArg_cache.get(method);
+    if(b != null)
+      return b;
+    IR ir = factory.makeIR(method, Everywhere.EVERYWHERE, SSAOptions.defaultOptions());
+    DefUse du = new DefUse(ir);
+    Iterator<SSAInstruction> uses = du.getUses(3);
+    for(SSAInstruction use : Iterator2Iterable.make(uses)) {
+      if(use instanceof EachElementGetInstruction) {
+        forInOnFirstArg_cache.put(method, true);
+        return true;
+      }
+    }
+    forInOnFirstArg_cache.put(method, false);
+    return false;
+  }
+  
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, final InstanceKey[] receiver) {
     Context baseContext = base.getCalleeTarget(caller, site, callee, receiver);
     String calleeFullName = callee.getDeclaringClass().getName().toString();
     String calleeShortName = calleeFullName.substring(calleeFullName.lastIndexOf('/')+1);
-    if (calleeShortName.startsWith(HACK_METHOD_STR) && receiver.length > 2) {
+    if (receiver.length > 2 && (calleeShortName.startsWith(HACK_METHOD_STR) || forInOnFirstArg(callee))) {
       InstanceKey loopVar = receiver[2];
       IClass stringClass = caller.getClassHierarchy().lookupClass(JavaScriptTypes.String);
       if(loopVar instanceof ConstantKey) {
