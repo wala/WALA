@@ -18,14 +18,11 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.RewriteContext, PropertyReadExpander.ExpanderKey> {
 
-  static class ExpanderKey implements CopyKey<ExpanderKey> {
-
-    public ExpanderKey parent() {
-      return null;
-    }
-   
-    static final ExpanderKey EVERYWHERE = new ExpanderKey();
-    static final ExpanderKey EXTRA = new ExpanderKey();
+  static enum ExpanderKey implements CopyKey<ExpanderKey> {
+    EVERYWHERE, EXTRA {
+      public ExpanderKey parent() { return EVERYWHERE; }
+    };
+    public ExpanderKey parent() { return null; }
   }
   
   private int readTempCounter = 0;
@@ -241,7 +238,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
             // assign lval to temp1 (where lval is a block that includes the prototype chain loop)
             Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(temp1, true, false)), lval),
             // ? --MS
-            rval,
+            //rval,
             // assign temp2 the new value to be assigned
             Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(temp2, true, false)),
                 Ast.makeNode(CAstNode.BINARY_EXPR, op, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(temp1)), rval)),
