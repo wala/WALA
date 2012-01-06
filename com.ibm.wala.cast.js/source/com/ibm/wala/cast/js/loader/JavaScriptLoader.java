@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.loader;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Collections;
@@ -58,7 +57,6 @@ import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
-import com.ibm.wala.cast.tree.impl.CAstRewriter;
 import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.cfg.AbstractCFG;
@@ -868,21 +866,13 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     super.init(all);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   protected TranslatorToCAst getTranslatorToCAst(final CAst ast, SourceModule module) {
-    final TranslatorToCAst baseTranslator = translatorFactory.make(ast, module);
-    return new TranslatorToCAst() {
-      
-      @Override
-      public CAstEntity translateToCAst() throws IOException {
-        CAstEntity e = baseTranslator.translateToCAst();
-        if(preprocessor != null) {
-          CAstRewriter rewriter = preprocessor.createCAstRewriter(ast);
-          e = rewriter.rewrite(e);
-        }
-        return e;
-      }
-    };
+    TranslatorToCAst translator = translatorFactory.make(ast, module);
+    if(preprocessor != null)
+      translator.addRewriter(preprocessor, true);
+    return translator;
   }
 
   @Override

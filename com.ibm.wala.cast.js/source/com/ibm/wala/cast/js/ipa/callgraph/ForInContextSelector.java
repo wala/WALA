@@ -275,9 +275,9 @@ public class ForInContextSelector implements ContextSelector {
       } else if(value == null) {
         return new ConstantKey<String>("null", stringClass);
       }
-    } else if(key != null && key.getConcreteType() == numberClass) {
+    } /*else if(key != null && key.getConcreteType() == numberClass) {
       return key;
-    }
+    }*/
     return new ConcreteTypeKey(stringClass);    
   }
   

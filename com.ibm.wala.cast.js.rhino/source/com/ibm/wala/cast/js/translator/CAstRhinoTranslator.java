@@ -11,22 +11,42 @@
 package com.ibm.wala.cast.js.translator;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.mozilla.javascript.RhinoToAstTranslator;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
+import com.ibm.wala.cast.js.translator.PropertyReadExpander.ExpanderKey;
+import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
+import com.ibm.wala.cast.tree.impl.CAstRewriter;
+import com.ibm.wala.cast.tree.impl.CAstRewriter.CopyKey;
+import com.ibm.wala.cast.tree.impl.CAstRewriter.RewriteContext;
+import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.classLoader.SourceModule;
 
 public class CAstRhinoTranslator implements TranslatorToCAst {
-
+  private final List<CAstRewriterFactory> rewriters = new LinkedList<CAstRewriterFactory>();
   private final SourceModule M;
-  
-   public CAstRhinoTranslator(SourceModule M) {
+
+  public CAstRhinoTranslator(SourceModule M) {
     this.M = M;
-   }
+    this.addRewriter(new CAstRewriterFactory<PropertyReadExpander.RewriteContext, ExpanderKey>() {
+      public CAstRewriter<PropertyReadExpander.RewriteContext, ExpanderKey> createCAstRewriter(CAst ast) {
+        return new PropertyReadExpander(ast);
+      }
+    }, true);
+  }
+
+  public <C extends RewriteContext<K>, K extends CopyKey<K>> void addRewriter(CAstRewriterFactory<C, K> factory, boolean prepend) {
+    if(prepend)
+      rewriters.add(0, factory);
+    else
+      rewriters.add(factory);
+  }  
 
   public CAstEntity translateToCAst() throws IOException {
     String N;
@@ -37,9 +57,9 @@ public class CAstRhinoTranslator implements TranslatorToCAst {
     }
 
     CAstImpl Ast = new CAstImpl();
-    
-    return
-      new PropertyReadExpander(Ast).rewrite(
-          new RhinoToAstTranslator(Ast, M, N).translate());
-    }
+    CAstEntity entity = new RhinoToAstTranslator(Ast, M, N).translate();
+    for(CAstRewriterFactory rwf : rewriters)
+      entity = rwf.createCAstRewriter(Ast).rewrite(entity);
+    return entity;
+  }
 }
