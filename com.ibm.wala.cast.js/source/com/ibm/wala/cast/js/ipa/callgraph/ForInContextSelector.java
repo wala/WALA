@@ -280,15 +280,13 @@ public class ForInContextSelector implements ContextSelector {
     Context baseContext = base.getCalleeTarget(caller, site, callee, receiver);
     String calleeFullName = callee.getDeclaringClass().getName().toString();
     String calleeShortName = calleeFullName.substring(calleeFullName.lastIndexOf('/')+1);
-    if(calleeShortName.contains("kill_contexts"))
-      return Everywhere.EVERYWHERE;
     if(USE_NAME_TO_SELECT_CONTEXT) {
       if(calleeShortName.contains(HACK_METHOD_STR) && receiver.length > 2) {
         // we assume that the argument is only used as a property name, so we can do ToString
         return new ForInContext(baseContext, simulateToString(caller.getClassHierarchy(), receiver[2]));
       }
     } else if(receiver.length > 2) {
-      Frequency f = calleeShortName.contains("make_for_in_sensitive") ? Frequency.SOMETIMES : usesFirstArgAsPropertyName(callee);
+      Frequency f = usesFirstArgAsPropertyName(callee);
       if(f == Frequency.ALWAYS) {
         return new ForInContext(baseContext, simulateToString(caller.getClassHierarchy(), receiver[2]));
       } else if(receiver[2] != null && (f == Frequency.SOMETIMES || forInOnFirstArg(callee))) {
