@@ -1108,9 +1108,9 @@ public class RhinoToAstTranslator {
 
     case Token.CALL: {
       if (!isPrimitiveCall(context, n)) {
-        CAstNode base = makeVarRef("base");
+        CAstNode base = makeVarRef("$$ base");
         Node callee = n.getFirstChild();
-        WalkContext child = new BaseCollectingContext(context, callee, "base");
+        WalkContext child = new BaseCollectingContext(context, callee, "$$ base");
         CAstNode fun = walkNodes(callee, child);
 
         // the first actual parameter appearing within the parentheses of the
@@ -1120,7 +1120,7 @@ public class RhinoToAstTranslator {
           return Ast.makeNode(
               CAstNode.LOCAL_SCOPE,
               Ast.makeNode(CAstNode.BLOCK_EXPR,
-                  Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl("base")), Ast.makeConstant(null)),
+                  Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl("$$ base")), Ast.makeConstant(null)),
                   makeCall(fun, base, firstParamInParens, context)));
         else {
           // pass the global object as the receiver argument
