@@ -119,7 +119,7 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
   protected static JSCFABuilder makeCG(JavaScriptLoaderFactory loaders, AnalysisScope scope, boolean useOneCFA, boolean handleCallApply) throws IOException {
     try {
       IClassHierarchy cha = makeHierarchy(scope, loaders);
-      com.ibm.wala.cast.test.Util.checkForFrontEndErrors(cha);
+      com.ibm.wala.cast.js.util.Util.checkForFrontEndErrors(cha);
       Iterable<Entrypoint> roots = makeScriptRoots(cha);
       JSAnalysisOptions options = makeOptions(scope, cha, roots);
       options.setHandleCallApply(handleCallApply);

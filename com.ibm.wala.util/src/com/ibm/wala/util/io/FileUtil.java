@@ -13,6 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.MappedByteBuffer;
@@ -181,5 +182,16 @@ public class FileUtil {
     byte[] bb = out.toByteArray();
     out.close();
     return bb;
+  }
+
+  /**
+   * write string s into file f
+   * 
+   * @param f
+   * @param content
+   * @throws IOException
+   */
+  public static void writeFile(File f, String content) throws IOException {
+    new FileWriter(f).append(content).close();
   }
 }
