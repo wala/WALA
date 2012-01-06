@@ -137,7 +137,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
    * (original node, copy key) pairs ot new nodes and the original control-flow
    * map.
    */
-  private CAstControlFlowMap copyFlow(Map<Pair<CAstNode, K>, CAstNode> nodeMap, CAstControlFlowMap orig,
+  protected CAstControlFlowMap copyFlow(Map<Pair<CAstNode, K>, CAstNode> nodeMap, CAstControlFlowMap orig,
       CAstSourcePositionMap newSrc) {
 
     // the new control-flow map
@@ -243,7 +243,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     return newMap;
   }
 
-  private CAstSourcePositionMap copySource(Map<Pair<CAstNode, K>, CAstNode> nodeMap, CAstSourcePositionMap orig) {
+  protected CAstSourcePositionMap copySource(Map<Pair<CAstNode, K>, CAstNode> nodeMap, CAstSourcePositionMap orig) {
     CAstSourcePositionRecorder newMap = new CAstSourcePositionRecorder();
     for (Iterator<Map.Entry<Pair<CAstNode, K>, CAstNode>> NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
       Map.Entry<Pair<CAstNode, K>, CAstNode> entry = NS.next();
@@ -260,7 +260,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     return newMap;
   }
 
-  private CAstNodeTypeMap copyTypes(Map<Pair<CAstNode, K>, CAstNode> nodeMap, CAstNodeTypeMap orig) {
+  protected CAstNodeTypeMap copyTypes(Map<Pair<CAstNode, K>, CAstNode> nodeMap, CAstNodeTypeMap orig) {
     if (orig != null) {
       CAstNodeTypeMapRecorder newMap = new CAstNodeTypeMapRecorder();
       for (Iterator<Entry<Pair<CAstNode, K>, CAstNode>> NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
@@ -281,7 +281,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     }
   }
 
-  private Map<CAstNode, Collection<CAstEntity>> copyChildren(Map<Pair<CAstNode, K>, CAstNode> nodeMap,
+  protected Map<CAstNode, Collection<CAstEntity>> copyChildren(Map<Pair<CAstNode, K>, CAstNode> nodeMap,
       Map<CAstNode, Collection<CAstEntity>> children) {
     final Map<CAstNode, Collection<CAstEntity>> newChildren = new LinkedHashMap<CAstNode, Collection<CAstEntity>>();
 

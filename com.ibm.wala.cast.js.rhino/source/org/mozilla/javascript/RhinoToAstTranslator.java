@@ -118,7 +118,7 @@ public class RhinoToAstTranslator {
     /**
      * @see BaseCollectingContext
      */
-    CAstNode getBaseVarIfRelevant(Node node);
+    String getBaseVarNameIfRelevant(Node node);
 
     /**
      * @see BaseCollectingContext
@@ -196,7 +196,7 @@ public class RhinoToAstTranslator {
       return null;
     }
 
-    public CAstNode getBaseVarIfRelevant(Node node) {
+    public String getBaseVarNameIfRelevant(Node node) {
       return null;
     }
 
@@ -268,8 +268,8 @@ public class RhinoToAstTranslator {
       return parent.getCatchTarget();
     }
 
-    public CAstNode getBaseVarIfRelevant(Node node) {
-      return parent.getBaseVarIfRelevant(node);
+    public String getBaseVarNameIfRelevant(Node node) {
+      return parent.getBaseVarNameIfRelevant(node);
     }
 
     public boolean foundBase(Node node) {
@@ -447,30 +447,30 @@ public class RhinoToAstTranslator {
     private Node baseFor;
 
     /**
-     * the variable to be used to store the value of the expression passed as
-     * the 'this' parameter
+     * the name of the variable to be used to store the value of the expression 
+     * passed as the 'this' parameter
      */
-    private final CAstNode baseVar;
+    private final String baseVarName;
 
     /**
      * have we discovered a value to be passed as the 'this' parameter?
      */
     private boolean foundBase = false;
 
-    BaseCollectingContext(WalkContext parent, Node initialBaseFor, CAstNode baseVar) {
+    BaseCollectingContext(WalkContext parent, Node initialBaseFor, String baseVarName) {
       super(parent);
       baseFor = initialBaseFor;
-      this.baseVar = baseVar;
+      this.baseVarName = baseVarName;
     }
 
     /**
      * if node is one that we care about, return baseVar, and as a side effect
      * set foundBase to true. Otherwise, return <code>null</code>.
      */
-    public CAstNode getBaseVarIfRelevant(Node node) {
+    public String getBaseVarNameIfRelevant(Node node) {
       if (baseFor.equals(node)) {
         foundBase = true;
-        return baseVar;
+        return baseVarName;
       } else {
         return null;
       }
@@ -1109,7 +1109,7 @@ public class RhinoToAstTranslator {
       if (!isPrimitiveCall(context, n)) {
         CAstNode base = Ast.makeNode(CAstNode.VAR, Ast.makeConstant("base"));
         Node callee = n.getFirstChild();
-        WalkContext child = new BaseCollectingContext(context, callee, base);
+        WalkContext child = new BaseCollectingContext(context, callee, "base");
         CAstNode fun = walkNodes(callee, child);
 
         // the first actual parameter appearing within the parentheses of the
@@ -1401,14 +1401,14 @@ public class RhinoToAstTranslator {
       Node element = receiver.getNext();
 
       CAstNode rcvr = walkNodes(receiver, context);
-      CAstNode baseVar = context.getBaseVarIfRelevant(n);
+      String baseVarName = context.getBaseVarNameIfRelevant(n);
 
       CAstNode elt = walkNodes(element, context);
 
       CAstNode get, result;
-      if (baseVar != null) {
-        result = Ast.makeNode(CAstNode.BLOCK_EXPR, Ast.makeNode(CAstNode.ASSIGN, baseVar, rcvr),
-            get = Ast.makeNode(CAstNode.OBJECT_REF, baseVar, elt));
+      if (baseVarName != null) {
+        result = Ast.makeNode(CAstNode.BLOCK_EXPR, Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(baseVarName)), rcvr),
+            get = Ast.makeNode(CAstNode.OBJECT_REF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(baseVarName)), elt));
       } else {
         result = get = Ast.makeNode(CAstNode.OBJECT_REF, rcvr, elt);
       }
@@ -1475,13 +1475,13 @@ public class RhinoToAstTranslator {
       Node element = receiver.getNext();
 
       CAstNode rcvr = walkNodes(receiver, context);
-      CAstNode baseVar = context.getBaseVarIfRelevant(n);
+      String baseVarName = context.getBaseVarNameIfRelevant(n);
 
       CAstNode elt = walkNodes(element, context);
 
-      if (baseVar != null) {
-        return Ast.makeNode(CAstNode.BLOCK_EXPR, Ast.makeNode(CAstNode.ASSIGN, baseVar, rcvr),
-            Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.OBJECT_REF, baseVar, elt), Ast.makeConstant(null)));
+      if (baseVarName != null) {
+        return Ast.makeNode(CAstNode.BLOCK_EXPR, Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(baseVarName)), rcvr),
+            Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.OBJECT_REF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(baseVarName)), elt), Ast.makeConstant(null)));
       } else {
         return Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.OBJECT_REF, rcvr, elt), Ast.makeConstant(null));
       }
@@ -1582,5 +1582,9 @@ public class RhinoToAstTranslator {
     this.Ast = Ast;
     this.scriptName = scriptName;
     this.sourceModule = M;
+  }
+
+  public static void resetGensymCounters() {
+    LoopContext.counter = 0;
   }
 }
