@@ -70,7 +70,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
    */
   private final InstanceKeyFactory iKeyFactory;
 
-  private final PropagationCallGraphBuilder builder;
+  protected final PropagationCallGraphBuilder builder;
 
   public PointerAnalysisImpl(PropagationCallGraphBuilder builder, CallGraph cg, PointsToMap pointsToMap,
       MutableMapping<InstanceKey> instanceKeys, PointerKeyFactory pointerKeys, InstanceKeyFactory iKeyFactory) {
@@ -217,6 +217,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       LocalPointerKey lpk = (LocalPointerKey) key;
       CGNode node = lpk.getNode();
       IR ir = node.getIR();
+      System.err.println(ir);
       DefUse du = node.getDU();
       if (((SSAPropagationCallGraphBuilder) builder).contentsAreInvariant(ir.getSymbolTable(), du, lpk.getValueNumber())) {
         // cons up the points-to set for invariant contents

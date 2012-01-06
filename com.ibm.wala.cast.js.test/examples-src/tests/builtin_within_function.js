@@ -1,0 +1,1 @@
+z = (function foo() { return this; })();

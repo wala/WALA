@@ -15,6 +15,8 @@ import java.util.Set;
 
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.cast.ipa.callgraph.AstSSAPropagationCallGraphBuilder;
+import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
+import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
 import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
 import com.ibm.wala.cast.js.analysis.typeInference.JSTypeInference;
@@ -30,6 +32,7 @@ import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -60,10 +63,14 @@ import com.ibm.wala.ssa.SSABinaryOpInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.MutableMapping;
+import com.ibm.wala.util.intset.MutableSparseIntSet;
+import com.ibm.wala.util.intset.OrdinalSet;
 
 public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraphBuilder {
 
@@ -116,6 +123,8 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   // top-level node constraint generation
   //
   // ///////////////////////////////////////////////////////////////////////////
+
+  private final GlobalObjectKey globalObject = new GlobalObjectKey(cha.lookupClass(JavaScriptTypes.Object));
 
   protected ExplicitCallGraph createEmptyCallGraph(IClassHierarchy cha, AnalysisOptions options) {
     return new JSCallGraph(cha, options, getAnalysisCache());
@@ -201,6 +210,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     public static class JSImplicitPointsToSetVisitor extends AstImplicitPointsToSetVisitor implements
         com.ibm.wala.cast.js.ssa.InstructionVisitor {
+      
       public JSImplicitPointsToSetVisitor(AstPointerAnalysisImpl analysis, LocalPointerKey lpk) {
         super(analysis, lpk);
       }
@@ -232,6 +242,31 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       public void visitWithRegion(JavaScriptWithRegion instruction) {
 
       }
+
+      @Override
+      public void visitAstGlobalRead(AstGlobalRead instruction) {
+        JSPointerAnalysisImpl jsAnalysis = (JSPointerAnalysisImpl) analysis;
+        pointsToSet = analysis.computeImplicitPointsToSetAtGet(node, instruction.getDeclaredField(), -1, true);
+        FieldReference field = instruction.getDeclaredField();
+        IField f = jsAnalysis.builder.getCallGraph().getClassHierarchy().resolveField(field);
+        assert f != null;
+        // if (f == null) {
+        // pointsToSet = OrdinalSet.empty();
+        // }
+        MutableSparseIntSet S = MutableSparseIntSet.makeEmpty();
+        InstanceKey ik = ((JSSSAPropagationCallGraphBuilder)jsAnalysis.builder).globalObject;
+        PointerKey fkey = analysis.getHeapModel().getPointerKeyForInstanceField(ik, f);
+        if (fkey != null) {
+          OrdinalSet pointees = analysis.getPointsToSet(fkey);
+          IntSet set = pointees.getBackingSet();
+          if (set != null) {
+            S.addAll(set);
+          }
+        }
+        pointsToSet = new OrdinalSet<InstanceKey>(S, analysis.getInstanceKeyMapping());
+
+      }
+
     };
 
     protected ImplicitPointsToSetVisitor makeImplicitPointsToVisitor(LocalPointerKey lpk) {
@@ -283,6 +318,10 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       super(builder, node);
     }
 
+    protected JSSSAPropagationCallGraphBuilder getBuilder() {
+      return (JSSSAPropagationCallGraphBuilder) builder;
+    }
+
     public void visitUnaryOp(SSAUnaryOpInstruction inst) {
       if (inst.getOpcode() == IUnaryOpInstruction.Operator.NEG) {
         addLvalTypeKeyConstraint(inst, JavaScriptTypes.Boolean);
@@ -320,6 +359,78 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       addLvalTypeKeyConstraint(instruction, JavaScriptTypes.String);
     }
 
+    @Override
+    public void visitAstGlobalRead(AstGlobalRead instruction) {
+      int lval = instruction.getDef();
+      FieldReference field = instruction.getDeclaredField();
+      // skip getfields of primitive type (optimisation)
+      // this can't happen in JavaScript...right?
+      // if (field.getFieldType().isPrimitiveType()) {
+      // return;
+      // }
+      PointerKey def = getPointerKeyForLocal(lval);
+      assert def != null;
+
+      IField f = getClassHierarchy().resolveField(field);
+      // if (f == null &&
+      // callGraph.getFakeRootNode().getMethod().getDeclaringClass().getReference().equals(field.getDeclaringClass()))
+      // {
+      // f =
+      // callGraph.getFakeRootNode().getMethod().getDeclaringClass().getField(field.getName());
+      // }
+      //
+      // if (f == null) {
+      // return;
+      // }
+      assert f != null : "could not resolve referenced global " + field;
+
+      if (hasNoInterestingUses(lval)) {
+        system.recordImplicitPointsToSet(def);
+      } else {
+        InstanceKey ik = getBuilder().globalObject;
+        system.findOrCreateIndexForInstanceKey(ik);
+        PointerKey p = getPointerKeyForInstanceField(ik, f);
+        system.newConstraint(def, assignOperator, p);
+      }
+
+    }
+
+    @Override
+    public void visitAstGlobalWrite(AstGlobalWrite instruction) {
+      int rval = instruction.getVal();
+      FieldReference field = instruction.getDeclaredField();
+
+      // skip putfields of primitive type
+      // if (field.getFieldType().isPrimitiveType()) {
+      // return;
+      // }
+      IField f = getClassHierarchy().resolveField(field);
+      // if (f == null) {
+      // if (DEBUG) {
+      // System.err.println("Could not resolve field " + field);
+      // }
+      // Warnings.add(FieldResolutionFailure.create(field));
+      // return;
+      // }
+      assert f != null : "could not resolve referenced global " + field;
+      assert !f.getFieldTypeReference().isPrimitiveType();
+      InstanceKey globalObj = getBuilder().globalObject;
+      system.findOrCreateIndexForInstanceKey(globalObj);
+      PointerKey p = getPointerKeyForInstanceField(globalObj, f);
+
+      PointerKey rvalKey = getPointerKeyForLocal(rval);
+      if (contentsAreInvariant(symbolTable, du, rval)) {
+        system.recordImplicitPointsToSet(rvalKey);
+        InstanceKey[] ik = getInvariantContents(rval);
+        for (int i = 0; i < ik.length; i++) {
+          system.newConstraint(p, ik[i]);
+        }
+      } else {
+        system.newConstraint(p, assignOperator, rvalKey);
+      }
+
+    }
+
     public void visitBinaryOp(final SSABinaryOpInstruction instruction) {
       handleBinaryOp(instruction, node, symbolTable, du);
     }
@@ -340,7 +451,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
         SSAInstruction[] instructions = ir.getInstructions();
         for (int ind = basicBlock.getFirstInstructionIndex(); ind <= basicBlock.getLastInstructionIndex(); ind++) {
           if (instruction.equals(instructions[ind])) {
-            return ((AstMethod)method).getSourcePosition(ind);
+            return ((AstMethod) method).getSourcePosition(ind);
           }
         }
       }
