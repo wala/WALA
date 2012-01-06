@@ -686,9 +686,12 @@ public class RhinoToAstTranslator {
     private final CAstControlFlowMap map;
 
     private final CAstSourcePositionMap pos;
+    
+    private final Position mypos;
 
     ScriptOrFnEntity(ScriptOrFnNode n, Map<CAstNode, Collection<CAstEntity>> subs, CAstNode ast, CAstControlFlowMap map,
         CAstSourcePositionMap pos) {
+      mypos = makePosition(n);
       if (n instanceof FunctionNode) {
         String x = ((FunctionNode) n).getFunctionName();
         if (x == null || "".equals(x)) {
@@ -773,7 +776,7 @@ public class RhinoToAstTranslator {
     }
 
     public CAstSourcePositionMap.Position getPosition() {
-      return null;
+      return mypos;
     }
 
     public CAstNodeTypeMap getNodeTypeMap() {
@@ -859,9 +862,17 @@ public class RhinoToAstTranslator {
 
   private CAstNode noteSourcePosition(WalkContext context, CAstNode n, Node p) {
     if (p.getLineno() != -1 && context.pos().getPosition(n) == null) {
-      context.pos().setPosition(n, makePosition(p));
+      propagateSourcePosition(n, p, context.pos());
     }
     return n;
+  }
+  
+  private void propagateSourcePosition(CAstNode n, Node p, CAstSourcePositionRecorder poss) {
+    if(poss.getPosition(n) == null) {
+      poss.setPosition(n, makePosition(p));
+      for(int i=0;i<n.getChildCount();++i)
+        propagateSourcePosition(n.getChild(i), p, poss);
+    }
   }
 
   private CAstNode readName(WalkContext context, String name) {
