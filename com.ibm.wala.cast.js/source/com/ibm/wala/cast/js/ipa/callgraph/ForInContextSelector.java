@@ -15,13 +15,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.ibm.wala.cast.ir.ssa.AbstractReflectiveGet;
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
+import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.OneLevelSiteContextSelector;
@@ -52,7 +56,7 @@ public class ForInContextSelector implements ContextSelector {
   public static boolean DEPENDENT_THRU_READS = true;
   
   public static class SelectiveCPAContext implements Context {
-      private final Context base;
+      protected final Context base;
       
       private final Map<ContextKey, InstanceKey> parameterObjs;
 
@@ -117,7 +121,7 @@ public class ForInContextSelector implements ContextSelector {
     
     @Override
     public String toString() {
-      return "for in hack filter for " + get(ContextKey.PARAMETERS[2]);
+      return "for in hack filter for " + get(ContextKey.PARAMETERS[2]) + " over " + this.base;
     }
     
   }
@@ -163,20 +167,39 @@ public class ForInContextSelector implements ContextSelector {
     this.base = base;
     this.oneLevel = new OneLevelSiteContextSelector(base);
   }
-
+  
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, final InstanceKey[] receiver) {
+    Context baseContext = base.getCalleeTarget(caller, site, callee, receiver);
     if (callee.getDeclaringClass().getName().toString().contains(HACK_METHOD_STR)) {
-      return new ForInContext(base.getCalleeTarget(caller, site, callee, receiver), receiver[2]);
+      InstanceKey loopVar = receiver[2];
+      IClass stringClass = caller.getClassHierarchy().lookupClass(JavaScriptTypes.String);
+      if(loopVar instanceof ConstantKey) {
+        // do a manual ToString conversion if necessary
+        Object value = ((ConstantKey)loopVar).getValue();
+        if(value instanceof String) {
+          return new ForInContext(baseContext, loopVar);
+        } else if(value instanceof Number) {
+          Integer ival = ((Number)value).intValue();
+          return new ForInContext(baseContext, new ConstantKey<String>(ival.toString(), stringClass));
+        } else if(value instanceof Boolean) {
+          Boolean bval = (Boolean)value;
+          return new ForInContext(baseContext, new ConstantKey<String>(bval.toString(), stringClass));
+        } else if(value == null) {
+          return new ForInContext(baseContext, new ConstantKey<String>("null", stringClass));
+        }
+      }
+      ConcreteTypeKey stringKey = new ConcreteTypeKey(stringClass);
+      return new ForInContext(baseContext, stringKey);
     } else if (USE_CPA_IN_BODIES && FORIN_MARKER.equals(caller.getContext().get(FORIN_KEY))) {
-      return new SelectiveCPAContext(base.getCalleeTarget(caller, site, callee, receiver), receiver);
+      return new SelectiveCPAContext(baseContext, receiver);
     } else if (USE_1LEVEL_IN_BODIES && FORIN_MARKER.equals(caller.getContext().get(FORIN_KEY))) {
       if (! identifyDependentParameters(caller, site).isEmpty()) {
         return oneLevel.getCalleeTarget(caller, site, callee, receiver);        
       } else {
-        return base.getCalleeTarget(caller, site, callee, receiver);
+        return baseContext;
       }
     } else {
-      return base.getCalleeTarget(caller, site, callee, receiver);
+      return baseContext;
     }
   }
   
