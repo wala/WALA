@@ -13,7 +13,6 @@ package com.ibm.wala.cast.js.ipa.callgraph;
 import com.ibm.wala.cast.ipa.callgraph.LexicalScopingResolverContexts;
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingKeysContextSelector;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
@@ -30,20 +29,17 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  * "uninteresting" types
  */
 public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
-  private static final boolean SIMPLE = false;
 
-  private static final boolean HANDLE_FUNCTION_PROTOTYPE_CALL = !SIMPLE && true;
-  private static final boolean HANDLE_FUNCTION_PROTOTYPE_APPLY = !SIMPLE && true;
-  private static final boolean USE_OBJECT_SENSITIVITY = !SIMPLE && true;
+  private static final boolean USE_OBJECT_SENSITIVITY = false;
   
   private static final boolean USE_LOAD_FILE_TARGET_SELECTOR = false;
 
-  public JSZeroOrOneXCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
+  public JSZeroOrOneXCFABuilder(IClassHierarchy cha, JSAnalysisOptions options, AnalysisCache cache,
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy, boolean doOneCFA) {
     super(cha, options, cache);
 
     SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha);
-    if (HANDLE_FUNCTION_PROTOTYPE_APPLY) {
+    if (options.handleCallApply()) {
       contextInterpreter = new DelegatingSSAContextInterpreter(new JavaScriptFunctionApplyContextInterpreter(options, cache),
           contextInterpreter);
     }
@@ -51,7 +47,7 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
 
     MethodTargetSelector targetSelector = new JavaScriptConstructTargetSelector(cha, options
         .getMethodTargetSelector());
-    if (HANDLE_FUNCTION_PROTOTYPE_CALL) {
+    if (options.handleCallApply()) {
       targetSelector = new JavaScriptFunctionDotCallTargetSelector(targetSelector);
     }
     if (USE_LOAD_FILE_TARGET_SELECTOR) {
@@ -66,7 +62,7 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     if (USE_OBJECT_SENSITIVITY) {
       contextSelector = new ObjectSensitivityContextSelector(contextSelector);
     }
-    if (HANDLE_FUNCTION_PROTOTYPE_APPLY) {
+    if (options.handleCallApply()) {
       contextSelector = new JavaScriptFunctionApplyContextSelector(contextSelector);
     }
     contextSelector = new LexicalScopingResolverContexts(this, contextSelector);
@@ -95,7 +91,7 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
    *          deployment descriptor abstraction
    * @return a 0-1-Opt-CFA Call Graph Builder.
    */
-  public static JSCFABuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, ClassLoader cl,
+  public static JSCFABuilder make(JSAnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, ClassLoader cl,
       AnalysisScope scope, String[] xmlFiles, byte instancePolicy, boolean doOneCFA) {
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     for (int i = 0; i < xmlFiles.length; i++) {

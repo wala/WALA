@@ -21,6 +21,7 @@ import junit.framework.Assert;
 import com.ibm.wala.cast.js.html.MappedSourceModule;
 import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
 import com.ibm.wala.cast.js.html.WebUtil;
+import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSZeroOrOneXCFABuilder;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
@@ -28,7 +29,6 @@ import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
@@ -116,7 +116,7 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
       IClassHierarchy cha = makeHierarchy(scope, loaders);
       com.ibm.wala.cast.test.Util.checkForFrontEndErrors(cha);
       Iterable<Entrypoint> roots = makeScriptRoots(cha);
-      AnalysisOptions options = makeOptions(scope, cha, roots);
+      JSAnalysisOptions options = makeOptions(scope, cha, roots);
       AnalysisCache cache = makeCache();
 
       JSCFABuilder builder = new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, ZeroXInstanceKeys.ALLOCATIONS, useOneCFA);

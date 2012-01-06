@@ -8,13 +8,13 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *****************************************************************************/
+import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSZeroOrOneXCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.Util;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
@@ -29,7 +29,7 @@ class dumpCallGraph {
     AnalysisScope scope = Util.makeScope(args, loaders, JavaScriptLoader.JS);
     IClassHierarchy cha = Util.makeHierarchy(scope, loaders);
     Iterable<Entrypoint> roots = Util.makeScriptRoots(cha);
-    AnalysisOptions options = Util.makeOptions(scope, cha, roots);
+    JSAnalysisOptions options = Util.makeOptions(scope, cha, roots);
     AnalysisCache cache = Util.makeCache();
     
     JSCFABuilder builder = new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, ZeroXInstanceKeys.ALLOCATIONS, false);

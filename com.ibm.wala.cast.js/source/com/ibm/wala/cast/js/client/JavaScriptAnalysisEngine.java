@@ -17,6 +17,7 @@ import java.util.jar.JarFile;
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.js.client.impl.ZeroCFABuilderFactory;
+import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptEntryPoints;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
@@ -98,6 +99,6 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
 
   @Override
   protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
-    return new ZeroCFABuilderFactory().make(options, cache, cha, scope, false);
+    return new ZeroCFABuilderFactory().make((JSAnalysisOptions) options, cache, cha, scope, false);
   }
 }

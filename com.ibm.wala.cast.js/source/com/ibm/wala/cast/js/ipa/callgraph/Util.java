@@ -38,7 +38,6 @@ import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.SourceURLModule;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -82,8 +81,8 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
     Util.preprocessor = preprocessor;
   }
 
-  public static AnalysisOptions makeOptions(AnalysisScope scope, IClassHierarchy cha, Iterable<Entrypoint> roots) {
-    final AnalysisOptions options = new AnalysisOptions(scope, /*
+  public static JSAnalysisOptions makeOptions(AnalysisScope scope, IClassHierarchy cha, Iterable<Entrypoint> roots) {
+    final JSAnalysisOptions options = new JSAnalysisOptions(scope, /*
                                                                 * AstIRFactory.
                                                                 * makeDefaultFactory
                                                                 * (keepIRs),
