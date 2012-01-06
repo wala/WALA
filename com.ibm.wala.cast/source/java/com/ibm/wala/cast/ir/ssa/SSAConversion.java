@@ -489,10 +489,12 @@ public class SSAConversion extends AbstractSSAConversion {
       if (namesData[to] == null) {
         namesData[to] = namesData[from];
       } else {
-        String[] newNames = new String[namesData[from].length + namesData[to].length];
-        System.arraycopy(namesData[from], 0, newNames, 0, namesData[from].length);
-        System.arraycopy(namesData[to], 0, newNames, namesData[from].length, namesData[to].length);
-        namesData[to] = newNames;
+        Set<String> newNames = HashSetFactory.make();
+        for(String fromName : namesData[from])
+          newNames.add(fromName);
+        for(String toName : namesData[to])
+          newNames.add(toName);
+        namesData[to] = newNames.toArray(new String[newNames.size()]);
       }
     }
   }
