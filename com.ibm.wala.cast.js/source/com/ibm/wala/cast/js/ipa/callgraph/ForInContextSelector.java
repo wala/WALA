@@ -16,6 +16,7 @@ import java.util.Map;
 
 import com.ibm.wala.cast.ir.ssa.AbstractReflectiveGet;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
+import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -41,6 +42,7 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
+import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.intset.IntSet;
@@ -182,45 +184,48 @@ public class ForInContextSelector implements ContextSelector {
     this.oneLevel = new OneLevelSiteContextSelector(base);
   }
   
-  private final HashMap<IMethod, Boolean> forInOnFirstArg_cache = HashMapFactory.make();
-  private final HashMap<IMethod, DefUse> du_cache = HashMapFactory.make();
+  private final HashMap<MethodReference, Boolean> forInOnFirstArg_cache = HashMapFactory.make();
+  private final HashMap<MethodReference, DefUse> du_cache = HashMapFactory.make();
   private final IRFactory<IMethod> factory = AstIRFactory.makeDefaultFactory();
   
   // determine whether the method performs a for-in loop over the properties of its first argument
   private boolean forInOnFirstArg(IMethod method) {
+    MethodReference mref = method.getReference();
     if(method.getNumberOfParameters() < 2)
       return false;
-    Boolean b = forInOnFirstArg_cache.get(method);
+    Boolean b = forInOnFirstArg_cache.get(mref);
     if(b != null)
       return b;
     DefUse du = getDefUse(method);
     for(SSAInstruction use : Iterator2Iterable.make(du.getUses(3))) {
       if(use instanceof EachElementGetInstruction) {
-        forInOnFirstArg_cache.put(method, true);
+        forInOnFirstArg_cache.put(mref, true);
         return true;
       }
     }
-    forInOnFirstArg_cache.put(method, false);
+    forInOnFirstArg_cache.put(mref, false);
     return false;
   }
 
   protected DefUse getDefUse(IMethod method) {
-    DefUse du = du_cache.get(method);
+    MethodReference mref = method.getReference();
+    DefUse du = du_cache.get(mref);
     if(du == null) {
       IR ir = factory.makeIR(method, Everywhere.EVERYWHERE, SSAOptions.defaultOptions());
-      du_cache.put(method, du = new DefUse(ir));
+      du_cache.put(mref, du = new DefUse(ir));
     }
     return du;
   }
   
   private enum Frequency { NEVER, SOMETIMES, ALWAYS };
-  private final HashMap<IMethod, Frequency> usesFirstArgAsPropertyName_cache = HashMapFactory.make();
+  private final HashMap<MethodReference, Frequency> usesFirstArgAsPropertyName_cache = HashMapFactory.make();
   
   // determine whether the method never/sometimes/always uses its first argument as a property name
   private Frequency usesFirstArgAsPropertyName(IMethod method) {
+    MethodReference mref = method.getReference();
     if(method.getNumberOfParameters() < 2)
       return Frequency.NEVER;
-    Frequency f = usesFirstArgAsPropertyName_cache.get(method);
+    Frequency f = usesFirstArgAsPropertyName_cache.get(mref);
     if(f != null)
       return f;
     boolean usedAsPropertyName = false, usedAsSomethingElse = false;
@@ -229,6 +234,12 @@ public class ForInContextSelector implements ContextSelector {
       if(use instanceof ReflectiveMemberAccess) {
         ReflectiveMemberAccess rma = (ReflectiveMemberAccess)use;
         if(rma.getMemberRef() == 3) {
+          usedAsPropertyName = true;
+          continue;
+        }
+      } else if(use instanceof AstIsDefinedInstruction) {
+        AstIsDefinedInstruction aidi = (AstIsDefinedInstruction)use;
+        if(aidi.getNumberOfUses() > 1 && aidi.getUse(1) == 3) {
           usedAsPropertyName = true;
           continue;
         }
@@ -241,7 +252,7 @@ public class ForInContextSelector implements ContextSelector {
       f = Frequency.SOMETIMES;
     else
       f = Frequency.ALWAYS;
-    usesFirstArgAsPropertyName_cache.put(method, f);
+    usesFirstArgAsPropertyName_cache.put(mref, f);
     return f;
   }
 
@@ -267,18 +278,18 @@ public class ForInContextSelector implements ContextSelector {
   
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, final InstanceKey[] receiver) {
     Context baseContext = base.getCalleeTarget(caller, site, callee, receiver);
-    String calleeFullName = callee.getDeclaringClass().getName().toString();
-    String calleeShortName = calleeFullName.substring(calleeFullName.lastIndexOf('/')+1);
     if(USE_NAME_TO_SELECT_CONTEXT) {
+      String calleeFullName = callee.getDeclaringClass().getName().toString();
+      String calleeShortName = calleeFullName.substring(calleeFullName.lastIndexOf('/')+1);
       if(calleeShortName.contains(HACK_METHOD_STR)) {
         // we assume that the argument is only used as a property name, so we can do ToString
         return new ForInContext(baseContext, simulateToString(caller.getClassHierarchy(), receiver[2]));
       }
-    } else if(receiver.length > 2 && receiver[2] != null) {
+    } else if(receiver.length > 2) {
       Frequency f = usesFirstArgAsPropertyName(callee);
       if(f == Frequency.ALWAYS) {
         return new ForInContext(baseContext, simulateToString(caller.getClassHierarchy(), receiver[2]));
-      } else if(f == Frequency.SOMETIMES || forInOnFirstArg(callee)) {
+      } else if(receiver[2] != null && (f == Frequency.SOMETIMES || forInOnFirstArg(callee))) {
         return new ForInContext(baseContext, receiver[2]);
       }
     }
