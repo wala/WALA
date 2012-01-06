@@ -8,6 +8,9 @@ import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.ssa.JSInstructionFactory;
 import com.ibm.wala.cast.types.AstMethodReference;
+import com.ibm.wala.cast.js.types.JavaScriptMethods;
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -19,7 +22,10 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.strings.Atom;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position; 
 
 /**
  * Generate IR to model Function.call()
@@ -32,6 +38,9 @@ import com.ibm.wala.util.strings.Atom;
  * 
  */
 public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSelector {
+  // whether to warn about what looks like constructor invocations of Function.prototype.call
+  // while not impossible, such invocations always result in a TypeError and thus are likely due to imprecise call graph information
+  public static final boolean WARN_ABOUT_NEW_CALL = true;
 
   private final MethodTargetSelector base;
 
@@ -50,16 +59,43 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
    */
   @Override
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
+<<<<<<< HEAD
     IMethod method = receiver.getMethod(AstMethodReference.fnSelector);
     if (method != null) {
       String s = method.getReference().getDeclaringClass().getName().toString();
       if (s.equals("Lprologue.js/functionCall")) {
         return getFunctionCallTarget(caller, site, receiver);
+=======
+    if (cha.isSubclassOf(receiver, cha.lookupClass(JavaScriptTypes.CodeBody))) {
+      // TODO better way to do this test?
+      String s = receiver.toString();
+      if (s.equals("function Lprologue.js/functionCall")) {
+        /* invoking Function.prototype.call as a constructor results in a TypeError
+         * see ECMA-262 5.1, 15: "None of the built-in functions described in this clause that 
+         *   are not constructors shall implement the [[Construct]] internal method unless otherwise 
+         *   specified" */
+        if(!site.getDeclaredTarget().equals(JavaScriptMethods.ctorReference)) {
+          return getFunctionCallTarget(caller, site, receiver);
+        } else {
+          // TODO: we know that this invocation would lead to a type error; how do we express this as a call target?
+          if(WARN_ABOUT_NEW_CALL) {
+            IntIterator indices = caller.getIR().getCallInstructionIndices(site).intIterator();
+            IMethod callerMethod = caller.getMethod();
+            Position pos = null;
+            if(indices.hasNext() && callerMethod instanceof AstMethod) {
+              pos = ((AstMethod)callerMethod).getSourcePosition(indices.next());
+            }
+            System.err.println("Detected constructor call to Function.prototype.call " +
+                (pos == null ? "" : "at position " + pos) +
+                "; this is likely caused by call graph imprecision.");
+          }
+        }
+>>>>>>> Improved target selector for Function.prototype.call to handle cases
       }
     }
     return base.getCalleeTarget(caller, site, receiver);
   }
-
+  
   private static final boolean SEPARATE_SYNTHETIC_METHOD_PER_SITE = true;
 
   /**
@@ -78,6 +114,8 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
    */
   private IMethod getFunctionCallTarget(CGNode caller, CallSiteReference site, IClass receiver) {
     int nargs = getNumberOfArgsPassed(caller, site);
+    if(nargs < 2)
+      Assertions.UNREACHABLE("Call to Function.prototype.call without receiver; this shouldn't be possible.");
     Object key = getKey(nargs, caller, site);
     if (callModels.containsKey(key)) {
       return callModels.get(key);
