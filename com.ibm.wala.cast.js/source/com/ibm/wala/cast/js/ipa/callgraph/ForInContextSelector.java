@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.ibm.wala.analysis.reflection.IllegalArgumentExceptionContext;
 import com.ibm.wala.cast.ir.ssa.AbstractReflectiveGet;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
@@ -51,13 +52,9 @@ import com.ibm.wala.util.intset.MutableIntSet;
 
 public class ForInContextSelector implements ContextSelector {
 
-  public final static ContextKey FORIN_KEY = new ContextKey() {
-    
-  };
+  public final static ContextKey FORIN_KEY = new ContextKey() { };
   
-  public static final ContextItem FORIN_MARKER = new ContextItem() {
-    
-  };
+  public static final ContextItem FORIN_MARKER = new ContextItem() { };
   
   public static final String HACK_METHOD_STR = "_forin_body";
   
@@ -121,10 +118,10 @@ public class ForInContextSelector implements ContextSelector {
   
   }
   
-  public static class ForInContext extends SelectiveCPAContext {
+  public class ForInContext extends SelectiveCPAContext {
     
     ForInContext(Context base, InstanceKey obj) {
-      super(base, Collections.singletonMap(ContextKey.PARAMETERS[2], obj));
+      super(base, Collections.singletonMap(ContextKey.PARAMETERS[index], obj));
     }
     
     public ContextItem get(ContextKey key) {
@@ -137,14 +134,14 @@ public class ForInContextSelector implements ContextSelector {
     
     @Override
     public String toString() {
-      return "for in hack filter for " + get(ContextKey.PARAMETERS[2]) + " over " + this.base;
+      return "for in hack filter for " + get(ContextKey.PARAMETERS[index]) + " over " + this.base;
     }
     
   }
     
   private final ContextSelector base;
-  
   private final ContextSelector oneLevel;
+  private final int index;
   
   private void collectValues(DefUse du, SSAInstruction inst, MutableIntSet values) {
     if (inst instanceof SSAGetInstruction) {
@@ -180,6 +177,11 @@ public class ForInContextSelector implements ContextSelector {
   }
   
   public ForInContextSelector(ContextSelector base) {
+    this(2, base);
+  }
+  
+  public ForInContextSelector(int index, ContextSelector base) {
+    this.index = index;
     this.base = base;
     this.oneLevel = new OneLevelSiteContextSelector(base);
   }
@@ -188,10 +190,10 @@ public class ForInContextSelector implements ContextSelector {
   public static final HashMap<MethodReference, DefUse> du_cache = HashMapFactory.make();
   public static final IRFactory<IMethod> factory = AstIRFactory.makeDefaultFactory();
   
-  // determine whether the method performs a for-in loop over the properties of its first argument
+  // determine whether the method performs a for-in loop over the properties of its index'th argument
   private boolean forInOnFirstArg(IMethod method) {
     MethodReference mref = method.getReference();
-    if(method.getNumberOfParameters() < 2)
+    if(method.getNumberOfParameters() < index)
       return false;
     Boolean b = forInOnFirstArg_cache.get(mref);
     if(b != null)
@@ -223,7 +225,7 @@ public class ForInContextSelector implements ContextSelector {
   // determine whether the method never/sometimes/always uses its first argument as a property name
   private Frequency usesFirstArgAsPropertyName(IMethod method) {
     MethodReference mref = method.getReference();
-    if(method.getNumberOfParameters() < 2)
+    if(method.getNumberOfParameters() < index)
       return Frequency.NEVER;
     Frequency f = usesFirstArgAsPropertyName_cache.get(mref);
     if(f != null)
@@ -259,19 +261,22 @@ public class ForInContextSelector implements ContextSelector {
   // simulate effect of ToString conversion on key
   private InstanceKey simulateToString(IClassHierarchy cha, InstanceKey key) {
     IClass stringClass = cha.lookupClass(JavaScriptTypes.String);
+    IClass numberClass = cha.lookupClass(JavaScriptTypes.Number);
     if(key instanceof ConstantKey) {
       Object value = ((ConstantKey)key).getValue();
       if(value instanceof String) {
         return key;
       } else if(value instanceof Number) {
-        Integer ival = ((Number)value).intValue();
-        return new ConstantKey<String>(ival.toString(), stringClass);
+        Double dval = ((Number)value).doubleValue();
+        return new ConstantKey<Double>(dval, numberClass);
       } else if(value instanceof Boolean) {
         Boolean bval = (Boolean)value;
         return new ConstantKey<String>(bval.toString(), stringClass);
       } else if(value == null) {
         return new ConstantKey<String>("null", stringClass);
       }
+    } else if(key != null && key.getConcreteType() == numberClass) {
+      return key;
     }
     return new ConcreteTypeKey(stringClass);    
   }
@@ -281,16 +286,20 @@ public class ForInContextSelector implements ContextSelector {
     String calleeFullName = callee.getDeclaringClass().getName().toString();
     String calleeShortName = calleeFullName.substring(calleeFullName.lastIndexOf('/')+1);
     if(USE_NAME_TO_SELECT_CONTEXT) {
-      if(calleeShortName.contains(HACK_METHOD_STR) && receiver.length > 2) {
+      if(calleeShortName.contains(HACK_METHOD_STR) && receiver.length > index) {
         // we assume that the argument is only used as a property name, so we can do ToString
-        return new ForInContext(baseContext, simulateToString(caller.getClassHierarchy(), receiver[2]));
+        return new ForInContext(baseContext, simulateToString(caller.getClassHierarchy(), receiver[index]));
       }
-    } else if(receiver.length > 2) {
+    } else if(receiver.length > index) {
+      // TODO: figure out why this happens sometimes and what to do about it; for now we just assume it's due to call graph
+      //       imprecision and prune
+      if(receiver[index] == null)
+        return new IllegalArgumentExceptionContext();
       Frequency f = usesFirstArgAsPropertyName(callee);
       if(f == Frequency.ALWAYS) {
-        return new ForInContext(baseContext, simulateToString(caller.getClassHierarchy(), receiver[2]));
-      } else if(receiver[2] != null && (f == Frequency.SOMETIMES || forInOnFirstArg(callee))) {
-        return new ForInContext(baseContext, receiver[2]);
+        return new ForInContext(baseContext, simulateToString(caller.getClassHierarchy(), receiver[index]));
+      } else if(f == Frequency.SOMETIMES || forInOnFirstArg(callee)) {
+        return new ForInContext(baseContext, receiver[index]);
       }
     }
     if (USE_CPA_IN_BODIES && FORIN_MARKER.equals(caller.getContext().get(FORIN_KEY))) {
@@ -308,8 +317,8 @@ public class ForInContextSelector implements ContextSelector {
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     if (USE_CPA_IN_BODIES && FORIN_MARKER.equals(caller.getContext().get(FORIN_KEY))) {
       return identifyDependentParameters(caller, site);
-    } else if (caller.getIR().getCalls(site)[0].getNumberOfUses() > 2) {
-      return IntSetUtil.make(new int[]{2}).union(base.getRelevantParameters(caller, site));
+    } else if (caller.getIR().getCalls(site)[0].getNumberOfUses() > index) {
+      return IntSetUtil.make(new int[]{index}).union(base.getRelevantParameters(caller, site));
     } else {
       return base.getRelevantParameters(caller, site);
     }
