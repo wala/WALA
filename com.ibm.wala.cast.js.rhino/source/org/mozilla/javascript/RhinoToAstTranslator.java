@@ -656,7 +656,7 @@ public class RhinoToAstTranslator {
 
     return call;
   }
-
+  
   /**
    * count the number of successor siblings of n, including n
    */
@@ -864,7 +864,7 @@ public class RhinoToAstTranslator {
   }
 
   private CAstNode readName(WalkContext context, String name) {
-    CAstNode cn = Ast.makeNode(CAstNode.VAR, Ast.makeConstant(name));
+    CAstNode cn = makeVarRef(name);
     context.cfg().map(cn, cn);
     CAstNode target = context.getCatchTarget();
     if (target != null) {
@@ -1309,15 +1309,29 @@ public class RhinoToAstTranslator {
     }
 
     case Token.OR: {
-      Node l = n.getFirstChild();
-      Node r = l.getNext();
-      return Ast.makeNode(CAstNode.IF_EXPR, walkNodes(l, context), Ast.makeConstant(true), walkNodes(r, context));
+    	Node l = n.getFirstChild();
+    	Node r = l.getNext();
+    	CAstNode lhs = walkNodes(l, context);
+    	String lhsTempName = "or___lhs";
+    	// { lhsTemp := <lhs>; if(lhsTemp) { lhsTemp } else { <rhs> }
+    	return Ast.makeNode(
+    			CAstNode.LOCAL_SCOPE,
+    			Ast.makeNode(CAstNode.BLOCK_EXPR,
+    					Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(lhsTempName)), lhs),
+    					Ast.makeNode(CAstNode.IF_EXPR, makeVarRef(lhsTempName), makeVarRef(lhsTempName), walkNodes(r, context))));
     }
 
     case Token.AND: {
       Node l = n.getFirstChild();
       Node r = l.getNext();
-      return Ast.makeNode(CAstNode.IF_EXPR, walkNodes(l, context), walkNodes(r, context), Ast.makeConstant(false));
+      CAstNode lhs = walkNodes(l, context);
+      String lhsTempName = "and___lhs";
+      // { lhsTemp := <lhs>; if(lhsTemp) { <rhs> } else { lhsTemp }
+      return Ast.makeNode(
+    		  CAstNode.LOCAL_SCOPE,
+    		  Ast.makeNode(CAstNode.BLOCK_EXPR,
+    				  Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(lhsTempName)), lhs),
+    				  Ast.makeNode(CAstNode.IF_EXPR, makeVarRef(lhsTempName), walkNodes(r, context), makeVarRef(lhsTempName))));
     }
 
     case Token.HOOK: {
@@ -1407,8 +1421,8 @@ public class RhinoToAstTranslator {
 
       CAstNode get, result;
       if (baseVarName != null) {
-        result = Ast.makeNode(CAstNode.BLOCK_EXPR, Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(baseVarName)), rcvr),
-            get = Ast.makeNode(CAstNode.OBJECT_REF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(baseVarName)), elt));
+        result = Ast.makeNode(CAstNode.BLOCK_EXPR, Ast.makeNode(CAstNode.ASSIGN, makeVarRef(baseVarName), rcvr),
+            get = Ast.makeNode(CAstNode.OBJECT_REF, makeVarRef(baseVarName), elt));
       } else {
         result = get = Ast.makeNode(CAstNode.OBJECT_REF, rcvr, elt);
       }
@@ -1480,8 +1494,8 @@ public class RhinoToAstTranslator {
       CAstNode elt = walkNodes(element, context);
 
       if (baseVarName != null) {
-        return Ast.makeNode(CAstNode.BLOCK_EXPR, Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(baseVarName)), rcvr),
-            Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.OBJECT_REF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(baseVarName)), elt), Ast.makeConstant(null)));
+        return Ast.makeNode(CAstNode.BLOCK_EXPR, Ast.makeNode(CAstNode.ASSIGN, makeVarRef(baseVarName), rcvr),
+            Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.OBJECT_REF, makeVarRef(baseVarName), elt), Ast.makeConstant(null)));
       } else {
         return Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.OBJECT_REF, rcvr, elt), Ast.makeConstant(null));
       }
@@ -1544,6 +1558,10 @@ public class RhinoToAstTranslator {
       return null;
     }
     }
+  }
+
+  private CAstNode makeVarRef(String lhsTempName) {
+	  return Ast.makeNode(CAstNode.VAR, Ast.makeConstant(lhsTempName));
   }
 
   /**
