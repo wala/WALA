@@ -4,7 +4,9 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 
 /**
- * represents the JavaScript global object
+ * Represents the JavaScript global object.  
+ * 
+ * @see JSSSAPropagationCallGraphBuilder
  */
 public class GlobalObjectKey implements InstanceKey {
 

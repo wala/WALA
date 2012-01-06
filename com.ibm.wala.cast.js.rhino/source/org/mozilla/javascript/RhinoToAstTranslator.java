@@ -1122,8 +1122,10 @@ public class RhinoToAstTranslator {
               Ast.makeNode(CAstNode.BLOCK_EXPR,
                   Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl("base")), Ast.makeConstant(null)),
                   makeCall(fun, base, firstParamInParens, context)));
-        else
+        else {
+          // pass the global object as the receiver argument
           return makeCall(fun, makeVarRef(JSSSAPropagationCallGraphBuilder.GLOBAL_OBJ_VAR_NAME), firstParamInParens, context);
+        }
       } else {
         return Ast.makeNode(CAstNode.PRIMITIVE, gatherChildren(n, context, 1));
       }

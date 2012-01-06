@@ -20,6 +20,7 @@ import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
 import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
 import com.ibm.wala.cast.js.analysis.typeInference.JSTypeInference;
+import com.ibm.wala.cast.js.ipa.callgraph.JSSSAPropagationCallGraphBuilder.JSPointerAnalysisImpl.JSImplicitPointsToSetVisitor;
 import com.ibm.wala.cast.js.ssa.InstructionVisitor;
 import com.ibm.wala.cast.js.ssa.JavaScriptCheckReference;
 import com.ibm.wala.cast.js.ssa.JavaScriptInstanceOf;
@@ -73,6 +74,23 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.strings.Atom;
 
+/**
+ * Specialized pointer analysis constraint generation for JavaScript.
+ * 
+ * <h2>Global object handling</h2>
+ * 
+ * The global object is represented by a {@link GlobalObjectKey} stored in
+ * {@link #globalObject}. {@link AstGlobalRead} and {@link AstGlobalWrite}
+ * instructions are treated as accessing properties of the global object; see
+ * {@link JSConstraintVisitor#visitAstGlobalRead(AstGlobalRead)},
+ * {@link JSConstraintVisitor#visitAstGlobalWrite(AstGlobalWrite)}, and
+ * {@link JSImplicitPointsToSetVisitor#visitAstGlobalRead(AstGlobalRead)}.
+ * Finally, we need to represent direct flow of the global object to handle
+ * receiver argument semantics (see
+ * {@link org.mozilla.javascript.RhinoToAstTranslator}). To do so, we create a
+ * reference to a global named {@link #GLOBAL_OBJ_VAR_NAME}, which is handled
+ * specially in {@link JSConstraintVisitor#visitAstGlobalRead(AstGlobalRead)}.
+ */
 public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraphBuilder {
 
   public static final boolean DEBUG_LEXICAL = false;
@@ -90,13 +108,13 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   private static boolean directGlobalObjectRef(FieldReference field) {
     return field.getName().toString().endsWith(GLOBAL_OBJ_VAR_NAME);
   }
-  
+
   private static FieldReference makeNonGlobalFieldReference(FieldReference field) {
     String nonGlobalFieldName = field.getName().toString().substring(7);
-    field = FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreateUnicodeAtom(nonGlobalFieldName), JavaScriptTypes.Root);
+    field = FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreateUnicodeAtom(nonGlobalFieldName),
+        JavaScriptTypes.Root);
     return field;
   }
-
 
   private URL scriptBaseURL;
 
@@ -267,11 +285,9 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       public void visitAstGlobalRead(AstGlobalRead instruction) {
         JSPointerAnalysisImpl jsAnalysis = (JSPointerAnalysisImpl) analysis;
         FieldReference field = makeNonGlobalFieldReference(instruction.getDeclaredField());
+        assert !directGlobalObjectRef(field);
         IField f = jsAnalysis.builder.getCallGraph().getClassHierarchy().resolveField(field);
         assert f != null;
-        // if (f == null) {
-        // pointsToSet = OrdinalSet.empty();
-        // }
         MutableSparseIntSet S = MutableSparseIntSet.makeEmpty();
         InstanceKey globalObj = ((JSSSAPropagationCallGraphBuilder) jsAnalysis.builder).globalObject;
         PointerKey fkey = analysis.getHeapModel().getPointerKeyForInstanceField(globalObj, f);
@@ -381,28 +397,10 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     public void visitAstGlobalRead(AstGlobalRead instruction) {
       int lval = instruction.getDef();
       FieldReference field = makeNonGlobalFieldReference(instruction.getDeclaredField());
-      // TODO new field reference should be FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreateUnicodeAtom(field), JavaScriptTypes.Root)
-      // strip off "global " from field name
-      // skip getfields of primitive type (optimisation)
-      // this can't happen in JavaScript...right?
-      // if (field.getFieldType().isPrimitiveType()) {
-      // return;
-      // }
       PointerKey def = getPointerKeyForLocal(lval);
       assert def != null;
       IField f = getClassHierarchy().resolveField(field);
-      // if (f == null &&
-      // callGraph.getFakeRootNode().getMethod().getDeclaringClass().getReference().equals(field.getDeclaringClass()))
-      // {
-      // f =
-      // callGraph.getFakeRootNode().getMethod().getDeclaringClass().getField(field.getName());
-      // }
-      //
-      // if (f == null) {
-      // return;
-      // }
       assert f != null : "could not resolve referenced global " + field;
-
       if (hasNoInterestingUses(lval)) {
         system.recordImplicitPointsToSet(def);
       } else {
@@ -419,24 +417,11 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     }
 
-
     @Override
     public void visitAstGlobalWrite(AstGlobalWrite instruction) {
       int rval = instruction.getVal();
       FieldReference field = makeNonGlobalFieldReference(instruction.getDeclaredField());
-
-      // skip putfields of primitive type
-      // if (field.getFieldType().isPrimitiveType()) {
-      // return;
-      // }
       IField f = getClassHierarchy().resolveField(field);
-      // if (f == null) {
-      // if (DEBUG) {
-      // System.err.println("Could not resolve field " + field);
-      // }
-      // Warnings.add(FieldResolutionFailure.create(field));
-      // return;
-      // }
       assert f != null : "could not resolve referenced global " + field;
       assert !f.getFieldTypeReference().isPrimitiveType();
       InstanceKey globalObj = getBuilder().globalObject;
