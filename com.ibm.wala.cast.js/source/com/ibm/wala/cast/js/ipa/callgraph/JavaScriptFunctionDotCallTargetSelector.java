@@ -110,13 +110,14 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
     return t;
   }
 
+  public static final String SYNTHETIC_CALL_METHOD_PREFIX = "$$ call_";
   private MethodReference genSyntheticMethodRef(IClass receiver, int nargs, Object key) {
     Atom atom = null;
     if (key instanceof Pair) {
       Pair p = (Pair) key;
-      atom = Atom.findOrCreateUnicodeAtom("call_" + p.fst + "_" + p.snd);
+      atom = Atom.findOrCreateUnicodeAtom(SYNTHETIC_CALL_METHOD_PREFIX + p.fst + "_" + p.snd);
     } else {
-      atom = Atom.findOrCreateUnicodeAtom("call" + nargs);
+      atom = Atom.findOrCreateUnicodeAtom(SYNTHETIC_CALL_METHOD_PREFIX + nargs);
     }
     Descriptor desc = Descriptor.findOrCreateUTF8(JavaScriptLoader.JS, "()LRoot;");
     MethodReference ref = MethodReference.findOrCreate(receiver.getReference(), atom, desc);
