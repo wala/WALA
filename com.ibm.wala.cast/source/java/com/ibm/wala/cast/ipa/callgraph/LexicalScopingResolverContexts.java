@@ -564,7 +564,9 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] actualParameters) {
     Context baseContext = base.getCalleeTarget(caller, site, callee, actualParameters);
     if (callee instanceof SummarizedMethod) {
-      if (callee.getReference().toString().equals("< JavaScriptLoader, LArray, ctor()LRoot; >")) {
+      final String calleeName = callee.getReference().toString();
+      // TODO create a sub-class in the cast.js projects so we're not checking strings here
+      if (calleeName.equals("< JavaScriptLoader, LArray, ctor()LRoot; >") || calleeName.equals("< JavaScriptLoader, LObject, ctor()LRoot; >")) {
         return baseContext;
       }
     }

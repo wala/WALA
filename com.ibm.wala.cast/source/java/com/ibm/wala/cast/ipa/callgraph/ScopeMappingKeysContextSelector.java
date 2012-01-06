@@ -9,6 +9,7 @@ import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.summaries.SummarizedMethod;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 
@@ -63,6 +64,12 @@ public class ScopeMappingKeysContextSelector implements ContextSelector {
   
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     Context bc = base.getCalleeTarget(caller, site, callee, receiver);
+    if (callee instanceof SummarizedMethod) {
+      final String calleeName = callee.getReference().toString();
+      if (calleeName.equals("< JavaScriptLoader, LArray, ctor()LRoot; >") || calleeName.equals("< JavaScriptLoader, LObject, ctor()LRoot; >")) {
+        return bc;
+      }
+    }
     if (receiver[0] instanceof ScopeMappingInstanceKey) {
       return new ScopeMappingContext(bc, (ScopeMappingInstanceKey) receiver[0]);
     } else {
