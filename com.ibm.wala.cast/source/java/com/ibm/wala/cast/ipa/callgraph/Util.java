@@ -38,7 +38,7 @@ public class Util {
    * flag to prevent dumping of verbose call graph / pointer analysis output
    */
   private static final boolean AVOID_DUMP = true;
-  
+
   public static SourceFileModule makeSourceModule(URL script, String dir, String name) {
     // DO NOT use File.separator here, since this name is matched against
     // URLs. It seems that, in DOS, URL.getFile() does not return a
@@ -76,29 +76,43 @@ public class Util {
   public static AnalysisCache makeCache() {
     return new AnalysisCache(AstIRFactory.makeDefaultFactory());
   }
-  
+
   public static String getShortName(CGNode nd) {
     IMethod method = nd.getMethod();
     return getShortName(method);
   }
 
   public static String getShortName(IMethod method) {
-    String name = method.getName().toString();
-    if(name.equals("do") || name.equals("ctor"))
-      name = method.getDeclaringClass().getName().toString();
-    name = name.substring(name.lastIndexOf('/')+1);
-    return name;
+    String origName = method.getName().toString();
+    String result = origName;
+    if (origName.equals("do") || origName.equals("ctor")) {
+      result = method.getDeclaringClass().getName().toString();
+      result = result.substring(result.lastIndexOf('/') + 1);
+      if (origName.equals("ctor")) {
+        if (result.equals("LFunction")) {
+          String s = method.toString();
+          if (s.indexOf('(') != -1) {
+            String functionName = s.substring(s.indexOf('(') + 1, s.indexOf(')'));
+            functionName = functionName.substring(functionName.lastIndexOf('/') + 1);
+            result += " " + functionName;
+          }
+        }
+        result = "ctor of " + result;
+      }
+    } 
+    return result;
   }
 
   @SuppressWarnings("unused")
   public static void dumpCG(PointerAnalysis PA, CallGraph CG) {
-    if (AVOID_DUMP) return;
+    if (AVOID_DUMP)
+      return;
     for (Iterator x = CG.iterator(); x.hasNext();) {
       CGNode N = (CGNode) x.next();
       System.err.print("callees of node " + getShortName(N) + " : [");
       boolean fst = true;
-      for(Iterator<? extends CGNode> ns = CG.getSuccNodes(N); ns.hasNext(); ) {
-        if(fst)
+      for (Iterator<? extends CGNode> ns = CG.getSuccNodes(N); ns.hasNext();) {
+        if (fst)
           fst = false;
         else
           System.err.print(", ");

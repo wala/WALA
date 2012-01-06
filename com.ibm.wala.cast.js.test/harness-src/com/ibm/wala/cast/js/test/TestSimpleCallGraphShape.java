@@ -166,7 +166,19 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     // just checking that we have a sufficient bailout to ensure termination
     Util.makeScriptCG("tests", "recursive_lexical.js");
   }
+  
+  private static final Object[][] assertionsForLexicalMultiple = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/lexical_multiple_calls.js" } },
+    new Object[] { "suffix:lexical_multiple_calls.js", new String[] { "suffix:reachable1" } }, 
+    new Object[] { "suffix:lexical_multiple_calls.js", new String[] { "suffix:reachable2" } }};
+  
+  @Test
+  public void testLexicalMultiple() throws IOException, IllegalArgumentException, CancelException {
+    CallGraph CG = Util.makeScriptCG("tests", "lexical_multiple_calls.js");
+    verifyGraphAssertions(CG, assertionsForLexicalMultiple);
+  }
 
+  
   private static final Object[][] assertionsForTry = new Object[][] {
       new Object[] { ROOT, new String[] { "tests/try.js" } },
       new Object[] { "tests/try.js",
@@ -406,6 +418,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     CallGraph CG = Util.makeScriptCG("tests", "global_object2.js");
     verifyGraphAssertions(CG, assertionsForGlobalObj2);
   }
+ 
   
   private static final Object[][] assertionsForReturnThis = new Object[][] {
     new Object[] { ROOT, new String[] { "tests/return_this.js" } },
