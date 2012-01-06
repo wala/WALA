@@ -396,7 +396,56 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     CallGraph CG = Util.makeScriptCG("tests", "global_object.js");
     verifyGraphAssertions(CG, assertionsForGlobalObj);
   }
+  
+  private static final Object[][] assertionsForGlobalObj2 = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/global_object2.js" } },
+    new Object[] { "suffix:global_object2.js", new String[] { "suffix:foo" } } };
 
+  @Test
+  public void testGlobalObj2() throws IOException, IllegalArgumentException, CancelException {
+    CallGraph CG = Util.makeScriptCG("tests", "global_object2.js");
+    verifyGraphAssertions(CG, assertionsForGlobalObj2);
+  }
+  
+  private static final Object[][] assertionsForReturnThis = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/return_this.js" } },
+    new Object[] { "suffix:return_this.js", new String[] { "suffix:foo" } }, 
+    new Object[] { "suffix:return_this.js", new String[] { "suffix:bar" } } };
+
+  @Test
+  public void testReturnThis() throws IOException, IllegalArgumentException, CancelException {
+    CallGraph CG = Util.makeScriptCG("tests", "return_this.js");
+    verifyGraphAssertions(CG, assertionsForReturnThis);
+  }
+  
+  private static final Object[][] assertionsForReturnThis2 = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/return_this2.js" } },
+    new Object[] { "suffix:return_this2.js", new String[] { "suffix:A" } }, 
+    new Object[] { "suffix:return_this2.js", new String[] { "suffix:foo" } }, 
+    new Object[] { "suffix:return_this2.js", new String[] { "suffix:test1" } }, 
+    new Object[] { "suffix:return_this2.js", new String[] { "suffix:test2" } }, 
+    new Object[] { "suffix:test1", new String[] { "suffix:bar1" } }, 
+    new Object[] { "suffix:test2", new String[] { "suffix:bar2" } } 
+  };
+  // when using the ObjectSensitivityContextSelector, we additionally know that test1 does not call bar2,
+  // and test2 does not call bar1
+
+  @Test
+  public void testReturnThis2() throws IOException, IllegalArgumentException, CancelException {
+    CallGraph CG = Util.makeScriptCG("tests", "return_this2.js");
+    verifyGraphAssertions(CG, assertionsForReturnThis2);
+  }
+  
+  private static final Object[][] assertionsForFunctionIsAFunction = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/Function_is_a_function.js" } },
+    new Object[] { "suffix:Function_is_a_function.js", new String[] { "suffix:functionCall" } } }; 
+
+  @Test
+  public void testFunctionIsAFunction() throws IOException, IllegalArgumentException, CancelException {
+    CallGraph CG = Util.makeScriptCG("tests", "Function_is_a_function.js");
+    verifyGraphAssertions(CG, assertionsForFunctionIsAFunction);
+  }
+  
   protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {
 
     // Created by reversing the points to mapping for local pointer keys.
