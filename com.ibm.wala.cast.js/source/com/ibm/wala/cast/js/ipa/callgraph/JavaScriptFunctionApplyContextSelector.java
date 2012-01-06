@@ -1,7 +1,9 @@
 package com.ibm.wala.cast.js.ipa.callgraph;
 
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
@@ -41,7 +43,7 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
     private final Context delegate;
 
     private final CallSiteReference site;
-    
+
     /**
      * was the argsList argument a non-null Array?
      */
@@ -101,20 +103,23 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
       return "ApplyContext [delegate=" + delegate + ", site=" + site + ", isNonNullArray=" + isNonNullArray + "]";
     }
 
-
-
   }
 
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
-    if (callee.toString().equals("<Code body of function Lprologue.js/functionApply>")) {
-      boolean isNonNullArray = false;
-      if (receiver.length >= 4) {
-        InstanceKey argsList = receiver[3];
-        if (argsList != null && argsList.getConcreteType().equals(caller.getClassHierarchy().lookupClass(JavaScriptTypes.Array))) {
-          isNonNullArray = true;
+    IClass declaringClass = callee.getDeclaringClass();
+    IMethod method = declaringClass.getMethod(AstMethodReference.fnSelector);
+    if (method != null) {
+      String s = method.getReference().getDeclaringClass().getName().toString();
+      if (s.equals("Lprologue.js/functionApply")) {
+        boolean isNonNullArray = false;
+        if (receiver.length >= 4) {
+          InstanceKey argsList = receiver[3];
+          if (argsList != null && argsList.getConcreteType().equals(caller.getClassHierarchy().lookupClass(JavaScriptTypes.Array))) {
+            isNonNullArray = true;
+          }
         }
+        return new ApplyContext(base.getCalleeTarget(caller, site, callee, receiver), site, isNonNullArray);
       }
-      return new ApplyContext(base.getCalleeTarget(caller, site, callee, receiver), site, isNonNullArray);
     }
     return base.getCalleeTarget(caller, site, callee, receiver);
   }

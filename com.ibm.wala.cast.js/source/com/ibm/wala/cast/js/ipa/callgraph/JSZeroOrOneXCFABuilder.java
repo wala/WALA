@@ -43,7 +43,7 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     }
     setContextInterpreter(contextInterpreter);
 
-    options.setSelector(new JavaScriptFunctionDotCallTargetSelector(cha, new JavaScriptConstructTargetSelector(cha, options
+    options.setSelector(new JavaScriptFunctionDotCallTargetSelector(new JavaScriptConstructTargetSelector(cha, options
         .getMethodTargetSelector())));
     options.setSelector(new LoadFileTargetSelector(options.getMethodTargetSelector(), this));
 

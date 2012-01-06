@@ -7,13 +7,12 @@ import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummary;
 import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.ssa.JSInstructionFactory;
-import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.types.Descriptor;
@@ -23,7 +22,7 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * Generate IR to model Function.call() 
+ * Generate IR to model Function.call()
  * 
  * @see <a
  *      href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/Call">MDN
@@ -34,11 +33,9 @@ import com.ibm.wala.util.strings.Atom;
  */
 public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSelector {
 
-  private final IClassHierarchy cha;
   private final MethodTargetSelector base;
 
-  public JavaScriptFunctionDotCallTargetSelector(IClassHierarchy cha, MethodTargetSelector base) {
-    this.cha = cha;
+  public JavaScriptFunctionDotCallTargetSelector(MethodTargetSelector base) {
     this.base = base;
 
   }
@@ -53,12 +50,12 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
    */
   @Override
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
-    if (cha.isSubclassOf(receiver, cha.lookupClass(JavaScriptTypes.CodeBody))) {
-      // TODO better way to do this test?
-      String s = receiver.toString();
-      if (s.equals("function Lprologue.js/functionCall")) {
+    IMethod method = receiver.getMethod(AstMethodReference.fnSelector);
+    if (method != null) {
+      String s = method.getReference().getDeclaringClass().getName().toString();
+      if (s.equals("Lprologue.js/functionCall")) {
         return getFunctionCallTarget(caller, site, receiver);
-      } 
+      }
     }
     return base.getCalleeTarget(caller, site, receiver);
   }
@@ -111,6 +108,7 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
   }
 
   public static final String SYNTHETIC_CALL_METHOD_PREFIX = "$$ call_";
+
   private MethodReference genSyntheticMethodRef(IClass receiver, int nargs, Object key) {
     Atom atom = null;
     if (key instanceof Pair) {
