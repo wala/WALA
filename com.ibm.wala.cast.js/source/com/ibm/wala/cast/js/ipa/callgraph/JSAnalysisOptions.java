@@ -14,6 +14,8 @@ public class JSAnalysisOptions extends AnalysisOptions {
    * Defaults to true.
    */
   private boolean handleCallApply = true;
+  
+  private boolean useLoadFileTargetSelector = true;
 
   public JSAnalysisOptions(AnalysisScope scope, Iterable<? extends Entrypoint> e) {
     super(scope, e);
@@ -30,4 +32,11 @@ public class JSAnalysisOptions extends AnalysisOptions {
     this.handleCallApply = handleCallApply;
   }
 
+  public boolean useLoadFileTargetSelector() {
+    return useLoadFileTargetSelector;
+  }
+
+  public void setUseLoadFileTargetSelector(boolean useIt) {
+    this.useLoadFileTargetSelector = useIt;
+  }
 }

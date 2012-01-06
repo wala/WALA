@@ -32,7 +32,6 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
 
   private static final boolean USE_OBJECT_SENSITIVITY = false;
   
-  private static final boolean USE_LOAD_FILE_TARGET_SELECTOR = false;
 
   public JSZeroOrOneXCFABuilder(IClassHierarchy cha, JSAnalysisOptions options, AnalysisCache cache,
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy, boolean doOneCFA) {
@@ -50,7 +49,7 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     if (options.handleCallApply()) {
       targetSelector = new JavaScriptFunctionDotCallTargetSelector(targetSelector);
     }
-    if (USE_LOAD_FILE_TARGET_SELECTOR) {
+    if (options.useLoadFileTargetSelector()) {
       targetSelector = new LoadFileTargetSelector(targetSelector, this);
     }
     options.setSelector(targetSelector);
