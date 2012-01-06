@@ -291,14 +291,13 @@ public class ForInContextSelector implements ContextSelector {
         return new ForInContext(baseContext, simulateToString(caller.getClassHierarchy(), receiver[index]));
       }
     } else if(receiver.length > index) {
-      // TODO: figure out why this happens sometimes and what to do about it; for now we just assume it's due to call graph
-      //       imprecision and prune
-      if(receiver[index] == null)
-        return new IllegalArgumentExceptionContext();
+      // TODO: figure out why we sometimes get receiver[index] == null, and what to do about it;
+      //       we used to assume that this is due to call graph imprecision and return an IllegalArgumentExceptionContext
+      //       to prune this CG edge away, but that led to ArrayIndexOutOfBoundBoundsExceptions on the jquery tests
       Frequency f = usesFirstArgAsPropertyName(callee);
       if(f == Frequency.ALWAYS) {
         return new ForInContext(baseContext, simulateToString(caller.getClassHierarchy(), receiver[index]));
-      } else if(f == Frequency.SOMETIMES || forInOnFirstArg(callee)) {
+      } else if(receiver[index] != null && (f == Frequency.SOMETIMES || forInOnFirstArg(callee))) {
         return new ForInContext(baseContext, receiver[index]);
       }
     }
