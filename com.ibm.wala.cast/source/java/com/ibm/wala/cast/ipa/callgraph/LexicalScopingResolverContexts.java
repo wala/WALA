@@ -2,6 +2,7 @@ package com.ibm.wala.cast.ipa.callgraph;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,7 +15,6 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
@@ -484,16 +484,61 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
     this.builder = builder;
   }
 
-  private Context checkForRecursion(CGNode caller, CallSiteReference site, IMethod target, LexicalScopingResolver srcResolver) {
-    if (srcResolver != null) {
-      ExplicitCallGraph cg = builder.getCallGraph();
-      Set<CGNode> callerNodes = cg.getNodes(caller.getMethod().getReference());
-      while (srcResolver != null) {
-        for (CGNode possibleCaller : callerNodes) {
-          for (CGNode n : cg.getPossibleTargets(possibleCaller, site)) {
-            if (n.getContext().get(RESOLVER) == srcResolver) {
-              return n.getContext();
-            }
+  private static class RecursionKey {
+    private final IMethod caller;
+    private final CallSiteReference site;
+    private final IMethod target;
+
+    public RecursionKey(IMethod caller, CallSiteReference site, IMethod target) {
+      super();
+      this.caller = caller;
+      this.site = site;
+      this.target = target;
+    }
+
+    @Override
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + caller.hashCode();
+      result = prime * result + site.hashCode();
+      result = prime * result + target.hashCode();
+      return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      RecursionKey other = (RecursionKey) obj;
+      if (!caller.equals(other.caller))
+        return false;
+      if (!site.equals(other.site))
+        return false;
+      if (!target.equals(other.target))
+        return false;
+      return true;
+    }
+
+  }
+
+  /**
+   * cache for recursion checks
+   */
+  private final Map<RecursionKey, List<LexicalScopingResolverContext>> key2Contexts = HashMapFactory.make();
+
+  private Context checkForRecursion(RecursionKey key, LexicalScopingResolver srcResolver) {
+    List<LexicalScopingResolverContext> calleeContexts = key2Contexts.get(key);
+    if (calleeContexts != null) {
+      // globalResolver better be at the top of any parent chain
+      while (srcResolver != globalResolver) {
+        for (LexicalScopingResolverContext c : calleeContexts) {
+          if (c.governingCallSites == srcResolver) {
+            return c;
           }
         }
         srcResolver = srcResolver.getParent();
@@ -519,17 +564,24 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
     Context baseContext = base.getCalleeTarget(caller, site, callee, actualParameters);
     LexicalScopingResolver resolver = (LexicalScopingResolver) caller.getContext().get(RESOLVER);
 
-    Context recursiveParent = checkForRecursion(caller, site, callee, resolver);
-    if (recursiveParent != null) {
-      return recursiveParent;
+    final RecursionKey key = new RecursionKey(caller.getMethod(), site, callee);
+    if (resolver != null) {
+      Context recursiveParent = checkForRecursion(key, resolver);
+      if (recursiveParent != null) {
+        return recursiveParent;
+      }
     }
 
     if (caller.getMethod() instanceof AstMethod && hasExposedUses(caller, site)) {
-      return new LexicalScopingResolverContext(caller, site, baseContext);
+      LexicalScopingResolverContext result = new LexicalScopingResolverContext(caller, site, baseContext);
+      MapUtil.findOrCreateList(key2Contexts, key).add(result);
+      return result;
     }
 
     else if (resolver != null) {
-      return new LexicalScopingResolverContext(resolver, baseContext);
+      LexicalScopingResolverContext result = new LexicalScopingResolverContext(resolver, baseContext);
+      MapUtil.findOrCreateList(key2Contexts, key).add(result);
+      return result;
     }
 
     else {
