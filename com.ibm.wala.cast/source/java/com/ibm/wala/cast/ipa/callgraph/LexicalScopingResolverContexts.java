@@ -14,6 +14,7 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
@@ -292,16 +293,16 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
       }
     }
 
-//    @Override
-//    public String toString() {
-//      StringBuilder result = new StringBuilder();
-//      result.append("CGNodeResolver[myDefiner=");
-//      result.append(myDefiner);
-//      result.append(",\n parent=");
-//      result.append(parent);
-//      result.append("]");
-//      return result.toString();
-//    }
+    // @Override
+    // public String toString() {
+    // StringBuilder result = new StringBuilder();
+    // result.append("CGNodeResolver[myDefiner=");
+    // result.append(myDefiner);
+    // result.append(",\n parent=");
+    // result.append(parent);
+    // result.append("]");
+    // return result.toString();
+    // }
 
   }
 
@@ -483,14 +484,20 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
     this.builder = builder;
   }
 
-  private Context checkForRecursion(IMethod target, LexicalScopingResolver srcResolver) {
-    while (srcResolver != null) {
-      for (CGNode n : builder.getCallGraph().getNodes(target.getReference())) {
-        if (n.getContext().get(RESOLVER) == srcResolver) {
-          return n.getContext();
+  private Context checkForRecursion(CGNode caller, CallSiteReference site, IMethod target, LexicalScopingResolver srcResolver) {
+    if (srcResolver != null) {
+      ExplicitCallGraph cg = builder.getCallGraph();
+      Set<CGNode> callerNodes = cg.getNodes(caller.getMethod().getReference());
+      while (srcResolver != null) {
+        for (CGNode possibleCaller : callerNodes) {
+          for (CGNode n : cg.getPossibleTargets(possibleCaller, site)) {
+            if (n.getContext().get(RESOLVER) == srcResolver) {
+              return n.getContext();
+            }
+          }
         }
+        srcResolver = srcResolver.getParent();
       }
-      srcResolver = srcResolver.getParent();
     }
     return null;
   }
@@ -512,7 +519,7 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
     Context baseContext = base.getCalleeTarget(caller, site, callee, actualParameters);
     LexicalScopingResolver resolver = (LexicalScopingResolver) caller.getContext().get(RESOLVER);
 
-    Context recursiveParent = checkForRecursion(callee, resolver);
+    Context recursiveParent = checkForRecursion(caller, site, callee, resolver);
     if (recursiveParent != null) {
       return recursiveParent;
     }
