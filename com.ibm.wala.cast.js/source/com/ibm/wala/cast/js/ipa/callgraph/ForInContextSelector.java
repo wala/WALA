@@ -32,6 +32,7 @@ import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.OneLevelSiteContextSelector;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
@@ -60,7 +61,7 @@ public class ForInContextSelector implements ContextSelector {
   
   // if this flag is set to true, functions are given ForInContexts based on their name
   // if it is false, any function that uses its first argument as a property name will be given a ForInContext
-  public static final boolean USE_NAME_TO_SELECT_CONTEXT = false;
+  public static final boolean USE_NAME_TO_SELECT_CONTEXT = true;
 
   public static boolean USE_CPA_IN_BODIES = false;
   
@@ -184,6 +185,8 @@ public class ForInContextSelector implements ContextSelector {
   private final HashMap<IMethod, Boolean> forInOnFirstArg_cache = HashMapFactory.make();
   private final HashMap<IMethod, DefUse> du_cache = HashMapFactory.make();
   private final IRFactory<IMethod> factory = AstIRFactory.makeDefaultFactory();
+  
+  // determine whether the method performs a for-in loop over the properties of its first argument
   private boolean forInOnFirstArg(IMethod method) {
     if(method.getNumberOfParameters() < 2)
       return false;
@@ -210,64 +213,76 @@ public class ForInContextSelector implements ContextSelector {
     return du;
   }
   
-  private final HashMap<IMethod, Boolean> usesFirstArgAsPropertyName_cache = HashMapFactory.make();
-  private boolean usesFirstArgAsPropertyName(IMethod method) {
+  private enum Frequency { NEVER, SOMETIMES, ALWAYS };
+  private final HashMap<IMethod, Frequency> usesFirstArgAsPropertyName_cache = HashMapFactory.make();
+  
+  // determine whether the method never/sometimes/always uses its first argument as a property name
+  private Frequency usesFirstArgAsPropertyName(IMethod method) {
     if(method.getNumberOfParameters() < 2)
-      return false;
-    Boolean b = usesFirstArgAsPropertyName_cache.get(method);
-    if(b != null)
-      return b;
+      return Frequency.NEVER;
+    Frequency f = usesFirstArgAsPropertyName_cache.get(method);
+    if(f != null)
+      return f;
+    boolean usedAsPropertyName = false, usedAsSomethingElse = false;
     DefUse du = getDefUse(method);
     for(SSAInstruction use : Iterator2Iterable.make(du.getUses(3))) {
       if(use instanceof ReflectiveMemberAccess) {
         ReflectiveMemberAccess rma = (ReflectiveMemberAccess)use;
         if(rma.getMemberRef() == 3) {
-          usesFirstArgAsPropertyName_cache.put(method, true);
-          return true;
+          usedAsPropertyName = true;
+          continue;
         }
       }
+      usedAsSomethingElse = true;
     }
-    usesFirstArgAsPropertyName_cache.put(method, false);
-    return false;
+    if(!usedAsPropertyName)
+      f = Frequency.NEVER;
+    else if(usedAsSomethingElse)
+      f = Frequency.SOMETIMES;
+    else
+      f = Frequency.ALWAYS;
+    usesFirstArgAsPropertyName_cache.put(method, f);
+    return f;
   }
-  
-  private boolean useForInContext(IMethod callee, InstanceKey[] receiver) {
-    if(receiver.length <= 2)
-      return false;
-    if(USE_NAME_TO_SELECT_CONTEXT) {
-      String calleeFullName = callee.getDeclaringClass().getName().toString();
-      String calleeShortName = calleeFullName.substring(calleeFullName.lastIndexOf('/')+1);
-      if(calleeShortName.contains(HACK_METHOD_STR))
-        return true;
-    } else if(usesFirstArgAsPropertyName(callee)) {
-      return true;
+
+  // simulate effect of ToString conversion on key
+  private InstanceKey simulateToString(IClassHierarchy cha, InstanceKey key) {
+    IClass stringClass = cha.lookupClass(JavaScriptTypes.String);
+    if(key instanceof ConstantKey) {
+      Object value = ((ConstantKey)key).getValue();
+      if(value instanceof String) {
+        return key;
+      } else if(value instanceof Number) {
+        Integer ival = ((Number)value).intValue();
+        return new ConstantKey<String>(ival.toString(), stringClass);
+      } else if(value instanceof Boolean) {
+        Boolean bval = (Boolean)value;
+        return new ConstantKey<String>(bval.toString(), stringClass);
+      } else if(value == null) {
+        return new ConstantKey<String>("null", stringClass);
+      }
     }
-    return forInOnFirstArg(callee);
+    return new ConcreteTypeKey(stringClass);    
   }
   
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, final InstanceKey[] receiver) {
     Context baseContext = base.getCalleeTarget(caller, site, callee, receiver);
-    if(useForInContext(callee, receiver)) {
-      InstanceKey loopVar = receiver[2];
-      IClass stringClass = caller.getClassHierarchy().lookupClass(JavaScriptTypes.String);
-      if(loopVar instanceof ConstantKey) {
-        // do a manual ToString conversion if necessary
-        Object value = ((ConstantKey)loopVar).getValue();
-        if(value instanceof String) {
-          return new ForInContext(baseContext, loopVar);
-        } else if(value instanceof Number) {
-          Integer ival = ((Number)value).intValue();
-          return new ForInContext(baseContext, new ConstantKey<String>(ival.toString(), stringClass));
-        } else if(value instanceof Boolean) {
-          Boolean bval = (Boolean)value;
-          return new ForInContext(baseContext, new ConstantKey<String>(bval.toString(), stringClass));
-        } else if(value == null) {
-          return new ForInContext(baseContext, new ConstantKey<String>("null", stringClass));
-        }
+    String calleeFullName = callee.getDeclaringClass().getName().toString();
+    String calleeShortName = calleeFullName.substring(calleeFullName.lastIndexOf('/')+1);
+    if(USE_NAME_TO_SELECT_CONTEXT) {
+      if(calleeShortName.contains(HACK_METHOD_STR)) {
+        // we assume that the argument is only used as a property name, so we can do ToString
+        return new ForInContext(baseContext, simulateToString(caller.getClassHierarchy(), receiver[2]));
       }
-      ConcreteTypeKey stringKey = new ConcreteTypeKey(stringClass);
-      return new ForInContext(baseContext, stringKey);
-    } else if (USE_CPA_IN_BODIES && FORIN_MARKER.equals(caller.getContext().get(FORIN_KEY))) {
+    } else if(receiver.length > 2 && receiver[2] != null) {
+      Frequency f = usesFirstArgAsPropertyName(callee);
+      if(f == Frequency.ALWAYS) {
+        return new ForInContext(baseContext, simulateToString(caller.getClassHierarchy(), receiver[2]));
+      } else if(f == Frequency.SOMETIMES || forInOnFirstArg(callee)) {
+        return new ForInContext(baseContext, receiver[2]);
+      }
+    }
+    if (USE_CPA_IN_BODIES && FORIN_MARKER.equals(caller.getContext().get(FORIN_KEY))) {
       return new SelectiveCPAContext(baseContext, receiver);
     } else if (USE_1LEVEL_IN_BODIES && FORIN_MARKER.equals(caller.getContext().get(FORIN_KEY))) {
       if (! identifyDependentParameters(caller, site).isEmpty()) {
@@ -275,9 +290,8 @@ public class ForInContextSelector implements ContextSelector {
       } else {
         return baseContext;
       }
-    } else {
-      return baseContext;
     }
+    return baseContext;
   }
   
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
