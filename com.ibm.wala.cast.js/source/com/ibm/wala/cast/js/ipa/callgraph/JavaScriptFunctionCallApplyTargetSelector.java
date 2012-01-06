@@ -1,6 +1,5 @@
 package com.ibm.wala.cast.js.ipa.callgraph;
 
-import java.util.Arrays;
 import java.util.Map;
 
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummarizedFunction;
@@ -8,13 +7,10 @@ import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummary;
 import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.ssa.JSInstructionFactory;
-import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
-import com.ibm.wala.cast.loader.AstFunctionClass;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -23,6 +19,7 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -76,10 +73,12 @@ public class JavaScriptFunctionCallApplyTargetSelector implements MethodTargetSe
     return base.getCalleeTarget(caller, site, receiver);
   }
 
+  private static final boolean SEPARATE_SYNTHETIC_METHOD_PER_SITE = true;
+
   /**
    * cache synthetic method for each arity of Function.call() invocation
    */
-  private final Map<Integer, JavaScriptSummarizedFunction> callModels = HashMapFactory.make();
+  private final Map<Object, JavaScriptSummarizedFunction> callModels = HashMapFactory.make();
 
   /**
    * generate a synthetic method modeling the invocation of Function.call() at
@@ -92,13 +91,12 @@ public class JavaScriptFunctionCallApplyTargetSelector implements MethodTargetSe
    */
   private IMethod getFunctionCallTarget(CGNode caller, CallSiteReference site, IClass receiver) {
     int nargs = getNumberOfArgsPassed(caller, site);
-    if (callModels.containsKey(nargs)) {
-      return callModels.get(nargs);
+    Object key = getKey(nargs, caller, site);
+    if (callModels.containsKey(key)) {
+      return callModels.get(key);
     }
     JSInstructionFactory insts = (JSInstructionFactory) receiver.getClassLoader().getInstructionFactory();
-    Atom atom = Atom.findOrCreateUnicodeAtom("call" + nargs);
-    Descriptor desc = Descriptor.findOrCreateUTF8(JavaScriptLoader.JS, "()LRoot;");
-    MethodReference ref = MethodReference.findOrCreate(receiver.getReference(), atom, desc);
+    MethodReference ref = genSyntheticMethodRef(receiver, nargs, key);
     JavaScriptSummary S = new JavaScriptSummary(ref, nargs);
 
     // generate invocation instruction for the real method being invoked
@@ -111,15 +109,36 @@ public class JavaScriptFunctionCallApplyTargetSelector implements MethodTargetSe
       params[i] = i + 3;
     }
     // function being invoked is in v2
-    S.addStatement(insts.Invoke(2, resultVal, params, resultVal + 1, site));
+    S.addStatement(insts.Invoke(2, resultVal, params, resultVal + 1, cs));
     S.getNextProgramCounter();
 
     S.addStatement(insts.ReturnInstruction(resultVal, false));
     S.getNextProgramCounter();
 
     JavaScriptSummarizedFunction t = new JavaScriptSummarizedFunction(ref, S, receiver);
-    callModels.put(nargs, t);
+    callModels.put(key, t);
     return t;
+  }
+
+  private MethodReference genSyntheticMethodRef(IClass receiver, int nargs, Object key) {
+    Atom atom = null;
+    if (key instanceof Pair) {
+      Pair p = (Pair) key;
+      atom = Atom.findOrCreateUnicodeAtom("call_" + p.fst + "_" + p.snd);
+    } else {
+      atom = Atom.findOrCreateUnicodeAtom("call" + nargs);
+    }
+    Descriptor desc = Descriptor.findOrCreateUTF8(JavaScriptLoader.JS, "()LRoot;");
+    MethodReference ref = MethodReference.findOrCreate(receiver.getReference(), atom, desc);
+    return ref;
+  }
+
+  private Object getKey(int nargs, CGNode caller, CallSiteReference site) {
+    if (SEPARATE_SYNTHETIC_METHOD_PER_SITE) {
+      return Pair.make(caller.getGraphNodeId(), site.getProgramCounter());
+    } else {
+      return nargs;
+    }
   }
 
   private int getNumberOfArgsPassed(CGNode caller, CallSiteReference site) {
