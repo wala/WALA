@@ -291,34 +291,44 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
    * @param name
    * @return
    */
-  protected int doLexicallyScopedRead(CAstNode node, WalkContext context, String name) {
+  protected int doLexicallyScopedRead(CAstNode node, WalkContext context, final String name) {
+    if (name.equals("self")) {
+      System.err.println("wow");
+    }
     // record in declaring scope that the name is exposed to a nested scope
     Symbol S = context.currentScope().lookup(name);
-    CAstEntity E = S.getDefiningScope().getEntity();
-    addExposedName(E, E, name, S.getDefiningScope().lookup(name).valueNumber(), false);
+    Scope definingScope = S.getDefiningScope();
+    CAstEntity E = definingScope.getEntity();
+    addExposedName(E, E, name, definingScope.lookup(name).valueNumber(), false);
 
-    int vn = S.valueNumber();
+    String entityName = getEntityName(E);
     if (useLocalValuesForLexicalVars()) {
-      // lexically-scoped variables can be given a single vn in a method
-      Access A = new Access(name, getEntityName(E), vn);
 
       // (context.top() is current entity)
       // record the name as exposed for the current entity, since if the name is
       // updated via a call to a nested function, SSA for the current entity may
       // need to be updated with the new definition
-      addExposedName(context.top(), E, name, vn, false);
+      Scope curScope = context.currentScope();
+      while (!curScope.equals(definingScope)) {
+        // lexically-scoped variables can be given a single vn in a method
+        Symbol curSymbol = curScope.lookup(name);
+        final int vn = curSymbol.valueNumber();
+        Access A = new Access(name, entityName, vn);
+        CAstEntity entity = curScope.getEntity();
+        addExposedName(entity, E, name, vn, false);
+        // record the access; later, the Accesses in the instruction
+        // defining vn will be adjusted based on this information; see
+        // patchLexicalAccesses()
+        addAccess(entity, A);
+        curScope = curScope.getParent();
+      }
 
-      // record the access; later, the Accesses in the instruction
-      // defining vn will be adjusted based on this information; see
-      // patchLexicalAccesses()
-      addAccess(context.top(), A);
-
-      return vn;
+      return S.valueNumber();
 
     } else {
       // lexically-scoped variables should be read from their scope each time
       int result = context.currentScope().allocateTempValue();
-      Access A = new Access(name, getEntityName(E), result);
+      Access A = new Access(name, entityName, result);
       context.cfg().addInstruction(new AstLexicalRead(A));
       return result;
     }
@@ -511,7 +521,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   public static final boolean DEBUG_CFG = DEBUG_ALL || false;
 
-  public static final boolean DEBUG_NAMES = DEBUG_ALL || false;
+  public static final boolean DEBUG_NAMES = DEBUG_ALL || true;
 
   public static final boolean DEBUG_LEXICAL = DEBUG_ALL || false;
 
@@ -2299,6 +2309,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     AstLexicalInformation(String entityName, Scope scope, SSAInstruction[] instrs, Set<Pair<Pair<String, String>, Integer>> exposedNamesForReadSet,
         Set<Pair<Pair<String, String>, Integer>> exposedNamesForWriteSet,
         Set<Access> accesses) {
+      if (entityName.contains("wrapper")) {
+        System.err.println("wow");
+      }
       this.functionLexicalName = entityName;
       
       Pair<Pair<String, String>, Integer>[] EN = null;
