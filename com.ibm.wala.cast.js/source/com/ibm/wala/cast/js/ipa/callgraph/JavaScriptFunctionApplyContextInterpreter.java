@@ -8,11 +8,9 @@ import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.ssa.JSInstructionFactory;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.types.MethodReference;
@@ -21,7 +19,7 @@ import com.ibm.wala.types.MethodReference;
  * TODO cache generated IRs
  * 
  * @author manu
- *
+ * 
  */
 public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensitiveSSAContextInterpreter {
 
@@ -30,22 +28,20 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
   }
 
   @Override
-  public boolean understands(IMethod method, Context context) {
-    return context instanceof ApplyContext;
+  public boolean understands(CGNode node) {
+    return node.getContext() instanceof ApplyContext;
   }
 
   @Override
   public IR getIR(CGNode node) {
-    if (understands(node.getMethod(), node.getContext())) {
-      ApplyContext applyContext = (ApplyContext) node.getContext();
-      boolean isNonNullArray = applyContext.isNonNullArray();
-      if (isNonNullArray) {
-        return makeIRForArgList(node);
-      } else {
-        return makeIRForNoArgList(node);
-      }
+    assert understands(node);
+    ApplyContext applyContext = (ApplyContext) node.getContext();
+    boolean isNonNullArray = applyContext.isNonNullArray();
+    if (isNonNullArray) {
+      return makeIRForArgList(node);
+    } else {
+      return makeIRForNoArgList(node);
     }
-    return super.getIR(node);
   }
 
   private IR makeIRForArgList(CGNode node) {
@@ -143,10 +139,8 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
 
   @Override
   public DefUse getDU(CGNode node) {
-    if (understands(node.getMethod(), node.getContext())) {
-      return new DefUse(getIR(node));
-    }
-    return super.getDU(node);
+    assert understands(node);
+    return new DefUse(getIR(node));
   }
 
 }
