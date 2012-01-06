@@ -436,6 +436,18 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForReturnThis2);
   }
   
+  private static final Object[][] assertionsForArguments = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/arguments.js" } },
+    new Object[] { "suffix:arguments.js", new String[] { "suffix:f" } },
+    new Object[] { "suffix:f", new String[] { "suffix:g3" } } // but neither "suffix:g1" nor "suffix:g2"
+  };
+  
+  @Test
+  public void testArguments() throws IOException, IllegalArgumentException, CancelException {
+    CallGraph CG = Util.makeScriptCG("tests", "arguments.js");
+    verifyGraphAssertions(CG, assertionsForArguments);
+  }
+  
   private static final Object[][] assertionsForFunctionIsAFunction = new Object[][] {
     new Object[] { ROOT, new String[] { "tests/Function_is_a_function.js" } },
     new Object[] { "suffix:Function_is_a_function.js", new String[] { "suffix:functionCall" } } }; 
