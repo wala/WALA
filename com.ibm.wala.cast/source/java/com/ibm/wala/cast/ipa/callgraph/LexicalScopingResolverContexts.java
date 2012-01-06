@@ -18,6 +18,7 @@ import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
+import com.ibm.wala.ipa.summaries.SummarizedMethod;
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -562,6 +563,11 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
 
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] actualParameters) {
     Context baseContext = base.getCalleeTarget(caller, site, callee, actualParameters);
+    if (callee instanceof SummarizedMethod) {
+      if (callee.getReference().toString().equals("< JavaScriptLoader, LArray, ctor()LRoot; >")) {
+        return baseContext;
+      }
+    }
     LexicalScopingResolver resolver = (LexicalScopingResolver) caller.getContext().get(RESOLVER);
 
     final RecursionKey key = new RecursionKey(caller.getMethod(), site, callee);
