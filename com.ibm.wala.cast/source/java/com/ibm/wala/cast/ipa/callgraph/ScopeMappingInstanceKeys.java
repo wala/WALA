@@ -136,6 +136,10 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
     public String toString() {
       return "SMIK:" + base + "@" + creator;
     }
+    
+    public InstanceKey getBase() {
+      return base;
+    }
   }
 
   public InstanceKey getInstanceKeyForAllocation(CGNode creatorNode, NewSiteReference allocationSite) {

@@ -64,4 +64,11 @@ public class DelegatingContext implements Context {
     return true;
   }
 
+  @Override
+  public String toString() {
+    return "DelegatingContext [A=" + A + ", B=" + B + "]";
+  }
+  
+  
+
 }
