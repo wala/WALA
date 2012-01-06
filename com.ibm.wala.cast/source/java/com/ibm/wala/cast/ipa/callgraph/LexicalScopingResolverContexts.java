@@ -1,7 +1,6 @@
 package com.ibm.wala.cast.ipa.callgraph;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -18,8 +17,12 @@ import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
+import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.IteratorPlusOne;
+import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.IntSet;
@@ -31,6 +34,8 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
       return "Resolver Key";
     }
   };
+
+  private static final boolean USE_CGNODE_RESOLVER = false;
 
   /**
    * used to resolve lexical accesses during call graph construction
@@ -53,7 +58,7 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
      * {@link LocalPointerKey} corresponding to name from the {@link CGNode}
      * that defines it
      */
-    LocalPointerKey getReadOnlyValue(Pair<String, String> name);
+    Set<LocalPointerKey> getReadOnlyValues(Pair<String, String> name);
 
     /**
      * get the site-node pairs (s,n) in the scope-resolver chain such that n has
@@ -88,8 +93,8 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
       parent = globalResolver;
     }
 
-    Map<String, LocalPointerKey> readOnlyNames = new HashMap<String, LocalPointerKey>();
-    Set<Pair<String, String>> readWritesNames = new HashSet<Pair<String, String>>();
+    Map<String, LocalPointerKey> readOnlyNames = HashMapFactory.make();
+    Set<Pair<String, String>> readWriteNames = HashSetFactory.make();
 
     LexicalInformation LI = ((AstMethod) caller.getMethod()).lexicalInfo();
     int[] exposedUses = LI.getExposedUses(callSite.getProgramCounter());
@@ -101,31 +106,46 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
             if (LI.isReadOnly(exposedNames[i].snd)) {
               readOnlyNames.put(exposedNames[i].snd, new LocalPointerKey(caller, exposedUses[i]));
             } else {
-              readWritesNames.add(exposedNames[i]);
+              readWriteNames.add(exposedNames[i]);
             }
           }
         }
       }
 
-      Object key;
-      if (!readWritesNames.isEmpty()) {
-        key = Pair.make(caller, callSite);
-      } else {
-        key = readOnlyNames.keySet();
-      }
-
-      if (parent.children().containsKey(key)) {
-        return parent.children().get(key);
-      }
-
-      if (!readWritesNames.isEmpty()) {
-        SiteResolver result = new SiteResolver(parent, caller, readOnlyNames, callSite, readWritesNames);
-        parent.children().put(key, result);
+      if (USE_CGNODE_RESOLVER) {
+        CGNodeResolver result = (CGNodeResolver) parent.children().get(caller);
+        if (result == null) {
+          result = new CGNodeResolver(parent, caller);
+          parent.children().put(caller, result);
+        }
+        for (String readOnlyName : readOnlyNames.keySet()) {
+          result.addReadOnlyName(readOnlyName, readOnlyNames.get(readOnlyName));
+        }
+        for (Pair<String, String> readWriteName : readWriteNames) {
+          result.addReadWriteName(readWriteName, callSite);
+        }
         return result;
       } else {
-        ReadOnlyResolver result = new ReadOnlyResolver(parent, caller, readOnlyNames);
-        parent.children().put(key, result);
-        return result;
+        Object key;
+        if (!readWriteNames.isEmpty()) {
+          key = Pair.make(caller, callSite);
+        } else {
+          key = readOnlyNames.keySet();
+        }
+
+        if (parent.children().containsKey(key)) {
+          return parent.children().get(key);
+        }
+
+        if (!readWriteNames.isEmpty()) {
+          SiteResolver result = new SiteResolver(parent, caller, readOnlyNames, callSite, readWriteNames);
+          parent.children().put(key, result);
+          return result;
+        } else {
+          ReadOnlyResolver result = new ReadOnlyResolver(parent, caller, readOnlyNames);
+          parent.children().put(key, result);
+          return result;
+        }
       }
     }
 
@@ -138,7 +158,7 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
       return false;
     }
 
-    public LocalPointerKey getReadOnlyValue(Pair<String, String> name) {
+    public Set<LocalPointerKey> getReadOnlyValues(Pair<String, String> name) {
       throw new UnsupportedOperationException("not expecting read only global");
     }
 
@@ -155,7 +175,7 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
 
     public Map<Object, LexicalScopingResolver> children() {
       if (children == null) {
-        children = new HashMap<Object, LexicalScopingResolver>();
+        children = HashMapFactory.make();
       }
       return children;
     }
@@ -171,11 +191,108 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
         return null;
       }
     }
-    
+
     public String toString() {
       return "GLOBAL_RESOLVER";
     }
   };
+
+  /**
+   * single {@link LexicalScopingResolver} for a CGNode, handling read-only and
+   * read-write names
+   */
+  class CGNodeResolver implements LexicalScopingResolver {
+
+    private final LexicalScopingResolver parent;
+    private Map<Object, LexicalScopingResolver> children;
+    /**
+     * definer name for corresponding scope
+     */
+    private final String myDefiner;
+    private final CGNode myNode;
+
+    /**
+     * maps a read-only name defined in this scope to the local pointer keys by
+     * which it is referenced at call sites encountered thus far
+     */
+    private Map<String, Set<LocalPointerKey>> myReadOnlyDefs = null;
+
+    /**
+     * maps a name defined in this scope that may be defined in a nested scope
+     * to the set of call sites at which it is exposed for nested writes
+     */
+    private Map<Pair<String, String>, Set<Pair<CallSiteReference, CGNode>>> myDefs = null;
+
+    public CGNodeResolver(LexicalScopingResolver parent, CGNode myNode) {
+      super();
+      this.parent = parent;
+      this.myDefiner = ((AstMethod) myNode.getMethod()).lexicalInfo().getScopingName();
+      this.myNode = myNode;
+    }
+
+    public void addReadWriteName(Pair<String, String> readWriteName, CallSiteReference callSite) {
+      if (myDefs == null) {
+        myDefs = HashMapFactory.make();
+      }
+      MapUtil.findOrCreateSet(myDefs, readWriteName).add(Pair.make(callSite, myNode));
+    }
+
+    public void addReadOnlyName(String readOnlyName, LocalPointerKey localPointerKey) {
+      if (myReadOnlyDefs == null) {
+        myReadOnlyDefs = HashMapFactory.make();
+      }
+      MapUtil.findOrCreateSet(myReadOnlyDefs, readOnlyName).add(localPointerKey);
+    }
+
+    public LexicalScopingResolver getParent() {
+      return parent;
+    }
+
+    public boolean isReadOnly(Pair<String, String> name) {
+      if (myDefiner.equals(name.fst)) {
+        return myReadOnlyDefs != null && myReadOnlyDefs.containsKey(name.snd);
+      } else {
+        return parent.isReadOnly(name);
+      }
+    }
+
+    public Set<LocalPointerKey> getReadOnlyValues(Pair<String, String> name) {
+      if (myDefiner.equals(name.fst)) {
+        return myReadOnlyDefs.get(name.snd);
+      } else {
+        return parent.getReadOnlyValues(name);
+      }
+    }
+
+    public Iterator<Pair<CallSiteReference, CGNode>> getLexicalSites(Pair<String, String> name) {
+      if (myDefs == null || myDefs.containsKey(name)) {
+        if (myDefiner.equals(name.snd)) {
+          // no need to recurse to parent
+          return myDefs.get(name).iterator();
+        } else {
+          return new CompoundIterator<Pair<CallSiteReference, CGNode>>(parent.getLexicalSites(name), myDefs.get(name).iterator());
+        }
+      } else {
+        return parent.getLexicalSites(name);
+      }
+    }
+
+    public Map<Object, LexicalScopingResolver> children() {
+      if (children == null) {
+        children = HashMapFactory.make();
+      }
+      return children;
+    }
+
+    public CGNode getOriginalDefiner(Pair<String, String> name) {
+      if (myDefiner.equals(name.snd)) {
+        return myNode;
+      } else {
+        return parent.getOriginalDefiner(name);
+      }
+    }
+
+  }
 
   /**
    * {@link LexicalScopingResolver} for case where all exposed names from the
@@ -206,17 +323,17 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
       }
     }
 
-    public LocalPointerKey getReadOnlyValue(Pair<String, String> name) {
+    public Set<LocalPointerKey> getReadOnlyValues(Pair<String, String> name) {
       if (myDefiner.equals(name.fst)) {
-        return myReadOnlyDefs.get(name.snd);
+        return Collections.singleton(myReadOnlyDefs.get(name.snd));
       } else {
-        return parent.getReadOnlyValue(name);
+        return parent.getReadOnlyValues(name);
       }
     }
 
     public Map<Object, LexicalScopingResolver> children() {
       if (children == null) {
-        children = new HashMap<Object, LexicalScopingResolver>();
+        children = HashMapFactory.make();
       }
       return children;
     }
@@ -242,8 +359,8 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
       StringBuilder result = new StringBuilder();
       result.append("ReadOnlyResolver[myDefiner=");
       result.append(myDefiner);
-//      result.append(", myNode=");
-//      result.append(myNode);
+      // result.append(", myNode=");
+      // result.append(myNode);
       result.append(",\n myReadOnlyDefs=");
       result.append(myReadOnlyDefs);
       result.append(",\n parent=");
@@ -290,8 +407,8 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
       StringBuilder result = new StringBuilder();
       result.append("SiteResolver[myDefiner=");
       result.append(myDefiner);
-//      result.append(", myNode=");
-//      result.append(myNode);
+      // result.append(", myNode=");
+      // result.append(myNode);
       result.append(",\n mySite=");
       result.append(mySite);
       result.append(",\n myReadOnlyDefs=");

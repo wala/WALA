@@ -314,7 +314,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       } else {
         for(Access a : instruction.getAccesses()) {
           Pair<String,String> name = a.getName();
-          if ((r.isReadOnly(name)? r.getReadOnlyValue(name): r.getLexicalSites(name)) == null) {
+          if ((r.isReadOnly(name)? r.getReadOnlyValues(name): r.getLexicalSites(name)) == null) {
             return false;
           }
         }
@@ -608,7 +608,10 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
               if (r.isReadOnly(accesses[i].getName())) {
                 assert isLoad;
                 foundOnStack = true;
-                action(r.getReadOnlyValue(accesses[i].getName()), vn);
+                Set<LocalPointerKey> vals = r.getReadOnlyValues(accesses[i].getName());
+                for (LocalPointerKey val : vals) {
+                  action(val, vn);
+                }
               } else {
                 Iterator<Pair<CallSiteReference,CGNode>> sites = r.getLexicalSites(accesses[i].getName());
                 while(sites.hasNext()) {
