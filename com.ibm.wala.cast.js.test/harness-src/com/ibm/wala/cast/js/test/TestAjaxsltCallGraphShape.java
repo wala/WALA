@@ -16,7 +16,9 @@ import java.net.URL;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.util.CancelException;
 
 public abstract class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
@@ -29,10 +31,11 @@ public abstract class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
 
   };
 
-  @Ignore("handling Function.prototype.apply makes this test blow up.  TODO: investigate")
   @Test public void testAjaxslt() throws IOException, IllegalArgumentException, CancelException {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xslt.html");
-    CallGraph CG = Util.makeHTMLCG(url);
+    PropagationCallGraphBuilder b = Util.makeHTMLCGBuilder(url);
+    ((JSAnalysisOptions) b.getOptions()).setHandleCallApply(false);
+    CallGraph CG = b.makeCallGraph(b.getOptions());
     verifyGraphAssertions(CG, assertionsForAjaxslt);
   }
 
