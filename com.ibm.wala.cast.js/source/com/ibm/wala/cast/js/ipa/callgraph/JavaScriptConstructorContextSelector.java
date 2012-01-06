@@ -6,9 +6,11 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.ContextItem;
+import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.OneLevelSiteContextSelector;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.nCFAContextSelector;
 import com.ibm.wala.util.intset.IntSet;
 
 public class JavaScriptConstructorContextSelector implements ContextSelector {
@@ -18,7 +20,7 @@ public class JavaScriptConstructorContextSelector implements ContextSelector {
   
   public JavaScriptConstructorContextSelector(ContextSelector base) {
     this.base = base;
-    this.oneLevel = new OneLevelSiteContextSelector(base);
+    this.oneLevel = new nCFAContextSelector(1, base);
   }
   
   
@@ -27,16 +29,32 @@ public class JavaScriptConstructorContextSelector implements ContextSelector {
   }
 
 
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {   
+  public Context getCalleeTarget(final CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {   
+    final Context baseCtxt = base.getCalleeTarget(caller, site, callee, receiver);
     if (callee instanceof JavaScriptConstructor) {
-      if (caller.getContext() instanceof ScopeMappingContext) {
-        return caller.getContext();        
+      final Context oneLevelContext = oneLevel.getCalleeTarget(caller, site, callee, receiver);
+      final Context callerContext = caller.getContext();
+      if (callerContext instanceof ScopeMappingContext) {
+        return new Context() {
+
+          @Override
+          public ContextItem get(ContextKey name) {
+            ContextItem result = callerContext.get(name);
+            if (result == null) {
+              result = oneLevelContext.get(name);
+              if (result == null) {
+                result = baseCtxt.get(name);
+              }
+            }
+            return result;
+          }             
+        };
       } else {
-        // use one-level of call-site sensitivity for constructors always
-        return oneLevel.getCalleeTarget(caller, site, callee, receiver);
+        // use one-level of call-string sensitivity for constructors always
+        return oneLevelContext;
       }
     } else {
-      return base.getCalleeTarget(caller, site, callee, receiver);
+      return baseCtxt;
     }
   }
 
