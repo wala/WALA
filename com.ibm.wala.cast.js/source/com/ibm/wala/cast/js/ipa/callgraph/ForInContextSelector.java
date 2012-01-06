@@ -12,7 +12,6 @@ package com.ibm.wala.cast.js.ipa.callgraph;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.ibm.wala.cast.ir.ssa.AbstractReflectiveGet;
@@ -36,6 +35,7 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.OneLevelSiteContextSelector;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
+import com.ibm.wala.ssa.ReflectiveMemberAccess;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -57,6 +57,10 @@ public class ForInContextSelector implements ContextSelector {
   };
   
   public static final String HACK_METHOD_STR = "_forin_body";
+  
+  // if this flag is set to true, functions are given ForInContexts based on their name
+  // if it is false, any function that uses its first argument as a property name will be given a ForInContext
+  public static final boolean USE_NAME_TO_SELECT_CONTEXT = false;
 
   public static boolean USE_CPA_IN_BODIES = false;
   
@@ -178,6 +182,7 @@ public class ForInContextSelector implements ContextSelector {
   }
   
   private final HashMap<IMethod, Boolean> forInOnFirstArg_cache = HashMapFactory.make();
+  private final HashMap<IMethod, DefUse> du_cache = HashMapFactory.make();
   private final IRFactory<IMethod> factory = AstIRFactory.makeDefaultFactory();
   private boolean forInOnFirstArg(IMethod method) {
     if(method.getNumberOfParameters() < 2)
@@ -185,10 +190,8 @@ public class ForInContextSelector implements ContextSelector {
     Boolean b = forInOnFirstArg_cache.get(method);
     if(b != null)
       return b;
-    IR ir = factory.makeIR(method, Everywhere.EVERYWHERE, SSAOptions.defaultOptions());
-    DefUse du = new DefUse(ir);
-    Iterator<SSAInstruction> uses = du.getUses(3);
-    for(SSAInstruction use : Iterator2Iterable.make(uses)) {
+    DefUse du = getDefUse(method);
+    for(SSAInstruction use : Iterator2Iterable.make(du.getUses(3))) {
       if(use instanceof EachElementGetInstruction) {
         forInOnFirstArg_cache.put(method, true);
         return true;
@@ -197,12 +200,54 @@ public class ForInContextSelector implements ContextSelector {
     forInOnFirstArg_cache.put(method, false);
     return false;
   }
+
+  protected DefUse getDefUse(IMethod method) {
+    DefUse du = du_cache.get(method);
+    if(du == null) {
+      IR ir = factory.makeIR(method, Everywhere.EVERYWHERE, SSAOptions.defaultOptions());
+      du_cache.put(method, du = new DefUse(ir));
+    }
+    return du;
+  }
+  
+  private final HashMap<IMethod, Boolean> usesFirstArgAsPropertyName_cache = HashMapFactory.make();
+  private boolean usesFirstArgAsPropertyName(IMethod method) {
+    if(method.getNumberOfParameters() < 2)
+      return false;
+    Boolean b = usesFirstArgAsPropertyName_cache.get(method);
+    if(b != null)
+      return b;
+    DefUse du = getDefUse(method);
+    for(SSAInstruction use : Iterator2Iterable.make(du.getUses(3))) {
+      if(use instanceof ReflectiveMemberAccess) {
+        ReflectiveMemberAccess rma = (ReflectiveMemberAccess)use;
+        if(rma.getMemberRef() == 3) {
+          usesFirstArgAsPropertyName_cache.put(method, true);
+          return true;
+        }
+      }
+    }
+    usesFirstArgAsPropertyName_cache.put(method, false);
+    return false;
+  }
+  
+  private boolean useForInContext(IMethod callee, InstanceKey[] receiver) {
+    if(receiver.length <= 2)
+      return false;
+    if(USE_NAME_TO_SELECT_CONTEXT) {
+      String calleeFullName = callee.getDeclaringClass().getName().toString();
+      String calleeShortName = calleeFullName.substring(calleeFullName.lastIndexOf('/')+1);
+      if(calleeShortName.contains(HACK_METHOD_STR))
+        return true;
+    } else if(usesFirstArgAsPropertyName(callee)) {
+      return true;
+    }
+    return forInOnFirstArg(callee);
+  }
   
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, final InstanceKey[] receiver) {
     Context baseContext = base.getCalleeTarget(caller, site, callee, receiver);
-    String calleeFullName = callee.getDeclaringClass().getName().toString();
-    String calleeShortName = calleeFullName.substring(calleeFullName.lastIndexOf('/')+1);
-    if (receiver.length > 2 && (calleeShortName.startsWith(HACK_METHOD_STR) || forInOnFirstArg(callee))) {
+    if(useForInContext(callee, receiver)) {
       InstanceKey loopVar = receiver[2];
       IClass stringClass = caller.getClassHierarchy().lookupClass(JavaScriptTypes.String);
       if(loopVar instanceof ConstantKey) {
