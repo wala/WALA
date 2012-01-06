@@ -2321,9 +2321,6 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     AstLexicalInformation(String entityName, Scope scope, SSAInstruction[] instrs,
         Set<Pair<Pair<String, String>, Integer>> exposedNamesForReadSet,
         Set<Pair<Pair<String, String>, Integer>> exposedNamesForWriteSet, Set<Access> accesses) {
-      if (entityName.contains("wrapper")) {
-        System.err.println("wow");
-      }
       this.functionLexicalName = entityName;
 
       Pair<Pair<String, String>, Integer>[] EN = null;

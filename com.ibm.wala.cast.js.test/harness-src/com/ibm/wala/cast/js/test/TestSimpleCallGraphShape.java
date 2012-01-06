@@ -364,6 +364,16 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForWrap2);
   }
 
+  private static final Object[][] assertionsForWrap3 = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/wrap3.js" } },
+    new Object[] { "suffix:wrap3.js", new String[] { "suffix:i_am_reachable" } } };
+
+  @Test
+  public void testWrap3() throws IllegalArgumentException, IOException, CancelException {
+    CallGraph CG = Util.makeScriptCG("tests", "wrap3.js");
+    verifyGraphAssertions(CG, assertionsForWrap3);
+  }
+
   private static final Object[][] assertionsForComplexCall = new Object[][] {
     new Object[] { ROOT, new String[] { "tests/complex_call.js" } },
     new Object[] { "suffix:call.js", new String[] { "suffix:f3" } } };
