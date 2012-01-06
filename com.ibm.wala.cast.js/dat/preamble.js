@@ -209,7 +209,7 @@ DOMElement = function DOMElement() { // An impostor for the Element class
 		return this[name];
 	}
 	this.setAttribute = function setAttribute(name, value) {
-//		this[name] = value;
+		this[name] = value;
 	}
 
 	this.removeAttribute = function removeAttribute(name) {
