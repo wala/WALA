@@ -3,7 +3,7 @@ function biz() { return this; }
 var q = biz;
 var o = { m: function theOne() {} }
 var r = q.apply(o);
-o.m()
+r.m()
 
 function id(y) { return y; }
 
@@ -14,3 +14,5 @@ s();
 
 // test invoking with non-array argsList
 p.apply(null, o);
+
+
