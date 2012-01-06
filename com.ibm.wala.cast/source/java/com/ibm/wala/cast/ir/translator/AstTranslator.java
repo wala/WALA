@@ -336,11 +336,13 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       final int vn = curSymbol.valueNumber();
       final Access A = new Access(name, entityName, vn);
       final CAstEntity entity = curScope.getEntity();
-      addExposedName(entity, E, name, vn, isWrite);
-      // record the access; later, the Accesses in the instruction
-      // defining vn will be adjusted based on this information; see
-      // patchLexicalAccesses()
-      addAccess(entity, A);
+      if (entity != definingScope.getEntity()) {
+        addExposedName(entity, E, name, vn, isWrite);
+        // record the access; later, the Accesses in the instruction
+        // defining vn will be adjusted based on this information; see
+        // patchLexicalAccesses()
+        addAccess(entity, A);
+      }
       curScope = curScope.getParent();
     }
   }
@@ -1514,7 +1516,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         if (isGlobal(s))
           return false;
         else
-          return ((AbstractScope) s.getDefiningScope()).getEntityScope() != this;
+          return ((AbstractScope) s.getDefiningScope()).getEntity() != getEntity();
       }
 
       public CAstEntity getEntity() {
@@ -1601,7 +1603,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         if (isGlobal(s))
           return false;
         else
-          return ((AbstractScope) s.getDefiningScope()).getEntityScope() != this;
+          return ((AbstractScope) s.getDefiningScope()).getEntity() != getEntity();
       }
 
       public CAstEntity getEntity() {
