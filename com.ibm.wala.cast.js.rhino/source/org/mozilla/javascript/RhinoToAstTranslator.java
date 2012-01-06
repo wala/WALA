@@ -23,6 +23,7 @@ import java.util.Map;
 import org.mozilla.javascript.tools.ToolErrorReporter;
 
 import com.ibm.wala.cast.js.html.MappedSourceModule;
+import com.ibm.wala.cast.js.ipa.callgraph.JSSSAPropagationCallGraphBuilder;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.tree.CAst;
@@ -1122,7 +1123,7 @@ public class RhinoToAstTranslator {
                   Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl("base")), Ast.makeConstant(null)),
                   makeCall(fun, base, firstParamInParens, context)));
         else
-          return makeCall(fun, Ast.makeConstant(null), firstParamInParens, context);
+          return makeCall(fun, makeVarRef(JSSSAPropagationCallGraphBuilder.GLOBAL_OBJ_VAR_NAME), firstParamInParens, context);
       } else {
         return Ast.makeNode(CAstNode.PRIMITIVE, gatherChildren(n, context, 1));
       }

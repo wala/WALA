@@ -19,4 +19,7 @@ public class GlobalObjectKey implements InstanceKey {
     return concreteType;
   }
 
+  public String toString() {
+    return "JS Global Object";
+  }
 }

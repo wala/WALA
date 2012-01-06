@@ -333,6 +333,14 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   }
 
 
+  private static final Object[][] assertionsForGlobalObj = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/global_object.js" } },
+    new Object[] { "suffix:global_object.js", new String[] { "suffix:biz" } } };
+
+  @Test
+  public void testGlobalObjPassing() throws IOException, IllegalArgumentException, CancelException {
+    Util.makeScriptCG("tests", "global_object.js");
+  }
   protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {
 
     // Created by reversing the points to mapping for local pointer keys.

@@ -217,7 +217,6 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       LocalPointerKey lpk = (LocalPointerKey) key;
       CGNode node = lpk.getNode();
       IR ir = node.getIR();
-      System.err.println(ir);
       DefUse du = node.getDU();
       if (((SSAPropagationCallGraphBuilder) builder).contentsAreInvariant(ir.getSymbolTable(), du, lpk.getValueNumber())) {
         // cons up the points-to set for invariant contents
