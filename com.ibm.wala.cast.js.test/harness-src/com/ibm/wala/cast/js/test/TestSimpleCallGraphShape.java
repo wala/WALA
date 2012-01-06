@@ -316,10 +316,14 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     }
   }
 
+  private static final Object[][] assertionsForFunctionApply = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/function_apply.js" } },
+    new Object[] { "suffix:function_apply.js", new String[] { "suffix:theOne" } } };
+
   @Test
   public void testFunctionDotApply() throws IOException, IllegalArgumentException, CancelException {
-    Util.makeScriptCG("tests", "function_apply.js");
-    // TODO assert that bar() is reachable
+    CallGraph CG = Util.makeScriptCG("tests", "function_apply.js");
+    verifyGraphAssertions(CG, assertionsForFunctionApply);
   }
 
   private static final Object[][] assertionsForComplexCall = new Object[][] {

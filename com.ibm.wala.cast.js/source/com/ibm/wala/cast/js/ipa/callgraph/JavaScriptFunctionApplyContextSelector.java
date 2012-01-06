@@ -15,11 +15,8 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
 
   private final ContextSelector base;
 
-  private final JSSSAPropagationCallGraphBuilder builder;
-
-  public JavaScriptFunctionApplyContextSelector(ContextSelector base, JSSSAPropagationCallGraphBuilder builder) {
+  public JavaScriptFunctionApplyContextSelector(ContextSelector base) {
     this.base = base;
-    this.builder = builder;
   }
 
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
@@ -54,6 +51,47 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
       return delegate.get(name);
     }
 
+    public InstanceKey getArgsListKey() {
+      return argsList;
+    }
+
+    @Override
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((argsList == null) ? 0 : argsList.hashCode());
+      result = prime * result + ((delegate == null) ? 0 : delegate.hashCode());
+      return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      ApplyContext other = (ApplyContext) obj;
+      if (argsList == null) {
+        if (other.argsList != null)
+          return false;
+      } else if (!argsList.equals(other.argsList))
+        return false;
+      if (delegate == null) {
+        if (other.delegate != null)
+          return false;
+      } else if (!delegate.equals(other.delegate))
+        return false;
+      return true;
+    }
+
+    @Override
+    public String toString() {
+      return "ApplyContext [delegate=" + delegate + ", argsList=" + argsList + "]";
+    }
+    
+    
   }
 
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {

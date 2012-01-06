@@ -19,6 +19,7 @@ import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.nCFAContextSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -34,6 +35,7 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     super(cha, options, cache);
 
     SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha);
+    contextInterpreter = new DelegatingSSAContextInterpreter(new JavaScriptFunctionApplyContextInterpreter(options, cache), contextInterpreter);
     setContextInterpreter(contextInterpreter);
 
     options.setSelector(new JavaScriptFunctionCallApplyTargetSelector(cha, new JavaScriptConstructTargetSelector(cha, options.getMethodTargetSelector())));
@@ -43,7 +45,7 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
     contextSelector = new ScopeMappingKeysContextSelector(contextSelector);
     contextSelector = new JavaScriptConstructorContextSelector(contextSelector);
-    contextSelector = new JavaScriptFunctionApplyContextSelector(contextSelector, this);
+    contextSelector = new JavaScriptFunctionApplyContextSelector(contextSelector);
     contextSelector = new LexicalScopingResolverContexts(this, contextSelector);
     if (doOneCFA) {
       contextSelector = new nCFAContextSelector(1, contextSelector);
