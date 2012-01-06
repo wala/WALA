@@ -31,13 +31,15 @@ import com.ibm.wala.util.intset.OrdinalSet;
 
 /**
  * An {@link InstanceKeyFactory} that returns {@link ScopeMappingInstanceKey}s
- * as necessary to handle interprocedural lexical scoping
+ * as necessary to handle interprocedural lexical scoping (specifically, to
+ * handle closure creation when a function escapes its allocating scope)
  */
 abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
 
   /**
    * does base require a scope mapping key? Typically, true if base is allocated
-   * in a nested lexical scope
+   * in a nested lexical scope, to handle the case of base being a function that
+   * performs closure accesses
    */
   protected abstract boolean needsScopeMappingKey(InstanceKey base);
 
@@ -72,13 +74,12 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
      */
     private final CGNode creator;
 
-
     /**
      * compute the {@link CGNode} correspond to each specified
      * {@link LexicalParent} of {@link #base}, populating {@link #scopeMap}
      * 
      */
-    
+
     private ScopeMappingInstanceKey(CGNode creator, InstanceKey base) {
       this.creator = creator;
       this.base = base;
@@ -89,29 +90,31 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
     }
 
     /**
-     * get the CGNode representing the lexical parent of {@link #creator} with name definer
+     * get the CGNode representing the lexical parent of {@link #creator} with
+     * name definer
+     * 
      * @param definer
      * @return
      */
-    Iterator<CGNode> getFunargNodes(Pair<String,String> name) {
+    Iterator<CGNode> getFunargNodes(Pair<String, String> name) {
       Iterator<CGNode> result = EmptyIterator.instance();
-      
-      LexicalScopingResolver r = (LexicalScopingResolver)creator.getContext().get(LexicalScopingResolverContexts.RESOLVER);
+
+      LexicalScopingResolver r = (LexicalScopingResolver) creator.getContext().get(LexicalScopingResolverContexts.RESOLVER);
       if (r != null) {
         CGNode def = r.getOriginalDefiner(name);
         if (def != null) {
           result = new NonNullSingletonIterator<CGNode>(def);
         }
       }
-      
+
       PointerKey funcKey = builder.getPointerKeyForLocal(creator, 1);
       OrdinalSet<InstanceKey> funcPtrs = builder.getPointerAnalysis().getPointsToSet(funcKey);
-      for(InstanceKey x : funcPtrs) {
+      for (InstanceKey x : funcPtrs) {
         if (x instanceof ScopeMappingInstanceKey) {
-          result = new CompoundIterator<CGNode>(result, ((ScopeMappingInstanceKey)x).getFunargNodes(name));
+          result = new CompoundIterator<CGNode>(result, ((ScopeMappingInstanceKey) x).getFunargNodes(name));
         }
       }
-      
+
       return result;
     }
 
