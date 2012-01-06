@@ -30,11 +30,13 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  * "uninteresting" types
  */
 public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
+  private static final boolean SIMPLE = false;
 
-  private static final boolean HANDLE_FUNCTION_PROTOTYPE_CALL = true;
+  private static final boolean HANDLE_FUNCTION_PROTOTYPE_CALL = !SIMPLE && true;
+  private static final boolean HANDLE_FUNCTION_PROTOTYPE_APPLY = !SIMPLE && true;
+  private static final boolean USE_OBJECT_SENSITIVITY = !SIMPLE && true;
   
-  private static final boolean HANDLE_FUNCTION_PROTOTYPE_APPLY = true;
-  private static final boolean USE_OBJECT_SENSITIVITY = true;
+  private static final boolean USE_LOAD_FILE_TARGET_SELECTOR = false;
 
   public JSZeroOrOneXCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy, boolean doOneCFA) {
@@ -52,7 +54,9 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     if (HANDLE_FUNCTION_PROTOTYPE_CALL) {
       targetSelector = new JavaScriptFunctionDotCallTargetSelector(targetSelector);
     }
-    targetSelector = new LoadFileTargetSelector(targetSelector, this);
+    if (USE_LOAD_FILE_TARGET_SELECTOR) {
+      targetSelector = new LoadFileTargetSelector(targetSelector, this);
+    }
     options.setSelector(targetSelector);
 
     ContextSelector def = new ContextInsensitiveSelector();
