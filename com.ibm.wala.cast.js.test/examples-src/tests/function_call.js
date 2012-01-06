@@ -1,1 +1,5 @@
-(function foo(x) { return x; }).call(null, 3);
+function foo(x) { return x; }
+
+var z = foo;
+z.call(null, 3);
+

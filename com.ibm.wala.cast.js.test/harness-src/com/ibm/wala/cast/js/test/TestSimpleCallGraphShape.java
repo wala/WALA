@@ -292,6 +292,12 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     // TODO assert that foo() is reachable
   }
 
+  @Test public void testFunctionDotApply() throws IOException, IllegalArgumentException, CancelException {
+    Util.makeScriptCG("tests", "function_apply.js");
+    // TODO assert that bar() is reachable
+  }
+
+
   protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {
 
     // Created by reversing the points to mapping for local pointer keys.
