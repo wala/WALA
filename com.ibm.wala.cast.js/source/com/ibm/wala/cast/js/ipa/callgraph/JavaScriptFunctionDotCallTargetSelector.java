@@ -38,9 +38,17 @@ import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
  * 
  */
 public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSelector {
-  // whether to warn about what looks like constructor invocations of Function.prototype.call
-  // while not impossible, such invocations always result in a TypeError and thus are likely due to imprecise call graph information
-  public static final boolean WARN_ABOUT_NEW_CALL = true;
+  /*
+   * Call graph imprecision often leads to spurious invocations of Function.prototype.call; two common
+   * patterns are invocations of "new" on Function.prototype.call (which in reality would lead to a
+   * type error), and self-applications of Function.prototype.call.
+   * 
+   * While neither of these situations is a priori impossible, they are most likely due to analysis
+   * imprecision. If this flag is set to true, we emit a warning when seeing them. 
+   */
+  public static final boolean WARN_ABOUT_IMPRECISE_CALLGRAPH = true;
+  
+  public static final boolean DEBUG_SYNTHETIC_CALL_METHODS = false;
 
   private final MethodTargetSelector base;
 
@@ -59,41 +67,38 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
    */
   @Override
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
-<<<<<<< HEAD
     IMethod method = receiver.getMethod(AstMethodReference.fnSelector);
     if (method != null) {
       String s = method.getReference().getDeclaringClass().getName().toString();
       if (s.equals("Lprologue.js/functionCall")) {
-        return getFunctionCallTarget(caller, site, receiver);
-=======
-    if (cha.isSubclassOf(receiver, cha.lookupClass(JavaScriptTypes.CodeBody))) {
-      // TODO better way to do this test?
-      String s = receiver.toString();
-      if (s.equals("function Lprologue.js/functionCall")) {
         /* invoking Function.prototype.call as a constructor results in a TypeError
          * see ECMA-262 5.1, 15: "None of the built-in functions described in this clause that 
          *   are not constructors shall implement the [[Construct]] internal method unless otherwise 
          *   specified" */
         if(!site.getDeclaredTarget().equals(JavaScriptMethods.ctorReference)) {
-          return getFunctionCallTarget(caller, site, receiver);
-        } else {
-          // TODO: we know that this invocation would lead to a type error; how do we express this as a call target?
-          if(WARN_ABOUT_NEW_CALL) {
-            IntIterator indices = caller.getIR().getCallInstructionIndices(site).intIterator();
-            IMethod callerMethod = caller.getMethod();
-            Position pos = null;
-            if(indices.hasNext() && callerMethod instanceof AstMethod) {
-              pos = ((AstMethod)callerMethod).getSourcePosition(indices.next());
-            }
-            System.err.println("Detected constructor call to Function.prototype.call " +
-                (pos == null ? "" : "at position " + pos) +
-                "; this is likely caused by call graph imprecision.");
-          }
+          IMethod target = getFunctionCallTarget(caller, site, receiver);
+          if(target != null)
+            return target;
         }
->>>>>>> Improved target selector for Function.prototype.call to handle cases
+        // if we get here, we either saw an invocation of "call" as a constructor, or an invocation 
+        // without receiver object; in either case, this is likely due to bad call graph info
+        if(WARN_ABOUT_IMPRECISE_CALLGRAPH)
+          warnAboutImpreciseCallGraph(caller, site);
       }
     }
     return base.getCalleeTarget(caller, site, receiver);
+  }
+
+  protected void warnAboutImpreciseCallGraph(CGNode caller, CallSiteReference site) {
+    IntIterator indices = caller.getIR().getCallInstructionIndices(site).intIterator();
+    IMethod callerMethod = caller.getMethod();
+    Position pos = null;
+    if(indices.hasNext() && callerMethod instanceof AstMethod) {
+      pos = ((AstMethod)callerMethod).getSourcePosition(indices.next());
+    }
+    System.err.println("Detected improbable call to Function.prototype.call " +
+        (pos == null ? "in function " + caller.getMethod() : "at position " + pos) +
+        "; this is likely caused by call graph imprecision.");
   }
   
   private static final boolean SEPARATE_SYNTHETIC_METHOD_PER_SITE = true;
@@ -115,14 +120,28 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
   private IMethod getFunctionCallTarget(CGNode caller, CallSiteReference site, IClass receiver) {
     int nargs = getNumberOfArgsPassed(caller, site);
     if(nargs < 2)
-      Assertions.UNREACHABLE("Call to Function.prototype.call without receiver; this shouldn't be possible.");
-    Object key = getKey(nargs, caller, site);
+      return null;
+    String key = getKey(nargs, caller, site);
     if (callModels.containsKey(key)) {
       return callModels.get(key);
     }
     JSInstructionFactory insts = (JSInstructionFactory) receiver.getClassLoader().getInstructionFactory();
     MethodReference ref = genSyntheticMethodRef(receiver, nargs, key);
     JavaScriptSummary S = new JavaScriptSummary(ref, nargs);
+    
+    if(WARN_ABOUT_IMPRECISE_CALLGRAPH && caller.getMethod().getName().toString().contains(SYNTHETIC_CALL_METHOD_PREFIX))
+      warnAboutImpreciseCallGraph(caller, site);
+    
+    // print information about where the method was created if desired 
+    if(DEBUG_SYNTHETIC_CALL_METHODS) {
+      IMethod method = caller.getMethod();
+      if(method instanceof AstMethod) {
+        int line = ((AstMethod)method).getLineNumber(caller.getIR().getCallInstructionIndices(site).intIterator().next());
+        System.err.println("creating " + ref.getName() + " at line " + line + " in " + caller);
+      } else {
+        System.err.println("creating " + ref.getName() + " in " + method.getName());
+      }
+    }
 
     // generate invocation instruction for the real method being invoked
     int resultVal = nargs + 2;
@@ -147,24 +166,18 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
 
   public static final String SYNTHETIC_CALL_METHOD_PREFIX = "$$ call_";
 
-  private MethodReference genSyntheticMethodRef(IClass receiver, int nargs, Object key) {
-    Atom atom = null;
-    if (key instanceof Pair) {
-      Pair p = (Pair) key;
-      atom = Atom.findOrCreateUnicodeAtom(SYNTHETIC_CALL_METHOD_PREFIX + p.fst + "_" + p.snd);
-    } else {
-      atom = Atom.findOrCreateUnicodeAtom(SYNTHETIC_CALL_METHOD_PREFIX + nargs);
-    }
+  private MethodReference genSyntheticMethodRef(IClass receiver, int nargs, String key) {
+    Atom atom = Atom.findOrCreateUnicodeAtom(SYNTHETIC_CALL_METHOD_PREFIX + key);
     Descriptor desc = Descriptor.findOrCreateUTF8(JavaScriptLoader.JS, "()LRoot;");
     MethodReference ref = MethodReference.findOrCreate(receiver.getReference(), atom, desc);
     return ref;
   }
 
-  private Object getKey(int nargs, CGNode caller, CallSiteReference site) {
+  private String getKey(int nargs, CGNode caller, CallSiteReference site) {
     if (SEPARATE_SYNTHETIC_METHOD_PER_SITE) {
-      return Pair.make(caller.getGraphNodeId(), site.getProgramCounter());
+      return Util.getShortName(caller) + "_" + caller.getGraphNodeId() + "_" + site.getProgramCounter();
     } else {
-      return nargs;
+      return ""+nargs;
     }
   }
 
