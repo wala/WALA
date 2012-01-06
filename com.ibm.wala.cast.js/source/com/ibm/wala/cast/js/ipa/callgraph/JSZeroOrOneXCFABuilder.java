@@ -51,7 +51,6 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
     contextSelector = new ScopeMappingKeysContextSelector(contextSelector);
     contextSelector = new JavaScriptConstructorContextSelector(contextSelector);
-    contextSelector = new JavaScriptFunctionDotCallContextSelector(contextSelector);
     if (HANDLE_FUNCTION_APPLY) {
       contextSelector = new JavaScriptFunctionApplyContextSelector(contextSelector);
     }
