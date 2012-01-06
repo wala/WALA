@@ -172,7 +172,7 @@ public class ForInContextSelector implements ContextSelector {
     Context baseContext = base.getCalleeTarget(caller, site, callee, receiver);
     String calleeFullName = callee.getDeclaringClass().getName().toString();
     String calleeShortName = calleeFullName.substring(calleeFullName.lastIndexOf('/')+1);
-    if (calleeShortName.startsWith(HACK_METHOD_STR)) {
+    if (calleeShortName.startsWith(HACK_METHOD_STR) && receiver.length > 2) {
       InstanceKey loopVar = receiver[2];
       IClass stringClass = caller.getClassHierarchy().lookupClass(JavaScriptTypes.String);
       if(loopVar instanceof ConstantKey) {
