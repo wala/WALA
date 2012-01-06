@@ -1550,7 +1550,7 @@ public class RhinoToAstTranslator {
     case Token.IN: {
       Node value = n.getFirstChild();
       Node property = value.getNext();
-      return Ast.makeNode(CAstNode.IS_DEFINED_EXPR, walkNodes(value, context), walkNodes(property, context));
+      return Ast.makeNode(CAstNode.IS_DEFINED_EXPR, walkNodes(property, context), walkNodes(value, context));
     }
 
     default: {
