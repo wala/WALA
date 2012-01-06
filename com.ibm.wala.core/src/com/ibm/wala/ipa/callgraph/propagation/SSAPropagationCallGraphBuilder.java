@@ -1575,20 +1575,21 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     public byte evaluate(PointsToSetVariable lhs, final PointsToSetVariable[] rhs) {
       assert dispatchIndices.length >= rhs.length : "bad operator at " + call;
       final MutableBoolean sideEffect = new MutableBoolean();
-      for(PointsToSetVariable v : rhs) {
-        if (v.getValue() == null) {
-          // this constraint was put on the work list, probably by
-          // initialization,
-          // even though the right-hand-side is empty.
-          // TODO: be more careful about what goes on the worklist to
-          // avoid this.
-          if (DEBUG) {
-            System.err.println("EVAL dispatch with value null");
-          }
-          return NOT_CHANGED;
+      // NOTE: we allow the value of points-to set variables other than rhs[0]
+      // to be null.  rhs[0] is the receiver, so to avoid an exception it must be
+      // non-empty, but empty points-to sets in other slots are allowed.
+      if (rhs[0].getValue() == null) {
+        // this constraint was put on the work list, probably by
+        // initialization,
+        // even though the right-hand-side is empty.
+        // TODO: be more careful about what goes on the worklist to
+        // avoid this.
+        if (DEBUG) {
+          System.err.println("EVAL dispatch with value null");
         }
+        return NOT_CHANGED;        
+        
       }
- 
       new Object() {
         InstanceKey keys[] = new InstanceKey[constParams == null? dispatchIndices[dispatchIndices.length-1]+1: constParams.length];
         void rec(int index, int rhsIndex, boolean redundant) {
@@ -1602,11 +1603,16 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
               }
             } else {
               PointsToSetVariable v = rhs[rhsIndex];
-              IntIterator ptrs = v.getValue().intIterator();
-              while (ptrs.hasNext()) {
-                int ptr = ptrs.next();
-                keys[dispatchIndices[index]] = system.getInstanceKey(ptr);
-                rec(index+1, rhsIndex+1, redundant & previousPtrs[index].contains(ptr));
+              if (v.getValue() != null) {
+                IntIterator ptrs = v.getValue().intIterator();
+                while (ptrs.hasNext()) {
+                  int ptr = ptrs.next();
+                  keys[dispatchIndices[index]] = system.getInstanceKey(ptr);
+                  rec(index+1, rhsIndex+1, redundant & previousPtrs[index].contains(ptr));
+                }
+              } else {
+                keys[dispatchIndices[index]] = null;
+                rec(index+1, rhsIndex+1, redundant);                
               }
             }
           } else if (!redundant) {
@@ -1659,7 +1665,10 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             previousPtrs[i].add(system.instanceKeys.getMappedIndex(constParams[i][ci]));
           }
         } else {
-          previousPtrs[i].addAll(rhs[ri++].getValue());
+          if (rhs[ri].getValue() != null) {
+            previousPtrs[i].addAll(rhs[ri].getValue());
+          }
+          ri++;
         }
       }
       
