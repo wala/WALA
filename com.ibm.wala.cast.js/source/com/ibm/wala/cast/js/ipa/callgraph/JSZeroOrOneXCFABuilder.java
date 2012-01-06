@@ -16,6 +16,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.impl.ContextInsensitiveSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
@@ -30,7 +31,9 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  */
 public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
 
-  private static final boolean HANDLE_FUNCTION_APPLY = true;
+  private static final boolean HANDLE_FUNCTION_PROTOTYPE_CALL = true;
+  
+  private static final boolean HANDLE_FUNCTION_PROTOTYPE_APPLY = true;
   private static final boolean USE_OBJECT_SENSITIVITY = true;
 
   public JSZeroOrOneXCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
@@ -38,15 +41,19 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     super(cha, options, cache);
 
     SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha);
-    if (HANDLE_FUNCTION_APPLY) {
+    if (HANDLE_FUNCTION_PROTOTYPE_APPLY) {
       contextInterpreter = new DelegatingSSAContextInterpreter(new JavaScriptFunctionApplyContextInterpreter(options, cache),
           contextInterpreter);
     }
     setContextInterpreter(contextInterpreter);
 
-    options.setSelector(new JavaScriptFunctionDotCallTargetSelector(new JavaScriptConstructTargetSelector(cha, options
-        .getMethodTargetSelector())));
-    options.setSelector(new LoadFileTargetSelector(options.getMethodTargetSelector(), this));
+    MethodTargetSelector targetSelector = new JavaScriptConstructTargetSelector(cha, options
+        .getMethodTargetSelector());
+    if (HANDLE_FUNCTION_PROTOTYPE_CALL) {
+      targetSelector = new JavaScriptFunctionDotCallTargetSelector(targetSelector);
+    }
+    targetSelector = new LoadFileTargetSelector(targetSelector, this);
+    options.setSelector(targetSelector);
 
     ContextSelector def = new ContextInsensitiveSelector();
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
@@ -55,7 +62,7 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     if (USE_OBJECT_SENSITIVITY) {
       contextSelector = new ObjectSensitivityContextSelector(contextSelector);
     }
-    if (HANDLE_FUNCTION_APPLY) {
+    if (HANDLE_FUNCTION_PROTOTYPE_APPLY) {
       contextSelector = new JavaScriptFunctionApplyContextSelector(contextSelector);
     }
     contextSelector = new LexicalScopingResolverContexts(this, contextSelector);
