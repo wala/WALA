@@ -292,22 +292,16 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
       }
     }
 
-    @Override
-    public String toString() {
-      StringBuilder result = new StringBuilder();
-      result.append("CGNodeResolver[myDefiner=");
-      result.append(myDefiner);
-      // result.append(", myNode=");
-      // result.append(myNode);
-//      result.append(",\n myReadOnlyDefs=");
-//      result.append(myReadOnlyDefs);
-//      result.append(",\n myDefs=");
-//      result.append(myDefs);
-      result.append(",\n parent=");
-      result.append(parent);
-      result.append("]");
-      return result.toString();
-    }
+//    @Override
+//    public String toString() {
+//      StringBuilder result = new StringBuilder();
+//      result.append("CGNodeResolver[myDefiner=");
+//      result.append(myDefiner);
+//      result.append(",\n parent=");
+//      result.append(parent);
+//      result.append("]");
+//      return result.toString();
+//    }
 
   }
 
