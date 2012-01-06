@@ -10,6 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.loader;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Collections;
@@ -57,6 +58,8 @@ import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.cast.tree.impl.CAstRewriter;
+import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -572,10 +575,17 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
   private static final Map<Atom, IField> emptyMap2 = Collections.emptyMap();
 
   private final JavaScriptTranslatorFactory translatorFactory;
-
+  
+  private final CAstRewriterFactory preprocessor;
+  
   public JavaScriptLoader(IClassHierarchy cha, JavaScriptTranslatorFactory translatorFactory) {
+    this(cha, translatorFactory, null);
+  }
+
+  public JavaScriptLoader(IClassHierarchy cha, JavaScriptTranslatorFactory translatorFactory, CAstRewriterFactory preprocessor) {
     super(cha);
     this.translatorFactory = translatorFactory;
+    this.preprocessor = preprocessor;
   }
 
   class JavaScriptClass extends AstClass {
@@ -859,8 +869,20 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
   }
 
   @Override
-  protected TranslatorToCAst getTranslatorToCAst(CAst ast, SourceModule module) {
-    return translatorFactory.make(ast, module);
+  protected TranslatorToCAst getTranslatorToCAst(final CAst ast, SourceModule module) {
+    final TranslatorToCAst baseTranslator = translatorFactory.make(ast, module);
+    return new TranslatorToCAst() {
+      
+      @Override
+      public CAstEntity translateToCAst() throws IOException {
+        CAstEntity e = baseTranslator.translateToCAst();
+        if(preprocessor != null) {
+          CAstRewriter rewriter = preprocessor.createCAstRewriter(ast);
+          e = rewriter.rewrite(e);
+        }
+        return e;
+      }
+    };
   }
 
   @Override

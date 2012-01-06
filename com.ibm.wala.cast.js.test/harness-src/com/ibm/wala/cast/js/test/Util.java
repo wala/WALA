@@ -87,7 +87,7 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
   public static JSCFABuilder makeHTMLCGBuilder(URL url) throws IOException {
     JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
     Set<MappedSourceModule> script = WebUtil.extractScriptFromHTML(url);
-    JSCFABuilder builder = makeCGBuilder(new WebPageLoaderFactory(translatorFactory), script.toArray(new SourceModule[script.size()]), false);
+    JSCFABuilder builder = makeCGBuilder(new WebPageLoaderFactory(translatorFactory, preprocessor), script.toArray(new SourceModule[script.size()]), false);
     builder.setBaseURL(url);
     return builder;
   }

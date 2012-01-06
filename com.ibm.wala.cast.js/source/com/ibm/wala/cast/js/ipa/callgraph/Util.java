@@ -16,6 +16,8 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import com.ibm.wala.cast.ipa.callgraph.StandardFunctionTargetSelector;
@@ -30,6 +32,7 @@ import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
+import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
 import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.cast.util.CAstPrinter;
@@ -59,6 +62,11 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
    * needed instead of using a global?
    */
   protected static JavaScriptTranslatorFactory translatorFactory;
+  
+  /**
+   * preprocessors to run generated CAst trees through, null if none
+   */
+  protected static CAstRewriterFactory preprocessor;
 
   /**
    * Set up the translator factory. This method should be called before invoking
@@ -70,6 +78,10 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
 
   public static JavaScriptTranslatorFactory getTranslatorFactory() {
     return translatorFactory;
+  }
+  
+  public static void setPreprocessor(CAstRewriterFactory preprocessor) {
+    Util.preprocessor = preprocessor;
   }
 
   public static AnalysisOptions makeOptions(AnalysisScope scope, IClassHierarchy cha, Iterable<Entrypoint> roots) {
@@ -93,7 +105,7 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
     if (translatorFactory == null) {
       throw new IllegalStateException("com.ibm.wala.cast.js.ipa.callgraph.Util.setTranslatorFactory() must be invoked before makeLoaders()");
     }
-    return new JavaScriptLoaderFactory(translatorFactory);
+    return new JavaScriptLoaderFactory(translatorFactory, preprocessor);
   }
 
   public static IClassHierarchy makeHierarchy(AnalysisScope scope, ClassLoaderFactory loaders) throws ClassHierarchyException {

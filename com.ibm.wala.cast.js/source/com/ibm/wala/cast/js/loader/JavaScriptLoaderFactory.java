@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.loader;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.loader.SingleClassLoaderFactory;
+import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -22,13 +23,19 @@ import com.ibm.wala.types.ClassLoaderReference;
  */
 public class JavaScriptLoaderFactory extends SingleClassLoaderFactory {
   protected final JavaScriptTranslatorFactory translatorFactory;
-
+  protected final CAstRewriterFactory preprocessor;
+  
   public JavaScriptLoaderFactory(JavaScriptTranslatorFactory factory) {
+    this(factory, null);
+  }
+
+  public JavaScriptLoaderFactory(JavaScriptTranslatorFactory factory, CAstRewriterFactory preprocessor) {
     this.translatorFactory = factory;
+    this.preprocessor = preprocessor;
   }
 
   protected IClassLoader makeTheLoader(IClassHierarchy cha) {
-    return new JavaScriptLoader( cha, translatorFactory );
+    return new JavaScriptLoader( cha, translatorFactory, preprocessor );
   }
 
   public ClassLoaderReference getTheReference() {
