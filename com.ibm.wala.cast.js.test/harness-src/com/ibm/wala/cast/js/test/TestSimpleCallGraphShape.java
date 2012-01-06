@@ -337,6 +337,26 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     CallGraph CG = Util.makeScriptCG("tests", "function_apply2.js");
     verifyGraphAssertions(CG, assertionsForFunctionApply2);
   }
+  
+  private static final Object[][] assertionsForWrap1 = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/wrap1.js" } },
+    new Object[] { "suffix:wrap1.js", new String[] { "suffix:i_am_reachable" } } };
+
+  @Test
+  public void testWrap1() throws IllegalArgumentException, IOException, CancelException {
+    CallGraph CG = Util.makeScriptCG("tests", "wrap1.js");
+    verifyGraphAssertions(CG, assertionsForWrap1);
+  }
+
+  private static final Object[][] assertionsForWrap2 = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/wrap2.js" } },
+    new Object[] { "suffix:wrap2.js", new String[] { "suffix:i_am_reachable" } } };
+
+  @Test
+  public void testWrap2() throws IllegalArgumentException, IOException, CancelException {
+    CallGraph CG = Util.makeScriptCG("tests", "wrap2.js");
+    verifyGraphAssertions(CG, assertionsForWrap2);
+  }
 
   private static final Object[][] assertionsForComplexCall = new Object[][] {
     new Object[] { ROOT, new String[] { "tests/complex_call.js" } },
@@ -345,6 +365,8 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   @Test
   public void testComplexCall() throws IOException, IllegalArgumentException, CancelException {
     CallGraph CG = Util.makeScriptCG("tests", "complex_call.js");
+    for(CGNode nd : CG)
+      System.out.println(nd);
     verifyGraphAssertions(CG, assertionsForComplexCall);
   }
 
