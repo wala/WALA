@@ -355,8 +355,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 
   @Test
   public void testGlobalObjPassing() throws IOException, IllegalArgumentException, CancelException {
-    Util.makeScriptCG("tests", "global_object.js");
+    CallGraph CG = Util.makeScriptCG("tests", "global_object.js");
+    verifyGraphAssertions(CG, assertionsForGlobalObj);
   }
+
   protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {
 
     // Created by reversing the points to mapping for local pointer keys.
