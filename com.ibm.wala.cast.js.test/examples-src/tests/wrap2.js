@@ -6,10 +6,10 @@ Function.prototype.wrap = function f_wrap(){
 };
 
 
-Function.prototype.extend = function f_extend(thi$, key, value){
+var extend = function f_extend(thi$, key, value){
 	thi$[key] = value;
 }.wrap();
 
-Number.extend(Number, 'g', function i_am_reachable(x){ return x+19; });
+extend(Number, 'g', function i_am_reachable(x){ return x+19; });
 
-print(Number.g(23));
+Number.g(23);
