@@ -40,7 +40,7 @@ public class JsViewerDriver extends Util {
 
 		SourceModule[] sources = getSources(domless, url);
 		
-		JSCFABuilder builder = makeCGBuilder(new WebPageLoaderFactory(translatorFactory), sources, false);
+		JSCFABuilder builder = makeCGBuilder(new WebPageLoaderFactory(translatorFactory), sources, false, true);
     builder.setBaseURL(url);
 
 		CallGraph cg = builder.makeCallGraph(builder.getOptions());

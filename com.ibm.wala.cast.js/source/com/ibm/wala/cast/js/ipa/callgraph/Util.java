@@ -58,12 +58,12 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
    * the translator factory to be used for analysis TODO: pass the factory where
    * needed instead of using a global?
    */
-  protected static JavaScriptTranslatorFactory translatorFactory;
+  public static JavaScriptTranslatorFactory translatorFactory;
   
   /**
    * preprocessor to run generated CAst trees through, null if none
    */
-  protected static CAstRewriterFactory preprocessor;
+  public static CAstRewriterFactory preprocessor;
 
   /**
    * Set up the translator factory. This method should be called before invoking

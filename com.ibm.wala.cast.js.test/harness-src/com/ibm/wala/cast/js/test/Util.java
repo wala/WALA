@@ -37,8 +37,10 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
+/**
+ * TODO this class is a mess.  rewrite.
+ */
 public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
 
   public static JSCFABuilder makeScriptCGBuilder(String dir, String name, boolean useOneCFA) throws IOException {
@@ -57,7 +59,7 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
       scope = makeScope(new SourceFileModule[] { makeSourceModule(script, dir, name) }, loaders, JavaScriptLoader.JS);
     }
 
-    return makeCG(loaders, scope, useOneCFA);
+    return makeCG(loaders, scope, useOneCFA, true);
   }
 
   public static JSCFABuilder makeScriptCGBuilder(String dir, String name) throws IOException {
@@ -78,16 +80,19 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
 
   public static CallGraph makeScriptCG(SourceModule[] scripts, boolean useOneCFA) throws IOException, IllegalArgumentException,
       CancelException {
-    PropagationCallGraphBuilder b = makeCGBuilder(makeLoaders(), scripts, useOneCFA);
+    PropagationCallGraphBuilder b = makeCGBuilder(makeLoaders(), scripts, useOneCFA, true);
     CallGraph CG = b.makeCallGraph(b.getOptions());
     dumpCG(b.getPointerAnalysis(), CG);
     return CG;
   }
 
   public static JSCFABuilder makeHTMLCGBuilder(URL url) throws IOException {
+    return makeHTMLCGBuilder(url, true);
+  }
+  public static JSCFABuilder makeHTMLCGBuilder(URL url, boolean handleCallApply) throws IOException {
     JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
     Set<MappedSourceModule> script = WebUtil.extractScriptFromHTML(url);
-    JSCFABuilder builder = makeCGBuilder(new WebPageLoaderFactory(translatorFactory, preprocessor), script.toArray(new SourceModule[script.size()]), false);
+    JSCFABuilder builder = makeCGBuilder(new WebPageLoaderFactory(translatorFactory, preprocessor), script.toArray(new SourceModule[script.size()]), false, handleCallApply);
     builder.setBaseURL(url);
     return builder;
   }
@@ -99,24 +104,25 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
     return CG;
   }
 
-  public static CallGraph makeHTMLCG(URL url, IProgressMonitor monitor) throws IOException, IllegalArgumentException,
+  public static CallGraph makeHTMLCG(URL url, boolean handleCallApply) throws IOException, IllegalArgumentException,
       CancelException {
-    PropagationCallGraphBuilder b = makeHTMLCGBuilder(url);
-    CallGraph CG = b.makeCallGraph(b.getOptions(), monitor);
+    PropagationCallGraphBuilder b = makeHTMLCGBuilder(url, handleCallApply);
+    CallGraph CG = b.makeCallGraph(b.getOptions());
     return CG;
   }
 
-  public static JSCFABuilder makeCGBuilder(JavaScriptLoaderFactory loaders, SourceModule[] scripts, boolean useOneCFA) throws IOException {
+  public static JSCFABuilder makeCGBuilder(JavaScriptLoaderFactory loaders, SourceModule[] scripts, boolean useOneCFA, boolean handleCallApply) throws IOException {
     AnalysisScope scope = makeScope(scripts, loaders, JavaScriptLoader.JS);
-    return makeCG(loaders, scope, useOneCFA);
+    return makeCG(loaders, scope, useOneCFA, handleCallApply);
   }
 
-  protected static JSCFABuilder makeCG(JavaScriptLoaderFactory loaders, AnalysisScope scope, boolean useOneCFA) throws IOException {
+  protected static JSCFABuilder makeCG(JavaScriptLoaderFactory loaders, AnalysisScope scope, boolean useOneCFA, boolean handleCallApply) throws IOException {
     try {
       IClassHierarchy cha = makeHierarchy(scope, loaders);
       com.ibm.wala.cast.test.Util.checkForFrontEndErrors(cha);
       Iterable<Entrypoint> roots = makeScriptRoots(cha);
       JSAnalysisOptions options = makeOptions(scope, cha, roots);
+      options.setHandleCallApply(handleCallApply);
       AnalysisCache cache = makeCache();
 
       JSCFABuilder builder = new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, ZeroXInstanceKeys.ALLOCATIONS, useOneCFA);
