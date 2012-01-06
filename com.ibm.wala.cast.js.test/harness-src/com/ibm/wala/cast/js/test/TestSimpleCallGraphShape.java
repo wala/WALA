@@ -471,6 +471,18 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForFunctionIsAFunction);
   }
   
+  private static final Object[][] assertionsForLexicalBroken = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/lexical_broken.js" } },
+    new Object[] { "suffix:lexical_broken.js", new String[] { "suffix:f" } },
+    new Object[] { "suffix:f", new String[] { "suffix:g" } }
+  };
+  
+  @Test
+  public void testLexicalBroken() throws IOException, IllegalArgumentException, CancelException {
+    CallGraph CG = Util.makeScriptCG("tests", "lexical_broken.js");
+    verifyGraphAssertions(CG, assertionsForLexicalBroken);
+  }
+  
   protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {
 
     // Created by reversing the points to mapping for local pointer keys.
