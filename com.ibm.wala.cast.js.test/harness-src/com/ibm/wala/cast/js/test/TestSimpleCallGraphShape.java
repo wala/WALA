@@ -299,8 +299,6 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     // all we need is for it to finish building CG successfully.
   }
 
-  private static final Object[][] assertionsForFunctionDotCall = new Object[][] { new Object[] { "suffix:call4",
-      new String[] { "suffix:foo", "suffix:bar" } } };
 
   @Test
   public void testFunctionDotCall() throws IOException, IllegalArgumentException, CancelException {
@@ -323,6 +321,17 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     Util.makeScriptCG("tests", "function_apply.js");
     // TODO assert that bar() is reachable
   }
+
+  private static final Object[][] assertionsForComplexCall = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/complex_call.js" } },
+    new Object[] { "suffix:call.js", new String[] { "suffix:f3" } } };
+
+  @Test
+  public void testComplexCall() throws IOException, IllegalArgumentException, CancelException {
+    CallGraph CG = Util.makeScriptCG("tests", "complex_call.js");
+    verifyGraphAssertions(CG, assertionsForComplexCall);
+  }
+
 
   protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {
 

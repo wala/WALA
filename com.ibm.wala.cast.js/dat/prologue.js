@@ -129,6 +129,8 @@ Function.prototype = {
 /* Array properties, see spec 15.4					*/
 /************************************************************************/
 
+Array.__proto__ = Function.prototype;
+
 Array.prototype = {
 
   __proto__: Object.prototype,
@@ -248,6 +250,8 @@ Array.prototype = {
 /* String properties, see spec 15.4					*/
 /************************************************************************/
 
+String.__proto__ = Function.prototype;
+
 String.prototype = {
 
   __proto__: Object.prototype,
@@ -323,6 +327,8 @@ String.prototype = {
 /************************************************************************/
 /* Number properties, see spec 15.7					*/
 /************************************************************************/
+
+Number.__proto__ = Function.prototype;
 
 Number.prototype = {
 
@@ -411,6 +417,8 @@ Math = {
 /************************************************************************/
 /* RegExp properties, see spec 15.10					*/
 /************************************************************************/
+
+RegExp.__proto__ = Function.prototype;
 
 RegExp.prototype = {
 
