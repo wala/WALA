@@ -31,6 +31,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
 
   private static final boolean HANDLE_FUNCTION_APPLY = true;
+  private static final boolean USE_OBJECT_SENSITIVITY = true;
 
   public JSZeroOrOneXCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy, boolean doOneCFA) {
@@ -51,6 +52,9 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
     contextSelector = new ScopeMappingKeysContextSelector(contextSelector);
     contextSelector = new JavaScriptConstructorContextSelector(contextSelector);
+    if (USE_OBJECT_SENSITIVITY) {
+      contextSelector = new ObjectSensitivityContextSelector(contextSelector);
+    }
     if (HANDLE_FUNCTION_APPLY) {
       contextSelector = new JavaScriptFunctionApplyContextSelector(contextSelector);
     }
