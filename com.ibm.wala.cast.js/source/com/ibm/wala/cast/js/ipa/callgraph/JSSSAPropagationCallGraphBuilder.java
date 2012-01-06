@@ -335,7 +335,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     return new JSConstraintVisitor(this, node);
   }
 
-  private Position getSomePositionForMethod(IR ir, AstMethod method) {
+  public static Position getSomePositionForMethod(IR ir, AstMethod method) {
     SSAInstruction[] instructions = ir.getInstructions();
     for (int i = 0; i < instructions.length; i++) {
       Position p = method.getSourcePosition(i);
