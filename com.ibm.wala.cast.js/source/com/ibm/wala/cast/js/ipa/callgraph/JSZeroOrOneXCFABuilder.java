@@ -16,7 +16,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
+import com.ibm.wala.ipa.callgraph.impl.ContextInsensitiveSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter;
@@ -48,7 +48,7 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
         .getMethodTargetSelector())));
     options.setSelector(new LoadFileTargetSelector(options.getMethodTargetSelector(), this));
 
-    ContextSelector def = new DefaultContextSelector(options, cha);
+    ContextSelector def = new ContextInsensitiveSelector();
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
     contextSelector = new ScopeMappingKeysContextSelector(contextSelector);
     contextSelector = new JavaScriptConstructorContextSelector(contextSelector);
