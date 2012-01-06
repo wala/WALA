@@ -25,44 +25,59 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.nCFAContextSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * 0-x-CFA Call graph builder, optimized to not disambiguate instances of "uninteresting" types
+ * 0-x-CFA Call graph builder, optimized to not disambiguate instances of
+ * "uninteresting" types
  */
 public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
 
+  private static final boolean HANDLE_FUNCTION_APPLY = true;
+
   public JSZeroOrOneXCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
-      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy,
-      boolean doOneCFA) {
+      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy, boolean doOneCFA) {
     super(cha, options, cache);
 
     SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha);
-    contextInterpreter = new DelegatingSSAContextInterpreter(new JavaScriptFunctionApplyContextInterpreter(options, cache), contextInterpreter);
+    if (HANDLE_FUNCTION_APPLY) {
+      contextInterpreter = new DelegatingSSAContextInterpreter(new JavaScriptFunctionApplyContextInterpreter(options, cache),
+          contextInterpreter);
+    }
     setContextInterpreter(contextInterpreter);
 
-    options.setSelector(new JavaScriptFunctionDotCallTargetSelector(cha, new JavaScriptConstructTargetSelector(cha, options.getMethodTargetSelector())));
+    options.setSelector(new JavaScriptFunctionDotCallTargetSelector(cha, new JavaScriptConstructTargetSelector(cha, options
+        .getMethodTargetSelector())));
     options.setSelector(new LoadFileTargetSelector(options.getMethodTargetSelector(), this));
-    
+
     ContextSelector def = new DefaultContextSelector(options, cha);
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
     contextSelector = new ScopeMappingKeysContextSelector(contextSelector);
     contextSelector = new JavaScriptConstructorContextSelector(contextSelector);
-    contextSelector = new JavaScriptFunctionApplyContextSelector(contextSelector);
+    if (HANDLE_FUNCTION_APPLY) {
+      contextSelector = new JavaScriptFunctionApplyContextSelector(contextSelector);
+    }
     contextSelector = new LexicalScopingResolverContexts(this, contextSelector);
     if (doOneCFA) {
       contextSelector = new nCFAContextSelector(1, contextSelector);
     }
     setContextSelector(contextSelector);
 
-    setInstanceKeys(new JavaScriptScopeMappingInstanceKeys(cha, this, new JavaScriptConstructorInstanceKeys(new ZeroXInstanceKeys(options, cha, contextInterpreter,
-        instancePolicy))));
+    setInstanceKeys(new JavaScriptScopeMappingInstanceKeys(cha, this, new JavaScriptConstructorInstanceKeys(new ZeroXInstanceKeys(
+        options, cha, contextInterpreter, instancePolicy))));
   }
 
   /**
-   * @param options options that govern call graph construction
-   * @param cha governing class hierarchy
-   * @param cl classloader that can find DOMO resources
-   * @param scope representation of the analysis scope
-   * @param xmlFiles set of Strings that are names of XML files holding bypass logic specifications.
-   * @param dmd deployment descriptor abstraction
+   * @param options
+   *          options that govern call graph construction
+   * @param cha
+   *          governing class hierarchy
+   * @param cl
+   *          classloader that can find DOMO resources
+   * @param scope
+   *          representation of the analysis scope
+   * @param xmlFiles
+   *          set of Strings that are names of XML files holding bypass logic
+   *          specifications.
+   * @param dmd
+   *          deployment descriptor abstraction
    * @return a 0-1-Opt-CFA Call Graph Builder.
    */
   public static JSCFABuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, ClassLoader cl,
