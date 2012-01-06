@@ -16,8 +16,6 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import com.ibm.wala.cast.ipa.callgraph.StandardFunctionTargetSelector;
@@ -64,7 +62,7 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
   protected static JavaScriptTranslatorFactory translatorFactory;
   
   /**
-   * preprocessors to run generated CAst trees through, null if none
+   * preprocessor to run generated CAst trees through, null if none
    */
   protected static CAstRewriterFactory preprocessor;
 

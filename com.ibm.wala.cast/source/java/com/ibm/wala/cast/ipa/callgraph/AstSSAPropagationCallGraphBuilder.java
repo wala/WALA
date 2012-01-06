@@ -906,7 +906,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
             while (insts.hasNext()) {
               SSAInstruction inst = insts.next();
               if (inst instanceof SSAAbstractInvokeInstruction) {
-                System.err.println("clearing for " + inst);
+                //System.err.println("clearing for " + inst);
                 CallSiteReference cs = ((SSAAbstractInvokeInstruction) inst).getCallSite();
                 ((AstCallGraph.AstCGNode) n).clearMutatedCache(cs);
               }
