@@ -670,10 +670,14 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     int paramCount = targetST.getParameterValueNumbers().length;
     int argCount = instruction.getNumberOfParameters();
+    
+    // the first argument is not actually an argument, it is the receiver object; 
+    // we should skip it when setting up the arguments array
+    int num_pseudoargs = 1;
 
     // pass actual arguments to formals in the normal way
     for (int i = 0; i < Math.min(paramCount, argCount); i++) {
-      InstanceKey[] fn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.Number, i) };
+      InstanceKey[] fn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.Number, i-num_pseudoargs) };
       PointerKey F = getTargetPointerKey(target, i);
 
       if (constParams != null && constParams[i] != null) {
@@ -681,14 +685,14 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           system.newConstraint(F, constParams[i][j]);
         }
 
-        if (av != -1)
+        if (av != -1 && i > num_pseudoargs)
           targetVisitor.newFieldWrite(target, av, fn, constParams[i]);
 
       } else {
         PointerKey A = getPointerKeyForLocal(caller, instruction.getUse(i));
         system.newConstraint(F, (F instanceof FilteredPointerKey) ? filterOperator : assignOperator, A);
 
-        if (av != -1)
+        if (av != -1 && i > num_pseudoargs)
           targetVisitor.newFieldWrite(target, av, fn, F);
       }
     }
@@ -697,10 +701,10 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     if (paramCount < argCount) {
       if (av != -1) {
         for (int i = paramCount; i < argCount; i++) {
-          InstanceKey[] fn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.Number, i) };
-          if (constParams != null && constParams[i] != null) {
-            targetVisitor.newFieldWrite(target, av, fn, constParams[i]);
-          } else {
+          InstanceKey[] fn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.Number, i-num_pseudoargs) };
+          if (constParams != null && constParams[i] != null && i > num_pseudoargs) {
+              targetVisitor.newFieldWrite(target, av, fn, constParams[i]);
+          } else if(i > num_pseudoargs) {
             PointerKey A = getPointerKeyForLocal(caller, instruction.getUse(i));
             targetVisitor.newFieldWrite(target, av, fn, A);
           }
@@ -723,7 +727,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     // write `length' in argument objects
     if (av != -1) {
-      InstanceKey[] svn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.Number, argCount) };
+      InstanceKey[] svn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.Number, argCount-1) };
       InstanceKey[] lnv = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.String, "length") };
       targetVisitor.newFieldWrite(target, av, lnv, svn);
     }
