@@ -12,6 +12,12 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 
+/**
+ * 
+ * @see <a
+ *      href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/Apply">MDN
+ *      Function.apply() docs</a>
+ */
 public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
 
   private final ContextSelector base;

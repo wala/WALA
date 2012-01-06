@@ -23,11 +23,8 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * Generate IR to model Function.call() and Function.apply()
+ * Generate IR to model Function.call() 
  * 
- * @see <a
- *      href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/Apply">MDN
- *      Function.apply() docs</a>
  * @see <a
  *      href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/Call">MDN
  *      Function.call() docs</a>
@@ -35,12 +32,12 @@ import com.ibm.wala.util.strings.Atom;
  * @author manu
  * 
  */
-public class JavaScriptFunctionCallApplyTargetSelector implements MethodTargetSelector {
+public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSelector {
 
   private final IClassHierarchy cha;
   private final MethodTargetSelector base;
 
-  public JavaScriptFunctionCallApplyTargetSelector(IClassHierarchy cha, MethodTargetSelector base) {
+  public JavaScriptFunctionDotCallTargetSelector(IClassHierarchy cha, MethodTargetSelector base) {
     this.cha = cha;
     this.base = base;
 
@@ -57,19 +54,12 @@ public class JavaScriptFunctionCallApplyTargetSelector implements MethodTargetSe
   @Override
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
     if (cha.isSubclassOf(receiver, cha.lookupClass(JavaScriptTypes.CodeBody))) {
-      // TODO better way to do these tests
+      // TODO better way to do this test?
       String s = receiver.toString();
       if (s.equals("function Lprologue.js/functionCall")) {
         return getFunctionCallTarget(caller, site, receiver);
-      } else if (s.equals("function Lprologue.js/functionApply")) {
-        return getFunctionApplyTarget(caller, site, receiver);
-      }
+      } 
     }
-    return base.getCalleeTarget(caller, site, receiver);
-  }
-
-  private IMethod getFunctionApplyTarget(CGNode caller, CallSiteReference site, IClass receiver) {
-//    System.err.println("TODO: handle Function.apply()");
     return base.getCalleeTarget(caller, site, receiver);
   }
 

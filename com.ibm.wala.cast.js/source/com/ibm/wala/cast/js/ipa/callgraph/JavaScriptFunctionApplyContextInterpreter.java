@@ -18,8 +18,9 @@ import com.ibm.wala.types.MethodReference;
 /**
  * TODO cache generated IRs
  * 
- * @author manu
- * 
+ * @see <a
+ *      href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/Apply">MDN
+ *      Function.apply() docs</a> *
  */
 public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensitiveSSAContextInterpreter {
 

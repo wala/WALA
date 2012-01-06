@@ -38,7 +38,7 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     contextInterpreter = new DelegatingSSAContextInterpreter(new JavaScriptFunctionApplyContextInterpreter(options, cache), contextInterpreter);
     setContextInterpreter(contextInterpreter);
 
-    options.setSelector(new JavaScriptFunctionCallApplyTargetSelector(cha, new JavaScriptConstructTargetSelector(cha, options.getMethodTargetSelector())));
+    options.setSelector(new JavaScriptFunctionDotCallTargetSelector(cha, new JavaScriptConstructTargetSelector(cha, options.getMethodTargetSelector())));
     options.setSelector(new LoadFileTargetSelector(options.getMethodTargetSelector(), this));
     
     ContextSelector def = new DefaultContextSelector(options, cha);
