@@ -30,7 +30,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  */
 public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
 
-  private static final boolean HANDLE_FUNCTION_APPLY = true;
+  private static final boolean HANDLE_FUNCTION_APPLY = false;
 
   public JSZeroOrOneXCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy, boolean doOneCFA) {
