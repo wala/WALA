@@ -104,8 +104,6 @@ Object.prototype = {
 /* Function properties, see spec 15.3					*/
 /************************************************************************/
 
-Function.__proto__ = Function.prototype;
-
 Function.prototype = {
 
   constructor: Function,
@@ -126,6 +124,7 @@ Function.prototype = {
   }
 };
 
+Function.__proto__ = Function.prototype;
 
 /************************************************************************/
 /* Array properties, see spec 15.4					*/
