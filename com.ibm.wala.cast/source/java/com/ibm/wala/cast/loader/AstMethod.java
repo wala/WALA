@@ -33,29 +33,65 @@ public abstract class AstMethod implements IMethod {
   public interface DebuggingInformation {
 
     Position getCodeBodyPosition();
-      
+
     Position getInstructionPosition(int instructionOffset);
-      
+
     String[][] getSourceNamesForValues();
 
   }
 
+  /**
+   * lexical access information for some entity scope. used during call graph
+   * construction to handle lexical accesses.
+   */
   public interface LexicalInformation {
 
-    public int[] getExitExposedUses();
-	
-    public int[] getExposedUses(int instructionOffset);
-
-    public IntSet getAllExposedUses();
-
+    /**
+     * names possibly accessed in a nested lexical scope, represented as pairs
+     * (name,nameOfDefiningEntity)
+     */
     public Pair<String, String>[] getExposedNames();
 
+    /**
+     * maps each exposed name (via its index in {@link #getExposedNames()}) to
+     * its value number at method exit.
+     */
+    public int[] getExitExposedUses();
+
+    /**
+     * get a map from exposed name (via its index in {@link #getExposedNames()})
+     * to its value number at the instruction at offset instructionOffset.
+     */
+    public int[] getExposedUses(int instructionOffset);
+
+    /**
+     * return all value numbers appearing as entries in either
+     * {@link #getExposedUses(int)} or {@link #getExitExposedUses()}
+     */
+    public IntSet getAllExposedUses();
+
+    /**
+     * return the names of the enclosing methods declaring names that are
+     * lexically accessed by the entity
+     */
     public String[] getScopingParents();
-    
+
+    /**
+     * returns true if name may be read in nested lexical scopes but cannot be
+     * written
+     */
     public boolean isReadOnly(String name);
-    
+
+    /**
+     * invoked to indicate that value numbering may have changed; implementation
+     * should discard any cached information and recompute
+     */
     public void handleAlteration();
-    
+
+    /**
+     * get the name of this entity, as it appears in the definer portion of a
+     * lexical name
+     */
     public String getScopingName();
 
   }
@@ -63,7 +99,7 @@ public abstract class AstMethod implements IMethod {
   protected final IClass cls;
   private final Collection qualifiers;
   private final AbstractCFG cfg;
-  private final SymbolTable symtab; 
+  private final SymbolTable symtab;
   private final MethodReference ref;
   private final boolean hasCatchBlock;
   private final boolean hasMonitorOp;
@@ -71,16 +107,9 @@ public abstract class AstMethod implements IMethod {
   private final AstLexicalInformation lexicalInfo;
   private final DebuggingInformation debugInfo;
 
-  protected AstMethod(IClass cls,
-	      Collection qualifiers,
-	      AbstractCFG cfg,
-	      SymbolTable symtab,
-	      MethodReference ref,
-	      boolean hasCatchBlock,
-	      TypeReference[][] catchTypes,
-          boolean hasMonitorOp,
-	      AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo)
-  {
+  protected AstMethod(IClass cls, Collection qualifiers, AbstractCFG cfg, SymbolTable symtab, MethodReference ref,
+      boolean hasCatchBlock, TypeReference[][] catchTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo,
+      DebuggingInformation debugInfo) {
     this.cls = cls;
     this.cfg = cfg;
     this.ref = ref;
@@ -92,11 +121,8 @@ public abstract class AstMethod implements IMethod {
     this.lexicalInfo = lexicalInfo;
     this.debugInfo = debugInfo;
   }
-  
-  protected AstMethod(IClass cls,
-	      Collection qualifiers,
-	      MethodReference ref)
-  {
+
+  protected AstMethod(IClass cls, Collection qualifiers, MethodReference ref) {
     this.cls = cls;
     this.qualifiers = qualifiers;
     this.ref = ref;
@@ -108,60 +134,59 @@ public abstract class AstMethod implements IMethod {
     this.hasMonitorOp = false;
     this.lexicalInfo = null;
     this.debugInfo = null;
-    
+
     assert isAbstract();
   }
 
   public AbstractCFG cfg() {
     return cfg;
   }
-  
+
   public boolean hasCatchBlock() {
     return hasCatchBlock();
   }
-  
+
   public SymbolTable symbolTable() {
     return symtab;
   }
-  
+
   public TypeReference[][] catchTypes() {
     return catchTypes;
   }
-  
+
   public LexicalInformation cloneLexicalInfo() {
     return new AstLexicalInformation(lexicalInfo);
   }
- 
+
   public LexicalInformation lexicalInfo() {
     return lexicalInfo;
   }
-  
+
   public DebuggingInformation debugInfo() {
     return debugInfo;
   }
-  
+
   /**
-   *  Parents of this method with respect to lexical scoping, that is, 
-   * methods containing state possibly referenced lexically in this
-   * method
+   * Parents of this method with respect to lexical scoping, that is, methods
+   * containing state possibly referenced lexically in this method
    */
   public static abstract class LexicalParent {
     public abstract String getName();
+
     public abstract AstMethod getMethod();
 
-    public int hashCode() { 
-      return getName().hashCode()*getMethod().hashCode(); 
+    public int hashCode() {
+      return getName().hashCode() * getMethod().hashCode();
     }
 
     public boolean equals(Object o) {
-	return (o instanceof LexicalParent) &&
-	    getName().equals(((LexicalParent)o).getName()) && 
-	    getMethod().equals(((LexicalParent)o).getMethod());
+      return (o instanceof LexicalParent) && getName().equals(((LexicalParent) o).getName())
+          && getMethod().equals(((LexicalParent) o).getMethod());
     }
   };
 
   public abstract LexicalParent[] getParents();
-  
+
   public IClass getDeclaringClass() {
     return cls;
   }
