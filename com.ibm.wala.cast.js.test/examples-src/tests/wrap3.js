@@ -2,11 +2,11 @@ function f_wrap() {
 	var y = null;
 	return function wrapper() {
 		return { set: function set(p) {
-			y = p;
-		}, get: function get() {
-			return y;
-		}
-		}
+			        y = p;
+		          }, get: function get() {
+			        return y;
+		          }
+		       };
 	}
 	
 }
