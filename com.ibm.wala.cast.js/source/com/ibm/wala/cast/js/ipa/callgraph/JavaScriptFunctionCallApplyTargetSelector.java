@@ -1,6 +1,7 @@
 package com.ibm.wala.cast.js.ipa.callgraph;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummarizedFunction;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummary;
@@ -21,6 +22,7 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -75,41 +77,57 @@ public class JavaScriptFunctionCallApplyTargetSelector implements MethodTargetSe
   }
 
   /**
-   * generate a synthetic method modeling the invocation of Function.call() at the site
+   * cache synthetic method for each arity of Function.call() invocation
+   */
+  private final Map<Integer, JavaScriptSummarizedFunction> callModels = HashMapFactory.make();
+
+  /**
+   * generate a synthetic method modeling the invocation of Function.call() at
+   * the site
+   * 
    * @param caller
    * @param site
    * @param receiver
    * @return
    */
   private IMethod getFunctionCallTarget(CGNode caller, CallSiteReference site, IClass receiver) {
-    JSInstructionFactory insts = (JSInstructionFactory)receiver.getClassLoader().getInstructionFactory();
-    IR callerIR = caller.getIR();
-    SSAAbstractInvokeInstruction callStmts[] = callerIR.getCalls(site);
-    assert callStmts.length == 1;
-    int nargs = callStmts[0].getNumberOfParameters();
+    int nargs = getNumberOfArgsPassed(caller, site);
+    if (callModels.containsKey(nargs)) {
+      return callModels.get(nargs);
+    }
+    JSInstructionFactory insts = (JSInstructionFactory) receiver.getClassLoader().getInstructionFactory();
     Atom atom = Atom.findOrCreateUnicodeAtom("call" + nargs);
     Descriptor desc = Descriptor.findOrCreateUTF8(JavaScriptLoader.JS, "()LRoot;");
-    MethodReference ref = MethodReference.findOrCreate(receiver.getReference(), atom , desc );
+    MethodReference ref = MethodReference.findOrCreate(receiver.getReference(), atom, desc);
     JavaScriptSummary S = new JavaScriptSummary(ref, nargs);
 
     // generate invocation instruction for the real method being invoked
     int resultVal = nargs + 2;
     CallSiteReference cs = new JSCallSiteReference(S.getNextProgramCounter());
-    int[] params = new int[nargs-2];
+    int[] params = new int[nargs - 2];
     for (int i = 0; i < params.length; i++) {
-      // add 3 to skip v1 (which points to Function.call() itself) and v2 (the real function being invoked)
-      params[i] = i+3;
+      // add 3 to skip v1 (which points to Function.call() itself) and v2 (the
+      // real function being invoked)
+      params[i] = i + 3;
     }
     // function being invoked is in v2
-    S.addStatement(insts.Invoke(2, resultVal, params , resultVal+1, site));
+    S.addStatement(insts.Invoke(2, resultVal, params, resultVal + 1, site));
     S.getNextProgramCounter();
-    
-    
+
     S.addStatement(insts.ReturnInstruction(resultVal, false));
     S.getNextProgramCounter();
 
     JavaScriptSummarizedFunction t = new JavaScriptSummarizedFunction(ref, S, receiver);
+    callModels.put(nargs, t);
     return t;
+  }
+
+  private int getNumberOfArgsPassed(CGNode caller, CallSiteReference site) {
+    IR callerIR = caller.getIR();
+    SSAAbstractInvokeInstruction callStmts[] = callerIR.getCalls(site);
+    assert callStmts.length == 1;
+    int nargs = callStmts[0].getNumberOfParameters();
+    return nargs;
   }
 
 }
