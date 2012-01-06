@@ -184,7 +184,7 @@ Array.prototype = {
   },
 
   push: function push () {
-    var n = this.length
+    var n = this.length;
     for(var i = 0; i < arguments.length; i++) {
       this[ n++ ] = arguments[i];
     }
