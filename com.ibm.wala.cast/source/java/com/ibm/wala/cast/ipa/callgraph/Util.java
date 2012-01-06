@@ -72,7 +72,7 @@ public class Util {
   }
 
   public static void dumpCG(PointerAnalysis PA, CallGraph CG) {
-
+    if (true) return;
     for (Iterator x = CG.iterator(); x.hasNext();) {
       CGNode N = (CGNode) x.next();
       System.err.println("\ncallees of node " + N.getMethod() + " " + N.getGraphNodeId());
