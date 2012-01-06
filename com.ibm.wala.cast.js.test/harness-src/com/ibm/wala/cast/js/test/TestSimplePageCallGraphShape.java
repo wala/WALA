@@ -43,7 +43,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
 
   @Before
   public void config() {
-    JSSourceExtractor.USE_TEMP_NAME = false;
+    JSSourceExtractor.USE_TEMP_NAME = true;
     JSSourceExtractor.DELETE_UPON_EXIT = false;
   }
   
