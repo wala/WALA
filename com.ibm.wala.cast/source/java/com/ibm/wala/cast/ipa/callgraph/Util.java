@@ -36,7 +36,7 @@ public class Util {
   /**
    * flag to prevent dumping of verbose call graph / pointer analysis output
    */
-  private static final boolean AVOID_DUMP = false;
+  private static final boolean AVOID_DUMP = true;
   
   public static SourceFileModule makeSourceModule(URL script, String dir, String name) {
     // DO NOT use File.separator here, since this name is matched against
@@ -76,6 +76,7 @@ public class Util {
     return new AnalysisCache(AstIRFactory.makeDefaultFactory());
   }
 
+  @SuppressWarnings("unused")
   public static void dumpCG(PointerAnalysis PA, CallGraph CG) {
     if (AVOID_DUMP) return;
     for (Iterator x = CG.iterator(); x.hasNext();) {
