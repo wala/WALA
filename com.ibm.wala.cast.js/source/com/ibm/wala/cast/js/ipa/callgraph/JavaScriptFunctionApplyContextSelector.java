@@ -1,5 +1,6 @@
 package com.ibm.wala.cast.js.ipa.callgraph;
 
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -34,16 +35,13 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
     private final Context delegate;
 
     /**
-     * null in the case where no args array is passed
-     * 
-     * TODO strictly speaking, we don't care about the exact InstanceKey per se; we only care about
-     * some of its properties...capture more directly?
+     * was the argsList argument a non-null Array?
      */
-    private final InstanceKey argsList;
+    private final boolean isNonNullArray;
 
-    ApplyContext(Context delegate, InstanceKey argsList) {
+    ApplyContext(Context delegate, boolean isNonNullArray) {
       this.delegate = delegate;
-      this.argsList = argsList;
+      this.isNonNullArray = isNonNullArray;
     }
 
     @Override
@@ -51,16 +49,16 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
       return delegate.get(name);
     }
 
-    public InstanceKey getArgsListKey() {
-      return argsList;
+    public boolean isNonNullArray() {
+      return isNonNullArray;
     }
 
     @Override
     public int hashCode() {
       final int prime = 31;
       int result = 1;
-      result = prime * result + ((argsList == null) ? 0 : argsList.hashCode());
       result = prime * result + ((delegate == null) ? 0 : delegate.hashCode());
+      result = prime * result + (isNonNullArray ? 1231 : 1237);
       return result;
     }
 
@@ -73,49 +71,28 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
       if (getClass() != obj.getClass())
         return false;
       ApplyContext other = (ApplyContext) obj;
-      if (argsList == null) {
-        if (other.argsList != null)
-          return false;
-      } else if (!argsList.equals(other.argsList))
-        return false;
       if (delegate == null) {
         if (other.delegate != null)
           return false;
       } else if (!delegate.equals(other.delegate))
         return false;
+      if (isNonNullArray != other.isNonNullArray)
+        return false;
       return true;
     }
 
-    @Override
-    public String toString() {
-      return "ApplyContext [delegate=" + delegate + ", argsList=" + argsList + "]";
-    }
-    
-    
   }
 
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (callee.toString().equals("<Code body of function Lprologue.js/functionApply>")) {
-      System.err.println("CALLEE: " + callee);
-      InstanceKey argsList = null;
+      boolean isNonNullArray = false;
       if (receiver.length >= 4) {
-        argsList = receiver[3];
-        // System.err.println(argsList);
-        // if
-        // (argsList.getConcreteType().equals(caller.getClassHierarchy().lookupClass(JavaScriptTypes.Array)))
-        // {
-        // System.err.println("it's an array");
-        // PointerKey catalog = ((AstPointerKeyFactory)
-        // builder.getPointerKeyFactory()).getPointerKeyForObjectCatalog(argsList);
-        // System.err.println(catalog);
-        // OrdinalSet<InstanceKey> catalogp2set =
-        // builder.getPointerAnalysis().getPointsToSet(catalog);
-        // System.err.println(catalogp2set);
-        // }
-      } else {
-        System.err.println("no arguments array");
+        InstanceKey argsList = receiver[3];
+        if (argsList.getConcreteType().equals(caller.getClassHierarchy().lookupClass(JavaScriptTypes.Array))) {
+          isNonNullArray = true;
+        }
       }
-      return new ApplyContext(base.getCalleeTarget(caller, site, callee, receiver), argsList);
+      return new ApplyContext(base.getCalleeTarget(caller, site, callee, receiver), isNonNullArray);
     }
     return base.getCalleeTarget(caller, site, callee, receiver);
   }

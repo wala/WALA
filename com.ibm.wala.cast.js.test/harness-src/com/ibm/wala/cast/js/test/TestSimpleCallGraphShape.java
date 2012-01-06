@@ -318,7 +318,9 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 
   private static final Object[][] assertionsForFunctionApply = new Object[][] {
     new Object[] { ROOT, new String[] { "tests/function_apply.js" } },
-    new Object[] { "suffix:function_apply.js", new String[] { "suffix:theOne" } } };
+    new Object[] { "suffix:function_apply.js", new String[] { "suffix:theOne" } }, 
+    new Object[] { "suffix:function_apply.js", new String[] { "suffix:theTwo" } } };
+
 
   @Test
   public void testFunctionDotApply() throws IOException, IllegalArgumentException, CancelException {
