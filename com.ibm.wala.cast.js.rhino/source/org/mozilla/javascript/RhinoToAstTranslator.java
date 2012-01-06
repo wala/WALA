@@ -1107,7 +1107,7 @@ public class RhinoToAstTranslator {
 
     case Token.CALL: {
       if (!isPrimitiveCall(context, n)) {
-        CAstNode base = Ast.makeNode(CAstNode.VAR, Ast.makeConstant("base"));
+        CAstNode base = makeVarRef("base");
         Node callee = n.getFirstChild();
         WalkContext child = new BaseCollectingContext(context, callee, "base");
         CAstNode fun = walkNodes(callee, child);
@@ -1134,11 +1134,11 @@ public class RhinoToAstTranslator {
     }
 
     case Token.THIS: {
-      return Ast.makeNode(CAstNode.VAR, Ast.makeConstant("this"));
+      return makeVarRef("this");
     }
 
     case Token.THISFN: {
-      return Ast.makeNode(CAstNode.VAR, Ast.makeConstant(((FunctionNode) context.top()).getFunctionName()));
+      return makeVarRef(((FunctionNode) context.top()).getFunctionName());
     }
 
     case Token.STRING: {
@@ -1206,7 +1206,7 @@ public class RhinoToAstTranslator {
         if (nm.getFirstChild() != null) {
           WalkContext child = new ExpressionContext(context);
 
-          result.add(Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(nm.getString())),
+          result.add(Ast.makeNode(CAstNode.ASSIGN, makeVarRef(nm.getString()),
               walkNodes(nm.getFirstChild(), child)));
 
         }
@@ -1244,11 +1244,11 @@ public class RhinoToAstTranslator {
     }
 
     case Token.ENUM_ID: {
-      return Ast.makeNode(CAstNode.EACH_ELEMENT_GET, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(context.getForInInitVar())));
+      return Ast.makeNode(CAstNode.EACH_ELEMENT_GET, makeVarRef(context.getForInInitVar()));
     }
 
     case Token.ENUM_NEXT: {
-      return Ast.makeNode(CAstNode.EACH_ELEMENT_HAS_NEXT, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(context.getForInInitVar())));
+      return Ast.makeNode(CAstNode.EACH_ELEMENT_HAS_NEXT, makeVarRef(context.getForInInitVar()));
     }
 
     case Token.RETURN: {
@@ -1502,7 +1502,7 @@ public class RhinoToAstTranslator {
     }
 
     case Token.TYPEOFNAME: {
-      return Ast.makeNode(CAstNode.TYPE_OF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(n.getString())));
+      return Ast.makeNode(CAstNode.TYPE_OF, makeVarRef(n.getString()));
     }
 
     case Token.TYPEOF: {
@@ -1560,8 +1560,8 @@ public class RhinoToAstTranslator {
     }
   }
 
-  private CAstNode makeVarRef(String lhsTempName) {
-	  return Ast.makeNode(CAstNode.VAR, Ast.makeConstant(lhsTempName));
+  private CAstNode makeVarRef(String varName) {
+	  return Ast.makeNode(CAstNode.VAR, Ast.makeConstant(varName));
   }
 
   /**
