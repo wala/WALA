@@ -118,7 +118,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
   protected boolean topLevelFunctionsInGlobalScope() {
     return true;
   }
-  
+
   /**
    * for a block that catches all exceptions, what is the root exception type
    * that it can catch? E.g., for Java, java.lang.Throwable
@@ -292,36 +292,17 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
    * @return
    */
   protected int doLexicallyScopedRead(CAstNode node, WalkContext context, final String name) {
-    if (name.equals("self")) {
-      System.err.println("wow");
-    }
-    // record in declaring scope that the name is exposed to a nested scope
     Symbol S = context.currentScope().lookup(name);
     Scope definingScope = S.getDefiningScope();
     CAstEntity E = definingScope.getEntity();
+    // record in declaring scope that the name is exposed to a nested scope
     addExposedName(E, E, name, definingScope.lookup(name).valueNumber(), false);
 
-    String entityName = getEntityName(E);
+    final String entityName = getEntityName(E);
     if (useLocalValuesForLexicalVars()) {
+      // lexically-scoped variables can be given a single vn in a method
 
-      // (context.top() is current entity)
-      // record the name as exposed for the current entity, since if the name is
-      // updated via a call to a nested function, SSA for the current entity may
-      // need to be updated with the new definition
-      Scope curScope = context.currentScope();
-      while (!curScope.equals(definingScope)) {
-        // lexically-scoped variables can be given a single vn in a method
-        Symbol curSymbol = curScope.lookup(name);
-        final int vn = curSymbol.valueNumber();
-        Access A = new Access(name, entityName, vn);
-        CAstEntity entity = curScope.getEntity();
-        addExposedName(entity, E, name, vn, false);
-        // record the access; later, the Accesses in the instruction
-        // defining vn will be adjusted based on this information; see
-        // patchLexicalAccesses()
-        addAccess(entity, A);
-        curScope = curScope.getParent();
-      }
+      markExposedInEnclosingEntities(context, name, definingScope, E, entityName, false);
 
       return S.valueNumber();
 
@@ -335,32 +316,62 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
   }
 
   /**
+   * record name as exposed for the current entity and for all enclosing
+   * entities up to that of the defining scope, since if the name is updated via
+   * a call to a nested function, SSA for these entities may need to be updated
+   * with the new definition
+   * 
+   * @param context
+   * @param name
+   * @param definingScope
+   * @param E
+   * @param entityName
+   * @param isWrite
+   */
+  private void markExposedInEnclosingEntities(WalkContext context, final String name, Scope definingScope, CAstEntity E,
+      final String entityName, boolean isWrite) {
+    Scope curScope = context.currentScope();
+    while (!curScope.equals(definingScope)) {
+      final Symbol curSymbol = curScope.lookup(name);
+      final int vn = curSymbol.valueNumber();
+      final Access A = new Access(name, entityName, vn);
+      final CAstEntity entity = curScope.getEntity();
+      addExposedName(entity, E, name, vn, isWrite);
+      // record the access; later, the Accesses in the instruction
+      // defining vn will be adjusted based on this information; see
+      // patchLexicalAccesses()
+      addAccess(entity, A);
+      curScope = curScope.getParent();
+    }
+  }
+
+  /**
    * Note that the caller is responsible for ensuring that name is defined in a
    * lexical scope.
    * 
    */
   protected void doLexicallyScopedWrite(WalkContext context, String name, int rval) {
-    // record in declaring scope that the name is exposed
     Symbol S = context.currentScope().lookup(name);
-    CAstEntity E = S.getDefiningScope().getEntity();
-    addExposedName(E, E, name, S.getDefiningScope().lookup(name).valueNumber(), true);
+    Scope definingScope = S.getDefiningScope();
+    CAstEntity E = definingScope.getEntity();
+    // record in declaring scope that the name is exposed to a nested scope
+    addExposedName(E, E, name, definingScope.lookup(name).valueNumber(), true);
 
-    // lexically-scoped variables can be given a single vn in a method, or
     if (useLocalValuesForLexicalVars()) {
+      // lexically-scoped variables can be given a single vn in a method
+      
+      markExposedInEnclosingEntities(context, name, definingScope, E, getEntityName(E), true);
+
       int vn = S.valueNumber();
       Access A = new Access(name, getEntityName(E), vn);
-
-      addExposedName(context.top(), E, name, vn, true);
-      addAccess(context.top(), A);
-
       context.cfg().addInstruction(new AssignInstruction(vn, rval));
       // we add write instructions at every access for now
       // eventually, we may restructure the method to do a single combined write
       // before exit
       context.cfg().addInstruction(new AstLexicalWrite(A));
 
-      // lexically-scoped variables can be read from their scope each time
     } else {
+      // lexically-scoped variables must be written in their scope each time
       Access A = new Access(name, getEntityName(E), rval);
       context.cfg().addInstruction(new AstLexicalWrite(A));
     }
@@ -521,7 +532,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   public static final boolean DEBUG_CFG = DEBUG_ALL || false;
 
-  public static final boolean DEBUG_NAMES = DEBUG_ALL || true;
+  public static final boolean DEBUG_NAMES = DEBUG_ALL || false;
 
   public static final boolean DEBUG_LEXICAL = DEBUG_ALL || false;
 
@@ -2188,10 +2199,11 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
    */
   public static class AstLexicalInformation implements LexicalInformation {
     /**
-     * the name of this function, as it appears in the definer portion of a lexical name
+     * the name of this function, as it appears in the definer portion of a
+     * lexical name
      */
     private final String functionLexicalName;
-    
+
     /**
      * names possibly accessed in a nested lexical scope, represented as pairs
      * (name,nameOfDefiningEntity)
@@ -2224,15 +2236,15 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
      */
     private MutableIntSet allExposedUses = null;
 
-    /** 
+    /**
      * names of exposed variables of this method that cannot be written outside
      */
     private final Set<String> readOnlyNames;
-    
+
     @SuppressWarnings("unchecked")
     public AstLexicalInformation(AstLexicalInformation original) {
       this.functionLexicalName = original.functionLexicalName;
-      
+
       if (original.exposedNames != null) {
         exposedNames = new Pair[original.exposedNames.length];
         for (int i = 0; i < exposedNames.length; i++) {
@@ -2270,7 +2282,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       } else {
         scopingParents = null;
       }
-      
+
       readOnlyNames = original.readOnlyNames;
     }
 
@@ -2306,14 +2318,14 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
 
     @SuppressWarnings("unchecked")
-    AstLexicalInformation(String entityName, Scope scope, SSAInstruction[] instrs, Set<Pair<Pair<String, String>, Integer>> exposedNamesForReadSet,
-        Set<Pair<Pair<String, String>, Integer>> exposedNamesForWriteSet,
-        Set<Access> accesses) {
+    AstLexicalInformation(String entityName, Scope scope, SSAInstruction[] instrs,
+        Set<Pair<Pair<String, String>, Integer>> exposedNamesForReadSet,
+        Set<Pair<Pair<String, String>, Integer>> exposedNamesForWriteSet, Set<Access> accesses) {
       if (entityName.contains("wrapper")) {
         System.err.println("wow");
       }
       this.functionLexicalName = entityName;
-      
+
       Pair<Pair<String, String>, Integer>[] EN = null;
       if (exposedNamesForReadSet != null || exposedNamesForWriteSet != null) {
         Set<Pair<Pair<String, String>, Integer>> exposedNamesSet = new HashSet<Pair<Pair<String, String>, Integer>>();
@@ -2328,13 +2340,13 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
       if (exposedNamesForReadSet != null) {
         Set<String> readOnlyNames = new HashSet<String>();
-        for(Pair<Pair<String,String>,Integer> v : exposedNamesForReadSet) {
+        for (Pair<Pair<String, String>, Integer> v : exposedNamesForReadSet) {
           if (entityName != null && entityName.equals(v.fst.snd)) {
             readOnlyNames.add(v.fst.fst);
           }
         }
         if (exposedNamesForWriteSet != null) {
-          for(Pair<Pair<String,String>,Integer> v : exposedNamesForWriteSet) {
+          for (Pair<Pair<String, String>, Integer> v : exposedNamesForWriteSet) {
             if (entityName != null && entityName.equals(v.fst.snd)) {
               readOnlyNames.remove(v.fst.fst);
             }
@@ -2344,7 +2356,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       } else {
         this.readOnlyNames = null;
       }
-   
+
       this.exposedNames = buildLexicalNamesArray(EN);
 
       // the value numbers stored in exitLexicalUses and instructionLexicalUses
@@ -2396,9 +2408,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
 
     private static final int[] NONE = new int[0];
-    
+
     public int[] getExposedUses(int instructionOffset) {
-      return instructionLexicalUses[instructionOffset]==null? NONE: instructionLexicalUses[instructionOffset];
+      return instructionLexicalUses[instructionOffset] == null ? NONE : instructionLexicalUses[instructionOffset];
     }
 
     public IntSet getAllExposedUses() {
@@ -2447,7 +2459,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
 
     public String getScopingName() {
-        return functionLexicalName;
+      return functionLexicalName;
     }
   };
 
@@ -2537,7 +2549,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
    */
   private void addExposedName(CAstEntity entity, CAstEntity declaration, String name, int valueNumber, boolean isWrite) {
     Pair<Pair<String, String>, Integer> newVal = Pair.make(Pair.make(name, getEntityName(declaration)), valueNumber);
-    MapUtil.findOrCreateSet(isWrite? exposedNamesForWrite: exposedNamesForRead, entity).add(newVal);
+    MapUtil.findOrCreateSet(isWrite ? exposedNamesForWrite : exposedNamesForRead, entity).add(newVal);
   }
 
   private String getEntityName(CAstEntity e) {
@@ -2844,8 +2856,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     // (put here to allow subclasses to handle stuff in scoped entities)
     // assemble lexical information
     patchLexicalAccesses(cfg.getInstructions(), accesses.get(n));
-    AstLexicalInformation LI = new AstLexicalInformation(getEntityName(n), (AbstractScope) functionContext.currentScope(), cfg.getInstructions(),
-        exposedNamesForRead.get(n), exposedNamesForWrite.get(n), accesses.get(n));
+    AstLexicalInformation LI = new AstLexicalInformation(getEntityName(n), (AbstractScope) functionContext.currentScope(),
+        cfg.getInstructions(), exposedNamesForRead.get(n), exposedNamesForWrite.get(n), accesses.get(n));
 
     DebuggingInformation DBG = new AstDebuggingInformation(n.getPosition(), line, nms);
 
@@ -2875,7 +2887,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
   // FIXME: should it be possible to override visit() instead to do the below
   // and then call super.visit?
   /**
-   * to record for which CAstNodes we need to pop the position stack when post-processing
+   * to record for which CAstNodes we need to pop the position stack when
+   * post-processing
    * 
    * @see #enterNode(CAstNode, Context, CAstVisitor)
    * @see #postProcessNode(CAstNode, Context, CAstVisitor)
@@ -2888,7 +2901,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     if (context.getSourceMap() != null) {
       CAstSourcePositionMap.Position p = context.getSourceMap().getPosition(n);
       if (p != null) {
-        // store the current position (if any) on the stack, and then set it to be p
+        // store the current position (if any) on the stack, and then set it to
+        // be p
         if (context.cfg().getCurrentPosition() != null) {
           positions.push(context.cfg().getCurrentPosition());
           popPosition = true;
@@ -2941,11 +2955,12 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     // FIXME: handle redefinitions of functions
     Scope cs = context.currentScope();
     if (cs.contains(fn.getName()) && !cs.isLexicallyScoped(cs.lookup(fn.getName())) && !cs.isGlobal(cs.lookup(fn.getName()))) {
-      // if we already have a local with the function's name, write the function value to that local 
+      // if we already have a local with the function's name, write the function
+      // value to that local
       assignValue(n, context, cs.lookup(fn.getName()), fn.getName(), result);
     } else if (topLevelFunctionsInGlobalScope() && context.top().getKind() == CAstEntity.SCRIPT_ENTITY) {
       globalScope.declare(new FinalCAstSymbol(fn.getName()));
-      assignValue(n, context, cs.lookup(fn.getName()), fn.getName(), result);      
+      assignValue(n, context, cs.lookup(fn.getName()), fn.getName(), result);
     } else {
       context.currentScope().declare(new FinalCAstSymbol(fn.getName()), result);
     }
