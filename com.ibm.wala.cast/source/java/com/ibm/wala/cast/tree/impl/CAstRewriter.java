@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.tree.impl;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -239,8 +240,26 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     for (CAstNode newTarget : allNewTargetNodes) {
       newMap.map(newTarget, newTarget);
     }
+    
+    
+    assert !oldNodesInNewMap(nodeMap, newMap);
 
     return newMap;
+  }
+
+  // check whether newMap contains any CFG edges involving nodes in the domain of nodeMap
+  private boolean oldNodesInNewMap(Map<Pair<CAstNode, K>, CAstNode> nodeMap, final CAstControlFlowRecorder newMap) {
+    HashSet<CAstNode> oldNodes = HashSetFactory.make();
+    for(Entry<Pair<CAstNode, K>, CAstNode> e : nodeMap.entrySet())
+      oldNodes.add(e.getKey().fst);
+    for(CAstNode mappedNode : newMap.getMappedNodes()) {
+      if(oldNodes.contains(mappedNode))
+        return true;
+      for(Object lbl : newMap.getTargetLabels(mappedNode))
+        if(oldNodes.contains(newMap.getTarget(mappedNode, lbl)))
+          return true;
+    }
+    return false;
   }
 
   protected CAstSourcePositionMap copySource(Map<Pair<CAstNode, K>, CAstNode> nodeMap, CAstSourcePositionMap orig) {
@@ -281,7 +300,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     }
   }
 
-  protected Map<CAstNode, Collection<CAstEntity>> copyChildren(Map<Pair<CAstNode, K>, CAstNode> nodeMap,
+  protected Map<CAstNode, Collection<CAstEntity>> copyChildren(CAstNode root, Map<Pair<CAstNode, K>, CAstNode> nodeMap,
       Map<CAstNode, Collection<CAstEntity>> children) {
     final Map<CAstNode, Collection<CAstEntity>> newChildren = new LinkedHashMap<CAstNode, Collection<CAstEntity>>();
 
@@ -319,7 +338,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
   /**
    * rewrite the CAst sub-tree rooted at root
    */
-  public Rewrite rewrite(CAstNode root, final CAstControlFlowMap cfg, final CAstSourcePositionMap pos, final CAstNodeTypeMap types,
+  public Rewrite rewrite(final CAstNode root, final CAstControlFlowMap cfg, final CAstSourcePositionMap pos, final CAstNodeTypeMap types,
       final Map<CAstNode, Collection<CAstEntity>> children) {
     final Map<Pair<CAstNode, K>, CAstNode> nodes = HashMapFactory.make();
     final CAstNode newRoot = copyNodes(root, rootContext, nodes);
@@ -356,7 +375,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
 
       public Map<CAstNode, Collection<CAstEntity>> newChildren() {
         if (theChildren == null)
-          theChildren = copyChildren(nodes, children);
+          theChildren = copyChildren(root, nodes, children);
         return theChildren;
       }
     };
