@@ -148,7 +148,7 @@ public class AstCallGraph extends ExplicitCallGraph {
     public void setLexicallyMutatedIR(IR ir) {
       lexicalScopingChanges = true;
       cachedIR = ir;
-      cachedDU = new DefUse(ir);
+      cachedDU = null;
     }
     
     public void clearMutatedCache(CallSiteReference cs) {
@@ -165,6 +165,9 @@ public class AstCallGraph extends ExplicitCallGraph {
     
     public DefUse getLexicallyMutatedDU() {
       if (lexicalScopingChanges) {
+        if (cachedDU == null) {
+          cachedDU = new DefUse(cachedIR);
+        }
         return cachedDU;
       } else {
         return null;

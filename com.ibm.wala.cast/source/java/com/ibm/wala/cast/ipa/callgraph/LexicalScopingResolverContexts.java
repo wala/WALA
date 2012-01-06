@@ -35,7 +35,7 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
     }
   };
 
-  private static final boolean USE_CGNODE_RESOLVER = false;
+  private static final boolean USE_CGNODE_RESOLVER = true;
 
   /**
    * used to resolve lexical accesses during call graph construction
@@ -290,6 +290,23 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
       } else {
         return parent.getOriginalDefiner(name);
       }
+    }
+
+    @Override
+    public String toString() {
+      StringBuilder result = new StringBuilder();
+      result.append("CGNodeResolver[myDefiner=");
+      result.append(myDefiner);
+      // result.append(", myNode=");
+      // result.append(myNode);
+//      result.append(",\n myReadOnlyDefs=");
+//      result.append(myReadOnlyDefs);
+//      result.append(",\n myDefs=");
+//      result.append(myDefs);
+      result.append(",\n parent=");
+      result.append(parent);
+      result.append("]");
+      return result.toString();
     }
 
   }
