@@ -362,8 +362,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
 
     S.addStatement(insts.NewInstruction(7, NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Object)));
 
-    // TODO fix these writes to operate on __proto__, once we're sure we're doing the right thing here
-    S.addStatement(insts.PutInstruction(7, 4, "prototype"));
+    S.addStatement(insts.PutInstruction(5, 4, "__proto__"));
     S.getNextProgramCounter();
     
     S.addStatement(insts.PutInstruction(5, 7, "prototype"));
@@ -372,6 +371,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     S.addStatement(insts.PutInstruction(7, 5, "constructor"));
     S.getNextProgramCounter();
     
+    // TODO we need to set v7.__proto__ to Object.prototype
     S.addStatement(insts.ReturnInstruction(5, false));
     S.getNextProgramCounter();
     
