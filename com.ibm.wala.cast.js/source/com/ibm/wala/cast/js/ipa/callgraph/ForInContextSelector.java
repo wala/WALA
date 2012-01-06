@@ -291,14 +291,16 @@ public class ForInContextSelector implements ContextSelector {
         return new ForInContext(baseContext, simulateToString(caller.getClassHierarchy(), receiver[index]));
       }
     } else if(receiver.length > index) {
-      // TODO: figure out why we sometimes get receiver[index] == null, and what to do about it;
-      //       we used to assume that this is due to call graph imprecision and return an IllegalArgumentExceptionContext
-      //       to prune this CG edge away, but that led to ArrayIndexOutOfBoundBoundsExceptions on the jquery tests
       Frequency f = usesFirstArgAsPropertyName(callee);
       if(f == Frequency.ALWAYS) {
         return new ForInContext(baseContext, simulateToString(caller.getClassHierarchy(), receiver[index]));
-      } else if(receiver[index] != null && (f == Frequency.SOMETIMES || forInOnFirstArg(callee))) {
-        return new ForInContext(baseContext, receiver[index]);
+      } else if(f == Frequency.SOMETIMES || forInOnFirstArg(callee)) {
+        if(receiver[index] == null) {
+          IClass undef = caller.getClassHierarchy().lookupClass(JavaScriptTypes.Undefined);
+          return new ForInContext(baseContext, new ConcreteTypeKey(undef));
+        } else {
+          return new ForInContext(baseContext, receiver[index]);
+        }
       }
     }
     if (USE_CPA_IN_BODIES && FORIN_MARKER.equals(caller.getContext().get(FORIN_KEY))) {
