@@ -1662,7 +1662,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         int pi = dispatchIndices[i];
         if (constParams != null && constParams[pi] != null) {
           for(int ci = 0; ci < constParams[pi].length; ci++) {
-            previousPtrs[i].add(system.instanceKeys.getMappedIndex(constParams[i][ci]));
+            previousPtrs[i].add(system.instanceKeys.getMappedIndex(constParams[pi][ci]));
           }
         } else {
           if (rhs[ri].getValue() != null) {

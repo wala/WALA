@@ -88,7 +88,7 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
       boolean isNonNullArray = false;
       if (receiver.length >= 4) {
         InstanceKey argsList = receiver[3];
-        if (argsList.getConcreteType().equals(caller.getClassHierarchy().lookupClass(JavaScriptTypes.Array))) {
+        if (argsList != null && argsList.getConcreteType().equals(caller.getClassHierarchy().lookupClass(JavaScriptTypes.Array))) {
           isNonNullArray = true;
         }
       }
