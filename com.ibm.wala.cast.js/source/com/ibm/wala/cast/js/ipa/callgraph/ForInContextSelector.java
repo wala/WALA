@@ -63,7 +63,7 @@ public class ForInContextSelector implements ContextSelector {
   
   // if this flag is set to true, functions are given ForInContexts based on their name
   // if it is false, any function that uses its first argument as a property name will be given a ForInContext
-  public static final boolean USE_NAME_TO_SELECT_CONTEXT = true;
+  public static final boolean USE_NAME_TO_SELECT_CONTEXT = false;
 
   public static boolean USE_CPA_IN_BODIES = false;
   
@@ -185,8 +185,8 @@ public class ForInContextSelector implements ContextSelector {
   }
   
   private final HashMap<MethodReference, Boolean> forInOnFirstArg_cache = HashMapFactory.make();
-  private final HashMap<MethodReference, DefUse> du_cache = HashMapFactory.make();
-  private final IRFactory<IMethod> factory = AstIRFactory.makeDefaultFactory();
+  public static final HashMap<MethodReference, DefUse> du_cache = HashMapFactory.make();
+  public static final IRFactory<IMethod> factory = AstIRFactory.makeDefaultFactory();
   
   // determine whether the method performs a for-in loop over the properties of its first argument
   private boolean forInOnFirstArg(IMethod method) {
@@ -207,7 +207,7 @@ public class ForInContextSelector implements ContextSelector {
     return false;
   }
 
-  protected DefUse getDefUse(IMethod method) {
+  public static DefUse getDefUse(IMethod method) {
     MethodReference mref = method.getReference();
     DefUse du = du_cache.get(mref);
     if(du == null) {
@@ -278,15 +278,17 @@ public class ForInContextSelector implements ContextSelector {
   
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, final InstanceKey[] receiver) {
     Context baseContext = base.getCalleeTarget(caller, site, callee, receiver);
+    String calleeFullName = callee.getDeclaringClass().getName().toString();
+    String calleeShortName = calleeFullName.substring(calleeFullName.lastIndexOf('/')+1);
+    if(calleeShortName.contains("kill_contexts"))
+      return Everywhere.EVERYWHERE;
     if(USE_NAME_TO_SELECT_CONTEXT) {
-      String calleeFullName = callee.getDeclaringClass().getName().toString();
-      String calleeShortName = calleeFullName.substring(calleeFullName.lastIndexOf('/')+1);
-      if(calleeShortName.contains(HACK_METHOD_STR)) {
+      if(calleeShortName.contains(HACK_METHOD_STR) && receiver.length > 2) {
         // we assume that the argument is only used as a property name, so we can do ToString
         return new ForInContext(baseContext, simulateToString(caller.getClassHierarchy(), receiver[2]));
       }
     } else if(receiver.length > 2) {
-      Frequency f = usesFirstArgAsPropertyName(callee);
+      Frequency f = calleeShortName.contains("make_for_in_sensitive") ? Frequency.SOMETIMES : usesFirstArgAsPropertyName(callee);
       if(f == Frequency.ALWAYS) {
         return new ForInContext(baseContext, simulateToString(caller.getClassHierarchy(), receiver[2]));
       } else if(receiver[2] != null && (f == Frequency.SOMETIMES || forInOnFirstArg(callee))) {
