@@ -13,11 +13,11 @@ package com.ibm.wala.cast.ipa.callgraph;
 import java.util.Iterator;
 
 import com.ibm.wala.cast.ipa.callgraph.LexicalScopingResolverContexts.LexicalScopingResolver;
-import com.ibm.wala.cast.loader.AstMethod.LexicalParent;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
@@ -74,12 +74,6 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
      */
     private final CGNode creator;
 
-    /**
-     * compute the {@link CGNode} correspond to each specified
-     * {@link LexicalParent} of {@link #base}, populating {@link #scopeMap}
-     * 
-     */
-
     private ScopeMappingInstanceKey(CGNode creator, InstanceKey base) {
       this.creator = creator;
       this.base = base;
@@ -107,6 +101,18 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
         }
       }
 
+      // with multiple levels of nested functions, the creator itself may have
+      // been invoked by a function represented by a SMIK. E.g., see
+      // wrap3.js; the constructor of set() is invoked by wrapper(), and
+      // the wrapper() function object is a SMIK. In such cases, we need to
+      // recurse to find all the relevant CGNodes.
+      ContextItem nested = creator.getContext().get(ScopeMappingKeysContextSelector.scopeKey);
+      if (nested != null) {
+        result = new CompoundIterator<CGNode>(result, ((ScopeMappingInstanceKey) nested).getFunargNodes(name));
+      }
+
+      // TODO what does this code do??? commenting out does not cause any
+      // regression failures --MS
       PointerKey funcKey = builder.getPointerKeyForLocal(creator, 1);
       OrdinalSet<InstanceKey> funcPtrs = builder.getPointerAnalysis().getPointsToSet(funcKey);
       for (InstanceKey x : funcPtrs) {
