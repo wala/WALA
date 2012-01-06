@@ -161,6 +161,12 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForSimpleLexical);
   }
 
+  @Test
+  public void testRecursiveLexical() throws IOException, IllegalArgumentException, CancelException {
+    // just checking that we have a sufficient bailout to ensure termination
+    Util.makeScriptCG("tests", "recursive_lexical.js");
+  }
+
   private static final Object[][] assertionsForTry = new Object[][] {
       new Object[] { ROOT, new String[] { "tests/try.js" } },
       new Object[] { "tests/try.js",
