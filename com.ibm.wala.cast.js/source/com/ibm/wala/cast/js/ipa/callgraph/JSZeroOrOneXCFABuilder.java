@@ -43,6 +43,7 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
     contextSelector = new ScopeMappingKeysContextSelector(contextSelector);
     contextSelector = new JavaScriptConstructorContextSelector(contextSelector);
+    contextSelector = new JavaScriptFunctionApplyContextSelector(contextSelector, this);
     contextSelector = new LexicalScopingResolverContexts(this, contextSelector);
     if (doOneCFA) {
       contextSelector = new nCFAContextSelector(1, contextSelector);

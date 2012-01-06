@@ -69,7 +69,7 @@ public class JavaScriptFunctionCallApplyTargetSelector implements MethodTargetSe
   }
 
   private IMethod getFunctionApplyTarget(CGNode caller, CallSiteReference site, IClass receiver) {
-    System.err.println("TODO: handle Function.apply()");
+//    System.err.println("TODO: handle Function.apply()");
     return base.getCalleeTarget(caller, site, receiver);
   }
 
