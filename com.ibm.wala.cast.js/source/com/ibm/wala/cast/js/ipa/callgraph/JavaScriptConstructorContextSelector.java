@@ -6,9 +6,8 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.callgraph.ContextItem;
-import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.DelegatingContext;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.nCFAContextSelector;
 import com.ibm.wala.util.intset.IntSet;
@@ -35,22 +34,9 @@ public class JavaScriptConstructorContextSelector implements ContextSelector {
       final Context oneLevelContext = oneLevel.getCalleeTarget(caller, site, callee, receiver);
       final Context callerContext = caller.getContext();
       if (callerContext instanceof ScopeMappingContext) {
-        return new Context() {
-
-          @Override
-          public ContextItem get(ContextKey name) {
-            ContextItem result = callerContext.get(name);
-            if (result == null) {
-              result = oneLevelContext.get(name);
-              if (result == null) {
-                result = baseCtxt.get(name);
-              }
-            }
-            return result;
-          }             
-        };
+        return new DelegatingContext(callerContext, new DelegatingContext(oneLevelContext, baseCtxt));
       } else {
-        // use one-level of call-string sensitivity for constructors always
+        // use at least one-level of call-string sensitivity for constructors always
         return oneLevelContext;
       }
     } else {
