@@ -40,13 +40,16 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
   public static class ApplyContext implements Context {
     private final Context delegate;
 
+    private final CallSiteReference site;
+    
     /**
      * was the argsList argument a non-null Array?
      */
     private final boolean isNonNullArray;
 
-    ApplyContext(Context delegate, boolean isNonNullArray) {
+    ApplyContext(Context delegate, CallSiteReference site, boolean isNonNullArray) {
       this.delegate = delegate;
+      this.site = site;
       this.isNonNullArray = isNonNullArray;
     }
 
@@ -65,6 +68,7 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
       int result = 1;
       result = prime * result + ((delegate == null) ? 0 : delegate.hashCode());
       result = prime * result + (isNonNullArray ? 1231 : 1237);
+      result = prime * result + ((site == null) ? 0 : site.hashCode());
       return result;
     }
 
@@ -84,8 +88,20 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
         return false;
       if (isNonNullArray != other.isNonNullArray)
         return false;
+      if (site == null) {
+        if (other.site != null)
+          return false;
+      } else if (!site.equals(other.site))
+        return false;
       return true;
     }
+
+    @Override
+    public String toString() {
+      return "ApplyContext [delegate=" + delegate + ", site=" + site + ", isNonNullArray=" + isNonNullArray + "]";
+    }
+
+
 
   }
 
@@ -98,7 +114,7 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
           isNonNullArray = true;
         }
       }
-      return new ApplyContext(base.getCalleeTarget(caller, site, callee, receiver), isNonNullArray);
+      return new ApplyContext(base.getCalleeTarget(caller, site, callee, receiver), site, isNonNullArray);
     }
     return base.getCalleeTarget(caller, site, callee, receiver);
   }
