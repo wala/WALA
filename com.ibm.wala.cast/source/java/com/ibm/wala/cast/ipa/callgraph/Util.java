@@ -19,6 +19,7 @@ import java.util.Iterator;
 
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.loader.SingleClassLoaderFactory;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.classLoader.SourceModule;
@@ -75,16 +76,35 @@ public class Util {
   public static AnalysisCache makeCache() {
     return new AnalysisCache(AstIRFactory.makeDefaultFactory());
   }
+  
+  public static String getShortName(CGNode nd) {
+    IMethod method = nd.getMethod();
+    return getShortName(method);
+  }
+
+  public static String getShortName(IMethod method) {
+    String name = method.getName().toString();
+    if(name.equals("do") || name.equals("ctor"))
+      name = method.getDeclaringClass().getName().toString();
+    name = name.substring(name.lastIndexOf('/')+1);
+    return name;
+  }
 
   @SuppressWarnings("unused")
   public static void dumpCG(PointerAnalysis PA, CallGraph CG) {
     if (AVOID_DUMP) return;
     for (Iterator x = CG.iterator(); x.hasNext();) {
       CGNode N = (CGNode) x.next();
-      System.err.println("\ncallees of node " + N.getMethod() + " " + N.getGraphNodeId());
+      System.err.print("callees of node " + getShortName(N) + " : [");
+      boolean fst = true;
       for(Iterator<? extends CGNode> ns = CG.getSuccNodes(N); ns.hasNext(); ) {
-        System.err.println("\n  " + ns.next().getGraphNodeId());
+        if(fst)
+          fst = false;
+        else
+          System.err.print(", ");
+        System.err.print(getShortName(ns.next()));
       }
+      System.err.println("]");
       System.err.println("\nIR of node " + N.getGraphNodeId());
       IR ir = N.getIR();
       if (ir != null) {
