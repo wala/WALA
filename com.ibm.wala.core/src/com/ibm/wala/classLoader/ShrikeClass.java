@@ -12,14 +12,12 @@ package com.ibm.wala.classLoader;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeCT.AnnotationsReader;
-import com.ibm.wala.shrikeCT.AnnotationsReader.UnimplementedException;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
@@ -32,7 +30,6 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.types.generics.ClassSignature;
-import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.shrike.ShrikeClassReaderHandle;
 import com.ibm.wala.util.strings.Atom;
@@ -85,13 +82,8 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
         Atom name = Atom.findOrCreateUnicodeAtom(cr.getFieldName(i));
         ImmutableByteArray b = ImmutableByteArray.make(cr.getFieldType(i));
         Collection<Annotation> annotations = null;
-        try {
           annotations = getRuntimeInvisibleAnnotations(i);
           annotations = annotations.isEmpty() ? null : annotations;
-        } catch (UnimplementedException e) {
-          e.printStackTrace();
-          // keep going
-        }
 
         if ((accessFlags & ClassConstants.ACC_STATIC) == 0) {
           addFieldToList(instanceList, name, b, accessFlags, annotations);
@@ -226,29 +218,17 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     reader.clear();
   }
 
-  public Collection<Annotation> getRuntimeInvisibleAnnotations() throws InvalidClassFileException, UnimplementedException {
+  public Collection<Annotation> getRuntimeInvisibleAnnotations() throws InvalidClassFileException {
     return getAnnotations(true);
   }
 
-  public Collection<Annotation> getRuntimeVisibleAnnotations() throws InvalidClassFileException, UnimplementedException {
+  public Collection<Annotation> getRuntimeVisibleAnnotations() throws InvalidClassFileException {
     return getAnnotations(false);
   }
   
-  public Collection<Annotation> getAnnotations(boolean runtimeInvisable) throws InvalidClassFileException, UnimplementedException {
-    AnnotationsReader r = getAnnotationsReader(runtimeInvisable);
-    if (r != null) {
-      int[] offsets = r.getAnnotationOffsets();
-      Collection<Annotation> result = HashSetFactory.make();
-      for (int i : offsets) {
-        String type = r.getAnnotationType(i);
-        type = type.replaceAll(";", "");
-        TypeReference t = TypeReference.findOrCreate(getClassLoader().getReference(), type);
-        result.add(Annotation.make(t));
-      }
-      return result;
-    } else {
-      return Collections.emptySet();
-    }
+  public Collection<Annotation> getAnnotations(boolean runtimeInvisible) throws InvalidClassFileException {
+    AnnotationsReader r = getAnnotationsReader(runtimeInvisible);
+    return Annotation.getAnnotationsFromReader(r, getClassLoader().getReference());
   }
 
   private AnnotationsReader getAnnotationsReader(boolean runtimeInvisable) throws InvalidClassFileException {
@@ -278,6 +258,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     return result;
   }
 
+  
   private InnerClassesReader getInnerClassesReader() throws InvalidClassFileException {
     ClassReader r = reader.get();
     ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
@@ -320,22 +301,9 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
   /**
    * read the runtime-invisible annotations from the class file
    */
-  public Collection<Annotation> getRuntimeInvisibleAnnotations(int fieldIndex) throws InvalidClassFileException,
-      UnimplementedException {
+  public Collection<Annotation> getRuntimeInvisibleAnnotations(int fieldIndex) throws InvalidClassFileException {
     RuntimeInvisibleAnnotationsReader r = getRuntimeInvisibleAnnotationsReader(fieldIndex);
-    if (r != null) {
-      int[] offsets = r.getAnnotationOffsets();
-      Collection<Annotation> result = HashSetFactory.make();
-      for (int i : offsets) {
-        String type = r.getAnnotationType(i);
-        type = type.replaceAll(";", "");
-        TypeReference t = TypeReference.findOrCreate(getClassLoader().getReference(), type);
-        result.add(Annotation.make(t));
-      }
-      return result;
-    } else {
-      return Collections.emptySet();
-    }
+    return Annotation.getAnnotationsFromReader(r, getClassLoader().getReference());
   }
 
   private SignatureReader getSignatureReader() throws InvalidClassFileException {

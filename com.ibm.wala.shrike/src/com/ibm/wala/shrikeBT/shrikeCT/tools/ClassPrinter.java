@@ -23,6 +23,7 @@ import com.ibm.wala.shrikeBT.shrikeCT.CTDecoder;
 import com.ibm.wala.shrikeBT.shrikeCT.ClassInstrumenter;
 import com.ibm.wala.shrikeBT.shrikeCT.OfflineInstrumenter;
 import com.ibm.wala.shrikeCT.AnnotationsReader;
+import com.ibm.wala.shrikeCT.AnnotationsReader.AnnotationAttribute;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.CodeReader;
@@ -286,20 +287,8 @@ public class ClassPrinter {
 
   private void printAnnotations(ClassReader cr, ClassReader.AttrIterator attrs, AnnotationsReader r)
       throws InvalidClassFileException {
-    try {
-      int[] annotations = r.getAnnotationOffsets();
-      for (int j : annotations) {
-        w.write("    Annotation type: " + r.getAnnotationType(j) + "\n");
-      }
-    } catch (AnnotationsReader.UnimplementedException e) {
-      int len = attrs.getDataSize();
-      int pos = attrs.getDataOffset();
-      while (len > 0) {
-        int amount = Math.min(16, len);
-        w.write("    " + makeHex(cr.getBytes(), pos, amount, 32) + " " + makeChars(cr.getBytes(), pos, amount) + "\n");
-        len -= amount;
-        pos += amount;
-      }
+    for (AnnotationAttribute annot : r.getAllAnnotations()) {
+      w.write("    Annotation type: " + annot.type + "\n");      
     }
   }
 

@@ -10,10 +10,14 @@
  *******************************************************************************/
 package com.ibm.wala.shrikeCT;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Map;
+
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.Pair;
 
 /**
- * This class reads Annotations attributes.
+ * This class reads Annotations attributes, e.g., RuntimeInvisibleAnnotations.
  * 
  * @author sjfink
  */
@@ -40,7 +44,8 @@ public class AnnotationsReader extends AttributeReader {
   }
 
   /**
-   * @return total length of this attribute in bytes, <bf>including</bf> the first 6 bytes
+   * @return total length of this attribute in bytes, <bf>including</bf> the
+   *         first 6 bytes
    * @throws InvalidClassFileException
    */
   public int getAttributeSize() throws InvalidClassFileException {
@@ -50,118 +55,238 @@ public class AnnotationsReader extends AttributeReader {
   }
 
   /**
-   * @return the offsets into the class file of the annotations of this attribute
-   * @throws InvalidClassFileException
-   * @throws UnimplementedException
-   */
-  public int[] getAnnotationOffsets() throws InvalidClassFileException, UnimplementedException {
-    int[] result = new int[getAnnotationCount()];
-    int offset = beginOffset + 8;
-    for (int i = 0; i < result.length; i++) {
-      result[i] = offset;
-      offset += getAnnotationSize(offset);
-    }
-    return result;
-  }
-
-  /**
-   * @param begin offset in the constant pool
-   * @return the size, in bytes, of the annotation structure starting at a given offset
-   * @throws InvalidClassFileException
-   * @throws UnimplementedException
-   */
-  private int getAnnotationSize(int begin) throws InvalidClassFileException, UnimplementedException {
-    int offset = begin + 2;
-    checkSize(offset, 2);
-    int numElementValuePairs = cr.getUShort(offset);
-    offset += 2;
-    for (int i = 0; i < numElementValuePairs; i++) {
-      offset += 2;
-      offset += getElementValueSize(offset);
-    }
-    return offset - begin;
-  }
-
-  /**
-   * temporary migration aid until I've implemented everything.
+   * get the Utf8 constant pool value, where the constant pool offset is given
+   * in the class
    * 
-   * @author sjfink
-   * 
+   * @param offset
+   *          offset in the class file at which the constant pool offset is
+   *          given
    */
-  public static class UnimplementedException extends Exception {
-  }
-
-  /**
-   * @return the type of the annotation stating at a given offset
-   * @throws InvalidClassFileException
-   */
-  public String getAnnotationType(int offset) throws InvalidClassFileException {
+  private String getUtf8ConstantPoolValue(int offset) throws InvalidClassFileException {
     checkSize(offset, 2);
     int cpOffset = cr.getUShort(offset);
     return cr.getCP().getCPUtf8(cpOffset);
   }
 
-  public static final int INT_TYPE = 3;
-
-  public static final int STRING_TYPE = 1;
-
-  /*
-   * This method maps the internal type representation of annotation types to java types and stringifies all annotations.
+  /**
+   * Marker interface for possible element values in an annotation attribute.
+   * 
+   * @see AnnotationsReader#readElementValueAndSize(int)
+   * 
    */
-  private String getFromConstantPool(int offset) {
-    byte type = cr.getCP().getItemType(cr.getByte(offset));
-
-    if (type == INT_TYPE) {
-      String res = "";
-      try {
-        res = "" + cr.getCP().getCPInt(cr.getByte(offset));
-      } catch (InvalidClassFileException e) {
-      }
-      return res;
-    }
-    if (type == STRING_TYPE) {
-      String res = "";
-      try {
-        res = cr.getCP().getCPUtf8(cr.getByte(offset));
-      } catch (Exception e) {
-      }
-      return res;
-    }
-    return "";
+  public static interface ElementValue {
   }
 
   /**
-   * This method returns all the annotations as map key->stringified value starting at the index begin in the class file.
+   * @see AnnotationsReader#readElementValueAndSize(int)
    * 
-   * @param begin
-   * @return HashMap<String, String>
+   * 
    */
-  public HashMap<String, String> getAnnotationValues(int begin) {
-    HashMap<String, String> res = new HashMap<String, String>();
-    int offset = begin + 2;
+  public static class ConstantElementValue implements ElementValue {
 
-    int numElementValuePairs = cr.getUShort(offset);
+    public final Object val;
 
-    offset += 3;
+    public ConstantElementValue(Object val) {
+      this.val = val;
+    }
+
+    @Override
+    public String toString() {
+      return val.toString();
+    }
+
+  }
+
+  /**
+   * @see AnnotationsReader#readElementValueAndSize(int)
+   */
+  public static class EnumElementValue implements ElementValue {
+    public final String enumType;
+    public final String enumVal;
+
+    public EnumElementValue(String enumType, String enumVal) {
+      super();
+      this.enumType = enumType;
+      this.enumVal = enumVal;
+    }
+
+    @Override
+    public String toString() {
+      return "EnumElementValue [type=" + enumType + ", val=" + enumVal + "]";
+    }
+
+  }
+
+  /**
+   * @see AnnotationsReader#readElementValueAndSize(int)
+   */
+  public static class ArrayElementValue implements ElementValue {
+
+    public final ElementValue[] vals;
+
+    public ArrayElementValue(ElementValue[] vals) {
+      super();
+      this.vals = vals;
+    }
+
+    @Override
+    public String toString() {
+      return "ArrayElementValue [vals=" + Arrays.toString(vals) + "]";
+    }
+
+  }
+
+  /**
+   * get all the annotations declared in this attribute.  
+   * 
+   * @throws InvalidClassFileException
+   */
+  public AnnotationAttribute[] getAllAnnotations() throws InvalidClassFileException {
+    AnnotationAttribute[] result = new AnnotationAttribute[getAnnotationCount()];
+    int offset = beginOffset + 8; // skip attribute_name_index,
+                                  // attribute_length, and num_annotations
+    for (int i = 0; i < result.length; i++) {
+      Pair<AnnotationAttribute, Integer> attributeAndSize = getAttributeAndSize(offset);
+      result[i] = attributeAndSize.fst;
+      offset += attributeAndSize.snd;
+    }
+    return result;
+  }
+
+  /**
+   * <pre>
+   * annotation { 
+   *   u2 type_index;
+   *   u2 num_element_value_pairs; 
+   *   { u2 element_name_index; 
+   *     element_value value; 
+   *   } element_value_pairs[num_element_value_pairs]
+   * </pre>
+   * 
+   * @throws InvalidClassFileException
+   */
+  private Pair<AnnotationAttribute, Integer> getAttributeAndSize(int begin) throws InvalidClassFileException {
+    String type = getUtf8ConstantPoolValue(begin);
+    int numElementValuePairs = cr.getUShort(begin + 2);
+    int size = 4;
+    int offset = begin + 4;
+    Map<String, ElementValue> elementName2Val = HashMapFactory.make();
     for (int i = 0; i < numElementValuePairs; i++) {
-      String res1 = getFromConstantPool(offset);
-      offset += 3;
-      String res2 = getFromConstantPool(offset);
+      String elementName = getUtf8ConstantPoolValue(offset);
       offset += 2;
-      res.put(res1, res2);
+      Pair<ElementValue, Integer> elementValAndSize = readElementValueAndSize(offset);
+      offset += elementValAndSize.snd;
+      size += elementValAndSize.snd + 2;
+      elementName2Val.put(elementName, elementValAndSize.fst);
     }
-    return res;
+    return Pair.make(new AnnotationAttribute(type, elementName2Val), size);
   }
 
   /**
-   * @return the size, in bytes, of the element-value structure starting at a given offset
+   * Representation of an annotation attribute. An annotation has the following
+   * format in the bytecode:
    * 
+   * <pre>
+   * annotation {
+   *   u2 type_index;
+   *   u2 num_element_value_pairs;
+   *   {  u2 element_name_index;
+   *      element_value value;
+   * } element_value_pairs[num_element_value_pairs];
+   * </pre>
    * 
+   * See the JVM spec section 4.7.16 for details.
    */
-  private int getElementValueSize(int begin) {
-    return 3; // this is correct for any primitive type annotations.
-    // TODO: Integrate array annotations
+  public static class AnnotationAttribute implements ElementValue {
 
+    public final String type;
+
+    public final Map<String, ElementValue> elementValues;
+
+    public AnnotationAttribute(String type, Map<String, ElementValue> elementValues) {
+      super();
+      this.type = type;
+      this.elementValues = elementValues;
+    }
+
+    @Override
+    public String toString() {
+      return "AnnotationElementValue [type=" + type + ", elementValues=" + elementValues + "]";
+    }
+
+  }
+
+  /**
+   * <pre>
+   * element_value { 
+   *   u1 tag; 
+   *   union {
+   *     u2 const_value_index; 
+   *     {  u2 type_name_index;
+   *        u2 const_name_index; 
+   *     } enum_const_value; 
+   *     u2 class_info_index; 
+   *     annotation annotation_value; 
+   *     {  u2 num_values;
+   *        element_value values[num_values]; 
+   *     } array_value;
+   *   } value;
+   * </pre>
+   * 
+   * A constant value (including class info) is represented by a
+   * {@link ConstantElementValue}. An enum constant value is represented by an
+   * {@link EnumElementValue}. An array value is represented by an
+   * {@link ArrayElementValue}. Finally, a nested annotation is represented by
+   * an {@link AnnotationAttribute}.
+   * 
+   * @throws InvalidClassFileException
+   * @throws IllegalArgumentException
+   */
+  private Pair<ElementValue, Integer> readElementValueAndSize(int offset) throws IllegalArgumentException,
+      InvalidClassFileException {
+    char tag = (char) cr.getByte(offset);
+    // meaning of this short depends on the tag
+    int nextShort = cr.getUShort(offset + 1);
+    switch (tag) {
+    case 'B':
+    case 'C':
+    case 'I':
+    case 'S':
+    case 'Z':
+      return Pair.<ElementValue, Integer> make(new ConstantElementValue(cr.getCP().getCPInt(nextShort)), 3);
+    case 'J':
+      return Pair.<ElementValue, Integer> make(new ConstantElementValue(cr.getCP().getCPLong(nextShort)), 3);
+    case 'D':
+      return Pair.<ElementValue, Integer> make(new ConstantElementValue(cr.getCP().getCPDouble(nextShort)), 3);
+    case 'F':
+      return Pair.<ElementValue, Integer> make(new ConstantElementValue(cr.getCP().getCPFloat(nextShort)), 3);
+    case 's': // string
+    case 'c': // class; just represent as a constant element with the type name
+      return Pair.<ElementValue, Integer> make(new ConstantElementValue(cr.getCP().getCPUtf8(nextShort)), 3);
+    case 'e': // enum
+      return Pair.<ElementValue, Integer> make(
+          new EnumElementValue(cr.getCP().getCPUtf8(nextShort), cr.getCP().getCPUtf8(cr.getUShort(offset + 3))), 5);
+    case '[': // array
+      int numValues = nextShort;
+      int numArrayBytes = 3; // start with 3 for the tag and num_values bytes
+      ElementValue[] vals = new ElementValue[numValues];
+      // start curOffset at beginning of array values
+      int curArrayOffset = offset + 3;
+      for (int i = 0; i < numValues; i++) {
+        Pair<ElementValue, Integer> arrayElemValueAndSize = readElementValueAndSize(curArrayOffset);
+        vals[i] = arrayElemValueAndSize.fst;
+        curArrayOffset += arrayElemValueAndSize.snd;
+        numArrayBytes += arrayElemValueAndSize.snd;
+      }
+      return Pair.<ElementValue, Integer> make(new ArrayElementValue(vals), numArrayBytes);
+    case '@': // annotation
+      Pair<AnnotationAttribute,Integer> attributeAndSize = getAttributeAndSize(offset+1);
+      // add 1 to size for the tag
+      return Pair.<ElementValue, Integer> make(attributeAndSize.fst, attributeAndSize.snd + 1);
+    default:
+      assert false;
+      return null;
+    }
   }
 
 }
