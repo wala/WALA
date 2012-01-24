@@ -1781,9 +1781,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         }
       }
     };
-    if (site.getDeclaredTarget().getName().toString().contains("numericToTextFormat")) {
-      System.err.println(site + "\n" + params + "\n" + targets);
-    }
     iterateCrossProduct(caller, site, params, f);
      return targets;
   }
