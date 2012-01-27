@@ -186,7 +186,7 @@ public class SynchronizedBlockDuplicator extends
     return null;
   }
 
-  protected CAstNode copyNodes(CAstNode n, RewriteContext<UnwindKey> c, Map<Pair<CAstNode, UnwindKey>, CAstNode> nodeMap) {
+  protected CAstNode copyNodes(CAstNode n, final CAstControlFlowMap cfg, RewriteContext<UnwindKey> c, Map<Pair<CAstNode, UnwindKey>, CAstNode> nodeMap) {
     String varName;
     // don't copy operators or constants (presumably since they are immutable?)
     if (n instanceof CAstOperator) {
@@ -204,15 +204,15 @@ public class SynchronizedBlockDuplicator extends
           Ast.makeNode(CAstNode.VAR, Ast.makeConstant(varName)));
 
       // the new if conditional
-      return Ast.makeNode(CAstNode.IF_STMT, test, copyNodes(n, new SyncContext(true, n, c), nodeMap),
-          copyNodes(n, new SyncContext(false, n, c), nodeMap));
+      return Ast.makeNode(CAstNode.IF_STMT, test, copyNodes(n, cfg, new SyncContext(true, n, c), nodeMap),
+          copyNodes(n, cfg, new SyncContext(false, n, c), nodeMap));
 
     } else {
       // invoke copyNodes() on the children with context c, ensuring, e.g., that
       // the body of a synchronized block gets cloned
       CAstNode[] newChildren = new CAstNode[n.getChildCount()];
       for (int i = 0; i < newChildren.length; i++)
-        newChildren[i] = copyNodes(n.getChild(i), c, nodeMap);
+        newChildren[i] = copyNodes(n.getChild(i), cfg, c, nodeMap);
 
       CAstNode newN = Ast.makeNode(n.getKind(), newChildren);
 

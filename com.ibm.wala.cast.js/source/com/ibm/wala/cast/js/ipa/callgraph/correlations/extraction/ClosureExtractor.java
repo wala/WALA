@@ -196,50 +196,50 @@ public class ClosureExtractor extends CAstRewriterExt {
   }
 
   @Override
-  protected CAstNode copyNodes(CAstNode root, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
+  protected CAstNode copyNodes(CAstNode root, CAstControlFlowMap cfg, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     switch(root.getKind()) {
     case OPERATOR:
       return root;
     case CONSTANT:
-      return copyConstant(root, context, nodeMap);
+      return copyConstant(root, cfg, context, nodeMap);
     case BLOCK_STMT:
-      return copyBlock(root, context, nodeMap);
+      return copyBlock(root, cfg, context, nodeMap);
     case RETURN: 
-      return copyReturn(root, context, nodeMap);
+      return copyReturn(root, cfg, context, nodeMap);
     case VAR: 
-      return copyVar(root, context, nodeMap);
+      return copyVar(root, cfg, context, nodeMap);
     case GOTO: 
-      return copyGoto(root, context, nodeMap);
+      return copyGoto(root, cfg, context, nodeMap);
     default:
-      return copyNode(root, context, nodeMap);
+      return copyNode(root, cfg, context, nodeMap);
     }
   }
 
   /* Constants are not affected by the rewriting, they are just copied. */
-  private CAstNode copyConstant(CAstNode root, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
+  private CAstNode copyConstant(CAstNode root, CAstControlFlowMap cfg, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     CAstNode newNode = Ast.makeConstant(root.getValue());
     nodeMap.put(Pair.make(root, context.key()), newNode);
     return newNode;
   }
 
   /* Ask the policy whether it wants anything extracted from this block; otherwise the node is simply copied. */
-  private CAstNode copyBlock(CAstNode root, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
+  private CAstNode copyBlock(CAstNode root, CAstControlFlowMap cfg, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     List<ExtractionRegion> regions = policies.getFirst().extract(root);
     if(regions == null) {
-      return copyNode(root, context, nodeMap);
+      return copyNode(root, cfg, context, nodeMap);
     } else {
       ArrayList<CAstNode> copied_children = new ArrayList<CAstNode>();
       int next_child = 0;
       // code in between regions is handled by invoking copyNodes, the regions themselves by extractRegion
       for(ExtractionRegion region : regions) {
         for(;next_child<region.getStart();++next_child)
-          copied_children.add(copyNodes(root.getChild(next_child), new ChildPos(root, next_child, context), nodeMap));
-        for(CAstNode stmt : extractRegion(root, new ExtractionPos(root, region, context), nodeMap))
+          copied_children.add(copyNodes(root.getChild(next_child), cfg, new ChildPos(root, next_child, context), nodeMap));
+        for(CAstNode stmt : extractRegion(root, cfg, new ExtractionPos(root, region, context), nodeMap))
           copied_children.add(stmt);
         next_child = region.getEnd();
       }
       for(;next_child<root.getChildCount();++next_child)
-        copied_children.add(copyNodes(root.getChild(next_child), new ChildPos(root, next_child, context), nodeMap));
+        copied_children.add(copyNodes(root.getChild(next_child), cfg, new ChildPos(root, next_child, context), nodeMap));
       CAstNode newNode = Ast.makeNode(BLOCK_STMT, copied_children.toArray(new CAstNode[0]));
       nodeMap.put(Pair.make(root, context.key()), newNode);
       return newNode;
@@ -250,7 +250,7 @@ public class ClosureExtractor extends CAstRewriterExt {
    * Normal variables are just copied, but 'this' references need to be rewritten if we are inside an extracted
    * function body.
    */
-  private CAstNode copyVar(CAstNode root, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
+  private CAstNode copyVar(CAstNode root, CAstControlFlowMap cfg, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     /*
      * If this node is a "this" reference, the outermost enclosing extracted function needs to pass in
      * the value of "this" as a parameter.
@@ -268,10 +268,10 @@ public class ClosureExtractor extends CAstRewriterExt {
         nodeMap.put(Pair.make(root, context.key()), newNode);
         return newNode;
       } else {
-        return copyNode(root, context, nodeMap);
+        return copyNode(root, cfg, context, nodeMap);
       }
     } else {
-      return copyNode(root, context, nodeMap);
+      return copyNode(root, cfg, context, nodeMap);
     }
   }
 
@@ -279,7 +279,7 @@ public class ClosureExtractor extends CAstRewriterExt {
    * 'break' and 'continue' statements are both encoded as GOTO. If they refer to a target outside the innermost
    * enclosing extracted function body, they are rewritten into a 'return' statement.
    */
-  private CAstNode copyGoto(CAstNode root, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
+  private CAstNode copyGoto(CAstNode root, CAstControlFlowMap cfg, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     CAstNode target = getCurrentEntity().getControlFlow().getTarget(root, null);
     ExtractionPos epos = ExtractionPos.getEnclosingExtractionPos(context);
     if(epos != null && !NodePos.inSubtree(target, epos.getParent())) {
@@ -301,18 +301,18 @@ public class ClosureExtractor extends CAstRewriterExt {
       nodeMap.put(Pair.make(root, context.key()), newNode);
       return newNode;
     } else {
-      return copyNode(root, context, nodeMap);
+      return copyNode(root, cfg, context, nodeMap);
     }
   }
 
   /* 'return' statements inside an extracted function body need to be encoded in a similar fashion. */
-  private CAstNode copyReturn(CAstNode root, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
+  private CAstNode copyReturn(CAstNode root, CAstControlFlowMap cfg, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     ExtractionPos epos = ExtractionPos.getEnclosingExtractionPos(context);
 
     // if an extracted function body may terminate normally, we need to append a default RETURN node
     // which should not be rewritten; this node is marked as 'synthetic'
     if(epos == null || isSynthetic(root))
-      return copyNode(root, context, nodeMap);
+      return copyNode(root, cfg, context, nodeMap);
 
     // add a return to every enclosing extracted function body
     do {
@@ -323,7 +323,7 @@ public class ClosureExtractor extends CAstRewriterExt {
     // emit appropriate 'return' statement
     if(root.getChildCount() > 0) {
       // return { type: 'return', value: <retval> }
-      CAstNode retval = copyNodes(root.getChild(0), new ChildPos(root, 0, context), nodeMap);
+      CAstNode retval = copyNodes(root.getChild(0), cfg, new ChildPos(root, 0, context), nodeMap);
       CAstNode newNode = 
           Ast.makeNode(RETURN,
               Ast.makeNode(OBJECT_LITERAL,
@@ -352,10 +352,10 @@ public class ClosureExtractor extends CAstRewriterExt {
   }
 
   /* Recursively copy child nodes. */
-  private CAstNode copyNode(CAstNode node, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
+  private CAstNode copyNode(CAstNode node, CAstControlFlowMap cfg, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     CAstNode children[] = new CAstNode[node.getChildCount()];
     for (int i = 0; i < children.length; i++) {
-      children[i] = copyNodes(node.getChild(i), new ChildPos(node, i, context), nodeMap);
+      children[i] = copyNodes(node.getChild(i), cfg, new ChildPos(node, i, context), nodeMap);
     }
     CAstNode newNode = Ast.makeNode(node.getKind(), children);
     nodeMap.put(Pair.make(node, context.key()), newNode);
@@ -363,7 +363,7 @@ public class ClosureExtractor extends CAstRewriterExt {
     // if this node has a control flow successor beyond the innermost enclosing extracted function loop, we need to reroute
     ExtractionPos epos = ExtractionPos.getEnclosingExtractionPos(context);
     if(!isFlowDeleted(newNode, getCurrentEntity()) && epos != null) {
-      CAstControlFlowMap cfg = getCurrentEntity().getControlFlow();
+      // CAstControlFlowMap cfg = getCurrentEntity().getControlFlow();
       Collection<Object> labels = cfg.getTargetLabels(node);
       boolean invalidateCFlow = false;
       for(Object label : labels) {
@@ -388,7 +388,7 @@ public class ClosureExtractor extends CAstRewriterExt {
   }
 
   private int anonymous_counter = 0;
-  private List<CAstNode> extractRegion(CAstNode root, ExtractionPos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
+  private List<CAstNode> extractRegion(CAstNode root, CAstControlFlowMap cfg, ExtractionPos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     CAstEntity entity = getCurrentEntity();
 
     // whether we are extracting a single statement that is itself a block
@@ -434,7 +434,7 @@ public class ClosureExtractor extends CAstRewriterExt {
           throw new UnimplementedError("Two-level extraction not fully implemented.");
         int i;
         for(i=0;i<tler.getStartInner();++i)
-          prologue.add(copyNodes(start.getChild(i),context, nodeMap));
+          prologue.add(copyNodes(start.getChild(i), cfg, context, nodeMap));
         for(;i<start.getChildCount();++i)
           fun_body_stmts.add(start.getChild(i));
         for(i=context.getStart()+1;i<context.getEnd();++i)
@@ -459,7 +459,7 @@ public class ClosureExtractor extends CAstRewriterExt {
      * Now we rewrite the body and construct a Rewrite object.
      */
     final Map<Pair<CAstNode, NoKey>, CAstNode> nodes = HashMapFactory.make();
-    final CAstNode newRoot = copyNodes(fun_body, context, nodes);
+    final CAstNode newRoot = copyNodes(fun_body, cfg, context, nodes);
     final CAstSourcePositionMap theSource = copySource(nodes, entity.getSourceMap());
     final CAstControlFlowMap theCfg = copyFlow(nodes, entity.getControlFlow(), theSource);
     final CAstNodeTypeMap theTypes = copyTypes(nodes, entity.getNodeTypeMap());
@@ -468,11 +468,11 @@ public class ClosureExtractor extends CAstRewriterExt {
       theChildren.putAll(copyChildren(root.getChild(i), nodes, entity.getAllScopedEntities()));
 
     Rewrite rw = new Rewrite() {
-      @Override public CAstNode newRoot() { return newRoot; }
-      @Override public CAstControlFlowMap newCfg() { return theCfg; }
-      @Override public CAstSourcePositionMap newPos() { return theSource; }
-      @Override public CAstNodeTypeMap newTypes() { return theTypes; }
-      @Override public Map<CAstNode, Collection<CAstEntity>> newChildren() { return theChildren; }
+      public CAstNode newRoot() { return newRoot; }
+      public CAstControlFlowMap newCfg() { return theCfg; }
+      public CAstSourcePositionMap newPos() { return theSource; }
+      public CAstNodeTypeMap newTypes() { return theTypes; }
+      public Map<CAstNode, Collection<CAstEntity>> newChildren() { return theChildren; }
     };
     new_entity.setRewrite(rw);
 
@@ -724,4 +724,5 @@ public class ClosureExtractor extends CAstRewriterExt {
     synthetic.add(node);
     return node;
   }
+
 }

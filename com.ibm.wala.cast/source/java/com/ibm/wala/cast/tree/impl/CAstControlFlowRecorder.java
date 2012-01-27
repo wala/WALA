@@ -140,6 +140,14 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
     assert from != null;
     assert to != null;
 
+    if (CAstToNode.containsKey(to)) {
+      to = CAstToNode.get(to);
+    }
+
+    if (CAstToNode.containsKey(from)) {
+      from = CAstToNode.get(from);
+    }
+    
     table.put(new Key(label, from), to);
 
     Set<Object> ls = labelMap.get(from);
@@ -170,8 +178,12 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
 
   public void addAll(CAstControlFlowMap other) {
     for (CAstNode n : other.getMappedNodes()) {
+      if (! CAstToNode.containsKey(n)) {
+        map(n, n);
+      }
       for (Object l : other.getTargetLabels(n)) {
-        add(n, l, other.getTarget(n, l));
+        CAstNode to = other.getTarget(n, l);
+        add(n, to, l);
       }
     }
   }

@@ -163,16 +163,15 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
         }
 
         @Override
-        protected void leaveFunctionStmt(CAstNode n, Context c, CAstVisitor visitor) {
-          WalkContext context = (WalkContext) c;
+        protected void leaveFunctionStmt(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
           CAstEntity fn = (CAstEntity) n.getChild(0).getValue();
-          Scope cs = context.currentScope();
+          Scope cs = c.currentScope();
           if (!cs.contains(fn.getName())
               || cs.lookup(fn.getName()).getDefiningScope().getEntity().getKind() == CAstEntity.SCRIPT_ENTITY) {
             int result = processFunctionExpr(n, c);
-            assignValue(n, context, cs.lookup(fn.getName()), fn.getName(), result);
+            assignValue(n, c, cs.lookup(fn.getName()), fn.getName(), result);
           } else {
-            super.leaveFunctionStmt(n, context, visitor);
+            super.leaveFunctionStmt(n, c, visitor);
           }
         }
       };

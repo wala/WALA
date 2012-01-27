@@ -17,7 +17,6 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Iterator;
 
-import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.loader.SingleClassLoaderFactory;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
@@ -30,6 +29,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 public class Util {
@@ -37,7 +37,7 @@ public class Util {
   /**
    * flag to prevent dumping of verbose call graph / pointer analysis output
    */
-  private static final boolean AVOID_DUMP = true;
+  public static boolean AVOID_DUMP = true;
 
   public static SourceFileModule makeSourceModule(URL script, String dir, String name) {
     // DO NOT use File.separator here, since this name is matched against
@@ -73,8 +73,8 @@ public class Util {
     return result;
   }
 
-  public static AnalysisCache makeCache() {
-    return new AnalysisCache(AstIRFactory.makeDefaultFactory());
+  public static AnalysisCache makeCache(IRFactory<IMethod> factory) {
+    return new AnalysisCache(factory);
   }
 
   public static String getShortName(CGNode nd) {

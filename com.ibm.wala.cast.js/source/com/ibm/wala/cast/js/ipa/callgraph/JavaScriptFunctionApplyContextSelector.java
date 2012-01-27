@@ -91,7 +91,6 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
       this.isNonNullArray = new BooleanContextItem(isNonNullArray);
     }
 
-    @Override
     public ContextItem get(ContextKey name) {
       if (APPLY_NON_NULL_ARGS.equals(name)) {
         return isNonNullArray;

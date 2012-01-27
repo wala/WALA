@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Set;
 
+import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.DomLessSourceExtractor;
 import com.ibm.wala.cast.js.html.IdentityUrlResolver;
@@ -40,8 +41,8 @@ public class JsViewerDriver extends Util {
 
 		SourceModule[] sources = getSources(domless, url);
 		
-		JSCFABuilder builder = makeCGBuilder(new WebPageLoaderFactory(translatorFactory), sources, false, true);
-    builder.setBaseURL(url);
+		JSCFABuilder builder = makeCGBuilder(new WebPageLoaderFactory(translatorFactory), sources, false, false, AstIRFactory.makeDefaultFactory());
+		builder.setBaseURL(url);
 
 		CallGraph cg = builder.makeCallGraph(builder.getOptions());
 		PointerAnalysis pa = builder.getPointerAnalysis();

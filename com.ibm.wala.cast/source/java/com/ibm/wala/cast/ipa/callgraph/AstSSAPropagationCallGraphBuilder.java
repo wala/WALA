@@ -277,11 +277,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
   protected static class AstConstraintVisitor extends ConstraintVisitor implements AstInstructionVisitor {
 
-    private final CallGraph cg;
-
-    public AstConstraintVisitor(AstSSAPropagationCallGraphBuilder builder, CGNode node) {
+     public AstConstraintVisitor(AstSSAPropagationCallGraphBuilder builder, CGNode node) {
       super(builder, node);
-      this.cg = builder.callGraph;
     }
 
     protected AstSSAPropagationCallGraphBuilder getBuilder() {

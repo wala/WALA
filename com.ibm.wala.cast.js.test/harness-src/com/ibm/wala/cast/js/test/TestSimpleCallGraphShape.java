@@ -42,6 +42,18 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     justThisTest(TestSimpleCallGraphShape.class);
   }
 
+  protected static final Object[][] assertionsForArgs = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/args.js" } },
+    new Object[] {
+        "tests/args.js",
+        new String[] { "tests/args.js/a" } },
+    new Object[] { "tests/args.js/a", new String[] { "tests/args.js/x", "tests/args.js/y" } } };
+
+@Test public void testArgs() throws IOException, IllegalArgumentException, CancelException {
+  CallGraph CG = Util.makeScriptCG("tests", "args.js");
+  verifyGraphAssertions(CG, assertionsForArgs);
+}
+
   protected static final Object[][] assertionsForSimple = new Object[][] {
       new Object[] { ROOT, new String[] { "tests/simple.js" } },
       new Object[] {

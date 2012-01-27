@@ -12,7 +12,9 @@ package com.ibm.wala.cast.loader;
 
 import java.util.Collection;
 
+import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.ir.translator.AstTranslator.AstLexicalInformation;
+import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cfg.AbstractCFG;
@@ -30,6 +32,11 @@ import com.ibm.wala.util.strings.Atom;
 
 public abstract class AstMethod implements IMethod {
 
+  public interface Retranslatable {
+    void retranslate(AstTranslator xlator);
+    CAstEntity getEntity();
+  }
+  
   public interface DebuggingInformation {
 
     Position getCodeBodyPosition();

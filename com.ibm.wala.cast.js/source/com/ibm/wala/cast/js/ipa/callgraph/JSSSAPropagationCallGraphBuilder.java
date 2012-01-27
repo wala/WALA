@@ -686,15 +686,17 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           system.newConstraint(F, constParams[i][j]);
         }
 
-        if (av != -1 && i > num_pseudoargs)
+        if (av != -1 && i > num_pseudoargs) {
           targetVisitor.newFieldWrite(target, av, fn, constParams[i]);
-
+        }
+        
       } else {
         PointerKey A = getPointerKeyForLocal(caller, instruction.getUse(i));
         system.newConstraint(F, (F instanceof FilteredPointerKey) ? filterOperator : assignOperator, A);
 
-        if (av != -1 && i > num_pseudoargs)
+        if (av != -1 && i > num_pseudoargs) {
           targetVisitor.newFieldWrite(target, av, fn, F);
+        }
       }
     }
 

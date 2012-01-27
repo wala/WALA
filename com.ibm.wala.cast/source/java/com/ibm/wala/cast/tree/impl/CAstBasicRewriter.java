@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
@@ -58,6 +59,6 @@ public abstract class CAstBasicRewriter
     super(Ast, recursive, new NonCopyingContext());
   }
 
-  protected abstract CAstNode copyNodes(CAstNode root, NonCopyingContext context, Map<Pair<CAstNode,NoKey>, CAstNode> nodeMap);
+  protected abstract CAstNode copyNodes(CAstNode root, final CAstControlFlowMap cfg, NonCopyingContext context, Map<Pair<CAstNode,NoKey>, CAstNode> nodeMap);
   
 }

@@ -61,33 +61,27 @@ class ExtractedFunction implements CAstEntity {
 		this.types = r.newTypes();
 	}
 	
-	@Override
 	public int getKind() {
 		return CAstEntity.FUNCTION_ENTITY;
 	}
 
-	@Override
 	public String getName() {
 		return name;
 	}
 
-	@Override
 	public String getSignature() {
 		return null;
 	}
 
-	@Override
 	public String[] getArgumentNames() {
 		computeParms();
 		return parms;
 	}
 
-	@Override
 	public CAstNode[] getArgumentDefaults() {
 		return new CAstNode[0];
 	}
 
-	@Override
 	public int getArgumentCount() {
 		computeParms();
 		return parms.length;
@@ -105,7 +99,6 @@ class ExtractedFunction implements CAstEntity {
 		}
 	}
 
-	@Override
 	public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
 		if(scopedEntities == null) {
 			scopedEntities = HashMapFactory.make();
@@ -132,7 +125,6 @@ class ExtractedFunction implements CAstEntity {
 		return scopedEntities;
 	}
 
-	@Override
 	public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
 		if(getAllScopedEntities().containsKey(construct)) {
 	        return getAllScopedEntities().get(construct).iterator();							
@@ -141,37 +133,30 @@ class ExtractedFunction implements CAstEntity {
 		}
 	}
 
-	@Override
 	public CAstNode getAST() {
 		return root;
 	}
 
-	@Override
 	public CAstControlFlowMap getControlFlow() {
 		return cfg;
 	}
 
-	@Override
 	public CAstSourcePositionMap getSourceMap() {
 		return posmap;
 	}
 
-	@Override
 	public Position getPosition() {
 		return getSourceMap().getPosition(root);
 	}
 
-	@Override
 	public CAstNodeTypeMap getNodeTypeMap() {
 		return types;
 	}
 
-	@Override
 	public Collection<CAstQualifier> getQualifiers() {
 		return null;
 	}
 
-	@Override
 	public CAstType getType() {
 		return null;
 	}

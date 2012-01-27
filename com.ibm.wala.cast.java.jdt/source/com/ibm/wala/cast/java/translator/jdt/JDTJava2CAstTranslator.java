@@ -128,10 +128,11 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.WhileStatement;
 
 import com.ibm.wala.cast.ir.translator.AstTranslator.InternalCAstSymbol;
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst.DoLoopTranslator;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.java.loader.Util;
 import com.ibm.wala.cast.java.translator.JavaProcedureEntity;
-import com.ibm.wala.cast.java.translator.TranslatorToCAst;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstEntity;
@@ -175,7 +176,7 @@ import com.ibm.wala.util.debug.Assertions;
 // * enums (probably in simplename or something. but using resolveConstantExpressionValue() possible)
 
 @SuppressWarnings("unchecked")
-public class JDTJava2CAstTranslator implements TranslatorToCAst {
+public class JDTJava2CAstTranslator {
   protected final CAst fFactory = new CAstImpl();
 
   // ///////////////////////////////////////////
@@ -203,6 +204,8 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
 
   protected ITypeBinding OutOfMemoryError;
 
+  protected DoLoopTranslator doLoopTranslator;
+  
   private String fullPath;
 
   private CompilationUnit cu;
@@ -211,20 +214,7 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
   // COMPILATION UNITS & TYPES
   //
 
-  public JDTJava2CAstTranslator(JavaSourceLoaderImpl sourceLoader) {
-    this.fSourceLoader = sourceLoader;
-  }
-
-  public CAstEntity translate(Object astRoot, String fullPath) {
-    this.cu = (CompilationUnit) astRoot;
-
-    this.fullPath = fullPath;
-    ast = cu.getAST();
-
-    // FIXME: we might need one AST (-> "Object" class) for all files.
-    fIdentityMapper = new JDTIdentityMapper(fSourceLoader.getReference(), ast);
-    fTypeDict = new JDTTypeDictionary(ast, fIdentityMapper);
-
+  public JDTJava2CAstTranslator(JavaSourceLoaderImpl sourceLoader, CompilationUnit astRoot, String fullPath, boolean replicateForDoLoops) {
     fDivByZeroExcType = FakeExceptionTypeBinding.arithmetic;
     fNullPointerExcType = FakeExceptionTypeBinding.nullPointer;
     fClassCastExcType = FakeExceptionTypeBinding.classCast;
@@ -232,12 +222,27 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
     ExceptionInInitializerError = FakeExceptionTypeBinding.initException;
     OutOfMemoryError = FakeExceptionTypeBinding.outOfMemory;
 
+    this.fSourceLoader = sourceLoader;
+    this.cu = astRoot;
+
+    this.fullPath = fullPath;
+    ast = cu.getAST();
+
+    this.doLoopTranslator = new DoLoopTranslator(replicateForDoLoops, fFactory);
+    
+    // FIXME: we might need one AST (-> "Object" class) for all files.
+    fIdentityMapper = new JDTIdentityMapper(fSourceLoader.getReference(), ast);
+    fTypeDict = new JDTTypeDictionary(ast, fIdentityMapper);
+
     fRuntimeExcType = ast.resolveWellKnownType("java.lang.RuntimeException");
     assert fRuntimeExcType != null;
+  }
+
+  public CAstEntity translateToCAst() {
 
     List<CAstEntity> declEntities = new ArrayList<CAstEntity>();
 
-    for (Iterator iter = cu.types().iterator(); iter.hasNext();) {
+    for (Iterator<CAstEntity> iter = cu.types().iterator(); iter.hasNext();) {
       AbstractTypeDeclaration decl = (AbstractTypeDeclaration) iter.next();
       // can be of type AnnotationTypeDeclaration, EnumDeclaration, TypeDeclaration
       declEntities.add(visit(decl, new RootContext()));
@@ -2095,7 +2100,6 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
   // ////////////////
 
   private CAstNode visit(LabeledStatement n, WalkContext context) {
-    ASTNode breakTarget = makeBreakOrContinueTarget(n, n.getLabel().getIdentifier());
 
     // find the first non-block statement ant set-up the label map (useful for breaking many fors)
     ASTNode stmt = n.getBody();
@@ -2108,10 +2112,12 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
 
     CAstNode result;
     if (!(n.getBody() instanceof EmptyStatement)) {
+      ASTNode breakTarget = makeBreakOrContinueTarget(n, n.getLabel().getIdentifier());
+      CAstNode breakNode = visitNode(breakTarget, context);
       WalkContext child = new BreakContext(context, n.getLabel().getIdentifier(), breakTarget);
 
       result = makeNode(context, fFactory, n, CAstNode.BLOCK_STMT, makeNode(context, fFactory, n, CAstNode.LABEL_STMT, fFactory
-          .makeConstant(n.getLabel().getIdentifier()), visitNode(n.getBody(), child)), visitNode(breakTarget, context));
+          .makeConstant(n.getLabel().getIdentifier()), visitNode(n.getBody(), child)), breakNode);
     } else {
       result = makeNode(context, fFactory, n, CAstNode.LABEL_STMT, fFactory.makeConstant(n.getLabel().getIdentifier()), visitNode(n
           .getBody(), context));
@@ -2163,7 +2169,10 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
     Statement body = n.getBody();
 
     ASTNode breakTarget = makeBreakOrContinueTarget(n, "breakLabel" + n.getStartPosition());
+    CAstNode breakNode = visitNode(breakTarget, context);
+
     ASTNode continueTarget = makeBreakOrContinueTarget(n, "continueLabel" + n.getStartPosition());
+    CAstNode continueNode = visitNode(continueTarget, context);
 
     String loopLabel = (String) context.getLabelMap().get(n);
     LoopContext lc = new LoopContext(context, loopLabel, breakTarget, continueTarget);
@@ -2172,8 +2181,8 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
      * The following loop is created sligtly differently than in jscore. It doesn't have a specific target for continue.
      */
     return makeNode(context, fFactory, n, CAstNode.BLOCK_STMT, makeNode(context, fFactory, n, CAstNode.LOOP, visitNode(cond,
-        context), makeNode(context, fFactory, n, CAstNode.BLOCK_STMT, visitNode(body, lc), visitNode(continueTarget, context))),
-        visitNode(breakTarget, context));
+        context), makeNode(context, fFactory, n, CAstNode.BLOCK_STMT, visitNode(body, lc), continueNode)),
+        breakNode);
   }
 
   private CAstNode getSwitchCaseConstant(SwitchCase n, WalkContext context) {
@@ -2282,22 +2291,21 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
   }
 
   private CAstNode visit(DoStatement n, WalkContext context) {
-    ASTNode header = ast.newEmptyStatement();
-    ASTNode breakTarget = makeBreakOrContinueTarget(n, "breakLabel" + n.getStartPosition());
-    ASTNode continueTarget = makeBreakOrContinueTarget(n, "continue" + "Label" + n.getStartPosition());
-
-    CAstNode loopGoto = makeNode(context, fFactory, n, CAstNode.IFGOTO, visitNode(n.getExpression(), context));
-
-    context.cfg().map(loopGoto, loopGoto);
-    context.cfg().add(loopGoto, header, Boolean.TRUE);
-
     String loopLabel = (String) context.getLabelMap().get(n); // set by visit(LabeledStatement)
-    WalkContext loopContext = new LoopContext(context, loopLabel, breakTarget, continueTarget);
+    String token = loopLabel==null? "at_" + n.getStartPosition(): loopLabel;
+    
+    ASTNode breakTarget = makeBreakOrContinueTarget(n, "breakLabel_" + token);
+    CAstNode breakNode = visitNode(breakTarget, context);
 
+    ASTNode continueTarget = makeBreakOrContinueTarget(n, "continueLabel_" + token);
     CAstNode continueNode = visitNode(continueTarget, context);
+ 
+    CAstNode loopTest = visitNode(n.getExpression(), context);
 
-    return makeNode(context, fFactory, n, CAstNode.BLOCK_STMT, visitNode(header, context), makeNode(context, fFactory, n,
-        CAstNode.BLOCK_STMT, visitNode(n.getBody(), loopContext), continueNode), loopGoto, visitNode(breakTarget, context));
+    WalkContext loopContext = new LoopContext(context, loopLabel, breakTarget, continueTarget);
+    CAstNode loopBody = visitNode(n.getBody(), loopContext);
+
+    return doLoopTranslator.translateDoLoop(loopTest, loopBody, continueNode, breakNode, context);  
   }
 
   /**
@@ -2889,23 +2897,11 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
    * Contains things needed by in the visit() of some nodes to process the nodes. For example, pos() contains the source position
    * mapping which each node registers
    */
-  public static interface WalkContext {
-    // LEFTOUT: plenty of stuff
-    public CAstControlFlowRecorder cfg();
-
-    public void addScopedEntity(CAstNode newNode, CAstEntity visit);
+  public static interface WalkContext extends TranslatorToCAst.WalkContext<WalkContext, ASTNode> {
 
     public Collection<Pair<ITypeBinding, Object>> getCatchTargets(ITypeBinding type);
 
-    public CAstSourcePositionRecorder pos();
-
-    public CAstNodeTypeMapRecorder getNodeTypeMap();
-
     public Map<ASTNode, String> getLabelMap();
-
-    public ASTNode getContinueFor(String label);
-
-    public ASTNode getBreakFor(String label);
 
     public boolean needLValue();
   }
@@ -2914,46 +2910,21 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
    * Default context functions. When one context doesn't handle something, it the next one up does. For example, there is only one
    * source pos. mapping per MethodContext, so loop contexts delegate it up.
    */
-  public static class DelegatingContext implements WalkContext {
-    protected WalkContext parent;
+  public static class DelegatingContext extends TranslatorToCAst.DelegatingContext<WalkContext, ASTNode> implements WalkContext {
 
     public DelegatingContext(WalkContext parent) {
-      this.parent = parent;
-    }
-
-    public CAstControlFlowRecorder cfg() {
-      return parent.cfg();
-    }
-
-    public CAstSourcePositionRecorder pos() {
-      return parent.pos();
-    }
-
-    public CAstNodeTypeMapRecorder getNodeTypeMap() {
-      return parent.getNodeTypeMap();
+      super(parent);
     }
 
     public Collection<Pair<ITypeBinding, Object>> getCatchTargets(ITypeBinding type) {
       return parent.getCatchTargets(type);
     }
 
-    public void addScopedEntity(CAstNode newNode, CAstEntity visit) {
-      parent.addScopedEntity(newNode, visit);
-    }
-
     public Map<ASTNode, String> getLabelMap() {
       return parent.getLabelMap();
     }
 
-    public ASTNode getContinueFor(String label) {
-      return parent.getContinueFor(label);
-    }
-
-    public ASTNode getBreakFor(String label) {
-      return parent.getBreakFor(label);
-    }
-
-    public boolean needLValue() {
+     public boolean needLValue() {
       return parent.needLValue();
     }
   }
@@ -2961,43 +2932,14 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
   /*
    * Root context. Doesn't do anything.
    */
-  public static class RootContext implements WalkContext {
-    public void addScopedEntity(CAstNode newNode, CAstEntity visit) {
-      Assertions.UNREACHABLE("Rootcontext.addScopedEntity()");
-    }
-
-    public CAstControlFlowRecorder cfg() {
-      Assertions.UNREACHABLE("RootContext.cfg()");
-      return null;
-    }
-
-    public CAstSourcePositionRecorder pos() {
-      Assertions.UNREACHABLE("RootContext.pos()");
-      return null;
-    }
-
-    public CAstNodeTypeMapRecorder getNodeTypeMap() {
-      Assertions.UNREACHABLE("RootContext.getNodeTypeMap()");
-      return null;
-    }
-
-    public Collection<Pair<ITypeBinding, Object>> getCatchTargets(ITypeBinding type) {
+  public static class RootContext extends TranslatorToCAst.RootContext<WalkContext, ASTNode> implements WalkContext {
+     public Collection<Pair<ITypeBinding, Object>> getCatchTargets(ITypeBinding type) {
       Assertions.UNREACHABLE("RootContext.getCatchTargets()");
       return null;
     }
 
     public Map<ASTNode, String> getLabelMap() {
       Assertions.UNREACHABLE("RootContext.getLabelMap()");
-      return null;
-    }
-
-    public ASTNode getBreakFor(String label) {
-      Assertions.UNREACHABLE("RootContext.getBreakFor()");
-      return null;
-    }
-
-    public ASTNode getContinueFor(String label) {
-      Assertions.UNREACHABLE("RootContext.getContinueFor()");
       return null;
     }
 

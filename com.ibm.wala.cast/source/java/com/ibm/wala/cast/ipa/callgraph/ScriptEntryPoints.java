@@ -61,7 +61,7 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
       }
 
       int functionVn = getMethod().isStatic()? -1: makeArgument(m, 0);
-      int paramVns[] = new int[Math.max(0, getNumberOfParameters() - 1)];
+      int paramVns[] = new int[Math.min(0, getNumberOfParameters() - 1)];
       for (int j = 0; j < paramVns.length; j++) {
         paramVns[j] = makeArgument(m, j + 1);
       }

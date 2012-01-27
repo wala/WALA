@@ -119,7 +119,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
    * how (original node, copy key) pairs are mapped to nodes in the rewritten
    * tree.
    */
-  protected abstract CAstNode copyNodes(CAstNode root, C context, Map<Pair<CAstNode, K>, CAstNode> nodeMap);
+  protected abstract CAstNode copyNodes(CAstNode root, final CAstControlFlowMap cfg, C context, Map<Pair<CAstNode, K>, CAstNode> nodeMap);
 
   /**
    * in {@link #copyFlow(Map, CAstControlFlowMap, CAstSourcePositionMap)}, if
@@ -170,9 +170,9 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
 
       if (oldSources.contains(oldSource)) {
         Iterator<Object> LS = orig.getTargetLabels(oldSource).iterator();
-        if (orig.getTarget(oldSource, null) != null) {
-          LS = IteratorPlusOne.make(LS, null);
-        }
+        //if (orig.getTarget(oldSource, null) != null) {
+        //  LS = IteratorPlusOne.make(LS, null);
+        //}
 
         while (LS.hasNext()) {
           Object origLabel = LS.next();
@@ -238,7 +238,9 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
 
     allNewTargetNodes.removeAll(newMap.getMappedNodes());
     for (CAstNode newTarget : allNewTargetNodes) {
-      newMap.map(newTarget, newTarget);
+      if (newTarget != CAstControlFlowMap.EXCEPTION_TO_EXIT) {
+        newMap.map(newTarget, newTarget); 
+      }
     }
     
     
@@ -341,7 +343,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
   public Rewrite rewrite(final CAstNode root, final CAstControlFlowMap cfg, final CAstSourcePositionMap pos, final CAstNodeTypeMap types,
       final Map<CAstNode, Collection<CAstEntity>> children) {
     final Map<Pair<CAstNode, K>, CAstNode> nodes = HashMapFactory.make();
-    final CAstNode newRoot = copyNodes(root, rootContext, nodes);
+    final CAstNode newRoot = copyNodes(root, cfg, rootContext, nodes);
     return new Rewrite() {
       private CAstControlFlowMap theCfg = null;
 

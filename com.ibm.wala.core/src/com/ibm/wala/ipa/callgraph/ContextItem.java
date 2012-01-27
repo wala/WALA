@@ -16,4 +16,20 @@ package com.ibm.wala.ipa.callgraph;
  */
 public interface ContextItem {
 
+  public class Value<T> implements ContextItem {
+    private final T v;
+    
+    public Value(T v) {
+      this.v = v;
+    }
+    
+    public T getValue() {
+      return v;
+    }
+
+    public static <T> Value make(T v) {
+      return new Value<T>(v);
+    }
+
+  }
 }

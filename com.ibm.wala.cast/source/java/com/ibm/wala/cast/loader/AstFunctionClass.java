@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.loader;
 
-
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
@@ -30,6 +29,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.strings.Atom;
 
 abstract public class AstFunctionClass implements IClass, ClassConstants {
+  
   private final IClassLoader loader;
 
   protected IMethod functionBody;
