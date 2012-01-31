@@ -471,7 +471,7 @@ public class RhinoToAstTranslator {
       stmts = newStmts;
     }
 
-    final CAstNode ast = Ast.makeNode(CAstNode.BLOCK_STMT, stmts);
+    final CAstNode ast = noteSourcePosition(child, Ast.makeNode(CAstNode.BLOCK_STMT, stmts), n);
     final CAstControlFlowMap map = child.cfg();
     final CAstSourcePositionMap pos = child.pos();
 
