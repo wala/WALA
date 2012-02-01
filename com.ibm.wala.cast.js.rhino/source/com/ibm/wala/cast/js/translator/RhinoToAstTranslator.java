@@ -544,7 +544,7 @@ public class RhinoToAstTranslator {
 		  loopContext = new LoopContext(loopContext, breakStmt, contStmt, null);
 	  } else {
 		  for(Label l : labels) {
-			  loopContext = new LoopContext(loopContext, breakStmt, contStmt, l.getString());				
+			  loopContext = new LoopContext(loopContext, breakStmt, contStmt, l.getName());				
 		  }
 	  }
 	  return loopContext;
@@ -747,33 +747,41 @@ public class RhinoToAstTranslator {
 
 		CAstNode initNode;
 		AstNode var = node.getIterator();
-		assert var instanceof VariableDeclaration || var instanceof LetNode;
-		boolean isLet;
-		VariableDeclaration decl;
-		if (var instanceof LetNode) {
-			isLet = true;
-			decl = ((LetNode)var).getVariables();
+		assert var instanceof Name || var instanceof VariableDeclaration || var instanceof LetNode : var.getClass()  + " " + var;
+		if (var instanceof Name) {
+      initNode = 
+        Ast.makeNode(CAstNode.ASSIGN, 
+          Ast.makeNode(CAstNode.VAR, Ast.makeConstant(((Name)var).getString())),
+          Ast.makeNode(CAstNode.EACH_ELEMENT_GET, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName))));
+		  
 		} else {
-			isLet = false;
-			decl = (VariableDeclaration)var;
-		}
-		assert decl.getVariables().size() == 1;
-		VariableInitializer init = decl.getVariables().iterator().next();
-		if (isLet) {
-			initNode = 
-				Ast.makeNode(CAstNode.DECL_STMT, 
-					Ast.makeConstant(new CAstSymbolImpl(init.getTarget().getString())),
-					Ast.makeNode(CAstNode.EACH_ELEMENT_GET, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName))));
+		  boolean isLet;
+		  VariableDeclaration decl;
+		  if (var instanceof LetNode) {
+		    isLet = true;
+		    decl = ((LetNode)var).getVariables();
+		  } else {
+		    isLet = false;
+		    decl = (VariableDeclaration)var;
+		  }
+		  assert decl.getVariables().size() == 1;
+		  VariableInitializer init = decl.getVariables().iterator().next();
+		  if (isLet) {
+		    initNode = 
+		      Ast.makeNode(CAstNode.DECL_STMT, 
+		          Ast.makeConstant(new CAstSymbolImpl(init.getTarget().getString())),
+		          Ast.makeNode(CAstNode.EACH_ELEMENT_GET, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName))));
 
-		} else {
-			arg.addNameDecl(
-					Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(init.getTarget().getString())),
-						  readName(arg, "$$undefined")));
-				
-			initNode = 
-				Ast.makeNode(CAstNode.ASSIGN, 
-					Ast.makeNode(CAstNode.VAR, Ast.makeConstant(init.getTarget().getString())),
-					Ast.makeNode(CAstNode.EACH_ELEMENT_GET, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName))));
+		  } else {
+		    arg.addNameDecl(
+		        Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(init.getTarget().getString())),
+		            readName(arg, "$$undefined")));
+
+		    initNode = 
+		      Ast.makeNode(CAstNode.ASSIGN, 
+		          Ast.makeNode(CAstNode.VAR, Ast.makeConstant(init.getTarget().getString())),
+		          Ast.makeNode(CAstNode.EACH_ELEMENT_GET, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName))));
+		  }
 		}
 		
 		// body
@@ -787,7 +795,7 @@ public class RhinoToAstTranslator {
 				visit(node.getBody(), loopContext),
 				contLabel);
 		
-		return Ast.makeNode(CAstNode.LOCAL_SCOPE,
+		CAstNode loop = Ast.makeNode(CAstNode.LOCAL_SCOPE,
 				Ast.makeNode(CAstNode.BLOCK_STMT,
 						loopTemp,
 						Ast.makeNode(CAstNode.LOOP,
@@ -795,6 +803,8 @@ public class RhinoToAstTranslator {
 										Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName))),
 								body),
 						breakLabel));
+		arg.cfg().map(node, loop);
+		return loop;
 	}
 
 	@Override
@@ -983,6 +993,7 @@ public class RhinoToAstTranslator {
 
 		for(Label label : node.getLabels()) {
 			result = Ast.makeNode(CAstNode.LABEL_STMT, visit(label, arg), result);
+			arg.cfg().map(label, result);
 		}
 		
 		return result;
@@ -1275,8 +1286,8 @@ public class RhinoToAstTranslator {
 
 	@Override
 	public CAstNode visitWithStatement(WithStatement node, WalkContext arg) {
-		// TODO Auto-generated method stub
-		return null;
+		// TODO implement this somehow
+		return Ast.makeNode(CAstNode.EMPTY);
 	}
 
 	@Override
