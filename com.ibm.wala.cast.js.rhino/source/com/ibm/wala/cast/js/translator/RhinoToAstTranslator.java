@@ -1224,6 +1224,15 @@ public class RhinoToAstTranslator {
 
 		else if (node.getType() == Token.TYPEOF) {
 	        return Ast.makeNode(CAstNode.TYPE_OF, visit(node.getOperand(), arg));
+	        
+    } else if (node.getType() == Token.DELPROP) {
+      AstNode expr = node.getOperand();
+      if (expr instanceof FunctionCall) {
+        expr = ((FunctionCall) expr).getTarget();
+        assert expr instanceof PropertyGet;
+      }
+      
+      return Ast.makeNode(CAstNode.ASSIGN, visit(expr, arg), Ast.makeConstant(null));
 
 		} else {
 			return Ast.makeNode(CAstNode.UNARY_EXPR, translateOpcode(node.getOperator()), visit(node.getOperand(), arg));
