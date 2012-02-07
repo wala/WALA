@@ -177,6 +177,14 @@ public class RhinoToAstTranslator {
   
   }
 
+  private static class BreakContext extends JavaScriptTranslatorToCAst.BreakContext<WalkContext, Node> implements WalkContext {
+
+    BreakContext(WalkContext parent, Node breakTo, String label) {
+      super(parent, breakTo, label);
+    }
+
+  }
+
   private static class LoopContext extends JavaScriptTranslatorToCAst.LoopContext<WalkContext, Node> implements WalkContext {
 
 	LoopContext(WalkContext parent, Node breakTo, Node continueTo, String label) {
@@ -550,6 +558,20 @@ public class RhinoToAstTranslator {
 	  return loopContext;
   }
 
+  private WalkContext makeBreakContext(AstNode node, WalkContext arg,
+      AstNode breakStmt) {
+    WalkContext loopContext = arg;
+    List<Label> labels = getLabels(node);
+    if (labels == null) {
+      loopContext = new BreakContext(loopContext, breakStmt, null);
+    } else {
+      for(Label l : labels) {
+        loopContext = new BreakContext(loopContext, breakStmt, l.getName());       
+      }
+    }
+    return loopContext;
+  }
+
   private class TranslatingVisitor extends TypedNodeVisitor<CAstNode,WalkContext> {
 
 	@Override
@@ -626,14 +648,16 @@ public class RhinoToAstTranslator {
 	@Override
 	public CAstNode visitBreakStatement(BreakStatement node, WalkContext arg) {
 		CAstNode breakStmt;
+		Node target;
 		if (node.getBreakLabel() != null) {
 			breakStmt = Ast.makeNode(CAstNode.GOTO, Ast.makeConstant(node.getBreakLabel().getIdentifier()));
+			target = arg.getBreakFor(node.getBreakLabel().getIdentifier());
 		} else {
 			breakStmt = Ast.makeNode(CAstNode.GOTO);
+			target = arg.getBreakFor(null);
 		}
-		arg.cfg().map(node, breakStmt);
 
-		Node target = node.getBreakTarget();
+		arg.cfg().map(node, breakStmt);
 		arg.cfg().add(node, target, null);
 		
 		return breakStmt;
@@ -839,10 +863,12 @@ public class RhinoToAstTranslator {
 		return args;
 	}
 
+	private static final String baseVarName = "$$-base-$$";
+	
 	@Override
 	public CAstNode visitFunctionCall(FunctionCall n, WalkContext context) {
 		if (!isPrimitiveCall(context, n)) {
-			CAstNode base = Ast.makeNode(CAstNode.VAR, Ast.makeConstant("base"));
+			CAstNode base = Ast.makeNode(CAstNode.VAR, Ast.makeConstant(baseVarName));
 			AstNode callee = n.getTarget();
 			WalkContext child = new BaseCollectingContext(context, callee, base);
 			CAstNode fun = visit(callee, child);
@@ -854,7 +880,7 @@ public class RhinoToAstTranslator {
 				return Ast.makeNode(
 						CAstNode.LOCAL_SCOPE,
 						Ast.makeNode(CAstNode.BLOCK_EXPR,
-								Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl("base")), Ast.makeConstant(null)),
+								Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(baseVarName)), Ast.makeConstant(null)),
 								makeCall(fun, base, args, context)));
 			else
 				return makeCall(fun, makeVarRef(JSSSAPropagationCallGraphBuilder.GLOBAL_OBJ_VAR_NAME), args, context);
@@ -991,9 +1017,11 @@ public class RhinoToAstTranslator {
 	public CAstNode visitLabeledStatement(LabeledStatement node, WalkContext arg) {
 		CAstNode result = visit(node.getStatement(), arg);
 
+		AstNode prev = node;
 		for(Label label : node.getLabels()) {
 			result = Ast.makeNode(CAstNode.LABEL_STMT, visit(label, arg), result);
-			arg.cfg().map(label, result);
+			arg.cfg().map(prev, result);
+			prev = label;
 		}
 		
 		return result;
@@ -1125,7 +1153,12 @@ public class RhinoToAstTranslator {
 
 	@Override
 	public CAstNode visitSwitchStatement(SwitchStatement node, WalkContext context) {
-		int i = 0;
+    AstNode breakStmt = makeEmptyLabelStmt("breakLabel");
+    CAstNode breakLabel = visit(breakStmt, context);
+
+    WalkContext switchBodyContext = makeBreakContext(node, context, breakStmt);
+
+    int i = 0;
 		CAstNode[] children = new CAstNode[ node.getCases().size() * 2 ];
 		for(SwitchCase sc : node.getCases()) {
 			CAstNode label = 
@@ -1142,16 +1175,17 @@ public class RhinoToAstTranslator {
 				context.cfg().add(node, label, labelCAst);
 			}
 			
-			children[i++] = visit(sc, context);
+			children[i++] = visit(sc, switchBodyContext);
 		}
 		
 		CAstNode s = 
 			Ast.makeNode(CAstNode.SWITCH, 
 				visit(node.getExpression(), context), 
 				Ast.makeNode(CAstNode.BLOCK_STMT, children));
+		
 		context.cfg().map(node, s);
 		
-		return s;
+		return Ast.makeNode(CAstNode.BLOCK_STMT, s, breakLabel);
 	}
 
 	@Override
@@ -1253,10 +1287,14 @@ public class RhinoToAstTranslator {
 									readName(arg, "$$undefined")),
 							node));
 				
-			children[i++] = 
-				Ast.makeNode(CAstNode.ASSIGN, 
-					Ast.makeNode(CAstNode.VAR, Ast.makeConstant(init.getTarget().getString())),
-					visit(init, arg));
+			if (init.getInitializer() == null) {
+			  children[i++] = Ast.makeNode(CAstNode.EMPTY);
+			} else {
+			  children[i++] = 
+			    Ast.makeNode(CAstNode.ASSIGN, 
+			      Ast.makeNode(CAstNode.VAR, Ast.makeConstant(init.getTarget().getString())),
+			      visit(init, arg));
+			}
 		}
 		
 		return Ast.makeNode(CAstNode.BLOCK_STMT, children);

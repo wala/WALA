@@ -191,7 +191,7 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
 
     @Override
     public T getBreakFor(String l) {
-      return ((l == null)? label==null: label.equals(l))? breakTarget: super.getBreakFor(l);
+      return (l == null || l.equals(label))? breakTarget: super.getBreakFor(l);
     }
   }
 
@@ -205,7 +205,7 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
 
     @Override
     public T getContinueFor(String l) {
-      return ((l == null)? label==null: label.equals(l))? continueTo: super.getContinueFor(l);
+      return (l == null || l.equals(label))? continueTo: super.getContinueFor(l);
     }
   }
 
