@@ -1257,11 +1257,8 @@ public class RhinoToAstTranslator {
 			
 		} else if (node.getType() == Token.TYPEOFNAME) {
 	        return Ast.makeNode(CAstNode.TYPE_OF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(node.getString())));
-		}
-
-		else if (node.getType() == Token.TYPEOF) {
+		}	else if (node.getType() == Token.TYPEOF) {
 	        return Ast.makeNode(CAstNode.TYPE_OF, visit(node.getOperand(), arg));
-	        
     } else if (node.getType() == Token.DELPROP) {
       AstNode expr = node.getOperand();
       if (expr instanceof FunctionCall) {
@@ -1270,7 +1267,8 @@ public class RhinoToAstTranslator {
       }
       
       return Ast.makeNode(CAstNode.ASSIGN, visit(expr, arg), Ast.makeConstant(null));
-
+		} else if (node.getType() == Token.VOID) {
+		  return Ast.makeConstant(null);
 		} else {
 			return Ast.makeNode(CAstNode.UNARY_EXPR, translateOpcode(node.getOperator()), visit(node.getOperand(), arg));
 		}
