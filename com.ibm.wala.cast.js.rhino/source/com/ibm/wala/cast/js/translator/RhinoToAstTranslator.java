@@ -1123,7 +1123,7 @@ public class RhinoToAstTranslator {
 		} else {
 			return 
 				Ast.makeNode(CAstNode.LOCAL_SCOPE,
-					Ast.makeNode(CAstNode.BLOCK_EXPR, nodes.toArray(new CAstNode[ nodes.size() ])));
+					Ast.makeNode(CAstNode.BLOCK_STMT, nodes.toArray(new CAstNode[ nodes.size() ])));
 		}
 	}
 
