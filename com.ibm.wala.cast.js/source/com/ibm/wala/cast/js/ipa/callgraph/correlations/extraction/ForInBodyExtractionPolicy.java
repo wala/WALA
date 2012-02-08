@@ -13,7 +13,9 @@ package com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction;
 
 import static com.ibm.wala.cast.tree.CAstNode.ASSIGN;
 import static com.ibm.wala.cast.tree.CAstNode.BLOCK_STMT;
+import static com.ibm.wala.cast.tree.CAstNode.DECL_STMT;
 import static com.ibm.wala.cast.tree.CAstNode.EACH_ELEMENT_GET;
+import static com.ibm.wala.cast.tree.CAstNode.LABEL_STMT;
 import static com.ibm.wala.cast.tree.CAstNode.VAR;
 
 import java.util.Collections;
@@ -21,7 +23,11 @@ import java.util.List;
 
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
-import com.ibm.wala.cast.tree.pattern.*;
+import com.ibm.wala.cast.tree.pattern.Alt;
+import com.ibm.wala.cast.tree.pattern.AnyNode;
+import com.ibm.wala.cast.tree.pattern.NodeOfKind;
+import com.ibm.wala.cast.tree.pattern.SomeConstant;
+import com.ibm.wala.cast.tree.pattern.SubtreeOfKind;
 
 /**
  * A policy telling a {@link ClosureExtractor} to extract the body of every for-in loop.
@@ -47,7 +53,27 @@ public class ForInBodyExtractionPolicy extends ExtractionPolicy {
   @Override
   public List<ExtractionRegion> extract(CAstNode node) {
     SomeConstant loopVar = new SomeConstant();
-    /* matches the following pattern:
+    
+    /* 
+     * matches Rhino 1.7.3 encoding of for-in loop bodies:
+     * 
+     *   BLOCK_STMT
+     *     decl/assign of loop variable
+     *     <loopBody>
+     */
+    if(new NodeOfKind(BLOCK_STMT,
+        new Alt(new NodeOfKind(DECL_STMT,
+                               loopVar,
+                               new SubtreeOfKind(EACH_ELEMENT_GET)),
+                new NodeOfKind(ASSIGN,
+                               new NodeOfKind(VAR, loopVar),
+                               new SubtreeOfKind(EACH_ELEMENT_GET))),
+        new AnyNode(),
+        new SubtreeOfKind(LABEL_STMT)).matches(node)) {
+      return Collections.singletonList(new ExtractionRegion(1, 2, Collections.singletonList((String)loopVar.getLastMatch())));
+    }
+    
+    /* matches Rhino < 1.7.3 encoding of for-in loop bodies:
      * 
      *   BLOCK_STMT
      *     ASSIGN
@@ -55,8 +81,6 @@ public class ForInBodyExtractionPolicy extends ExtractionPolicy {
      *       EACH_ELEMENT_GET
      *         VAR <forin_tmp>
      *     <loopBody>
-     *     
-     * TODO: this is too brittle; what if future versions of Rhino encode for-in loops differently?
      */
     if(new NodeOfKind(BLOCK_STMT,
         new NodeOfKind(ASSIGN,

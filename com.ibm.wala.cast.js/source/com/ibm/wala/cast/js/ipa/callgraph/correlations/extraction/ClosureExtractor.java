@@ -172,6 +172,8 @@ import com.ibm.wala.util.debug.UnimplementedError;
  *
  */
 public class ClosureExtractor extends CAstRewriterExt {
+  private static final boolean RHINO_1_7_2 = false;
+  
   private LinkedList<ExtractionPolicy> policies = new LinkedList<ExtractionPolicy>();
   private final ExtractionPolicyFactory policyFactory;
   
@@ -388,6 +390,8 @@ public class ClosureExtractor extends CAstRewriterExt {
   }
 
   private int anonymous_counter = 0;
+  
+  @SuppressWarnings("unused")
   private List<CAstNode> extractRegion(CAstNode root, CAstControlFlowMap cfg, ExtractionPos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     CAstEntity entity = getCurrentEntity();
 
@@ -412,26 +416,28 @@ public class ClosureExtractor extends CAstRewriterExt {
      */
     ArrayList<CAstNode> prologue = new ArrayList<CAstNode>();
     ArrayList<CAstNode> fun_body_stmts = new ArrayList<CAstNode>();
-    CAstNode self_ref = makeVarRef(name);
-    CAstNode self_assign = Ast.makeNode(ASSIGN, self_ref, makeVarRef(name));
-    addFlow(self_ref, JavaScriptTypes.ReferenceError, CAstControlFlowMap.EXCEPTION_TO_EXIT, entity.getControlFlow());
-    fun_body_stmts.add(self_assign);
+    if(RHINO_1_7_2) {
+      CAstNode self_ref = makeVarRef(name);
+      CAstNode self_assign = Ast.makeNode(ASSIGN, self_ref, makeVarRef(name));
+      addFlow(self_ref, JavaScriptTypes.ReferenceError, CAstControlFlowMap.EXCEPTION_TO_EXIT, entity.getControlFlow());
+      fun_body_stmts.add(self_assign);
+    }
 
     // if we are extracting a block, unwrap it
     if(extractingBlock) {
       CAstNode block = root.getChild(context.getStart());
       for(int i=0;i<block.getChildCount();++i)
         fun_body_stmts.add(block.getChild(i));
-      if(mayCompleteNormally(block))
+      if(RHINO_1_7_2 && mayCompleteNormally(block))
         fun_body_stmts.add(markSynthetic(Ast.makeNode(RETURN)));
     } else {
       if(context.getRegion() instanceof TwoLevelExtractionRegion) {
         CAstNode start = root.getChild(context.getStart());
         TwoLevelExtractionRegion tler = (TwoLevelExtractionRegion)context.getRegion();
-        if(start.getKind() != CAstNode.BLOCK_EXPR)
-          throw new IllegalArgumentException("Invalid two-level extraction region.");
         if(tler.getEndInner() != -1)
           throw new UnimplementedError("Two-level extraction not fully implemented.");
+        if(start.getKind() != CAstNode.BLOCK_EXPR)
+          throw new IllegalArgumentException("Invalid two-level extraction region.");
         int i;
         for(i=0;i<tler.getStartInner();++i)
           prologue.add(copyNodes(start.getChild(i), cfg, context, nodeMap));
@@ -449,11 +455,11 @@ public class ClosureExtractor extends CAstRewriterExt {
           fun_body_stmts.add(root.getChild(context.getStart()));
         }
       }
-      if(mayCompleteNormally(root.getChild(context.getEnd()-1)))
+      if(RHINO_1_7_2 && mayCompleteNormally(root.getChild(context.getEnd()-1)))
         fun_body_stmts.add(markSynthetic(Ast.makeNode(RETURN)));
     }
     CAstNode inner_block = Ast.makeNode(BLOCK_STMT, fun_body_stmts.toArray(new CAstNode[0]));
-    CAstNode fun_body = Ast.makeNode(BLOCK_STMT, inner_block);
+    CAstNode fun_body = RHINO_1_7_2 ? Ast.makeNode(BLOCK_STMT, inner_block) : inner_block;
 
     /*
      * Now we rewrite the body and construct a Rewrite object.
