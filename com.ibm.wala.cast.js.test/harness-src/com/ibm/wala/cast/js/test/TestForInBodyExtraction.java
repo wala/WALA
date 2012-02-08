@@ -73,7 +73,7 @@ public abstract class TestForInBodyExtraction {
 				     "      dest[p] = src[p];" +
 				     "     })(p);" +
 				     "  }" +
-				     "}");
+		         "}");
 	}
 	
 	// example from the paper, but with single-statement loop body
