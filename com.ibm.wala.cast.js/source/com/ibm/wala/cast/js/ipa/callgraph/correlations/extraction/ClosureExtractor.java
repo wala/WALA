@@ -449,7 +449,7 @@ public class ClosureExtractor extends CAstRewriterExt {
           CAstNode node_to_extract = root.getChild(context.getStart());
           if(node_to_extract.getKind() == CAstNode.EMPTY)
             extractingEmpty = true;
-          fun_body_stmts.add(wrapInBlockExpr(node_to_extract));
+          fun_body_stmts.add(wrapIn(BLOCK_STMT, node_to_extract));
         }
       }
     }
@@ -533,7 +533,7 @@ public class ClosureExtractor extends CAstRewriterExt {
         if(context.isOutermost()) {
           CAstNode return_fixup = createReturnFixup(context, entity);
           if(fixup != null)
-            fixup = Ast.makeNode(BLOCK_EXPR, return_fixup, fixup);
+            fixup = Ast.makeNode(BLOCK_STMT, return_fixup, fixup);
           else
             fixup = return_fixup;
         } else {
@@ -548,9 +548,9 @@ public class ClosureExtractor extends CAstRewriterExt {
       // if(re$) <check>;
       fixup = Ast.makeNode(IF_STMT, 
           addExnFlow(makeVarRef("re$"), JavaScriptTypes.ReferenceError, entity, context),
-          Ast.makeNode(LOCAL_SCOPE, wrapInBlockExpr(fixup == null ? Ast.makeNode(EMPTY) : fixup)));
+          Ast.makeNode(LOCAL_SCOPE, wrapIn(BLOCK_STMT, fixup == null ? Ast.makeNode(EMPTY) : fixup)));
 
-      stmts.add(Ast.makeNode(BLOCK_EXPR, decl, fixup));
+      stmts.add(Ast.makeNode(BLOCK_STMT, decl, fixup));
     } else {
       stmts.add(call);
     }
@@ -564,7 +564,7 @@ public class ClosureExtractor extends CAstRewriterExt {
     }
     
     if(extractingLocalScope || extractingEmpty) {
-      CAstNode newNode = Ast.makeNode(LOCAL_SCOPE, wrapInBlockExpr(stmts.toArray(new CAstNode[0])));
+      CAstNode newNode = Ast.makeNode(LOCAL_SCOPE, wrapIn(BLOCK_STMT, stmts.toArray(new CAstNode[0])));
       stmts = Collections.singletonList(newNode);
     }
     
@@ -617,12 +617,12 @@ public class ClosureExtractor extends CAstRewriterExt {
                 addExnFlow(makeVarRef("re$"), JavaScriptTypes.ReferenceError, entity, context),
                 Ast.makeConstant("type")), JavaScriptTypes.TypeError, entity, context),
             Ast.makeConstant("goto")),
-        Ast.makeNode(LOCAL_SCOPE, Ast.makeNode(BLOCK_EXPR, fixup)));
+        Ast.makeNode(LOCAL_SCOPE, wrapIn(BLOCK_STMT, fixup)));
   }
   
-  // wrap given nodes into a BLOCK_EXPR unless there is only a single node which is itself a BLOCK_EXPR
-  private CAstNode wrapInBlockExpr(CAstNode... nodes) {
-    return nodes.length == 1 && nodes[0].getKind() == BLOCK_EXPR ? nodes[0] : Ast.makeNode(BLOCK_EXPR, nodes);
+  // wrap given nodes into a node of the given kind, unless there is only a single node which is itself of the same kind
+  private CAstNode wrapIn(int kind, CAstNode... nodes) {
+    return nodes.length == 1 && nodes[0].getKind() == kind ? nodes[0] : Ast.makeNode(kind, nodes);
   }
 
   // helper functions for adding exceptional CFG edges
