@@ -180,7 +180,9 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
     int start = -1, end = 0;
     int start_inner = -1, end_inner = -1;
     
-    while(end == 0) {
+    do {
+      if(pos != startNode && pos.getParentPos() instanceof ChildPos)
+        pos = (ChildPos)pos.getParentPos();
       // find the next closest block around the node at position "pos"
       while(pos.getParent().getKind() != CAstNode.BLOCK_STMT) {
         if(pos.getParentPos() instanceof ChildPos)
@@ -191,7 +193,7 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
       block = pos.getParent();
       start = pos.getIndex();
       end = getCoveringChildIndex(block, start, endNode.getChild()) + 1;
-    }
+    } while(end == 0);
     
     // expand region to include forward goto targets
     CAstControlFlowMap cfg = entity.getControlFlow();
