@@ -122,7 +122,7 @@ public class RhinoToAstTranslator {
    */
   public static final String CTOR_CALL_FN_NAME = "ctor";
 
-  private final boolean DEBUG = true;
+  private final boolean DEBUG = false;
 
   /**
    * shared interface for all objects storing contextual information during the
@@ -903,11 +903,13 @@ public class RhinoToAstTranslator {
 	    	name = fn.getFunctionName().getIdentifier();
 	    }
 
-	    System.err.println(name + "\n" + body);
+	    if(DEBUG)
+	      System.err.println(name + "\n" + body);
 
 		CAstEntity fne = walkEntity(fn, body, name, child);
 
-		System.err.println(fne.getName());
+		if(DEBUG)
+		  System.err.println(fne.getName());
 	      
 		if (fn.getFunctionType() == FunctionNode.FUNCTION_EXPRESSION) {
 			CAstNode fun = Ast.makeNode(CAstNode.FUNCTION_EXPR, Ast.makeConstant(fne));
