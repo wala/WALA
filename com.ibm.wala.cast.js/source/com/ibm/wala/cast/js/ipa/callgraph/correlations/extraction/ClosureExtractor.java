@@ -24,6 +24,7 @@ import static com.ibm.wala.cast.tree.CAstNode.FUNCTION_STMT;
 import static com.ibm.wala.cast.tree.CAstNode.GOTO;
 import static com.ibm.wala.cast.tree.CAstNode.IFGOTO;
 import static com.ibm.wala.cast.tree.CAstNode.LABEL_STMT;
+import static com.ibm.wala.cast.tree.CAstNode.LOCAL_SCOPE;
 import static com.ibm.wala.cast.tree.CAstNode.LOOP;
 import static com.ibm.wala.cast.tree.CAstNode.OBJECT_LITERAL;
 import static com.ibm.wala.cast.tree.CAstNode.OBJECT_REF;
@@ -210,7 +211,7 @@ public class ClosureExtractor extends CAstRewriterExt {
       return copyReturn(root, cfg, context, nodeMap);
     case VAR: 
       return copyVar(root, cfg, context, nodeMap);
-    case GOTO: 
+    case GOTO:
       return copyGoto(root, cfg, context, nodeMap);
     default:
       return copyNode(root, cfg, context, nodeMap);
@@ -397,6 +398,9 @@ public class ClosureExtractor extends CAstRewriterExt {
 
     // whether we are extracting a single statement that is itself a block
     boolean extractingBlock = context.getStart() + 1 == context.getEnd() && root.getChild(context.getStart()).getKind() == BLOCK_STMT;
+    
+    // whether we are extracting the body of a local scope
+    boolean extractingLocalScope = false;
 
     String name = EXTRACTED_FUN_BASENAME + (anonymous_counter++);
 
@@ -436,15 +440,22 @@ public class ClosureExtractor extends CAstRewriterExt {
         TwoLevelExtractionRegion tler = (TwoLevelExtractionRegion)context.getRegion();
         if(tler.getEndInner() != -1)
           throw new UnimplementedError("Two-level extraction not fully implemented.");
-        if(start.getKind() != CAstNode.BLOCK_EXPR)
-          throw new IllegalArgumentException("Invalid two-level extraction region.");
         int i;
-        for(i=0;i<tler.getStartInner();++i)
-          prologue.add(copyNodes(start.getChild(i), cfg, context, nodeMap));
-        for(;i<start.getChildCount();++i)
-          fun_body_stmts.add(start.getChild(i));
-        for(i=context.getStart()+1;i<context.getEnd();++i)
-          fun_body_stmts.add(root.getChild(i));
+        if(start.getKind() == CAstNode.BLOCK_EXPR) {
+          for(i=0;i<tler.getStartInner();++i)
+            prologue.add(copyNodes(start.getChild(i), cfg, context, nodeMap));
+          for(;i<start.getChildCount();++i)
+            fun_body_stmts.add(start.getChild(i));
+          for(i=context.getStart()+1;i<context.getEnd();++i)
+            fun_body_stmts.add(root.getChild(i));
+        } else if(start.getKind() == CAstNode.LOCAL_SCOPE) {
+          if(tler.getStartInner() != 0 || tler.getEnd() != tler.getStart() + 1)
+            throw new UnimplementedError("Unsupported two-level extraction");
+          fun_body_stmts.add(start.getChild(0));
+          extractingLocalScope = true;
+        } else {
+          throw new UnimplementedError("Unsupported two-level.");
+        }
       } else {
         if(context.getEnd() > context.getStart()+1) {
           CAstNode[] stmts = new CAstNode[context.getEnd()-context.getStart()];
@@ -569,6 +580,9 @@ public class ClosureExtractor extends CAstRewriterExt {
       CAstNode newNode = Ast.makeNode(BLOCK_STMT, stmts.toArray(new CAstNode[0]));
       nodeMap.put(Pair.make(root, context.key()), newNode);
       deleteFlow(root, getCurrentEntity());
+      return Collections.singletonList(newNode);
+    } else if(extractingLocalScope) {
+      CAstNode newNode = Ast.makeNode(LOCAL_SCOPE, stmts.toArray(new CAstNode[0]));
       return Collections.singletonList(newNode);
     } else {
       return stmts;
