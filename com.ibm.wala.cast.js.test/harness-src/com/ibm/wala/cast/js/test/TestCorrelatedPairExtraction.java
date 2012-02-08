@@ -442,7 +442,7 @@ public abstract class TestCorrelatedPairExtraction {
 	  		         "function write(p, v) { this[p] = v; }",
 	  		         "function extend(dest, src) {\n" +
 	  		         "  for(var p in src)\n" +
-	  		         "     if(foo(p)) (function _forin_body_0(p) { write.call(dest, p, src[p]); })(p);\n" +
+	  		         "     (function _forin_body_0(p) { if(foo(p)) write.call(dest, p, src[p]); })(p);\n" +
 	  		         "}\n" +
 	  		         "function write(p, v) { this[p] = v; }");
 	}
