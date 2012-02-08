@@ -442,7 +442,7 @@ public abstract class TestCorrelatedPairExtraction {
 	  		         "function write(p, v) { this[p] = v; }",
 	  		         "function extend(dest, src) {\n" +
 	  		         "  for(var p in src)\n" +
-	  		         "     (function _forin_body_0(p) { if(foo(p)) write.call(dest, p, src[p]); })(p);\n" +
+	  		         "      if(foo(p)) (function _forin_body_0(p) { write.call(dest, p, src[p]); })(p);\n" +
 	  		         "}\n" +
 	  		         "function write(p, v) { this[p] = v; }");
 	}
@@ -482,4 +482,24 @@ public abstract class TestCorrelatedPairExtraction {
 	               "  }\n" +
 	               "}");
 	}
+  
+  @Test
+  public void test22() {
+    testRewriter("function(object, keys){\n" +
+    		         "  var results = {};\n" +
+    		         "  for (var i = 0, l = keys.length; i < l; i++){\n" +
+    		         "    var k = keys[i];\n" +
+    		         "    if (k in object) results[k] = object[k];\n" +
+    		         "  }\n" +
+    		         "  return results;\n" +
+    		         "}",
+    		         "function(object, keys){\n" +
+                 "  var results = {};\n" +
+                 "  for (var i = 0, l = keys.length; i < l; i++){\n" +
+                 "    var k = keys[i];\n" +
+                 "     if (k in object) (function _forin_body_0(k) { results[k] = object[k]; })(k);\n" +
+                 "  }\n" +
+                 "  return results;\n" +
+                 "}");
+  }
 }
