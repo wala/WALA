@@ -43,7 +43,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
  *
  */
 public class CAstDumper {
-  private static final boolean NORMALISE = true;
+  private static final boolean NORMALISE = false;
 	private final NodeLabeller labeller;
 	
 	public CAstDumper() {
