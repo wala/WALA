@@ -43,7 +43,7 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
    * While neither of these situations is a priori impossible, they are most likely due to analysis
    * imprecision. If this flag is set to true, we emit a warning when seeing them. 
    */
-  public static final boolean WARN_ABOUT_IMPRECISE_CALLGRAPH = true;
+  public static boolean WARN_ABOUT_IMPRECISE_CALLGRAPH = true;
   
   public static final boolean DEBUG_SYNTHETIC_CALL_METHODS = false;
 
