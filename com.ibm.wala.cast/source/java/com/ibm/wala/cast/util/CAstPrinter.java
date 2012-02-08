@@ -86,6 +86,8 @@ public class CAstPrinter {
     case CAstNode.ARRAY_REF: return "ARRAY_REF";
     case CAstNode.ARRAY_LENGTH: return "ARRAY_LENGTH";
     case CAstNode.TYPE_OF: return "TYPE_OF";
+    case CAstNode.EACH_ELEMENT_HAS_NEXT: return "EACH_ELEMENT_HAS_NEXT";
+    case CAstNode.EACH_ELEMENT_GET: return "EACH_ELEMENT_GET";
     case CAstNode.LIST_EXPR: return "LIST_EXPR";
     case CAstNode.EMPTY_LIST_EXPR: return "EMPTY_LIST_EXPR";
     case CAstNode.IS_DEFINED_EXPR: return "IS_DEFINED_EXPR";
