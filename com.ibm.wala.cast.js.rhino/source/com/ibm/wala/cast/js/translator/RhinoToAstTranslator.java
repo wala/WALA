@@ -641,7 +641,7 @@ public class RhinoToAstTranslator {
 		if (nodes.isEmpty()) {
 			return Ast.makeNode(CAstNode.EMPTY);
 		} else {
-			return Ast.makeNode(CAstNode.BLOCK_EXPR, nodes.toArray(new CAstNode[ nodes.size() ]));
+			return Ast.makeNode(CAstNode.BLOCK_STMT, nodes.toArray(new CAstNode[ nodes.size() ]));
 		}
 	}
 
