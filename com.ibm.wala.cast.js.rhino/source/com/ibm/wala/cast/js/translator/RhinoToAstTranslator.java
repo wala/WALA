@@ -171,7 +171,7 @@ public class RhinoToAstTranslator {
   private static class BaseCollectingContext extends JavaScriptTranslatorToCAst.BaseCollectingContext<WalkContext, Node> implements WalkContext {
 
 	BaseCollectingContext(WalkContext parent, Node initialBaseFor,
-			CAstNode baseVar) {
+			String baseVar) {
 		super(parent, initialBaseFor, baseVar);
 	}
   
@@ -719,22 +719,23 @@ public class RhinoToAstTranslator {
 
 	private CAstNode visitObjectRead(AstNode n, AstNode objAst, CAstNode elt, WalkContext context) {
 		CAstNode obj = visit(objAst, context);
-		CAstNode baseVar = context.getBaseVarIfRelevant(n);
+		String baseVar = context.getBaseVarIfRelevant(n);
 		
 		CAstNode get, result;
 		if (baseVar != null) {
-			result = Ast.makeNode(CAstNode.BLOCK_EXPR, Ast.makeNode(CAstNode.ASSIGN, baseVar, obj),
-					get = Ast.makeNode(CAstNode.OBJECT_REF, baseVar, elt));
-	      } else {
-	        result = get = Ast.makeNode(CAstNode.OBJECT_REF, obj, elt);
-	      }
+		  result = Ast.makeNode(CAstNode.BLOCK_EXPR, 
+		                          Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(baseVar)), obj),
+		                          get = Ast.makeNode(CAstNode.OBJECT_REF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(baseVar)), elt));
+		} else {
+		  result = get = Ast.makeNode(CAstNode.OBJECT_REF, obj, elt);
+		}
 
-	      if (context.getCatchTarget() != null) {
-	        context.cfg().map(get, get);
-	        context.cfg().add(get, context.getCatchTarget(), JavaScriptTypes.TypeError);
-	      }
+		if (context.getCatchTarget() != null) {
+		  context.cfg().map(get, get);
+		  context.cfg().add(get, context.getCatchTarget(), JavaScriptTypes.TypeError);
+		}
 
-	      return result;		
+		return result;		
 	}
 	
 	@Override
@@ -870,7 +871,7 @@ public class RhinoToAstTranslator {
 		if (!isPrimitiveCall(context, n)) {
 			CAstNode base = Ast.makeNode(CAstNode.VAR, Ast.makeConstant(baseVarName));
 			AstNode callee = n.getTarget();
-			WalkContext child = new BaseCollectingContext(context, callee, base);
+			WalkContext child = new BaseCollectingContext(context, callee, baseVarName);
 			CAstNode fun = visit(callee, child);
 
 			// the first actual parameter appearing within the parentheses of the

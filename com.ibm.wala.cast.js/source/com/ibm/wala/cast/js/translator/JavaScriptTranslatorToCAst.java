@@ -35,7 +35,7 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
 
     CAstNode getCatchTarget();
 
-    CAstNode getBaseVarIfRelevant(T node);
+    String getBaseVarIfRelevant(T node);
 
     boolean foundBase(T node);
 
@@ -66,7 +66,7 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
       return null;
     }
 
-    public CAstNode getBaseVarIfRelevant(T node) { return null; }
+    public String getBaseVarIfRelevant(T node) { return null; }
 
     public boolean foundBase(T node) { return false; }
 
@@ -99,7 +99,7 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
       return parent.getCatchTarget();
     }
 
-    public CAstNode getBaseVarIfRelevant(T node) {
+    public String getBaseVarIfRelevant(T node) {
       return parent.getBaseVarIfRelevant(node);
     }
 
@@ -233,14 +233,14 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
      * the variable to be used to store the value of the expression passed as
      * the 'this' parameter
      */
-    private final CAstNode baseVar;
+    private final String baseVar;
 
     /**
      * have we discovered a value to be passed as the 'this' parameter?
      */
     private boolean foundBase = false;
 
-    protected BaseCollectingContext(C parent, T initialBaseFor, CAstNode baseVar) {
+    protected BaseCollectingContext(C parent, T initialBaseFor, String baseVar) {
       super(parent);
       baseFor.add( initialBaseFor );
       this.baseVar = baseVar;
@@ -251,7 +251,7 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
      * set foundBase to true. Otherwise, return <code>null</code>.
      */
     @Override
-    public CAstNode getBaseVarIfRelevant(T node) { 
+    public String getBaseVarIfRelevant(T node) { 
       if (baseFor.contains( node )) {
         foundBase = true;
         return baseVar;
