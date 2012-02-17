@@ -505,9 +505,15 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     Util.makeScriptCG("tests", "scoping_test.js");
   }
   
+  private static final Object[][] assertionsForNestedParamAssign = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/nested_assign_to_param.js" } },
+    new Object[] { "suffix:nested_assign_to_param.js", new String[] { "suffix:i_am_reachable" } } 
+  };
+  
   @Test
   public void testNestedAssignToParam() throws IllegalArgumentException, IOException, CancelException {
-    assert false : "WRITE THIS TEST!";
+    CallGraph CG = Util.makeScriptCG("tests", "nested_assign_to_param.js");
+    verifyGraphAssertions(CG, assertionsForNestedParamAssign);
   }
 
   protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {
