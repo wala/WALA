@@ -31,7 +31,7 @@ public abstract class TestMediawikiCallGraphShape extends TestJSCallGraphShape {
   @Test public void testSwineFlu() throws IOException, IllegalArgumentException, CancelException {
     URL url = new URL("http://en.wikipedia.org/wiki/2009_swine_flu_outbreak");
     // don't handle call / apply; it makes things blow up
-    CallGraph CG = Util.makeHTMLCG(url, false);
+    CallGraph CG = Util.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForSwineFlu);
   }
 

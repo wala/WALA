@@ -143,8 +143,6 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
     IClass declaringClass = callee.getDeclaringClass();
     IMethod method = declaringClass.getMethod(AstMethodReference.fnSelector);
     Context baseCtxt = base.getCalleeTarget(caller, site, callee, receiver);
-    if(USE_ONE_LEVEL_CALLSTRING)
-      baseCtxt = new DelegatingContext(oneLevel.getCalleeTarget(caller, site, callee, receiver), baseCtxt);
     if (method != null) {
       String s = method.getReference().getDeclaringClass().getName().toString();
       if (s.equals("Lprologue.js/functionApply")) {
@@ -155,6 +153,8 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
             isNonNullArray = true;
           }
         }
+        if (USE_ONE_LEVEL_CALLSTRING)
+          baseCtxt = new DelegatingContext(oneLevel.getCalleeTarget(caller, site, callee, receiver), baseCtxt);
         return new ApplyContext(baseCtxt, isNonNullArray);
       }
     }
