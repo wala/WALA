@@ -16,6 +16,7 @@ import com.ibm.wala.cast.js.ipa.callgraph.ForInContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptFunctionDotCallTargetSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.RecursionBoundContextSelector;
+import com.ibm.wala.cast.js.ipa.callgraph.RecursionCheckContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.CorrelatedPairExtractorFactory;
 import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil;
 import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil.CGBuilderType;
@@ -92,7 +93,8 @@ public class HTMLCGBuilder {
 			// the code below belongs somewhere else!!!
 			// the bound of 4 is what is needed to pass our current framework tests
 			if (AstTranslator.NEW_LEXICAL) {
-				builder.setContextSelector(new RecursionBoundContextSelector(builder.getContextSelector(), 4));
+//				builder.setContextSelector(new RecursionBoundContextSelector(builder.getContextSelector(), 4));
+				builder.setContextSelector(new RecursionCheckContextSelector(builder.getContextSelector()));
 			}
 			ProgressMaster master = ProgressMaster.make(new NullProgressMonitor());
 			if (timeout > 0) {
