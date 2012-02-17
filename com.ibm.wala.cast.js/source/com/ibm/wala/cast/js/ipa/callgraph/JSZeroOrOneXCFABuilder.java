@@ -47,7 +47,7 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     MethodTargetSelector targetSelector = new JavaScriptConstructTargetSelector(cha, options
         .getMethodTargetSelector());
     if (options.handleCallApply()) {
-      targetSelector = new JavaScriptFunctionDotCallTargetSelector(targetSelector);
+      targetSelector = new JavaScriptFunctionApplyTargetSelector(new JavaScriptFunctionDotCallTargetSelector(targetSelector));
     }
     if (options.useLoadFileTargetSelector()) {
       targetSelector = new LoadFileTargetSelector(targetSelector, this);
