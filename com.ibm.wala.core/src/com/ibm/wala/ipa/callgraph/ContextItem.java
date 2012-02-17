@@ -31,5 +31,27 @@ public interface ContextItem {
       return new Value<T>(v);
     }
 
+    @Override
+    public int hashCode() {
+      return 31 + ((v == null) ? 0 : v.hashCode());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      Value other = (Value) obj;
+      if (v == null) {
+        if (other.v != null)
+          return false;
+      } else if (!v.equals(other.v))
+        return false;
+      return true;
+    }
+
   }
 }

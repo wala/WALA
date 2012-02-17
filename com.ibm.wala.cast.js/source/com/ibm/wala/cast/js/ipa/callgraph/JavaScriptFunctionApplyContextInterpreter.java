@@ -1,7 +1,6 @@
 package com.ibm.wala.cast.js.ipa.callgraph;
 
 import com.ibm.wala.cast.ipa.callgraph.AstContextInsensitiveSSAContextInterpreter;
-import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptFunctionApplyContextSelector.BooleanContextItem;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummarizedFunction;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummary;
 import com.ibm.wala.cast.js.loader.JSCallSiteReference;
@@ -11,6 +10,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
@@ -40,10 +40,11 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
   @Override
   public IR getIR(CGNode node) {
     assert understands(node);
-    BooleanContextItem isNonNullArray = (BooleanContextItem) node.getContext().get(JavaScriptFunctionApplyContextSelector.APPLY_NON_NULL_ARGS);
+    @SuppressWarnings("unchecked")
+    ContextItem.Value<Boolean> isNonNullArray = (ContextItem.Value<Boolean>) node.getContext().get(JavaScriptFunctionApplyContextSelector.APPLY_NON_NULL_ARGS);
     // isNonNullArray can be null if, e.g., due to recursion bounding we have no
     // information on the arguments parameter
-    if (isNonNullArray == null || isNonNullArray.val) {
+    if (isNonNullArray == null || isNonNullArray.getValue()) {
       return makeIRForArgList(node);
     } else {
       return makeIRForNoArgList(node);
