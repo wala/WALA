@@ -19,6 +19,7 @@ import com.ibm.wala.cast.js.test.Util;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
+import com.ibm.wala.ipa.callgraph.ComposedContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.ProgressMaster;
@@ -82,8 +83,9 @@ public class HTMLCGBuilder {
 		JSCFABuilder builder = null;
 		try {
 			builder = Util.makeHTMLCGBuilder(url);
-			builder.setContextSelector(new ForInContextSelector(2, builder.getContextSelector()));
-			builder.setContextSelector(new ForInContextSelector(3, builder.getContextSelector()));
+			builder.setContextSelector(new ComposedContextSelector(builder
+					.getContextSelector(), new ForInContextSelector(2),
+					new ForInContextSelector(3)));
 			ProgressMaster master = ProgressMaster.make(new NullProgressMonitor());
 			if (timeout > 0) {
 				master.setMillisPerWorkItem(timeout * 1000);

@@ -27,6 +27,7 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.impl.ContextInsensitiveSelector;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
@@ -45,6 +46,7 @@ import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
+import com.ibm.wala.util.intset.EmptyIntSet;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
@@ -103,9 +105,8 @@ public class ForInContextSelector implements ContextSelector {
   public static boolean DEPENDENT_THRU_READS = true;
   
   public static class SelectiveCPAContext implements Context {
-      protected final Context base;
-      
-      private final Map<ContextKey, InstanceKey> parameterObjs;
+
+    private final Map<ContextKey, InstanceKey> parameterObjs;
 
       private final int hashCode;
       
@@ -119,21 +120,20 @@ public class ForInContextSelector implements ContextSelector {
         return result;
       }
       
-      public SelectiveCPAContext(Context base, InstanceKey[] x) {
-        this(base, makeMap(x));
+      public SelectiveCPAContext(InstanceKey[] x) {
+        this(makeMap(x));
       }
       
-      public SelectiveCPAContext(Context base, Map<ContextKey, InstanceKey> parameterObjs) {
-       this.base = base;
+      public SelectiveCPAContext(Map<ContextKey, InstanceKey> parameterObjs) {
        this.parameterObjs = parameterObjs;
-       hashCode = base.hashCode() ^ parameterObjs.hashCode();
+       hashCode = parameterObjs.hashCode();
       }
 
       public ContextItem get(ContextKey name) {
         if (parameterObjs.containsKey(name)) {
           return new FilteredPointerKey.SingleInstanceFilter(parameterObjs.get(name));
         } else {
-          return base.get(name);
+          return null;
         }
       }
       
@@ -145,7 +145,6 @@ public class ForInContextSelector implements ContextSelector {
       public boolean equals(Object other) {
         return other != null &&
             getClass().equals(other.getClass()) &&
-            base.equals(((SelectiveCPAContext)other).base) &&
             parameterObjs.equals(((SelectiveCPAContext)other).parameterObjs);
       }     
 
@@ -154,8 +153,8 @@ public class ForInContextSelector implements ContextSelector {
   
   public class ForInContext extends SelectiveCPAContext {
     
-    ForInContext(Context base, InstanceKey obj) {
-      super(base, Collections.singletonMap(ContextKey.PARAMETERS[index], obj));
+    ForInContext(InstanceKey obj) {
+      super(Collections.singletonMap(ContextKey.PARAMETERS[index], obj));
     }
     
     public ContextItem get(ContextKey key) {
@@ -170,12 +169,11 @@ public class ForInContextSelector implements ContextSelector {
     
     @Override
     public String toString() {
-      return "for in hack filter for " + get(ContextKey.PARAMETERS[index]) + " over " + this.base;
+      return "for in hack filter for " + get(ContextKey.PARAMETERS[index]);
     }
     
   }
     
-  private final ContextSelector base;
   private final ContextSelector oneLevel;
   private final int index;
   
@@ -212,14 +210,13 @@ public class ForInContextSelector implements ContextSelector {
     return dependentParameters;
   }
   
-  public ForInContextSelector(ContextSelector base) {
-    this(2, base);
+  public ForInContextSelector() {
+    this(2);
   }
   
-  public ForInContextSelector(int index, ContextSelector base) {
+  public ForInContextSelector(int index) {
     this.index = index;
-    this.base = base;
-    this.oneLevel = new OneLevelSiteContextSelector(base);
+    this.oneLevel = new OneLevelSiteContextSelector(new ContextInsensitiveSelector());
   }
   
   private final HashMap<MethodReference, Boolean> forInOnFirstArg_cache = HashMapFactory.make();
@@ -318,37 +315,36 @@ public class ForInContextSelector implements ContextSelector {
   }
   
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, final InstanceKey[] receiver) {
-    Context baseContext = base.getCalleeTarget(caller, site, callee, receiver);
     String calleeFullName = callee.getDeclaringClass().getName().toString();
     String calleeShortName = calleeFullName.substring(calleeFullName.lastIndexOf('/')+1);
     if(USE_NAME_TO_SELECT_CONTEXT) {
       if(calleeShortName.contains(HACK_METHOD_STR) && receiver.length > index) {
         // we assume that the argument is only used as a property name, so we can do ToString
-        return new ForInContext(baseContext, simulateToString(caller.getClassHierarchy(), receiver[index]));
+        return new ForInContext(simulateToString(caller.getClassHierarchy(), receiver[index]));
       }
     } else if(receiver.length > index) {
       Frequency f = usesFirstArgAsPropertyName(callee);
       if(f == Frequency.ALWAYS) {
-        return new ForInContext(baseContext, simulateToString(caller.getClassHierarchy(), receiver[index]));
+        return new ForInContext(simulateToString(caller.getClassHierarchy(), receiver[index]));
       } else if(f == Frequency.SOMETIMES) {
         if(receiver[index] == null) {
           IClass undef = caller.getClassHierarchy().lookupClass(JavaScriptTypes.Undefined);
-          return new ForInContext(baseContext, new ConcreteTypeKey(undef));
+          return new ForInContext(new ConcreteTypeKey(undef));
         } else {
-          return new ForInContext(baseContext, receiver[index]);
+          return new ForInContext(receiver[index]);
         }
       }
     }
     if (USE_CPA_IN_BODIES && FORIN_MARKER.equals(caller.getContext().get(FORIN_KEY))) {
-      return new SelectiveCPAContext(baseContext, receiver);
+      return new SelectiveCPAContext(receiver);
     } else if (USE_1LEVEL_IN_BODIES && FORIN_MARKER.equals(caller.getContext().get(FORIN_KEY))) {
       if (! identifyDependentParameters(caller, site).isEmpty()) {
         return oneLevel.getCalleeTarget(caller, site, callee, receiver);        
       } else {
-        return baseContext;
+        return null;
       }
     } 
-    return baseContext;
+    return null;
   }
   
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
@@ -356,9 +352,9 @@ public class ForInContextSelector implements ContextSelector {
       // what about base.getRelevantParameters() here?
       return identifyDependentParameters(caller, site);
     } else if (caller.getIR().getCalls(site)[0].getNumberOfUses() > index) {
-      return IntSetUtil.make(new int[]{index}).union(base.getRelevantParameters(caller, site));
+      return IntSetUtil.make(new int[]{index});
     } else {
-      return base.getRelevantParameters(caller, site);
+      return EmptyIntSet.instance;
     }
   }
 

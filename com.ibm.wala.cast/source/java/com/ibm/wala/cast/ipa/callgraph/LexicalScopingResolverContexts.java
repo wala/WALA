@@ -27,6 +27,7 @@ import com.ibm.wala.util.collections.IteratorPlusOne;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.intset.EmptyIntSet;
 import com.ibm.wala.util.intset.IntSet;
 
 public final class LexicalScopingResolverContexts implements ContextSelector {
@@ -438,10 +439,8 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
 
   private class LexicalScopingResolverContext implements Context {
     private final LexicalScopingResolver governingCallSites;
-    private final Context base;
-
     public int hashCode() {
-      return base.hashCode() * (governingCallSites == null ? 1077651 : governingCallSites.hashCode());
+      return (governingCallSites == null ? 1077651 : governingCallSites.hashCode());
     }
 
     public boolean equals(Object o) {
@@ -449,39 +448,35 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
         return true;
       } else if (getClass().equals(o.getClass())) {
         LexicalScopingResolverContext c = (LexicalScopingResolverContext) o;
-        return (base == null ? c.base == null : base.equals(c.base)) && (governingCallSites == c.governingCallSites);
+        return (governingCallSites == c.governingCallSites);
       } else {
         return false;
       }
     }
 
     public ContextItem get(ContextKey name) {
-      return name.equals(RESOLVER) ? governingCallSites : base != null ? base.get(name) : null;
+      return name.equals(RESOLVER) ? governingCallSites: null;
     }
 
-    private LexicalScopingResolverContext(LexicalScopingResolver governingCallSites, Context base) {
-      this.base = base;
+    private LexicalScopingResolverContext(LexicalScopingResolver governingCallSites) {
       this.governingCallSites = governingCallSites;
     }
 
-    private LexicalScopingResolverContext(CGNode source, CallSiteReference callSite, Context base) {
-      this.base = base;
+    private LexicalScopingResolverContext(CGNode source, CallSiteReference callSite) {
       this.governingCallSites = findChild(source, callSite);
     }
 
     @Override
     public String toString() {
-      return "LexicalScopingResolverContext [governingCallSites=" + governingCallSites + ", base=" + base + "]";
+      return "LexicalScopingResolverContext [governingCallSites=" + governingCallSites + "]";
     }
 
   }
 
-  private final ContextSelector base;
 
   private final PropagationCallGraphBuilder builder;
 
-  public LexicalScopingResolverContexts(PropagationCallGraphBuilder builder, ContextSelector base) {
-    this.base = base;
+  public LexicalScopingResolverContexts(PropagationCallGraphBuilder builder) {
     this.builder = builder;
   }
 
@@ -562,12 +557,11 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
   }
 
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] actualParameters) {
-    Context baseContext = base.getCalleeTarget(caller, site, callee, actualParameters);
     if (callee instanceof SummarizedMethod) {
       final String calleeName = callee.getReference().toString();
       // TODO create a sub-class in the cast.js projects so we're not checking strings here
       if (calleeName.equals("< JavaScriptLoader, LArray, ctor()LRoot; >") || calleeName.equals("< JavaScriptLoader, LObject, ctor()LRoot; >")) {
-        return baseContext;
+        return null;
       }
     }
     LexicalScopingResolver resolver = (LexicalScopingResolver) caller.getContext().get(RESOLVER);
@@ -581,23 +575,23 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
     }
 
     if (caller.getMethod() instanceof AstMethod && hasExposedUses(caller, site)) {
-      LexicalScopingResolverContext result = new LexicalScopingResolverContext(caller, site, baseContext);
+      LexicalScopingResolverContext result = new LexicalScopingResolverContext(caller, site);
       MapUtil.findOrCreateList(key2Contexts, key).add(result);
       return result;
     }
 
     else if (resolver != null) {
-      LexicalScopingResolverContext result = new LexicalScopingResolverContext(resolver, baseContext);
+      LexicalScopingResolverContext result = new LexicalScopingResolverContext(resolver);
       MapUtil.findOrCreateList(key2Contexts, key).add(result);
       return result;
     }
 
     else {
-      return baseContext;
+      return null;
     }
   }
 
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
-    return base.getRelevantParameters(caller, site);
+    return EmptyIntSet.instance;
   }
 }

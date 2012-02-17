@@ -13,6 +13,7 @@ package com.ibm.wala.ipa.callgraph.propagation.cfa;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.ComposedContextSelector;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
@@ -24,6 +25,9 @@ import com.ibm.wala.util.intset.IntSet;
  */
 public class OneLevelSiteContextSelector implements ContextSelector {
 
+  /**
+   * TODO get rid of base selector, and instead use with {@link ComposedContextSelector}
+   */
   private final ContextSelector baseSelector;
 
   /**

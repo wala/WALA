@@ -10,9 +10,12 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.DelegatingContext;
+import com.ibm.wala.ipa.callgraph.impl.ContextInsensitiveSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.nCFAContextSelector;
 import com.ibm.wala.types.TypeName;
+import com.ibm.wala.util.intset.EmptyIntSet;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 
@@ -23,8 +26,11 @@ import com.ibm.wala.util.intset.IntSetUtil;
  *      Function.prototype.apply() docs</a>
  */
 public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
-  /* whether to use a one-level callstring context in addition to the apply context */
-  private static final boolean USE_ONE_LEVEL = true; 
+  /*
+   * whether to use a one-level callstring context in addition to the apply
+   * context
+   */
+  private static final boolean USE_ONE_LEVEL = true;
 
   private static final TypeName APPLY_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/functionApply");
 
@@ -67,13 +73,11 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
 
   }
 
-  private final ContextSelector base;
   private ContextSelector oneLevel;
 
-  public JavaScriptFunctionApplyContextSelector(ContextSelector base) {
-    this.base = base;
-    this.oneLevel = new nCFAContextSelector(1, base);
-//    this.oneLevel = new OneLevelSiteContextSelector(base);
+  public JavaScriptFunctionApplyContextSelector() {
+    this.oneLevel = new nCFAContextSelector(1, new ContextInsensitiveSelector());
+    // this.oneLevel = new OneLevelSiteContextSelector(base);
   }
 
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
@@ -81,22 +85,19 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
     // for this arg of function being invoked,
     // 3 for arguments array
     if (caller.getIR().getCalls(site)[0].getNumberOfUses() >= 4) {
-      return IntSetUtil.make(new int[] { 3 }).union(base.getRelevantParameters(caller, site));
+      return IntSetUtil.make(new int[] { 3 });
     } else {
-      return base.getRelevantParameters(caller, site);
+      return EmptyIntSet.instance;
     }
   }
 
   public static class ApplyContext implements Context {
-    private final Context delegate;
-
     /**
      * was the argsList argument a non-null Array?
      */
     private final BooleanContextItem isNonNullArray;
 
-    ApplyContext(Context delegate, boolean isNonNullArray) {
-      this.delegate = delegate;
+    ApplyContext(boolean isNonNullArray) {
       this.isNonNullArray = new BooleanContextItem(isNonNullArray);
     }
 
@@ -104,7 +105,7 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
       if (APPLY_NON_NULL_ARGS.equals(name)) {
         return isNonNullArray;
       } else {
-        return delegate.get(name);
+        return null;
       }
     }
 
@@ -112,8 +113,7 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
     public int hashCode() {
       final int prime = 31;
       int result = 1;
-      result = prime * result + delegate.hashCode();
-      result = prime * result + isNonNullArray.hashCode();
+      result = prime * result + ((isNonNullArray == null) ? 0 : isNonNullArray.hashCode());
       return result;
     }
 
@@ -126,16 +126,17 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
       if (getClass() != obj.getClass())
         return false;
       ApplyContext other = (ApplyContext) obj;
-      if (!delegate.equals(other.delegate))
-        return false;
-      if (!isNonNullArray.equals(other.isNonNullArray))
+      if (isNonNullArray == null) {
+        if (other.isNonNullArray != null)
+          return false;
+      } else if (!isNonNullArray.equals(other.isNonNullArray))
         return false;
       return true;
     }
 
     @Override
     public String toString() {
-      return "ApplyContext [delegate=" + delegate + ", isNonNullArray=" + isNonNullArray + "]";
+      return "ApplyContext [isNonNullArray=" + isNonNullArray + "]";
     }
 
   }
@@ -143,7 +144,6 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     IClass declaringClass = callee.getDeclaringClass();
     IMethod method = declaringClass.getMethod(AstMethodReference.fnSelector);
-    Context baseCtxt = base.getCalleeTarget(caller, site, callee, receiver);
     if (method != null) {
       TypeName tn = method.getReference().getDeclaringClass().getName();
       if (tn.equals(APPLY_TYPE_NAME)) {
@@ -154,12 +154,13 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
             isNonNullArray = true;
           }
         }
+        Context result = new ApplyContext(isNonNullArray);
         if (USE_ONE_LEVEL)
-          baseCtxt = oneLevel.getCalleeTarget(caller, site, callee, receiver);
-        return new ApplyContext(baseCtxt, isNonNullArray);
+          result = new DelegatingContext(result, oneLevel.getCalleeTarget(caller, site, callee, receiver));
+        return result;
       }
     }
-    return baseCtxt;
+    return null;
   }
 
 }

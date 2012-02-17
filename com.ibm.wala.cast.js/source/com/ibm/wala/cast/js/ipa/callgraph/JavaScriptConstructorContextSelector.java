@@ -10,32 +10,25 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.DelegatingContext;
-import com.ibm.wala.ipa.callgraph.impl.Everywhere;
+import com.ibm.wala.ipa.callgraph.impl.ContextInsensitiveSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.OneLevelSiteContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.nCFAContextSelector;
+import com.ibm.wala.util.intset.EmptyIntSet;
 import com.ibm.wala.util.intset.IntSet;
 
 public class JavaScriptConstructorContextSelector implements ContextSelector {
-  private final ContextSelector base;
+  private nCFAContextSelector oneLevelCallStrings;
+  private OneLevelSiteContextSelector oneLevelCallerSite;
 
-  /**
-   * for generating contexts with one-level of call strings, to match standard
-   * Andersen's heap abstraction
-   */
-  private final nCFAContextSelector oneLevelCallStrings;
-
-  private final OneLevelSiteContextSelector oneLevelCallerSite;
-  
-  public JavaScriptConstructorContextSelector(ContextSelector base) {
-    this.base = base;
-    this.oneLevelCallStrings = new nCFAContextSelector(1, base);
-    this.oneLevelCallerSite = new OneLevelSiteContextSelector(base);
+  public JavaScriptConstructorContextSelector() {
+    final ContextInsensitiveSelector dummyBase = new ContextInsensitiveSelector();
+    this.oneLevelCallStrings = new nCFAContextSelector(1, dummyBase);
+    this.oneLevelCallerSite = new OneLevelSiteContextSelector(dummyBase);
   }
 
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
-    return base.getRelevantParameters(caller, site);
+    return EmptyIntSet.instance;
   }
 
   public Context getCalleeTarget(final CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
@@ -45,7 +38,8 @@ public class JavaScriptConstructorContextSelector implements ContextSelector {
       if (!AstTranslator.NEW_LEXICAL && callerContext instanceof ScopeMappingContext) {
         return new DelegatingContext(callerContext, oneLevelCallStringContext);
       } else if (AstTranslator.NEW_LEXICAL && LexicalScopingResolverContexts.hasExposedUses(caller, site)) {
-        // use a caller-site context, to enable lexical scoping lookups (via caller CGNode)
+        // use a caller-site context, to enable lexical scoping lookups (via
+        // caller CGNode)
         return oneLevelCallerSite.getCalleeTarget(caller, site, callee, receiver);
       } else {
         // use at least one-level of call-string sensitivity for constructors
@@ -53,7 +47,7 @@ public class JavaScriptConstructorContextSelector implements ContextSelector {
         return oneLevelCallStringContext;
       }
     } else {
-      return base.getCalleeTarget(caller, site, callee, receiver);
+      return null;
     }
   }
 
