@@ -600,7 +600,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
             System.err.println(("looking up lexical parent " + definer));
 
           boolean foundOnStack = false;
-          if (r != null) {
+          if (r != null && !AstTranslator.NEW_LEXICAL) {
             if (! funargsOnly) {
               if (r.isReadOnly(accesses[i].getName())) {
                 assert isLoad;

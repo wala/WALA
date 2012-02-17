@@ -45,11 +45,6 @@ import com.ibm.wala.util.strings.Atom;
 public class JSAstTranslator extends AstTranslator {
   private final static boolean DEBUG = false;
 
-  /**
-   * set to true to use new handling of lexical scoping
-   */
-  public final static boolean NEW_LEXICAL = false;
-  
   public JSAstTranslator(JavaScriptLoader loader) {
     super(loader);
   }
@@ -67,12 +62,7 @@ public class JSAstTranslator extends AstTranslator {
   }
 
   protected boolean useLocalValuesForLexicalVars() {
-    return !NEW_LEXICAL;
-//    return false;
-  }
-
-  protected boolean useLexicalAccessesForExposedVars() {
-    return NEW_LEXICAL;
+    return !AstTranslator.NEW_LEXICAL;
   }
   
   protected TypeReference defaultCatchType() {

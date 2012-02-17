@@ -115,12 +115,6 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    */
   protected abstract boolean useLocalValuesForLexicalVars();
 
-  /**
-   * should variables accessed by nested entities be accessed with lexical
-   * access instructions in the declaring entity?
-   */
-  protected abstract boolean useLexicalAccessesForExposedVars();
-
   protected boolean topLevelFunctionsInGlobalScope() {
     return true;
   }
@@ -257,15 +251,14 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     // variables at the beginning of the method.
     if (useLocalValuesForLexicalVars()) {
       context.cfg().addInstruction(new AstLexicalRead(new Access[0]));
-    }
-    if (useLexicalAccessesForExposedVars()) {
+    } else {
+      // perform a lexical write to copy the value stored in the local
+      // associated with each parameter to the lexical name
       final CAstEntity entity = context.top();
       Set<String> exposedNames = entity2ExposedNames.get(entity);
       if (exposedNames != null) {
         for (String arg : entity.getArgumentNames()) {
           if (exposedNames.contains(arg)) {
-            // perform a lexical write to copy the value stored in the local
-            // associated with the parameter to the lexical name
             final Scope currentScope = context.currentScope();
             Symbol symbol = currentScope.lookup(arg);
             assert symbol.getDefiningScope() == currentScope;
@@ -290,7 +283,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * caller is responsible for ensuring that name is defined in the local scope.
    */
   protected int doLocalRead(WalkContext context, String name) {
-    if (useLexicalAccessesForExposedVars()) {
+    if (!useLocalValuesForLexicalVars()) {
       CAstEntity entity = context.top();
       Set<String> exposed = entity2ExposedNames.get(entity);
       if (exposed != null && exposed.contains(name) && Arrays.asList(entity.getArgumentNames()).contains(name)) {
@@ -306,7 +299,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * that nm is defined in the local scope.
    */
   protected void doLocalWrite(WalkContext context, String nm, int rval) {
-    if (useLexicalAccessesForExposedVars()) {
+    if (!useLocalValuesForLexicalVars()) {
       CAstEntity entity = context.top();
       Set<String> exposed = entity2ExposedNames.get(entity);
       if (exposed != null && exposed.contains(nm) && Arrays.asList(entity.getArgumentNames()).contains(nm)) {
@@ -389,7 +382,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       Access A = new Access(name, entityName, result);
 //>>>>>>> .r4421
       context.cfg().addInstruction(new AstLexicalRead(A));
-      addAccess(context, context.top(), A);
+      markExposedInEnclosingEntities(context, name, definingScope, E, entityName, false);
       return result;
     }
   }
@@ -454,7 +447,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       // lexically-scoped variables must be written in their scope each time
       Access A = new Access(name, context.getEntityName(E), rval);
       context.cfg().addInstruction(new AstLexicalWrite(A));
-      addAccess(context, context.top(), A);
+      markExposedInEnclosingEntities(context, name, definingScope, E, context.getEntityName(E), true);
     }
   }
 
@@ -4261,6 +4254,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     // entity2ExposedNames)).rewrite(N);
     walkEntities(N, new RootContext(N, module));
   }
+
+  /**
+   * set to true to use new handling of lexical scoping
+   */
+  public final static boolean NEW_LEXICAL = false;
 
   public void translate(final CAstEntity N, final WalkContext context) {
     walkEntities(N, context);
