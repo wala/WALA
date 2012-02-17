@@ -10,6 +10,9 @@ import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.MapUtil;
 
+/**
+ * discovers which names declared by an {@link CAstEntity entity} are exposed, i.e., accessed by nested functions.  
+ */
 public class ExposedNamesCollector extends CAstVisitor {
 
   /**
@@ -21,6 +24,10 @@ public class ExposedNamesCollector extends CAstVisitor {
    * exposed names for each entity, updated as child entities are visited
    */
   private final Map<CAstEntity, Set<String>> entity2ExposedNames = HashMapFactory.make();
+
+  public Map<CAstEntity, Set<String>> getEntity2ExposedNames() {
+    return entity2ExposedNames;
+  }
 
   private static class EntityContext implements Context {
 

@@ -4196,7 +4196,10 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     if (DEBUG_TOP)
       System.err.println(("translating " + module.getName()));
     // this.inlinedSourceMap = inlinedSourceMap;
-    (new ExposedNamesCollector()).run(N);
+    final ExposedNamesCollector exposedNamesCollector = new ExposedNamesCollector();
+    exposedNamesCollector.run(N);
+    Map<CAstEntity, Set<String>> entity2ExposedNames = exposedNamesCollector.getEntity2ExposedNames();
+    CAstEntity rewrite = (new ExposedParamRenamer(new CAstImpl(), entity2ExposedNames)).rewrite(N);
     walkEntities(N, new RootContext(N, module));
   }
 
