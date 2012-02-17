@@ -10,7 +10,6 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.callgraph.DelegatingContext;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.nCFAContextSelector;
 import com.ibm.wala.util.intset.IntSet;
@@ -24,7 +23,7 @@ import com.ibm.wala.util.intset.IntSetUtil;
  */
 public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
   /* whether to use a one-level callstring context in addition to the apply context */
-  private static final boolean USE_ONE_LEVEL_CALLSTRING = true; 
+  private static final boolean USE_ONE_LEVEL = true; 
 
   public static final ContextKey APPLY_NON_NULL_ARGS = new ContextKey() {
   };
@@ -66,11 +65,12 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
   }
 
   private final ContextSelector base;
-  private nCFAContextSelector oneLevel;
+  private ContextSelector oneLevel;
 
   public JavaScriptFunctionApplyContextSelector(ContextSelector base) {
     this.base = base;
     this.oneLevel = new nCFAContextSelector(1, base);
+//    this.oneLevel = new OneLevelSiteContextSelector(base);
   }
 
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
@@ -153,8 +153,8 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
             isNonNullArray = true;
           }
         }
-        if (USE_ONE_LEVEL_CALLSTRING)
-          baseCtxt = new DelegatingContext(oneLevel.getCalleeTarget(caller, site, callee, receiver), baseCtxt);
+        if (USE_ONE_LEVEL)
+          baseCtxt = oneLevel.getCalleeTarget(caller, site, callee, receiver);
         return new ApplyContext(baseCtxt, isNonNullArray);
       }
     }

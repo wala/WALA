@@ -119,7 +119,7 @@ public class Util {
         System.err.print(getShortName(ns.next()));
       }
       System.err.println("]");
-      System.err.println("\nIR of node " + N.getGraphNodeId());
+      System.err.println("\nIR of node " + N.getGraphNodeId() + ", context " + N.getContext());
       IR ir = N.getIR();
       if (ir != null) {
         System.err.println(ir);

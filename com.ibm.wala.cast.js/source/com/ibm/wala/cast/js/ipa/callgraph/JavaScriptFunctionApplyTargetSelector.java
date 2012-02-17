@@ -24,9 +24,16 @@ public class JavaScriptFunctionApplyTargetSelector implements MethodTargetSelect
 
   private final MethodTargetSelector base;
 
+  private IMethod applyMethod;
   public JavaScriptFunctionApplyTargetSelector(MethodTargetSelector base) {
     this.base = base;
+  }
 
+  private IMethod createApplyDummyMethod(IClass declaringClass) {
+    final MethodReference ref = genSyntheticMethodRef(declaringClass);
+    // number of args doesn't matter
+    JavaScriptSummary S = new JavaScriptSummary(ref, 1);
+    return new JavaScriptSummarizedFunction(ref, S, declaringClass);  
   }
 
   public static final String SYNTHETIC_APPLY_METHOD_PREFIX = "$$ apply_dummy";
@@ -44,11 +51,10 @@ public class JavaScriptFunctionApplyTargetSelector implements MethodTargetSelect
     if (method != null) {
       String s = method.getReference().getDeclaringClass().getName().toString();
       if (s.equals("Lprologue.js/functionApply")) {
-        // just create a dummy method
-        final MethodReference ref = genSyntheticMethodRef(receiver);
-        // number of args doesn't matter
-        JavaScriptSummary S = new JavaScriptSummary(ref, 1);
-        return new JavaScriptSummarizedFunction(ref, S, receiver);
+        if (applyMethod == null) {
+          applyMethod = createApplyDummyMethod(receiver);
+        }
+        return applyMethod;
       }
     }
     return base.getCalleeTarget(caller, site, receiver);

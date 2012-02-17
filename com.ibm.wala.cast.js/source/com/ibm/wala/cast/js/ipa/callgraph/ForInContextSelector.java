@@ -63,7 +63,7 @@ public class ForInContextSelector implements ContextSelector {
 
   public static boolean USE_CPA_IN_BODIES = false;
   
-  public static boolean USE_1LEVEL_IN_BODIES = false;
+  public static boolean USE_1LEVEL_IN_BODIES = true;
 
   public static boolean DEPENDENT_THRU_READS = true;
   
@@ -310,7 +310,7 @@ public class ForInContextSelector implements ContextSelector {
       } else {
         return baseContext;
       }
-    }
+    } 
     return baseContext;
   }
   
