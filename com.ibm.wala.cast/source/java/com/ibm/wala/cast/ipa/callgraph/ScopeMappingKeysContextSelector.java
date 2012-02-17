@@ -1,6 +1,7 @@
 package com.ibm.wala.cast.ipa.callgraph;
 
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys.ScopeMappingInstanceKey;
+import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -71,7 +72,15 @@ public class ScopeMappingKeysContextSelector implements ContextSelector {
       }
     }
     if (receiver[0] instanceof ScopeMappingInstanceKey) {
-      return new ScopeMappingContext(bc, (ScopeMappingInstanceKey) receiver[0]);
+      if (AstTranslator.NEW_LEXICAL) {
+        // need a recursion check; for now, very coarse
+        ContextItem contextItem = caller.getContext().get(scopeKey);
+        if (contextItem != null) {
+          return bc;
+        }
+      }
+      final ScopeMappingContext scopeMappingContext = new ScopeMappingContext(bc, (ScopeMappingInstanceKey) receiver[0]);
+      return scopeMappingContext;
     } else {
       return bc;
     }
