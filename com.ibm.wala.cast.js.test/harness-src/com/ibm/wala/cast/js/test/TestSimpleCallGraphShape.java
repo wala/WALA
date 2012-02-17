@@ -499,10 +499,16 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   public void testDeadPhi() throws IllegalArgumentException, IOException, CancelException {
     Util.makeScriptCG("tests", "dead_phi.js");
   }
-  
+
+  private static final Object[][] assertionsForScopingOverwriteFunction = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/scoping_test.js" } },
+    new Object[] { "suffix:scoping_test.js", new String[] { "suffix:i_am_reachable" } } 
+  };
+
   @Test
-  public void testScoping() throws IllegalArgumentException, IOException, CancelException {
-    Util.makeScriptCG("tests", "scoping_test.js");
+  public void testScopingOverwriteFunction() throws IllegalArgumentException, IOException, CancelException {
+    CallGraph CG = Util.makeScriptCG("tests", "scoping_test.js");
+    verifyGraphAssertions(CG, assertionsForScopingOverwriteFunction);
   }
   
   private static final Object[][] assertionsForNestedParamAssign = new Object[][] {

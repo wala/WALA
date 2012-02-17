@@ -11,7 +11,6 @@
 package com.ibm.wala.cast.ir.translator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -292,7 +291,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     if (!useLocalValuesForLexicalVars()) {
       CAstEntity entity = context.top();
       Set<String> exposed = entity2ExposedNames.get(entity);
-      if (exposed != null && exposed.contains(name) && Arrays.asList(entity.getArgumentNames()).contains(name)) {
+      if (exposed != null && exposed.contains(name)) {
         return doLexReadHelper(context, name);
       }
     }
@@ -308,7 +307,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     if (!useLocalValuesForLexicalVars()) {
       CAstEntity entity = context.top();
       Set<String> exposed = entity2ExposedNames.get(entity);
-      if (exposed != null && exposed.contains(nm) && Arrays.asList(entity.getArgumentNames()).contains(nm)) {
+      if (exposed != null && exposed.contains(nm)) {
         // use a lexical write
         doLexicallyScopedWrite(context, nm, rval);
         return;
