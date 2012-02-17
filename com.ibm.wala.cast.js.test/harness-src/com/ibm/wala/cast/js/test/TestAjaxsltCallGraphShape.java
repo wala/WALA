@@ -31,7 +31,7 @@ public abstract class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
   @Test public void testAjaxslt() throws IOException, IllegalArgumentException, CancelException {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xslt.html");
     // don't handle call / apply; it makes things blow up
-    CallGraph CG = Util.makeHTMLCG(url, false);
+    CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url, false);
     
     verifyGraphAssertions(CG, assertionsForAjaxslt);
   }
@@ -42,7 +42,7 @@ public abstract class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
 
   @Test public void testAjaxpath() throws IOException, IllegalArgumentException, CancelException {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xpath.html");
-    CallGraph CG = Util.makeHTMLCG(url);
+    CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForAjaxpath);
   }
 

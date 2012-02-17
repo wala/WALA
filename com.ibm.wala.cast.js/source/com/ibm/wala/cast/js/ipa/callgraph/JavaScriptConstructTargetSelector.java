@@ -430,7 +430,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
         FO.write(fun.toString());
         FO.close();
         
-        Set<String> fnNames = Util.loadAdditionalFile(cha, cl, fileName, f.toURI().toURL(), f.getAbsolutePath());
+        Set<String> fnNames = JSCallGraphUtil.loadAdditionalFile(cha, cl, fileName, f.toURI().toURL(), f.getAbsolutePath());
         IClass fcls = null;
         for(String nm : fnNames) {
           if (nm.endsWith("_fromctor")) {

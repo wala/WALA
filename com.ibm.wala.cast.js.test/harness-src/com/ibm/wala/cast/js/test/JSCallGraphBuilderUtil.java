@@ -43,10 +43,10 @@ import com.ibm.wala.util.CancelException;
 /**
  * TODO this class is a mess.  rewrite.
  */
-public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
+public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil {
 
   public static JSCFABuilder makeScriptCGBuilder(String dir, String name, boolean useOneCFA, IRFactory irFactory) throws IOException {
-    JavaScriptLoaderFactory loaders = Util.makeLoaders();
+    JavaScriptLoaderFactory loaders = JSCallGraphBuilderUtil.makeLoaders();
 
     AnalysisScope scope = makeScriptScope(dir, name, loaders);
 
@@ -54,9 +54,9 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
   }
 
   static AnalysisScope makeScriptScope(String dir, String name, JavaScriptLoaderFactory loaders) throws IOException {
-    URL script = Util.class.getClassLoader().getResource(dir + File.separator + name);
+    URL script = JSCallGraphBuilderUtil.class.getClassLoader().getResource(dir + File.separator + name);
     if (script == null) {
-      script = Util.class.getClassLoader().getResource(dir + "/" + name);
+      script = JSCallGraphBuilderUtil.class.getClassLoader().getResource(dir + "/" + name);
     }
     assert script != null : "cannot find " + dir + " and " + name;
 

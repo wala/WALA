@@ -15,7 +15,7 @@ import com.ibm.wala.cast.js.ipa.callgraph.ForInContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptFunctionDotCallTargetSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.CorrelatedPairExtractorFactory;
-import com.ibm.wala.cast.js.test.Util;
+import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
@@ -76,12 +76,12 @@ public class HTMLCGBuilder {
 		} catch (MalformedURLException e1) {
 			Assert.fail("Could not find page to analyse: " + src);
 		}
-		com.ibm.wala.cast.js.ipa.callgraph.Util.setTranslatorFactory(new CAstRhinoTranslatorFactory());
+		com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
 		if(automated_extraction)
-			com.ibm.wala.cast.js.ipa.callgraph.Util.setPreprocessor(new CorrelatedPairExtractorFactory(new CAstRhinoTranslatorFactory(), url));
+			com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setPreprocessor(new CorrelatedPairExtractorFactory(new CAstRhinoTranslatorFactory(), url));
 		JSCFABuilder builder = null;
 		try {
-			builder = Util.makeHTMLCGBuilder(url);
+			builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
 			builder.setContextSelector(new ForInContextSelector(2, builder.getContextSelector()));
 			builder.setContextSelector(new ForInContextSelector(3, builder.getContextSelector()));
 			ProgressMaster master = ProgressMaster.make(new NullProgressMonitor());

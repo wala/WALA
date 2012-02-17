@@ -60,7 +60,7 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
           JavaScriptLoader cl = (JavaScriptLoader) builder.getClassHierarchy().getLoader(JavaScriptTypes.jsLoader);
           URL url = new URL(builder.getBaseURL(), str);
           if(!loadedFiles.contains(url)) {
-            Util.loadAdditionalFile(builder.getClassHierarchy() , cl, str, url, url.getFile());
+            JSCallGraphUtil.loadAdditionalFile(builder.getClassHierarchy() , cl, str, url, url.getFile());
             loadedFiles.add(url);
             IClass script = builder.getClassHierarchy().lookupClass(TypeReference.findOrCreate(cl.getReference(), "L" + url.getFile()));
             return script.getMethod(JavaScriptMethods.fnSelector);
