@@ -20,6 +20,7 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.strings.Atom;
@@ -47,6 +48,7 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
   
   public static final boolean DEBUG_SYNTHETIC_CALL_METHODS = false;
 
+  private static final TypeName CALL_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/functionCall");
   private final MethodTargetSelector base;
 
   public JavaScriptFunctionDotCallTargetSelector(MethodTargetSelector base) {
@@ -65,8 +67,8 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
     IMethod method = receiver.getMethod(AstMethodReference.fnSelector);
     if (method != null) {
-      String s = method.getReference().getDeclaringClass().getName().toString();
-      if (s.equals("Lprologue.js/functionCall")) {
+      TypeName tn = method.getReference().getDeclaringClass().getName();
+      if (tn.equals(CALL_TYPE_NAME)) {
         /* invoking Function.prototype.call as a constructor results in a TypeError
          * see ECMA-262 5.1, 15: "None of the built-in functions described in this clause that 
          *   are not constructors shall implement the [[Construct]] internal method unless otherwise 

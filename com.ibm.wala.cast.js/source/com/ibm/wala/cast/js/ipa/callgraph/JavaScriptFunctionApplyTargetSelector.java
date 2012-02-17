@@ -11,6 +11,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -23,6 +24,8 @@ import com.ibm.wala.util.strings.Atom;
 public class JavaScriptFunctionApplyTargetSelector implements MethodTargetSelector {
 
   private final MethodTargetSelector base;
+
+  private static final TypeName APPLY_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/functionApply");
 
   private IMethod applyMethod;
   public JavaScriptFunctionApplyTargetSelector(MethodTargetSelector base) {
@@ -49,8 +52,8 @@ public class JavaScriptFunctionApplyTargetSelector implements MethodTargetSelect
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
     IMethod method = receiver.getMethod(AstMethodReference.fnSelector);
     if (method != null) {
-      String s = method.getReference().getDeclaringClass().getName().toString();
-      if (s.equals("Lprologue.js/functionApply")) {
+      TypeName tn = method.getReference().getDeclaringClass().getName();
+      if (tn.equals(APPLY_TYPE_NAME)) {
         if (applyMethod == null) {
           applyMethod = createApplyDummyMethod(receiver);
         }

@@ -353,6 +353,7 @@ public class ForInContextSelector implements ContextSelector {
   
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     if (USE_CPA_IN_BODIES && FORIN_MARKER.equals(caller.getContext().get(FORIN_KEY))) {
+      // what about base.getRelevantParameters() here?
       return identifyDependentParameters(caller, site);
     } else if (caller.getIR().getCalls(site)[0].getNumberOfUses() > index) {
       return IntSetUtil.make(new int[]{index}).union(base.getRelevantParameters(caller, site));

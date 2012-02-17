@@ -12,6 +12,7 @@ import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.nCFAContextSelector;
+import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 
@@ -24,6 +25,8 @@ import com.ibm.wala.util.intset.IntSetUtil;
 public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
   /* whether to use a one-level callstring context in addition to the apply context */
   private static final boolean USE_ONE_LEVEL = true; 
+
+  private static final TypeName APPLY_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/functionApply");
 
   public static final ContextKey APPLY_NON_NULL_ARGS = new ContextKey() {
   };
@@ -134,8 +137,6 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
     public String toString() {
       return "ApplyContext [delegate=" + delegate + ", isNonNullArray=" + isNonNullArray + "]";
     }
-    
-    
 
   }
 
@@ -144,8 +145,8 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
     IMethod method = declaringClass.getMethod(AstMethodReference.fnSelector);
     Context baseCtxt = base.getCalleeTarget(caller, site, callee, receiver);
     if (method != null) {
-      String s = method.getReference().getDeclaringClass().getName().toString();
-      if (s.equals("Lprologue.js/functionApply")) {
+      TypeName tn = method.getReference().getDeclaringClass().getName();
+      if (tn.equals(APPLY_TYPE_NAME)) {
         boolean isNonNullArray = false;
         if (receiver.length >= 4) {
           InstanceKey argsList = receiver[3];
