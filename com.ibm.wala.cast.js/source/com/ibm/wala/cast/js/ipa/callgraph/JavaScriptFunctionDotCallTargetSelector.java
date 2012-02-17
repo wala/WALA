@@ -99,7 +99,7 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
         "; this is likely caused by call graph imprecision.");
   }
   
-  private static final boolean SEPARATE_SYNTHETIC_METHOD_PER_SITE = true;
+  private static final boolean SEPARATE_SYNTHETIC_METHOD_PER_SITE = false;
 
   /**
    * cache synthetic method for each arity of Function.call() invocation
