@@ -198,7 +198,7 @@ public class ForInContextSelector implements ContextSelector {
     if(b != null)
       return b;
     DefUse du = getDefUse(method);
-    for(SSAInstruction use : Iterator2Iterable.make(du.getUses(3))) {
+    for(SSAInstruction use : Iterator2Iterable.make(du.getUses(index+1))) {
       if(use instanceof EachElementGetInstruction) {
         forInOnFirstArg_cache.put(mref, true);
         return true;
@@ -231,16 +231,16 @@ public class ForInContextSelector implements ContextSelector {
       return f;
     boolean usedAsPropertyName = false, usedAsSomethingElse = false;
     DefUse du = getDefUse(method);
-    for(SSAInstruction use : Iterator2Iterable.make(du.getUses(3))) {
+    for(SSAInstruction use : Iterator2Iterable.make(du.getUses(index+1))) {
       if(use instanceof ReflectiveMemberAccess) {
         ReflectiveMemberAccess rma = (ReflectiveMemberAccess)use;
-        if(rma.getMemberRef() == 3) {
+        if(rma.getMemberRef() == index+1) {
           usedAsPropertyName = true;
           continue;
         }
       } else if(use instanceof AstIsDefinedInstruction) {
         AstIsDefinedInstruction aidi = (AstIsDefinedInstruction)use;
-        if(aidi.getNumberOfUses() > 1 && aidi.getUse(1) == 3) {
+        if(aidi.getNumberOfUses() > 1 && aidi.getUse(1) == index+1) {
           usedAsPropertyName = true;
           continue;
         }
