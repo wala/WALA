@@ -339,7 +339,10 @@ public class ForInContextSelector implements ContextSelector {
       return new SelectiveCPAContext(receiver);
     } else if (USE_1LEVEL_IN_BODIES && FORIN_MARKER.equals(caller.getContext().get(FORIN_KEY))) {
       if (! identifyDependentParameters(caller, site).isEmpty()) {
-        return oneLevel.getCalleeTarget(caller, site, callee, receiver);        
+        // RECURSION CHECK: only add one level of caller-site contexts if the caller and callee methods are distinct
+        if (!caller.getMethod().equals(callee)) {
+          return oneLevel.getCalleeTarget(caller, site, callee, receiver);
+        }
       } else {
         return null;
       }
