@@ -31,9 +31,8 @@ import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.SingleInstanceFilter;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.OneLevelSiteContextSelector;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
@@ -176,25 +175,44 @@ public class ForInContextSelector implements ContextSelector {
     public String toString() {
       return "for in hack filter for " + get(ContextKey.PARAMETERS[index]) + " over " + this.base;
     }
-   
+
+    /**
+     * get the {@link InstanceKey} used to distinguish this context 
+     */
     public InstanceKey getInstanceKey() {
       return ((SingleInstanceFilter)get(ContextKey.PARAMETERS[index])).getInstance();
     }
   }
    
+  /**
+   * A "dummy" for-in context used for callees of a method analyzed in a real
+   * {@link ForInContext}. The purpose of this class is to clone callees based
+   * on the same {@link InstanceKey} used for the caller context, but without
+   * returning a {@link SingleInstanceFilter} {@link ContextItem} that filters
+   * possible parameter values.
+   */
   class MarkerForInContext extends ForInContext {
 
     MarkerForInContext(Context base, InstanceKey obj) {
       super(base, obj);
-      // TODO Auto-generated constructor stub
     }
 
+    /**
+     * Like {@link ForInContext#get(ContextKey)}, but don't return a
+     * {@link SingleInstanceFilter} for the distinguishing {@link InstanceKey}
+     */
     @Override
     public ContextItem get(ContextKey key) {
       final ContextItem contextItem = super.get(key);
       return (contextItem instanceof SingleInstanceFilter) ? null : contextItem;
     }
 
+    /**
+     * we need to override this method since
+     * {@link MarkerForInContext#get(ContextKey)} does not return the
+     * {@link SingleInstanceFilter} containing the {@link InstanceKey}. Instead,
+     * we invoke {@link ForInContext#get(ContextKey)} from the superclass.
+     */
     @Override
     public InstanceKey getInstanceKey() {
       return ((SingleInstanceFilter)super.get(ContextKey.PARAMETERS[index])).getInstance();
@@ -202,7 +220,7 @@ public class ForInContextSelector implements ContextSelector {
     
   }
   private final ContextSelector base;
-  private final ContextSelector oneLevel;
+//  private final ContextSelector oneLevel;
   private final int index;
   
   private void collectValues(DefUse du, SSAInstruction inst, MutableIntSet values) {
@@ -245,7 +263,7 @@ public class ForInContextSelector implements ContextSelector {
   public ForInContextSelector(int index, ContextSelector base) {
     this.index = index;
     this.base = base;
-    this.oneLevel = new OneLevelSiteContextSelector(base);
+//    this.oneLevel = new OneLevelSiteContextSelector(base);
   }
   
   private final HashMap<MethodReference, Boolean> forInOnFirstArg_cache = HashMapFactory.make();
@@ -375,6 +393,8 @@ public class ForInContextSelector implements ContextSelector {
 //        if (!RecursionCheckContextSelector.recursiveContext(calleeTarget, callee)) {
 //          return calleeTarget;
 //        }
+        // use a MarkerForInContext to clone based on the InstanceKey used in the caller context
+        // TODO the cast below isn't safe; fix
         InstanceKey callerIk = ((ForInContext)caller.getContext()).getInstanceKey();
         return new MarkerForInContext(baseContext, callerIk);
       } else {
