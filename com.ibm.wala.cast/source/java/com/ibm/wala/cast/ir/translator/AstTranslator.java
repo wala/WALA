@@ -389,6 +389,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       Access A = new Access(name, entityName, result);
 //>>>>>>> .r4421
       context.cfg().addInstruction(new AstLexicalRead(A));
+      addAccess(context, context.top(), A);
       return result;
     }
   }
@@ -453,6 +454,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       // lexically-scoped variables must be written in their scope each time
       Access A = new Access(name, context.getEntityName(E), rval);
       context.cfg().addInstruction(new AstLexicalWrite(A));
+      addAccess(context, context.top(), A);
     }
   }
 
@@ -480,6 +482,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         int result = context.currentScope().allocateTempValue();
         Access A = new Access(name, null, result);
         context.cfg().addInstruction(new AstLexicalRead(A));
+        addAccess(context, context.top(), A);
         return result;
       }
 
@@ -516,6 +519,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       } else {
         Access A = new Access(name, null, rval);
         context.cfg().addInstruction(new AstLexicalWrite(A));
+        addAccess(context, context.top(), A);
       }
 
       // globals can be treated as a single static location
@@ -2649,13 +2653,15 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   };
  
   /**
-   * record that in entity e, the access is performed using a local variable. in
+   * record that in entity e, the access is performed.
+   * 
+   * If {@link #useLocalValuesForLexicalVars()} is true, the access is performed
+   * using a local variable. in
    * {@link #patchLexicalAccesses(SSAInstruction[], Set)}, this information is
    * used to update an instruction that performs all the accesses at the
    * beginning of the method and defines the locals.
    */
   private void addAccess(WalkContext context, CAstEntity e, Access access) {
-    assert useLocalValuesForLexicalVars();
     context.getAccesses(e).add(access);
   }
 
@@ -2833,6 +2839,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         // should just be AstLexicalRead for now; may add support for
         // AstLexicalWrite later
         assert instrs[i] instanceof AstLexicalRead;
+        assert useLocalValuesForLexicalVars();
         if (AC != null) {
           ((AstLexicalAccess) instrs[i]).setAccesses(AC);
         } else {
