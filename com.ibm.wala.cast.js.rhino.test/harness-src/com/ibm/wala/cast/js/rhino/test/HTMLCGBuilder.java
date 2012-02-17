@@ -11,6 +11,7 @@ import junit.framework.Assert;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 
+import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.js.ipa.callgraph.ForInContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptFunctionDotCallTargetSelector;
@@ -144,7 +145,7 @@ public class HTMLCGBuilder {
 		}
 		// suppress debug output
 		JavaScriptFunctionDotCallTargetSelector.WARN_ABOUT_IMPRECISE_CALLGRAPH = false;
-		CGBuilderResult res = buildHTMLCG(src, timeout, true, CGBuilderType.ZERO_ONE_CFA_PRECISE_LEXICAL);
+		CGBuilderResult res = buildHTMLCG(src, timeout, true, AstTranslator.NEW_LEXICAL ? CGBuilderType.ONE_CFA_PRECISE_LEXICAL : CGBuilderType.ZERO_ONE_CFA);
 		if(res.construction_time == -1)
 			System.out.println("TIMED OUT");
 		else

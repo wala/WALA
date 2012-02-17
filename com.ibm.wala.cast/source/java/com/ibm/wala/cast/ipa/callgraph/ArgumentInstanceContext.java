@@ -58,5 +58,11 @@ public class ArgumentInstanceContext implements Context {
       return false;
     return true;
   }
+
+  @Override
+  public String toString() {
+    return "ArgumentInstanceContext [base=" + base + ", index=" + index + ", instanceKey=" + instanceKey + "]";
+  }
+  
   
 }

@@ -51,7 +51,7 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
    */
   protected abstract boolean needsScopeMappingKey(InstanceKey base);
 
-  private final PropagationCallGraphBuilder builder;
+  protected final PropagationCallGraphBuilder builder;
 
   private final InstanceKeyFactory basic;
 
@@ -100,8 +100,8 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
      */
     Iterator<CGNode> getFunargNodes(Pair<String, String> name) {
       if (AstTranslator.NEW_LEXICAL) {
-        Collection<CGNode> constructorCallers = getConstructorCallers();
-        assert !constructorCallers.isEmpty() : "no callers for constructor";
+        Collection<CGNode> constructorCallers = getConstructorCallers(this, name);
+        assert constructorCallers != null && !constructorCallers.isEmpty() : "no callers for constructor";
         Iterator<CGNode> result = EmptyIterator.instance();
         for (CGNode callerOfConstructor : constructorCallers) {
           if (callerOfConstructor.getMethod().getReference().getDeclaringClass().getName().toString().equals(name.snd)){
@@ -159,20 +159,7 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
       }
     }
 
-    private Collection<CGNode> getConstructorCallers() {
-      final Context creatorContext = creator.getContext();
-      CGNode callerOfConstructor = (CGNode) creatorContext.get(ContextKey.CALLER);
-      if (callerOfConstructor != null) {
-        return Collections.singleton(callerOfConstructor);        
-      } else {
-        CallString cs = (CallString) creatorContext.get(CallStringContextSelector.CALL_STRING);
-        assert cs != null : "unexpected context " + creatorContext;
-        IMethod[] methods = cs.getMethods();
-        assert methods.length == 1;
-        IMethod m = methods[0];
-        return builder.getCallGraph().getNodes(m.getReference());
-      }
-    }
+
 
     public int hashCode() {
       return base.hashCode() * creator.hashCode();
@@ -205,6 +192,22 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
     }
   }
 
+  protected Collection<CGNode> getConstructorCallers(ScopeMappingInstanceKey smik, Pair<String, String> name) {
+    final Context creatorContext = smik.getCreator().getContext();
+    CGNode callerOfConstructor = (CGNode) creatorContext.get(ContextKey.CALLER);
+    if (callerOfConstructor != null) {
+      return Collections.singleton(callerOfConstructor);        
+    } else {
+      CallString cs = (CallString) creatorContext.get(CallStringContextSelector.CALL_STRING);
+      if (cs != null) {
+        IMethod[] methods = cs.getMethods();
+        assert methods.length == 1;
+        IMethod m = methods[0];
+        return builder.getCallGraph().getNodes(m.getReference());        
+      }
+    }
+    return null;
+  }
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
     return basic.getInstanceKeyForMultiNewArray(node, allocation, dim);
   }

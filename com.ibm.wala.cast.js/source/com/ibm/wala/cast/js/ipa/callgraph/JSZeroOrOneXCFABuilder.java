@@ -83,6 +83,9 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     if (doOneCFA) {
       contextSelector = new nCFAContextSelector(1, contextSelector);
     }
+    if (AstTranslator.NEW_LEXICAL) {
+      contextSelector = new RecursionBoundContextSelector(contextSelector, 3);
+    }
     setContextSelector(contextSelector);
   }
 

@@ -15,6 +15,7 @@ import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeName;
 
 /**
  * TODO cache generated IRs
@@ -25,20 +26,24 @@ import com.ibm.wala.types.MethodReference;
  */
 public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensitiveSSAContextInterpreter {
 
+  private static final TypeName APPLY_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/functionApply");
+
   public JavaScriptFunctionApplyContextInterpreter(AnalysisOptions options, AnalysisCache cache) {
     super(options, cache);
   }
 
   @Override
   public boolean understands(CGNode node) {
-    return node.getContext().get(JavaScriptFunctionApplyContextSelector.APPLY_NON_NULL_ARGS) != null;
+    return node.getMethod().getDeclaringClass().getName().equals(APPLY_TYPE_NAME);
   }
 
   @Override
   public IR getIR(CGNode node) {
     assert understands(node);
     BooleanContextItem isNonNullArray = (BooleanContextItem) node.getContext().get(JavaScriptFunctionApplyContextSelector.APPLY_NON_NULL_ARGS);
-    if (isNonNullArray.val) {
+    // isNonNullArray can be null if, e.g., due to recursion bounding we have no
+    // information on the arguments parameter
+    if (isNonNullArray == null || isNonNullArray.val) {
       return makeIRForArgList(node);
     } else {
       return makeIRForNoArgList(node);
