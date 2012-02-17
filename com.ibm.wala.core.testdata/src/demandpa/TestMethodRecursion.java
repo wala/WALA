@@ -64,6 +64,6 @@ public class TestMethodRecursion {
     Object o1 = new Object();
     Object o2 = new Object();
     Object o3 = foo(o1, o2, false);
-    TestUtil.testThisVar(o3);
+    DemandPATestUtil.testThisVar(o3);
   }
 }

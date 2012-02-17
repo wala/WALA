@@ -49,8 +49,8 @@ public class TestHashMapGet {
     s2.put(key2, new Object());
     Object o1 = s1.get(key1);
     Object o2 = s2.get(key2);
-    TestUtil.makeVarUsed(o1);
-    TestUtil.testThisVar(o2);
+    DemandPATestUtil.makeVarUsed(o1);
+    DemandPATestUtil.testThisVar(o2);
   }
 
 }

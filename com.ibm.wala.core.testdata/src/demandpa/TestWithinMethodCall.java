@@ -48,6 +48,6 @@ public class TestWithinMethodCall {
   }
 
   private static void testMethod(Object o) {
-    TestUtil.testThisVar(o);
+    DemandPATestUtil.testThisVar(o);
   }
 }

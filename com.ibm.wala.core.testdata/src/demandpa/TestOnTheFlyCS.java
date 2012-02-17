@@ -48,7 +48,7 @@ public class TestOnTheFlyCS {
   static class C2 extends C1 {
     @Override
     void doSomething(Object o) {
-      TestUtil.testThisVar(o);
+      DemandPATestUtil.testThisVar(o);
     }
   }
 

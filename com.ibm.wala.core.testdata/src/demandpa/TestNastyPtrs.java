@@ -100,6 +100,6 @@ class TestNastyPtrs {
     x.next8 = x;
     x.next9 = x;
 
-    TestUtil.testThisVar(x);
+    DemandPATestUtil.testThisVar(x);
   }
 }

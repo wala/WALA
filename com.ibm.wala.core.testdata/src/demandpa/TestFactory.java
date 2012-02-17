@@ -49,8 +49,8 @@ public class TestFactory {
   public static void main(String[] args) {
     A a1 = makeA();
     A a2 = makeA();
-    TestUtil.makeVarUsed(a1);
-    TestUtil.testThisVar(a2);
+    DemandPATestUtil.makeVarUsed(a1);
+    DemandPATestUtil.testThisVar(a2);
   }
 
 }

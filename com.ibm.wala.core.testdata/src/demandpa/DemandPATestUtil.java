@@ -44,7 +44,7 @@ package demandpa;
  * @author manu
  * 
  */
-public class TestUtil {
+public class DemandPATestUtil {
 
   public static void makeVarUsed(Object o) {
   }

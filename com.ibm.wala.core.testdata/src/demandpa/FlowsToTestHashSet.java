@@ -24,7 +24,7 @@ public class FlowsToTestHashSet {
     s2.add(new Object());
     Object o1 = s1.iterator().next();
     Object o2 = s2.iterator().next();
-    TestUtil.makeVarUsed(o1);
-    TestUtil.makeVarUsed(o2);
+    DemandPATestUtil.makeVarUsed(o1);
+    DemandPATestUtil.makeVarUsed(o2);
   }
 }

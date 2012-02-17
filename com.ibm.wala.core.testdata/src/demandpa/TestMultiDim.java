@@ -47,7 +47,7 @@ public class TestMultiDim {
     multi[0] = new Object[10][10];
     Object[][] t = multi[0];
     Object[] t2 = t[0];
-    TestUtil.testThisVar(t2);
+    DemandPATestUtil.testThisVar(t2);
   }
 
 }

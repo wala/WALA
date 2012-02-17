@@ -46,8 +46,8 @@ public class TestArraySet {
     s2.add(new B());
     A a = (A) s1.get();
     B b = (B) s2.get();
-    TestUtil.makeVarUsed(b);
-    TestUtil.testThisVar(a);
+    DemandPATestUtil.makeVarUsed(b);
+    DemandPATestUtil.testThisVar(a);
 
   }
 

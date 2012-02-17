@@ -23,7 +23,7 @@ public class FlowsToTestArraySetIter {
     s2.add(new B());
     A a = (A) s1.iterator().next();
     B b = (B) s2.iterator().next();
-    TestUtil.makeVarUsed(b);
-    TestUtil.makeVarUsed(a);
+    DemandPATestUtil.makeVarUsed(b);
+    DemandPATestUtil.makeVarUsed(a);
   }
 }

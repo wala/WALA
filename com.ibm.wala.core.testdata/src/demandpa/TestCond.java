@@ -46,7 +46,7 @@ public class TestCond {
     Object x = arr[0];
     if (x instanceof B) {
       B b = (B) x;
-      TestUtil.testThisVar(b);
+      DemandPATestUtil.testThisVar(b);
     }
   }
 
