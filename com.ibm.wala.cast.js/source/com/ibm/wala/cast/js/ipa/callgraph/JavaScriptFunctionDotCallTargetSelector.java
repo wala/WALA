@@ -95,7 +95,7 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
       pos = ((AstMethod)callerMethod).getSourcePosition(indices.next());
     }
     System.err.println("Detected improbable call to Function.prototype.call " +
-        (pos == null ? "in function " + caller.getMethod() : "at position " + pos) +
+        (pos == null ? "in function " + caller : "at position " + pos) +
         "; this is likely caused by call graph imprecision.");
   }
   
