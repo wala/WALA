@@ -143,6 +143,9 @@ public class ForInContextSelector implements ContextSelector {
 
       @Override
       public boolean equals(Object other) {
+        if (this == other) {
+           return true;
+        }
         return other != null &&
             getClass().equals(other.getClass()) &&
             base.equals(((SelectiveCPAContext)other).base) &&
