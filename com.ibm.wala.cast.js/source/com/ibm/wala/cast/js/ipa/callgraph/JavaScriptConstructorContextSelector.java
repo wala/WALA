@@ -10,9 +10,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.DelegatingContext;
-import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.OneLevelSiteContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.nCFAContextSelector;
 import com.ibm.wala.util.intset.IntSet;
@@ -28,10 +26,13 @@ public class JavaScriptConstructorContextSelector implements ContextSelector {
 
   private final OneLevelSiteContextSelector oneLevelCallerSite;
   
-  public JavaScriptConstructorContextSelector(ContextSelector base) {
+  private final boolean usePreciseLexical;
+  
+  public JavaScriptConstructorContextSelector(ContextSelector base, boolean usePreciseLexical) {
     this.base = base;
     this.oneLevelCallStrings = new nCFAContextSelector(1, base);
     this.oneLevelCallerSite = new OneLevelSiteContextSelector(base);
+    this.usePreciseLexical = usePreciseLexical;
   }
 
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
@@ -44,7 +45,7 @@ public class JavaScriptConstructorContextSelector implements ContextSelector {
       final Context callerContext = caller.getContext();
       if (!AstTranslator.NEW_LEXICAL && callerContext instanceof ScopeMappingContext) {
         return new DelegatingContext(callerContext, oneLevelCallStringContext);
-      } else if (AstTranslator.NEW_LEXICAL && LexicalScopingResolverContexts.hasExposedUses(caller, site)) {
+      } else if (AstTranslator.NEW_LEXICAL && usePreciseLexical && LexicalScopingResolverContexts.hasExposedUses(caller, site)) {
         // use a caller-site context, to enable lexical scoping lookups (via caller CGNode)
         return oneLevelCallerSite.getCalleeTarget(caller, site, callee, receiver);
       } else {

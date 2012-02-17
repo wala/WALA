@@ -10,20 +10,26 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 
 import com.ibm.wala.cast.ipa.callgraph.LexicalScopingResolverContexts.LexicalScopingResolver;
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallString;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallStringContextSelector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
@@ -94,31 +100,30 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
      */
     Iterator<CGNode> getFunargNodes(Pair<String, String> name) {
       if (AstTranslator.NEW_LEXICAL) {
-        CGNode callerOfConstructor = (CGNode) creator.getContext().get(ContextKey.CALLER);
-        if (callerOfConstructor == null) {
-          System.err.println(creator);
-          assert false;
-        }
-        if (callerOfConstructor.getMethod().getReference().getDeclaringClass().getName().toString().equals(name.snd)){ 
-          return new NonNullSingletonIterator<CGNode>(callerOfConstructor);
-        } else {
-          PointerKey funcKey = builder.getPointerKeyForLocal(callerOfConstructor, 1);
-          OrdinalSet<InstanceKey> funcPtrs = builder.getPointerAnalysis().getPointsToSet(funcKey);
-          assert funcPtrs.size() == 1;
-          InstanceKey funcPtr = funcPtrs.iterator().next();
-          if (funcPtr instanceof ScopeMappingInstanceKey) {
-            return ((ScopeMappingInstanceKey) funcPtr).getFunargNodes(name);
+        Collection<CGNode> constructorCallers = getConstructorCallers();
+        assert !constructorCallers.isEmpty() : "no callers for constructor";
+        Iterator<CGNode> result = EmptyIterator.instance();
+        for (CGNode callerOfConstructor : constructorCallers) {
+          if (callerOfConstructor.getMethod().getReference().getDeclaringClass().getName().toString().equals(name.snd)){
+            result = new CompoundIterator<CGNode>(result, new NonNullSingletonIterator<CGNode>(callerOfConstructor));
           } else {
-            return EmptyIterator.instance();
-          }
-//          Iterator<CGNode> result = EmptyIterator.instance();
-//          for (InstanceKey x : funcPtrs) {
-//            if (x instanceof ScopeMappingInstanceKey) {
-//              result = new CompoundIterator<CGNode>(result, ((ScopeMappingInstanceKey) x).getFunargNodes(name));
+            PointerKey funcKey = builder.getPointerKeyForLocal(callerOfConstructor, 1);
+            OrdinalSet<InstanceKey> funcPtrs = builder.getPointerAnalysis().getPointsToSet(funcKey);
+            for (InstanceKey funcPtr : funcPtrs) {
+              if (funcPtr instanceof ScopeMappingInstanceKey) {
+                result = new CompoundIterator<CGNode>(result, ((ScopeMappingInstanceKey) funcPtr).getFunargNodes(name));                
+              }              
+            }
+//            Iterator<CGNode> result = EmptyIterator.instance();
+//            for (InstanceKey x : funcPtrs) {
+//              if (x instanceof ScopeMappingInstanceKey) {
+//                result = new CompoundIterator<CGNode>(result, ((ScopeMappingInstanceKey) x).getFunargNodes(name));
+//              }
 //            }
-//          }
-//          return result;
+//            return result;
+          }          
         }
+        return result;
       } else {
         Iterator<CGNode> result = EmptyIterator.instance();
 
@@ -151,6 +156,21 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
         }
 
         return result;
+      }
+    }
+
+    private Collection<CGNode> getConstructorCallers() {
+      final Context creatorContext = creator.getContext();
+      CGNode callerOfConstructor = (CGNode) creatorContext.get(ContextKey.CALLER);
+      if (callerOfConstructor != null) {
+        return Collections.singleton(callerOfConstructor);        
+      } else {
+        CallString cs = (CallString) creatorContext.get(CallStringContextSelector.CALL_STRING);
+        assert cs != null : "unexpected context " + creatorContext;
+        IMethod[] methods = cs.getMethods();
+        assert methods.length == 1;
+        IMethod m = methods[0];
+        return builder.getCallGraph().getNodes(m.getReference());
       }
     }
 
