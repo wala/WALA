@@ -234,7 +234,7 @@ public class ClosureExtractor extends CAstRewriterExt {
   /* Ask the policy whether it wants anything extracted from this block; otherwise the node is simply copied. */
   private CAstNode copyBlock(CAstNode root, CAstControlFlowMap cfg, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     List<ExtractionRegion> regions = policies.getFirst().extract(root);
-    if(regions == null) {
+    if(regions == null || usesArguments(root)) {
       return copyNode(root, cfg, context, nodeMap);
     } else {
       ArrayList<CAstNode> copied_children = new ArrayList<CAstNode>();
@@ -744,6 +744,11 @@ public class ClosureExtractor extends CAstRewriterExt {
     return false;
   }
   
+  /*
+   * Due to the way CAst rewriting works, we sometimes have to insert nodes before rewriting
+   * a subtree. These nodes should not usually be rewritten again, however, so we mark them
+   * as "synthetic". Currently, this only applies to "return" statements.
+   */
   private final Set<CAstNode> synthetic = HashSetFactory.make();
   private void markSynthetic(CAstNode node) {
     this.synthetic.add(node);
@@ -759,6 +764,7 @@ public class ClosureExtractor extends CAstRewriterExt {
     return true;
   }
   
+  // determine whether the given subtree contains no unstructured control flow and calls
   private boolean noJumpsAndNoCalls(CAstNode node) {
     switch(node.getKind()) {
     case CAstNode.BREAK:
@@ -773,5 +779,17 @@ public class ClosureExtractor extends CAstRewriterExt {
       if(!noJumpsAndNoCalls(node.getChild(i)))
         return false;
     return true;
+  }
+  
+  // determines whether the given subtree refers to the variable "arguments"
+  private boolean usesArguments(CAstNode node) {
+    if(node.getKind() == CAstNode.VAR) {
+        return node.getChild(0).getValue().equals("arguments");
+    } else {
+      for(int i=0;i<node.getChildCount();++i)
+        if(usesArguments(node.getChild(i)))
+          return true;
+      return false;      
+    }
   }
 }

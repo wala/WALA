@@ -569,4 +569,20 @@ public abstract class TestCorrelatedPairExtraction {
              "  }\n" +
              "}");
   }
+
+  
+  // cannot extract for-in body referring to "arguments"
+  @Test
+  public void test24() {
+    testRewriter("function extend(dest, src) {" +
+             "  for(var p in src) {" +
+             "    arguments[0][p] = src[p];" +
+             "  }" +
+             "}",
+             "function extend(dest, src) {" +
+             "  for(var p in src) {" +
+             "    arguments[0][p] = src[p];" +
+             "  }" +
+             "}");
+  }
 }
