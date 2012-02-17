@@ -16,6 +16,7 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptFunctionDotCallTargetSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.CorrelatedPairExtractorFactory;
 import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil;
+import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil.CGBuilderType;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
@@ -67,7 +68,7 @@ public class HTMLCGBuilder {
 	 * @throws IOException 
 	 * @throws ClassHierarchyException 
 	 */
-	public static CGBuilderResult buildHTMLCG(String src, int timeout, boolean automated_extraction) 
+	public static CGBuilderResult buildHTMLCG(String src, int timeout, boolean automated_extraction, CGBuilderType builderType) 
 			throws ClassHierarchyException, IOException {
 		CGBuilderResult res = new CGBuilderResult();
 		URL url = null;
@@ -81,7 +82,7 @@ public class HTMLCGBuilder {
 			com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setPreprocessor(new CorrelatedPairExtractorFactory(new CAstRhinoTranslatorFactory(), url));
 		JSCFABuilder builder = null;
 		try {
-			builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
+			builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url, builderType);
 			builder.setContextSelector(new ForInContextSelector(2, builder.getContextSelector()));
 			builder.setContextSelector(new ForInContextSelector(3, builder.getContextSelector()));
 			ProgressMaster master = ProgressMaster.make(new NullProgressMonitor());
@@ -143,7 +144,7 @@ public class HTMLCGBuilder {
 		}
 		// suppress debug output
 		JavaScriptFunctionDotCallTargetSelector.WARN_ABOUT_IMPRECISE_CALLGRAPH = false;
-		CGBuilderResult res = buildHTMLCG(src, timeout, true);
+		CGBuilderResult res = buildHTMLCG(src, timeout, true, CGBuilderType.ZERO_ONE_CFA_PRECISE_LEXICAL);
 		if(res.construction_time == -1)
 			System.out.println("TIMED OUT");
 		else
