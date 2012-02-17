@@ -171,7 +171,7 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
     }
 
     public String toString() {
-      return "SMIK:" + base + "@" + creator;
+      return "SMIK:" + base + "@creator:" + creator;
     }
 
     public InstanceKey getBase() {
