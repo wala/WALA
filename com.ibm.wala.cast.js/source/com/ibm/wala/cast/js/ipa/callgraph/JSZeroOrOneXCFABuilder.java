@@ -57,7 +57,9 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
 
     ContextSelector def = new ContextInsensitiveSelector();
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
-    contextSelector = new ScopeMappingKeysContextSelector(contextSelector);
+    if (!AstTranslator.NEW_LEXICAL) {
+      contextSelector = new ScopeMappingKeysContextSelector(contextSelector);
+    }
     contextSelector = new JavaScriptConstructorContextSelector(contextSelector);
     if (USE_OBJECT_SENSITIVITY) {
       contextSelector = new ObjectSensitivityContextSelector(contextSelector);
