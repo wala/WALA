@@ -11,6 +11,9 @@ public class ArgumentInstanceContext implements Context {
   private final int index;
   private final InstanceKey instanceKey;
 
+  // to easily identify when an ArgumentInstanceContext is present
+  public static final ContextKey ID_KEY = new ContextKey() {};
+
   public ArgumentInstanceContext(Context base, int index, InstanceKey instanceKey) {
     this.base = base;
     this.index = index;
@@ -20,7 +23,7 @@ public class ArgumentInstanceContext implements Context {
   public ContextItem get(ContextKey name) {
     /*if(name == ContextKey.RECEIVER && index == 1)
       return instanceKey;*/
-    if(name == ContextKey.PARAMETERS[index])
+    if(name.equals(ContextKey.PARAMETERS[index]) || name.equals(ID_KEY))
       return new FilteredPointerKey.SingleInstanceFilter(instanceKey);
     return base.get(name);
   }
