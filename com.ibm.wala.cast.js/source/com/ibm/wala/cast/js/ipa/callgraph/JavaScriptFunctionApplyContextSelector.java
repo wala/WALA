@@ -10,7 +10,9 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.DelegatingContext;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.nCFAContextSelector;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 
@@ -21,6 +23,8 @@ import com.ibm.wala.util.intset.IntSetUtil;
  *      Function.prototype.apply() docs</a>
  */
 public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
+  /* whether to use a one-level callstring context in addition to the apply context */
+  private static final boolean USE_ONE_LEVEL_CALLSTRING = true; 
 
   public static final ContextKey APPLY_NON_NULL_ARGS = new ContextKey() {
   };
@@ -62,9 +66,11 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
   }
 
   private final ContextSelector base;
+  private nCFAContextSelector oneLevel;
 
   public JavaScriptFunctionApplyContextSelector(ContextSelector base) {
     this.base = base;
+    this.oneLevel = new nCFAContextSelector(1, base);
   }
 
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
@@ -136,6 +142,9 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     IClass declaringClass = callee.getDeclaringClass();
     IMethod method = declaringClass.getMethod(AstMethodReference.fnSelector);
+    Context baseCtxt = base.getCalleeTarget(caller, site, callee, receiver);
+    if(USE_ONE_LEVEL_CALLSTRING)
+      baseCtxt = new DelegatingContext(oneLevel.getCalleeTarget(caller, site, callee, receiver), baseCtxt);
     if (method != null) {
       String s = method.getReference().getDeclaringClass().getName().toString();
       if (s.equals("Lprologue.js/functionApply")) {
@@ -146,10 +155,10 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
             isNonNullArray = true;
           }
         }
-        return new ApplyContext(base.getCalleeTarget(caller, site, callee, receiver), isNonNullArray);
+        return new ApplyContext(baseCtxt, isNonNullArray);
       }
     }
-    return base.getCalleeTarget(caller, site, callee, receiver);
+    return baseCtxt;
   }
 
 }
