@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.ArgumentSpecialization;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
@@ -29,23 +30,23 @@ public abstract class TestArgumentSensitivity extends TestJSCallGraphShape {
     new Object[] { "tests/args.js/a", new String[] { "tests/args.js/y", "tests/args.js/z" } } };
 
   @Test public void testArgs() throws IOException, IllegalArgumentException, CancelException, ClassHierarchyException {
-    JavaScriptLoaderFactory loaders = Util.makeLoaders();
-    AnalysisScope scope = Util.makeScriptScope("tests", "args.js", loaders);
+    JavaScriptLoaderFactory loaders = JSCallGraphBuilderUtil.makeLoaders();
+    AnalysisScope scope = JSCallGraphBuilderUtil.makeScriptScope("tests", "args.js", loaders);
 
-    IClassHierarchy cha = Util.makeHierarchy(scope, loaders);
+    IClassHierarchy cha = JSCallGraphBuilderUtil.makeHierarchy(scope, loaders);
     com.ibm.wala.cast.js.util.Util.checkForFrontEndErrors(cha);
-    Iterable<Entrypoint> roots = Util.makeScriptRoots(cha);
-    JSAnalysisOptions options = Util.makeOptions(scope, cha, roots);
+    Iterable<Entrypoint> roots = JSCallGraphBuilderUtil.makeScriptRoots(cha);
+    JSAnalysisOptions options = JSCallGraphBuilderUtil.makeOptions(scope, cha, roots);
 
-    AnalysisCache cache = Util.makeCache(new ArgumentSpecialization.ArgumentCountIRFactory(options.getSSAOptions()));
+    AnalysisCache cache = JSCallGraphBuilderUtil.makeCache(new ArgumentSpecialization.ArgumentCountIRFactory(options.getSSAOptions()));
 
     JSCFABuilder builder = new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, ZeroXInstanceKeys.ALLOCATIONS, false);
     builder.setContextSelector(new ArgumentSpecialization.ArgumentCountContextSelector(builder.getContextSelector()));
     builder.setContextInterpreter(new ArgumentSpecialization.ArgumentSpecializationContextIntepreter(options, cache));
     CallGraph CG = builder.makeCallGraph(options);
     
-    Util.AVOID_DUMP = false;
-    Util.dumpCG(builder.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.AVOID_DUMP = false;
+    CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
     
     verifyGraphAssertions(CG, assertionsForArgs);
   }

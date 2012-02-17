@@ -138,12 +138,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
 
   @Test public void testCrawlPage12() throws IOException, IllegalArgumentException, CancelException {
     URL url = getClass().getClassLoader().getResource("pages/crawl/page12.html");
-<<<<<<< HEAD
-    CallGraph CG = Util.makeHTMLCG(url);
-    System.err.println(CG);
-=======
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
->>>>>>> refactoring: rename some Util classes
     verifyGraphAssertions(CG, assertionsForPage12);
   }
 
@@ -235,13 +230,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     
   @Test public void testCrawlPage17() throws IOException, IllegalArgumentException, CancelException {
     URL url = getClass().getClassLoader().getResource("pages/crawl/page17.html");
-<<<<<<< HEAD
-    JSCFABuilder builder = Util.makeHTMLCGBuilder(url);
-    CallGraph CG = builder.makeCallGraph(builder.getOptions());
-    Util.dumpCG(builder.getPointerAnalysis(), CG);
-=======
     CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
->>>>>>> refactoring: rename some Util classes
     verifyGraphAssertions(CG, assertionsForPage17);
   }
   
