@@ -3,6 +3,7 @@ package com.ibm.wala.cast.js.ipa.callgraph;
 import java.util.HashMap;
 
 import com.ibm.wala.cast.ipa.callgraph.ArgumentInstanceContext;
+import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -10,6 +11,7 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAReturnInstruction;
@@ -27,6 +29,8 @@ public class ObjectSensitivityContextSelector implements ContextSelector {
   
   private final HashMap<MethodReference, Boolean> returnsThis_cache = HashMapFactory.make();
   
+  private final IRFactory<IMethod> factory = AstIRFactory.makeDefaultFactory();
+
   // determine whether the method returns "this"
   private boolean returnsThis(IMethod method) {
     MethodReference mref = method.getReference();
@@ -35,7 +39,7 @@ public class ObjectSensitivityContextSelector implements ContextSelector {
     Boolean b = returnsThis_cache.get(mref);
     if(b != null)
       return b;
-    for(SSAInstruction inst : ForInContextSelector.factory.makeIR(method, Everywhere.EVERYWHERE, SSAOptions.defaultOptions()).getInstructions()) {
+    for(SSAInstruction inst : factory.makeIR(method, Everywhere.EVERYWHERE, SSAOptions.defaultOptions()).getInstructions()) {
       if(inst instanceof SSAReturnInstruction) {
         SSAReturnInstruction ret = (SSAReturnInstruction)inst;
         if(ret.getResult() == 2) {

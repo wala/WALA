@@ -226,10 +226,11 @@ public class ForInContextSelector implements ContextSelector {
   }
   
   private final HashMap<MethodReference, Boolean> forInOnFirstArg_cache = HashMapFactory.make();
-  public static final HashMap<MethodReference, DefUse> du_cache = HashMapFactory.make();
-  public static final IRFactory<IMethod> factory = AstIRFactory.makeDefaultFactory();
+  private final HashMap<MethodReference, DefUse> du_cache = HashMapFactory.make();
+  private final IRFactory<IMethod> factory = AstIRFactory.makeDefaultFactory();
   
   // determine whether the method performs a for-in loop over the properties of its index'th argument
+  @SuppressWarnings("unused")
   private boolean forInOnFirstArg(IMethod method) {
     MethodReference mref = method.getReference();
     if(method.getNumberOfParameters() < index)
@@ -248,7 +249,7 @@ public class ForInContextSelector implements ContextSelector {
     return false;
   }
 
-  public static DefUse getDefUse(IMethod method) {
+  private DefUse getDefUse(IMethod method) {
     MethodReference mref = method.getReference();
     DefUse du = du_cache.get(mref);
     if(du == null) {
