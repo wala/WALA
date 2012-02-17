@@ -144,6 +144,14 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForbadforin2HackPrecision);
   }
 
+  @Test public void testForInRecursion() throws IOException, IllegalArgumentException, CancelException {
+    JSCFABuilder B = Util.makeScriptCGBuilder("tests", "badforin3.js");
+    addHackedForInLoopSensitivity(B);
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    Util.dumpCG(B.getPointerAnalysis(), CG);
+  }
+
+
   /*
   @Test public void testYahooWithoutHack() throws IOException, IllegalArgumentException, CancelException {
     JSCFABuilder B = Util.makeScriptCGBuilder("frameworks", "yahoo.js");
