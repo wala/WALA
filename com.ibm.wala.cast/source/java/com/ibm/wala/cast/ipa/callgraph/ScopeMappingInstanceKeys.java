@@ -170,6 +170,10 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
     public InstanceKey getBase() {
       return base;
     }
+    
+    public CGNode getCreator() {
+      return creator;
+    }
   }
 
   public InstanceKey getInstanceKeyForAllocation(CGNode creatorNode, NewSiteReference allocationSite) {
