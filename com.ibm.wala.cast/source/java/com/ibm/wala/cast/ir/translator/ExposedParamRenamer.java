@@ -37,7 +37,10 @@ public class ExposedParamRenamer extends CAstCloner {
 
   private final Map<CAstEntity, Set<String>> entity2ExposedNames;
 
-  private List<CAstNode> curDecls;
+  /**
+   * A bit hackish
+   */
+  private List<CAstNode> curExposedDecls;
 
   protected ExposedParamRenamer(CAst Ast, Map<CAstEntity, Set<String>> entity2ExposedNames) {
     super(Ast, true);
@@ -46,9 +49,9 @@ public class ExposedParamRenamer extends CAstCloner {
 
   @Override
   protected CAstNode copyNodes(CAstNode root, NonCopyingContext c, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
-    if (root.getKind() == CAstNode.BLOCK_STMT && curDecls != null) {
-      List<CAstNode> myDecls = curDecls;
-      curDecls = null;
+    if (root.getKind() == CAstNode.BLOCK_STMT && curExposedDecls != null) {
+      List<CAstNode> myDecls = curExposedDecls;
+      curExposedDecls = null;
       CAstNode result = super.copyNodes(root, c, nodeMap);
       CAstNode[] newChildren = new CAstNode[result.getChildCount() + 1];
       newChildren[0] = Ast.makeNode(CAstNode.BLOCK_STMT, myDecls.toArray(new CAstNode[myDecls.size()]));
@@ -69,27 +72,16 @@ public class ExposedParamRenamer extends CAstCloner {
       String[] argumentNames = root.getArgumentNames();
       final Set<String> exposedNames = entity2ExposedNames.get(root);
       assert !exposedNames.isEmpty();
-      List<CAstNode> decls = new ArrayList<CAstNode>();
+      List<CAstNode> exposedDecls = new ArrayList<CAstNode>();
       List<String> newArgNames = new ArrayList<String>();
-      for (String argName : argumentNames) {
-        if (exposedNames.contains(argName)) {
-          if (VERBOSE)
-            System.err.println("argument " + argName + " exposed");
-          final String newArgName = transformExposedArg(argName);
-          decls.add(Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(argName)),
-              Ast.makeNode(CAstNode.VAR, Ast.makeConstant(newArgName))));
-          newArgNames.add(newArgName);
-        } else {
-          newArgNames.add(argName);
-        }
-      }
+      createDeclsForExposedArgs(argumentNames, exposedNames, exposedDecls, newArgNames);
 
-      if (!decls.isEmpty()) {
-        curDecls = decls;
+      if (!exposedDecls.isEmpty()) {
+        curExposedDecls = exposedDecls;
         CAstEntity result = super.rewrite(root);
         if (VERBOSE)
           System.err.println(result.getAST());
-        assert curDecls == null;
+        assert curExposedDecls == null;
         assert argumentNames.length == newArgNames.size();
         final String[] newArgNameArray = newArgNames.toArray(new String[argumentNames.length]);
         return new DelegatingEntity(result) {
@@ -103,7 +95,58 @@ public class ExposedParamRenamer extends CAstCloner {
       }
 
     }
+    // return new DelegatingEntity(root) {
+    // private Map<CAstNode, Collection<CAstEntity>> theChildren;
+    //
+    // public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
+    // Map<CAstNode, Collection<CAstEntity>> newChildren =
+    // getAllScopedEntities();
+    // if (newChildren.containsKey(construct)) {
+    // return newChildren.get(construct).iterator();
+    // } else {
+    // return EmptyIterator.instance();
+    // }
+    // }
+    //
+    // public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
+    // if (theChildren == null) {
+    // theChildren = HashMapFactory.make();
+    // for (Iterator<Map.Entry<CAstNode, Collection<CAstEntity>>> keys =
+    // base.getAllScopedEntities().entrySet().iterator(); keys
+    // .hasNext();) {
+    // Map.Entry<CAstNode, Collection<CAstEntity>> entry = keys.next();
+    // CAstNode key = entry.getKey();
+    // if (key == null) {
+    // Set<CAstEntity> newEntities = new LinkedHashSet<CAstEntity>();
+    // theChildren.put(key, newEntities);
+    // for (Iterator oldEntities = ((Collection) entry.getValue()).iterator();
+    // oldEntities.hasNext();) {
+    // newEntities.add(rewrite((CAstEntity) oldEntities.next()));
+    // }
+    // }
+    // }
+    // }
+    // return theChildren;
+    // }
+    //
+    // };
     return super.rewrite(root);
+  }
+
+  private void createDeclsForExposedArgs(String[] argumentNames, final Set<String> exposedNames, List<CAstNode> decls,
+      List<String> newArgNames) {
+    for (String argName : argumentNames) {
+      if (exposedNames.contains(argName)) {
+        if (VERBOSE)
+          System.err.println("argument " + argName + " exposed");
+        final String newArgName = transformExposedArg(argName);
+        decls.add(Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(argName)),
+            Ast.makeNode(CAstNode.VAR, Ast.makeConstant(newArgName))));
+        newArgNames.add(newArgName);
+      } else {
+        newArgNames.add(argName);
+      }
+    }
   }
 
   private String transformExposedArg(String argName) {

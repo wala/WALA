@@ -65,6 +65,10 @@ public class JSAstTranslator extends AstTranslator {
     return true;
   }
 
+  protected boolean useLexicalAccessesForExposedVars() {
+    return false;
+  }
+  
   protected TypeReference defaultCatchType() {
     return JavaScriptTypes.Root;
   }

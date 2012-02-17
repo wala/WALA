@@ -384,4 +384,9 @@ processExceptions(n, context);
     }
   }
 
+  @Override
+  protected boolean useLexicalAccessesForExposedVars() {
+    return false;
+  }
+
 }
