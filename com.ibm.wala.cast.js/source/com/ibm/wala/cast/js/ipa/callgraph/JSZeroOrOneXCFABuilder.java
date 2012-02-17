@@ -12,6 +12,7 @@ package com.ibm.wala.cast.js.ipa.callgraph;
 
 import com.ibm.wala.cast.ipa.callgraph.LexicalScopingResolverContexts;
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingKeysContextSelector;
+import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
@@ -64,7 +65,9 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     if (options.handleCallApply()) {
       contextSelector = new JavaScriptFunctionApplyContextSelector(contextSelector);
     }
-    contextSelector = new LexicalScopingResolverContexts(this, contextSelector);
+    if (!AstTranslator.NEW_LEXICAL) {
+      contextSelector = new LexicalScopingResolverContexts(this, contextSelector);
+    }
     if (doOneCFA) {
       contextSelector = new nCFAContextSelector(1, contextSelector);
     }

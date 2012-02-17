@@ -13,11 +13,13 @@ package com.ibm.wala.cast.ipa.callgraph;
 import java.util.Iterator;
 
 import com.ibm.wala.cast.ipa.callgraph.LexicalScopingResolverContexts.LexicalScopingResolver;
+import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextItem;
+import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
@@ -91,37 +93,65 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
      * @return
      */
     Iterator<CGNode> getFunargNodes(Pair<String, String> name) {
-      Iterator<CGNode> result = EmptyIterator.instance();
-
-      LexicalScopingResolver r = (LexicalScopingResolver) creator.getContext().get(LexicalScopingResolverContexts.RESOLVER);
-      if (r != null) {
-        CGNode def = r.getOriginalDefiner(name);
-        if (def != null) {
-          result = new NonNullSingletonIterator<CGNode>(def);
+      if (AstTranslator.NEW_LEXICAL) {
+        CGNode callerOfConstructor = (CGNode) creator.getContext().get(ContextKey.CALLER);
+        if (callerOfConstructor == null) {
+          System.err.println(creator);
+          assert false;
         }
-      }
-
-      // with multiple levels of nested functions, the creator itself may have
-      // been invoked by a function represented by a SMIK. E.g., see
-      // wrap3.js; the constructor of set() is invoked by wrapper(), and
-      // the wrapper() function object is a SMIK. In such cases, we need to
-      // recurse to find all the relevant CGNodes.
-      ContextItem nested = creator.getContext().get(ScopeMappingKeysContextSelector.scopeKey);
-      if (nested != null) {
-        result = new CompoundIterator<CGNode>(result, ((ScopeMappingInstanceKey) nested).getFunargNodes(name));
-      }
-
-      // TODO what does this code do??? commenting out does not cause any
-      // regression failures --MS
-      PointerKey funcKey = builder.getPointerKeyForLocal(creator, 1);
-      OrdinalSet<InstanceKey> funcPtrs = builder.getPointerAnalysis().getPointsToSet(funcKey);
-      for (InstanceKey x : funcPtrs) {
-        if (x instanceof ScopeMappingInstanceKey) {
-          result = new CompoundIterator<CGNode>(result, ((ScopeMappingInstanceKey) x).getFunargNodes(name));
+        if (callerOfConstructor.getMethod().getReference().getDeclaringClass().getName().toString().equals(name.snd)){ 
+          return new NonNullSingletonIterator<CGNode>(callerOfConstructor);
+        } else {
+          PointerKey funcKey = builder.getPointerKeyForLocal(callerOfConstructor, 1);
+          OrdinalSet<InstanceKey> funcPtrs = builder.getPointerAnalysis().getPointsToSet(funcKey);
+          assert funcPtrs.size() == 1;
+          InstanceKey funcPtr = funcPtrs.iterator().next();
+          if (funcPtr instanceof ScopeMappingInstanceKey) {
+            return ((ScopeMappingInstanceKey) funcPtr).getFunargNodes(name);
+          } else {
+            return EmptyIterator.instance();
+          }
+//          Iterator<CGNode> result = EmptyIterator.instance();
+//          for (InstanceKey x : funcPtrs) {
+//            if (x instanceof ScopeMappingInstanceKey) {
+//              result = new CompoundIterator<CGNode>(result, ((ScopeMappingInstanceKey) x).getFunargNodes(name));
+//            }
+//          }
+//          return result;
         }
-      }
+      } else {
+        Iterator<CGNode> result = EmptyIterator.instance();
 
-      return result;
+        LexicalScopingResolver r = (LexicalScopingResolver) creator.getContext().get(LexicalScopingResolverContexts.RESOLVER);
+        if (r != null) {
+          CGNode def = r.getOriginalDefiner(name);
+          if (def != null) {
+            result = new NonNullSingletonIterator<CGNode>(def);
+          }
+        }
+
+        // with multiple levels of nested functions, the creator itself may have
+        // been invoked by a function represented by a SMIK. E.g., see
+        // wrap3.js; the constructor of set() is invoked by wrapper(), and
+        // the wrapper() function object is a SMIK. In such cases, we need to
+        // recurse to find all the relevant CGNodes.
+        ContextItem nested = creator.getContext().get(ScopeMappingKeysContextSelector.scopeKey);
+        if (nested != null) {
+          result = new CompoundIterator<CGNode>(result, ((ScopeMappingInstanceKey) nested).getFunargNodes(name));
+        }
+
+        // TODO what does this code do??? commenting out does not cause any
+        // regression failures --MS
+        PointerKey funcKey = builder.getPointerKeyForLocal(creator, 1);
+        OrdinalSet<InstanceKey> funcPtrs = builder.getPointerAnalysis().getPointsToSet(funcKey);
+        for (InstanceKey x : funcPtrs) {
+          if (x instanceof ScopeMappingInstanceKey) {
+            result = new CompoundIterator<CGNode>(result, ((ScopeMappingInstanceKey) x).getFunargNodes(name));
+          }
+        }
+
+        return result;
+      }
     }
 
     public int hashCode() {
@@ -136,7 +166,7 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
     public String toString() {
       return "SMIK:" + base + "@" + creator;
     }
-    
+
     public InstanceKey getBase() {
       return base;
     }

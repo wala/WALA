@@ -548,7 +548,7 @@ public final class LexicalScopingResolverContexts implements ContextSelector {
     return null;
   }
 
-  private boolean hasExposedUses(CGNode caller, CallSiteReference site) {
+  public static boolean hasExposedUses(CGNode caller, CallSiteReference site) {
     int uses[] = ((AstMethod) caller.getMethod()).lexicalInfo().getExposedUses(site.getProgramCounter());
     if (uses != null && uses.length > 0) {
       for (int use : uses) {
