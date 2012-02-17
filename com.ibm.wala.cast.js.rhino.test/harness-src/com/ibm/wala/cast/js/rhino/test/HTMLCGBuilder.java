@@ -20,6 +20,7 @@ import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.CorrelatedPair
 import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil;
 import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil.CGBuilderType;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
+import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
@@ -132,8 +133,10 @@ public class HTMLCGBuilder {
 	}
 
 	/**
-	 * Usage: HTMLCGBuilder -src path_to_html_file -timeout timeout_in_seconds
+	 * Usage: HTMLCGBuilder -src path_to_html_file -timeout timeout_in_seconds -reachable function_name
 	 * timeout argument is optional and defaults to {@link #DEFAULT_TIMEOUT}.
+	 * reachable argument is optional.  if provided, and some reachable function name contains function_name,
+	 * will print "REACHABLE"
 	 * @throws IOException 
 	 * @throws ClassHierarchyException 
 	 * 
@@ -150,6 +153,10 @@ public class HTMLCGBuilder {
 		} else {
 			timeout = DEFAULT_TIMEOUT;
 		}
+		String reachableName = null;
+		if (parsedArgs.containsKey("reachable")) {
+			reachableName = parsedArgs.getProperty("reachable");
+		}
 		// suppress debug output
 		JavaScriptFunctionDotCallTargetSelector.WARN_ABOUT_IMPRECISE_CALLGRAPH = false;
 		CGBuilderResult res = buildHTMLCG(src, timeout, true, AstTranslator.NEW_LEXICAL ? CGBuilderType.ONE_CFA_PRECISE_LEXICAL : CGBuilderType.ZERO_ONE_CFA);
@@ -157,5 +164,13 @@ public class HTMLCGBuilder {
 			System.out.println("TIMED OUT");
 		else
 			System.out.println("Call graph construction took " + res.construction_time/1000.0 + " seconds");
+		if (reachableName != null) {
+			for (CGNode node : res.cg) {
+				if (node.getMethod().getDeclaringClass().getName().toString().contains(reachableName)) {
+					System.out.println("REACHABLE");
+					break;
+				}
+			}
+		}
 	}
 }
