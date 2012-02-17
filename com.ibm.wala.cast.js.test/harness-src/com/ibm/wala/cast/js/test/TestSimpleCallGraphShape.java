@@ -464,7 +464,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   private static final Object[][] assertionsForArguments = new Object[][] {
     new Object[] { ROOT, new String[] { "tests/arguments.js" } },
     new Object[] { "suffix:arguments.js", new String[] { "suffix:f" } },
-    new Object[] { "suffix:f", new String[] { "suffix:g3" } } // but neither "suffix:g1" nor "suffix:g2"
+    new Object[] { "suffix:f", new String[] { "!suffix:g1", "!suffix:g2", "suffix:g3", } }
   };
   
   @Test

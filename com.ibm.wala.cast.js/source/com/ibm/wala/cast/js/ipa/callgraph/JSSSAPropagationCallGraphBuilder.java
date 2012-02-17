@@ -672,9 +672,9 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     int paramCount = targetST.getParameterValueNumbers().length;
     int argCount = instruction.getNumberOfParameters();
     
-    // the first argument is not actually an argument, it is the receiver object; 
-    // we should skip it when setting up the arguments array
-    int num_pseudoargs = 1;
+    // the first two arguments are the function object and the receiver, neither of which
+    // should become part of the arguments array
+    int num_pseudoargs = 2;
 
     // pass actual arguments to formals in the normal way
     for (int i = 0; i < Math.min(paramCount, argCount); i++) {
@@ -686,7 +686,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           system.newConstraint(F, constParams[i][j]);
         }
 
-        if (av != -1 && i > num_pseudoargs) {
+        if (av != -1 && i >= num_pseudoargs) {
           targetVisitor.newFieldWrite(target, av, fn, constParams[i]);
         }
         
@@ -694,7 +694,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
         PointerKey A = getPointerKeyForLocal(caller, instruction.getUse(i));
         system.newConstraint(F, (F instanceof FilteredPointerKey) ? filterOperator : assignOperator, A);
 
-        if (av != -1 && i > num_pseudoargs) {
+        if (av != -1 && i >= num_pseudoargs) {
           targetVisitor.newFieldWrite(target, av, fn, F);
         }
       }
@@ -705,9 +705,9 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       if (av != -1) {
         for (int i = paramCount; i < argCount; i++) {
           InstanceKey[] fn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.Number, i-num_pseudoargs) };
-          if (constParams != null && constParams[i] != null && i > num_pseudoargs) {
+          if (constParams != null && constParams[i] != null && i >= num_pseudoargs) {
               targetVisitor.newFieldWrite(target, av, fn, constParams[i]);
-          } else if(i > num_pseudoargs) {
+          } else if(i >= num_pseudoargs) {
             PointerKey A = getPointerKeyForLocal(caller, instruction.getUse(i));
             targetVisitor.newFieldWrite(target, av, fn, A);
           }
