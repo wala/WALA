@@ -32,6 +32,7 @@ import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.SingleInstanceFilter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.OneLevelSiteContextSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.DefUse;
@@ -175,9 +176,31 @@ public class ForInContextSelector implements ContextSelector {
     public String toString() {
       return "for in hack filter for " + get(ContextKey.PARAMETERS[index]) + " over " + this.base;
     }
+   
+    public InstanceKey getInstanceKey() {
+      return ((SingleInstanceFilter)get(ContextKey.PARAMETERS[index])).getInstance();
+    }
+  }
+   
+  class MarkerForInContext extends ForInContext {
+
+    MarkerForInContext(Context base, InstanceKey obj) {
+      super(base, obj);
+      // TODO Auto-generated constructor stub
+    }
+
+    @Override
+    public ContextItem get(ContextKey key) {
+      final ContextItem contextItem = super.get(key);
+      return (contextItem instanceof SingleInstanceFilter) ? null : contextItem;
+    }
+
+    @Override
+    public InstanceKey getInstanceKey() {
+      return ((SingleInstanceFilter)super.get(ContextKey.PARAMETERS[index])).getInstance();
+    }
     
   }
-    
   private final ContextSelector base;
   private final ContextSelector oneLevel;
   private final int index;
@@ -347,10 +370,13 @@ public class ForInContextSelector implements ContextSelector {
       return new SelectiveCPAContext(baseContext, receiver);
     } else if (USE_1LEVEL_IN_BODIES && FORIN_MARKER.equals(caller.getContext().get(FORIN_KEY))) {
       if (! identifyDependentParameters(caller, site).isEmpty()) {
-        // RECURSION CHECK: only add one level of caller-site contexts if the caller and callee methods are distinct
-        if (!caller.getMethod().equals(callee)) {
-          return oneLevel.getCalleeTarget(caller, site, callee, receiver);
-        }
+//        final Context calleeTarget = oneLevel.getCalleeTarget(caller, site, callee, receiver);
+//        // RECURSION CHECK: only add one level of caller-site contexts if the caller and callee methods are distinct
+//        if (!RecursionCheckContextSelector.recursiveContext(calleeTarget, callee)) {
+//          return calleeTarget;
+//        }
+        InstanceKey callerIk = ((ForInContext)caller.getContext()).getInstanceKey();
+        return new MarkerForInContext(baseContext, callerIk);
       } else {
         return baseContext;
       }
@@ -358,6 +384,7 @@ public class ForInContextSelector implements ContextSelector {
     return baseContext;
   }
   
+
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     if (USE_CPA_IN_BODIES && FORIN_MARKER.equals(caller.getContext().get(FORIN_KEY))) {
       // what about base.getRelevantParameters() here?
