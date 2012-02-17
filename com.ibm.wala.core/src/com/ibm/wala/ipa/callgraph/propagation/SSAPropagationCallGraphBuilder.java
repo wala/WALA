@@ -33,6 +33,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextKey;
+import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
@@ -1546,7 +1547,19 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
     private final PointerKey uniqueCatch;
 
+    /**
+     * relevant parameter indices for the registered {@link ContextSelector}
+     * 
+     * @see ContextSelector#getRelevantParameters(CGNode, CallSiteReference)
+     */
     private final int[] dispatchIndices;
+    
+    /**
+     * The set of instance keys that have already been processed.
+     * previousPtrs[i] contains the processed instance keys for parameter
+     * position dispatchIndices[i]
+     */
+    final private MutableIntSet[] previousPtrs;
     
     /**
      * @param call
@@ -1561,16 +1574,15 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       this.constParams = constParams;
       this.uniqueCatch = uniqueCatch;
       this.dispatchIndices = IntSetUtil.toArray(dispatchIndices);
+      // we better always be interested in the receiver
+      assert this.dispatchIndices[0] == 0;
       previousPtrs = new MutableIntSet[dispatchIndices.size()];
       for(int i = 0; i < previousPtrs.length; i++) {
         previousPtrs[i] = IntSetUtil.getDefaultIntSetFactory().make();
       }
     }
 
-    /**
-     * The set of pointers that have already been processed.
-     */
-    final private MutableIntSet[] previousPtrs;
+
 
     /*
      * @see com.ibm.wala.dataflow.fixpoint.UnaryOperator#evaluate(com.ibm.wala.dataflow.fixpoint.IVariable,
@@ -1583,7 +1595,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       // NOTE: we allow the value of points-to set variables other than rhs[0]
       // to be null.  rhs[0] is the receiver, so to avoid an exception it must be
       // non-empty, but empty points-to sets in other slots are allowed.
-      if (rhs[0].getValue() == null) {
+      final MutableIntSet receiverVals = rhs[0].getValue();
+      if (receiverVals == null) {
         // this constraint was put on the work list, probably by
         // initialization,
         // even though the right-hand-side is empty.
@@ -1595,96 +1608,113 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         return NOT_CHANGED;        
         
       }
-      new Object() {
-        InstanceKey keys[] = new InstanceKey[constParams == null? dispatchIndices[dispatchIndices.length-1]+1: constParams.length];
-        void rec(int index, int rhsIndex, boolean redundant) {
-          try {
-            MonitorUtil.throwExceptionIfCanceled(monitor);
-          } catch (CancelException e) {
-            throw new CancelRuntimeException(e);
-          }
-          if (index < dispatchIndices.length) {
-            int pi = dispatchIndices[index];
-            if (constParams != null && constParams[pi] != null) {
-              for(int i = 0; i < constParams[pi].length; i++) {
-                keys[pi] = constParams[pi][i];
-                int ii = system.instanceKeys.getMappedIndex(constParams[pi][i]);
-                rec(index+1, rhsIndex, redundant & previousPtrs[index].contains(ii));
-              }
-            } else {
-              PointsToSetVariable v = rhs[rhsIndex];
-              if (v.getValue() != null) {
-                IntIterator ptrs = v.getValue().intIterator();
-                while (ptrs.hasNext()) {
-                  int ptr = ptrs.next();
-                  keys[dispatchIndices[index]] = system.getInstanceKey(ptr);
-                  rec(index+1, rhsIndex+1, redundant & previousPtrs[index].contains(ptr));
-                }
-              } else {
-                keys[dispatchIndices[index]] = null;
-                rec(index+1, rhsIndex+1, redundant);                
-              }
-            }
-          } else if (!redundant) {
-            
-            if (clone2Assign) {
-              // for efficiency: assume that only call sites that reference
-              // clone() might dispatch to clone methods
-              if (call.getCallSite().getDeclaredTarget().getSelector().equals(cloneSelector)) {
-                IClass recv = (keys[0] != null) ? keys[0].getConcreteType() : null;
-                IMethod targetMethod = getOptions().getMethodTargetSelector().getCalleeTarget(node, call.getCallSite(), recv);
-                if (targetMethod != null && targetMethod.getReference().equals(CloneInterpreter.CLONE)) {
-                  // treat this call to clone as an assignment
-                  PointerKey result = getPointerKeyForLocal(node, call.getDef());
-                  PointerKey receiver = getPointerKeyForLocal(node, call.getReceiver());
-                  system.newConstraint(result, assignOperator, receiver);
-                  return;
-                }
-              }
-            }
-            CGNode target = getTargetForCall(node, call.getCallSite(), keys[0].getConcreteType(), keys);
-            if (target == null) {
-              // This indicates an error; I sure hope getTargetForCall
-              // raised a warning about this!
-              if (DEBUG) {
-                System.err.println("Warning: null target for call " + call);
-              }
-            } else {
-              IntSet targets = getCallGraph().getPossibleTargetNumbers(node, call.getCallSite());
-              if (targets != null && targets.contains(target.getGraphNodeId())) {
-                // do nothing; we've previously discovered and handled this
-                // receiver for this call site.
-              } else {
-                // process the newly discovered target for this call
-                sideEffect.b = true;
-                processResolvedCall(node, call, target, constParams, uniqueCatch);
-                if (!haveAlreadyVisited(target)) {
-                  markDiscovered(target);
-                }
-              }
-            }
-         }
+      // we handle the parameter positions one by one, rather than enumerating
+      // the cartesian product of possibilities. this disallows
+      // context-sensitivity policies like true CPA, but is necessary for
+      // performance.
+      InstanceKey keys[] = new InstanceKey[constParams == null? dispatchIndices[dispatchIndices.length-1]+1: constParams.length];
+      // determine whether we're handling a new receiver; used later
+      // to check for redundancy
+      boolean newReceiver = !receiverVals.isSubset(previousPtrs[0]);
+      // keep separate rhsIndex, since it doesn't advance for constant
+      // parameters
+      int rhsIndex = 1;
+      // we start at index 1 since we need to handle the receiver specially; see
+      // below
+      for (int index = 1; index < dispatchIndices.length; index++) {
+        try {
+          MonitorUtil.throwExceptionIfCanceled(monitor);
+        } catch (CancelException e) {
+          throw new CancelRuntimeException(e);
         }
-      }.rec(0, 0, true);
- 
-      // update the set of receivers previously considered
-      for(int ri = 0, i = 0; i < rhs.length; i++) {
-        int pi = dispatchIndices[i];
-        if (constParams != null && constParams[pi] != null) {
-          for(int ci = 0; ci < constParams[pi].length; ci++) {
-            previousPtrs[i].add(system.instanceKeys.getMappedIndex(constParams[pi][ci]));
+        int paramIndex = dispatchIndices[index];
+        assert keys[paramIndex] == null;
+        final MutableIntSet prevAtIndex = previousPtrs[index];
+        if (constParams != null && constParams[paramIndex] != null) {
+          // we have a constant parameter.  only need to propagate again if we've never done it before or if we have a new receiver
+          if (newReceiver || prevAtIndex.isEmpty()) {
+            for(int i = 0; i < constParams[paramIndex].length; i++) {
+              keys[paramIndex] = constParams[paramIndex][i];
+              handleAllReceivers(receiverVals,keys, sideEffect);
+              int ii = system.instanceKeys.getMappedIndex(constParams[paramIndex][i]);
+              prevAtIndex.add(ii);
+            }            
           }
-        } else {
-          if (rhs[ri].getValue() != null) {
-            previousPtrs[i].addAll(rhs[ri].getValue());
-          }
-          ri++;
+        } else { // non-constant parameter
+          PointsToSetVariable v = rhs[rhsIndex];
+          if (v.getValue() != null) {
+            IntIterator ptrs = v.getValue().intIterator();
+            while (ptrs.hasNext()) {
+              int ptr = ptrs.next();
+              if (newReceiver || !prevAtIndex.contains(ptr)) {
+                keys[paramIndex] = system.getInstanceKey(ptr);
+                handleAllReceivers(receiverVals,keys, sideEffect);
+                prevAtIndex.add(ptr);
+              }
+            }
+          } 
+          rhsIndex++;
         }
+        keys[paramIndex] = null;
       }
-      
+      if (newReceiver && !sideEffect.b) {
+        // we have a new receiver value, and it wasn't propagated at all,
+        // so propagate it now
+        handleAllReceivers(receiverVals, keys, sideEffect);
+        previousPtrs[0].addAll(receiverVals);
+      }
+
       byte sideEffectMask = sideEffect.b ? (byte) SIDE_EFFECT_MASK : 0;
       return (byte) (NOT_CHANGED | sideEffectMask);
     }
+
+    private void handleAllReceivers(MutableIntSet receiverVals, InstanceKey[] keys, MutableBoolean sideEffect) {
+      assert keys[0] == null;
+      IntIterator receiverIter = receiverVals.intIterator();
+      while (receiverIter.hasNext()) {
+        final int rcvr = receiverIter.next();
+        keys[0] = system.getInstanceKey(rcvr);
+        if (clone2Assign) {
+          // for efficiency: assume that only call sites that reference
+          // clone() might dispatch to clone methods
+          if (call.getCallSite().getDeclaredTarget().getSelector().equals(cloneSelector)) {
+            IClass recv = (keys[0] != null) ? keys[0].getConcreteType() : null;
+            IMethod targetMethod = getOptions().getMethodTargetSelector().getCalleeTarget(node, call.getCallSite(), recv);
+            if (targetMethod != null && targetMethod.getReference().equals(CloneInterpreter.CLONE)) {
+              // treat this call to clone as an assignment
+              PointerKey result = getPointerKeyForLocal(node, call.getDef());
+              PointerKey receiver = getPointerKeyForLocal(node, call.getReceiver());
+              system.newConstraint(result, assignOperator, receiver);
+              return;
+            }
+          }
+        }
+        CGNode target = getTargetForCall(node, call.getCallSite(), keys[0].getConcreteType(), keys);
+        if (target == null) {
+          // This indicates an error; I sure hope getTargetForCall
+          // raised a warning about this!
+          if (DEBUG) {
+            System.err.println("Warning: null target for call " + call);
+          }
+        } else {
+          IntSet targets = getCallGraph().getPossibleTargetNumbers(node, call.getCallSite());
+          if (targets != null && targets.contains(target.getGraphNodeId())) {
+            // do nothing; we've previously discovered and handled this
+            // receiver for this call site.
+          } else {
+            // process the newly discovered target for this call
+            sideEffect.b = true;
+            processResolvedCall(node, call, target, constParams, uniqueCatch);
+            if (!haveAlreadyVisited(target)) {
+              markDiscovered(target);
+            }
+          }
+        }
+      }
+      keys[0] = null;
+    }
+
+
 
     @Override
     public String toString() {
