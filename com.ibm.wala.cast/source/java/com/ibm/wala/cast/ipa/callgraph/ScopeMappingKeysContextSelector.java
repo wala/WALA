@@ -9,6 +9,7 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.propagation.AllocationSiteInNode;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 import com.ibm.wala.ipa.summaries.SummarizedMethod;
@@ -24,9 +25,11 @@ public class ScopeMappingKeysContextSelector implements ContextSelector {
   };
 
   public static class ScopeMappingContext implements Context {
+    private final Context base;
     private final ScopeMappingInstanceKey key;
 
-    private ScopeMappingContext(ScopeMappingInstanceKey key) {
+    private ScopeMappingContext(Context base, ScopeMappingInstanceKey key) {
+      this.base = base;
       this.key = key;
     }
 
@@ -34,7 +37,7 @@ public class ScopeMappingKeysContextSelector implements ContextSelector {
       if (scopeKey.equals(name)) {
         return key;
       } else {
-        return null;
+        return base.get(name);
       }
     }
 
@@ -42,7 +45,7 @@ public class ScopeMappingKeysContextSelector implements ContextSelector {
 
     public int hashCode() {
       if (hashcode == -1) {
-        hashcode = key.hashCode();
+        hashcode = base.hashCode() * key.hashCode();
       }
       return hashcode;
     }
@@ -52,30 +55,37 @@ public class ScopeMappingKeysContextSelector implements ContextSelector {
     }
 
     public boolean equals(Object o) {
-      return (o instanceof ScopeMappingContext) && key.equals(((ScopeMappingContext) o).key);
+      return (o instanceof ScopeMappingContext) && key.equals(((ScopeMappingContext) o).key)
+          && base.equals(((ScopeMappingContext) o).base);
     }
   }
 
+  private final ContextSelector base;
+
+  public ScopeMappingKeysContextSelector(ContextSelector base) {
+    this.base = base;
+  }
 
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
+    Context bc = base.getCalleeTarget(caller, site, callee, receiver);
     if (callee instanceof SummarizedMethod) {
       final String calleeName = callee.getReference().toString();
       if (calleeName.equals("< JavaScriptLoader, LArray, ctor()LRoot; >")
           || calleeName.equals("< JavaScriptLoader, LObject, ctor()LRoot; >")) {
-        return null;
+        return bc;
       }
     }
     if (receiver[0] instanceof ScopeMappingInstanceKey) {
       final ScopeMappingInstanceKey smik = (ScopeMappingInstanceKey) receiver[0];
       if (AstTranslator.NEW_LEXICAL) {
         if (detectRecursion(smik.getCreator().getContext(), callee)) {
-          return null;
+          return bc;
         }
       }
-      final ScopeMappingContext scopeMappingContext = new ScopeMappingContext(smik);
+      final ScopeMappingContext scopeMappingContext = new ScopeMappingContext(bc, smik);
       return scopeMappingContext;
     } else {
-      return null;
+      return bc;
     }
   }
 

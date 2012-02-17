@@ -10,15 +10,11 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ipa.callgraph;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import com.ibm.wala.cast.ipa.callgraph.LexicalScopingResolverContexts;
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingKeysContextSelector;
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.ipa.callgraph.ComposedContextSelector;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.impl.ContextInsensitiveSelector;
@@ -42,41 +38,13 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy, boolean doOneCFA) {
     super(cha, options, cache);
 
-    SSAContextInterpreter contextInterpreter = setupSSAContextInterpreter(cha, options, cache, appContextInterpreter);
-
-    setupMethodTargetSelector(cha, options);
-
-    setupContextSelector(options, appContextSelector, doOneCFA);
-
-    setInstanceKeys(new JavaScriptScopeMappingInstanceKeys(cha, this, new JavaScriptConstructorInstanceKeys(new ZeroXInstanceKeys(
-        options, cha, contextInterpreter, instancePolicy))));
-  }
-
-  private void setupContextSelector(JSAnalysisOptions options, ContextSelector appContextSelector, boolean doOneCFA) {
-    Collection<ContextSelector> selectors = new ArrayList<ContextSelector>();
-    ContextSelector def = new ContextInsensitiveSelector();
-    ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
-    selectors.add(contextSelector);
-//    if (!AstTranslator.NEW_LEXICAL) {
-      selectors.add(new ScopeMappingKeysContextSelector());
-//    }
-    selectors.add(new JavaScriptConstructorContextSelector());
-    if (USE_OBJECT_SENSITIVITY) {
-      selectors.add(new ObjectSensitivityContextSelector());
-    }
+    SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha);
     if (options.handleCallApply()) {
-      selectors.add(new JavaScriptFunctionApplyContextSelector());
+      contextInterpreter = new DelegatingSSAContextInterpreter(new JavaScriptFunctionApplyContextInterpreter(options, cache),
+          contextInterpreter);
     }
-    if (!AstTranslator.NEW_LEXICAL) {
-      selectors.add(new LexicalScopingResolverContexts(this));
-    }
-    if (doOneCFA) {
-      selectors.add(new nCFAContextSelector(1, new ContextInsensitiveSelector()));
-    }
-    setContextSelector(new ComposedContextSelector(selectors));
-  }
+    setContextInterpreter(contextInterpreter);
 
-  private void setupMethodTargetSelector(IClassHierarchy cha, JSAnalysisOptions options) {
     MethodTargetSelector targetSelector = new JavaScriptConstructTargetSelector(cha, options
         .getMethodTargetSelector());
     if (options.handleCallApply()) {
@@ -86,17 +54,29 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
       targetSelector = new LoadFileTargetSelector(targetSelector, this);
     }
     options.setSelector(targetSelector);
-  }
 
-  private SSAContextInterpreter setupSSAContextInterpreter(IClassHierarchy cha, JSAnalysisOptions options, AnalysisCache cache,
-      SSAContextInterpreter appContextInterpreter) {
-    SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha);
-    if (options.handleCallApply()) {
-      contextInterpreter = new DelegatingSSAContextInterpreter(new JavaScriptFunctionApplyContextInterpreter(options, cache),
-          contextInterpreter);
+    ContextSelector def = new ContextInsensitiveSelector();
+    ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
+//    if (!AstTranslator.NEW_LEXICAL) {
+      contextSelector = new ScopeMappingKeysContextSelector(contextSelector);
+//    }
+    contextSelector = new JavaScriptConstructorContextSelector(contextSelector);
+    if (USE_OBJECT_SENSITIVITY) {
+      contextSelector = new ObjectSensitivityContextSelector(contextSelector);
     }
-    setContextInterpreter(contextInterpreter);
-    return contextInterpreter;
+    if (options.handleCallApply()) {
+      contextSelector = new JavaScriptFunctionApplyContextSelector(contextSelector);
+    }
+    if (!AstTranslator.NEW_LEXICAL) {
+      contextSelector = new LexicalScopingResolverContexts(this, contextSelector);
+    }
+    if (doOneCFA) {
+      contextSelector = new nCFAContextSelector(1, contextSelector);
+    }
+    setContextSelector(contextSelector);
+
+    setInstanceKeys(new JavaScriptScopeMappingInstanceKeys(cha, this, new JavaScriptConstructorInstanceKeys(new ZeroXInstanceKeys(
+        options, cha, contextInterpreter, instancePolicy))));
   }
 
   /**
