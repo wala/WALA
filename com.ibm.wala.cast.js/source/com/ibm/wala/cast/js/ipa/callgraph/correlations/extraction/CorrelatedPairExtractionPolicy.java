@@ -125,7 +125,9 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
       endNode = endNodes.iterator().next();
     }
     
-    Pair<CAstNode, ? extends ExtractionRegion> region_info = findClosestContainingBlock(entity, startNode, endNode, corr.getIndexName());
+    List<String> locals = corr.getFlownThroughLocals().size() == 1 ? Collections.singletonList(corr.getFlownThroughLocals().iterator().next()) 
+                                                                   : Collections.<String>emptyList();
+    Pair<CAstNode, ? extends ExtractionRegion> region_info = findClosestContainingBlock(entity, startNode, endNode, corr.getIndexName(), locals);
     if(region_info == null) {
       if(DEBUG)
         System.err.println("Couldn't find enclosing block for correlation " + corr.pp(correlations.getPositions()));
@@ -174,7 +176,7 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
     }
   }
 
-  private Pair<CAstNode, ? extends ExtractionRegion> findClosestContainingBlock(CAstEntity entity, ChildPos startNode, ChildPos endNode, String parmName) {
+  private Pair<CAstNode, ? extends ExtractionRegion> findClosestContainingBlock(CAstEntity entity, ChildPos startNode, ChildPos endNode, String parmName, List<String> locals) {
     ChildPos pos = startNode;
     CAstNode block = null;
     int start = -1, end = 0;
@@ -208,17 +210,17 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
     }
     
     // special hack to handle "var p = ..., x = y[p];", where startNode = "y[p]"
-    if(block.getChild(0).getKind() == CAstNode.BLOCK_EXPR && start == 0) {
+    if(block.getChild(0).getKind() == CAstNode.BLOCK_STMT && start == 0) {
       for(start_inner=0;start_inner<block.getChild(0).getChildCount();++start_inner)
         if(NodePos.inSubtree(startNode.getChild(), block.getChild(0).getChild(start_inner)))
-          return Pair.make(block, new TwoLevelExtractionRegion(start, end, start_inner, end_inner, Collections.singletonList(parmName)));
+          return Pair.make(block, new TwoLevelExtractionRegion(start, end, start_inner, end_inner, Collections.singletonList(parmName), locals));
     }
     // special hack to handle the case where we're extracting the body of a local scope
     else if(block.getChild(start).getKind() == CAstNode.LOCAL_SCOPE && end == start+1) {
-      return Pair.make(block, new TwoLevelExtractionRegion(start, end, 0, -1, Collections.singletonList(parmName)));
+      return Pair.make(block, new TwoLevelExtractionRegion(start, end, 0, -1, Collections.singletonList(parmName), locals));
     }
 
-    return Pair.make(block, new ExtractionRegion(start, end, Collections.singletonList(parmName)));
+    return Pair.make(block, new ExtractionRegion(start, end, Collections.singletonList(parmName), locals));
   }
   
   private static int getCoveringChildIndex(CAstNode parent, int start, CAstNode child) {

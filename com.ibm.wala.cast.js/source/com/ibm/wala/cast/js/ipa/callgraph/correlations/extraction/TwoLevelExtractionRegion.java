@@ -16,8 +16,8 @@ import java.util.List;
 public class TwoLevelExtractionRegion extends ExtractionRegion {
   private final int start_inner, end_inner;
 
-  public TwoLevelExtractionRegion(int start, int end, int start_inner, int end_inner, List<String> parameters) {
-    super(start, end, parameters);
+  public TwoLevelExtractionRegion(int start, int end, int start_inner, int end_inner, List<String> parameters, List<String> locals) {
+    super(start, end, parameters, locals);
     this.start_inner = start_inner;
     this.end_inner = end_inner;
   }

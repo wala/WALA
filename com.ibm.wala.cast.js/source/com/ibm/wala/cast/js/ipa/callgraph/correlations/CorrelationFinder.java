@@ -18,6 +18,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +58,8 @@ import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.ObjectArrayMapping;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.BitVectorIntSet;
+import com.ibm.wala.util.intset.IntIterator;
+import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 import com.ibm.wala.util.io.FileProvider;
@@ -138,7 +141,7 @@ public class CorrelationFinder {
               if(TRACK_ESCAPES) {
                 for(int j=0;j<inst2.getNumberOfUses();++j) {
                   if(inst2.getUse(j) == index) {
-                    summary.addCorrelation(new EscapeCorrelation(get, (SSAAbstractInvokeInstruction)inst2, indexName));
+                    summary.addCorrelation(new EscapeCorrelation(get, (SSAAbstractInvokeInstruction)inst2, indexName, getSourceLevelNames(astMethod, reached)));
                     break;
                   }
                 }
@@ -149,7 +152,7 @@ public class CorrelationFinder {
         // now find property writes with the same index whose RHS is in 'reached'
         for(AbstractReflectivePut put : puts)
           if(put.getMemberRef() == index && reached.contains(put.getValue()))
-            summary.addCorrelation(new ReadWriteCorrelation(get, put, indexName));
+            summary.addCorrelation(new ReadWriteCorrelation(get, put, indexName, getSourceLevelNames(astMethod, reached)));
       }
 
     return summary;
@@ -168,6 +171,16 @@ public class CorrelationFinder {
         indexName = candidateName;
     }
     return indexName;
+  }
+  
+  private Set<String> getSourceLevelNames(AstMethod astMethod, IntSet vs) {
+    Set<String> res = new HashSet<String>();
+    for(IntIterator iter=vs.intIterator();iter.hasNext();) {
+      String name = getSourceLevelName(astMethod, iter.next());
+      if(name != null)
+        res.add(name);
+    }
+    return res;
   }
 
   // checks whether the given SSA variable must always be assigned a numeric value

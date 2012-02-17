@@ -11,6 +11,8 @@
 
 package com.ibm.wala.cast.js.ipa.callgraph.correlations;
 
+import java.util.Set;
+
 import com.ibm.wala.cast.ir.ssa.AbstractReflectiveGet;
 import com.ibm.wala.cast.ir.ssa.AbstractReflectivePut;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
@@ -26,8 +28,9 @@ public class ReadWriteCorrelation extends Correlation {
 	private final AbstractReflectiveGet get;
 	private final AbstractReflectivePut put;
 	
-	public ReadWriteCorrelation(AbstractReflectiveGet get, AbstractReflectivePut put, String indexName) {
-	  super(indexName);
+	public ReadWriteCorrelation(AbstractReflectiveGet get, AbstractReflectivePut put,
+	                            String indexName, Set<String> flownThroughLocals) {
+	  super(indexName, flownThroughLocals);
 		this.get = get;
 		this.put = put;
 	}

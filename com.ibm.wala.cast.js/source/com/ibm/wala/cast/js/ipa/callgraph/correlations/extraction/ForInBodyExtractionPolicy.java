@@ -73,9 +73,9 @@ public class ForInBodyExtractionPolicy extends ExtractionPolicy {
         new SubtreeOfKind(LABEL_STMT)).matches(node)) {
       List<String> parms = Collections.singletonList((String)loopVar.getLastMatch());
       if(node.getChild(1).getKind() == LOCAL_SCOPE) {
-        return Collections.<ExtractionRegion>singletonList(new TwoLevelExtractionRegion(1, 2, 0, -1, parms));
+        return Collections.<ExtractionRegion>singletonList(new TwoLevelExtractionRegion(1, 2, 0, -1, parms, Collections.<String>emptyList()));
       } else {
-        return Collections.singletonList(new ExtractionRegion(1, 2, parms));
+        return Collections.singletonList(new ExtractionRegion(1, 2, parms, Collections.<String>emptyList()));
       }
     }
     
@@ -94,7 +94,7 @@ public class ForInBodyExtractionPolicy extends ExtractionPolicy {
             new SubtreeOfKind(EACH_ELEMENT_GET)),
             new AnyNode()).matches(node)) {
       List<String> parms = Collections.singletonList((String)loopVar.getLastMatch());
-      return Collections.singletonList(new ExtractionRegion(1, 2, parms));
+      return Collections.singletonList(new ExtractionRegion(1, 2, parms, Collections.<String>emptyList()));
     }
     return null;
   }

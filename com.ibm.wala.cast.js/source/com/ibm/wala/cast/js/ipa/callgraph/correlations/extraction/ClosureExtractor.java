@@ -17,6 +17,7 @@ import static com.ibm.wala.cast.tree.CAstNode.BLOCK_EXPR;
 import static com.ibm.wala.cast.tree.CAstNode.BLOCK_STMT;
 import static com.ibm.wala.cast.tree.CAstNode.CALL;
 import static com.ibm.wala.cast.tree.CAstNode.CONSTANT;
+import static com.ibm.wala.cast.tree.CAstNode.DECL_STMT;
 import static com.ibm.wala.cast.tree.CAstNode.EMPTY;
 import static com.ibm.wala.cast.tree.CAstNode.FUNCTION_EXPR;
 import static com.ibm.wala.cast.tree.CAstNode.FUNCTION_STMT;
@@ -36,6 +37,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.tree.CAst;
@@ -45,8 +47,11 @@ import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstNodeTypeMap;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.cast.tree.impl.CAstBasicRewriter.NoKey;
+import com.ibm.wala.cast.tree.impl.CAstControlFlowRecorder;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
+import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.UnimplementedError;
 
@@ -104,8 +109,16 @@ import com.ibm.wala.util.debug.UnimplementedError;
  *   <p>Local variable declarations inside the extracted code have to be hoisted to the enclosing function;
  *   otherwise they would become local variables of the extracted function instead.</p>
  *   <p>This is already taken care of by the translation from Rhino's AST to CAst.</p>
+ *   <p>Optionally, the policy can request that one local variable of the surrounding function be turned into 
+ *   a local variable of the extracted closure. The rewriter checks that this is possible: the code to extract
+ *   must not contain function calls or <code>new</code> expressions, and it must not contain <code>break</code>,
+ *   <code>continue</code>, or <code>return</code> statements. The former requirement prevents a called function
+ *   from observing a different value of the local variable than before. The latter requirement is necessary
+ *   because the final value of the localised variable needs to be returned and assigned to its counterpart in
+ *   the surrounding function; since non-local jumps are encoded by special return values (see next item),
+ *   this would no longer be possible.</p>
  * </li>
- * <li><b><code>break</code>,<code>continue</code>,<code>return</code></b>:
+ * <li><b><code>break</code>, <code>continue</code>, <code>return</code></b>:
  *   <p>A <code>break</code> or <code>continue</code> statement within the extracted loop body that refers
  *   to the loop itself or an enclosing loop would become invalid in the transformed code. A <code>return</code>
  *   statement would no longer return from the enclosing function, but instead from the extracted function.</p>
@@ -168,6 +181,8 @@ import com.ibm.wala.util.debug.UnimplementedError;
 public class ClosureExtractor extends CAstRewriterExt {
   private LinkedList<ExtractionPolicy> policies = new LinkedList<ExtractionPolicy>();
   private final ExtractionPolicyFactory policyFactory;
+  
+  private static final boolean LOCALISE = true;
   
   // names for extracted functions are built from this string with a number appended
   private static final String EXTRACTED_FUN_BASENAME = "_forin_body_";
@@ -303,7 +318,7 @@ public class ClosureExtractor extends CAstRewriterExt {
   private CAstNode copyReturn(CAstNode root, CAstControlFlowMap cfg, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     ExtractionPos epos = ExtractionPos.getEnclosingExtractionPos(context);
 
-    if(epos == null)
+    if(epos == null || isSynthetic(root))
       return copyNode(root, cfg, context, nodeMap);
 
     // add a return to every enclosing extracted function body
@@ -424,11 +439,19 @@ public class ClosureExtractor extends CAstRewriterExt {
         if(tler.getEndInner() != -1)
           throw new UnimplementedError("Two-level extraction not fully implemented.");
         int i;
-        if(start.getKind() == CAstNode.BLOCK_EXPR) {
+        if(start.getKind() == CAstNode.BLOCK_STMT) {
+          CAstNode[] before = new CAstNode[tler.getStartInner()];
           for(i=0;i<tler.getStartInner();++i)
-            prologue.add(copyNodes(start.getChild(i), cfg, context, nodeMap));
-          for(;i<start.getChildCount();++i)
-            fun_body_stmts.add(start.getChild(i));
+            before[i] = copyNodes(start.getChild(i), cfg, context, nodeMap);
+          prologue.add(Ast.makeNode(BLOCK_STMT, before));
+          if(i+1 == start.getChildCount()) {
+            fun_body_stmts.add(addSpuriousExnFlow(start.getChild(i), cfg));            
+          } else {
+            CAstNode[] after = new CAstNode[start.getChildCount()-i];
+            for(int j=0;j+i<start.getChildCount();++j)
+              after[j] = addSpuriousExnFlow(start.getChild(j+i), cfg);
+            fun_body_stmts.add(Ast.makeNode(BLOCK_EXPR, after));
+          }
           for(i=context.getStart()+1;i<context.getEnd();++i)
             fun_body_stmts.add(root.getChild(i));
         } else if(start.getKind() == CAstNode.LOCAL_SCOPE) {
@@ -453,6 +476,38 @@ public class ClosureExtractor extends CAstRewriterExt {
         }
       }
     }
+    
+    List<String> locals = context.getRegion().getLocals();
+    String theLocal = null;
+    if(LOCALISE && locals.size() == 1 && noJumpsAndNoCalls(fun_body_stmts)) {
+      // the variable can be localised, remember its name
+      theLocal = locals.get(0);
+      
+      // append "return <theLocal>;" to the end of the function body
+      CAstNode retLocal = Ast.makeNode(RETURN, addExnFlow(makeVarRef(theLocal), JavaScriptTypes.ReferenceError, entity, context));
+      markSynthetic(retLocal);
+      // insert as last stmt if fun_body_stmts is a single block, otherwise append
+      if(fun_body_stmts.size() == 1 && fun_body_stmts.get(0).getKind() == BLOCK_STMT) {
+        CAstNode[] stmts = new CAstNode[fun_body_stmts.get(0).getChildCount()+1];
+        for(int i=0;i<stmts.length-1;++i)
+          stmts[i] = fun_body_stmts.get(0).getChild(i);
+        stmts[stmts.length-1] = retLocal;
+        fun_body_stmts.set(0, Ast.makeNode(BLOCK_STMT, stmts));
+      } else {
+        fun_body_stmts.add(retLocal);
+      }
+      
+      // prepend declaration "var <theLocal>;"
+      CAstNode theLocalDecl = Ast.makeNode(DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(theLocal)),
+                                           addExnFlow(makeVarRef("$$undefined"), JavaScriptTypes.ReferenceError, entity, context));
+      if(fun_body_stmts.size() > 1) {
+        CAstNode newBlock = Ast.makeNode(BLOCK_STMT, fun_body_stmts.toArray(new CAstNode[0]));
+        fun_body_stmts.clear();
+        fun_body_stmts.add(newBlock);
+      }
+      fun_body_stmts.add(0, Ast.makeNode(BLOCK_STMT, theLocalDecl));
+    }
+
     CAstNode fun_body = Ast.makeNode(BLOCK_STMT, fun_body_stmts.toArray(new CAstNode[0]));
 
     /*
@@ -551,6 +606,9 @@ public class ClosureExtractor extends CAstRewriterExt {
           Ast.makeNode(LOCAL_SCOPE, wrapIn(BLOCK_STMT, fixup == null ? Ast.makeNode(EMPTY) : fixup)));
 
       stmts.add(Ast.makeNode(BLOCK_STMT, decl, fixup));
+    } else if(theLocal != null) {
+      // assign final value of the localised variable back
+      stmts.add(Ast.makeNode(CAstNode.ASSIGN, addExnFlow(makeVarRef(theLocal), JavaScriptTypes.ReferenceError, entity, context), call));
     } else {
       stmts.add(call);
     }
@@ -569,6 +627,19 @@ public class ClosureExtractor extends CAstRewriterExt {
     }
     
     return stmts;
+  }
+  
+  private CAstNode addSpuriousExnFlow(CAstNode node, CAstControlFlowMap cfg) {
+    CAstControlFlowRecorder flow = (CAstControlFlowRecorder)cfg;
+    if(node.getKind() == ASSIGN) {
+      if(node.getChild(0).getKind() == VAR) {
+        CAstNode var = node.getChild(0);
+        if(!flow.isMapped(var))
+          flow.map(var, var);
+        flow.add(var, CAstControlFlowMap.EXCEPTION_TO_EXIT, JavaScriptTypes.ReferenceError);
+      }
+    }
+    return node;
   }
 
   private CAstNode createReturnFixup(ExtractionPos context, CAstEntity entity) {
@@ -671,5 +742,36 @@ public class ClosureExtractor extends CAstRewriterExt {
       if(e.getKind() == CAstEntity.FUNCTION_ENTITY)
         return true;
     return false;
+  }
+  
+  private final Set<CAstNode> synthetic = HashSetFactory.make();
+  private void markSynthetic(CAstNode node) {
+    this.synthetic.add(node);
+  }
+  private boolean isSynthetic(CAstNode node) {
+    return synthetic.contains(node);
+  }
+  
+  private boolean noJumpsAndNoCalls(Collection<CAstNode> nodes) {
+    for(CAstNode node : nodes)
+      if(!noJumpsAndNoCalls(node))
+        return false;
+    return true;
+  }
+  
+  private boolean noJumpsAndNoCalls(CAstNode node) {
+    switch(node.getKind()) {
+    case CAstNode.BREAK:
+    case CAstNode.CONTINUE:
+    case CAstNode.GOTO:
+    case CAstNode.RETURN:
+    case CAstNode.CALL:
+    case CAstNode.NEW:
+      return false;
+    }
+    for(int i=0;i<node.getChildCount();++i)
+      if(!noJumpsAndNoCalls(node.getChild(i)))
+        return false;
+    return true;
   }
 }
