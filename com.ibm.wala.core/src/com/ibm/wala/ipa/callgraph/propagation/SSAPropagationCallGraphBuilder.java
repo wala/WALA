@@ -69,6 +69,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.MonitorUtil;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -149,6 +150,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    */
   private final Set<IClass> clinitVisited = HashSetFactory.make();
 
+  private IProgressMonitor monitor;
 
   protected SSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       PointerKeyFactory pointerKeyFactory) {
@@ -182,6 +184,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    */
   @Override
   protected boolean addConstraintsFromNode(CGNode node, IProgressMonitor monitor) throws CancelException {
+    this.monitor = monitor;
     if (haveAlreadyVisited(node)) {
       return false;
     } else {
@@ -192,7 +195,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   @Override
   protected boolean unconditionallyAddConstraintsFromNode(CGNode node, IProgressMonitor monitor) throws CancelException {
-
+    this.monitor = monitor;
     if (PERIODIC_WIPE_SOFT_CACHES) {
       wipeCount++;
       if (wipeCount >= WIPE_SOFT_CACHE_INTERVAL) {
@@ -241,6 +244,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @throws CancelException 
    */
   protected void addNodeInstructionConstraints(CGNode node, IProgressMonitor monitor) throws CancelException {
+    this.monitor = monitor;
     ConstraintVisitor v = makeVisitor(node);
 
     IR ir = getCFAContextInterpreter().getIR(node);
@@ -260,6 +264,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    */
   protected void addBlockInstructionConstraints(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, BasicBlock b,
       ConstraintVisitor v, IProgressMonitor monitor) throws CancelException {
+    this.monitor = monitor;
     v.setBasicBlock(b);
 
     // visit each instruction in the basic block.
@@ -1593,6 +1598,11 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       new Object() {
         InstanceKey keys[] = new InstanceKey[constParams == null? dispatchIndices[dispatchIndices.length-1]+1: constParams.length];
         void rec(int index, int rhsIndex, boolean redundant) {
+          try {
+            MonitorUtil.throwExceptionIfCanceled(monitor);
+          } catch (CancelException e) {
+            throw new CancelRuntimeException(e);
+          }
           if (index < dispatchIndices.length) {
             int pi = dispatchIndices[index];
             if (constParams != null && constParams[pi] != null) {

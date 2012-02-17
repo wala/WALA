@@ -39,6 +39,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
@@ -258,6 +259,10 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     try {
       solver.solve(monitor);
     } catch (CancelException e) {
+      CallGraphBuilderCancelException c = CallGraphBuilderCancelException.createCallGraphBuilderCancelException(e, callGraph,
+          system.extractPointerAnalysis(this));
+      throw c;
+    } catch (CancelRuntimeException e) {
       CallGraphBuilderCancelException c = CallGraphBuilderCancelException.createCallGraphBuilderCancelException(e, callGraph,
           system.extractPointerAnalysis(this));
       throw c;
