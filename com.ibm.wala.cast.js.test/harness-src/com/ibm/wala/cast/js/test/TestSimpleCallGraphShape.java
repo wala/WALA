@@ -500,6 +500,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     Util.makeScriptCG("tests", "dead_phi.js");
   }
   
+  @Test
+  public void testScoping() throws IllegalArgumentException, IOException, CancelException {
+    Util.makeScriptCG("tests", "scoping_test.js");
+  }
   protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {
 
     // Created by reversing the points to mapping for local pointer keys.
