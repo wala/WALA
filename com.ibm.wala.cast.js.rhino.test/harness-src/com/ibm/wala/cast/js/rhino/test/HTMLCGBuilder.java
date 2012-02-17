@@ -15,7 +15,6 @@ import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.js.ipa.callgraph.ForInContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptFunctionDotCallTargetSelector;
-import com.ibm.wala.cast.js.ipa.callgraph.RecursionBoundContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.RecursionCheckContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.CorrelatedPairExtractorFactory;
 import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil;
