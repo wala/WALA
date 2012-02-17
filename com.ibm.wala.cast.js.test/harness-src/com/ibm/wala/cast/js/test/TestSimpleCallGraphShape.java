@@ -19,6 +19,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil.CGBuilderType;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -204,7 +205,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 
   @Test
   public void testTry() throws IOException, IllegalArgumentException, CancelException {
-    CallGraph CG = JSCallGraphBuilderUtil.makeScriptCG("tests", "try.js", true);
+    CallGraph CG = JSCallGraphBuilderUtil.makeScriptCG("tests", "try.js");
     verifyGraphAssertions(CG, assertionsForTry);
   }
 

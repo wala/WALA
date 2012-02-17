@@ -41,7 +41,7 @@ public class JsViewerDriver extends JSCallGraphBuilderUtil {
 
 		SourceModule[] sources = getSources(domless, url);
 		
-		JSCFABuilder builder = makeCGBuilder(new WebPageLoaderFactory(translatorFactory), sources, false, false, AstIRFactory.makeDefaultFactory());
+		JSCFABuilder builder = makeCGBuilder(new WebPageLoaderFactory(translatorFactory), sources, CGBuilderType.ZERO_ONE_CFA, AstIRFactory.makeDefaultFactory());
 		builder.setBaseURL(url);
 
 		CallGraph cg = builder.makeCallGraph(builder.getOptions());

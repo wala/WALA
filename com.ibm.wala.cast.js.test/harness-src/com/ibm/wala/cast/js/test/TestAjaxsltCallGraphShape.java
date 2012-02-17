@@ -15,6 +15,7 @@ import java.net.URL;
 
 import org.junit.Test;
 
+import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil.CGBuilderType;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 
@@ -31,7 +32,7 @@ public abstract class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
   @Test public void testAjaxslt() throws IOException, IllegalArgumentException, CancelException {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xslt.html");
     // don't handle call / apply; it makes things blow up
-    CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url, false);
+    CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url, CGBuilderType.ZERO_ONE_CFA_NO_CALL_APPLY);
     
     verifyGraphAssertions(CG, assertionsForAjaxslt);
   }
