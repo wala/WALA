@@ -687,7 +687,10 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     private Set<CGNode> getLexicalDefiners(final CGNode opNode, final Pair<String,String> definer) {
       if (definer == null) {
         return Collections.singleton(getBuilder().getCallGraph().getFakeRootNode());
-
+      } else if (definer.snd.equals(opNode.getMethod().getReference().getDeclaringClass().getName().toString())) {
+        // lexical access to a variable declared in opNode itself
+        assert AstTranslator.NEW_LEXICAL;
+        return Collections.singleton(opNode);
       } else {
         final Set<CGNode> result = HashSetFactory.make();
         PointerKey F = getBuilder().getPointerKeyForLocal(opNode, 1);
