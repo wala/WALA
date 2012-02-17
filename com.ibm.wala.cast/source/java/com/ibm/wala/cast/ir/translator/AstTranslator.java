@@ -4261,6 +4261,9 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   }
 
   public void translate(final CAstEntity N, final WalkContext context) {
+    final ExposedNamesCollector exposedNamesCollector = new ExposedNamesCollector();
+    exposedNamesCollector.run(N);
+    entity2ExposedNames = exposedNamesCollector.getEntity2ExposedNames();
     walkEntities(N, context);
   }
  
