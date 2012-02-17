@@ -51,7 +51,42 @@ import com.ibm.wala.util.intset.MutableIntSet;
 
 public class ForInContextSelector implements ContextSelector {
 
+  public static class IntegerContextItem implements ContextItem {
+    private final int value;
+    
+    public IntegerContextItem(int value) {
+      this.value = value;
+    }
+
+    public int getValue() {
+      return value;
+    }
+    
+    @Override
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + value;
+      return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      IntegerContextItem other = (IntegerContextItem) obj;
+      if (value != other.value)
+        return false;
+      return true;
+    }
+  }
+
   public final static ContextKey FORIN_KEY = new ContextKey() { };
+  public final static ContextKey FORIN_PARM_INDEX = new ContextKey() { };
   
   public static final ContextItem FORIN_MARKER = new ContextItem() { };
   
@@ -126,6 +161,8 @@ public class ForInContextSelector implements ContextSelector {
     public ContextItem get(ContextKey key) {
       if (FORIN_KEY.equals(key)) {
         return FORIN_MARKER;
+      } else if(FORIN_PARM_INDEX.equals(key)) {
+        return new IntegerContextItem(index);
       } else {
         return super.get(key);
       }
@@ -168,7 +205,7 @@ public class ForInContextSelector implements ContextSelector {
       if (DEPENDENT_THRU_READS) {
         collectValues(du, du.getDef(inst.getUse(i)), values);
       }
-      if (values.contains(3)) {
+      if (values.contains(index+1)) {
         dependentParameters.add(i);
       }
     }
@@ -293,7 +330,7 @@ public class ForInContextSelector implements ContextSelector {
       Frequency f = usesFirstArgAsPropertyName(callee);
       if(f == Frequency.ALWAYS) {
         return new ForInContext(baseContext, simulateToString(caller.getClassHierarchy(), receiver[index]));
-      } else if(f == Frequency.SOMETIMES || forInOnFirstArg(callee)) {
+      } else if(f == Frequency.SOMETIMES) {
         if(receiver[index] == null) {
           IClass undef = caller.getClassHierarchy().lookupClass(JavaScriptTypes.Undefined);
           return new ForInContext(baseContext, new ConcreteTypeKey(undef));
