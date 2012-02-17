@@ -2,6 +2,7 @@ package com.ibm.wala.cast.js.ipa.callgraph;
 
 import com.ibm.wala.analysis.reflection.InstanceKeyWithNode;
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys.ScopeMappingInstanceKey;
+import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptConstructTargetSelector.JavaScriptConstructor;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -12,6 +13,8 @@ import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.SingleInstanceFilter;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallString;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallStringContext;
 import com.ibm.wala.util.intset.IntSet;
 
 /**
@@ -50,8 +53,17 @@ public class RecursionBoundContextSelector implements ContextSelector {
   @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] actualParameters) {
     Context baseContext = base.getCalleeTarget(caller, site, callee, actualParameters);
-    // TODO somehow k-limit more smartly?
-    return exceedsRecursionBound(baseContext, 0) ? Everywhere.EVERYWHERE : baseContext;
+    final boolean exceedsRecursionBound = exceedsRecursionBound(baseContext, 0);
+    if (!exceedsRecursionBound) {
+      return baseContext;
+    } else if (callee instanceof JavaScriptConstructor) {
+      // for constructors, we want to keep some basic context sensitivity to
+      // avoid horrible imprecision
+      return new CallStringContext(new CallString(site, caller.getMethod()));
+    } else {
+      // TODO somehow k-limit more smartly?
+      return Everywhere.EVERYWHERE;
+    }
   }
 
   private boolean exceedsRecursionBound(Context baseContext, int curLevel) {
