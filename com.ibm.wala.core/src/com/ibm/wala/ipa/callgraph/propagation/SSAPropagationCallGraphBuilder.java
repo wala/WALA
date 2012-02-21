@@ -248,7 +248,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     this.monitor = monitor;
     ConstraintVisitor v = makeVisitor(node);
 
-    IR ir = getCFAContextInterpreter().getIR(node);
+    IR ir = v.ir;
     ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = ir.getControlFlowGraph();
     for (Iterator<ISSABasicBlock> x = cfg.iterator(); x.hasNext();) {
       BasicBlock b = (BasicBlock) x.next();
