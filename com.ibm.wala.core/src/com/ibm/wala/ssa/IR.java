@@ -13,6 +13,7 @@ package com.ibm.wala.ssa;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -24,6 +25,7 @@ import com.ibm.wala.ssa.SSACFG.ExceptionHandlerBasicBlock;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.IntIterator;
@@ -188,7 +190,22 @@ public abstract class IR {
           StringStuff.padWithSpaces(x, 45);
           result.append(x);
           result.append(instructionPosition(j));
+          
+          Map<Integer,Set<String>> valNames = HashMapFactory.make();
+          for(int v = 0; v < instructions[j].getNumberOfDefs(); v++) {
+            int valNum = instructions[j].getDef(v);
+            addNames(j, valNames, valNum);
+          }
+          for(int v = 0; v < instructions[j].getNumberOfUses(); v++) {
+            int valNum = instructions[j].getUse(v);
+            addNames(j, valNames, valNum);
+          }
+          if (!valNames.isEmpty()) {
+            result.append(" ").append(valNames);
+          }
+ 
           result.append("\n");
+          
           if (names != null) {
             boolean any = false;
             for(SSAIndirectionData.Name n : names) {
@@ -211,6 +228,17 @@ public abstract class IR {
       }
     }
     return result.toString();
+  }
+
+  private void addNames(int j, Map<Integer, Set<String>> valNames, int valNum) {
+    if (getLocalNames(j, valNum) != null && getLocalNames(j, valNum).length > 0) {
+      if (! valNames.containsKey(valNum)) {
+        valNames.put(valNum, HashSetFactory.<String>make());
+      }
+      for(String s : getLocalNames(j, valNum)) {
+        valNames.get(valNum).add(s);
+      }
+    }
   }
 
   /**
