@@ -103,7 +103,6 @@ public class CAstCallGraphUtil {
     return result;
   }
 
-  @SuppressWarnings("unused")
   public static void dumpCG(PointerAnalysis PA, CallGraph CG) {
     if (AVOID_DUMP)
       return;
