@@ -29,7 +29,6 @@ import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.IteratorPlusOne;
 import com.ibm.wala.util.collections.Pair;
 
 /**
