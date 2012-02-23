@@ -135,8 +135,10 @@ public abstract class TestCallGraphShape extends WalaTestCase {
             CallSiteReference sr = (CallSiteReference) sites.next();
            
             Iterator dsts = getNodes(CG, targetName).iterator();
-            Assert.assertTrue("cannot find " + targetName, dsts.hasNext());
-
+            if (! checkAbsence) {
+              Assert.assertTrue("cannot find " + targetName, dsts.hasNext());
+            }
+            
             while (dsts.hasNext()) {
               CGNode dst = (CGNode) dsts.next();
               for (Iterator tos = CG.getPossibleTargets(src, sr).iterator(); tos.hasNext();) {

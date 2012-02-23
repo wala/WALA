@@ -27,7 +27,7 @@ public abstract class TestArgumentSensitivity extends TestJSCallGraphShape {
         "tests/args.js",
         new String[] { "tests/args.js/a" } },
     new Object[] { "tests/args.js/a", new String[] { "tests/args.js/x"} },
-    new Object[] { "tests/args.js/a", new String[] { "tests/args.js/y", "tests/args.js/z" } } };
+    new Object[] { "tests/args.js/a", new String[] { "tests/args.js/y", "tests/args.js/z", "!tests/args.js/wrong" } } };
 
   @Test public void testArgs() throws IOException, IllegalArgumentException, CancelException, ClassHierarchyException {
     JavaScriptLoaderFactory loaders = JSCallGraphBuilderUtil.makeLoaders();

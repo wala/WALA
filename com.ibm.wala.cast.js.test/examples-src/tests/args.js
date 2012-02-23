@@ -20,5 +20,9 @@ function z() {
 	print("z");
 }
 
+function wrong() {
+	print("wrong");
+}
+
 a(x);
-a(y, z);
+a(y, z, wrong);
