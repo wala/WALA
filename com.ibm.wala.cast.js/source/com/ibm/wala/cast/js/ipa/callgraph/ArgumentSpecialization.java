@@ -2,6 +2,8 @@ package com.ibm.wala.cast.js.ipa.callgraph;
 
 import java.util.Map;
 
+import java.util.regex.*;
+
 import com.ibm.wala.cast.ipa.callgraph.AstContextInsensitiveSSAContextInterpreter;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
@@ -38,6 +40,8 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.IntSet;
 
 public class ArgumentSpecialization {
+
+  private static final Pattern baseNameRegex = Pattern.compile("[$-]*base[$-]*[0-9]*");
 
   public static class ArgumentSpecializationContextIntepreter extends AstContextInsensitiveSSAContextInterpreter {
 
@@ -167,6 +171,15 @@ public class ArgumentSpecialization {
               
               return false;
             }
+
+            private boolean isNamedVar(CAstNode n, Pattern namePattern) {
+              if (n.getKind() == CAstNode.VAR) {
+                String nm = (String) n.getChild(0).getValue();
+                return namePattern.matcher(nm).matches();
+              }
+              
+              return false;
+            }
             
             private Object getIndexFromArgumentRef(CAstNode n) {
               if (n.getKind() == CAstNode.OBJECT_REF || n.getKind() == CAstNode.ARRAY_REF) {
@@ -177,19 +190,19 @@ public class ArgumentSpecialization {
               
               return null;
             }
-                
+                         
             private Object getIndexFromBaseVar(CAstNode n) {
               if (n.getKind() == CAstNode.BLOCK_EXPR) {
                 if (n.getChildCount() == 2) {
                   
                   CAstNode c1 = n.getChild(0);
                   if (c1.getKind() == CAstNode.ASSIGN) {
-                    if (isNamedVar(c1.getChild(0), "base")) {
+                    if (isNamedVar(c1.getChild(0), baseNameRegex)) {
                       if (isNamedVar(c1.getChild(1), "arguments")) {
                         
                         CAstNode c2 = n.getChild(1);
                         if (c2.getKind() == CAstNode.OBJECT_REF || c2.getKind() == CAstNode.ARRAY_REF) {
-                          if (isNamedVar(c2.getChild(0), "base")) {
+                          if (isNamedVar(c2.getChild(0), baseNameRegex)) {
                             return c2.getChild(1).getValue();
                           }
                         }   
@@ -216,7 +229,7 @@ public class ArgumentSpecialization {
               Object x = getStaticArgumentIndex(n);
               if (x != null) {
                 if (x instanceof Number && ((Number)x).intValue() < v.getValue()-2) {
-                  int arg = ((Number)x).intValue() + 3;
+                  int arg = ((Number)x).intValue() + 2;
                   if (arg < e.getArgumentCount()) {
                     return Ast.makeNode(CAstNode.VAR, Ast.makeConstant(e.getArgumentNames()[arg]));
                   } else {
@@ -298,7 +311,7 @@ public class ArgumentSpecialization {
                 String[] argNames = new String[ v.getValue() ];
                 System.arraycopy(super.getArgumentNames(f), 0, argNames, 0, super.getArgumentCount(f));
                 for(int i = super.getArgumentCount(f); i < argNames.length; i++) {
-                  argNames[i] = "$arg" + (i+1);
+                  argNames[i] = "$arg" + i;
                 }
                 
                 return argNames;
