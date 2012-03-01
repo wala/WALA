@@ -35,11 +35,11 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
 
     CAstNode getCatchTarget();
 
-    String getBaseVarIfRelevant(T node);
+    int setOperation(T node);
 
-    boolean foundBase(T node);
+    boolean foundMemberOperation(T node);
 
-    void updateBase(T from, T to);
+    void copyOperation(T from, T to);
 
   }
 
@@ -66,11 +66,21 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
       return null;
     }
 
-    public String getBaseVarIfRelevant(T node) { return null; }
+    @Override
+    public int setOperation(T node) {
+      return -1;
+    }
 
-    public boolean foundBase(T node) { return false; }
+    @Override
+    public boolean foundMemberOperation(T node) {
+      return false;
+    }
 
-    public void updateBase(T from, T to) {  }
+    @Override
+    public void copyOperation(T from, T to) {
+      Assertions.UNREACHABLE();
+    }
+
   }
 
   class DelegatingContext<C extends WalkContext<C, T>, T> extends TranslatorToCAst.DelegatingContext<C, T> implements WalkContext<C,T> {
@@ -99,16 +109,19 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
       return parent.getCatchTarget();
     }
 
-    public String getBaseVarIfRelevant(T node) {
-      return parent.getBaseVarIfRelevant(node);
+    @Override
+    public int setOperation(T node) {
+      return parent.setOperation(node);
     }
 
-    public boolean foundBase(T node) {
-      return parent.foundBase(node);
+    @Override
+    public boolean foundMemberOperation(T node) {
+      return parent.foundMemberOperation(node);
     }
 
-    public void updateBase(T from, T to) {
-      parent.updateBase(from, to);
+    @Override
+    public void copyOperation(T from, T to) {
+      parent.copyOperation(from, to);
     }
 
   }
@@ -220,7 +233,7 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
    * 'this' parameter in baseVar, and then to use baseVar as the actual argument
    * sub-node for the CAst call node
    */
-  public class BaseCollectingContext<C extends WalkContext<C, T>, T> extends DelegatingContext<C,T> {
+  public class MemberDestructuringContext<C extends WalkContext<C, T>, T> extends DelegatingContext<C,T> {
     
     /**
      * node for which we actually care about what the base pointer is. this
@@ -229,49 +242,33 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
      */
     private final Set<T> baseFor = new HashSet<T>();
 
-    /**
-     * the variable to be used to store the value of the expression passed as
-     * the 'this' parameter
-     */
-    private final String baseVar;
-
+    private int operationIndex;
+    
     /**
      * have we discovered a value to be passed as the 'this' parameter?
      */
     private boolean foundBase = false;
 
-    protected BaseCollectingContext(C parent, T initialBaseFor, String baseVar) {
+    protected MemberDestructuringContext(C parent, T initialBaseFor, int operationIndex) {
       super(parent);
       baseFor.add( initialBaseFor );
-      this.baseVar = baseVar;
+      this.operationIndex = operationIndex;
     }
 
-    /**
-     * if node is one that we care about, return baseVar, and as a side effect
-     * set foundBase to true. Otherwise, return <code>null</code>.
-     */
-    @Override
-    public String getBaseVarIfRelevant(T node) { 
+    public int setOperation(T node) { 
       if (baseFor.contains( node )) {
         foundBase = true;
-        return baseVar;
+        return operationIndex;
       } else {
-        return null;
+        return -1;
       }
     }
-
-    @Override
-    public boolean foundBase(T node) {
+      
+    public boolean foundMemberOperation(T node) {
       return foundBase;
     }
 
-    /**
-     * if we currently care about the base pointer of from, switch to searching
-     * for the base pointer of to. Used for cases like comma expressions: if we
-     * have (x,y.f)(), we want to assign y to baseVar
-     */
-    @Override
-    public void updateBase(T from, T to) {
+    public void copyOperation(T from, T to) {
       if (baseFor.contains(from)) baseFor.add(to);
     }
   }

@@ -203,6 +203,10 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     return instanceKeys.getMappedObject(i);
   }
 
+  public int getInstanceIndex(InstanceKey ik) {
+    return instanceKeys.getMappedIndex(ik);
+  }
+
   /**
    * TODO: optimize; this may be inefficient;
    * 
@@ -340,7 +344,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     return newStatement(L, op, R, true, true);
   }
 
-  public void newConstraint(PointerKey lhs, AbstractOperator<PointsToSetVariable> op, PointerKey rhs) {
+  public boolean newConstraint(PointerKey lhs, AbstractOperator<PointsToSetVariable> op, PointerKey rhs) {
     if (lhs == null) {
       throw new IllegalArgumentException("lhs null");
     }
@@ -357,10 +361,10 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     assert !pointsToMap.isUnified(rhs);
     PointsToSetVariable L = findOrCreatePointsToSet(lhs);
     PointsToSetVariable R = findOrCreatePointsToSet(rhs);
-    newStatement(L, op, new PointsToSetVariable[] { R }, true, true);
+    return newStatement(L, op, new PointsToSetVariable[] { R }, true, true);
   }
 
-  public void newConstraint(PointerKey lhs, AbstractOperator<PointsToSetVariable> op, PointerKey rhs1, PointerKey rhs2) {
+  public boolean newConstraint(PointerKey lhs, AbstractOperator<PointsToSetVariable> op, PointerKey rhs1, PointerKey rhs2) {
     if (lhs == null) {
       throw new IllegalArgumentException("null lhs");
     }
@@ -382,7 +386,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     PointsToSetVariable L = findOrCreatePointsToSet(lhs);
     PointsToSetVariable R1 = findOrCreatePointsToSet(rhs1);
     PointsToSetVariable R2 = findOrCreatePointsToSet(rhs2);
-    newStatement(L, op, R1, R2, true, true);
+    return newStatement(L, op, R1, R2, true, true);
   }
 
   /**

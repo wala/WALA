@@ -14,13 +14,9 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
-import com.ibm.wala.cast.js.translator.PropertyReadExpander.ExpanderKey;
-import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
-import com.ibm.wala.cast.tree.impl.CAstRewriter;
 import com.ibm.wala.cast.tree.impl.CAstRewriter.CopyKey;
 import com.ibm.wala.cast.tree.impl.CAstRewriter.RewriteContext;
 import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
@@ -35,12 +31,7 @@ public class CAstRhinoTranslator implements TranslatorToCAst {
   public CAstRhinoTranslator(SourceModule M, boolean replicateForDoLoops) {
     this.M = M;
     this.replicateForDoLoops = replicateForDoLoops;
-    this.addRewriter(new CAstRewriterFactory<PropertyReadExpander.RewriteContext, ExpanderKey>() {
-      public CAstRewriter<PropertyReadExpander.RewriteContext, ExpanderKey> createCAstRewriter(CAst ast) {
-        return new PropertyReadExpander(ast);
-      }
-    }, true);
-  }
+   }
 
   public <C extends RewriteContext<K>, K extends CopyKey<K>> void addRewriter(CAstRewriterFactory<C, K> factory, boolean prepend) {
     if(prepend)

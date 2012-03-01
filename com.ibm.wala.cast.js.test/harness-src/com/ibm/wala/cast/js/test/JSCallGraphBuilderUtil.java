@@ -111,7 +111,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
       IllegalArgumentException, CancelException {
     PropagationCallGraphBuilder b = makeScriptCGBuilder(dir, name, builderType);
     CallGraph CG = b.makeCallGraph(b.getOptions());
-    dumpCG(b.getPointerAnalysis(), CG);
+    // dumpCG(b.getPointerAnalysis(), CG);
     return CG;
   }
 
@@ -119,7 +119,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
       CancelException {
     PropagationCallGraphBuilder b = makeCGBuilder(makeLoaders(), scripts, builderType, irFactory);
     CallGraph CG = b.makeCallGraph(b.getOptions());
-    dumpCG(b.getPointerAnalysis(), CG);
+    // dumpCG(b.getPointerAnalysis(), CG);
     return CG;
   }
 

@@ -168,13 +168,12 @@ public class RhinoToAstTranslator {
     }
   }
 
-  private static class BaseCollectingContext extends JavaScriptTranslatorToCAst.BaseCollectingContext<WalkContext, Node> implements WalkContext {
+  private static class MemberDestructuringContext extends JavaScriptTranslatorToCAst.MemberDestructuringContext<WalkContext, Node> implements WalkContext {
 
-	BaseCollectingContext(WalkContext parent, Node initialBaseFor,
-			String baseVar) {
-		super(parent, initialBaseFor, baseVar);
-	}
-  
+    protected MemberDestructuringContext(WalkContext parent, Node initialBaseFor, int operationIndex) {
+      super(parent, initialBaseFor, operationIndex);
+    }
+
   }
 
   private static class BreakContext extends JavaScriptTranslatorToCAst.BreakContext<WalkContext, Node> implements WalkContext {
@@ -199,6 +198,22 @@ public class RhinoToAstTranslator {
 		super(parent, catchNode);
 	}
 
+  }
+
+  private String operationReceiverName(int operationIndex) {
+    return "$$destructure$rcvr" + operationIndex;
+  }
+
+  private CAstNode operationReceiverVar(int operationIndex) {
+    return Ast.makeNode(CAstNode.VAR, Ast.makeConstant(operationReceiverName(operationIndex)));
+  }
+  
+  private String operationElementName(int operationIndex) {
+    return "$$destructure$elt" + operationIndex;
+  }
+
+  private CAstNode operationElementVar(int operationIndex) {
+    return Ast.makeNode(CAstNode.VAR, Ast.makeConstant(operationElementName(operationIndex)));
   }
 
   private CAstNode translateOpcode(int nodeType) {
@@ -327,7 +342,7 @@ public class RhinoToAstTranslator {
     int i = 0;
     CAstNode arguments[] = new CAstNode[nargs];
     arguments[i++] = fun;
-    assert callee.equals(STANDARD_CALL_FN_NAME) || callee.equals(CTOR_CALL_FN_NAME);
+    // assert callee.equals(STANDARD_CALL_FN_NAME) || callee.equals(CTOR_CALL_FN_NAME);
     arguments[i++] = Ast.makeConstant(callee);
     if (thisptr != null)
       arguments[i++] = thisptr;
@@ -718,19 +733,20 @@ public class RhinoToAstTranslator {
 	}
 
 	private CAstNode visitObjectRead(AstNode n, AstNode objAst, CAstNode elt, WalkContext context) {
-		CAstNode obj = visit(objAst, context);
-		String baseVar = context.getBaseVarIfRelevant(n);
-		
-		CAstNode get, result;
-		if (baseVar != null) {
-		  result = Ast.makeNode(CAstNode.BLOCK_EXPR, 
-		                          Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(baseVar)), obj),
-		                          get = Ast.makeNode(CAstNode.OBJECT_REF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(baseVar)), elt));
-		} else {
-		  result = get = Ast.makeNode(CAstNode.OBJECT_REF, obj, elt);
-		}
+    CAstNode get, result;
+    int operationIndex = context.setOperation(n);
 
-		if (context.getCatchTarget() != null) {
+    CAstNode obj = visit(objAst, context);
+    if (operationIndex != -1) {
+      get = null;
+      result = Ast.makeNode(CAstNode.BLOCK_EXPR,
+      Ast.makeNode(CAstNode.ASSIGN, operationReceiverVar(operationIndex), obj),
+      Ast.makeNode(CAstNode.ASSIGN, operationElementVar(operationIndex), elt));
+    } else {
+      result = get = Ast.makeNode(CAstNode.OBJECT_REF, obj, elt);
+    }
+
+		if (get != null && context.getCatchTarget() != null) {
 		  context.cfg().map(get, get);
 		  context.cfg().add(get, context.getCatchTarget(), JavaScriptTypes.TypeError);
 		}
@@ -864,27 +880,34 @@ public class RhinoToAstTranslator {
 		return args;
 	}
 
-	private static final String baseVarName = "$$-base-$$";
-	
 	@Override
 	public CAstNode visitFunctionCall(FunctionCall n, WalkContext context) {
 		if (!isPrimitiveCall(context, n)) {
-			CAstNode base = Ast.makeNode(CAstNode.VAR, Ast.makeConstant(baseVarName));
 			AstNode callee = n.getTarget();
-			WalkContext child = new BaseCollectingContext(context, callee, baseVarName);
+			int thisBaseVarNum = ++baseVarNum;
+			WalkContext child = new MemberDestructuringContext(context, callee, thisBaseVarNum);
 			CAstNode fun = visit(callee, child);
 
 			// the first actual parameter appearing within the parentheses of the
 			// call (i.e., possibly excluding the 'this' parameter)
 			CAstNode[] args = gatherCallArguments(n, context);
-			if (child.foundBase(callee))
-				return Ast.makeNode(
-						CAstNode.LOCAL_SCOPE,
-						Ast.makeNode(CAstNode.BLOCK_EXPR,
-								Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(baseVarName)), Ast.makeConstant(null)),
-								makeCall(fun, base, args, context)));
-			else
-				return makeCall(fun, makeVarRef(JSSSAPropagationCallGraphBuilder.GLOBAL_OBJ_VAR_NAME), args, context);
+			if (child.foundMemberOperation(callee))
+				return 
+				Ast.makeNode(CAstNode.LOCAL_SCOPE,
+		        Ast.makeNode(CAstNode.BLOCK_EXPR,
+		          Ast.makeNode(CAstNode.DECL_STMT, 
+		            Ast.makeConstant(new CAstSymbolImpl(operationReceiverName(thisBaseVarNum))),
+		            Ast.makeConstant(null)),
+		        Ast.makeNode(CAstNode.DECL_STMT, 
+		          Ast.makeConstant(new CAstSymbolImpl(operationElementName(thisBaseVarNum))),
+		          Ast.makeConstant(null)),
+		        fun,
+		        makeCall(operationElementVar(thisBaseVarNum), operationReceiverVar(thisBaseVarNum), args, context, "dispatch")));
+			else {
+				CAstNode globalRef = makeVarRef(JSSSAPropagationCallGraphBuilder.GLOBAL_OBJ_VAR_NAME);
+        context.cfg().map(globalRef, globalRef);
+				return makeCall(fun, globalRef, args, context);
+			}
 		} else {
 			return Ast.makeNode(CAstNode.PRIMITIVE, gatherCallArguments(n, context));
 		}
@@ -992,7 +1015,9 @@ public class RhinoToAstTranslator {
 		switch (node.getType()) {
 		case Token.THIS: {
 		  if (arg.top() instanceof ScriptNode && !(arg.top() instanceof FunctionNode)) {
-		    return makeVarRef(JSSSAPropagationCallGraphBuilder.GLOBAL_OBJ_VAR_NAME);
+		    CAstNode globalRef = makeVarRef(JSSSAPropagationCallGraphBuilder.GLOBAL_OBJ_VAR_NAME);
+		    arg.cfg().map(globalRef, globalRef);
+        return globalRef;
 		  } else {
 		    return Ast.makeNode(CAstNode.VAR, Ast.makeConstant("this"));
 		  }
@@ -2248,6 +2273,8 @@ private CAstNode[] walkChildren(final Node n, WalkContext context) {
   final private Reader sourceReader;
 
   private int anonymousCounter = 0;
+
+  private int baseVarNum = 0;
 
   private final DoLoopTranslator doLoopTranslator;
   

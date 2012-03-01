@@ -516,8 +516,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
     }
 
-    protected void visitInvokeInternal(final SSAAbstractInvokeInstruction instruction) {
-      super.visitInvokeInternal(instruction);
+    protected void visitInvokeInternal(final SSAAbstractInvokeInstruction instruction, InvariantComputer invs) {
+      super.visitInvokeInternal(instruction, invs);
       if (instruction instanceof AbstractLexicalInvoke) {
         AbstractLexicalInvoke I = (AbstractLexicalInvoke) instruction;
         for (int wi = 0; wi < I.getNumberOfDefs(); wi++) {
@@ -981,7 +981,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     //
     // /////////////////////////////////////////////////////////////////////////
 
-    private interface ReflectedFieldAction {
+    protected interface ReflectedFieldAction {
       void action(AbstractFieldPointerKey fieldKey);
 
       void dump(AbstractFieldPointerKey fieldKey, boolean constObj, boolean constProp);
@@ -1090,7 +1090,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
     }
 
-    private void newFieldFullOperation(final boolean isLoadOperation, final ReflectedFieldAction action, PointerKey objKey,
+    protected void newFieldFullOperation(final boolean isLoadOperation, final ReflectedFieldAction action, PointerKey objKey,
         final PointerKey fieldKey) {
       system.newSideEffect(new AbstractOperator<PointsToSetVariable>() {
         private final MutableIntSet doneReceiver = IntSetUtil.make();
@@ -1148,7 +1148,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       }, objKey, fieldKey);
     }
 
-    private void newFieldOperationOnlyFieldConstant(final boolean isLoadOperation, final ReflectedFieldAction action,
+    protected void newFieldOperationOnlyFieldConstant(final boolean isLoadOperation, final ReflectedFieldAction action,
         final PointerKey objKey, final InstanceKey[] fieldsKeys) {
       system.newSideEffect(new UnaryOperator<PointsToSetVariable>() {
         public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
@@ -1198,7 +1198,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       }, objKey);
     }
 
-    private void newFieldOperationOnlyObjectConstant(final boolean isLoadOperation, final ReflectedFieldAction action,
+    protected void newFieldOperationOnlyObjectConstant(final boolean isLoadOperation, final ReflectedFieldAction action,
         final PointerKey fieldKey, final InstanceKey[] objKeys) {
       if (!isLoadOperation) {
         for (int o = 0; o < objKeys.length; o++) {
@@ -1245,7 +1245,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       }, fieldKey);
     }
 
-    private void newFieldOperationObjectAndFieldConstant(final boolean isLoadOperation, final ReflectedFieldAction action,
+    protected void newFieldOperationObjectAndFieldConstant(final boolean isLoadOperation, final ReflectedFieldAction action,
         final InstanceKey[] objKeys, InstanceKey[] fieldsKeys) {
       for (int o = 0; o < objKeys.length; o++) {
         PointerKey objCatalog = getPointerKeyForObjectCatalog(objKeys[o]);

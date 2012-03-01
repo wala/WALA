@@ -33,7 +33,7 @@ public class JavaScriptTypeOfInstruction extends SSAAbstractUnaryInstruction {
   }
 
   public void visit(IVisitor v) {
-    ((InstructionVisitor) v).visitTypeOf(this);
+    ((JSInstructionVisitor) v).visitTypeOf(this);
   }
 
   public Collection<TypeReference> getExceptionTypes() {

@@ -19,6 +19,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
+import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -151,7 +153,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 
   @Test
   public void testForin() throws IOException, IllegalArgumentException, CancelException {
-    CallGraph CG = JSCallGraphBuilderUtil.makeScriptCG("tests", "forin.js");
+    JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "forin.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    JSCallGraphUtil.AVOID_DUMP = false;
+    JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForForin);
   }
 
@@ -242,6 +247,8 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "string-prims.js");
     B.getOptions().setTraceStringConstants(true);
     CallGraph CG = B.makeCallGraph(B.getOptions());
+    JSCallGraphUtil.AVOID_DUMP = false;
+    JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForStringPrims);
   }
 
@@ -439,7 +446,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 
   @Test
   public void testReturnThis() throws IOException, IllegalArgumentException, CancelException {
-    CallGraph CG = JSCallGraphBuilderUtil.makeScriptCG("tests", "return_this.js");
+    PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "return_this.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    JSCallGraphUtil.AVOID_DUMP = false;
+    JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForReturnThis);
   }
   
@@ -520,6 +530,22 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   public void testNestedAssignToParam() throws IllegalArgumentException, IOException, CancelException {
     CallGraph CG = JSCallGraphBuilderUtil.makeScriptCG("tests", "nested_assign_to_param.js");
     verifyGraphAssertions(CG, assertionsForNestedParamAssign);
+  }
+
+  private static final Object[][] assertionsForDispatch = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/dispatch.js" } },
+    new Object[] { "tests/dispatch.js", new String[] { "tests/dispatch.js/left_outer", "tests/dispatch.js/right_outer" } },
+    new Object[] { "tests/dispatch.js/left_outer", new String[]{ "tests/dispatch.js/left_inner" } },
+    new Object[] { "tests/dispatch.js/right_outer", new String[]{ "tests/dispatch.js/right_inner" } }
+  };
+
+  @Test
+  public void testDispatch() throws IOException, IllegalArgumentException, CancelException {
+    PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "dispatch.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    JSCallGraphUtil.AVOID_DUMP = false;
+    JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
+    verifyGraphAssertions(CG, assertionsForDispatch);
   }
 
   protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {

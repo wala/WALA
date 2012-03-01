@@ -1,8 +1,9 @@
 package com.ibm.wala.cast.js.ipa.callgraph;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-
-import java.util.regex.*;
+import java.util.regex.Pattern;
 
 import com.ibm.wala.cast.ipa.callgraph.AstContextInsensitiveSSAContextInterpreter;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
@@ -17,6 +18,8 @@ import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.impl.CAstBasicRewriter;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
+import com.ibm.wala.cast.util.CAstPattern;
+import com.ibm.wala.cast.util.CAstPattern.Segments;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -36,12 +39,13 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.IntSet;
 
 public class ArgumentSpecialization {
 
-  private static final Pattern baseNameRegex = Pattern.compile("[$-]*base[$-]*[0-9]*");
+  private static final Pattern baseNameRegex = Pattern.compile("[$]+destructuring[$]rcvr*[0-9]*");
 
   public static class ArgumentSpecializationContextIntepreter extends AstContextInsensitiveSSAContextInterpreter {
 
@@ -136,6 +140,12 @@ public class ArgumentSpecialization {
   }
 
   public static class ArgumentCountIRFactory extends AstIRFactory.AstDefaultIRFactory {
+    private static final CAstPattern directAccessPattern = CAstPattern.parse("|(ARRAY_REF(VAR(\"arguments\"),<value>*)||OBJECT_REF(VAR(\"arguments\"),<value>*))|");
+
+    private static final CAstPattern destructuredAccessPattern = CAstPattern.parse("BLOCK_EXPR(ASSIGN(VAR(/[$][$]destructure[$]rcvr[0-9]+/),VAR(\"arguments\")),ASSIGN(VAR(<name>/[$][$]destructure[$]elt[0-9]+/),<value>*))");
+
+    private static final CAstPattern destructuredCallPattern = CAstPattern.parse("CALL(VAR(<name>/[$][$]destructure[$]elt[0-9]+/),\"dispatch\",VAR(<thisptr>/[$][$]destructure[$]rcvr[0-9]+/),<args>**)");
+    
     private final SSAOptions defaultOptions;
     
     public ArgumentCountIRFactory(SSAOptions defaultOptions) {
@@ -155,78 +165,21 @@ public class ArgumentSpecialization {
         final Retranslatable m = (Retranslatable)method;
         if (v != null) {
           final JavaScriptLoader myloader = (JavaScriptLoader) method.getDeclaringClass().getClassLoader();
-          
+                    
           class FixedArgumentsRewriter extends CAstBasicRewriter {
-            private final CAstEntity e = m.getEntity();
-            
+            private final CAstEntity e;
+            Map<String, CAstNode> argRefs = HashMapFactory.make();
+ 
             public FixedArgumentsRewriter(CAst Ast) {
               super(Ast, false);
-            }
-
-            private boolean isNamedVar(CAstNode n, String name) {
-              if (n.getKind() == CAstNode.VAR) {
-                String nm = (String) n.getChild(0).getValue();
-                return nm.equals(name);
-              }
-              
-              return false;
-            }
-
-            private boolean isNamedVar(CAstNode n, Pattern namePattern) {
-              if (n.getKind() == CAstNode.VAR) {
-                String nm = (String) n.getChild(0).getValue();
-                return namePattern.matcher(nm).matches();
-              }
-              
-              return false;
-            }
-            
-            private Object getIndexFromArgumentRef(CAstNode n) {
-              if (n.getKind() == CAstNode.OBJECT_REF || n.getKind() == CAstNode.ARRAY_REF) {
-                if (isNamedVar(n.getChild(0), "arguments")) {
-                  return n.getChild(1).getValue();
-                }
-              }
-              
-              return null;
-            }
-                         
-            private Object getIndexFromBaseVar(CAstNode n) {
-              if (n.getKind() == CAstNode.BLOCK_EXPR) {
-                if (n.getChildCount() == 2) {
-                  
-                  CAstNode c1 = n.getChild(0);
-                  if (c1.getKind() == CAstNode.ASSIGN) {
-                    if (isNamedVar(c1.getChild(0), baseNameRegex)) {
-                      if (isNamedVar(c1.getChild(1), "arguments")) {
-                        
-                        CAstNode c2 = n.getChild(1);
-                        if (c2.getKind() == CAstNode.OBJECT_REF || c2.getKind() == CAstNode.ARRAY_REF) {
-                          if (isNamedVar(c2.getChild(0), baseNameRegex)) {
-                            return c2.getChild(1).getValue();
-                          }
-                        }   
-                      }
-                    }
-                  }
-                }
-              }
-              
-              return null;
-            }
-       
-            private Object getStaticArgumentIndex(CAstNode n) {
-              Object x = getIndexFromArgumentRef(n);
-              if (x != null) { 
-                return x;
-              } else {
-                return getIndexFromBaseVar(n);
+              this.e = m.getEntity();
+              for(Segments s : CAstPattern.findAll(destructuredAccessPattern, m.getEntity())) {
+                argRefs.put(s.getSingle("name").getValue().toString(), s.getSingle("value"));
               }
             }
-            
 
             private CAstNode handleArgumentRef(CAstNode n) {
-              Object x = getStaticArgumentIndex(n);
+              Object x = n.getValue();
               if (x != null) {
                 if (x instanceof Number && ((Number)x).intValue() < v.getValue()-2) {
                   int arg = ((Number)x).intValue() + 2;
@@ -250,18 +203,31 @@ public class ArgumentSpecialization {
                 Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap)
             {
               CAstNode result = null;
-              if (root.getKind() == CAstNode.ARRAY_REF 
-                    || root.getKind() == CAstNode.OBJECT_REF
-                    || root.getKind() == CAstNode.BLOCK_EXPR) 
-              {
-                result = handleArgumentRef(root);
+              Segments s;
+
+              if ((s = CAstPattern.match(directAccessPattern, root)) != null) {
+                result = handleArgumentRef(s.getSingle("value"));
+
+              } else if ((s = CAstPattern.match(destructuredCallPattern, root)) != null) {
+                if (argRefs.containsKey(s.getSingle("name").getValue().toString())) {
+                 List<CAstNode> x = new ArrayList<CAstNode>();
+                 CAstNode ref = handleArgumentRef(argRefs.get(s.getSingle("name").getValue().toString()));
+                 if (ref != null) {
+                   x.add(ref);
+                   x.add(Ast.makeConstant("do"));
+                   x.add(Ast.makeNode(CAstNode.VAR, Ast.makeConstant("arguments")));
+                   for (CAstNode c : s.getMultiple("args")) {
+                     x.add(copyNodes(c, cfg, context, nodeMap));
+                   }
+                   result = Ast.makeNode(CAstNode.CALL, x.toArray(new CAstNode[ x.size() ]));
+                 }
+                }
                
               } else if (root.getKind() == CAstNode.CONSTANT) {
                 result = Ast.makeConstant(root.getValue());
 
               } else if (root.getKind() == CAstNode.OPERATOR) {
                 result = root;
-                
               } 
               
               if (result == null) {
@@ -280,7 +246,6 @@ public class ArgumentSpecialization {
 
               nodeMap.put(Pair.make(root, context.key()), result);
               return result;
-
             }
             
           }

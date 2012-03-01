@@ -739,6 +739,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
     case CAstNode.PRIMITIVE: {
       if (visitor.visitPrimitive(n, context, visitor))
         break;
+      visitor.visitAllChildren(n, context, visitor);
       visitor.leavePrimitive(n, context, visitor);
       break;
     }

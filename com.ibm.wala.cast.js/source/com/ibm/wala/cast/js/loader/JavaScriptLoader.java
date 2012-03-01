@@ -45,6 +45,8 @@ import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
 import com.ibm.wala.cast.js.ssa.JavaScriptTypeOfInstruction;
 import com.ibm.wala.cast.js.ssa.JavaScriptWithRegion;
+import com.ibm.wala.cast.js.ssa.PrototypeLookup;
+import com.ibm.wala.cast.js.ssa.SetPrototype;
 import com.ibm.wala.cast.js.translator.JSAstTranslator;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
@@ -515,6 +517,16 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
         public SSAStoreIndirectInstruction StoreIndirectInstruction(int addressVal, int rval, TypeReference t) {
           throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public PrototypeLookup PrototypeLookup(int lval, int object) {
+          return new PrototypeLookup(lval, object);
+        }
+
+        @Override
+        public SetPrototype SetPrototype(int object, int prototype) {
+          return new SetPrototype(object, prototype);
         }
 
       };

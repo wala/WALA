@@ -49,6 +49,10 @@ public class JSAstTranslator extends AstTranslator {
     super(loader);
   }
 
+  private boolean isPrologueScript(WalkContext context) {
+    return JavaScriptLoader.bootstrapFileNames.contains( context.getModule().getName() );
+  }
+
   protected boolean useDefaultInitValues() {
     return false;
   }
@@ -112,7 +116,7 @@ public class JSAstTranslator extends AstTranslator {
   }
 
   protected void defineField(CAstEntity topEntity, WalkContext wc, CAstEntity n) {
-    Assertions.UNREACHABLE("JavaScript doesn't have fields, numb-nuts!");
+    Assertions.UNREACHABLE("JavaScript doesn't have fields");
   }
 
   protected String composeEntityName(WalkContext parent, CAstEntity f) {
@@ -152,12 +156,14 @@ public class JSAstTranslator extends AstTranslator {
   }
 
   protected void doCall(WalkContext context, CAstNode call, int result, int exception, CAstNode name, int receiver, int[] arguments) {
-    MethodReference ref = name.getValue().equals("ctor") ? JavaScriptMethods.ctorReference : AstMethodReference
-        .fnReference(JavaScriptTypes.CodeBody);
+    MethodReference ref = 
+      name.getValue().equals("ctor") ? JavaScriptMethods.ctorReference 
+          : name.getValue().equals("dispatch") ? JavaScriptMethods.dispatchReference 
+              : AstMethodReference.fnReference(JavaScriptTypes.CodeBody);
 
     context.cfg().addInstruction(
-        ((JSInstructionFactory) insts).Invoke(receiver, result, arguments, exception, new JSCallSiteReference(ref, context.cfg()
-            .getCurrentInstruction())));
+        ((JSInstructionFactory) insts).Invoke(receiver, result, arguments, exception, 
+            new JSCallSiteReference(ref, context.cfg().getCurrentInstruction())));
 
     context.cfg().addPreNode(call, context.getUnwindState());
 
@@ -202,6 +208,8 @@ public class JSAstTranslator extends AstTranslator {
 
     context.cfg().addInstruction(((JSInstructionFactory) insts).AssignInstruction(x, receiver));
 
+    context.cfg().addInstruction(((JSInstructionFactory) insts).PrototypeLookup(x, x));
+    
     if (elt.getKind() == CAstNode.CONSTANT && elt.getValue() instanceof String) {
       String field = (String) elt.getValue();
       // symtab needs to have this value
@@ -228,14 +236,18 @@ public class JSAstTranslator extends AstTranslator {
     this.visit(elt, context, this);
     if (elt.getKind() == CAstNode.CONSTANT && elt.getValue() instanceof String) {
       String field = (String) elt.getValue();
-      context.currentScope().getConstantValue(field);
-      SSAPutInstruction put = ((JSInstructionFactory) insts).PutInstruction(receiver, rval, field);
-      try {
-        assert field.equals(put.getDeclaredField().getName().toUnicodeString());
-      } catch (UTFDataFormatException e) {
-        Assertions.UNREACHABLE();
+      if (isPrologueScript(context) && "__proto__".equals(field)) {
+        context.cfg().addInstruction(((JSInstructionFactory) insts).SetPrototype(receiver, rval));
+      } else {
+        context.currentScope().getConstantValue(field);
+        SSAPutInstruction put = ((JSInstructionFactory) insts).PutInstruction(receiver, rval, field);
+        try {
+          assert field.equals(put.getDeclaredField().getName().toUnicodeString());
+        } catch (UTFDataFormatException e) {
+          Assertions.UNREACHABLE();
+        }
+        context.cfg().addInstruction(put);
       }
-      context.cfg().addInstruction(put);
     } else {
       context.cfg().addInstruction(((JSInstructionFactory) insts).PropertyWrite(receiver, context.getValue(elt), rval));
     }

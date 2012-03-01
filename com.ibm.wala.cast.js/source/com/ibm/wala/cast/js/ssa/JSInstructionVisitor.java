@@ -12,7 +12,7 @@ package com.ibm.wala.cast.js.ssa;
 
 import com.ibm.wala.cast.ir.ssa.AstInstructionVisitor;
 
-public interface InstructionVisitor extends AstInstructionVisitor {
+public interface JSInstructionVisitor extends AstInstructionVisitor {
 
   public void visitJavaScriptInvoke(JavaScriptInvoke instruction);
     
@@ -27,6 +27,10 @@ public interface InstructionVisitor extends AstInstructionVisitor {
   public void visitWithRegion(JavaScriptWithRegion instruction);
   
   public void visitCheckRef(JavaScriptCheckReference instruction);
+  
+  public void visitSetPrototype(SetPrototype instruction);
+  
+  public void visitPrototypeLookup(PrototypeLookup instruction);
   
 }
 

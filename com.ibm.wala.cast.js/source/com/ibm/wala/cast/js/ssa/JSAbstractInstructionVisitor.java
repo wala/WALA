@@ -12,9 +12,9 @@ package com.ibm.wala.cast.js.ssa;
 
 import com.ibm.wala.cast.ir.ssa.AstAbstractInstructionVisitor;
 
-public class AbstractInstructionVisitor 
+public class JSAbstractInstructionVisitor 
     extends AstAbstractInstructionVisitor 
-    implements InstructionVisitor
+    implements JSInstructionVisitor
 {
 
   public void visitJavaScriptInvoke(JavaScriptInvoke instruction) {
@@ -42,6 +42,16 @@ public class AbstractInstructionVisitor
   }
 
   public void visitWithRegion(JavaScriptWithRegion instruction) {
+    
+  }
+
+  @Override
+  public void visitSetPrototype(SetPrototype instruction) {
+    
+  }
+
+  @Override
+  public void visitPrototypeLookup(PrototypeLookup instruction) {
     
   }
 
