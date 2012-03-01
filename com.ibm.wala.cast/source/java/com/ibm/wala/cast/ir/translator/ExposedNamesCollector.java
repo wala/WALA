@@ -13,7 +13,7 @@ import com.ibm.wala.util.collections.MapUtil;
 /**
  * discovers which names declared by an {@link CAstEntity entity} are exposed, i.e., accessed by nested functions.  
  */
-public class ExposedNamesCollector extends CAstVisitor {
+public class ExposedNamesCollector extends CAstVisitor<ExposedNamesCollector.EntityContext> {
 
   /**
    * names declared by each entity
@@ -29,7 +29,7 @@ public class ExposedNamesCollector extends CAstVisitor {
     return entity2ExposedNames;
   }
 
-  private static class EntityContext implements Context {
+  static class EntityContext implements CAstVisitor.Context {
 
     private final CAstEntity top;
 
@@ -54,7 +54,7 @@ public class ExposedNamesCollector extends CAstVisitor {
   }
 
   @Override
-  protected Context makeCodeContext(Context context, CAstEntity n) {
+  protected EntityContext makeCodeContext(EntityContext context, CAstEntity n) {
     if (n.getKind() == CAstEntity.FUNCTION_ENTITY) {
       // need to handle arguments
       String[] argumentNames = n.getArgumentNames();
@@ -67,7 +67,7 @@ public class ExposedNamesCollector extends CAstVisitor {
   }
 
   @Override
-  protected void leaveDeclStmt(CAstNode n, Context c, CAstVisitor visitor) {
+  protected void leaveDeclStmt(CAstNode n, EntityContext c, CAstVisitor<EntityContext> visitor) {
     CAstSymbol s = (CAstSymbol) n.getChild(0).getValue();
     String nm = s.name();
 //    System.err.println("declaration of " + nm + " in " + c.top());
@@ -75,7 +75,7 @@ public class ExposedNamesCollector extends CAstVisitor {
   }
 
   @Override
-  protected void leaveFunctionStmt(CAstNode n, Context c, CAstVisitor visitor) {
+  protected void leaveFunctionStmt(CAstNode n, EntityContext c, CAstVisitor<EntityContext> visitor) {
     CAstEntity fn = (CAstEntity) n.getChild(0).getValue();
     String nm = fn.getName();
 //    System.err.println("declaration of " + nm + " in " + c.top());
@@ -105,23 +105,23 @@ public class ExposedNamesCollector extends CAstVisitor {
   }
 
   @Override
-  protected void leaveVar(CAstNode n, Context c, CAstVisitor visitor) {
+  protected void leaveVar(CAstNode n, EntityContext c, CAstVisitor<EntityContext> visitor) {
     String nm = (String) n.getChild(0).getValue();
     checkForLexicalAccess(c, nm);
   }
 
   @Override
-  protected void leaveVarAssignOp(CAstNode n, CAstNode v, CAstNode a, boolean pre, Context c, CAstVisitor visitor) {
+  protected void leaveVarAssignOp(CAstNode n, CAstNode v, CAstNode a, boolean pre, EntityContext c, CAstVisitor<EntityContext> visitor) {
     checkForLexicalAccess(c, (String) n.getChild(0).getValue());
   }
 
   @Override
-  protected void leaveVarAssign(CAstNode n, CAstNode v, CAstNode a, Context c, CAstVisitor visitor) {
+  protected void leaveVarAssign(CAstNode n, CAstNode v, CAstNode a, EntityContext c, CAstVisitor<EntityContext> visitor) {
     checkForLexicalAccess(c, (String) n.getChild(0).getValue());
   }
 
   @Override
-  protected boolean doVisit(CAstNode n, Context context, CAstVisitor visitor) {
+  protected boolean doVisit(CAstNode n, EntityContext context, CAstVisitor<EntityContext> visitor) {
     // assume unknown node types don't do anything relevant to exposed names.  
     // override if this is untrue
     return true;
