@@ -3,7 +3,6 @@ package com.ibm.wala.cast.js.ipa.callgraph;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import com.ibm.wala.cast.ipa.callgraph.AstContextInsensitiveSSAContextInterpreter;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
@@ -44,8 +43,6 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.IntSet;
 
 public class ArgumentSpecialization {
-
-  private static final Pattern baseNameRegex = Pattern.compile("[$]+destructuring[$]rcvr*[0-9]*");
 
   public static class ArgumentSpecializationContextIntepreter extends AstContextInsensitiveSSAContextInterpreter {
 

@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ipa.callgraph;
 
-import java.security.KeyStore.Builder;
 import java.util.Collection;
 
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys;
