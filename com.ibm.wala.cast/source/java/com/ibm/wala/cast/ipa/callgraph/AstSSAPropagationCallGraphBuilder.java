@@ -703,7 +703,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
         IR ir = getBuilder().getCFAContextInterpreter().getIR(opNode);
         SymbolTable symtab = ir.getSymbolTable();
-        DefUse du = getAnalysisCache().getSSACache().findOrCreateDU(ir, opNode.getContext());
+        DefUse du = getBuilder().getCFAContextInterpreter().getDU(opNode);
         if (contentsAreInvariant(symtab, du, 1)) {
           system.recordImplicitPointsToSet(F);
           final InstanceKey[] functionKeys = getInvariantContents(symtab, du, opNode, 1);
