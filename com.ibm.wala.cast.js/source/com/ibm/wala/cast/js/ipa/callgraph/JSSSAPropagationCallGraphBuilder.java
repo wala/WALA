@@ -39,6 +39,8 @@ import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -62,6 +64,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationSystem;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.BinaryOpInstruction;
+import com.ibm.wala.shrikeBT.IBinaryOpInstruction.IOperator;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
@@ -745,20 +748,33 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           }
 
           if (doDefault) {
-            for (int i = 0; i < iks1.length; i++) {
-              if (addKey(new ConcreteTypeKey(iks1[i].getConcreteType()))) {
-                changed = CHANGED;
+              for (int i = 0; i < iks1.length; i++) {
+                for (int j = 0; j < iks2.length; j++) {
+                  if (handleBinaryOperatorArgs(iks1[i], iks2[j])) {
+                    changed = CHANGED;
+                  }
+                }
               }
-            }
-            for (int i = 0; i < iks2.length; i++) {
-              if (addKey(new ConcreteTypeKey(iks2[i].getConcreteType()))) {
-                changed = CHANGED;
-              }
-            }
           }
-
+          
           return changed;
         }
+        
+        private boolean isNumberType(Language l, TypeReference t) {
+          return l.isDoubleType(t)||l.isFloatType(t)||l.isIntType(t)||l.isLongType(t);
+        }
+        
+        protected boolean handleBinaryOperatorArgs(InstanceKey left, InstanceKey right) {
+          Language l = node.getMethod().getDeclaringClass().getClassLoader().getLanguage();
+          if (l.isStringType(left.getConcreteType().getReference()) || l.isStringType(right.getConcreteType().getReference())) {
+            return addKey(new ConcreteTypeKey(node.getClassHierarchy().lookupClass(l.getStringType())));
+          } else if (isNumberType(l, left.getConcreteType().getReference()) && isNumberType(l, right.getConcreteType().getReference())) {
+            return addKey(left) || addKey(right);
+          } else {
+            return false;
+          }
+         }
+
       }
 
       BinaryOperator B = new BinaryOperator();
@@ -993,5 +1009,4 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       system.newConstraint(EA, assignOperator, EF);
     }
   }
-
 }
