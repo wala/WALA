@@ -23,6 +23,11 @@ import com.ibm.wala.util.strings.Atom;
  */
 public final class FieldReference extends MemberReference {
   private final static boolean DEBUG = false;
+  /**
+   * Obfuscated code contains multiple fields with the same name but different type. This does not
+   * work with IClass.getField(Atom name). Therefore we add the type signature to the name as a workaround.
+   */
+  public static boolean addTypeToName = false;
 
   /**
    * Used to canonicalize MemberReferences a mapping from Key -> MemberReference
@@ -65,7 +70,7 @@ public final class FieldReference extends MemberReference {
       throws IllegalArgumentException {
     TypeReference c = ShrikeUtil.makeTypeReference(loader, classType);
     TypeReference ft = ShrikeUtil.makeTypeReference(loader, fieldType);
-    Atom name = Atom.findOrCreateUnicodeAtom(fieldName);
+    Atom name = Atom.findOrCreateUnicodeAtom((addTypeToName ? (fieldName + "!" + fieldType) : fieldName));
     return findOrCreate(c, name, ft);
   }
 
