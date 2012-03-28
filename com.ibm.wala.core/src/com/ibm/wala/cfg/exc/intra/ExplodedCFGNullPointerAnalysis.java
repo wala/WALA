@@ -55,7 +55,7 @@ public class ExplodedCFGNullPointerAnalysis implements ExceptionPruningAnalysis<
   /* (non-Javadoc)
    * @see jsdg.exceptions.ExceptionPrunedCFGAnalysis#getPruned()
    */
-  public ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> getPruned() {
+  public ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> getCFG() {
     if (intra == null) {
       throw new IllegalStateException("Run compute(IProgressMonitor) first.");
     }

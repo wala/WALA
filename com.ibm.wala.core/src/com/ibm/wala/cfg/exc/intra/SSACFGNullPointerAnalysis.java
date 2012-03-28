@@ -49,7 +49,7 @@ public class SSACFGNullPointerAnalysis implements ExceptionPruningAnalysis<SSAIn
   /* (non-Javadoc)
    * @see jsdg.exceptions.ExceptionPrunedCFGAnalysis#getPruned()
    */
-  public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getPruned() {
+  public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG() {
     if (intra == null) {
       throw new IllegalStateException("Run compute(IProgressMonitor) first.");
     }

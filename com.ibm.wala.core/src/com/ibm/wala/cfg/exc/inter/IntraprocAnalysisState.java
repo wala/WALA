@@ -11,6 +11,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 
 /**
@@ -20,23 +21,28 @@ import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
  * @author Juergen Graf <graf@kit.edu>
  * 
  */
-final class SingleMethodState {
+final class IntraprocAnalysisState implements ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> {
 
   private final ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> cfg;
-  private final HashMap<IExplodedBasicBlock, String> statesOfSsaVars = new HashMap<IExplodedBasicBlock, String>();
+  private final HashMap<IExplodedBasicBlock, NullPointerState> statesOfSsaVars =
+      new HashMap<IExplodedBasicBlock, NullPointerState>();
   private final HashMap<IExplodedBasicBlock, Object[]> valuesOfSsaVars = new HashMap<IExplodedBasicBlock, Object[]>();
-  private final HashMap<IExplodedBasicBlock, int[]> numbersOfSsaVarsThatAreParemerters = new HashMap<IExplodedBasicBlock, int[]>();
+  private final HashMap<IExplodedBasicBlock, int[]> numbersOfSsaVarsThatAreParemerters =
+      new HashMap<IExplodedBasicBlock, int[]>();
   private final boolean hasNoRecords;
+  private final int deletedEdges;
   private boolean throwsException = true;
 
   /**
-   * Constructor for an emtpy OptimisationInfo.
+   * Constructor for the state of a method that has not been analyzed. These are methods with an empty IR or methods
+   * left out explicitly.
    * 
    * Use it if you have nothing to tell about the node.
    */
-  SingleMethodState() {
+  IntraprocAnalysisState() {
     this.cfg = null;
     this.hasNoRecords = true;
+    this.deletedEdges = 0;
   }
 
   /**
@@ -53,16 +59,18 @@ final class SingleMethodState {
    * @throws UnsoundGraphException
    * @throws CancelException
    */
-  SingleMethodState(final ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intra, final CGNode node,
-      final ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> cfg) throws UnsoundGraphException, CancelException {
+  IntraprocAnalysisState(final ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intra, final CGNode node,
+      final ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> cfg, final int deletedEdges)
+      throws UnsoundGraphException, CancelException {
     this.cfg = cfg;
     this.hasNoRecords = false;
+    this.deletedEdges = deletedEdges;
     final SymbolTable sym = node.getIR().getSymbolTable();
     
     for (final IExplodedBasicBlock block : cfg) {
       // set states
       final NullPointerState state = intra.getState(block);
-      this.statesOfSsaVars.put(block, state.toString());
+      this.statesOfSsaVars.put(block, state);
 
       // set values
       if (block.getInstruction() != null) {
@@ -71,7 +79,7 @@ final class SingleMethodState {
 
         for (int j = 0; j < numberOfSSAVars; j++) {
           final boolean isContant = sym.isConstant(j);
-          values[j] = isContant ? sym.getConstantValue(j) : null;
+          values[j] = (isContant ? sym.getConstantValue(j) : null);
         }
 
         this.valuesOfSsaVars.put(block, values);
@@ -82,7 +90,7 @@ final class SingleMethodState {
       // set nr. of parameters
       if (block.getInstruction() instanceof SSAAbstractInvokeInstruction) {
         final SSAAbstractInvokeInstruction instr = (SSAAbstractInvokeInstruction) block.getInstruction();
-        final int[] numbersOfParams = InterprocNullPointerAnalysis.getParameterNumbers(instr);
+        final int[] numbersOfParams = AnalysisUtil.getParameterNumbers(instr);
         this.numbersOfSsaVarsThatAreParemerters.put(block, numbersOfParams);
       } else {
         // default to null
@@ -91,8 +99,15 @@ final class SingleMethodState {
     }
   }
 
-  public String getState(final IExplodedBasicBlock block) {
-    // if (hasNoRecords) throw new IllegalStateException();
+  public int compute(IProgressMonitor progress) throws UnsoundGraphException, CancelException {
+    return deletedEdges;
+  }
+  
+  public NullPointerState getState(final IExplodedBasicBlock block) {
+    if (hasNoRecords) {
+      throw new IllegalStateException();
+    }
+
     return statesOfSsaVars.get(block);
   }
 
@@ -129,11 +144,11 @@ final class SingleMethodState {
     return !hasNoRecords;
   }
 
-  public void setThrowsException(final boolean throwsException) {
+  public void setHasExceptions(final boolean throwsException) {
     this.throwsException = throwsException;
   }
 
-  public boolean throwsException() {
+  public boolean hasExceptions() {
     return throwsException;
   }
 

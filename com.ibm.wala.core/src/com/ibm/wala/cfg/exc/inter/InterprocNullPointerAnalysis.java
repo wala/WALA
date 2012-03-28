@@ -16,7 +16,6 @@ import com.ibm.wala.cfg.exc.intra.NullPointerState.State;
 import com.ibm.wala.cfg.exc.intra.ParameterState;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.callgraph.impl.PartialCallGraph;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
@@ -48,7 +47,7 @@ public final class InterprocNullPointerAnalysis {
 
   private CallGraph cgFiltered = null;
   private final TypeReference[] ignoredExceptions;
-  private final Map<CGNode, SingleMethodState> states;
+  private final Map<CGNode, IntraprocAnalysisState> states;
 
   public static InterprocNullPointerAnalysis compute(final CallGraph cg, final IProgressMonitor progress)
       throws WalaException, UnsoundGraphException, CancelException {
@@ -65,7 +64,7 @@ public final class InterprocNullPointerAnalysis {
   
   private InterprocNullPointerAnalysis(final TypeReference[] ignoredExceptions) {
     this.ignoredExceptions = ignoredExceptions;
-    this.states = new HashMap<CGNode, SingleMethodState>();
+    this.states = new HashMap<CGNode, IntraprocAnalysisState>();
   }
 
   private void run(final CallGraph cg, final IProgressMonitor progress) throws WalaException, UnsoundGraphException, CancelException {
@@ -104,121 +103,98 @@ public final class InterprocNullPointerAnalysis {
     
     visited.add(startNode);
 
-    if (!startNode.getMethod().isStatic()) {
-      paramState.setState(0, State.NOT_NULL);
-    }
-
-    final HashMap<CGNode, HashMap<SSAAbstractInvokeInstruction, ParameterState>> successorNodes =
-        new HashMap<CGNode, HashMap<SSAAbstractInvokeInstruction, ParameterState>>();
-    final IR ir = startNode.getIR();
-
-    // skip the fakeRoot and memorize the successors to visit them later
-    if (isFakeRoot(startNode)) {
-      for (CGNode successor : getAllSuccessors(startNode)) {
-        // we neither have an instruction nor a parameter state
-        final HashMap<SSAAbstractInvokeInstruction, ParameterState> invokeMap =
-            new HashMap<SSAAbstractInvokeInstruction, ParameterState>();
-        invokeMap.put(null, null);
-        successorNodes.put(successor, invokeMap);
-      }
-
-      // we have nothing to tell about the fakeroot
-      states.put(startNode, new SingleMethodState());
-    } else if (ir == null || ir.isEmptyIR()) {
-      // we have nothing to tell about the empty IR
-      states.put(startNode, new SingleMethodState());
-    } else {
-      final ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intra = 
-          NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ignoredExceptions, ir, paramState, null);
-      intra.compute(progress);
-      // Analyze the method with intraprocedural scope
-      final ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> cfg = intra.getPruned();
-      final SingleMethodState info = new SingleMethodState(intra, startNode, cfg);
-      info.setThrowsException(intra.hasExceptions());
-      states.put(startNode, info);
-
-      // get the parameter's state out of the invoke block and collect them
-      final Set<IExplodedBasicBlock> invokeBlocks = extractInvokeBlocks(cfg);
-
-      for (final IExplodedBasicBlock invokeBlock : invokeBlocks) {
-        final NullPointerState state = intra.getState(invokeBlock);
-        final SSAAbstractInvokeInstruction invokeInstruction = (SSAAbstractInvokeInstruction) invokeBlock.getInstruction();
-        final int[] parameterNumbers = getParameterNumbers(invokeInstruction);
-        final ParameterState paramStateOfInvokeBlock = new ParameterState(state, parameterNumbers);
-        final Set<CGNode> targets = cgFiltered.getPossibleTargets(startNode, invokeInstruction.getCallSite());
-
-        for (final CGNode target : targets) {
-          final HashMap<SSAAbstractInvokeInstruction, ParameterState> stateMap = new HashMap<SSAAbstractInvokeInstruction, ParameterState>();
-          stateMap.put(invokeInstruction, paramStateOfInvokeBlock);
-          successorNodes.put(target, stateMap);
-        }
-      }
-    }
+    final Map<CGNode, Map<SSAAbstractInvokeInstruction, ParameterState>> firstPass =
+        analysisFirstPass(startNode, paramState, progress);
 
     // visit every invoked invoke
-    for (final Entry<CGNode, HashMap<SSAAbstractInvokeInstruction, ParameterState>> nodeEntry : successorNodes.entrySet()) {
+    for (final Entry<CGNode, Map<SSAAbstractInvokeInstruction, ParameterState>> nodeEntry : firstPass.entrySet()) {
       final CGNode node = nodeEntry.getKey();
-      final HashMap<SSAAbstractInvokeInstruction, ParameterState> invokes = nodeEntry.getValue();
+      final Map<SSAAbstractInvokeInstruction, ParameterState> invokes = nodeEntry.getValue();
 
       for (final Entry<SSAAbstractInvokeInstruction, ParameterState> instructionEntry : invokes.entrySet()) {
         findAndInjectInvokes(node, instructionEntry.getValue(), visited, progress);
       }
     }
 
-    if (!isFakeRoot(startNode) && !(ir == null || ir.isEmptyIR())) {
+    analysisSecondPass(startNode, paramState, progress);
+  }
+  
+  private void analysisSecondPass(final CGNode startNode, final ParameterState paramState,
+      final IProgressMonitor progress) throws UnsoundGraphException, CancelException {
+    final IR ir = startNode.getIR();
+    if (!AnalysisUtil.isFakeRoot(startNode) && !(ir == null || ir.isEmptyIR())) {
       final MethodState mState = new InterprocMethodState(startNode, cgFiltered, states);
 
       // run intraprocedural part again with invoke exception info
       final ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intra2 = 
           NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ignoredExceptions, ir, paramState, mState);
-      intra2.compute(progress);
-      final ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> cfg2 = intra2.getPruned();
-      final SingleMethodState singleState2 = new SingleMethodState(intra2, startNode, cfg2);
-      singleState2.setThrowsException(intra2.hasExceptions());
+      final int deletedEdges2 = intra2.compute(progress);
+      final ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> cfg2 = intra2.getCFG();
+      final IntraprocAnalysisState singleState1 = states.get(startNode);
+      final int deletedEdges1 = singleState1.compute(progress);
+      final IntraprocAnalysisState singleState2 = new IntraprocAnalysisState(intra2, startNode, cfg2, deletedEdges2 + deletedEdges1);
+      singleState2.setHasExceptions(intra2.hasExceptions());
       states.put(startNode, singleState2);
     }
   }
+  
+  private Map<CGNode, Map<SSAAbstractInvokeInstruction, ParameterState>> analysisFirstPass(final CGNode startNode,
+      final ParameterState paramState, final IProgressMonitor progress) throws UnsoundGraphException, CancelException {
+    final Map<CGNode, Map<SSAAbstractInvokeInstruction, ParameterState>> result =
+        new HashMap<CGNode, Map<SSAAbstractInvokeInstruction, ParameterState>>();
+    final IR ir = startNode.getIR();
 
-  /**
-   * Returns an array of <code>int</code> with the parameter's var nums of the
-   * invoked method in <code>invokeInstruction</code>.
-   * 
-   * @param invokeInstruction
-   *          The instruction that invokes the method.
-   * @return an array of <code>int</code> with all parameter's var nums
-   *         including the this pointer.
-   */
-  public static int[] getParameterNumbers(SSAAbstractInvokeInstruction invokeInstruction) {
-    final int number = invokeInstruction.getNumberOfParameters();
-    final int[] parameterNumbers = new int[number];
-    assert (parameterNumbers.length == invokeInstruction.getNumberOfUses());
-
-    for (int i = 0; i < parameterNumbers.length; i++) {
-      parameterNumbers[i] = invokeInstruction.getUse(i);
+    if (!startNode.getMethod().isStatic()) {
+      // this pointer is never null
+      paramState.setState(0, State.NOT_NULL);
     }
 
-    return parameterNumbers;
-  }
+    // skip the fakeRoot and memorize the successors to visit them later
+    if (AnalysisUtil.isFakeRoot(startNode)) {
+      for (CGNode successor : getAllSuccessors(startNode)) {
+        // we neither have an instruction nor a parameter state
+        final HashMap<SSAAbstractInvokeInstruction, ParameterState> invokeMap =
+            new HashMap<SSAAbstractInvokeInstruction, ParameterState>();
+        invokeMap.put(null, null);
+        result.put(successor, invokeMap);
+      }
 
-  /**
-   * Returns a Set of all blocks that invoke another method.
-   * 
-   * @param cfg
-   *          The Control Flow Graph to analyse
-   * @return a Set of alle blocks that contain an invoke
-   */
-  private static Set<IExplodedBasicBlock> extractInvokeBlocks(ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> cfg) {
-    final HashSet<IExplodedBasicBlock> invokeBlocks = new HashSet<IExplodedBasicBlock>();
+      // we have nothing to tell about the fakeroot
+      states.put(startNode, new IntraprocAnalysisState());
+    } else if (ir == null || ir.isEmptyIR()) {
+      // we have nothing to tell about the empty IR
+      states.put(startNode, new IntraprocAnalysisState());
+    } else {
+      final ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intra = 
+          NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ignoredExceptions, ir, paramState, null);
+      final int deletedEdges = intra.compute(progress);
+      // Analyze the method with intraprocedural scope
+      final ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> cfg = intra.getCFG();
+      final IntraprocAnalysisState info = new IntraprocAnalysisState(intra, startNode, cfg, deletedEdges);
+      info.setHasExceptions(intra.hasExceptions());
+      states.put(startNode, info);
 
-    for (final IExplodedBasicBlock block : cfg) {
-      if (block.getInstruction() instanceof SSAAbstractInvokeInstruction) {
-        invokeBlocks.add(block);
+      // get the parameter's state out of the invoke block and collect them
+      final Set<IExplodedBasicBlock> invokeBlocks = AnalysisUtil.extractInvokeBlocks(cfg);
+
+      for (final IExplodedBasicBlock invokeBlock : invokeBlocks) {
+        final NullPointerState state = intra.getState(invokeBlock);
+        final SSAAbstractInvokeInstruction invokeInstruction = (SSAAbstractInvokeInstruction) invokeBlock.getInstruction();
+        final int[] parameterNumbers = AnalysisUtil.getParameterNumbers(invokeInstruction);
+        final ParameterState paramStateOfInvokeBlock = new ParameterState(state, parameterNumbers);
+        final Set<CGNode> targets = cgFiltered.getPossibleTargets(startNode, invokeInstruction.getCallSite());
+
+        for (final CGNode target : targets) {
+          final HashMap<SSAAbstractInvokeInstruction, ParameterState> stateMap = new HashMap<SSAAbstractInvokeInstruction, ParameterState>();
+          stateMap.put(invokeInstruction, paramStateOfInvokeBlock);
+          result.put(target, stateMap);
+        }
       }
     }
-
-    return invokeBlocks;
+    
+    return result;
   }
-
+  
   /**
    * Returns all successor of a given cg's node.
    * 
@@ -243,7 +219,7 @@ public final class InterprocNullPointerAnalysis {
    * 
    * @return Result of the interprocedural analysis.
    */
-  public Map<CGNode, SingleMethodState> getResult() {
+  public Map<CGNode, IntraprocAnalysisState> getResult() {
     return states;
   }
 
@@ -258,17 +234,6 @@ public final class InterprocNullPointerAnalysis {
     final CallGraphFilter filter = new CallGraphFilter(filterSet);
 
     return filter.filter(cg);
-  }
-
-  /**
-   * Checks if a node is FakeRoot
-   * 
-   * @param node
-   *          the node to check
-   * @return true if node is FakeRoot
-   */
-  public static boolean isFakeRoot(CGNode node) {
-    return (node.getMethod().getName().equals(FakeRootMethod.rootMethod.getName()));
   }
 
   /**

@@ -14,11 +14,11 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
  */
 public class InterprocMethodState extends MethodState {
 
-  private final Map<CGNode, SingleMethodState> map;
+  private final Map<CGNode, IntraprocAnalysisState> map;
   private final CGNode method;
   private final CallGraph cg;
 
-  public InterprocMethodState(final CGNode method, final CallGraph cg, final Map<CGNode, SingleMethodState> map) {
+  public InterprocMethodState(final CGNode method, final CallGraph cg, final Map<CGNode, IntraprocAnalysisState> map) {
     this.map = map;
     this.method = method;
     this.cg = cg;
@@ -27,16 +27,14 @@ public class InterprocMethodState extends MethodState {
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * edu.kit.ipd.wala.intra.MethodState#throwsException(com.ibm.wala.ipa.callgraph
-   * .CGNode)
+   * @see edu.kit.ipd.wala.intra.MethodState#throwsException(com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
   public boolean throwsException(final SSAAbstractInvokeInstruction node) {
     for (final CGNode called : cg.getPossibleTargets(method, node.getCallSite())) {
-      final SingleMethodState info = map.get(called);
+      final IntraprocAnalysisState info = map.get(called);
       
-      if (info == null || info.throwsException()) {
+      if (info == null || info.hasExceptions()) {
         return true;
       }
     }

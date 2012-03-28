@@ -44,7 +44,7 @@ public interface ExceptionPruningAnalysis<I, T extends IBasicBlock<I>> {
    * @return The improved CFG without edges that were detected as impossible
    *         flow.
    */
-  ControlFlowGraph<I, T> getPruned();
+  ControlFlowGraph<I, T> getCFG();
 
   /**
    * Returns true if the corresponding method contains instructions that may
@@ -54,16 +54,6 @@ public interface ExceptionPruningAnalysis<I, T extends IBasicBlock<I>> {
    */
   boolean hasExceptions();
 
-  /**
-   * Returns the control flow graph that is used as starting point of this
-   * analysis. This should be the original CFG without any deleted edges.
-   * 
-   * @return The original CFG of the given method.
-   * @throws UnsoundGraphException
-   *           Thrown if the original CFG contains inconsistencies.
-   */
-  ControlFlowGraph<I, T> getOriginal() throws UnsoundGraphException;
-  
   /**
    * Returns the state of a node. The node has to be part of the cfg.
    * @param bb Node
