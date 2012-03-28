@@ -24,6 +24,7 @@ import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.MonitorUtil;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
@@ -99,15 +100,18 @@ public final class InterprocNullPointerAnalysis {
 
     if (visited.contains(startNode)) {
       return;
-    }
-    
+    }    
     visited.add(startNode);
-
+    
+    MonitorUtil.throwExceptionIfCanceled(progress);
+    
     final Map<CGNode, Map<SSAAbstractInvokeInstruction, ParameterState>> firstPass =
         analysisFirstPass(startNode, paramState, progress);
 
     // visit every invoked invoke
     for (final Entry<CGNode, Map<SSAAbstractInvokeInstruction, ParameterState>> nodeEntry : firstPass.entrySet()) {
+      MonitorUtil.throwExceptionIfCanceled(progress);
+    
       final CGNode node = nodeEntry.getKey();
       final Map<SSAAbstractInvokeInstruction, ParameterState> invokes = nodeEntry.getValue();
 
@@ -116,6 +120,8 @@ public final class InterprocNullPointerAnalysis {
       }
     }
 
+    MonitorUtil.throwExceptionIfCanceled(progress);
+    
     analysisSecondPass(startNode, paramState, progress);
   }
   
