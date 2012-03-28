@@ -3,7 +3,7 @@ package com.ibm.wala.cfg.exc.intra;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 
 /**
- * Provides a way for the nullpointer analysis to decide wether or not a called method
+ * Provides a way for the nullpointer analysis to decide whether or not a called method
  * may throw an exception.
  * 
  * @author Juergen Graf <graf@kit.edu>
