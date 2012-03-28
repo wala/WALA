@@ -16,6 +16,9 @@ import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 
 /**
  * Saves interprocedural state of a single method.
+ *
+ * This class has been developed as part of a student project "Studienarbeit" by Markus Herhoffer.
+ * It has been adapted and integrated into the WALA project by Juergen Graf.
  * 
  * @author Markus Herhoffer <markus.herhoffer@student.kit.edu>
  * @author Juergen Graf <graf@kit.edu>

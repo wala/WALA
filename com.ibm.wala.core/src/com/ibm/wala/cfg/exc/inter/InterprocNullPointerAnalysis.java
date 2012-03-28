@@ -40,6 +40,9 @@ import com.ibm.wala.util.strings.Atom;
  * 1st run: collect and propagate all parameters on ENTRY nodes.
  * 2nd run: collect the results on the ENTRY nodes.
  * 
+ * This class has been developed as part of a student project "Studienarbeit" by Markus Herhoffer.
+ * It has been adapted and integrated into the WALA project by Juergen Graf.
+ * 
  * @author Markus Herhoffer <markus.herhoffer@student.kit.edu>
  * @author Juergen Graf <graf@kit.edu>
  * 

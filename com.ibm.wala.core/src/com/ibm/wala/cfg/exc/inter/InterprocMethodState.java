@@ -8,6 +8,11 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 
 /**
+ * A MethodState for the interprocedural analysis.
+ * 
+ * This class has been developed as part of a student project "Studienarbeit" by Markus Herhoffer.
+ * It has been adapted and integrated into the WALA project by Juergen Graf.
+ * 
  * @author Markus Herhoffer <markus.herhoffer@student.kit.edu>
  * @author Juergen Graf <graf@kit.edu>
  * 
