@@ -9,6 +9,7 @@ import java.util.Set;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.exc.ExceptionPruningAnalysis;
+import com.ibm.wala.cfg.exc.InterprocAnalysisResult;
 import com.ibm.wala.cfg.exc.NullPointerAnalysis;
 import com.ibm.wala.cfg.exc.intra.MethodState;
 import com.ibm.wala.cfg.exc.intra.NullPointerState;
@@ -53,12 +54,7 @@ public final class InterprocNullPointerAnalysis {
   private final TypeReference[] ignoredExceptions;
   private final Map<CGNode, IntraprocAnalysisState> states;
 
-  public static InterprocNullPointerAnalysis compute(final CallGraph cg, final IProgressMonitor progress)
-      throws WalaException, UnsoundGraphException, CancelException {
-    return compute(cg, NullPointerAnalysis.DEFAULT_IGNORE_EXCEPTIONS, progress);
-  }
-  
-  public static InterprocNullPointerAnalysis compute(final CallGraph cg, final TypeReference[] ignoredExceptions,
+  public static InterprocNullPointerAnalysis compute(final TypeReference[] ignoredExceptions, final CallGraph cg,
       final IProgressMonitor progress) throws WalaException, UnsoundGraphException, CancelException {
     final InterprocNullPointerAnalysis inpa = new InterprocNullPointerAnalysis(ignoredExceptions);
     inpa.run(cg, progress);
@@ -228,8 +224,8 @@ public final class InterprocNullPointerAnalysis {
    * 
    * @return Result of the interprocedural analysis.
    */
-  public Map<CGNode, IntraprocAnalysisState> getResult() {
-    return states;
+  public InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock> getResult() {
+    return new InterprocAnalysisResultWrapper(states);
   }
 
   /**
@@ -248,7 +244,7 @@ public final class InterprocNullPointerAnalysis {
   /**
    * Filter for CallGraphs
    * 
-   * @author markus
+   * @author Markus Herhoffer <markus.herhoffer@student.kit.edu>
    * 
    */
   private static class CallGraphFilter {
@@ -260,7 +256,7 @@ public final class InterprocNullPointerAnalysis {
      * @param filterSet
      *          the MethodReferences to be filtered out
      */
-    public CallGraphFilter(HashSet<Atom> filterSet) {
+    private CallGraphFilter(HashSet<Atom> filterSet) {
       this.filter = filterSet;
     }
 
@@ -271,7 +267,7 @@ public final class InterprocNullPointerAnalysis {
      *          the original unfiltered CallGraph
      * @return the filtered CallGraph
      */
-    public CallGraph filter(final CallGraph fullCG) {
+    private CallGraph filter(final CallGraph fullCG) {
       final HashSet<CGNode> nodes = new HashSet<CGNode>();
 
       // fill all nodes into a set

@@ -21,7 +21,9 @@ import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
  */
 public final class AnalysisUtil {
 
-  private AnalysisUtil() {}
+  private AnalysisUtil() {
+    throw new IllegalStateException("No instances of this class allowed.");
+  }
   
   /**
    * Checks if a node is FakeRoot

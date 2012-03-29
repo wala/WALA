@@ -17,13 +17,13 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
  * @author Juergen Graf <graf@kit.edu>
  * 
  */
-public class InterprocMethodState extends MethodState {
+class InterprocMethodState extends MethodState {
 
   private final Map<CGNode, IntraprocAnalysisState> map;
   private final CGNode method;
   private final CallGraph cg;
 
-  public InterprocMethodState(final CGNode method, final CallGraph cg, final Map<CGNode, IntraprocAnalysisState> map) {
+  InterprocMethodState(final CGNode method, final CallGraph cg, final Map<CGNode, IntraprocAnalysisState> map) {
     this.map = map;
     this.method = method;
     this.cg = cg;

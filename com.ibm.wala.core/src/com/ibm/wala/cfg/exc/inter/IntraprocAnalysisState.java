@@ -32,7 +32,7 @@ final class IntraprocAnalysisState implements ExceptionPruningAnalysis<SSAInstru
   private final HashMap<IExplodedBasicBlock, Object[]> valuesOfSsaVars = new HashMap<IExplodedBasicBlock, Object[]>();
   private final HashMap<IExplodedBasicBlock, int[]> numbersOfSsaVarsThatAreParemerters =
       new HashMap<IExplodedBasicBlock, int[]>();
-  private final boolean hasNoRecords;
+  private final boolean noAnalysisPossible;
   private final int deletedEdges;
   private boolean throwsException = true;
 
@@ -44,7 +44,7 @@ final class IntraprocAnalysisState implements ExceptionPruningAnalysis<SSAInstru
    */
   IntraprocAnalysisState() {
     this.cfg = null;
-    this.hasNoRecords = true;
+    this.noAnalysisPossible = true;
     this.deletedEdges = 0;
   }
 
@@ -66,7 +66,7 @@ final class IntraprocAnalysisState implements ExceptionPruningAnalysis<SSAInstru
       final ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> cfg, final int deletedEdges)
       throws UnsoundGraphException, CancelException {
     this.cfg = cfg;
-    this.hasNoRecords = false;
+    this.noAnalysisPossible = false;
     this.deletedEdges = deletedEdges;
     final SymbolTable sym = node.getIR().getSymbolTable();
     
@@ -107,7 +107,7 @@ final class IntraprocAnalysisState implements ExceptionPruningAnalysis<SSAInstru
   }
   
   public NullPointerState getState(final IExplodedBasicBlock block) {
-    if (hasNoRecords) {
+    if (noAnalysisPossible) {
       throw new IllegalStateException();
     }
 
@@ -115,7 +115,7 @@ final class IntraprocAnalysisState implements ExceptionPruningAnalysis<SSAInstru
   }
 
   public Object[] getValues(final IExplodedBasicBlock block) {
-    if (hasNoRecords) {
+    if (noAnalysisPossible) {
       throw new IllegalStateException();
     }
 
@@ -123,10 +123,10 @@ final class IntraprocAnalysisState implements ExceptionPruningAnalysis<SSAInstru
   }
 
   public int[] getInjectedParameters(final IExplodedBasicBlock block) {
-    if (hasNoRecords) {
+    if (noAnalysisPossible) {
       throw new IllegalStateException();
     } else if (!((block.getInstruction() instanceof SSAAbstractInvokeInstruction))) {
-      throw new IllegalStateException();
+      throw new IllegalArgumentException();
     }
 
     assert (block.getInstruction() instanceof SSAAbstractInvokeInstruction);
@@ -140,11 +140,11 @@ final class IntraprocAnalysisState implements ExceptionPruningAnalysis<SSAInstru
    * @return the CFG or null if there is no CFG for the CGNode.
    */
   public ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> getCFG() {
-    return (hasNoRecords ? null : this.cfg);
+    return (noAnalysisPossible ? null : this.cfg);
   }
 
-  public boolean hasRecords() {
-    return !hasNoRecords;
+  public boolean canBeAnalyzed() {
+    return !noAnalysisPossible;
   }
 
   public void setHasExceptions(final boolean throwsException) {
@@ -157,7 +157,7 @@ final class IntraprocAnalysisState implements ExceptionPruningAnalysis<SSAInstru
 
   @Override
   public String toString() {
-    if (hasNoRecords) {
+    if (noAnalysisPossible) {
       return "";
     }
 
