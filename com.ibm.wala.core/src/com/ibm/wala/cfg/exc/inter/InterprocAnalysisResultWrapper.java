@@ -1,6 +1,7 @@
 package com.ibm.wala.cfg.exc.inter;
 
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.ibm.wala.cfg.exc.ExceptionPruningAnalysis;
 import com.ibm.wala.cfg.exc.InterprocAnalysisResult;
@@ -38,4 +39,15 @@ class InterprocAnalysisResultWrapper implements InterprocAnalysisResult<SSAInstr
     return map.containsKey(n) && map.get(n).canBeAnalyzed();
   }
 
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder();
+    
+    for (final Entry<CGNode, IntraprocAnalysisState> e : map.entrySet()) {
+      sb.append(e.getValue().hasExceptions() ? "THROWS " : "CLEAN  ");
+      sb.append(e.getKey().toString() + "\n");
+    }
+    
+    return sb.toString();
+  }
 }
