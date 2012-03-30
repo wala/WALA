@@ -33,18 +33,12 @@ public class ExplodedCFGNullPointerAnalysis implements ExceptionPruningAnalysis<
     this.initialState = (paramState == null ? ParameterState.createDefault(ir.getMethod()) : paramState);
     this.mState = (mState == null ? MethodState.DEFAULT : mState);
   }
-  
-  /* (non-Javadoc)
-   * @see jsdg.exceptions.ExceptionPrunedCFGAnalysis#getOriginal()
-   */
-  public ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> getOriginal() {
-    return ExplodedControlFlowGraph.make(ir);
-  }
+
   /*
    * @see com.ibm.wala.cfg.exc.ExceptionPrunedCFGAnalysis#compute(com.ibm.wala.util.MonitorUtil.IProgressMonitor)
    */
   public int compute(IProgressMonitor progress) throws UnsoundGraphException, CancelException {
-    ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> orig = getOriginal();
+    ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> orig = ExplodedControlFlowGraph.make(ir);
 
     intra = new IntraprocNullPointerAnalysis<IExplodedBasicBlock>(ir, orig, ignoredExceptions, initialState, mState);
     intra.run(progress);
@@ -53,14 +47,14 @@ public class ExplodedCFGNullPointerAnalysis implements ExceptionPruningAnalysis<
   }
   
   /* (non-Javadoc)
-   * @see jsdg.exceptions.ExceptionPrunedCFGAnalysis#getPruned()
+   * @see jsdg.exceptions.ExceptionPrunedCFGAnalysis#getCFG()
    */
   public ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> getCFG() {
     if (intra == null) {
       throw new IllegalStateException("Run compute(IProgressMonitor) first.");
     }
     
-    return intra.getPrunedCfg();
+    return intra.getPrunedCFG();
   }
 
   /* (non-Javadoc)
@@ -71,7 +65,7 @@ public class ExplodedCFGNullPointerAnalysis implements ExceptionPruningAnalysis<
       throw new IllegalStateException("Run compute(IProgressMonitor) first.");
     }
     
-    ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> cfg = intra.getPrunedCfg();
+    ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> cfg = intra.getPrunedCFG();
     
     boolean hasException = false;
     for (IExplodedBasicBlock bb : cfg) {

@@ -11,9 +11,9 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
  */
 public abstract class MethodState {
 
-	public abstract boolean throwsException(SSAAbstractInvokeInstruction node);
-	
-	public static final MethodState DEFAULT = new MethodState() {
+  public abstract boolean throwsException(SSAAbstractInvokeInstruction node);
+  
+  public static final MethodState DEFAULT = new MethodState() {
     
     @Override
     public boolean throwsException(SSAAbstractInvokeInstruction node) {

@@ -13,24 +13,24 @@ import com.ibm.wala.util.graph.Graph;
  */
 public class NegativeGraphFilter<T extends IBasicBlock<?>> implements EdgeFilter<T> {
 
-	private final Graph<T> deleted;
-	
-	public NegativeGraphFilter(Graph<T> deleted) {
-		this.deleted = deleted;
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.ibm.wala.ipa.cfg.EdgeFilter#hasExceptionalEdge(com.ibm.wala.cfg.IBasicBlock, com.ibm.wala.cfg.IBasicBlock)
-	 */
-	public boolean hasExceptionalEdge(T src, T dst) {
-		return !deleted.hasEdge(src, dst);
-	}
+  private final Graph<T> deleted;
+  
+  public NegativeGraphFilter(Graph<T> deleted) {
+    this.deleted = deleted;
+  }
+  
+  /* (non-Javadoc)
+   * @see com.ibm.wala.ipa.cfg.EdgeFilter#hasExceptionalEdge(com.ibm.wala.cfg.IBasicBlock, com.ibm.wala.cfg.IBasicBlock)
+   */
+  public boolean hasExceptionalEdge(T src, T dst) {
+    return !deleted.hasEdge(src, dst);
+  }
 
-	/* (non-Javadoc)
-	 * @see com.ibm.wala.ipa.cfg.EdgeFilter#hasNormalEdge(com.ibm.wala.cfg.IBasicBlock, com.ibm.wala.cfg.IBasicBlock)
-	 */
-	public boolean hasNormalEdge(T src, T dst) {
-		return !deleted.hasEdge(src, dst);
-	}
-	
+  /* (non-Javadoc)
+   * @see com.ibm.wala.ipa.cfg.EdgeFilter#hasNormalEdge(com.ibm.wala.cfg.IBasicBlock, com.ibm.wala.cfg.IBasicBlock)
+   */
+  public boolean hasNormalEdge(T src, T dst) {
+    return !deleted.hasEdge(src, dst);
+  }
+  
 }

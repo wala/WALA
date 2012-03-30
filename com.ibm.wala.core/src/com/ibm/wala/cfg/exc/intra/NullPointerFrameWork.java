@@ -20,42 +20,42 @@ import com.ibm.wala.util.intset.IntPair;
  */
 class NullPointerFrameWork<T extends ISSABasicBlock> implements IKilldallFramework<T, NullPointerState> {
 
-	private final Graph<T> flow;
-	private final NullPointerTransferFunctionProvider<T> transferFunct;
-	
-	NullPointerFrameWork(ControlFlowGraph<SSAInstruction, T> cfg, IR ir) {
-		final IBinaryNaturalRelation backEdges = Acyclic.computeBackEdges(cfg, cfg.entry());
-		boolean hasBackEdge = backEdges.iterator().hasNext();
-		if (hasBackEdge) {
-			MutableCFG<SSAInstruction, T> cfg2 = MutableCFG.copyFrom(cfg);
-			
-			for (IntPair edge : backEdges) {
-				T from = cfg2.getNode(edge.getX());
-				T to = cfg2.getNode(edge.getY());
-				cfg2.removeEdge(from, to);
-				cfg2.addEdge(from, cfg.exit());
-			}
-			
-			this.flow = cfg2;
-		} else {
-			this.flow = cfg;
-		}
+  private final Graph<T> flow;
+  private final NullPointerTransferFunctionProvider<T> transferFunct;
+  
+  NullPointerFrameWork(ControlFlowGraph<SSAInstruction, T> cfg, IR ir) {
+    final IBinaryNaturalRelation backEdges = Acyclic.computeBackEdges(cfg, cfg.entry());
+    boolean hasBackEdge = backEdges.iterator().hasNext();
+    if (hasBackEdge) {
+      MutableCFG<SSAInstruction, T> cfg2 = MutableCFG.copyFrom(cfg);
+      
+      for (IntPair edge : backEdges) {
+        T from = cfg2.getNode(edge.getX());
+        T to = cfg2.getNode(edge.getY());
+        cfg2.removeEdge(from, to);
+        cfg2.addEdge(from, cfg.exit());
+      }
+      
+      this.flow = cfg2;
+    } else {
+      this.flow = cfg;
+    }
 
-		this.transferFunct = new NullPointerTransferFunctionProvider<T>(cfg, ir);
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.ibm.wala.dataflow.graph.IKilldallFramework#getFlowGraph()
-	 */
-	public Graph<T> getFlowGraph() {
-		return flow;
-	}
+    this.transferFunct = new NullPointerTransferFunctionProvider<T>(cfg, ir);
+  }
+  
+  /* (non-Javadoc)
+   * @see com.ibm.wala.dataflow.graph.IKilldallFramework#getFlowGraph()
+   */
+  public Graph<T> getFlowGraph() {
+    return flow;
+  }
 
-	/* (non-Javadoc)
-	 * @see com.ibm.wala.dataflow.graph.IKilldallFramework#getTransferFunctionProvider()
-	 */
-	public NullPointerTransferFunctionProvider<T> getTransferFunctionProvider() {
-		return transferFunct;
-	}
-	
+  /* (non-Javadoc)
+   * @see com.ibm.wala.dataflow.graph.IKilldallFramework#getTransferFunctionProvider()
+   */
+  public NullPointerTransferFunctionProvider<T> getTransferFunctionProvider() {
+    return transferFunct;
+  }
+  
 }

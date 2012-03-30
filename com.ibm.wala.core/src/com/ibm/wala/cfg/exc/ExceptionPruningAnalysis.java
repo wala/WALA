@@ -32,7 +32,7 @@ public interface ExceptionPruningAnalysis<I, T extends IBasicBlock<I>> {
    * @throws CancelException
    *           Thrown if the user requested cancellation through the progress
    *           monitor.
-  */
+   */
   int compute(IProgressMonitor progress) throws UnsoundGraphException, CancelException;
   
   /**
@@ -57,7 +57,7 @@ public interface ExceptionPruningAnalysis<I, T extends IBasicBlock<I>> {
   /**
    * Returns the state of a node. The node has to be part of the cfg.
    * @param bb Node
-   * @return EdgeState
+   * @return NullPointerState
    */
   NullPointerState getState(T bb);
 
