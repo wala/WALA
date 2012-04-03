@@ -24,6 +24,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.io.FileProvider;
@@ -35,17 +36,18 @@ public class DupFieldsTest extends WalaTestCase {
     AnalysisScope scope = null;
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), DupFieldsTest.class.getClassLoader());
     ClassHierarchy cha = ClassHierarchy.make(scope);
-    IClass klass = cha.lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Application, "LDupFieldName"));
+    TypeReference ref = TypeReference.findOrCreate(ClassLoaderReference.Application, "LDupFieldName");
+    IClass klass = cha.lookupClass(ref);
     boolean threwException = false;
     try {
       klass.getField(Atom.findOrCreateUnicodeAtom("a"));
     } catch (IllegalStateException e) {
       threwException = true;
     }
-    Assert.assertTrue(threwException);
-    IField f = klass.getField(Atom.findOrCreateUnicodeAtom("a"), TypeReference.IntName);
+    Assert.assertTrue(threwException);    
+    IField f = cha.resolveField(FieldReference.findOrCreate(ref, Atom.findOrCreateUnicodeAtom("a"), TypeReference.Int));
     Assert.assertEquals(f.getFieldTypeReference(), TypeReference.Int);
-    f = klass.getField(Atom.findOrCreateUnicodeAtom("a"), TypeReference.BooleanName);
+    f = cha.resolveField(FieldReference.findOrCreate(ref, Atom.findOrCreateUnicodeAtom("a"), TypeReference.Boolean));
     Assert.assertEquals(f.getFieldTypeReference(), TypeReference.Boolean);
   }
 }
