@@ -121,7 +121,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   protected int hashCode;
 
   private final HashMap<Atom, IField> fieldMap = HashMapFactory.make(5);
-
+  
   /**
    * A warning for when we get a class not found exception
    */
@@ -192,12 +192,17 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     if (fieldMap.containsKey(name)) {
       return fieldMap.get(name);
     } else {
-      IField f = findDeclaredField(name);
-      if (f != null) {
-        fieldMap.put(name, f);
-        return f;
+      List<IField> fields = findDeclaredField(name);
+      if (!fields.isEmpty()) {
+        if (fields.size() == 1) {
+          IField f = fields.iterator().next();
+          fieldMap.put(name, f);
+          return f;
+        } else {
+          throw new IllegalStateException("multiple fields with name " + name);
+        }
       } else if ((superClass = getSuperclass()) != null) {
-        f = superClass.getField(name);
+        IField f = superClass.getField(name);
         if (f != null) {
           fieldMap.put(name, f);
           return f;
@@ -205,7 +210,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
       }
       // try superinterfaces
       for (IClass i : getAllImplementedInterfaces()) {
-        f = i.getField(name);
+        IField f = i.getField(name);
         if (f != null) {
           fieldMap.put(name, f);
           return f;
@@ -213,6 +218,43 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
       }
     }
 
+    return null;
+  }
+
+  
+  public IField getField(Atom name, TypeName type) {
+    try {
+      // typically, there will be at most one field with the name
+      IField field = getField(name);
+      if (field != null && field.getFieldTypeReference().getName().equals(type)) {
+        return field;
+      } else {
+        return null;
+      }
+    } catch (IllegalStateException e) {
+      assert e.getMessage().startsWith("multiple fields with");
+      // multiple fields.  look through all of them and see if any have the appropriate type
+      List<IField> fields = findDeclaredField(name);
+      for (IField f : fields) {
+        if (f.getFieldTypeReference().getName().equals(type)) {
+          return f;
+        }
+      }
+      // check superclass
+      if (getSuperclass() != null) {
+        IField f = superClass.getField(name, type);
+        if (f != null) {
+          return f;
+        }
+      }
+      // try superinterfaces
+      for (IClass i : getAllImplementedInterfaces()) {
+        IField f = i.getField(name, type);
+        if (f != null) {
+          return f;
+        }
+      }
+    }
     return null;
   }
 
@@ -466,11 +508,14 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     return result;
   }
 
-  protected IField findDeclaredField(Atom name) {
+  protected List<IField> findDeclaredField(Atom name) {
+    
+    List<IField> result = new ArrayList<IField>(1);
+    
     if (instanceFields != null) {
       for (int i = 0; i < instanceFields.length; i++) {
         if (instanceFields[i].getName() == name) {
-          return instanceFields[i];
+          result.add(instanceFields[i]);
         }
       }
     }
@@ -478,12 +523,12 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     if (staticFields != null) {
       for (int i = 0; i < staticFields.length; i++) {
         if (staticFields[i].getName() == name) {
-          return staticFields[i];
+          result.add(staticFields[i]);
         }
       }
     }
 
-    return null;
+    return result;
   }
 
   protected void addFieldToList(List<FieldImpl> L, Atom name, ImmutableByteArray fieldType, int accessFlags,
