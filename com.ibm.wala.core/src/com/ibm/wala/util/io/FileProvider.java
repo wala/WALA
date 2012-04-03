@@ -247,7 +247,11 @@ public class FileProvider {
     if (fileName == null) {
       throw new IllegalArgumentException("null fileName");
     }
-    URL url = loader.getResource(fileName);
+    URL url = null;
+    try {
+      url = loader.getResource(fileName);
+    } catch (Exception e) {
+    }    
     if (DEBUG_LEVEL > 0) {
       System.err.println(("FileProvider got url: " + url + " for " + fileName));
     }
