@@ -64,7 +64,7 @@ public class EclipseProjectSourceAnalysisEngine extends EclipseProjectAnalysisEn
     super(project);
     this.fileExt = fileExt;
     try {
-      setExclusionsFile(FileProvider.getFileFromPlugin(CorePlugin.getDefault(), "J2SEClassHierarchyExclusions.txt")
+      setExclusionsFile((new FileProvider()).getFileFromPlugin(CorePlugin.getDefault(), "J2SEClassHierarchyExclusions.txt")
           .getAbsolutePath());
     } catch (IOException e) {
       Assertions.UNREACHABLE("Cannot find exclusions file");

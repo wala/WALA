@@ -56,7 +56,7 @@ public class CFGTest extends WalaTestCase {
   public static void beforeClass() throws Exception {
 
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
-        FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), CFGTest.class.getClassLoader());
+        (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), CFGTest.class.getClassLoader());
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions());
 
     try {

@@ -143,7 +143,7 @@ public final class WalaProperties {
     if (url == null) {
       return System.getProperty("user.dir"); //$NON-NLS-1$
     } else {
-      return new File(FileProvider.filePathFromURL(url)).getParentFile().getParentFile().getPath();
+      return new File((new FileProvider()).filePathFromURL(url)).getParentFile().getParentFile().getPath();
     }
   }
   

@@ -96,7 +96,7 @@ public class JDTJavaIRTests extends JavaIRTests {
     };
 
     try {
-      engine.setExclusionsFile(FileProvider
+      engine.setExclusionsFile((new FileProvider())
           .getFileFromPlugin(CoreTestsPlugin.getDefault(), CallGraphTestUtil.REGRESSION_EXCLUSIONS).getAbsolutePath());
     } catch (IOException e) {
       Assert.assertFalse("Cannot find exclusions file", true);

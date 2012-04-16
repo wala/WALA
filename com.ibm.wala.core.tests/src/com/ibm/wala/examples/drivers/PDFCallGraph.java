@@ -108,7 +108,7 @@ public class PDFCallGraph {
    */
   public static Process run(String appJar, String exclusionFile) throws IllegalArgumentException, CancelException {
     try {
-      Graph<CGNode> g = buildPrunedCallGraph(appJar, FileProvider.getFile(exclusionFile));
+      Graph<CGNode> g = buildPrunedCallGraph(appJar, (new FileProvider()).getFile(exclusionFile));
 
       Properties p = null;
       try {
