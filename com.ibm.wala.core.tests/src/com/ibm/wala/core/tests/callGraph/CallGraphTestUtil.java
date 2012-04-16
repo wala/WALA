@@ -45,7 +45,7 @@ public class CallGraphTestUtil {
   private static final boolean CHECK_FOOTPRINT = false;
 
   public static AnalysisScope makeJ2SEAnalysisScope(String scopeFile, String exclusionsFile) throws IOException {
-    AnalysisScope scope = AnalysisScopeReader.readJavaScope(scopeFile, FileProvider.getFile(exclusionsFile), MY_CLASSLOADER);
+    AnalysisScope scope = AnalysisScopeReader.readJavaScope(scopeFile, (new FileProvider()).getFile(exclusionsFile), MY_CLASSLOADER);
     return scope;
   }
 

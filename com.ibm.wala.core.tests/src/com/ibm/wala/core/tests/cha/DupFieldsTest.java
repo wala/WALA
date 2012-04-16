@@ -34,7 +34,7 @@ public class DupFieldsTest extends WalaTestCase {
 
   @Test public void testDupFieldNames() throws IOException, ClassHierarchyException {
     AnalysisScope scope = null;
-    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), DupFieldsTest.class.getClassLoader());
+    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), DupFieldsTest.class.getClassLoader());
     ClassHierarchy cha = ClassHierarchy.make(scope);
     TypeReference ref = TypeReference.findOrCreate(ClassLoaderReference.Application, "LDupFieldName");
     IClass klass = cha.lookupClass(ref);

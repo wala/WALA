@@ -270,7 +270,7 @@ public class CorrelationFinder {
   private URL toUrl(String src) throws MalformedURLException {
     // first try interpreting as local file name, if that doesn't work just assume it's a URL
     try {
-      File f = FileProvider.getFileFromClassLoader(src, this.getClass().getClassLoader());
+      File f = (new FileProvider()).getFileFromClassLoader(src, this.getClass().getClassLoader());
       URL url = f.toURI().toURL();
       return url;
     } catch(FileNotFoundException fnfe) {

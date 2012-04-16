@@ -78,21 +78,17 @@ public class FileProvider {
   }
 
   private final static int DEBUG_LEVEL = 0;
-
-  public FileProvider() {
-    super();
-  }
-
+  
   /**
    * @param fileName
    * @return the jar file packaged with this plug-in of the given name, or null
    *         if not found.
    */
-  public static Module getJarFileModule(String fileName) throws IOException {
+  public Module getJarFileModule(String fileName) throws IOException {
     return getJarFileModule(fileName, FileProvider.class.getClassLoader());
   }
 
-  public static Module getJarFileModule(String fileName, ClassLoader loader) throws IOException {
+  public Module getJarFileModule(String fileName, ClassLoader loader) throws IOException {
     if (CorePlugin.getDefault() == null) {
       return getJarFileFromClassLoader(fileName, loader);
     } else if (CorePlugin.IS_RESOURCES_BUNDLE_AVAILABLE) {
@@ -104,14 +100,14 @@ public class FileProvider {
     return getFromPlugin(CorePlugin.getDefault(), fileName);
   }
 
-  public static URL getResource(String fileName) throws IOException {
+  public URL getResource(String fileName) throws IOException {
     if (fileName == null) {
       throw new IllegalArgumentException("null fileName");
     }
     return getResource(fileName, FileProvider.class.getClassLoader());
   }
 
-  public static URL getResource(String fileName, ClassLoader loader) throws IOException {
+  public URL getResource(String fileName, ClassLoader loader) throws IOException {
     if (fileName == null) {
       throw new IllegalArgumentException("null fileName");
     }
@@ -122,14 +118,14 @@ public class FileProvider {
         new Path(fileName), null);
   }
 
-  public static File getFile(String fileName) throws IOException {
+  public File getFile(String fileName) throws IOException {
     if (fileName == null) {
       throw new IllegalArgumentException("null fileName");
     }
     return getFile(fileName, FileProvider.class.getClassLoader());
   }
 
-  public static File getFile(String fileName, ClassLoader loader) throws IOException {
+  public File getFile(String fileName, ClassLoader loader) throws IOException {
     return (CorePlugin.getDefault() == null) ? getFileFromClassLoader(fileName, loader) : getFileFromPlugin(
         CorePlugin.getDefault(), fileName);
   }
@@ -141,7 +137,7 @@ public class FileProvider {
    * @throws IllegalArgumentException
    *           if p is null
    */
-  public static File getFileFromPlugin(Plugin p, String fileName) throws IOException {
+  public File getFileFromPlugin(Plugin p, String fileName) throws IOException {
 
     if (p == null) {
       throw new IllegalArgumentException("p is null");
@@ -161,7 +157,7 @@ public class FileProvider {
    * @return the jar file packaged with this plug-in of the given name, or null
    *         if not found.
    */
-  private static JarFileModule getFromPlugin(Plugin p, String fileName) throws IOException {
+  private JarFileModule getFromPlugin(Plugin p, String fileName) throws IOException {
     URL url = getFileURLFromPlugin(p, fileName);
     return (url == null) ? null : new JarFileModule(new JarFile(filePathFromURL(url)));
   }
@@ -174,7 +170,7 @@ public class FileProvider {
    * @return the URL, or <code>null</code> if the file is not found
    * @throws IOException
    */
-  private static URL getFileURLFromPlugin(Plugin p, String fileName) throws IOException {
+  private  URL getFileURLFromPlugin(Plugin p, String fileName) throws IOException {
     try {
       URL url = FileLocator.find(p.getBundle(), new Path(fileName), null);
       if (url == null) {
@@ -212,7 +208,7 @@ public class FileProvider {
    * @param url
    * @return an escaped version of the URL
    */
-  private static URL fixupFileURLSpaces(URL url) {
+  private URL fixupFileURLSpaces(URL url) {
     String urlString = url.toExternalForm();
     StringBuffer fixedUpUrl = new StringBuffer();
     int lastIndex = 0;
@@ -240,7 +236,7 @@ public class FileProvider {
   /**
    * @throws FileNotFoundException
    */
-  public static File getFileFromClassLoader(String fileName, ClassLoader loader) throws FileNotFoundException {
+  public File getFileFromClassLoader(String fileName, ClassLoader loader) throws FileNotFoundException {
     if (loader == null) {
       throw new IllegalArgumentException("null loader");
     }
@@ -271,7 +267,7 @@ public class FileProvider {
   /**
    * @throws FileNotFoundException
    */
-  public static InputStream getInputStreamFromClassLoader(String fileName, ClassLoader loader) throws FileNotFoundException {
+  public InputStream getInputStreamFromClassLoader(String fileName, ClassLoader loader) throws FileNotFoundException {
     if (loader == null) {
       throw new IllegalArgumentException("null loader");
     }
@@ -290,7 +286,7 @@ public class FileProvider {
    *         if not found: wrapped as a JarFileModule or a NestedJarFileModule
    * @throws IOException
    */
-  public static Module getJarFileFromClassLoader(String fileName, ClassLoader loader) throws IOException {
+  public Module getJarFileFromClassLoader(String fileName, ClassLoader loader) throws IOException {
     if (fileName == null) {
       throw new IllegalArgumentException("null fileName");
     }
@@ -334,7 +330,7 @@ public class FileProvider {
    * @throws IllegalArgumentException
    *           if url is null
    */
-  public static String filePathFromURL(URL url) {
+  public String filePathFromURL(URL url) {
     if (url == null) {
       throw new IllegalArgumentException("url is null");
     }

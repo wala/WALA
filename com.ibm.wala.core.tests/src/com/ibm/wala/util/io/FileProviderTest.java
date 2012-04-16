@@ -17,7 +17,7 @@ public class FileProviderTest {
     URL url = new URL("file:///c:/my/File.jar");
     String expected = "/c:/my/File.jar";
     // exercise:
-    String actual = FileProvider.filePathFromURL(url);
+    String actual = (new FileProvider()).filePathFromURL(url);
     // verify:
     assertEquals(expected, actual);
   }
@@ -29,7 +29,7 @@ public class FileProviderTest {
     URL url = new URL("file:///[Eclipse]/File.jar");
     String expected = PlatformUtil.onWindows() ? "/C:/[Eclipse]/File.jar" : "/[Eclipse]/File.jar";
     // exercise:
-    String actual = FileProvider.filePathFromURL(url);
+    String actual = (new FileProvider()).filePathFromURL(url);
     // verify:
     assertEquals(expected, actual);
   }

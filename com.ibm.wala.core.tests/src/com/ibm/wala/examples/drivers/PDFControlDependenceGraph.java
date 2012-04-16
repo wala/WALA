@@ -87,7 +87,7 @@ public class PDFControlDependenceGraph {
       if (PDFCallGraph.isDirectory(appJar)) {
         appJar = PDFCallGraph.findJarFiles(new String[] { appJar });
       }
-      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, FileProvider.getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       ClassHierarchy cha = ClassHierarchy.make(scope);
 

@@ -125,7 +125,7 @@ public class HTMLCGBuilder {
 		// first try interpreting as local file name, if that doesn't work just
 		// assume it's a URL
 		try {
-			File f = FileProvider.getFileFromClassLoader(src, HTMLCGBuilder.class.getClassLoader());
+			File f = (new FileProvider()).getFileFromClassLoader(src, HTMLCGBuilder.class.getClassLoader());
 			URL url = f.toURI().toURL();
 			return url;
 		} catch (FileNotFoundException fnfe) {

@@ -28,7 +28,7 @@ public class ExclusionsTest {
 
   @Test
   public void testExclusions() throws IOException {
-    AnalysisScope scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, FileProvider.getFile("GUIExclusions.txt"),
+    AnalysisScope scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, (new FileProvider()).getFile("GUIExclusions.txt"),
         ExclusionsTest.class.getClassLoader());
     TypeReference buttonRef = TypeReference.findOrCreate(ClassLoaderReference.Application,
         StringStuff.deployment2CanonicalTypeString("java.awt.Button"));

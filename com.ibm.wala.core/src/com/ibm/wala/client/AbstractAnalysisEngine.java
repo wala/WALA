@@ -154,7 +154,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
       Assertions.UNREACHABLE("no j2selibs specified. You probably did not call AppAnalysisEngine.setJ2SELibrary.");
     }
 
-    scope = AnalysisScopeReader.readJavaScope(SYNTHETIC_J2SE_MODEL, FileProvider.getFile(getExclusionsFile()), getClass()
+    scope = AnalysisScopeReader.readJavaScope(SYNTHETIC_J2SE_MODEL, (new FileProvider()).getFile(getExclusionsFile()), getClass()
         .getClassLoader());
 
     // add standard libraries

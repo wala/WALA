@@ -63,7 +63,7 @@ public class AnalysisScopeReader {
       Plugin plugIn) throws IOException {
     BufferedReader r = null;
     try {
-      File scopeFile = (plugIn == null) ? FileProvider.getFile(scopeFileName, javaLoader) : FileProvider.getFileFromPlugin(plugIn,
+      File scopeFile = (plugIn == null) ? (new FileProvider()).getFile(scopeFileName, javaLoader) : (new FileProvider()).getFileFromPlugin(plugIn,
           scopeFileName);
       assert scopeFile.exists();
 
@@ -107,26 +107,27 @@ public class AnalysisScopeReader {
     String language = toks.nextToken();
     String entryType = toks.nextToken();
     String entryPathname = toks.nextToken();
+    FileProvider fp = (new FileProvider());
     if ("classFile".equals(entryType)) {
-      File cf = FileProvider.getFile(entryPathname, javaLoader);
+      File cf = fp.getFile(entryPathname, javaLoader);
       try {
         scope.addClassFileToScope(walaLoader, cf);
       } catch (InvalidClassFileException e) {
         Assertions.UNREACHABLE(e.toString());
       }
     } else if ("sourceFile".equals(entryType)) {
-      File sf = FileProvider.getFile(entryPathname, javaLoader);
+      File sf = fp.getFile(entryPathname, javaLoader);
       scope.addSourceFileToScope(walaLoader, sf, entryPathname);
     } else if ("binaryDir".equals(entryType)) {
-      File bd = FileProvider.getFile(entryPathname, javaLoader);
+      File bd = fp.getFile(entryPathname, javaLoader);
       assert bd.isDirectory();
       scope.addToScope(walaLoader, new BinaryDirectoryTreeModule(bd));
     } else if ("sourceDir".equals(entryType)) {
-      File sd = FileProvider.getFile(entryPathname, javaLoader);
+      File sd = fp.getFile(entryPathname, javaLoader);
       assert sd.isDirectory();
       scope.addToScope(walaLoader, new SourceDirectoryTreeModule(sd));
     } else if ("jarFile".equals(entryType)) {
-      Module M = FileProvider.getJarFileModule(entryPathname, javaLoader);
+      Module M = fp.getJarFileModule(entryPathname, javaLoader);
       scope.addToScope(walaLoader, M);
     } else if ("loaderImpl".equals(entryType)) {
       scope.setLoaderImpl(walaLoader, entryPathname);
