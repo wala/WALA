@@ -18,5 +18,6 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: com.ibm.wala.ide,
  com.ibm.wala.ide.classloader,
+ com.ibm.wala.ide.plugin,
  com.ibm.wala.ide.ui,
  com.ibm.wala.ide.util

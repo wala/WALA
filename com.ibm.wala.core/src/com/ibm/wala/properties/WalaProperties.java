@@ -17,10 +17,6 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Properties;
 
-import org.eclipse.core.runtime.Platform;
-import org.osgi.framework.Bundle;
-
-import com.ibm.wala.core.plugin.CorePlugin;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileProvider;
@@ -147,24 +143,4 @@ public final class WalaProperties {
     }
   }
   
-  /**
-   * This is fragile.  Use with care.
-   * @return a String representing the path to the wala.core plugin installation
-   */
-  public static String getWalaCorePluginHome() {
-    if (CorePlugin.getDefault() == null) {
-       return null;
-    }
-    String install = Platform.getInstallLocation().getURL().getPath();
-    Bundle b = Platform.getBundle("com.ibm.wala.core");
-    String l = b.getLocation();
-    if (l.startsWith("update@")) {
-      l = l.replace("update@", "");
-    }
-    if (l.startsWith("reference:file:")) {
-      return l.replace("reference:file:","");
-    } else {
-      return install + File.separator + l;
-    }
-  }
 }

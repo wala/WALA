@@ -20,13 +20,13 @@ import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.CorrelatedPair
 import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil;
 import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil.CGBuilderType;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
+import com.ibm.wala.ide.util.ProgressMaster;
+import com.ibm.wala.ide.util.ProgressMonitorDelegate;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
-import com.ibm.wala.util.ProgressMaster;
-import com.ibm.wala.util.ProgressMonitorDelegate;
 import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.io.FileProvider;
 
