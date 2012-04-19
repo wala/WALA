@@ -154,19 +154,7 @@ public final class InterprocNullPointerAnalysis {
       paramState.setState(0, State.NOT_NULL);
     }
 
-    // skip the fakeRoot and memorize the successors to visit them later
-    if (AnalysisUtil.isFakeRoot(startNode)) {
-      for (CGNode successor : getAllSuccessors(startNode)) {
-        // we neither have an instruction nor a parameter state
-        final HashMap<SSAAbstractInvokeInstruction, ParameterState> invokeMap =
-            new HashMap<SSAAbstractInvokeInstruction, ParameterState>();
-        invokeMap.put(null, null);
-        result.put(successor, invokeMap);
-      }
-
-      // we have nothing to tell about the fakeroot
-      states.put(startNode, new IntraprocAnalysisState());
-    } else if (ir == null || ir.isEmptyIR()) {
+    if (ir == null || ir.isEmptyIR()) {
       // we have nothing to tell about the empty IR
       states.put(startNode, new IntraprocAnalysisState());
     } else {
@@ -200,25 +188,6 @@ public final class InterprocNullPointerAnalysis {
     return result;
   }
   
-  /**
-   * Returns all successor of a given cg's node.
-   * 
-   * @param node
-   *          The node of the cg
-   * @return a set with alle successors of <code>node</code>
-   */
-  private Set<CGNode> getAllSuccessors(CGNode node) {
-    final Set<CGNode> successors = new HashSet<CGNode>();
-    final Iterator<CGNode> it = cgFiltered.getSuccNodes(node);
-
-    while (it.hasNext()) {
-      final CGNode successor = it.next();
-      successors.add(successor);
-    }
-
-    return successors;
-  }
-
   /**
    * Returns the result of the interprocedural analysis.
    * 
