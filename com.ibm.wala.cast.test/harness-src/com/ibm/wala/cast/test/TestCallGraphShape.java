@@ -51,14 +51,14 @@ public abstract class TestCallGraphShape extends WalaTestCase {
                   if (file.equalsIgnoreCase(fileName)) {
                     if (pos.getFirstLine() >= (Integer) assertionData[j][2]
                                            &&
-                        pos.getLastLine() <= (Integer) assertionData[j][3]) {
+                        (pos.getLastLine() != -1? pos.getLastLine(): pos.getFirstLine()) <= (Integer) assertionData[j][3]) {
                       System.err.println("found " + inst + " of " + M + " at expected position " + pos);
                       continue insts;
                     }
                   }
                 }
 
-                Assert.assertTrue("unexpected location " + pos + " for " + inst + " of " + M, false);
+                Assert.assertTrue("unexpected location " + pos + " for " + inst + " of " + M + "\n" + N.getIR(), false);
               }
             }
           }

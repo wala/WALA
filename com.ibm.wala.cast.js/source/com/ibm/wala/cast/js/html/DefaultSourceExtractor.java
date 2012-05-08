@@ -11,13 +11,16 @@
 
 package com.ibm.wala.cast.js.html;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
 
@@ -45,9 +48,15 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
       if (tag.getName().equalsIgnoreCase("FORM")) {
         forms.pop();
       }
-      for(String v : tag.getAllAttributes().values()) {
+      for(Entry<String,Pair<String, Position>> e : tag.getAllAttributes().entrySet()) {
+        String a = e.getKey();
+        String v = e.getValue().fst;
         if (v != null && v.startsWith("javascript:")) {
-          entrypointRegion.println(v.substring(11), makePos(tag.getStartingLineNum(), tag));
+          try {
+            entrypointRegion.println("           " + v.substring(11), e.getValue().snd, new URL(tag.getElementPosition().getURL().toString() + "#" + a));
+          } catch (MalformedURLException ex) {
+            entrypointRegion.println(v.substring(11), e.getValue().snd, entrypointUrl);
+          }
         }
       }
    }
@@ -62,16 +71,20 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
     }
 
     private void printlnIndented(String line, ITag relatedTag){
+      printlnIndented(line, relatedTag==null? null: relatedTag.getElementPosition());
+    }
+    
+    private void printlnIndented(String line, Position pos){
       StringBuilder indentedLine = new StringBuilder();
       for (int i = 0 ; i < stack.size() ; i++){
         indentedLine.append("  ");
       }
       indentedLine.append(line);
 
-      if (relatedTag == null){
+      if (pos == null){
         domRegion.println(indentedLine.toString());
       } else {
-        domRegion.println(indentedLine.toString(), makePos(relatedTag.getStartingLineNum(), relatedTag));
+        domRegion.println(indentedLine.toString(), pos, entrypointUrl);
       }
     }
 
@@ -80,16 +93,17 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
     }
     
     protected void writeElement(ITag tag, String cons, String varName){
+      Map<String, Pair<String, Position>> attrs = tag.getAllAttributes();
 
       printlnIndented("function make_" + varName + "(parent) {", tag);
       stack.push(varName);
       
       printlnIndented("this.temp = " + cons + ";", tag);
       printlnIndented("this.temp(\"" + tag.getName() + "\");", tag);
-      for (Map.Entry<String, String> e : tag.getAllAttributes().entrySet()){
+      for (Map.Entry<String, Pair<String, Position>> e : attrs.entrySet()){
         String attr = e.getKey();
-        String value = e.getValue();
-        writeAttribute(tag, attr, value, "this", varName);
+        String value = e.getValue().fst;
+        writeAttribute(tag, e.getValue().snd, attr, value, "this", varName);
       }
 
       if (tag.getName().equalsIgnoreCase("FORM")) {
@@ -97,15 +111,8 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
         printlnIndented("  document.forms[document.formCount++] = this;", tag);
         printlnIndented("  var currentForm = this;", tag);
       } if (tag.getName().equalsIgnoreCase("INPUT")) {
-        String prop = tag.getAttributeByName("NAME");
-        if (prop == null) {
-          prop = tag.getAttributeByName("name");
-        }
-        
-        String type = tag.getAttributeByName("TYPE");
-        if (type == null) {
-          type = tag.getAttributeByName("type");
-        }
+        String prop = attrs.get("name").fst;
+        String type = attrs.get("type").fst;
  
         if (type != null && prop != null) {
         if (type.equalsIgnoreCase("RADIO")) {
@@ -126,15 +133,15 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
       printlnIndented("parent.appendChild(this);", tag);
     }
 
-    protected void writeAttribute(ITag tag, String attr, String value, String varName, String varName2) {
+    protected void writeAttribute(ITag tag, Position pos, String attr, String value, String varName, String varName2) {
       writePortletAttribute(tag, attr, value, varName);
-      writeEventAttribute(tag, attr, value, varName, varName2);
+      writeEventAttribute(tag, pos, attr, value, varName, varName2);
     }
 
-    protected void writeEventAttribute(ITag tag, String attr, String value, String varName, String varName2){
+    protected void writeEventAttribute(ITag tag, Position pos, String attr, String value, String varName, String varName2){
       if(attr.substring(0,2).equals("on")) {
         printlnIndented(varName + "." + attr + " = function " + tag.getName().toLowerCase() + "_" + attr + "(event) {" + value + "};", tag);
-        entrypointRegion.println(varName2 + "." + attr + "(null);", makePos(tag.getStartingLineNum(), tag));
+        entrypointRegion.println(varName2 + "." + attr + "(null);", tag.getElementPosition(), entrypointUrl);
       } else if (value != null) {
         if (value.indexOf('\'') > 0) {
           value = value.replaceAll("\\'", "\\\\'");
@@ -162,11 +169,11 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
     }
 
     protected void endElement(String name) {
-      printlnIndented("};", null);
+      printlnIndented("};", (Position)null);
       if (stack.isEmpty()) {
-        printlnIndented("new make_" + name + "(document);\n\n", null);
+        printlnIndented("new make_" + name + "(document);\n\n", (Position)null);
       } else {
-        printlnIndented("new make_" + name + "(this);\n", null);
+        printlnIndented("new make_" + name + "(this);\n", (Position)null);
       }
     }
   }

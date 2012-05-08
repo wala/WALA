@@ -10,46 +10,45 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.html;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.PrintStream;
-import java.io.StringReader;
-import java.util.StringTokenizer;
+import java.net.URL;
 
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
-import com.ibm.wala.util.functions.Function;
 
 public class SourceRegion {
 
   private final StringBuilder source = new StringBuilder();
-  private final MutableFileMapping fileMapping = new MutableFileMapping();
+  private FileMapping fileMapping;
   private int currentLine = 1;
   
   public SourceRegion() {
   }
 
-  public void print(String text, Function<Integer,IncludedPosition> originalPos){
+  public void print(String text, Position originalPos, URL url){
+    int startOffset = source.length();
     source.append(text);
-    int ln = 0;
+    int endOffset = source.length();
+
     int numberOfLineDrops = getNumberOfLineDrops(text);
-    if (originalPos != null){
-      for (int i = 0; i < numberOfLineDrops; i++){
-        fileMapping.map(currentLine++, originalPos.apply(ln++));
+
+    if (originalPos != null) {
+      RangeFileMapping map = new RangeFileMapping(startOffset, endOffset, currentLine, currentLine+numberOfLineDrops, originalPos, url);
+      if (fileMapping == null) {
+        fileMapping = map;
+      } else {
+        fileMapping = new CompositeFileMapping(map, fileMapping);
       }
-      if (! text.endsWith("\n")){ // avoid mapping one line too much
-        fileMapping.map(currentLine, originalPos.apply(ln)); // required for handling text with no CRs.
-      }
-    } else {
-      currentLine += numberOfLineDrops;
     }
+    
+    currentLine += numberOfLineDrops;
   }
 
-  public void println(String text, Function<Integer,IncludedPosition> originalPos){
-    print(text + "\n", originalPos);
+  public void println(String text, Position originalPos, URL url){
+    print(text + "\n", originalPos, url);
   }
   
   public void print(String text){
-    print(text, null);
+    print(text, null, null);
   }
 
   public void println(String text){
@@ -62,42 +61,27 @@ public class SourceRegion {
   }
   
   public void write(SourceRegion otherRegion){
-    BufferedReader br = new BufferedReader(new StringReader(otherRegion.source.toString()));
-    int lineNum = 0;
-    String line;
-    try {
-      while ((line = br.readLine()) != null){
-        lineNum++;
-        
-        IncludedPosition fileAndLine = otherRegion.fileMapping.getAssociatedFileAndLine(lineNum);
-        if (fileAndLine!= null){
-          fileMapping.map(currentLine, fileAndLine);
-        }
- 
-        this.println(line);
+    int rangeStart = source.length();
+    String text = otherRegion.source.toString();
+    source.append(text);
+    int rangeEnd = source.length();
+
+    int numberOfLineDrops = getNumberOfLineDrops(text);
+
+    if (otherRegion.fileMapping != null) {
+      FileMapping map = new NestedRangeMapping(rangeStart, rangeEnd, currentLine, currentLine+numberOfLineDrops, otherRegion.fileMapping);
+      if (fileMapping == null) {
+        fileMapping = map;
+      } else {
+        fileMapping = new CompositeFileMapping(map, fileMapping);
       }
-    } catch (IOException e) {
-      e.printStackTrace();
-      assert false;
     }
+
+    currentLine += numberOfLineDrops;
   }
   
   public void dump(PrintStream ps){
-    StringTokenizer st = new StringTokenizer(source.toString(),"\n");
-    int lineNum = 0;
-    while (st.hasMoreElements()){
-      String line = (String) st.nextElement();
-      lineNum++;
-      
-      Position fileAndLine = fileMapping.getAssociatedFileAndLine(lineNum);
-      if (fileAndLine!= null){
-        ps.print(fileAndLine + "\t:");
-      } else {
-        ps.print("N/A \t\t:");
-      }
-      
-      ps.println(line);
-    }
+    ps.println(source.toString());
   }
   
   private static int getNumberOfLineDrops(String text) {
