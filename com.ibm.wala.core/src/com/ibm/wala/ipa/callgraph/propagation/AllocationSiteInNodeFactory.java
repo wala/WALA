@@ -20,6 +20,8 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerContext;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ContainerContextSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.types.TypeReference;
 
 /**
@@ -63,16 +65,31 @@ public class AllocationSiteInNodeFactory implements InstanceKeyFactory {
       return null;
     }
 
+    CGNode nodeToUse = node;
+    
     // disallow recursion in contexts.
     if (node.getContext() instanceof ReceiverInstanceContext || node.getContext() instanceof CallerContext) {
       IMethod m = node.getMethod();
       CGNode n = ContainerContextSelector.findNodeRecursiveMatchingContext(m, node.getContext());
       if (n != null) {
-        return new NormalAllocationInNode(n, allocation, type);
+        nodeToUse = n;
       }
     }
 
-    InstanceKey key = new NormalAllocationInNode(node, allocation, type);
+    if (type.isArrayClass()) {
+      // special case for arrays with zero length in their first dimension
+      IR ir = node.getIR();
+      SSANewInstruction newInstruction = ir.getNew(allocation);
+      int lengthVN = newInstruction.getUse(0);
+      if (ir.getSymbolTable().isIntegerConstant(lengthVN)) {
+        Integer c = (Integer) ir.getSymbolTable().getConstantValue(lengthVN);
+        if (c.intValue() == 0) {
+          return new ZeroLengthArrayInNode(nodeToUse, allocation, type);
+        }
+      }     
+    }
+    
+    InstanceKey key = new NormalAllocationInNode(nodeToUse, allocation, type);
 
     return key;
   }

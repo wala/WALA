@@ -703,7 +703,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         InstanceKey[] ik = getInvariantContents(arrayRef);
 
         for (int i = 0; i < ik.length; i++) {
-          if (!representsNullType(ik[i])) {
+          if (!representsNullType(ik[i]) && !(ik[i] instanceof ZeroLengthArrayInNode)) {
             system.findOrCreateIndexForInstanceKey(ik[i]);
             PointerKey p = getPointerKeyForArrayContents(ik[i]);
             IClass contents = ((ArrayClass) ik[i].getConcreteType()).getElementClass();
