@@ -25,26 +25,40 @@ public class SourceBuffer {
 
   public SourceBuffer(Position p) throws IOException {
     this.p = p;
-    this.lines = new String[ p.getLastLine() - p.getFirstLine() + 1];
-    BufferedReader r =
-      new BufferedReader(new InputStreamReader(p.getInputStream()));
-    int line = 1;
-    while (line <= p.getLastLine()) {
-      String theLine = r.readLine();
-      if (line >= p.getFirstLine()) {
-	lines[line-p.getFirstLine()] = 
-	   line == p.getLastLine()?
-	   theLine.substring(0, Math.min(theLine.length(), p.getLastCol()+1)):
-	   theLine;
+
+    InputStreamReader reader = new InputStreamReader(p.getInputStream());
+    if (p.getFirstOffset() >= 0 && p.getLastOffset() >= 0) {
+      int skip = 0;
+      while((skip += reader.skip(p.getFirstOffset())) < p.getFirstOffset());
+      
+      int size = p.getLastOffset() - p.getFirstOffset();
+      char[] buf = new char[size];
+      int read = 0;
+      while ((read += reader.read(buf, read, size)) < size);
+      
+      this.lines = new String(buf).split("\\n");
+    } else {
+      this.lines = new String[ p.getLastLine() - p.getFirstLine() + 1];
+      BufferedReader r =
+        new BufferedReader(reader);
+      int line = 1;
+      while (line <= p.getLastLine()) {
+        String theLine = r.readLine();
+        if (line >= p.getFirstLine()) {
+          lines[line-p.getFirstLine()] = 
+            line == p.getLastLine()?
+                theLine.substring(0, Math.min(theLine.length(), p.getLastCol()+1)):
+                  theLine;
+        }
+        line++;
       }
-      line++;
     }
   }
     
   public String toString() {
     StringBuffer result = new StringBuffer();
     for(int i = 0; i < lines.length; i++) {
-      if (i == 0) {
+      if (i == 0 && p.getFirstOffset() == -1) {
         result.append(lines[i].substring(p.getFirstCol())).append("\n");
       } else if (i == lines.length - 1) {
 	result.append(lines[i]);

@@ -925,7 +925,7 @@ public class RhinoToAstTranslator {
 	    String name;
 	    Name x = fn.getFunctionName();
 	    if (x == null || x.getIdentifier() == null || "".equals(x.getIdentifier())) {
-	    	name = scriptName + "_anonymous_" + anonymousCounter++;
+	    	name = scriptName + "@" + fn.getAbsolutePosition();
 	    } else {
 	    	name = fn.getFunctionName().getIdentifier();
 	    }
@@ -2274,8 +2274,6 @@ private CAstNode[] walkChildren(final Node n, WalkContext context) {
   private final SourceModule sourceModule;
 
   final private Reader sourceReader;
-
-  private int anonymousCounter = 0;
 
   private int baseVarNum = 0;
 
