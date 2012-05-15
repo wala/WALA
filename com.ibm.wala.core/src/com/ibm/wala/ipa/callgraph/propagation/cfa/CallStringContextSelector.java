@@ -112,7 +112,7 @@ public abstract class CallStringContextSelector implements ContextSelector {
   }
 
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
-    return EmptyIntSet.instance;
+    return base.getRelevantParameters(caller, site);
   }
   
 }
