@@ -39,7 +39,7 @@ public class InitializerTest {
     AnalysisScope scope = null;
     try {
       scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
-          (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), InitializerTest.class.getClassLoader());
+          FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), InitializerTest.class.getClassLoader());
     } catch (IOException e1) {
       // TODO Auto-generated catch block
       e1.printStackTrace();
