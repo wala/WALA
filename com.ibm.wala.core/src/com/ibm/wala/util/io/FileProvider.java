@@ -17,11 +17,14 @@ import java.io.InputStream;
 import java.net.JarURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.jar.JarInputStream;
 import java.util.zip.ZipException;
 
 import com.ibm.wala.classLoader.JarFileModule;
+import com.ibm.wala.classLoader.JarStreamModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.NestedJarFileModule;
 
@@ -153,9 +156,15 @@ public class FileProvider {
       JarEntry entry = jc.getJarEntry();
       JarFileModule parent = new JarFileModule(f);
       return new NestedJarFileModule(parent, entry);
-    } else {
+/** BEGIN Custom change: try to load from input stream as fallback */
+    } else if (url.getProtocol().equals("file")) {
       String filePath = filePathFromURL(url);
       return new JarFileModule(new JarFile(filePath, false));
+    } else {
+      final URLConnection in = url.openConnection();
+      final JarInputStream jarIn = new JarInputStream(in.getInputStream());
+      return new JarStreamModule(jarIn);
+/** END Custom change: try to load from input stream as fallback */
     }
   }
 
