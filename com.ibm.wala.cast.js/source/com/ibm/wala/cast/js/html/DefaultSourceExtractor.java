@@ -26,7 +26,7 @@ import com.ibm.wala.util.collections.Pair;
 
 public class DefaultSourceExtractor extends DomLessSourceExtractor{
 
-  private static class HtmlCallBack extends DomLessSourceExtractor.HtmlCallback{
+  protected static class HtmlCallBack extends DomLessSourceExtractor.HtmlCallback{
 
     private final HashMap<String, String> constructors = HashMapFactory.make();
  
