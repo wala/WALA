@@ -44,8 +44,8 @@ public abstract class TestArgumentSensitivity extends TestJSCallGraphShape {
     builder.setContextSelector(new ArgumentSpecialization.ArgumentCountContextSelector(builder.getContextSelector()));
     builder.setContextInterpreter(new ArgumentSpecialization.ArgumentSpecializationContextIntepreter(options, cache));
     CallGraph CG = builder.makeCallGraph(options);
-    
-    CAstCallGraphUtil.AVOID_DUMP = false;
+
+//    CAstCallGraphUtil.AVOID_DUMP = false;
     CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
     
     verifyGraphAssertions(CG, assertionsForArgs);
