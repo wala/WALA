@@ -209,7 +209,7 @@ public abstract class TestForInBodyExtraction {
 	public void test9() {
 		testRewriter("function defglobals(globals) {" +
 				     "  for(var p in globals) {" +
-				     "    (function() {" +
+				     "    (function inner() {" +
 				     "      this[p] = globals[p];" +
 				     "    })();" +
 				     "  }" +
@@ -217,7 +217,7 @@ public abstract class TestForInBodyExtraction {
 				     "function defglobals(globals) {" +
 				     "  for(var p in globals) {" +
 				     "    (function _forin_body_0(p) {" +
-				     "      (function() {" +
+				     "      (function inner() {" +
 				     "        this[p] = globals[p];" +
 				     "      })()" +
 				     "    })(p);" +
@@ -364,7 +364,7 @@ public abstract class TestForInBodyExtraction {
 				     "function foo() {" +
 				     "  x = 42;" +
 				     "  for(var p in {toString : 23}) {" +
-				     "    (function() {" +
+				     "    (function inner() {" +
 				     "      var x = 56;" +
 				     "      alert(x);" +
 				     "    })();" +
@@ -378,7 +378,7 @@ public abstract class TestForInBodyExtraction {
 				     "  x = 42;" +
 				     "  for(var p in {toString : 23}) {" +
 				     "    (function _forin_body_0(p) {" +
-				     "      (function() {" +
+				     "      (function inner() {" +
 				     "        var x = 56;" +
 				     "        alert(x);" +
 				     "      })();" +
@@ -499,6 +499,7 @@ public abstract class TestForInBodyExtraction {
 	}
 	
 	// example with nested for-in loops and this (adapted from MooTools)
+  // currently fails because generated names look different
   @Test
 	public void test21() {
 		testRewriter("function foo() {" +
@@ -586,7 +587,7 @@ public abstract class TestForInBodyExtraction {
 				     "}");
 	}
 	
-	// this test fails since the rewritten CAst contains one more level of blocks
+	// currently fails because generated names look different
   @Test
 	public void test24() {
 		testRewriter("var addSlickPseudos = function() {" +
