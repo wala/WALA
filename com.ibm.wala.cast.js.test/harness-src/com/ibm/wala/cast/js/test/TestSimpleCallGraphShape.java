@@ -532,6 +532,11 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForNestedParamAssign);
   }
 
+  @Test
+  public void testSwitchCrash() throws IOException, IllegalArgumentException, CancelException {
+    // just check that we can successfully convert to CAst
+    JSCallGraphBuilderUtil.makeScriptCG("tests", "switch_crash.js");
+  }
   private static final Object[][] assertionsForDispatch = new Object[][] {
     new Object[] { ROOT, new String[] { "tests/dispatch.js" } },
     new Object[] { "tests/dispatch.js", new String[] { "tests/dispatch.js/left_outer", "tests/dispatch.js/right_outer" } },
