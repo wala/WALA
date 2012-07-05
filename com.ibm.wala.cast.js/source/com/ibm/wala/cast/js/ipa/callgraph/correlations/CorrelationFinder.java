@@ -162,7 +162,12 @@ public class CorrelationFinder {
   // if it does not correspond to any variable, or to more than one, null is returned
   private String getSourceLevelName(AstMethod astMethod, int v) {
     String indexName = null;
-    for(String candidateName : astMethod.debugInfo().getSourceNamesForValues()[v]) {
+    String[][] sourceNamesForValues = astMethod.debugInfo().getSourceNamesForValues();
+    
+    if(v >= sourceNamesForValues.length)
+      return null;
+    
+    for(String candidateName : sourceNamesForValues[v]) {
       if(indexName != null) {
         indexName = null;
         break;
