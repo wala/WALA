@@ -39,6 +39,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.io.FileProvider;
+import com.ibm.wala.util.io.FileUtil;
 
 /**
  * Utility class for building call graphs of HTML pages.
@@ -154,27 +155,51 @@ public class HTMLCGBuilder {
 	 */
 	public static void main(String[] args) throws ClassHierarchyException, IOException {
 		Properties parsedArgs = CommandLine.parse(args);
+		
 		String src = parsedArgs.getProperty("src");
 		if (src == null) {
 			throw new IllegalArgumentException("-src argument is required");
 		}
+
+		// if src is a JS file, build trivial wrapper HTML file
+		if (src.endsWith(".js")) {
+			File tmpFile = File.createTempFile("HTMLCGBuilder", ".html");
+			tmpFile.deleteOnExit();
+			FileUtil.writeFile(tmpFile, 
+					"<html>" +
+					"  <head>" +
+					"    <title></title>" +
+					"    <script src=\"" + src + "\" type='text/javascript'></script>" +
+					"  </head>" +
+					"<body>" +
+					"</body>" +
+					"</html>");
+			src = tmpFile.getAbsolutePath();
+		}
+		
 		int timeout;
 		if (parsedArgs.containsKey("timeout")) {
 			timeout = Integer.parseInt(parsedArgs.getProperty("timeout"));
 		} else {
 			timeout = DEFAULT_TIMEOUT;
 		}
+		
 		String reachableName = null;
 		if (parsedArgs.containsKey("reachable")) {
 			reachableName = parsedArgs.getProperty("reachable");
 		}
+		
 		// suppress debug output
 		JavaScriptFunctionDotCallTargetSelector.WARN_ABOUT_IMPRECISE_CALLGRAPH = false;
+		
+		// build call graph
 		CGBuilderResult res = buildHTMLCG(src, timeout, true, AstTranslator.NEW_LEXICAL ? CGBuilderType.ONE_CFA_PRECISE_LEXICAL : CGBuilderType.ZERO_ONE_CFA);
+		
 		if(res.construction_time == -1)
 			System.out.println("TIMED OUT");
 		else
 			System.out.println("Call graph construction took " + res.construction_time/1000.0 + " seconds");
+		
 		if (reachableName != null) {
 			for (CGNode node : res.cg) {
 				if (node.getMethod().getDeclaringClass().getName().toString().contains(reachableName)) {
