@@ -65,9 +65,11 @@ public abstract class TestCorrelatedPairExtraction {
         }
 			};
 	    String actual = new CAstDumper().dump(new ClosureExtractor(ast, policyFactory).rewrite(inEntity));
+	    actual = TestForInBodyExtraction.eraseGeneratedNames(actual);
 			
 			FileUtil.writeFile(tmp, out);
 			String expected = new CAstDumper().dump(parseJS(tmp, ast));
+			expected = TestForInBodyExtraction.eraseGeneratedNames(expected);
 
 			if(ASSERT_EQUALS) {
 	      Assert.assertEquals(testName, expected, actual);			  
@@ -476,7 +478,6 @@ public abstract class TestCorrelatedPairExtraction {
                  "}");
   }
   
-  // TODO: currently fails because generated names look different
   @Test
 	public void test19() {
 	  testRewriter("function extend(dest, src) {\n" +
