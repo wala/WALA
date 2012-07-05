@@ -361,9 +361,19 @@ public class ClosureExtractor extends CAstRewriterExt {
   /* Recursively copy child nodes. */
   private CAstNode copyNode(CAstNode node, CAstControlFlowMap cfg, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     CAstNode children[] = new CAstNode[node.getChildCount()];
+    
+    // copy children
     for (int i = 0; i < children.length; i++) {
       children[i] = copyNodes(node.getChild(i), cfg, new ChildPos(node, i, context), nodeMap);
     }
+    
+    // for non-constant case labels, the case expressions appear as labels on CFG edges; rewrite those as well
+    for(Object label: cfg.getTargetLabels(node)) {
+      if (label instanceof CAstNode) {
+        copyNodes((CAstNode)label, cfg, new LabelPos(node, context), nodeMap);
+      }
+    }
+    
     CAstNode newNode = Ast.makeNode(node.getKind(), children);
     nodeMap.put(Pair.make(node, context.key()), newNode);
 
@@ -726,6 +736,11 @@ public class ClosureExtractor extends CAstRewriterExt {
 
       @Override
       public CAstNode caseForInLoopBodyPos(ExtractionPos pos) {
+        return getThrowTarget(pos.getParentPos());
+      }
+
+      @Override
+      public CAstNode caseLabelPos(LabelPos pos) {
         return getThrowTarget(pos.getParentPos());
       }
     });
