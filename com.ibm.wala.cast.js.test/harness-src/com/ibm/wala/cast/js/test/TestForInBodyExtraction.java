@@ -41,7 +41,11 @@ public abstract class TestForInBodyExtraction {
 	 */
 	public static String eraseGeneratedNames(String str) {
 	  Pattern generatedNamePattern = Pattern.compile("\\$\\$destructure\\$(rcvr|elt)\\d+");
-	  return generatedNamePattern.matcher(str).replaceAll("\\$\\$destructure\\$$1xxx");
+	  str = generatedNamePattern.matcher(str).replaceAll("\\$\\$destructure\\$$1xxx");
+	  
+	  Pattern generatedFunNamePattern = Pattern.compile("\\.js(@\\d+)+");
+	  str = generatedFunNamePattern.matcher(str).replaceAll(".js@xxx");
+	  return str;
 	}
 	
 	public void testRewriter(String testName, String in, String out) {
