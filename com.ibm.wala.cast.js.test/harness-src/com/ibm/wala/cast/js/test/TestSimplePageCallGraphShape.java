@@ -40,12 +40,6 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
       }
     });
   }
-
-  @Before
-  public void config() {
-    JSSourceExtractor.USE_TEMP_NAME = false;
-    JSSourceExtractor.DELETE_UPON_EXIT = true;
-  }
   
   private static final Object[][] assertionsForPage1 = new Object[][] {
     new Object[] { ROOT, new String[] { "page1.html" } },
@@ -272,7 +266,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     URL url = getClass().getClassLoader().getResource("pages/list.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
-    JSCallGraphBuilderUtil.AVOID_DUMP = false;
+//    JSCallGraphBuilderUtil.AVOID_DUMP = false;
     JSCallGraphBuilderUtil.dumpCG(builder.getPointerAnalysis(), CG);
     verifySourceAssertions(CG, sourceAssertionsForList);
   }

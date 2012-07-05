@@ -155,7 +155,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   public void testForin() throws IOException, IllegalArgumentException, CancelException {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "forin.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
-    JSCallGraphUtil.AVOID_DUMP = false;
+//    JSCallGraphUtil.AVOID_DUMP = false;
     JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForForin);
   }
@@ -247,7 +247,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "string-prims.js");
     B.getOptions().setTraceStringConstants(true);
     CallGraph CG = B.makeCallGraph(B.getOptions());
-    JSCallGraphUtil.AVOID_DUMP = false;
+//    JSCallGraphUtil.AVOID_DUMP = false;
     JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForStringPrims);
   }
@@ -448,7 +448,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   public void testReturnThis() throws IOException, IllegalArgumentException, CancelException {
     PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "return_this.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
-    JSCallGraphUtil.AVOID_DUMP = false;
+//    JSCallGraphUtil.AVOID_DUMP = false;
     JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForReturnThis);
   }
@@ -548,7 +548,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   public void testDispatch() throws IOException, IllegalArgumentException, CancelException {
     PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "dispatch.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
-    JSCallGraphUtil.AVOID_DUMP = false;
+//    JSCallGraphUtil.AVOID_DUMP = false;
     JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForDispatch);
   }

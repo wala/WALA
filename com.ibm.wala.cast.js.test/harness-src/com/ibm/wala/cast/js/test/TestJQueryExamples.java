@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
@@ -24,6 +25,7 @@ public class TestJQueryExamples extends TestJSCallGraphShape {
     JSSourceExtractor.DELETE_UPON_EXIT = false;
   }
 
+  @Ignore("This tries to analyze unmodified jquery, which we can't do yet")
   @Test public void testEx1() throws IOException, IllegalArgumentException, CancelException {
     URL url = getClass().getClassLoader().getResource("pages/jquery/ex1.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
