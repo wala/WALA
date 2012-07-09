@@ -571,7 +571,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   };
   
   @Test
-  public void testAssertionsForArrayIndexConv() throws IllegalArgumentException, IOException, CancelException {
+  public void testArrayIndexConv() throws IllegalArgumentException, IOException, CancelException {
     PropagationCallGraphBuilder b = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "array_index_conv.js");
     CallGraph cg = b.makeCallGraph(b.getOptions());
     verifyGraphAssertions(cg, assertionsForArrayIndexConv);
@@ -586,7 +586,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   };
   
   @Test
-  public void testAssertionsForArrayIndexConv2() throws IllegalArgumentException, IOException, CancelException {
+  public void testArrayIndexConv2() throws IllegalArgumentException, IOException, CancelException {
     PropagationCallGraphBuilder b = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "array_index_conv2.js");
     b.setContextSelector(new ForInContextSelector(b.getContextSelector()));
     CallGraph cg = b.makeCallGraph(b.getOptions());
