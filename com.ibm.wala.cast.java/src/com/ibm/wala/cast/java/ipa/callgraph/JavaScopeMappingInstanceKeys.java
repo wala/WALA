@@ -10,21 +10,26 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.ipa.callgraph;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys;
+import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys.ScopeMappingInstanceKey;
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl.JavaClass;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.LexicalParent;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Pair;
 
 public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
 
@@ -75,4 +80,11 @@ public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
 
     return result;
   }
+  
+  @Override
+  protected Collection<CGNode> getConstructorCallers(ScopeMappingInstanceKey smik, Pair<String, String> name) {
+    // for Java, the creator node is exactly what we want
+    return Collections.singleton(smik.getCreator());
+  }
+
 }
