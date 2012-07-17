@@ -99,6 +99,25 @@ public class OrdinalSet<T> implements Iterable<T> {
     return new OrdinalSet<T>(isect, A.mapping);
   }
 
+/** BEGIN Custom change: equals for OrdinalSets */
+  /**
+   * @return true if the contents of two sets are equal
+   */
+  public static <T> boolean equals(OrdinalSet<T> a, OrdinalSet<T> b) {
+    if (a == null && b == null) {
+      return true;
+    }
+    
+    if (a != null && b != null && a.size() == b.size()) {
+      if (a.mapping == b.mapping || (a.mapping != null && b.mapping != null && a.mapping.equals(b.mapping))) {
+        return a.S == b.S || (a.S != null && b.S != null && a.S.sameValue(b.S));
+      }
+    }
+    
+    return false;
+  }
+  
+/** END Custom change: equals for OrdinalSets */
   /**
    * Creates the union of two ordinal sets.
    * 
