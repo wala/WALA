@@ -2,6 +2,9 @@ package com.ibm.wala.cfg.exc.intra;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
@@ -83,11 +86,44 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
     this.mState = mState;
   }
 
+  private static <T extends ISSABasicBlock> List<T> 
+      searchNodesWithPathToCatchAll(ControlFlowGraph<SSAInstruction, T> cfg) {
+    final List<T> nodes = new LinkedList<T>();
+
+    for (final T exp : cfg) {
+      final List<T> excSucc = cfg.getExceptionalSuccessors(exp);
+      if (excSucc != null && excSucc.size() > 1) {
+        boolean foundExit = false;
+        boolean foundCatchAll = false;
+        for (final T succ : excSucc) {
+          if (succ.isExitBlock()) {
+            foundExit = true;
+          } else if (succ.isCatchBlock()) {
+            final Iterator<TypeReference> caught = succ.getCaughtExceptionTypes();
+            while (caught.hasNext()) {
+              final TypeReference t = caught.next();
+              if (t.equals(TypeReference.JavaLangException) || t.equals(TypeReference.JavaLangThrowable)) {
+                foundCatchAll = true;
+              }
+            }
+          }
+        }
+        
+        if (foundExit && foundCatchAll) {
+          nodes.add(exp);
+        }
+      }
+    }
+
+    return nodes;
+  }
+  
   void run(IProgressMonitor progress) throws CancelException {
     if (pruned == null) {
       if (ir == null || ir.isEmptyIR()) {
         pruned = cfg;
       } else {
+        final List<T> catched = searchNodesWithPathToCatchAll(cfg);
         NullPointerFrameWork<T> problem = new NullPointerFrameWork<T>(cfg, ir);
         int[] paramValNum = ir.getParameterValueNumbers();
       
@@ -96,6 +132,28 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
         if (solver.solve(progress)) {
           // we were able to remove some exceptions
           Graph<T> deleted = createDeletedGraph(solver);
+          
+          for (final T ch : catched) {
+            deleted.addNode(ch);
+            deleted.addNode(cfg.exit());
+            deleted.addEdge(ch, cfg.exit());
+          }
+          
+          for (T node : deleted) {
+            deletedEdges += deleted.getSuccNodeCount(node);
+          }
+          NegativeGraphFilter<T> filter = new NegativeGraphFilter<T>(deleted);
+          
+          pruned = PrunedCFG.make(cfg, filter);
+        } else if (!catched.isEmpty()) {
+          Graph<T> deleted = new SparseNumberedGraph<T>();
+
+          for (final T ch : catched) {
+            deleted.addNode(ch);
+            deleted.addNode(cfg.exit());
+            deleted.addEdge(ch, cfg.exit());
+          }
+          
           for (T node : deleted) {
             deletedEdges += deleted.getSuccNodeCount(node);
           }
