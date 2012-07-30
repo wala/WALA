@@ -1726,7 +1726,11 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           }
         } else {
           IntSet targets = getCallGraph().getPossibleTargetNumbers(node, call.getCallSite());
-          if (targets != null && targets.contains(target.getGraphNodeId())) {
+          // even if we've seen this target before, if we have constant
+          // parameters, we may need to re-process the call, as the constraints
+          // for the first time we reached this target may not have been fully
+          // general. TODO a more refined check?
+          if (targets != null && targets.contains(target.getGraphNodeId()) && noConstParams()) {
             // do nothing; we've previously discovered and handled this
             // receiver for this call site.
           } else {
@@ -1740,6 +1744,21 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         }
       }
       keys[0] = null;
+    }
+
+    private boolean noConstParams() {
+      if (constParams != null) {
+        for (int i = 0; i < constParams.length; i++) {
+          if (constParams[i] != null) {
+            for (int j = 0; j < constParams[i].length; i++) {
+              if (constParams[i][j] != null) {
+                return false;
+              }
+            }
+          }
+        }
+      }
+      return true;
     }
 
 
