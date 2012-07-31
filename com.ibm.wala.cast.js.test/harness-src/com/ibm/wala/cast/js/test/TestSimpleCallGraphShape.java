@@ -549,6 +549,22 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForDispatch);
   }
+
+  private static final Object[][] assertionsForDispatchSameTarget = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/dispatch_same_target.js" } },
+    new Object[] { "tests/dispatch_same_target.js/f3", new String[] { "tests/dispatch_same_target.js/f4" } } 
+  };
+
+
+  @Test
+  public void testDispatchSameTarget() throws IOException, IllegalArgumentException, CancelException {
+    PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "dispatch_same_target.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+//    JSCallGraphUtil.AVOID_DUMP = false;
+//    JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
+    verifyGraphAssertions(CG, assertionsForDispatchSameTarget);
+  }
+  
   
   private static final Object[][] assertionsForForInPrototype = new Object[][] {
     new Object[] { ROOT, new String[] { "tests/for_in_prototype.js" } },
