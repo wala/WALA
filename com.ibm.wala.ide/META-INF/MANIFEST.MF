@@ -9,24 +9,18 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Require-Bundle: com.ibm.wala.cast.js.rhino;bundle-version="1.0.0",
  com.ibm.wala.cast.js;bundle-version="1.0.0",
- com.ibm.wala.cast.java.polyglot;bundle-version="1.0.0",
- com.ibm.wala.cast.java,
  com.ibm.wala.cast;bundle-version="1.0.0",
  com.ibm.wala.core,
  com.ibm.wala.shrike,
- org.eclipse.wst.jsdt.ui;bundle-version="1.1.201",
- org.eclipse.wst.jsdt.core;bundle-version="1.1.4",
  org.eclipse.pde.core,
- org.eclipse.jdt.core,
  org.eclipse.jface,
  org.eclipse.ui,
  org.eclipse.core.resources,
  org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: com.ibm.wala.cast.java.client.polyglot,
- com.ibm.wala.ide,
- com.ibm.wala.ide.classloader,
+Export-Package: com.ibm.wala.ide.classloader,
+ com.ibm.wala.ide.client,
  com.ibm.wala.ide.plugin,
  com.ibm.wala.ide.ui,
  com.ibm.wala.ide.util

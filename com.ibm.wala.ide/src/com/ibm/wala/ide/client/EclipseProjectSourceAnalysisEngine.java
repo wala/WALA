@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *****************************************************************************/
-package com.ibm.wala.cast.java.client.polyglot;
+package com.ibm.wala.ide.client;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +16,6 @@ import java.io.IOException;
 import org.eclipse.core.runtime.CoreException;
 
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
-import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
@@ -75,13 +74,13 @@ abstract public class EclipseProjectSourceAnalysisEngine<P> extends EclipseProje
       if (getExclusionsFile() != null) {
         scope.setExclusions(FileOfClasses.createFileOfClasses(new File(getExclusionsFile())));
       }
-      EclipseProjectPath epath = getEclipseProjectPath();
+      EclipseProjectPath<?,?> epath = getEclipseProjectPath();
 
       for (Module m : epath.getModules(Loader.PRIMORDIAL, true)) {
         scope.addToScope(scope.getPrimordialLoader(), m);
       }
       ClassLoaderReference app = scope.getApplicationLoader();
-      ClassLoaderReference src = ((JavaSourceAnalysisScope) scope).getSourceLoader();
+      ClassLoaderReference src = getSourceLoader();
       for (Module m : epath.getModules(Loader.APPLICATION, true)) {
         if (m instanceof SourceDirectoryTreeModule) {
           scope.addToScope(src, m);
@@ -102,6 +101,8 @@ abstract public class EclipseProjectSourceAnalysisEngine<P> extends EclipseProje
       Assertions.UNREACHABLE(e.toString());
     }
   }
+
+  protected abstract ClassLoaderReference getSourceLoader();
 
   @Override
   public AnalysisOptions getDefaultOptions(Iterable<Entrypoint> entrypoints) {

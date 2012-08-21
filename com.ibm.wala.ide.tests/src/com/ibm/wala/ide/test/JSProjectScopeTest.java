@@ -19,8 +19,8 @@ import com.ibm.wala.cast.js.test.JavaScriptTestPlugin;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.ide.tests.util.EclipseTestUtil;
-import com.ibm.wala.ide.util.EclipseProjectPath;
-import com.ibm.wala.ide.util.HeadlessUtil;
+import com.ibm.wala.ide.util.JavaScriptEclipseProjectPath;
+import com.ibm.wala.ide.util.JavaScriptHeadlessUtil;
 import com.ibm.wala.ide.util.JsdtUtil;
 import com.ibm.wala.ide.util.JsdtUtil.CGInfo;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -42,16 +42,16 @@ public class JSProjectScopeTest {
 
   @Test
   public void testOpenProject() {
-    IJavaScriptProject p = HeadlessUtil.getJavaScriptProjectFromWorkspace(jsTestDataProject);
+    IJavaScriptProject p = JavaScriptHeadlessUtil.getJavaScriptProjectFromWorkspace(jsTestDataProject);
     System.err.println(p);
     Assert.assertTrue("cannot find project", p != null);
   }
 
   @Test
   public void testProjectScope() throws IOException, CoreException {
-    IJavaScriptProject p = HeadlessUtil.getJavaScriptProjectFromWorkspace(jsTestDataProject);
+    IJavaScriptProject p = JavaScriptHeadlessUtil.getJavaScriptProjectFromWorkspace(jsTestDataProject);
     JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
-    AnalysisScope s = EclipseProjectPath.make(p).toAnalysisScope(new CAstAnalysisScope(JSCallGraphUtil.makeLoaders(), Collections.singleton(JavaScriptLoader.JS)));
+    AnalysisScope s = JavaScriptEclipseProjectPath.make(p).toAnalysisScope(new CAstAnalysisScope(JSCallGraphUtil.makeLoaders(), Collections.singleton(JavaScriptLoader.JS)));
     System.err.println(s);
     Assert.assertTrue("cannot make scope", s != null);
   }

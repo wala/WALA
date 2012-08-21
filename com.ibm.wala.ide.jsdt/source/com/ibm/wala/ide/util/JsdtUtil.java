@@ -55,9 +55,9 @@ public class JsdtUtil {
   };
 
   public static Set<ModuleEntry> getJavaScriptCodeFromProject(String project) throws IOException, CoreException {
-    IJavaScriptProject p = HeadlessUtil.getJavaScriptProjectFromWorkspace(project);
+    IJavaScriptProject p = JavaScriptHeadlessUtil.getJavaScriptProjectFromWorkspace(project);
     JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
-    AnalysisScope s = EclipseProjectPath.make(p).toAnalysisScope(new CAstAnalysisScope(JSCallGraphUtil.makeLoaders(), Collections.singleton(JavaScriptLoader.JS)));
+    AnalysisScope s = JavaScriptEclipseProjectPath.make(p).toAnalysisScope(new CAstAnalysisScope(JSCallGraphUtil.makeLoaders(), Collections.singleton(JavaScriptLoader.JS)));
 
     List<Module> modules = s.getModules(JavaScriptTypes.jsLoader);
     Set<ModuleEntry> mes = HashSetFactory.make();

@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.cast.java.client.polyglot;
+package com.ibm.wala.ide.client;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +17,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 
-import com.ibm.wala.cast.java.client.impl.ZeroCFABuilderFactory;
 import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.ide.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -42,6 +41,8 @@ abstract public class EclipseProjectAnalysisEngine<P> extends AbstractAnalysisEn
 
   abstract protected EclipseProjectPath createProjectPath(P project) throws IOException, CoreException;
 
+  abstract protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache);
+
   @Override
   public void buildAnalysisScope() throws IOException {
     super.scope = ePath.toAnalysisScope(new File(getExclusionsFile()));
@@ -51,8 +52,4 @@ abstract public class EclipseProjectAnalysisEngine<P> extends AbstractAnalysisEn
     return ePath;
   }
 
-  @Override
-  protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
-    return new ZeroCFABuilderFactory().make(options, cache, cha, scope, false);
-  }
 }

@@ -23,10 +23,6 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.IJavaScriptProject;
-import org.eclipse.wst.jsdt.core.JavaScriptCore;
 
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.ide.classloader.EclipseSourceFileModule;
@@ -66,59 +62,7 @@ public class HeadlessUtil {
     return p;
   }
 
-  /**
-   * compute the analysis scope for a project in the current workspace
-   * @throws IOException 
-   * @throws CoreException 
-   */
-  public static AnalysisScope computeJavaScope(final String projectName) throws IOException, CoreException {
-    if (projectName == null) {
-      throw new IllegalArgumentException("null projectName");
-    }
-    IJavaProject jp = getJavaProjectFromWorkspace(projectName);
-    EclipseProjectPath path = EclipseProjectPath.make(jp);
-    return path.toAnalysisScope((File)null);
-  }
-
-  private static IJavaProject getJavaProjectFromWorkspace(final String projectName) {
-    IJavaProject jp = getProjectFromWorkspace(new Function<IProject, IJavaProject>() {
-      public IJavaProject apply(IProject p) {
-        try {
-          if (p.hasNature(JavaCore.NATURE_ID)) {
-            IJavaProject jp = JavaCore.create(p);
-            if (jp != null && jp.getElementName().equals(projectName)) {
-              return jp;
-            }
-          }
-        } catch (CoreException e) {
-        }
-        // failed to match
-        return null;
-      }
-    });
-    return jp;
-  }
-
-  public static IJavaScriptProject getJavaScriptProjectFromWorkspace(final String projectName) {
-    IJavaScriptProject jp = getProjectFromWorkspace(new Function<IProject, IJavaScriptProject>() {
-      public IJavaScriptProject apply(IProject p) {
-        try {
-          if (p.hasNature(JavaScriptCore.NATURE_ID)) {
-            IJavaScriptProject jp = JavaScriptCore.create(p);
-             if (jp != null && jp.getElementName().equals(projectName)) {
-              return jp;
-            }
-          }
-        } catch (CoreException e) {
-        }
-        // failed to match
-        return null;
-      }
-    });
-    return jp;
-  }
-
-  private static <X> X getProjectFromWorkspace(Function<IProject, X> pred) {
+  protected static <X> X getProjectFromWorkspace(Function<IProject, X> pred) {
     IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
     IPath workspaceRootPath = workspaceRoot.getLocation();
     System.out.println("workspace: " + workspaceRootPath.toOSString());
