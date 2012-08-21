@@ -43,7 +43,7 @@ public class JavaScriptCheckReference extends SSAInstruction {
 
   @Override
   public void visit(IVisitor v) {
-    ((InstructionVisitor)v).visitCheckRef(this);
+    ((JSInstructionVisitor)v).visitCheckRef(this);
   }
 
   public boolean isPEI() {

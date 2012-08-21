@@ -54,7 +54,7 @@ public class SWTTypeHierarchy {
   public static ApplicationWindow run(String classpath) {
 
     try {
-      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(classpath, FileProvider
+      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(classpath, (new FileProvider())
           .getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // invoke WALA to build a class hierarchy

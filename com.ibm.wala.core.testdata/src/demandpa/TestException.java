@@ -46,7 +46,7 @@ public class TestException {
     try {
       foo(null);
     } catch (Exception e) {
-      TestUtil.testThisVar(e);
+      DemandPATestUtil.testThisVar(e);
     }
   }
 

@@ -88,9 +88,16 @@ public interface IClass extends IClassHierarchyDweller {
 
   /**
    * Finds a field.
+   * 
+   * @throws IllegalStateException if the class contains multiple fields with name <code>name</code>.
    */
   IField getField(Atom name);
 
+  /**
+   * Finds a field, given a name and a type.  Returns <code>null</code> if not found.
+   */
+  IField getField(Atom name, TypeName type);
+  
   /**
    * @return canonical TypeReference corresponding to this class
    */

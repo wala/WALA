@@ -28,12 +28,12 @@ public class TestSimpleCallGraphShapeRhino extends TestSimpleCallGraphShape {
 
   @Before
   public void setUp() {
-    com.ibm.wala.cast.js.ipa.callgraph.Util.setTranslatorFactory(new CAstRhinoTranslatorFactory());
+    com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
   }
 
   @Test
   public void test214631() throws IOException, IllegalArgumentException, CancelException {
-    JSCFABuilder b = Util.makeScriptCGBuilder("tests", "214631.js");
+    JSCFABuilder b = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "214631.js");
     b.makeCallGraph(b.getOptions());
     PointerAnalysis PA = b.getPointerAnalysis();
     // just make sure this does not crash
@@ -42,22 +42,27 @@ public class TestSimpleCallGraphShapeRhino extends TestSimpleCallGraphShape {
 
   @Test
   public void testRewriterDoesNotChangeLablesBug() throws IOException, IllegalArgumentException, CancelException {
-    Util.makeScriptCG("tests", "rewrite_does_not_change_lables_bug.js");
+    JSCallGraphBuilderUtil.makeScriptCG("tests", "rewrite_does_not_change_lables_bug.js");
     // all we need is for it to finish building CG successfully.
   }
 
   @Test
   public void testRepr() throws IllegalArgumentException, IOException, CancelException {
-    Util.makeScriptCG("tests", "repr.js");
+    JSCallGraphBuilderUtil.makeScriptCG("tests", "repr.js");
   }
 
   @Test
   public void testTranslateToCAstCrash1() throws IllegalArgumentException, IOException, CancelException {
-    Util.makeScriptCG("tests", "rhino_crash1.js");
+    JSCallGraphBuilderUtil.makeScriptCG("tests", "rhino_crash1.js");
   }
   
   @Test
   public void testTranslateToCAstCrash2() throws IllegalArgumentException, IOException, CancelException {
-    Util.makeScriptCG("tests", "rhino_crash2.js");
+    JSCallGraphBuilderUtil.makeScriptCG("tests", "rhino_crash2.js");
+  }
+
+  @Test
+  public void testTranslateToCAstCrash3() throws IllegalArgumentException, IOException, CancelException {
+    JSCallGraphBuilderUtil.makeScriptCG("tests", "rhino_crash3.js");
   }
 }

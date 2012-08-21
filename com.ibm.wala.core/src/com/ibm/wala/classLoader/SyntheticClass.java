@@ -17,6 +17,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  * An {@link IClass} that exists nowhere in bytecode.
@@ -120,5 +121,12 @@ public abstract class SyntheticClass implements IClass {
   
   public TypeName getName() {
     return getReference().getName();
+  }
+
+  /**
+   * we assume synthetic classes do not need to have multiple fields with the same name.  
+   */
+  public IField getField(Atom name, TypeName typeName) {
+    return getField(name);
   }
 }

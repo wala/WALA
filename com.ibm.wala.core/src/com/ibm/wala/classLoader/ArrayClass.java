@@ -130,6 +130,10 @@ public class ArrayClass implements IClass, Constants {
     return getSuperclass().getField(name);
   }
 
+  public IField getField(Atom name, TypeName typeName) {
+    return getSuperclass().getField(name, typeName);
+  } 
+
   /*
    * @see com.ibm.wala.classLoader.IClass#getDeclaredMethods()
    */

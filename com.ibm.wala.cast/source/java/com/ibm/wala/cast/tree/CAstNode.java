@@ -111,6 +111,8 @@ public interface CAstNode {
   public static final int MONITOR_ENTER = 23;
   public static final int MONITOR_EXIT = 24;
   public static final int ECHO = 25;
+  public static final int YIELD_STMT = 26;
+  public static final int FORIN_LOOP = 27;
 
   // expression kinds
   public static final int FUNCTION_EXPR = 100;

@@ -16,10 +16,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Pair;
 
 /**
  * A special {@link ChildPos} representing the position of a node which is the body of a for-in loop.
@@ -36,7 +36,7 @@ public class ExtractionPos extends NodePos {
 	private final NodePos parent_pos;
 	private boolean contains_return;
 	private boolean contains_this;
-	private final Set<CAstNode> goto_targets = HashSetFactory.make();
+	private final Set<Pair<String, CAstNode>> goto_targets = HashSetFactory.make();
 	private boolean contains_outer_goto;
 	private final Set<ExtractionPos> nested_loops = HashSetFactory.make();
 	private CAstEntity extracted_entity;
@@ -75,17 +75,17 @@ public class ExtractionPos extends NodePos {
 	  return region.getParameters();
 	}
 	
-	public void addGotoTarget(CAstNode node) {
+	public void addGotoTarget(String label, CAstNode node) {
 		// check whether this target lies beyond an enclosing for-in loop
 		ExtractionPos outer = getEnclosingExtractionPos(parent_pos);
 		if(outer != null && !outer.contains(node)) {
 			// the goto needs to be handled by the outer loop
-			outer.addGotoTarget(node);
+			outer.addGotoTarget(label, node);
 			// but we need to remember to pass it on
 			contains_outer_goto = true;
 		} else {
 			// this goto is our responsibility
-			goto_targets.add(node);
+			goto_targets.add(Pair.make(label, node));
 		}
 	}
 
@@ -97,7 +97,7 @@ public class ExtractionPos extends NodePos {
 		this.contains_return = true;
 	}
 	
-	public Set<CAstNode> getGotoTargets() {
+	public Set<Pair<String, CAstNode>> getGotoTargets() {
 		return Collections.unmodifiableSet(goto_targets);
 	}
 	

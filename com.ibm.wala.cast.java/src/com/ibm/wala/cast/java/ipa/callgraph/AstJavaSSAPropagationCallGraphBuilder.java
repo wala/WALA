@@ -272,7 +272,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
     }
 
     public void visitJavaInvoke(AstJavaInvokeInstruction instruction) {
-      visitInvokeInternal(instruction);
+      visitInvokeInternal(instruction, new DefaultInvariantComputer());
     }
   }
 

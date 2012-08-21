@@ -15,7 +15,7 @@ public class TestSimplePageCallGraphShapeRhinoJericho extends TestSimplePageCall
 
 	@Test public void testCrawl() throws IOException, IllegalArgumentException, CancelException {
 		URL url = getClass().getClassLoader().getResource("pages/crawl.html");
-		CallGraph CG = Util.makeHTMLCG(url);
+		CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
 		verifyGraphAssertions(CG, null);
 	}
 

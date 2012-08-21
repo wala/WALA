@@ -11,6 +11,8 @@ import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.OneLevelSiteContextSelector;
+import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 
@@ -21,50 +23,23 @@ import com.ibm.wala.util.intset.IntSetUtil;
  *      Function.prototype.apply() docs</a>
  */
 public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
+  /* whether to use a one-level callstring context in addition to the apply context */
+  private static final boolean USE_ONE_LEVEL = true; 
+
+  private static final TypeName APPLY_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/functionApply");
+
+  private static final TypeName CALL_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/functionCall");
 
   public static final ContextKey APPLY_NON_NULL_ARGS = new ContextKey() {
   };
 
-  public static class BooleanContextItem implements ContextItem {
-    final boolean val;
-
-    BooleanContextItem(boolean val) {
-      this.val = val;
-    }
-
-    @Override
-    public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + (val ? 1231 : 1237);
-      return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      if (this == obj)
-        return true;
-      if (obj == null)
-        return false;
-      if (getClass() != obj.getClass())
-        return false;
-      BooleanContextItem other = (BooleanContextItem) obj;
-      if (val != other.val)
-        return false;
-      return true;
-    }
-
-    @Override
-    public String toString() {
-      return "BooleanContextItem [val=" + val + "]";
-    }
-
-  }
-
   private final ContextSelector base;
+  private ContextSelector oneLevel;
 
   public JavaScriptFunctionApplyContextSelector(ContextSelector base) {
     this.base = base;
+//    this.oneLevel = new nCFAContextSelector(1, base);
+    this.oneLevel = new OneLevelSiteContextSelector(base);
   }
 
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
@@ -84,14 +59,14 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
     /**
      * was the argsList argument a non-null Array?
      */
-    private final BooleanContextItem isNonNullArray;
+    private final ContextItem.Value<Boolean> isNonNullArray;
 
+    @SuppressWarnings("unchecked")
     ApplyContext(Context delegate, boolean isNonNullArray) {
       this.delegate = delegate;
-      this.isNonNullArray = new BooleanContextItem(isNonNullArray);
+      this.isNonNullArray = ContextItem.Value.make(isNonNullArray);
     }
 
-    @Override
     public ContextItem get(ContextKey name) {
       if (APPLY_NON_NULL_ARGS.equals(name)) {
         return isNonNullArray;
@@ -129,17 +104,16 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
     public String toString() {
       return "ApplyContext [delegate=" + delegate + ", isNonNullArray=" + isNonNullArray + "]";
     }
-    
-    
 
   }
 
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     IClass declaringClass = callee.getDeclaringClass();
     IMethod method = declaringClass.getMethod(AstMethodReference.fnSelector);
+    Context baseCtxt = base.getCalleeTarget(caller, site, callee, receiver);
     if (method != null) {
-      String s = method.getReference().getDeclaringClass().getName().toString();
-      if (s.equals("Lprologue.js/functionApply")) {
+      TypeName tn = method.getReference().getDeclaringClass().getName();
+      if (tn.equals(APPLY_TYPE_NAME)) {
         boolean isNonNullArray = false;
         if (receiver.length >= 4) {
           InstanceKey argsList = receiver[3];
@@ -147,10 +121,14 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
             isNonNullArray = true;
           }
         }
-        return new ApplyContext(base.getCalleeTarget(caller, site, callee, receiver), isNonNullArray);
+        if (USE_ONE_LEVEL)
+          baseCtxt = oneLevel.getCalleeTarget(caller, site, callee, receiver);
+        return new ApplyContext(baseCtxt, isNonNullArray);
+      } else if (USE_ONE_LEVEL && tn.equals(CALL_TYPE_NAME)) {
+        return oneLevel.getCalleeTarget(caller, site, callee, receiver);
       }
     }
-    return base.getCalleeTarget(caller, site, callee, receiver);
+    return baseCtxt;
   }
 
 }

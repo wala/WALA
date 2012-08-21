@@ -52,8 +52,8 @@ public class TestHashtableEnum {
     h2.put(key2, new Object());
     Object o1 = h1.elements().next();
     Object o2 = h2.elements().next();
-    TestUtil.makeVarUsed(o1);
-    TestUtil.testThisVar(o2);
+    DemandPATestUtil.makeVarUsed(o1);
+    DemandPATestUtil.testThisVar(o2);
 
   }
 

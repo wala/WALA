@@ -41,7 +41,7 @@ public class AnnotationTest extends WalaTestCase {
   @BeforeClass
   public static void before() throws IOException, ClassHierarchyException {
     AnalysisScope scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
-        FileProvider.getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS), AnnotationTest.class.getClassLoader());
+        (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS), AnnotationTest.class.getClassLoader());
     cha = ClassHierarchy.make(scope);    
   }
   

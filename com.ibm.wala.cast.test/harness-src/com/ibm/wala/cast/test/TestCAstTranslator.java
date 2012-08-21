@@ -10,7 +10,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
-import com.ibm.wala.cast.ipa.callgraph.Util;
+import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.loader.SingleClassLoaderFactory;
 import com.ibm.wala.classLoader.IClass;
@@ -119,7 +119,7 @@ public abstract class TestCAstTranslator extends WalaTestCase {
   public ClassHierarchy runTranslator(SourceFileModule[] fileNames) throws Exception {
     SingleClassLoaderFactory loaders = getClassLoaderFactory();
 
-    AnalysisScope scope = Util.makeScope(fileNames, loaders, getLanguage());
+    AnalysisScope scope = CAstCallGraphUtil.makeScope(fileNames, loaders, getLanguage());
 
     ClassHierarchy cha = ClassHierarchy.make(scope, loaders, getLanguage());
 
@@ -208,12 +208,12 @@ public abstract class TestCAstTranslator extends WalaTestCase {
     SourceFileModule[] fileNames = new SourceFileModule[args.length];
     for (int i = 0; i < args.length; i++) {
       if (new File(args[i]).exists()) {
-        fileNames[i] = Util.makeSourceModule(new File(args[i]).toURI().toURL(), args[i]);
+        fileNames[i] = CAstCallGraphUtil.makeSourceModule(new File(args[i]).toURI().toURL(), args[i]);
       } else if (new File(testPath + args[i]).exists()) {
-        fileNames[i] = Util.makeSourceModule(new File(testPath + args[i]).toURI().toURL(), args[i]);
+        fileNames[i] = CAstCallGraphUtil.makeSourceModule(new File(testPath + args[i]).toURI().toURL(), args[i]);
       } else {
         URL url = getClass().getClassLoader().getResource(args[i]);
-        fileNames[i] = Util.makeSourceModule(url, args[i]);
+        fileNames[i] = CAstCallGraphUtil.makeSourceModule(url, args[i]);
       }
       Assert.assertTrue(args[i], fileNames[i] != null);
     }

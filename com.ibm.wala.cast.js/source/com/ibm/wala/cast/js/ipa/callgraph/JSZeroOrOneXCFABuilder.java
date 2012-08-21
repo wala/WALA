@@ -11,7 +11,9 @@
 package com.ibm.wala.cast.js.ipa.callgraph;
 
 import com.ibm.wala.cast.ipa.callgraph.LexicalScopingResolverContexts;
+import com.ibm.wala.cast.ipa.callgraph.OneLevelForLexicalAccessFunctions;
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingKeysContextSelector;
+import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
@@ -37,41 +39,75 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy, boolean doOneCFA) {
     super(cha, options, cache);
 
-    SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha);
-    if (options.handleCallApply()) {
-      contextInterpreter = new DelegatingSSAContextInterpreter(new JavaScriptFunctionApplyContextInterpreter(options, cache),
-          contextInterpreter);
+    if (!AstTranslator.NEW_LEXICAL && options.usePreciseLexical()) {
+      throw new IllegalArgumentException("usePreciseLexical only valid with new lexical scoping handling");
     }
-    setContextInterpreter(contextInterpreter);
+    
+    SSAContextInterpreter contextInterpreter = setupSSAContextInterpreter(cha, options, cache, appContextInterpreter);
 
-    MethodTargetSelector targetSelector = new JavaScriptConstructTargetSelector(cha, options
-        .getMethodTargetSelector());
-    if (options.handleCallApply()) {
-      targetSelector = new JavaScriptFunctionDotCallTargetSelector(targetSelector);
-    }
-    if (options.useLoadFileTargetSelector()) {
-      targetSelector = new LoadFileTargetSelector(targetSelector, this);
-    }
-    options.setSelector(targetSelector);
+    setupMethodTargetSelector(cha, options);
 
+    setupContextSelector(options, appContextSelector, doOneCFA);
+
+    setInstanceKeys(new JavaScriptScopeMappingInstanceKeys(cha, this, new JavaScriptConstructorInstanceKeys(new ZeroXInstanceKeys(
+        options, cha, contextInterpreter, instancePolicy))));
+  }
+
+  private void setupContextSelector(JSAnalysisOptions options, ContextSelector appContextSelector, boolean doOneCFA) {
+    // baseline selector
     ContextSelector def = new ContextInsensitiveSelector();
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
-    contextSelector = new ScopeMappingKeysContextSelector(contextSelector);
-    contextSelector = new JavaScriptConstructorContextSelector(contextSelector);
+    
+    // JavaScriptConstructorContextSelector ensures at least a 0-1-CFA (i.e.,
+    // Andersen's-style) heap abstraction. This level of heap abstraction is
+    // _necessary_ for correctness (we rely on it when handling lexical scoping)
+    contextSelector = new JavaScriptConstructorContextSelector(contextSelector, options.usePreciseLexical());
+    
+    if (!AstTranslator.NEW_LEXICAL) {
+      contextSelector = new ScopeMappingKeysContextSelector(contextSelector);
+    }
+    
+    if (options.usePreciseLexical()) {
+      contextSelector = new OneLevelForLexicalAccessFunctions(contextSelector);
+    }
+    
     if (USE_OBJECT_SENSITIVITY) {
       contextSelector = new ObjectSensitivityContextSelector(contextSelector);
     }
     if (options.handleCallApply()) {
       contextSelector = new JavaScriptFunctionApplyContextSelector(contextSelector);
     }
-    contextSelector = new LexicalScopingResolverContexts(this, contextSelector);
+    if (!AstTranslator.NEW_LEXICAL) {
+      contextSelector = new LexicalScopingResolverContexts(this, contextSelector);
+    }
     if (doOneCFA) {
       contextSelector = new nCFAContextSelector(1, contextSelector);
     }
     setContextSelector(contextSelector);
+  }
 
-    setInstanceKeys(new JavaScriptScopeMappingInstanceKeys(cha, this, new JavaScriptConstructorInstanceKeys(new ZeroXInstanceKeys(
-        options, cha, contextInterpreter, instancePolicy))));
+  
+  private void setupMethodTargetSelector(IClassHierarchy cha, JSAnalysisOptions options) {
+    MethodTargetSelector targetSelector = new JavaScriptConstructTargetSelector(cha, options
+        .getMethodTargetSelector());
+    if (options.handleCallApply()) {
+      targetSelector = new JavaScriptFunctionApplyTargetSelector(new JavaScriptFunctionDotCallTargetSelector(targetSelector));
+    }
+    if (options.useLoadFileTargetSelector()) {
+      targetSelector = new LoadFileTargetSelector(targetSelector, this);
+    }
+    options.setSelector(targetSelector);
+  }
+
+  private SSAContextInterpreter setupSSAContextInterpreter(IClassHierarchy cha, JSAnalysisOptions options, AnalysisCache cache,
+      SSAContextInterpreter appContextInterpreter) {
+    SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha);
+    if (options.handleCallApply()) {
+      contextInterpreter = new DelegatingSSAContextInterpreter(new JavaScriptFunctionApplyContextInterpreter(options, cache),
+          contextInterpreter);
+    }
+    setContextInterpreter(contextInterpreter);
+    return contextInterpreter;
   }
 
   /**

@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.js.html;
 
 import java.io.InputStream;
+import java.net.URL;
 
 /**
  * @author danielk
@@ -25,6 +26,6 @@ public interface IHtmlParser {
      * @param callback
      * @param fileName
      */
-    public void parse(InputStream reader, IHtmlCallback callback, String fileName);
+    public void parse(URL url, InputStream reader, IHtmlCallback callback, String fileName);
 
 }

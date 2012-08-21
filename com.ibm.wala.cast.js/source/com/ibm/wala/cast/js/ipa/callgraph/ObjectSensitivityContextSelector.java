@@ -2,16 +2,16 @@ package com.ibm.wala.cast.js.ipa.callgraph;
 
 import java.util.HashMap;
 
+import com.ibm.wala.cast.ipa.callgraph.ArgumentInstanceContext;
+import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.callgraph.ContextItem;
-import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
-import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAReturnInstruction;
@@ -29,6 +29,8 @@ public class ObjectSensitivityContextSelector implements ContextSelector {
   
   private final HashMap<MethodReference, Boolean> returnsThis_cache = HashMapFactory.make();
   
+  private final IRFactory<IMethod> factory = AstIRFactory.makeDefaultFactory();
+
   // determine whether the method returns "this"
   private boolean returnsThis(IMethod method) {
     MethodReference mref = method.getReference();
@@ -37,7 +39,7 @@ public class ObjectSensitivityContextSelector implements ContextSelector {
     Boolean b = returnsThis_cache.get(mref);
     if(b != null)
       return b;
-    for(SSAInstruction inst : ForInContextSelector.factory.makeIR(method, Everywhere.EVERYWHERE, SSAOptions.defaultOptions()).getInstructions()) {
+    for(SSAInstruction inst : factory.makeIR(method, Everywhere.EVERYWHERE, SSAOptions.defaultOptions()).getInstructions()) {
       if(inst instanceof SSAReturnInstruction) {
         SSAReturnInstruction ret = (SSAReturnInstruction)inst;
         if(ret.getResult() == 2) {
@@ -50,7 +52,6 @@ public class ObjectSensitivityContextSelector implements ContextSelector {
     return false;
   }
 
-  @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] arguments) {
     Context baseContext = base.getCalleeTarget(caller, site, callee, arguments);
     if(returnsThis(callee)) {
@@ -61,7 +62,6 @@ public class ObjectSensitivityContextSelector implements ContextSelector {
     return baseContext;
   }
 
-  @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     if (caller.getIR().getCalls(site)[0].getNumberOfUses() > 1) {
       return IntSetUtil.make(new int[]{1}).union(base.getRelevantParameters(caller, site));
@@ -70,60 +70,4 @@ public class ObjectSensitivityContextSelector implements ContextSelector {
     }
   }
 
-}
-
-class ArgumentInstanceContext implements Context {
-  private final Context base;
-  private final int index;
-  private final InstanceKey instanceKey;
-
-  public ArgumentInstanceContext(Context base, int index, InstanceKey instanceKey) {
-    this.base = base;
-    this.index = index;
-    this.instanceKey = instanceKey;
-  }
-
-  @Override
-  public ContextItem get(ContextKey name) {
-    /*if(name == ContextKey.RECEIVER && index == 1)
-      return instanceKey;*/
-    if(name == ContextKey.PARAMETERS[index])
-      return new FilteredPointerKey.SingleInstanceFilter(instanceKey);
-    return base.get(name);
-  }
-
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((base == null) ? 0 : base.hashCode());
-    result = prime * result + index;
-    result = prime * result + ((instanceKey == null) ? 0 : instanceKey.hashCode());
-    return result;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    ArgumentInstanceContext other = (ArgumentInstanceContext) obj;
-    if (base == null) {
-      if (other.base != null)
-        return false;
-    } else if (!base.equals(other.base))
-      return false;
-    if (index != other.index)
-      return false;
-    if (instanceKey == null) {
-      if (other.instanceKey != null)
-        return false;
-    } else if (!instanceKey.equals(other.instanceKey))
-      return false;
-    return true;
-  }
-  
 }

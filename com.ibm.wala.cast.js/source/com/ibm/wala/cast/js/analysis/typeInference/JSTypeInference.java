@@ -22,6 +22,8 @@ import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
 import com.ibm.wala.cast.js.ssa.JavaScriptTypeOfInstruction;
 import com.ibm.wala.cast.js.ssa.JavaScriptWithRegion;
+import com.ibm.wala.cast.js.ssa.PrototypeLookup;
+import com.ibm.wala.cast.js.ssa.SetPrototype;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -36,7 +38,7 @@ public class JSTypeInference extends AstTypeInference {
   }
 
   protected void initialize() {
-    class JSTypeOperatorFactory extends AstTypeOperatorFactory implements com.ibm.wala.cast.js.ssa.InstructionVisitor {
+    class JSTypeOperatorFactory extends AstTypeOperatorFactory implements com.ibm.wala.cast.js.ssa.JSInstructionVisitor {
       public void visitJavaScriptInvoke(JavaScriptInvoke inst) {
         result = new DeclaredTypeOperator(new ConeType(cha.getRootClass()));
       }
@@ -60,6 +62,15 @@ public class JSTypeInference extends AstTypeInference {
       }
 
       public void visitWithRegion(JavaScriptWithRegion instruction) {
+      }
+
+      @Override
+      public void visitSetPrototype(SetPrototype instruction) {
+      }
+
+      @Override
+      public void visitPrototypeLookup(PrototypeLookup instruction) {
+        result = new DeclaredTypeOperator(new ConeType(cha.getRootClass()));
       }
     }
     ;

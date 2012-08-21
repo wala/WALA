@@ -36,6 +36,10 @@ public interface ContextKey {
   public final static ContextKey RECEIVER = new ContextKey() {
   };
 
+  /**
+   * context key representing some parameter index, useful, e.g. for CPA-style
+   * context-sensitivity policies.
+   */
   public static class ParameterKey implements ContextKey {
     public final int index;
 
@@ -45,6 +49,9 @@ public interface ContextKey {
     }
   }
   
+  /**
+   * Generally useful constants for possible parameter indices 
+   */
   public static final ContextKey PARAMETERS[] = new ContextKey[]{
     new ParameterKey(0),
     new ParameterKey(1),

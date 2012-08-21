@@ -62,7 +62,7 @@ public class TestClone {
   public static void main(String[] args) {
     A a = new B();
     A a2 = a.copy();
-    TestUtil.testThisVar(a2);
+    DemandPATestUtil.testThisVar(a2);
 
   }
 }

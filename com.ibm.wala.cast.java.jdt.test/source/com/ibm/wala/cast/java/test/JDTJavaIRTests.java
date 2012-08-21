@@ -54,11 +54,11 @@ import com.ibm.wala.cast.java.test.ide.IDEIRTestUtil;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.plugin.CoreTestsPlugin;
 import com.ibm.wala.ide.tests.util.EclipseTestUtil;
+import com.ibm.wala.ide.util.EclipseFileProvider;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.io.FileProvider;
 
 public class JDTJavaIRTests extends JavaIRTests {
 
@@ -96,7 +96,7 @@ public class JDTJavaIRTests extends JavaIRTests {
     };
 
     try {
-      engine.setExclusionsFile(FileProvider
+      engine.setExclusionsFile((new EclipseFileProvider())
           .getFileFromPlugin(CoreTestsPlugin.getDefault(), CallGraphTestUtil.REGRESSION_EXCLUSIONS).getAbsolutePath());
     } catch (IOException e) {
       Assert.assertFalse("Cannot find exclusions file", true);

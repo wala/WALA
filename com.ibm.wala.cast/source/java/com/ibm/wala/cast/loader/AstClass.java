@@ -153,6 +153,10 @@ abstract public class AstClass implements IClass, ClassConstants {
     }
   }
 
+  public IField getField(Atom name, TypeName type) {
+    // assume that for AST classes, you can't have multiple fields with the same name
+    return getField(name);
+  }
   public Collection<IMethod> getDeclaredMethods() {
     return declaredMethods.values();
   }

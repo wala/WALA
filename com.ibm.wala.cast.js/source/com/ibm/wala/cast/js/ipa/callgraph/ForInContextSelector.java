@@ -31,8 +31,8 @@ import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.SingleInstanceFilter;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.OneLevelSiteContextSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
@@ -50,8 +50,8 @@ import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 
 public class ForInContextSelector implements ContextSelector {
-
   public final static ContextKey FORIN_KEY = new ContextKey() { };
+  public final static ContextKey FORIN_PARM_INDEX = new ContextKey() { };
   
   public static final ContextItem FORIN_MARKER = new ContextItem() { };
   
@@ -63,7 +63,7 @@ public class ForInContextSelector implements ContextSelector {
 
   public static boolean USE_CPA_IN_BODIES = false;
   
-  public static boolean USE_1LEVEL_IN_BODIES = false;
+  public static boolean USE_1LEVEL_IN_BODIES = true;
 
   public static boolean DEPENDENT_THRU_READS = true;
   
@@ -108,6 +108,9 @@ public class ForInContextSelector implements ContextSelector {
 
       @Override
       public boolean equals(Object other) {
+        if (this == other) {
+           return true;
+        }
         return other != null &&
             getClass().equals(other.getClass()) &&
             base.equals(((SelectiveCPAContext)other).base) &&
@@ -126,6 +129,8 @@ public class ForInContextSelector implements ContextSelector {
     public ContextItem get(ContextKey key) {
       if (FORIN_KEY.equals(key)) {
         return FORIN_MARKER;
+      } else if(FORIN_PARM_INDEX.equals(key)) {
+        return ContextItem.Value.make(index);
       } else {
         return super.get(key);
       }
@@ -135,11 +140,52 @@ public class ForInContextSelector implements ContextSelector {
     public String toString() {
       return "for in hack filter for " + get(ContextKey.PARAMETERS[index]) + " over " + this.base;
     }
+
+    /**
+     * get the {@link InstanceKey} used to distinguish this context 
+     */
+    public InstanceKey getInstanceKey() {
+      return ((SingleInstanceFilter)get(ContextKey.PARAMETERS[index])).getInstance();
+    }
+  }
+   
+  /**
+   * A "dummy" for-in context used for callees of a method analyzed in a real
+   * {@link ForInContext}. The purpose of this class is to clone callees based
+   * on the same {@link InstanceKey} used for the caller context, but without
+   * returning a {@link SingleInstanceFilter} {@link ContextItem} that filters
+   * possible parameter values.
+   */
+  class MarkerForInContext extends ForInContext {
+
+    MarkerForInContext(Context base, InstanceKey obj) {
+      super(base, obj);
+    }
+
+    /**
+     * Like {@link ForInContext#get(ContextKey)}, but don't return a
+     * {@link SingleInstanceFilter} for the distinguishing {@link InstanceKey}
+     */
+    @Override
+    public ContextItem get(ContextKey key) {
+      final ContextItem contextItem = super.get(key);
+      return (contextItem instanceof SingleInstanceFilter) ? null : contextItem;
+    }
+
+    /**
+     * we need to override this method since
+     * {@link MarkerForInContext#get(ContextKey)} does not return the
+     * {@link SingleInstanceFilter} containing the {@link InstanceKey}. Instead,
+     * we invoke {@link ForInContext#get(ContextKey)} from the superclass.
+     */
+    @Override
+    public InstanceKey getInstanceKey() {
+      return ((SingleInstanceFilter)super.get(ContextKey.PARAMETERS[index])).getInstance();
+    }
     
   }
-    
   private final ContextSelector base;
-  private final ContextSelector oneLevel;
+//  private final ContextSelector oneLevel;
   private final int index;
   
   private void collectValues(DefUse du, SSAInstruction inst, MutableIntSet values) {
@@ -168,7 +214,7 @@ public class ForInContextSelector implements ContextSelector {
       if (DEPENDENT_THRU_READS) {
         collectValues(du, du.getDef(inst.getUse(i)), values);
       }
-      if (values.contains(3)) {
+      if (values.contains(index+1)) {
         dependentParameters.add(i);
       }
     }
@@ -182,14 +228,15 @@ public class ForInContextSelector implements ContextSelector {
   public ForInContextSelector(int index, ContextSelector base) {
     this.index = index;
     this.base = base;
-    this.oneLevel = new OneLevelSiteContextSelector(base);
+//    this.oneLevel = new OneLevelSiteContextSelector(base);
   }
   
   private final HashMap<MethodReference, Boolean> forInOnFirstArg_cache = HashMapFactory.make();
-  public static final HashMap<MethodReference, DefUse> du_cache = HashMapFactory.make();
-  public static final IRFactory<IMethod> factory = AstIRFactory.makeDefaultFactory();
+  private final HashMap<MethodReference, DefUse> du_cache = HashMapFactory.make();
+  private final IRFactory<IMethod> factory = AstIRFactory.makeDefaultFactory();
   
   // determine whether the method performs a for-in loop over the properties of its index'th argument
+  @SuppressWarnings("unused")
   private boolean forInOnFirstArg(IMethod method) {
     MethodReference mref = method.getReference();
     if(method.getNumberOfParameters() < index)
@@ -198,7 +245,7 @@ public class ForInContextSelector implements ContextSelector {
     if(b != null)
       return b;
     DefUse du = getDefUse(method);
-    for(SSAInstruction use : Iterator2Iterable.make(du.getUses(3))) {
+    for(SSAInstruction use : Iterator2Iterable.make(du.getUses(index+1))) {
       if(use instanceof EachElementGetInstruction) {
         forInOnFirstArg_cache.put(mref, true);
         return true;
@@ -208,7 +255,7 @@ public class ForInContextSelector implements ContextSelector {
     return false;
   }
 
-  public static DefUse getDefUse(IMethod method) {
+  private DefUse getDefUse(IMethod method) {
     MethodReference mref = method.getReference();
     DefUse du = du_cache.get(mref);
     if(du == null) {
@@ -231,16 +278,16 @@ public class ForInContextSelector implements ContextSelector {
       return f;
     boolean usedAsPropertyName = false, usedAsSomethingElse = false;
     DefUse du = getDefUse(method);
-    for(SSAInstruction use : Iterator2Iterable.make(du.getUses(3))) {
+    for(SSAInstruction use : Iterator2Iterable.make(du.getUses(index+1))) {
       if(use instanceof ReflectiveMemberAccess) {
         ReflectiveMemberAccess rma = (ReflectiveMemberAccess)use;
-        if(rma.getMemberRef() == 3) {
+        if(rma.getMemberRef() == index+1) {
           usedAsPropertyName = true;
           continue;
         }
       } else if(use instanceof AstIsDefinedInstruction) {
         AstIsDefinedInstruction aidi = (AstIsDefinedInstruction)use;
-        if(aidi.getNumberOfUses() > 1 && aidi.getUse(1) == 3) {
+        if(aidi.getNumberOfUses() > 1 && aidi.getUse(1) == index+1) {
           usedAsPropertyName = true;
           continue;
         }
@@ -293,7 +340,7 @@ public class ForInContextSelector implements ContextSelector {
       Frequency f = usesFirstArgAsPropertyName(callee);
       if(f == Frequency.ALWAYS) {
         return new ForInContext(baseContext, simulateToString(caller.getClassHierarchy(), receiver[index]));
-      } else if(f == Frequency.SOMETIMES || forInOnFirstArg(callee)) {
+      } else if(f == Frequency.SOMETIMES) {
         if(receiver[index] == null) {
           IClass undef = caller.getClassHierarchy().lookupClass(JavaScriptTypes.Undefined);
           return new ForInContext(baseContext, new ConcreteTypeKey(undef));
@@ -306,16 +353,26 @@ public class ForInContextSelector implements ContextSelector {
       return new SelectiveCPAContext(baseContext, receiver);
     } else if (USE_1LEVEL_IN_BODIES && FORIN_MARKER.equals(caller.getContext().get(FORIN_KEY))) {
       if (! identifyDependentParameters(caller, site).isEmpty()) {
-        return oneLevel.getCalleeTarget(caller, site, callee, receiver);        
+//        final Context calleeTarget = oneLevel.getCalleeTarget(caller, site, callee, receiver);
+//        // RECURSION CHECK: only add one level of caller-site contexts if the caller and callee methods are distinct
+//        if (!RecursionCheckContextSelector.recursiveContext(calleeTarget, callee)) {
+//          return calleeTarget;
+//        }
+        // use a MarkerForInContext to clone based on the InstanceKey used in the caller context
+        // TODO the cast below isn't safe; fix
+        InstanceKey callerIk = ((ForInContext)caller.getContext()).getInstanceKey();
+        return new MarkerForInContext(baseContext, callerIk);
       } else {
         return baseContext;
       }
-    }
+    } 
     return baseContext;
   }
   
+
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     if (USE_CPA_IN_BODIES && FORIN_MARKER.equals(caller.getContext().get(FORIN_KEY))) {
+      // what about base.getRelevantParameters() here?
       return identifyDependentParameters(caller, site);
     } else if (caller.getIR().getCalls(site)[0].getNumberOfUses() > index) {
       return IntSetUtil.make(new int[]{index}).union(base.getRelevantParameters(caller, site));

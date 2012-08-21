@@ -44,3 +44,7 @@ var foo = strObj.toLowerCase();
 var whatnot = [ , , , 7, numObj, arg2, strObj ];
 
 whatnot[ 5 ].otherMethod( 7 );
+
+delete arg2.bar();
+delete whatnot[ 5 ];
+delete arg2;

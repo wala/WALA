@@ -39,6 +39,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.CancelRuntimeException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
@@ -258,6 +259,10 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     try {
       solver.solve(monitor);
     } catch (CancelException e) {
+      CallGraphBuilderCancelException c = CallGraphBuilderCancelException.createCallGraphBuilderCancelException(e, callGraph,
+          system.extractPointerAnalysis(this));
+      throw c;
+    } catch (CancelRuntimeException e) {
       CallGraphBuilderCancelException c = CallGraphBuilderCancelException.createCallGraphBuilderCancelException(e, callGraph,
           system.extractPointerAnalysis(this));
       throw c;
@@ -907,6 +912,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
         if (!I.getConcreteType().isArrayClass()) {
           continue;
         }
+        if (I instanceof ZeroLengthArrayInNode) {
+          continue;
+        }
         TypeReference C = I.getConcreteType().getReference().getArrayElementType();
         if (C.isPrimitiveType()) {
           continue;
@@ -1285,6 +1293,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
         public void act(int i) {
           InstanceKey I = system.getInstanceKey(i);
           if (!I.getConcreteType().isArrayClass()) {
+            return;
+          }
+          if (I instanceof ZeroLengthArrayInNode) {
             return;
           }
           TypeReference C = I.getConcreteType().getReference().getArrayElementType();

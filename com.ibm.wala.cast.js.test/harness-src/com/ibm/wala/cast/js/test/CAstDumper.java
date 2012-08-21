@@ -11,6 +11,11 @@
 
 package com.ibm.wala.cast.js.test;
 
+import static com.ibm.wala.cast.tree.CAstNode.ASSIGN;
+import static com.ibm.wala.cast.tree.CAstNode.BLOCK_EXPR;
+import static com.ibm.wala.cast.tree.CAstNode.BLOCK_STMT;
+import static com.ibm.wala.cast.tree.CAstNode.EMPTY;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -38,6 +43,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
  *
  */
 public class CAstDumper {
+  private static final boolean NORMALISE = false;
 	private final NodeLabeller labeller;
 	
 	public CAstDumper() {
@@ -112,10 +118,37 @@ public class CAstDumper {
 		return scopedEntities;
 	}
 	
-	private void dump(CAstNode node, int indent, StringBuilder buf, CAstControlFlowMap cfg) {
+	private boolean isTrivial(CAstNode node) {
+	  switch(node.getKind()) {
+	  case ASSIGN:
+	    return node.getChild(0).getKind() == CAstNode.VAR && isTrivial(node.getChild(1));
+	  case EMPTY:
+	    return true;
+	  case BLOCK_EXPR:
+	  case BLOCK_STMT:
+	    return getNonTrivialChildCount(node) == 0;
+	  default:
+	    return false;
+	  }
+	}
+	
+	private int getNonTrivialChildCount(CAstNode node) {
+	  int cnt = 0;
+	  for(int i=0;i<node.getChildCount();++i)
+	    if(!isTrivial(node.getChild(i)))
+	      ++cnt;
+	  return cnt;
+	}
+	
+	@SuppressWarnings("unused")
+  private void dump(CAstNode node, int indent, StringBuilder buf, CAstControlFlowMap cfg) {
+	  if(isTrivial(node))
+	    return;
 		// normalise away single-child block expressions
-		if(node.getKind() == CAstNode.BLOCK_EXPR && node.getChildCount() == 1) {
-			dump(node.getChild(0), indent, buf, cfg);
+		if(NORMALISE && node.getKind() == CAstNode.BLOCK_EXPR && getNonTrivialChildCount(node) == 1) {
+		  for(int i=0;i<node.getChildCount();++i)
+		    if(!isTrivial(node.getChild(i)))
+		      dump(node.getChild(i), indent, buf, cfg);
 		} else {
 			buf.append(indent(indent) + labeller.addNode(node) + ": ");
 			if(node.getKind() == CAstNode.CONSTANT) {
@@ -153,7 +186,7 @@ public class CAstDumper {
 			for(int i=0;i<node.getChildCount();++i) {
 				CAstNode child = node.getChild(i);
 				// omit empty statements in a block
-				if(node.getKind() == CAstNode.BLOCK_STMT && child != null && child.getKind() == CAstNode.EMPTY)
+				if(NORMALISE && node.getKind() == CAstNode.BLOCK_STMT && child != null && child.getKind() == CAstNode.EMPTY)
 					continue;
 				dump(child, indent+2, buf, cfg);
 			}

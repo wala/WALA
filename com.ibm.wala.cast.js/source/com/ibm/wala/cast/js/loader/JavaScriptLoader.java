@@ -33,6 +33,7 @@ import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.ir.translator.AstTranslator.AstLexicalInformation;
+import com.ibm.wala.cast.ir.translator.AstTranslator.WalkContext;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.ir.translator.TranslatorToIR;
 import com.ibm.wala.cast.js.analysis.typeInference.JSPrimitiveType;
@@ -44,6 +45,8 @@ import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
 import com.ibm.wala.cast.js.ssa.JavaScriptTypeOfInstruction;
 import com.ibm.wala.cast.js.ssa.JavaScriptWithRegion;
+import com.ibm.wala.cast.js.ssa.PrototypeLookup;
+import com.ibm.wala.cast.js.ssa.SetPrototype;
 import com.ibm.wala.cast.js.translator.JSAstTranslator;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
@@ -52,6 +55,7 @@ import com.ibm.wala.cast.loader.AstDynamicPropertyClass;
 import com.ibm.wala.cast.loader.AstFunctionClass;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
+import com.ibm.wala.cast.loader.AstMethod.Retranslatable;
 import com.ibm.wala.cast.loader.CAstAbstractModuleLoader;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstEntity;
@@ -515,6 +519,16 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
           throw new UnsupportedOperationException();
         }
 
+        @Override
+        public PrototypeLookup PrototypeLookup(int lval, int object) {
+          return new PrototypeLookup(lval, object);
+        }
+
+        @Override
+        public SetPrototype SetPrototype(int object, int prototype) {
+          return new SetPrototype(object, prototype);
+        }
+
       };
     }
 
@@ -641,19 +655,25 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
   }
 
   class JavaScriptCodeBody extends AstFunctionClass {
-
+    private final WalkContext translationContext;
+    private final CAstEntity entity;
+    
     public JavaScriptCodeBody(TypeReference codeName, TypeReference parent, IClassLoader loader,
-        CAstSourcePositionMap.Position sourcePosition) {
+        CAstSourcePositionMap.Position sourcePosition, CAstEntity entity, WalkContext context) {
       super(codeName, parent, loader, sourcePosition);
       types.put(codeName.getName(), this);
+      this.translationContext = context;
+      this.entity = entity;
     }
 
     public IClassHierarchy getClassHierarchy() {
       return cha;
     }
-
-    private IMethod setCodeBody(IMethod codeBody) {
+    
+    private IMethod setCodeBody(JavaScriptMethodObject codeBody) {
       this.functionBody = codeBody;
+      codeBody.entity = entity;
+      codeBody.translationContext = translationContext;
       return codeBody;
     }
   }
@@ -666,12 +686,27 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     functionQualifiers.add(CAstQualifier.FINAL);
   }
 
-  public class JavaScriptMethodObject extends AstMethod {
+  public class JavaScriptMethodObject extends AstMethod implements Retranslatable {
+    private WalkContext translationContext;
+    private CAstEntity entity;
 
-    JavaScriptMethodObject(JavaScriptCodeBody cls, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
+    JavaScriptMethodObject(IClass cls, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
         TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
       super(cls, functionQualifiers, cfg, symtab, AstMethodReference.fnReference(cls.getReference()), hasCatchBlock, caughtTypes,
           hasMonitorOp, lexicalInfo, debugInfo);
+
+      // force creation of these constants by calling the getter methods
+      symtab.getNullConstant();
+    }
+
+    
+    public CAstEntity getEntity() {
+      return entity;
+    }
+
+
+    public void retranslate(AstTranslator xlator) {
+      xlator.translate(entity, translationContext);
     }
 
     public IClassHierarchy getClassHierarchy() {
@@ -745,25 +780,31 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     }
   }
 
-  public IClass defineCodeBodyType(String name, TypeReference P, CAstSourcePositionMap.Position sourcePosition) {
+  public IClass makeCodeBodyType(String name, TypeReference P, CAstSourcePositionMap.Position sourcePosition, CAstEntity entity, WalkContext context) {
     return new JavaScriptCodeBody(TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName(name)), P, this,
-        sourcePosition);
+        sourcePosition, entity, context);
   }
 
-  public IClass defineFunctionType(String name, CAstSourcePositionMap.Position pos) {
-    return defineCodeBodyType(name, JavaScriptTypes.Function, pos);
+  public IClass defineFunctionType(String name, CAstSourcePositionMap.Position pos, CAstEntity entity, WalkContext context) {
+    return makeCodeBodyType(name, JavaScriptTypes.Function, pos, entity, context);
   }
 
-  public IClass defineScriptType(String name, CAstSourcePositionMap.Position pos) {
-    return defineCodeBodyType(name, JavaScriptTypes.Script, pos);
+  public IClass defineScriptType(String name, CAstSourcePositionMap.Position pos, CAstEntity entity, WalkContext context) {
+    return makeCodeBodyType(name, JavaScriptTypes.Script, pos, entity, context);
   }
 
   public IMethod defineCodeBodyCode(String clsName, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
       TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
     JavaScriptCodeBody C = (JavaScriptCodeBody) lookupClass(clsName, cha);
     assert C != null : clsName;
-    return C.setCodeBody(new JavaScriptMethodObject(C, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo,
-        debugInfo));
+    return C.setCodeBody(makeCodeBodyCode(cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo, debugInfo, C));
+  }
+
+  public JavaScriptMethodObject makeCodeBodyCode(AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
+      TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo,
+      IClass C) {
+    return new JavaScriptMethodObject(C, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo,
+        debugInfo);
   }
 
   final JavaScriptRootClass ROOT = new JavaScriptRootClass(this, null);

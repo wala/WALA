@@ -17,7 +17,7 @@ public class FlowsToTestLocals {
    */
   public static void main(String[] args) {
     Object x = new FlowsToType();
-    TestUtil.makeVarUsed(x);
+    DemandPATestUtil.makeVarUsed(x);
   }
 
 }

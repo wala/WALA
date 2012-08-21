@@ -115,8 +115,6 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
   public void loadAllSources(Set<ModuleEntry> modules) {
     // TODO: we might need one AST (-> "Object" class) for all files.
     // TODO: group by project and send 'em in
-    JDTJava2CAstTranslator jdt2cast = makeCAstTranslator();
-    final Java2IRTranslator java2ir = makeIRTranslator(jdt2cast);
 
     System.out.println(modules);
 
@@ -143,7 +141,9 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
         public void acceptAST(ICompilationUnit source, CompilationUnit ast) {
 
           try {
-            java2ir.translate(proj.getValue().get(source), ast, source.getUnderlyingResource().getLocation().toOSString());
+            JDTJava2CAstTranslator jdt2cast = makeCAstTranslator(ast, source.getUnderlyingResource().getLocation().toOSString());
+            final Java2IRTranslator java2ir = makeIRTranslator();
+            java2ir.translate(proj.getValue().get(source), jdt2cast.translateToCAst());
           } catch (JavaModelException e) {
             e.printStackTrace();
           }
@@ -165,12 +165,12 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
     }
   }
 
-  protected Java2IRTranslator makeIRTranslator(JDTJava2CAstTranslator jdt2cast) {
-    return new Java2IRTranslator(jdt2cast, sourceLoader);
+  protected Java2IRTranslator makeIRTranslator() {
+    return new Java2IRTranslator(sourceLoader);
   }
 
-  protected JDTJava2CAstTranslator makeCAstTranslator() {
-    return new JDTJava2CAstTranslator(sourceLoader);
+  protected JDTJava2CAstTranslator makeCAstTranslator(CompilationUnit cu, String fullPath) {
+    return new JDTJava2CAstTranslator(sourceLoader, cu, fullPath, false);
   }
 
 }

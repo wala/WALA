@@ -54,11 +54,19 @@ public abstract class AbstractSourcePosition implements Position {
 
   public String toString() {
     URL x = getURL();
-    String xf = x.getPath();
+    String xf = x.toString();
     if (xf.indexOf('/') >= 0) {
       xf = xf.substring(xf.lastIndexOf('/')+1);
     }
-    return xf + "["+getFirstLine()+":"+getFirstCol()+"] -> ["+getLastLine()+":"+getLastCol()+"]";
+    String pos;
+    if (getFirstCol() != -1) {
+      pos = "["+getFirstLine()+":"+getFirstCol()+"] -> ["+getLastLine()+":"+getLastCol()+"]";
+    } else if (getFirstOffset() != -1) {
+      pos =  "[" + getFirstOffset() + "->" + getLastOffset() + "] (line " + getFirstLine() +")";
+    } else {
+      pos = "(line " + getFirstLine() +")";
+    }
+    return xf + " " + pos;
   }
 
 }

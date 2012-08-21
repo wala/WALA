@@ -10,6 +10,8 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.html;
 
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
+
 
 
 /**
@@ -22,7 +24,7 @@ public interface IHtmlCallback {
 
 	void handleStartTag(ITag tag);
 
-	void handleText(int lineNumber, String text);
+	void handleText(Position pos, String text);
 	
 	void handleEndTag(ITag tag);
 	

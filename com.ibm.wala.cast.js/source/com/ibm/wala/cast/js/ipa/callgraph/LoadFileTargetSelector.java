@@ -1,6 +1,7 @@
 package com.ibm.wala.cast.js.ipa.callgraph;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
@@ -60,7 +61,10 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
           JavaScriptLoader cl = (JavaScriptLoader) builder.getClassHierarchy().getLoader(JavaScriptTypes.jsLoader);
           URL url = new URL(builder.getBaseURL(), str);
           if(!loadedFiles.contains(url)) {
-            Util.loadAdditionalFile(builder.getClassHierarchy() , cl, str, url, url.getFile());
+            // try to open the input stream for the URL.  if it fails, we'll get an IOException and fall through to default case
+            InputStream inputStream = url.openConnection().getInputStream();
+            inputStream.close();
+            JSCallGraphUtil.loadAdditionalFile(builder.getClassHierarchy() , cl, str, url);
             loadedFiles.add(url);
             IClass script = builder.getClassHierarchy().lookupClass(TypeReference.findOrCreate(cl.getReference(), "L" + url.getFile()));
             return script.getMethod(JavaScriptMethods.fnSelector);

@@ -21,13 +21,19 @@ import java.util.List;
  */
 public class ExtractionRegion {
   private int start, end;
+  
+  // parameters for the extracted method
   private final List<String> parameters;
+  
+  // variables that should be made local to the extracted method if possible
+  private final List<String> locals;
 
-  public ExtractionRegion(int start, int end, List<String> parameters) {
+  public ExtractionRegion(int start, int end, List<String> parameters, List<String> locals) {
     super();
     this.start = start;
     this.end = end;
     this.parameters = parameters;
+    this.locals = locals;
   }
 
   public int getStart() {
@@ -48,5 +54,9 @@ public class ExtractionRegion {
 
   public void setEnd(int end) {
     this.end = end;
+  }
+
+  public List<String> getLocals() {
+    return locals;
   }
 }

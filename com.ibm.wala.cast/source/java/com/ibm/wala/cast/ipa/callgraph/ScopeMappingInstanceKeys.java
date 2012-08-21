@@ -10,9 +10,11 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 import com.ibm.wala.cast.ipa.callgraph.LexicalScopingResolverContexts.LexicalScopingResolver;
+import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
@@ -43,7 +45,7 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
    */
   protected abstract boolean needsScopeMappingKey(InstanceKey base);
 
-  private final PropagationCallGraphBuilder builder;
+  protected final PropagationCallGraphBuilder builder;
 
   private final InstanceKeyFactory basic;
 
@@ -91,38 +93,67 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
      * @return
      */
     Iterator<CGNode> getFunargNodes(Pair<String, String> name) {
-      Iterator<CGNode> result = EmptyIterator.instance();
-
-      LexicalScopingResolver r = (LexicalScopingResolver) creator.getContext().get(LexicalScopingResolverContexts.RESOLVER);
-      if (r != null) {
-        CGNode def = r.getOriginalDefiner(name);
-        if (def != null) {
-          result = new NonNullSingletonIterator<CGNode>(def);
+      if (AstTranslator.NEW_LEXICAL) {
+        Collection<CGNode> constructorCallers = getConstructorCallers(this, name);
+        assert constructorCallers != null && !constructorCallers.isEmpty() : "no callers for constructor";
+        Iterator<CGNode> result = EmptyIterator.instance();
+        for (CGNode callerOfConstructor : constructorCallers) {
+          if (callerOfConstructor.getMethod().getReference().getDeclaringClass().getName().toString().equals(name.snd)){
+            result = new CompoundIterator<CGNode>(result, new NonNullSingletonIterator<CGNode>(callerOfConstructor));
+          } else {
+            PointerKey funcKey = builder.getPointerKeyForLocal(callerOfConstructor, 1);
+            OrdinalSet<InstanceKey> funcPtrs = builder.getPointerAnalysis().getPointsToSet(funcKey);
+            for (InstanceKey funcPtr : funcPtrs) {
+              if (funcPtr instanceof ScopeMappingInstanceKey) {
+                result = new CompoundIterator<CGNode>(result, ((ScopeMappingInstanceKey) funcPtr).getFunargNodes(name));                
+              }              
+            }
+//            Iterator<CGNode> result = EmptyIterator.instance();
+//            for (InstanceKey x : funcPtrs) {
+//              if (x instanceof ScopeMappingInstanceKey) {
+//                result = new CompoundIterator<CGNode>(result, ((ScopeMappingInstanceKey) x).getFunargNodes(name));
+//              }
+//            }
+//            return result;
+          }          
         }
-      }
+        return result;
+      } else {
+        Iterator<CGNode> result = EmptyIterator.instance();
 
-      // with multiple levels of nested functions, the creator itself may have
-      // been invoked by a function represented by a SMIK. E.g., see
-      // wrap3.js; the constructor of set() is invoked by wrapper(), and
-      // the wrapper() function object is a SMIK. In such cases, we need to
-      // recurse to find all the relevant CGNodes.
-      ContextItem nested = creator.getContext().get(ScopeMappingKeysContextSelector.scopeKey);
-      if (nested != null) {
-        result = new CompoundIterator<CGNode>(result, ((ScopeMappingInstanceKey) nested).getFunargNodes(name));
-      }
-
-      // TODO what does this code do??? commenting out does not cause any
-      // regression failures --MS
-      PointerKey funcKey = builder.getPointerKeyForLocal(creator, 1);
-      OrdinalSet<InstanceKey> funcPtrs = builder.getPointerAnalysis().getPointsToSet(funcKey);
-      for (InstanceKey x : funcPtrs) {
-        if (x instanceof ScopeMappingInstanceKey) {
-          result = new CompoundIterator<CGNode>(result, ((ScopeMappingInstanceKey) x).getFunargNodes(name));
+        LexicalScopingResolver r = (LexicalScopingResolver) creator.getContext().get(LexicalScopingResolverContexts.RESOLVER);
+        if (r != null) {
+          CGNode def = r.getOriginalDefiner(name);
+          if (def != null) {
+            result = new NonNullSingletonIterator<CGNode>(def);
+          }
         }
-      }
 
-      return result;
+        // with multiple levels of nested functions, the creator itself may have
+        // been invoked by a function represented by a SMIK. E.g., see
+        // wrap3.js; the constructor of set() is invoked by wrapper(), and
+        // the wrapper() function object is a SMIK. In such cases, we need to
+        // recurse to find all the relevant CGNodes.
+        ContextItem nested = creator.getContext().get(ScopeMappingKeysContextSelector.scopeKey);
+        if (nested != null) {
+          result = new CompoundIterator<CGNode>(result, ((ScopeMappingInstanceKey) nested).getFunargNodes(name));
+        }
+
+        // TODO what does this code do??? commenting out does not cause any
+        // regression failures --MS
+        PointerKey funcKey = builder.getPointerKeyForLocal(creator, 1);
+        OrdinalSet<InstanceKey> funcPtrs = builder.getPointerAnalysis().getPointsToSet(funcKey);
+        for (InstanceKey x : funcPtrs) {
+          if (x instanceof ScopeMappingInstanceKey) {
+            result = new CompoundIterator<CGNode>(result, ((ScopeMappingInstanceKey) x).getFunargNodes(name));
+          }
+        }
+
+        return result;
+      }
     }
+
+
 
     public int hashCode() {
       return base.hashCode() * creator.hashCode();
@@ -134,11 +165,15 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
     }
 
     public String toString() {
-      return "SMIK:" + base + "@" + creator;
+      return "SMIK:" + base + "@creator:" + creator;
     }
-    
+
     public InstanceKey getBase() {
       return base;
+    }
+    
+    public CGNode getCreator() {
+      return creator;
     }
   }
 
@@ -151,6 +186,11 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
     }
   }
 
+  /**
+   * get the CGNodes corresponding to the method that invoked the constructor for smik
+   */
+  protected abstract Collection<CGNode> getConstructorCallers(ScopeMappingInstanceKey smik, Pair<String, String> name);
+  
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
     return basic.getInstanceKeyForMultiNewArray(node, allocation, dim);
   }

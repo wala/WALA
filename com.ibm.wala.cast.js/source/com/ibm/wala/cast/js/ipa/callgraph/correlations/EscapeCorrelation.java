@@ -11,6 +11,8 @@
 
 package com.ibm.wala.cast.js.ipa.callgraph.correlations;
 
+import java.util.Set;
+
 import com.ibm.wala.cast.ir.ssa.AbstractReflectiveGet;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
@@ -28,8 +30,9 @@ public class EscapeCorrelation extends Correlation {
 	private final AbstractReflectiveGet get;
 	private final SSAAbstractInvokeInstruction invoke;
 	
-	public EscapeCorrelation(AbstractReflectiveGet get, SSAAbstractInvokeInstruction invoke, String indexName) {
-	  super(indexName);
+	public EscapeCorrelation(AbstractReflectiveGet get, SSAAbstractInvokeInstruction invoke,
+	                         String indexName, Set<String> flownThroughLocals) {
+	  super(indexName, flownThroughLocals);
 		this.get = get;
 		this.invoke = invoke;
 	}

@@ -52,10 +52,10 @@ public class TestOnTheFlySimple {
    */
   public static void main(String[] args) {
     A a2 = new A();
-    TestUtil.makeVarUsed(a2);
+    DemandPATestUtil.makeVarUsed(a2);
     A a = makeA();
     Object o = a.foo();
-    TestUtil.testThisVar(o);
+    DemandPATestUtil.testThisVar(o);
   }
 
 }

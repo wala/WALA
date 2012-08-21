@@ -20,6 +20,7 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.strings.Atom;
@@ -43,10 +44,11 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
    * While neither of these situations is a priori impossible, they are most likely due to analysis
    * imprecision. If this flag is set to true, we emit a warning when seeing them. 
    */
-  public static final boolean WARN_ABOUT_IMPRECISE_CALLGRAPH = true;
+  public static boolean WARN_ABOUT_IMPRECISE_CALLGRAPH = true;
   
   public static final boolean DEBUG_SYNTHETIC_CALL_METHODS = false;
 
+  private static final TypeName CALL_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/functionCall");
   private final MethodTargetSelector base;
 
   public JavaScriptFunctionDotCallTargetSelector(MethodTargetSelector base) {
@@ -62,12 +64,11 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
    * .wala.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference,
    * com.ibm.wala.classLoader.IClass)
    */
-  @Override
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
     IMethod method = receiver.getMethod(AstMethodReference.fnSelector);
     if (method != null) {
-      String s = method.getReference().getDeclaringClass().getName().toString();
-      if (s.equals("Lprologue.js/functionCall")) {
+      TypeName tn = method.getReference().getDeclaringClass().getName();
+      if (tn.equals(CALL_TYPE_NAME)) {
         /* invoking Function.prototype.call as a constructor results in a TypeError
          * see ECMA-262 5.1, 15: "None of the built-in functions described in this clause that 
          *   are not constructors shall implement the [[Construct]] internal method unless otherwise 
@@ -94,11 +95,11 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
       pos = ((AstMethod)callerMethod).getSourcePosition(indices.next());
     }
     System.err.println("Detected improbable call to Function.prototype.call " +
-        (pos == null ? "in function " + caller.getMethod() : "at position " + pos) +
+        (pos == null ? "in function " + caller : "at position " + pos) +
         "; this is likely caused by call graph imprecision.");
   }
   
-  private static final boolean SEPARATE_SYNTHETIC_METHOD_PER_SITE = true;
+  private static final boolean SEPARATE_SYNTHETIC_METHOD_PER_SITE = false;
 
   /**
    * cache synthetic method for each arity of Function.call() invocation
@@ -172,7 +173,7 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
 
   private String getKey(int nargs, CGNode caller, CallSiteReference site) {
     if (SEPARATE_SYNTHETIC_METHOD_PER_SITE) {
-      return Util.getShortName(caller) + "_" + caller.getGraphNodeId() + "_" + site.getProgramCounter();
+      return JSCallGraphUtil.getShortName(caller) + "_" + caller.getGraphNodeId() + "_" + site.getProgramCounter();
     } else {
       return ""+nargs;
     }

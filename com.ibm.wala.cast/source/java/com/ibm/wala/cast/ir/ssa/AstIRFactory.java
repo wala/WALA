@@ -36,6 +36,34 @@ public class AstIRFactory implements IRFactory {
     return ((AstMethod) method).getControlFlowGraph();
   }
 
+  public static class AstDefaultIRFactory extends DefaultIRFactory {
+    private final AstIRFactory astFactory;
+
+    public AstDefaultIRFactory() {
+      this(new AstIRFactory());
+    }
+    
+    public AstDefaultIRFactory(AstIRFactory astFactory) {
+      this.astFactory = astFactory;
+    }
+
+    public IR makeIR(IMethod method, Context context, SSAOptions options) {
+      if (method instanceof AstMethod) {
+        return astFactory.makeIR(method, context, options);
+      } else {
+        return super.makeIR(method, context, options);
+      }
+    }
+
+    public ControlFlowGraph makeCFG(IMethod method, Context context) {
+      if (method instanceof AstMethod) {
+        return astFactory.makeCFG(method, context);
+      } else {
+        return super.makeCFG(method, context);
+      }
+    }
+  }
+
   public class AstIR extends IR {
     private final LexicalInformation lexicalInfo;
     
@@ -101,7 +129,6 @@ public class AstIRFactory implements IRFactory {
 
   public IR makeIR(final IMethod method, final Context context, final SSAOptions options) {
     assert method instanceof AstMethod : method.toString();
-//    Pair<IMethod,Context> key = Pair.make(method, context);
   
     AbstractCFG oldCfg = ((AstMethod) method).cfg();
     SSAInstruction[] oldInstrs = (SSAInstruction[]) oldCfg.getInstructions();
@@ -115,25 +142,7 @@ public class AstIRFactory implements IRFactory {
   }
 
   public static IRFactory<IMethod> makeDefaultFactory() {
-    return new DefaultIRFactory() {
-      private final AstIRFactory astFactory = new AstIRFactory();
-
-      public IR makeIR(IMethod method, Context context, SSAOptions options) {
-        if (method instanceof AstMethod) {
-          return astFactory.makeIR(method, context, options);
-        } else {
-          return super.makeIR(method, context, options);
-        }
-      }
-
-      public ControlFlowGraph makeCFG(IMethod method, Context context) {
-        if (method instanceof AstMethod) {
-          return astFactory.makeCFG(method, context);
-        } else {
-          return super.makeCFG(method, context);
-        }
-      }
-    };
+    return new AstDefaultIRFactory();
   }
 
   public boolean contextIsIrrelevant(IMethod method) {

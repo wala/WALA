@@ -51,14 +51,14 @@ public abstract class TestCallGraphShape extends WalaTestCase {
                   if (file.equalsIgnoreCase(fileName)) {
                     if (pos.getFirstLine() >= (Integer) assertionData[j][2]
                                            &&
-                        pos.getLastLine() <= (Integer) assertionData[j][3]) {
+                        (pos.getLastLine() != -1? pos.getLastLine(): pos.getFirstLine()) <= (Integer) assertionData[j][3]) {
                       System.err.println("found " + inst + " of " + M + " at expected position " + pos);
                       continue insts;
                     }
                   }
                 }
 
-                Assert.assertTrue("unexpected location " + pos + " for " + inst + " of " + M, false);
+                Assert.assertTrue("unexpected location " + pos + " for " + inst + " of " + M + "\n" + N.getIR(), false);
               }
             }
           }
@@ -101,7 +101,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
             }
           }
 
-          Assert.assertTrue("no name " + names[j].name + " for " + N, found);
+          Assert.assertTrue("no name " + names[j].name + " for " + N + "\n" + ir, found);
         }
       }
     }
@@ -129,14 +129,16 @@ public abstract class TestCallGraphShape extends WalaTestCase {
           targetName = targetName.substring(1);
         }
 
-        check_edges: while (srcs.hasNext()) {
+        while (srcs.hasNext()) {
           CGNode src = (CGNode) srcs.next();
           for (Iterator sites = src.iterateCallSites(); sites.hasNext();) {
             CallSiteReference sr = (CallSiteReference) sites.next();
            
             Iterator dsts = getNodes(CG, targetName).iterator();
-            Assert.assertTrue("cannot find " + targetName, dsts.hasNext());
-
+            if (! checkAbsence) {
+              Assert.assertTrue("cannot find " + targetName, dsts.hasNext());
+            }
+            
             while (dsts.hasNext()) {
               CGNode dst = (CGNode) dsts.next();
               for (Iterator tos = CG.getPossibleTargets(src, sr).iterator(); tos.hasNext();) {

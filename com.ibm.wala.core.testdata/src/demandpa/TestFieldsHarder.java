@@ -42,7 +42,7 @@ public class TestFieldsHarder {
     a2.f = a1;
     A a3 = (A) a2.f;
     Object o2 = a3.f;
-    TestUtil.testThisVar(o2);
+    DemandPATestUtil.testThisVar(o2);
   }
 
 }

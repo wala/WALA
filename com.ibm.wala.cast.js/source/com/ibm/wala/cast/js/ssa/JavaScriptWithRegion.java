@@ -43,7 +43,7 @@ public class JavaScriptWithRegion extends SSAInstruction {
 
   @Override
   public void visit(IVisitor v) {
-    ((InstructionVisitor)v).visitWithRegion(this);
+    ((JSInstructionVisitor)v).visitWithRegion(this);
   }
 
   public int getNumberOfUses() {

@@ -4,6 +4,7 @@ Eclipse-LazyStart: true
 Bundle-Name: %pluginName
 Bundle-SymbolicName: com.ibm.wala.ide
 Bundle-Version: 1.1.3.qualifier
+Bundle-Activator: com.ibm.wala.ide.plugin.CorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Require-Bundle: com.ibm.wala.shrike,
@@ -18,5 +19,6 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: com.ibm.wala.ide,
  com.ibm.wala.ide.classloader,
+ com.ibm.wala.ide.plugin,
  com.ibm.wala.ide.ui,
  com.ibm.wala.ide.util

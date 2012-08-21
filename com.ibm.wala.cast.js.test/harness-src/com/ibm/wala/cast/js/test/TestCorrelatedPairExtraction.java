@@ -227,6 +227,7 @@ public abstract class TestCorrelatedPairExtraction {
 	}
 	
 	// another example with "this"
+  // fails since variables from enclosing functions are no longer in SSA form, hence no correlation is found 
   @Test
 	public void test9() {
 		testRewriter("function defglobals(globals) {\n" +
@@ -413,7 +414,7 @@ public abstract class TestCorrelatedPairExtraction {
 	}
 	
 	// fails since the assignment to "value" in the extracted version gets a (spurious) reference error CFG edge
-  @Test @Ignore
+  @Test
 	public void test18() {
     testRewriter("function addMethods(source) {\n" +
             	   "  var properties = Object.keys(source);\n" +
@@ -426,13 +427,55 @@ public abstract class TestCorrelatedPairExtraction {
             	   "function addMethods(source) {\n" +
                  "  var properties = Object.keys(source);\n" +
                  "  for (var i = 0, length = properties.length; i < length; i++) {\n" +
-                 "    var property = properties[i], value; (function _forin_body_0(property, thi$) { value = source[property];\n" +
-                 "    thi$.prototype[property] = value; })(property, this);\n" +
+                 "    var property = properties[i], value; value = (function _forin_body_0(property, thi$) { var value; value = source[property];\n" +
+                 "    thi$.prototype[property] = value; return value; })(property, this);\n" +
                  "  }\n" +
                  "  return this;\n" +
                  "}");
 	}
 	
+  // slight variation of test18
+  @Test
+  public void test18_b() {
+    testRewriter("function addMethods(source) {\n" +
+                 "  var properties = Object.keys(source);\n" +
+                 "  for (var i = 0, length = properties.length; i < length; i++) {\n" +
+                 "    var property = properties[i], foo = 23, value = source[property];\n" +
+                 "    this.prototype[property] = value;\n" +
+                 "  }\n" +
+                 "  return this;\n" +
+                 "}",
+                 "function addMethods(source) {\n" +
+                 "  var properties = Object.keys(source);\n" +
+                 "  for (var i = 0, length = properties.length; i < length; i++) {\n" +
+                 "    var property = properties[i], foo = 23, value; value = (function _forin_body_0(property, thi$) { var value; value = source[property];\n" +
+                 "    thi$.prototype[property] = value; return value; })(property, this);\n" +
+                 "  }\n" +
+                 "  return this;\n" +
+                 "}");
+  }
+  
+  // fails since the assignment to "value" in the extracted version gets a (spurious) reference error CFG edge
+  @Test
+  public void test18_c() {
+    testRewriter("function addMethods(source) {\n" +
+                 "  var properties = Object.keys(source);\n" +
+                 "  for (var i = 0, length = properties.length; i < length; i++) {\n" +
+                 "    var property = properties[i], foo = 23, value = source[property], bar = 42;\n" +
+                 "    this.prototype[property] = value;\n" +
+                 "  }\n" +
+                 "  return this;\n" +
+                 "}",
+                 "function addMethods(source) {\n" +
+                 "  var properties = Object.keys(source);\n" +
+                 "  for (var i = 0, length = properties.length; i < length; i++) {\n" +
+                 "    var property = properties[i], foo = 23, value, bar; value = (function _forin_body_0(property, thi$) { var value; value = source[property], bar = 42;\n" +
+                 "    thi$.prototype[property] = value; return value; })(property, this);\n" +
+                 "  }\n" +
+                 "  return this;\n" +
+                 "}");
+  }
+  
   @Test
 	public void test19() {
 	  testRewriter("function extend(dest, src) {\n" +
@@ -442,11 +485,12 @@ public abstract class TestCorrelatedPairExtraction {
 	  		         "function write(p, v) { this[p] = v; }",
 	  		         "function extend(dest, src) {\n" +
 	  		         "  for(var p in src)\n" +
-	  		         "     if(foo(p)) (function _forin_body_0(p) { write.call(dest, p, src[p]); })(p);\n" +
+	  		         "      (function _forin_body_0(p) { if(foo(p)) write.call(dest, p, src[p]); })(p);\n" +
 	  		         "}\n" +
 	  		         "function write(p, v) { this[p] = v; }");
 	}
 	
+  // fails due to a missing LOCAL_SCOPE node
   @Test
 	public void test20() {
 	  testRewriter("function every(object, fn, bind) {\n" +
@@ -476,10 +520,69 @@ public abstract class TestCorrelatedPairExtraction {
 	  		         "function extend(dest, src) {\n" +
 	  		         "  var x, y;\n" +
 	               "  for(var name in src) {\n" +
-	               "    (function _forin_body_0(name) { { x = dest[name];\n" +
+	               "    (function _forin_body_0(name) { x = dest[name];\n" +
 	               "    y = src[name];\n" +
-	               "    dest[name] = join(x,y); } })(name);\n" +
+	               "    dest[name] = join(x,y); })(name);\n" +
 	               "  }\n" +
 	               "}");
 	}
+  
+  @Test
+  public void test22() {
+    testRewriter("function(object, keys){\n" +
+    		         "  var results = {};\n" +
+    		         "  for (var i = 0, l = keys.length; i < l; i++){\n" +
+    		         "    var k = keys[i];\n" +
+    		         "    if (k in object) results[k] = object[k];\n" +
+    		         "  }\n" +
+    		         "  return results;\n" +
+    		         "}",
+    		         "function(object, keys){\n" +
+                 "  var results = {};\n" +
+                 "  for (var i = 0, l = keys.length; i < l; i++){\n" +
+                 "    var k = keys[i];\n" +
+                 "    (function _forin_body_0(k) { if (k in object) results[k] = object[k]; })(k);\n" +
+                 "  }\n" +
+                 "  return results;\n" +
+                 "}");
+  }
+  
+  // variant of test1
+  @Test
+  public void test23() {
+    testRewriter("function extend(dest, src) {\n" +
+    		     "  var s;\n" +
+             "  for(var p in src) {\n" +
+             "    s = src[p];\n" +
+             "    dest[p] = s;\n" +
+             "  }\n" +
+             "}",
+             "function extend(dest, src) {\n" +
+             "  var s;\n" +
+             "  for(var p in src) {\n" +
+             "    s = (function _forin_body_0(p) {\n" +
+             "      var s;" +
+             "      s = src[p];\n" +
+             "      dest[p] = s;\n" +
+             "      return s;" +
+             "     })(p);\n" +
+             "  }\n" +
+             "}");
+  }
+
+  
+  // cannot extract for-in body referring to "arguments"
+  @Test
+  public void test24() {
+    testRewriter("function extend(dest, src) {" +
+             "  for(var p in src) {" +
+             "    arguments[0][p] = src[p];" +
+             "  }" +
+             "}",
+             "function extend(dest, src) {" +
+             "  for(var p in src) {" +
+             "    arguments[0][p] = src[p];" +
+             "  }" +
+             "}");
+  }
 }

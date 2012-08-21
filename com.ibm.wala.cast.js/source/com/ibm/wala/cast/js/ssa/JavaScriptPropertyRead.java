@@ -49,7 +49,7 @@ public class JavaScriptPropertyRead extends AbstractReflectiveGet {
    * @see com.ibm.domo.ssa.SSAInstruction#visit(com.ibm.domo.ssa.SSAInstruction.Visitor)
    */
   public void visit(IVisitor v) {
-    assert v instanceof InstructionVisitor;
-    ((InstructionVisitor)v).visitJavaScriptPropertyRead(this);
+    assert v instanceof JSInstructionVisitor;
+    ((JSInstructionVisitor)v).visitJavaScriptPropertyRead(this);
   }
 }

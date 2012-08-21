@@ -8,6 +8,14 @@ import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.Graph;
 
+/**
+ * Extends {@link DFSPathFinder} to discover all paths from a set of root nodes
+ * to nodes passing some {@link Filter}.
+ * 
+ * Note that this code performs work that is potentially exponential in the size
+ * of the underlying graph, using exponential space. It most likely won't work
+ * even for graphs of moderate size.
+ */
 public class DFSAllPathsFinder<T> extends DFSPathFinder<T> {
 
   public DFSAllPathsFinder(Graph<T> G, Iterator<T> nodes, Filter<T> f) {
@@ -18,6 +26,7 @@ public class DFSAllPathsFinder<T> extends DFSPathFinder<T> {
     super(G, N, f);
   }
 
+  @Override
   protected Iterator<? extends T> getConnected(T n) {
     final List<T> cp = currentPath();
     return new FilterIterator<T>(G.getSuccNodes(n), new Filter<T>() {

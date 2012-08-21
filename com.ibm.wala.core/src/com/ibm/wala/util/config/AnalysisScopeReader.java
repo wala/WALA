@@ -18,12 +18,9 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 import java.util.jar.JarFile;
 
-import org.eclipse.core.runtime.Plugin;
-
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
-import com.ibm.wala.core.plugin.CorePlugin;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
@@ -39,7 +36,7 @@ public class AnalysisScopeReader {
 
   private static final ClassLoader MY_CLASSLOADER = AnalysisScopeReader.class.getClassLoader();
 
-  private static final String BASIC_FILE = "primordial.txt";
+  protected static final String BASIC_FILE = "primordial.txt";
 
   /**
    * read in an analysis scope for a Java application from a text file
@@ -51,20 +48,15 @@ public class AnalysisScopeReader {
    */
   public static AnalysisScope readJavaScope(String scopeFileName, File exclusionsFile, ClassLoader javaLoader) throws IOException {
     AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
-    return read(scope, scopeFileName, exclusionsFile, javaLoader, CorePlugin.getDefault());
+    return read(scope, scopeFileName, exclusionsFile, javaLoader, new FileProvider());
   }
 
-  private static AnalysisScope readJavaScope(String scopeFileName, File exclusionsFile, ClassLoader javaLoader, Plugin plugIn) throws IOException {
-    AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
-    return read(scope, scopeFileName, exclusionsFile, javaLoader, plugIn);
-  }
 
-  private static AnalysisScope read(AnalysisScope scope, String scopeFileName, File exclusionsFile, ClassLoader javaLoader,
-      Plugin plugIn) throws IOException {
+  protected static AnalysisScope read(AnalysisScope scope, String scopeFileName, File exclusionsFile, ClassLoader javaLoader,
+      FileProvider fp) throws IOException {
     BufferedReader r = null;
     try {
-      File scopeFile = (plugIn == null) ? FileProvider.getFile(scopeFileName, javaLoader) : FileProvider.getFileFromPlugin(plugIn,
-          scopeFileName);
+      File scopeFile = fp.getFile(scopeFileName, javaLoader);
       assert scopeFile.exists();
 
       String line;
@@ -107,26 +99,27 @@ public class AnalysisScopeReader {
     String language = toks.nextToken();
     String entryType = toks.nextToken();
     String entryPathname = toks.nextToken();
+    FileProvider fp = (new FileProvider());
     if ("classFile".equals(entryType)) {
-      File cf = FileProvider.getFile(entryPathname, javaLoader);
+      File cf = fp.getFile(entryPathname, javaLoader);
       try {
         scope.addClassFileToScope(walaLoader, cf);
       } catch (InvalidClassFileException e) {
         Assertions.UNREACHABLE(e.toString());
       }
     } else if ("sourceFile".equals(entryType)) {
-      File sf = FileProvider.getFile(entryPathname, javaLoader);
+      File sf = fp.getFile(entryPathname, javaLoader);
       scope.addSourceFileToScope(walaLoader, sf, entryPathname);
     } else if ("binaryDir".equals(entryType)) {
-      File bd = FileProvider.getFile(entryPathname, javaLoader);
+      File bd = fp.getFile(entryPathname, javaLoader);
       assert bd.isDirectory();
       scope.addToScope(walaLoader, new BinaryDirectoryTreeModule(bd));
     } else if ("sourceDir".equals(entryType)) {
-      File sd = FileProvider.getFile(entryPathname, javaLoader);
+      File sd = fp.getFile(entryPathname, javaLoader);
       assert sd.isDirectory();
       scope.addToScope(walaLoader, new SourceDirectoryTreeModule(sd));
     } else if ("jarFile".equals(entryType)) {
-      Module M = FileProvider.getJarFileModule(entryPathname, javaLoader);
+      Module M = fp.getJarFileModule(entryPathname, javaLoader);
       scope.addToScope(walaLoader, M);
     } else if ("loaderImpl".equals(entryType)) {
       scope.setLoaderImpl(walaLoader, entryPathname);
@@ -146,12 +139,10 @@ public class AnalysisScopeReader {
    * @throws IllegalStateException if there are problmes reading wala properties
    */
   public static AnalysisScope makePrimordialScope(File exclusionsFile) throws IOException {
-    return readJavaScope(BASIC_FILE, exclusionsFile, MY_CLASSLOADER, CorePlugin.getDefault());
+    return readJavaScope(BASIC_FILE, exclusionsFile, MY_CLASSLOADER);
   }
 
-  private static AnalysisScope makePrimordialScope(File exclusionsFile, Plugin plugIn) throws IOException {
-    return readJavaScope(BASIC_FILE, exclusionsFile, MY_CLASSLOADER, plugIn);
-  }
+
 
   /**
    * @param classPath class path to analyze, delimited by File.pathSeparator
@@ -160,20 +151,10 @@ public class AnalysisScopeReader {
    * @throws IllegalStateException if there are problems reading wala properties
    */
   public static AnalysisScope makeJavaBinaryAnalysisScope(String classPath, File exclusionsFile) throws IOException {
-    return makeJavaBinaryAnalysisScope(classPath, exclusionsFile, CorePlugin.getDefault());
-  }
-
-  /**
-   * @param classPath class path to analyze, delimited by File.pathSeparator
-   * @param exclusionsFile file holding class hierarchy exclusions. may be null
-   * @throws IOException 
-   * @throws IllegalStateException if there are problems reading wala properties
-   */
-  public static AnalysisScope makeJavaBinaryAnalysisScope(String classPath, File exclusionsFile, Plugin plugIn) throws IOException {
     if (classPath == null) {
       throw new IllegalArgumentException("classPath null");
     }
-    AnalysisScope scope = makePrimordialScope(exclusionsFile, plugIn);
+    AnalysisScope scope = makePrimordialScope(exclusionsFile);
     ClassLoaderReference loader = scope.getLoader(AnalysisScope.APPLICATION);
 
     addClassPathToScope(classPath, scope, loader);

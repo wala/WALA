@@ -92,7 +92,8 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     
     S.addStatement(insts.NewInstruction(5, NewSiteReference.make(S.getNextProgramCounter(), cls.getReference())));
 
-    S.addStatement(insts.PutInstruction(5, 4, "__proto__"));
+    S.addStatement(insts.SetPrototype(5, 4));
+    //S.addStatement(insts.PutInstruction(5, 4, "__proto__"));
     S.getNextProgramCounter();
     
     S.addConstant(new Integer(8), new ConstantValue(value));
@@ -101,6 +102,8 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     
     S.addStatement(insts.ReturnInstruction(5, false));
     S.getNextProgramCounter();
+    
+    //S.addConstant(9, new ConstantValue("__proto__"));
     
     return new JavaScriptConstructor(ref, S, cls);
   }
@@ -115,7 +118,8 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     
     S.addStatement(insts.NewInstruction(6, NewSiteReference.make(S.getNextProgramCounter(), cls.getReference())));
 
-    S.addStatement(insts.PutInstruction(6, 5, "__proto__"));
+    S.addStatement(insts.SetPrototype(6, 5));
+    //S.addStatement(insts.PutInstruction(6, 5, "__proto__"));
     S.getNextProgramCounter();
     
     S.addStatement(insts.PutInstruction(6, 2, "$value"));
@@ -123,7 +127,9 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     
     S.addStatement(insts.ReturnInstruction(6, false));
     S.getNextProgramCounter();
-    
+ 
+    //S.addConstant(7, new ConstantValue("__proto__"));
+
     return new JavaScriptConstructor(ref, S, cls);
   }
 
@@ -155,12 +161,15 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     
     S.addStatement(insts.NewInstruction(5, NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Object)));
 
-    S.addStatement(insts.PutInstruction(5, 4, "__proto__"));
+    S.addStatement(insts.SetPrototype(5, 4));
+    //S.addStatement(insts.PutInstruction(5, 4, "__proto__"));
     S.getNextProgramCounter();
     
     S.addStatement(insts.ReturnInstruction(5, false));
     S.getNextProgramCounter();
     
+    //S.addConstant(6, new ConstantValue("__proto__"));
+
     return new JavaScriptConstructor(ref, S, cls);
   }
 
@@ -212,7 +221,8 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     
     S.addStatement(insts.NewInstruction(6, NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Array)));
 
-    S.addStatement(insts.PutInstruction(6, 5, "__proto__"));
+    S.addStatement(insts.SetPrototype(6, 5));
+    //S.addStatement(insts.PutInstruction(6, 5, "__proto__"));
     S.getNextProgramCounter();
     
     S.addStatement(insts.PutInstruction(6, 2, "length"));
@@ -220,7 +230,9 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     
     S.addStatement(insts.ReturnInstruction(6, false));
     S.getNextProgramCounter();
-    
+  
+    //S.addConstant(7, new ConstantValue("__proto__"));
+
     return new JavaScriptConstructor(ref, S, cls);
   }
 
@@ -237,7 +249,8 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
         insts.NewInstruction(nargs + 5, NewSiteReference.make(S.getNextProgramCounter(),
             JavaScriptTypes.Array)));
 
-    S.addStatement(insts.PutInstruction(nargs + 5, nargs + 4, "__proto__"));
+    S.addStatement(insts.SetPrototype(nargs + 5, nargs + 4));
+    //S.addStatement(insts.PutInstruction(nargs + 5, nargs + 4, "__proto__"));
     S.getNextProgramCounter();
     
     S.addConstant(new Integer(nargs + 7), new ConstantValue(nargs));
@@ -254,6 +267,8 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     S.addStatement(insts.ReturnInstruction(5, false));
     S.getNextProgramCounter();
     
+    //S.addConstant(vn, new ConstantValue("__proto__"));
+
     return new JavaScriptConstructor(ref, S, cls);
   }
 
@@ -362,7 +377,8 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
 
     S.addStatement(insts.NewInstruction(7, NewSiteReference.make(S.getNextProgramCounter(), JavaScriptTypes.Object)));
 
-    S.addStatement(insts.PutInstruction(5, 4, "__proto__"));
+    S.addStatement(insts.SetPrototype(5, 4));
+    //S.addStatement(insts.PutInstruction(5, 4, "__proto__"));
     S.getNextProgramCounter();
     
     S.addStatement(insts.PutInstruction(5, 7, "prototype"));
@@ -375,6 +391,8 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     S.addStatement(insts.ReturnInstruction(5, false));
     S.getNextProgramCounter();
     
+    //S.addConstant(8, new ConstantValue("__proto__"));
+
     if (receiver != cls)
       return record(tableKey, new JavaScriptConstructor(ref, S, receiver, "(" + cls.getReference().getName() + ")"));
     else
@@ -430,7 +448,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
         FO.write(fun.toString());
         FO.close();
         
-        Set<String> fnNames = Util.loadAdditionalFile(cha, cl, fileName, f.toURI().toURL(), f.getAbsolutePath());
+        Set<String> fnNames = JSCallGraphUtil.loadAdditionalFile(cha, cl, fileName, f.toURI().toURL());
         IClass fcls = null;
         for(String nm : fnNames) {
           if (nm.endsWith("_fromctor")) {
@@ -465,7 +483,6 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
 
     MethodReference ref = JavaScriptMethods.makeCtorReference(cls.getReference());
     JavaScriptSummary S = new JavaScriptSummary(ref, nargs + 1);
-
     S.addStatement(insts.GetInstruction(nargs + 4, 1, "prototype"));
     S.getNextProgramCounter();
       
@@ -474,7 +491,8 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
                                      NewSiteReference.make(S.getNextProgramCounter(),
                                      JavaScriptTypes.Object)));
 
-    S.addStatement(insts.PutInstruction(nargs + 5, nargs + 4, "__proto__"));
+    S.addStatement(insts.SetPrototype(nargs + 5, nargs + 4));
+    //S.addStatement(insts.PutInstruction(nargs + 5, nargs + 4, "__proto__"));
     S.getNextProgramCounter();
     
     CallSiteReference cs = new JSCallSiteReference(S.getNextProgramCounter());
@@ -490,6 +508,8 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     S.addStatement(insts.ReturnInstruction(nargs + 5, false));
     S.getNextProgramCounter();
     
+    //S.addConstant(nargs + 9, new ConstantValue("__proto__"));
+
     return record(key, new JavaScriptConstructor(ref, S, cls));
   }
 

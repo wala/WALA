@@ -51,8 +51,8 @@ public class TestGetterSetter {
     a2.f = o2;
     Object o3 = a1.getF();
     Object o4 = a2.f;
-    TestUtil.makeVarUsed(o4);
-    TestUtil.testThisVar(o3);
+    DemandPATestUtil.makeVarUsed(o4);
+    DemandPATestUtil.testThisVar(o3);
 
   }
 

@@ -13,24 +13,21 @@ package com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction;
 
 import static com.ibm.wala.cast.tree.CAstNode.ASSIGN;
 import static com.ibm.wala.cast.tree.CAstNode.BINARY_EXPR;
+import static com.ibm.wala.cast.tree.CAstNode.BLOCK_EXPR;
 import static com.ibm.wala.cast.tree.CAstNode.BLOCK_STMT;
-import static com.ibm.wala.cast.tree.CAstNode.BREAK;
 import static com.ibm.wala.cast.tree.CAstNode.CALL;
 import static com.ibm.wala.cast.tree.CAstNode.CONSTANT;
-import static com.ibm.wala.cast.tree.CAstNode.CONTINUE;
+import static com.ibm.wala.cast.tree.CAstNode.DECL_STMT;
 import static com.ibm.wala.cast.tree.CAstNode.EMPTY;
 import static com.ibm.wala.cast.tree.CAstNode.FUNCTION_EXPR;
 import static com.ibm.wala.cast.tree.CAstNode.FUNCTION_STMT;
 import static com.ibm.wala.cast.tree.CAstNode.GOTO;
-import static com.ibm.wala.cast.tree.CAstNode.IFGOTO;
-import static com.ibm.wala.cast.tree.CAstNode.LABEL_STMT;
-import static com.ibm.wala.cast.tree.CAstNode.LOOP;
+import static com.ibm.wala.cast.tree.CAstNode.IF_STMT;
+import static com.ibm.wala.cast.tree.CAstNode.LOCAL_SCOPE;
 import static com.ibm.wala.cast.tree.CAstNode.OBJECT_LITERAL;
 import static com.ibm.wala.cast.tree.CAstNode.OBJECT_REF;
 import static com.ibm.wala.cast.tree.CAstNode.OPERATOR;
 import static com.ibm.wala.cast.tree.CAstNode.RETURN;
-import static com.ibm.wala.cast.tree.CAstNode.SWITCH;
-import static com.ibm.wala.cast.tree.CAstNode.THROW;
 import static com.ibm.wala.cast.tree.CAstNode.TRY;
 import static com.ibm.wala.cast.tree.CAstNode.VAR;
 
@@ -50,7 +47,9 @@ import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstNodeTypeMap;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.cast.tree.impl.CAstBasicRewriter.NoKey;
+import com.ibm.wala.cast.tree.impl.CAstControlFlowRecorder;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
+import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
@@ -110,8 +109,16 @@ import com.ibm.wala.util.debug.UnimplementedError;
  *   <p>Local variable declarations inside the extracted code have to be hoisted to the enclosing function;
  *   otherwise they would become local variables of the extracted function instead.</p>
  *   <p>This is already taken care of by the translation from Rhino's AST to CAst.</p>
+ *   <p>Optionally, the policy can request that one local variable of the surrounding function be turned into 
+ *   a local variable of the extracted closure. The rewriter checks that this is possible: the code to extract
+ *   must not contain function calls or <code>new</code> expressions, and it must not contain <code>break</code>,
+ *   <code>continue</code>, or <code>return</code> statements. The former requirement prevents a called function
+ *   from observing a different value of the local variable than before. The latter requirement is necessary
+ *   because the final value of the localised variable needs to be returned and assigned to its counterpart in
+ *   the surrounding function; since non-local jumps are encoded by special return values (see next item),
+ *   this would no longer be possible.</p>
  * </li>
- * <li><b><code>break</code>,<code>continue</code>,<code>return</code></b>:
+ * <li><b><code>break</code>, <code>continue</code>, <code>return</code></b>:
  *   <p>A <code>break</code> or <code>continue</code> statement within the extracted loop body that refers
  *   to the loop itself or an enclosing loop would become invalid in the transformed code. A <code>return</code>
  *   statement would no longer return from the enclosing function, but instead from the extracted function.</p>
@@ -175,6 +182,8 @@ public class ClosureExtractor extends CAstRewriterExt {
   private LinkedList<ExtractionPolicy> policies = new LinkedList<ExtractionPolicy>();
   private final ExtractionPolicyFactory policyFactory;
   
+  private static final boolean LOCALISE = true;
+  
   // names for extracted functions are built from this string with a number appended
   private static final String EXTRACTED_FUN_BASENAME = "_forin_body_";
 
@@ -196,51 +205,51 @@ public class ClosureExtractor extends CAstRewriterExt {
   }
 
   @Override
-  protected CAstNode copyNodes(CAstNode root, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
+  protected CAstNode copyNodes(CAstNode root, CAstControlFlowMap cfg, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     switch(root.getKind()) {
     case OPERATOR:
       return root;
     case CONSTANT:
-      return copyConstant(root, context, nodeMap);
+      return copyConstant(root, cfg, context, nodeMap);
     case BLOCK_STMT:
-      return copyBlock(root, context, nodeMap);
+      return copyBlock(root, cfg, context, nodeMap);
     case RETURN: 
-      return copyReturn(root, context, nodeMap);
+      return copyReturn(root, cfg, context, nodeMap);
     case VAR: 
-      return copyVar(root, context, nodeMap);
-    case GOTO: 
-      return copyGoto(root, context, nodeMap);
+      return copyVar(root, cfg, context, nodeMap);
+    case GOTO:
+      return copyGoto(root, cfg, context, nodeMap);
     default:
-      return copyNode(root, context, nodeMap);
+      return copyNode(root, cfg, context, nodeMap);
     }
   }
 
   /* Constants are not affected by the rewriting, they are just copied. */
-  private CAstNode copyConstant(CAstNode root, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
+  private CAstNode copyConstant(CAstNode root, CAstControlFlowMap cfg, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     CAstNode newNode = Ast.makeConstant(root.getValue());
     nodeMap.put(Pair.make(root, context.key()), newNode);
     return newNode;
   }
 
   /* Ask the policy whether it wants anything extracted from this block; otherwise the node is simply copied. */
-  private CAstNode copyBlock(CAstNode root, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
+  private CAstNode copyBlock(CAstNode root, CAstControlFlowMap cfg, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     List<ExtractionRegion> regions = policies.getFirst().extract(root);
-    if(regions == null) {
-      return copyNode(root, context, nodeMap);
+    if(regions == null || usesArguments(root)) {
+      return copyNode(root, cfg, context, nodeMap);
     } else {
       ArrayList<CAstNode> copied_children = new ArrayList<CAstNode>();
       int next_child = 0;
       // code in between regions is handled by invoking copyNodes, the regions themselves by extractRegion
       for(ExtractionRegion region : regions) {
         for(;next_child<region.getStart();++next_child)
-          copied_children.add(copyNodes(root.getChild(next_child), new ChildPos(root, next_child, context), nodeMap));
-        for(CAstNode stmt : extractRegion(root, new ExtractionPos(root, region, context), nodeMap))
+          copied_children.add(copyNodes(root.getChild(next_child), cfg, new ChildPos(root, next_child, context), nodeMap));
+        for(CAstNode stmt : extractRegion(root, cfg, new ExtractionPos(root, region, context), nodeMap))
           copied_children.add(stmt);
         next_child = region.getEnd();
       }
       for(;next_child<root.getChildCount();++next_child)
-        copied_children.add(copyNodes(root.getChild(next_child), new ChildPos(root, next_child, context), nodeMap));
-      CAstNode newNode = Ast.makeNode(BLOCK_STMT, copied_children.toArray(new CAstNode[0]));
+        copied_children.add(copyNodes(root.getChild(next_child), cfg, new ChildPos(root, next_child, context), nodeMap));
+      CAstNode newNode = Ast.makeNode(root.getKind(), copied_children.toArray(new CAstNode[0]));
       nodeMap.put(Pair.make(root, context.key()), newNode);
       return newNode;
     }
@@ -250,7 +259,7 @@ public class ClosureExtractor extends CAstRewriterExt {
    * Normal variables are just copied, but 'this' references need to be rewritten if we are inside an extracted
    * function body.
    */
-  private CAstNode copyVar(CAstNode root, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
+  private CAstNode copyVar(CAstNode root, CAstControlFlowMap cfg, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     /*
      * If this node is a "this" reference, the outermost enclosing extracted function needs to pass in
      * the value of "this" as a parameter.
@@ -268,10 +277,10 @@ public class ClosureExtractor extends CAstRewriterExt {
         nodeMap.put(Pair.make(root, context.key()), newNode);
         return newNode;
       } else {
-        return copyNode(root, context, nodeMap);
+        return copyNode(root, cfg, context, nodeMap);
       }
     } else {
-      return copyNode(root, context, nodeMap);
+      return copyNode(root, cfg, context, nodeMap);
     }
   }
 
@@ -279,11 +288,11 @@ public class ClosureExtractor extends CAstRewriterExt {
    * 'break' and 'continue' statements are both encoded as GOTO. If they refer to a target outside the innermost
    * enclosing extracted function body, they are rewritten into a 'return' statement.
    */
-  private CAstNode copyGoto(CAstNode root, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
+  private CAstNode copyGoto(CAstNode root, CAstControlFlowMap cfg, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     CAstNode target = getCurrentEntity().getControlFlow().getTarget(root, null);
     ExtractionPos epos = ExtractionPos.getEnclosingExtractionPos(context);
     if(epos != null && !NodePos.inSubtree(target, epos.getParent())) {
-      epos.addGotoTarget(target);
+      epos.addGotoTarget(root.getChildCount() > 0 ? (String)root.getChild(0).getValue(): null, target);
       int label = labeller.addNode(target);
       // return { type: 'goto', target: <label> }
       CAstNode newNode = 
@@ -301,18 +310,16 @@ public class ClosureExtractor extends CAstRewriterExt {
       nodeMap.put(Pair.make(root, context.key()), newNode);
       return newNode;
     } else {
-      return copyNode(root, context, nodeMap);
+      return copyNode(root, cfg, context, nodeMap);
     }
   }
 
   /* 'return' statements inside an extracted function body need to be encoded in a similar fashion. */
-  private CAstNode copyReturn(CAstNode root, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
+  private CAstNode copyReturn(CAstNode root, CAstControlFlowMap cfg, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     ExtractionPos epos = ExtractionPos.getEnclosingExtractionPos(context);
 
-    // if an extracted function body may terminate normally, we need to append a default RETURN node
-    // which should not be rewritten; this node is marked as 'synthetic'
     if(epos == null || isSynthetic(root))
-      return copyNode(root, context, nodeMap);
+      return copyNode(root, cfg, context, nodeMap);
 
     // add a return to every enclosing extracted function body
     do {
@@ -323,7 +330,7 @@ public class ClosureExtractor extends CAstRewriterExt {
     // emit appropriate 'return' statement
     if(root.getChildCount() > 0) {
       // return { type: 'return', value: <retval> }
-      CAstNode retval = copyNodes(root.getChild(0), new ChildPos(root, 0, context), nodeMap);
+      CAstNode retval = copyNodes(root.getChild(0), cfg, new ChildPos(root, 0, context), nodeMap);
       CAstNode newNode = 
           Ast.makeNode(RETURN,
               Ast.makeNode(OBJECT_LITERAL,
@@ -352,10 +359,10 @@ public class ClosureExtractor extends CAstRewriterExt {
   }
 
   /* Recursively copy child nodes. */
-  private CAstNode copyNode(CAstNode node, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
+  private CAstNode copyNode(CAstNode node, CAstControlFlowMap cfg, NodePos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     CAstNode children[] = new CAstNode[node.getChildCount()];
     for (int i = 0; i < children.length; i++) {
-      children[i] = copyNodes(node.getChild(i), new ChildPos(node, i, context), nodeMap);
+      children[i] = copyNodes(node.getChild(i), cfg, new ChildPos(node, i, context), nodeMap);
     }
     CAstNode newNode = Ast.makeNode(node.getKind(), children);
     nodeMap.put(Pair.make(node, context.key()), newNode);
@@ -363,7 +370,7 @@ public class ClosureExtractor extends CAstRewriterExt {
     // if this node has a control flow successor beyond the innermost enclosing extracted function loop, we need to reroute
     ExtractionPos epos = ExtractionPos.getEnclosingExtractionPos(context);
     if(!isFlowDeleted(newNode, getCurrentEntity()) && epos != null) {
-      CAstControlFlowMap cfg = getCurrentEntity().getControlFlow();
+      // CAstControlFlowMap cfg = getCurrentEntity().getControlFlow();
       Collection<Object> labels = cfg.getTargetLabels(node);
       boolean invalidateCFlow = false;
       for(Object label : labels) {
@@ -388,11 +395,18 @@ public class ClosureExtractor extends CAstRewriterExt {
   }
 
   private int anonymous_counter = 0;
-  private List<CAstNode> extractRegion(CAstNode root, ExtractionPos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
+  
+  private List<CAstNode> extractRegion(CAstNode root, CAstControlFlowMap cfg, ExtractionPos context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
     CAstEntity entity = getCurrentEntity();
 
     // whether we are extracting a single statement that is itself a block
     boolean extractingBlock = context.getStart() + 1 == context.getEnd() && root.getChild(context.getStart()).getKind() == BLOCK_STMT;
+    
+    // whether we are extracting the body of a local scope
+    boolean extractingLocalScope = false;
+    
+    // whether we are extracting an empty loop body
+    boolean extractingEmpty = false;
 
     String name = EXTRACTED_FUN_BASENAME + (anonymous_counter++);
 
@@ -412,54 +426,95 @@ public class ClosureExtractor extends CAstRewriterExt {
      */
     ArrayList<CAstNode> prologue = new ArrayList<CAstNode>();
     ArrayList<CAstNode> fun_body_stmts = new ArrayList<CAstNode>();
-    CAstNode self_ref = makeVarRef(name);
-    CAstNode self_assign = Ast.makeNode(ASSIGN, self_ref, makeVarRef(name));
-    addFlow(self_ref, JavaScriptTypes.ReferenceError, CAstControlFlowMap.EXCEPTION_TO_EXIT, entity.getControlFlow());
-    fun_body_stmts.add(self_assign);
 
     // if we are extracting a block, unwrap it
     if(extractingBlock) {
       CAstNode block = root.getChild(context.getStart());
       for(int i=0;i<block.getChildCount();++i)
         fun_body_stmts.add(block.getChild(i));
-      if(mayCompleteNormally(block))
-        fun_body_stmts.add(markSynthetic(Ast.makeNode(RETURN)));
     } else {
       if(context.getRegion() instanceof TwoLevelExtractionRegion) {
         CAstNode start = root.getChild(context.getStart());
         TwoLevelExtractionRegion tler = (TwoLevelExtractionRegion)context.getRegion();
-        if(start.getKind() != CAstNode.BLOCK_EXPR)
-          throw new IllegalArgumentException("Invalid two-level extraction region.");
         if(tler.getEndInner() != -1)
           throw new UnimplementedError("Two-level extraction not fully implemented.");
         int i;
-        for(i=0;i<tler.getStartInner();++i)
-          prologue.add(copyNodes(start.getChild(i),context, nodeMap));
-        for(;i<start.getChildCount();++i)
-          fun_body_stmts.add(start.getChild(i));
-        for(i=context.getStart()+1;i<context.getEnd();++i)
-          fun_body_stmts.add(root.getChild(i));
+        if(start.getKind() == CAstNode.BLOCK_STMT) {
+          CAstNode[] before = new CAstNode[tler.getStartInner()];
+          for(i=0;i<tler.getStartInner();++i)
+            before[i] = copyNodes(start.getChild(i), cfg, context, nodeMap);
+          prologue.add(Ast.makeNode(BLOCK_STMT, before));
+          if(i+1 == start.getChildCount()) {
+            fun_body_stmts.add(addSpuriousExnFlow(start.getChild(i), cfg));            
+          } else {
+            CAstNode[] after = new CAstNode[start.getChildCount()-i];
+            for(int j=0;j+i<start.getChildCount();++j)
+              after[j] = addSpuriousExnFlow(start.getChild(j+i), cfg);
+            fun_body_stmts.add(Ast.makeNode(BLOCK_EXPR, after));
+          }
+          for(i=context.getStart()+1;i<context.getEnd();++i)
+            fun_body_stmts.add(root.getChild(i));
+        } else if(start.getKind() == CAstNode.LOCAL_SCOPE) {
+          if(tler.getStartInner() != 0 || tler.getEnd() != tler.getStart() + 1)
+            throw new UnimplementedError("Unsupported two-level extraction");
+          fun_body_stmts.add(start.getChild(0));
+          extractingLocalScope = true;
+        } else {
+          throw new UnimplementedError("Unsupported two-level.");
+        }
       } else {
         if(context.getEnd() > context.getStart()+1) {
           CAstNode[] stmts = new CAstNode[context.getEnd()-context.getStart()];
           for(int i=context.getStart();i<context.getEnd();++i)
             stmts[i-context.getStart()] = root.getChild(i);
-          fun_body_stmts.add(Ast.makeNode(BLOCK_STMT, stmts));
+          fun_body_stmts.add(Ast.makeNode(root.getKind(), stmts));
         } else {
-          fun_body_stmts.add(root.getChild(context.getStart()));
+          CAstNode node_to_extract = root.getChild(context.getStart());
+          if(node_to_extract.getKind() == CAstNode.EMPTY)
+            extractingEmpty = true;
+          fun_body_stmts.add(wrapIn(BLOCK_STMT, node_to_extract));
         }
       }
-      if(mayCompleteNormally(root.getChild(context.getEnd()-1)))
-        fun_body_stmts.add(markSynthetic(Ast.makeNode(RETURN)));
     }
-    CAstNode inner_block = Ast.makeNode(BLOCK_STMT, fun_body_stmts.toArray(new CAstNode[0]));
-    CAstNode fun_body = Ast.makeNode(BLOCK_STMT, inner_block);
+    
+    List<String> locals = context.getRegion().getLocals();
+    String theLocal = null;
+    if(LOCALISE && locals.size() == 1 && noJumpsAndNoCalls(fun_body_stmts)) {
+      // the variable can be localised, remember its name
+      theLocal = locals.get(0);
+      
+      // append "return <theLocal>;" to the end of the function body
+      CAstNode retLocal = Ast.makeNode(RETURN, addExnFlow(makeVarRef(theLocal), JavaScriptTypes.ReferenceError, entity, context));
+      markSynthetic(retLocal);
+      // insert as last stmt if fun_body_stmts is a single block, otherwise append
+      if(fun_body_stmts.size() == 1 && fun_body_stmts.get(0).getKind() == BLOCK_STMT) {
+        CAstNode[] stmts = new CAstNode[fun_body_stmts.get(0).getChildCount()+1];
+        for(int i=0;i<stmts.length-1;++i)
+          stmts[i] = fun_body_stmts.get(0).getChild(i);
+        stmts[stmts.length-1] = retLocal;
+        fun_body_stmts.set(0, Ast.makeNode(BLOCK_STMT, stmts));
+      } else {
+        fun_body_stmts.add(retLocal);
+      }
+      
+      // prepend declaration "var <theLocal>;"
+      CAstNode theLocalDecl = Ast.makeNode(DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(theLocal)),
+                                           addExnFlow(makeVarRef("$$undefined"), JavaScriptTypes.ReferenceError, entity, context));
+      if(fun_body_stmts.size() > 1) {
+        CAstNode newBlock = Ast.makeNode(BLOCK_STMT, fun_body_stmts.toArray(new CAstNode[0]));
+        fun_body_stmts.clear();
+        fun_body_stmts.add(newBlock);
+      }
+      fun_body_stmts.add(0, Ast.makeNode(BLOCK_STMT, theLocalDecl));
+    }
+
+    CAstNode fun_body = Ast.makeNode(BLOCK_STMT, fun_body_stmts.toArray(new CAstNode[0]));
 
     /*
      * Now we rewrite the body and construct a Rewrite object.
      */
     final Map<Pair<CAstNode, NoKey>, CAstNode> nodes = HashMapFactory.make();
-    final CAstNode newRoot = copyNodes(fun_body, context, nodes);
+    final CAstNode newRoot = copyNodes(fun_body, cfg, context, nodes);
     final CAstSourcePositionMap theSource = copySource(nodes, entity.getSourceMap());
     final CAstControlFlowMap theCfg = copyFlow(nodes, entity.getControlFlow(), theSource);
     final CAstNodeTypeMap theTypes = copyTypes(nodes, entity.getNodeTypeMap());
@@ -468,11 +523,11 @@ public class ClosureExtractor extends CAstRewriterExt {
       theChildren.putAll(copyChildren(root.getChild(i), nodes, entity.getAllScopedEntities()));
 
     Rewrite rw = new Rewrite() {
-      @Override public CAstNode newRoot() { return newRoot; }
-      @Override public CAstControlFlowMap newCfg() { return theCfg; }
-      @Override public CAstSourcePositionMap newPos() { return theSource; }
-      @Override public CAstNodeTypeMap newTypes() { return theTypes; }
-      @Override public Map<CAstNode, Collection<CAstEntity>> newChildren() { return theChildren; }
+      public CAstNode newRoot() { return newRoot; }
+      public CAstControlFlowMap newCfg() { return theCfg; }
+      public CAstSourcePositionMap newPos() { return theSource; }
+      public CAstNodeTypeMap newTypes() { return theTypes; }
+      public Map<CAstNode, Collection<CAstEntity>> newChildren() { return theChildren; }
     };
     new_entity.setRewrite(rw);
 
@@ -520,40 +575,40 @@ public class ClosureExtractor extends CAstRewriterExt {
     addExnFlow(call, null, entity, context);
 
     // if the extracted code contains jumps, we need to insert some fix-up code
-    ArrayList<CAstNode> stmts = new ArrayList<CAstNode>(prologue);
+    List<CAstNode> stmts = new ArrayList<CAstNode>(prologue);
     if(context.containsJump()) {
-      // result of call is stored in variable 're$'
-      // TODO: this should not be an assignment to a global variable, but to a let-scoped one
       CAstNode decl = Ast.makeNode(ASSIGN,
           addExnFlow(makeVarRef("re$"), JavaScriptTypes.ReferenceError, entity, context),
           call);
-      stmts.add(decl);
 
-      CAstNode goto_fixup = null, return_fixup = null;
+      CAstNode fixup = null;
       if(context.containsGoto())
-        goto_fixup = createGotoFixup(context, entity);
-      if(context.containsReturn() && context.isOutermost())
-        return_fixup = createReturnFixup(context, entity);
+        fixup = createGotoFixup(context, entity);
+      if(context.containsReturn()) {
+        if(context.isOutermost()) {
+          CAstNode return_fixup = createReturnFixup(context, entity);
+          if(fixup != null)
+            fixup = Ast.makeNode(BLOCK_STMT, return_fixup, fixup);
+          else
+            fixup = return_fixup;
+        } else {
+          fixup = Ast.makeNode(RETURN, addExnFlow(makeVarRef("re$"), JavaScriptTypes.ReferenceError, entity, context));
+        }
+      }
 
-      // empty statement as else branch
-      CAstNode if_undef = Ast.makeNode(LABEL_STMT, Ast.makeConstant(-1), Ast.makeNode(EMPTY));
-
-      // if(re$ != 1) goto if_undef;
-      CAstNode undef_check = Ast.makeNode(IFGOTO, 
-          CAstOperator.OP_NE,
-          addExnFlow(makeVarRef("re$"), JavaScriptTypes.ReferenceError, entity, context),
-          Ast.makeConstant(1));
-      addFlow(undef_check, true, if_undef, entity.getControlFlow());
-
-      List<CAstNode> fixup_stmts = new ArrayList<CAstNode>();
-      if(return_fixup != null)
-        fixup_stmts.add(return_fixup);
-      if(goto_fixup != null)
-        fixup_stmts.add(goto_fixup);
       // if this is a nested for-in loop, we need to pass on unhandled jumps
       if(!context.isOutermost() && (context.containsReturn() || context.containsOuterGoto()))
-        fixup_stmts.add(Ast.makeNode(RETURN, addExnFlow(makeVarRef("re$"), JavaScriptTypes.ReferenceError, entity, context)));
-      stmts.add(Ast.makeNode(BLOCK_STMT, undef_check, Ast.makeNode(BLOCK_STMT, fixup_stmts.toArray(new CAstNode[0])), if_undef));
+        fixup = Ast.makeNode(RETURN, addExnFlow(makeVarRef("re$"), JavaScriptTypes.ReferenceError, entity, context));
+
+      // if(re$) <check>;
+      fixup = Ast.makeNode(IF_STMT, 
+          addExnFlow(makeVarRef("re$"), JavaScriptTypes.ReferenceError, entity, context),
+          Ast.makeNode(LOCAL_SCOPE, wrapIn(BLOCK_STMT, fixup == null ? Ast.makeNode(EMPTY) : fixup)));
+
+      stmts.add(Ast.makeNode(BLOCK_STMT, decl, fixup));
+    } else if(theLocal != null) {
+      // assign final value of the localised variable back
+      stmts.add(Ast.makeNode(CAstNode.ASSIGN, addExnFlow(makeVarRef(theLocal), JavaScriptTypes.ReferenceError, entity, context), call));
     } else {
       stmts.add(call);
     }
@@ -563,108 +618,82 @@ public class ClosureExtractor extends CAstRewriterExt {
       CAstNode newNode = Ast.makeNode(BLOCK_STMT, stmts.toArray(new CAstNode[0]));
       nodeMap.put(Pair.make(root, context.key()), newNode);
       deleteFlow(root, getCurrentEntity());
-      return Collections.singletonList(newNode);
-    } else {
-      return stmts;
+      stmts = Collections.singletonList(newNode);
     }
+    
+    if(extractingLocalScope || extractingEmpty) {
+      CAstNode newNode = Ast.makeNode(LOCAL_SCOPE, wrapIn(BLOCK_STMT, stmts.toArray(new CAstNode[0])));
+      stmts = Collections.singletonList(newNode);
+    }
+    
+    return stmts;
+  }
+  
+  private CAstNode addSpuriousExnFlow(CAstNode node, CAstControlFlowMap cfg) {
+    CAstControlFlowRecorder flow = (CAstControlFlowRecorder)cfg;
+    if(node.getKind() == ASSIGN) {
+      if(node.getChild(0).getKind() == VAR) {
+        CAstNode var = node.getChild(0);
+        if(!flow.isMapped(var))
+          flow.map(var, var);
+        flow.add(var, CAstControlFlowMap.EXCEPTION_TO_EXIT, JavaScriptTypes.ReferenceError);
+      }
+    }
+    return node;
   }
 
   private CAstNode createReturnFixup(ExtractionPos context, CAstEntity entity) {
-    CAstNode return_fixup;
-    // if((re$.type == 'return') != 1) ...
-    CAstNode return_check = Ast.makeNode(IFGOTO,
-        CAstOperator.OP_NE,
+    return Ast.makeNode(IF_STMT,
         Ast.makeNode(BINARY_EXPR,
             CAstOperator.OP_EQ,
             addExnFlow(Ast.makeNode(OBJECT_REF,
                 addExnFlow(makeVarRef("re$"), JavaScriptTypes.ReferenceError, entity, context),
                 Ast.makeConstant("type")), JavaScriptTypes.TypeError, entity, context),
-                Ast.makeConstant("return")),
-                Ast.makeConstant(1));
-
-    // return re$.value;
-    CAstNode then_branch =
+            Ast.makeConstant("return")),
         Ast.makeNode(RETURN,
             addExnFlow(Ast.makeNode(OBJECT_REF,
                 addExnFlow(makeVarRef("re$"), JavaScriptTypes.ReferenceError, entity, context),
-                Ast.makeConstant("value")), JavaScriptTypes.TypeError, entity, context));
-
-    // empty statement as else branch
-    CAstNode else_branch = Ast.makeNode(LABEL_STMT, Ast.makeConstant(-1), Ast.makeNode(EMPTY));
-
-    // effectively, this becomes 
-    //   if(re$.type == 'return') return re$.value;
-    addFlow(return_check, true, else_branch, entity.getControlFlow());
-
-    return_fixup = Ast.makeNode(BLOCK_STMT, return_check, then_branch, else_branch);
-    return return_fixup;
+                Ast.makeConstant("value")), JavaScriptTypes.TypeError, entity, context)));
   }
 
   private CAstNode createGotoFixup(ExtractionPos context, CAstEntity entity) {
-    CAstNode goto_fixup;
-
-    ArrayList<CAstNode> target_checks = new ArrayList<CAstNode>();
+    CAstNode fixup = null;
 
     // add fixup code for every goto in the extracted code
-    for(CAstNode goto_target : context.getGotoTargets()) {
-      // if((re$.target == <goto_target>) != 1) goto dummy; goto <goto_target>; dummy: ;
-      CAstNode target_check = Ast.makeNode(IFGOTO,
-          CAstOperator.OP_NE,
-          Ast.makeNode(BINARY_EXPR,
-              CAstOperator.OP_EQ,
-              addExnFlow(Ast.makeNode(OBJECT_REF,
-                  addExnFlow(makeVarRef("re$"), JavaScriptTypes.ReferenceError, entity, context),
-                  Ast.makeConstant("target")), JavaScriptTypes.TypeError, entity, context),
-                  Ast.makeConstant((double)labeller.getLabel(goto_target)+"")),
-                  Ast.makeConstant(1));
-      CAstNode then_branch = Ast.makeNode(GOTO, Ast.makeConstant(-1));
-      CAstNode else_branch = Ast.makeNode(LABEL_STMT, Ast.makeConstant(-1), Ast.makeNode(EMPTY));
-      addFlow(then_branch, null, goto_target, entity.getControlFlow());
-      addFlow(target_check, true, else_branch, entity.getControlFlow());
-      target_checks.add(Ast.makeNode(BLOCK_STMT, target_check, then_branch, else_branch));
+    for(Pair<String, CAstNode> goto_target : context.getGotoTargets()) {
+      // if(re$.target == <goto_target>) goto <goto_target>; else <fixup>
+      CAstNode cond = Ast.makeNode(BINARY_EXPR,
+          CAstOperator.OP_EQ,
+          addExnFlow(Ast.makeNode(OBJECT_REF,
+              addExnFlow(makeVarRef("re$"), JavaScriptTypes.ReferenceError, entity, context),
+              Ast.makeConstant("target")), JavaScriptTypes.TypeError, entity, context),
+          Ast.makeConstant((double)labeller.getLabel(goto_target.snd)+""));
+      CAstNode then_branch;
+      if(goto_target.fst != null)
+        then_branch = Ast.makeNode(GOTO, Ast.makeConstant(goto_target.fst));
+      else
+        then_branch = Ast.makeNode(GOTO);
+      addFlow(then_branch, null, goto_target.snd, entity.getControlFlow());
+      if(fixup != null)
+        fixup = Ast.makeNode(IF_STMT, cond, then_branch, fixup);
+      else
+        fixup = Ast.makeNode(IF_STMT, cond, then_branch);
     }
 
-    // add check whether re$ is actually a goto
-    CAstNode goto_check = Ast.makeNode(IFGOTO,
-        CAstOperator.OP_NE,
+    // add check whether re$ is actually a 'goto'
+    return Ast.makeNode(IF_STMT,
         Ast.makeNode(BINARY_EXPR,
             CAstOperator.OP_EQ,
             addExnFlow(Ast.makeNode(OBJECT_REF,
                 addExnFlow(makeVarRef("re$"), JavaScriptTypes.ReferenceError, entity, context),
                 Ast.makeConstant("type")), JavaScriptTypes.TypeError, entity, context),
-                Ast.makeConstant("goto")),
-                Ast.makeConstant(1));
-
-    CAstNode else_branch = Ast.makeNode(LABEL_STMT, Ast.makeConstant(-1), Ast.makeNode(EMPTY));
-
-    addFlow(goto_check, true, else_branch, entity.getControlFlow());
-
-    goto_fixup = Ast.makeNode(BLOCK_STMT, goto_check, Ast.makeNode(BLOCK_STMT, target_checks.toArray(new CAstNode[0])), else_branch);
-    return goto_fixup;
+            Ast.makeConstant("goto")),
+        Ast.makeNode(LOCAL_SCOPE, wrapIn(BLOCK_STMT, fixup)));
   }
-
-  // false if execution of this node must result in a jump
-  private boolean mayCompleteNormally(CAstNode node) {
-    int kind= node.getKind();
-    switch(kind) {
-    case BLOCK_STMT:
-      if(node.getChildCount()==0)
-        return true;
-      return mayCompleteNormally(node.getChild(node.getChildCount()-1));
-    case GOTO:
-    case RETURN:
-    case BREAK:
-    case CONTINUE:
-    case THROW:
-      return false;
-    case LOOP:
-    case SWITCH:
-      return mayCompleteNormally(node.getChild(1));
-    case TRY:
-      return mayCompleteNormally(node.getChild(0));
-    default:
-      return true;
-    }
+  
+  // wrap given nodes into a node of the given kind, unless there is only a single node which is itself of the same kind
+  private CAstNode wrapIn(int kind, CAstNode... nodes) {
+    return nodes.length == 1 && nodes[0].getKind() == kind ? nodes[0] : Ast.makeNode(kind, nodes);
   }
 
   // helper functions for adding exceptional CFG edges
@@ -714,14 +743,53 @@ public class ClosureExtractor extends CAstRewriterExt {
         return true;
     return false;
   }
-
-  // keep track of synthetic nodes that are to be treated specially during rewriting
-  private Set<CAstNode> synthetic = HashSetFactory.make();
+  
+  /*
+   * Due to the way CAst rewriting works, we sometimes have to insert nodes before rewriting
+   * a subtree. These nodes should not usually be rewritten again, however, so we mark them
+   * as "synthetic". Currently, this only applies to "return" statements.
+   */
+  private final Set<CAstNode> synthetic = HashSetFactory.make();
+  private void markSynthetic(CAstNode node) {
+    this.synthetic.add(node);
+  }
   private boolean isSynthetic(CAstNode node) {
     return synthetic.contains(node);
   }
-  private CAstNode markSynthetic(CAstNode node) {
-    synthetic.add(node);
-    return node;
+  
+  private boolean noJumpsAndNoCalls(Collection<CAstNode> nodes) {
+    for(CAstNode node : nodes)
+      if(!noJumpsAndNoCalls(node))
+        return false;
+    return true;
+  }
+  
+  // determine whether the given subtree contains no unstructured control flow and calls
+  private boolean noJumpsAndNoCalls(CAstNode node) {
+    switch(node.getKind()) {
+    case CAstNode.BREAK:
+    case CAstNode.CONTINUE:
+    case CAstNode.GOTO:
+    case CAstNode.RETURN:
+    case CAstNode.CALL:
+    case CAstNode.NEW:
+      return false;
+    }
+    for(int i=0;i<node.getChildCount();++i)
+      if(!noJumpsAndNoCalls(node.getChild(i)))
+        return false;
+    return true;
+  }
+  
+  // determines whether the given subtree refers to the variable "arguments"
+  private boolean usesArguments(CAstNode node) {
+    if(node.getKind() == CAstNode.VAR) {
+        return node.getChild(0).getValue().equals("arguments");
+    } else {
+      for(int i=0;i<node.getChildCount();++i)
+        if(usesArguments(node.getChild(i)))
+          return true;
+      return false;      
+    }
   }
 }

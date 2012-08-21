@@ -11,7 +11,7 @@
 package com.ibm.wala.cast.js.cfg;
 
 import com.ibm.wala.cast.ir.cfg.AstInducedCFG;
-import com.ibm.wala.cast.js.ssa.InstructionVisitor;
+import com.ibm.wala.cast.js.ssa.JSInstructionVisitor;
 import com.ibm.wala.cast.js.ssa.JavaScriptCheckReference;
 import com.ibm.wala.cast.js.ssa.JavaScriptInstanceOf;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
@@ -19,6 +19,8 @@ import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
 import com.ibm.wala.cast.js.ssa.JavaScriptTypeOfInstruction;
 import com.ibm.wala.cast.js.ssa.JavaScriptWithRegion;
+import com.ibm.wala.cast.js.ssa.PrototypeLookup;
+import com.ibm.wala.cast.js.ssa.SetPrototype;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -29,7 +31,7 @@ public class JSInducedCFG extends AstInducedCFG {
     super(instructions, method, context);
   }
 
-  class JSPEIVisitor extends AstPEIVisitor implements InstructionVisitor {
+  class JSPEIVisitor extends AstPEIVisitor implements JSInstructionVisitor {
 
     JSPEIVisitor(boolean[] r) {
       super(r);
@@ -59,9 +61,17 @@ public class JSInducedCFG extends AstInducedCFG {
     public void visitWithRegion(JavaScriptWithRegion instruction) {
       
     }
+
+    @Override
+    public void visitSetPrototype(SetPrototype instruction) {
+    }
+
+    @Override
+    public void visitPrototypeLookup(PrototypeLookup instruction) {
+    }
   }
     
-  class JSBranchVisitor extends AstBranchVisitor implements InstructionVisitor {
+  class JSBranchVisitor extends AstBranchVisitor implements JSInstructionVisitor {
 
     JSBranchVisitor(boolean[] r) {
       super(r);
@@ -86,6 +96,14 @@ public class JSInducedCFG extends AstInducedCFG {
     }
 
     public void visitWithRegion(JavaScriptWithRegion instruction) {
+    }
+
+    @Override
+    public void visitSetPrototype(SetPrototype instruction) {
+    }
+
+    @Override
+    public void visitPrototypeLookup(PrototypeLookup instruction) {
     }
   }
     

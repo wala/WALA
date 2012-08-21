@@ -12,14 +12,20 @@ package com.ibm.wala.cast.util;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
+import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.visit.CAstVisitor;
+import com.ibm.wala.cast.tree.visit.CAstVisitor.Context;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 public class CAstPattern {
@@ -38,14 +44,14 @@ public class CAstPattern {
   private final static int OPTIONAL_PATTERN_KIND = -5;
 
   private final static int REFERENCE_PATTERN_KIND = -6;
-
+  
   private final static int IGNORE_KIND = -99;
 
   private final String name;
 
   private final int kind;
 
-  private final String value;
+  private final Object value;
 
   private final CAstPattern[] children;
 
@@ -59,16 +65,16 @@ public class CAstPattern {
     }
 
     @SuppressWarnings("unchecked")
-    public List<Object> getMultiple(String name) {
+    public List<CAstNode> getMultiple(String name) {
       if (!containsKey(name)) {
         return Collections.emptyList();
       } else {
         Object o = get(name);
         if (o instanceof CAstNode) {
-          return Collections.singletonList(o);
+          return Collections.singletonList((CAstNode)o);
         } else {
           assert o instanceof List;
-          return (List<Object>) o;
+          return (List<CAstNode>) o;
         }
       }
     }
@@ -114,7 +120,7 @@ public class CAstPattern {
     this.references = null;
   }
 
-  public CAstPattern(String name, String value) {
+  public CAstPattern(String name, Object value) {
     this.name = name;
     this.kind = IGNORE_KIND;
     this.value = value;
@@ -140,6 +146,8 @@ public class CAstPattern {
     if (value != null) {
       if (kind == REFERENCE_PATTERN_KIND) {
         sb.append("ref:").append(value);
+      } else if (value instanceof Pattern) {
+        sb.append("/").append(value).append("/");
       } else {
         sb.append("literal:").append(value);
       }
@@ -296,8 +304,12 @@ public class CAstPattern {
       return false;
 
     } else {
-      if ((value == null) ? tree.getKind() != kind : (tree.getKind() != CAstNode.CONSTANT || !value.equals(tree.getValue()
-          .toString()))) {
+      if ((value == null) ? tree.getKind() != kind : 
+          (tree.getKind() != CAstNode.CONSTANT || 
+           (value instanceof Pattern 
+               ? !((Pattern)value).matcher(tree.getValue().toString()).matches()
+               : !value.equals(tree.getValue().toString())))) 
+      {
         if (DEBUG_MATCH) {
           System.err.println("match failed (b)");
         }
@@ -364,6 +376,29 @@ public class CAstPattern {
     }
   }
 
+  public static Collection<Segments> findAll(final CAstPattern p, final CAstEntity e) {
+    final Collection<Segments> result = HashSetFactory.make();
+    CAstVisitor<Context> v = new CAstVisitor<Context>() {
+
+      @Override
+      public void leaveNode(CAstNode n, Context c, CAstVisitor visitor) {
+        Segments s = match(p, n);
+        if (s != null) {
+          result.add(s);
+        }
+      }
+      
+    };
+    
+    v.visit(e.getAST(), new Context() {
+      public CAstEntity top() {
+        return e;
+      }
+    }, v);
+  
+    return result;
+  }
+  
   private static class Parser {
     private final Map<String, CAstPattern> namedPatterns = HashMapFactory.make();
 
@@ -413,6 +448,11 @@ public class CAstPattern {
         int strEnd = patternString.indexOf('"', start + 1);
         end = strEnd + 1;
         result = new CAstPattern(name, patternString.substring(start + 1, strEnd));
+
+      } else if (patternString.charAt(start) == '/') {
+        int strEnd = patternString.indexOf('/', start + 1);
+        end = strEnd + 1;
+        result = new CAstPattern(name, Pattern.compile(patternString.substring(start + 1, strEnd)));
 
       } else if (patternString.startsWith("**", start)) {
         end = start + 2;

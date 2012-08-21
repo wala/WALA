@@ -49,6 +49,10 @@ public class JSAstTranslator extends AstTranslator {
     super(loader);
   }
 
+  private boolean isPrologueScript(WalkContext context) {
+    return JavaScriptLoader.bootstrapFileNames.contains( context.getModule().getName() );
+  }
+
   protected boolean useDefaultInitValues() {
     return false;
   }
@@ -62,9 +66,9 @@ public class JSAstTranslator extends AstTranslator {
   }
 
   protected boolean useLocalValuesForLexicalVars() {
-    return true;
+    return !AstTranslator.NEW_LEXICAL;
   }
-
+  
   protected TypeReference defaultCatchType() {
     return JavaScriptTypes.Root;
   }
@@ -112,7 +116,7 @@ public class JSAstTranslator extends AstTranslator {
   }
 
   protected void defineField(CAstEntity topEntity, WalkContext wc, CAstEntity n) {
-    Assertions.UNREACHABLE("JavaScript doesn't have fields, numb-nuts!");
+    Assertions.UNREACHABLE("JavaScript doesn't have fields");
   }
 
   protected String composeEntityName(WalkContext parent, CAstEntity f) {
@@ -125,9 +129,9 @@ public class JSAstTranslator extends AstTranslator {
   protected void declareFunction(CAstEntity N, WalkContext context) {
     String fnName = composeEntityName(context, N);
     if (N.getKind() == CAstEntity.SCRIPT_ENTITY) {
-      ((JavaScriptLoader) loader).defineScriptType("L" + fnName, N.getPosition());
+      ((JavaScriptLoader) loader).defineScriptType("L" + fnName, N.getPosition(), N, context);
     } else if (N.getKind() == CAstEntity.FUNCTION_ENTITY) {
-      ((JavaScriptLoader) loader).defineFunctionType("L" + fnName, N.getPosition());
+      ((JavaScriptLoader) loader).defineFunctionType("L" + fnName, N.getPosition(), N, context);
     } else {
       Assertions.UNREACHABLE();
     }
@@ -142,9 +146,6 @@ public class JSAstTranslator extends AstTranslator {
 
     if (DEBUG)
       System.err.println(cfg);
-
-    // force creation of these constants by calling the getter methods
-    symtab.getNullConstant();
  
     ((JavaScriptLoader) loader).defineCodeBodyCode("L" + fnName, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, LI,
         debugInfo);
@@ -155,12 +156,14 @@ public class JSAstTranslator extends AstTranslator {
   }
 
   protected void doCall(WalkContext context, CAstNode call, int result, int exception, CAstNode name, int receiver, int[] arguments) {
-    MethodReference ref = name.getValue().equals("ctor") ? JavaScriptMethods.ctorReference : AstMethodReference
-        .fnReference(JavaScriptTypes.CodeBody);
+    MethodReference ref = 
+      name.getValue().equals("ctor") ? JavaScriptMethods.ctorReference 
+          : name.getValue().equals("dispatch") ? JavaScriptMethods.dispatchReference 
+              : AstMethodReference.fnReference(JavaScriptTypes.CodeBody);
 
     context.cfg().addInstruction(
-        ((JSInstructionFactory) insts).Invoke(receiver, result, arguments, exception, new JSCallSiteReference(ref, context.cfg()
-            .getCurrentInstruction())));
+        ((JSInstructionFactory) insts).Invoke(receiver, result, arguments, exception, 
+            new JSCallSiteReference(ref, context.cfg().getCurrentInstruction())));
 
     context.cfg().addPreNode(call, context.getUnwindState());
 
@@ -205,13 +208,15 @@ public class JSAstTranslator extends AstTranslator {
 
     context.cfg().addInstruction(((JSInstructionFactory) insts).AssignInstruction(x, receiver));
 
+    context.cfg().addInstruction(((JSInstructionFactory) insts).PrototypeLookup(x, x));
+    
     if (elt.getKind() == CAstNode.CONSTANT && elt.getValue() instanceof String) {
       String field = (String) elt.getValue();
       // symtab needs to have this value
       context.currentScope().getConstantValue(field);
       context.cfg().addInstruction(((JSInstructionFactory) insts).GetInstruction(result, x, field));
     } else {
-      context.cfg().addInstruction(((JSInstructionFactory) insts).PropertyRead(result, x, getValue(elt)));
+      context.cfg().addInstruction(((JSInstructionFactory) insts).PropertyRead(result, x, context.getValue(elt)));
     }
 
     // generate code to handle read of non-existent property
@@ -231,16 +236,20 @@ public class JSAstTranslator extends AstTranslator {
     this.visit(elt, context, this);
     if (elt.getKind() == CAstNode.CONSTANT && elt.getValue() instanceof String) {
       String field = (String) elt.getValue();
-      context.currentScope().getConstantValue(field);
-      SSAPutInstruction put = ((JSInstructionFactory) insts).PutInstruction(receiver, rval, field);
-      try {
-        assert field.equals(put.getDeclaredField().getName().toUnicodeString());
-      } catch (UTFDataFormatException e) {
-        Assertions.UNREACHABLE();
+      if (isPrologueScript(context) && "__proto__".equals(field)) {
+        context.cfg().addInstruction(((JSInstructionFactory) insts).SetPrototype(receiver, rval));
+      } else {
+        context.currentScope().getConstantValue(field);
+        SSAPutInstruction put = ((JSInstructionFactory) insts).PutInstruction(receiver, rval, field);
+        try {
+          assert field.equals(put.getDeclaredField().getName().toUnicodeString());
+        } catch (UTFDataFormatException e) {
+          Assertions.UNREACHABLE();
+        }
+        context.cfg().addInstruction(put);
       }
-      context.cfg().addInstruction(put);
     } else {
-      context.cfg().addInstruction(((JSInstructionFactory) insts).PropertyWrite(receiver, getValue(elt), rval));
+      context.cfg().addInstruction(((JSInstructionFactory) insts).PropertyWrite(receiver, context.getValue(elt), rval));
     }
   }
 
@@ -328,26 +337,26 @@ public class JSAstTranslator extends AstTranslator {
 
     } else {
 
-      context.cfg().addInstruction(((JSInstructionFactory) insts).IsDefinedInstruction(result, ref, getValue(f)));
+      context.cfg().addInstruction(((JSInstructionFactory) insts).IsDefinedInstruction(result, ref, context.getValue(f)));
     }
   }
 
-  protected boolean visitInstanceOf(CAstNode n, Context c, CAstVisitor visitor) {
+  protected boolean visitInstanceOf(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
     WalkContext context = (WalkContext) c;
     int result = context.currentScope().allocateTempValue();
-    setValue(n, result);
+    context.setValue(n, result);
     return false;
   }
 
-  protected void leaveInstanceOf(CAstNode n, Context c, CAstVisitor visitor) {
+  protected void leaveInstanceOf(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
     WalkContext context = (WalkContext) c;
-    int result = getValue(n);
+    int result = context.getValue(n);
 
     visit(n.getChild(0), context, visitor);
-    int value = getValue(n.getChild(0));
+    int value = context.getValue(n.getChild(0));
 
     visit(n.getChild(1), context, visitor);
-    int type = getValue(n.getChild(1));
+    int type = context.getValue(n.getChild(1));
 
     context.cfg().addInstruction(new JavaScriptInstanceOf(result, value, type));
   }
@@ -362,18 +371,18 @@ public class JSAstTranslator extends AstTranslator {
     //context.cfg().addInstruction(((JSInstructionFactory) insts).PutInstruction(1, tempVal, "arguments"));
   }
 
-  protected boolean doVisit(CAstNode n, Context cntxt, CAstVisitor visitor) {
+  protected boolean doVisit(CAstNode n, WalkContext cntxt, CAstVisitor<WalkContext> visitor) {
     WalkContext context = (WalkContext) cntxt;
     switch (n.getKind()) {
     case CAstNode.TYPE_OF: {
       int result = context.currentScope().allocateTempValue();
 
       this.visit(n.getChild(0), context, this);
-      int ref = getValue(n.getChild(0));
+      int ref = context.getValue(n.getChild(0));
 
       context.cfg().addInstruction(((JSInstructionFactory) insts).TypeOfInstruction(result, ref));
 
-      setValue(n, result);
+      context.setValue(n, result);
       return true;
     }
 
@@ -381,7 +390,7 @@ public class JSAstTranslator extends AstTranslator {
     case JavaScriptCAstNode.EXIT_WITH: {
 
       this.visit(n.getChild(0), context, this);
-      int ref = getValue(n.getChild(0));
+      int ref = context.getValue(n.getChild(0));
 
       context.cfg().addInstruction(((JSInstructionFactory) insts).WithRegion(ref, n.getKind() == JavaScriptCAstNode.ENTER_WITH));
 

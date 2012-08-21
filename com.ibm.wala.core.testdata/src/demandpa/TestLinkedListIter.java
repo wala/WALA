@@ -50,8 +50,8 @@ public class TestLinkedListIter {
     l2.add(new Object());
     Object o1 = l1.iterator().next();
     Object o2 = l2.iterator().next();
-    TestUtil.makeVarUsed(o1);
-    TestUtil.testThisVar(o2);
+    DemandPATestUtil.makeVarUsed(o1);
+    DemandPATestUtil.testThisVar(o2);
 
   }
 
