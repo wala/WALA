@@ -165,7 +165,7 @@ public abstract class EclipseProjectPath<E, P> {
     }
   }
 
-  protected void resolveProjectPathEntry(ILoader loader, boolean includeSource, IPath p) throws IOException {
+  protected void resolveProjectPathEntry(Loader loader, boolean includeSource, IPath p) throws IOException {
     IPath projectPath = makeAbsolute(p);
     IWorkspace ws = ResourcesPlugin.getWorkspace();
     IWorkspaceRoot root = ws.getRoot();
@@ -222,7 +222,7 @@ public abstract class EclipseProjectPath<E, P> {
   /**
    * traverse a bundle description and populate the analysis scope accordingly
    */
-  private void resolveBundleDescriptionClassPath(P project, BundleDescription bd, ILoader loader, boolean includeSource) throws CoreException,
+  private void resolveBundleDescriptionClassPath(P project, BundleDescription bd, Loader loader, boolean includeSource) throws CoreException,
       IOException {
     assert bd != null;
     if (alreadyProcessed(bd)) {
@@ -276,7 +276,7 @@ public abstract class EclipseProjectPath<E, P> {
     return true;
   }
 
-  protected void resolveClasspathEntries(P project, List l, ILoader loader, boolean includeSource, boolean entriesFromTopLevelProject) {
+  protected void resolveClasspathEntries(P project, List l, Loader loader, boolean includeSource, boolean entriesFromTopLevelProject) {
     for (int i = 0; i < l.size(); i++) {
       resolveClasspathEntry(project, resolve((E)l.get(i)), loader, includeSource, entriesFromTopLevelProject);
     }

@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Test Plug-in
 Bundle-SymbolicName: com.ibm.wala.cast.js.rhino.test
 Bundle-Version: 1.0.0
-Bundle-Activator: com.ibm.wala.cast.js.rhino.test.Activator
 Bundle-Vendor: IBM
 Require-Bundle: com.ibm.wala.cast.js.rhino;bundle-version="1.0.0",
  com.ibm.wala.cast.js;bundle-version="1.0.0",
