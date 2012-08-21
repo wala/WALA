@@ -101,7 +101,7 @@ public abstract class Launcher {
       throw new IllegalArgumentException("cmd cannot be null");
     }
     if (logger != null) {
-      logger.fine("spawning process " + cmd);
+      logger.info("spawning process " + cmd);
     }
     String[] ev = getEnv() == null ? null : buildEnv(getEnv());
     Process p = Runtime.getRuntime().exec(cmd, ev, getWorkingDir());
