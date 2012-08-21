@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.ibm.wala.cfg.InducedCFG;
+import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -174,7 +175,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     int instance = nextLocal++;
     NewSiteReference ref = NewSiteReference.make(statements.size(), T);
     assert T.isArrayType();
-    assert T.getDimensionality() == 1;
+    assert ((ArrayClass)cha.lookupClass(T)).getDimensionality() == 1;
     int[] sizes = new int[1];
     Arrays.fill(sizes, getValueNumberForIntConstant(length));
     SSANewInstruction result = insts.NewInstruction(instance, ref, sizes);
@@ -206,7 +207,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     if (T.isReferenceType()) {
       NewSiteReference ref = NewSiteReference.make(statements.size(), T);
       if (T.isArrayType()) {
-        int[] sizes = new int[T.getDimensionality()];
+        int[] sizes = new int[((ArrayClass)cha.lookupClass(T)).getDimensionality()];
         Arrays.fill(sizes, getValueNumberForIntConstant(1));
         result = insts.NewInstruction(instance, ref, sizes);
       } else {
@@ -229,7 +230,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
           int alloc = nextLocal++;
           SSANewInstruction ni = null;
           if (e.isArrayType()) {
-            int[] sizes = new int[T.getDimensionality()];
+            int[] sizes = new int[((ArrayClass)cha.lookupClass(T)).getDimensionality()];
             Arrays.fill(sizes, getValueNumberForIntConstant(1));
             ni = insts.NewInstruction(alloc, n, sizes);
           } else {

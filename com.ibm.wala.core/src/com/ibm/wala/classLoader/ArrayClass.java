@@ -19,6 +19,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
+import static com.ibm.wala.types.TypeName.*;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
@@ -234,7 +235,17 @@ public class ArrayClass implements IClass, Constants {
   }
 
   public int getDimensionality() {
-    return getReference().getDimensionality();
+    int mask = getReference().getDerivedMask();
+    if ((mask&PrimitiveMask) == PrimitiveMask) {
+      mask >>= 2;
+    }
+    int dims = 0;
+    while ((mask&ArrayMask) == ArrayMask) {
+      mask >>= 2;
+      dims++;
+    }
+    assert dims>0;
+    return dims;
   }
 
   /**

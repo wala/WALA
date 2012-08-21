@@ -45,6 +45,7 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
+import static com.ibm.wala.types.TypeName.*;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -515,7 +516,11 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         Assertions.productionAssertion(size != null);
         Integer sNumber = symbolTable.get(size);
         Assertions.productionAssertion(sNumber != null);
-        Assertions.productionAssertion(type.getDimensionality() == 1);
+        Assertions.productionAssertion(
+            // array of objects
+            type.getDerivedMask()==ArrayMask || 
+            // array of primitives
+            type.getDerivedMask()==((ArrayMask<<2)|PrimitiveMask));  
         a = insts.NewInstruction(defNum, ref, new int[] { sNumber.intValue() });
       } else {
         a = insts.NewInstruction(defNum, ref);

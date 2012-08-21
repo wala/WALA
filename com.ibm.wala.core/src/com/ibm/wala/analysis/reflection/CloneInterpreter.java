@@ -18,6 +18,7 @@ import java.util.Set;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.InducedCFG;
+import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.CodeScanner;
 import com.ibm.wala.classLoader.IClass;
@@ -155,7 +156,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
     if (klass.isArrayClass()) {
       int length = nextLocal++;
       statements.add(insts.ArrayLengthInstruction(length, 1));
-      int[] sizes = new int[klass.getReference().getDimensionality()];
+      int[] sizes = new int[((ArrayClass)klass).getDimensionality()];
       Arrays.fill(sizes, length);
       N = insts.NewInstruction(retValue, ref, sizes);
     } else {

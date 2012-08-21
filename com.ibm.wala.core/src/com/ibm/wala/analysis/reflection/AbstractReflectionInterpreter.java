@@ -35,6 +35,7 @@ import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
+import static com.ibm.wala.types.TypeName.*;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
@@ -227,8 +228,17 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
 
       if (t.isArrayType()) {
         // for now, just allocate an array of size 1 in each dimension.
-        int dim = t.getDimensionality();
-        int[] extents = new int[dim];
+        int dims = 0;
+        int dim = t.getDerivedMask();
+        if ((dim&ElementMask) == PrimitiveMask) {
+          dim >>= 2;
+        }
+        while ((dim&ElementMask) == ArrayMask) {
+          dims++;
+          dim >>=2;
+        }
+        
+        int[] extents = new int[dims];
         Arrays.fill(extents, 1);
         SSANewInstruction a = insts.NewInstruction(alloc, ref, extents);
         addInstruction(t, a, true);

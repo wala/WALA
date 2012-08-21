@@ -25,6 +25,7 @@ import com.ibm.wala.analysis.typeInference.SetType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.InducedCFG;
+import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.CodeScanner;
 import com.ibm.wala.classLoader.IClass;
@@ -528,7 +529,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
         NewSiteReference ref = NewSiteReference.make(getNewSiteForType(T), T);
         SSANewInstruction a = null;
         if (T.isArrayType()) {
-          int[] sizes = new int[T.getDimensionality()];
+          int[] sizes = new int[((ArrayClass)klass).getDimensionality()];
           initValueNumberForConstantOne();
           Arrays.fill(sizes, valueNumberForConstantOne);
           a = insts.NewInstruction(i, ref, sizes);
