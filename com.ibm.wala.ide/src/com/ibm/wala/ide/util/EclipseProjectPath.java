@@ -36,7 +36,6 @@ import org.eclipse.pde.internal.core.ClasspathUtilCore;
 import org.eclipse.pde.internal.core.PDECore;
 import org.eclipse.pde.internal.core.PDEStateHelper;
 
-import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
@@ -68,17 +67,21 @@ public abstract class EclipseProjectPath<E, P> {
   
   protected abstract E resolve(E entry);
   
-  protected abstract void resolveClasspathEntry(P project, E entry, Loader loader, boolean includeSource, boolean cpeFromMainProject);
+  protected abstract void resolveClasspathEntry(P project, E entry, ILoader loader, boolean includeSource, boolean cpeFromMainProject);
 
   protected abstract void resolveProjectClasspathEntries(P project, boolean includeSource);
 
 
+  interface ILoader {
+    
+  };
+  
   /**
    * Eclipse projects are modeled with 3 loaders, as described above.
    */
-  public enum Loader {
+  public enum Loader implements ILoader {
     APPLICATION(ClassLoaderReference.Application), EXTENSION(ClassLoaderReference.Extension), PRIMORDIAL(
-        ClassLoaderReference.Primordial), JAVASCRIPT(JavaScriptTypes.jsLoader);
+        ClassLoaderReference.Primordial);
 
     private ClassLoaderReference ref;
 
@@ -98,7 +101,7 @@ public abstract class EclipseProjectPath<E, P> {
 
   // SJF: Intentionally do not use HashMapFactory, since the Loader keys in the following must use
   // identityHashCode. TODO: fix this source of non-determinism?
-  protected final Map<Loader, List<Module>> modules = new HashMap<Loader, List<Module>>();
+  protected final Map<ILoader, List<Module>> modules = new HashMap<ILoader, List<Module>>();
 
   /**
    * Classpath entries that have already been resolved and added to the scope.
@@ -112,7 +115,7 @@ public abstract class EclipseProjectPath<E, P> {
 
   protected EclipseProjectPath(AnalysisScopeType scopeType) throws IOException, CoreException {
     this.scopeType = scopeType;
-    for (Loader loader : Loader.values()) {
+    for (ILoader loader : Loader.values()) {
       MapUtil.findOrCreateList(modules, loader);
     }
   }
@@ -133,7 +136,7 @@ public abstract class EclipseProjectPath<E, P> {
   }
 
 
-  protected void resolveLibraryPathEntry(Loader loader, IPath p) throws IOException {
+  protected void resolveLibraryPathEntry(ILoader loader, IPath p) throws IOException {
     File file = makeAbsolute(p).toFile();
     JarFile j;
     try {
@@ -151,7 +154,7 @@ public abstract class EclipseProjectPath<E, P> {
     }
   }
 
-  protected void resolveSourcePathEntry(Loader loader, boolean includeSource, boolean cpeFromMainProject, IPath p, IPath o, String fileExtension) {
+  protected void resolveSourcePathEntry(ILoader loader, boolean includeSource, boolean cpeFromMainProject, IPath p, IPath o, String fileExtension) {
     if (includeSource) {
       List<Module> s = MapUtil.findOrCreateList(modules, loader);
       s.add(new EclipseSourceDirectoryTreeModule(p, fileExtension));
@@ -162,7 +165,7 @@ public abstract class EclipseProjectPath<E, P> {
     }
   }
 
-  protected void resolveProjectPathEntry(Loader loader, boolean includeSource, IPath p) throws IOException {
+  protected void resolveProjectPathEntry(ILoader loader, boolean includeSource, IPath p) throws IOException {
     IPath projectPath = makeAbsolute(p);
     IWorkspace ws = ResourcesPlugin.getWorkspace();
     IWorkspaceRoot root = ws.getRoot();
@@ -219,7 +222,7 @@ public abstract class EclipseProjectPath<E, P> {
   /**
    * traverse a bundle description and populate the analysis scope accordingly
    */
-  private void resolveBundleDescriptionClassPath(P project, BundleDescription bd, Loader loader, boolean includeSource) throws CoreException,
+  private void resolveBundleDescriptionClassPath(P project, BundleDescription bd, ILoader loader, boolean includeSource) throws CoreException,
       IOException {
     assert bd != null;
     if (alreadyProcessed(bd)) {
@@ -273,7 +276,7 @@ public abstract class EclipseProjectPath<E, P> {
     return true;
   }
 
-  protected void resolveClasspathEntries(P project, List l, Loader loader, boolean includeSource, boolean entriesFromTopLevelProject) {
+  protected void resolveClasspathEntries(P project, List l, ILoader loader, boolean includeSource, boolean entriesFromTopLevelProject) {
     for (int i = 0; i < l.size(); i++) {
       resolveClasspathEntry(project, resolve((E)l.get(i)), loader, includeSource, entriesFromTopLevelProject);
     }

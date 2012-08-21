@@ -10,9 +10,21 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.types.ClassLoaderReference;
+
 public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePathEntry, IJavaScriptProject> {
 
+	public enum JSLoader implements ILoader {
+		JAVASCRIPT(JavaScriptTypes.jsLoader);
+		
+	    private ClassLoaderReference ref;
 
+	    JSLoader(ClassLoaderReference ref) {
+	      this.ref = ref;
+	    }
+	}
+	
 	protected JavaScriptEclipseProjectPath(IJavaScriptProject p) throws IOException,
 			CoreException {
 		super(AnalysisScopeType.SOURCE_FOR_PROJ_AND_LINKED_PROJS);
@@ -44,12 +56,12 @@ public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePat
 	@Override
 	protected void resolveClasspathEntry(IJavaScriptProject project,
 			IIncludePathEntry entry,
-			com.ibm.wala.ide.util.EclipseProjectPath.Loader loader,
+			ILoader loader,
 			boolean includeSource, boolean cpeFromMainProject) {
 		IIncludePathEntry e = JavaScriptCore.getResolvedIncludepathEntry(entry);
 		switch (e.getEntryKind()) {
 		case IIncludePathEntry.CPE_SOURCE:
-			resolveSourcePathEntry(Loader.JAVASCRIPT, true, cpeFromMainProject, e.getPath(), null, "js");
+			resolveSourcePathEntry(JSLoader.JAVASCRIPT, true, cpeFromMainProject, e.getPath(), null, "js");
 		}
 	}
 
