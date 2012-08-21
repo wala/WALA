@@ -3,15 +3,12 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Java Source WALA Front End
 Bundle-SymbolicName: com.ibm.wala.cast.java
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: com.ibm.wala.cast.java.JavaSourcePlugin
 Bundle-Vendor: rfuhrer@watson.ibm.com
 Require-Bundle: com.ibm.wala.cast,
  com.ibm.wala.core,
- com.ibm.wala.shrike,
- org.eclipse.core.runtime
+ com.ibm.wala.shrike
 Bundle-ActivationPolicy: lazy
-Export-Package: com.ibm.wala.cast.java,
- com.ibm.wala.cast.java.analysis.typeInference,
+Export-Package: com.ibm.wala.cast.java.analysis.typeInference,
  com.ibm.wala.cast.java.client,
  com.ibm.wala.cast.java.client.impl,
  com.ibm.wala.cast.java.examples.ast,

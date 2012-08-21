@@ -38,17 +38,16 @@
 package com.ibm.wala.cast.java.translator.jdt;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTRequestor;
@@ -61,9 +60,13 @@ import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.ide.classloader.EclipseSourceFileModule;
+import com.ibm.wala.ide.util.HeadlessUtil;
+import com.ibm.wala.ide.util.HeadlessUtil.EclipseCompiler;
+import com.ibm.wala.ide.util.HeadlessUtil.Parser;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.functions.Function;
 
 /**
  * A SourceModuleTranslator whose implementation of loadAllSources() uses the PolyglotFrontEnd pseudo-compiler to generate DOMO IR
@@ -115,54 +118,44 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
   public void loadAllSources(Set<ModuleEntry> modules) {
     // TODO: we might need one AST (-> "Object" class) for all files.
     // TODO: group by project and send 'em in
-
     System.out.println(modules);
 
-    // sort files into projects
-    Map<IProject, Map<ICompilationUnit,EclipseSourceFileModule>> projectsFiles = new HashMap<IProject, Map<ICompilationUnit,EclipseSourceFileModule>>();
-    for (ModuleEntry m : modules) {
-      assert m instanceof EclipseSourceFileModule : "Expecing EclipseSourceFileModule, not " + m.getClass();
-      EclipseSourceFileModule entry = (EclipseSourceFileModule) m;
-      IProject proj = entry.getIFile().getProject();
-      if (!projectsFiles.containsKey(proj)) {
-        projectsFiles.put(proj, new HashMap<ICompilationUnit,EclipseSourceFileModule>());
+    HeadlessUtil.parseModules(modules, new EclipseCompiler<ICompilationUnit, CompilationUnit>() {
+      @Override
+      public ICompilationUnit getCompilationUnit(IFile file) {
+        return JavaCore.createCompilationUnitFrom(file);
       }
-      projectsFiles.get(proj).put(JavaCore.createCompilationUnitFrom(entry.getIFile()), entry);
-    }
-
-    final ASTParser parser = ASTParser.newParser(AST.JLS3);
- 
-    for (final Map.Entry<IProject,Map<ICompilationUnit,EclipseSourceFileModule>> proj : projectsFiles.entrySet()) {
-      parser.setProject(JavaCore.create(proj.getKey()));
-      parser.setResolveBindings(true);
-           
-      Set<ICompilationUnit> units = proj.getValue().keySet();
-      parser.createASTs(units.toArray(new ICompilationUnit[units.size()]), new String[0], new ASTRequestor() {
-        public void acceptAST(ICompilationUnit source, CompilationUnit ast) {
-
-          try {
-            JDTJava2CAstTranslator jdt2cast = makeCAstTranslator(ast, source.getUnderlyingResource().getLocation().toOSString());
-            final Java2IRTranslator java2ir = makeIRTranslator();
-            java2ir.translate(proj.getValue().get(source), jdt2cast.translateToCAst());
-          } catch (JavaModelException e) {
-            e.printStackTrace();
+      @Override
+      public Parser<ICompilationUnit, CompilationUnit> getParser() {
+        return new Parser<ICompilationUnit, CompilationUnit>() {
+          final ASTParser parser;
+          {
+            parser = ASTParser.newParser(AST.JLS3);
+            parser.setResolveBindings(true);
           }
-
-          IProblem[] problems = ast.getProblems();
-          int length = problems.length;
-          if (length > 0) {
-            StringBuffer buffer = new StringBuffer();
-            for (int i = 0; i < length; i++) {
-              buffer.append(problems[i].getMessage());
-              buffer.append('\n');
-            }
-            if (length != 0)
-              System.err.println("Unexpected problems in " + source.getElementName() + buffer.toString());
+          @Override
+          public void setProject(IProject project) {
+            parser.setProject(JavaCore.create(project));
           }
-        }
-      }, null);
+          @Override
+          public void processASTs(final Map<ICompilationUnit,EclipseSourceFileModule> files, final Function<Object[], Boolean> errors) {
+            parser.createASTs(files.keySet().toArray(new ICompilationUnit[files.size()]), new String[0], new ASTRequestor() {
+              public void acceptAST(ICompilationUnit source, CompilationUnit ast) {
+                try {
+                  JDTJava2CAstTranslator jdt2cast = makeCAstTranslator(ast, source.getUnderlyingResource().getLocation().toOSString());
+                  final Java2IRTranslator java2ir = makeIRTranslator();
+                  java2ir.translate(files.get(source), jdt2cast.translateToCAst());
+                } catch (JavaModelException e) {
+                  e.printStackTrace();
+                }
 
-    }
+                errors.apply(ast.getProblems());
+              }
+            }, null);
+          }
+        };
+      }
+    });
   }
 
   protected Java2IRTranslator makeIRTranslator() {

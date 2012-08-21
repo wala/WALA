@@ -6,22 +6,24 @@ Bundle-Version: 1.1.3.qualifier
 Bundle-Vendor: %providerName
 Require-Bundle: com.ibm.wala.shrike,
  com.ibm.wala.core,
- org.eclipse.core.runtime,
- org.junit4;bundle-version="4.3.1",
- com.ibm.wala.ide;bundle-version="1.1.3"
+ org.junit;bundle-version="4.8.1"
 Bundle-Localization: plugin
-Export-Package: com.ibm.wala.core.tests.basic,
+Export-Package: .,
+ com.ibm.wala.core.tests.basic,
  com.ibm.wala.core.tests.callGraph,
  com.ibm.wala.core.tests.cha,
+ com.ibm.wala.core.tests.collections,
  com.ibm.wala.core.tests.demandpa,
  com.ibm.wala.core.tests.ir,
- com.ibm.wala.core.tests.plugin,
+ com.ibm.wala.core.tests.ptrs,
  com.ibm.wala.core.tests.slicer,
+ com.ibm.wala.core.tests.typeInference,
  com.ibm.wala.core.tests.util,
  com.ibm.wala.demandpa.driver,
+ com.ibm.wala.examples.analysis,
  com.ibm.wala.examples.analysis.dataflow,
  com.ibm.wala.examples.drivers,
- com.ibm.wala.examples.properties
+ com.ibm.wala.examples.properties,
+ com.ibm.wala.util.io
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
-Bundle-Activator: com.ibm.wala.core.tests.plugin.CoreTestsPlugin

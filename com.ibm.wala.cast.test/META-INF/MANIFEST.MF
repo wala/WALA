@@ -9,8 +9,7 @@ Require-Bundle:
  com.ibm.wala.core.tests,
  com.ibm.wala.cast,
  com.ibm.wala.core,
- com.ibm.wala.shrike,
- org.eclipse.core.runtime
+ com.ibm.wala.shrike
 Export-Package: com.ibm.wala.cast.test
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 

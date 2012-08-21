@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Data
+Bundle-SymbolicName: com.ibm.wala.cast.js.test.data;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: examples-src/
+Bundle-ActivationPolicy: lazy
