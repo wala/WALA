@@ -152,7 +152,11 @@ public class ClassHierarchy implements IClassHierarchy {
       if (DEBUG) {
         System.err.println("got superclass " + klass);
       }
-      result.add(klass);
+      boolean added = result.add(klass);
+      if (!added) {
+        // oops.  we have A is a sub-class of B and B is a sub-class of A.  blow up.
+        throw new IllegalStateException("cycle in the extends relation for class " + klass);
+      }
       klass = klass.getSuperclass();
       if (klass != null && klass.getReference().getName().equals(rootTypeRef.getName())) {
         if (!klass.getReference().getClassLoader().equals(rootTypeRef.getClassLoader())) {
@@ -345,7 +349,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
     if (loadedSuperInterfaces != null) {
       for (Iterator it3 = loadedSuperInterfaces.iterator(); it3.hasNext();) {
-        IClass iface = (IClass) it3.next();
+        final IClass iface = (IClass) it3.next();
         try {
           // make sure we'll be able to load the interface!
           computeSuperclasses(iface);
@@ -354,7 +358,14 @@ public class ClassHierarchy implements IClassHierarchy {
           continue;
         }
         if (!iface.isInterface()) {
-          assert false : "not an interface: " + iface;
+          Warnings.add(new Warning() {
+            
+            @Override
+            public String getMsg() {
+              return "class implements non-interface " + iface.getReference() + " as an interface";
+            }
+          });
+          continue;
         }
         recordImplements(klass, iface);
       }
@@ -1109,7 +1120,7 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   public Collection<IClass> getImmediateSubclasses(IClass klass) {
     if (klass.isArrayClass()) {
-      return getImmediateArraySubclasses(klass);
+      return getImmediateArraySubclasses((ArrayClass)klass);
     }
     Function<Node, IClass> node2Class = new Function<Node, IClass>() {
       public IClass apply(Node n) {
@@ -1119,13 +1130,13 @@ public class ClassHierarchy implements IClassHierarchy {
     return Iterator2Collection.toSet(new MapIterator<Node, IClass>(findNode(klass).children.iterator(), node2Class));
   }
 
-  private Collection<IClass> getImmediateArraySubclasses(IClass klass) {
+  private Collection<IClass> getImmediateArraySubclasses(ArrayClass klass) {
     IClass innermost = getInnermostTypeOfArrayClass(klass);
     if (innermost == null) {
       return Collections.emptySet();
     }
     Collection<IClass> innermostSubclasses = getImmediateSubclasses(innermost);
-    int dim = klass.getReference().getDimensionality();
+    int dim = klass.getDimensionality();
     Collection<IClass> result = HashSetFactory.make();
     for (IClass k : innermostSubclasses) {
       TypeReference ref = k.getReference();
