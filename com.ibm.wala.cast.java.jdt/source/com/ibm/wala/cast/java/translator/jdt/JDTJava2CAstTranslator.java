@@ -2869,6 +2869,7 @@ public class JDTJava2CAstTranslator {
     }
 
     public CAstSourcePositionMap.Position getPosition() {
+      Assertions.UNREACHABLE("CompilationUnitEntity.getPosition()");
       return null;
     }
 
