@@ -15,8 +15,8 @@ import org.junit.Test;
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
-import com.ibm.wala.cast.js.test.JavaScriptTestPlugin;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.ide.tests.util.EclipseTestUtil;
 import com.ibm.wala.ide.util.JavaScriptEclipseProjectPath;
@@ -31,7 +31,7 @@ public class JSProjectScopeTest {
 
   @BeforeClass
   public static void beforeClass() {
-    EclipseTestUtil.importZippedProject(JavaScriptTestPlugin.getDefault(), jsTestDataProject, "test_project.zip", new NullProgressMonitor());
+    EclipseTestUtil.importZippedProject(Activator.getDefault(), jsTestDataProject, "test_js_project.zip", new NullProgressMonitor());
     System.err.println("finish importing project");
   }
 
@@ -54,6 +54,7 @@ public class JSProjectScopeTest {
     AnalysisScope s = JavaScriptEclipseProjectPath.make(p).toAnalysisScope(new CAstAnalysisScope(JSCallGraphUtil.makeLoaders(), Collections.singleton(JavaScriptLoader.JS)));
     System.err.println(s);
     Assert.assertTrue("cannot make scope", s != null);
+    Assert.assertFalse("cannot find files", s.getModules(JavaScriptTypes.jsLoader).isEmpty());
   }
 
   @Test
@@ -64,6 +65,7 @@ public class JSProjectScopeTest {
     System.err.println(info.calls.size());
     System.err.println("call graph:\n" + info.cg);
     Assert.assertTrue("cannot find any function calls", info.calls.size()>0);
+    Assert.assertTrue("cannot find any cg nodes", info.cg.getNumberOfNodes()>0);
   }
 
 }

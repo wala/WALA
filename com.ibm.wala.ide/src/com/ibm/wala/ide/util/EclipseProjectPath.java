@@ -72,8 +72,8 @@ public abstract class EclipseProjectPath<E, P> {
   protected abstract void resolveProjectClasspathEntries(P project, boolean includeSource);
 
 
-  interface ILoader {
-    
+  public interface ILoader {
+    ClassLoaderReference ref();
   };
   
   /**
@@ -87,6 +87,10 @@ public abstract class EclipseProjectPath<E, P> {
 
     Loader(ClassLoaderReference ref) {
       this.ref = ref;
+    }
+
+    public ClassLoaderReference ref() {
+      return ref;
     }
   };
 
@@ -308,9 +312,9 @@ public abstract class EclipseProjectPath<E, P> {
 
   public AnalysisScope toAnalysisScope(AnalysisScope scope) {
 
-    for (Loader loader : Loader.values()) {
+    for (ILoader loader : modules.keySet()) {
       for (Module m : modules.get(loader)) {
-        scope.addToScope(loader.ref, m);
+        scope.addToScope(loader.ref(), m);
       }
     }
     return scope;

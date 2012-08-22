@@ -23,12 +23,16 @@ public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePat
 	    JSLoader(ClassLoaderReference ref) {
 	      this.ref = ref;
 	    }
+
+		@Override
+		public ClassLoaderReference ref() {
+			return ref;
+		}
 	}
 	
 	protected JavaScriptEclipseProjectPath(IJavaScriptProject p) throws IOException,
 			CoreException {
-		super(AnalysisScopeType.SOURCE_FOR_PROJ_AND_LINKED_PROJS);
-		// TODO Auto-generated constructor stub
+		super(p.getProject(), AnalysisScopeType.SOURCE_FOR_PROJ_AND_LINKED_PROJS);
 	}
 
 	public static JavaScriptEclipseProjectPath make(IJavaScriptProject p) throws IOException, CoreException {
