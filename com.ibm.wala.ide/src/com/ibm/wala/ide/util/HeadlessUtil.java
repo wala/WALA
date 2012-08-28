@@ -10,20 +10,21 @@
  *******************************************************************************/
 package com.ibm.wala.ide.util;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
 
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.classLoader.ModuleEntry;
+import com.ibm.wala.ide.classloader.EclipseSourceFileModule;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.io.CommandLine;
 
 public class HeadlessUtil {
@@ -57,39 +58,68 @@ public class HeadlessUtil {
     return p;
   }
 
-  /**
-   * compute the analysis scope for a project in the current workspace
-   * @throws IOException 
-   * @throws CoreException 
-   */
-  public static AnalysisScope computeScope(String projectName) throws IOException, CoreException {
-    if (projectName == null) {
-      throw new IllegalArgumentException("null projectName");
-    }
-    IJavaProject jp = getProjectFromWorkspace(projectName);
-    EclipseProjectPath path = EclipseProjectPath.make(jp);
-    return path.toAnalysisScope((File)null);
-  }
-
-  private static IJavaProject getProjectFromWorkspace(String projectName) {
+  protected static <X> X getProjectFromWorkspace(Function<IProject, X> pred) {
     IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
     IPath workspaceRootPath = workspaceRoot.getLocation();
     System.out.println("workspace: " + workspaceRootPath.toOSString());
   
     for (IProject p : workspaceRoot.getProjects()) {
-      try {
-        if (p.hasNature(JavaCore.NATURE_ID)) {
-          IJavaProject jp = JavaCore.create(p);
-          if (jp != null && jp.getElementName().equals(projectName)) {
-            return jp;
-          }
-        }
-      } catch (CoreException e) {
-        // do nothing and continue
+      X result = pred.apply(p);
+      if (result != null) {
+        return result;
       }
     }
     Assertions.UNREACHABLE();
     return null;
   }
 
+  public interface EclipseCompiler<Unit,CompiledUnit> {
+    Unit getCompilationUnit(IFile file);
+    
+    Parser<Unit,CompiledUnit> getParser();
+  }
+  
+  public interface Parser<Unit, CompiledUnit> {
+    void setProject(IProject project);
+    
+    void processASTs(Map<Unit,EclipseSourceFileModule> files, Function<Object[], Boolean> errors);
+  }
+    
+  public static <Unit, CompiledUnit> void parseModules(Set<ModuleEntry> modules, EclipseCompiler<Unit, CompiledUnit> compiler) {
+    // sort files into projects
+    Map<IProject, Map<Unit,EclipseSourceFileModule>> projectsFiles = new HashMap<IProject, Map<Unit,EclipseSourceFileModule>>();
+    for (ModuleEntry m : modules) {
+      if (m instanceof EclipseSourceFileModule) {
+        EclipseSourceFileModule entry = (EclipseSourceFileModule) m;
+        IProject proj = entry.getIFile().getProject();
+        if (!projectsFiles.containsKey(proj)) {
+          projectsFiles.put(proj, new HashMap<Unit,EclipseSourceFileModule>());
+        }
+        projectsFiles.get(proj).put(compiler.getCompilationUnit(entry.getIFile()), entry);
+      }
+    }
+
+  final Parser<Unit,CompiledUnit> parser = compiler.getParser();
+
+  for (final Map.Entry<IProject,Map<Unit,EclipseSourceFileModule>> proj : projectsFiles.entrySet()) {
+    parser.setProject(proj.getKey());
+    parser.processASTs(proj.getValue(), new Function<Object[],Boolean>() {
+      public Boolean apply(Object[] problems) {
+        int length = problems.length;
+        if (length > 0) {
+          StringBuffer buffer = new StringBuffer();
+          for (int i = 0; i < length; i++) {
+            buffer.append(problems[i].toString());
+            buffer.append('\n');
+          }
+          if (length != 0) {
+            System.err.println(buffer.toString());
+            return true;
+          }
+        }
+        return false;
+     }    
+    });
+  }
+  }
 }

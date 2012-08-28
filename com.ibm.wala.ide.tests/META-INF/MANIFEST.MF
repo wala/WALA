@@ -13,8 +13,17 @@ Require-Bundle: com.ibm.wala.shrike,
  org.eclipse.jdt.core,
  org.eclipse.ui,
  org.eclipse.ui.ide,
- org.junit4;bundle-version="4.3.1"
+ org.junit4;bundle-version="4.3.1",
+ org.eclipse.wst.jsdt.core;bundle-version="1.1.4",
+ com.ibm.wala.cast.js.test;bundle-version="1.0.0",
+ com.ibm.wala.cast;bundle-version="1.0.0",
+ com.ibm.wala.cast.js;bundle-version="1.0.0",
+ com.ibm.wala.cast.js.rhino;bundle-version="1.0.0",
+ org.eclipse.wst.jsdt.ui;bundle-version="1.1.4",
+ com.ibm.wala.ide.jdt;bundle-version="1.0.0",
+ com.ibm.wala.ide.jsdt;bundle-version="1.0.0"
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Export-Package: com.ibm.wala.ide.tests.util
+Bundle-Activator: com.ibm.wala.ide.test.Activator

@@ -20,9 +20,9 @@ import org.junit.Test;
 import com.ibm.wala.cast.java.client.JDTJavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
+import com.ibm.wala.cast.java.jdt.test.Activator;
 import com.ibm.wala.cast.java.test.ide.IDEIRTestUtil;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
-import com.ibm.wala.core.tests.plugin.CoreTestsPlugin;
 import com.ibm.wala.ide.tests.util.EclipseTestUtil;
 import com.ibm.wala.ide.util.EclipseFileProvider;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -43,7 +43,7 @@ public class JDTJava15IRTests extends IRTests {
 
   @BeforeClass
   public static void beforeClass() {
-    EclipseTestUtil.importZippedProject(TestPlugin.getDefault(), JDTJavaIRTests.PROJECT_NAME, JDTJavaIRTests.PROJECT_ZIP, new NullProgressMonitor());
+    EclipseTestUtil.importZippedProject(Activator.getDefault(), JDTJavaIRTests.PROJECT_NAME, JDTJavaIRTests.PROJECT_ZIP, new NullProgressMonitor());
     System.err.println("finish importing project");
   }
 
@@ -63,7 +63,7 @@ public class JDTJava15IRTests extends IRTests {
 
     try {
       engine.setExclusionsFile((new EclipseFileProvider())
-          .getFileFromPlugin(CoreTestsPlugin.getDefault(), CallGraphTestUtil.REGRESSION_EXCLUSIONS).getAbsolutePath());
+          .getFileFromPlugin(Activator.getDefault(), CallGraphTestUtil.REGRESSION_EXCLUSIONS).getAbsolutePath());
     } catch (IOException e) {
       Assert.assertFalse("Cannot find exclusions file", true);
     }
