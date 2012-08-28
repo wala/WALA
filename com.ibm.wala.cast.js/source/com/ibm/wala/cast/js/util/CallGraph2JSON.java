@@ -30,6 +30,7 @@ import com.ibm.wala.util.functions.Function;
 /**
  * Utility class to serialize call graphs as JSON objects.
  * 
+<<<<<<< HEAD
  * The serialised objects have the form
  * 
  * <pre>
@@ -55,6 +56,8 @@ import com.ibm.wala.util.functions.Function;
  * its starting offset (in characters from the beginning of the
  * file), and its end offset.
  * 
+=======
+>>>>>>> 4dc8bf18bc218aa65c36a5b36930bf0672561915
  * @author mschaefer
  */
 public class CallGraph2JSON {
@@ -106,7 +109,11 @@ public class CallGraph2JSON {
 	  return method;
 	}
 
+<<<<<<< HEAD
 	public static boolean isRealFunction(IMethod method) {
+=======
+	private static boolean isRealFunction(IMethod method) {
+>>>>>>> 4dc8bf18bc218aa65c36a5b36930bf0672561915
 		if(method instanceof AstMethod) {
 		  String methodName = method.getDeclaringClass().getName().toString();
 	    
