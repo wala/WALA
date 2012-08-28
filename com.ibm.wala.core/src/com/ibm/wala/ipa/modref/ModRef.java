@@ -260,7 +260,7 @@ public class ModRef {
     @Override
     public void visitNew(SSANewInstruction instruction) {
       if (instruction.getConcreteType().isArrayType()) {
-        int dim = ((ArrayClass)n.getClassHierarchy().lookupClass(instruction.getConcreteType())).getDimensionality();
+        int dim = instruction.getConcreteType().getDimensionality();
         if (dim > 1) {
           // we need to handle the top-level allocation, just like the 1D case
           InstanceKey ik = h.getInstanceKeyForAllocation(n, instruction.getNewSite());

@@ -241,11 +241,11 @@ public class ArrayClass implements IClass, Constants {
   public int getDimensionality() {
     int mask = getReference().getDerivedMask();
     if ((mask&PrimitiveMask) == PrimitiveMask) {
-      mask >>= 2;
+      mask >>= ElementBits;
     }
     int dims = 0;
     while ((mask&ArrayMask) == ArrayMask) {
-      mask >>= 2;
+      mask >>= ElementBits;
       dims++;
     }
     assert dims>0;

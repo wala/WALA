@@ -10,6 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.types;
 
+import static com.ibm.wala.types.TypeName.ArrayMask;
+import static com.ibm.wala.types.TypeName.ElementBits;
+import static com.ibm.wala.types.TypeName.PrimitiveMask;
+
 import java.io.Serializable;
 import java.util.Map;
 
@@ -579,4 +583,21 @@ public final class TypeReference implements Serializable {
       return (name.equals(that.name) && classloader.equals(that.classloader));
     }
   }
+  
+  public int getDimensionality() {
+    assert isArrayType();
+    
+    int mask = getDerivedMask();
+    if ((mask&PrimitiveMask) == PrimitiveMask) {
+      mask >>= ElementBits;
+    }
+    int dims = 0;
+    while ((mask&ArrayMask) == ArrayMask) {
+      mask >>= ElementBits;
+      dims++;
+    }
+    assert dims>0;
+    return dims;
+  }
+
 }
