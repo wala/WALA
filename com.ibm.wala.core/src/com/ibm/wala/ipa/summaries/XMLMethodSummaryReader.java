@@ -520,7 +520,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
             // array of objects
             type.getDerivedMask()==ArrayMask || 
             // array of primitives
-            type.getDerivedMask()==((ArrayMask<<2)|PrimitiveMask));  
+            type.getDerivedMask()==((ArrayMask<<ElementBits)|PrimitiveMask));  
         a = insts.NewInstruction(defNum, ref, new int[] { sNumber.intValue() });
       } else {
         a = insts.NewInstruction(defNum, ref);
