@@ -109,11 +109,7 @@ public class CallGraph2JSON {
 	  return method;
 	}
 
-<<<<<<< HEAD
 	public static boolean isRealFunction(IMethod method) {
-=======
-	private static boolean isRealFunction(IMethod method) {
->>>>>>> 4dc8bf18bc218aa65c36a5b36930bf0672561915
 		if(method instanceof AstMethod) {
 		  String methodName = method.getDeclaringClass().getName().toString();
 	    
