@@ -19,8 +19,6 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
-
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.js.ipa.callgraph.ForInContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
@@ -30,13 +28,13 @@ import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.CorrelatedPair
 import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil;
 import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil.CGBuilderType;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
-import com.ibm.wala.ide.util.ProgressMaster;
-import com.ibm.wala.ide.util.ProgressMonitorDelegate;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.util.NullProgressMonitor;
+import com.ibm.wala.util.ProgressMaster;
 import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.io.FileUtil;
@@ -113,7 +111,7 @@ public class HTMLCGBuilder {
 			}
 			long start = System.currentTimeMillis();
 			CallGraph cg = timeout > 0 ? builder.makeCallGraph(builder.getOptions(),
-					ProgressMonitorDelegate.createProgressMonitorDelegate(master)) : builder.makeCallGraph(builder.getOptions());
+					master) : builder.makeCallGraph(builder.getOptions());
 			long end = System.currentTimeMillis();
 			master.done();
 			res.construction_time = (end - start);

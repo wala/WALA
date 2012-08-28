@@ -67,7 +67,7 @@ public class DataflowTest extends WalaTestCase {
   public static void beforeClass() throws Exception {
 
     scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
-        (new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt"), DataflowTest.class.getClassLoader());
+        (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS), DataflowTest.class.getClassLoader());
 
     try {
       cha = ClassHierarchy.make(scope);

@@ -10,6 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.types;
 
+import static com.ibm.wala.types.TypeName.ArrayMask;
+import static com.ibm.wala.types.TypeName.ElementBits;
+import static com.ibm.wala.types.TypeName.PrimitiveMask;
+
 import java.io.Serializable;
 import java.util.Map;
 
@@ -318,6 +322,10 @@ public final class TypeReference implements Serializable {
 
   public final static byte ArrayTypeCode = '[';
 
+  public final static byte PointerTypeCode = '*';
+
+  public final static byte ReferenceTypeCode = '&';
+
   // TODO! the following two are unsound hacks; kill them.
   final static TypeName NullName = TypeName.string2TypeName("null");
 
@@ -412,6 +420,30 @@ public final class TypeReference implements Serializable {
     }
   }
 
+  public static TypeReference findOrCreateReferenceTo(TypeReference t) {
+    if (t == null) {
+      throw new IllegalArgumentException("t is null");
+    }
+    TypeName name = t.getName();
+    if (t.isPrimitiveType()) {
+      return findOrCreate(ClassLoaderReference.Primordial, name.getReferenceTypeForElementType());
+    } else {
+      return findOrCreate(t.getClassLoader(), name.getReferenceTypeForElementType());
+    }
+  }
+
+  public static TypeReference findOrCreatePointerTo(TypeReference t) {
+    if (t == null) {
+      throw new IllegalArgumentException("t is null");
+    }
+    TypeName name = t.getName();
+    if (t.isPrimitiveType()) {
+      return findOrCreate(ClassLoaderReference.Primordial, name.getPointerTypeForElementType());
+    } else {
+      return findOrCreate(t.getClassLoader(), name.getPointerTypeForElementType());
+    }
+  }
+
   /**
    * NB: All type names should use '/' and not '.' as a separator. eg. Ljava/lang/Class
    * 
@@ -456,8 +488,8 @@ public final class TypeReference implements Serializable {
    * Return the dimensionality of the type. By convention, class types have dimensionality 0, primitives -1, and arrays
    * the number of [ in their descriptor.
    */
-  public final int getDimensionality() {
-    return name.getDimensionality();
+  public final int getDerivedMask() {
+    return name.getDerivedMask();
   }
 
   /**
@@ -551,4 +583,21 @@ public final class TypeReference implements Serializable {
       return (name.equals(that.name) && classloader.equals(that.classloader));
     }
   }
+  
+  public int getDimensionality() {
+    assert isArrayType();
+    
+    int mask = getDerivedMask();
+    if ((mask&PrimitiveMask) == PrimitiveMask) {
+      mask >>= ElementBits;
+    }
+    int dims = 0;
+    while ((mask&ArrayMask) == ArrayMask) {
+      mask >>= ElementBits;
+      dims++;
+    }
+    assert dims>0;
+    return dims;
+  }
+
 }

@@ -78,12 +78,15 @@ public class AnnotationsReader extends AttributeReader {
   }
 
   /**
-   * @see AnnotationsReader#readElementValueAndSize(int)
-   * 
-   * 
+   * Represents a constant argument to an annotation. Class arguments (e.g.,
+   * <code>Foo.class</code>) are also represented with this type, with the value
+   * being the String class name.
    */
   public static class ConstantElementValue implements ElementValue {
 
+    /**
+     * the constant value
+     */
     public final Object val;
 
     public ConstantElementValue(Object val) {
@@ -98,10 +101,18 @@ public class AnnotationsReader extends AttributeReader {
   }
 
   /**
-   * @see AnnotationsReader#readElementValueAndSize(int)
+   * Represents enum constant annotation arguments.
    */
   public static class EnumElementValue implements ElementValue {
+    
+    /**
+     * the name of the enum type
+     */
     public final String enumType;
+    
+    /**
+     * the enum value
+     */
     public final String enumVal;
 
     public EnumElementValue(String enumType, String enumVal) {
@@ -118,10 +129,13 @@ public class AnnotationsReader extends AttributeReader {
   }
 
   /**
-   * @see AnnotationsReader#readElementValueAndSize(int)
+   * represents an annotation argument that itself is an array of arguments
    */
   public static class ArrayElementValue implements ElementValue {
 
+    /**
+     * the values contained in the array
+     */
     public final ElementValue[] vals;
 
     public ArrayElementValue(ElementValue[] vals) {
@@ -195,12 +209,20 @@ public class AnnotationsReader extends AttributeReader {
    * } element_value_pairs[num_element_value_pairs];
    * </pre>
    * 
-   * See the JVM spec section 4.7.16 for details.
+   * See the JVM specification section 4.7.16 for details.
+   * 
+   * This class implements {@link ElementValue} to handle nested annotations.
    */
   public static class AnnotationAttribute implements ElementValue {
 
+    /**
+     * the type of the annotation
+     */
     public final String type;
 
+    /**
+     * the arguments to the annotation
+     */
     public final Map<String, ElementValue> elementValues;
 
     public AnnotationAttribute(String type, Map<String, ElementValue> elementValues) {

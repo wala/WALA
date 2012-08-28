@@ -11,13 +11,10 @@ Require-Bundle: com.ibm.wala.cast.java,
  org.eclipse.core.runtime,
  com.ibm.wala.shrike,
  org.eclipse.jdt.core,
- org.eclipse.core.resources,
- com.ibm.wala.ide
+ org.eclipse.core.resources
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
-Export-Package: com.ibm.wala.cast.java.client.polyglot,
- com.ibm.wala.cast.java.polyglot;uses:="org.osgi.framework,org.eclipse.core.runtime",
- com.ibm.wala.cast.java.translator.polyglot;
+Export-Package: com.ibm.wala.cast.java.translator.polyglot;
   uses:="com.ibm.wala.types,
    polyglot.types,
    polyglot.util,
