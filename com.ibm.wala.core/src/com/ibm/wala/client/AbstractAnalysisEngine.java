@@ -27,6 +27,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -166,12 +167,13 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     addApplicationModulesToScope();
   }
 
+  
   /**
    * @return a IClassHierarchy object for this analysis scope
    */
   public IClassHierarchy buildClassHierarchy() {
     IClassHierarchy cha = null;
-    ClassLoaderFactory factory = new ClassLoaderFactoryImpl(getScope().getExclusions());
+    ClassLoaderFactory factory = makeClassLoaderFactory(getScope().getExclusions());
     try {
       cha = ClassHierarchy.make(getScope(), factory);
     } catch (ClassHierarchyException e) {
@@ -181,6 +183,10 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     }
     return cha;
   }
+
+  protected ClassLoaderFactory makeClassLoaderFactory(SetOfClasses exclusions) {
+    return new ClassLoaderFactoryImpl(exclusions);
+   }
 
   public IClassHierarchy getClassHierarchy() {
     return cha;

@@ -37,58 +37,63 @@
  */
 package com.ibm.wala.cast.java.client;
 
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
+import java.io.IOException;
+
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IJavaProject;
 
+import com.ibm.wala.cast.java.client.impl.ZeroCFABuilderFactory;
+import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.java.translator.jdt.JDTClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
-import com.ibm.wala.ide.classloader.EclipseSourceFileModule;
+import com.ibm.wala.ide.client.EclipseProjectSourceAnalysisEngine;
+import com.ibm.wala.ide.util.EclipseProjectPath;
+import com.ibm.wala.ide.util.EclipseProjectPath.AnalysisScopeType;
+import com.ibm.wala.ide.util.JavaEclipseProjectPath;
 import com.ibm.wala.ide.util.JdtUtil;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.ClassLoaderReference;
 
-public class JDTJavaSourceAnalysisEngine extends JavaSourceAnalysisEngine {
-  protected final IJavaProject project;
+public class JDTJavaSourceAnalysisEngine extends EclipseProjectSourceAnalysisEngine<IJavaProject> {
 
-  public JDTJavaSourceAnalysisEngine(IJavaProject project) {
-    super();
-    this.project = project;
+  public JDTJavaSourceAnalysisEngine(IJavaProject project) throws IOException, CoreException {
+    super(project);
   }
 
-  public JDTJavaSourceAnalysisEngine(String projectName) {
+  public JDTJavaSourceAnalysisEngine(String projectName) throws IOException, CoreException {
     this(JdtUtil.getNamedProject(projectName));
   }
 
-  protected ClassLoaderFactory getClassLoaderFactory(SetOfClasses exclusions) {
-    return new JDTClassLoaderFactory(exclusions);
+  @Override
+  protected ClassLoaderFactory makeClassLoaderFactory(SetOfClasses exclusions) {
+	  return new JDTClassLoaderFactory(exclusions);	
   }
 
-  public void addSourceModule(IResource file) {
-    IProject proj = project.getProject();
-    IPath path = file.getProjectRelativePath();
-    if (file.getType() == IResource.FILE) {
-      addSourceModule(EclipseSourceFileModule.createEclipseSourceFileModule(proj.getFile(path)));    
-    } else {
-      assert file.getType() == IResource.FOLDER;
-      IFolder dir = proj.getFolder(path);
-      try {
-        for(IResource x : dir.members()) {
-          assert x.getType() == IResource.FILE || x.getType() == IResource.FOLDER;
-          addSourceModule(x);
-        }
-      } catch (CoreException e) {
-        throw new RuntimeException("trouble with " + file, e);
-      }
-    }
+  @Override
+  protected AnalysisScope makeAnalysisScope() {
+	  return new JavaSourceAnalysisScope();
   }
   
-  public void addSourceModule(String fileName) {
-    IResource file = project.getProject().findMember(fileName);
-    assert file != null;
-    addSourceModule(file);
+  @Override
+  protected ClassLoaderReference getSourceLoader() {
+	  return JavaSourceAnalysisScope.SOURCE;
+  }
+
+  @Override
+  protected EclipseProjectPath<?, IJavaProject> createProjectPath(
+		  IJavaProject project) throws IOException, CoreException {
+	  return JavaEclipseProjectPath.make(project, AnalysisScopeType.SOURCE_FOR_PROJ_AND_LINKED_PROJS);	
+  }
+
+  @Override
+  protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha,
+		  AnalysisOptions options, AnalysisCache cache) {
+	    return new ZeroCFABuilderFactory().make(options, cache, cha, scope, false);
   }
 
 }

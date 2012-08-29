@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaCore;
@@ -141,7 +142,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
         public void acceptAST(ICompilationUnit source, CompilationUnit ast) {
 
           try {
-            JDTJava2CAstTranslator jdt2cast = makeCAstTranslator(ast, source.getUnderlyingResource().getLocation().toOSString());
+            JDTJava2CAstTranslator jdt2cast = makeCAstTranslator(ast, proj.getValue().get(source).getIFile(), source.getUnderlyingResource().getLocation().toOSString());
             final Java2IRTranslator java2ir = makeIRTranslator();
             java2ir.translate(proj.getValue().get(source), jdt2cast.translateToCAst());
           } catch (JavaModelException e) {
@@ -169,8 +170,8 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
     return new Java2IRTranslator(sourceLoader);
   }
 
-  protected JDTJava2CAstTranslator makeCAstTranslator(CompilationUnit cu, String fullPath) {
-    return new JDTJava2CAstTranslator(sourceLoader, cu, fullPath, false);
+  protected JDTJava2CAstTranslator makeCAstTranslator(CompilationUnit cu, IFile sourceFile, String fullPath) {
+    return new JDTJava2CAstTranslator(sourceLoader, cu, sourceFile, fullPath, false);
   }
 
 }

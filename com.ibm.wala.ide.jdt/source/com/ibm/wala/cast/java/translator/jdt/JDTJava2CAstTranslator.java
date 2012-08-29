@@ -37,10 +37,6 @@
  */
 package com.ibm.wala.cast.java.translator.jdt;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -52,6 +48,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
@@ -140,7 +137,6 @@ import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstNodeTypeMap;
 import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
-import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.impl.CAstControlFlowRecorder;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
@@ -149,6 +145,7 @@ import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.impl.CAstSourcePositionRecorder;
 import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
 import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.ide.util.JdtPosition;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
@@ -182,39 +179,41 @@ public class JDTJava2CAstTranslator {
   // ///////////////////////////////////////////
   // / HANDLINGS OF VARIOUS THINGS //
   // ///////////////////////////////////////////
-  protected AST ast; // TAGALONG
+  protected final AST ast; // TAGALONG
 
-  protected JDTIdentityMapper fIdentityMapper; // TAGALONG
+  protected final JDTIdentityMapper fIdentityMapper; // TAGALONG
 
-  protected JDTTypeDictionary fTypeDict;
+  protected final JDTTypeDictionary fTypeDict;
 
-  protected JavaSourceLoaderImpl fSourceLoader;
+  protected final JavaSourceLoaderImpl fSourceLoader;
 
-  protected ITypeBinding fDivByZeroExcType;
+  protected final ITypeBinding fDivByZeroExcType;
 
-  protected ITypeBinding fNullPointerExcType;
+  protected final ITypeBinding fNullPointerExcType;
 
-  protected ITypeBinding fClassCastExcType;
+  protected final ITypeBinding fClassCastExcType;
 
-  protected ITypeBinding fRuntimeExcType;
+  protected final ITypeBinding fRuntimeExcType;
 
-  protected ITypeBinding NoClassDefFoundError;
+  protected final ITypeBinding NoClassDefFoundError;
 
-  protected ITypeBinding ExceptionInInitializerError;
+  protected final ITypeBinding ExceptionInInitializerError;
 
-  protected ITypeBinding OutOfMemoryError;
+  protected final ITypeBinding OutOfMemoryError;
 
-  protected DoLoopTranslator doLoopTranslator;
+  protected final DoLoopTranslator doLoopTranslator;
   
-  private String fullPath;
+  private final String fullPath;
+  
+  private final IFile sourceFile;
 
-  private CompilationUnit cu;
+  private final CompilationUnit cu;
 
   //
   // COMPILATION UNITS & TYPES
   //
 
-  public JDTJava2CAstTranslator(JavaSourceLoaderImpl sourceLoader, CompilationUnit astRoot, String fullPath, boolean replicateForDoLoops) {
+  public JDTJava2CAstTranslator(JavaSourceLoaderImpl sourceLoader, CompilationUnit astRoot, IFile sourceFile, String fullPath, boolean replicateForDoLoops) {
     fDivByZeroExcType = FakeExceptionTypeBinding.arithmetic;
     fNullPointerExcType = FakeExceptionTypeBinding.nullPointer;
     fClassCastExcType = FakeExceptionTypeBinding.classCast;
@@ -222,6 +221,7 @@ public class JDTJava2CAstTranslator {
     ExceptionInInitializerError = FakeExceptionTypeBinding.initException;
     OutOfMemoryError = FakeExceptionTypeBinding.outOfMemory;
 
+    this.sourceFile = sourceFile;
     this.fSourceLoader = sourceLoader;
     this.cu = astRoot;
 
@@ -646,6 +646,7 @@ public class JDTJava2CAstTranslator {
       // process Object in source...
 
       ITypeBinding superType = classBinding.getSuperclass();
+      
       // find default constructor. IT is an error to have a constructor
       // without super() when the default constructor of the superclass does not exist.
       IMethodBinding defaultSuperCtor = findDefaultCtor(superType);
@@ -3145,71 +3146,10 @@ public class JDTJava2CAstTranslator {
   }
 
   public JdtPosition makePosition(int start, int end) {
-    return new JdtPosition(start, end, cu.getLineNumber(start), cu.getLineNumber(end), fullPath);
+    return new JdtPosition(start, end, cu.getLineNumber(start), cu.getLineNumber(end), sourceFile, fullPath);
   }
 
-  public static class JdtPosition implements Position {
-    private int firstOffset;
-
-    private int lastOffset;
-
-    private int firstLine, lastLine;
-
-    private String path;
-
-    public JdtPosition(int start, int end, int startLine, int endLine, String path) {
-      firstOffset = start;
-      lastOffset = end;
-      firstLine = startLine;
-      lastLine = endLine;
-      this.path = path;
-    }
-
-    public int getFirstCol() {
-      return -1;
-    }
-
-    public int getFirstLine() {
-      return firstLine;
-    }
-
-    public InputStream getInputStream() throws IOException {
-      return null;
-    }
-
-    public int getLastCol() {
-      return -1;
-    }
-
-    public int getLastLine() {
-      return lastLine;
-    }
-
-    public URL getURL() {
-      try {
-        return new URL("file:" + path);
-      } catch (MalformedURLException e) {
-        Assertions.UNREACHABLE(e.toString());
-        return null;
-      }
-    }
-
-    public int compareTo(Object arg0) {
-      return 0;
-    }
-
-    public int getFirstOffset() {
-      return firstOffset;
-    }
-
-    public int getLastOffset() {
-      return lastOffset;
-    }
-
-    public String toString() {
-      return "[offset " + firstOffset + ":" + lastOffset + "]";
-    }
-  }
+  
 
   // /////////////////////////////////////////////////////////////////
   // // ENUM TRANSFORMATION //////////////////////////////////////////

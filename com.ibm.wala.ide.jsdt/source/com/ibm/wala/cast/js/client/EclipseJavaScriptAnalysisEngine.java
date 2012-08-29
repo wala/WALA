@@ -27,7 +27,7 @@ public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysi
   }
 
   @Override
-  protected AnalysisScope makeSourceAnalysisScope() {
+  protected AnalysisScope makeAnalysisScope() {
     return new CAstAnalysisScope(new JavaScriptLoaderFactory(new CAstRhinoTranslatorFactory()), Collections.singleton(JavaScriptLoader.JS));
   }
 

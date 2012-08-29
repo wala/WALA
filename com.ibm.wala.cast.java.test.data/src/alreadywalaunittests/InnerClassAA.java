@@ -47,17 +47,17 @@ package alreadywalaunittests;
 //      invariants and non-invariants (immediate 'new' in that function)
 //      subclasses
 
-public class InnerClassA {
+public class InnerClassAA {
 	int a_x;
 
 	public static void main(String args[]) {
 		// prints out 5 5 9 7 5 5 7 5 7 5
-		InnerClassA a = new InnerClassA();
+		InnerClassAA a = new InnerClassAA();
 		a.doAllThis();
 	}
 	
 	public void doAllThis() {
-		InnerClassA a = this;
+		InnerClassAA a = this;
 		AA aa = new AA();
 		aa = a.new AA();
 		AB ab = aa.makeAB();
@@ -104,7 +104,7 @@ public class InnerClassA {
 			doMoreWithABSubA(absuba);
 		}
 
-		private void doMoreWithABSubA(InnerClassA.AB.ABSubA absuba) {
+		private void doMoreWithABSubA(InnerClassAA.AB.ABSubA absuba) {
 			System.out.println(absuba.getA_X()); // 5
 			
 			AB.ABSubA.ABSubAA absubaa = absuba.new ABSubAA();
