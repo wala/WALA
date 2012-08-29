@@ -90,10 +90,10 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
              endPos = corr.getEndPosition(correlations.getPositions());
     
     // TODO: enable these assertions; currently we're getting getLastLine() == -1 a lot
-    /*assert startPos.getFirstLine() != -1;
-    assert startPos.getLastLine() != -1;
+    assert startPos.getFirstLine() != -1;
+    //assert startPos.getLastLine() != -1;
     assert endPos.getFirstLine() != -1;
-    assert endPos.getLastLine() != -1;*/
+    //assert endPos.getLastLine() != -1;
     
     Set<ChildPos> startNodes = null,
                   endNodes = null;
