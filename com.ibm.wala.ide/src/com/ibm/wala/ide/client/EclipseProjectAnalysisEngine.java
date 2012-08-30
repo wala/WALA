@@ -21,34 +21,43 @@ import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.ide.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.util.config.FileOfClasses;
 
 abstract public class EclipseProjectAnalysisEngine<P> extends AbstractAnalysisEngine {
 
+  protected final P project;
+  
   protected final IPath workspaceRootPath;
 
-  protected final EclipseProjectPath ePath;
+  protected final EclipseProjectPath<?,P> ePath;
 
   public EclipseProjectAnalysisEngine(P project) throws IOException, CoreException {
     super();
+    this.project = project;
     this.workspaceRootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
     assert project != null;
     assert workspaceRootPath != null;
     this.ePath = createProjectPath(project);
-    // setCallGraphBuilderFactory(new ZeroCFABuilderFactory());
   }
 
-  abstract protected EclipseProjectPath createProjectPath(P project) throws IOException, CoreException;
+  abstract protected EclipseProjectPath<?,P> createProjectPath(P project) throws IOException, CoreException;
 
   abstract protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache);
 
+  abstract protected AnalysisScope makeAnalysisScope();
+  
   @Override
   public void buildAnalysisScope() throws IOException {
-    super.scope = ePath.toAnalysisScope(new File(getExclusionsFile()));
+    super.scope = ePath.toAnalysisScope(makeAnalysisScope());
+    if (getExclusionsFile() != null) {
+      scope.setExclusions(FileOfClasses.createFileOfClasses(new File(getExclusionsFile())));
+    }
   }
 
-  public EclipseProjectPath getEclipseProjectPath() {
+  public EclipseProjectPath<?,P> getEclipseProjectPath() {
     return ePath;
   }
 

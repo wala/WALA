@@ -6,6 +6,9 @@
  *******************************************************************************/
 package com.ibm.wala.cast.java.test;
 
+import java.util.Collection;
+import java.util.List;
+
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.java.translator.polyglot.PolyglotJavaSourceAnalysisEngine;
@@ -18,13 +21,14 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 public class PolyglotJLexTest extends JLexTest {
 
   @Override
-  protected JavaSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors) {
+  protected JavaSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
     JavaSourceAnalysisEngine engine = new PolyglotJavaSourceAnalysisEngine() {
       protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
         return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, new String[] { "LJLex/Main" });
       }
     };
     engine.setExclusionsFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    populateScope(engine, sources, libs);
     return engine;
   }
 

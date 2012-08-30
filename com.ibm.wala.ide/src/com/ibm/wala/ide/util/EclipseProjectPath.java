@@ -140,7 +140,7 @@ public abstract class EclipseProjectPath<E, P> {
   }
 
 
-  protected void resolveLibraryPathEntry(ILoader loader, IPath p) throws IOException {
+  protected void resolveLibraryPathEntry(ILoader loader, IPath p) {
     File file = makeAbsolute(p).toFile();
     JarFile j;
     try {
@@ -148,7 +148,7 @@ public abstract class EclipseProjectPath<E, P> {
     } catch (ZipException z) {
       // a corrupted file. ignore it.
       return;
-    } catch (FileNotFoundException z) {
+    } catch (IOException z) {
       // should ignore directories as well..
       return;
     }
@@ -169,7 +169,7 @@ public abstract class EclipseProjectPath<E, P> {
     }
   }
 
-  protected void resolveProjectPathEntry(Loader loader, boolean includeSource, IPath p) throws IOException {
+  protected void resolveProjectPathEntry(ILoader loader, boolean includeSource, IPath p) {
     IPath projectPath = makeAbsolute(p);
     IWorkspace ws = ResourcesPlugin.getWorkspace();
     IWorkspaceRoot root = ws.getRoot();
@@ -184,6 +184,9 @@ public abstract class EclipseProjectPath<E, P> {
       }
     } catch (CoreException e1) {
       e1.printStackTrace();
+      Assertions.UNREACHABLE();
+    } catch (IOException e) {
+      e.printStackTrace();
       Assertions.UNREACHABLE();
     }
   }
@@ -280,7 +283,7 @@ public abstract class EclipseProjectPath<E, P> {
     return true;
   }
 
-  protected void resolveClasspathEntries(P project, List l, Loader loader, boolean includeSource, boolean entriesFromTopLevelProject) {
+  protected void resolveClasspathEntries(P project, List l, ILoader loader, boolean includeSource, boolean entriesFromTopLevelProject) {
     for (int i = 0; i < l.size(); i++) {
       resolveClasspathEntry(project, resolve((E)l.get(i)), loader, includeSource, entriesFromTopLevelProject);
     }

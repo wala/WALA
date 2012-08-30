@@ -22,6 +22,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaModel;
@@ -33,6 +34,10 @@ import org.eclipse.jdt.core.ITypeParameter;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.ASTParser;
+import org.eclipse.jdt.core.dom.NodeFinder;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchEngine;
@@ -572,4 +577,21 @@ public class JdtUtil {
     return helloWorldProject;
   }
 
+  public static ASTNode getAST(IFile javaSourceFile) {
+	  ASTParser parser = ASTParser.newParser(AST.JLS3);
+	  parser.setSource(JavaCore.createCompilationUnitFrom(javaSourceFile));
+	  parser.setProject(JavaCore.create(javaSourceFile.getProject()));
+	  parser.setResolveBindings(true);
+	  return parser.createAST(new NullProgressMonitor());
+  }
+  
+  public static ASTNode getOriginalNode(JdtPosition pos) {
+	  ASTNode root = getAST(pos.getEclipseFile());
+	  return getOriginalNode(root, pos);
+  }
+
+  public static ASTNode getOriginalNode(ASTNode root, JdtPosition pos) {
+	  	return NodeFinder.perform(root, pos.getFirstOffset(), pos.getLastOffset()-pos.getFirstOffset());
+  }
+  
 }

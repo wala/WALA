@@ -10,28 +10,21 @@
  *****************************************************************************/
 package com.ibm.wala.ide.client;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
 
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
-import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
-import com.ibm.wala.classLoader.Module;
-import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.ide.plugin.CorePlugin;
 import com.ibm.wala.ide.util.EclipseFileProvider;
-import com.ibm.wala.ide.util.EclipseProjectPath;
-import com.ibm.wala.ide.util.EclipseProjectPath.Loader;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.io.FileProvider;
 
 /**
  * An {@link EclipseProjectAnalysisEngine} specialized for source code analysis with CAst
@@ -56,50 +49,18 @@ abstract public class EclipseProjectSourceAnalysisEngine<P> extends EclipseProje
       setExclusionsFile((new EclipseFileProvider()).getFileFromPlugin(CorePlugin.getDefault(), "J2SEClassHierarchyExclusions.txt")
           .getAbsolutePath());
     } catch (IOException e) {
-      Assertions.UNREACHABLE("Cannot find exclusions file");
+      try {
+        setExclusionsFile((new FileProvider()).getFile("J2SEClassHierarchyExclusions.txt", getClass().getClassLoader())
+          .getAbsolutePath());
+      } catch (IOException f) {
+        Assertions.UNREACHABLE("Cannot find exclusions file");
+      }
     }
   }
 
   @Override
   public AnalysisCache makeDefaultCache() {
     return new AnalysisCache(AstIRFactory.makeDefaultFactory());
-  }
-
-  protected abstract AnalysisScope makeSourceAnalysisScope();
-
-  @Override
-  public void buildAnalysisScope() {
-    try {
-      scope = makeSourceAnalysisScope();
-      if (getExclusionsFile() != null) {
-        scope.setExclusions(FileOfClasses.createFileOfClasses(new File(getExclusionsFile())));
-      }
-      EclipseProjectPath<?,?> epath = getEclipseProjectPath();
-
-      for (Module m : epath.getModules(Loader.PRIMORDIAL, true)) {
-        scope.addToScope(scope.getPrimordialLoader(), m);
-      }
-      ClassLoaderReference app = scope.getApplicationLoader();
-      ClassLoaderReference src = getSourceLoader();
-      for (Module m : epath.getModules(Loader.APPLICATION, true)) {
-        if (m instanceof SourceDirectoryTreeModule) {
-          scope.addToScope(src, m);
-        } else {
-          scope.addToScope(app, m);
-        }
-      }
-      for (Module m : epath.getModules(Loader.EXTENSION, true)) {
-        if (!(m instanceof BinaryDirectoryTreeModule))
-          scope.addToScope(app, m);
-      }
-      /*
-       * ClassLoaderReference src = ((JavaSourceAnalysisScope)scope).getSourceLoader(); for (Module m :
-       * epath.getModules(Loader.APPLICATION, false)) { scope.addToScope(src, m); }
-       */
-
-    } catch (IOException e) {
-      Assertions.UNREACHABLE(e.toString());
-    }
   }
 
   protected abstract ClassLoaderReference getSourceLoader();

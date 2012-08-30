@@ -1411,7 +1411,6 @@ public class PolyglotJava2CAstTranslator {
     }
 
     public CAstSourcePositionMap.Position getPosition() {
-      Assertions.UNREACHABLE("CompilationUnitEntity.getPosition()");
       return null;
     }
 

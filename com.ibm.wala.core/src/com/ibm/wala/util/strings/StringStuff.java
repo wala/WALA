@@ -433,6 +433,9 @@ public class StringStuff {
            default:
              throw new IllegalArgumentException("ill-formed array descriptor " + b);
            }
+        } else {
+          // type codes must be at the start of the descriptor; if we see something else, stop
+          break;
         }
       }
       return code;

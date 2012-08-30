@@ -35,24 +35,15 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package alreadywalaunittests;
+package foo.bar.hello.world;
 
-public class InnerClassSuper {
-	int x = 5;
-	class SuperOuter {
-		public void test() {
-			System.out.println(x);
-		}
-	}
-	public static void main(String args[]) {
-		new Sub().new SubInner();
-	}
+public class MiniaturList2 {
+
+        public static void main(String[] args) {
+        	int a;
+            for ( ;; ) {
+                            break;
+            }
+        }
 }
-class Sub extends InnerClassSuper {
-	class SubInner {
-		public SubInner() {
-			InnerClassSuper.SuperOuter so = new InnerClassSuper.SuperOuter();
-			so.test();
-		}
-	}
-}
+
