@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cast.tree.visit.CAstVisitor.Context;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -393,6 +394,9 @@ public class CAstPattern {
     v.visit(e.getAST(), new Context() {
       public CAstEntity top() {
         return e;
+      }
+      public CAstSourcePositionMap getSourceMap() {
+        return e.getSourceMap();
       }
     }, v);
   

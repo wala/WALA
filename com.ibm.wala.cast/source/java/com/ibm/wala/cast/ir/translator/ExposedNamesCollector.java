@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.cast.tree.CAstSymbol;
 import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -39,6 +40,10 @@ public class ExposedNamesCollector extends CAstVisitor<ExposedNamesCollector.Ent
 
     public CAstEntity top() {
       return top;
+    }
+
+    public CAstSourcePositionMap getSourceMap() {
+      return top.getSourceMap();
     }
 
   }

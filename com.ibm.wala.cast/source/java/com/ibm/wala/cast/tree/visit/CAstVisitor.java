@@ -16,6 +16,7 @@ import java.util.Map;
 
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -30,8 +31,12 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
 
   private Position currentPosition;
   
-  protected Position getCurrentPosition() {
+  public Position getCurrentPosition() {
     return currentPosition;
+  }
+  
+  protected CAstVisitor() {
+    
   }
   
   /**
@@ -43,7 +48,10 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
    * @author Igor Peshansky
    */
   public interface Context {
+    
     CAstEntity top();
+    
+    CAstSourcePositionMap getSourceMap();
   }
 
   /**
@@ -406,8 +414,8 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
    */
   public final void visit(final CAstNode n, C context, CAstVisitor<C> visitor) {
     Position restore = currentPosition;
-    if (context.top().getSourceMap() != null) {
-      Position p = context.top().getSourceMap().getPosition(n);
+    if (context.getSourceMap() != null) {
+      Position p = context.getSourceMap().getPosition(n);
       if (p != null) {
         currentPosition = p;
       }
@@ -939,7 +947,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
 	System.err.println(("cannot handle assign to kind " + n.getKind()));
 	throw new UnsupportedOperationException(
 	  "cannot handle assignment: " + 
-	  CAstPrinter.print(a, context.top().getSourceMap()));
+	  CAstPrinter.print(a, context.getSourceMap()));
       }
     }
     }

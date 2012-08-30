@@ -914,7 +914,7 @@ public class JDTJava2CAstTranslator {
     }
 
     public CAstSourcePositionMap.Position getPosition() {
-      return getSourceMap().getPosition(fAst);
+      return fDecl==null? getSourceMap().getPosition(fAst): makePosition(fDecl);
     }
 
     public CAstNodeTypeMap getNodeTypeMap() {
