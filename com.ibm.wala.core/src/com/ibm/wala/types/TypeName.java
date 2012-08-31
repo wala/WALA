@@ -250,6 +250,19 @@ public final class TypeName implements Serializable {
      * Dimensionality: -1 => primitive 
      *                  0 => class 
      *                  >0 => mask of levels of array, reference, pointer
+     *                  
+     *  When the mask is > 0, it represents levels of type qualifiers (in C 
+     *  terminology) for array, reference and pointer types.  There is also a
+     *  special mask for when the innermost type is a primitive.  The mask is
+     *  a bitfield laid out in inverse dimension order. 
+     *  
+     *  For instance, a single-dimension array is simply the value ArrayMask, 
+     *  padded with leading zeros.  A single-dimension array of primitives is
+     *  ArrayMask<<ElementBits | PrimitiveMask.  An array of pointers to objects
+     *  would be (ArrayMask<<ElementBits) | PointerMask; an array of pointers
+     *  to a primitive type would have the primitive mask on the end:
+     *  ((ArrayMask<<ElementBits) | PointerMask)<<ElementBits | PrimitiveMask
+     *  
      */
     private final int dim;
 
