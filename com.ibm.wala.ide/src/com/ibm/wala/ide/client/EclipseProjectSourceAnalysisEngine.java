@@ -14,7 +14,6 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
 
-import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.ide.plugin.CorePlugin;
 import com.ibm.wala.ide.util.EclipseFileProvider;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -27,7 +26,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileProvider;
 
 /**
- * An {@link EclipseProjectAnalysisEngine} specialized for source code analysis with CAst
+ * An {@link EclipseProjectAnalysisEngine} specialized for source code analysis
  */
 abstract public class EclipseProjectSourceAnalysisEngine<P> extends EclipseProjectAnalysisEngine<P> {
 
@@ -58,11 +57,12 @@ abstract public class EclipseProjectSourceAnalysisEngine<P> extends EclipseProje
     }
   }
 
-  @Override
-  public AnalysisCache makeDefaultCache() {
-    return new AnalysisCache(AstIRFactory.makeDefaultFactory());
-  }
-
+  /**
+   * we don't provide a default implementation of this method to avoid
+   * introducing a dependence on com.ibm.wala.cast from this project
+   */
+  public abstract AnalysisCache makeDefaultCache();
+  
   protected abstract ClassLoaderReference getSourceLoader();
 
   @Override

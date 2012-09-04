@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
+import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
@@ -39,6 +40,11 @@ public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysi
   @Override
   protected ClassLoaderReference getSourceLoader() {
 	return JavaScriptTypes.jsLoader;
+  }
+
+  @Override
+  public AnalysisCache makeDefaultCache() {
+    return new AnalysisCache(AstIRFactory.makeDefaultFactory());
   }
 
   @Override

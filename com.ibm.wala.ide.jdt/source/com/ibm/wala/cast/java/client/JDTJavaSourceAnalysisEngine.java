@@ -42,6 +42,7 @@ import java.io.IOException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 
+import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.java.client.impl.ZeroCFABuilderFactory;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.java.translator.jdt.JDTClassLoaderFactory;
@@ -82,6 +83,11 @@ public class JDTJavaSourceAnalysisEngine extends EclipseProjectSourceAnalysisEng
   @Override
   protected ClassLoaderReference getSourceLoader() {
 	  return JavaSourceAnalysisScope.SOURCE;
+  }
+
+  @Override
+  public AnalysisCache makeDefaultCache() {
+    return new AnalysisCache(AstIRFactory.makeDefaultFactory());
   }
 
   @Override
