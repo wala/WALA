@@ -141,7 +141,11 @@ public final class ConstantPoolParser implements ClassConstants {
     return s;
   }
 
-  private static boolean isRef(byte b) {
+  /**
+   * Does b represent the tag of a constant pool reference to an (interface)
+   * method or field?
+   */
+  public static boolean isRef(byte b) {
     switch (b) {
     case CONSTANT_MethodRef:
     case CONSTANT_FieldRef:
