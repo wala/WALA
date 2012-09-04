@@ -17,10 +17,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.ibm.wala.classLoader.SourceModule;
-
 import polyglot.frontend.FileSource;
 import polyglot.frontend.Resource;
+
+import com.ibm.wala.classLoader.SourceModule;
 
 /**
  * A Polyglot Source whose input comes from an InputStream.<br>

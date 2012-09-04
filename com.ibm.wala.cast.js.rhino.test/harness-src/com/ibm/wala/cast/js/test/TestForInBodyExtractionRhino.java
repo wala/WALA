@@ -13,7 +13,6 @@ package com.ibm.wala.cast.js.test;
 
 import java.io.IOException;
 
-
 import com.ibm.wala.cast.js.translator.RhinoToAstTranslator;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.impl.CAstImpl;

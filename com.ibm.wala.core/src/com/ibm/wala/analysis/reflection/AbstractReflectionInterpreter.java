@@ -10,6 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.analysis.reflection;
 
+import static com.ibm.wala.types.TypeName.ArrayMask;
+import static com.ibm.wala.types.TypeName.ElementMask;
+import static com.ibm.wala.types.TypeName.PrimitiveMask;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,7 +39,6 @@ import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import static com.ibm.wala.types.TypeName.*;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;

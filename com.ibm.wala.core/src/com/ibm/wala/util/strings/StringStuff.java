@@ -10,7 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.util.strings;
 
-import static com.ibm.wala.types.TypeName.*;
+import static com.ibm.wala.types.TypeName.ArrayMask;
+import static com.ibm.wala.types.TypeName.ElementBits;
+import static com.ibm.wala.types.TypeName.PointerMask;
+import static com.ibm.wala.types.TypeName.ReferenceMask;
 import static com.ibm.wala.types.TypeReference.ArrayTypeCode;
 import static com.ibm.wala.types.TypeReference.PointerTypeCode;
 import static com.ibm.wala.types.TypeReference.ReferenceTypeCode;

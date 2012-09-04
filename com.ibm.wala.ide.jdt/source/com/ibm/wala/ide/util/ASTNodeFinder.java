@@ -1,12 +1,13 @@
 package com.ibm.wala.ide.util;
 
+import static com.ibm.wala.ide.util.JdtUtil.getAST;
+import static com.ibm.wala.ide.util.JdtUtil.getOriginalNode;
+
 import java.lang.ref.SoftReference;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.dom.ASTNode;
-
-import static com.ibm.wala.ide.util.JdtUtil.*;
 
 import com.ibm.wala.util.collections.HashMapFactory;
 

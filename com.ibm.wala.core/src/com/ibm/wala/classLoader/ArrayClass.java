@@ -10,6 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
+import static com.ibm.wala.types.TypeName.ArrayMask;
+import static com.ibm.wala.types.TypeName.ElementBits;
+import static com.ibm.wala.types.TypeName.PrimitiveMask;
+
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,7 +23,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
-import static com.ibm.wala.types.TypeName.*;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;

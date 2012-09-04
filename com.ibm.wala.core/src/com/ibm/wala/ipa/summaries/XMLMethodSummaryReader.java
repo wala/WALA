@@ -10,6 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.summaries;
 
+import static com.ibm.wala.types.TypeName.ArrayMask;
+import static com.ibm.wala.types.TypeName.ElementBits;
+import static com.ibm.wala.types.TypeName.PrimitiveMask;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -45,7 +49,6 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
-import static com.ibm.wala.types.TypeName.*;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;

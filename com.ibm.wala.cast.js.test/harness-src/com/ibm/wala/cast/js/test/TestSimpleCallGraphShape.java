@@ -24,7 +24,6 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;

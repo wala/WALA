@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.util.Predicate;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.FilterPredicate;

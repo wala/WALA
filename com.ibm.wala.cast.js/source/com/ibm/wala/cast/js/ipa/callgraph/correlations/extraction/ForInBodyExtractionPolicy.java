@@ -15,8 +15,8 @@ import static com.ibm.wala.cast.tree.CAstNode.ASSIGN;
 import static com.ibm.wala.cast.tree.CAstNode.BLOCK_STMT;
 import static com.ibm.wala.cast.tree.CAstNode.DECL_STMT;
 import static com.ibm.wala.cast.tree.CAstNode.EACH_ELEMENT_GET;
-import static com.ibm.wala.cast.tree.CAstNode.LABEL_STMT;
 import static com.ibm.wala.cast.tree.CAstNode.EMPTY;
+import static com.ibm.wala.cast.tree.CAstNode.LABEL_STMT;
 import static com.ibm.wala.cast.tree.CAstNode.LOCAL_SCOPE;
 import static com.ibm.wala.cast.tree.CAstNode.VAR;
 

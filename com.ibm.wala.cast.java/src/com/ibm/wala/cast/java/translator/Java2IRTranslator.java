@@ -15,7 +15,6 @@ package com.ibm.wala.cast.java.translator;
 
 import java.io.PrintWriter;
 
-import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstEntity;

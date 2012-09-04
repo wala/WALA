@@ -19,8 +19,6 @@ import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.ReceiverInstanceContext;
-import com.ibm.wala.util.intset.EmptyIntSet;
 import com.ibm.wala.util.intset.IntSet;
 
 public abstract class CallStringContextSelector implements ContextSelector {
