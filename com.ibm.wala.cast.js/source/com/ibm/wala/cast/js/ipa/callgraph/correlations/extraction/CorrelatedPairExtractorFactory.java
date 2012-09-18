@@ -37,7 +37,7 @@ public class CorrelatedPairExtractorFactory implements CAstRewriterFactory<NodeP
     this.summaries = summaries;
   }
 
-  public CAstRewriter<NodePos, NoKey> createCAstRewriter(CAst ast) {
+  public ClosureExtractor createCAstRewriter(CAst ast) {
     ExtractionPolicyFactory policyFactory = new ExtractionPolicyFactory() {
       @Override
       public ExtractionPolicy createPolicy(CAstEntity entity) {
