@@ -26,9 +26,9 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
   /* whether to use a one-level callstring context in addition to the apply context */
   private static final boolean USE_ONE_LEVEL = true; 
 
-  private static final TypeName APPLY_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/functionApply");
+  private static final TypeName APPLY_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/Function_prototype_apply");
 
-  private static final TypeName CALL_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/functionCall");
+  private static final TypeName CALL_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/Function_prototype_call");
 
   public static final ContextKey APPLY_NON_NULL_ARGS = new ContextKey() {
   };
