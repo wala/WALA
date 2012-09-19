@@ -10,15 +10,35 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
+/**
+ * IR instruction to check whether a field is defined on some object. The field
+ * is represented either by a {@link FieldReference} or by a local value number.  
+ */
 public class AstIsDefinedInstruction extends SSAInstruction {
+  /**
+   * name of the field.  If non-null, fieldVal should be -1.
+   */
   private final FieldReference fieldRef;
 
+  /**
+   * value number holding the field string.  If non-negative,
+   * fieldRef should be null.
+   */
   private final int fieldVal;
 
+  /**
+   * the base pointer
+   */
   private final int rval;
 
+  /**
+   * gets 1 if the field is defined, 0 otherwise.
+   */
   private final int lval;
 
+  /**
+   * This constructor should only be used from {@link SSAInstruction#copyForSSA(SSAInstructionFactory, int[], int[])}
+   */
   public AstIsDefinedInstruction(int lval, int rval, int fieldVal, FieldReference fieldRef) {
     this.lval = lval;
     this.rval = rval;
