@@ -14,7 +14,7 @@
 <booleanAttribute key="includeOptional" value="true"/>
 <stringAttribute key="location" value="${workspace_loc}/../junit-workspace"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/com.ibm.wala.ide.tests/src/com/ibm/wala/ide/test/JSProjectScopeTest.java"/>
+<listEntry value="/com.ibm.wala.ide.tests/src/com/ibm/wala/ide/test/WLProjectScopeTest.java"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
@@ -25,8 +25,8 @@
 <booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>
 <stringAttribute key="org.eclipse.jdt.junit.TESTNAME" value=""/>
 <stringAttribute key="org.eclipse.jdt.junit.TEST_KIND" value="org.eclipse.jdt.junit.loader.junit4"/>
-<stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/JDK 1.6"/>
-<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.wala.ide.test.JSProjectScopeTest"/>
+<stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/Java SE 6"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.wala.ide.test.WLProjectScopeTest"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.wala.ide.tests"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>

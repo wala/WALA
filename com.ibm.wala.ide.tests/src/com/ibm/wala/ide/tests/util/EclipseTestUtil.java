@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
@@ -33,6 +34,27 @@ import org.osgi.framework.Bundle;
 
 public class EclipseTestUtil {
 
+  public static class ZippedProjectData {
+    public final Plugin sourcePlugin;
+    public final String projectName;
+    public final String zipFileName;
+ 
+    public ZippedProjectData(Plugin sourcePlugin, String projectName, String zipFileName) {
+      this.sourcePlugin = sourcePlugin;
+      this.projectName = projectName;
+      this.zipFileName = zipFileName;
+      open();
+    }
+    
+    private void open() {
+      importZippedProject(sourcePlugin, projectName, zipFileName, new NullProgressMonitor());
+    }
+    
+    public void close() {
+      destroyProject(projectName);
+    }
+  }
+  
   public static void importZippedProject(Plugin plugin, String projectName, String zipFileName, IProgressMonitor monitor) {
     ZipFile zipFile = getZipFile(plugin, zipFileName);
     ZipFileStructureProvider zp = new ZipFileStructureProvider(zipFile);

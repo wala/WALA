@@ -7,16 +7,13 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 
 import com.ibm.wala.cast.java.client.JDTJavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.java.jdt.test.Activator;
 import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
-import com.ibm.wala.ide.tests.util.EclipseTestUtil;
+import com.ibm.wala.ide.tests.util.EclipseTestUtil.ZippedProjectData;
 import com.ibm.wala.ide.util.EclipseFileProvider;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
@@ -25,30 +22,22 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 public abstract class JDTJavaTest extends IRTests {
 
-  @BeforeClass
-  public static void beforeClass() {
-    EclipseTestUtil.importZippedProject(Activator.getDefault(), JDTJavaIRTests.PROJECT_NAME, JDTJavaIRTests.PROJECT_ZIP, new NullProgressMonitor());
-    System.err.println("finish importing project");
-  }
-
-  @AfterClass
-  public static void afterClass() {
-    EclipseTestUtil.destroyProject(JDTJavaIRTests.PROJECT_NAME);
-  }
-
-  public JDTJavaTest(String projectName) {
-    super(projectName);
-  }
+  private final ZippedProjectData project;
+  
+  public JDTJavaTest(ZippedProjectData project) {
+    super(project.projectName);
+    this.project = project;
+   }
 
   @Override
   protected AbstractAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
-    return makeAnalysisEngine(mainClassDescriptors, sources, libs);
+    return makeAnalysisEngine(mainClassDescriptors, sources, libs, project);
   }
   
-  static AbstractAnalysisEngine makeAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
+  static AbstractAnalysisEngine makeAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs, ZippedProjectData project) {
     AbstractAnalysisEngine engine;
     try {
-      engine = new JDTJavaSourceAnalysisEngine(JDTJavaIRTests.PROJECT_NAME) {
+      engine = new JDTJavaSourceAnalysisEngine(project.projectName) {
         @Override
         protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
           return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
