@@ -16,8 +16,8 @@ import com.ibm.wala.util.strings.Atom;
 
 /**
  * We need to generate synthetic methods for Function.apply() in the target
- * selector, so that the AstMethod for functionApply() in the prologue doesn't
- * actually get used in the CGNodes used for calls to Function.apply(). The
+ * selector, so that the AstMethod for Function_prototype_apply() in the prologue doesn't
+ * actually get used in the CGNodes used for calls to Function.prototype.apply(). The
  * generated dummy methods should <em>never</em> actually be used except as a
  * stub.
  */
@@ -25,7 +25,7 @@ public class JavaScriptFunctionApplyTargetSelector implements MethodTargetSelect
 
   private final MethodTargetSelector base;
 
-  private static final TypeName APPLY_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/functionApply");
+  private static final TypeName APPLY_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/Function_prototype_apply");
 
   private IMethod applyMethod;
   public JavaScriptFunctionApplyTargetSelector(MethodTargetSelector base) {

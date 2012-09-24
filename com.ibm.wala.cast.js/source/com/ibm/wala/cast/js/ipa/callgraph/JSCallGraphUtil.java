@@ -113,7 +113,15 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     return new JavaScriptEntryPoints(cha, cha.getLoader(JavaScriptTypes.jsLoader));
   }
 
-  public static Collection getNodes(CallGraph CG, String funName) {
+  /**
+   * Get all the nodes in CG with name funName. If funName is of the form
+   * <code>"ctor:nm"</code>, return nodes corresponding to constructor function
+   * for <code>nm</code>. If funName is of the form <code>"suffix:nm"</code>,
+   * return nodes corresponding to functions whose names end with
+   * <code>nm</code>. Otherwise, return nodes for functions whose name matches
+   * funName exactly.
+   */
+  public static Collection<CGNode> getNodes(CallGraph CG, String funName) {
     boolean ctor = funName.startsWith("ctor:");
     boolean suffix = funName.startsWith("suffix:");
     if (ctor) {

@@ -90,20 +90,20 @@ NamedNodeList = function NamedNodeList() {
 
 DOMNode = function DOMNode() { // An impostor for the Node class
 	this.childNodes = new NamedNodeList();
-	this.insertBefore = function insertBefore(newChild, refChild) {
+	this.insertBefore = function Node_prototype_insertBefore(newChild, refChild) {
 				this.childNodes.insertBefore(newChild, refChild);
 			}
-	this.replaceChild = function replaceChild(newChild, oldChild) {
+	this.replaceChild = function Node_prototype_replaceChild(newChild, oldChild) {
 				this.childNodes.replace(newChild, oldChild);
 			}
-	this.removeChild = function removeChild(oldChild) {
+	this.removeChild = function Node_prototype_removeChild(oldChild) {
 				this.childNodes.remove(oldChild);
 			}
-	this.appendChild = function appendChild(newChild) {
+	this.appendChild = function Node_prototype_appendChild(newChild) {
 				this.childNodes.add(newChild);
 				newChild.parentNode = this;
 			}
-	this.hasChildNodes = function hasChildNodes() {
+	this.hasChildNodes = function Node_prototype_hasChildNodes() {
 				return this.childNodes.hasElements();
 			}
 	
@@ -117,39 +117,77 @@ DOMNode = function DOMNode() { // An impostor for the Node class
           }
           this.childNodes.collect(predicate, result);
         }
-	this.addEventListener = function(name, fn) {
-		fn();
-	};
+};
+
+DOMNode.prototype.addEventListener = function Node_prototype_addEventListener(name, fn) { fn(); };
+
+DOMNode.prototype.removeEventListener = function Node_prototype_removeEventListener(name) {};
+
+DOMNode.prototype.cloneNode = function Node_prototype_cloneNode() {
+	// TODO: model me
+};
+
+DOMNode.prototype.compareDocumentPosition = function Node_prototype_compareDocumentPosition() {
+	// TODO: model me
+};
+
+DOMNode.prototype.contains = function Node_prototype_contains() {
+	return true || false;
 }
 
 DOMDocument = function DOMDocument() {
-	this.temp = DOMNode;
-	this.temp();
+	this.DOMNode = DOMNode;
+	this.DOMNode();
+	delete this.DOMNode;
 
-	this.createElement = function createElement(name) {
+	this.createElement = function Document_prototype_createElement(name) {
 		// TODO : to be implemented accurately
-		var toReturn = new DOMHTMLGenericElement(name);
-		return toReturn;
+		return new DOMHTMLGenericElement(name);
 	}
 
-        this.getElementById = function getElementById(id) {
-          var result = new Array();
-          this.collect(function check_id(x) { return x.id == id; }, result);
-          return result[0];
-	}
-	
-	this.write = function write_to_dom (stuff) {
-		
+	this.getElementById = function Document_prototype_getElementById(id) {
+		var result = new Array();
+		this.collect(function check_id(x) { return x.id == id; }, result);
+		return result[0];
 	};
-}
+	
+	this.getElementsByTagName = function Document_prototype_getElementsByTagName(name) {
+		// TODO: implement
+	};
+	
+	this.createTextNode = function Document_prototype_createTextNode(txt) {
+		// TODO: not very precise
+		return new DOMHTMLGenericElement("text");
+	};
+
+	this.write = function Document_prototype_write (stuff) {
+
+	};
+};
+DOMDocument.prototype.createDocumentFragment = function Document_prototype_createDocumentFragment() {
+	// TODO: model me
+};
+DOMDocument.prototype.createComment = function Document_prototype_createComment() {
+	// TODO: model me
+};
+DOMDocument.prototype.getElementsByClassName = function Document_prototype_getElementsByClassName() {
+	// TODO: model me
+};
+DOMDocument.prototype.querySelectorAll = function Document_prototype_querySelectorAll() {
+	// TODO: model me
+};
+
+
 
 HTMLBody = function HTMLBody(){
 	this.innerHTML = new String();
 }
 
 DOMHTMLDocument = function DOMHTMLDocument() {
-	this.temp = DOMDocument;
-	this.temp();
+	this.DOMDocument = DOMDocument;
+	this.DOMDocument();
+	delete this.DOMDocument;
+	
 	this.URL = new String();
 	this.body = new HTMLBody();
 	this.forms = new Array();
@@ -168,16 +206,54 @@ Location = function Location(){
 	}
 }
 
+Image = function Image() {
+	this.name = new String();
+	this.src = new String();
+	this.align = new String();
+	this.alt = new String();
+	this.border = new String();
+	this.height = 1/2;
+	this.hspace = 1/2;
+	this.isMap = true || false;
+	this.longDesc = new String();
+	this.useMap = new String();
+	this.vspace = 1/2;
+	this.width = 1/2;
+};
+
 
 DOMWindow = function DOMWindow(){
 	this.name = new String();
 	this.open = function window_open(url, stuff) { 
 		note_url(url); 
 	};
-	this.addEventListener = function(name, fn) {
+	this.addEventListener = function Window_prototype_addEventListener(name, fn) {
 		fn();
 	};
-}
+	this.alert = function Window_prototype_alert(msg) {
+		// as everyone knows, alert is pure
+	};
+	this.setInterval = function Window_prototype_setInterval(fn, interval) {
+		fn();
+	};
+	this.setTimeout = function Window_prototype_setTimeout(fn, timeout) {
+		fn();
+	};
+	this.clearInterval = function Window_prototype_clearInterval(interval) {};
+	this.clearTimeout = function Window_prototype_clearTimeout(timeout) {};
+};
+DOMWindow.prototype.getComputedStyle = function Window_prototype_getComputedStyle(elt, pseudoElt) {
+	return new CSS2Properties();
+};
+DOMWindow.prototype.focus = function Window_prototype_focus() {
+	// TODO: model me
+};
+DOMWindow.prototype.prompt = function Window_prototype_prompt() {
+};
+
+CSS2Properties = function CSS2Properties() {
+	this.cssText = new String();
+};
 
 DOJOObj = function DOJOObj(){
 	this.moduleUrl = function module_url(str1, str2){
@@ -201,40 +277,75 @@ window.document = document;
 document.defaultView = window;
 window.XMLHttpRequest = XMLHttpRequest;
 
+setInterval = window.setInterval;
+setTimeout = window.setTimeout;
+clearInterval = window.clearInterval;
+
 var dojo = new DOJOObj();
 
 DOMElement = function DOMElement() { // An impostor for the Element class
 	// inherits from Node
-	this.temp = DOMNode;
-	this.temp();
+	this.DOMNode = DOMNode;
+	this.DOMNode();
+	delete this.DOMNode;
 
 	// The get/set/remove attribute methods cannot be run using 'onclick','onmouseover', 'on...' kind of arguments for name.
 	// since that would be used as a workaround for eval
 
-	this.getAttribute = function getAttribute(name) {
+	this.getAttribute = function Element_prototype_getAttribute(name) {
 		return this[name];
-	}
-	this.setAttribute = function setAttribute(name, value) {
+	};
+	
+	this.setAttribute = function Element_prototype_setAttribute(name, value) {
 		this[name] = value;
-	}
+	};
 
-	this.removeAttribute = function removeAttribute(name) {
-	        this[name] = undefined;
-	}
+	this.removeAttribute = function Element_prototype_removeAttribute(name) {
+		delete this[name];
+	};
 
-    this.getElementsByTagName = function _getElementsByTagName(tagName) {
+    this.getElementsByTagName = function Element_prototype_getElementsByTagName(tagName) {
         var result = new Array();
         this.collect(function check_tag(x) { return x.name == tagName; }, result);
         return result;
 
-    }
+    };
 
-}
+    this.focus = function Element_prototype_focus() {};
+};
+
+DOMElement.prototype.querySelectorAll = function Element_prototype_querySelectorAll() {
+	// TODO: model me
+};
+
+DOMElement.prototype.getElementsByClassName = function Element_prototype_getElementsByClassName() {
+	// TODO: model me
+};
+
+DOMElement.prototype.getBoundingClientRect = function Element_prototype_getBoundingClientRect() {
+	// TODO: model me
+};
+
+DOMElement.prototype.focus = function Element_prototype_focus() {
+};
+
+Event = function Event() {
+	// TODO: model me
+};
+
+Event.prototype.stopPropagation = function Event_prototype_stopPropagation() {
+	// TODO: model me
+};
+
+Event.prototype.preventDefault = function Event_prototype_preventDefault() {
+	// TODO: model me
+};
 
 DOMHTMLElement = function DOMHTMLElement() { // An impostor for the HTMLElement class
 	// inherits from Element
-	this.temp = DOMElement;
-	this.temp();
+	this.DOMElement = DOMElement;
+	this.DOMElement();
+	delete this.DOMElement;
 
 	// Set HTML Attribute Defaults
 	this.id = null;
@@ -253,8 +364,9 @@ DOMHTMLElement = function DOMHTMLElement() { // An impostor for the HTMLElement 
 // Just a hack until all HTML elements have corresponding constructors
 DOMHTMLGenericElement = function DOMHTMLGenericElement(tagName) {
 	// inherits from Element
-	this.temp = DOMHTMLElement;
-	this.temp();
+	this.DOMHTMLElement = DOMHTMLElement;
+	this.DOMHTMLElement();
+	delete this.DOMHTMLElement;
 
 	// Set just the tag name
 	this.nodeName = tagName;
@@ -263,14 +375,32 @@ DOMHTMLGenericElement = function DOMHTMLGenericElement(tagName) {
 	// load 'src' if appropriate
 	this.src.loadFile = String.prototype.loadFile;
 	this.src.loadFile();
-}
+	
+	// this property only exists on iframes; putting it here for now
+	this.documentWindow = window;
+	
+	this.getContext = function() { return new CanvasRenderingContext2D(); };
+};
+
+CanvasRenderingContext2D = function CanvasRenderingContext2D() {};
+CanvasRenderingContext2D.prototype = {
+	beginPath: function CanvasRenderingContext2D_prototype_beginPath() {},
+    moveTo: function CanvasRenderingContext2D_prototype_moveTo() {},
+	lineTo: function CanvasRenderingContext2D_prototype_lineTo() {},
+	closePath: function CanvasRenderingContext2D_prototype_closePath() {},
+	fill: function CanvasRenderingContext2D_prototype_fill() {},
+	stroke: function CanvasRenderingContext2D_prototype_stroke() {},
+	clearRect: function CanvasRenderingContext2D_prototype_clearRect() {}, 
+	fillRect: function CanvasRenderingContext2D_prototype_fillRect() {}
+};
 
 var formCount = 0;
 
 DOMHTMLFormElement = function DOMHTMLFormElement() {
 	// inherits from HTMLElement
-	this.temp = DOMHTMLElement;
-	this.temp();
+	this.DOMHTMLElement = DOMHTMLElement;
+	this.DOMHTMLElement();
+	delete this.DOMHTMLElement;
 
         // add to 'forms' property
         document.forms[formCount++] = this;
@@ -297,14 +427,15 @@ DOMHTMLFormElement = function DOMHTMLFormElement() {
 
 DOMHTMLTableElement = function DOMHTMLTableElement () {
 	// inherits from HTMLElement
-	this.temp = DOMHTMLElement;
-	this.temp();
+	this.DOMHTMLElement = DOMHTMLElement;
+	this.DOMHTMLElement();
+	delete this.DOMHTMLElement;
 
 	this.rows = function table_elt_rows() {
 	}	
 }
 
-XMLHttpRequest = function _XMLHttpRequest() {
+XMLHttpRequest = function XMLHttpRequest() {
 
 	this.UNSENT = 0;
 	this.OPENED = 1;
@@ -343,6 +474,11 @@ XMLHttpRequest = function _XMLHttpRequest() {
 
 	}
 
+};
+
+XMLSerializer = function XMLSerializer() {};
+XMLSerializer.prototype.serializeToString = function XMLSerializer_prototype_serializeToString() {
+	// TODO: model me
 };
 
 for(var n = 0; n < dom_nodes.length; n++) {

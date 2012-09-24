@@ -5,6 +5,10 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 
+/**
+ * Non-deterministically assigns some object in the prototype chain
+ * of val (or val itself) to result.
+ */
 public class PrototypeLookup extends SSAAbstractUnaryInstruction {
 
   public PrototypeLookup(int result, int val) {

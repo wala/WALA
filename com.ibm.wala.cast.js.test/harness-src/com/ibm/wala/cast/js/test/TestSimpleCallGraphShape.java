@@ -67,7 +67,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
       new Object[] { "tests/simple.js/rubbish",
           new String[] { "tests/simple.js/weirder", "tests/simple.js/stranger", "tests/simple.js/rubbish" } },
       new Object[] { "tests/simple.js/fib", new String[] { "tests/simple.js/fib" } },
-      new Object[] { "tests/simple.js/weirder", new String[] { "prologue.js/abs" } } };
+      new Object[] { "tests/simple.js/weirder", new String[] { "prologue.js/Math_abs" } } };
 
   @Test
   public void testSimple() throws IOException, IllegalArgumentException, CancelException {
@@ -241,7 +241,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 
   private static final Object[][] assertionsForStringPrims = new Object[][] {
       new Object[] { ROOT, new String[] { "tests/string-prims.js" } },
-      new Object[] { "tests/string-prims.js", new String[] { "prologue.js/stringSplit", "prologue.js/toUpperCase" } } };
+      new Object[] { "tests/string-prims.js", new String[] { "prologue.js/String_prototype_split", "prologue.js/String_prototype_toUpperCase" } } };
 
   @Test
   public void testStringPrims() throws IOException, IllegalArgumentException, CancelException {
@@ -486,7 +486,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   
   private static final Object[][] assertionsForFunctionIsAFunction = new Object[][] {
     new Object[] { ROOT, new String[] { "tests/Function_is_a_function.js" } },
-    new Object[] { "suffix:Function_is_a_function.js", new String[] { "suffix:functionCall" } } }; 
+    new Object[] { "suffix:Function_is_a_function.js", new String[] { "suffix:Function_prototype_call" } } }; 
 
   @Test
   public void testFunctionIsAFunction() throws IOException, IllegalArgumentException, CancelException {
