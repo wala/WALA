@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
@@ -30,7 +31,6 @@ import com.ibm.wala.util.functions.Function;
 /**
  * Utility class to serialize call graphs as JSON objects.
  * 
-<<<<<<< HEAD
  * The serialised objects have the form
  * 
  * <pre>
@@ -56,8 +56,6 @@ import com.ibm.wala.util.functions.Function;
  * its starting offset (in characters from the beginning of the
  * file), and its end offset.
  * 
-=======
->>>>>>> 4dc8bf18bc218aa65c36a5b36930bf0672561915
  * @author mschaefer
  */
 public class CallGraph2JSON {
@@ -117,8 +115,11 @@ public class CallGraph2JSON {
 	    if(methodName.contains("/make_node"))
 	      return false;
 
-      if(IGNORE_HARNESS && methodName.startsWith("Lprologue.js/") || methodName.startsWith("Lpreamble.js/"))
-		    return false;
+      if(IGNORE_HARNESS) {
+        for(String bootstrapFile : JavaScriptLoader.bootstrapFileNames)
+          if(methodName.startsWith("L" + bootstrapFile + "/"))
+            return false;
+      }
  
 	    return method.getName().equals(AstMethodReference.fnAtom);
 		}
