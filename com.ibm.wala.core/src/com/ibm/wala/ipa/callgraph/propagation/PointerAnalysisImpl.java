@@ -17,6 +17,7 @@ import java.util.Set;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -117,7 +118,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       InstanceFieldKey ifk = (InstanceFieldKey) key;
       if (ifk.getInstanceKey() instanceof ConstantKey) {
         ConstantKey<?> i = (ConstantKey<?>) ifk.getInstanceKey();
-        if (i.getValue() instanceof String) {
+        if (i.getValue() instanceof String && i.getConcreteType().getClassLoader().getLanguage().equals(Language.JAVA)) {
           StringConstantCharArray contents = StringConstantCharArray.make((ConstantKey<String>) i);
           instanceKeys.add(contents);
           Collection<InstanceKey> singleton = HashSetFactory.make();

@@ -10,6 +10,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
+import com.ibm.wala.cast.js.client.EclipseJavaScriptAnalysisEngine;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
@@ -21,6 +22,8 @@ import com.ibm.wala.ide.util.JavaScriptHeadlessUtil;
 import com.ibm.wala.ide.util.JsdtUtil;
 import com.ibm.wala.ide.util.JsdtUtil.CGInfo;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
+import com.ibm.wala.util.CancelException;
 
 public class AbstractJSProjectScopeTest {
 
@@ -58,4 +61,14 @@ public class AbstractJSProjectScopeTest {
     Assert.assertTrue("cannot find any cg nodes", info.cg.getNumberOfNodes()>0);
   }
 
+  /*
+  @Test
+  public void testEngine() throws IOException, CoreException, IllegalArgumentException, CancelException {
+    IJavaScriptProject p = JavaScriptHeadlessUtil.getJavaScriptProjectFromWorkspace(project.projectName);
+    EclipseJavaScriptAnalysisEngine e = new EclipseJavaScriptAnalysisEngine(p);
+    JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
+    CallGraphBuilder b = e.defaultCallGraphBuilder();
+    Assert.assertTrue(b != null);
+  }
+  */
 }

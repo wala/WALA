@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: WALA CAst Java Polyglot Plug-in
 Bundle-SymbolicName: com.ibm.wala.cast.java.polyglot
 Bundle-Version: 1.0.0
-Bundle-Activator: com.ibm.wala.cast.java.polyglot.Activator
 Bundle-Vendor: IBM
 Require-Bundle: com.ibm.wala.cast.java,
  com.ibm.wala.cast,
@@ -29,4 +28,21 @@ Export-Package: com.ibm.wala.cast.java.translator.polyglot;
    polyglot.frontend.goals,
    com.ibm.wala.cast.tree.impl,
    com.ibm.wala.cast.java.translator,
-   com.ibm.wala.cast.java.types"
+   com.ibm.wala.cast.java.types",
+ java_cup,
+ java_cup.runtime,
+ polyglot.ast,
+ polyglot.dispatch,
+ polyglot.frontend,
+ polyglot.lex,
+ polyglot.main,
+ polyglot.parse,
+ polyglot.qq,
+ polyglot.types,
+ polyglot.types.reflect,
+ polyglot.util,
+ polyglot.util.typedump,
+ polyglot.visit
+Bundle-ClassPath: lib/java_cup.jar,
+ lib/polyglot.jar,
+ .
