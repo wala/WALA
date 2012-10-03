@@ -5,8 +5,8 @@ import java.util.Map;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstNode;
-import com.ibm.wala.cast.tree.impl.CAstBasicRewriter;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
+import com.ibm.wala.cast.tree.rewrite.CAstBasicRewriter;
 import com.ibm.wala.util.collections.Pair;
 
 public abstract class ConstantFoldingRewriter extends CAstBasicRewriter {
