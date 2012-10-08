@@ -141,6 +141,7 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
       int propertyReadResult = curValNum++;
       // 4 is position of arguments array
       S.addStatement(insts.PropertyRead(propertyReadResult, 4, constVN));
+      S.getNextProgramCounter();
       paramsToPassToInvoked[i] = propertyReadResult;
     }
     return curValNum;
