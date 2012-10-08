@@ -17,9 +17,9 @@ import java.util.List;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
-import com.ibm.wala.cast.tree.impl.CAstRewriter.CopyKey;
-import com.ibm.wala.cast.tree.impl.CAstRewriter.RewriteContext;
-import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriter.CopyKey;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriter.RewriteContext;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.classLoader.SourceModule;
 

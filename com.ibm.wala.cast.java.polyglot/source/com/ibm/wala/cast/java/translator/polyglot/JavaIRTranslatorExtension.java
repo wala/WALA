@@ -21,7 +21,7 @@ import polyglot.frontend.JLScheduler;
 import polyglot.frontend.Job;
 import polyglot.frontend.Scheduler;
 
-import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 
 /**
  * A Polyglot extension descriptor for a test harness extension that generates WALA IR for

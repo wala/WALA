@@ -30,7 +30,7 @@ import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
-import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.cast.util.CAstPrinter;

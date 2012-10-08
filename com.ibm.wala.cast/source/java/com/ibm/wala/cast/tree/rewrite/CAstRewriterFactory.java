@@ -1,4 +1,4 @@
-package com.ibm.wala.cast.tree.impl;
+package com.ibm.wala.cast.tree.rewrite;
 
 import com.ibm.wala.cast.tree.CAst;
 

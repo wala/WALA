@@ -13,7 +13,7 @@
  */
 package com.ibm.wala.cast.java.translator.polyglot;
 
-import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 
 public interface IRTranslatorExtension {
   void setSourceLoader(PolyglotSourceLoaderImpl jsli);

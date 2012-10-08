@@ -8,7 +8,7 @@ import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
-import com.ibm.wala.cast.tree.impl.CAstRewriter;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriter;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.util.collections.Pair;
 

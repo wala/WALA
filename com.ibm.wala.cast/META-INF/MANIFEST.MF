@@ -22,6 +22,7 @@ Export-Package: com.ibm.wala.cast.analysis.typeInference,
  com.ibm.wala.cast.tree,
  com.ibm.wala.cast.tree.impl,
  com.ibm.wala.cast.tree.pattern,
+ com.ibm.wala.cast.tree.rewrite,
  com.ibm.wala.cast.tree.visit,
  com.ibm.wala.cast.types,
  com.ibm.wala.cast.util

@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *****************************************************************************/
-package com.ibm.wala.cast.tree.impl;
+package com.ibm.wala.cast.tree.rewrite;
 
 import java.util.Collection;
 import java.util.Map;
@@ -19,6 +19,7 @@ import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstNodeTypeMap;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.util.collections.Pair;
 
 public class CAstCloner extends CAstBasicRewriter {

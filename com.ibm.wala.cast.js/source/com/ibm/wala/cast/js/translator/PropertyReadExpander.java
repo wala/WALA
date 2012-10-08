@@ -7,8 +7,8 @@ import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
-import com.ibm.wala.cast.tree.impl.CAstRewriter;
-import com.ibm.wala.cast.tree.impl.CAstRewriter.CopyKey;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriter;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriter.CopyKey;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 

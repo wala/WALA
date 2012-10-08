@@ -13,7 +13,7 @@ package com.ibm.wala.cast.js.loader;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.loader.SingleClassLoaderFactory;
-import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
