@@ -171,6 +171,13 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
   private final GlobalObjectKey globalObject = new GlobalObjectKey(cha.lookupClass(JavaScriptTypes.Object));
 
+  public PointerKey getPointerKeyForGlobalVar(String varName) {
+    FieldReference fieldRef = FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreateUnicodeAtom(varName),
+        JavaScriptTypes.Root);
+    IField f = cha.resolveField(fieldRef);
+    assert f != null : "couldn't resolve " + varName;
+    return getPointerKeyForInstanceField(globalObject, f);
+  }
   protected ExplicitCallGraph createEmptyCallGraph(IClassHierarchy cha, AnalysisOptions options) {
     return new JSCallGraph(cha, options, getAnalysisCache());
   }
