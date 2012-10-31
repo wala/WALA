@@ -521,6 +521,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
               private JavaScriptInvoke getInstruction() { return instruction; }
               private InstanceKey getReceiver() { return receiverType; }
               private AbstractFieldPointerKey getProperty() { return fieldKey; }
+              private CGNode getNode() { return node; }
               
               @Override
               public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable ptrs) {
@@ -553,6 +554,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
               @Override
               public boolean equals(Object o) {
                 return o instanceof FieldValueDispatch &&
+                ((FieldValueDispatch)o).getNode().equals(node) &&
                 ((FieldValueDispatch)o).getInstruction() == instruction &&
                 ((FieldValueDispatch)o).getProperty().equals(fieldKey) &&
                 ((FieldValueDispatch)o).getReceiver().equals(receiverType);
