@@ -25,16 +25,17 @@ public abstract class IntSetVariable<T extends IntSetVariable> extends AbstractV
   private MutableIntSet V;
 
   public void copyState(T other) {
+    final IntSetVariable<?> isv = (IntSetVariable<?>) other;
     if (V == null) {
-      if (other.V == null) {
+      if (isv.V == null) {
         return;
       } else {
-        V = IntSetUtil.getDefaultIntSetFactory().makeCopy(other.V);
+        V = IntSetUtil.getDefaultIntSetFactory().makeCopy(isv.V);
         return;
       }
     } else {
-      if (other.V != null) {
-        V.copySet(other.V);
+      if (isv.V != null) {
+        V.copySet(isv.V);
       }
     }
   }
@@ -60,12 +61,14 @@ public abstract class IntSetVariable<T extends IntSetVariable> extends AbstractV
    * @return true iff the contents of this variable changes.
    */
   public boolean addAll(T other) {
+    final IntSetVariable<?> isv = (IntSetVariable<?>) other;
+    
     if (V == null) {
       copyState(other);
       return (V != null);
     } else {
-      if (other.V != null) {
-        boolean result = addAll(other.V);
+      if (isv.V != null) {
+        boolean result = addAll(isv.V);
         return result;
       } else {
         return false;
@@ -74,13 +77,15 @@ public abstract class IntSetVariable<T extends IntSetVariable> extends AbstractV
   }
 
   public boolean sameValue(IntSetVariable other) {
+    final IntSetVariable<?> isv = (IntSetVariable<?>) other;
+    
     if (V == null) {
-      return (other.V == null);
+      return (isv.V == null);
     } else {
-      if (other.V == null) {
+      if (isv.V == null) {
         return false;
       } else {
-        return V.sameValue(other.V);
+        return V.sameValue(isv.V);
       }
     }
   }
@@ -153,8 +158,10 @@ public abstract class IntSetVariable<T extends IntSetVariable> extends AbstractV
       }
       return (V != null);
     } else {
-      if (other.V != null) {
-        boolean result = addAllInIntersection(other.V, filter);
+      final IntSetVariable<?> isv = (IntSetVariable<?>) other;
+      
+      if (isv.V != null) {
+        boolean result = addAllInIntersection(isv.V, filter);
         return result;
       } else {
         return false;
