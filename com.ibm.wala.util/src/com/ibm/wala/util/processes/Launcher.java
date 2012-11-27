@@ -15,7 +15,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -121,7 +120,6 @@ public abstract class Launcher {
     if (logger != null) {
       logger.info("spawning process " + cmd);
     }
-    System.out.println("spawning " + Arrays.toString(cmd));
     String[] ev = getEnv() == null ? null : buildEnv(getEnv());
     Process p = Runtime.getRuntime().exec(cmd, ev, getWorkingDir());
     return p;
