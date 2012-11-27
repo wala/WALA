@@ -856,10 +856,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         System.err.println("visitGet " + field);
       }
 
-      // skip getfields of primitive type (optimisation)
-      if (field.getFieldType().isPrimitiveType()) {
-        return;
-      }
       PointerKey def = getPointerKeyForLocal(lval);
       assert def != null;
 
@@ -871,6 +867,23 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       if (f == null) {
         return;
       }
+      
+      if(isStatic){
+        IClass klass = getClassHierarchy().lookupClass(field.getDeclaringClass());
+        if (klass == null) {
+        } else {
+          // side effect of getstatic: may call class initializer
+          if (DEBUG) {
+            System.err.println("getstatic call class init " + klass);
+          }
+          processClassInitializer(klass);
+        }
+      }
+
+      // skip getfields of primitive type (optimisation)
+      if (field.getFieldType().isPrimitiveType()) {
+        return;
+      }
 
       if (hasNoInterestingUses(lval)) {
         system.recordImplicitPointsToSet(def);
@@ -878,15 +891,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         if (isStatic) {
           PointerKey fKey = getPointerKeyForStaticField(f);
           system.newConstraint(def, assignOperator, fKey);
-          IClass klass = getClassHierarchy().lookupClass(field.getDeclaringClass());
-          if (klass == null) {
-          } else {
-            // side effect of getstatic: may call class initializer
-            if (DEBUG) {
-              System.err.println("getstatic call class init " + klass);
-            }
-            processClassInitializer(klass);
-          }
         } else {
           PointerKey refKey = getPointerKeyForLocal(ref);
           // if (!supportFullPointerFlowGraph &&
