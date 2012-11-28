@@ -13,6 +13,7 @@ package com.ibm.wala.util.processes;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
@@ -103,7 +104,7 @@ public class JavaLauncher extends Launcher {
   /**
    * Extra args to pass to the JVM
    */
-  private String vmArgs;
+  private List<String> vmArgs = new ArrayList<String>();
 
   /**
    * The last process returned by a call to start() on this object.
@@ -196,18 +197,17 @@ public class JavaLauncher extends Launcher {
       cmd.add("-ea");
     }
     if (vmArgs != null) {
-      String[] vmArgs = getVmArgs().split(" +");
       for (String s : vmArgs) {
-        if (s.length() > 0) {
-          cmd.add(s);
-        }
+        cmd.add(s);
       }
     }
     cmd.add(getMainClass());
     if (getProgramArgs() != null) {
       String[] pa = getProgramArgs().split(" ");
       for (String s : pa) {
-        cmd.add(s);
+        if (s.length() > 0) {
+          cmd.add(s);
+        }
       }
     }
 
@@ -285,15 +285,18 @@ public class JavaLauncher extends Launcher {
    */
   public static String quoteStringIfNeeded(String s) {
     s = s.trim();
+    // s = s.replaceAll(" ", "\\\\ ");
+    return s;
     // Check if there's a space. If not, skip quoting to make Macs happy.
     // TODO: Add the check for an escaped space.
-    if (s.indexOf(' ') == -1) {
-      return s;
-    }
-    if (s.charAt(s.length() - 1) == '\\' && s.charAt(s.length() - 2) != '\\') {
-      s += '\\'; // Escape the last backslash, so it doesn't escape the quote.
-    }
-    return '\"' + s + '\"';
+    // if (s.indexOf(' ') == -1) {
+    // return s;
+    // }
+    // if (s.charAt(s.length() - 1) == '\\' && s.charAt(s.length() - 2) != '\\')
+    // {
+    // s += '\\'; // Escape the last backslash, so it doesn't escape the quote.
+    // }
+    // return '\"' + s + '\"';
   }
 
   public boolean isEnableAssertions() {
@@ -304,12 +307,12 @@ public class JavaLauncher extends Launcher {
     this.enableAssertions = enableAssertions;
   }
 
-  public void setVmArgs(String vmArgs) {
-    this.vmArgs = vmArgs;
+  public void addVmArg(String arg) {
+    this.vmArgs.add(arg);
   }
 
-  public String getVmArgs() {
-    return vmArgs;
+  public List<String> getVmArgs() {
+    return Collections.unmodifiableList(vmArgs);
   }
 
 }
