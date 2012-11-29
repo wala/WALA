@@ -23,7 +23,7 @@ public final class BitVectorIntersection extends AbstractMeetOperator<BitVectorV
   public byte evaluate(final BitVectorVariable lhs, final BitVectorVariable[] rhs) {
     IntSet intersect = lhs.getValue();
     if (intersect == null || intersect.isEmpty()) {
-      return NOT_CHANGED_AND_FIXED;
+      intersect = rhs[0].getValue();
     }
 
     for (final BitVectorVariable bv : rhs) {
@@ -31,7 +31,7 @@ public final class BitVectorIntersection extends AbstractMeetOperator<BitVectorV
       intersect = intersect.intersection(vlhs);
     }
 
-    if (intersect.sameValue(lhs.getValue())) {
+    if (lhs.getValue() != null && intersect.sameValue(lhs.getValue())) {
       return NOT_CHANGED;
     } else {
       final BitVectorVariable bvv = new BitVectorVariable();
