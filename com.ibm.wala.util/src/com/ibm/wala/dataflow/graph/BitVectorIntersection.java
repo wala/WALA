@@ -21,14 +21,28 @@ public final class BitVectorIntersection extends AbstractMeetOperator<BitVectorV
 
   @Override
   public byte evaluate(final BitVectorVariable lhs, final BitVectorVariable[] rhs) {
+    // as null is the initial value, we treat null as the neutral element to intersection
+    // which is a set of all possible elements.
     IntSet intersect = lhs.getValue();
-    if (intersect == null || intersect.isEmpty()) {
-      intersect = rhs[0].getValue();
+    if (intersect == null) {
+      for (BitVectorVariable r : rhs) {
+        intersect = r.getValue();
+        if (intersect != null) { break; }
+      }
+      
+      if (intersect == null) {
+        // still null - so all rhs is null -> no change
+        return NOT_CHANGED;
+      }
+    } else if (intersect.isEmpty()) {
+      return NOT_CHANGED_AND_FIXED;
     }
-
+    
     for (final BitVectorVariable bv : rhs) {
       final IntSet vlhs = bv.getValue();
-      intersect = intersect.intersection(vlhs);
+      if (vlhs != null) {
+        intersect = intersect.intersection(vlhs);
+      }
     }
 
     if (lhs.getValue() != null && intersect.sameValue(lhs.getValue())) {
