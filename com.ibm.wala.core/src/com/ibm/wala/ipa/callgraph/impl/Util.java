@@ -489,6 +489,7 @@ public class Util {
 
   public static void addDefaultBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, IClassHierarchy cha) {
 /** BEGIN Custom change: load xml from file system as a fallback */
+    if (nativeSpec == null) return;
     if (cl.getResourceAsStream(nativeSpec) != null) {
 /** END Custom change: load xml from file system as fallback */
       addBypassLogic(options, scope, cl, nativeSpec, cha);
