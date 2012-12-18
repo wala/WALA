@@ -19,11 +19,13 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
+import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  * Common utilities for CFA-style call graph builders.
@@ -90,6 +92,29 @@ public abstract class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
           return super.getPointerKeysForReflectedFieldWrite(I, F);
         }
       }
+
+      @Override
+      protected PointerKey getInstanceFieldPointerKeyForConstant(InstanceKey I, ConstantKey F) {
+        Object v = F.getValue();
+        if (v instanceof Double) {
+          String strVal = simulateNumberToString((Double)v);
+          IField f = I.getConcreteType().getField(Atom.findOrCreateUnicodeAtom((String) strVal));
+          return getPointerKeyForInstanceField(I, f);
+          
+        } else {
+          return super.getInstanceFieldPointerKeyForConstant(I, F);
+        }
+      }
+
+      private String simulateNumberToString(Double v) {
+        // TODO this is very incomplete  --MS
+        String result = v.toString();
+        if (result.endsWith(".0")) {
+          result = result.substring(0, result.length() - 2);
+        }
+        return result;
+      }
+      
       
     });
   }
