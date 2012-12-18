@@ -581,10 +581,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   
   private static final Object[][] assertionsForArrayIndexConv = new Object[][] {
     new Object[] { ROOT, new String[] { "tests/array_index_conv.js" } },
-    new Object[] { "tests/array_index_conv.js", new String[] { "suffix:reachable",
-                                                               "suffix:also_reachable",
-                                                               "suffix:reachable_too",
-                                                               "suffix:reachable3" } }
+    new Object[] { "tests/array_index_conv.js", new String[] { "suffix:reachable1",
+                                                               "suffix:reachable2",
+                                                               "suffix:reachable3",
+                                                               "suffix:reachable4" } }
   };
   
   @Test
