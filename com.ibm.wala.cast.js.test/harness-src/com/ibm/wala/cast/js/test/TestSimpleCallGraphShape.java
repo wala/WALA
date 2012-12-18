@@ -19,6 +19,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.ForInContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
@@ -582,7 +583,8 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     new Object[] { ROOT, new String[] { "tests/array_index_conv.js" } },
     new Object[] { "tests/array_index_conv.js", new String[] { "suffix:reachable",
                                                                "suffix:also_reachable",
-                                                               "suffix:reachable_too" } }
+                                                               "suffix:reachable_too",
+                                                               "suffix:reachable3" } }
   };
   
   @Test
@@ -607,6 +609,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     CallGraph cg = b.makeCallGraph(b.getOptions());
     verifyGraphAssertions(cg, assertionsForArrayIndexConv2);
   }
+
 
   protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {
 
