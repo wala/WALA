@@ -77,6 +77,9 @@ public class Util {
     return traceDump.toString();
   }
   
+  /**
+   * Return those elements of <code>c</code> that are assignable to <code>klass</code>.
+   */
   @SuppressWarnings("unchecked")
   public static <S, T> Set<T> filterByType(Iterable<S> c, Class<T> klass) {
     Set<T> result = HashSetFactory.make();
