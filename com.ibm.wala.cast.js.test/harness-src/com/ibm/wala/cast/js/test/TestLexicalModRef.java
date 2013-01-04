@@ -17,7 +17,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.ibm.wala.cast.ipa.lexical.TransitiveLexicalAccesses;
+import com.ibm.wala.cast.ipa.lexical.LexicalModRef;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -25,15 +25,15 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.OrdinalSet;
 
-public abstract class TestTransitiveLexicalAccesses {
+public abstract class TestLexicalModRef {
 
   @Test
   public void testSimpleLexical() throws IOException, IllegalArgumentException, CancelException {
     JSCFABuilder b = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "simple-lexical.js");
     CallGraph CG = b.makeCallGraph(b.getOptions());    
-    TransitiveLexicalAccesses lexAccesses = TransitiveLexicalAccesses.make(CG, b.getPointerAnalysis());
-    Map<CGNode, OrdinalSet<Pair<CGNode, String>>> readResult = lexAccesses.computeLexVarsRead();
-    Map<CGNode, OrdinalSet<Pair<CGNode, String>>> writeResult = lexAccesses.computeLexVarsWritten();
+    LexicalModRef lexAccesses = LexicalModRef.make(CG, b.getPointerAnalysis());
+    Map<CGNode, OrdinalSet<Pair<CGNode, String>>> readResult = lexAccesses.computeLexicalRef();
+    Map<CGNode, OrdinalSet<Pair<CGNode, String>>> writeResult = lexAccesses.computeLexicalMod();
     for (CGNode n : readResult.keySet()) {
       if (n.toString().contains("Node: <Code body of function Ltests/simple-lexical.js/outer/inner>")) {
         // function "inner" reads exactly x and z 
