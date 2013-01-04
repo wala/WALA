@@ -14,7 +14,7 @@ import org.junit.Before;
 
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 
-public class TestTransitiveLexicalAccessesRhino extends TestTransitiveLexicalAccesses {
+public class TestLexicalModRefRhino extends TestLexicalModRef {
 
   @Before
   public void setUp() {
