@@ -20,9 +20,8 @@ import com.ibm.wala.cast.js.ipa.callgraph.correlations.CorrelationSummary;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstEntity;
-import com.ibm.wala.cast.tree.rewrite.CAstRewriter;
-import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.cast.tree.rewrite.CAstBasicRewriter.NoKey;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 
