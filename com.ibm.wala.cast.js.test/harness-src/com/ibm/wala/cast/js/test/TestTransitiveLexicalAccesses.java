@@ -32,17 +32,23 @@ public abstract class TestTransitiveLexicalAccesses {
     JSCFABuilder b = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "simple-lexical.js");
     CallGraph CG = b.makeCallGraph(b.getOptions());    
     TransitiveLexicalAccesses lexAccesses = TransitiveLexicalAccesses.make(CG, b.getPointerAnalysis());
-    Map<CGNode, OrdinalSet<Pair<CGNode, String>>> result = lexAccesses.computeLexVarsRead();
-    for (CGNode n : result.keySet()) {
+    Map<CGNode, OrdinalSet<Pair<CGNode, String>>> readResult = lexAccesses.computeLexVarsRead();
+    Map<CGNode, OrdinalSet<Pair<CGNode, String>>> writeResult = lexAccesses.computeLexVarsWritten();
+    for (CGNode n : readResult.keySet()) {
       if (n.toString().contains("Node: <Code body of function Ltests/simple-lexical.js/outer/inner>")) {
         // function "inner" reads exactly x and z 
-        OrdinalSet<Pair<CGNode, String>> readVars = result.get(n);
+        OrdinalSet<Pair<CGNode, String>> readVars = readResult.get(n);
         Assert.assertEquals(2, readVars.size());
         Assert.assertEquals("[[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,x], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,z]]", readVars.toString());
+        // writes x and z as well
+        OrdinalSet<Pair<CGNode, String>> writtenVars = writeResult.get(n);
+        Assert.assertEquals(2, writtenVars.size());
+        Assert.assertEquals("[[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,x], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,z]]", writtenVars.toString());
+        
       }
       if (n.toString().contains("Node: <Code body of function Ltests/simple-lexical.js/outer/inner2>")) {
         // function "inner3" reads exactly innerName, inner3, and x and z via callees
-        OrdinalSet<Pair<CGNode, String>> readVars = result.get(n);
+        OrdinalSet<Pair<CGNode, String>> readVars = readResult.get(n);
         Assert.assertEquals(4, readVars.size());
         Assert.assertEquals("[[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,inner3], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,innerName], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,x], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,z]]", readVars.toString());
       }
