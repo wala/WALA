@@ -16,6 +16,7 @@ import java.util.Map;
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys.ScopeMappingInstanceKey;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
+import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphTransitiveClosure;
@@ -58,17 +59,23 @@ public class TransitiveLexicalAccesses {
   }
 
   public Map<CGNode, OrdinalSet<Pair<CGNode, String>>> computeLexVarsRead() {
-    Map<CGNode, Collection<Pair<CGNode, String>>> scan = scanForLexReads();
-    return CallGraphTransitiveClosure.transitiveClosure(cg, scan);
-  }
-
-  private Map<CGNode, Collection<Pair<CGNode, String>>> scanForLexReads() {
-    return CallGraphTransitiveClosure.collectNodeResults(cg, new Function<CGNode, Collection<Pair<CGNode,String>>>() {
-
+    Map<CGNode, Collection<Pair<CGNode, String>>> scan = CallGraphTransitiveClosure.collectNodeResults(cg, new Function<CGNode, Collection<Pair<CGNode,String>>>() {
+    
       public Collection<Pair<CGNode, String>> apply(CGNode n) {
         return scanNodeForLexReads(n);
       }
     });
+    return CallGraphTransitiveClosure.transitiveClosure(cg, scan);
+  }
+
+  public Map<CGNode, OrdinalSet<Pair<CGNode, String>>> computeLexVarsWritten() {
+    Map<CGNode, Collection<Pair<CGNode, String>>> scan = CallGraphTransitiveClosure.collectNodeResults(cg, new Function<CGNode, Collection<Pair<CGNode,String>>>() {
+
+      public Collection<Pair<CGNode, String>> apply(CGNode n) {
+        return scanNodeForLexWrites(n);
+      }
+    });
+    return CallGraphTransitiveClosure.transitiveClosure(cg, scan);
   }
 
   protected Collection<Pair<CGNode, String>> scanNodeForLexReads(CGNode n) {
@@ -79,6 +86,23 @@ public class TransitiveLexicalAccesses {
         if (instr instanceof AstLexicalRead) {
           AstLexicalRead read = (AstLexicalRead) instr;
           for (Access a : read.getAccesses()) {
+            Pair<String, String> nameAndDefiner = a.getName();
+            result.addAll(getNodeNamePairsForAccess(n, nameAndDefiner));
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  protected Collection<Pair<CGNode, String>> scanNodeForLexWrites(CGNode n) {
+    Collection<Pair<CGNode, String>> result = HashSetFactory.make();
+    IR ir = n.getIR();
+    if (ir != null) {
+      for (SSAInstruction instr: Iterator2Iterable.make(ir.iterateNormalInstructions())) {
+        if (instr instanceof AstLexicalWrite) {
+          AstLexicalWrite write = (AstLexicalWrite) instr;
+          for (Access a : write.getAccesses()) {
             Pair<String, String> nameAndDefiner = a.getName();
             result.addAll(getNodeNamePairsForAccess(n, nameAndDefiner));
           }
