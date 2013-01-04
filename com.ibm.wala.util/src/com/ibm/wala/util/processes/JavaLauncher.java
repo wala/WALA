@@ -230,7 +230,7 @@ public class JavaLauncher extends Launcher {
     if (libPath == null) {
       return null;
     } else {
-      return "-Djava.library.path=" + quoteStringIfNeeded(libPath);
+      return "-Djava.library.path=" + libPath.trim();
     }
   }
 
@@ -264,16 +264,16 @@ public class JavaLauncher extends Launcher {
   /**
    * Compute the classpath for the spawned process
    */
-  private String makeClasspath() {
+  public String makeClasspath() {
     String cp = inheritClasspath ? System.getProperty("java.class.path") : "";
     if (getXtraClassPath() == null || getXtraClassPath().isEmpty()) {
-      return quoteStringIfNeeded(cp);
+      return cp.trim();
     } else {
       for (Iterator<String> it = getXtraClassPath().iterator(); it.hasNext();) {
         cp += File.pathSeparatorChar;
         cp += (String) it.next();
       }
-      return quoteStringIfNeeded(cp);
+      return cp.trim();
     }
   }
 
@@ -283,6 +283,7 @@ public class JavaLauncher extends Launcher {
    * are unsafe, so we have to escape the last backslash (if present and
    * unescaped), so it doesn't escape the closing quote.
    */
+  @Deprecated
   public static String quoteStringIfNeeded(String s) {
     s = s.trim();
     // s = s.replaceAll(" ", "\\\\ ");
