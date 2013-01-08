@@ -10,8 +10,14 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import java.util.Iterator;
+
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.ContextItem;
+import com.ibm.wala.util.collections.Pair;
 
 /**
  * An InstanceKey serves as the representative for an equivalence class of
@@ -32,5 +38,7 @@ public interface InstanceKey extends ContextItem {
    */
   IClass getConcreteType();
 
+  Iterator<Pair<CGNode,NewSiteReference>> getCreationSites(CallGraph CG);
+  
 }
 

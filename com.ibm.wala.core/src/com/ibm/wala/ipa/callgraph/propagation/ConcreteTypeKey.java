@@ -14,11 +14,20 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.ComposedIterator;
+import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.collections.FilterIterator;
+import com.ibm.wala.util.collections.MapIterator;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.functions.Function;
 
 /**
  * An instance key which represents a unique set for each concrete type
@@ -91,5 +100,27 @@ public final class ConcreteTypeKey implements InstanceKey {
       result[i++] = new ConcreteTypeKey(klass);
     }
     return result;
+  }
+
+  public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
+    return new ComposedIterator<CGNode, Pair<CGNode, NewSiteReference>>(CG.iterator()) {
+      @Override
+      public Iterator<? extends Pair<CGNode, NewSiteReference>> makeInner(final CGNode outer) {
+        return new MapIterator<NewSiteReference, Pair<CGNode, NewSiteReference>>(
+            new FilterIterator<NewSiteReference>(
+                outer.iterateNewSites(),
+                new Filter<NewSiteReference>() {
+                  public boolean accepts(NewSiteReference o) {
+                    return o.getDeclaredType().equals(type.getReference());
+                  }
+                }
+            ),
+            new Function<NewSiteReference, Pair<CGNode, NewSiteReference>>() {
+              public Pair<CGNode, NewSiteReference> apply(NewSiteReference object) {
+                return Pair.make(outer, object);
+              }
+            });
+      }
+    };
   }
 }

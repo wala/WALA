@@ -66,7 +66,7 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
     return base.getPointerKeyForArrayContents(I);
   }
 
-  public Iterator<PointerKey> getPointerKeysForReflectedFieldRead(InstanceKey I, InstanceKey F) {
+  public Iterator<PointerKey> getPointerKeysForReflectedFieldWrite(InstanceKey I, InstanceKey F) {
     List<PointerKey> result = new LinkedList<PointerKey>();
 
     if (F instanceof ConstantKey) {
@@ -106,7 +106,7 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
     return null;
   }
   
-  public Iterator<PointerKey> getPointerKeysForReflectedFieldWrite(InstanceKey I, InstanceKey F) {
+  public Iterator<PointerKey> getPointerKeysForReflectedFieldRead(InstanceKey I, InstanceKey F) {
     if (F instanceof ConstantKey) {
       PointerKey ifk = getInstanceFieldPointerKeyForConstant(I, (ConstantKey) F);
       if (ifk != null) {

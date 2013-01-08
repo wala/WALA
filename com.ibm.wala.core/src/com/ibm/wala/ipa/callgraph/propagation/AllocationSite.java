@@ -10,11 +10,19 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import java.util.Iterator;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.collections.FilterIterator;
+import com.ibm.wala.util.collections.MapIterator;
+import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.functions.Function;
 
 /**
  * An {@link InstanceKey} which represents a {@link NewSiteReference} in some {@link IMethod}. Note that this differs from
@@ -80,5 +88,22 @@ public class AllocationSite implements InstanceKey {
     } else if (!site.equals(other.site))
       return false;
     return true;
+  }
+
+  public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
+    return new MapIterator<CGNode, Pair<CGNode, NewSiteReference>>(
+        new FilterIterator<CGNode>(
+          CG.getNodes(method.getReference()).iterator(),
+          new Filter<CGNode>() {
+            public boolean accepts(CGNode o) {
+              return o.getMethod().equals(method);
+            }
+          }
+        ), 
+        new Function<CGNode, Pair<CGNode, NewSiteReference>>() {
+          public Pair<CGNode, NewSiteReference> apply(CGNode object) {
+            return Pair.make(object, site);
+          }
+        });
   }
 }
