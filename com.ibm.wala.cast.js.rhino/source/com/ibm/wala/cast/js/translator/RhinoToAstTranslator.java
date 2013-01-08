@@ -623,7 +623,7 @@ public class RhinoToAstTranslator {
 			if (elt instanceof EmptyExpression) {
 				index++;
 			} else {
-				eltNodes.add(Ast.makeConstant(index++));
+				eltNodes.add(Ast.makeConstant("" + (index++)));
 				eltNodes.add(visit(elt, arg));
 			}
 		}

@@ -607,9 +607,24 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     PropagationCallGraphBuilder b = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "array_index_conv2.js");
     b.setContextSelector(new ForInContextSelector(b.getContextSelector()));
     CallGraph cg = b.makeCallGraph(b.getOptions());
+    //JSCallGraphUtil.AVOID_DUMP = false;
+    //JSCallGraphUtil.dumpCG(b.getPointerAnalysis(), cg);
     verifyGraphAssertions(cg, assertionsForArrayIndexConv2);
   }
 
+  private static final Object[][] assertionsForDateProperty = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/date-property.js" } },
+    new Object[] { "tests/date-property.js", new String[] { "suffix:_fun" } }
+  };
+
+    @Test
+  public void testDateAsProperty() throws IllegalArgumentException, IOException, CancelException {
+    PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "date-property.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    //JSCallGraphUtil.AVOID_DUMP = false;
+    //JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
+    verifyGraphAssertions(CG, assertionsForDateProperty);
+  }
 
   protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {
 

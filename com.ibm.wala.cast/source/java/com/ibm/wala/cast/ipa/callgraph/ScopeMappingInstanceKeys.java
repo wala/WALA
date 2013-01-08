@@ -19,6 +19,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
@@ -27,6 +28,8 @@ import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.OrdinalSet;
@@ -174,6 +177,16 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
     
     public CGNode getCreator() {
       return creator;
+    }
+
+    public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
+      return new FilterIterator<Pair<CGNode, NewSiteReference>>(
+          base.getCreationSites(CG),
+          new Filter<Pair<CGNode, NewSiteReference>>() {
+            public boolean accepts(Pair<CGNode, NewSiteReference> o) {
+              return o.fst.equals(creator);
+            }
+          });
     }
   }
 

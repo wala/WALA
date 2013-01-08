@@ -238,6 +238,10 @@ public class JSAstTranslator extends AstTranslator {
       String field = (String) elt.getValue();
       if (isPrologueScript(context) && "__proto__".equals(field)) {
         context.cfg().addInstruction(((JSInstructionFactory) insts).SetPrototype(receiver, rval));
+        return;
+      }
+    }
+    /*
       } else {
         context.currentScope().getConstantValue(field);
         SSAPutInstruction put = ((JSInstructionFactory) insts).PutInstruction(receiver, rval, field);
@@ -249,8 +253,9 @@ public class JSAstTranslator extends AstTranslator {
         context.cfg().addInstruction(put);
       }
     } else {
+    */
       context.cfg().addInstruction(((JSInstructionFactory) insts).PropertyWrite(receiver, context.getValue(elt), rval));
-    }
+   // }
   }
 
   private void doPrimitiveNew(WalkContext context, int resultVal, String typeName) {

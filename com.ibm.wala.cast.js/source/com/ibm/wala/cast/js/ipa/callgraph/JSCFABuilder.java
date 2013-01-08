@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.ipa.callgraph;
 import java.util.Iterator;
 
 import com.ibm.wala.cast.ipa.callgraph.AstCFAPointerKeys;
+import com.ibm.wala.cast.ipa.callgraph.ReflectedFieldPointerKey;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -69,12 +70,8 @@ public abstract class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
 
       @Override
       public Iterator<PointerKey> getPointerKeysForReflectedFieldRead(InstanceKey I, InstanceKey F) {
-        IClassHierarchy cha = I.getConcreteType().getClassHierarchy();
-        IClass function = cha.lookupClass(JavaScriptTypes.Function);
         if (isBogusKey(I)) {
           return EmptyIterator.instance();
-        } else if (cha.isSubclassOf(F.getConcreteType(), function)) {
-          return super.getPointerKeysForReflectedFieldRead(I, new ConcreteTypeKey(function));
         } else {
           return super.getPointerKeysForReflectedFieldRead(I, F);
         }
@@ -82,12 +79,8 @@ public abstract class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
 
       @Override
       public Iterator<PointerKey> getPointerKeysForReflectedFieldWrite(InstanceKey I, InstanceKey F) {
-        IClassHierarchy cha = I.getConcreteType().getClassHierarchy();
-        IClass function = cha.lookupClass(JavaScriptTypes.Function);
-        if (isBogusKey(I)) {
+         if (isBogusKey(I)) {
           return EmptyIterator.instance();
-        } else if (cha.isSubclassOf(F.getConcreteType(), function)) {
-          return super.getPointerKeysForReflectedFieldWrite(I, new ConcreteTypeKey(function));
         } else {
           return super.getPointerKeysForReflectedFieldWrite(I, F);
         }
@@ -96,23 +89,45 @@ public abstract class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
       @Override
       protected PointerKey getInstanceFieldPointerKeyForConstant(InstanceKey I, ConstantKey F) {
         Object v = F.getValue();
-        if (v instanceof Double) {
-          String strVal = simulateNumberToString((Double)v);
-          IField f = I.getConcreteType().getField(Atom.findOrCreateUnicodeAtom((String) strVal));
+        String strVal = simulateToStringForPropertyNames(v);
+        // if we know the string representation of the constant, use it...
+        if (strVal != null) {
+          IField f = I.getConcreteType().getField(Atom.findOrCreateUnicodeAtom(strVal));
           return getPointerKeyForInstanceField(I, f);
           
+        // ...otherwise it is some unknown string
         } else {
-          return super.getInstanceFieldPointerKeyForConstant(I, F);
+          return ReflectedFieldPointerKey.mapped(new ConcreteTypeKey(getFieldNameType(F)), I);
         }
       }
 
-      private String simulateNumberToString(Double v) {
+      /**
+       * All values used as property names get implicitly converted to strings in JavaScript.
+       * @see com.ibm.wala.cast.ipa.callgraph.DelegatingAstPointerKeys#getFieldNameType(com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
+       */
+      protected IClass getFieldNameType(InstanceKey F) {
+        return F.getConcreteType().getClassHierarchy().lookupClass(JavaScriptTypes.String);
+      }
+
+      private String simulateToStringForPropertyNames(Object v) {
         // TODO this is very incomplete  --MS
-        String result = v.toString();
-        if (result.endsWith(".0")) {
-          result = result.substring(0, result.length() - 2);
+        if (v instanceof String) {
+          return (String)v;
+        } else if (v instanceof Double) {
+          String result = v.toString();
+          if (((double) Math.round((Double)v)) == ((Double)v).doubleValue()) {
+            result = Long.toString(Math.round((Double)v));
+          }
+          return result;
+        } else if (v instanceof Boolean) {
+          if (((Boolean)v).booleanValue()) {
+            return "true";
+          } else {
+            return "false";
+          }
+        } else {
+          return null;
         }
-        return result;
       }
       
       
