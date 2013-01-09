@@ -145,7 +145,7 @@ public class AnalysisScopeReader {
 
 
   /**
-   * @param classPath class path to analyze, delimited by File.pathSeparator
+   * @param classPath class path to analyze, delimited by {@link File#pathSeparator}
    * @param exclusionsFile file holding class hierarchy exclusions. may be null
    * @throws IOException 
    * @throws IllegalStateException if there are problems reading wala properties
