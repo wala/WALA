@@ -50,7 +50,7 @@ public abstract class TestLexicalModRef {
         // function "inner3" reads exactly innerName, inner3, and x and z via callees
         OrdinalSet<Pair<CGNode, String>> readVars = readResult.get(n);
         Assert.assertEquals(4, readVars.size());
-        Assert.assertEquals("[[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,inner3], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,innerName], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,x], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,z]]", readVars.toString());
+        Assert.assertEquals("[[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,x], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,inner3], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,innerName], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,z]]", readVars.toString());
       }
     }
   }
