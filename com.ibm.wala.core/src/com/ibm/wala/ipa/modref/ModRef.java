@@ -17,10 +17,9 @@ import java.util.Set;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
-import com.ibm.wala.dataflow.graph.BitVectorSolver;
-import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.CallGraphTransitiveClosure;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
@@ -33,11 +32,8 @@ import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
-import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.CancelRuntimeException;
-import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.graph.impl.GraphInverter;
+import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.intset.OrdinalSet;
 
 /**
@@ -66,7 +62,7 @@ public class ModRef {
       throw new IllegalArgumentException("cg is null");
     }
     Map<CGNode, Collection<PointerKey>> scan = scanForMod(cg, pa, heapExclude);
-    return transitiveClosure(cg, scan);
+    return CallGraphTransitiveClosure.transitiveClosure(cg, scan);
   }
 
   /**
@@ -80,7 +76,7 @@ public class ModRef {
       throw new IllegalArgumentException("cg is null");
     }
     Map<CGNode, Collection<PointerKey>> scan = scanForRef(cg, pa, heapExclude);
-    return transitiveClosure(cg, scan);
+    return CallGraphTransitiveClosure.transitiveClosure(cg, scan);
   }
 
   /**
@@ -99,36 +95,20 @@ public class ModRef {
     return computeRef(cg, pa, null);
   }
 
-  private Map<CGNode, OrdinalSet<PointerKey>> transitiveClosure(CallGraph cg, Map<CGNode, Collection<PointerKey>> scan) {
-    try {
-      GenReach<CGNode, PointerKey> gr = new GenReach<CGNode, PointerKey>(GraphInverter.invert(cg), scan);
-      BitVectorSolver<CGNode> solver = new BitVectorSolver<CGNode>(gr);
-      solver.solve(null);
-      Map<CGNode, OrdinalSet<PointerKey>> result = HashMapFactory.make();
-      for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext();) {
-        CGNode n = it.next();
-        BitVectorVariable bv = solver.getOut(n);
-        result.put(n, new OrdinalSet<PointerKey>(bv.getValue(), gr.getLatticeValues()));
-      }
-      return result;
-    } catch (CancelException e) {
-      throw new CancelRuntimeException(e);
-    }
-  }
-
   /**
    * For each call graph node, what heap locations (as determined by a heap model) may it write, <bf> NOT </bf> including its
    * callees transitively
    * 
    * @param heapExclude
    */
-  private Map<CGNode, Collection<PointerKey>> scanForMod(CallGraph cg, PointerAnalysis pa, HeapExclusions heapExclude) {
-    Map<CGNode, Collection<PointerKey>> result = HashMapFactory.make();
-    for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext();) {
-      CGNode n = it.next();
-      result.put(n, scanNodeForMod(n, pa, heapExclude));
-    }
-    return result;
+  private Map<CGNode, Collection<PointerKey>> scanForMod(CallGraph cg, final PointerAnalysis pa, final HeapExclusions heapExclude) {
+
+    return CallGraphTransitiveClosure.collectNodeResults(cg, new Function<CGNode, Collection<PointerKey>>() {
+
+      public Collection<PointerKey> apply(CGNode n) {
+        return scanNodeForMod(n, pa, heapExclude);
+      }
+    });
   }
 
   /**
@@ -137,13 +117,13 @@ public class ModRef {
    * 
    * @param heapExclude
    */
-  private Map<CGNode, Collection<PointerKey>> scanForRef(CallGraph cg, PointerAnalysis pa, HeapExclusions heapExclude) {
-    Map<CGNode, Collection<PointerKey>> result = HashMapFactory.make();
-    for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext();) {
-      CGNode n = it.next();
-      result.put(n, scanNodeForRef(n, pa, heapExclude));
-    }
-    return result;
+  private Map<CGNode, Collection<PointerKey>> scanForRef(CallGraph cg, final PointerAnalysis pa, final HeapExclusions heapExclude) {
+    return CallGraphTransitiveClosure.collectNodeResults(cg, new Function<CGNode, Collection<PointerKey>>() {
+
+      public Collection<PointerKey> apply(CGNode n) {
+        return scanNodeForRef(n, pa, heapExclude);
+      }
+    });
   }
 
   /**

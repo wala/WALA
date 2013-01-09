@@ -95,7 +95,7 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
      * @param definer
      * @return
      */
-    Iterator<CGNode> getFunargNodes(Pair<String, String> name) {
+    public Iterator<CGNode> getFunargNodes(Pair<String, String> name) {
       if (AstTranslator.NEW_LEXICAL) {
         Collection<CGNode> constructorCallers = getConstructorCallers(this, name);
         assert constructorCallers != null && !constructorCallers.isEmpty() : "no callers for constructor";
