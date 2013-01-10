@@ -38,7 +38,14 @@ public interface InstanceKey extends ContextItem {
    */
   IClass getConcreteType();
 
-  Iterator<Pair<CGNode,NewSiteReference>> getCreationSites(CallGraph CG);
-  
-}
+  /**
+   * Get the creation sites of <code>this</code>, i.e., the statements that may
+   * allocate objects represented by <code>this</code>. A creation site is a
+   * pair (n,s), where n is the containing {@link CGNode} in the given
+   * {@link CallGraph} <code>CG</code> and s is the allocating
+   * {@link NewSiteReference}.
+   * 
+   */
+  Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG);
 
+}
