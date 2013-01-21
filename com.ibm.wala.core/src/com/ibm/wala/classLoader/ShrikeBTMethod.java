@@ -404,7 +404,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   private void processBytecodesWithShrikeBT(BytecodeInfo info) throws InvalidClassFileException {
     info.decoder = makeDecoder();
     if (!isAbstract() && info.decoder == null) {
-      Assertions.UNREACHABLE("bad method " + getReference());
+      throw new InvalidClassFileException(-1, "non-abstract method " + getReference() + " has no bytecodes");
     }
     if (info.decoder == null) {
       return;
