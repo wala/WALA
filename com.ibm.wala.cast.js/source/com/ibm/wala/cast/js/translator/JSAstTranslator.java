@@ -10,8 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.translator;
 
-import java.io.UTFDataFormatException;
-
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
@@ -29,7 +27,6 @@ import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
