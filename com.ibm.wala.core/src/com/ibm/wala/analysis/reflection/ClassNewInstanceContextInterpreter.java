@@ -145,7 +145,7 @@ public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterp
 
   private IMethod getPublicDefaultCtor(IClass klass) {
     IMethod ctorMethod = klass.getMethod(defCtorSelector);
-    if (ctorMethod != null && ctorMethod.isPublic()) {
+    if (ctorMethod != null && ctorMethod.isPublic() && ctorMethod.getDeclaringClass() == klass) {
       return ctorMethod;
     }
     return null;
