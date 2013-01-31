@@ -8,16 +8,16 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/com.ibm.wala.ide"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/com.ibm.wala.shrike"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/com.ibm.wala.util"/>
-	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/VirtualWorkspaces/SCanDroid/SCanDroid.wala/lib/dexlib-1.3.4-dev.jar"/>
-	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/VirtualWorkspaces/SCanDroid/SCanDroid.wala/lib/slf4j-api-1.7.2.jar"/>
-	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/VirtualWorkspaces/SCanDroid/SCanDroid.wala/lib/guava-13.0.1.jar"/>
-	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/VirtualWorkspaces/SCanDroid/SCanDroid.wala/lib/commons-cli-1.2.jar"/>
-	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/VirtualWorkspaces/SCanDroid/SCanDroid.wala/lib/commons-io-2.4.jar"/>
-	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/VirtualWorkspaces/SCanDroid/SCanDroid.wala/lib/commons-lang3-3.1.jar"/>
-	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/VirtualWorkspaces/SCanDroid/SCanDroid.wala/lib/jgrapht-0.8.3.jar"/>
-	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/VirtualWorkspaces/SCanDroid/SCanDroid.wala/lib/junit-4.11.jar"/>
-	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/VirtualWorkspaces/SCanDroid/SCanDroid.wala/lib/logback-classic-1.0.9.jar"/>
-	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/VirtualWorkspaces/SCanDroid/SCanDroid.wala/lib/logback-core-1.0.9.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/com.ibm.wala.core.tests"/>
+	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/git/joana/contrib/wala/com.ibm.wala.dalvik/lib/commons-cli-1.2.jar"/>
+	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/git/joana/contrib/wala/com.ibm.wala.dalvik/lib/commons-io-2.4.jar"/>
+	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/git/joana/contrib/wala/com.ibm.wala.dalvik/lib/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/git/joana/contrib/wala/com.ibm.wala.dalvik/lib/dexlib-1.3.4-dev.jar"/>
+	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/git/joana/contrib/wala/com.ibm.wala.dalvik/lib/guava-13.0.1.jar"/>
+	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/git/joana/contrib/wala/com.ibm.wala.dalvik/lib/jgrapht-0.8.3.jar"/>
+	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/git/joana/contrib/wala/com.ibm.wala.dalvik/lib/junit-4.11.jar"/>
+	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/git/joana/contrib/wala/com.ibm.wala.dalvik/lib/logback-classic-1.0.9.jar"/>
+	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/git/joana/contrib/wala/com.ibm.wala.dalvik/lib/logback-core-1.0.9.jar"/>
+	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/git/joana/contrib/wala/com.ibm.wala.dalvik/lib/slf4j-api-1.7.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
