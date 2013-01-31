@@ -442,7 +442,10 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock> 
       }
     }
 
-    SSAPiInstruction getPiForRefAndPath(int n, Object path) {
+    /* BEGIN custom change: some parts of dalvik frontend need to call this method, so its
+     * visibility is changed from default to public */
+    public SSAPiInstruction getPiForRefAndPath(int n, Object path) {
+    /* END custom change */
       return piInstructions.get(new RefPathKey(n, this, path));
     }
 
@@ -454,7 +457,10 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock> 
      * @param path can be the successor block in the pi instruction
      * @param pi
      */
+    /* BEGIN custom change: some parts of dalvik frontend need to call this method, so its
+     * visibility is changed from default to public */
     void addPiForRefAndPath(int n, Object path, SSAPiInstruction pi) {
+      /* END custom change */
       piInstructions.put(new RefPathKey(n, this, path), pi);
       blockPiInstructions.add(pi);
     }
