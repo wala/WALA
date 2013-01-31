@@ -459,7 +459,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock> 
      */
     /* BEGIN custom change: some parts of dalvik frontend need to call this method, so its
      * visibility is changed from default to public */
-    void addPiForRefAndPath(int n, Object path, SSAPiInstruction pi) {
+    public void addPiForRefAndPath(int n, Object path, SSAPiInstruction pi) {
       /* END custom change */
       piInstructions.put(new RefPathKey(n, this, path), pi);
       blockPiInstructions.add(pi);
