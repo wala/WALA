@@ -184,9 +184,10 @@ public class FileProvider {
     // http://www.faqs.org/rfcs/rfc2396.html Section 2.4.3
     // This solution works. See discussion at
     // http://stackoverflow.com/questions/4494063/how-to-avoid-java-net-urisyntaxexception-in-url-touri
-    URI uri = new File(url.getPath()).toURI();
+    // we assume url has been properly encoded, so we decode it 
     try {
-      return URLDecoder.decode(uri.getPath(), "UTF-8");
+      URI uri = new File(URLDecoder.decode(url.getPath(), "UTF-8")).toURI();
+      return uri.getPath();
     } catch (UnsupportedEncodingException e) {
       // this really shouldn't happen
       Assertions.UNREACHABLE();
