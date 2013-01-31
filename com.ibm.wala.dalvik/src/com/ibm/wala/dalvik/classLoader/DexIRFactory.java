@@ -17,10 +17,10 @@ import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.dalvik.ssa.DexSSABuilder;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.DefaultIRFactory;
-import com.ibm.wala.ssa.DexSSABuilder;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
