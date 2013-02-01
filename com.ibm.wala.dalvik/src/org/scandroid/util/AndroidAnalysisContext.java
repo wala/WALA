@@ -134,31 +134,7 @@ public class AndroidAnalysisContext {
 			       ClassHierarchyException, URISyntaxException {
 		logger.debug(DefaultSCanDroidOptions.dumpString(options));
 		this.options = options;
-		scope = DexAnalysisScopeReader.makeAndroidBinaryAnalysisScope(
-				options.getClasspath(), exclusions);
-
-		scope.setLoaderImpl(ClassLoaderReference.Application,
-				"com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
-
-		scope.setLoaderImpl(ClassLoaderReference.Primordial,
-				"com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
-		
-		// TODO: this check is case-sensitive :(
-		URI androidLib = options.getAndroidLibrary();
-		if (androidLib.getPath().endsWith(".dex")) { 
-			Module dexMod = new DexFileModule(new File(androidLib));
-			
-//			Iterator<ModuleEntry> mitr = dexMod.getEntries();
-//			while (mitr.hasNext()) {
-//				ModuleEntry moduleEntry = (ModuleEntry) mitr.next();
-//				logger.error("dex module: {}", moduleEntry.getName());
-//			}
-			
-			scope.addToScope(ClassLoaderReference.Primordial, dexMod);
-		} else {
-			scope.addToScope(ClassLoaderReference.Primordial, new JarFile(new File(
-				androidLib)));
-		}
+		scope = AndroidAnalysisScope.setUpAndroidAnalysisScope(options.getAndroidLibrary(), options.getClasspath(), exclusions);
 		
 		
 		cha = ClassHierarchy.make(scope);
@@ -173,6 +149,8 @@ public class AndroidAnalysisContext {
 		}
 		Warnings.clear();
 	}
+	
+	
 
 	// ContextSelector, entry points, reflection options, IR Factory, call graph
 	// type, include library

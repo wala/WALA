@@ -38,6 +38,7 @@
 
 package com.ibm.wala.dalvik.dex.util.config;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -49,6 +50,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -64,6 +66,19 @@ public class DexAnalysisScopeReader extends AnalysisScopeReader {
 	private static final String BASIC_FILE = /**"conf" + File.separator
 			+ */"primordial.txt";
 
+	
+	
+	public static AnalysisScope makeAndroidBinaryAnalysisScope(String classPath, String exclusions) throws IOException {
+		if (classPath == null) {
+			throw new IllegalArgumentException("classPath null");
+		}
+		
+		AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
+		scope.setExclusions(new FileOfClasses(new ByteArrayInputStream(exclusions.getBytes())));
+		ClassLoaderReference loader = scope.getLoader(AnalysisScope.APPLICATION);
+		addClassPathToScope(classPath, scope, loader);
+		return scope;
+	}
 	/**
 	 * @param classPath
 	 *            class path to analyze, delimited by File.pathSeparator
