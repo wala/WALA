@@ -19,5 +19,6 @@
 	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/git/joana/contrib/wala/com.ibm.wala.dalvik/lib/logback-classic-1.0.9.jar"/>
 	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/git/joana/contrib/wala/com.ibm.wala.dalvik/lib/logback-core-1.0.9.jar"/>
 	<classpathentry kind="lib" path="/afs/info.uni-karlsruhe.de/user/mmohr/git/joana/contrib/wala/com.ibm.wala.dalvik/lib/slf4j-api-1.7.2.jar"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
