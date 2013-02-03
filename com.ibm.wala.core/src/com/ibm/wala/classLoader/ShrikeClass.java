@@ -30,6 +30,7 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.types.generics.ClassSignature;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.shrike.ShrikeClassReaderHandle;
 import com.ibm.wala.util.strings.Atom;
@@ -226,6 +227,17 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     return getAnnotations(false);
   }
   
+  public Collection<Annotation> getAnnotations() {
+    Collection<Annotation> result = HashSetFactory.make();
+    try {
+      result.addAll(getAnnotations(true));
+      result.addAll(getAnnotations(false));
+    } catch (InvalidClassFileException e) {
+      
+    }
+    return result;
+  }
+
   public Collection<Annotation> getAnnotations(boolean runtimeInvisible) throws InvalidClassFileException {
     AnnotationsReader r = getAnnotationsReader(runtimeInvisible);
     return Annotation.getAnnotationsFromReader(r, getClassLoader().getReference());

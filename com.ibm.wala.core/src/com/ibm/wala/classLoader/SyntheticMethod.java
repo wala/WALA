@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
@@ -22,6 +25,7 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.bytecode.BytecodeStream;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.strings.Atom;
@@ -362,6 +366,10 @@ public class SyntheticMethod implements IMethod {
 
   public IClassHierarchy getClassHierarchy() {
     return getDeclaringClass().getClassHierarchy();
+  }
+
+  public Collection<Annotation> getAnnotations() {
+     return Collections.emptySet();
   }
 
 }

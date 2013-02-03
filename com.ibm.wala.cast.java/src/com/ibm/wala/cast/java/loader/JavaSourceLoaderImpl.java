@@ -42,6 +42,7 @@ import com.ibm.wala.cast.loader.AstClass;
 import com.ibm.wala.cast.loader.AstField;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
+import com.ibm.wala.cast.tree.CAstAnnotation;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
@@ -61,6 +62,8 @@ import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.shrikeCT.AnnotationsReader.ElementValue;
+import com.ibm.wala.shrikeCT.AnnotationsReader.ConstantElementValue;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.ssa.SymbolTable;
@@ -71,7 +74,9 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
@@ -92,11 +97,18 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 
     protected final Collection superTypeNames;
 
+    private final Collection<Annotation> annotations;
+    
     public JavaClass(String typeName, Collection superTypeNames, CAstSourcePositionMap.Position position, Collection qualifiers,
-        JavaSourceLoaderImpl loader, IClass enclosingClass) {
+        JavaSourceLoaderImpl loader, IClass enclosingClass, Collection<Annotation> annotations) {
       super(position, TypeName.string2TypeName(typeName), loader, (short) mapToInt(qualifiers), new HashMap<Atom, IField>(), new HashMap<Selector, IMethod>());
       this.superTypeNames = superTypeNames;
       this.enclosingClass = enclosingClass;
+      this.annotations = annotations;
+    }
+
+    public Collection<Annotation> getAnnotations() {
+      return annotations;
     }
 
     public IClassHierarchy getClassHierarchy() {
@@ -157,7 +169,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     }
 
     private void addField(CAstEntity fieldEntity) {
-      declaredFields.put(Util.fieldEntityToAtom(fieldEntity), new JavaField(fieldEntity, JavaSourceLoaderImpl.this, this));
+      declaredFields.put(Util.fieldEntityToAtom(fieldEntity), new JavaField(fieldEntity, JavaSourceLoaderImpl.this, this, JavaSourceLoaderImpl.this.getAnnotations(fieldEntity)));
     }
 
     public IClass getEnclosingClass() {
@@ -165,24 +177,53 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     }
 
     public String toString() {
-      if (enclosingClass == null) {
-        return "<src-class: " + getName().toString() + ">";
-      } else {
-        return "<src-class: " + getName().toString() + "(within " + enclosingClass.getName() + ")>";
+      StringBuffer sb = new StringBuffer("<src-class: " );
+      sb.append(getName().toString());
+      if (enclosingClass != null) {
+        sb.append(" (within " + enclosingClass.getName() + ")");
       }
+      if (annotations != null && !annotations.isEmpty()) {
+        for(Annotation a : annotations) {
+          sb.append("[" + a.getType().getName().getClassName() + "]");
+        }
+      }
+      return sb.toString();
     }
   }
 
+  private Collection<Annotation> getAnnotations(CAstEntity e) {
+    Collection<CAstAnnotation> annotations = e.getAnnotations();
+    if (annotations == null || annotations.isEmpty()) {
+      return null;
+    } else {
+      Collection<Annotation> result = HashSetFactory.make();
+      for(CAstAnnotation ca : annotations) {
+        TypeName walaTypeName = toWALATypeName(ca.getType());
+        TypeReference ref = TypeReference.findOrCreate(getReference(), walaTypeName);
+        if (ca.getArguments() == null || ca.getArguments().isEmpty()) {
+          result.add(Annotation.make(ref));
+        } else {
+          Map<String,ElementValue> args = HashMapFactory.make();
+          for(Map.Entry<String, Object> a : ca.getArguments().entrySet()) {
+            args.put(a.getKey(), new ConstantElementValue(a.getValue()));
+          }
+          result.add(Annotation.makeWithNamed(ref, args));
+        }
+      }
+      return result;
+    }
+  }
+  
   /**
    * DOMO representation of a field on a Java type that resides in a source file
    * 
    * @author rfuhrer
    */
   private class JavaField extends AstField {
-    private JavaField(CAstEntity fieldEntity, IClassLoader loader, IClass declaringClass) {
+    private JavaField(CAstEntity fieldEntity, IClassLoader loader, IClass declaringClass, Collection<Annotation> annotations) {
       super(FieldReference.findOrCreate(declaringClass.getReference(), Atom.findOrCreateUnicodeAtom(fieldEntity.getName()),
           TypeReference.findOrCreate(loader.getReference(), TypeName.string2TypeName(fieldEntity.getType().getName()))),
-          fieldEntity.getQualifiers(), declaringClass, declaringClass.getClassHierarchy());
+          fieldEntity.getQualifiers(), declaringClass, declaringClass.getClassHierarchy(), annotations);
     }
   }
 
@@ -200,14 +241,14 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     public JavaEntityMethod(CAstEntity methodEntity, IClass owner, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
         TypeReference[][] catchTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
       super(owner, methodEntity.getQualifiers(), cfg, symtab, MethodReference.findOrCreate(owner.getReference(), Util
-          .methodEntityToSelector(methodEntity)), hasCatchBlock, catchTypes, hasMonitorOp, lexicalInfo, debugInfo);
+          .methodEntityToSelector(methodEntity)), hasCatchBlock, catchTypes, hasMonitorOp, lexicalInfo, debugInfo, JavaSourceLoaderImpl.this.getAnnotations(methodEntity));
       this.parameterTypes = computeParameterTypes(methodEntity);
       this.exceptionTypes = computeExceptionTypes(methodEntity);
     }
 
     public JavaEntityMethod(CAstEntity methodEntity, IClass owner) {
       super(owner, methodEntity.getQualifiers(), MethodReference.findOrCreate(owner.getReference(), Util
-          .methodEntityToSelector(methodEntity)));
+          .methodEntityToSelector(methodEntity)), JavaSourceLoaderImpl.this.getAnnotations(methodEntity));
       this.parameterTypes = computeParameterTypes(methodEntity);
       this.exceptionTypes = computeExceptionTypes(methodEntity);
     }
@@ -449,14 +490,18 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     ((JavaClass) owner).addField(n);
   }
 
+  private TypeName toWALATypeName(CAstType type) {
+    return TypeName.string2TypeName(type.getName());
+  }
+  
   public IClass defineType(CAstEntity type, String typeName, CAstEntity owner) {
     Collection<TypeName> superTypeNames = new ArrayList<TypeName>();
     for (Iterator superTypes = type.getType().getSupertypes().iterator(); superTypes.hasNext();) {
-      superTypeNames.add(TypeName.string2TypeName(((CAstType) superTypes.next()).getName()));
+      superTypeNames.add(toWALATypeName(((CAstType) superTypes.next())));
     }
 
     JavaClass javaClass = new JavaClass(typeName, superTypeNames, type.getPosition(), type.getQualifiers(), this,
-        (owner != null) ? (JavaClass) fTypeMap.get(owner) : (JavaClass) null);
+        (owner != null) ? (JavaClass) fTypeMap.get(owner) : (JavaClass) null, getAnnotations(type));
 
     if (getParent().lookupClass(javaClass.getName()) != null) {
       return null;

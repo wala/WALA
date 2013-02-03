@@ -37,11 +37,15 @@
  */
 package com.ibm.wala.demandpa.util;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.strings.Atom;
@@ -119,5 +123,9 @@ public class ArrayContents implements IField {
 
   public FieldReference getReference() {
     return null;
+  }
+
+  public Collection<Annotation> getAnnotations() {
+    return Collections.emptySet();
   }
 }

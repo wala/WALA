@@ -47,11 +47,13 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.core.dom.Annotation;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
 import org.eclipse.jdt.core.dom.AnnotationTypeMemberDeclaration;
 import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
@@ -82,6 +84,9 @@ import org.eclipse.jdt.core.dom.ExpressionStatement;
 import org.eclipse.jdt.core.dom.FieldAccess;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.ForStatement;
+import org.eclipse.jdt.core.dom.IAnnotationBinding;
+import org.eclipse.jdt.core.dom.IBinding;
+import org.eclipse.jdt.core.dom.IMemberValuePairBinding;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
@@ -131,6 +136,7 @@ import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.java.loader.Util;
 import com.ibm.wala.cast.java.translator.JavaProcedureEntity;
 import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstAnnotation;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
@@ -152,6 +158,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -268,16 +275,26 @@ public class JDTJava2CAstTranslator {
 
     private final JdtPosition fSourcePosition;
 
+    private final Set<CAstAnnotation> annotations;
+    
     public ClassEntity(ITypeBinding jdtType, String name, Collection<CAstQualifier> quals, Collection<CAstEntity> entities,
-        JdtPosition pos) {
+        JdtPosition pos, Set<CAstAnnotation> annotations) {
       fName = name;
       fQuals = quals;
       fEntities = entities;
       fJdtType = jdtType;
       fSourcePosition = pos;
+      this.annotations = annotations;
     }
 
-    public int getKind() {
+    @Override
+	public Collection<CAstAnnotation> getAnnotations() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public int getKind() {
       return TYPE_ENTITY;
     }
 
@@ -423,8 +440,10 @@ public class JDTJava2CAstTranslator {
         Collection<CAstQualifier> quals = JDT2CAstUtils.mapModifiersToQualifiers(fieldDecl.getModifiers(), false, false);
         for (Object f : fieldDecl.fragments()) {
           VariableDeclarationFragment fieldFrag = (VariableDeclarationFragment) f;
-          memberEntities.add(new FieldEntity(fieldFrag.getName().getIdentifier(), fieldFrag.resolveBinding().getType(), quals,
-              makePosition(fieldFrag.getStartPosition(), fieldFrag.getStartPosition() + fieldFrag.getLength())));
+          IVariableBinding fieldBinding = fieldFrag.resolveBinding();
+		memberEntities.add(new FieldEntity(fieldFrag.getName().getIdentifier(), fieldBinding.getType(), quals,
+              makePosition(fieldFrag.getStartPosition(), fieldFrag.getStartPosition() + fieldFrag.getLength()),
+              handleAnnotations(fieldBinding)));
         }
       } else if (decl instanceof Initializer) {
         // Initializers are inserted into constructors when making constructors.
@@ -481,11 +500,14 @@ public class JDTJava2CAstTranslator {
       for (int i = 0; i < staticInits.size(); i++)
         bodyNodes[i] = visitFieldInitNode(staticInits.get(i), newContext);
       CAstNode staticInitAst = makeNode(newContext, fFactory, n, CAstNode.BLOCK_STMT, bodyNodes);
-      memberEntities.add(new ProcedureEntity(staticInitAst, typeBinding, childEntities, newContext));
+      memberEntities.add(new ProcedureEntity(staticInitAst, typeBinding, childEntities, newContext, null));
     }
 
     Collection<CAstQualifier> quals = JDT2CAstUtils.mapModifiersToQualifiers(modifiers, isInterface, isAnnotation);
-    return new ClassEntity(typeBinding, name, quals, memberEntities, makePosition(n));
+
+    Set<CAstAnnotation> annotations = handleAnnotations(typeBinding);
+
+    return new ClassEntity(typeBinding, name, quals, memberEntities, makePosition(n), annotations);
   }
 
   private CAstEntity visit(AnonymousClassDeclaration n, WalkContext context) {
@@ -577,7 +599,7 @@ public class JDTJava2CAstTranslator {
 
     // finally, make the procedure entity
     CAstNode ast = makeNode(context, fFactory, n, CAstNode.BLOCK_STMT, bodyNodes);
-    return new ProcedureEntity(ast, fakeCtor, newType, memberEntities, context, paramTypes, null);
+    return new ProcedureEntity(ast, fakeCtor, newType, memberEntities, context, paramTypes, null, null);
 
   }
 
@@ -726,7 +748,7 @@ public class JDTJava2CAstTranslator {
     for (ITypeBinding paramType : overridden.getParameterTypes())
       paramCAstTypes.add(fTypeDict.getCAstTypeFor(paramType));
     return new ProcedureEntity(mdast, overriding, overridingBinding.getDeclaringClass(), memberEntities, context, paramCAstTypes,
-        overridden.getReturnType());
+        overridden.getReturnType(), null);
   }
 
   /**
@@ -754,9 +776,50 @@ public class JDTJava2CAstTranslator {
     // Polyglot comment: Presumably the MethodContext's parent is a ClassContext,
     // and he has the list of initializers. Hopefully the following
     // will glue that stuff in the right place in any constructor body.
-
-    return new ProcedureEntity(mdast, n, classBinding, memberEntities, context);
+    
+    Set<CAstAnnotation> annotations = null;
+    if (n.resolveBinding() != null) {
+    	annotations = handleAnnotations(n.resolveBinding());
+    }
+    
+    return new ProcedureEntity(mdast, n, classBinding, memberEntities, context, annotations);
   }
+
+  private Set<CAstAnnotation> handleAnnotations(IBinding binding) {
+    IAnnotationBinding[] annotations = binding.getAnnotations();
+    
+    if(annotations == null || annotations.length == 0) {
+    	return null;
+    }
+    
+    Set<CAstAnnotation> castAnnotations = HashSetFactory.make();
+    for(IAnnotationBinding annotation : annotations) {
+    	ITypeBinding annotationTypeBinding = annotation.getAnnotationType();
+    	final CAstType annotationType = fTypeDict.getCAstTypeFor(annotationTypeBinding);
+    	final Map<String,Object> args = HashMapFactory.make();
+    	for(IMemberValuePairBinding mvpb : annotation.getAllMemberValuePairs()) {
+    		String name = mvpb.getName();
+    		Object value = mvpb.getValue();
+    		args.put(name, value);
+    	}
+    	castAnnotations.add(new CAstAnnotation() {
+			@Override
+			public CAstType getType() {
+				return annotationType;
+			}
+			@Override
+			public Map<String, Object> getArguments() {
+				return args;
+			}
+			@Override
+			public String toString() {
+				return annotationType.getName() + args;
+			}
+    	});
+    }
+    
+    return castAnnotations;
+}
 
   protected final class ProcedureEntity implements JavaProcedureEntity { // TAGALONG (make static, access ast)
 
@@ -795,6 +858,8 @@ public class JDTJava2CAstTranslator {
 
     private int fModifiers;
 
+    private final Set<CAstAnnotation> annotations;
+
     // can be method, constructor, "fake" default constructor, or null decl = static initializer
     /**
      * For a static initializer, pass a null decl.
@@ -802,22 +867,22 @@ public class JDTJava2CAstTranslator {
     // FIXME: get rid of decl and pass in everything instead of having to do two different things with parameters
     // regular case
     private ProcedureEntity(CAstNode mdast, MethodDeclaration decl, ITypeBinding type, Map<CAstNode, CAstEntity> entities,
-        MethodContext context) {
-      this(mdast, decl, type, entities, context, null, null, decl.getModifiers());
+        MethodContext context, Set<CAstAnnotation> annotations) {
+      this(mdast, decl, type, entities, context, null, null, decl.getModifiers(), annotations);
     }
 
     // static init
-    private ProcedureEntity(CAstNode mdast, ITypeBinding type, Map<CAstNode, CAstEntity> entities, MethodContext context) {
-      this(mdast, null, type, entities, context, null, null, 0);
+    private ProcedureEntity(CAstNode mdast, ITypeBinding type, Map<CAstNode, CAstEntity> entities, MethodContext context, Set<CAstAnnotation> annotations) {
+      this(mdast, null, type, entities, context, null, null, 0, annotations);
     }
 
     private ProcedureEntity(CAstNode mdast, MethodDeclaration decl, ITypeBinding type, Map<CAstNode, CAstEntity> entities,
-        MethodContext context, ArrayList<CAstType> parameterTypes, ITypeBinding returnType) {
-      this(mdast, decl, type, entities, context, parameterTypes, returnType, decl.getModifiers());
+        MethodContext context, ArrayList<CAstType> parameterTypes, ITypeBinding returnType, Set<CAstAnnotation> annotations) {
+      this(mdast, decl, type, entities, context, parameterTypes, returnType, decl.getModifiers(), annotations);
     }
 
     private ProcedureEntity(CAstNode mdast, MethodDeclaration decl, ITypeBinding type, Map<CAstNode, CAstEntity> entities,
-        MethodContext context, ArrayList<CAstType> parameterTypes, ITypeBinding returnType, int modifiers) {
+        MethodContext context, ArrayList<CAstType> parameterTypes, ITypeBinding returnType, int modifiers, Set<CAstAnnotation> annotations) {
       // TypeSystem system, CodeInstance pd, String[] argumentNames,
       // }
       // Map<CAstNode, CAstEntity> entities, MethodContext mc) {
@@ -827,6 +892,7 @@ public class JDTJava2CAstTranslator {
       fType = type;
       fReturnType = returnType;
       fModifiers = modifiers;
+      this.annotations = annotations;
 
       // from CodeBodyEntity
       fEntities = new LinkedHashMap<CAstNode, Collection<CAstEntity>>();
@@ -866,7 +932,12 @@ public class JDTJava2CAstTranslator {
       }
     }
 
-    public String toString() {
+    @Override
+	public Collection<CAstAnnotation> getAnnotations() {
+		return annotations;
+	}
+
+	public String toString() {
       return fDecl == null ? "<clinit>" : fDecl.toString();
     }
 
@@ -1034,15 +1105,24 @@ public class JDTJava2CAstTranslator {
 
     private final JdtPosition position;
 
-    private FieldEntity(String name, ITypeBinding type, Collection<CAstQualifier> quals, JdtPosition position) {
+    private final Set<CAstAnnotation> annotations;
+
+    private FieldEntity(String name, ITypeBinding type, Collection<CAstQualifier> quals, JdtPosition position, Set<CAstAnnotation> annotations) {
       super();
       this.type = type;
       this.quals = quals;
       this.name = name;
       this.position = position;
+      this.annotations = annotations;
     }
 
-    public int getKind() {
+    
+    @Override
+	public Collection<CAstAnnotation> getAnnotations() {
+		return annotations;
+	}
+
+	public int getKind() {
       return CAstEntity.FIELD_ENTITY;
     }
 
@@ -2821,7 +2901,12 @@ public class JDTJava2CAstTranslator {
       fTopLevelDecls = topLevelDecls;
     }
 
-    public int getKind() {
+    @Override
+	public Collection<CAstAnnotation> getAnnotations() {
+		return null;
+	}
+
+	public int getKind() {
       return FILE_ENTITY;
     }
 
@@ -3171,7 +3256,7 @@ public class JDTJava2CAstTranslator {
    */
   private CAstEntity visit(EnumConstantDeclaration decl, WalkContext context) {
     return new FieldEntity(decl.getName().getIdentifier(), decl.resolveVariable().getType(), enumQuals, makePosition(decl
-        .getStartPosition(), decl.getStartPosition() + decl.getLength()));
+        .getStartPosition(), decl.getStartPosition() + decl.getLength()), null);
   }
 
   /**
@@ -3248,7 +3333,7 @@ public class JDTJava2CAstTranslator {
     ArrayList<CAstType> paramTypes = new ArrayList<CAstType>(1);
     paramTypes.add(fTypeDict.getCAstTypeFor(ast.resolveWellKnownType("java.lang.String")));
 
-    return new ProcedureEntity(bodyNode, fakeMet, enumType, memberEntities, context, paramTypes, enumType, met.getModifiers());
+    return new ProcedureEntity(bodyNode, fakeMet, enumType, memberEntities, context, paramTypes, enumType, met.getModifiers(), handleAnnotations(met));
   }
 
   private CAstEntity createEnumValuesMethod(ITypeBinding enumType, ArrayList<IVariableBinding> constants, WalkContext oldContext) {
@@ -3281,7 +3366,7 @@ public class JDTJava2CAstTranslator {
 
     ArrayList<CAstType> paramTypes = new ArrayList<CAstType>(0);
     return new ProcedureEntity(bodyNode, fakeMet, enumType, memberEntities, context, paramTypes, enumType.createArrayType(1), met
-        .getModifiers());
+        .getModifiers(), handleAnnotations(enumType));
   }
 
   private void doEnumHiddenEntities(ITypeBinding typeBinding, ArrayList<ASTNode> staticInits, List<CAstEntity> memberEntities,
@@ -3431,7 +3516,7 @@ public class JDTJava2CAstTranslator {
 
     // finally, make the procedure entity
     CAstNode ast = makeNode(context, fFactory, n, CAstNode.BLOCK_STMT, bodyNodes);
-    return new ProcedureEntity(ast, fakeCtor, newType, memberEntities, context, paramTypes, null);
+    return new ProcedureEntity(ast, fakeCtor, newType, memberEntities, context, paramTypes, null, handleAnnotations(ctor));
 
   }
 

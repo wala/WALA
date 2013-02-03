@@ -117,8 +117,6 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
     // TODO: we might need one AST (-> "Object" class) for all files.
     // TODO: group by project and send 'em in
 
-    System.out.println(modules);
-
     // sort files into projects
     Map<IProject, Map<ICompilationUnit,EclipseSourceFileModule>> projectsFiles = new HashMap<IProject, Map<ICompilationUnit,EclipseSourceFileModule>>();
     for (ModuleEntry m : modules) {
@@ -131,12 +129,12 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
       projectsFiles.get(proj).put(JavaCore.createCompilationUnitFrom(entry.getIFile()), entry);
     }
 
-    final ASTParser parser = ASTParser.newParser(AST.JLS3);
+    final ASTParser parser = ASTParser.newParser(AST.JLS4);
  
     for (final Map.Entry<IProject,Map<ICompilationUnit,EclipseSourceFileModule>> proj : projectsFiles.entrySet()) {
       parser.setProject(JavaCore.create(proj.getKey()));
       parser.setResolveBindings(true);
-           
+ 
       Set<ICompilationUnit> units = proj.getValue().keySet();
       parser.createASTs(units.toArray(new ICompilationUnit[units.size()]), new String[0], new ASTRequestor() {
         public void acceptAST(ICompilationUnit source, CompilationUnit ast) {
