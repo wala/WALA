@@ -6,6 +6,7 @@ package javaonepointfive;
 	String date();
 }
 
+@TestAnnotation (doSomething="The class", count=-1, date="09-09-2001")
 public class Annotations {
 	
 	@TestAnnotation (doSomething="What to do", count=1, date="09-09-2005")

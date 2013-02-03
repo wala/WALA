@@ -10,6 +10,8 @@
  *****************************************************************************/
 package com.ibm.wala.cast.loader;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +25,7 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.strings.Atom;
 
 public abstract class AstDynamicPropertyClass extends AstClass {
@@ -88,6 +91,10 @@ public abstract class AstDynamicPropertyClass extends AstClass {
 
         public IClassHierarchy getClassHierarchy() {
           return AstDynamicPropertyClass.this.getClassHierarchy();
+        }
+        
+        public Collection<Annotation> getAnnotations() {
+          return Collections.emptySet();
         }
       });
 
