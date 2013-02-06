@@ -74,6 +74,7 @@ public class DexAnalysisScopeReader extends AnalysisScopeReader {
 		}
 		
 		AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
+		//AnalysisScope scope = AnalysisScopeReader.makePrimordialScope(null);
 		scope.setExclusions(new FileOfClasses(new ByteArrayInputStream(exclusions.getBytes())));
 		ClassLoaderReference loader = scope.getLoader(AnalysisScope.APPLICATION);
 		addClassPathToScope(classPath, scope, loader);
