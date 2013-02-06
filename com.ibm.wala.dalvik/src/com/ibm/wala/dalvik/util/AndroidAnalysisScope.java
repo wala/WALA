@@ -1,4 +1,4 @@
-package org.scandroid.util;
+package com.ibm.wala.dalvik.util;
 
 import java.io.File;
 import java.io.IOException;

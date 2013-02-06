@@ -136,6 +136,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 
@@ -3269,6 +3270,11 @@ public class DexIMethod implements IBytecodeMethod {
 	@Override
 	public SourcePosition getParameterSourcePosition(int paramNum) throws InvalidClassFileException {
 		return null;
+	}
+
+	@Override
+	public Collection<Annotation> getAnnotations() {
+		throw new UnsupportedOperationException();
 	}
 
 }

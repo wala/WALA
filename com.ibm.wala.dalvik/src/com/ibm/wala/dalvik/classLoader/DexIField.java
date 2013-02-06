@@ -46,6 +46,8 @@ import static org.jf.dexlib.Util.AccessFlags.PUBLIC;
 import static org.jf.dexlib.Util.AccessFlags.STATIC;
 import static org.jf.dexlib.Util.AccessFlags.VOLATILE;
 
+import java.util.Collection;
+
 import org.jf.dexlib.ClassDataItem.EncodedField;
 
 import com.ibm.wala.classLoader.IClass;
@@ -54,6 +56,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 
@@ -161,5 +164,10 @@ public class DexIField implements IField {
     public IClassHierarchy getClassHierarchy() {
         return myClass.getClassHierarchy();
     }
+
+	@Override
+	public Collection<Annotation> getAnnotations() {
+		throw new UnsupportedOperationException();
+	}
 
 }
