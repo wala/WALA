@@ -10,6 +10,7 @@ import com.ibm.wala.dalvik.classLoader.DexFileModule;
 import com.ibm.wala.dalvik.dex.util.config.DexAnalysisScopeReader;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.util.config.AnalysisScopeReader;
 
 public class AndroidAnalysisScope {
 	
@@ -70,5 +71,6 @@ public class AndroidAnalysisScope {
 				androidLib)));
 		}
 		
+		scope.addToScope(AnalysisScopeReader.makePrimordialScope(null));
 	}
 }
