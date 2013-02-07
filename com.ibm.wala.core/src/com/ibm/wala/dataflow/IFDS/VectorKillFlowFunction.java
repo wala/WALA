@@ -45,5 +45,9 @@ public class VectorKillFlowFunction implements IReversibleFlowFunction {
   public static VectorKillFlowFunction make(IntSet kill) {
     return new VectorKillFlowFunction(kill);
   }
-
+  
+  @Override
+  public String toString() {
+    return "VectorKill: " + kill;
+  }
 }
