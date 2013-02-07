@@ -254,15 +254,11 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
      */
     @Override
     protected IMethod[] computeDeclaredMethods() throws InvalidClassFileException {
-    	boolean isActivity = false;
     	ArrayList<IMethod> methodsAL = new ArrayList<IMethod>();
     	
     	logger.debug("class: " + classDef.getClassType().getTypeDescriptor());
     	logger.debug("superclass: " + classDef.getSuperclass().getTypeDescriptor());
-
-    	if (classDef.getSuperclass().getTypeDescriptor() == "Landroid/app/Activity;")
-    		isActivity = true;
-    	
+ 	
         if (methods == null && classDef.getClassData() == null)
             methods = new IMethod[0];
 
@@ -305,15 +301,8 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
                 //is this enough to determine if the class is an activity?
                 //maybe check superclass?  -- but that may also not be enough
                 //may need to keep checking superclass of superclass, etc.
-                if (virtualMethods.get(i).method.getMethodName().getStringValue().equals("onCreate") 
-                		&& virtualMethods.get(i).method.getPrototype().getPrototypeString().equals("(Landroid/os/Bundle;)V"))
-                	isActivity = true;
+                
             }
-        }
-        
-        if (methods == null && methodsAL.size() > 0 && isActivity) {
-            logger.debug("Activity Found, adding ActivityModelMethod to class: " + this.getName().toString());
-        	methodsAL.add(new ActivityModelMethod(ActivityModelMethod.getActivityModel(),this));
         }
         
         if (methods == null)
