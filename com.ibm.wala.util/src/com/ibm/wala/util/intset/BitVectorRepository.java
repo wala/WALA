@@ -32,9 +32,6 @@ public class BitVectorRepository {
 
   private final static int SUBSET_DELTA = 5;
 
-  /**
-   * A Mapping from Integer -> WeakHashMap
-   */
   final private static Map<Integer, LinkedList<WeakReference<BitVectorIntSet>>> buckets = HashMapFactory.make();
 
   /**
@@ -71,7 +68,7 @@ public class BitVectorRepository {
               return bv;            
             }
           } else {
-            // might as well clear out the weak ref
+            // remove the weak reference to avoid leaks
             it.remove();
           }
         }
