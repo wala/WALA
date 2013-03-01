@@ -20,7 +20,9 @@ import com.ibm.wala.cast.js.html.IHtmlParser;
 import com.ibm.wala.cast.js.html.IHtmlParserFactory;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.html.WebUtil;
+import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
+import com.ibm.wala.cast.js.util.Util;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 
@@ -35,6 +37,14 @@ public abstract class TestSimplePageCallGraphShapeRhino extends TestSimplePageCa
 		URL url = getClass().getClassLoader().getResource("pages/page3.html");
 		CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
 		verifyGraphAssertions(CG, assertionsForPage3);
+	}
+
+	@Test(expected = AssertionError.class)
+	public void testJSParseError() throws IOException, IllegalArgumentException, CancelException {
+		URL url = getClass().getClassLoader().getResource("pages/garbage2.html");
+		JSCFABuilder B = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
+		B.makeCallGraph(B.getOptions());
+	    Util.checkForFrontEndErrors(B.getClassHierarchy());
 	}
 
 	public static void main(String[] args) {

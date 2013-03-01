@@ -15,14 +15,19 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import net.htmlparser.jericho.Config;
 import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.Logger;
 import net.htmlparser.jericho.LoggerProvider;
 import net.htmlparser.jericho.Source;
 
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.js.html.IHtmlCallback;
 import com.ibm.wala.cast.js.html.IHtmlParser;
+import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.warnings.Warning;
 
 
 /**
@@ -30,19 +35,86 @@ import com.ibm.wala.cast.js.html.IHtmlParser;
  * Uses the Jericho parser to go over the HTML
  */
 public class JerichoHtmlParser implements IHtmlParser{
+    static Set<Warning> warnings = HashSetFactory.make();
+
     static{
-      Config.LoggerProvider = LoggerProvider.STDERR;
+      class CAstLoggerProvider implements LoggerProvider {
+        @Override
+        public Logger getLogger(String arg0) {
+          class CAstLogger implements Logger {
+
+            @Override
+            public void debug(String arg0) {
+              // TODO Auto-generated method stub
+              
+            }
+
+            @Override
+            public void error(final String arg0) {
+              warnings.add(new Warning() {
+                @Override
+                public String getMsg() {
+                  return arg0;
+                }                
+              });
+            }
+
+            @Override
+            public void info(String arg0) {
+              // TODO Auto-generated method stub
+              
+            }
+
+            @Override
+            public boolean isDebugEnabled() {
+              return true;
+            }
+
+            @Override
+            public boolean isErrorEnabled() {
+              return true;
+            }
+
+            @Override
+            public boolean isInfoEnabled() {
+              return true;
+            }
+
+            @Override
+            public boolean isWarnEnabled() {
+              return true;
+            }
+
+            @Override
+            public void warn(String arg0) {
+              // TODO Auto-generated method stub
+              
+            }
+            
+          }
+          
+          return new CAstLogger();
+        }
+        
+      }
+      
+      Config.LoggerProvider = new CAstLoggerProvider();
     }
 
-	public void parse(URL url, InputStream reader, IHtmlCallback callback, String fileName) {
+	public void parse(URL url, InputStream reader, IHtmlCallback callback, String fileName) throws TranslatorToCAst.Error {
+	  warnings.clear();
 		Parser parser = new Parser(callback, fileName);
 		Source src;
 		try {
 			src = new Source(reader);
+			src.setLogger(Config.LoggerProvider.getLogger(fileName));
 			List<Element> childElements = src.getChildElements();
 			for (Iterator<Element> nodeIterator = childElements.iterator(); nodeIterator.hasNext();) {
 				Element e = nodeIterator.next();
 				parser.parse(e);
+			}
+			if (! warnings.isEmpty()) {
+			  throw new TranslatorToCAst.Error(warnings.iterator().next());
 			}
 		} catch (IOException e) {
 			System.err.println("Error parsing file: " + e.getMessage());

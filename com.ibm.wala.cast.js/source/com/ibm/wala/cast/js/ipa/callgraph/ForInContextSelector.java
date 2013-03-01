@@ -29,11 +29,9 @@ import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
-import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.SingleInstanceFilter;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
@@ -304,29 +302,6 @@ public class ForInContextSelector implements ContextSelector {
     return f;
   }
 
-  // simulate effect of ToString conversion on key
-  private InstanceKey simulateToString(IClassHierarchy cha, InstanceKey key) {
-    IClass stringClass = cha.lookupClass(JavaScriptTypes.String);
-    IClass numberClass = cha.lookupClass(JavaScriptTypes.Number);
-    if(key instanceof ConstantKey) {
-      Object value = ((ConstantKey)key).getValue();
-      if(value instanceof String) {
-        return key;
-      } else if(value instanceof Number) {
-        Double dval = ((Number)value).doubleValue();
-        return new ConstantKey<Double>(dval, numberClass);
-      } else if(value instanceof Boolean) {
-        Boolean bval = (Boolean)value;
-        return new ConstantKey<String>(bval.toString(), stringClass);
-      } else if(value == null) {
-        return new ConstantKey<String>("null", stringClass);
-      }
-    } /*else if(key != null && key.getConcreteType() == numberClass) {
-      return key;
-    }*/
-    return new ConcreteTypeKey(stringClass);    
-  }
-  
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, final InstanceKey[] receiver) {
     Context baseContext = base.getCalleeTarget(caller, site, callee, receiver);
     String calleeFullName = callee.getDeclaringClass().getName().toString();
@@ -334,7 +309,7 @@ public class ForInContextSelector implements ContextSelector {
     if(USE_NAME_TO_SELECT_CONTEXT) {
       if(calleeShortName.contains(HACK_METHOD_STR) && receiver.length > index) {
         // we assume that the argument is only used as a property name, so we can do ToString
-        return new ForInContext(baseContext, simulateToString(caller.getClassHierarchy(), receiver[index]));
+        return new ForInContext(baseContext, receiver[index]);
       }
     } else if(receiver.length > index) {
       Frequency f = usesFirstArgAsPropertyName(callee);

@@ -139,21 +139,17 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
       } else if (moduleEntry instanceof SourceModule) {
         TranslatorToCAst xlatorToCAst = getTranslatorToCAst(ast, (SourceModule) moduleEntry);
 
-        CAstEntity fileEntity = xlatorToCAst.translateToCAst();
-
-        if (fileEntity != null) {
+        CAstEntity fileEntity = null;
+        try {
+          fileEntity = xlatorToCAst.translateToCAst();
+        
           if (DEBUG) {
             CAstPrinter.printTo(fileEntity, new PrintWriter(System.err));
           }
           topLevelEntities.add(Pair.make(fileEntity, moduleEntry));
 
-        } else {
-          addMessage(moduleEntry, new Warning(Warning.SEVERE) {
-            @Override
-            public String getMsg() {
-              return "parse error";
-            }
-          });
+        } catch (TranslatorToCAst.Error e) {
+          addMessage(moduleEntry, e.warning);
         }
       }
     } catch (final MalformedURLException e) {
