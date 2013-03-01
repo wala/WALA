@@ -28,6 +28,7 @@ import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.ir.ssa.AbstractReflectiveGet;
 import com.ibm.wala.cast.ir.ssa.AbstractReflectivePut;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
 import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
@@ -245,7 +246,12 @@ public class CorrelationFinder {
 
   public Map<IMethod, CorrelationSummary> findCorrelatedAccesses(URL url) throws IOException, ClassHierarchyException {
     JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
-    Set<? extends SourceModule> script = WebUtil.extractScriptFromHTML(url);
+    Set<? extends SourceModule> script = null;
+    try {
+      script = WebUtil.extractScriptFromHTML(url);
+    } catch (Error e) {
+      assert false : e.warning;
+    }
     Map<IMethod, CorrelationSummary> summaries = findCorrelatedAccesses(script);
     return summaries;
   }

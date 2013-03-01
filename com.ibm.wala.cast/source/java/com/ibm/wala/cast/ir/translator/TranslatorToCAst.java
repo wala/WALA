@@ -13,14 +13,25 @@ import com.ibm.wala.cast.tree.impl.CAstNodeTypeMapRecorder;
 import com.ibm.wala.cast.tree.impl.CAstSourcePositionRecorder;
 import com.ibm.wala.cast.tree.rewrite.CAstCloner;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriter;
-import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriter.CopyKey;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriter.RewriteContext;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
+import com.ibm.wala.util.warnings.Warning;
 
 public interface TranslatorToCAst {
   public <C extends RewriteContext<K>, K extends CopyKey<K>> void addRewriter(CAstRewriterFactory<C, K> factory, boolean prepend);
 
-  public CAstEntity translateToCAst() throws IOException;
+  public class Error extends Exception {
+    public final Warning warning;
+    
+    public Error(Warning message) {
+      super(message.getMsg());
+      warning = message;
+    }
+    
+  }
+  
+  public CAstEntity translateToCAst() throws Error, IOException;
 
   public interface WalkContext<C extends WalkContext<C, T>, T> {
 

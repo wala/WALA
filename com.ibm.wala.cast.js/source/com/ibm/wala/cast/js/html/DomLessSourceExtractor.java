@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.util.collections.Pair;
@@ -225,7 +226,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
   }
 
   public Set<MappedSourceModule> extractSources(URL entrypointUrl, IHtmlParser htmlParser, IUrlResolver urlResolver)
-  throws IOException {
+  throws IOException, Error {
 
     InputStream inputStreamReader = WebUtil.getStream(entrypointUrl);
     IGeneratorCallback htmlCallback = createHtmlCallback(entrypointUrl, urlResolver); 
@@ -237,6 +238,9 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     // writing the final region into one SourceFileModule.
     File outputFile = createOutputFile(entrypointUrl, DELETE_UPON_EXIT, USE_TEMP_NAME);
     FileMapping fileMapping = finalRegion.writeToFile(new PrintStream(outputFile));
+    if (fileMapping == null) {
+      fileMapping = new EmptyFileMapping();
+    }
     MappedSourceModule singleFileModule = new MappedSourceFileModule(outputFile, outputFile.getName(), fileMapping);
     return Collections.singleton(singleFileModule);
   }
@@ -262,7 +266,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
   }   
 
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException, Error {
 //    DomLessSourceExtractor domLessScopeGenerator = new DomLessSourceExtractor();
     JSSourceExtractor domLessScopeGenerator = new DefaultSourceExtractor();
     JSSourceExtractor.DELETE_UPON_EXIT = false;
