@@ -471,10 +471,17 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
   }
 
   protected abstract SourceModuleTranslator getTranslator();
-
+/** BEGIN Custom change: Optional deletion of fTypeMap */
+  public static volatile boolean deleteTypeMapAfterInit = true;
+/** END Custom change: Optional deletion of fTypeMap */
+  
   public void init(List<Module> modules) throws IOException {
     super.init(modules);
-    fTypeMap = null;
+/** BEGIN Custom change: Optional deletion of fTypeMap */
+    if (deleteTypeMapAfterInit) {
+      fTypeMap = null;
+    }
+/** END Custom change: Optional deletion of fTypeMap */
   }
 
   public void defineFunction(CAstEntity n, IClass owner, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
