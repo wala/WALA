@@ -86,6 +86,9 @@ import com.ibm.wala.util.strings.Atom;
  */
 public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
   public Map<CAstEntity, IClass> fTypeMap = HashMapFactory.make();
+/** BEGIN Custom change: Common superclass is optional */
+  private final boolean existsCommonSuperclass;   // extension to deal with X10 that has no common superclass
+/** END Custom change: Common superclass is optional */
 
   /**
    * WALA representation of a Java class residing in a source file
@@ -131,7 +134,10 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
       // The following test allows the root class to reside in source; without
       // it, the assertion requires all classes represented by a JavaClass to
       // have a superclass.
-      if (!getName().equals(JavaSourceLoaderImpl.this.getLanguage().getRootType().getName()) && !excludedSupertype) {
+/** BEGIN Custom change: Common superclass is optional */
+      // Is no longer true in new X10 - no common object super class
+      if (existsCommonSuperclass && !getName().equals(JavaSourceLoaderImpl.this.getLanguage().getRootType().getName()) && !excludedSupertype) {
+/** END Custom change: Common superclass is optional */
         Assertions.UNREACHABLE("Cannot find super class for " + this + " in " + superTypeNames);
       }
       
@@ -458,9 +464,18 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     return result;
   }
 
-  public JavaSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha) throws IOException {
+/** BEGIN Custom change: Common superclass is optional */
+  public JavaSourceLoaderImpl(boolean existsCommonSuperClass, ClassLoaderReference loaderRef, IClassLoader parent,
+      SetOfClasses exclusions, IClassHierarchy cha) throws IOException {
     super(loaderRef, cha.getScope().getArrayClassLoader(), parent, cha.getScope().getExclusions(), cha);
+    this.existsCommonSuperclass = existsCommonSuperClass;
   }
+  
+  public JavaSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha) throws IOException {
+    // standard case: we have a common super class
+    this(true, loaderRef, parent, exclusions, cha);
+  }
+/** END Custom change: Common superclass is optional */
 
   public IClassHierarchy getClassHierarchy() {
     return cha;
