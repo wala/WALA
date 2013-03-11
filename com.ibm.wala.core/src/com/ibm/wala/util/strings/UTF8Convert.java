@@ -54,6 +54,7 @@ public abstract class UTF8Convert {
    * @returns unicode string
    * @throws IllegalArgumentException if utf8 is null
    */
+  @SuppressWarnings("unused")
   public static String fromUTF8(byte[] utf8) throws UTFDataFormatException {
     if (utf8 == null) {
       throw new IllegalArgumentException("utf8 is null");

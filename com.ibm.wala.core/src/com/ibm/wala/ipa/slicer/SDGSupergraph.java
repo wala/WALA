@@ -26,6 +26,7 @@ import com.ibm.wala.util.intset.IntSet;
 /**
  * A wrapper around an SDG to make it look like a supergraph for tabulation.
  */
+@SuppressWarnings("deprecation")
 class SDGSupergraph implements ISupergraph<Statement, PDG> {
 
   private final ISDG sdg;

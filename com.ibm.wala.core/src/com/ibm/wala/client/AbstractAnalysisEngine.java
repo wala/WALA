@@ -141,6 +141,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     return builder;
   }
 
+  @SuppressWarnings("unchecked")
   public void setModuleFiles(Collection moduleFiles) {
     this.moduleFiles = moduleFiles;
   }

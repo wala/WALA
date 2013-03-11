@@ -40,6 +40,7 @@ import com.ibm.wala.util.intset.MutableIntSet;
  * 
  * For example, you can use this class to produce a CFG view that ignores certain types of exceptional edges.
  */
+@SuppressWarnings("deprecation")
 public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGraph<T> implements ControlFlowGraph<I, T> {
 
   /**

@@ -214,8 +214,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
    */
   List<InstanceKey> getInstances(IntSet set) {
     LinkedList<InstanceKey> result = new LinkedList<InstanceKey>();
-    int i = 0;
-    for (IntIterator it = set.intIterator(); it.hasNext(); i++) {
+    for (IntIterator it = set.intIterator(); it.hasNext();) {
       int j = it.next();
       result.add(getInstanceKey(j));
     }
@@ -253,7 +252,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
    * @param key
    * @return the dataflow variable that tracks the points-to set for key
    */
-  public PointsToSetVariable findOrCreatePointsToSet(PointerKey key) {
+  public PointsToSetVariable findOrCreatePointsToSet(final PointerKey key) {
 
     if (key == null) {
       throw new IllegalArgumentException("null key");
@@ -281,12 +280,6 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
           pk = key;
         }
         FilteredPointerKey fpk = (FilteredPointerKey) pk;
-        if (fpk == null) {
-          Assertions.UNREACHABLE("fpk is null");
-        }
-        if (key == null) {
-          Assertions.UNREACHABLE("key is null");
-        }
         if (fpk.getTypeFilter() == null) {
           Assertions.UNREACHABLE("fpk.getTypeFilter() is null");
         }

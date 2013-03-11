@@ -32,6 +32,7 @@ import com.ibm.wala.util.functions.Function;
 /**
  * An instance key which represents a unique set for each concrete type
  */
+@SuppressWarnings("deprecation")
 public final class ConcreteTypeKey implements InstanceKey {
   private final IClass type;
 

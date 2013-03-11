@@ -41,6 +41,7 @@ import com.ibm.wala.util.intset.IntSet;
  * @author sjfink
  * 
  */
+@SuppressWarnings("deprecation")
 public class ICFGSupergraph implements ISupergraph<BasicBlockInContext<IExplodedBasicBlock>, CGNode> {
 
   private final AnalysisCache analysisCache;

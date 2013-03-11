@@ -25,6 +25,7 @@ import com.ibm.wala.util.intset.SparseIntSet;
 /**
  * A set of path edges for a particular procedure entry s_p.
  */
+@SuppressWarnings("unused")
 public class LocalPathEdges {
 
   /**

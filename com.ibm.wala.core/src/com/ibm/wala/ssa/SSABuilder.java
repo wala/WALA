@@ -381,7 +381,7 @@ public class SSABuilder extends AbstractIntStackMachine {
     class NodeVisitor extends BasicStackMachineVisitor {
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayLength(ArrayLengthInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitArrayLength(ArrayLengthInstruction)
        */
       @Override
       public void visitArrayLength(com.ibm.wala.shrikeBT.ArrayLengthInstruction instruction) {
@@ -394,7 +394,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayLoad(IArrayLoadInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitArrayLoad(IArrayLoadInstruction)
        */
       @Override
       public void visitArrayLoad(IArrayLoadInstruction instruction) {
@@ -411,7 +411,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayStore(IArrayStoreInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitArrayStore(IArrayStoreInstruction)
        */
       @Override
       public void visitArrayStore(IArrayStoreInstruction instruction) {
@@ -424,7 +424,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitBinaryOp(IBinaryOpInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitBinaryOp(IBinaryOpInstruction)
        */
       @Override
       public void visitBinaryOp(IBinaryOpInstruction instruction) {
@@ -438,7 +438,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitCheckCast(ITypeTestInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitCheckCast(ITypeTestInstruction)
        */
       @Override
       public void visitCheckCast(ITypeTestInstruction instruction) {
@@ -456,7 +456,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitComparison(IComparisonInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitComparison(IComparisonInstruction)
        */
       @Override
       public void visitComparison(IComparisonInstruction instruction) {
@@ -469,7 +469,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitConditionalBranch(IConditionalBranchInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitConditionalBranch(IConditionalBranchInstruction)
        */
       @Override
       public void visitConditionalBranch(IConditionalBranchInstruction instruction) {
@@ -481,7 +481,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitConstant(ConstantInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitConstant(ConstantInstruction)
        */
       @Override
       public void visitConstant(com.ibm.wala.shrikeBT.ConstantInstruction instruction) {
@@ -516,7 +516,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitConversion(IConversionInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitConversion(IConversionInstruction)
        */
       @Override
       public void visitConversion(IConversionInstruction instruction) {
@@ -532,7 +532,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitGet(IGetInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitGet(IGetInstruction)
        */
       @Override
       public void visitGet(IGetInstruction instruction) {
@@ -552,7 +552,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitGoto(GotoInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitGoto(GotoInstruction)
        */
       @Override
       public void visitGoto(com.ibm.wala.shrikeBT.GotoInstruction instruction) {
@@ -560,7 +560,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitInstanceof(IInstanceofInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitInstanceof(IInstanceofInstruction)
        */
       @Override
       public void visitInstanceof(IInstanceofInstruction instruction) {
@@ -573,7 +573,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitInvoke(IInvokeInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitInvoke(IInvokeInstruction)
        */
       @Override
       public void visitInvoke(IInvokeInstruction instruction) {
@@ -619,7 +619,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /*
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitLocalStore(com.ibm.wala.shrikeBT.StoreInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitLocalStore(com.ibm.wala.shrikeBT.StoreInstruction)
        */
       @Override
       public void visitLocalStore(IStoreInstruction instruction) {
@@ -630,7 +630,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitMonitor(MonitorInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitMonitor(MonitorInstruction)
        */
       @Override
       public void visitMonitor(com.ibm.wala.shrikeBT.MonitorInstruction instruction) {
@@ -640,7 +640,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitNew(NewInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitNew(NewInstruction)
        */
       @Override
       public void visitNew(com.ibm.wala.shrikeBT.NewInstruction instruction) {
@@ -661,7 +661,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitGet(IGetInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitGet(IGetInstruction)
        */
       @Override
       public void visitPut(IPutInstruction instruction) {
@@ -679,7 +679,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitReturn(ReturnInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitReturn(ReturnInstruction)
        */
       @Override
       public void visitReturn(com.ibm.wala.shrikeBT.ReturnInstruction instruction) {
@@ -693,7 +693,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitShift(IShiftInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitShift(IShiftInstruction)
        */
       @Override
       public void visitShift(IShiftInstruction instruction) {
@@ -706,7 +706,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitSwitch(SwitchInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitSwitch(SwitchInstruction)
        */
       @Override
       public void visitSwitch(com.ibm.wala.shrikeBT.SwitchInstruction instruction) {
@@ -747,7 +747,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitThrow(ThrowInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitThrow(ThrowInstruction)
        */
       @Override
       public void visitThrow(com.ibm.wala.shrikeBT.ThrowInstruction instruction) {
@@ -763,7 +763,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitUnaryOp(IUnaryOpInstruction)
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitUnaryOp(IUnaryOpInstruction)
        */
       @Override
       public void visitUnaryOp(IUnaryOpInstruction instruction) {

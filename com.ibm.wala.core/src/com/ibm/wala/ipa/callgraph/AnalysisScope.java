@@ -61,6 +61,7 @@ import com.ibm.wala.util.strings.ImmutableByteArray;
  * 
  * Each class loader will load a set of classes described by a {@link Module}.
  */
+@SuppressWarnings("unused")
 public class AnalysisScope {
 
   private final static int DEBUG_LEVEL = 0;

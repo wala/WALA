@@ -18,6 +18,7 @@ public class SourceViewer extends JPanel{
   private DefaultListModel sourceCodeLinesList = new DefaultListModel();
   private JList sourceCodeLines;
 
+  @SuppressWarnings("unchecked")
   public SourceViewer() {
     super(new BorderLayout());
     sourceURL = null;
@@ -45,6 +46,7 @@ public class SourceViewer extends JPanel{
     }
   }
   
+  @SuppressWarnings("unchecked")
   private boolean loadSource(URL url) {
     if (url == null) {
       if (sourceURL != null) {

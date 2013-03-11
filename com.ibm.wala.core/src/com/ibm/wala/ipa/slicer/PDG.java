@@ -73,6 +73,7 @@ import com.ibm.wala.util.intset.OrdinalSet;
 /**
  * Program dependence graph for a single call graph node
  */
+@SuppressWarnings("deprecation")
 public class PDG implements NumberedGraph<Statement> {
 
 /** BEGIN Custom change: control deps */                

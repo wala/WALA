@@ -246,6 +246,7 @@ public class BypassSyntheticClass extends SyntheticClass {
     return null;
   }
 
+  @Override
   public Collection<Annotation> getAnnotations() {
     return Collections.emptySet();
   }

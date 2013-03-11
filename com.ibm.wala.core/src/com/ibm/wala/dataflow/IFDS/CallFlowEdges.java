@@ -22,6 +22,7 @@ import com.ibm.wala.util.intset.SparseIntSet;
 /**
  * A set of call flow edges which lead to a particular procedure entry s_p.
  */
+@SuppressWarnings("unused")
 public class CallFlowEdges {
 
   /**

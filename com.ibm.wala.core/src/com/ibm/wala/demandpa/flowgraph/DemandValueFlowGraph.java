@@ -54,7 +54,6 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
-import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
@@ -146,14 +145,14 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
     /**
      * Def-use information
      */
-    protected final DefUse du;
+    //protected final DefUse du;
 
     public AllValsStatementVisitor(CGNode node) {
       this.node = node;
       this.ir = node.getIR();
       this.symbolTable = ir.getSymbolTable();
       assert symbolTable != null;
-      this.du = node.getDU();
+      //this.du = node.getDU();
     }
 
     /*

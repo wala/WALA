@@ -50,6 +50,7 @@ import com.ibm.wala.util.intset.SparseIntSet;
 /**
  * A call graph which explicitly holds the target for each call site in each node.
  */
+@SuppressWarnings("deprecation")
 public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstants {
 
   protected final IClassHierarchy cha;

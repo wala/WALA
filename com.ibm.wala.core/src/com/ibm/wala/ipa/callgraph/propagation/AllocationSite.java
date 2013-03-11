@@ -29,6 +29,7 @@ import com.ibm.wala.util.functions.Function;
  * {@link AllocationSiteInNode}, which represents an allocation in a {@link CGNode} that may carry some {@link Context}. This type
  * is useful for a context-<em>insensitive</em> heap abstraction.
  */
+@SuppressWarnings("deprecation")
 public class AllocationSite implements InstanceKey {
   private final NewSiteReference site;
 

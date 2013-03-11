@@ -52,6 +52,7 @@ import com.ibm.wala.util.intset.IntSet;
 /**
  * A dataflow graph implementation specialized for propagation-based pointer analysis
  */
+@SuppressWarnings("deprecation")
 public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> {
 
   private final static boolean DEBUG = false;
@@ -194,7 +195,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       delegateGraph.addEdge(eq, lhs);
     }
     for (int i = 0; i < eq.getRHS().length; i++) {
-      PointsToSetVariable v = (PointsToSetVariable) eq.getRHS()[i];
+      PointsToSetVariable v = eq.getRHS()[i];
       if (v != null) {
         delegateGraph.addVariable(v);
         delegateGraph.addEdge(v, eq);

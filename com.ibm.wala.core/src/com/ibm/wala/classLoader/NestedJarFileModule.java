@@ -84,6 +84,7 @@ public class NestedJarFileModule implements Module {
           cache.put(name, bb);
         }
       }
+      stream.close();
     } catch (IOException e) {
       // just go with what we have
       Warnings.add(new Warning() {

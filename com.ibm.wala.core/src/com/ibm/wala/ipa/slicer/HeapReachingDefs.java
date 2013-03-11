@@ -65,6 +65,7 @@ import com.ibm.wala.util.intset.SparseIntSet;
 /**
  * Computation of reaching definitions for heap locations, relying on pointer analysis
  */
+@SuppressWarnings("deprecation")
 public class HeapReachingDefs {
 
   private static final boolean DEBUG = false;
@@ -91,6 +92,7 @@ public class HeapReachingDefs {
    * @throws IllegalArgumentException if pa is null
    * @throws IllegalArgumentException if statements is null
    */
+  @SuppressWarnings("unused")
   public Map<Statement, OrdinalSet<Statement>> computeReachingDefs(CGNode node, IR ir, PointerAnalysis pa,
       Map<CGNode, OrdinalSet<PointerKey>> mod, Collection<Statement> statements, HeapExclusions exclusions, CallGraph cg) {
 

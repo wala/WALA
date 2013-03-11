@@ -25,6 +25,7 @@ import com.ibm.wala.util.intset.IntSet;
  * 
  * In this view, a return is treated like a call, and vice-versa. All normal edges are reversed.
  */
+@SuppressWarnings("deprecation")
 public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
 
   /**
@@ -89,6 +90,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
    * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getCalledNodes(java.lang.Object)
    */
+  @SuppressWarnings("unused")
   public Iterator<T> getCalledNodes(T ret) {
     if (DEBUG_LEVEL > 1) {
       System.err.println(getClass() + " getCalledNodes " + ret);

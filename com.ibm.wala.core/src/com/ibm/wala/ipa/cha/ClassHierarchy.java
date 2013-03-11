@@ -682,6 +682,7 @@ public class ClassHierarchy implements IClassHierarchy {
       this.klass = klass;
     }
 
+    @SuppressWarnings("unused")
     boolean isInterface() {
       return klass.isInterface();
     }
@@ -733,9 +734,6 @@ public class ClassHierarchy implements IClassHierarchy {
   public IClass getLeastCommonSuperclass(IClass a, IClass b) {
     assert (a.getClassLoader().getLanguage().equals(b.getClassLoader().getLanguage()));
     Language lang = a.getClassLoader().getLanguage();
-    if (a == null) {
-      throw new IllegalArgumentException("A is null");
-    }
     TypeReference tempA = a.getReference();
     if (a.equals(b)) {
       return a;
