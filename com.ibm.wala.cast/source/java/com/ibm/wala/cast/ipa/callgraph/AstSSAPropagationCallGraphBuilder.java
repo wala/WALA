@@ -595,6 +595,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
        * {@link AstConstraintVisitor#handleRootLexicalReference(String, String, CGNode)}
        * .
        */
+      @SuppressWarnings("unused")
       private void doLexicalPointerKeys(boolean funargsOnly) {
         LexicalScopingResolver r = (LexicalScopingResolver) node.getContext().get(LexicalScopingResolverContexts.RESOLVER);
         for (int i = 0; i < accesses.length; i++) {

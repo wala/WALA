@@ -30,6 +30,7 @@ import com.ibm.wala.util.warnings.Warning;
  * basic abstract class loader implementation
  *
  */
+@SuppressWarnings("deprecation")
 public abstract class CAstAbstractLoader implements IClassLoader {
 
   /**

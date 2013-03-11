@@ -39,6 +39,7 @@ import com.ibm.wala.util.intset.OrdinalSet;
  * as necessary to handle interprocedural lexical scoping (specifically, to
  * handle closure creation when a function escapes its allocating scope)
  */
+@SuppressWarnings("deprecation")
 abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
 
   /**
