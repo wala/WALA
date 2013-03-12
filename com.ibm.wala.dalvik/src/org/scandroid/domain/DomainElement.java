@@ -40,6 +40,7 @@ package org.scandroid.domain;
 
 import org.scandroid.flow.types.FlowType;
 
+@SuppressWarnings("rawtypes")
 public class DomainElement {
 	// the code element in question
 	// alternate framing: the /current/ fact about the element

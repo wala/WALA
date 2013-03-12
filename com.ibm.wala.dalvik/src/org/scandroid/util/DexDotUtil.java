@@ -210,7 +210,7 @@ public class DexDotUtil extends DotUtil {
         result.append(fontnameStr);
         result.append("]; \n");
 
-        Collection dotNodes = computeDotNodes(g);
+        Collection<T> dotNodes = computeDotNodes(g);
 
         outputNodes(labels, result, dotNodes);
 
@@ -230,8 +230,8 @@ public class DexDotUtil extends DotUtil {
         return result;
       }
 
-      private static void outputNodes(NodeDecorator labels, StringBuffer result, Collection dotNodes) throws WalaException {
-        for (Iterator it = dotNodes.iterator(); it.hasNext();) {
+      private static <T> void outputNodes(NodeDecorator labels, StringBuffer result, Collection<T> dotNodes) throws WalaException {
+        for (Iterator<T> it = dotNodes.iterator(); it.hasNext();) {
           outputNode(labels, result, it.next());
         }
       }

@@ -252,7 +252,7 @@ public class DexFakeRootMethod extends AbstractRootMethod {
 	 * @return true iff block is a basic block in the fake root method
 	 * @throws IllegalArgumentException if block is null
 	 */
-	public static boolean isFromFakeRoot(IBasicBlock block) {
+	public static boolean isFromFakeRoot(IBasicBlock<?> block) {
 		if (block == null) {
 			throw new IllegalArgumentException("block is null");
 		}

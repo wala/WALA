@@ -73,6 +73,7 @@ public class LocalSinkPoint implements ISinkPoint {
 		this.sinkFlow = sinkFlow;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public Set<FlowType<IExplodedBasicBlock>> findSources(CGAnalysisContext<IExplodedBasicBlock> ctx,
 			TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, DomainElement> flowResult,

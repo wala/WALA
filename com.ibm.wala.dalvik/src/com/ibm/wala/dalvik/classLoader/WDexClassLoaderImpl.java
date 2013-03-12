@@ -71,7 +71,7 @@ import com.ibm.wala.util.warnings.Warnings;
 public class WDexClassLoaderImpl extends ClassLoaderImpl {
 	private static final Logger logger = LoggerFactory.getLogger(WDexClassLoaderImpl.class);
 	
-    private SetOfClasses lExclusions;
+//    private SetOfClasses lExclusions;
     private IClassLoader lParent;
 
     
@@ -90,7 +90,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
             SetOfClasses exclusions, IClassHierarchy cha) {
         super(loader, cha.getScope().getArrayClassLoader(), parent, exclusions, cha);
         lParent = parent;
-        lExclusions = exclusions;
+//        lExclusions = exclusions;
         //DEBUG_LEVEL = 0;
     }
     

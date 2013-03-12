@@ -73,6 +73,7 @@ import com.ibm.wala.util.debug.UnimplementedError;
  * <p>
  * In this implementation, each dataflow variable value is an integer, and the "meeter" object provides the meets
  */
+@SuppressWarnings("rawtypes")
 public abstract class AbstractIntRegisterMachine implements FixedPointConstants {
 	private static final Logger logger = LoggerFactory.getLogger(AbstractIntRegisterMachine.class);
 
@@ -587,7 +588,8 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
      * @return the height of stacks that are being meeted. Return -1 if there is no stack meet necessary.
      * @param operands The operands for this operator. operands[0] is the left-hand side.
      */
-    private static int computeMeetStackHeight(IVariable[] operands) {
+    @SuppressWarnings("unused")
+	private static int computeMeetStackHeight(IVariable[] operands) {
         MachineState lhs = (MachineState) operands[0];
         int height = -1;
         if (lhs.stack != null) {

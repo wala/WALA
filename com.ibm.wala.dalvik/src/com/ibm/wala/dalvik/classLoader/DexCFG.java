@@ -162,7 +162,8 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock>{
         boolean[] r = new boolean[getInstructions().length];
         boolean[] catchers = new boolean[getInstructions().length];
         // we initially start with both the entry and exit block.
-        int blockCount = 2;
+        @SuppressWarnings("unused")
+		int blockCount = 2;
 
         // Compute r so r[i] == true iff instruction i begins a basic block.
         // While doing so count the number of blocks.
@@ -663,8 +664,8 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock>{
     @Override
     public String toString() {
         StringBuffer s = new StringBuffer("");
-        for (Iterator it = iterator(); it.hasNext();) {
-            BasicBlock bb = (BasicBlock) it.next();
+        for (Iterator<BasicBlock> it = iterator(); it.hasNext();) {
+            BasicBlock bb = it.next();
             s.append("BB").append(getNumber(bb)).append("\n");
             for (int j = bb.getFirstInstructionIndex(); j <= bb.getLastInstructionIndex(); j++) {
                 s.append("  ").append(j).append("  ").append(getInstructions()[j]).append("\n");

@@ -133,7 +133,7 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
             {
                 if(k instanceof ConstantKey)
                 {
-                    node = new ConstantString(pa.getInstanceKeyMapping().getMappedIndex(k), (String)((ConstantKey)k).getValue());
+                    node = new ConstantString(pa.getInstanceKeyMapping().getMappedIndex(k), (String)((ConstantKey<?>)k).getValue());
                     addNode(node);
 //                	logger.debug(node);
                     nodeMap.put(k, node);

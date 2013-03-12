@@ -149,7 +149,8 @@ public class EntryPoints {
         }
     }
     
-    private void systemEntry(ClassHierarchy cha, AndroidAnalysisContext loader) {
+    @SuppressWarnings("unused")
+	private void systemEntry(ClassHierarchy cha, AndroidAnalysisContext loader) {
         String[] systemEntyPoints = { 
 //              "android.app.ActivityThread.main([Ljava/lang/String;)V"
 //              , "com.android.server.ServerThread.run()V"
@@ -279,7 +280,8 @@ public class EntryPoints {
         }
     }
 
-    private static String getTagValue(String sTag, Element eElement) {
+    @SuppressWarnings("unused")
+	private static String getTagValue(String sTag, Element eElement) {
         NodeList nlList = eElement.getElementsByTagName(sTag).item(0).getChildNodes();
 
         Node nValue = (Node) nlList.item(0);
@@ -322,7 +324,8 @@ public class EntryPoints {
         }
     }
 
-    private void populateEntryPoints(ClassHierarchy cha) {
+    @SuppressWarnings("unused")
+	private void populateEntryPoints(ClassHierarchy cha) {
         String method = null;
         IMethod im = null;
         for (String[] intent: ActivityIntentList) {
@@ -349,7 +352,8 @@ public class EntryPoints {
         //entries.add(new DefaultEntrypoint(im, cha));
     }
 
-    private String IntentToMethod(String intent) {
+    @SuppressWarnings("unused")
+	private String IntentToMethod(String intent) {
         if (intent.contentEquals("android.intent.action.MAIN") ||
                 intent.contentEquals("android.media.action.IMAGE_CAPTURE") ||
                 intent.contentEquals("android.media.action.VIDEO_CAPTURE") ||
@@ -380,7 +384,8 @@ public class EntryPoints {
         }
     }
 
-    private void outputIntentList() {
+    @SuppressWarnings("unused")
+	private void outputIntentList() {
         if (ActivityIntentList != null)
         for (int i = 0; i < ActivityIntentList.size(); i++)
             logger.debug("Activity Intent: " + ActivityIntentList.get(i)[0] + " ~> " + ActivityIntentList.get(i)[1]);

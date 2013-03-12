@@ -81,8 +81,8 @@ public class DexFileModule implements Module {
         // create ModuleEntries from ClassDefItem
         entries = new HashSet<ModuleEntry>();
 
-        Section<ClassDefItem> cldeff = dexfile
-                .getSectionForType(TYPE_CLASS_DEF_ITEM);
+        @SuppressWarnings("unchecked")
+		Section<ClassDefItem> cldeff = dexfile.getSectionForType(TYPE_CLASS_DEF_ITEM);
 
         for (ClassDefItem cdefitems : cldeff.getItems()) {
             logger.debug("DexFileModule adding class: " + cdefitems.getConciseIdentity());

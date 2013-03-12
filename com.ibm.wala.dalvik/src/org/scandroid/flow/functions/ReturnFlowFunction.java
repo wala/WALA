@@ -48,7 +48,6 @@ import org.scandroid.domain.ReturnElement;
 import com.ibm.wala.dataflow.IFDS.IUnaryFlowFunction;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
 
 /**

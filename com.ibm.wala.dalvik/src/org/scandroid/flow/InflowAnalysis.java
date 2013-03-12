@@ -80,11 +80,12 @@ import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 
-
+@SuppressWarnings("rawtypes")
 public class InflowAnalysis <E extends ISSABasicBlock> {
 	private static final Logger logger = LoggerFactory.getLogger(InflowAnalysis.class);
 
-    public static <E extends ISSABasicBlock>
+    @SuppressWarnings("unchecked")
+	public static <E extends ISSABasicBlock>
     void addDomainElements(
             Map<BasicBlockInContext<E>, Map<FlowType<E>,Set<CodeElement>>> taintMap, 
             BasicBlockInContext<E> block, 
@@ -261,7 +262,7 @@ public class InflowAnalysis <E extends ISSABasicBlock> {
                 for(CodeElement o:e2.getValue())
                 {
                     if (e2.getKey() instanceof IKFlow) {
-                    	InstanceKey e2IK = ((IKFlow)e2.getKey()).getIK();
+                    	InstanceKey e2IK = ((IKFlow<?>)e2.getKey()).getIK();
                     	if (prefixes.containsKey(e2IK))
                     			logger.debug("Uri Prefix: " + prefixes.get(e2IK));                    	
                     }

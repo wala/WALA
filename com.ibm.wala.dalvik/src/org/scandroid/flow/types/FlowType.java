@@ -117,7 +117,8 @@ public abstract class FlowType<E extends ISSABasicBlock> {
      * @param b
      * @return
      */
-    private boolean compareBlocks(BasicBlockInContext<E> a,
+    @SuppressWarnings("unused")
+	private boolean compareBlocks(BasicBlockInContext<E> a,
             BasicBlockInContext<E> b) {
         // delegate to the defined implementation, but only if it's true.
         if (a.equals(b)) {

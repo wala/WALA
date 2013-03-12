@@ -130,6 +130,7 @@ public class OutflowAnalysis {
 		logger.debug("added edge from {} to {}", source, dest);
 	}
 
+	@SuppressWarnings({ "unused", "unchecked" })
 	private void processArgSinks(
 			TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, DomainElement> flowResult,
 			IFDSTaintDomain<IExplodedBasicBlock> domain,
@@ -234,6 +235,7 @@ public class OutflowAnalysis {
 		}
 	}
 
+	@SuppressWarnings({ "unused", "unchecked" })
 	private void processEntryArgs(
 			TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, DomainElement> flowResult,
 			IFDSTaintDomain<IExplodedBasicBlock> domain,
@@ -324,6 +326,7 @@ public class OutflowAnalysis {
 		}
 	}
 
+	@SuppressWarnings({ "unused", "unchecked" })
 	private void processEntryRets(
 			TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, DomainElement> flowResult,
 			IFDSTaintDomain<IExplodedBasicBlock> domain,

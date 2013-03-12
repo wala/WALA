@@ -128,8 +128,8 @@ public class PrefixTransferGraph implements Graph<InstanceKeySite> {
             {
                 if(k instanceof ConstantKey)
                 {
-                    logger.debug("ConstantKey: "+((ConstantKey)k).getValue());
-                    node = new ConstantString(pa.getInstanceKeyMapping().getMappedIndex(k), (String)((ConstantKey)k).getValue());
+                    logger.debug("ConstantKey: "+((ConstantKey<?>)k).getValue());
+                    node = new ConstantString(pa.getInstanceKeyMapping().getMappedIndex(k), (String)((ConstantKey<?>)k).getValue());
                     addNode(node);
                     nodeMap.put(k, node);
                 }

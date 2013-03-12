@@ -123,6 +123,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 		this(analysisContext, specifier, new ArrayList<InputStream>());
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public CGAnalysisContext(AndroidAnalysisContext analysisContext,
 			IEntryPointSpecifier specifier,
 			Collection<InputStream> extraSummaries) throws IOException {

@@ -62,7 +62,8 @@ public class WalaGraphToJGraphT {
 	private DirectedGraph<CGNode, DefaultEdge> jgrapht;
     private DijkstraShortestPath<CGNode, DefaultEdge> shortestpath;
     
-    public <E extends ISSABasicBlock>
+    @SuppressWarnings("rawtypes")
+	public <E extends ISSABasicBlock>
     WalaGraphToJGraphT(TabulationResult<BasicBlockInContext<E>, CGNode, DomainElement> flowResult,
             IFDSTaintDomain<E> domain,
             FlowType source, ISupergraph<BasicBlockInContext<E>, CGNode> graph, CallGraph cg) {

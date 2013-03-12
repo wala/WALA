@@ -48,8 +48,6 @@ import org.scandroid.flow.types.FlowType;
 import org.scandroid.flow.types.StaticFieldFlow;
 import org.scandroid.spec.StaticFieldSinkSpec;
 import org.scandroid.util.CGAnalysisContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Sets;
 import com.ibm.wala.classLoader.IField;
@@ -63,8 +61,8 @@ import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
  * 
  */
 public class StaticFieldSinkPoint implements ISinkPoint {
-	private static final Logger logger = LoggerFactory
-			.getLogger(StaticFieldSinkPoint.class);
+//	private static final Logger logger = LoggerFactory
+//			.getLogger(StaticFieldSinkPoint.class);
 
 	private final IField field;
 	private final FlowType<IExplodedBasicBlock> flow;
@@ -84,6 +82,7 @@ public class StaticFieldSinkPoint implements ISinkPoint {
 	 * CGAnalysisContext, com.ibm.wala.dataflow.IFDS.TabulationResult,
 	 * org.scandroid.domain.IFDSTaintDomain)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Set<FlowType<IExplodedBasicBlock>> findSources(
 			CGAnalysisContext<IExplodedBasicBlock> ctx,
@@ -95,7 +94,6 @@ public class StaticFieldSinkPoint implements ISinkPoint {
 				.getPossibleElements(new StaticFieldElement(field
 						.getReference()))) {
 			if (de.taintSource instanceof StaticFieldFlow<?>) {
-				@SuppressWarnings("unchecked")
 				StaticFieldFlow<IExplodedBasicBlock> source = (StaticFieldFlow<IExplodedBasicBlock>) de.taintSource;
 				if (source.getField().equals(field)) {
 					continue;

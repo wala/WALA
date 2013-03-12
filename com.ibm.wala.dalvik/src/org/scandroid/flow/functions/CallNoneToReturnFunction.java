@@ -73,6 +73,7 @@ public final class CallNoneToReturnFunction <E extends ISSABasicBlock> implement
 	    // this effectively taints everything in the heap that we've seen before.
 		DomainElement de = domain.getMappedObject(d);
 		
+		@SuppressWarnings("unchecked")
 		FlowType<E> taint = de.taintSource;
 		
 		for (CodeElement ce : domain.codeElements() ){

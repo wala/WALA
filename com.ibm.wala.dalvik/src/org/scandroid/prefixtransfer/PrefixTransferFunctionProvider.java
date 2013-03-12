@@ -40,7 +40,6 @@ package org.scandroid.prefixtransfer;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.dataflow.graph.ITransferFunctionProvider;
 import com.ibm.wala.fixpoint.UnaryOperator;
-import com.ibm.wala.fixpoint.IVariable;
 
 
 public class PrefixTransferFunctionProvider implements ITransferFunctionProvider<InstanceKeySite, PrefixVariable> {
@@ -50,7 +49,6 @@ public class PrefixTransferFunctionProvider implements ITransferFunctionProvider
 
     public UnaryOperator<PrefixVariable> getEdgeTransferFunction(
             InstanceKeySite src, InstanceKeySite dst) {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -67,14 +65,12 @@ public class PrefixTransferFunctionProvider implements ITransferFunctionProvider
             public byte evaluate(PrefixVariable lhs, PrefixVariable[] rhs) {
 //              System.out.println("Evaluating meet");
                 boolean changed = false;
-                for(IVariable iv:rhs)
-                {
-                    PrefixVariable rhsTPV = (PrefixVariable)iv;
+                
+                for (final PrefixVariable rhsTPV : rhs) {
                     changed = lhs.updateAll(rhsTPV) || changed;
                 }
-                if(changed)
-                    return 1;
-                return 0;
+                
+                return (changed ? (byte) 1 : (byte) 0);
             }
 
             @Override

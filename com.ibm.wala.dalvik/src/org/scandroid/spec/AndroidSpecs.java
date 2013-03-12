@@ -43,10 +43,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.scandroid.model.AppModelMethod;
 import org.scandroid.util.LoaderUtils;
-
-
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -54,7 +51,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 
 public class AndroidSpecs implements ISpecs {
-	private AppModelMethod appEntrySummary;
+//	private AppModelMethod appEntrySummary;
 	
 	static String act = "Landroid/app/Activity";
 	static String svc = "Landroid/app/Service";
@@ -146,9 +143,9 @@ public class AndroidSpecs implements ISpecs {
 	static MethodNamePattern httpExecute =
 			new MethodNamePattern(http, "execute");
 
-	private static MethodNamePattern[] callbackModelEntry = {
-		new MethodNamePattern("Lcom/SCanDroid/AppModel", "entry")
-	};
+//	private static MethodNamePattern[] callbackModelEntry = {
+//		new MethodNamePattern("Lcom/SCanDroid/AppModel", "entry")
+//	};
 	
 	static MethodNamePattern llLocChanged =
 	        new MethodNamePattern(ll, "onLocationChanged");

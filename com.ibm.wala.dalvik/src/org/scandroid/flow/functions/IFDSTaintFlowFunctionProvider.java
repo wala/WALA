@@ -280,7 +280,6 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 				UseDefSetPair p, IClassHierarchy ch) {
 			SSAPutInstruction pi = (SSAPutInstruction)instruction;
 			PointerKey pk;
-			boolean isStatic;
 			Set<CodeElement> elements = Sets.newHashSet();
 			if (pi.isStatic()) {
 			    p.uses.addAll(CodeElement.valueElements(pa, bb.getNode(), instruction.getUse(0)));
@@ -291,7 +290,6 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 			    } else {
 			    	pk = new StaticFieldKey(staticField);
 			    }
-			    isStatic = true;
 			} else {
 			    p.uses.addAll(
 			    		CodeElement.valueElements(pa, bb.getNode(), instruction.getUse(1)));
@@ -302,7 +300,6 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 				
 				//MyLogger.log(LogLevel.DEBUG, " instruction: "+instruction);
 				
-				isStatic = false;
 				// add the object that holds the field that was modified
 				// to the list of things tainted by this flow:
 				p.defs.addAll(CodeElement.valueElements(pa, bb.getNode(), valueNumber));
@@ -332,21 +329,19 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 			SSAGetInstruction gi = (SSAGetInstruction)instruction;
 			
 			PointerKey pk;
-			boolean isStatic;
 			FieldReference declaredField = gi.getDeclaredField();
 			if ( gi.isStatic()) {
 			    IField staticField =
 			            getStaticIField(ch, declaredField);
 			    
-			    if (staticField == null)
+			    if (staticField == null) {
 			    	pk = null;
-			    else
+			    } else {
 			    	pk = new StaticFieldKey(staticField);
-			    isStatic = true;
+			    }
 			} else {
 			    int valueNumber = instruction.getUse(0);
 			    pk = new LocalPointerKey(bb.getNode(), valueNumber);
-			    isStatic = false;
 			}
 			
 			if (pk!=null) {
@@ -407,6 +402,7 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 			}
 		}	
 
+		@SuppressWarnings("unchecked")
 		public IntSet getTargets(int d1) {
 			//System.out.println(this.toString()+".getTargets("+d1+") "+bb);
 			//BitVectorIntSet set = new BitVectorIntSet();
@@ -428,7 +424,7 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 
 		final SSAInvokeInstruction instruction = (SSAInvokeInstruction) src.getLastInstruction();
 		
-		String signature = dest.getMethod().getSignature();
+//		String signature = dest.getMethod().getSignature();
 //		if ( dest.getMethod().isSynthetic() ) { 
 //			System.out.println("Synthetic: "+signature);
 //		} else {
@@ -482,7 +478,7 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 		// TODO: Look up summary for this method, or warn if it doesn't exist.
 		assert (src.getNode().equals(dest.getNode()));
 		
-		final SSAInvokeInstruction instruction = (SSAInvokeInstruction) src.getLastInstruction();
+//		final SSAInvokeInstruction instruction = (SSAInvokeInstruction) src.getLastInstruction();
 
 //		System.out.println("call to return(no callee) method inside call graph: " + src.getNode()+"--" + instruction.getDeclaredTarget());
 		// System.out.println("call to system: " + instruction.getDeclaredTarget());

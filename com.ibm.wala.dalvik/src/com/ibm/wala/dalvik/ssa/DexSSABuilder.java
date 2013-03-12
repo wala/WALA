@@ -60,7 +60,6 @@ import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IGetInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
-import com.ibm.wala.shrikeBT.IndirectionData;
 import com.ibm.wala.shrikeBT.InstanceofInstruction;
 import com.ibm.wala.shrikeBT.MonitorInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
@@ -134,7 +133,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
     /**
      * information about indirect use of local variables in the bytecode
      */
-    private final IndirectionData bytecodeIndirections;
+//    private final IndirectionData bytecodeIndirections;
 
     private final ShrikeIndirectionData shrikeIndirections;
 
@@ -147,7 +146,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         this.method = method;
         this.symbolTable = symbolTable;
         this.insts = method.getDeclaringClass().getClassLoader().getInstructionFactory();
-        this.bytecodeIndirections = method.getIndirectionData();
+//        this.bytecodeIndirections = method.getIndirectionData();
         this.shrikeIndirections = new ShrikeIndirectionData(instructions.length);
         assert cfg != null : "Null CFG";
     }
@@ -156,7 +155,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
         final SSACFG cfg;
 
-        final SSAInstruction[] instructions;
+//        final SSAInstruction[] instructions;
 
         final SymbolTable symbolTable;
 
@@ -164,7 +163,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
         SymbolTableMeeter(SymbolTable symbolTable, SSACFG cfg, SSAInstruction[] instructions, DexCFG dexCFG) {
             this.cfg = cfg;
-            this.instructions = instructions;
+//            this.instructions = instructions;
             this.symbolTable = symbolTable;
             this.dexCFG = dexCFG;
         }
@@ -372,7 +371,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
          */
         private SSAInstruction[] creators;
 
-        final SSA2LocalMap localMap;
+//        final SSA2LocalMap localMap;
 
         final SSAPiNodePolicy piNodePolicy;
 
@@ -386,7 +385,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             this.instructions = instructions;
             this.symbolTable = symbolTable;
             this.loader = dexCFG.getMethod().getDeclaringClass().getClassLoader().getReference();
-            this.localMap = localMap;
+//            this.localMap = localMap;
             init(this.new NodeVisitor(), this.new EdgeVisitor());
         }
 
@@ -1105,7 +1104,8 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
             private Dominators<ISSABasicBlock> dom = null;
 
-            private int findRethrowException() {
+            @SuppressWarnings("unused")
+			private int findRethrowException() {
                 int index = getCurrentInstructionIndex();
                 SSACFG.BasicBlock bb = cfg.getBlockForInstruction(index);
                 if (bb.isCatchBlock()) {
@@ -1431,7 +1431,8 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
          * Record the beginning of a new range, starting at the given program counter, in which a particular value number corresponds to
          * a particular local number
          */
-        void startRange(int pc, int localNumber, int valueNumber) {
+        @SuppressWarnings("unused")
+		void startRange(int pc, int localNumber, int valueNumber) {
             int max = ((DexIMethod)dexCFG.getMethod()).getMaxLocals();
             if (localNumber >= max) {
                 assert false : "invalid local " + localNumber + ">" + max;
@@ -1444,8 +1445,8 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
          * Finish populating the map of local variable information
          */
         private void finishLocalMap(DexSSABuilder builder) {
-            for (Iterator it = dexCFG.iterator(); it.hasNext();) {
-                BasicBlock bb = (BasicBlock) it.next();
+            for (Iterator<BasicBlock> it = dexCFG.iterator(); it.hasNext();) {
+                BasicBlock bb = it.next();
                 MachineState S = builder.getIn(bb);
                 int number = bb.getNumber();
                 block2LocalState[number] = S.getLocals();
