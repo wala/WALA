@@ -6,6 +6,6 @@ This fork includes some additional features:
 - null-pointer detection that removes spurious CFG edges.
 - it includes the code for a dalivk bytecode frontend copied and integrated from <a href="https://github.com/SCanDroid/SCanDroid">github.com/SCanDroid/SCanDroid</a>.
 - configuration/property files are loaded from current directory, with an automatic fallback to load from .jar.
-- SDG implemlementation that has different edge types for control and data dependencies.
+- SDG implementation that has different edge types for control and data dependencies.
 - every SSAInstrution knows its index.
 - many other minor changes.
