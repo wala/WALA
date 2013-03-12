@@ -39,12 +39,10 @@
 package org.scandroid.spec;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.scandroid.domain.CodeElement;
-import org.scandroid.domain.InstanceKeyElement;
 import org.scandroid.flow.InflowAnalysis;
 import org.scandroid.flow.types.FlowType;
 import org.scandroid.flow.types.ParameterFlow;
@@ -52,7 +50,6 @@ import org.scandroid.util.CGAnalysisContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Lists;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
