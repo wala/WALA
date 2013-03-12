@@ -38,6 +38,7 @@ import com.ibm.wala.viz.PDFViewUtil;
  * 
  * @author sfink
  */
+@SuppressWarnings("deprecation")
 public class ViewIFDSLocalAction<T, P, F> extends Action {
   /**
    * Governing tree viewer
@@ -112,6 +113,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
     public String getLabel(Object o) throws WalaException {
       T t = (T) o;
       if (t instanceof BasicBlockInContext) {
+        @SuppressWarnings("rawtypes")
         BasicBlockInContext bb = (BasicBlockInContext) t;
         if (bb.getDelegate() instanceof IExplodedBasicBlock) {
           IExplodedBasicBlock delegate = (IExplodedBasicBlock) bb.getDelegate();

@@ -237,6 +237,7 @@ public abstract class EclipseProjectPath<E, P> {
     bundlesProcessed.add(bd.getName());
 
     // handle the classpath entries for bd
+    @SuppressWarnings("rawtypes")
     ArrayList l = new ArrayList();
     ClasspathUtilCore.addLibraries(findModel(bd), l);
     resolveClasspathEntries(project, l, loader, includeSource, false);
@@ -282,6 +283,7 @@ public abstract class EclipseProjectPath<E, P> {
     return true;
   }
 
+  @SuppressWarnings({ "rawtypes", "unchecked" })
   protected void resolveClasspathEntries(P project, List l, ILoader loader, boolean includeSource, boolean entriesFromTopLevelProject) {
     for (int i = 0; i < l.size(); i++) {
       resolveClasspathEntry(project, resolve((E)l.get(i)), loader, includeSource, entriesFromTopLevelProject);
