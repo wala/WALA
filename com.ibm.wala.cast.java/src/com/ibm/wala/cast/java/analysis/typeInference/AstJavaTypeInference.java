@@ -33,7 +33,7 @@ import com.ibm.wala.util.debug.Assertions;
 
 public class AstJavaTypeInference extends AstTypeInference {
 
-  protected final IClass stringClass;
+  protected IClass stringClass;
 
   protected class AstJavaTypeOperatorFactory extends AstTypeOperatorFactory implements AstJavaInstructionVisitor {
     public void visitBinaryOp(SSABinaryOpInstruction instruction) {
@@ -96,7 +96,13 @@ public class AstJavaTypeInference extends AstTypeInference {
 
   public AstJavaTypeInference(IR ir, IClassHierarchy cha, boolean doPrimitives) {
     super(ir, cha, JavaPrimitiveType.BOOLEAN, doPrimitives);
-    this.stringClass = cha.lookupClass(TypeReference.JavaLangString);
+  }
+
+  IClass getStringClass() {
+    if (stringClass == null) {
+      this.stringClass = cha.lookupClass(TypeReference.JavaLangString);
+    }
+    return stringClass;
   }
 
   protected void initialize() {
@@ -125,12 +131,12 @@ public class AstJavaTypeInference extends AstTypeInference {
           TypeVariable r = (TypeVariable) rhs[i];
           TypeAbstraction ta = r.getType();
           if (ta instanceof PointType) {
-            if (ta.getType().equals(stringClass)) {
+            if (ta.getType().equals(getStringClass())) {
               meet = new PointType(ta.getType());
               break;
             }
           } else if (ta instanceof ConeType) {
-            if (ta.getType().equals(stringClass)) {
+            if (ta.getType().equals(getStringClass())) {
               meet = new PointType(ta.getType());
               break;
             }
