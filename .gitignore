@@ -11,4 +11,4 @@ com.ibm.wala.core.testdata/lib/
 com.ibm.wala.core/dat/wala.properties
 com.ibm.wala.core.tests/dat/wala.examples.properties
 com.ibm.wala.cast.js.html.nu_validator/lib/
-com.ibm.wala.cast.java.test/testdata/
+com.ibm.wala.ide.jdt.test/testdata/
