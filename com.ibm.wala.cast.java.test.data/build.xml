@@ -49,11 +49,11 @@
   <target name="getSources" depends="fetchJLex" />
 
   <target name="testdatadir" depends="init,testdata.exists" unless="testdatadir.present">
-    <mkdir dir="${basedir}/../com.ibm.wala.cast.java.test/testdata"/>
+    <mkdir dir="${basedir}/../com.ibm.wala.ide.jdt.test/testdata"/>
   </target>
 
   <target name="testdata.exists" depends="init">
-    <available file="${basedir}/../com.ibm.wala.cast.java.test/testdata" 
+    <available file="${basedir}/../com.ibm.wala.ide.jdt.test/testdata" 
 	       type="dir" 
 	       property="testdatadir.present"/>
   </target>
@@ -65,7 +65,7 @@
   </target>
   
   <target name="jar" depends="compile,testdatadir">
-    <jar destfile="${basedir}/../com.ibm.wala.cast.java.test/testdata/test_project.zip" basedir="${basedir}"/>
+    <jar destfile="${basedir}/../com.ibm.wala.ide.jdt.test/testdata/test_project.zip" basedir="${basedir}"/>
   </target>
   
   <target name="init" depends="properties">

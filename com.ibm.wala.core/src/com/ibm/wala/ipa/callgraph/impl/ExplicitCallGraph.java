@@ -23,6 +23,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.BytecodeConstants;
 import com.ibm.wala.ssa.DefUse;
@@ -50,7 +51,7 @@ import com.ibm.wala.util.intset.SparseIntSet;
 /**
  * A call graph which explicitly holds the target for each call site in each node.
  */
-public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstants {
+public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter> implements BytecodeConstants {
 
   protected final IClassHierarchy cha;
 

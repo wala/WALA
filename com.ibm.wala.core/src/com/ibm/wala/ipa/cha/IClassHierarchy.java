@@ -52,7 +52,7 @@ public interface IClassHierarchy extends Iterable<IClass> {
    * @return the set of IMethods that this call can resolve to.
    * @throws IllegalArgumentException if ref is null
    */
-  public Collection<IMethod> getPossibleTargets(MethodReference ref);
+  public Set<IMethod> getPossibleTargets(MethodReference ref);
 
   /**
    * Find the possible targets of a call to a method reference where the receiver is of a certain type

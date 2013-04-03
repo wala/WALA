@@ -23,7 +23,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.propagation.ReceiverInstanceContext;
-import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.types.MethodReference;
@@ -42,7 +41,7 @@ import com.ibm.wala.util.graph.traverse.DFS;
 /**
  * Basic data structure support for a call graph.
  */
-public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> implements CallGraph {
+public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> implements CallGraph {
 
   private static final boolean DEBUG = false;
 
@@ -61,7 +60,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
   /**
    * An object that handles context interpreter functions
    */
-  private SSAContextInterpreter interpreter;
+  private T interpreter;
 
   /**
    * Set of nodes that are entrypoints for this analysis
@@ -81,7 +80,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
    * 
    * TODO: this is a bit redundant with the nodes Map. Restructure these data structures for space efficiency.
    */
-  final private Map<MethodReference, Set<CGNode>> mr2Nodes = HashMapFactory.make();
+  protected final Map<MethodReference, Set<CGNode>> mr2Nodes = HashMapFactory.make();
 
   public BasicCallGraph() {
     super();
@@ -303,7 +302,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
    * @param node a call graph node we want information about
    * @return an object that knows how to interpret information about the node
    */
-  protected SSAContextInterpreter getInterpreter(CGNode node) {
+  protected T getInterpreter(CGNode node) {
     if (interpreter == null) {
       throw new IllegalStateException("must register an interpreter for this call graph");
     }
@@ -344,7 +343,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
     return getNode(N.getMethod(), N.getContext()) != null;
   }
 
-  public void setInterpreter(SSAContextInterpreter interpreter) {
+  public void setInterpreter(T interpreter) {
     this.interpreter = interpreter;
   }
 
