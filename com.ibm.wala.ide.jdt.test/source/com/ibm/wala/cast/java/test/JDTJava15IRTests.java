@@ -6,6 +6,9 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.test;
 
+import java.io.File;
+import java.util.Arrays;
+
 import org.junit.Test;
 
 public class JDTJava15IRTests extends JDTJavaTest {
@@ -13,7 +16,7 @@ public class JDTJava15IRTests extends JDTJavaTest {
   public JDTJava15IRTests() {
     super(JDTJavaIRTests.PROJECT);
   }
-  
+
   @Test
   public void testAnonGeneNullarySimple() {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
@@ -119,4 +122,10 @@ public class JDTJava15IRTests extends JDTJavaTest {
     runTest(singlePkgTestSrc("javaonepointfive"), rtJar, simplePkgTestEntryPoint("javaonepointfive"), emptyList, true);
   }
 
+  @Test
+  public void testTypeInferencePrimAndStringOp() {
+    String pkgName = "javaonepointfive";
+    runTest(singlePkgTestSrc(pkgName), rtJar, simplePkgTestEntryPoint(pkgName),
+        Arrays.asList(new TypeInferenceAssertion(pkgName + File.separator + singleInputForTest())), false);
+  }
 }
