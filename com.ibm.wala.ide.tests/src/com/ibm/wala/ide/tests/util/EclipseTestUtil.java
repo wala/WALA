@@ -114,7 +114,7 @@ public class EclipseTestUtil {
     IPath path = new Path("testdata").append(filename);
 
     URL url = FileLocator.find(bundle, path, null);
-    assert url != null;
+    assert url != null : bundle.toString() + " path " + path.toString();
     try {
       URL fileURL = FileLocator.toFileURL(url);
       File file = new File(fileURL.getPath());
