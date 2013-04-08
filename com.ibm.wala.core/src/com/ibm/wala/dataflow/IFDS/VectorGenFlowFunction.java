@@ -14,17 +14,20 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
- * A function which gens a vector of outgoing dataflow facts
+ * A function which gens a vector of outgoing dataflow facts. 
  */
 public class VectorGenFlowFunction implements IReversibleFlowFunction {
 
   private final IntSet gen;
   
   /**
-   * @param gen the intset of facts which are gen'ned by this flow function
+   * @param gen
+   *          the intset of facts which are gen'ned by this flow function. gen
+   *          <em>must</em> contain 0.
    */
   private VectorGenFlowFunction(IntSet gen) {
     this.gen = gen;
+    assert gen.contains(0);
   }
 
   public IntSet getTargets(int i) {
