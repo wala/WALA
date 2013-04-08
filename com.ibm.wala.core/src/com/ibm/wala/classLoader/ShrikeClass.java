@@ -82,9 +82,10 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
         int accessFlags = cr.getFieldAccessFlags(i);
         Atom name = Atom.findOrCreateUnicodeAtom(cr.getFieldName(i));
         ImmutableByteArray b = ImmutableByteArray.make(cr.getFieldType(i));
-        Collection<Annotation> annotations = null;
-          annotations = getRuntimeInvisibleAnnotations(i);
-          annotations = annotations.isEmpty() ? null : annotations;
+        Collection<Annotation> annotations = HashSetFactory.make(); 
+        annotations.addAll(getRuntimeInvisibleAnnotations(i));
+        annotations.addAll(getRuntimeVisibleAnnotations(i));
+        annotations = annotations.isEmpty() ? null : annotations;
 
         if ((accessFlags & ClassConstants.ACC_STATIC) == 0) {
           addFieldToList(instanceList, name, b, accessFlags, annotations);
@@ -291,17 +292,24 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     return result;
   }
 
-  private RuntimeInvisibleAnnotationsReader getRuntimeInvisibleAnnotationsReader(int fieldIndex) throws InvalidClassFileException {
+  private AnnotationsReader getFieldAnnotationsReader(boolean runtimeInvisible, int fieldIndex) throws InvalidClassFileException {
     ClassReader.AttrIterator iter = new AttrIterator();
     reader.get().initFieldAttributeIterator(fieldIndex, iter);
 
     // search for the desired attribute
-    RuntimeInvisibleAnnotationsReader result = null;
+    AnnotationsReader result = null;
     try {
       for (; iter.isValid(); iter.advance()) {
-        if (iter.getName().toString().equals("RuntimeInvisibleAnnotations")) {
-          result = new RuntimeInvisibleAnnotationsReader(iter);
-          break;
+        if (runtimeInvisible) {
+          if (iter.getName().equals(RuntimeInvisibleAnnotationsReader.attrName)) {
+            result = new RuntimeInvisibleAnnotationsReader(iter);
+            break;
+          }
+        } else {
+          if (iter.getName().equals(RuntimeVisibleAnnotationsReader.attrName)) {
+            result = new RuntimeVisibleAnnotationsReader(iter);
+            break;
+          }
         }
       }
     } catch (InvalidClassFileException e) {
@@ -314,7 +322,18 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
    * read the runtime-invisible annotations from the class file
    */
   public Collection<Annotation> getRuntimeInvisibleAnnotations(int fieldIndex) throws InvalidClassFileException {
-    RuntimeInvisibleAnnotationsReader r = getRuntimeInvisibleAnnotationsReader(fieldIndex);
+    return getFieldAnnotations(fieldIndex, true);
+  }
+
+  /**
+   * read the runtime-invisible annotations from the class file
+   */
+  public Collection<Annotation> getRuntimeVisibleAnnotations(int fieldIndex) throws InvalidClassFileException {
+    return getFieldAnnotations(fieldIndex, false);
+  }
+  
+  protected Collection<Annotation> getFieldAnnotations(int fieldIndex, boolean runtimeInvisible) throws InvalidClassFileException {
+    AnnotationsReader r = getFieldAnnotationsReader(runtimeInvisible, fieldIndex);
     return Annotation.getAnnotationsFromReader(r, getClassLoader().getReference());
   }
 
