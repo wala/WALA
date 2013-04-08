@@ -252,6 +252,12 @@ public abstract class SSAInstruction {
   /**
    * We assume these instructions are canonical and managed by a governing IR object. Be careful.
    * 
+   * Depending on the caching policy (see {@link com.ibm.wala.ssa.SSACache}), the governing IR may be deleted
+   * to reclaim memory and recomputed as needed. When an IR is recomputed, it also creates fresh SSAInstruction 
+   * objects that will not equal old ones. Thus, do not  compare for identity SSAInstructions obtained from 
+   * distinct calls that retrieve cached values (e.g. distinct CGNode.getIR() calls).
+   * See <a href="https://github.com/wala/WALA/issues/6"> the github issue </a> for details.
+   * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
