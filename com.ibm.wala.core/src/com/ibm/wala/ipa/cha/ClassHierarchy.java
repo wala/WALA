@@ -389,7 +389,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * @return the set of IMethods that this call can resolve to.
    * @throws IllegalArgumentException if ref is null
    */
-  public Collection<IMethod> getPossibleTargets(MethodReference ref) {
+  public Set<IMethod> getPossibleTargets(MethodReference ref) {
     if (ref == null) {
       throw new IllegalArgumentException("ref is null");
     }

@@ -10,7 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
+import java.util.Collection;
+
 import com.ibm.wala.ipa.cha.IClassHierarchyDweller;
+import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -37,5 +40,10 @@ public interface IMember extends IClassHierarchyDweller {
    * Is this member static?
    */
   boolean isStatic();
+  
+  /**
+   * Get the annotations on this member, if any
+   */
+  Collection<Annotation> getAnnotations();
   
 }

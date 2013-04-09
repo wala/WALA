@@ -10,12 +10,12 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
+import java.lang.ref.WeakReference;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.MapUtil;
 
 /**
  * A repository for shared bit vectors as described by Heintze
@@ -32,10 +32,7 @@ public class BitVectorRepository {
 
   private final static int SUBSET_DELTA = 5;
 
-  /**
-   * A Mapping from Integer -> WeakHashMap
-   */
-  final private static Map<Object, WeakHashMap<BitVectorIntSet,Object>> buckets = HashMapFactory.make();
+  final private static Map<Integer, LinkedList<WeakReference<BitVectorIntSet>>> buckets = HashMapFactory.make();
 
   /**
    * @param value
@@ -56,24 +53,35 @@ public class BitVectorRepository {
     }
     int size = value.size();
     for (int i = size; i > size - SUBSET_DELTA; i--) {
-      WeakHashMap<?, ?> m = buckets.get(Integer.valueOf(i));
+      LinkedList<WeakReference<BitVectorIntSet>> m = buckets.get(Integer.valueOf(i));
       if (m != null) {
-        for (Iterator<?> it = m.keySet().iterator(); it.hasNext();) {
-          BitVectorIntSet bv = (BitVectorIntSet) it.next();
-          if (bv.isSubset(value)) {
-            // FOUND ONE!
-            if (STATS) {
-              hits++;
+        Iterator<WeakReference<BitVectorIntSet>> it = m.iterator();
+        while (it.hasNext()) {
+          WeakReference<BitVectorIntSet> wr = it.next();
+          BitVectorIntSet bv = wr.get();
+          if (bv != null) {
+            if (bv.isSubset(value)) {
+              // FOUND ONE!
+              if (STATS) {
+                hits++;
+              }
+              return bv;            
             }
-            return bv;
+          } else {
+            // remove the weak reference to avoid leaks
+            it.remove();
           }
         }
       }
     }
     // didn't find one. create one.
-    WeakHashMap<BitVectorIntSet, Object> m = MapUtil.findOrCreateWeakHashMap(buckets, new Integer(size));
+    LinkedList<WeakReference<BitVectorIntSet>> m = buckets.get(size);
+    if (m == null) {
+      m = new LinkedList<WeakReference<BitVectorIntSet>>();
+      buckets.put(size, m);
+    }
     BitVectorIntSet bv = new BitVectorIntSet(value);
-    m.put(bv, null);
+    m.add(new WeakReference<BitVectorIntSet>(bv));
     return bv;
   }
 
@@ -90,9 +98,9 @@ public class BitVectorRepository {
    */
   private static int countEntries() {
     int result = 0;
-    for (Iterator<WeakHashMap<BitVectorIntSet,Object>> it = buckets.values().iterator(); it.hasNext();) {
-      WeakHashMap<?, ?> m = it.next();
-      result += m.size();
+    for (LinkedList<WeakReference<BitVectorIntSet>> l : buckets.values()) {
+      // don't worry about cleared WeakReferences; count will be rough
+      result += l.size();
     }
     return result;
   }

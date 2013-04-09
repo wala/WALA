@@ -113,6 +113,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
@@ -625,6 +626,11 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     public IClass getSuperclass() {
       return superClass;
     }
+
+    @Override
+    public Collection<Annotation> getAnnotations() {
+      return Collections.emptySet();
+    }
   }
 
   class JavaScriptRootClass extends AstDynamicPropertyClass {
@@ -651,6 +657,10 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       return null;
     }
     
+    @Override
+    public Collection<Annotation> getAnnotations() {
+      return Collections.emptySet();
+    }
   }
 
   class JavaScriptCodeBody extends AstFunctionClass {
@@ -674,6 +684,11 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       codeBody.entity = entity;
       codeBody.translationContext = translationContext;
       return codeBody;
+    }
+    
+    @Override
+    public Collection<Annotation> getAnnotations() {
+      return Collections.emptySet();
     }
   }
 

@@ -94,6 +94,7 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSSSAPropagationCallGraphBuilder;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstAnnotation;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
@@ -467,6 +468,10 @@ public class RhinoToAstTranslator {
     }
 
     public CAstNodeTypeMap getNodeTypeMap() {
+      return null;
+    }
+
+    public Collection<CAstAnnotation> getAnnotations() {
       return null;
     }
 
