@@ -20,6 +20,7 @@ import java.util.Set;
 
 import com.ibm.wala.cast.ipa.callgraph.StandardFunctionTargetSelector;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.translator.JSAstTranslator;
@@ -182,17 +183,22 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
           }
         }
       };
-      CAstEntity tree = toCAst.translateToCAst();
-      if (DEBUG) {
-        CAstPrinter.printTo(tree, new PrintWriter(System.err));
+      CAstEntity tree;
+      try {
+        tree = toCAst.translateToCAst();
+        if (DEBUG) {
+          CAstPrinter.printTo(tree, new PrintWriter(System.err));
+        }
+        toIR.translate(tree, M);
+        for (String name : names) {
+          IClass fcls = cl.lookupClass(name, cha);
+          cha.addClass(fcls);
+        }
+        return names;
+      } catch (Error e) {
+        return Collections.emptySet();
       }
-      toIR.translate(tree, M);
-      for (String name : names) {
-        IClass fcls = cl.lookupClass(name, cha);
-        cha.addClass(fcls);
-      }
-      return names;
-    } catch (RuntimeException e) {
+     } catch (RuntimeException e) {
       return Collections.emptySet();
     }
   }

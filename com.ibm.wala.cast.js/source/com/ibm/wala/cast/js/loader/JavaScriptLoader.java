@@ -13,7 +13,6 @@ package com.ibm.wala.cast.js.loader;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +71,6 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.LanguageImpl;
 import com.ibm.wala.classLoader.Module;
-import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.classLoader.SourceURLModule;
@@ -652,6 +650,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     public IClass getSuperclass() {
       return null;
     }
+    
   }
 
   class JavaScriptCodeBody extends AstFunctionClass {
@@ -693,7 +692,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     JavaScriptMethodObject(IClass cls, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
         TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
       super(cls, functionQualifiers, cfg, symtab, AstMethodReference.fnReference(cls.getReference()), hasCatchBlock, caughtTypes,
-          hasMonitorOp, lexicalInfo, debugInfo);
+          hasMonitorOp, lexicalInfo, debugInfo, null);
 
       // force creation of these constants by calling the getter methods
       symtab.getNullConstant();
@@ -924,15 +923,5 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
   @Override
   protected boolean shouldTranslate(CAstEntity entity) {
     return true;
-  }
-
-  @Override
-  protected void finishTranslation() {
-    Iterator<ModuleEntry> ms = getModulesWithParseErrors();
-    while (ms.hasNext()) {
-      ModuleEntry m = ms.next();
-      System.err.println(m);
-      System.err.println(getMessages(m));
-    }
   }
 }

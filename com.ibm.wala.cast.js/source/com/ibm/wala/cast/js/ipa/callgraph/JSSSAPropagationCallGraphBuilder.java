@@ -73,6 +73,9 @@ import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.CancelRuntimeException;
+import com.ibm.wala.util.MonitorUtil;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
@@ -614,6 +617,11 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
               rhs.getValue().foreach(new IntSetAction() {
                 @Override
                 public void act(int x) {
+                  try {
+                    MonitorUtil.throwExceptionIfCanceled(getBuilder().monitor);
+                  } catch (CancelException e) {
+                    throw new CancelRuntimeException(e);
+                  }
                   InstanceKey ik = system.getInstanceKey(x);
                   handleJavascriptDispatch(instruction, ik);
                 }
@@ -732,6 +740,11 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
               if (isStringConstant(iks1[i])) {
                 for (int j = 0; j < iks2.length; j++) {
                   if (isStringConstant(iks2[j])) {
+                    try {
+                      MonitorUtil.throwExceptionIfCanceled(builder.monitor);
+                    } catch (CancelException e) {
+                      throw new CancelRuntimeException(e);
+                    }
                     String v1 = (String) ((ConstantKey) iks1[i]).getValue();
                     String v2 = (String) ((ConstantKey) iks2[j]).getValue();
                     if (v1.indexOf(v2) == -1 && v2.indexOf(v1) == -1) {
@@ -757,6 +770,11 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           if (doDefault) {
               for (int i = 0; i < iks1.length; i++) {
                 for (int j = 0; j < iks2.length; j++) {
+                  try {
+                    MonitorUtil.throwExceptionIfCanceled(builder.monitor);
+                  } catch (CancelException e) {
+                    throw new CancelRuntimeException(e);
+                  }
                   if (handleBinaryOperatorArgs(iks1[i], iks2[j])) {
                     changed = CHANGED;
                   }

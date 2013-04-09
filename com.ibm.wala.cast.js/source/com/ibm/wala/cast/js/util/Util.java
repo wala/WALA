@@ -6,11 +6,12 @@ import com.ibm.wala.cast.loader.CAstAbstractLoader;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.warnings.Warning;
 
 public class Util {
 
-  public static void checkForFrontEndErrors(IClassHierarchy cha) {
+  public static void checkForFrontEndErrors(IClassHierarchy cha) throws WalaException {
     StringBuffer message = null;
     for(IClassLoader loader : cha.getLoaders()) {
       if (loader instanceof CAstAbstractLoader) {
@@ -33,7 +34,7 @@ public class Util {
     }
     if (message != null) {
       message.append("end of front end errors\n");
-      throw new AssertionError(String.valueOf(message));
+      throw new WalaException(String.valueOf(message));
     }
   }
   

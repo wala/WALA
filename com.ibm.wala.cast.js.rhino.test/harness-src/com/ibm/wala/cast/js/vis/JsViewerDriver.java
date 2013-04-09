@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.Set;
 
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.DomLessSourceExtractor;
 import com.ibm.wala.cast.js.html.IdentityUrlResolver;
@@ -23,9 +24,10 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.WalaException;
 
 public class JsViewerDriver extends JSCallGraphBuilderUtil {
-	public static void main(String args[]) throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException {
+	public static void main(String args[]) throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, Error, WalaException {
 
 		if (args.length != 1){
 			System.out.println("Usage: <URL of html page to analyze>");
@@ -51,7 +53,7 @@ public class JsViewerDriver extends JSCallGraphBuilderUtil {
 	}
 
 	private static SourceModule[] getSources(boolean domless, URL url)
-			throws IOException {
+			throws IOException, Error {
 		JSSourceExtractor sourceExtractor;
 		if (domless ){
 			sourceExtractor = new DomLessSourceExtractor(); 

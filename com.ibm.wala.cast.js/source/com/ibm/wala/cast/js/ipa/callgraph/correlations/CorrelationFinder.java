@@ -28,6 +28,7 @@ import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.ir.ssa.AbstractReflectiveGet;
 import com.ibm.wala.cast.ir.ssa.AbstractReflectivePut;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
 import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
@@ -53,6 +54,7 @@ import com.ibm.wala.ssa.SSABinaryOpInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAPhiInstruction;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.ObjectArrayMapping;
@@ -245,7 +247,12 @@ public class CorrelationFinder {
 
   public Map<IMethod, CorrelationSummary> findCorrelatedAccesses(URL url) throws IOException, ClassHierarchyException {
     JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
-    Set<? extends SourceModule> script = WebUtil.extractScriptFromHTML(url);
+    Set<? extends SourceModule> script = null;
+    try {
+      script = WebUtil.extractScriptFromHTML(url);
+    } catch (Error e) {
+      assert false : e.warning;
+    }
     Map<IMethod, CorrelationSummary> summaries = findCorrelatedAccesses(script);
     return summaries;
   }
@@ -256,7 +263,11 @@ public class CorrelationFinder {
     WebPageLoaderFactory loaders = new WebPageLoaderFactory(translatorFactory);
     CAstAnalysisScope scope = new CAstAnalysisScope(scripts, loaders, Collections.singleton(JavaScriptLoader.JS));
     IClassHierarchy cha = ClassHierarchy.make(scope, loaders, JavaScriptLoader.JS);
-    Util.checkForFrontEndErrors(cha);
+    try {
+      Util.checkForFrontEndErrors(cha);
+    } catch (WalaException e) {
+      return Collections.emptyMap();
+    }
     IRFactory<IMethod> factory = AstIRFactory.makeDefaultFactory();
 
     Map<IMethod, CorrelationSummary> correlations = HashMapFactory.make();

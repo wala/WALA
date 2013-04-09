@@ -17,8 +17,11 @@ import org.junit.Test;
 
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
+import com.ibm.wala.cast.js.util.Util;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.WalaException;
 
 public class TestSimpleCallGraphShapeRhino extends TestSimpleCallGraphShape {
 
@@ -32,7 +35,7 @@ public class TestSimpleCallGraphShapeRhino extends TestSimpleCallGraphShape {
   }
 
   @Test
-  public void test214631() throws IOException, IllegalArgumentException, CancelException {
+  public void test214631() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCFABuilder b = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "214631.js");
     b.makeCallGraph(b.getOptions());
     PointerAnalysis PA = b.getPointerAnalysis();
@@ -41,33 +44,41 @@ public class TestSimpleCallGraphShapeRhino extends TestSimpleCallGraphShape {
   }
 
   @Test
-  public void testRewriterDoesNotChangeLablesBug() throws IOException, IllegalArgumentException, CancelException {
+  public void testRewriterDoesNotChangeLablesBug() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "rewrite_does_not_change_lables_bug.js");
     // all we need is for it to finish building CG successfully.
   }
 
   @Test
-  public void testRepr() throws IllegalArgumentException, IOException, CancelException {
+  public void testRepr() throws IllegalArgumentException, IOException, CancelException, WalaException {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "repr.js");
   }
 
   @Test
-  public void testTranslateToCAstCrash1() throws IllegalArgumentException, IOException, CancelException {
+  public void testTranslateToCAstCrash1() throws IllegalArgumentException, IOException, CancelException, WalaException {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "rhino_crash1.js");
   }
   
   @Test
-  public void testTranslateToCAstCrash2() throws IllegalArgumentException, IOException, CancelException {
+  public void testTranslateToCAstCrash2() throws IllegalArgumentException, IOException, CancelException, WalaException {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "rhino_crash2.js");
   }
 
   @Test
-  public void testTranslateToCAstCrash3() throws IllegalArgumentException, IOException, CancelException {
+  public void testTranslateToCAstCrash3() throws IllegalArgumentException, IOException, CancelException, WalaException {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "rhino_crash3.js");
   }
   
   @Test
-  public void testNonLoopBreakLabel() throws IllegalArgumentException, IOException, CancelException {
+  public void testNonLoopBreakLabel() throws IllegalArgumentException, IOException, CancelException, WalaException {
 	  JSCallGraphBuilderUtil.makeScriptCG("tests", "non_loop_break.js");
   }
+  
+  @Test(expected = WalaException.class)
+  public void testParseError() throws IllegalArgumentException, IOException, CancelException, WalaException {
+    PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "portal-example-simple.html");
+    B.makeCallGraph(B.getOptions());
+    Util.checkForFrontEndErrors(B.getClassHierarchy());
+  }
+
 }

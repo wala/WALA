@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.util.collections.Pair;
@@ -35,6 +36,9 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
   }
   
   protected static class HtmlCallback implements IGeneratorCallback{
+    
+    public static final boolean DEBUG = false;
+    
     protected final URL entrypointUrl;
     protected final IUrlResolver urlResolver;
 
@@ -131,7 +135,9 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
         url = new URL(entrypointUrl, "#" + tag.getElementPosition().getFirstOffset());
       } catch (MalformedURLException e) {
         // TODO Auto-generated catch block
-        e.printStackTrace();
+        if (DEBUG) {
+          e.printStackTrace();
+        }
       }
       Position pos = a.getValue().snd;
       String attName = a.getKey();
@@ -171,7 +177,9 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
         }
 
       } catch (IOException e) {
-        System.err.println("Error reading script file: " + e.getMessage());
+        if (DEBUG) {
+          System.err.println("Error reading script file: " + e.getMessage());
+        }
       }
     }
 
@@ -182,10 +190,23 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
         return;
       }
 
-      InputStream scriptInputStream = scriptSrc.openConnection().getInputStream();
-      try{
+      InputStream scriptInputStream;
+      try {
+         scriptInputStream = scriptSrc.openConnection().getInputStream();
+      } catch (Exception e) {
+        //it looks like this happens when we can't resolve the url?
+        if (DEBUG) {
+          System.err.println("Error reading script: " + scriptSrc);
+          System.err.println(e);
+          e.printStackTrace(System.err);
+        }
+        return;
+      }
+      
+      BufferedReader scriptReader = null;
+      try {
         String line;
-        BufferedReader scriptReader = new BufferedReader(new UnicodeReader(scriptInputStream, "UTF8"));
+        scriptReader = new BufferedReader(new UnicodeReader(scriptInputStream, "UTF8"));
         StringBuffer x = new StringBuffer();
         while ((line = scriptReader.readLine()) != null) {
           x.append(line).append("\n");
@@ -194,7 +215,9 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
         scriptRegion.println(x.toString(), scriptTag.getElementPosition(), scriptSrc);
 
       } finally {
-        scriptInputStream.close();
+        if (scriptReader != null) {
+          scriptReader.close();
+        }
       }
     }
 
@@ -223,9 +246,9 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       finalRegion.println("window.__MAIN__();");
     }
   }
-
+  
   public Set<MappedSourceModule> extractSources(URL entrypointUrl, IHtmlParser htmlParser, IUrlResolver urlResolver)
-  throws IOException {
+  throws IOException, Error {
 
     InputStream inputStreamReader = WebUtil.getStream(entrypointUrl);
     IGeneratorCallback htmlCallback = createHtmlCallback(entrypointUrl, urlResolver); 
@@ -237,6 +260,9 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     // writing the final region into one SourceFileModule.
     File outputFile = createOutputFile(entrypointUrl, DELETE_UPON_EXIT, USE_TEMP_NAME);
     FileMapping fileMapping = finalRegion.writeToFile(new PrintStream(outputFile));
+    if (fileMapping == null) {
+      fileMapping = new EmptyFileMapping();
+    }
     MappedSourceModule singleFileModule = new MappedSourceFileModule(outputFile, outputFile.getName(), fileMapping);
     return Collections.singleton(singleFileModule);
   }
@@ -262,7 +288,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
   }   
 
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException, Error {
 //    DomLessSourceExtractor domLessScopeGenerator = new DomLessSourceExtractor();
     JSSourceExtractor domLessScopeGenerator = new DefaultSourceExtractor();
     JSSourceExtractor.DELETE_UPON_EXIT = false;

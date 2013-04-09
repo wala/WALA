@@ -612,12 +612,12 @@ public class SSAConversion extends AbstractSSAConversion {
         System.err.println(("<<< done " + ir.getMethod()));
       return ssa.getComputedLocalMap();
     } catch (RuntimeException e) {
-      System.err.println(("exception " + e + " while converting:"));
-      System.err.println(ir);
+//      System.err.println(("exception " + e + " while converting:"));
+//      System.err.println(ir);
       throw e;
     } catch (Error e) {
-      System.err.println(("error " + e + " while converting:"));
-      System.err.println(ir);
+//      System.err.println(("error " + e + " while converting:"));
+//      System.err.println(ir);
       throw e;
     }
   }

@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Set;
 
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
+
 /**
  * Extracts scripts from a given URL of an HTML. Retrieves also attached js files. 
  * Provides file and line mapping for each extracted SourceFileModule back to the original file and line number.
@@ -23,10 +25,10 @@ import java.util.Set;
  */
 public abstract class JSSourceExtractor {
 
-  public static boolean DELETE_UPON_EXIT = false;
+  public static boolean DELETE_UPON_EXIT = true;
 
-  public static boolean USE_TEMP_NAME = false;
+  public static boolean USE_TEMP_NAME = true;
 
-  public abstract Set<MappedSourceModule> extractSources(URL entrypointUrl, IHtmlParser htmlParser, IUrlResolver urlResolver) throws IOException;
+  public abstract Set<MappedSourceModule> extractSources(URL entrypointUrl, IHtmlParser htmlParser, IUrlResolver urlResolver) throws IOException, Error;
   
 }

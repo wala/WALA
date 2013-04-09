@@ -10,6 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.translator;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -20,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.mozilla.javascript.CompilerEnvirons;
+import org.mozilla.javascript.ErrorReporter;
+import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Parser;
 import org.mozilla.javascript.Token;
@@ -83,8 +86,8 @@ import org.mozilla.javascript.ast.XmlPropRef;
 import org.mozilla.javascript.ast.XmlRef;
 import org.mozilla.javascript.ast.XmlString;
 import org.mozilla.javascript.ast.Yield;
-import org.mozilla.javascript.tools.ToolErrorReporter;
 
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.DoLoopTranslator;
 import com.ibm.wala.cast.js.html.MappedSourceModule;
 import com.ibm.wala.cast.js.ipa.callgraph.JSSSAPropagationCallGraphBuilder;
@@ -105,6 +108,7 @@ import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.warnings.Warning;
 
 public class RhinoToAstTranslator {
 
@@ -2248,9 +2252,32 @@ private CAstNode[] walkChildren(final Node n, WalkContext context) {
   /**
    * parse the JavaScript code using Rhino, and then translate the resulting AST
    * to CAst
+   * @throws com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error 
    */
-  public CAstEntity translateToCAst() throws java.io.IOException {
-    ToolErrorReporter reporter = new ToolErrorReporter(true);
+  public CAstEntity translateToCAst() throws Error, IOException, com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error {
+    class CAstErrorReporter implements ErrorReporter {
+      private Warning w = null;
+      
+      public void error(final String arg0, final String arg1, final int arg2, final String arg3, int arg4) {
+        w = new Warning(Warning.SEVERE) {
+          @Override
+          public String getMsg() {
+            return arg0 + ": " + arg1 + "@" + arg2 + ": " + arg3;
+          }
+        };
+      }
+
+      public EvaluatorException runtimeError(String arg0, String arg1, int arg2, String arg3, int arg4) {
+        error(arg0, arg1, arg2, arg3, arg4);
+        return null;
+      }
+
+      public void warning(String arg0, String arg1, int arg2, String arg3, int arg4) {
+        // ignore warnings
+      } 
+    };
+    
+    CAstErrorReporter reporter = new CAstErrorReporter();
     CompilerEnvirons compilerEnv = new CompilerEnvirons();
     compilerEnv.setErrorReporter(reporter);
     compilerEnv.setReservedKeywordAsIdentifier(true);
@@ -2264,6 +2291,10 @@ private CAstNode[] walkChildren(final Node n, WalkContext context) {
 
     AstRoot top = P.parse(sourceReader, scriptName, 1);
 
+    if (reporter.w != null) {
+      throw new TranslatorToCAst.Error(reporter.w);
+    }
+    
     final FunctionContext child = new ScriptContext(new RootContext(), top, top.getSourceName());
     TranslatingVisitor tv = new TranslatingVisitor();
     List<CAstNode> body = new ArrayList<CAstNode>();

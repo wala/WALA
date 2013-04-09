@@ -91,13 +91,17 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
     private void newLine(){
       domRegion.println("");
     }
+
+    private String makeRef(String object, String property) {
+      return object + "[\"" + property + "\"]";
+    }
     
     protected void writeElement(ITag tag, String cons, String varName){
       Map<String, Pair<String, Position>> attrs = tag.getAllAttributes();
 
       printlnIndented("function make_" + varName + "(parent) {", tag);
       stack.push(varName);
-      
+
       printlnIndented("this.temp = " + cons + ";", tag);
       printlnIndented("this.temp(\"" + tag.getName() + "\");", tag);
       for (Map.Entry<String, Pair<String, Position>> e : attrs.entrySet()){
@@ -113,19 +117,22 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
       } if (tag.getName().equalsIgnoreCase("INPUT")) {
         String prop = attrs.containsKey("name") ? attrs.get("name").fst : null;
         String type = attrs.containsKey("type") ? attrs.get("type").fst : null;
- 
+
         if (type != null && prop != null) {
-        if (type.equalsIgnoreCase("RADIO")) {
-          if (! sets.contains(Pair.make(forms.peek(), prop))) {
-            sets.add(Pair.make(forms.peek(), prop));
-            printlnIndented("  currentForm." + prop + " = new Array();", tag);
-            printlnIndented("  currentForm." + prop + "Counter = 0;", tag);
+          //input tags do not need to be in a form
+          if (!forms.isEmpty()) {
+             if (type.equalsIgnoreCase("RADIO")) {
+              if (! sets.contains(Pair.make(forms.peek(), prop))) {
+                sets.add(Pair.make(forms.peek(), prop));
+                printlnIndented("  " + makeRef("currentForm", prop) + " = new Array();", tag);
+                printlnIndented("  " + makeRef("currentForm", prop + "Counter") + " = 0;", tag);
+              }
+              printlnIndented("  " + makeRef(makeRef("currentForm", prop), prop + "Counter++") + " = this;", tag);
+            } else {
+              printlnIndented("  " + makeRef("currentForm", prop) + " = this;", tag);          
+            }
           }
-          printlnIndented("  currentForm." + prop + "[currentForm." + prop + "Counter++] = this;", tag);
-        } else {
-          printlnIndented("  currentForm." + prop + " = this;", tag);          
         }
-      }
       }
 
       printlnIndented(varName + " = this;", tag);
@@ -139,7 +146,8 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
     }
 
     protected void writeEventAttribute(ITag tag, Position pos, String attr, String value, String varName, String varName2){
-      if(attr.substring(0,2).equals("on")) {
+      //There should probably be more checking to see what the attributes are since we allow things like: ; to be used as attributes now.
+      if(attr.length() >= 2 && attr.substring(0,2).equals("on")) {
         printlnIndented(varName + "." + attr + " = function " + tag.getName().toLowerCase() + "_" + attr + "(event) {" + value + "};", tag);
         entrypointRegion.println(varName2 + "." + attr + "(null);", tag.getElementPosition(), entrypointUrl);
       } else if (value != null) {

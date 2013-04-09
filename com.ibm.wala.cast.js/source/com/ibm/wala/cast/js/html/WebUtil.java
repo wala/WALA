@@ -17,8 +17,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Set;
 
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
-import com.ibm.wala.util.debug.Assertions;
 
 public class WebUtil { 
 
@@ -34,19 +34,7 @@ public class WebUtil {
     WebUtil.factory = factory;
   }
 
-  public static Set<MappedSourceModule> extractScriptFromHTML(String url) {
-    try {
-      if (! url.startsWith("file://")) {
-        url = "file://" + url;
-      }
-      return extractScriptFromHTML(new URL(url));
-    } catch (MalformedURLException e) {
-      Assertions.UNREACHABLE( e.toString() );
-      return null;
-    }
-  }
-
-  public static Set<MappedSourceModule> extractScriptFromHTML(URL url) {
+  public static Set<MappedSourceModule> extractScriptFromHTML(URL url) throws Error {
     try {
       JSSourceExtractor extractor = new DefaultSourceExtractor();
       return extractor.extractSources(url, factory.getParser(), new IdentityUrlResolver());
@@ -55,7 +43,7 @@ public class WebUtil {
     }
   }
   
-  public static void main(String[] args) throws MalformedURLException {
+  public static void main(String[] args) throws MalformedURLException, Error {
     System.err.println(extractScriptFromHTML(new URL(args[0])));
   }
 
