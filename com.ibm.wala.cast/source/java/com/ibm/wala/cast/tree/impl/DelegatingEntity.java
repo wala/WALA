@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.ibm.wala.cast.tree.CAstAnnotation;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
@@ -87,6 +88,10 @@ public class DelegatingEntity implements CAstEntity {
 
     public CAstType getType() {
 	return base.getType();
+    }
+
+    public Collection<CAstAnnotation> getAnnotations() {
+      return base.getAnnotations();
     }
 
 }

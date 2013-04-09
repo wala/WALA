@@ -42,6 +42,8 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
     }
     if (other.V != null) {
       V.copySet(other.V);
+    } else {
+      V = null;
     }
   }
 

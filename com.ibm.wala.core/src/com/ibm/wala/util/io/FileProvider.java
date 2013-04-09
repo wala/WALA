@@ -14,9 +14,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.JarURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipException;
@@ -24,6 +26,7 @@ import java.util.zip.ZipException;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.NestedJarFileModule;
+import com.ibm.wala.util.debug.Assertions;
 
 /**
  * This class provides files that are packaged with this plug-in
@@ -181,9 +184,15 @@ public class FileProvider {
     // http://www.faqs.org/rfcs/rfc2396.html Section 2.4.3
     // This solution works. See discussion at
     // http://stackoverflow.com/questions/4494063/how-to-avoid-java-net-urisyntaxexception-in-url-touri
-    URI uri = new File(url.getPath()).toURI();
-    String filePath = uri.getPath();
-    return filePath;
+    // we assume url has been properly encoded, so we decode it 
+    try {
+      URI uri = new File(URLDecoder.decode(url.getPath(), "UTF-8")).toURI();
+      return uri.getPath();
+    } catch (UnsupportedEncodingException e) {
+      // this really shouldn't happen
+      Assertions.UNREACHABLE();
+      return null;
+    }
   }
 
 }

@@ -31,7 +31,7 @@ public abstract class ComposedIterator<O,I> implements Iterator<I> {
         break;
       }
     }
-    if (!inner.hasNext()) {
+    if (inner != null && !inner.hasNext()) {
       inner = null;
     }
   }

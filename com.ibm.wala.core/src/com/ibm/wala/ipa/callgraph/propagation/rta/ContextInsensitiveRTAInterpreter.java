@@ -19,6 +19,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.cha.ContextInsensitiveCHAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.FieldReference;
@@ -27,7 +28,7 @@ import com.ibm.wala.util.debug.Assertions;
 /**
  * Default implementation of MethodContextInterpreter for context-insensitive analysis
  */
-public abstract class ContextInsensitiveRTAInterpreter implements RTAContextInterpreter, SSAContextInterpreter {
+public abstract class ContextInsensitiveRTAInterpreter extends ContextInsensitiveCHAContextInterpreter implements RTAContextInterpreter, SSAContextInterpreter {
 
   private final AnalysisCache analysisCache;
 
@@ -45,19 +46,6 @@ public abstract class ContextInsensitiveRTAInterpreter implements RTAContextInte
     }
     try {
       return CodeScanner.getNewSites(node.getMethod()).iterator();
-    } catch (InvalidClassFileException e) {
-      e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return null;
-    }
-  }
-
-  public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
-    try {
-      return CodeScanner.getCallSites(node.getMethod()).iterator();
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();
@@ -89,10 +77,6 @@ public abstract class ContextInsensitiveRTAInterpreter implements RTAContextInte
       Assertions.UNREACHABLE();
       return null;
     }
-  }
-
-  public boolean understands(CGNode node) {
-    return true;
   }
 
   public boolean recordFactoryType(CGNode node, IClass klass) {

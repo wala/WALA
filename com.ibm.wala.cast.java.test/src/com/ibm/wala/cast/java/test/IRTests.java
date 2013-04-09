@@ -49,6 +49,7 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
@@ -250,6 +251,63 @@ public abstract class IRTests {
     }
   }
 
+  protected static class AnnotationAssertions implements IRAssertion {
+
+    public static class ClassAnnotation {
+      private final String className;
+      private final String annotationTypeName;
+      
+      public ClassAnnotation(String className, String annotationTypeName) {
+        super();
+        this.className = className;
+        this.annotationTypeName = annotationTypeName;
+      }
+    }
+
+    public static class MethodAnnotation {
+      private final String methodSig;
+      private final String annotationTypeName;
+      
+      public MethodAnnotation(String methodSig, String annotationTypeName) {
+        super();
+        this.methodSig = methodSig;
+        this.annotationTypeName = annotationTypeName;
+      }
+    }
+
+    public final Set<ClassAnnotation> classAnnotations = HashSetFactory.make();
+    public final Set<MethodAnnotation> methodAnnotations = HashSetFactory.make();
+    
+    public void check(CallGraph cg) {
+      classes: for(ClassAnnotation ca : classAnnotations) {
+        IClass cls = cg.getClassHierarchy().lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Application, ca.className));
+        IClass at = cg.getClassHierarchy().lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Application, ca.annotationTypeName));
+        for(Annotation a : cls.getAnnotations()) {
+          if (a.getType().equals(at.getReference())) {
+            continue classes;
+          }
+        }
+        
+        Assert.assertFalse("cannot find " + at + " in " + cls, false);
+      }
+    
+      annot: for(MethodAnnotation ma : methodAnnotations) {
+        IClass at = cg.getClassHierarchy().lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Application, ma.annotationTypeName));
+        for(CGNode n : cg) {
+          if (n.getMethod().getSignature().equals(ma.methodSig)) {
+            for(Annotation a : n.getMethod().getAnnotations()) {
+              if (a.getType().equals(at.getReference())) {
+                continue annot;
+              }
+            }
+          
+            Assert.assertFalse("cannot find " + at, false);
+          }
+        }
+      }
+    }
+  }
+  
   protected Collection<String> singleTestSrc() {
     return Collections.singletonList(getTestSrcPath() + File.separator + singleJavaInputForTest());
   }

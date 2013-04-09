@@ -34,5 +34,14 @@ public class FileProviderTest {
     assertEquals(expected, actual);
   }
 
+  @Test
+  public void testURLWithSpace() throws MalformedURLException {
+    URL url = new URL("file:///With%20Space/File.jar");
+    String expected = PlatformUtil.onWindows() ? "/C:/With Space/File.jar" : "/With Space/File.jar";
+    // exercise:
+    String actual = (new FileProvider()).filePathFromURL(url);
+    // verify:
+    assertEquals(expected, actual);
+  }
   
 }

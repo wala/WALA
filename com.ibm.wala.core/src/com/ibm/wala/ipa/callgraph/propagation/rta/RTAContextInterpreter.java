@@ -12,30 +12,21 @@ package com.ibm.wala.ipa.callgraph.propagation.rta;
 
 import java.util.Iterator;
 
-import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.cha.CHAContextInterpreter;
 import com.ibm.wala.types.FieldReference;
 
 /**
  * This object will analyze a method in a context and return information needed for RTA.
  */
-public interface RTAContextInterpreter {
-  /**
-   * Does this object understand the given method? The caller had better check this before inquiring on other properties.
-   */
-  public boolean understands(CGNode node);
+public interface RTAContextInterpreter extends CHAContextInterpreter {
 
   /**
    * @return an Iterator of the types that may be allocated by a given method in a given context.
    */
   public abstract Iterator<NewSiteReference> iterateNewSites(CGNode node);
-
-  /**
-   * @return an Iterator of the call statements that may execute in a given method for a given context
-   */
-  public abstract Iterator<CallSiteReference> iterateCallSites(CGNode node);
 
   /**
    * @return iterator of FieldReference

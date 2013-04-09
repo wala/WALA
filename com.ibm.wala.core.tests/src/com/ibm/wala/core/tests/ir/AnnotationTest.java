@@ -10,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.classLoader.ShrikeClass;
@@ -22,6 +23,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
@@ -29,6 +31,7 @@ import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.io.FileProvider;
+import com.ibm.wala.util.strings.Atom;
 
 public class AnnotationTest extends WalaTestCase {
 
@@ -140,6 +143,23 @@ public class AnnotationTest extends WalaTestCase {
         .assertEquals(
             "[Annotation type <Application,Lannotations/AnnotationWithParams> {enumParam=EnumElementValue [type=Lannotations/AnnotationEnum;, val=VAL1], strArrParam=ArrayElementValue [vals=[biz, boz]], annotParam=AnnotationElementValue [type=Lannotations/AnnotationWithSingleParam;, elementValues={value=sdfevs}], strParam=sdfsevs, intParam=25, klassParam=Ljava/lang/Integer;}]",
             runtimeInvisibleAnnotations.toString());
+
+  }
+  
+  @Test
+  public void testClassAnnotations4() throws Exception {
+
+    TypeReference typeRef = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lannotations/AnnotatedClass4");
+    FieldReference fieldRefUnderTest = FieldReference.findOrCreate(typeRef, Atom.findOrCreateUnicodeAtom("foo"), TypeReference.Int); 
+
+    IField fieldUnderTest = cha.resolveField(fieldRefUnderTest);
+    Assert.assertNotNull(fieldRefUnderTest.toString() + " not found", fieldUnderTest);
+
+    Collection<Annotation> annots = fieldUnderTest.getAnnotations();
+    Assert
+        .assertEquals(
+            "[Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>, Annotation type <Application,Lannotations/RuntimeVisableAnnotation>]",
+            annots.toString());
 
   }
 }

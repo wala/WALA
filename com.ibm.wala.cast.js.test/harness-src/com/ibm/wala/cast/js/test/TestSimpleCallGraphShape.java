@@ -22,6 +22,7 @@ import org.junit.Test;
 import com.ibm.wala.cast.js.ipa.callgraph.ForInContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
+import com.ibm.wala.cast.js.util.Util;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
@@ -628,7 +629,6 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     //JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForDateProperty);
   }
-
     private static final Object[][] assertionsForDeadCode = new Object[][] {
       new Object[] { ROOT, new String[] { "tests/dead.js" } },
       new Object[] { "tests/dead.js", new String[] { "suffix:twoReturns" } }
