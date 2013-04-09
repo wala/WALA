@@ -32,12 +32,16 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.IntMapIterator;
+import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.Iterator2List;
 import com.ibm.wala.util.collections.SparseVector;
+import com.ibm.wala.util.collections.Util;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.functions.IntFunction;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
@@ -298,6 +302,11 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter> imp
     }
 
     public IR getIR() {
+      if (getMethod().isSynthetic()) {
+        // disable local cache in this case, as context interpreters
+        // do weird things like mutate IRs
+        return getCallGraph().getInterpreter(this).getIR(this);
+      }
       IR ir = this.ir.get();
       if (ir == null) {
         ir = getCallGraph().getInterpreter(this).getIR(this);
@@ -307,6 +316,11 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter> imp
     }
 
     public DefUse getDU() {
+      if (getMethod().isSynthetic()) {
+        // disable local cache in this case, as context interpreters
+        // do weird things like mutate IRs
+        return getCallGraph().getInterpreter(this).getDU(this);
+      }
       DefUse du = this.du.get();
       if (du == null) {
         du = getCallGraph().getInterpreter(this).getDU(this);
