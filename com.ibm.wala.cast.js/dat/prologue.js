@@ -309,6 +309,10 @@ local_array.prototype = {
 		  res[i] = callback.call(thisArg, this[i], i, this);
 	  res.length = this.length;
 	  return res;
+  },
+  
+  item: function Array_prototype_item(index) {
+	  return this[index];
   }
 };
 
@@ -404,6 +408,13 @@ local_string.prototype = {
   
   loadFile: function loadFile() {
     // magic function body handled in analysis.
+  },
+  
+  link: function String_prototype_link(url) {
+  },
+  
+  anchor: function String_prototype_anchor(url) {
+	  return new String();
   }
 
 };
@@ -607,4 +618,13 @@ Date.prototype = {
 Date.now = function Date_now() {
 	return new Date().valueOf();
 };
+
+function Error(str) {
+	this.message = new String();
+}
+
+function EvalError(str) {
+	this.message = new String();
+}
+
 

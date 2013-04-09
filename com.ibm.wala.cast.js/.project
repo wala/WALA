@@ -2,6 +2,8 @@
 <projectDescription>
 	<name>com.ibm.wala.cast.js</name>
 	<comment></comment>
+	<projects>
+	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>

@@ -177,4 +177,5 @@ public interface CAstEntity {
    * The CAst type of this entity.
    */
   CAstType getType();
+    
 }

@@ -152,7 +152,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    */
   private final Set<IClass> clinitVisited = HashSetFactory.make();
 
-  private IProgressMonitor monitor;
+  public IProgressMonitor monitor;
 
   protected SSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       PointerKeyFactory pointerKeyFactory) {

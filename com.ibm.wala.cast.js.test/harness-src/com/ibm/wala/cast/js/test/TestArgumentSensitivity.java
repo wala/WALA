@@ -18,6 +18,7 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.WalaException;
 
 public abstract class TestArgumentSensitivity extends TestJSCallGraphShape {
 
@@ -29,7 +30,7 @@ public abstract class TestArgumentSensitivity extends TestJSCallGraphShape {
     new Object[] { "tests/args.js/a", new String[] { "tests/args.js/x"} },
     new Object[] { "tests/args.js/a", new String[] { "tests/args.js/y", "tests/args.js/z", "!tests/args.js/wrong" } } };
 
-  @Test public void testArgs() throws IOException, IllegalArgumentException, CancelException, ClassHierarchyException {
+  @Test public void testArgs() throws IOException, IllegalArgumentException, CancelException, ClassHierarchyException, WalaException {
     JavaScriptLoaderFactory loaders = JSCallGraphBuilderUtil.makeLoaders();
     AnalysisScope scope = JSCallGraphBuilderUtil.makeScriptScope("tests", "args.js", loaders);
 

@@ -22,13 +22,14 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.OrdinalSet;
 
 public abstract class TestLexicalModRef {
 
   @Test
-  public void testSimpleLexical() throws IOException, IllegalArgumentException, CancelException {
+  public void testSimpleLexical() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCFABuilder b = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "simple-lexical.js");
     CallGraph CG = b.makeCallGraph(b.getOptions());    
     LexicalModRef lexAccesses = LexicalModRef.make(CG, b.getPointerAnalysis());
@@ -50,7 +51,14 @@ public abstract class TestLexicalModRef {
         // function "inner3" reads exactly innerName, inner3, and x and z via callees
         OrdinalSet<Pair<CGNode, String>> readVars = readResult.get(n);
         Assert.assertEquals(4, readVars.size());
-        Assert.assertEquals("[[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,x], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,inner3], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,innerName], [Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,z]]", readVars.toString());
+        for(Pair<CGNode, String> rv : readVars) {
+          Assert.assertTrue(rv.toString(), 
+                            "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,x]".equals(rv.toString()) ||
+                            "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,inner3]".equals(rv.toString()) ||
+                            "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,innerName]".equals(rv.toString()) ||
+                            "[Node: <Code body of function Ltests/simple-lexical.js/outer> Context: Everywhere,z]".equals(rv.toString()));
+          
+        }
       }
     }
   }

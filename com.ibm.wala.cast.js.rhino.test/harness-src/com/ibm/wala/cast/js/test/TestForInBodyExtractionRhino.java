@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.test;
 
 import java.io.IOException;
 
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.translator.RhinoToAstTranslator;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
@@ -21,7 +22,13 @@ import com.ibm.wala.classLoader.SourceModule;
 public class TestForInBodyExtractionRhino extends TestForInBodyExtraction {
 	protected CAstEntity parseJS(CAstImpl ast, SourceModule module) throws IOException {
 		RhinoToAstTranslator translator = new RhinoToAstTranslator(ast, module, module.getName(), false);
-		CAstEntity entity = translator.translateToCAst();
+		CAstEntity entity = null;
+		try {
+			entity = translator.translateToCAst();
+		} catch (Error e) {
+			e.printStackTrace();
+			assert false;
+		}
 		return entity;
 	}
 }

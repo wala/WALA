@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.test;
 
 import java.io.IOException;
 
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.CorrelationFinder;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.cast.js.translator.RhinoToAstTranslator;
@@ -27,7 +28,13 @@ public class TestCorrelatedPairExtractionRhino extends TestCorrelatedPairExtract
 	
 	protected CAstEntity parseJS(CAstImpl ast, SourceModule module) throws IOException {
 		RhinoToAstTranslator translator = new RhinoToAstTranslator(ast, module, module.getName(), false);
-		CAstEntity entity = translator.translateToCAst();
+		CAstEntity entity = null;
+		try {
+			entity = translator.translateToCAst();
+		} catch (Error e) {
+			e.printStackTrace();
+			assert false;
+		}
 		return entity;
 	}
 }

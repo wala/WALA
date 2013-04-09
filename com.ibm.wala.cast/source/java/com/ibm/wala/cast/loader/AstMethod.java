@@ -26,6 +26,7 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.strings.Atom;
@@ -113,10 +114,11 @@ public abstract class AstMethod implements IMethod {
   private final TypeReference[][] catchTypes;
   private final AstLexicalInformation lexicalInfo;
   private final DebuggingInformation debugInfo;
+  private final Collection<Annotation> annotations;
 
   protected AstMethod(IClass cls, Collection qualifiers, AbstractCFG cfg, SymbolTable symtab, MethodReference ref,
       boolean hasCatchBlock, TypeReference[][] catchTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo,
-      DebuggingInformation debugInfo) {
+      DebuggingInformation debugInfo, Collection<Annotation> annotations) {
     this.cls = cls;
     this.cfg = cfg;
     this.ref = ref;
@@ -127,12 +129,14 @@ public abstract class AstMethod implements IMethod {
     this.hasMonitorOp = hasMonitorOp;
     this.lexicalInfo = lexicalInfo;
     this.debugInfo = debugInfo;
+    this.annotations = annotations;
   }
 
-  protected AstMethod(IClass cls, Collection qualifiers, MethodReference ref) {
+  protected AstMethod(IClass cls, Collection qualifiers, MethodReference ref, Collection<Annotation> annotations) {
     this.cls = cls;
     this.qualifiers = qualifiers;
     this.ref = ref;
+    this.annotations = annotations;
 
     this.cfg = null;
     this.symtab = null;
@@ -171,6 +175,10 @@ public abstract class AstMethod implements IMethod {
 
   public DebuggingInformation debugInfo() {
     return debugInfo;
+  }
+
+  public Collection<Annotation> getAnnotations() {
+    return annotations;
   }
 
   /**

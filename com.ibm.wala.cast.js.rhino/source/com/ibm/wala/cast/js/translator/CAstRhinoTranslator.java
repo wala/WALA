@@ -40,7 +40,7 @@ public class CAstRhinoTranslator implements TranslatorToCAst {
       rewriters.add(factory);
   }  
 
-  public CAstEntity translateToCAst() throws IOException {
+  public CAstEntity translateToCAst() throws IOException, Error {
     String N;
     if (M instanceof SourceFileModule) {
       N = ((SourceFileModule) M).getClassName();

@@ -22,6 +22,9 @@ NamedNodeList = function NamedNodeList() {
 	var maxLength = 10;
 	var local = new Array(10);
 	var counter = -1;
+	
+	local[0] = new DOMElement();
+	this[0] = local[0];
 
 	var checkAndIncrease = function checkAndIncrease() {
 		if(counter >= maxLength - 1) {
@@ -37,6 +40,11 @@ NamedNodeList = function NamedNodeList() {
         this.get = function _get(index) {
                 return local[ index ];
 	}
+	
+	this.item = function _item(index) {
+        	return new DOMElement();
+        	//return local[ index ];
+        }
 
 	this.add = function add(elem) {
 		checkAndIncrease();
@@ -89,6 +97,7 @@ NamedNodeList = function NamedNodeList() {
 }
 
 DOMNode = function DOMNode() { // An impostor for the Node class
+    this.attributes = new NamedNodeList();
 	this.childNodes = new NamedNodeList();
 	this.insertBefore = function Node_prototype_insertBefore(newChild, refChild) {
 				this.childNodes.insertBefore(newChild, refChild);
@@ -110,6 +119,10 @@ DOMNode = function DOMNode() { // An impostor for the Node class
 	this.ownerDocument = document;
 	this.ownerWindow = window;
 	this.ownerWindow.XMLHttpRequest = XMLHttpRequest;
+	
+	//these fields exist so we need to at least stub them out for pointer analysis
+	this.innerText = new String();
+	this.innerHTML = new String();
 
 	this.collect = function collect(predicate, result) {
           if (predicate(this)) {
@@ -117,6 +130,9 @@ DOMNode = function DOMNode() { // An impostor for the Node class
           }
           this.childNodes.collect(predicate, result);
         }
+        
+        this.selectNodes = function(a) {
+	}
 };
 
 DOMNode.prototype.addEventListener = function Node_prototype_addEventListener(name, fn) { fn(); };
@@ -147,12 +163,17 @@ DOMDocument = function DOMDocument() {
 
 	this.getElementById = function Document_prototype_getElementById(id) {
 		var result = new Array();
-		this.collect(function check_id(x) { return x.id == id; }, result);
+		result[0] = new DOMHTMLGenericElement("model");
+		//this.collect(function check_id(x) { return x.id == id; }, result);
 		return result[0];
 	};
 	
 	this.getElementsByTagName = function Document_prototype_getElementsByTagName(name) {
-		// TODO: implement
+		// TODO: change this to use the tag name and not the ID
+		var result = new Array();
+		result[0] = new DOMHTMLGenericElement("model");
+		//this.collect(function check_id(x) { return x.id == id; }, result);
+		return result;
 	};
 	
 	this.createTextNode = function Document_prototype_createTextNode(txt) {
@@ -161,6 +182,10 @@ DOMDocument = function DOMDocument() {
 	};
 
 	this.write = function Document_prototype_write (stuff) {
+
+	};
+	
+	this.writeln = function Document_prototype_write (stuff) {
 
 	};
 };
@@ -193,17 +218,22 @@ DOMHTMLDocument = function DOMHTMLDocument() {
 	this.forms = new Array();
 }
 
-
 Location = function Location(){
+	this.port = new String();
+	this.port.value = new String();
 	this.host = new String();
 	this.hostname = new String();
 	this.href = new String();
 	this.search = new String();
 	this.protocol = new String();
+	this.protocol.value = new String();
 	this.pathname = new String();
 	this.toString = function Location_to_string(){
 		return new String();
 	}
+	this.replace = function Location_replace(name) {
+    }
+	this.assign = function Location_assign(a) {}
 }
 
 Image = function Image() {
@@ -270,8 +300,52 @@ document = new DOMHTMLDocument();
 // Creating the root window object
 window = new DOMWindow();
 
+document.body = new Object();
+
 document.location = location;
 window.location = location;
+
+document.domain = new Object();
+document.title = new String();
+
+function Referrer() {
+	this.toString = function () { return new String();}
+}
+document.referrer = new Referrer();
+document.evaluate = function evaluate(a, b, c, d, e) {
+}
+document.execCommand = function execCommand(a,b,c) {}
+
+function Cookie() {
+	this.toString = function() { return new String(); }
+}
+document.cookie = new Cookie();
+
+document.createExpression = function createExpression(a,b) {return new String()}
+
+window.parseFloat = parseFloat;
+window.parseInt = parseInt;
+
+function ExecScript(code) {
+}
+
+window.execScript = ExecScript;
+window.eval = eval;
+
+function prompt(a, b) {
+	return new String();
+}
+
+window.prompt = prompt;
+
+window.escape = escape;
+window.encodeURI = encodeURI;
+window.encodeURIComponent = encodeURIComponent;
+window.unescape = unescape;
+window.decodeURI = decodeURI;
+window.decodeURIComponent = decodeURIComponent;
+
+window.navigate = function navigate(a) {}
 
 window.document = document;
 document.defaultView = window;
@@ -283,11 +357,20 @@ clearInterval = window.clearInterval;
 
 var dojo = new DOJOObj();
 
+function ElementStyle() {
+	this.background = new String();
+}
+
 DOMElement = function DOMElement() { // An impostor for the Element class
 	// inherits from Node
 	this.DOMNode = DOMNode;
 	this.DOMNode();
 	delete this.DOMNode;
+	
+	this.style = new ElementStyle();
+	
+	this.outerHTML = new String();
+	this.src = new String();
 
 	// The get/set/remove attribute methods cannot be run using 'onclick','onmouseover', 'on...' kind of arguments for name.
 	// since that would be used as a workaround for eval
@@ -303,10 +386,14 @@ DOMElement = function DOMElement() { // An impostor for the Element class
 	this.removeAttribute = function Element_prototype_removeAttribute(name) {
 		delete this[name];
 	};
+	
+	this.insertAdjacentHTML = function insertAdjacentHTML(a, b) {
+	};
 
     this.getElementsByTagName = function Element_prototype_getElementsByTagName(tagName) {
         var result = new Array();
-        this.collect(function check_tag(x) { return x.name == tagName; }, result);
+        result[0] = new DOMHTMLGenericElement("model");
+        //this.collect(function check_tag(x) { return x.name == tagName; }, result);
         return result;
 
     };
@@ -359,6 +446,34 @@ DOMHTMLElement = function DOMHTMLElement() { // An impostor for the HTMLElement 
 	
     this.forms = new Array();
     this.formCount = 0;
+    
+    // Set Javascript properties
+	this.getAttribute = function getAttribute(name) {
+			if(name == "id") return this.id;
+			else if(name == "title") return this.title;
+			else if(name == "lang") return this.lang;
+			else if(name == "dir") return this.dir;
+			else if(name == "class") return this.className;
+			else return this.attributes.get(name);
+		}
+
+	this.setAttribute = function setAttribute(name, value) {
+			if(name == "id") this.id = value;
+			else if(name == "title") this.title = value;
+			else if(name == "lang")  this.lang = value;
+			else if(name == "dir")  this.dir = value;
+			else if(name == "class") this.className = value;
+			else return this.attributes.set(name, value);
+		}
+
+	this.removeAttribute = function removeAttribute(name) {
+			if(name == "id") this.id = null;
+			else if(name == "title") this.title = null;
+			else if(name == "lang")  this.lang = null;
+			else if(name == "dir") this.dir = null;
+			else if(name == "class") this.className = null;
+			else return this.attributes.remove(name);
+		}
 }
 
 // Just a hack until all HTML elements have corresponding constructors
@@ -380,6 +495,7 @@ DOMHTMLGenericElement = function DOMHTMLGenericElement(tagName) {
 	this.documentWindow = window;
 	
 	this.getContext = function() { return new CanvasRenderingContext2D(); };
+	this.getAttribute = function() {return new String();}
 };
 
 CanvasRenderingContext2D = function CanvasRenderingContext2D() {};
@@ -423,6 +539,37 @@ DOMHTMLFormElement = function DOMHTMLFormElement() {
 	this.enctype = "application/x-www-form-urlencoded";
 	this.method = "get";
 	this.target = null;
+	
+	// Set Javascript properties
+	this.getAttribute = function getAttribute(name) {
+			if(name == "name") return this.name;
+			else if(name == "accept-charset") return this.acceptCharset;
+			else if(name == "action") return this.action;
+			else if(name == "enctype") return this.enctype;
+			else if(name == "method") return this.method;
+			else if(name == "target") return this.target;
+			else return this.prototype.getAttribute(name);
+		}
+
+	this.setAttribute = function setAttribute(name, value) {
+			if(name == "name") this.name = value;
+			else if(name == "accept-charset") this.acceptCharset = value;
+			else if(name == "action") this.action = value;
+			else if(name == "enctype") this.enctype = value;
+			else if(name == "method") this.method = value;
+			else if(name == "target") this.target = value;
+			else return this.prototype.setAttribute(name, value);
+		}
+
+	this.removeAttribute = function removeAttribute(name) {
+			if(name == "name") this.name = null;
+			else if(name == "accept-charset") this.acceptCharset = null;
+			else if(name == "action") this.action = null;
+			else if(name == "enctype") this.enctype = null;
+			else if(name == "method") this.method = null;
+			else if(name == "target") this.target = null;
+			else return this.prototype.removeAttribute(name);
+		}
 }
 
 DOMHTMLTableElement = function DOMHTMLTableElement () {
@@ -437,12 +584,18 @@ DOMHTMLTableElement = function DOMHTMLTableElement () {
 
 XMLHttpRequest = function XMLHttpRequest() {
 
+	this.responseText = new String();
+	this.responseXML = new DOMNode();
+	
 	this.UNSENT = 0;
 	this.OPENED = 1;
 	this.HEADERS_RECEIVED = 2;
 	this.LOADING = 3;
 	this.DONE = 4;
 
+	this.onreadystatechange = function xhr_onreadystatechange() {
+	}
+	
 	this.orsc_handler = function xhr_orsc_handler() {
 		this.onreadystatechange();
 	}
@@ -467,11 +620,11 @@ XMLHttpRequest = function XMLHttpRequest() {
 	}
 
 	this.getResponseHeader = function xhr_getResponseHeader(header) {
-
+		return new String();
 	}	
 
 	this.getAllResponseHeaders = function xhr_getAllResponseHeaders() {
-
+		return new String();
 	}
 
 };
@@ -485,4 +638,11 @@ for(var n = 0; n < dom_nodes.length; n++) {
 	dom_nodes[n].onload();
 	dom_nodes[n].onreadystatechange();
 }
+
+function ActiveXObject() {
+	this.async = new String();
+	this.loadXML = function AXOloadXML(url) {
+	}
+}
+
 

@@ -12,6 +12,7 @@ import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.WalaException;
 
 public class TestJQueryExamples extends TestJSCallGraphShape {
 
@@ -26,7 +27,7 @@ public class TestJQueryExamples extends TestJSCallGraphShape {
   }
 
   @Ignore("This tries to analyze unmodified jquery, which we can't do yet")
-  @Test public void testEx1() throws IOException, IllegalArgumentException, CancelException {
+  @Test public void testEx1() throws IOException, IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/jquery/ex1.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());

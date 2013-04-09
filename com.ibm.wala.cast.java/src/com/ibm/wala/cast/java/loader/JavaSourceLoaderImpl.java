@@ -182,7 +182,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     private JavaField(CAstEntity fieldEntity, IClassLoader loader, IClass declaringClass) {
       super(FieldReference.findOrCreate(declaringClass.getReference(), Atom.findOrCreateUnicodeAtom(fieldEntity.getName()),
           TypeReference.findOrCreate(loader.getReference(), TypeName.string2TypeName(fieldEntity.getType().getName()))),
-          fieldEntity.getQualifiers(), declaringClass, declaringClass.getClassHierarchy());
+          fieldEntity.getQualifiers(), declaringClass, declaringClass.getClassHierarchy(), null);
     }
   }
 
@@ -200,14 +200,14 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     public JavaEntityMethod(CAstEntity methodEntity, IClass owner, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
         TypeReference[][] catchTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
       super(owner, methodEntity.getQualifiers(), cfg, symtab, MethodReference.findOrCreate(owner.getReference(), Util
-          .methodEntityToSelector(methodEntity)), hasCatchBlock, catchTypes, hasMonitorOp, lexicalInfo, debugInfo);
+          .methodEntityToSelector(methodEntity)), hasCatchBlock, catchTypes, hasMonitorOp, lexicalInfo, debugInfo, null);
       this.parameterTypes = computeParameterTypes(methodEntity);
       this.exceptionTypes = computeExceptionTypes(methodEntity);
     }
 
     public JavaEntityMethod(CAstEntity methodEntity, IClass owner) {
       super(owner, methodEntity.getQualifiers(), MethodReference.findOrCreate(owner.getReference(), Util
-          .methodEntityToSelector(methodEntity)));
+          .methodEntityToSelector(methodEntity)), null);
       this.parameterTypes = computeParameterTypes(methodEntity);
       this.exceptionTypes = computeExceptionTypes(methodEntity);
     }
