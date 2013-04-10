@@ -15,5 +15,5 @@ Export-Package: com.ibm.wala.shrike.bench,
  com.ibm.wala.shrikeBT.shrikeCT.tools,
  com.ibm.wala.shrikeBT.tools,
  com.ibm.wala.shrikeCT
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: com.ibm.wala.util

@@ -15,4 +15,4 @@ Require-Bundle: com.ibm.wala.cast.js,
  com.ibm.wala.cast.test;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: com.ibm.wala.cast.js.test
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

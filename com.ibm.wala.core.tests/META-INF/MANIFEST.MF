@@ -21,6 +21,6 @@ Export-Package: com.ibm.wala.core.tests.basic,
  com.ibm.wala.examples.analysis.dataflow,
  com.ibm.wala.examples.drivers,
  com.ibm.wala.examples.properties
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: com.ibm.wala.core.tests.plugin.CoreTestsPlugin

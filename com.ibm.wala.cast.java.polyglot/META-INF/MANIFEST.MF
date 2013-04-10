@@ -11,7 +11,7 @@ Require-Bundle: com.ibm.wala.cast.java,
  com.ibm.wala.shrike,
  org.eclipse.jdt.core,
  org.eclipse.core.resources
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: com.ibm.wala.cast.java.translator.polyglot;
   uses:="com.ibm.wala.types,
