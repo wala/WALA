@@ -246,6 +246,11 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       finalRegion.println("window.__MAIN__();");
     }
   }
+
+  /**
+   * for storing the name of the temp file created by extractSources()
+   */
+  private File tempFile;
   
   public Set<MappedSourceModule> extractSources(URL entrypointUrl, IHtmlParser htmlParser, IUrlResolver urlResolver)
   throws IOException, Error {
@@ -259,6 +264,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     
     // writing the final region into one SourceFileModule.
     File outputFile = createOutputFile(entrypointUrl, DELETE_UPON_EXIT, USE_TEMP_NAME);
+    tempFile = outputFile;
     FileMapping fileMapping = finalRegion.writeToFile(new PrintStream(outputFile));
     if (fileMapping == null) {
       fileMapping = new EmptyFileMapping();
@@ -300,6 +306,11 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     System.out.println(entry);
     entry.getMapping().dump(System.out);
     
+  }
+
+  @Override
+  public File getTempFile() {
+    return tempFile;
   }
 }
 

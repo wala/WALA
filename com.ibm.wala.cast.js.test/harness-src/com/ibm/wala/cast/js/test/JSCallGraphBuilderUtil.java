@@ -137,7 +137,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
     IRFactory irFactory = AstIRFactory.makeDefaultFactory();
     JavaScriptLoaderFactory loaders = new WebPageLoaderFactory(translatorFactory, preprocessor);
     try {
-      Set<MappedSourceModule> script = WebUtil.extractScriptFromHTML(url);
+      Set<MappedSourceModule> script = WebUtil.extractScriptFromHTML(url).fst;
       scripts = script.toArray(new SourceModule[script.size()]);
     } catch (Error e) {
       SourceModule dummy = new SourceURLModule(url);

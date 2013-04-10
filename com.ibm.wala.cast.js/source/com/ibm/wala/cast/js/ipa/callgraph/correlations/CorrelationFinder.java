@@ -249,7 +249,7 @@ public class CorrelationFinder {
     JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
     Set<? extends SourceModule> script = null;
     try {
-      script = WebUtil.extractScriptFromHTML(url);
+      script = WebUtil.extractScriptFromHTML(url).fst;
     } catch (Error e) {
       assert false : e.warning;
     }
