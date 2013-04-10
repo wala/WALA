@@ -27,5 +27,5 @@ Export-Package: com.ibm.wala.cast.analysis.typeInference,
  com.ibm.wala.cast.tree.visit,
  com.ibm.wala.cast.types,
  com.ibm.wala.cast.util
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 

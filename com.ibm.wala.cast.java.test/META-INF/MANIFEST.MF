@@ -14,4 +14,4 @@ Require-Bundle: org.junit4,
  org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
 Export-Package: com.ibm.wala.cast.java.test
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

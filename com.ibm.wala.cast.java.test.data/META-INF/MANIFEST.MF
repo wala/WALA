@@ -4,5 +4,5 @@ Bundle-Name: Data Plug-in
 Bundle-SymbolicName: com.ibm.wala.cast.java.test.data
 Bundle-Version: 1.0.0
 Bundle-Vendor: IBM
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy

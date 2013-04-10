@@ -34,3 +34,4 @@ Require-Bundle: com.ibm.wala.cast,
  org.eclipse.core.runtime;bundle-version="3.4.0",
  org.apache.commons.logging
 Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

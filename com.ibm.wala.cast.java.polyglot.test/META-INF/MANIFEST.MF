@@ -14,5 +14,5 @@ Require-Bundle: com.ibm.wala.cast;bundle-version="1.0.0",
  com.ibm.wala.cast.test;bundle-version="1.0.0",
  com.ibm.wala.cast.java.polyglot;bundle-version="1.0.0",
  org.junit4;bundle-version="4.3.1"
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy

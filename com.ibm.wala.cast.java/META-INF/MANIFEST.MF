@@ -23,4 +23,4 @@ Export-Package: com.ibm.wala.cast.java,
  com.ibm.wala.cast.java.translator,
  com.ibm.wala.cast.java.types
 Bundle-ClassPath: .
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
