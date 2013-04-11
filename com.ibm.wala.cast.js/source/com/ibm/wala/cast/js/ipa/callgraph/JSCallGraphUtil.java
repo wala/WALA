@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.cast.ipa.callgraph.StandardFunctionTargetSelector;
@@ -36,6 +37,7 @@ import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.cfg.AbstractCFG;
+import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.SourceURLModule;
@@ -163,7 +165,7 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
       JSAstTranslator toIR = new JSAstTranslator(cl) {
         @Override
         protected void defineFunction(CAstEntity N, WalkContext definingContext, AbstractCFG cfg, SymbolTable symtab,
-            boolean hasCatchBlock, TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation LI,
+            boolean hasCatchBlock, Map<IBasicBlock,TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation LI,
             DebuggingInformation debugInfo) {
           String fnName = "L" + composeEntityName(definingContext, N);
           names.add(fnName);

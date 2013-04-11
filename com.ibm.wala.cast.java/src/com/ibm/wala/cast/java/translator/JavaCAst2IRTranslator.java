@@ -15,6 +15,7 @@ package com.ibm.wala.cast.java.translator;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
@@ -30,6 +31,7 @@ import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.CAstType.Method;
 import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cfg.AbstractCFG;
+import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.ModuleEntry;
@@ -229,7 +231,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
   }
 
   protected void defineFunction(CAstEntity N, WalkContext definingContext, AbstractCFG cfg, SymbolTable symtab,
-      boolean hasCatchBlock, TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo,
+      boolean hasCatchBlock, Map<IBasicBlock,TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo,
       DebuggingInformation debugInfo) {
     // N.B.: base class may actually ask to create a synthetic type to wrap
     // code bodies, so we may see other things than TYPE_ENTITY here.

@@ -49,6 +49,7 @@ import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.CAstType.Function;
 import com.ibm.wala.cfg.AbstractCFG;
+import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.ClassLoaderImpl;
 import com.ibm.wala.classLoader.IClass;
@@ -159,9 +160,9 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     }
 
     private void addMethod(CAstEntity methodEntity, IClass owner, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
-        TypeReference[][] catchTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
+        Map<IBasicBlock, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
       declaredMethods.put(Util.methodEntityToSelector(methodEntity), new ConcreteJavaMethod(methodEntity, owner, cfg, symtab,
-          hasCatchBlock, catchTypes, hasMonitorOp, lexicalInfo, debugInfo));
+          hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo, debugInfo));
     }
 
     private void addMethod(CAstEntity methodEntity, IClass owner) {
@@ -239,9 +240,9 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     private final TypeReference[] exceptionTypes;
 
     public JavaEntityMethod(CAstEntity methodEntity, IClass owner, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
-        TypeReference[][] catchTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
+        Map<IBasicBlock, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
       super(owner, methodEntity.getQualifiers(), cfg, symtab, MethodReference.findOrCreate(owner.getReference(), Util
-          .methodEntityToSelector(methodEntity)), hasCatchBlock, catchTypes, hasMonitorOp, lexicalInfo, debugInfo, JavaSourceLoaderImpl.this.getAnnotations(methodEntity));
+          .methodEntityToSelector(methodEntity)), hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo, debugInfo, JavaSourceLoaderImpl.this.getAnnotations(methodEntity));
       this.parameterTypes = computeParameterTypes(methodEntity);
       this.exceptionTypes = computeExceptionTypes(methodEntity);
     }
@@ -350,8 +351,8 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
    */
   public class ConcreteJavaMethod extends JavaEntityMethod {
     public ConcreteJavaMethod(CAstEntity methodEntity, IClass owner, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
-        TypeReference[][] catchTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
-      super(methodEntity, owner, cfg, symtab, hasCatchBlock, catchTypes, hasMonitorOp, lexicalInfo, debugInfo);
+        Map<IBasicBlock, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
+      super(methodEntity, owner, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo, debugInfo);
     }
 
     public IClassHierarchy getClassHierarchy() {
@@ -478,8 +479,8 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
   }
 
   public void defineFunction(CAstEntity n, IClass owner, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
-      TypeReference[][] catchTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
-    ((JavaClass) owner).addMethod(n, owner, cfg, symtab, hasCatchBlock, catchTypes, hasMonitorOp, lexicalInfo, debugInfo);
+      Map<IBasicBlock, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
+    ((JavaClass) owner).addMethod(n, owner, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo, debugInfo);
   }
 
   public void defineAbstractFunction(CAstEntity n, IClass owner) {

@@ -150,7 +150,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * been processed
    */
   protected abstract void defineFunction(CAstEntity N, WalkContext definingContext, AbstractCFG cfg, SymbolTable symtab,
-      boolean hasCatchBlock, TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo,
+      boolean hasCatchBlock, Map<IBasicBlock, TypeReference[]> catchTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo,
       DebuggingInformation debugInfo);
 
   /**
@@ -826,7 +826,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
             setCurrentBlockAsHandler();
             e = sourceContext.astContext.currentScope().allocateTempValue();
             addInstruction(insts.GetCaughtExceptionInstruction(startBlock.getNumber(), e));
-            sourceContext.astContext.setCatchType(startBlock.getNumber(), defaultCatchType());
+            sourceContext.astContext.setCatchType(startBlock, defaultCatchType());
           }
 
           while (sourceContext != null && (targetContext == null || !targetContext.covers(sourceContext))) {
@@ -1235,11 +1235,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       
       for (int i = 0, blockNumber = 0; i < blocks.size(); i++) {
         PreBasicBlock pb = blocks.get(i);
+        PreBasicBlock block = blocks.get(i);
+        block.setGraphNodeId(-1);
         if (liveBlocks.contains(pb)) {
-          instructionToBlockMap[blockNumber] = blocks.get(i).getLastInstructionIndex();
+          instructionToBlockMap[blockNumber] = block.getLastInstructionIndex();
 
-          PreBasicBlock block = blocks.get(i);
-          block.setGraphNodeId(-1);
           this.addNode(block);
           if (block.isCatchBlock()) {
             setCatchBlock(blockNumber);
@@ -2110,11 +2110,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     UnwindState getUnwindState();
 
-    void setCatchType(int blockNumber, TypeReference catchType);
+    void setCatchType(IBasicBlock bb, TypeReference catchType);
 
     void setCatchType(CAstNode catchNode, TypeReference catchType);
 
-    TypeReference[][] getCatchTypes();
+    Map<IBasicBlock,TypeReference[]> getCatchTypes();
 
     void addEntityName(CAstEntity e, String name);
     
@@ -2185,15 +2185,15 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       return parent.getUnwindState();
     }
 
-    public void setCatchType(int blockNumber, TypeReference catchType) {
-      parent.setCatchType(blockNumber, catchType);
+    public void setCatchType(IBasicBlock bb, TypeReference catchType) {
+      parent.setCatchType(bb, catchType);
     }
 
     public void setCatchType(CAstNode catchNode, TypeReference catchType) {
       parent.setCatchType(catchNode, catchType);
     }
 
-    public TypeReference[][] getCatchTypes() {
+    public Map<IBasicBlock, TypeReference[]> getCatchTypes() {
       return parent.getCatchTypes();
     }
 
@@ -2286,7 +2286,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     private final IncipientCFG cfg;
 
-    private TypeReference[][] catchTypes = new TypeReference[0][];
+    private final Map<IBasicBlock,TypeReference[]> catchTypes = HashMapFactory.make();
 
     Set<Pair<Pair<String, String>, Integer>> exposedReads;
     Set<Pair<Pair<String, String>, Integer>> exposedWrites;
@@ -2362,20 +2362,14 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
 
     public void setCatchType(CAstNode catchNode, TypeReference catchType) {
-      setCatchType(cfg.getBlock(catchNode).getNumber(), catchType);
+      setCatchType(cfg.getBlock(catchNode), catchType);
     }
 
-    public void setCatchType(int blockNumber, TypeReference catchType) {
-      if (catchTypes.length <= blockNumber) {
-        TypeReference[][] data = new TypeReference[blockNumber + 1][];
-        System.arraycopy(catchTypes, 0, data, 0, catchTypes.length);
-        catchTypes = data;
-      }
-
-      if (catchTypes[blockNumber] == null) {
-        catchTypes[blockNumber] = new TypeReference[] { catchType };
+    public void setCatchType(IBasicBlock bb, TypeReference catchType) {
+      if (! catchTypes.containsKey(bb)) {
+        catchTypes.put(bb, new TypeReference[] { catchType });
       } else {
-        TypeReference[] data = catchTypes[blockNumber];
+        TypeReference[] data = catchTypes.get(bb);
 
         for (int i = 0; i < data.length; i++) {
           if (data[i] == catchType) {
@@ -2387,11 +2381,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         System.arraycopy(data, 0, newData, 0, data.length);
         newData[data.length] = catchType;
 
-        catchTypes[blockNumber] = newData;
+        catchTypes.put(bb, newData);
       }
     }
 
-    public TypeReference[][] getCatchTypes() {
+    public Map<IBasicBlock,TypeReference[]> getCatchTypes() {
       return catchTypes;
     }
     
@@ -3034,7 +3028,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     // create code entry stuff for this entity
     SymbolTable symtab = ((AbstractScope) functionContext.currentScope()).getUnderlyingSymtab();
-    TypeReference[][] catchTypes = functionContext.getCatchTypes();
+    Map<IBasicBlock,TypeReference[]> catchTypes = functionContext.getCatchTypes();
     AstCFG cfg = new AstCFG(n, functionContext.cfg(), symtab);
     Position[] line = functionContext.cfg().getLinePositionMap();
     boolean katch = functionContext.cfg().hasCatchBlock();
@@ -4261,13 +4255,13 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       return null;
     }
 
-    public void setCatchType(int blockNumber, TypeReference catchType) {
+    public void setCatchType(IBasicBlock bb, TypeReference catchType) {
     }
 
     public void setCatchType(CAstNode castNode, TypeReference catchType) {
     }
 
-    public TypeReference[][] getCatchTypes() {
+    public Map<IBasicBlock, TypeReference[]> getCatchTypes() {
       return null;
     }
     
