@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.loader;
 
 import java.util.Collection;
+import java.util.Map;
 
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.ir.translator.AstTranslator.AstLexicalInformation;
@@ -19,6 +20,7 @@ import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.ControlFlowGraph;
+import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ssa.SymbolTable;
@@ -111,20 +113,20 @@ public abstract class AstMethod implements IMethod {
   private final MethodReference ref;
   private final boolean hasCatchBlock;
   private final boolean hasMonitorOp;
-  private final TypeReference[][] catchTypes;
+  private final Map<IBasicBlock, TypeReference[]> catchTypes;
   private final AstLexicalInformation lexicalInfo;
   private final DebuggingInformation debugInfo;
   private final Collection<Annotation> annotations;
 
   protected AstMethod(IClass cls, Collection qualifiers, AbstractCFG cfg, SymbolTable symtab, MethodReference ref,
-      boolean hasCatchBlock, TypeReference[][] catchTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo,
+      boolean hasCatchBlock, Map<IBasicBlock, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo,
       DebuggingInformation debugInfo, Collection<Annotation> annotations) {
     this.cls = cls;
     this.cfg = cfg;
     this.ref = ref;
     this.symtab = symtab;
     this.qualifiers = qualifiers;
-    this.catchTypes = catchTypes;
+    this.catchTypes = caughtTypes;
     this.hasCatchBlock = hasCatchBlock;
     this.hasMonitorOp = hasMonitorOp;
     this.lexicalInfo = lexicalInfo;
@@ -161,7 +163,7 @@ public abstract class AstMethod implements IMethod {
     return symtab;
   }
 
-  public TypeReference[][] catchTypes() {
+  public Map<IBasicBlock, TypeReference[]> catchTypes() {
     return catchTypes;
   }
 

@@ -10,6 +10,8 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.translator;
 
+import java.util.Map;
+
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
@@ -26,6 +28,7 @@ import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
 import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.cfg.AbstractCFG;
+import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
@@ -135,7 +138,7 @@ public class JSAstTranslator extends AstTranslator {
   }
 
   protected void defineFunction(CAstEntity N, WalkContext definingContext, AbstractCFG cfg, SymbolTable symtab,
-      boolean hasCatchBlock, TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation LI,
+      boolean hasCatchBlock, Map<IBasicBlock,TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation LI,
       DebuggingInformation debugInfo) {
     if (DEBUG)
       System.err.println(("\n\nAdding code for " + N));

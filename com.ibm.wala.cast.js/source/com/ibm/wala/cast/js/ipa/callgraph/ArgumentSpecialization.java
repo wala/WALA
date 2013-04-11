@@ -21,6 +21,7 @@ import com.ibm.wala.cast.util.CAstPattern;
 import com.ibm.wala.cast.util.CAstPattern.Segments;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.ControlFlowGraph;
+import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -291,7 +292,7 @@ public class ArgumentSpecialization {
 
             @Override
             protected void defineFunction(CAstEntity N, WalkContext definingContext, AbstractCFG cfg, SymbolTable symtab,
-                boolean hasCatchBlock, TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation LI,
+                boolean hasCatchBlock, Map<IBasicBlock,TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation LI,
                 DebuggingInformation debugInfo) {
               if (N == codeBodyEntity) {
                 specializedCode = myloader.makeCodeBodyCode(cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, LI, debugInfo, method.getDeclaringClass());

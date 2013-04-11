@@ -10,11 +10,14 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.ssa;
 
+import java.util.Map;
+
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.ControlFlowGraph;
+import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ssa.DefaultIRFactory;
@@ -82,12 +85,12 @@ public class AstIRFactory implements IRFactory {
         }
     }
 
-    private void setupCatchTypes(SSACFG cfg, TypeReference[][] catchTypes) {
-      for (int i = 0; i < catchTypes.length; i++) {
-        if (catchTypes[i] != null) {
-          ExceptionHandlerBasicBlock bb = (ExceptionHandlerBasicBlock) cfg.getNode(i);
-          for (int j = 0; j < catchTypes[i].length; j++) {
-            bb.addCaughtExceptionType(catchTypes[i][j]);
+    private void setupCatchTypes(SSACFG cfg, Map<IBasicBlock, TypeReference[]> map) {
+      for(Map.Entry<IBasicBlock,TypeReference[]> e : map.entrySet()) {
+        if (e.getKey().getNumber() != -1) {
+          ExceptionHandlerBasicBlock bb = (ExceptionHandlerBasicBlock) cfg.getNode(e.getKey().getNumber());
+          for (int j = 0; j < e.getValue().length; j++) {
+            bb.addCaughtExceptionType(e.getValue()[j]);
           }
         }
       }

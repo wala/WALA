@@ -643,6 +643,11 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
       verifyGraphAssertions(CG, assertionsForDeadCode);
     }
 
+    @Test
+    public void testDeadCatch() throws IllegalArgumentException, IOException, CancelException, WalaException {
+      JSCallGraphBuilderUtil.makeScriptCG("tests", "dead_catch.js");
+    }
+
     @Test(expected = CallGraphBuilderCancelException.class)
     public void testManyStrings() throws IllegalArgumentException, IOException, CancelException, WalaException {
       SSAPropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "many-strings.js");
