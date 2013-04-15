@@ -243,7 +243,16 @@ public class ArrayClass implements IClass, Constants {
   }
 
   public int getDimensionality() {
-    int mask = getReference().getDerivedMask();
+    return getArrayTypeDimensionality(getReference());
+  }
+
+  /**
+   * 
+   * @param reference a type reference for an array type
+   * @return the dimensionality of the array
+   */
+  public static int getArrayTypeDimensionality(TypeReference reference) {
+    int mask = reference.getDerivedMask();
     if ((mask&PrimitiveMask) == PrimitiveMask) {
       mask >>= ElementBits;
     }

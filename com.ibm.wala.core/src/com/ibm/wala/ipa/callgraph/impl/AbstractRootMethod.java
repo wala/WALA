@@ -207,7 +207,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     if (T.isReferenceType()) {
       NewSiteReference ref = NewSiteReference.make(statements.size(), T);
       if (T.isArrayType()) {
-        int[] sizes = new int[((ArrayClass)cha.lookupClass(T)).getDimensionality()];
+        int[] sizes = new int[ArrayClass.getArrayTypeDimensionality(T)];
         Arrays.fill(sizes, getValueNumberForIntConstant(1));
         result = insts.NewInstruction(instance, ref, sizes);
       } else {
