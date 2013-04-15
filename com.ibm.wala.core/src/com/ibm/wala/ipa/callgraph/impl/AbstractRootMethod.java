@@ -205,6 +205,12 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     SSANewInstruction result = null;
 
     if (T.isReferenceType()) {
+      IClass klass = cha.lookupClass(T);
+      if (klass == null) {
+        Warnings.add(AllocationFailure.create(T));
+        return null;
+      }
+
       NewSiteReference ref = NewSiteReference.make(statements.size(), T);
       if (T.isArrayType()) {
         int[] sizes = new int[ArrayClass.getArrayTypeDimensionality(T)];
@@ -214,12 +220,6 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
         result = insts.NewInstruction(instance, ref);
       }
       statements.add(result);
-
-      IClass klass = cha.lookupClass(T);
-      if (klass == null) {
-        Warnings.add(AllocationFailure.create(T));
-        return null;
-      }
 
       if (klass.isArrayClass()) {
         int arrayRef = result.getDef();
