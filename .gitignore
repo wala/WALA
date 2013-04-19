@@ -1,3 +1,4 @@
+target/
 */bin/
 com.ibm.wala.cast.js.rhino/lib/
 com.ibm.wala.cast.js/lib/
