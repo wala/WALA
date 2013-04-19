@@ -29,14 +29,6 @@
 		<module>com.ibm.wala.shrike</module>
 		<module>com.ibm.wala.util</module>
 		<module>com.ibm.wala-repository</module>
-        <!--
-        <module>com.ibm.wala.tests-feature</module>
-        <module>com.ibm.wala.core.tests</module>
-        <module>com.ibm.wala.core.testdata</module>
-        <module>com.ibm.wala.cast.test</module>
-        <module>com.ibm.wala.cast.java.test</module>
-        <module>com.ibm.wala.cast.java.test.data</module>
-        -->
 	</modules>
 	<build>
 		<plugins>
