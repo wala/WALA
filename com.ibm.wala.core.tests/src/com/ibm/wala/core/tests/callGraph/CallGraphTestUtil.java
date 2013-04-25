@@ -10,7 +10,11 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.callGraph;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -22,6 +26,7 @@ import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.perf.StopwatchGC;
 
@@ -44,8 +49,37 @@ public class CallGraphTestUtil {
    */
   private static final boolean CHECK_FOOTPRINT = false;
 
-  public static AnalysisScope makeJ2SEAnalysisScope(String scopeFile, String exclusionsFile) throws IOException {
-    AnalysisScope scope = AnalysisScopeReader.readJavaScope(scopeFile, (new FileProvider()).getFile(exclusionsFile), MY_CLASSLOADER);
+  public static AnalysisScope makeJ2SEAnalysisScope(String scopeFileName, String exclusionsFileName) throws IOException {
+    AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
+    FileProvider fileProvider = new FileProvider();
+    File exclusionsFile = fileProvider.getFile(exclusionsFileName, MY_CLASSLOADER);
+    BufferedReader r = null;
+    try {
+      InputStream scopeStream = fileProvider.getInputStreamFromClassLoader(scopeFileName, MY_CLASSLOADER);
+
+      String line;
+
+      // assume the scope file is UTF-8 encoded; ASCII files will also be
+      // handled properly
+      // TODO allow specifying encoding as a parameter?
+      r = new BufferedReader(new InputStreamReader(scopeStream, "UTF-8"));
+      while ((line = r.readLine()) != null) {
+        AnalysisScopeReader.processScopeDefLine(scope, MY_CLASSLOADER, line);
+      }
+
+      if (exclusionsFile != null) {
+        scope.setExclusions(FileOfClasses.createFileOfClasses(exclusionsFile));
+      }
+
+    } finally {
+      if (r != null) {
+        try {
+          r.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
     return scope;
   }
 
