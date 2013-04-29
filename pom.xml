@@ -28,7 +28,7 @@
 		<module>com.ibm.wala.cast.java</module>
 		<!-- excluded since ant uses my JRE instead of JDk and thus can't find 
 			tools.jar -->
-		<!-- module>com.ibm.wala.cast.java.polyglot</module -->
+		<module>com.ibm.wala.cast.java.polyglot</module>
 		<module>com.ibm.wala.cast.js</module>
 		<module>com.ibm.wala.cast.js.rhino</module>
 

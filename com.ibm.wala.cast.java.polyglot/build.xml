@@ -17,7 +17,7 @@
 	<!-- This property has been updated to correspond to the paths used by the latest Java update
 	on Mac OS X 10.6 (Java version 1.6.0_22).  If you are not using this version of Mac OS X or Java,
 	try changing the value of the property to "${java.home}/../../../Classes" -->
-    <condition property="dir_bootclasspath" value="${java.home}/../Classes">
+<!--    <condition property="dir_bootclasspath" value="${java.home}/../Classes">
             <os family="mac"/>
     </condition>
     <property name="dir_bootclasspath" value="${java.home}/lib"/>
@@ -30,7 +30,7 @@
 	<property name="bootclasspath" refid="path_bootclasspath"/>
 	<property name="bundleJavacSource" value="${javacSource}"/>
 	<property name="bundleJavacTarget" value="${javacTarget}"/>
-	<property name="bundleBootClasspath" value="${bootclasspath}"/>
+	<property name="bundleBootClasspath" value="${bootclasspath}"/> -->
 
      <target name="PolyglotPresent" depends="init">
         <available file="${plugin.destination}/lib/polyglot.jar" property="polyglot.present"/>

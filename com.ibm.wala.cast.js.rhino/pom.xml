@@ -21,7 +21,7 @@
 							<goal>wget</goal>
 						</goals>
 						<configuration>
-							<url>http://repo1.maven.org/maven2/org/mozilla/rhino/1.7R4/rhino-1.7R4.jar</url>
+							<url>http://repo1.maven.org/maven2/org/mozilla/rhino/1.7R3/rhino-1.7R3.jar</url>
 							<outputDirectory>lib/</outputDirectory>
 						</configuration>
 					</execution>
