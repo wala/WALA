@@ -3,10 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: JavaScript Plug-in
 Bundle-SymbolicName: com.ibm.wala.cast.js;singleton:=true
 Bundle-Version: 1.3.4.qualifier
-Bundle-ClassPath: bin/,
- .,
- lib/js.jar,
- lib/xalan.jar
+Bundle-ClassPath: .,
+ lib/jericho-html-3.2.jar
 Bundle-Activator: com.ibm.wala.cast.js.JavaScriptPlugin
 Bundle-Vendor: IBM
 Export-Package: com.ibm.wala.cast.js,
