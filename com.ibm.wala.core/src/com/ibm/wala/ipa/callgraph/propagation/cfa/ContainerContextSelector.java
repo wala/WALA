@@ -103,6 +103,7 @@ public class ContainerContextSelector implements ContextSelector {
    * com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod,
    * com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
    */
+  @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] keys) {
     if (DEBUG) {
       System.err.println("ContainerContextSelector: getCalleeTarget " + callee);
@@ -170,7 +171,8 @@ public class ContainerContextSelector implements ContextSelector {
   }
 
   /**
-   * return true iff m represents one of the well-known methods in java.lang.reflect.Arrays that do some sort of arraycopy
+   * return true iff m represents one of the well-known methods in
+   * java.lang.reflect.Arrays that do some sort of arraycopy
    */
   private static boolean isArrayCopyMethod(MethodReference m) {
     if (m.getDeclaringClass().equals(Arrays)) {
@@ -194,8 +196,9 @@ public class ContainerContextSelector implements ContextSelector {
   }
 
   /**
-   * This method walks recursively up the definition of a context C, to see if the chain of contexts that give rise to C a) includes
-   * the method M. or b) includes the method in which the receiver was allocated
+   * This method walks recursively up the definition of a context C, to see if
+   * the chain of contexts that give rise to C a) includes the method M. or b)
+   * includes the method in which the receiver was allocated
    * 
    * @return the matching context if found, null otherwise
    */
@@ -218,10 +221,11 @@ public class ContainerContextSelector implements ContextSelector {
   }
 
   /**
-   * This method walks recursively up the definition of a context C, to see if the chain of contexts that give rise to C includes
-   * the method M.
+   * This method walks recursively up the definition of a context C, to see if
+   * the chain of contexts that give rise to C includes the method M.
    * 
-   * If C is a ReceiverInstanceContext, Let N be the node that allocated C.instance. If N.method == M, return N. Else return
+   * If C is a ReceiverInstanceContext, Let N be the node that allocated
+   * C.instance. If N.method == M, return N. Else return
    * findRecursiveMatchingContext(M, N.context) Else return null
    */
   public static CGNode findNodeRecursiveMatchingContext(IMethod m, Context c) {
@@ -254,10 +258,11 @@ public class ContainerContextSelector implements ContextSelector {
   }
 
   /**
-   * This method walks recursively up the definition of a context C, to see if the chain of contexts that give rise to C includes
-   * the method M.
+   * This method walks recursively up the definition of a context C, to see if
+   * the chain of contexts that give rise to C includes the method M.
    * 
-   * If C is a ReceiverInstanceContext, Let N be the node that allocated C.instance. If N.method == M, return N.context. Else return
+   * If C is a ReceiverInstanceContext, Let N be the node that allocated
+   * C.instance. If N.method == M, return N.context. Else return
    * findRecursiveMatchingContext(M, N.context) Else return null
    */
   public static Context findRecursiveMatchingContext(IMethod M, Context C) {
@@ -333,6 +338,7 @@ public class ContainerContextSelector implements ContextSelector {
 
   private static final IntSet thisParameter = IntSetUtil.make(new int[]{0});
 
+  @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     if (site.isDispatch() || site.getDeclaredTarget().getNumberOfParameters() > 0) {
       return thisParameter;
