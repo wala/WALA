@@ -94,13 +94,11 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
       script = JSCallGraphBuilderUtil.class.getClassLoader().getResource(dir + "/" + name);
     }
     assert script != null : "cannot find " + dir + " and " + name;
-    SourceFileModule sourceModule = makeSourceModule(script, dir, name);
-
     AnalysisScope scope;
     if (script.openConnection() instanceof JarURLConnection) {
       scope = makeScope(new URL[] { script }, loaders, JavaScriptLoader.JS);
     } else {
-      scope = makeScope(new SourceFileModule[] { sourceModule }, loaders, JavaScriptLoader.JS);
+      scope = makeScope(new SourceFileModule[] { makeSourceModule(script, dir, name) }, loaders, JavaScriptLoader.JS);
     }
 
     return scope;
