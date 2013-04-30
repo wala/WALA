@@ -34,6 +34,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSetAction;
 
@@ -278,5 +279,13 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
 
   protected ConstraintVisitor makeVisitor(CGNode node) {
     return new AstJavaConstraintVisitor(this, node);
+  }
+
+  @Override
+  protected boolean sameMethod(CGNode opNode, String definingMethod) {
+    MethodReference reference = opNode.getMethod().getReference();
+    String selector = reference.getSelector().toString();
+    String containingClass = reference.getDeclaringClass().getName().toString();
+    return definingMethod.equals(containingClass + "/" + selector);
   }
 }
