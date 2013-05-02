@@ -1036,6 +1036,11 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     } else {
       PointerKey EA = getPointerKeyForLocal(caller, instruction.getDef(1));
       system.newConstraint(EA, assignOperator, EF);
-    }
+    }  
+  }
+
+  @Override
+  protected boolean sameMethod(CGNode opNode, String definingMethod) {
+    return definingMethod.equals(opNode.getMethod().getReference().getDeclaringClass().getName().toString());
   }
 }

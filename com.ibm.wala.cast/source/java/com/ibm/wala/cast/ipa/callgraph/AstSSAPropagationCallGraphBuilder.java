@@ -693,7 +693,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     private Set<CGNode> getLexicalDefiners(final CGNode opNode, final Pair<String, String> definer) {
       if (definer == null) {
         return Collections.singleton(getBuilder().getCallGraph().getFakeRootNode());
-      } else if (definer.snd.equals(opNode.getMethod().getReference().getDeclaringClass().getName().toString())) {
+      } else if (getBuilder().sameMethod(opNode, definer.snd)) {
         // lexical access to a variable declared in opNode itself
         assert AstTranslator.NEW_LEXICAL;
         return Collections.singleton(opNode);
@@ -1361,4 +1361,13 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       });
     }
   }
+
+  /**
+   * 
+   * Is definingMethod the same as the method represented by opNode?  We need this since the names for 
+   * methods in some languages don't map in the straightforward way to the CGNode 
+   */
+  protected abstract boolean sameMethod(final CGNode opNode, final String definingMethod);
+
+
 }
