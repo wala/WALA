@@ -91,7 +91,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
   }
 
   protected boolean useLocalValuesForLexicalVars() {
-    return true;
+    return false;
   }
 
   protected void doThrow(WalkContext context, int exception) {

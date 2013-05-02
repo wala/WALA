@@ -19,7 +19,7 @@ import java.net.URL;
 import com.ibm.wala.util.io.FileSuffixes;
 
 /**
- * A {@link Module} which is a wrapper around a .java file
+ * A {@link Module} which is a wrapper around a source file
  */
 public class SourceFileModule extends FileModule implements Module, ModuleEntry, SourceModule {
 

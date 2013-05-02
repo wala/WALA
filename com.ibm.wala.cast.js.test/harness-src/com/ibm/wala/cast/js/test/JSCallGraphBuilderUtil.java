@@ -25,10 +25,12 @@ import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
 import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
+import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSZeroOrOneXCFABuilder;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.loader.CAstAbstractLoader;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.classLoader.SourceURLModule;
@@ -79,7 +81,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
   }
 
   public static JSCFABuilder makeScriptCGBuilder(String dir, String name, CGBuilderType builderType) throws IOException, WalaException {
-    JavaScriptLoaderFactory loaders = JSCallGraphBuilderUtil.makeLoaders();
+    JavaScriptLoaderFactory loaders = JSCallGraphUtil.makeLoaders();
 
     AnalysisScope scope = makeScriptScope(dir, name, loaders);
 
@@ -92,7 +94,6 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
       script = JSCallGraphBuilderUtil.class.getClassLoader().getResource(dir + "/" + name);
     }
     assert script != null : "cannot find " + dir + " and " + name;
-
     AnalysisScope scope;
     if (script.openConnection() instanceof JarURLConnection) {
       scope = makeScope(new URL[] { script }, loaders, JavaScriptLoader.JS);
@@ -119,7 +120,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
     return CG;
   }
 
-  public static CallGraph makeScriptCG(SourceModule[] scripts, CGBuilderType builderType, IRFactory irFactory) throws IOException, IllegalArgumentException,
+  public static CallGraph makeScriptCG(SourceModule[] scripts, CGBuilderType builderType, IRFactory<IMethod> irFactory) throws IOException, IllegalArgumentException,
       CancelException, WalaException {
     PropagationCallGraphBuilder b = makeCGBuilder(makeLoaders(), scripts, builderType, irFactory);
     CallGraph CG = b.makeCallGraph(b.getOptions());
@@ -134,7 +135,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
   public static JSCFABuilder makeHTMLCGBuilder(URL url, CGBuilderType builderType) throws IOException, WalaException {
     JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
     SourceModule[] scripts;
-    IRFactory irFactory = AstIRFactory.makeDefaultFactory();
+    IRFactory<IMethod> irFactory = AstIRFactory.makeDefaultFactory();
     JavaScriptLoaderFactory loaders = new WebPageLoaderFactory(translatorFactory, preprocessor);
     try {
       Set<MappedSourceModule> script = WebUtil.extractScriptFromHTML(url).fst;
@@ -163,12 +164,12 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
     return CG;
   }
 
-  public static JSCFABuilder makeCGBuilder(JavaScriptLoaderFactory loaders, SourceModule[] scripts, CGBuilderType builderType, IRFactory irFactory) throws IOException, WalaException {
+  public static JSCFABuilder makeCGBuilder(JavaScriptLoaderFactory loaders, SourceModule[] scripts, CGBuilderType builderType, IRFactory<IMethod> irFactory) throws IOException, WalaException {
     AnalysisScope scope = makeScope(scripts, loaders, JavaScriptLoader.JS);
     return makeCG(loaders, scope, builderType, irFactory);
   }
 
-  protected static JSCFABuilder makeCG(JavaScriptLoaderFactory loaders, AnalysisScope scope, CGBuilderType builderType, IRFactory irFactory) throws IOException, WalaException {
+  protected static JSCFABuilder makeCG(JavaScriptLoaderFactory loaders, AnalysisScope scope, CGBuilderType builderType, IRFactory<IMethod> irFactory) throws IOException, WalaException {
     try {
       IClassHierarchy cha = makeHierarchy(scope, loaders);
       com.ibm.wala.cast.js.util.Util.checkForFrontEndErrors(cha);
