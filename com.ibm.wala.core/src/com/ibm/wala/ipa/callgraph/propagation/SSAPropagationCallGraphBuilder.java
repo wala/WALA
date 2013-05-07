@@ -1262,6 +1262,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         system.recordImplicitPointsToSet(dst);
       } else {
         ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = ir.getControlFlowGraph();
+        int val = instruction.getVal();
         if (com.ibm.wala.cfg.Util.endsWithConditionalBranch(cfg, getBasicBlock()) && cfg.getSuccNodeCount(getBasicBlock()) == 2) {
           SSAConditionalBranchInstruction cond = (SSAConditionalBranchInstruction) com.ibm.wala.cfg.Util.getLastInstruction(cfg,
               getBasicBlock());
@@ -1275,31 +1276,42 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
               IClass cls = getClassHierarchy().lookupClass(type);
               if (cls == null) {
                 PointerKey dst = getPointerKeyForLocal(instruction.getDef());
-                addPiAssignment(dst, instruction.getVal());
+                addPiAssignment(dst, val);
               } else {
                 PointerKey dst = getFilteredPointerKeyForLocal(instruction.getDef(), new FilteredPointerKey.SingleClassFilter(cls));
-                PointerKey src = getPointerKeyForLocal(instruction.getVal());
-                if ((target == com.ibm.wala.cfg.Util.getTakenSuccessor(cfg, getBasicBlock()) && direction == 1)
-                    || (target == com.ibm.wala.cfg.Util.getNotTakenSuccessor(cfg, getBasicBlock()) && direction == -1)) {
-                  system.newConstraint(dst, getBuilder().filterOperator, src);
+                // if true, only allow objects assignable to cls.  otherwise, only allow objects 
+                // *not* assignable to cls
+                boolean useFilter = (target == com.ibm.wala.cfg.Util.getTakenSuccessor(cfg, getBasicBlock()) && direction == 1)
+                    || (target == com.ibm.wala.cfg.Util.getNotTakenSuccessor(cfg, getBasicBlock()) && direction == -1);
+                PointerKey src = getPointerKeyForLocal(val);
+                if (contentsAreInvariant(symbolTable, du, val)) {
+                  system.recordImplicitPointsToSet(src);
+                  InstanceKey[] ik = getInvariantContents(val);
+                  for (int j = 0; j < ik.length; j++) {
+                    boolean assignable = getClassHierarchy().isAssignableFrom(cls, ik[j].getConcreteType());
+                    if ((assignable && useFilter) || (!assignable && !useFilter)) {
+                      system.newConstraint(dst, ik[j]);
+                    }
+                  }
                 } else {
-                  system.newConstraint(dst, getBuilder().inverseFilterOperator, src);
+                  FilterOperator op = useFilter ? getBuilder().filterOperator : getBuilder().inverseFilterOperator;
+                  system.newConstraint(dst, op, src);
                 }
               }
             }
-          } else if ((dir = nullConstantTest(cond, instruction.getVal())) != 0) {
+          } else if ((dir = nullConstantTest(cond, val)) != 0) {
             if ((target == com.ibm.wala.cfg.Util.getTakenSuccessor(cfg, getBasicBlock()) && dir == -1)
                 || (target == com.ibm.wala.cfg.Util.getNotTakenSuccessor(cfg, getBasicBlock()) && dir == 1)) {
               PointerKey dst = getPointerKeyForLocal(instruction.getDef());
-              addPiAssignment(dst, instruction.getVal());
+              addPiAssignment(dst, val);
             }
           } else {
             PointerKey dst = getPointerKeyForLocal(instruction.getDef());
-            addPiAssignment(dst, instruction.getVal());
+            addPiAssignment(dst, val);
           }
         } else {
           PointerKey dst = getPointerKeyForLocal(instruction.getDef());
-          addPiAssignment(dst, instruction.getVal());
+          addPiAssignment(dst, val);
         }
       }
     }

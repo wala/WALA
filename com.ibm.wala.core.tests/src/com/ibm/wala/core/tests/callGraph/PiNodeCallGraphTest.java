@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -37,6 +38,7 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2List;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -83,7 +85,7 @@ public class PiNodeCallGraphTest extends WalaTestCase {
     return CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(), cha, scope, false);
   }
 
-  private void checkCallAssertions(CallGraph cg, int desiredNumberOfTargets, int desiredNumberOfCalls) {
+  private void checkCallAssertions(CallGraph cg, int desiredNumberOfTargets, int desiredNumberOfCalls, int numLocalCastCallees) {
   
     int numberOfCalls = 0;
     Set<CGNode> callerNodes = HashSetFactory.make();
@@ -93,7 +95,7 @@ public class PiNodeCallGraphTest extends WalaTestCase {
 
     for (CGNode n : callerNodes) {
       for (Iterator<CallSiteReference> sites = n.iterateCallSites(); sites.hasNext();) {
-        CallSiteReference csRef = (CallSiteReference) sites.next();
+        CallSiteReference csRef = sites.next();
         if (csRef.getDeclaredTarget().equals(unary2Ref)) {
           numberOfCalls++;
           assert cg.getNumberOfTargets(n, csRef) == desiredNumberOfTargets;
@@ -101,15 +103,20 @@ public class PiNodeCallGraphTest extends WalaTestCase {
       }
     }
 
+    
     assert numberOfCalls == desiredNumberOfCalls;
+
+    CGNode localCastNode = cg.getNodes(MethodReference.findOrCreate(TypeReference.findOrCreate(loader, TestConstants.PI_TEST_MAIN), "localCast", "()V")).iterator().next();
+    int actualLocalCastCallees = cg.getSuccNodeCount(localCastNode);
+    Assert.assertEquals(numLocalCastCallees, actualLocalCastCallees);
   }
 
   @Test public void testNoPiNodes() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    checkCallAssertions(doGraph(false), 2, 2);
+    checkCallAssertions(doGraph(false), 2, 2, 2);
   }
 
   @Test public void testPiNodes() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    checkCallAssertions(doGraph(true), 1, 2);
-  }
+    checkCallAssertions(doGraph(true), 1, 2, 1);
+  } 
 
 }
