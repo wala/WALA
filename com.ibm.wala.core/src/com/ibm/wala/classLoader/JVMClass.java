@@ -65,7 +65,7 @@ public abstract class JVMClass<T extends IClassLoader> extends BytecodeClass<T> 
    */
   public IMethod getClassInitializer() {
     try {
-      computeMethodMap();
+      computeMethodMapIfNeeded();
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();
