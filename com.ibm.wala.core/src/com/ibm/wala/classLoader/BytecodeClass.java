@@ -78,7 +78,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
    * 
    * TODO: get rid of this for classes (though keep it for interfaces) instead ... use a VMT.
    */
-  protected Map<Selector, IMethod> methodMap;
+  protected volatile Map<Selector, IMethod> methodMap;
 
   /**
    * A mapping from Selector to IMethod used to cache method lookups from superclasses
@@ -385,13 +385,11 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
    * @see com.ibm.wala.classLoader.IClass#getDeclaredMethods()
    */
   public Collection<IMethod> getDeclaredMethods() {
-    if (methodMap == null) {
-      try {
-        computeMethodMap();
-      } catch (InvalidClassFileException e) {
-        e.printStackTrace();
-        Assertions.UNREACHABLE();
-      }
+    try {
+      computeMethodMap();
+    } catch (InvalidClassFileException e) {
+      e.printStackTrace();
+      Assertions.UNREACHABLE();
     }
     return Collections.unmodifiableCollection(methodMap.values());
   }
@@ -400,13 +398,11 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
    * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.types.Selector)
    */
   public IMethod getMethod(Selector selector) {
-    if (methodMap == null) {
-      try {
-        computeMethodMap();
-      } catch (InvalidClassFileException e1) {
-        e1.printStackTrace();
-        Assertions.UNREACHABLE();
-      }
+    try {
+      computeMethodMap();
+    } catch (InvalidClassFileException e1) {
+      e1.printStackTrace();
+      Assertions.UNREACHABLE();
     }
 
     // my methods + cached parent stuff
@@ -555,15 +551,19 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
    */
   protected void computeMethodMap() throws InvalidClassFileException {
     if (methodMap == null) {
-      IMethod[] methods = computeDeclaredMethods();
-      if (methods.length > 5) {
-        methodMap = HashMapFactory.make(methods.length);
-      } else {
-        methodMap = new SmallMap<Selector, IMethod>();
-      }
-      for (int i = 0; i < methods.length; i++) {
-        IMethod m = methods[i];
-        methodMap.put(m.getReference().getSelector(), m);
+      synchronized (this) {
+        if (methodMap == null) {
+          IMethod[] methods = computeDeclaredMethods();
+          if (methods.length > 5) {
+            methodMap = HashMapFactory.make(methods.length);
+          } else {
+            methodMap = new SmallMap<Selector, IMethod>();
+          }
+          for (int i = 0; i < methods.length; i++) {
+            IMethod m = methods[i];
+            methodMap.put(m.getReference().getSelector(), m);
+          }
+        }
       }
     }
   }
