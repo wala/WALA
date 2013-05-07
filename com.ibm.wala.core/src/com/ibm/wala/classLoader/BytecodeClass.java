@@ -386,7 +386,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
    */
   public Collection<IMethod> getDeclaredMethods() {
     try {
-      computeMethodMap();
+      computeMethodMapIfNeeded();
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();
@@ -399,7 +399,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
    */
   public IMethod getMethod(Selector selector) {
     try {
-      computeMethodMap();
+      computeMethodMapIfNeeded();
     } catch (InvalidClassFileException e1) {
       e1.printStackTrace();
       Assertions.UNREACHABLE();
@@ -549,7 +549,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   /**
    * set up the methodMap mapping
    */
-  protected void computeMethodMap() throws InvalidClassFileException {
+  protected void computeMethodMapIfNeeded() throws InvalidClassFileException {
     if (methodMap == null) {
       synchronized (this) {
         if (methodMap == null) {
