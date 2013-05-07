@@ -64,13 +64,11 @@ public abstract class JVMClass<T extends IClassLoader> extends BytecodeClass<T> 
    * @see com.ibm.wala.classLoader.IClass#getClassInitializer()
    */
   public IMethod getClassInitializer() {
-    if (methodMap == null) {
-      try {
-        computeMethodMap();
-      } catch (InvalidClassFileException e) {
-        e.printStackTrace();
-        Assertions.UNREACHABLE();
-      }
+    try {
+      computeMethodMap();
+    } catch (InvalidClassFileException e) {
+      e.printStackTrace();
+      Assertions.UNREACHABLE();
     }
     return methodMap.get(MethodReference.clinitSelector);
   }
