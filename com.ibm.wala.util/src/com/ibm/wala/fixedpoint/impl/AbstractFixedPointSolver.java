@@ -212,7 +212,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<?>> implement
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer("Fixed Point Sytem:\n");
+    StringBuffer result = new StringBuffer("Fixed Point System:\n");
     for (Iterator it = getStatements(); it.hasNext();) {
       result.append(it.next()).append("\n");
     }
