@@ -256,7 +256,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       throws IllegalArgumentException {
     Pair<PointsToResult, Collection<InstanceKeyAndState>> p = getPointsToWithStates(pk, ikeyPred);
     final Collection<InstanceKeyAndState> p2SetWithStates = p.snd;
-    Collection<InstanceKey> finalP2Set = removeStates(p2SetWithStates);
+    Collection<InstanceKey> finalP2Set = p2SetWithStates != null ? removeStates(p2SetWithStates) : Collections.<InstanceKey>emptySet();
     return Pair.make(p.fst, finalP2Set);
   }
 
@@ -283,6 +283,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    * Unwrap a Collection of WithState<T> objects, returning a Collection containing the wrapped objects
    */
   private static <T> Collection<T> removeStates(final Collection<? extends WithState<T>> p2SetWithStates) {
+    if (p2SetWithStates == null) {
+      throw new IllegalArgumentException("p2SetWithStates == null");
+    }
     Collection<T> finalP2Set = Iterator2Collection.toSet(new MapIterator<WithState<T>, T>(p2SetWithStates.iterator(),
         new Function<WithState<T>, T>() {
 
