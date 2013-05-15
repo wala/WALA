@@ -27,6 +27,7 @@ import java.util.zip.ZipException;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.NestedJarFileModule;
+import com.ibm.wala.classLoader.ResourceJarFileModule;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -35,7 +36,7 @@ import com.ibm.wala.util.debug.Assertions;
 public class FileProvider {
 
 
-  private final static int DEBUG_LEVEL = 0;
+  private final static int DEBUG_LEVEL = Integer.parseInt(System.getProperty("wala.debug.file", "0"));
   
   /**
    * @param fileName
@@ -164,6 +165,8 @@ public class FileProvider {
       JarEntry entry = jc.getJarEntry();
       JarFileModule parent = new JarFileModule(f);
       return new NestedJarFileModule(parent, entry);
+    } else if (url.getProtocol().equals("rsrc")) {
+      return new ResourceJarFileModule(url);
     } else {
       String filePath = filePathFromURL(url);
       return new JarFileModule(new JarFile(filePath, false));
