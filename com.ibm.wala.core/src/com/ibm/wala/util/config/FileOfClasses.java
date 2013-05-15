@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.io.FileProvider;
 
 /**
  * An object which represents a set of classes read from a text file.
@@ -43,7 +44,7 @@ public class FileOfClasses extends SetOfClasses implements Serializable {
   private boolean needsCompile = false;
 
   private FileOfClasses(File textFile) throws IOException {
-    this(new FileInputStream(textFile));
+    this(textFile.exists()? new FileInputStream(textFile): FileProvider.class.getClassLoader().getResourceAsStream(textFile.getName()));
   }
   
   public static FileOfClasses createFileOfClasses(File textFile) throws IOException {
