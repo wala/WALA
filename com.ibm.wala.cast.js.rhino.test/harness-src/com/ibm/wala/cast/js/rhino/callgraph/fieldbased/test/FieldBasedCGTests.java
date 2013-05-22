@@ -41,7 +41,6 @@ public class FieldBasedCGTests extends TestJSCallGraphShape {
 	  for(BuilderType builderType : builderTypes) {
 	    URL url = FieldBasedCGTests.class.getClassLoader().getResource(script);
 	    JSCallGraph cg = util.buildCG(url, builderType);
-	    System.out.println(cg);
 	    try {
 	      verifyGraphAssertions(cg, assertions);
 	    } catch(AssertionFailedError afe) {
