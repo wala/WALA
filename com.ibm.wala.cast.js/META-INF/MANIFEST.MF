@@ -9,6 +9,9 @@ Bundle-Activator: com.ibm.wala.cast.js.JavaScriptPlugin
 Bundle-Vendor: IBM
 Export-Package: com.ibm.wala.cast.js,
  com.ibm.wala.cast.js.analysis.typeInference,
+ com.ibm.wala.cast.js.callgraph.fieldbased,
+ com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph,
+ com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices,
  com.ibm.wala.cast.js.cfg,
  com.ibm.wala.cast.js.client,
  com.ibm.wala.cast.js.client.impl,
