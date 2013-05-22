@@ -1,5 +1,3 @@
-package com.ibm.wala.cast.js.html;
-
 /******************************************************************************
  * Copyright (c) 2002 - 2011 IBM Corporation.
  * All rights reserved. This program and the accompanying materials
@@ -10,6 +8,8 @@ package com.ibm.wala.cast.js.html;
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *****************************************************************************/
+package com.ibm.wala.cast.js.html;
+
 import java.util.Map;
 
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;

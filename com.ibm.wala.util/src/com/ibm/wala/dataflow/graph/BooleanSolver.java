@@ -1,5 +1,3 @@
-package com.ibm.wala.dataflow.graph;
-
 /*******************************************************************************
  * Copyright (c) 2002 - 2006 IBM Corporation.
  * All rights reserved. This program and the accompanying materials
@@ -10,6 +8,8 @@ package com.ibm.wala.dataflow.graph;
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+package com.ibm.wala.dataflow.graph;
+
 import com.ibm.wala.fixpoint.BooleanVariable;
 
 /**
