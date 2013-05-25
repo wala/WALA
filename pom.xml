@@ -19,12 +19,14 @@
 	<modules>
 		<module>targets</module>
 
-                <module>com.ibm.wala.core.testdata</module>
 
 		<module>com.ibm.wala-feature</module>
 		<module>com.ibm.wala.core</module>
 		<module>com.ibm.wala.shrike</module>
 		<module>com.ibm.wala.util</module>
+
+                <module>com.ibm.wala.core.testdata</module>
+                <module>com.ibm.wala.core.tests</module>
 
 		<module>com.ibm.wala.cast</module>
 		<module>com.ibm.wala.cast.java</module>
