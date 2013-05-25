@@ -17,6 +17,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Properties;
 
+import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileProvider;
@@ -38,15 +39,17 @@ public final class WalaProperties {
 
   /**
    * Determine the classpath noted in wala.properties for J2SE standard libraries
-   * @throws IllegalStateException if there's a problem loading the wala properties
+   * 
+   * If wala.properties cannot be loaded, returns jar files in boot classpath.
+   * @throws IllegalStateException if jar files cannot be discovered
+   * @see PlatformUtil#getBootClassPathJars() 
    */
   public static String[] getJ2SEJarFiles() {
     Properties p = null;
     try {
       p = WalaProperties.loadProperties();
     } catch (WalaException e) {
-      e.printStackTrace();
-      throw new IllegalStateException("problem loading wala.properties");
+      return PlatformUtil.getBootClassPathJars();
     }
 
     String dir = p.getProperty(WalaProperties.J2SE_DIR);
@@ -99,7 +102,7 @@ public final class WalaProperties {
 
       return result;
     } catch (Exception e) {
-      e.printStackTrace();
+//      e.printStackTrace();
       throw new WalaException("Unable to set up wala properties ", e);
     }
   }

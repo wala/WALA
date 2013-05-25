@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.util;
 
+import java.io.File;
+import java.util.ArrayList;
+
 /**
  * Platform-specific utility functions.
  */
@@ -47,4 +50,24 @@ public class PlatformUtil {
     return "IKVM.NET".equals(System.getProperty("java.runtime.name"));
   }
 
+  /**
+   * get the jars in the boot classpath.
+   * TODO test on more JVMs
+   * 
+   * @throws IllegalStateException if boot classpath cannot be found
+   */
+  public static String[] getBootClassPathJars() {
+    String classpath = System.getProperty("sun.boot.class.path");
+    if (classpath == null) {
+      throw new IllegalStateException("could not find boot classpath");
+    }
+    String[] jars = classpath.split(File.pathSeparator);
+    ArrayList<String> result = new ArrayList<String>();
+    for (String jar : jars) {
+      if (jar.endsWith(".jar") && (new File(jar)).exists()) {
+        result.add(jar);
+      }
+    }
+    return result.toArray(new String[result.size()]);
+  }
 }
