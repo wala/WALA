@@ -554,15 +554,19 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
       synchronized (this) {
         if (methodMap == null) {
           IMethod[] methods = computeDeclaredMethods();
+          
+          final Map<Selector, IMethod> tmpMethodMap;
           if (methods.length > 5) {
-            methodMap = HashMapFactory.make(methods.length);
+            tmpMethodMap = HashMapFactory.make(methods.length);
           } else {
-            methodMap = new SmallMap<Selector, IMethod>();
+            tmpMethodMap= new SmallMap<Selector, IMethod>();
           }
           for (int i = 0; i < methods.length; i++) {
             IMethod m = methods[i];
-            methodMap.put(m.getReference().getSelector(), m);
+            tmpMethodMap.put(m.getReference().getSelector(), m);
           }
+          
+          methodMap = tmpMethodMap;
         }
       }
     }
