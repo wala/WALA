@@ -257,7 +257,7 @@ public class SlicerTest {
         TestConstants.SLICE8_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeVanillaZeroOneContainerCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
 
     CGNode process = findMethod(cg, Descriptor.findOrCreateUTF8("()V"), Atom.findOrCreateUnicodeAtom("process"));
@@ -646,7 +646,7 @@ public class SlicerTest {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    Assert.assertEquals(1, countAllocations(slice));
+    Assert.assertEquals(1, countApplicationAllocations(slice));
     Assert.assertEquals(1, countThrows(slice));
     Assert.assertEquals(1, countGetfields(slice));
   }
@@ -699,6 +699,22 @@ public class SlicerTest {
         NormalStatement ns = (NormalStatement) s;
         if (ns.getInstruction() instanceof SSANewInstruction) {
           count++;
+        }
+      }
+    }
+    return count;
+  }
+
+  public static int countApplicationAllocations(Collection<Statement> slice) {
+    int count = 0;
+    for (Statement s : slice) {
+      if (s.getKind().equals(Statement.Kind.NORMAL)) {
+        NormalStatement ns = (NormalStatement) s;
+        if (ns.getInstruction() instanceof SSANewInstruction) {
+          AnalysisScope scope = s.getNode().getClassHierarchy().getScope();
+          if (scope.isApplicationLoader(s.getNode().getMethod().getDeclaringClass().getClassLoader())) {
+            count++;
+          }
         }
       }
     }
