@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.examples.analysis.dataflow;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,9 +51,9 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.io.FileProvider;
 
 /**
  * Tests of various flow analysis engines.
@@ -63,12 +64,29 @@ public class DataflowTest extends WalaTestCase {
 
   private static IClassHierarchy cha;
 
+  // more aggressive exclusions to avoid library blowup
+  // in interprocedural tests
+  private static final String EXCLUSIONS = "java\\/awt\\/.*\n" + 
+  		"javax\\/swing\\/.*\n" + 
+  		"sun\\/awt\\/.*\n" + 
+  		"sun\\/swing\\/.*\n" + 
+  		"com\\/sun\\/.*\n" + 
+  		"sun\\/.*\n" + 
+  		"org\\/netbeans\\/.*\n" + 
+  		"org\\/openide\\/.*\n" + 
+  		"com\\/ibm\\/crypto\\/.*\n" + 
+  		"com\\/ibm\\/security\\/.*\n" + 
+  		"org\\/apache\\/xerces\\/.*\n" + 
+  		"java\\/security\\/.*\n" + 
+  		"";
+  
+  
   @BeforeClass
   public static void beforeClass() throws Exception {
 
-    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA,
-        (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS), DataflowTest.class.getClassLoader());
+    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, null, DataflowTest.class.getClassLoader());
 
+    scope.setExclusions(new FileOfClasses(new ByteArrayInputStream(EXCLUSIONS.getBytes("UTF-8"))));
     try {
       cha = ClassHierarchy.make(scope);
     } catch (ClassHierarchyException e) {
