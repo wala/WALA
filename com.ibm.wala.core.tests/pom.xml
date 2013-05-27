@@ -8,7 +8,7 @@
       <version>1.3.4-SNAPSHOT</version>
   </parent>
   <artifactId>com.ibm.wala.core.tests</artifactId>
-  <packaging>eclipse-plugin</packaging>
+  <packaging>eclipse-test-plugin</packaging>
   <build>
     <plugins>
       <plugin>
@@ -20,7 +20,7 @@
             <phase>test</phase>
             <configuration>
               <testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
-              <argLine>-Xmx800M -Dcom.ibm.wala.junit.profile=short -Dcom.ibm.wala.junit.analyzingJar=true -ea -Dcom.ibm.wala.fixedpoint.impl.verbose=true</argLine>
+              <argLine>-Xmx800M -Dcom.ibm.wala.junit.profile=short -Dcom.ibm.wala.junit.analyzingJar=true -ea</argLine>
             </configuration>
             <goals>
               <goal>test</goal>
