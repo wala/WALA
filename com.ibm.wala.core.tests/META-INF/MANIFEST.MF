@@ -25,3 +25,4 @@ Export-Package: com.ibm.wala.core.tests.basic,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: com.ibm.wala.core.tests.plugin.CoreTestsPlugin
+Eclipse-RegisterBuddy: com.ibm.wala.core
