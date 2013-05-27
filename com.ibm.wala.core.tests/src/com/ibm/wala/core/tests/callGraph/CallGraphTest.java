@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.ibm.wala.classLoader.IClass;
@@ -197,7 +196,6 @@ public class CallGraphTest extends WalaTestCase {
     doCallGraphs(options, new AnalysisCache(), cha, scope);
   }
 
-  @Ignore
   @Test public void testIO() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("primordial.txt", CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
