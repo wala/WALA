@@ -21,6 +21,7 @@
             <configuration>
               <testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
               <argLine>-Xmx800M -Dcom.ibm.wala.junit.profile=short -Dcom.ibm.wala.junit.analyzingJar=true -ea</argLine>
+              <redirectTestOutputToFile>true</redirectTestOutputToFile>
             </configuration>
             <goals>
               <goal>test</goal>
