@@ -8,7 +8,7 @@
       <version>1.3.4-SNAPSHOT</version>
   </parent>
   <artifactId>com.ibm.wala.core.tests</artifactId>
-  <packaging>eclipse-test-plugin</packaging>
+  <packaging>eclipse-plugin</packaging>
   <build>
     <plugins>
       <plugin>
