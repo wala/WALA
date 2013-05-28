@@ -19,9 +19,9 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
-public class PolyglotJavaIRTests extends JavaIRTests {
+public class PolyglotJavaIRTest extends JavaIRTests {
   
-  public PolyglotJavaIRTests() {
+  public PolyglotJavaIRTest() {
     super(null);
   }
 
