@@ -28,7 +28,7 @@ import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.cast.js.util.CallGraph2JSON;
 import com.ibm.wala.util.WalaException;
 
-public class FieldBasedCGTests extends TestJSCallGraphShape {
+public class TestFieldBasedCG extends TestJSCallGraphShape {
 	protected CGUtil util;
 
 	@Override
@@ -39,7 +39,7 @@ public class FieldBasedCGTests extends TestJSCallGraphShape {
 	
 	private void runTest(String script, Object[][] assertions, BuilderType... builderTypes) throws IOException, WalaException, Error {
 	  for(BuilderType builderType : builderTypes) {
-	    URL url = FieldBasedCGTests.class.getClassLoader().getResource(script);
+	    URL url = TestFieldBasedCG.class.getClassLoader().getResource(script);
 	    JSCallGraph cg = util.buildCG(url, builderType);
 	    try {
 	      verifyGraphAssertions(cg, assertions);
