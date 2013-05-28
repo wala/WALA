@@ -16,12 +16,11 @@ package com.ibm.wala.cast.java.test;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 import java.util.jar.JarFile;
 
@@ -68,50 +67,50 @@ public abstract class IRTests {
 
   private String testSrcPath = "." + File.separator + "src";
 
-  public static List<String> rtJar;
+  public static final List<String> rtJar = Arrays.asList(WalaProperties.getJ2SEJarFiles());
 
   protected static List<IRAssertion> emptyList = Collections.emptyList();
 
-  static {
-    boolean found = false;
-    try {
-      rtJar = new LinkedList<String>();
-
-      Properties p = WalaProperties.loadProperties();
-      javaHomePath = p.getProperty(WalaProperties.J2SE_DIR);
-
-      if (new File(javaHomePath).isDirectory()) {
-        if ("Mac OS X".equals(System.getProperty("os.name"))) { // nick
-          /**
-           * todo: {@link WalaProperties#getJ2SEJarFiles()}
-           */
-          rtJar.add(javaHomePath + "/classes.jar");
-          rtJar.add(javaHomePath + "/ui.jar");
-        } else {
-          rtJar.add(javaHomePath + File.separator + "classes.jar");
-          rtJar.add(javaHomePath + File.separator + "rt.jar");
-          rtJar.add(javaHomePath + File.separator + "core.jar");
-          rtJar.add(javaHomePath + File.separator + "vm.jar");
-        }
-        found = true;
-      }
-    } catch (Exception e) {
-      // no properties
-    }
-
-    if (!found) {
-      javaHomePath = System.getProperty("java.home");
-      if ("Mac OS X".equals(System.getProperty("os.name"))) { // nick
-        rtJar.add(javaHomePath + "/../Classes/classes.jar");
-        rtJar.add(javaHomePath + "/../Classes/ui.jar");
-      } else {
-        rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "rt.jar");
-        rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "core.jar");
-        rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "vm.jar");
-        rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "classes.jar");
-      }
-    }
-  }
+//  static {
+//    boolean found = false;
+//    try {
+//      rtJar = new LinkedList<String>();
+//
+//      Properties p = WalaProperties.loadProperties();
+//      javaHomePath = p.getProperty(WalaProperties.J2SE_DIR);
+//
+//      if (new File(javaHomePath).isDirectory()) {
+//        if ("Mac OS X".equals(System.getProperty("os.name"))) { // nick
+//          /**
+//           * todo: {@link WalaProperties#getJ2SEJarFiles()}
+//           */
+//          rtJar.add(javaHomePath + "/classes.jar");
+//          rtJar.add(javaHomePath + "/ui.jar");
+//        } else {
+//          rtJar.add(javaHomePath + File.separator + "classes.jar");
+//          rtJar.add(javaHomePath + File.separator + "rt.jar");
+//          rtJar.add(javaHomePath + File.separator + "core.jar");
+//          rtJar.add(javaHomePath + File.separator + "vm.jar");
+//        }
+//        found = true;
+//      }
+//    } catch (Exception e) {
+//      // no properties
+//    }
+//
+//    if (!found) {
+//      javaHomePath = System.getProperty("java.home");
+//      if ("Mac OS X".equals(System.getProperty("os.name"))) { // nick
+//        rtJar.add(javaHomePath + "/../Classes/classes.jar");
+//        rtJar.add(javaHomePath + "/../Classes/ui.jar");
+//      } else {
+//        rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "rt.jar");
+//        rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "core.jar");
+//        rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "vm.jar");
+//        rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "classes.jar");
+//      }
+//    }
+//  }
 
   public interface IRAssertion {
 
@@ -420,7 +419,6 @@ public abstract class IRTests {
    * @param srcMethodDescriptor a full method descriptor of the form ldr#type#methName#methSig example:
    *          Source#Simple1#main#([Ljava/lang/String;)V
    * @param cha
-   * @return
    */
   public static MethodReference descriptorToMethodRef(String srcMethodDescriptor, IClassHierarchy cha) {
     String[] ldrTypeMeth = srcMethodDescriptor.split("\\#");
