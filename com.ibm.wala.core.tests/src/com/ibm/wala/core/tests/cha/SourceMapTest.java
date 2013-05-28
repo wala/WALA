@@ -33,6 +33,7 @@ public class SourceMapTest extends WalaTestCase {
   private final static String CLASS_IN_PRIMORDIAL_JAR = "Lcom/ibm/wala/model/SyntheticFactory";
 
   @Test public void testHello() throws ClassHierarchyException, IOException {
+    if (analyzingJar()) return;
     AnalysisScope scope = null;
     scope = AnalysisScopeReader.readJavaScope(TestConstants.HELLO, null, MY_CLASSLOADER);
     // TODO: it's annoying to have to build a class hierarchy here.
@@ -47,6 +48,7 @@ public class SourceMapTest extends WalaTestCase {
   }
 
   @Test public void testFromJar() throws ClassHierarchyException, IOException {
+    if (analyzingJar()) return;
     AnalysisScope scope = null;
     scope = AnalysisScopeReader.readJavaScope(TestConstants.HELLO, null, MY_CLASSLOADER);
     // TODO: it's annoying to have to build a class hierarchy here.
