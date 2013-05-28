@@ -61,7 +61,17 @@
 	       property="testdatadir.present"/>
   </target>
 
-  <target name="compile" depends="getSources">
+  <target name="bin.exists" depends="">
+    <available file="${basedir}/bin" 
+	       type="dir" 
+	       property="bin.present"/>
+  </target>
+
+  <target name="bindir" depends="init,bin.exists" unless="bin.present">
+    <mkdir dir="${basedir}/bin"/>
+  </target>
+
+  <target name="compile" depends="getSources,bindir">
     <javac srcdir="${basedir}/src"
 	   destdir="${basedir}/bin"
 	   excludes="**/Activator.java"/>
