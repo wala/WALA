@@ -71,6 +71,7 @@ public abstract class IRTests {
 
   protected static List<IRAssertion> emptyList = Collections.emptyList();
 
+  // TODO delete this code; leaving just in case --MS
 //  static {
 //    boolean found = false;
 //    try {
