@@ -48,6 +48,9 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
+import com.ibm.wala.demandpa.alg.refinepolicy.NeverRefineCGPolicy;
+import com.ibm.wala.demandpa.alg.refinepolicy.OnlyArraysPolicy;
+import com.ibm.wala.demandpa.alg.refinepolicy.SinglePassRefinementPolicy;
 import com.ibm.wala.demandpa.alg.statemachine.DummyStateMachine;
 import com.ibm.wala.demandpa.alg.statemachine.StateMachineFactory;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
@@ -243,6 +246,9 @@ public abstract class AbstractPtrTest {
     DemandRefinementPointsTo fullDemandPointsTo = DemandRefinementPointsTo.makeWithDefaultFlowGraph(cg, builder, mam, cha, options,
         getStateMachineFactory());
 
+    // always refine array fields; otherwise, can be very sensitive to differences
+    // in library versions.  otherwise, no refinement by default
+    fullDemandPointsTo.setRefinementPolicyFactory(new SinglePassRefinementPolicy.Factory(new OnlyArraysPolicy(), new NeverRefineCGPolicy()));
     return fullDemandPointsTo;
   }
 

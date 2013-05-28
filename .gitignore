@@ -8,7 +8,7 @@ com.ibm.wala.cast.java.test.data/src/JLex/
 *~
 com.ibm.wala.cast.js.test.data/examples-src/ajaxslt/
 com.ibm.wala.core.testdata/@dot/
-com.ibm.wala.core.testdata/lib/
+com.ibm.wala.core.testdata/*.jar
 com.ibm.wala.core/dat/wala.properties
 com.ibm.wala.core.tests/dat/wala.examples.properties
 com.ibm.wala.cast.js.html.nu_validator/lib/

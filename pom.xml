@@ -19,15 +19,17 @@
 	<modules>
 		<module>targets</module>
 
+
 		<module>com.ibm.wala-feature</module>
 		<module>com.ibm.wala.core</module>
 		<module>com.ibm.wala.shrike</module>
 		<module>com.ibm.wala.util</module>
 
+                <module>com.ibm.wala.core.testdata</module>
+                <module>com.ibm.wala.core.tests</module>
+
 		<module>com.ibm.wala.cast</module>
 		<module>com.ibm.wala.cast.java</module>
-		<!-- excluded since ant uses my JRE instead of JDk and thus can't find 
-			tools.jar -->
 		<module>com.ibm.wala.cast.java.polyglot</module>
 		<module>com.ibm.wala.cast.js</module>
 		<module>com.ibm.wala.cast.js.rhino</module>
@@ -68,6 +70,9 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
+                                        <compilerArguments>                 
+                                          <properties>${project.basedir}/.settings/org.eclipse.jdt.core.prefs</properties>
+                                        </compilerArguments>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -140,7 +145,12 @@
 				<artifactId>maven-download-plugin</artifactId>
 				<version>1.0.0</version>
 			</plugin>
-		</plugins>
+                        <plugin>
+                          <groupId>org.apache.maven.plugins</groupId>
+                          <artifactId>maven-surefire-plugin</artifactId>
+                          <version>2.14.1</version>
+                        </plugin>		
+                </plugins>
 	</build>
 	<pluginRepositories>
 		<pluginRepository>

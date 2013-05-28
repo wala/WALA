@@ -60,3 +60,4 @@ Export-Package: .,
  com.ibm.wala.viz,
  com.ibm.wala.viz.viewer
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Eclipse-BuddyPolicy: registered
