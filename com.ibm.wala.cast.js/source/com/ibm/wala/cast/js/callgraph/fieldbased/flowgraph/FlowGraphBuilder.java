@@ -145,9 +145,6 @@ public class FlowGraphBuilder {
 	 * @author mschaefer
 	 */
 	private class FlowGraphSSAVisitor extends JSMethodInstructionVisitor {
-		// whether to handle dynamic property accesses with a constant property name as normal property accesses
-		public static final boolean HANDLE_DYNAMIC_PROP_ACC = false;
-		
 		// index of the instruction currently visited; -1 if the instruction isn't a normal instruction
 		public int instructionIndex = -1;
 		
@@ -233,10 +230,13 @@ public class FlowGraphBuilder {
 		@Override
 		public void visitJavaScriptPropertyWrite(JavaScriptPropertyWrite pw) {
 			int p = pw.getMemberRef();
-			if(HANDLE_DYNAMIC_PROP_ACC && symtab.isConstant(p)) {
+			if(symtab.isConstant(p)) {
 				String pn = symtab.getValue(p)+"";
+				if(pn.charAt(0) == '#')
+				  pn = pn.substring(1);
+				
 				Vertex v = factory.makeVarVertex(func, pw.getValue()),
-					   w = factory.makePropVertex(pn);
+				       w = factory.makePropVertex(pn);
 				flowgraph.addEdge(v, w);
 			}
 		}
@@ -270,8 +270,10 @@ public class FlowGraphBuilder {
 		@Override
 		public void visitJavaScriptPropertyRead(JavaScriptPropertyRead pr) {
 			int p = pr.getMemberRef();
-			if(HANDLE_DYNAMIC_PROP_ACC && symtab.isConstant(p)) {
+			if(symtab.isConstant(p)) {
 				String pn = symtab.getValue(p)+"";
+				if(pn.charAt(0) == '#')
+				  pn = pn.substring(1);
 				Vertex v = factory.makePropVertex(pn),
 					   w = factory.makeVarVertex(func, pr.getDef());
 				flowgraph.addEdge(v, w);
