@@ -18,7 +18,6 @@ import java.util.Set;
 import junit.framework.AssertionFailedError;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
@@ -108,7 +107,6 @@ public class TestFieldBasedCG extends TestJSCallGraphShape {
 		new Object[] { "suffix:f", new String[] { "suffix:k" } }
 	};
 	
-	@Ignore("temporarily ignoring until we get a fix")
 	@Test
 	public void testReflectiveCall() throws IOException, WalaException, Error {
 		runTest("tests/fieldbased/reflective_calls.js", assertionsForReflectiveCall, BuilderType.OPTIMISTIC, BuilderType.OPTIMISTIC_WORKLIST);
