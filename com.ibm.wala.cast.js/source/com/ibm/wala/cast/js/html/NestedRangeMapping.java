@@ -12,7 +12,6 @@ package com.ibm.wala.cast.js.html;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.net.URL;
 
 import com.ibm.wala.cast.js.html.RangeFileMapping.Range;
@@ -79,6 +78,7 @@ public class NestedRangeMapping implements FileMapping {
     }
   }
 
+  @Override
   public String toString() {
     return range + "(" + innerMapping + ")";
   }
