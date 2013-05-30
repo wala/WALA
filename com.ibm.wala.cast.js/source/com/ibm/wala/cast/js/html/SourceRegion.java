@@ -15,9 +15,18 @@ import java.net.URL;
 
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 
+/**
+ * Represents a region of source code, with source locations. Regions can be
+ * added to other {@link SourceRegion}s, with nested source location information
+ * maintained.
+ */
 public class SourceRegion {
 
   private final StringBuilder source = new StringBuilder();
+  
+  /**
+   * source location information
+   */
   private FileMapping fileMapping;
   private int currentLine = 1;
   
