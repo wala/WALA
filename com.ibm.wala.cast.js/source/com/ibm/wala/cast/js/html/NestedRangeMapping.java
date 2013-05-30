@@ -79,12 +79,6 @@ public class NestedRangeMapping implements FileMapping {
     }
   }
 
-  @Override
-  public void dump(PrintStream ps) {
-    // TODO Auto-generated method stub
-
-  }
-
   public String toString() {
     return range + "(" + innerMapping + ")";
   }
