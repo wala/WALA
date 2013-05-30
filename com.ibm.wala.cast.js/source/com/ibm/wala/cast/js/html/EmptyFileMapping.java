@@ -21,9 +21,4 @@ public class EmptyFileMapping implements FileMapping {
     return null;
   }
 
-  @Override
-  public void dump(PrintStream ps) {
-    ps.println("empty mapping");
-  }
-
 }

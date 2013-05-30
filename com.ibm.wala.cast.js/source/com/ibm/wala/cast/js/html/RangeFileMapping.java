@@ -130,10 +130,5 @@ public class RangeFileMapping implements FileMapping {
     }
   }
 
-  @Override
-  public void dump(PrintStream ps) {
-    // TODO Auto-generated method stub
-
-  }
 
 }

@@ -252,6 +252,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
    */
   private File tempFile;
   
+  @Override
   public Set<MappedSourceModule> extractSources(URL entrypointUrl, IHtmlParser htmlParser, IUrlResolver urlResolver)
   throws IOException, Error {
 
@@ -304,7 +305,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     Set<MappedSourceModule> res = domLessScopeGenerator.extractSources(entrypointUrl , htmlParser , urlResolver);
     MappedSourceModule entry = res.iterator().next();
     System.out.println(entry);
-    entry.getMapping().dump(System.out);
+    System.out.println(entry.getMapping());
     
   }
 

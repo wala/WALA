@@ -42,12 +42,6 @@ public class CompositeFileMapping implements FileMapping {
     return null;
   }
 
-  @Override
-  public void dump(PrintStream ps) {
-    // TODO Auto-generated method stub
-
-  }
-
   public String toString() {
     return mappings.toString();
   }
