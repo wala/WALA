@@ -12,22 +12,29 @@
 	<artifactId>com.ibm.wala.cast.js</artifactId>
 	<packaging>eclipse-plugin</packaging>
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>com.googlecode.maven-download-plugin</groupId>
-				<artifactId>maven-download-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>wget</goal>
-						</goals>
-						<configuration>
-							<url>http://repo1.maven.org/maven2/net/htmlparser/jericho/jericho-html/3.2/jericho-html-3.2.jar</url>
-							<outputDirectory>lib/</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
+               <plugins>
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <goals>
+                                        <goal>copy</goal>
+                                    </goals>
+                                    <configuration>
+                                        <artifactItems>
+                                          <artifactItem>
+                                            <groupId>net.htmlparser.jericho</groupId>
+                                            <artifactId>jericho-html</artifactId>
+                                            <version>3.2</version>
+                                            <type>jar</type>
+                                            <overWrite>false</overWrite>
+                                          </artifactItem>
+                                        </artifactItems>  
+                                        <outputDirectory>${basedir}/lib</outputDirectory>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                    </plugin>
+                </plugins>
 	</build>
 </project>
