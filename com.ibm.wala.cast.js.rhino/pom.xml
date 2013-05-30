@@ -11,24 +11,30 @@
 	<artifactId>com.ibm.wala.cast.js.rhino</artifactId>
 	<packaging>eclipse-plugin</packaging>
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>com.googlecode.maven-download-plugin</groupId>
-				<artifactId>maven-download-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>wget</goal>
-						</goals>
-						<configuration>
-							<url>http://repo1.maven.org/maven2/org/mozilla/rhino/1.7R3/rhino-1.7R3.jar</url>
-							<outputDirectory>lib/</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
+               <plugins>
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <goals>
+                                        <goal>copy</goal>
+                                    </goals>
+                                    <configuration>
+                                        <artifactItems>
+                                          <artifactItem>
+                                            <groupId>org.mozilla</groupId>
+                                            <artifactId>rhino</artifactId>
+                                            <version>1.7R3</version>
+                                            <type>jar</type>
+                                            <overWrite>false</overWrite>
+                                          </artifactItem>
+                                        </artifactItems>  
+                                        <outputDirectory>${basedir}/lib</outputDirectory>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                    </plugin>
+                </plugins>
 	</build>
-
 </project>
 
