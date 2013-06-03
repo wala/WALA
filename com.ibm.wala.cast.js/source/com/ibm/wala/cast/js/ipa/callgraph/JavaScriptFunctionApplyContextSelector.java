@@ -131,7 +131,7 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
             isNonNullArray = true;
           }
         }
-        if (USE_ONE_LEVEL)
+        if (USE_ONE_LEVEL && caller.getContext().get(APPLY_NON_NULL_ARGS) == null)
           baseCtxt = oneLevel.getCalleeTarget(caller, site, callee, receiver);
         return new ApplyContext(baseCtxt, isNonNullArray);
       } else if (USE_ONE_LEVEL && tn.equals(CALL_TYPE_NAME)) {
