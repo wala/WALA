@@ -19,7 +19,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.ibm.wala.cast.js.ipa.callgraph.ForInContextSelector;
+import com.ibm.wala.cast.js.ipa.callgraph.ParameterNameContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.util.Util;
@@ -609,7 +609,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   @Test
   public void testArrayIndexConv2() throws IllegalArgumentException, IOException, CancelException, WalaException {
     PropagationCallGraphBuilder b = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "array_index_conv2.js");
-    b.setContextSelector(new ForInContextSelector(b.getContextSelector()));
+    b.setContextSelector(new ParameterNameContextSelector(b.getContextSelector()));
     CallGraph cg = b.makeCallGraph(b.getOptions());
     //JSCallGraphUtil.AVOID_DUMP = false;
     //JSCallGraphUtil.dumpCG(b.getPointerAnalysis(), cg);
