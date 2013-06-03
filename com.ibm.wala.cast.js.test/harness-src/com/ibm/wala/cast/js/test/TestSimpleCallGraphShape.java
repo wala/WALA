@@ -17,12 +17,12 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
-import com.ibm.wala.cast.js.ipa.callgraph.PropertyNameContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
-import com.ibm.wala.cast.js.util.Util;
+import com.ibm.wala.cast.js.ipa.callgraph.PropertyNameContextSelector;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
@@ -647,6 +647,13 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     public void testDeadCatch() throws IllegalArgumentException, IOException, CancelException, WalaException {
       JSCallGraphBuilderUtil.makeScriptCG("tests", "dead_catch.js");
     }
+
+    @Ignore("need a bug fix")
+    @Test
+    public void testTryFinallyCrash() throws IllegalArgumentException, IOException, CancelException, WalaException {      
+      JSCallGraphBuilderUtil.makeScriptCG("tests", "try-finally-crash.js");
+    }
+
 
     @Test(expected = CallGraphBuilderCancelException.class)
     public void testManyStrings() throws IllegalArgumentException, IOException, CancelException, WalaException {
