@@ -20,7 +20,7 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import com.ibm.wala.cast.ir.translator.AstTranslator;
-import com.ibm.wala.cast.js.ipa.callgraph.ParameterNameContextSelector;
+import com.ibm.wala.cast.js.ipa.callgraph.PropertyNameContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptFunctionDotCallTargetSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.RecursionCheckContextSelector;
@@ -95,8 +95,8 @@ public class HTMLCGBuilder {
 		JSCFABuilder builder = null;
 		try {
 			builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url, builderType);
-			builder.setContextSelector(new ParameterNameContextSelector(2, builder.getContextSelector()));
-			builder.setContextSelector(new ParameterNameContextSelector(3, builder.getContextSelector()));
+			builder.setContextSelector(new PropertyNameContextSelector(builder.getAnalysisCache(), 2, builder.getContextSelector()));
+			builder.setContextSelector(new PropertyNameContextSelector(builder.getAnalysisCache(), 3, builder.getContextSelector()));
 			// TODO we need to find a better way to do this ContextSelector delegation;
 			// the code below belongs somewhere else!!!
 			// the bound of 4 is what is needed to pass our current framework tests
