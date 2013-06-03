@@ -380,7 +380,17 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     CallGraph CG = JSCallGraphBuilderUtil.makeScriptCG("tests", "function_apply2.js");
     verifyGraphAssertions(CG, assertionsForFunctionApply2);
   }
-  
+
+  private static final Object[][] assertionsForFunctionApply3 = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/function_apply3.js" } },
+    new Object[] { "suffix:apply", new String[] { "suffix:foo" } } }; 
+
+  @Test
+  public void testFunctionDotApply3() throws IOException, IllegalArgumentException, CancelException, WalaException {
+    CallGraph CG = JSCallGraphBuilderUtil.makeScriptCG("tests", "function_apply3.js");
+    verifyGraphAssertions(CG, assertionsForFunctionApply3);
+  }
+
   private static final Object[][] assertionsForWrap1 = new Object[][] {
     new Object[] { ROOT, new String[] { "tests/wrap1.js" } },
     new Object[] { "suffix:wrap1.js", new String[] { "suffix:i_am_reachable" } } };
