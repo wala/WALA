@@ -18,7 +18,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
-import com.ibm.wala.cast.js.ipa.callgraph.ForInContextSelector;
+import com.ibm.wala.cast.js.ipa.callgraph.ParameterNameContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
@@ -173,7 +173,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
   
   private void addHackedForInLoopSensitivity(JSCFABuilder builder) {
     final ContextSelector orig = builder.getContextSelector();
-    builder.setContextSelector(new ForInContextSelector(orig));
+    builder.setContextSelector(new ParameterNameContextSelector(orig));
   }
 
 }
