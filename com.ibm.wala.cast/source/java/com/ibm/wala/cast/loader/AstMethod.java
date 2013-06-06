@@ -93,12 +93,6 @@ public abstract class AstMethod implements IMethod {
     public boolean isReadOnly(String name);
 
     /**
-     * invoked to indicate that value numbering may have changed; implementation
-     * should discard any cached information and recompute
-     */
-    public void handleAlteration();
-
-    /**
      * get the name of this entity, as it appears in the definer portion of a
      * lexical name
      */
