@@ -32,8 +32,8 @@ public abstract class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
 
   @Test public void testAjaxslt() throws IOException, IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xslt.html");
-    // don't handle call / apply; it makes things blow up
-    CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url, CGBuilderType.ZERO_ONE_CFA_NO_CALL_APPLY);
+    // need 1-CFA for this; alternatively need to turn off correlation tracking
+    CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url, CGBuilderType.ONE_CFA_PRECISE_LEXICAL);
     
     verifyGraphAssertions(CG, assertionsForAjaxslt);
   }
