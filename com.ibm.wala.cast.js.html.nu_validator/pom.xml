@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>WALA</artifactId>
@@ -9,23 +9,48 @@
   </parent>
   <artifactId>com.ibm.wala.cast.js.html.nu_validator</artifactId>
   <packaging>eclipse-plugin</packaging>
-  	<build>
-		<plugins>
-			<plugin>
-				<groupId>com.googlecode.maven-download-plugin</groupId>
-				<artifactId>maven-download-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>wget</goal>
-						</goals>
-						<configuration>
-							<url>http://repo1.maven.org/maven2/nu/validator/htmlparser/htmlparser/1.4/htmlparser-1.4.jar</url>
-							<outputDirectory>lib/</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>nu.validator.htmlparser</groupId>
+                  <artifactId>htmlparser</artifactId>
+                  <version>1.4</version>
+                  <type>jar</type>
+                  <overWrite>false</overWrite>
+                </artifactItem>
+              </artifactItems>  
+              <outputDirectory>${basedir}/lib</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>test</id>
+            <phase>test</phase>
+            <configuration>
+              <testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
+              <argLine>-Xmx800M -ea</argLine>
+              <redirectTestOutputToFile>true</redirectTestOutputToFile>
+            </configuration>
+            <goals>
+              <goal>test</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>
