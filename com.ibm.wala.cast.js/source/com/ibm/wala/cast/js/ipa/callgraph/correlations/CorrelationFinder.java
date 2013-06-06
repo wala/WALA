@@ -30,10 +30,10 @@ import com.ibm.wala.cast.ir.ssa.AbstractReflectiveGet;
 import com.ibm.wala.cast.ir.ssa.AbstractReflectivePut;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
-import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
 import com.ibm.wala.cast.js.html.WebUtil;
+import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
-import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
+import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.util.Util;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
@@ -41,6 +41,7 @@ import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.SourceModule;
+import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -77,8 +78,6 @@ public class CorrelationFinder {
   private final static boolean TRACK_ESCAPES = true;
   private final static boolean IGNORE_NUMERIC_INDICES = false;
   
-  private final JavaScriptTranslatorFactory translatorFactory;
-
   public static CorrelationSummary findCorrelatedAccesses(IMethod method, IR ir) {
     AstMethod astMethod = (AstMethod)method;
     DefUse du = new DefUse(ir);
@@ -249,12 +248,17 @@ public class CorrelationFinder {
   }
 
   public Map<IMethod, CorrelationSummary> findCorrelatedAccesses(URL url) throws IOException, ClassHierarchyException {
-    JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
     Set<? extends SourceModule> scripts = null;
-    try {
-      scripts = WebUtil.extractScriptFromHTML(url).fst;
-    } catch (Error e) {
-      assert false : e.warning;
+    if(url.getPath().endsWith(".js")) {
+      scripts = Collections.singleton(new SourceURLModule(url));
+    } else {
+      JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
+      try {
+        scripts = WebUtil.extractScriptFromHTML(url).fst;
+      } catch (Error e) {
+        e.printStackTrace();
+        assert false : e.warning;
+      }
     }
     Map<IMethod, CorrelationSummary> summaries = findCorrelatedAccesses(scripts);
     return summaries;
@@ -267,7 +271,7 @@ public class CorrelationFinder {
 
   public Map<IMethod, CorrelationSummary> findCorrelatedAccesses(SourceModule[] scripts_array) throws IOException,
       ClassHierarchyException {
-    WebPageLoaderFactory loaders = new WebPageLoaderFactory(translatorFactory);
+    JavaScriptLoaderFactory loaders = JSCallGraphUtil.makeLoaders(null);
     CAstAnalysisScope scope = new CAstAnalysisScope(scripts_array, loaders, Collections.singleton(JavaScriptLoader.JS));
     IClassHierarchy cha = ClassHierarchy.make(scope, loaders, JavaScriptLoader.JS);
     try {
@@ -281,15 +285,12 @@ public class CorrelationFinder {
     for(IClass klass : cha) {
       for(IMethod method : klass.getAllMethods()) {
         IR ir = factory.makeIR(method, Everywhere.EVERYWHERE, SSAOptions.defaultOptions());
-        if(method.toString().endsWith("__WINDOW_MAIN__>"))
-          System.out.println(ir);
         CorrelationSummary summary = findCorrelatedAccesses(method, ir);
         if(!summary.getCorrelations().isEmpty())
           correlations.put(method, summary);
       }
     }
     
-    printCorrelatedAccesses(correlations);
     return correlations;
   }
 
@@ -303,9 +304,5 @@ public class CorrelationFinder {
     } catch(FileNotFoundException fnfe) {
       return new URL(src);
     }
-  }
-  
-  public CorrelationFinder(JavaScriptTranslatorFactory translatorFactory) {
-    this.translatorFactory = translatorFactory;
   }
 }
