@@ -19,9 +19,13 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 
+<<<<<<< HEAD
 import com.ibm.wala.cast.ir.translator.AstTranslator;
+=======
+>>>>>>> kill NEW_LEXICAL flag
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptFunctionDotCallTargetSelector;
+import com.ibm.wala.cast.js.ipa.callgraph.PropertyNameContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.RecursionCheckContextSelector;
 import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil;
 import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil.CGBuilderType;
@@ -92,10 +96,7 @@ public class HTMLCGBuilder {
 			// TODO we need to find a better way to do this ContextSelector delegation;
 			// the code below belongs somewhere else!!!
 			// the bound of 4 is what is needed to pass our current framework tests
-			if (AstTranslator.NEW_LEXICAL) {
-//				builder.setContextSelector(new RecursionBoundContextSelector(builder.getContextSelector(), 4));
-				builder.setContextSelector(new RecursionCheckContextSelector(builder.getContextSelector()));
-			}
+			builder.setContextSelector(new RecursionCheckContextSelector(builder.getContextSelector()));
 			ProgressMaster master = ProgressMaster.make(new NullProgressMonitor());
 			if (timeout > 0) {
 				master.setMillisPerWorkItem(timeout * 1000);
@@ -183,7 +184,7 @@ public class HTMLCGBuilder {
 		JavaScriptFunctionDotCallTargetSelector.WARN_ABOUT_IMPRECISE_CALLGRAPH = false;
 		
 		// build call graph
-		CGBuilderResult res = buildHTMLCG(src, timeout, AstTranslator.NEW_LEXICAL ? CGBuilderType.ONE_CFA_PRECISE_LEXICAL : CGBuilderType.ZERO_ONE_CFA);
+		CGBuilderResult res = buildHTMLCG(src, timeout, CGBuilderType.ONE_CFA_PRECISE_LEXICAL);
 		
 		if(res.construction_time == -1)
 			System.out.println("TIMED OUT");

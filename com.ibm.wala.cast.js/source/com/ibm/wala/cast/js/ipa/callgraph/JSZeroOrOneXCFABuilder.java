@@ -39,10 +39,6 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy, boolean doOneCFA) {
     super(cha, options, cache);
 
-    if (!AstTranslator.NEW_LEXICAL && options.usePreciseLexical()) {
-      throw new IllegalArgumentException("usePreciseLexical only valid with new lexical scoping handling");
-    }
-    
     SSAContextInterpreter contextInterpreter = setupSSAContextInterpreter(cha, options, cache, appContextInterpreter);
 
     setupMethodTargetSelector(cha, options);
@@ -63,10 +59,6 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     // _necessary_ for correctness (we rely on it when handling lexical scoping)
     contextSelector = new JavaScriptConstructorContextSelector(contextSelector, options.usePreciseLexical());
     
-    if (!AstTranslator.NEW_LEXICAL) {
-      contextSelector = new ScopeMappingKeysContextSelector(contextSelector);
-    }
-    
     if (options.usePreciseLexical()) {
       contextSelector = new OneLevelForLexicalAccessFunctions(contextSelector);
     }
@@ -76,9 +68,6 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     }
     if (options.handleCallApply()) {
       contextSelector = new JavaScriptFunctionApplyContextSelector(contextSelector);
-    }
-    if (!AstTranslator.NEW_LEXICAL) {
-      contextSelector = new LexicalScopingResolverContexts(this, contextSelector);
     }
     if (doOneCFA) {
       contextSelector = new nCFAContextSelector(1, contextSelector);
