@@ -35,6 +35,7 @@ import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
 import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
 import com.ibm.wala.cast.ir.ssa.SSAConversion;
+import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
 import com.ibm.wala.cast.loader.CAstAbstractLoader;
@@ -56,9 +57,11 @@ import com.ibm.wala.cast.types.AstTypeReference;
 import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.IBasicBlock;
+import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ModuleEntry;
+import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.shrikeBT.BinaryOpInstruction;
 import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
@@ -2705,6 +2708,19 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     public String getScopingName() {
       return functionLexicalName;
+    }
+
+    public static boolean hasExposedUses(CGNode caller, CallSiteReference site) {
+      int uses[] = ((AstMethod) caller.getMethod()).lexicalInfo().getExposedUses(site.getProgramCounter());
+      if (uses != null && uses.length > 0) {
+        for (int use : uses) {
+          if (use > 0) {
+            return true;
+          }
+        }
+      }
+    
+      return false;
     }
   };
  

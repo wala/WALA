@@ -17,7 +17,6 @@ import java.util.Set;
 
 import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
 import com.ibm.wala.cast.ipa.callgraph.AstCallGraph.AstCGNode;
-import com.ibm.wala.cast.ipa.callgraph.LexicalScopingResolverContexts.LexicalScopingResolver;
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys.ScopeMappingInstanceKey;
 import com.ibm.wala.cast.ir.ssa.AbstractLexicalInvoke;
 import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
@@ -33,11 +32,9 @@ import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
 import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
-import com.ibm.wala.cast.ir.ssa.SSAConversion;
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
-import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.fixpoint.IntSetVariable;
@@ -46,7 +43,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.AbstractFieldPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -66,7 +62,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
-import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -304,25 +299,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       // }
     }
 
-    /**
-     * Not sure what this method is doing; keeping to play it safe --MS
-     */
-    @SuppressWarnings("unused")
-    private boolean checkLexicalInstruction(AstLexicalAccess instruction) {
-      LexicalScopingResolver r = (LexicalScopingResolver) node.getContext().get(LexicalScopingResolverContexts.RESOLVER);
-      if (r == null) {
-        return false;
-      } else {
-        for (Access a : instruction.getAccesses()) {
-          Pair<String, String> name = a.getName();
-          if ((r.isReadOnly(name) ? r.getReadOnlyValues(name) : r.getLexicalSites(name)) == null) {
-            return false;
-          }
-        }
-      }
 
-      return true;
-    }
 
     public void visitAstLexicalRead(AstLexicalRead instruction) {
       visitLexical(instruction, new LexicalOperator((AstCGNode) node, instruction.getAccesses(), true) {
@@ -594,7 +571,6 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
        * .
        */
       private void doLexicalPointerKeys(boolean funargsOnly) {
-        LexicalScopingResolver r = (LexicalScopingResolver) node.getContext().get(LexicalScopingResolverContexts.RESOLVER);
         for (int i = 0; i < accesses.length; i++) {
           final String name = accesses[i].variableName;
           final String definer = accesses[i].variableDefiner;
@@ -801,148 +777,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       }
     }
 
-    /**
-     * if n is the root method, return the result of
-     * {@link #handleRootLexicalReference(String, String, CGNode)}. Otherwise,
-     * if (name,definer) is exposed from the lexical scope for n, get the
-     * corresponding value number at the call site and return the PointerKey
-     * corresponding to that local. possibly adds a use of the value number to
-     * the {@link AbstractLexicalInvoke} instruction at the call site (since we
-     * now know the name is accessed by some transitive callee), thereby
-     * requiring marking of the IR as mutated.
-     */
-    private PointerKey getLocalReadKey(CGNode n, CallSiteReference callSite, String name, String definer) {
-      AstIR ir = (AstIR) n.getIR();
-      int pc = callSite.getProgramCounter();
-      LexicalInformation L = ((AstIR) n.getIR()).lexicalInfo();
-
-      AbstractLexicalInvoke I = (AbstractLexicalInvoke) ir.getInstructions()[pc];
-
-      // find existing explicit lexical use
-      for (int i = I.getNumberOfParameters(); i <= I.getLastLexicalUse(); i++) {
-        Access A = I.getLexicalUse(i);
-        if (A.variableName.equals(name) && isEqual(A.variableDefiner, definer)) {
-          return getBuilder().getPointerKeyForLocal(n, A.valueNumber);
-        }
-      }
-
-      // make new lexical use
-      int values[] = L.getExposedUses(pc);
-      Pair names[] = L.getExposedNames();
-      if (names != null && names.length > 0) {
-        for (int i = 0; i < names.length; i++) {
-          if (name.equals(names[i].fst) && isEqual(definer, names[i].snd)) {
-            if (values[i] == -1)
-              return null;
-
-            I.addLexicalUse(new Access(name, definer, values[i]));
-
-            if (SSAConversion.DEBUG_UNDO)
-              System.err.println(("copy use #" + (-i - 1) + " to use #" + (I.getNumberOfUses() - 1) + " at inst " + pc));
-
-            SSAConversion.copyUse(ir, pc, -i - 1, pc, I.getNumberOfUses() - 1);
-
-            ((AstCallGraph.AstCGNode) n).setLexicallyMutatedIR(ir);
-
-            return getBuilder().getPointerKeyForLocal(n, values[i]);
-          }
-        }
-      }
-
-      return null;
-
-    }
-
-    private PointerKey getLocalWriteKey(CGNode n, CallSiteReference callSite, String name, String definer) {
-      AstMethod AstM = (AstMethod) n.getMethod();
-      ;
-      AstIR ir = (AstIR) n.getIR();
-      LexicalInformation L = ir.lexicalInfo();
-
-      int pc = callSite.getProgramCounter();
-      AbstractLexicalInvoke I = (AbstractLexicalInvoke) ir.getInstructions()[pc];
-
-      // find existing explicit lexical def
-      for (int i = 2; i < I.getNumberOfDefs(); i++) {
-        Access A = I.getLexicalDef(i);
-        if (A.variableName.equals(name) && isEqual(A.variableDefiner, definer)) {
-          return getBuilder().getPointerKeyForLocal(n, A.valueNumber);
-        }
-      }
-
-      // make new lexical def
-      int values[] = L.getExposedUses(pc);
-      Pair names[] = L.getExposedNames();
-      if (names != null && names.length > 0) {
-        for (int i = 0; i < names.length; i++) {
-          if (name.equals(names[i].fst) && isEqual(definer, names[i].snd)) {
-            if (values[i] == -1)
-              return null;
-
-            // find calls that may be altered, and clear their caches
-            DefUse newDU = getAnalysisCache().getSSACache().findOrCreateDU(ir, n.getContext());
-            Iterator<SSAInstruction> insts = newDU.getUses(values[i]);
-            while (insts.hasNext()) {
-              SSAInstruction inst = insts.next();
-              if (inst instanceof SSAAbstractInvokeInstruction) {
-                // System.err.println("clearing for " + inst);
-                CallSiteReference cs = ((SSAAbstractInvokeInstruction) inst).getCallSite();
-                ((AstCallGraph.AstCGNode) n).clearMutatedCache(cs);
-              }
-            }
-
-            // if values[i] was altered by copy propagation, we must undo
-            // that to ensure we do not bash the wrong value number in the
-            // the next steps.
-            SSAConversion.undoCopyPropagation(ir, pc, -i - 1);
-
-            // possibly new instruction due to renames, so get it again
-            I = (AbstractLexicalInvoke) ir.getInstructions()[pc];
-
-            // we assume that the callee might not necessarily write,
-            // so the call becomes like a phi node. hence it needs a
-            // read of the old value
-            ensureRead: {
-              for (int l = 0; l < I.getNumberOfUses(); l++) {
-                if (I.isLexicalUse(l)) {
-                  Access r = I.getLexicalUse(l);
-                  if (name.equals(r.variableName)) {
-                    if (definer == null ? r.variableDefiner == null : definer.equals(r.variableDefiner)) {
-                      break ensureRead;
-                    }
-                  }
-                }
-              }
-              I.addLexicalUse(new Access(name, definer, values[i]));
-            }
-
-            // add new lexical definition
-            I.addLexicalDef(new Access(name, definer, values[i]));
-
-            if (SSAConversion.DEBUG_UNDO)
-              System.err.println("new def of " + values[i] + " at inst " + pc + ": " + I);
-
-            // new def has broken SSA form for values[i], so fix for that value
-            MutableIntSet vs = IntSetUtil.make();
-            vs.add(values[i]);
-            SSAConversion.convert(AstM, ir, getOptions().getSSAOptions());
-
-            // force analysis to be redone
-            // TODO: only values[i] uses need to be re-done.
-            ir.lexicalInfo().handleAlteration();
-            ((AstCallGraph.AstCGNode) n).setLexicallyMutatedIR(ir);
-            getAnalysisCache().getSSACache().invalidate(AstM, n.getContext());
-            getAnalysisCache().getSSACache().invalidate(AstM, Everywhere.EVERYWHERE);
-            getBuilder().markChanged(n);
-
-            // get SSA-renamed def from call site instruction
-            return getLocalWriteKey(n, callSite, name, definer);
-          }
-        }
-      }
-
-      return null;
-    }
+    
 
     // /////////////////////////////////////////////////////////////////////////
     //

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.cast.js.ipa.callgraph;
 
-import com.ibm.wala.cast.ipa.callgraph.LexicalScopingResolverContexts;
+import com.ibm.wala.cast.ir.translator.AstTranslator.AstLexicalInformation;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptConstructTargetSelector.JavaScriptConstructor;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
@@ -49,7 +49,7 @@ public class JavaScriptConstructorContextSelector implements ContextSelector {
   public Context getCalleeTarget(final CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (callee instanceof JavaScriptConstructor) {
       final Context oneLevelCallStringContext = oneLevelCallStrings.getCalleeTarget(caller, site, callee, receiver);
-      if (usePreciseLexical && LexicalScopingResolverContexts.hasExposedUses(caller, site)) {
+      if (usePreciseLexical && AstLexicalInformation.hasExposedUses(caller, site)) {
         // use a caller-site context, to enable lexical scoping lookups (via caller CGNode)
         return oneLevelCallerSite.getCalleeTarget(caller, site, callee, receiver);
       } else {
