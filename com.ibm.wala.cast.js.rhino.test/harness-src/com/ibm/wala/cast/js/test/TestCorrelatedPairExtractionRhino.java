@@ -15,7 +15,6 @@ import java.io.IOException;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.CorrelationFinder;
-import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.cast.js.translator.RhinoToAstTranslator;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
@@ -23,7 +22,7 @@ import com.ibm.wala.classLoader.SourceModule;
 
 public class TestCorrelatedPairExtractionRhino extends TestCorrelatedPairExtraction {
 	protected CorrelationFinder makeCorrelationFinder() {
-		return new CorrelationFinder(new CAstRhinoTranslatorFactory());
+		return new CorrelationFinder();
 	}
 	
 	protected CAstEntity parseJS(CAstImpl ast, SourceModule module) throws IOException {
