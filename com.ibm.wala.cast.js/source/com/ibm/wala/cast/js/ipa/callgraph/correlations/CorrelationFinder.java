@@ -34,6 +34,7 @@ import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
+import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.js.util.Util;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
@@ -78,6 +79,12 @@ public class CorrelationFinder {
   private final static boolean TRACK_ESCAPES = true;
   private final static boolean IGNORE_NUMERIC_INDICES = false;
   
+  private final JavaScriptTranslatorFactory translatorFactory;
+  
+  public CorrelationFinder(JavaScriptTranslatorFactory translatorFactory) {
+    this.translatorFactory = translatorFactory;
+  }
+
   public static CorrelationSummary findCorrelatedAccesses(IMethod method, IR ir) {
     AstMethod astMethod = (AstMethod)method;
     DefUse du = new DefUse(ir);
@@ -225,7 +232,7 @@ public class CorrelationFinder {
     // found no non-numeric definitions
     return true;
   }
-  
+
   @SuppressWarnings("unused")
   private void printCorrelatedAccesses(URL url) throws IOException, ClassHierarchyException {
     printCorrelatedAccesses(findCorrelatedAccesses(url));
@@ -271,6 +278,7 @@ public class CorrelationFinder {
 
   public Map<IMethod, CorrelationSummary> findCorrelatedAccesses(SourceModule[] scripts_array) throws IOException,
       ClassHierarchyException {
+    JSCallGraphUtil.setTranslatorFactory(translatorFactory);
     JavaScriptLoaderFactory loaders = JSCallGraphUtil.makeLoaders(null);
     CAstAnalysisScope scope = new CAstAnalysisScope(scripts_array, loaders, Collections.singleton(JavaScriptLoader.JS));
     IClassHierarchy cha = ClassHierarchy.make(scope, loaders, JavaScriptLoader.JS);
