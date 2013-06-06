@@ -27,9 +27,12 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSZeroOrOneXCFABuilder;
+import com.ibm.wala.cast.js.ipa.callgraph.PropertyNameContextSelector;
+import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.CorrelatedPairExtractorFactory;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.loader.CAstAbstractLoader;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.classLoader.SourceModule;
@@ -52,19 +55,25 @@ import com.ibm.wala.util.WalaException;
 public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil {
 
   public static enum CGBuilderType {
-    ZERO_ONE_CFA(false, false, true), ZERO_ONE_CFA_NO_CALL_APPLY(false, false, false), ZERO_ONE_CFA_PRECISE_LEXICAL(false, true,
-        true), ONE_CFA(true, false, true), ONE_CFA_PRECISE_LEXICAL(true, true, true);
+    ZERO_ONE_CFA(false, false, true, true),
+    ZERO_ONE_CFA_NO_CALL_APPLY(false, false, false, true),
+    ZERO_ONE_CFA_PRECISE_LEXICAL(false, true, true, true),
+    ONE_CFA(true, false, true, true),
+    ONE_CFA_PRECISE_LEXICAL(true, true, true, true);
 
     private final boolean useOneCFA;
 
     private final boolean usePreciseLexical;
 
     private final boolean handleCallApply;
+    
+    private final boolean extractCorrelatedPairs;
 
-    private CGBuilderType(boolean useOneCFA, boolean usePreciseLexical, boolean handleCallApply) {
+    private CGBuilderType(boolean useOneCFA, boolean usePreciseLexical, boolean handleCallApply, boolean extractCorrelatedPairs) {
       this.useOneCFA = useOneCFA;
       this.usePreciseLexical = usePreciseLexical;
       this.handleCallApply = handleCallApply;
+      this.extractCorrelatedPairs = extractCorrelatedPairs;
     }
 
     public boolean useOneCFA() {
@@ -74,26 +83,40 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
     public boolean usePreciseLexical() {
       return usePreciseLexical;
     }
+    
     public boolean handleCallApply() {
       return handleCallApply;
     }
 
+    public boolean extractCorrelatedPairs() {
+      return extractCorrelatedPairs;
+    }
   }
 
   public static JSCFABuilder makeScriptCGBuilder(String dir, String name, CGBuilderType builderType) throws IOException, WalaException {
-    JavaScriptLoaderFactory loaders = JSCallGraphUtil.makeLoaders();
+    URL script = getURLforFile(dir, name);
+    CAstRewriterFactory preprocessor = builderType.extractCorrelatedPairs ? new CorrelatedPairExtractorFactory(translatorFactory, script) : null;
+    JavaScriptLoaderFactory loaders = JSCallGraphUtil.makeLoaders(preprocessor);
 
-    AnalysisScope scope = makeScriptScope(dir, name, loaders);
+    AnalysisScope scope = makeScriptScope(script, dir, name, loaders);
 
     return makeCG(loaders, scope, builderType, AstIRFactory.makeDefaultFactory());
   }
 
-  static AnalysisScope makeScriptScope(String dir, String name, JavaScriptLoaderFactory loaders) throws IOException {
+  private static URL getURLforFile(String dir, String name) {
     URL script = JSCallGraphBuilderUtil.class.getClassLoader().getResource(dir + File.separator + name);
     if (script == null) {
       script = JSCallGraphBuilderUtil.class.getClassLoader().getResource(dir + "/" + name);
     }
     assert script != null : "cannot find " + dir + " and " + name;
+    return script;
+  }
+  
+  static AnalysisScope makeScriptScope(String dir, String name, JavaScriptLoaderFactory loaders) throws IOException {
+    return makeScriptScope(getURLforFile(dir, name), dir, name, loaders);
+  }
+
+  static AnalysisScope makeScriptScope(URL script, String dir, String name, JavaScriptLoaderFactory loaders) throws IOException {
     AnalysisScope scope;
     if (script.openConnection() instanceof JarURLConnection) {
       scope = makeScope(new URL[] { script }, loaders, JavaScriptLoader.JS);
@@ -122,7 +145,8 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
 
   public static CallGraph makeScriptCG(SourceModule[] scripts, CGBuilderType builderType, IRFactory<IMethod> irFactory) throws IOException, IllegalArgumentException,
       CancelException, WalaException {
-    PropagationCallGraphBuilder b = makeCGBuilder(makeLoaders(), scripts, builderType, irFactory);
+    CAstRewriterFactory preprocessor = builderType.extractCorrelatedPairs ? new CorrelatedPairExtractorFactory(translatorFactory, scripts) : null;
+    PropagationCallGraphBuilder b = makeCGBuilder(makeLoaders(preprocessor), scripts, builderType, irFactory);
     CallGraph CG = b.makeCallGraph(b.getOptions());
     // dumpCG(b.getPointerAnalysis(), CG);
     return CG;
@@ -136,6 +160,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
     JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
     SourceModule[] scripts;
     IRFactory<IMethod> irFactory = AstIRFactory.makeDefaultFactory();
+    CAstRewriterFactory preprocessor = builderType.extractCorrelatedPairs ? new CorrelatedPairExtractorFactory(translatorFactory, url) : null;
     JavaScriptLoaderFactory loaders = new WebPageLoaderFactory(translatorFactory, preprocessor);
     try {
       Set<MappedSourceModule> script = WebUtil.extractScriptFromHTML(url).fst;
@@ -146,6 +171,8 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
       ((CAstAbstractLoader)loaders.getTheLoader()).addMessage(dummy, e.warning);
     }
     JSCFABuilder builder = makeCGBuilder(loaders, scripts, builderType, irFactory);
+    if(builderType.extractCorrelatedPairs)
+      builder.setContextSelector(new PropertyNameContextSelector(builder.getAnalysisCache(), 2, builder.getContextSelector()));
     builder.setBaseURL(url);
     return builder;
   }
@@ -180,6 +207,8 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
       AnalysisCache cache = makeCache(irFactory);
       JSCFABuilder builder = new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, ZeroXInstanceKeys.ALLOCATIONS,
           builderType.useOneCFA());
+      if(builderType.extractCorrelatedPairs())
+        builder.setContextSelector(new PropertyNameContextSelector(builder.getAnalysisCache(), 2, builder.getContextSelector()));
 
       return builder;
     } catch (ClassHierarchyException e) {

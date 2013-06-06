@@ -64,11 +64,6 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
   public static JavaScriptTranslatorFactory translatorFactory;
   
   /**
-   * preprocessor to run generated CAst trees through, null if none
-   */
-  public static CAstRewriterFactory preprocessor;
-
-  /**
    * Set up the translator factory. This method should be called before invoking
    * {@link #makeLoaders()}.
    */
@@ -80,10 +75,6 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     return translatorFactory;
   }
   
-  public static void setPreprocessor(CAstRewriterFactory preprocessor) {
-    JSCallGraphUtil.preprocessor = preprocessor;
-  }
-
   public static JSAnalysisOptions makeOptions(AnalysisScope scope, IClassHierarchy cha, Iterable<Entrypoint> roots) {
     final JSAnalysisOptions options = new JSAnalysisOptions(scope, /*
                                                                 * AstIRFactory.
@@ -101,7 +92,11 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     return options;
   }
 
-  public static JavaScriptLoaderFactory makeLoaders() {
+  /**
+   * @param preprocessor CAst rewriter to use for preprocessing JavaScript source files; may be null
+   * @return
+   */
+  public static JavaScriptLoaderFactory makeLoaders(CAstRewriterFactory preprocessor) {
     if (translatorFactory == null) {
       throw new IllegalStateException("com.ibm.wala.cast.js.ipa.callgraph.Util.setTranslatorFactory() must be invoked before makeLoaders()");
     }
