@@ -559,14 +559,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
        * perform the necessary {@link #action(PointerKey, int)}s for the
        * accesses. For each access, we determine the possible {@link CGNode}s
        * corresponding to its definer (see
-       * {@link AstConstraintVisitor#getLexicalDefiners(CGNode, String)). For
-       * each such definer node D, we traverse the current call graph backwards,
-       * stopping at either D or the root. For each call edge encountered during
-       * the traversal, check if the caller has a local value number for the
-       * access's name at the relevant call sites (can be functions nested in D
-       * if {@link AstTranslator#useLocalValuesForLexicalVars()} is set). If so,
-       * perform the action. Note that if the root node is reached, we have an
-       * upward funarg; see
+       * {@link AstConstraintVisitor#getLexicalDefiners(CGNode, String)). Handle
+       * using
        * {@link AstConstraintVisitor#handleRootLexicalReference(String, String, CGNode)}
        * .
        */
@@ -579,11 +573,11 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           if (AstTranslator.DEBUG_LEXICAL)
             System.err.println(("looking up lexical parent " + definer));
 
-            Set<CGNode> creators = getLexicalDefiners(node, Pair.make(name, definer));
-            for (CGNode n : creators) {
-              PointerKey funargKey = handleRootLexicalReference(name, definer, n);
-              action(funargKey, vn);
-            }
+          Set<CGNode> creators = getLexicalDefiners(node, Pair.make(name, definer));
+          for (CGNode n : creators) {
+            PointerKey funargKey = handleRootLexicalReference(name, definer, n);
+            action(funargKey, vn);
+          }
         }
       }
 

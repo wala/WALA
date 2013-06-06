@@ -2695,13 +2695,6 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       return scopingParents;
     }
 
-    /**
-     * reset cached info about value numbers that may have changed
-     */
-    public void handleAlteration() {
-      allExposedUses = null;
-    }
-
     public boolean isReadOnly(String name) {
       return readOnlyNames != null && readOnlyNames.contains(name);
     }
