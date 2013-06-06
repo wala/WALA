@@ -124,8 +124,6 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     SSAContextInterpreter c = new DefaultSSAInterpreter(options, getAnalysisCache());
     c = new DelegatingSSAContextInterpreter(new AstContextInsensitiveSSAContextInterpreter(options, getAnalysisCache()), c);
 
-    c = new DelegatingSSAContextInterpreter(new LexicalScopingSSAContextInterpreter(options, getAnalysisCache()), c);
-
     c = new DelegatingSSAContextInterpreter(ReflectionContextInterpreter.createReflectionContextInterpreter(cha, options,
         getAnalysisCache()), c);
 
