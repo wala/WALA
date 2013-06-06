@@ -652,6 +652,18 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
       //JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
       verifyGraphAssertions(CG, assertionsForDeadCode);
     }
+    
+    private static final Object[][] assertionsForExtend = new Object[][] {
+      new Object[] { ROOT, new String[] { "tests/extend.js" } },
+      new Object[] { "tests/extend.js", new String[] { "suffix:foo", "!suffix:bar" } }
+    };
+    
+    @Test
+    public void testExtend() throws IOException, WalaException, IllegalArgumentException, CancelException {
+      JSCFABuilder builder = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "extend.js");
+      CallGraph cg = builder.makeCallGraph(builder.getOptions());
+      verifyGraphAssertions(cg, assertionsForExtend);
+    }
 
     @Test
     public void testDeadCatch() throws IllegalArgumentException, IOException, CancelException, WalaException {

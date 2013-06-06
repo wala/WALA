@@ -50,6 +50,7 @@ import com.ibm.wala.cast.tree.impl.CAstControlFlowRecorder;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
 import com.ibm.wala.cast.tree.rewrite.CAstBasicRewriter.NoKey;
+import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
@@ -419,7 +420,7 @@ public class ClosureExtractor extends CAstRewriterExt {
     boolean extractingEmpty = false;
 
     String name = EXTRACTED_FUN_BASENAME + (anonymous_counter++);
-
+    
     // Create a new entity for the extracted function.
     ExtractedFunction new_entity = new ExtractedFunction(name, context);
     context.setExtractedEntity(new_entity);
