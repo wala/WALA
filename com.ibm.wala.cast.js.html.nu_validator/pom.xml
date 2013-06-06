@@ -44,6 +44,10 @@
               <testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
               <argLine>-Xmx800M -ea</argLine>
               <redirectTestOutputToFile>true</redirectTestOutputToFile>
+              <additionalClasspathElements>
+               <additionalClasspathElement>${basedir}/../com.ibm.wala.cast.js.test.data/examples-src</additionalClasspathElement>
+              </additionalClasspathElements>
+
             </configuration>
             <goals>
               <goal>test</goal>
