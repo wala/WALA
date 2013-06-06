@@ -66,7 +66,7 @@ public class JSAstTranslator extends AstTranslator {
   }
 
   protected boolean useLocalValuesForLexicalVars() {
-    return !AstTranslator.NEW_LEXICAL;
+    return false;
   }
   
   protected TypeReference defaultCatchType() {

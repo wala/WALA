@@ -605,39 +605,11 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           if (AstTranslator.DEBUG_LEXICAL)
             System.err.println(("looking up lexical parent " + definer));
 
-          boolean foundOnStack = false;
-          if (r != null && !AstTranslator.NEW_LEXICAL) {
-            if (!funargsOnly) {
-              if (r.isReadOnly(accesses[i].getName())) {
-                assert isLoad;
-                foundOnStack = true;
-                Set<LocalPointerKey> vals = r.getReadOnlyValues(accesses[i].getName());
-                for (LocalPointerKey val : vals) {
-                  action(val, vn);
-                }
-              } else {
-                Iterator<Pair<CallSiteReference, CGNode>> sites = r.getLexicalSites(accesses[i].getName());
-                while (sites.hasNext()) {
-                  Pair<CallSiteReference, CGNode> x = sites.next();
-                  PointerKey V = isLoad ? getLocalReadKey(x.snd, x.fst, name, definer) : getLocalWriteKey(x.snd, x.fst, name,
-                      definer);
-
-                  if (V != null) {
-                    foundOnStack = true;
-                    action(V, vn);
-                  }
-                }
-              }
-            }
-          }
-
-          if (!foundOnStack) {
             Set<CGNode> creators = getLexicalDefiners(node, Pair.make(name, definer));
             for (CGNode n : creators) {
               PointerKey funargKey = handleRootLexicalReference(name, definer, n);
               action(funargKey, vn);
             }
-          }
         }
       }
 
@@ -695,7 +667,6 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         return Collections.singleton(getBuilder().getCallGraph().getFakeRootNode());
       } else if (getBuilder().sameMethod(opNode, definer.snd)) {
         // lexical access to a variable declared in opNode itself
-        assert AstTranslator.NEW_LEXICAL;
         return Collections.singleton(opNode);
       } else {
         final Set<CGNode> result = HashSetFactory.make();

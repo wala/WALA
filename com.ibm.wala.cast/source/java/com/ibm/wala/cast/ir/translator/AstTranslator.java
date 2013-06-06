@@ -95,12 +95,6 @@ import com.ibm.wala.util.warnings.Warning;
 public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContext> implements ArrayOpHandler, TranslatorToIR {
 
   /**
-   * set to true to use new handling of lexical scoping
-   */
-  public static final boolean NEW_LEXICAL = true;
-
-
-  /**
    * does the language care about using type-appropriate default values? For
    * Java, the answer is yes (ints should get a default value of 0, null for
    * pointers, etc.). For JavaScript, the answer is no, as any variable can hold
