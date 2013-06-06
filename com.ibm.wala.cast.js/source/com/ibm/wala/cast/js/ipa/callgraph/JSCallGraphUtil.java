@@ -102,6 +102,10 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     }
     return new JavaScriptLoaderFactory(translatorFactory, preprocessor);
   }
+  
+  public static JavaScriptLoaderFactory makeLoaders() {
+    return makeLoaders(null);
+  }
 
   public static IClassHierarchy makeHierarchy(AnalysisScope scope, ClassLoaderFactory loaders) throws ClassHierarchyException {
     return ClassHierarchy.make(scope, loaders, JavaScriptLoader.JS);
