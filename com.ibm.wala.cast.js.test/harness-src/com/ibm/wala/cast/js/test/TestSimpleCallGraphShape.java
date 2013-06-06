@@ -655,7 +655,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     
     private static final Object[][] assertionsForExtend = new Object[][] {
       new Object[] { ROOT, new String[] { "tests/extend.js" } },
-      new Object[] { "tests/extend.js", new String[] { "suffix:foo", "!suffix:bar" } }
+      new Object[] { "tests/extend.js", new String[] { "suffix:bar", "!suffix:foo" } }
     };
     
     @Test

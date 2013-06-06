@@ -161,9 +161,8 @@ public class TestRhinoSourceMap {
 			  sources.put(assertion[0], assertion[1]);
 		  }
 		  
-	    URL script = TestRhinoSourceMap.class.getClassLoader().getResource(fileName);
 		  JavaScriptLoaderFactory loaders = makeLoaders(null);
-		  AnalysisScope scope = makeScriptScope(script, "tests", fileName, loaders);
+		  AnalysisScope scope = makeScriptScope("tests", fileName, loaders);
 		  IClassHierarchy cha = makeHierarchy(scope, loaders);
 		  for(IClass cls : cha) {
 			  if (cls.getName().toString().contains(fileName)) {
