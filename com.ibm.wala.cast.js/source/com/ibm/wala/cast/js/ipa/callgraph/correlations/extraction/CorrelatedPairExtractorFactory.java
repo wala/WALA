@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Map;
 
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.CorrelationFinder;
@@ -23,6 +24,7 @@ import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.rewrite.CAstBasicRewriter.NoKey;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 
 public class CorrelatedPairExtractorFactory implements CAstRewriterFactory<NodePos, NoKey> {
@@ -30,6 +32,14 @@ public class CorrelatedPairExtractorFactory implements CAstRewriterFactory<NodeP
 
   public CorrelatedPairExtractorFactory(JavaScriptTranslatorFactory translatorFactory, URL entryPoint) throws ClassHierarchyException, IOException {
     this(new CorrelationFinder(translatorFactory).findCorrelatedAccesses(entryPoint));
+  }
+  
+  public CorrelatedPairExtractorFactory(JavaScriptTranslatorFactory translatorFactory, Collection<? extends SourceModule> scripts) throws ClassHierarchyException, IOException {
+    this(new CorrelationFinder(translatorFactory).findCorrelatedAccesses(scripts));
+  }
+  
+  public CorrelatedPairExtractorFactory(JavaScriptTranslatorFactory translatorFactory, SourceModule[] scripts) throws ClassHierarchyException, IOException {
+    this(new CorrelationFinder(translatorFactory).findCorrelatedAccesses(scripts));
   }
   
   public CorrelatedPairExtractorFactory(Map<IMethod, CorrelationSummary> summaries) {
