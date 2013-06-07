@@ -28,7 +28,6 @@ import com.ibm.wala.cast.ir.ssa.AstEchoInstruction;
 import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
 import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
 import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
-import com.ibm.wala.cast.ir.ssa.AstLexicalAccess;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
@@ -109,15 +108,6 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * can lexical reads / writes access globals?
    */
   protected abstract boolean treatGlobalsAsLexicallyScoped();
-
-  /**
-   * given accesses in a method to variables defined in an enclosing lexical
-   * scope, is it legal to read the variable into a local l once at the
-   * beginning of the method, operate on l through the method body (rather than
-   * performing separate lexical read / write operations), and write back the
-   * value in l (if necessary) at the end of the method?
-   */
-  protected abstract boolean useLocalValuesForLexicalVars();
 
   protected boolean topLevelFunctionsInGlobalScope() {
     return true;
@@ -250,26 +240,19 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * generate prologue code for each function body
    */
   protected void doPrologue(WalkContext context) {
-    // if we are SSA converting lexical accesses, add a placeholder instruction
-    // eventually (via mutation of its Access array) reads all relevant lexical
-    // variables at the beginning of the method.
-    if (useLocalValuesForLexicalVars()) {
-      context.cfg().addInstruction(new AstLexicalRead(new Access[0]));
-    } else {
-      // perform a lexical write to copy the value stored in the local
-      // associated with each parameter to the lexical name
-      final CAstEntity entity = context.top();
-      Set<String> exposedNames = entity2ExposedNames.get(entity);
-      if (exposedNames != null) {
-        for (String arg : entity.getArgumentNames()) {
-          if (exposedNames.contains(arg)) {
-            final Scope currentScope = context.currentScope();
-            Symbol symbol = currentScope.lookup(arg);
-            assert symbol.getDefiningScope() == currentScope;
-            int argVN = symbol.valueNumber();
-            Access A = new Access(arg, context.getEntityName(entity), argVN);
-            context.cfg().addInstruction(new AstLexicalWrite(A));
-          }
+    // perform a lexical write to copy the value stored in the local
+    // associated with each parameter to the lexical name
+    final CAstEntity entity = context.top();
+    Set<String> exposedNames = entity2ExposedNames.get(entity);
+    if (exposedNames != null) {
+      for (String arg : entity.getArgumentNames()) {
+        if (exposedNames.contains(arg)) {
+          final Scope currentScope = context.currentScope();
+          Symbol symbol = currentScope.lookup(arg);
+          assert symbol.getDefiningScope() == currentScope;
+          int argVN = symbol.valueNumber();
+          Access A = new Access(arg, context.getEntityName(entity), argVN);
+          context.cfg().addInstruction(new AstLexicalWrite(A));
         }
       }
     }
@@ -287,12 +270,10 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * caller is responsible for ensuring that name is defined in the local scope.
    */
   protected int doLocalRead(WalkContext context, String name) {
-    if (!useLocalValuesForLexicalVars()) {
-      CAstEntity entity = context.top();
-      Set<String> exposed = entity2ExposedNames.get(entity);
-      if (exposed != null && exposed.contains(name)) {
-        return doLexReadHelper(context, name);
-      }
+    CAstEntity entity = context.top();
+    Set<String> exposed = entity2ExposedNames.get(entity);
+    if (exposed != null && exposed.contains(name)) {
+      return doLexReadHelper(context, name);
     }
     return context.currentScope().lookup(name).valueNumber();
   }
@@ -303,14 +284,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * that nm is defined in the local scope.
    */
   protected void doLocalWrite(WalkContext context, String nm, int rval) {
-    if (!useLocalValuesForLexicalVars()) {
-      CAstEntity entity = context.top();
-      Set<String> exposed = entity2ExposedNames.get(entity);
-      if (exposed != null && exposed.contains(nm)) {
-        // use a lexical write
-        doLexicallyScopedWrite(context, nm, rval);
-        return;
-      }
+    CAstEntity entity = context.top();
+    Set<String> exposed = entity2ExposedNames.get(entity);
+    if (exposed != null && exposed.contains(nm)) {
+      // use a lexical write
+      doLexicallyScopedWrite(context, nm, rval);
+      return;
     }
     int lval = context.currentScope().lookup(nm).valueNumber();
     if (lval != rval) {
@@ -342,53 +321,13 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     Scope definingScope = S.getDefiningScope();
     CAstEntity E = definingScope.getEntity();
     // record in declaring scope that the name is exposed to a nested scope
-//<<<<<<< .mine
-//    Symbol S = context.currentScope().lookup(name);
-//    CAstEntity E = S.getDefiningScope().getEntity();
-//    addExposedName(E, E, name, S.getDefiningScope().lookup(name).valueNumber(), false, context);
-//=======
     addExposedName(E, E, name, definingScope.lookup(name).valueNumber(), false, context);
-//>>>>>>> .r4421
-
     final String entityName = context.getEntityName(E);
-    if (useLocalValuesForLexicalVars()) {
-      // lexically-scoped variables can be given a single vn in a method
-//<<<<<<< .mine
-//      Access A = new Access(name, context.getEntityName(E), vn);
-//=======
-//>>>>>>> .r4421
-
-//<<<<<<< .mine
-      // (context.top() is current entity)
-      // record the name as exposed for the current entity, since if the name is
-      // updated via a call to a nested function, SSA for the current entity may
-      // need to be updated with the new definition
-//      addExposedName(context.top(), E, name, vn, false, context);
-//=======
-      markExposedInEnclosingEntities(context, name, definingScope, E, entityName, false);
-//>>>>>>> .r4421
-
-//<<<<<<< .mine
-      // record the access; later, the Accesses in the instruction
-      // defining vn will be adjusted based on this information; see
-      // patchLexicalAccesses()
-//      addAccess(context, context.top(), A);
-//=======
-      return S.valueNumber();
-//>>>>>>> .r4421
-
-    } else {
-      // lexically-scoped variables should be read from their scope each time
-      int result = context.currentScope().allocateTempValue();
-//<<<<<<< .mine
-//      Access A = new Access(name, context.getEntityName(E), result);
-//=======
-      Access A = new Access(name, entityName, result);
-//>>>>>>> .r4421
-      context.cfg().addInstruction(new AstLexicalRead(A));
-      markExposedInEnclosingEntities(context, name, definingScope, E, entityName, false);
-      return result;
-    }
+    int result = context.currentScope().allocateTempValue();
+    Access A = new Access(name, entityName, result);
+    context.cfg().addInstruction(new AstLexicalRead(A));
+    markExposedInEnclosingEntities(context, name, definingScope, E, entityName, false);
+    return result;
   }
 
   /**
@@ -435,53 +374,24 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     // record in declaring scope that the name is exposed to a nested scope
     addExposedName(E, E, name, definingScope.lookup(name).valueNumber(), true, context);
 
-    if (useLocalValuesForLexicalVars()) {
-      // lexically-scoped variables can be given a single vn in a method
-      
-      markExposedInEnclosingEntities(context, name, definingScope, E, context.getEntityName(E), true);
-
-      context.cfg().addInstruction(new AssignInstruction(S.valueNumber(), rval));
-      // we add write instructions at every access for now
-      // eventually, we may restructure the method to do a single combined write
-      // before exit
-      Access A = new Access(name, context.getEntityName(E), rval);
-      context.cfg().addInstruction(new AstLexicalWrite(A));
-
-    } else {
-      // lexically-scoped variables must be written in their scope each time
-      Access A = new Access(name, context.getEntityName(E), rval);
-      context.cfg().addInstruction(new AstLexicalWrite(A));
-      markExposedInEnclosingEntities(context, name, definingScope, E, context.getEntityName(E), true);
-    }
+    // lexically-scoped variables must be written in their scope each time
+    Access A = new Access(name, context.getEntityName(E), rval);
+    context.cfg().addInstruction(new AstLexicalWrite(A));
+    markExposedInEnclosingEntities(context, name, definingScope, E, context.getEntityName(E), true);
   }
 
   /**
    * generate instructions for a read of a global
    */
   protected int doGlobalRead(CAstNode node, WalkContext context, String name) {
-    Symbol S = context.currentScope().lookup(name);
-
     // Global variables can be treated as lexicals defined in the CG root, or
     if (treatGlobalsAsLexicallyScoped()) {
 
-      // lexically-scoped variables can be given a single vn in a method, or
-      if (useLocalValuesForLexicalVars()) {
-        int vn = S.valueNumber();
-        Access A = new Access(name, null, vn);
-
-        addExposedName(context.top(), null, name, vn, false, context);
-        addAccess(context, context.top(), A);
-
-        return vn;
-
-        // lexically-scoped variables can be read from their scope each time
-      } else {
-        int result = context.currentScope().allocateTempValue();
-        Access A = new Access(name, null, result);
-        context.cfg().addInstruction(new AstLexicalRead(A));
-        addAccess(context, context.top(), A);
-        return result;
-      }
+      int result = context.currentScope().allocateTempValue();
+      Access A = new Access(name, null, result);
+      context.cfg().addInstruction(new AstLexicalRead(A));
+      addAccess(context, context.top(), A);
+      return result;
 
       // globals can be treated as a single static location
     } else {
@@ -496,28 +406,13 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * generate instructions for a write of a global
    */
   protected void doGlobalWrite(WalkContext context, String name, int rval) {
-    Symbol S = context.currentScope().lookup(name);
 
     // Global variables can be treated as lexicals defined in the CG root, or
     if (treatGlobalsAsLexicallyScoped()) {
 
-      // lexically-scoped variables can be given a single vn in a method, or
-      if (useLocalValuesForLexicalVars()) {
-        int vn = S.valueNumber();
-        Access A = new Access(name, null, vn);
-
-        addExposedName(context.top(), null, name, vn, true, context);
-        addAccess(context, context.top(), A);
-
-        context.cfg().addInstruction(new AssignInstruction(vn, rval));
-        context.cfg().addInstruction(new AstLexicalWrite(A));
-
-        // lexically-scoped variables can be read from their scope each time
-      } else {
-        Access A = new Access(name, null, rval);
-        context.cfg().addInstruction(new AstLexicalWrite(A));
-        addAccess(context, context.top(), A);
-      }
+      Access A = new Access(name, null, rval);
+      context.cfg().addInstruction(new AstLexicalWrite(A));
+      addAccess(context, context.top(), A);
 
       // globals can be treated as a single static location
     } else {
@@ -2889,31 +2784,6 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
   }
 
-  /**
-   * find any AstLexicalAccess instructions in instrs with a zero access count,
-   * and change them to perform specified accesses. If accesses is empty, null
-   * out the pointers to the AstLexicalAccess instructions in the array.
-   * 
-   * Presumably, such empty AstLexicalAccess instructions should only exist if
-   * {@link #useLocalValuesForLexicalVars()} returns true?
-   */
-  private void patchLexicalAccesses(SSAInstruction[] instrs, Set<Access> accesses) {
-    Access[] AC = accesses == null || accesses.isEmpty() ? (Access[]) null : (Access[]) accesses.toArray(new Access[accesses.size()]);
-    for (int i = 0; i < instrs.length; i++) {
-      if (instrs[i] instanceof AstLexicalAccess && ((AstLexicalAccess) instrs[i]).getAccessCount() == 0) {
-        // should just be AstLexicalRead for now; may add support for
-        // AstLexicalWrite later
-        assert instrs[i] instanceof AstLexicalRead;
-        assert useLocalValuesForLexicalVars();
-        if (AC != null) {
-          ((AstLexicalAccess) instrs[i]).setAccesses(AC);
-        } else {
-          instrs[i] = null;
-        }
-      }
-    }
-  }
-
   private Position getPosition(CAstSourcePositionMap map, CAstNode n) {
     if (map.getPosition(n) != null) {
       return map.getPosition(n);
@@ -3047,7 +2917,6 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     // (put here to allow subclasses to handle stuff in scoped entities)
     // assemble lexical information
-    patchLexicalAccesses(cfg.getInstructions(), functionContext.getAccesses(n));
     AstLexicalInformation LI = new AstLexicalInformation(functionContext.getEntityName(n), (AbstractScope) functionContext.currentScope(), cfg.getInstructions(),
         functionContext.exposeNameSet(n, false), 
         functionContext.exposeNameSet(n, true), 
