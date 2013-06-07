@@ -55,23 +55,18 @@ import com.ibm.wala.util.WalaException;
 public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil {
 
   public static enum CGBuilderType {
-    ZERO_ONE_CFA(false, false, true, true),
-    ZERO_ONE_CFA_NO_CALL_APPLY(false, false, false, true),
-    ZERO_ONE_CFA_PRECISE_LEXICAL(false, true, true, true),
-    ONE_CFA(true, false, true, true),
-    ONE_CFA_PRECISE_LEXICAL(true, true, true, true);
-
+    ZERO_ONE_CFA(false, true, true),
+    ZERO_ONE_CFA_NO_CALL_APPLY(false, false, true),
+    ONE_CFA(true, true, true);
+    
     private final boolean useOneCFA;
-
-    private final boolean usePreciseLexical;
 
     private final boolean handleCallApply;
     
     private final boolean extractCorrelatedPairs;
 
-    private CGBuilderType(boolean useOneCFA, boolean usePreciseLexical, boolean handleCallApply, boolean extractCorrelatedPairs) {
+    private CGBuilderType(boolean useOneCFA, boolean handleCallApply, boolean extractCorrelatedPairs) {
       this.useOneCFA = useOneCFA;
-      this.usePreciseLexical = usePreciseLexical;
       this.handleCallApply = handleCallApply;
       this.extractCorrelatedPairs = extractCorrelatedPairs;
     }
@@ -80,10 +75,6 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
       return useOneCFA;
     }
 
-    public boolean usePreciseLexical() {
-      return usePreciseLexical;
-    }
-    
     public boolean handleCallApply() {
       return handleCallApply;
     }
@@ -203,7 +194,6 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
       Iterable<Entrypoint> roots = makeScriptRoots(cha);
       JSAnalysisOptions options = makeOptions(scope, cha, roots);
       options.setHandleCallApply(builderType.handleCallApply());
-      options.setUsePreciseLexical(builderType.usePreciseLexical());
       AnalysisCache cache = makeCache(irFactory);
       JSCFABuilder builder = new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, ZeroXInstanceKeys.ALLOCATIONS,
           builderType.useOneCFA());

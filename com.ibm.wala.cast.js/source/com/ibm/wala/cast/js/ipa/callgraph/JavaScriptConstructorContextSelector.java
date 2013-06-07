@@ -33,23 +33,22 @@ public class JavaScriptConstructorContextSelector implements ContextSelector {
 
   private final OneLevelSiteContextSelector oneLevelCallerSite;
   
-  private final boolean usePreciseLexical;
-  
-  public JavaScriptConstructorContextSelector(ContextSelector base, boolean usePreciseLexical) {
+  public JavaScriptConstructorContextSelector(ContextSelector base) {
     this.base = base;
     this.oneLevelCallStrings = new nCFAContextSelector(1, base);
     this.oneLevelCallerSite = new OneLevelSiteContextSelector(base);
-    this.usePreciseLexical = usePreciseLexical;
   }
 
+  @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     return base.getRelevantParameters(caller, site);
   }
 
+  @Override
   public Context getCalleeTarget(final CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (callee instanceof JavaScriptConstructor) {
       final Context oneLevelCallStringContext = oneLevelCallStrings.getCalleeTarget(caller, site, callee, receiver);
-      if (usePreciseLexical && AstLexicalInformation.hasExposedUses(caller, site)) {
+      if (AstLexicalInformation.hasExposedUses(caller, site)) {
         // use a caller-site context, to enable lexical scoping lookups (via caller CGNode)
         return oneLevelCallerSite.getCalleeTarget(caller, site, callee, receiver);
       } else {

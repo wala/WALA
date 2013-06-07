@@ -179,7 +179,7 @@ public class HTMLCGBuilder {
 		JavaScriptFunctionDotCallTargetSelector.WARN_ABOUT_IMPRECISE_CALLGRAPH = false;
 		
 		// build call graph
-		CGBuilderResult res = buildHTMLCG(src, timeout, CGBuilderType.ONE_CFA_PRECISE_LEXICAL);
+		CGBuilderResult res = buildHTMLCG(src, timeout, CGBuilderType.ONE_CFA);
 		
 		if(res.construction_time == -1)
 			System.out.println("TIMED OUT");

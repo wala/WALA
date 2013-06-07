@@ -54,11 +54,9 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     // JavaScriptConstructorContextSelector ensures at least a 0-1-CFA (i.e.,
     // Andersen's-style) heap abstraction. This level of heap abstraction is
     // _necessary_ for correctness (we rely on it when handling lexical scoping)
-    contextSelector = new JavaScriptConstructorContextSelector(contextSelector, options.usePreciseLexical());
+    contextSelector = new JavaScriptConstructorContextSelector(contextSelector);
     
-    if (options.usePreciseLexical()) {
-      contextSelector = new OneLevelForLexicalAccessFunctions(contextSelector);
-    }
+    contextSelector = new OneLevelForLexicalAccessFunctions(contextSelector);
     
     if (USE_OBJECT_SENSITIVITY) {
       contextSelector = new ObjectSensitivityContextSelector(contextSelector);
@@ -108,8 +106,6 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
    * @param xmlFiles
    *          set of Strings that are names of XML files holding bypass logic
    *          specifications.
-   * @param dmd
-   *          deployment descriptor abstraction
    * @return a 0-1-Opt-CFA Call Graph Builder.
    */
   public static JSCFABuilder make(JSAnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, ClassLoader cl,
