@@ -19,13 +19,8 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 
-<<<<<<< HEAD
-import com.ibm.wala.cast.ir.translator.AstTranslator;
-=======
->>>>>>> kill NEW_LEXICAL flag
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptFunctionDotCallTargetSelector;
-import com.ibm.wala.cast.js.ipa.callgraph.PropertyNameContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.RecursionCheckContextSelector;
 import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil;
 import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil.CGBuilderType;
