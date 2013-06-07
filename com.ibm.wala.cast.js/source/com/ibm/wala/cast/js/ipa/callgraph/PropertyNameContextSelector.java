@@ -30,6 +30,7 @@ import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
+import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.SingleInstanceFilter;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ssa.DefUse;
@@ -213,16 +214,10 @@ public class PropertyNameContextSelector implements ContextSelector {
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, final InstanceKey[] receiver) {
     Context baseContext = base.getCalleeTarget(caller, site, callee, receiver);
     
-    if(receiver.length > index) {
+    if(receiver.length > index && receiver[index] instanceof ConstantKey) {
       Frequency f = usesFirstArgAsPropertyName(callee);
-      if(f == Frequency.ALWAYS|| f == Frequency.SOMETIMES) {
-        if(receiver[index] == null) {
-          IClass undef = caller.getClassHierarchy().lookupClass(JavaScriptTypes.Undefined);
-          return new PropNameContext(baseContext, new ConcreteTypeKey(undef));
-        } else {
-          return new PropNameContext(baseContext, receiver[index]);
-        }
-      }
+      if(f == Frequency.ALWAYS|| f == Frequency.SOMETIMES)
+         return new PropNameContext(baseContext, receiver[index]);
     }
     
     if (PROPNAME_MARKER.equals(caller.getContext().get(PROPNAME_KEY))) {
