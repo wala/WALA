@@ -21,6 +21,7 @@ public class SemiSparseMutableIntSetFactory implements MutableIntSetFactory<Semi
    * @param set
    * @throws IllegalArgumentException  if set is null
    */
+  @Override
   public SemiSparseMutableIntSet make(int[] set) {
     if (set == null) {
       throw new IllegalArgumentException("set is null");
@@ -45,6 +46,7 @@ public class SemiSparseMutableIntSetFactory implements MutableIntSetFactory<Semi
   /**
    * @param string
    */
+  @Override
   public SemiSparseMutableIntSet parse(String string) throws NumberFormatException {
     int[] data = SparseIntSet.parseIntArray(string);
     SemiSparseMutableIntSet result = new SemiSparseMutableIntSet();
@@ -56,6 +58,7 @@ public class SemiSparseMutableIntSetFactory implements MutableIntSetFactory<Semi
   /*
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#make(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public SemiSparseMutableIntSet makeCopy(IntSet x) {
     SemiSparseMutableIntSet y = new SemiSparseMutableIntSet();
     y.copySet(x);
@@ -65,6 +68,7 @@ public class SemiSparseMutableIntSetFactory implements MutableIntSetFactory<Semi
   /*
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#make()
    */
+  @Override
   public SemiSparseMutableIntSet make() {
     return new SemiSparseMutableIntSet();
   }

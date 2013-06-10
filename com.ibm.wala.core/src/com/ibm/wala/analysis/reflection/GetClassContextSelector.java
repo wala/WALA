@@ -39,6 +39,7 @@ class GetClassContextSelector implements ContextSelector {
    *      com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod,
    *      com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
    */
+  @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (callee.getReference().equals(GET_CLASS)) {
       return new JavaTypeContext(new PointType(receiver[0].getConcreteType()));
@@ -48,6 +49,7 @@ class GetClassContextSelector implements ContextSelector {
   
   private static final IntSet thisParameter = IntSetUtil.make(new int[]{0});
 
+  @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     if (site.isDispatch() || site.getDeclaredTarget().getNumberOfParameters() > 0) {
       return thisParameter;

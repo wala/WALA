@@ -33,6 +33,7 @@ public class TunedFieldRefinementPolicy implements FieldRefinePolicy {
 
   private IClass firstSkippedClass = null;
 
+  @Override
   public boolean nextPass() {
     if (firstSkippedClass != null) {
       typesToRefine.add(firstSkippedClass);
@@ -46,6 +47,7 @@ public class TunedFieldRefinementPolicy implements FieldRefinePolicy {
     }
   }
 
+  @Override
   public boolean shouldRefine(IField field, PointerKey basePtr, PointerKey val, IFlowLabel label, StateMachine.State state) {
     if (field == null) {
       throw new IllegalArgumentException("null field");

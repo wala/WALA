@@ -32,6 +32,7 @@ public class AscriptionGoal extends VisitorGoal {
   public AscriptionGoal(Job job) {
     super(job,
       new AscriptionVisitor(job, job.extensionInfo().typeSystem(), job.extensionInfo().nodeFactory()) {
+        @Override
         public Expr ascribe(Expr e, Type toType) throws SemanticException {
           if (e instanceof ArrayInit && e.type().isNull()) {
             return e.type(toType);

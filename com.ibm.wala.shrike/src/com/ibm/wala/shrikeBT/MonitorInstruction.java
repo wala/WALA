@@ -63,6 +63,7 @@ public final class MonitorInstruction extends Instruction {
     return "Monitor(" + (isEnter() ? "ENTER" : "EXIT") + ")";
   }
 
+  @Override
   public boolean isPEI() {
     return true;
   }

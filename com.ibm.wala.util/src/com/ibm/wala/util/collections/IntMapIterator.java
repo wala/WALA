@@ -34,14 +34,17 @@ public class IntMapIterator<T> implements Iterator<T> {
     this.f = f;
   }
 
+  @Override
   public T next() {
     return f.apply(i.next());
   }
 
+  @Override
   public boolean hasNext() {
     return i.hasNext();
   }
 
+  @Override
   public void remove() throws UnsupportedOperationException {
     throw new java.lang.UnsupportedOperationException();
   }

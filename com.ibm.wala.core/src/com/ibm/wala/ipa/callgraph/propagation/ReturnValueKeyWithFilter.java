@@ -28,6 +28,7 @@ public class ReturnValueKeyWithFilter extends ReturnValueKey implements Filtered
     this.typeFilter = typeFilter;
   }
 
+  @Override
   public TypeFilter getTypeFilter() {
     return typeFilter;
   }

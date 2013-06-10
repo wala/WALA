@@ -94,6 +94,7 @@ public class GraphReachability<T> {
       /*
        * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#getNodeTransferFunction(java.lang.Object)
        */
+      @Override
       public UnaryOperator<BitVectorVariable> getNodeTransferFunction(T n) {
         int index = domain.getMappedIndex(n);
         if (index > -1) {
@@ -106,6 +107,7 @@ public class GraphReachability<T> {
       /*
        * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#hasNodeTransferFunctions()
        */
+      @Override
       public boolean hasNodeTransferFunctions() {
         return true;
       }
@@ -113,6 +115,7 @@ public class GraphReachability<T> {
       /*
        * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#getEdgeTransferFunction(java.lang.Object, java.lang.Object)
        */
+      @Override
       public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(Object from, Object to) {
         Assertions.UNREACHABLE();
         return null;
@@ -121,6 +124,7 @@ public class GraphReachability<T> {
       /*
        * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#hasEdgeTransferFunctions()
        */
+      @Override
       public boolean hasEdgeTransferFunctions() {
         return false;
       }
@@ -128,6 +132,7 @@ public class GraphReachability<T> {
       /*
        * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#getMeetOperator()
        */
+      @Override
       public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
         return BitVectorUnion.instance();
       }

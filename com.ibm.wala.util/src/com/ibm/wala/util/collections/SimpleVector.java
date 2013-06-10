@@ -32,6 +32,7 @@ public class SimpleVector<T> implements IVector<T> {
   /*
    * @see com.ibm.wala.util.intset.IntVector#get(int)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public T get(int x) {
     if (x < 0) {
@@ -47,6 +48,7 @@ public class SimpleVector<T> implements IVector<T> {
   /*
    * @see com.ibm.wala.util.intset.IVector#set(int, int)
    */
+  @Override
   public void set(int x, T value) {
     if (x < 0) {
       throw new IllegalArgumentException("illegal x value " + x);
@@ -81,6 +83,7 @@ public class SimpleVector<T> implements IVector<T> {
   /*
    * @see com.ibm.wala.util.intset.IntVector#reportStats()
    */
+  @Override
   public void performVerboseAction() {
     System.err.println(("size:       " + store.length));
     System.err.println(("occupancy:  " + computeOccupancy()));
@@ -100,6 +103,7 @@ public class SimpleVector<T> implements IVector<T> {
   }
 
 
+  @Override
   @SuppressWarnings("unchecked")
   public Iterator<T> iterator() {
     ArrayList<T> result = new ArrayList<T>();
@@ -109,6 +113,7 @@ public class SimpleVector<T> implements IVector<T> {
     return result.iterator();
   }
 
+  @Override
   public int getMaxIndex() {
     return maxIndex;
   }

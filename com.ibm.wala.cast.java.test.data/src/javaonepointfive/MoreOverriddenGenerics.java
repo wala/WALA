@@ -47,13 +47,15 @@ public class MoreOverriddenGenerics {
 	}
 
 	class Sub extends Super<Number> {
-		public Number get() {
+		@Override
+    public Number get() {
 			return super.get();
 		} 
 	}
 	
 	class SubSub extends Sub {
-		public Long get() {
+		@Override
+    public Long get() {
 			return new Long(6);
 		}
 	}

@@ -69,7 +69,8 @@ class VarityTestSuper {
 }
 
 class VarityTestSub extends VarityTestSuper {
-	void bar(String... args) {}
+	@Override
+  void bar(String... args) {}
 }
 
 public class VarargsOverriding {

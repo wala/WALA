@@ -100,14 +100,17 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
   protected void init(Meeter meeter, final FlowProvider flow) {
     final MeetOperator meet = new MeetOperator(meeter);
     ITransferFunctionProvider<BasicBlock, MachineState> xferFunctions = new ITransferFunctionProvider<BasicBlock, MachineState>() {
+      @Override
       public boolean hasNodeTransferFunctions() {
         return flow.needsNodeFlow();
       }
 
+      @Override
       public boolean hasEdgeTransferFunctions() {
         return flow.needsEdgeFlow();
       }
 
+      @Override
       public UnaryOperator<MachineState> getNodeTransferFunction(final BasicBlock node) {
         return new UnaryOperator<MachineState>() {
           @Override
@@ -142,6 +145,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         };
       }
 
+      @Override
       public UnaryOperator<MachineState> getEdgeTransferFunction(final BasicBlock from, final BasicBlock to) {
         return new UnaryOperator<MachineState>() {
           @Override
@@ -176,6 +180,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         };
       }
 
+      @Override
       public AbstractMeetOperator<MachineState> getMeetOperator() {
         return meet;
       }
@@ -717,6 +722,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       return result;
     }
 
+    @Override
     public void copyState(MachineState other) {
       if (other.stack == null) {
         stack = null;
@@ -834,14 +840,17 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       this.edgeVisitor = ev;
     }
 
+    @Override
     public boolean needsNodeFlow() {
       return true;
     }
 
+    @Override
     public boolean needsEdgeFlow() {
       return false;
     }
 
+    @Override
     public MachineState flow(MachineState entry, BasicBlock basicBlock) {
       workingState = entry.duplicate();
       currentBlock = basicBlock;
@@ -861,6 +870,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       return workingState;
     }
 
+    @Override
     public MachineState flow(MachineState entry, BasicBlock from, BasicBlock to) {
       workingState = entry.duplicate();
       currentBlock = from;

@@ -45,6 +45,7 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
    public JavaScriptAnalysisEngine() {
   }
 
+  @Override
   public void buildAnalysisScope() {
     try {
       loaderFactory = new JavaScriptLoaderFactory(translatorFactory);
@@ -57,6 +58,7 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
     }
   }
 
+  @Override
   public IClassHierarchy buildClassHierarchy() {
     try {
       return ClassHierarchy.make(getScope(), loaderFactory, JavaScriptLoader.JS);
@@ -70,14 +72,17 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
     this.translatorFactory = factory;
   }
 
+  @Override
   public void setJ2SELibraries(JarFile[] libs) {
     Assertions.UNREACHABLE("Illegal to call setJ2SELibraries");
   }
 
+  @Override
   public void setJ2SELibraries(Module[] libs) {
     Assertions.UNREACHABLE("Illegal to call setJ2SELibraries");
   }
 
+  @Override
   protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
     return new JavaScriptEntryPoints(cha, cha.getLoader(JavaScriptTypes.jsLoader));
   }
@@ -87,6 +92,7 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
     return new AnalysisCache(AstIRFactory.makeDefaultFactory());
   }
 
+  @Override
   public AnalysisOptions getDefaultOptions(Iterable<Entrypoint> roots) {
     final AnalysisOptions options = new AnalysisOptions(scope, roots);
 

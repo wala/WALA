@@ -52,11 +52,13 @@ public class JavaIRTranslatorExtension extends JLExtensionInfo implements IRTran
     };
   }
 
+  @Override
   public void setSourceLoader(PolyglotSourceLoaderImpl sourceLoader) {
     fSourceLoader= sourceLoader;
     fMapper= new PolyglotIdentityMapper(sourceLoader.getReference());
   }
 
+  @Override
   public PolyglotIdentityMapper getIdentityMapper() {
     return fMapper;
   }
@@ -65,10 +67,12 @@ public class JavaIRTranslatorExtension extends JLExtensionInfo implements IRTran
     rewriterFactory = factory;
   }
 
+  @Override
   public CAstRewriterFactory<?,?> getCAstRewriterFactory() {
     return rewriterFactory;
   }
 
+  @Override
   public boolean getReplicateForDoLoops() {
     return false;
   }

@@ -46,6 +46,7 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
    * 
    * @throws IllegalArgumentException if call is null
    */
+  @Override
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference call, IClass receiver) {
 
     if (call == null) {

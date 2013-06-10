@@ -73,6 +73,7 @@ public class SinglePassRefinementPolicy extends AbstractRefinementPolicy {
     }
 
 
+    @Override
     public RefinementPolicy make() {
       return new SinglePassRefinementPolicy(fieldRefinePolicy, cgRefinePolicy, budget);
     }

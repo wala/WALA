@@ -48,6 +48,7 @@ public class MatchLabel implements IFlowLabel {
     return theInstance;
   }
 
+  @Override
   public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException("v == null");
@@ -60,10 +61,12 @@ public class MatchLabel implements IFlowLabel {
     return "match";
   }
 
+  @Override
   public MatchBarLabel bar() {
     return MatchBarLabel.v();
   }
 
+  @Override
   public boolean isBarred() {
     return false;
   }

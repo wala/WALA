@@ -173,6 +173,7 @@ public abstract class AstMethod implements IMethod {
     return debugInfo;
   }
 
+  @Override
   public Collection<Annotation> getAnnotations() {
     return annotations;
   }
@@ -186,10 +187,12 @@ public abstract class AstMethod implements IMethod {
 
     public abstract AstMethod getMethod();
 
+    @Override
     public int hashCode() {
       return getName().hashCode() * getMethod().hashCode();
     }
 
+    @Override
     public boolean equals(Object o) {
       return (o instanceof LexicalParent) && getName().equals(((LexicalParent) o).getName())
           && getMethod().equals(((LexicalParent) o).getMethod());
@@ -198,78 +201,97 @@ public abstract class AstMethod implements IMethod {
 
   public abstract LexicalParent[] getParents();
 
+  @Override
   public IClass getDeclaringClass() {
     return cls;
   }
 
+  @Override
   public String getSignature() {
     return ref.getSignature();
   }
 
+  @Override
   public Selector getSelector() {
     return ref.getSelector();
   }
 
+  @Override
   public boolean isClinit() {
     return getSelector().equals(MethodReference.clinitSelector);
   }
 
+  @Override
   public boolean isInit() {
     return getSelector().getName().equals(MethodReference.initAtom);
   }
 
+  @Override
   public Atom getName() {
     return ref.getName();
   }
 
+  @Override
   public Descriptor getDescriptor() {
     return ref.getDescriptor();
   }
 
+  @Override
   public MethodReference getReference() {
     return ref;
   }
 
+  @Override
   public TypeReference getReturnType() {
     return ref.getReturnType();
   }
 
+  @Override
   public boolean isStatic() {
     return qualifiers.contains(CAstQualifier.STATIC);
   }
 
+  @Override
   public boolean isSynchronized() {
     return qualifiers.contains(CAstQualifier.SYNCHRONIZED);
   }
 
+  @Override
   public boolean isNative() {
     return qualifiers.contains(CAstQualifier.NATIVE);
   }
 
+  @Override
   public boolean isSynthetic() {
     return false;
   }
 
+  @Override
   public boolean isAbstract() {
     return qualifiers.contains(CAstQualifier.ABSTRACT);
   }
 
+  @Override
   public boolean isPrivate() {
     return qualifiers.contains(CAstQualifier.PRIVATE);
   }
 
+  @Override
   public boolean isProtected() {
     return qualifiers.contains(CAstQualifier.PROTECTED);
   }
 
+  @Override
   public boolean isPublic() {
     return qualifiers.contains(CAstQualifier.PUBLIC);
   }
 
+  @Override
   public boolean isFinal() {
     return qualifiers.contains(CAstQualifier.FINAL);
   }
 
+  @Override
   public boolean isBridge() {
     return qualifiers.contains(CAstQualifier.VOLATILE);
   }
@@ -278,6 +300,7 @@ public abstract class AstMethod implements IMethod {
     return cfg;
   }
 
+  @Override
   public boolean hasExceptionHandler() {
     return hasCatchBlock;
   }
@@ -286,10 +309,12 @@ public abstract class AstMethod implements IMethod {
     return hasMonitorOp;
   }
 
+  @Override
   public int getNumberOfParameters() {
     return symtab.getParameterValueNumbers().length;
   }
 
+  @Override
   public int getLineNumber(int instructionIndex) {
     Position pos = debugInfo.getInstructionPosition(instructionIndex);
     if (pos == null) {

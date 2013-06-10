@@ -26,6 +26,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param context a visitor-specific context in which this file was visited
    * @param n the file entity
    */
+  @Override
   protected C makeFileContext(C context, CAstEntity n) {
     return delegate.makeFileContext(context, n);
   }
@@ -34,6 +35,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param context a visitor-specific context in which this type was visited
    * @param n the type entity
    */
+  @Override
   protected C makeTypeContext(C context, CAstEntity n) {
     return delegate.makeTypeContext(context, n);
   }
@@ -42,6 +44,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param context a visitor-specific context in which the code was visited
    * @param n the code entity
    */
+  @Override
   protected C makeCodeContext(C context, CAstEntity n) {
     return delegate.makeCodeContext(context, n);
   }
@@ -51,6 +54,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param context a visitor-specific context in which the local scope was visited
    * @param n the local scope node
    */
+  @Override
   protected C makeLocalContext(C context, CAstNode n) {
     return delegate.makeLocalContext(context, n);
   }
@@ -59,6 +63,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param context a visitor-specific context in which the unwind was visited
    * @param n the unwind node
    */
+  @Override
   protected C makeUnwindContext(C context, CAstNode n, CAstVisitor<C> visitor) {
     return delegate.makeUnwindContext(context, n, visitor);
   }
@@ -68,6 +73,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param entity the child entity
    * @return the parent entity for the given entity
    */
+  @Override
   protected CAstEntity getParent(CAstEntity entity) {
     return delegate.getParent(entity);
   }
@@ -77,6 +83,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param entity the child entity
    * @param parent the parent entity
    */
+  @Override
   protected void setParent(CAstEntity entity, CAstEntity parent) {
     delegate.setParent(entity, parent);
   }
@@ -101,6 +108,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * Should invoke super.doVisitEntity() for unprocessed entities.
    * @return true if entity was handled
    */
+  @Override
   protected boolean doVisitEntity(CAstEntity n, C context, CAstVisitor<C> visitor) {
     return delegate.doVisitEntity(n, context, visitor);
   }
@@ -111,6 +119,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param context a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean enterEntity(CAstEntity n, C context, CAstVisitor<C> visitor) {
     return delegate.enterEntity(n, context, visitor);
   }
@@ -119,6 +128,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the entity to process
    * @param context a visitor-specific context
    */
+  @Override
   protected void postProcessEntity(CAstEntity n, C context, CAstVisitor<C> visitor) {
     delegate.postProcessEntity(n, context, visitor);
   }
@@ -129,6 +139,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param context a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   public boolean visitEntity(CAstEntity n, C context, CAstVisitor<C> visitor) {
     return delegate.visitEntity(n, context, visitor);
   }
@@ -137,6 +148,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the entity to process
    * @param context a visitor-specific context
    */
+  @Override
   public void leaveEntity(CAstEntity n, C context, CAstVisitor<C> visitor) {
     delegate.leaveEntity(n, context, visitor);
   }
@@ -148,6 +160,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param fileContext a visitor-specific context for this file
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitFileEntity(CAstEntity n, C context, C fileContext, CAstVisitor<C> visitor) {
     return delegate.visitFileEntity(n, context, fileContext, visitor);
   }
@@ -157,6 +170,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param context a visitor-specific context
    * @param fileContext a visitor-specific context for this file
    */
+  @Override
   protected void leaveFileEntity(CAstEntity n, C context, C fileContext, CAstVisitor<C> visitor) {
     delegate.leaveFileEntity(n, context, fileContext, visitor);
   }
@@ -166,6 +180,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param context a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitFieldEntity(CAstEntity n, C context, CAstVisitor<C> visitor) {
     return delegate.visitFieldEntity(n, context, visitor);
   }
@@ -174,6 +189,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the entity to process
    * @param context a visitor-specific context
    */
+  @Override
   protected void leaveFieldEntity(CAstEntity n, C context, CAstVisitor<C> visitor) {
     delegate.leaveFieldEntity(n, context, visitor);
   }
@@ -184,6 +200,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param typeContext a visitor-specific context for this type
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitTypeEntity(CAstEntity n, C context, C typeContext, CAstVisitor<C> visitor) {
     return delegate.visitTypeEntity(n, context, typeContext, visitor);
   }
@@ -193,6 +210,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param context a visitor-specific context
    * @param typeContext a visitor-specific context for this type
    */
+  @Override
   protected void leaveTypeEntity(CAstEntity n, C context, C typeContext, CAstVisitor<C> visitor) {
     delegate.leaveTypeEntity(n, context, typeContext, visitor);
   }
@@ -203,6 +221,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param codeContext a visitor-specific context for this function
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitFunctionEntity(CAstEntity n, C context, C codeContext, CAstVisitor<C> visitor) {
     return delegate.visitFunctionEntity(n, context, codeContext, visitor);
   }
@@ -212,6 +231,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param context a visitor-specific context
    * @param codeContext a visitor-specific context for this function
    */
+  @Override
   protected void leaveFunctionEntity(CAstEntity n, C context, C codeContext, CAstVisitor<C> visitor) {
     delegate.leaveFunctionEntity(n, context, codeContext, visitor);
   }
@@ -222,6 +242,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param codeContext a visitor-specific context for this script
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitScriptEntity(CAstEntity n, C context, C codeContext, CAstVisitor<C> visitor) {
     return delegate.visitScriptEntity(n, context, codeContext, visitor);
   }
@@ -231,6 +252,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param context a visitor-specific context
    * @param codeContext a visitor-specific context for this script
    */
+  @Override
   protected void leaveScriptEntity(CAstEntity n, C context, C codeContext, CAstVisitor<C> visitor) {
     delegate.leaveScriptEntity(n, context, codeContext, visitor);
   }
@@ -241,6 +263,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * Should invoke super.doVisit() for unprocessed nodes.
    * @return true if node was handled
    */
+  @Override
   protected boolean doVisit(CAstNode n, C context, CAstVisitor<C> visitor) {
     return delegate.doVisit(n, context, visitor);
   }
@@ -251,6 +274,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean enterNode(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.enterNode(n, c, visitor);
   }
@@ -259,6 +283,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void postProcessNode(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.postProcessNode(n, c, visitor);
   }
@@ -269,6 +294,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   public boolean visitNode(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitNode(n, c, visitor);
   }
@@ -277,6 +303,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   public void leaveNode(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveNode(n, c, visitor);
   }
@@ -287,6 +314,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitFunctionExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitFunctionExpr(n, c, visitor);
   }
@@ -295,6 +323,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveFunctionExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveFunctionExpr(n, c, visitor);
   }
@@ -304,6 +333,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitFunctionStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitFunctionStmt(n, c, visitor);
   }
@@ -312,6 +342,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveFunctionStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveFunctionStmt(n, c, visitor);
   }
@@ -321,6 +352,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitLocalScope(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitLocalScope(n, c, visitor);
   }
@@ -329,6 +361,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveLocalScope(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveLocalScope(n, c, visitor);
   }
@@ -338,6 +371,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitBlockExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitBlockExpr(n, c, visitor);
   }
@@ -346,6 +380,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveBlockExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveBlockExpr(n, c, visitor);
   }
@@ -355,6 +390,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitBlockStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitBlockStmt(n, c, visitor);
   }
@@ -363,6 +399,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveBlockStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveBlockStmt(n, c, visitor);
   }
@@ -372,6 +409,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitLoop(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitLoop(n, c, visitor);
   }
@@ -380,6 +418,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveLoopHeader(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveLoopHeader(n, c, visitor);
   }
@@ -388,6 +427,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveLoop(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveLoop(n, c, visitor);
   }
@@ -397,6 +437,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitGetCaughtException(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitGetCaughtException(n, c, visitor);
   }
@@ -405,6 +446,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveGetCaughtException(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveGetCaughtException(n, c, visitor);
   }
@@ -414,6 +456,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitThis(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitThis(n, c, visitor);
   }
@@ -422,6 +465,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveThis(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveThis(n, c, visitor);
   }
@@ -431,6 +475,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitSuper(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitSuper(n, c, visitor);
   }
@@ -439,6 +484,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveSuper(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveSuper(n, c, visitor);
   }
@@ -448,6 +494,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitCall(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitCall(n, c, visitor);
   }
@@ -456,6 +503,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveCall(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveCall(n, c, visitor);
   }
@@ -465,6 +513,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitVar(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitVar(n, c, visitor);
   }
@@ -473,6 +522,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveVar(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveVar(n, c, visitor);
   }
@@ -482,6 +532,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitConstant(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitConstant(n, c, visitor);
   }
@@ -490,6 +541,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveConstant(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveConstant(n, c, visitor);
   }
@@ -499,6 +551,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitBinaryExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitBinaryExpr(n, c, visitor);
   }
@@ -507,6 +560,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveBinaryExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveBinaryExpr(n, c, visitor);
   }
@@ -516,6 +570,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitUnaryExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitUnaryExpr(n, c, visitor);
   }
@@ -524,6 +579,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveUnaryExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveUnaryExpr(n, c, visitor);
   }
@@ -533,6 +589,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitArrayLength(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitArrayLength(n, c, visitor);
   }
@@ -541,6 +598,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveArrayLength(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveArrayLength(n, c, visitor);
   }
@@ -550,6 +608,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitArrayRef(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitArrayRef(n, c, visitor);
   }
@@ -558,6 +617,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveArrayRef(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveArrayRef(n, c, visitor);
   }
@@ -567,6 +627,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitDeclStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitDeclStmt(n, c, visitor);
   }
@@ -575,6 +636,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveDeclStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveDeclStmt(n, c, visitor);
   }
@@ -584,6 +646,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitReturn(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitReturn(n, c, visitor);
   }
@@ -592,6 +655,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveReturn(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveReturn(n, c, visitor);
   }
@@ -601,6 +665,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitIfgoto(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitIfgoto(n, c, visitor);
   }
@@ -609,6 +674,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveIfgoto(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveIfgoto(n, c, visitor);
   }
@@ -618,6 +684,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitGoto(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitGoto(n, c, visitor);
   }
@@ -626,6 +693,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveGoto(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveGoto(n, c, visitor);
   }
@@ -635,6 +703,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitLabelStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitLabelStmt(n, c, visitor);
   }
@@ -643,6 +712,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveLabelStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveLabelStmt(n, c, visitor);
   }
@@ -652,6 +722,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitIfStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitIfStmt(n, c, visitor);
   }
@@ -660,6 +731,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveIfStmtCondition(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveIfStmtCondition(n, c, visitor);
   }
@@ -668,6 +740,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveIfStmtTrueClause(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveIfStmtTrueClause(n, c, visitor);
   }
@@ -676,6 +749,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveIfStmt(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveIfStmt(n, c, visitor);
   }
@@ -685,6 +759,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitIfExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitIfExpr(n, c, visitor);
   }
@@ -693,6 +768,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveIfExprCondition(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveIfExprCondition(n, c, visitor);
   }
@@ -701,6 +777,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveIfExprTrueClause(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveIfExprTrueClause(n, c, visitor);
   }
@@ -709,6 +786,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveIfExpr(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveIfExpr(n, c, visitor);
   }
@@ -718,6 +796,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitNew(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitNew(n, c, visitor);
   }
@@ -726,6 +805,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveNew(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveNew(n, c, visitor);
   }
@@ -735,6 +815,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitObjectLiteral(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitObjectLiteral(n, c, visitor);
   }
@@ -744,6 +825,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param i the field position that was initialized
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveObjectLiteralFieldInit(CAstNode n, int i, C c, CAstVisitor<C> visitor) {
     delegate.leaveObjectLiteralFieldInit(n, i, c, visitor);
   }
@@ -752,6 +834,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveObjectLiteral(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveObjectLiteral(n, c, visitor);
   }
@@ -761,6 +844,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitArrayLiteral(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitArrayLiteral(n, c, visitor);
   }
@@ -769,6 +853,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveArrayLiteralObject(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveArrayLiteralObject(n, c, visitor);
   }
@@ -778,6 +863,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param i the index that was initialized
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveArrayLiteralInitElement(CAstNode n, int i, C c, CAstVisitor<C> visitor) {
     delegate.leaveArrayLiteralInitElement(n, i, c, visitor);
   }
@@ -786,6 +872,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveArrayLiteral(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveArrayLiteral(n, c, visitor);
   }
@@ -795,6 +882,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitObjectRef(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitObjectRef(n, c, visitor);
   }
@@ -803,6 +891,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveObjectRef(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveObjectRef(n, c, visitor);
   }
@@ -812,6 +901,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   public boolean visitAssign(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitAssign(n, c, visitor);
   }
@@ -820,6 +910,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   public void leaveAssign(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveAssign(n, c, visitor);
   }
@@ -831,6 +922,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitArrayRefAssign(CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
     return delegate.visitArrayRefAssign(n, v, a, c, visitor);
   }
@@ -841,6 +933,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param a the assignment node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveArrayRefAssign(CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
     delegate.leaveArrayRefAssign(n, v, a, c, visitor);
   }
@@ -853,6 +946,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitArrayRefAssignOp(CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
     return delegate.visitArrayRefAssignOp(n, v, a, pre, c, visitor);
   }
@@ -864,6 +958,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param pre whether the value before the operation should be used
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveArrayRefAssignOp(CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
     delegate.leaveArrayRefAssignOp(n, v, a, pre, c, visitor);
   }
@@ -875,6 +970,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitObjectRefAssign(CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
     return delegate.visitObjectRefAssign(n, v, a, c, visitor);
   }
@@ -885,6 +981,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param a the assignment node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveObjectRefAssign(CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
     delegate.leaveObjectRefAssign(n, v, a, c, visitor);
   }
@@ -897,6 +994,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitObjectRefAssignOp(CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
     return delegate.visitObjectRefAssignOp(n, v, a, pre, c, visitor);
   }
@@ -908,6 +1006,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param pre whether the value before the operation should be used
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveObjectRefAssignOp(CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
     delegate.leaveObjectRefAssignOp(n, v, a, pre, c, visitor);
   }
@@ -919,6 +1018,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitBlockExprAssign(CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
     return delegate.visitBlockExprAssign(n, v, a, c, visitor);
   }
@@ -929,6 +1029,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param a the assignment node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveBlockExprAssign(CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
     delegate.leaveBlockExprAssign(n, v, a, c, visitor);
   }
@@ -941,6 +1042,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitBlockExprAssignOp(CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
     return delegate.visitBlockExprAssignOp(n, v, a, pre, c, visitor);
   }
@@ -952,6 +1054,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param pre whether the value before the operation should be used
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveBlockExprAssignOp(CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
     delegate.leaveBlockExprAssignOp(n, v, a, pre, c, visitor);
   }
@@ -963,6 +1066,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitVarAssign(CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
     return delegate.visitVarAssign(n, v, a, c, visitor);
   }
@@ -973,6 +1077,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param a the assignment node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveVarAssign(CAstNode n, CAstNode v, CAstNode a, C c, CAstVisitor<C> visitor) {
     delegate.leaveVarAssign(n, v, a, c, visitor);
   }
@@ -985,6 +1090,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitVarAssignOp(CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
     return delegate.visitVarAssignOp(n, v, a, pre, c, visitor);
   }
@@ -996,6 +1102,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param pre whether the value before the operation should be used
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveVarAssignOp(CAstNode n, CAstNode v, CAstNode a, boolean pre, C c, CAstVisitor<C> visitor) {
     delegate.leaveVarAssignOp(n, v, a, pre, c, visitor);
   }
@@ -1005,6 +1112,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitSwitch(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitSwitch(n, c, visitor);
   }
@@ -1013,6 +1121,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveSwitchValue(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveSwitchValue(n, c, visitor);
   }
@@ -1021,6 +1130,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveSwitch(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveSwitch(n, c, visitor);
   }
@@ -1030,6 +1140,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitThrow(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitThrow(n, c, visitor);
   }
@@ -1038,6 +1149,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveThrow(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveThrow(n, c, visitor);
   }
@@ -1047,6 +1159,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitCatch(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitCatch(n, c, visitor);
   }
@@ -1055,6 +1168,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveCatch(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveCatch(n, c, visitor);
   }
@@ -1064,6 +1178,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitUnwind(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitUnwind(n, c, visitor);
   }
@@ -1072,6 +1187,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveUnwind(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveUnwind(n, c, visitor);
   }
@@ -1081,6 +1197,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitTry(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitTry(n, c, visitor);
   }
@@ -1089,6 +1206,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveTryBlock(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveTryBlock(n, c, visitor);
   }
@@ -1097,6 +1215,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveTry(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveTry(n, c, visitor);
   }
@@ -1106,6 +1225,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitEmpty(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitEmpty(n, c, visitor);
   }
@@ -1114,6 +1234,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveEmpty(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveEmpty(n, c, visitor);
   }
@@ -1123,6 +1244,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitPrimitive(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitPrimitive(n, c, visitor);
   }
@@ -1131,6 +1253,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leavePrimitive(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leavePrimitive(n, c, visitor);
   }
@@ -1140,6 +1263,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitVoid(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitVoid(n, c, visitor);
   }
@@ -1148,6 +1272,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveVoid(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveVoid(n, c, visitor);
   }
@@ -1157,6 +1282,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitCast(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitCast(n, c, visitor);
   }
@@ -1165,6 +1291,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveCast(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveCast(n, c, visitor);
   }
@@ -1174,6 +1301,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param c a visitor-specific context
    * @return true if no further processing is needed
    */
+  @Override
   protected boolean visitInstanceOf(CAstNode n, C c, CAstVisitor<C> visitor) {
     return delegate.visitInstanceOf(n, c, visitor);
   }
@@ -1182,6 +1310,7 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
    * @param n the node to process
    * @param c a visitor-specific context
    */
+  @Override
   protected void leaveInstanceOf(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveInstanceOf(n, c, visitor);
   }

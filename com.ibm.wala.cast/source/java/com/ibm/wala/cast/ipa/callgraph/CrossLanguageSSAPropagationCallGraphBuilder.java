@@ -54,6 +54,7 @@ public abstract class CrossLanguageSSAPropagationCallGraphBuilder extends AstSSA
     interesting = makeInterestingVisitorSelector();
   }
 
+  @Override
   protected ExplicitCallGraph createEmptyCallGraph(IClassHierarchy cha, AnalysisOptions options) {
     return new CrossLanguageCallGraph(makeRootNodeSelector(), cha, options, getAnalysisCache());
   }
@@ -62,16 +63,20 @@ public abstract class CrossLanguageSSAPropagationCallGraphBuilder extends AstSSA
     return node.getMethod().getReference().getDeclaringClass().getClassLoader().getLanguage();
   }
 
+  @Override
   protected InterestingVisitor makeInterestingVisitor(CGNode node, int vn) {
     return interesting.get(getLanguage(node), new Integer(vn));
   }
 
+  @Override
   protected ConstraintVisitor makeVisitor(ExplicitCallGraph.ExplicitNode node) {
     return visitors.get(getLanguage(node), node);
   }
 
+  @Override
   protected PropagationSystem makeSystem(AnalysisOptions options) {
     return new PropagationSystem(callGraph, pointerKeyFactory, instanceKeyFactory) {
+      @Override
       public PointerAnalysis makePointerAnalysis(PropagationCallGraphBuilder builder) {
         assert builder == CrossLanguageSSAPropagationCallGraphBuilder.this;
         return new CrossLanguagePointerAnalysisImpl(CrossLanguageSSAPropagationCallGraphBuilder.this, cg, pointsToMap,
@@ -90,11 +95,13 @@ public abstract class CrossLanguageSSAPropagationCallGraphBuilder extends AstSSA
       this.implicitVisitors = builder.makeImplicitVisitorSelector(this);
     }
 
+    @Override
     protected ImplicitPointsToSetVisitor makeImplicitPointsToVisitor(LocalPointerKey lpk) {
       return implicitVisitors.get(getLanguage(lpk.getNode()), lpk);
     }
   }
 
+  @Override
   protected void customInit() {
     for (Iterator roots = ((CrossLanguageCallGraph) callGraph).getLanguageRoots(); roots.hasNext();) {
       markDiscovered((CGNode) roots.next());

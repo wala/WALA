@@ -62,6 +62,7 @@ public class CAstAnalysisScope extends AnalysisScope {
    * 
    * @return ClassLoaderReference
    */
+  @Override
   public ClassLoaderReference getPrimordialLoader() {
     Assertions.UNREACHABLE();
     return null;
@@ -72,6 +73,7 @@ public class CAstAnalysisScope extends AnalysisScope {
    * 
    * @return ClassLoaderReference
    */
+  @Override
   public ClassLoaderReference getExtensionLoader() {
     Assertions.UNREACHABLE();
     return null;
@@ -82,6 +84,7 @@ public class CAstAnalysisScope extends AnalysisScope {
    * 
    * @return ClassLoaderReference
    */
+  @Override
   public ClassLoaderReference getApplicationLoader() {
     Assertions.UNREACHABLE();
     return null;
@@ -90,6 +93,7 @@ public class CAstAnalysisScope extends AnalysisScope {
   /**
    * @return Returns the arrayClassLoader.
    */
+  @Override
   public ArrayClassLoader getArrayClassLoader() {
     Assertions.UNREACHABLE();
     return null;
@@ -100,6 +104,7 @@ public class CAstAnalysisScope extends AnalysisScope {
    * 
    * @return ClassLoaderReference
    */
+  @Override
   public ClassLoaderReference getSyntheticLoader() {
     Assertions.UNREACHABLE();
     return null;
@@ -111,6 +116,7 @@ public class CAstAnalysisScope extends AnalysisScope {
    * @param loader
    * @param file
    */
+  @Override
   public void addClassFileToScope(ClassLoaderReference loader, File file) {
     Assertions.UNREACHABLE();
   }
@@ -118,6 +124,7 @@ public class CAstAnalysisScope extends AnalysisScope {
   /**
    * @return the ClassLoaderReference specified by <code>name</code>.
    */
+  @Override
   public ClassLoaderReference getLoader(Atom name) {
     assert name.equals(theLoader.getName());
     return theLoader;
@@ -125,6 +132,7 @@ public class CAstAnalysisScope extends AnalysisScope {
 
   /**
    */
+  @Override
   public Collection<ClassLoaderReference> getLoaders() {
     return Collections.singleton(theLoader);
   }
@@ -132,10 +140,12 @@ public class CAstAnalysisScope extends AnalysisScope {
   /**
    * @return the number of loaders.
    */
+  @Override
   public int getNumberOfLoaders() {
     return 1;
   }
 
+  @Override
   public String toString() {
     return super.toString() + "\n" + theLoader + ": " + getModules(theLoader);
   }

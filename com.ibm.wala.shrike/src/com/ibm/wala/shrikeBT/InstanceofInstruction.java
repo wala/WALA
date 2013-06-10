@@ -48,6 +48,7 @@ public final class InstanceofInstruction extends Instruction implements IInstanc
     return 1;
   }
 
+  @Override
   public String getType() {
     return type;
   }
@@ -75,10 +76,12 @@ public final class InstanceofInstruction extends Instruction implements IInstanc
     return "Instanceof(" + type + ")";
   }
 
+  @Override
   public boolean isPEI() {
     return false;
   }
 
+  @Override
   public boolean firstClassType() {
     return false;
   }

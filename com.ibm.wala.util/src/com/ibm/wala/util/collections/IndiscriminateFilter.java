@@ -24,6 +24,7 @@ public class IndiscriminateFilter<T> implements Filter<T> {
   /*
    * @see com.ibm.wala.util.Filter#accepts(java.lang.Object)
    */
+  @Override
   public boolean accepts(Object o) {
     return true;
   }

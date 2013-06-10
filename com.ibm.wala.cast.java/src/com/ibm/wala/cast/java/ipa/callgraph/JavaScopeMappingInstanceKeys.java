@@ -72,6 +72,7 @@ public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
     return cls instanceof JavaClass;
   }
 
+  @Override
   protected boolean needsScopeMappingKey(InstanceKey base) {
     boolean result = getParents(base).length > 0;
     if (AstTranslator.DEBUG_LEXICAL)

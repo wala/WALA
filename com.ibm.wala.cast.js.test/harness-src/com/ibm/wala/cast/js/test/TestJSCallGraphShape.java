@@ -17,6 +17,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 
 public abstract class TestJSCallGraphShape extends TestCallGraphShape {
 
+  @Override
   protected Collection getNodes(CallGraph CG, String functionIdentifier) {
     return JSCallGraphBuilderUtil.getNodes(CG, functionIdentifier);
   }

@@ -87,6 +87,7 @@ public class EclipseTestUtil {
     IPath containerPath = getWorkspacePath().append(projectName).addTrailingSeparator();
 
     ImportOperation importOp = new ImportOperation(containerPath, provider.getRoot(), provider, new IOverwriteQuery() {
+      @Override
       public String queryOverwrite(String pathString) {
         return IOverwriteQuery.ALL;
       }

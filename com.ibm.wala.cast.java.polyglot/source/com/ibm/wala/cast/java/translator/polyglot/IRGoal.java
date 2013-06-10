@@ -66,6 +66,7 @@ public class IRGoal extends SourceGoal_c /* PORT1.7 removed 'implements EndGoal'
     return true;
   }
 
+  @Override
   public String name() {
     return "<WALA IR goal for " + job.source().path() + ">";
   }

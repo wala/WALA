@@ -20,14 +20,17 @@ public class SourceURLModule extends AbstractURLModule implements SourceModule {
     super(url);
   }
 
+  @Override
   public boolean isClassFile() {
     return false;
   }
 
+  @Override
   public boolean isSourceFile() {
     return true;
   }
 
+  @Override
   public Reader getInputReader() {
     return new InputStreamReader(getInputStream());
   }

@@ -50,6 +50,7 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
     this(function, null, params, exception, site);
   }
 
+  @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     int fn = function;
     int newParams[] = params;
@@ -96,6 +97,7 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
     return ((JSInstructionFactory)insts).Invoke(fn, newLvals, newParams, newExp, site, reads, writes);
   }
 
+  @Override
   public String toString(SymbolTable symbolTable) {
     StringBuffer s = new StringBuffer();
     if (getNumberOfReturnValues() > 0) {
@@ -152,11 +154,13 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
   /**
    * @see com.ibm.domo.ssa.Instruction#visit(Visitor)
    */
+  @Override
   public void visit(IVisitor v) {
     assert v instanceof JSInstructionVisitor;
     ((JSInstructionVisitor) v).visitJavaScriptInvoke(this);
   }
 
+  @Override
   public int getNumberOfParameters() {
     if (params == null) {
       return 1;
@@ -168,6 +172,7 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
   /**
    * @see com.ibm.domo.ssa.Instruction#getUse(int)
    */
+  @Override
   public int getUse(int j) {
     if (j == 0)
       return function;
@@ -186,10 +191,12 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
    * (non-Javadoc)
    * @see com.ibm.domo.ssa.Instruction#getExceptionTypes()
    */
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return Util.typeErrorExceptions();
   }
 
+  @Override
   public int hashCode() {
     return site.hashCode() * function * 7529;
   }

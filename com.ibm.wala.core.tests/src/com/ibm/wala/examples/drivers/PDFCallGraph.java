@@ -196,6 +196,7 @@ public class PDFCallGraph {
    */
   private static class ApplicationLoaderFilter implements Filter<CGNode> {
 
+    @Override
     public boolean accepts(CGNode o) {
       if (o instanceof CGNode) {
         CGNode n = (CGNode) o;

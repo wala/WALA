@@ -30,6 +30,7 @@ public class Filtersection<T> implements Filter<T> {
     }
   }
 
+  @Override
   public boolean accepts(T o) {
     return a.accepts(o) && b.accepts(o);
   }

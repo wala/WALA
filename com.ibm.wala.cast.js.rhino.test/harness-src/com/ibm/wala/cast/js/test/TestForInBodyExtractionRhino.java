@@ -20,7 +20,8 @@ import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.classLoader.SourceModule;
 
 public class TestForInBodyExtractionRhino extends TestForInBodyExtraction {
-	protected CAstEntity parseJS(CAstImpl ast, SourceModule module) throws IOException {
+	@Override
+  protected CAstEntity parseJS(CAstImpl ast, SourceModule module) throws IOException {
 		RhinoToAstTranslator translator = new RhinoToAstTranslator(ast, module, module.getName(), false);
 		CAstEntity entity = null;
 		try {

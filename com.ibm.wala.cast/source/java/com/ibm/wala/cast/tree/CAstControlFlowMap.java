@@ -39,31 +39,38 @@ public interface CAstControlFlowMap {
    * uncaught exception.
    */
   public static final CAstNode EXCEPTION_TO_EXIT = new CAstNode() {
+    @Override
     public int getKind() {
       return CAstNode.CONSTANT;
     }
 
+    @Override
     public Object getValue() {
       return this;
     }
 
+    @Override
     public CAstNode getChild(int n) {
       Assertions.UNREACHABLE();
       return null;
     }
 
+    @Override
     public int getChildCount() {
       return 0;
     }
 
+    @Override
     public String toString() {
       return "EXCEPTION_TO_EXIT";
     }
 
+    @Override
     public int hashCode() {
       return getKind() * toString().hashCode();
     }
 
+    @Override
     public boolean equals(Object o) {
       return o == this;
     }

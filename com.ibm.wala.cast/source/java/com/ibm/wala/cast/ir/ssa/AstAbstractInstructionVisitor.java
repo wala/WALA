@@ -17,38 +17,47 @@ public abstract class AstAbstractInstructionVisitor
     implements AstInstructionVisitor 
 {
 
+  @Override
   public void visitAstLexicalRead(AstLexicalRead instruction) {
 
   }
     
+  @Override
   public void visitAstLexicalWrite(AstLexicalWrite instruction) {
 
   }
     
+  @Override
   public void visitAstGlobalRead(AstGlobalRead instruction) {
 
   }
     
+  @Override
   public void visitAstGlobalWrite(AstGlobalWrite instruction) {
 
   }
 
+  @Override
   public void visitAssert(AstAssertInstruction instruction) {
 		
   }
 
+  @Override
   public void visitEachElementGet(EachElementGetInstruction inst) {
 
   }
 
+  @Override
   public void visitEachElementHasNext(EachElementHasNextInstruction inst) {
 
   }
 
+  @Override
   public void visitIsDefined(AstIsDefinedInstruction inst) {
 
   }
 
+  @Override
   public void visitEcho(AstEchoInstruction inst) {
 
   }

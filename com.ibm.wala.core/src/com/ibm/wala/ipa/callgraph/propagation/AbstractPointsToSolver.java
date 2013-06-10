@@ -40,6 +40,7 @@ public abstract class AbstractPointsToSolver implements IPointsToSolver {
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.IPointsToSolver#solve()
    */
+  @Override
   public abstract void solve(IProgressMonitor monitor) throws IllegalArgumentException, CancelException;
 
   protected PropagationCallGraphBuilder getBuilder() {

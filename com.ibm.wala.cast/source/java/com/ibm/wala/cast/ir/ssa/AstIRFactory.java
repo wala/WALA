@@ -50,6 +50,7 @@ public class AstIRFactory implements IRFactory {
       this.astFactory = astFactory;
     }
 
+    @Override
     public IR makeIR(IMethod method, Context context, SSAOptions options) {
       if (method instanceof AstMethod) {
         return astFactory.makeIR(method, context, options);
@@ -58,6 +59,7 @@ public class AstIRFactory implements IRFactory {
       }
     }
 
+    @Override
     public ControlFlowGraph makeCFG(IMethod method, Context context) {
       if (method instanceof AstMethod) {
         return astFactory.makeCFG(method, context);
@@ -96,10 +98,12 @@ public class AstIRFactory implements IRFactory {
       }
     }
 
+    @Override
     protected SSA2LocalMap getLocalMap() {
       return localMap;
     }
 
+    @Override
     protected String instructionPosition(int instructionIndex) {
       Position pos = ((AstMethod) getMethod()).getSourcePosition(instructionIndex);
       if (pos == null) {
@@ -130,6 +134,7 @@ public class AstIRFactory implements IRFactory {
     }
   }
 
+  @Override
   public IR makeIR(final IMethod method, final Context context, final SSAOptions options) {
     assert method instanceof AstMethod : method.toString();
   
@@ -148,6 +153,7 @@ public class AstIRFactory implements IRFactory {
     return new AstDefaultIRFactory();
   }
 
+  @Override
   public boolean contextIsIrrelevant(IMethod method) {
     return true;
   }

@@ -28,22 +28,27 @@ public abstract class AbstractCodeEntity extends AbstractEntity {
     this.type = type;
   }
 
+  @Override
   public CAstNode getAST() {
     return Ast;
   }
 
+  @Override
   public CAstType getType() {
     return type;
   }
 
+  @Override
   public CAstControlFlowMap getControlFlow() {
     return cfg;
   }
 
+  @Override
   public CAstSourcePositionMap getSourceMap() {
     return src;
   }
 
+  @Override
   public CAstNodeTypeMap getNodeTypeMap() {
     return types;
   }

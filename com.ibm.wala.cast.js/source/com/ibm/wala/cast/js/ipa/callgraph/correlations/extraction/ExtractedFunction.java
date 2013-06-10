@@ -62,28 +62,34 @@ class ExtractedFunction implements CAstEntity {
 		this.types = r.newTypes();
 	}
 	
-	public int getKind() {
+	@Override
+  public int getKind() {
 		return CAstEntity.FUNCTION_ENTITY;
 	}
 
-	public String getName() {
+	@Override
+  public String getName() {
 		return name;
 	}
 
-	public String getSignature() {
+	@Override
+  public String getSignature() {
 		return null;
 	}
 
-	public String[] getArgumentNames() {
+	@Override
+  public String[] getArgumentNames() {
 		computeParms();
 		return parms;
 	}
 
-	public CAstNode[] getArgumentDefaults() {
+	@Override
+  public CAstNode[] getArgumentDefaults() {
 		return new CAstNode[0];
 	}
 
-	public int getArgumentCount() {
+	@Override
+  public int getArgumentCount() {
 		computeParms();
 		return parms.length;
 	}
@@ -100,7 +106,8 @@ class ExtractedFunction implements CAstEntity {
 		}
 	}
 
-	public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
+	@Override
+  public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
 		if(scopedEntities == null) {
 			scopedEntities = HashMapFactory.make();
 			// first, add all existing entities inside the body of this for loop
@@ -126,7 +133,8 @@ class ExtractedFunction implements CAstEntity {
 		return scopedEntities;
 	}
 
-	public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
+	@Override
+  public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
 		if(getAllScopedEntities().containsKey(construct)) {
 	        return getAllScopedEntities().get(construct).iterator();							
 		} else {
@@ -134,31 +142,38 @@ class ExtractedFunction implements CAstEntity {
 		}
 	}
 
-	public CAstNode getAST() {
+	@Override
+  public CAstNode getAST() {
 		return root;
 	}
 
-	public CAstControlFlowMap getControlFlow() {
+	@Override
+  public CAstControlFlowMap getControlFlow() {
 		return cfg;
 	}
 
-	public CAstSourcePositionMap getSourceMap() {
+	@Override
+  public CAstSourcePositionMap getSourceMap() {
 		return posmap;
 	}
 
-	public Position getPosition() {
+	@Override
+  public Position getPosition() {
 		return getSourceMap().getPosition(root);
 	}
 
-	public CAstNodeTypeMap getNodeTypeMap() {
+	@Override
+  public CAstNodeTypeMap getNodeTypeMap() {
 		return types;
 	}
 
-	public Collection<CAstQualifier> getQualifiers() {
+	@Override
+  public Collection<CAstQualifier> getQualifiers() {
 		return null;
 	}
 
-	public CAstType getType() {
+	@Override
+  public CAstType getType() {
 		return null;
 	}
 

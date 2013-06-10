@@ -37,38 +37,47 @@ public class CompoundModule implements ModuleEntry, Module, SourceModule {
     return stuff;
   }
   
+  @Override
   public Iterator<ModuleEntry> getEntries() {
     return new NonNullSingletonIterator<ModuleEntry>(this);
   }
   
+  @Override
   public boolean isModuleFile() {
     return false;
   }
 
+  @Override
   public Module asModule() {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public String getClassName() {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public String getName() {
     return name.toString();
   }
 
+  @Override
   public URL getURL() {
     return name;
   }
   
+  @Override
   public boolean isClassFile() {
     return false;
   }
 
+  @Override
   public boolean isSourceFile() {
     return true;
   }
 
+  @Override
   public InputStream getInputStream() {
     return new InputStream() {
       private int index = 0;
@@ -146,6 +155,7 @@ public class CompoundModule implements ModuleEntry, Module, SourceModule {
     }
   }
     
+  @Override
   public Reader getInputReader() {
     return new Reader();
   }

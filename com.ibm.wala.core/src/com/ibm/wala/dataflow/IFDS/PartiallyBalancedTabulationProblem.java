@@ -20,6 +20,7 @@ package com.ibm.wala.dataflow.IFDS;
  */
 public interface PartiallyBalancedTabulationProblem<T, P, F> extends TabulationProblem<T, P, F> {
 
+  @Override
   public IPartiallyBalancedFlowFunctions<T> getFunctionMap();
 
   /**

@@ -43,6 +43,7 @@ public class PathFinderTest {
 
   private static DFSAllPathsFinder<String> makeFinder(Graph<String> g, String start, final String end) {
     return new DFSAllPathsFinder<String>(g, start, new Filter<String>() {
+      @Override
       public boolean accepts(String o) {
         return end.equals(o);
       }

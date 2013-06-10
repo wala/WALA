@@ -48,6 +48,7 @@ public class NewLabel implements IFlowLabel {
     return theInstance;
   }
 
+  @Override
   public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException("v == null");
@@ -60,10 +61,12 @@ public class NewLabel implements IFlowLabel {
     return "new";
   }
 
+  @Override
   public NewBarLabel bar() {
     return NewBarLabel.v();
   }
 
+  @Override
   public boolean isBarred() {
     return false;
   }

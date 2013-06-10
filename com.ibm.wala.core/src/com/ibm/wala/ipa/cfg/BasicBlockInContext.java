@@ -40,6 +40,7 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
   /*
    * @see com.ibm.wala.cfg.IBasicBlock#getFirstInstructionIndex()
    */
+  @Override
   public int getFirstInstructionIndex() {
     return delegate.getFirstInstructionIndex();
   }
@@ -47,6 +48,7 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
   /*
    * @see com.ibm.wala.cfg.IBasicBlock#getLastInstructionIndex()
    */
+  @Override
   public int getLastInstructionIndex() {
     return delegate.getLastInstructionIndex();
   }
@@ -54,6 +56,7 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
   /*
    * @see com.ibm.wala.cfg.IBasicBlock#iterateAllInstructions()
    */
+  @Override
   public Iterator<SSAInstruction> iterator() {
     return delegate.iterator();
   }
@@ -61,6 +64,7 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
   /*
    * @see com.ibm.wala.cfg.IBasicBlock#getMethod()
    */
+  @Override
   public IMethod getMethod() {
     return delegate.getMethod();
   }
@@ -68,6 +72,7 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
   /*
    * @see com.ibm.wala.cfg.IBasicBlock#getNumber()
    */
+  @Override
   public int getNumber() {
     return delegate.getNumber();
   }
@@ -75,6 +80,7 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
   /*
    * @see com.ibm.wala.cfg.IBasicBlock#isCatchBlock()
    */
+  @Override
   public boolean isCatchBlock() {
     return delegate.isCatchBlock();
   }
@@ -82,6 +88,7 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
   /*
    * @see com.ibm.wala.cfg.IBasicBlock#isEntryBlock()
    */
+  @Override
   public boolean isEntryBlock() {
     return delegate.isEntryBlock();
   }
@@ -89,6 +96,7 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
   /*
    * @see com.ibm.wala.cfg.IBasicBlock#isExitBlock()
    */
+  @Override
   public boolean isExitBlock() {
     return delegate.isExitBlock();
   }
@@ -137,18 +145,22 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
     return delegate.toString();
   }
 
+  @Override
   public Iterator<TypeReference> getCaughtExceptionTypes() {
     return delegate.getCaughtExceptionTypes();
   }
 
+  @Override
   public SSAInstruction getLastInstruction() {
     return delegate.getLastInstruction();
   }
 
+  @Override
   public Iterator<SSAPhiInstruction> iteratePhis() {
     return delegate.iteratePhis();
   }
 
+  @Override
   public Iterator<SSAPiInstruction> iteratePis() {
     return delegate.iteratePis();
   }

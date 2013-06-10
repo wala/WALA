@@ -51,10 +51,12 @@ public final class StoreInstruction extends Instruction implements IStoreInstruc
   /**
    * @return the index of the local variable stored
    */
+  @Override
   public int getVarIndex() {
     return index;
   }
 
+  @Override
   public String getType() {
     if (opcode < OP_istore_0) {
       return indexedTypes[opcode - OP_istore];
@@ -93,6 +95,7 @@ public final class StoreInstruction extends Instruction implements IStoreInstruc
     v.visitLocalStore(this);
   }
 
+  @Override
   public boolean isPEI() {
     return false;
   }

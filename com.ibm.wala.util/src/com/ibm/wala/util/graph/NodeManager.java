@@ -26,6 +26,7 @@ public interface NodeManager<T> extends Iterable<T> {
   /**
    * @return an {@link Iterator} of the nodes in this graph
    */
+  @Override
   public Iterator<T> iterator();
 
   /**

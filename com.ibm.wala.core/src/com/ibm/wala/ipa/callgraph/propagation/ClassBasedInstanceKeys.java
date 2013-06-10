@@ -40,6 +40,7 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
     this.options = options;
   }
 
+  @Override
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
     if (allocation == null) {
       throw new IllegalArgumentException("allocation is null");
@@ -64,6 +65,7 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
    *      [[Object; e.g., the [[Object; instances in [[[Object; dim == 1 represents the second dimension, e.g., the [Object
    *      instances in [[[Object;
    */
+  @Override
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
     if (DEBUG) {
       System.err.println(("getInstanceKeyForMultiNewArray " + allocation + " " + dim));
@@ -98,6 +100,7 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
     return key;
   }
 
+  @Override
   public <T> InstanceKey getInstanceKeyForConstant(TypeReference type, T S) {
     if (type == null || cha.lookupClass(type) == null) {
       return null;
@@ -113,6 +116,7 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
   /**
    * @return a set of ConcreteTypeKeys that represent the exceptions the PEI may throw.
    */
+  @Override
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter peiLoc, TypeReference type) {
     IClass klass = cha.lookupClass(type);
     if (klass == null) {
@@ -121,6 +125,7 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
     return new ConcreteTypeKey(cha.lookupClass(type));
   }
 
+  @Override
   public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
     IClass klass = cha.lookupClass(type);
     if (klass == null) {

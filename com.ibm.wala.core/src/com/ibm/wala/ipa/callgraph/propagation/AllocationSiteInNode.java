@@ -48,6 +48,7 @@ public abstract class AllocationSiteInNode extends AbstractTypeInNode {
     return site;
   }
 
+  @Override
   public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
     return new NonNullSingletonIterator<Pair<CGNode, NewSiteReference>>(Pair.make(getNode(), getSite()));
   }

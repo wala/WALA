@@ -82,6 +82,7 @@ public class AssignLabel implements IFlowLabelWithFilter {
     return new AssignLabel(filter);
   }
   
+  @Override
   public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException("v == null");
@@ -89,6 +90,7 @@ public class AssignLabel implements IFlowLabelWithFilter {
     v.visitAssign(this, dst);
   }
 
+  @Override
   public AssignBarLabel bar() {
     return this == noFilter ? AssignBarLabel.noFilter() : AssignBarLabel.make(filter);
   }
@@ -98,10 +100,12 @@ public class AssignLabel implements IFlowLabelWithFilter {
     return "assign";
   }
 
+  @Override
   public boolean isBarred() {
     return false;
   }
   
+  @Override
   public TypeFilter getFilter() {
     return filter;
   }

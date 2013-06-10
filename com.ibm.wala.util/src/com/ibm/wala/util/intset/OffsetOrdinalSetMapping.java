@@ -27,10 +27,12 @@ public class OffsetOrdinalSetMapping<T> implements OrdinalSetMapping<T> {
     this.offset = offset;
   }
 
+  @Override
   public int getMaximumIndex() {
     return offset + delegate.getMaximumIndex();
   }
 
+  @Override
   public int getSize() {
     return delegate.getSize();
   }
@@ -47,10 +49,12 @@ public class OffsetOrdinalSetMapping<T> implements OrdinalSetMapping<T> {
     return new OffsetOrdinalSetMapping<T>(m, offset);
   }
 
+  @Override
   public int add(T o) {
     return offset + delegate.add(o);
   }
 
+  @Override
   public int getMappedIndex(T o) {
     if (delegate.getMappedIndex(o) == -1) {
       return -1;
@@ -58,14 +62,17 @@ public class OffsetOrdinalSetMapping<T> implements OrdinalSetMapping<T> {
     return offset + delegate.getMappedIndex(o);
   }
 
+  @Override
   public T getMappedObject(int n) throws NoSuchElementException {
     return delegate.getMappedObject(n - offset);
   }
 
+  @Override
   public boolean hasMappedIndex(T o) {
     return delegate.hasMappedIndex(o);
   }
 
+  @Override
   public Iterator<T> iterator() {
     return delegate.iterator();
   }

@@ -17,7 +17,8 @@ import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 
 public class TestArgumentSensitivityRhino extends TestArgumentSensitivity {
 
-	  @Before
+	  @Override
+    @Before
 	  public void setUp() {
 	    JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
 	  }

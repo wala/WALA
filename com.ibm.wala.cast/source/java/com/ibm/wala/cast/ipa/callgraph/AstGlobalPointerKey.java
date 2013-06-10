@@ -22,15 +22,18 @@ public class AstGlobalPointerKey extends AbstractPointerKey {
     this.globalName = globalName;
   }
 
+  @Override
   public boolean equals(Object x) {
     return (x instanceof AstGlobalPointerKey) &&
       ((AstGlobalPointerKey)x).globalName.equals(globalName);
   }
 
+  @Override
   public int hashCode() {
     return globalName.hashCode();
   }
 
+  @Override
   public String toString() {
     return "[global: " + globalName + "]";
   }

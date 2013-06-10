@@ -228,14 +228,17 @@ public class ArraySet<T> extends AbstractSet<T> {
     public ArraySetIterator() {
     }
 
+    @Override
     public void remove() {
       throw new UnsupportedOperationException();
     }
 
+    @Override
     public boolean hasNext() {
       return ind < setSize;
     }
 
+    @Override
     public T next() {
       if (ind >= setSize) {
         throw new NoSuchElementException();

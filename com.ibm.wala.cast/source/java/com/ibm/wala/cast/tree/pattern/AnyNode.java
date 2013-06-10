@@ -20,7 +20,8 @@ import com.ibm.wala.cast.tree.CAstNode;
  *
  */
 public class AnyNode implements NodePattern {
-	public boolean matches(CAstNode node) {
+	@Override
+  public boolean matches(CAstNode node) {
 		return true;
 	}
 }

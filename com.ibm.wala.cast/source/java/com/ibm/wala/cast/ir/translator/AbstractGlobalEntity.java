@@ -26,6 +26,7 @@ public class AbstractGlobalEntity extends AbstractDataEntity {
     }
    }
 
+  @Override
   public String toString() {
     if (type == null) {
       return "global " + name;
@@ -34,18 +35,22 @@ public class AbstractGlobalEntity extends AbstractDataEntity {
     }
   }
 
+  @Override
   public int getKind() {
     return GLOBAL_ENTITY;
   }
 
+  @Override
   public String getName() {
     return name;
   }
 
+  @Override
   public CAstType getType() {
     return type;
   }
 
+  @Override
   public Collection<CAstQualifier> getQualifiers() {
     return modifiers;
   }

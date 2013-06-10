@@ -30,19 +30,23 @@ public class ProgressMonitorDelegate implements IProgressMonitor {
     this.delegate = d;
   }
 
+  @Override
   public void beginTask(String task, int totalWork) {
     delegate.beginTask(task, totalWork);
 
   }
 
+  @Override
   public boolean isCanceled() {
     return delegate.isCanceled();
   }
 
+  @Override
   public void done() {
     delegate.done();
   }
 
+  @Override
   public void worked(int units) {
     delegate.worked(units);
   }

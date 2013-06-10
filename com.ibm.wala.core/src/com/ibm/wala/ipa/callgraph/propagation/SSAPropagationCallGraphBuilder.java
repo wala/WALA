@@ -1061,6 +1061,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         final int vns[] = new int[ params.size() ];
         params.foreach(new IntSetAction() {
           private int i = 0;
+          @Override
           public void act(int x) {
             vns[i++] = instruction.getUse(x);
           }
@@ -1079,6 +1080,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
  
           final List<PointerKey> pks = new ArrayList<PointerKey>(params.size());
           params.foreach(new IntSetAction() {
+            @Override
             public void act(int x) {
               if (!contentsAreInvariant(symbolTable, du, instruction.getUse(x))) {
                 pks.add(getBuilder().getPointerKeyForLocal(node, instruction.getUse(x)));
@@ -1357,6 +1359,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      * @return if non-null, then result[i] holds the set of instance keys which may be passed as the ith parameter. (which must be
      *         invariant)
      */
+    @Override
     public InstanceKey[][] computeInvariantParameters(SSAAbstractInvokeInstruction call) {
       InstanceKey[][] constParams = null;
       for (int i = 0; i < call.getNumberOfUses(); i++) {
@@ -1810,6 +1813,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     /*
      * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
      */
+    @Override
     public boolean isComplex() {
       return true;
     }
@@ -1846,6 +1850,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             IntSet s = system.findOrCreatePointsToSet(var).getValue();
             if (s != null && !s.isEmpty()) {
               s.foreach(new IntSetAction() {
+                @Override
                 public void act(int x) {
                   keys[p] = system.getInstanceKey(x);
                   rec(pi + 1);
@@ -1878,6 +1883,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
     final Set<CGNode> targets = HashSetFactory.make();
     VoidFunction<InstanceKey[]> f = new VoidFunction<InstanceKey[]>() {
+      @Override
       public void apply(InstanceKey[] v) {
         IClass recv = null;
         if (site.isDispatch()) {
@@ -2243,6 +2249,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.HeapModel#iteratePointerKeys()
    */
+  @Override
   public Iterator<PointerKey> iteratePointerKeys() {
     return system.iteratePointerKeys();
   }
@@ -2266,6 +2273,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     return types;
   }
 
+  @Override
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type) {
     return getInstanceKeyForPEI(node, instr, type, instanceKeyFactory);
   }

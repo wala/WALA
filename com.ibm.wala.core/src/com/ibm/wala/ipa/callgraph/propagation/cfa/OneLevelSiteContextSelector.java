@@ -37,6 +37,7 @@ public class OneLevelSiteContextSelector implements ContextSelector {
     this.baseSelector = baseSelector;
   }
 
+  @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     Context baseContext = baseSelector.getCalleeTarget(caller, site, callee, receiver);
     if (baseContext.equals(Everywhere.EVERYWHERE)) {
@@ -46,6 +47,7 @@ public class OneLevelSiteContextSelector implements ContextSelector {
     }
   }
 
+  @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     return baseSelector.getRelevantParameters(caller, site);
   }

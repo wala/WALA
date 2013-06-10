@@ -32,9 +32,11 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     
   protected abstract IHtmlParser getParser();
   
+  @Override
   @Before
   public void setUp() {
     WebUtil.setFactory(new IHtmlParserFactory() {
+      @Override
       public IHtmlParser getParser() {
         return getParser();
       }

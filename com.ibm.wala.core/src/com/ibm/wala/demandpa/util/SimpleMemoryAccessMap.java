@@ -343,6 +343,7 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
   /*
    * @see com.ibm.wala.demandpa.util.MemoryAccessMap#getFieldReads(com.ibm.wala.classLoader.IField)
    */
+  @Override
   public Collection<MemoryAccess> getFieldReads(PointerKey pk, IField field) {
     Collection<MemoryAccess> result = readMap.get(field);
     if (result == null) {
@@ -355,6 +356,7 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
   /*
    * @see com.ibm.wala.demandpa.util.MemoryAccessMap#getFieldWrites(com.ibm.wala.classLoader.IField)
    */
+  @Override
   public Collection<MemoryAccess> getFieldWrites(PointerKey pk, IField field) {
     Collection<MemoryAccess> result = writeMap.get(field);
     if (result == null) {
@@ -367,6 +369,7 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
   /*
    * @see com.ibm.wala.demandpa.util.MemoryAccessMap#getArrayReads()
    */
+  @Override
   public Collection<MemoryAccess> getArrayReads(PointerKey pk) {
     return arrayReads;
   }
@@ -374,6 +377,7 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
   /*
    * @see com.ibm.wala.demandpa.util.MemoryAccessMap#getArrayWrites()
    */
+  @Override
   public Collection<MemoryAccess> getArrayWrites(PointerKey pk) {
     return arrayWrites;
   }
@@ -422,14 +426,17 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
     return result.toString();
   }
 
+  @Override
   public Collection<MemoryAccess> getStaticFieldReads(IField field) {
     return getFieldReads(null, field);
   }
 
+  @Override
   public Collection<MemoryAccess> getStaticFieldWrites(IField field) {
     return getFieldWrites(null, field);
   }
 
+  @Override
   public HeapModel getHeapModel() {
     // NOTE: this memory access map actually makes no use of the heap model
     return heapModel;

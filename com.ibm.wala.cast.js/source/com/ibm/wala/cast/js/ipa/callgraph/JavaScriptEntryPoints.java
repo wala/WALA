@@ -20,6 +20,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 public class JavaScriptEntryPoints extends ScriptEntryPoints {
 
+  @Override
   protected CallSiteReference makeScriptSite(IMethod m, int pc) {
     return new JSCallSiteReference(pc);
   }

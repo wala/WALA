@@ -42,18 +42,22 @@ public class PolyglotTypeDictionary extends CAstTypeDictionaryImpl {
       fEltCAstType = getCAstTypeFor(fEltPolyglotType);
     }
 
+    @Override
     public int getNumDimensions() {
       return 1; // always 1 for Java
     }
 
+    @Override
     public CAstType getElementType() {
       return fEltCAstType;
     }
 
+    @Override
     public String getName() {
       return "[" + fEltCAstType.getName();
     }
 
+    @Override
     public Collection<CAstType> getSupertypes() {
       if (fEltPolyglotType.isPrimitive())
         return Collections.singleton(getCAstTypeFor(fTypeSystem.Object()));
@@ -81,6 +85,7 @@ public class PolyglotTypeDictionary extends CAstTypeDictionaryImpl {
     fTranslator = translator;
   }
 
+  @Override
   public CAstType getCAstTypeFor(Object astType) {
     CAstType type = super.getCAstTypeFor(astType);
     // Handle the case where we haven't seen an AST decl for some type before

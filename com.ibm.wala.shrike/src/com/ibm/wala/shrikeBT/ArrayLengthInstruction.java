@@ -59,6 +59,7 @@ final public class ArrayLengthInstruction extends Instruction {
     return "ArrayLength()";
   }
 
+  @Override
   public boolean isPEI() {
     return true;
   }

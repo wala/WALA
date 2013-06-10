@@ -35,6 +35,7 @@ public abstract class JavaScriptLoopUnwindingTranslatorFactory
 
   protected abstract TranslatorToCAst translateInternal(CAst Ast, SourceModule M, String N);
 
+  @Override
   public TranslatorToCAst make(CAst ast, final SourceModule M) {
 	  String N;
 	  if (M instanceof SourceFileModule) {
@@ -45,7 +46,8 @@ public abstract class JavaScriptLoopUnwindingTranslatorFactory
 
 	  TranslatorToCAst xlator = translateInternal(ast, M, N);
 	  xlator.addRewriter(new CAstRewriterFactory<CAstRewriter.RewriteContext<AstLoopUnwinder.UnwindKey>,AstLoopUnwinder.UnwindKey>() {
-		public CAstRewriter<RewriteContext<UnwindKey>, UnwindKey> createCAstRewriter(CAst ast) {
+		@Override
+    public CAstRewriter<RewriteContext<UnwindKey>, UnwindKey> createCAstRewriter(CAst ast) {
 			return new AstLoopUnwinder(ast, true, unwindFactor);
 		}		  
 	  }, false);

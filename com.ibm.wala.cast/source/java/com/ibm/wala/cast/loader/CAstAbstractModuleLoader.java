@@ -91,6 +91,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
 
   }
 
+  @Override
   public void init(final List<Module> modules) {
 
     final CAst ast = new CAstImpl();

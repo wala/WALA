@@ -35,10 +35,12 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
       super(scriptCodeBody);
     }
       
+    @Override
     public CallSiteReference makeSite(int programCounter) {
       return makeScriptSite(getMethod(), programCounter);
     }
 
+    @Override
     public TypeReference[] getParameterTypes(int i) {
       assert i == 0;
       if (getMethod().isStatic()) {
@@ -48,11 +50,13 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
       }
     }
 
+    @Override
     public int getNumberOfParameters() {
       return getMethod().isStatic()? 0: 1;
     }
 
       
+    @Override
     public SSAAbstractInvokeInstruction addCall(AbstractRootMethod m){
       CallSiteReference site = makeSite(0);
 
@@ -81,6 +85,7 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
     return true;
   }
   
+  @Override
   public Iterator<Entrypoint> iterator() {
     Set<Entrypoint> ES = HashSetFactory.make();
     Iterator<IClass> classes = scriptType.getClassLoader().iterateAllClasses();

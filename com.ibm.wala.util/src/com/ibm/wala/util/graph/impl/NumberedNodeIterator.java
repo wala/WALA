@@ -35,10 +35,12 @@ public class NumberedNodeIterator<T> implements Iterator<T> {
     this.nodeManager = nodeManager;
   }
 
+  @Override
   public boolean hasNext() {
     return numbers.hasNext();
   }
 
+  @Override
   public T next() throws NoSuchElementException {
     int i = numbers.next();
     T result = nodeManager.getNode(i);
@@ -46,6 +48,7 @@ public class NumberedNodeIterator<T> implements Iterator<T> {
     return result;
   }
 
+  @Override
   public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }

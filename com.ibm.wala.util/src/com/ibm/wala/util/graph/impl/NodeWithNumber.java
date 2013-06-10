@@ -26,10 +26,12 @@ public class NodeWithNumber implements INodeWithNumber {
   /**
    * @return the number which identifies this node in the numbered graph
    */
+  @Override
   public int getGraphNodeId() {
     return number;
   }
 
+  @Override
   public void setGraphNodeId(int i) {
     number = i;
   }

@@ -51,14 +51,16 @@ interface IGeneric<E> {
 class ConcreteGeneric<Q> implements IGeneric<Q> {
 	Q x;
 
-	public Q bar(Q a, Q b) {
+	@Override
+  public Q bar(Q a, Q b) {
 		x = a;
 		if (b.hashCode() == a.hashCode() || b.toString().equals(a.toString()))
 			return a;
 		return b;
 	}
 
-	public Q foo() {
+	@Override
+  public Q foo() {
 		return x;
 	}
 }
@@ -68,7 +70,8 @@ class ConcreteGeneric2<Q> extends ConcreteGeneric<Q> {
 	public void setFoo(Q a) {
 		y = a;
 	}
-	public Q foo() {
+	@Override
+  public Q foo() {
 		return y;
 	}
 }

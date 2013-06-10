@@ -431,6 +431,7 @@ public class ClassLoaderImpl implements IClassLoader {
    * 
    * @throws IllegalArgumentException if modules is null
    */
+  @Override
   public void init(List<Module> modules) throws IOException {
 
     if (modules == null) {
@@ -529,10 +530,12 @@ public class ClassLoaderImpl implements IClassLoader {
     }
   }
 
+  @Override
   public ClassLoaderReference getReference() {
     return loader;
   }
 
+  @Override
   public Iterator<IClass> iterateAllClasses() {
     return getAllClasses().iterator();
   }
@@ -540,6 +543,7 @@ public class ClassLoaderImpl implements IClassLoader {
   /*
    * @see com.ibm.wala.classLoader.IClassLoader#lookupClass(com.ibm.wala.types.TypeName)
    */
+  @Override
   public IClass lookupClass(TypeName className) {
     if (className == null) {
       throw new IllegalArgumentException("className is null");
@@ -569,14 +573,17 @@ public class ClassLoaderImpl implements IClassLoader {
   /**
    * Method getParent.
    */
+  @Override
   public IClassLoader getParent() {
     return parent;
   }
 
+  @Override
   public Atom getName() {
     return loader.getName();
   }
 
+  @Override
   public Language getLanguage() {
     return Language.JAVA;
   }
@@ -589,6 +596,7 @@ public class ClassLoaderImpl implements IClassLoader {
   /*
    * @see com.ibm.wala.classLoader.IClassLoader#getNumberOfClasses()
    */
+  @Override
   public int getNumberOfClasses() {
     return getAllClasses().size();
   }
@@ -596,6 +604,7 @@ public class ClassLoaderImpl implements IClassLoader {
   /*
    * @see com.ibm.wala.classLoader.IClassLoader#getNumberOfMethods()
    */
+  @Override
   public int getNumberOfMethods() {
     int result = 0;
     for (Iterator<IClass> it = iterateAllClasses(); it.hasNext();) {
@@ -608,6 +617,7 @@ public class ClassLoaderImpl implements IClassLoader {
   /*
    * @see com.ibm.wala.classLoader.IClassLoader#getSourceFileName(com.ibm.wala.classLoader.IClass)
    */
+  @Override
   public String getSourceFileName(IClass klass) {
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");
@@ -616,14 +626,17 @@ public class ClassLoaderImpl implements IClassLoader {
     return e == null ? null : e.getName();
   }
 
+  @Override
   public InputStream getSource(IMethod method, int offset) {
     return getSource(method.getDeclaringClass());
   }
 
+  @Override
   public String getSourceFileName(IMethod method, int offset) {
     return getSourceFileName(method.getDeclaringClass());
   }
 
+  @Override
   public InputStream getSource(IClass klass) {
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");
@@ -635,6 +648,7 @@ public class ClassLoaderImpl implements IClassLoader {
   /*
    * @see com.ibm.wala.classLoader.IClassLoader#removeAll(java.util.Collection)
    */
+  @Override
   public void removeAll(Collection<IClass> toRemove) {
     if (toRemove == null) {
       throw new IllegalArgumentException("toRemove is null");
@@ -649,6 +663,7 @@ public class ClassLoaderImpl implements IClassLoader {
     }
   }
 
+  @Override
   public SSAInstructionFactory getInstructionFactory() {
     return getLanguage().instructionFactory();
   }

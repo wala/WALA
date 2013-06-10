@@ -60,6 +60,7 @@ public class JarFileModule implements Module {
   /*
    * @see com.ibm.wala.classLoader.Module#getEntries()
    */
+  @Override
   public Iterator<ModuleEntry> getEntries() {
     HashSet<ModuleEntry> result = HashSetFactory.make();
     for (Enumeration e = file.entries(); e.hasMoreElements();) {

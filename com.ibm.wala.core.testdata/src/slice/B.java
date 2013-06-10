@@ -11,6 +11,7 @@
 package slice;
 
 class B extends A {
+  @Override
   Object foo() {
     return new Float(4);
   }

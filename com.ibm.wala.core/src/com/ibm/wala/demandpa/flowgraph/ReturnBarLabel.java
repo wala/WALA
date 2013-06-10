@@ -54,6 +54,7 @@ public class ReturnBarLabel extends CallLabel {
   /*
    * @see demandGraph.IFlowLabel#bar()
    */
+  @Override
   public ReturnLabel bar() {
     return ReturnLabel.make(callSite);
   }
@@ -62,6 +63,7 @@ public class ReturnBarLabel extends CallLabel {
    * @see demandGraph.IFlowLabel#visit(demandGraph.IFlowLabel.IFlowLabelVisitor,
    *      java.lang.Object)
    */
+  @Override
   public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException("v == null");
@@ -69,6 +71,7 @@ public class ReturnBarLabel extends CallLabel {
     v.visitReturnBar(this, dst);
   }
 
+  @Override
   public boolean isBarred() {
     return true;
   }

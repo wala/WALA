@@ -25,10 +25,12 @@ public class JavaScriptSummarizedFunction extends SummarizedMethod {
     super(ref, summary, declaringClass);
   }
 
+  @Override
   public boolean equals(Object o) {
     return this == o;
   }
 
+  @Override
   public InducedCFG makeControlFlowGraph(SSAInstruction[] instructions) {
     return new JSInducedCFG(instructions, this, Everywhere.EVERYWHERE);
   }

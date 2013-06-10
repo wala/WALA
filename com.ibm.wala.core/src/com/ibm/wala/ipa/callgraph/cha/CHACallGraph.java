@@ -61,21 +61,25 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
       super(method, C);
     }
 
+    @Override
     public IR getIR() {
       assert false;
       return null;
     }
 
+    @Override
     public DefUse getDU() {
       assert false;
       return null;
     }
 
+    @Override
     public Iterator<NewSiteReference> iterateNewSites() {
       assert false;
       return null;
     }
 
+    @Override
     public Iterator<CallSiteReference> iterateCallSites() {
       return getInterpreter(this).iterateCallSites(this);
     }
@@ -116,6 +120,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     isInitialized = true;
   }
   
+  @Override
   public IClassHierarchy getClassHierarchy() {
     return cha;
   }
@@ -133,18 +138,21 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     }
   }
   
+  @Override
   public Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site) {
     return Iterator2Collection.toSet(
       new MapIterator<IMethod,CGNode>(
           new FilterIterator<IMethod>(
               getPossibleTargets(site),
               new Filter<IMethod>() {
+                @Override
                 public boolean accepts(IMethod o) {
                   return !o.isAbstract();
                 }
               }
           ),
         new Function<IMethod,CGNode>() {
+          @Override
           public CGNode apply(IMethod object) {
             try {
               return findOrCreateNode(object, Everywhere.EVERYWHERE);
@@ -156,14 +164,17 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
         }));        
   }
 
+  @Override
   public int getNumberOfTargets(CGNode node, CallSiteReference site) {
     return IteratorUtil.count(getPossibleTargets(site));
   }
 
+  @Override
   public Iterator<CallSiteReference> getPossibleSites(final CGNode src, final CGNode target) {
     return 
       new FilterIterator<CallSiteReference>(getInterpreter(src).iterateCallSites(src),
         new Filter<CallSiteReference>() {
+          @Override
           public boolean accepts(CallSiteReference o) {
             return getPossibleTargets(src, o).contains(target);
           }
@@ -267,14 +278,17 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
         }
       }
       
+      @Override
       public Iterator<CGNode> getPredNodes(CGNode n) {
         return getPreds(n).iterator();
       }
 
+      @Override
       public int getPredNodeCount(CGNode n) {
         return getPreds(n).size();
       }
 
+      @Override
       public Iterator<CGNode> getSuccNodes(final CGNode n) {
         return new FilterIterator<CGNode>(new ComposedIterator<CallSiteReference, CGNode>(n.iterateCallSites()) {
           @Override
@@ -284,6 +298,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
         },
         new Filter<CGNode>() {
           private final MutableIntSet nodes = IntSetUtil.make();
+          @Override
           public boolean accepts(CGNode o) {
             if (nodes.contains(o.getGraphNodeId())) {
               return false;
@@ -295,34 +310,42 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
         });
       }
 
+      @Override
       public int getSuccNodeCount(CGNode N) {
         return IteratorUtil.count(getSuccNodes(N));
       }
 
+      @Override
       public void addEdge(CGNode src, CGNode dst) {
         assert false;
       }
 
+      @Override
       public void removeEdge(CGNode src, CGNode dst) throws UnsupportedOperationException {
         assert false;
       }
 
+      @Override
       public void removeAllIncidentEdges(CGNode node) throws UnsupportedOperationException {
         assert false;
       }
 
+      @Override
       public void removeIncomingEdges(CGNode node) throws UnsupportedOperationException {
         assert false;
       }
 
+      @Override
       public void removeOutgoingEdges(CGNode node) throws UnsupportedOperationException {
         assert false;
       }
 
+      @Override
       public boolean hasEdge(CGNode src, CGNode dst) {
          return getPossibleSites(src, dst).hasNext();
       }
 
+      @Override
       public IntSet getSuccNodeNumbers(CGNode node) {
         MutableIntSet result = IntSetUtil.make();
         for(Iterator<CGNode> ss = getSuccNodes(node); ss.hasNext(); ) {
@@ -331,6 +354,7 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
         return result;
       }
 
+      @Override
       public IntSet getPredNodeNumbers(CGNode node) {
         MutableIntSet result = IntSetUtil.make();
         for(Iterator<CGNode> ss = getPredNodes(node); ss.hasNext(); ) {

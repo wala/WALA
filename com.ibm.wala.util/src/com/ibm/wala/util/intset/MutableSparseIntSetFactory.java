@@ -21,6 +21,7 @@ public class MutableSparseIntSetFactory implements MutableIntSetFactory<MutableS
   /**
    * @throws IllegalArgumentException  if set is null
    */
+  @Override
   public MutableSparseIntSet make(int[] set) {
     if (set == null) {
       throw new IllegalArgumentException("set is null");
@@ -47,6 +48,7 @@ public class MutableSparseIntSetFactory implements MutableIntSetFactory<MutableS
   /**
    * @param string
    */
+  @Override
   public MutableSparseIntSet parse(String string) throws NumberFormatException {
     int[] backingStore = SparseIntSet.parseIntArray(string);
     return new MutableSparseIntSet(backingStore);
@@ -55,6 +57,7 @@ public class MutableSparseIntSetFactory implements MutableIntSetFactory<MutableS
   /*
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#make(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public MutableSparseIntSet makeCopy(IntSet x) throws IllegalArgumentException {
     if (x == null) {
       throw new IllegalArgumentException("x == null");
@@ -65,6 +68,7 @@ public class MutableSparseIntSetFactory implements MutableIntSetFactory<MutableS
   /*
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#make()
    */
+  @Override
   public MutableSparseIntSet make() {
     return MutableSparseIntSet.makeEmpty();
   }

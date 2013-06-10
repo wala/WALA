@@ -76,10 +76,12 @@ public class ArrayIterator<T> implements Iterator<T> {
     this.last = last;
   }
 
+  @Override
   public boolean hasNext() {
     return _cnt <= last;
   }
 
+  @Override
   public T next() throws NoSuchElementException {
     if (_cnt >= _elts.length) {
       throw new NoSuchElementException();
@@ -87,6 +89,7 @@ public class ArrayIterator<T> implements Iterator<T> {
     return _elts[_cnt++];
   }
 
+  @Override
   public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }

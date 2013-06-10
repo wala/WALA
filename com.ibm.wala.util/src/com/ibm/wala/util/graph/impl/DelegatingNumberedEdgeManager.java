@@ -44,14 +44,17 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
       this.delegate = delegate;
     }
 
+    @Override
     public boolean hasNext() {
       return delegate.hasNext();
     }
 
+    @Override
     public T next() {
       return nodeManager.getNode(delegate.next());
     }
 
+    @Override
     public void remove() {
       // TODO Auto-generated method stub
       Assertions.UNREACHABLE();
@@ -61,6 +64,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public Iterator<T> getPredNodes(T N) throws IllegalArgumentException {
     if (N == null) {
       throw new IllegalArgumentException("N cannot be null");
@@ -71,6 +75,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
     return (pred == null) ? empty : (Iterator<T>) new IntSetNodeIterator(pred.intIterator());
   }
 
+  @Override
   public IntSet getPredNodeNumbers(T node) {
     if (node == null) {
       throw new IllegalArgumentException("N cannot be null");
@@ -83,6 +88,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public int getPredNodeCount(T N) throws IllegalArgumentException {
     if (N == null) {
       throw new IllegalArgumentException("N cannot be null");
@@ -99,6 +105,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public Iterator<T> getSuccNodes(T N) {
     if (N == null) {
       throw new IllegalArgumentException("N cannot be null");
@@ -112,6 +119,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public int getSuccNodeCount(T N) {
     if (N == null) {
       throw new IllegalArgumentException("N is null");
@@ -124,6 +132,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#addEdge(com.ibm.wala.util.graph.Node, com.ibm.wala.util.graph.Node)
    */
+  @Override
   public void addEdge(T src, T dst) {
     if (dst == null || src == null) {
       throw new IllegalArgumentException("parameter is null");
@@ -132,6 +141,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
     dst.addPred(src.getGraphNodeId());
   }
 
+  @Override
   public void removeEdge(T src, T dst) throws UnimplementedError {
     Assertions.UNREACHABLE("Implement me");
   }
@@ -139,6 +149,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public void removeAllIncidentEdges(T node) throws UnimplementedError {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -150,6 +161,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public void removeIncomingEdges(T node) throws UnimplementedError {
     if (node == null) {
       throw new IllegalArgumentException("node cannot be null");
@@ -161,6 +173,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public void removeOutgoingEdges(T node) throws UnimplementedError {
     if (node == null) {
       throw new IllegalArgumentException("node cannot be null");
@@ -169,6 +182,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
     n.removeOutgoingEdges();
   }
 
+  @Override
   public boolean hasEdge(T src, T dst) throws IllegalArgumentException {
     if (dst == null) {
       throw new IllegalArgumentException("dst == null");
@@ -176,6 +190,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
     return getSuccNodeNumbers(src).contains(dst.getGraphNodeId());
   }
 
+  @Override
   public IntSet getSuccNodeNumbers(T node) {
     if (node == null) {
       throw new IllegalArgumentException("node cannot be null");

@@ -35,6 +35,7 @@ public interface IField extends IMember {
   public boolean isPrivate();
   public boolean isProtected();
   public boolean isPublic();
+  @Override
   public boolean isStatic();
 
   /**

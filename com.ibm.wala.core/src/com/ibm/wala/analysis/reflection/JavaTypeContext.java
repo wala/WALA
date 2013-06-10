@@ -32,6 +32,7 @@ public class JavaTypeContext implements Context {
     this.type = type;
   }
 
+  @Override
   public ContextItem get(ContextKey name) {
     if (name == ContextKey.RECEIVER) {
       return type;

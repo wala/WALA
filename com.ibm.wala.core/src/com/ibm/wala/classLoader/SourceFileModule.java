@@ -46,6 +46,7 @@ public class SourceFileModule extends FileModule implements Module, ModuleEntry,
   /*
    * @see com.ibm.wala.classLoader.ModuleEntry#isClassFile()
    */
+  @Override
   public boolean isClassFile() {
     return false;
   }
@@ -53,6 +54,7 @@ public class SourceFileModule extends FileModule implements Module, ModuleEntry,
   /*
    * @see com.ibm.wala.classLoader.ModuleEntry#getClassName()
    */
+  @Override
   public String getClassName() {
     return FileSuffixes.stripSuffix(fileName).replace(File.separator.charAt(0), '/');
   }
@@ -60,14 +62,17 @@ public class SourceFileModule extends FileModule implements Module, ModuleEntry,
   /*
    * @see com.ibm.wala.classLoader.ModuleEntry#isSourceFile()
    */
+  @Override
   public boolean isSourceFile() {
     return true;
   }
 
+  @Override
   public Reader getInputReader() {
     return new InputStreamReader(getInputStream());
   }
  
+  @Override
   public URL getURL() {
     try {
       return getFile().toURI().toURL();

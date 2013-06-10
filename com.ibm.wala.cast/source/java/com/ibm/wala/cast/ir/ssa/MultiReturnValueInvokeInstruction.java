@@ -23,10 +23,12 @@ abstract class MultiReturnValueInvokeInstruction
     this.results = results;
   }
 
+  @Override
   public int getNumberOfReturnValues() {
     return results==null? 0: results.length;
   }
 
+  @Override
   public int getReturnValue(int i) {
     return results[i];
   }

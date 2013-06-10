@@ -113,6 +113,7 @@ public final class NewInstruction extends Instruction {
     v.visitNew(this);
   }
 
+  @Override
   public boolean isPEI() {
     return true;
   }

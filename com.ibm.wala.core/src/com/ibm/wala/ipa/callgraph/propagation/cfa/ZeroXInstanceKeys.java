@@ -181,6 +181,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     return (policy & CONSTANT_SPECIFIC) > 0;
   }
 
+  @Override
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
     if (allocation == null) {
       throw new IllegalArgumentException("allocation is null");
@@ -246,6 +247,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     return count;
   }
 
+  @Override
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
     if (allocationPolicy()) {
       return siteBased.getInstanceKeyForMultiNewArray(node, allocation, dim);
@@ -254,6 +256,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     }
   }
 
+  @Override
   public <T> InstanceKey getInstanceKeyForConstant(TypeReference type, T S) {
     if (type == null) {
       throw new IllegalArgumentException("null type");
@@ -273,10 +276,12 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
    * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory#getInstanceKeyForPEI(com.ibm.wala.ipa.callgraph.CGNode,
    * com.ibm.wala.classLoader.ProgramCounter, com.ibm.wala.types.TypeReference)
    */
+  @Override
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter pei, TypeReference type) {
     return classBased.getInstanceKeyForPEI(node, pei, type);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
     return classBased.getInstanceKeyForClassObject(type);
   }

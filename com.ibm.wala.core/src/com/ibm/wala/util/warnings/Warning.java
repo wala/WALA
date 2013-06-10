@@ -46,6 +46,7 @@ public abstract class Warning implements Comparable {
    * 
    * @throws ClassCastException if o is not a Warning
    */
+  @Override
   public int compareTo(Object o) throws ClassCastException {
     if (o == null) {
       return -1;

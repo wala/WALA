@@ -105,6 +105,7 @@ public final class DupInstruction extends Instruction {
     v.visitDup(this);
   }
 
+  @Override
   public boolean isPEI() {
     return false;
   }

@@ -38,10 +38,12 @@ public class ReverseIterator<T> implements Iterator<T> {
     nextIndex = list.size() - 1;
   }
 
+  @Override
   public boolean hasNext() {
     return nextIndex > -1;
   }
 
+  @Override
   public T next() throws NoSuchElementException {
     if (!hasNext()) {
       throw new NoSuchElementException();
@@ -49,6 +51,7 @@ public class ReverseIterator<T> implements Iterator<T> {
     return list.get(nextIndex--);
   }
 
+  @Override
   public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }

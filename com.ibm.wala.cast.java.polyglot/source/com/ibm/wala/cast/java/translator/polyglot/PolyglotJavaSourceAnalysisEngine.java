@@ -20,6 +20,7 @@ public class PolyglotJavaSourceAnalysisEngine extends JavaSourceAnalysisEngine {
     return new JavaIRTranslatorExtension();
   }
 
+  @Override
   protected ClassLoaderFactory getClassLoaderFactory(SetOfClasses exclusions) {
     return new PolyglotClassLoaderFactory(exclusions, getTranslatorExtension());
   }

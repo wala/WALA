@@ -47,6 +47,7 @@ import com.ibm.wala.types.MethodReference;
  */
 public class ManualCGRefinePolicy implements CallGraphRefinePolicy {
 
+  @Override
   public boolean shouldRefine(CallerSiteContext callSiteAndCGNode) throws IllegalArgumentException {
     if (callSiteAndCGNode == null) {
       throw new IllegalArgumentException("callSiteAndCGNode == null");
@@ -58,6 +59,7 @@ public class ManualCGRefinePolicy implements CallGraphRefinePolicy {
     return true;
   }
 
+  @Override
   public boolean nextPass() {
     return false;
   }

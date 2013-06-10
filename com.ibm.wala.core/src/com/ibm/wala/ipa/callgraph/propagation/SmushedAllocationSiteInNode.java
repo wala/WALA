@@ -54,16 +54,19 @@ public class SmushedAllocationSiteInNode extends AbstractTypeInNode {
     return "SMUSHED " + getNode() + " : " + getConcreteType();
   }
 
+  @Override
   public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
     return new MapIterator<NewSiteReference,Pair<CGNode, NewSiteReference>>(
         new FilterIterator<NewSiteReference>(
           getNode().iterateNewSites(),
           new Filter<NewSiteReference>() {
+            @Override
             public boolean accepts(NewSiteReference o) {
               return o.getDeclaredType().equals(getConcreteType().getReference());
             }
         }),
         new Function<NewSiteReference,Pair<CGNode, NewSiteReference>>() {
+          @Override
           public Pair<CGNode, NewSiteReference> apply(NewSiteReference object) {
             return Pair.make(getNode(), object);
           }

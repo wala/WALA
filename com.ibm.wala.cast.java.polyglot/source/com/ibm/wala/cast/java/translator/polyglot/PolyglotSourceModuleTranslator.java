@@ -108,6 +108,7 @@ public class PolyglotSourceModuleTranslator implements SourceModuleTranslator {
     fSourcePath = ".";
   }
 
+  @Override
   public void loadAllSources(Set<ModuleEntry> modules) {
     Options opts= fExtInfo.getOptions();
     opts.assertions = true;

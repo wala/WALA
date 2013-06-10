@@ -30,6 +30,7 @@ public class ClassHierarchyClassTargetSelector implements ClassTargetSelector {
     this.cha = cha;
   }
 
+  @Override
   public IClass getAllocatedTarget(CGNode caller, NewSiteReference site) {
     if (site == null) {
       throw new IllegalArgumentException("site is null");

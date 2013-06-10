@@ -47,6 +47,7 @@ public class AssignGlobalLabel implements IFlowLabel {
     return theInstance;
   }
 
+  @Override
   public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException("v == null");
@@ -54,10 +55,12 @@ public class AssignGlobalLabel implements IFlowLabel {
     v.visitAssignGlobal(this, dst);
   }
 
+  @Override
   public AssignGlobalBarLabel bar() {
     return AssignGlobalBarLabel.v();
   }
 
+  @Override
   public boolean isBarred() {
     return false;
   }

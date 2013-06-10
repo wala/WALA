@@ -37,6 +37,7 @@ public class JarFileEntry implements ModuleEntry {
   /*
    * @see com.ibm.wala.classLoader.ModuleEntry#getName()
    */
+  @Override
   public String getName() {
     return entryName;
   }
@@ -44,6 +45,7 @@ public class JarFileEntry implements ModuleEntry {
   /*
    * @see com.ibm.wala.classLoader.ModuleEntry#isClassFile()
    */
+  @Override
   public boolean isClassFile() {
     return FileSuffixes.isClassFile(getName());
   }
@@ -51,6 +53,7 @@ public class JarFileEntry implements ModuleEntry {
   /*
    * @see com.ibm.wala.classLoader.ModuleEntry#getInputStream()
    */
+  @Override
   public InputStream getInputStream() {
     try {
       return jarFile.getInputStream(jarFile.getEntry(entryName));
@@ -79,6 +82,7 @@ public class JarFileEntry implements ModuleEntry {
   /*
    * @see com.ibm.wala.classLoader.ModuleEntry#isModuleFile()
    */
+  @Override
   public boolean isModuleFile() {
     return FileSuffixes.isJarFile(getName()) || FileSuffixes.isWarFile(getName());
   }
@@ -86,6 +90,7 @@ public class JarFileEntry implements ModuleEntry {
   /*
    * @see com.ibm.wala.classLoader.ModuleEntry#asModule()
    */
+  @Override
   public Module asModule() {
     return new NestedJarFileModule(jarFileModule, jarFile.getEntry(entryName));
   }
@@ -106,6 +111,7 @@ public class JarFileEntry implements ModuleEntry {
   /*
    * @see com.ibm.wala.classLoader.ModuleEntry#getClassName()
    */
+  @Override
   public String getClassName() {
     return FileSuffixes.stripSuffix(getName());
   }
@@ -113,6 +119,7 @@ public class JarFileEntry implements ModuleEntry {
   /*
    * @see com.ibm.wala.classLoader.ModuleEntry#isSourceFile()
    */
+  @Override
   public boolean isSourceFile() {
     return FileSuffixes.isSourceFile(getName());
   }

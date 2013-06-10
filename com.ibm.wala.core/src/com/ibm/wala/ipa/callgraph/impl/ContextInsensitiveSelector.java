@@ -25,10 +25,12 @@ import com.ibm.wala.util.intset.IntSet;
  */
 public class ContextInsensitiveSelector implements ContextSelector {
 
+  @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     return Everywhere.EVERYWHERE;
   }
 
+  @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     return EmptyIntSet.instance;
   }

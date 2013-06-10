@@ -40,6 +40,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     this.backward = backward;
   }
 
+  @Override
   public Graph<PDG> getProcedureGraph() {
     Assertions.UNREACHABLE();
     return null;
@@ -53,6 +54,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#classifyEdge(java.lang.Object, java.lang.Object)
    */
+  @Override
   public byte classifyEdge(Statement src, Statement dest) {
     Assertions.UNREACHABLE();
     return 0;
@@ -61,6 +63,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getCallSites(java.lang.Object)
    */
+  @Override
   public Iterator<? extends Statement> getCallSites(Statement r, PDG callee) {
     switch (r.getKind()) {
     case EXC_RET_CALLER: {
@@ -90,10 +93,12 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getCalledNodes(java.lang.Object)
    */
+  @Override
   public Iterator<? extends Statement> getCalledNodes(Statement call) {
     switch (call.getKind()) {
     case NORMAL:
       Filter f = new Filter() {
+        @Override
         public boolean accepts(Object o) {
           Statement s = (Statement) o;
           return isEntry(s);
@@ -112,6 +117,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getEntriesForProcedure(java.lang.Object)
    */
+  @Override
   public Statement[] getEntriesForProcedure(PDG procedure) {
     Statement[] normal = procedure.getParamCalleeStatements();
     Statement[] result = new Statement[normal.length + 1];
@@ -123,6 +129,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getExitsForProcedure(java.lang.Object)
    */
+  @Override
   public Statement[] getExitsForProcedure(PDG procedure) {
     Statement[] normal = procedure.getReturnStatements();
     Statement[] result = new Statement[normal.length + 1];
@@ -134,6 +141,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getLocalBlock(java.lang.Object, int)
    */
+  @Override
   public Statement getLocalBlock(PDG procedure, int i) {
     return procedure.getNode(i);
   }
@@ -141,6 +149,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getLocalBlockNumber(java.lang.Object)
    */
+  @Override
   public int getLocalBlockNumber(Statement n) {
     PDG pdg = getProcOf(n);
     return pdg.getNumber(n);
@@ -149,6 +158,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getNormalSuccessors(java.lang.Object)
    */
+  @Override
   public Iterator<Statement> getNormalSuccessors(Statement call) {
     if (!backward) {
       return EmptyIterator.instance();
@@ -161,6 +171,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getNumberOfBlocks(java.lang.Object)
    */
+  @Override
   public int getNumberOfBlocks(PDG procedure) {
     Assertions.UNREACHABLE();
     return 0;
@@ -169,6 +180,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getProcOf(java.lang.Object)
    */
+  @Override
   public PDG getProcOf(Statement n) {
     CGNode node = n.getNode();
     PDG result = sdg.getPDG(node);
@@ -181,6 +193,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getReturnSites(java.lang.Object)
    */
+  @Override
   public Iterator<? extends Statement> getReturnSites(Statement call, PDG callee) {
     switch (call.getKind()) {
     case PARAM_CALLER: {
@@ -210,6 +223,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#isCall(java.lang.Object)
    */
+  @Override
   public boolean isCall(Statement n) {
     switch (n.getKind()) {
     case EXC_RET_CALLEE:
@@ -242,6 +256,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     }
   }
 
+  @Override
   public boolean isEntry(Statement n) {
     switch (n.getKind()) {
     case PARAM_CALLEE:
@@ -267,6 +282,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     }
   }
 
+  @Override
   public boolean isExit(Statement n) {
     switch (n.getKind()) {
     case PARAM_CALLEE:
@@ -293,6 +309,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     }
   }
 
+  @Override
   public boolean isReturn(Statement n) {
     switch (n.getKind()) {
     case EXC_RET_CALLER:
@@ -318,98 +335,119 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     }
   }
 
+  @Override
   public void removeNodeAndEdges(Statement N) {
     Assertions.UNREACHABLE();
 
   }
 
+  @Override
   public void addNode(Statement n) {
     Assertions.UNREACHABLE();
 
   }
 
+  @Override
   public boolean containsNode(Statement N) {
     return sdg.containsNode(N);
   }
 
+  @Override
   public int getNumberOfNodes() {
     Assertions.UNREACHABLE();
     return 0;
   }
 
+  @Override
   public Iterator<Statement> iterator() {
     return sdg.iterator();
   }
 
+  @Override
   public void removeNode(Statement n) {
     Assertions.UNREACHABLE();
 
   }
 
+  @Override
   public void addEdge(Statement src, Statement dst) {
     Assertions.UNREACHABLE();
 
   }
 
+  @Override
   public int getPredNodeCount(Statement N) {
     Assertions.UNREACHABLE();
     return 0;
   }
 
+  @Override
   public Iterator<Statement> getPredNodes(Statement N) {
     return sdg.getPredNodes(N);
   }
 
+  @Override
   public int getSuccNodeCount(Statement N) {
     Assertions.UNREACHABLE();
     return 0;
   }
 
+  @Override
   public Iterator<Statement> getSuccNodes(Statement N) {
     return sdg.getSuccNodes(N);
   }
 
+  @Override
   public boolean hasEdge(Statement src, Statement dst) {
     return sdg.hasEdge(src, dst);
   }
 
+  @Override
   public void removeAllIncidentEdges(Statement node) {
     Assertions.UNREACHABLE();
 
   }
 
+  @Override
   public void removeEdge(Statement src, Statement dst) {
     Assertions.UNREACHABLE();
 
   }
 
+  @Override
   public void removeIncomingEdges(Statement node) {
     Assertions.UNREACHABLE();
 
   }
 
+  @Override
   public void removeOutgoingEdges(Statement node) {
     Assertions.UNREACHABLE();
 
   }
 
+  @Override
   public int getMaxNumber() {
     return sdg.getMaxNumber();
   }
 
+  @Override
   public Statement getNode(int number) {
     return sdg.getNode(number);
   }
 
+  @Override
   public int getNumber(Statement N) {
     return sdg.getNumber(N);
   }
 
+  @Override
   public Iterator<Statement> iterateNodes(IntSet s) {
     Assertions.UNREACHABLE();
     return null;
   }
 
+  @Override
   public IntSet getPredNodeNumbers(Statement node) {
     return sdg.getPredNodeNumbers(node);
   }
@@ -417,6 +455,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   /*
    * @see com.ibm.wala.util.graph.NumberedEdgeManager#getSuccNodeNumbers(java.lang.Object)
    */
+  @Override
   public IntSet getSuccNodeNumbers(Statement node) {
     return sdg.getSuccNodeNumbers(node);
   }

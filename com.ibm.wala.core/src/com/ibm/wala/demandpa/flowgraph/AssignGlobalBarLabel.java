@@ -57,6 +57,7 @@ public class AssignGlobalBarLabel implements IFlowLabel {
    * 
    * @see demandGraph.IFlowLabel#bar()
    */
+  @Override
   public AssignGlobalLabel bar() {
     return AssignGlobalLabel.v();
   }
@@ -67,6 +68,7 @@ public class AssignGlobalBarLabel implements IFlowLabel {
    * @see demandGraph.IFlowLabel#visit(demandGraph.IFlowLabel.IFlowLabelVisitor,
    *      java.lang.Object)
    */
+  @Override
   public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException("v == null");
@@ -74,6 +76,7 @@ public class AssignGlobalBarLabel implements IFlowLabel {
     v.visitAssignGlobalBar(this, dst);
   }
 
+  @Override
   public boolean isBarred() {
     return true;
   }

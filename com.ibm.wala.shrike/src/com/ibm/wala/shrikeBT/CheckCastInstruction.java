@@ -51,6 +51,7 @@ final public class CheckCastInstruction extends Instruction implements ITypeTest
   /**
    * @return the type to which the operand is cast
    */
+  @Override
   public String[] getTypes() {
     return new String[]{ type };
   }
@@ -78,10 +79,12 @@ final public class CheckCastInstruction extends Instruction implements ITypeTest
     return "CheckCast(" + type + ")";
   }
 
+  @Override
   public boolean isPEI() {
     return true;
   }
 
+  @Override
   public boolean firstClassTypes() {
     return false;
   }

@@ -77,6 +77,7 @@ public class AstIsDefinedInstruction extends SSAInstruction {
     this.fieldRef = null;
   }
 
+  @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     assert fieldVal == -1 || fieldRef == null;
 
@@ -84,6 +85,7 @@ public class AstIsDefinedInstruction extends SSAInstruction {
         (uses == null || fieldVal == -1) ? fieldVal : uses[1], fieldRef);
   }
 
+  @Override
   public String toString(SymbolTable symbolTable) {
     if (fieldVal == -1 && fieldRef == null) {
       return getValueString(symbolTable, lval) + " = isDefined(" + getValueString(symbolTable, rval) + ")";
@@ -99,36 +101,44 @@ public class AstIsDefinedInstruction extends SSAInstruction {
     }
   }
 
+  @Override
   public void visit(IVisitor v) {
     ((AstInstructionVisitor) v).visitIsDefined(this);
   }
 
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return Collections.emptySet();
   }
 
+  @Override
   public boolean hasDef() {
     return true;
   }
 
+  @Override
   public int getDef() {
     return lval;
   }
 
+  @Override
   public int getDef(int i) {
     assert i == 0;
 
     return lval;
   }
 
+  @Override
   public int getNumberOfDefs() {
     return 1;
   }
 
+  @Override
   public int getNumberOfUses() {
     return (fieldVal == -1) ? 1 : 2;
   }
 
+  @Override
   public int getUse(int j) {
     if (j == 0) {
       return rval;
@@ -140,10 +150,12 @@ public class AstIsDefinedInstruction extends SSAInstruction {
     }
   }
 
+  @Override
   public boolean isFallThrough() {
     return true;
   }
 
+  @Override
   public int hashCode() {
     return 3077 * fieldVal * rval;
   }

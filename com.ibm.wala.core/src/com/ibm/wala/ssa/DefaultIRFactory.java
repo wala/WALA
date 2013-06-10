@@ -53,6 +53,7 @@ public class DefaultIRFactory implements IRFactory<IMethod> {
    * @see com.ibm.wala.ssa.IRFactory#makeIR(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context,
    * com.ibm.wala.ipa.cha.IClassHierarchy, com.ibm.wala.ssa.SSAOptions, com.ibm.wala.util.warnings.WarningSet)
    */
+  @Override
   public IR makeIR(IMethod method, Context c, SSAOptions options) throws IllegalArgumentException {
     if (method == null) {
       throw new IllegalArgumentException("method cannot be null");
@@ -70,6 +71,7 @@ public class DefaultIRFactory implements IRFactory<IMethod> {
   /**
    * Is the {@link Context} irrelevant as to structure of the {@link IR} for a particular {@link IMethod}? 
    */
+  @Override
   public boolean contextIsIrrelevant(IMethod method) {
     if (method == null) {
       throw new IllegalArgumentException("null method");

@@ -43,6 +43,7 @@ public final class ArrayContentsKey extends AbstractFieldPointerKey implements F
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.PointerKey#getTypeFilter()
    */
+  @Override
   public TypeFilter getTypeFilter() {
     return new SingleClassFilter(((ArrayClass) instance.getConcreteType()).getElementClass());
   }

@@ -45,6 +45,7 @@ public class JavaScriptInstanceOf extends SSAInstruction {
     return Collections.singleton(JavaScriptTypes.TypeError);
   }
 
+  @Override
   public boolean isPEI() {
     return true;
   }
@@ -69,19 +70,23 @@ public class JavaScriptInstanceOf extends SSAInstruction {
      ((JSInstructionVisitor)v).visitJavaScriptInstanceOf(this);
   }
   
+  @Override
   public int getNumberOfDefs() {
     return 1;
   }
 
+  @Override
   public int getDef(int i) {
     assert i == 0;
     return result;
   }
   
+  @Override
   public int getNumberOfUses() {
     return 2;
   }
   
+  @Override
   public int getUse(int i) {
     switch (i) {
     case 0: return objVal;

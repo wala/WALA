@@ -53,10 +53,12 @@ public class CrossLanguageContextSelector implements ContextSelector {
     return (ContextSelector)languageSelectors.get(getLanguage(site));
   }
 
+  @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     return getSelector(site).getCalleeTarget(caller, site, callee, receiver);
   }
 
+  @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     return getSelector(site).getRelevantParameters(caller, site);
   }

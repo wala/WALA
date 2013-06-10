@@ -30,6 +30,7 @@ public class CAstValueImpl extends CAstImpl {
       super(kind, cs);
     }
 
+    @Override
     public int hashCode() {
       int value = 1237 * kind;
       for(int i = 0; i < cs.length; i++) 
@@ -38,6 +39,7 @@ public class CAstValueImpl extends CAstImpl {
       return value;
     }
 
+    @Override
     public boolean equals(Object o) {
       if (! (o instanceof CAstNode)) return false;
       if (kind != ((CAstNode)o).getKind()) return false;
@@ -50,6 +52,7 @@ public class CAstValueImpl extends CAstImpl {
     }
   }
   
+  @Override
   public CAstNode makeNode(final int kind, final CAstNode[] cs) {
     return new CAstNodeValueImpl(kind, cs);
   }
@@ -60,10 +63,12 @@ public class CAstValueImpl extends CAstImpl {
       super(value);
     }
 
+    @Override
     public int hashCode() { 
       return value.hashCode(); 
     }
 
+    @Override
     public boolean equals(Object o) {
       if (o instanceof CAstNode) {
 	return value==null? 
@@ -75,6 +80,7 @@ public class CAstValueImpl extends CAstImpl {
     }
   }
 
+  @Override
   public CAstNode makeConstant(final Object value) {
     return new CAstValueValueImpl(value);
   }

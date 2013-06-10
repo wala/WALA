@@ -174,6 +174,7 @@ public class TypeBasedHeapModel implements HeapModel {
     return result;
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public Iterator<PointerKey> iteratePointerKeys() {
     initAllPKeys();
@@ -185,18 +186,22 @@ public class TypeBasedHeapModel implements HeapModel {
     }).iterator();
   }
 
+  @Override
   public IClassHierarchy getClassHierarchy() {
     return iKeyFactory.getClassHierarchy();
   }
 
+  @Override
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) throws UnimplementedError {
     return iKeyFactory.getInstanceKeyForAllocation(node, allocation);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) throws UnimplementedError {
     return iKeyFactory.getInstanceKeyForMultiNewArray(node, allocation, dim);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForConstant(TypeReference type, Object S) {
     return iKeyFactory.getInstanceKeyForConstant(type, S);
   }
@@ -206,11 +211,13 @@ public class TypeBasedHeapModel implements HeapModel {
     return null;
   }
 
+  @Override
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
 
+  @Override
   public InstanceKey getInstanceKeyForClassObject(TypeReference type) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
@@ -222,6 +229,7 @@ public class TypeBasedHeapModel implements HeapModel {
    * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForLocal(com.ibm.wala.ipa.callgraph.CGNode, int)
    */
+  @Override
   public FilteredPointerKey getPointerKeyForLocal(CGNode node, int valueNumber) {
     initPKeysForNode(node);
     PointerKey p = pointerKeys.getPointerKeyForLocal(node, valueNumber);
@@ -250,28 +258,34 @@ public class TypeBasedHeapModel implements HeapModel {
     }
   }
 
+  @Override
   public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter)
       throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
 
+  @Override
   public PointerKey getPointerKeyForReturnValue(CGNode node) {
     return pointerKeys.getPointerKeyForReturnValue(node);
   }
 
+  @Override
   public PointerKey getPointerKeyForExceptionalReturnValue(CGNode node) {
     return pointerKeys.getPointerKeyForExceptionalReturnValue(node);
   }
 
+  @Override
   public PointerKey getPointerKeyForStaticField(IField f) {
     return pointerKeys.getPointerKeyForStaticField(f);
   }
 
+  @Override
   public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField field) {
     return pointerKeys.getPointerKeyForInstanceField(I, field);
   }
 
+  @Override
   public PointerKey getPointerKeyForArrayContents(InstanceKey I) {
     return pointerKeys.getPointerKeyForArrayContents(I);
   }

@@ -53,6 +53,7 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
         sourcePosition);
   }
 
+  @Override
   public String toString() {
     try {
       return "function " + functionBody.getReference().getDeclaringClass().getName();
@@ -61,22 +62,27 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
     }
   }
 
+  @Override
   public IClassLoader getClassLoader() {
     return loader;
   }
 
+  @Override
   public boolean isInterface() {
     return false;
   }
 
+  @Override
   public boolean isAbstract() {
     return functionBody == null;
   }
 
+  @Override
   public boolean isPublic() {
     return true;
   }
   
+  @Override
   public boolean isPrivate() {
     return false;
   }
@@ -85,18 +91,22 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
     return false;
   }
 
+  @Override
   public int getModifiers() {
     return ACC_PUBLIC;
   }
 
+  @Override
   public IClass getSuperclass() {
     return loader.lookupClass(superReference.getName());
   }
 
+  @Override
   public Collection<IClass> getDirectInterfaces() {
     return Collections.emptySet();
   }
 
+  @Override
   public Collection<IClass> getAllImplementedInterfaces() {
     return Collections.emptySet();
   }
@@ -105,6 +115,7 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
     return Collections.emptySet();
   }
 
+  @Override
   public IMethod getMethod(Selector selector) {
     if (selector.equals(AstMethodReference.fnSelector)) {
       return functionBody;
@@ -113,15 +124,18 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
     }
   }
 
+  @Override
   public IField getField(Atom name) {
     return loader.lookupClass(superReference.getName()).getField(name);
   }
 
+  @Override
   public IField getField(Atom name, TypeName type) {
     // assume that for AST classes, you can't have multiple fields with the same name    
     return loader.lookupClass(superReference.getName()).getField(name);
   }
 
+  @Override
   public TypeReference getReference() {
     return reference;
   }
@@ -134,22 +148,27 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
     return sourcePosition.getURL();
   }
 
+  @Override
   public String getSourceFileName() {
     return sourcePosition.getURL().getFile();
   }
   
+  @Override
   public InputStream getSource() {
     return null;
   }
 
+  @Override
   public IMethod getClassInitializer() {
     return null;
   }
 
+  @Override
   public boolean isArrayClass() {
     return false;
   }
 
+  @Override
   public Collection<IMethod> getDeclaredMethods() {
     if (functionBody != null) {
       return Collections.singleton(functionBody);
@@ -158,34 +177,42 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
     }
   }
 
+  @Override
   public Collection<IField> getDeclaredInstanceFields() {
     return Collections.emptySet();
   }
 
+  @Override
   public Collection<IField> getDeclaredStaticFields() {
     return Collections.emptySet();
   }
 
+  @Override
   public Collection<IField> getAllInstanceFields() {
     return Collections.emptySet();
   }
 
+  @Override
   public Collection<IField> getAllStaticFields() {
     return Collections.emptySet();
   }
 
+  @Override
   public Collection<IField> getAllFields() {
     return Collections.emptySet();
   }
 
+  @Override
   public Collection<IMethod> getAllMethods() {
     return Collections.singleton(functionBody);
   }
 
+  @Override
   public TypeName getName() {
     return reference.getName();
   }
 
+  @Override
   public boolean isReferenceType() {
     return true;
   }

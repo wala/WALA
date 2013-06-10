@@ -59,8 +59,10 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
    */
   public interface CopyKey<Self extends CopyKey> {
 
+    @Override
     int hashCode();
 
+    @Override
     boolean equals(Object o);
 
     /**
@@ -356,28 +358,33 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
 
       private Map<CAstNode, Collection<CAstEntity>> theChildren = null;
 
+      @Override
       public CAstNode newRoot() {
         return newRoot;
       }
 
+      @Override
       public CAstControlFlowMap newCfg() {
         if (theCfg == null)
           theCfg = copyFlow(nodes, cfg, newPos());
         return theCfg;
       }
 
+      @Override
       public CAstSourcePositionMap newPos() {
         if (theSource == null)
           theSource = copySource(nodes, pos);
         return theSource;
       }
 
+      @Override
       public CAstNodeTypeMap newTypes() {
         if (theTypes == null)
           theTypes = copyTypes(nodes, types);
         return theTypes;
       }
 
+      @Override
       public Map<CAstNode, Collection<CAstEntity>> newChildren() {
         if (theChildren == null)
           theChildren = copyChildren(root, nodes, children);
@@ -397,10 +404,12 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
           root.getAllScopedEntities());
 
       return new DelegatingEntity(root) {
+        @Override
         public String toString() {
           return root.toString() + " (clone)";
         }
 
+        @Override
         public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
           Map<CAstNode, Collection<CAstEntity>> newChildren = getAllScopedEntities();
           if (newChildren.containsKey(construct)) {
@@ -410,22 +419,27 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
           }
         }
 
+        @Override
         public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
           return rewrite.newChildren();
         }
 
+        @Override
         public CAstNode getAST() {
           return rewrite.newRoot();
         }
 
+        @Override
         public CAstNodeTypeMap getNodeTypeMap() {
           return rewrite.newTypes();
         }
 
+        @Override
         public CAstSourcePositionMap getSourceMap() {
           return rewrite.newPos();
         }
 
+        @Override
         public CAstControlFlowMap getControlFlow() {
           return rewrite.newCfg();
         }
@@ -446,10 +460,12 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
       }
 
       return new DelegatingEntity(root) {
+        @Override
         public String toString() {
           return root.toString() + " (clone)";
         }
 
+        @Override
         public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
           if (newChildren.containsKey(construct)) {
             return newChildren.get(construct).iterator();
@@ -458,6 +474,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
           }
         }
 
+        @Override
         public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
           return newChildren;
         }

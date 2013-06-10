@@ -39,6 +39,7 @@ public class TwoLevelIntVector implements IntVector {
   /*
    * @see com.ibm.wala.util.intset.IntVector#get(int)
    */
+  @Override
   public int get(int x) {
     int page = getPageNumber(x);
     if (page >= data.size()) {
@@ -69,6 +70,7 @@ public class TwoLevelIntVector implements IntVector {
    * 
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
+  @Override
   public void set(int x, int value) {
     maxIndex = Math.max(maxIndex, x);
     int page = getPageNumber(x);
@@ -101,6 +103,7 @@ public class TwoLevelIntVector implements IntVector {
     System.err.println(("data: size = " + data.size()));
   }
 
+  @Override
   public int getMaxIndex() {
     return maxIndex;
   }
