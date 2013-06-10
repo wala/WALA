@@ -95,7 +95,6 @@ public class MethodMadness {
 			return 13 + x;
 		}
 		
-		@Override
     protected int protectedInteger() {
 			return 233 + x;
 		}

@@ -46,7 +46,7 @@ public class VarargsCovariant {
 	}
 
 	static class B extends A { 
-		@Override
+		
     B hello(int... x) {
 			System.out.println("b hello");
 			return this;

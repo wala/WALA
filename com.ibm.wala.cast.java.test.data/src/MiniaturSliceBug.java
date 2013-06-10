@@ -29,7 +29,7 @@ abstract class PrimitiveWrapper {
    * {@inheritDoc}
    * @see java.lang.Object#equals(java.lang.Object)
    */
-  @Override
+  
   abstract public boolean equals(Object o);
 }
 
@@ -48,7 +48,7 @@ final class IntWrapper extends PrimitiveWrapper {
    * {@inheritDoc}
    * @see com.ibm.miniatur.tests.sequential.PrimitiveWrapper#intValue()
    */
-  @Override
+  
   public int intValue() {
     return val;
   }
@@ -57,7 +57,7 @@ final class IntWrapper extends PrimitiveWrapper {
    * {@inheritDoc}
    * @see com.ibm.miniatur.tests.sequential.PrimitiveWrapper#setIntValue(int)
    */
-  @Override
+  
   public void setIntValue(int i) {
     this.val = i;
   }
@@ -66,7 +66,7 @@ final class IntWrapper extends PrimitiveWrapper {
    * {@inheritDoc}
    * @see com.ibm.miniatur.tests.sequential.PrimitiveWrapper#equals(java.lang.Object)
    */
-  @Override
+  
   public boolean equals(Object o) { 
     return o instanceof IntWrapper && ((IntWrapper)o).val==val;
   }

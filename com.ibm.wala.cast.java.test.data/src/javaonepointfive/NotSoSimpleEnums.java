@@ -39,13 +39,13 @@ package javaonepointfive;
 
 public class NotSoSimpleEnums {
 	public enum Direction {
-	    NORTH("nord") { @Override
+	    NORTH("nord") { 
       public Direction getOpposite() { return SOUTH; }},
-	    EAST("est") { @Override
+	    EAST("est") { 
       public Direction getOpposite() { return WEST; }},
-	    SOUTH("sud") { @Override
+	    SOUTH("sud") { 
       public Direction getOpposite() { return NORTH; }},
-	    WEST("ouest") { @Override
+	    WEST("ouest") { 
       public Direction getOpposite() { return EAST; }};
 		
 	    public abstract Direction getOpposite();

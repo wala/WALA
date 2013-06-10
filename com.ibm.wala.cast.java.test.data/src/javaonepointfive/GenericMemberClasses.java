@@ -45,18 +45,18 @@ public class GenericMemberClasses<T>
     {
     	T x = null;
         private int localChangeID;
-		@Override
+		
     public boolean hasNext() {
 			return ( localChangeID == 5 );
 		}
 
-		@Override
+		
     public T next() {
 			localChangeID = 5;
 			return x;
 		}
 
-		@Override
+		
     public void remove() {
 		}
     }
