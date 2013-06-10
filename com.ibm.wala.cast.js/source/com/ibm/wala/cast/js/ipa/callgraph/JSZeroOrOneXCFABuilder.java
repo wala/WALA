@@ -10,10 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ipa.callgraph;
 
-import com.ibm.wala.cast.ipa.callgraph.LexicalScopingResolverContexts;
 import com.ibm.wala.cast.ipa.callgraph.OneLevelForLexicalAccessFunctions;
-import com.ibm.wala.cast.ipa.callgraph.ScopeMappingKeysContextSelector;
-import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
@@ -39,10 +36,6 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy, boolean doOneCFA) {
     super(cha, options, cache);
 
-    if (!AstTranslator.NEW_LEXICAL && options.usePreciseLexical()) {
-      throw new IllegalArgumentException("usePreciseLexical only valid with new lexical scoping handling");
-    }
-    
     SSAContextInterpreter contextInterpreter = setupSSAContextInterpreter(cha, options, cache, appContextInterpreter);
 
     setupMethodTargetSelector(cha, options);
@@ -61,24 +54,15 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     // JavaScriptConstructorContextSelector ensures at least a 0-1-CFA (i.e.,
     // Andersen's-style) heap abstraction. This level of heap abstraction is
     // _necessary_ for correctness (we rely on it when handling lexical scoping)
-    contextSelector = new JavaScriptConstructorContextSelector(contextSelector, options.usePreciseLexical());
+    contextSelector = new JavaScriptConstructorContextSelector(contextSelector);
     
-    if (!AstTranslator.NEW_LEXICAL) {
-      contextSelector = new ScopeMappingKeysContextSelector(contextSelector);
-    }
-    
-    if (options.usePreciseLexical()) {
-      contextSelector = new OneLevelForLexicalAccessFunctions(contextSelector);
-    }
+    contextSelector = new OneLevelForLexicalAccessFunctions(contextSelector);
     
     if (USE_OBJECT_SENSITIVITY) {
       contextSelector = new ObjectSensitivityContextSelector(contextSelector);
     }
     if (options.handleCallApply()) {
       contextSelector = new JavaScriptFunctionApplyContextSelector(contextSelector);
-    }
-    if (!AstTranslator.NEW_LEXICAL) {
-      contextSelector = new LexicalScopingResolverContexts(this, contextSelector);
     }
     if (doOneCFA) {
       contextSelector = new nCFAContextSelector(1, contextSelector);
@@ -122,8 +106,6 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
    * @param xmlFiles
    *          set of Strings that are names of XML files holding bypass logic
    *          specifications.
-   * @param dmd
-   *          deployment descriptor abstraction
    * @return a 0-1-Opt-CFA Call Graph Builder.
    */
   public static JSCFABuilder make(JSAnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, ClassLoader cl,

@@ -64,10 +64,6 @@ public class JSAstTranslator extends AstTranslator {
   protected boolean treatGlobalsAsLexicallyScoped() {
     return false;
   }
-
-  protected boolean useLocalValuesForLexicalVars() {
-    return !AstTranslator.NEW_LEXICAL;
-  }
   
   protected TypeReference defaultCatchType() {
     return JavaScriptTypes.Root;

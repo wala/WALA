@@ -82,8 +82,6 @@ public class AstCallGraph extends ExplicitCallGraph {
   public class AstCGNode extends ExplicitNode {
     private Set<Function<Object, Object>> callbacks;
 
-    private boolean lexicalScopingChanges = false;
-    
     private IR cachedIR;
     
     private DefUse cachedDU;
@@ -145,35 +143,10 @@ public class AstCallGraph extends ExplicitCallGraph {
       }
     }
 
-    public void setLexicallyMutatedIR(IR ir) {
-      lexicalScopingChanges = true;
-      cachedIR = ir;
-      cachedDU = null;
-    }
-    
     public void clearMutatedCache(CallSiteReference cs) {
       targets.remove(cs.getProgramCounter());
     }
     
-    public IR getLexicallyMutatedIR() {
-      if (lexicalScopingChanges) {
-        return cachedIR;
-      } else {
-        return null;
-      }
-    }
-    
-    public DefUse getLexicallyMutatedDU() {
-      if (lexicalScopingChanges) {
-        if (cachedDU == null) {
-          cachedDU = new DefUse(cachedIR);
-        }
-        return cachedDU;
-      } else {
-        return null;
-      }
-    }
-
     public boolean addTarget(CallSiteReference site, CGNode node) {
       if (super.addTarget(site, node)) {
         if (((AstCGNode) node).callbacks != null) {

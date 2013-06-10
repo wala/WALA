@@ -63,6 +63,6 @@ public abstract class TestSimplePageCallGraphShapeRhino extends TestSimplePageCa
 				}
 			});
 		    JSSourceExtractor.USE_TEMP_NAME = false;
-		    JSSourceExtractor.DELETE_UPON_EXIT = false;    			
+//		    JSSourceExtractor.DELETE_UPON_EXIT = false;    			
 	  }
 }
