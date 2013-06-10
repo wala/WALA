@@ -16,6 +16,7 @@ import static com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFa
 import static com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil.makeScriptScope;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Map;
 
 import junit.framework.Assert;
@@ -160,7 +161,7 @@ public class TestRhinoSourceMap {
 			  sources.put(assertion[0], assertion[1]);
 		  }
 		  
-		  JavaScriptLoaderFactory loaders = makeLoaders();
+		  JavaScriptLoaderFactory loaders = makeLoaders(null);
 		  AnalysisScope scope = makeScriptScope("tests", fileName, loaders);
 		  IClassHierarchy cha = makeHierarchy(scope, loaders);
 		  for(IClass cls : cha) {
