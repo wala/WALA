@@ -17,12 +17,12 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
-import com.ibm.wala.cast.js.ipa.callgraph.ForInContextSelector;
+import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
-import com.ibm.wala.cast.js.util.Util;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
@@ -380,7 +380,17 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     CallGraph CG = JSCallGraphBuilderUtil.makeScriptCG("tests", "function_apply2.js");
     verifyGraphAssertions(CG, assertionsForFunctionApply2);
   }
-  
+
+  private static final Object[][] assertionsForFunctionApply3 = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/function_apply3.js" } },
+    new Object[] { "suffix:apply", new String[] { "suffix:foo" } } }; 
+
+  @Test
+  public void testFunctionDotApply3() throws IOException, IllegalArgumentException, CancelException, WalaException {
+    CallGraph CG = JSCallGraphBuilderUtil.makeScriptCG("tests", "function_apply3.js");
+    verifyGraphAssertions(CG, assertionsForFunctionApply3);
+  }
+
   private static final Object[][] assertionsForWrap1 = new Object[][] {
     new Object[] { ROOT, new String[] { "tests/wrap1.js" } },
     new Object[] { "suffix:wrap1.js", new String[] { "suffix:i_am_reachable" } } };
@@ -609,7 +619,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   @Test
   public void testArrayIndexConv2() throws IllegalArgumentException, IOException, CancelException, WalaException {
     PropagationCallGraphBuilder b = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "array_index_conv2.js");
-    b.setContextSelector(new ForInContextSelector(b.getContextSelector()));
+    b.setContextSelector(new PropertyNameContextSelector(b.getAnalysisCache(), b.getContextSelector()));
     CallGraph cg = b.makeCallGraph(b.getOptions());
     //JSCallGraphUtil.AVOID_DUMP = false;
     //JSCallGraphUtil.dumpCG(b.getPointerAnalysis(), cg);
@@ -642,11 +652,30 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
       //JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
       verifyGraphAssertions(CG, assertionsForDeadCode);
     }
+    
+    private static final Object[][] assertionsForExtend = new Object[][] {
+      new Object[] { ROOT, new String[] { "tests/extend.js" } },
+      new Object[] { "tests/extend.js", new String[] { "suffix:bar", "!suffix:foo" } }
+    };
+    
+    @Test
+    public void testExtend() throws IOException, WalaException, IllegalArgumentException, CancelException {
+      JSCFABuilder builder = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "extend.js");
+      CallGraph cg = builder.makeCallGraph(builder.getOptions());
+      verifyGraphAssertions(cg, assertionsForExtend);
+    }
 
     @Test
     public void testDeadCatch() throws IllegalArgumentException, IOException, CancelException, WalaException {
       JSCallGraphBuilderUtil.makeScriptCG("tests", "dead_catch.js");
     }
+
+    @Ignore("need a bug fix")
+    @Test
+    public void testTryFinallyCrash() throws IllegalArgumentException, IOException, CancelException, WalaException {      
+      JSCallGraphBuilderUtil.makeScriptCG("tests", "try-finally-crash.js");
+    }
+
 
     @Test(expected = CallGraphBuilderCancelException.class)
     public void testManyStrings() throws IllegalArgumentException, IOException, CancelException, WalaException {
@@ -654,19 +683,32 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
       B.getOptions().setTraceStringConstants(true);
       final long startTime = System.currentTimeMillis();
       CallGraph CG = B.makeCallGraph(B.getOptions(), new IProgressMonitor() {
+        @Override
         public void beginTask(String task, int totalWork) {
         }
+        @Override
         public boolean isCanceled() {
            return System.currentTimeMillis() > (startTime + 10000L);
         }
+        @Override
         public void done() {
         }
+        @Override
         public void worked(int units) {
         }
       });
-      JSCallGraphUtil.AVOID_DUMP = false;
-      JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
+      CAstCallGraphUtil.AVOID_DUMP = false;
+      CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     }
+
+    @Test
+  public void testTutorialExample() throws IllegalArgumentException, IOException, CancelException, WalaException {
+    PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "tutorial-example.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    CAstCallGraphUtil.AVOID_DUMP = false;
+    CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
+    // verifyGraphAssertions(CG, assertionsForDateProperty);
+  }
 
   protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {
 
