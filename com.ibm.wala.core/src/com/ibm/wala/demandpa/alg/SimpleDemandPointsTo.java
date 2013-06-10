@@ -69,6 +69,7 @@ public class SimpleDemandPointsTo extends AbstractDemandPointsTo {
     super(cg, model, fam, cha, options);
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public Collection<InstanceKey> getPointsTo(PointerKey pk) throws IllegalArgumentException, UnimplementedError {
 

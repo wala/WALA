@@ -660,6 +660,7 @@ public abstract class ConstantInstruction extends Instruction {
     return "Constant(" + getType() + "," + quote(getValue()) + ")";
   }
 
+  @Override
   public boolean isPEI() {
     return false;
   }

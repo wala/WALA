@@ -40,26 +40,32 @@ public final class JdtPosition implements Position {
       this.eclipseFile = eclipseFile;
     }
 
+    @Override
     public int getFirstCol() {
       return -1;
     }
 
+    @Override
     public int getFirstLine() {
       return firstLine;
     }
 
+    @Override
     public InputStream getInputStream() throws IOException {
       return null;
     }
 
+    @Override
     public int getLastCol() {
       return -1;
     }
 
+    @Override
     public int getLastLine() {
       return lastLine;
     }
 
+    @Override
     public URL getURL() {
       try {
         return new URL("file:" + path);
@@ -69,6 +75,7 @@ public final class JdtPosition implements Position {
       }
     }
 
+    @Override
     public int compareTo(Object arg0) {
     	if (arg0 instanceof JdtPosition) {
     		if (firstOffset != ((JdtPosition)arg0).firstOffset) {
@@ -81,14 +88,17 @@ public final class JdtPosition implements Position {
     	return 0;
     }
 
+    @Override
     public int getFirstOffset() {
       return firstOffset;
     }
 
+    @Override
     public int getLastOffset() {
       return lastOffset;
     }
 
+    @Override
     public String toString() {
       return "[offset " + firstOffset + ":" + lastOffset + "]";
     }

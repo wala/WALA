@@ -21,6 +21,7 @@ public class MutableSharedBitVectorIntSetFactory implements MutableIntSetFactory
   /*
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#make(int[])
    */
+  @Override
   public MutableSharedBitVectorIntSet make(int[] set) {
     SparseIntSet s = (SparseIntSet) sparseFactory.make(set);
     return new MutableSharedBitVectorIntSet(s);
@@ -29,6 +30,7 @@ public class MutableSharedBitVectorIntSetFactory implements MutableIntSetFactory
   /*
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#parse(java.lang.String)
    */
+  @Override
   public MutableSharedBitVectorIntSet parse(String string) throws NumberFormatException {
     SparseIntSet s = (SparseIntSet) sparseFactory.parse(string);
     return new MutableSharedBitVectorIntSet(s);
@@ -37,6 +39,7 @@ public class MutableSharedBitVectorIntSetFactory implements MutableIntSetFactory
   /*
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#makeCopy(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public MutableSharedBitVectorIntSet makeCopy(IntSet x) throws IllegalArgumentException {
     if (x == null) {
       throw new IllegalArgumentException("x == null");
@@ -62,6 +65,7 @@ public class MutableSharedBitVectorIntSetFactory implements MutableIntSetFactory
   /*
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#make()
    */
+  @Override
   public MutableSharedBitVectorIntSet make() {
     return new MutableSharedBitVectorIntSet();
   }

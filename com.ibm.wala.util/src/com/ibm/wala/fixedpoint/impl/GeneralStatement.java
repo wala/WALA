@@ -32,6 +32,7 @@ public abstract class GeneralStatement<T extends IVariable<?>> extends AbstractS
    * 
    * @return true if the lhs value changed. false otherwise
    */
+  @Override
   public byte evaluate() {
     return operator.evaluate(lhs, rhs);
   }
@@ -41,6 +42,7 @@ public abstract class GeneralStatement<T extends IVariable<?>> extends AbstractS
    * 
    * @return the lattice cell this equation computes
    */
+  @Override
   public T getLHS() {
     return lhs;
   }
@@ -54,6 +56,7 @@ public abstract class GeneralStatement<T extends IVariable<?>> extends AbstractS
    * @param cell the cell in question
    * @return true or false
    */
+  @Override
   public boolean hasVariable(T cell) {
     if (lhs == cell) {
       return true;
@@ -209,6 +212,7 @@ public abstract class GeneralStatement<T extends IVariable<?>> extends AbstractS
     return operator;
   }
 
+  @Override
   public T[] getRHS() {
     return rhs;
   }

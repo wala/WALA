@@ -27,6 +27,7 @@ public class Everywhere implements Context {
   /**
    * This context gives no information.
    */
+  @Override
   public ContextItem get(ContextKey name) {
     return null;
   }

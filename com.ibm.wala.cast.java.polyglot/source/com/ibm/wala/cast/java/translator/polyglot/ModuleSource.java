@@ -37,14 +37,17 @@ public class ModuleSource extends FileSource {
   
   public ModuleSource(final SourceModule module) throws IOException {
     super(new Resource() {
+      @Override
       public File file() {
         return new File(module.getURL().getFile());
       }
 
+      @Override
       public InputStream getInputStream() throws IOException {
         return module.getInputStream();
       }
 
+      @Override
       public String name() {
         String fullPath = module.getURL().getFile();
         int idx= fullPath.lastIndexOf(File.separatorChar);

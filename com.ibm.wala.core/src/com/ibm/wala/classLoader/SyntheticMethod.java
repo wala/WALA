@@ -74,6 +74,7 @@ public class SyntheticMethod implements IMethod {
   /**
    * @see com.ibm.wala.classLoader.IMethod#isClinit()
    */
+  @Override
   public boolean isClinit() {
     return method.getSelector().equals(MethodReference.clinitSelector);
   }
@@ -81,6 +82,7 @@ public class SyntheticMethod implements IMethod {
   /**
    * @see com.ibm.wala.classLoader.IMethod#isInit()
    */
+  @Override
   public boolean isInit() {
     return method.getSelector().equals(MethodReference.initSelector);
   }
@@ -88,6 +90,7 @@ public class SyntheticMethod implements IMethod {
   /**
    * @see com.ibm.wala.classLoader.IMethod#isStatic()
    */
+  @Override
   public boolean isStatic() {
     return isStatic;
   }
@@ -95,6 +98,7 @@ public class SyntheticMethod implements IMethod {
   /**
    * @see com.ibm.wala.classLoader.IMethod#isNative()
    */
+  @Override
   public boolean isNative() {
     return false;
   }
@@ -102,6 +106,7 @@ public class SyntheticMethod implements IMethod {
   /**
    * @see com.ibm.wala.classLoader.IMethod#isAbstract()
    */
+  @Override
   public boolean isAbstract() {
     return false;
   }
@@ -109,14 +114,17 @@ public class SyntheticMethod implements IMethod {
   /**
    * @see com.ibm.wala.classLoader.IMethod#isPrivate()
    */
+  @Override
   public boolean isPrivate() {
     return false;
   }
 
+  @Override
   public boolean isProtected() {
     return false;
   }
 
+  @Override
   public boolean isPublic() {
     return false;
   }
@@ -124,6 +132,7 @@ public class SyntheticMethod implements IMethod {
   /**
    * @see com.ibm.wala.classLoader.IMethod#isFinal()
    */
+  @Override
   public boolean isFinal() {
     return false;
   }
@@ -131,6 +140,7 @@ public class SyntheticMethod implements IMethod {
   /**
    * @see com.ibm.wala.classLoader.IMethod#isBridge()
    */
+  @Override
   public boolean isBridge() {
     return false;
   }
@@ -138,6 +148,7 @@ public class SyntheticMethod implements IMethod {
   /**
    * @see com.ibm.wala.classLoader.IMethod#isAbstract()
    */
+  @Override
   public boolean isSynchronized() {
     return false;
   }
@@ -145,6 +156,7 @@ public class SyntheticMethod implements IMethod {
   /**
    * @see com.ibm.wala.classLoader.IMethod#isSynthetic()
    */
+  @Override
   public boolean isSynthetic() {
     return true;
   }
@@ -152,6 +164,7 @@ public class SyntheticMethod implements IMethod {
   /**
    * @see com.ibm.wala.classLoader.IMethod#getReference()
    */
+  @Override
   public MethodReference getReference() {
     return method;
   }
@@ -189,6 +202,7 @@ public class SyntheticMethod implements IMethod {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public IClass getDeclaringClass() {
     return declaringClass;
   }
@@ -234,6 +248,7 @@ public class SyntheticMethod implements IMethod {
     return true;
   }
 
+  @Override
   public boolean hasExceptionHandler() {
     return false;
   }
@@ -273,6 +288,7 @@ public class SyntheticMethod implements IMethod {
   /*
    * @see com.ibm.wala.classLoader.IMethod#getParameterType(int)
    */
+  @Override
   public TypeReference getParameterType(int i) {
     if (isStatic()) {
       return method.getParameterType(i);
@@ -289,6 +305,7 @@ public class SyntheticMethod implements IMethod {
    * 
    * @see com.ibm.wala.classLoader.IMethod#getNumberOfParameters()
    */
+  @Override
   public int getNumberOfParameters() {
     int n = method.getNumberOfParameters();
     return isStatic() ? n : n + 1;
@@ -297,6 +314,7 @@ public class SyntheticMethod implements IMethod {
   /*
    * @see com.ibm.wala.classLoader.IMethod#getDeclaredExceptions()
    */
+  @Override
   public TypeReference[] getDeclaredExceptions() throws InvalidClassFileException {
     if (resolvedMethod == null) {
       return null;
@@ -305,10 +323,12 @@ public class SyntheticMethod implements IMethod {
     }
   }
 
+  @Override
   public Atom getName() {
     return method.getSelector().getName();
   }
 
+  @Override
   public Descriptor getDescriptor() {
     return method.getSelector().getDescriptor();
   }
@@ -316,6 +336,7 @@ public class SyntheticMethod implements IMethod {
   /*
    * @see com.ibm.wala.classLoader.IMethod#getLineNumber(int)
    */
+  @Override
   public int getLineNumber(int bcIndex) {
     return -1;
   }
@@ -327,6 +348,7 @@ public class SyntheticMethod implements IMethod {
   /*
    * @see com.ibm.wala.classLoader.IMethod#getSignature()
    */
+  @Override
   public String getSignature() {
     return getReference().getSignature();
   }
@@ -334,6 +356,7 @@ public class SyntheticMethod implements IMethod {
   /*
    * @see com.ibm.wala.classLoader.IMethod#getSelector()
    */
+  @Override
   public Selector getSelector() {
     return getReference().getSelector();
   }
@@ -341,6 +364,7 @@ public class SyntheticMethod implements IMethod {
   /*
    * @see com.ibm.wala.classLoader.IMethod#getLocalVariableName(int, int)
    */
+  @Override
   public String getLocalVariableName(int bcIndex, int localNumber) {
     // no information is available
     return null;
@@ -349,6 +373,7 @@ public class SyntheticMethod implements IMethod {
   /*
    * @see com.ibm.wala.classLoader.IMethod#hasLocalVariableTable()
    */
+  @Override
   public boolean hasLocalVariableTable() {
     return false;
   }
@@ -360,14 +385,17 @@ public class SyntheticMethod implements IMethod {
   /*
    * @see com.ibm.wala.classLoader.IMethod#getReturnType()
    */
+  @Override
   public TypeReference getReturnType() {
     return getReference().getReturnType();
   }
 
+  @Override
   public IClassHierarchy getClassHierarchy() {
     return getDeclaringClass().getClassHierarchy();
   }
 
+  @Override
   public Collection<Annotation> getAnnotations() {
      return Collections.emptySet();
   }

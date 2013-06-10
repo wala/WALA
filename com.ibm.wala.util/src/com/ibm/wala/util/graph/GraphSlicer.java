@@ -82,10 +82,12 @@ public class GraphSlicer {
     final NodeManager<T> n = new NodeManager<T>() {
       int nodeCount = -1;
 
+      @Override
       public Iterator<T> iterator() {
         return Predicate.filter(g.iterator(), p).iterator();
       }
 
+      @Override
       public int getNumberOfNodes() {
         if (nodeCount == -1) {
           nodeCount = IteratorUtil.count(iterator());
@@ -93,14 +95,17 @@ public class GraphSlicer {
         return nodeCount;
       }
 
+      @Override
       public void addNode(T n) {
         Assertions.UNREACHABLE();
       }
 
+      @Override
       public void removeNode(T n) {
         Assertions.UNREACHABLE();
       }
 
+      @Override
       public boolean containsNode(T n) {
         return p.test(n) && g.containsNode(n);
       }
@@ -108,42 +113,52 @@ public class GraphSlicer {
     };
     final EdgeManager<T> e = new EdgeManager<T>() {
 
+      @Override
       public Iterator<T> getPredNodes(T n) {
         return Predicate.filter(g.getPredNodes(n), p).iterator();
       }
 
+      @Override
       public int getPredNodeCount(T n) {
         return IteratorUtil.count(getPredNodes(n));
       }
 
+      @Override
       public Iterator<T> getSuccNodes(T n) {
         return Predicate.filter(g.getSuccNodes(n), p).iterator();
       }
 
+      @Override
       public int getSuccNodeCount(T N) {
         return IteratorUtil.count(getSuccNodes(N));
       }
 
+      @Override
       public void addEdge(T src, T dst) {
         Assertions.UNREACHABLE();
       }
 
+      @Override
       public void removeEdge(T src, T dst) {
         Assertions.UNREACHABLE();
       }
 
+      @Override
       public void removeAllIncidentEdges(T node) {
         Assertions.UNREACHABLE();
       }
 
+      @Override
       public void removeIncomingEdges(T node) {
         Assertions.UNREACHABLE();
       }
 
+      @Override
       public void removeOutgoingEdges(T node) {
         Assertions.UNREACHABLE();
       }
 
+      @Override
       public boolean hasEdge(T src, T dst) {
         return g.hasEdge(src, dst) && p.test(src) && p.test(dst);
       }
@@ -170,14 +185,17 @@ public class GraphSlicer {
     final NodeManager<E> nodeManager = new NodeManager<E>() {
       private int count = -1;
 
+      @Override
       public void addNode(E n) {
         throw new UnsupportedOperationException();
       }
 
+      @Override
       public boolean containsNode(E N) {
         return G.containsNode(N) && fmember.accepts(N);
       }
 
+      @Override
       public int getNumberOfNodes() {
         if (count == -1) {
           count = IteratorUtil.count(iterator());
@@ -185,10 +203,12 @@ public class GraphSlicer {
         return count;
       }
 
+      @Override
       public Iterator<E> iterator() {
         return new FilterIterator<E>(G.iterator(), fmember);
       }
 
+      @Override
       public void removeNode(E n) {
         throw new UnsupportedOperationException();
       }
@@ -229,6 +249,7 @@ public class GraphSlicer {
 
       private void setPredNodes(E N) {
         preds.put(N, getConnected(N, new Function<E, Iterator<? extends E>>() {
+          @Override
           public Iterator<? extends E> apply(E object) {
             return G.getPredNodes(object);
           }
@@ -237,12 +258,14 @@ public class GraphSlicer {
 
       private void setSuccNodes(E N) {
         succs.put(N, getConnected(N, new Function<E, Iterator<? extends E>>() {
+          @Override
           public Iterator<? extends E> apply(E object) {
             return G.getSuccNodes(object);
           }
         }));
       }
 
+      @Override
       public int getPredNodeCount(E N) {
         if (!preds.containsKey(N)) {
           setPredNodes(N);
@@ -250,6 +273,7 @@ public class GraphSlicer {
         return preds.get(N).size();
       }
 
+      @Override
       public Iterator<E> getPredNodes(E N) {
         if (!preds.containsKey(N)) {
           setPredNodes(N);
@@ -257,6 +281,7 @@ public class GraphSlicer {
         return preds.get(N).iterator();
       }
 
+      @Override
       public int getSuccNodeCount(E N) {
         if (!succs.containsKey(N)) {
           setSuccNodes(N);
@@ -264,6 +289,7 @@ public class GraphSlicer {
         return succs.get(N).size();
       }
 
+      @Override
       public Iterator<E> getSuccNodes(E N) {
         if (!succs.containsKey(N)) {
           setSuccNodes(N);
@@ -271,6 +297,7 @@ public class GraphSlicer {
         return succs.get(N).iterator();
       }
 
+      @Override
       public boolean hasEdge(E src, E dst) {
         if (!preds.containsKey(dst)) {
           setPredNodes(dst);
@@ -278,22 +305,27 @@ public class GraphSlicer {
         return preds.get(dst).contains(src);
       }
 
+      @Override
       public void addEdge(E src, E dst) {
         throw new UnsupportedOperationException();
       }
 
+      @Override
       public void removeAllIncidentEdges(E node) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
       }
 
+      @Override
       public void removeEdge(E src, E dst) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
       }
 
+      @Override
       public void removeIncomingEdges(E node) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
       }
 
+      @Override
       public void removeOutgoingEdges(E node) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
       }

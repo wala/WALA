@@ -61,6 +61,7 @@ abstract public class EclipseProjectSourceAnalysisEngine<P> extends EclipseProje
    * we don't provide a default implementation of this method to avoid
    * introducing a dependence on com.ibm.wala.cast from this project
    */
+  @Override
   public abstract AnalysisCache makeDefaultCache();
   
   protected abstract ClassLoaderReference getSourceLoader();
@@ -71,6 +72,7 @@ abstract public class EclipseProjectSourceAnalysisEngine<P> extends EclipseProje
 
     SSAOptions ssaOptions = new SSAOptions();
     ssaOptions.setDefaultValues(new SSAOptions.DefaultValues() {
+      @Override
       public int getDefaultValue(SymbolTable symtab, int valueNumber) {
         return symtab.getDefaultValue(valueNumber);
       }

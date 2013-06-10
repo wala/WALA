@@ -23,6 +23,7 @@ public class NormalReturnCaller extends StatementWithInstructionIndex implements
     super(node, callIndex);
   }
   
+  @Override
   public int getValueNumber() {
     return getInstruction().getReturnValue(0);
   }

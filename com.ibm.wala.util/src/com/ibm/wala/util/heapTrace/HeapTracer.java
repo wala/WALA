@@ -698,7 +698,8 @@ public class HeapTracer {
 	     * @see java.util.Comparator#compare(java.lang.Object,
 	     * java.lang.Object)
 	     */
-	    public int compare(Object o1, Object o2) {
+	    @Override
+      public int compare(Object o1, Object o2) {
 		Integer i1 = sizeCount.get(o1);
 		Integer i2 = sizeCount.get(o2);
 		return i2.intValue() - i1.intValue();
@@ -803,7 +804,8 @@ public class HeapTracer {
 	     * @see java.util.Comparator#compare(java.lang.Object,
 	     * java.lang.Object)
 	     */
-	    public int compare(Field o1, Field o2) {
+	    @Override
+      public int compare(Field o1, Field o2) {
 		Demographics d1 = roots.get(o1);
 		Demographics d2 = roots.get(o2);
 		return d2.getTotalSize() - d1.getTotalSize();

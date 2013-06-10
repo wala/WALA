@@ -390,6 +390,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /*
    * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public void removeNodeAndEdges(BasicBlockInContext N) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
@@ -397,6 +398,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /*
    * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
    */
+  @Override
   public Iterator<BasicBlockInContext<T>> iterator() {
     if (WARN_ON_EAGER_CONSTRUCTION) {
       System.err.println("WARNING: forcing full ICFG construction by calling iterator()");
@@ -411,6 +413,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /*
    * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
    */
+  @Override
   public int getNumberOfNodes() {
     if (WARN_ON_EAGER_CONSTRUCTION) {
       System.err.println("WARNING: forcing full ICFG construction by calling getNumberOfNodes()");
@@ -537,6 +540,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /*
    * @see com.ibm.wala.util.graph.NodeManager#addNode(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public void addNode(BasicBlockInContext n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
@@ -544,6 +548,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /*
    * @see com.ibm.wala.util.graph.NodeManager#removeNode(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public void removeNode(BasicBlockInContext n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
@@ -551,6 +556,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public Iterator<BasicBlockInContext<T>> getPredNodes(BasicBlockInContext<T> N) {
     initForPred(N);
     return g.getPredNodes(N);
@@ -595,6 +601,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public int getPredNodeCount(BasicBlockInContext<T> N) {
     initForPred(N);
     return g.getPredNodeCount(N);
@@ -603,6 +610,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public Iterator<BasicBlockInContext<T>> getSuccNodes(BasicBlockInContext<T> N) {
     initForSucc(N);
     return g.getSuccNodes(N);
@@ -611,6 +619,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public int getSuccNodeCount(BasicBlockInContext<T> N) {
     initForSucc(N);
     return g.getSuccNodeCount(N);
@@ -619,10 +628,12 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#addEdge(com.ibm.wala.util.graph.Node, com.ibm.wala.util.graph.Node)
    */
+  @Override
   public void addEdge(BasicBlockInContext src, BasicBlockInContext dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public void removeEdge(BasicBlockInContext src, BasicBlockInContext dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
@@ -630,6 +641,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public void removeAllIncidentEdges(BasicBlockInContext node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
@@ -642,6 +654,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /*
    * @see com.ibm.wala.util.graph.Graph#containsNode(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public boolean containsNode(BasicBlockInContext<T> N) {
     return g.containsNode(N);
   }
@@ -709,14 +722,17 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     return site;
   }
 
+  @Override
   public void removeIncomingEdges(BasicBlockInContext node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public void removeOutgoingEdges(BasicBlockInContext node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public boolean hasEdge(BasicBlockInContext<T> src, BasicBlockInContext<T> dst) {
     if (!addedSuccs.contains(getNumber(src))) {
       if (!src.getNode().equals(dst.getNode())) {
@@ -747,15 +763,18 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     return g.hasEdge(src, dst);
   }
 
+  @Override
   public int getNumber(BasicBlockInContext<T> N) {
     addNodeForBasicBlockIfNeeded(N);
     return g.getNumber(N);
   }
 
+  @Override
   public BasicBlockInContext<T> getNode(int number) throws UnimplementedError {
     return g.getNode(number);
   }
 
+  @Override
   public int getMaxNumber() {
     if (WARN_ON_EAGER_CONSTRUCTION) {
       System.err.println("WARNING: forcing full ICFG construction by calling getMaxNumber()");
@@ -767,16 +786,19 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     return g.getMaxNumber();
   }
 
+  @Override
   public Iterator<BasicBlockInContext<T>> iterateNodes(IntSet s) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
 
+  @Override
   public IntSet getSuccNodeNumbers(BasicBlockInContext<T> node) {
     initForSucc(node);
     return g.getSuccNodeNumbers(node);
   }
 
+  @Override
   public IntSet getPredNodeNumbers(BasicBlockInContext<T> node) {
     initForPred(node);
     return g.getPredNodeNumbers(node);
@@ -812,6 +834,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     // a successor node is a return site if it is in the same
     // procedure, and is not the entry() node.
     Filter isReturn = new Filter() {
+      @Override
       public boolean accepts(Object o) {
         BasicBlockInContext other = (BasicBlockInContext) o;
         return !other.isEntryBlock() && node.equals(other.getNode());
@@ -833,6 +856,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     final CGNode node = returnBlock.getNode();
 
     Filter<? extends T> dispatchFilter = new Filter<T>() {
+      @Override
       public boolean accepts(T callBlock) {
         BasicBlockInContext<T> bb = new BasicBlockInContext<T>(node, callBlock);
         if (!hasCall(bb, cfg)) {
@@ -848,6 +872,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     it = new FilterIterator<T>(it, dispatchFilter);
 
     Function<T, BasicBlockInContext<T>> toContext = new Function<T, BasicBlockInContext<T>>() {
+      @Override
       public BasicBlockInContext<T> apply(T object) {
         T b = object;
         return new BasicBlockInContext<T>(node, b);
@@ -858,6 +883,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   }
 
   private final Filter<BasicBlockInContext<T>> isCall = new Filter<BasicBlockInContext<T>>() {
+    @Override
     public boolean accepts(BasicBlockInContext<T> o) {
       return hasCall(o);
     }

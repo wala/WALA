@@ -35,6 +35,7 @@ public class DelegatingFieldRefinePolicy implements FieldRefinePolicy {
     B = b;
   }
 
+  @Override
   public boolean nextPass() {
     // careful not to short-circuit here, since nextPass() can have side-effects
     boolean AnextPass = A.nextPass();
@@ -48,6 +49,7 @@ public class DelegatingFieldRefinePolicy implements FieldRefinePolicy {
    * if <code>A.shouldRefine(field)</code> is <code>true</code>,
    * <code>B.shouldRefine(field)</code> is <em>not</em> called.
    */
+  @Override
   public boolean shouldRefine(IField field, PointerKey basePtr, PointerKey val, IFlowLabel label, StateMachine.State state) {
     // make code explicit to avoid subtle reliance on short-circuiting
     boolean AshouldRefine = A.shouldRefine(field, basePtr, val, label, state);

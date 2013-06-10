@@ -23,15 +23,18 @@ public class TransitivePrototypeKey extends AbstractFieldPointerKey {
     super(object);
   }
 
+  @Override
   public boolean equals(Object x) {
     return (x instanceof TransitivePrototypeKey) &&
       ((TransitivePrototypeKey)x).getInstanceKey().equals(getInstanceKey());
   }
 
+  @Override
   public int hashCode() {
     return getInstanceKey().hashCode();
   }
 
+  @Override
   public String toString() {
     return "<proto:" + getName() + ">";
   }

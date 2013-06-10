@@ -104,6 +104,7 @@ public class HeadlessUtil {
   for (final Map.Entry<IProject,Map<Unit,EclipseSourceFileModule>> proj : projectsFiles.entrySet()) {
     parser.setProject(proj.getKey());
     parser.processASTs(proj.getValue(), new Function<Object[],Boolean>() {
+      @Override
       public Boolean apply(Object[] problems) {
         int length = problems.length;
         if (length > 0) {

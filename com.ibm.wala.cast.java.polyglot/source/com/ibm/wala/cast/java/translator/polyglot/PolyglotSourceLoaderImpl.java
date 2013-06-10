@@ -36,6 +36,7 @@ public class PolyglotSourceLoaderImpl extends JavaSourceLoaderImpl {
     return fExtInfo;
   }
 
+  @Override
   protected SourceModuleTranslator getTranslator() {
     return new PolyglotSourceModuleTranslator(cha.getScope(), fExtInfo, this, JavaSourceAnalysisScope.SOURCE);
   }

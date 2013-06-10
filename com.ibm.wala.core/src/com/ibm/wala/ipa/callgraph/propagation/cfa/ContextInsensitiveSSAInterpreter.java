@@ -36,6 +36,7 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
     this.options = options;
   }
 
+  @Override
   public IR getIR(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -45,6 +46,7 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
     return getAnalysisCache().getSSACache().findOrCreateIR(node.getMethod(), Everywhere.EVERYWHERE, options.getSSAOptions());
   }
 
+  @Override
   public int getNumberOfStatements(CGNode node) {
     IR ir = getIR(node);
     return (ir == null) ? -1 : ir.getInstructions().length;
@@ -55,6 +57,7 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
     return false;
   }
 
+  @Override
   public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode N) {
     IR ir = getIR(N);
     if (ir == null) {
@@ -64,6 +67,7 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
     }
   }
 
+  @Override
   public DefUse getDU(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");

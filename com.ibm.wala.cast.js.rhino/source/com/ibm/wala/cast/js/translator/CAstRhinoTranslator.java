@@ -15,7 +15,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
-import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
@@ -34,6 +33,7 @@ public class CAstRhinoTranslator implements TranslatorToCAst {
     this.replicateForDoLoops = replicateForDoLoops;
    }
 
+  @Override
   public <C extends RewriteContext<K>, K extends CopyKey<K>> void addRewriter(CAstRewriterFactory<C, K> factory, boolean prepend) {
     if(prepend)
       rewriters.add(0, factory);
@@ -41,6 +41,7 @@ public class CAstRhinoTranslator implements TranslatorToCAst {
       rewriters.add(factory);
   }  
 
+  @Override
   public CAstEntity translateToCAst() throws IOException, Error {
     String N;
     if (M instanceof SourceFileModule) {

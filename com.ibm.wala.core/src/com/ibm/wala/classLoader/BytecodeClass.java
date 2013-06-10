@@ -144,20 +144,24 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     }
   }
 
+  @Override
   public IClassLoader getClassLoader() {
     return loader;
   }
 
   protected abstract IMethod[] computeDeclaredMethods() throws InvalidClassFileException;
 
+  @Override
   public TypeReference getReference() {
     return typeReference;
   }
 
+  @Override
   public String getSourceFileName() {
     return loader.getSourceFileName(this);
   }
 
+  @Override
   public InputStream getSource() {
     return loader.getSource(this);
   }
@@ -172,22 +176,27 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     return getReference().toString();
   }
 
+  @Override
   public boolean isArrayClass() {
     return false;
   }
 
+  @Override
   public IClassHierarchy getClassHierarchy() {
     return cha;
   }
 
+  @Override
   public TypeName getName() {
     return getReference().getName();
   }
 
+  @Override
   public boolean isReferenceType() {
     return getReference().isReferenceType();
   }
 
+  @Override
   public IField getField(Atom name) {
     if (fieldMap.containsKey(name)) {
       return fieldMap.get(name);
@@ -222,6 +231,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   }
 
   
+  @Override
   public IField getField(Atom name, TypeName type) {
     boolean unresolved = false;
     try {
@@ -276,6 +286,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     superClass = loader.lookupClass(TypeName.findOrCreate(superName));
   }
 
+  @Override
   public IClass getSuperclass() {
     if (!superclassComputed) {
       computeSuperclass();
@@ -289,6 +300,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllFields()
    */
+  @Override
   public Collection<IField> getAllFields() {
     Collection<IField> result = new LinkedList<IField>();
     result.addAll(getAllInstanceFields());
@@ -299,6 +311,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllImplementedInterfaces()
    */
+  @Override
   public Collection<IClass> getAllImplementedInterfaces() {
     if (allInterfaces != null) {
       return allInterfaces;
@@ -312,6 +325,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getDeclaredFields()
    */
+  @Override
   public Collection<IField> getDeclaredInstanceFields() {
     return Collections.unmodifiableList(Arrays.asList(instanceFields));
   }
@@ -319,6 +333,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getDeclaredFields()
    */
+  @Override
   public Collection<IField> getDeclaredStaticFields() {
     return Collections.unmodifiableList(Arrays.asList(staticFields));
   }
@@ -326,6 +341,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getDirectInterfaces()
    */
+  @Override
   public Collection<? extends IClass> getDirectInterfaces() {
     return array2IClassSet(interfaceNames);
   }
@@ -333,6 +349,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllInstanceFields()
    */
+  @Override
   public Collection<IField> getAllInstanceFields() {
     Collection<IField> result = new LinkedList<IField>(getDeclaredInstanceFields());
     IClass s = getSuperclass();
@@ -346,6 +363,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllStaticFields()
    */
+  @Override
   public Collection<IField> getAllStaticFields() {
     Collection<IField> result = new LinkedList<IField>(getDeclaredStaticFields());
     IClass s = getSuperclass();
@@ -359,6 +377,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllMethods()
    */
+  @Override
   public Collection<IMethod> getAllMethods() {
     Collection<IMethod> result = new LinkedList<IMethod>();
     Iterator<IMethod> declaredMethods = getDeclaredMethods().iterator();
@@ -384,6 +403,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getDeclaredMethods()
    */
+  @Override
   public Collection<IMethod> getDeclaredMethods() {
     try {
       computeMethodMapIfNeeded();
@@ -397,6 +417,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.types.Selector)
    */
+  @Override
   public IMethod getMethod(Selector selector) {
     try {
       computeMethodMapIfNeeded();

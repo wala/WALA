@@ -41,6 +41,7 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
 
   private static final boolean DEBUG = false;
 
+  @Override
   public IR getIR(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -53,11 +54,13 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
     return result;
   }
 
+  @Override
   public int getNumberOfStatements(CGNode node) {
     assert understands(node);
     return getIR(node).getInstructions().length;
   }
 
+  @Override
   public boolean understands(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -68,10 +71,12 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
     return node.getMethod().getReference().equals(GetClassContextSelector.GET_CLASS);
   }
 
+  @Override
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
     return EmptyIterator.instance();
   }
 
+  @Override
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
     return EmptyIterator.instance();
   }
@@ -101,22 +106,27 @@ public class GetClassContextInterpeter implements SSAContextInterpreter {
     return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), null);
   }
 
+  @Override
   public boolean recordFactoryType(CGNode node, IClass klass) {
     return false;
   }
 
+  @Override
   public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
     return EmptyIterator.instance();
   }
 
+  @Override
   public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
     return EmptyIterator.instance();
   }
 
+  @Override
   public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode N) {
     return getIR(N).getControlFlowGraph();
   }
 
+  @Override
   public DefUse getDU(CGNode node) {
     return new DefUse(getIR(node));
   }

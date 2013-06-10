@@ -73,6 +73,7 @@ public class CAstQualifier {
     return fName;
   }
 
+  @Override
   public boolean equals(Object o) {
     if (!(o instanceof CAstQualifier))
       return false;
@@ -80,6 +81,7 @@ public class CAstQualifier {
     return other.fName.equals(fName) && (fBit == other.fBit);
   }
 
+  @Override
   public int hashCode() {
     int result = 37;
     result = result * 13 + fName.hashCode();

@@ -31,6 +31,7 @@ public class ParamCallee extends Statement implements ValueNumberCarrier {
     return Kind.PARAM_CALLEE;
   }
 
+  @Override
   public int getValueNumber() {
     return valueNumber;
   }

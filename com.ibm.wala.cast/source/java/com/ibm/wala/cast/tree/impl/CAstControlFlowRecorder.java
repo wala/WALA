@@ -67,6 +67,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
       this.label = label;
     }
 
+    @Override
     public int hashCode() {
       if (label != null)
         return from.hashCode() * label.hashCode();
@@ -74,11 +75,13 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
         return from.hashCode();
     }
 
+    @Override
     public boolean equals(Object o) {
       return (o instanceof Key) && from == ((Key) o).from
           && ((label == null) ? ((Key) o).label == null : label.equals(((Key) o).label));
     }
 
+    @Override
     public String toString() {
       return "<key " + label + " : " + from + ">";
     }
@@ -89,6 +92,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
     map(EXCEPTION_TO_EXIT, EXCEPTION_TO_EXIT);
   }
 
+  @Override
   public CAstNode getTarget(CAstNode from, Object label) {
     assert CAstToNode.get(from) != null;
     Key key = new Key(label, CAstToNode.get(from));
@@ -100,6 +104,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
       return null;
   }
 
+  @Override
   public Collection<Object> getTargetLabels(CAstNode from) {
     if (labelMap.containsKey(CAstToNode.get(from))) {
       return labelMap.get(CAstToNode.get(from));
@@ -108,6 +113,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
     }
   }
 
+  @Override
   public Collection getSourceNodes(CAstNode to) {
     if (sourceMap.containsKey(CAstToNode.get(to))) {
       return (Set) sourceMap.get(CAstToNode.get(to));
@@ -116,6 +122,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
     }
   }
 
+  @Override
   public Collection<CAstNode> getMappedNodes() {
     Collection<CAstNode> nodes = cachedMappedNodes;
     if (nodes == null) {
@@ -192,6 +199,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
     return nodeToCAst.containsKey(node);
   }
 
+  @Override
   public String toString() {
     StringBuffer sb = new StringBuffer("control flow map\n");
     for (Iterator keys = table.keySet().iterator(); keys.hasNext();) {

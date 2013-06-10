@@ -275,6 +275,7 @@ public class InstructionTypeCounter implements MethodData.Results {
    * 
    * This is not to be called by clients.
    */
+  @Override
   public boolean notifyUpdate(MethodData info, IInstruction[] newInstructions, ExceptionHandler[][] newHandlers,
       int[] newInstructionMap) {
     // just throw this away and we'll recalculate from scratch if necessary

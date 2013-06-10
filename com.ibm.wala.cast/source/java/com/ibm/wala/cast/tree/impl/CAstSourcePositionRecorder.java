@@ -25,10 +25,12 @@ public class CAstSourcePositionRecorder implements CAstSourcePositionMap {
  
   private final HashMap<CAstNode, Position> positions = HashMapFactory.make();
 
+  @Override
   public Position getPosition(CAstNode n) {
     return positions.get(n);
   }
 
+  @Override
   public Iterator<CAstNode> getMappedNodes() {
     return positions.keySet().iterator();
   }
@@ -59,17 +61,26 @@ public class CAstSourcePositionRecorder implements CAstSourcePositionMap {
   {
     setPosition(n,
       new AbstractSourcePosition() {
-	public int getFirstLine() { return fl; }
-	public int getLastLine() { return ll; }
-	public int getFirstCol() { return fc; }
-	public int getLastCol() { return lc; }
-	public int getFirstOffset() { return -1; }
-	public int getLastOffset() { return -1; }
-	public URL getURL() { return url; }
-	public InputStream getInputStream() throws IOException { 
+	@Override
+  public int getFirstLine() { return fl; }
+	@Override
+  public int getLastLine() { return ll; }
+	@Override
+  public int getFirstCol() { return fc; }
+	@Override
+  public int getLastCol() { return lc; }
+	@Override
+  public int getFirstOffset() { return -1; }
+	@Override
+  public int getLastOffset() { return -1; }
+	@Override
+  public URL getURL() { return url; }
+	@Override
+  public InputStream getInputStream() throws IOException { 
 	  return file.openConnection().getInputStream();
 	}
-	public String toString() {
+	@Override
+  public String toString() {
 	  return "["+fl+":"+fc+"]->["+ll+":"+lc+"]";
 	}
       });

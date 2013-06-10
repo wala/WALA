@@ -40,6 +40,7 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
   /**
    * Add this edge, unconditionally setting it as the next successor.
    */
+  @Override
   public void addEdge(T src, T dst) throws IllegalArgumentException {
     delegate.addEdge(src, dst);
     SimpleVector<T> s = successorEdges.get(src);
@@ -50,6 +51,7 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
     s.set(s.getMaxIndex() + 1, dst);
   }
 
+  @Override
   public void addEdge(int i, T src, T dst) throws IllegalArgumentException {
     delegate.addEdge(src, dst);
     SimpleVector<T> s = successorEdges.get(src);
@@ -60,18 +62,22 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
     s.set(i, dst);
   }
 
+  @Override
   public void addNode(T n) {
     delegate.addNode(n);
   }
 
+  @Override
   public boolean containsNode(T N) {
     return delegate.containsNode(N);
   }
 
+  @Override
   public int getNumberOfNodes() {
     return delegate.getNumberOfNodes();
   }
 
+  @Override
   public int getPredNodeCount(T N) throws IllegalArgumentException {
     return delegate.getPredNodeCount(N);
   }
@@ -79,56 +85,68 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
   /**
    * For now, this returns nodes in no particular order! Fix this when needed.
    */
+  @Override
   public Iterator<T> getPredNodes(T N) throws IllegalArgumentException {
     return delegate.getPredNodes(N);
   }
 
+  @Override
   public int getSuccNodeCount(T N) throws IllegalArgumentException {
     return delegate.getSuccNodeCount(N);
   }
 
+  @Override
   public Iterator<T> getSuccNodes(T N) throws IllegalArgumentException {
     return delegate.getSuccNodes(N);
   }
 
+  @Override
   public boolean hasEdge(T src, T dst) {
     return delegate.hasEdge(src, dst);
   }
 
+  @Override
   public Iterator<T> iterator() {
     return delegate.iterator();
   }
 
+  @Override
   public void removeAllIncidentEdges(T node) throws UnimplementedError {
     Assertions.UNREACHABLE();
     delegate.removeAllIncidentEdges(node);
   }
 
+  @Override
   public void removeEdge(T src, T dst) throws UnimplementedError {
     Assertions.UNREACHABLE();
     delegate.removeEdge(src, dst);
   }
 
+  @Override
   public void removeIncomingEdges(T node) throws UnimplementedError {
     Assertions.UNREACHABLE();
     delegate.removeIncomingEdges(node);
   }
 
+  @Override
   public void removeNode(T n) throws UnimplementedError {
     Assertions.UNREACHABLE();
     delegate.removeNode(n);
   }
 
+  @Override
   public void removeNodeAndEdges(T N) throws UnimplementedError {
     Assertions.UNREACHABLE();
     delegate.removeNodeAndEdges(N);
   }
 
+  @Override
   public void removeOutgoingEdges(T node) throws UnimplementedError {
     Assertions.UNREACHABLE();
     delegate.removeOutgoingEdges(node);
   }
 
+  @Override
   public T getSuccessor(T node, int i) throws IllegalArgumentException {
     SimpleVector<T> s = successorEdges.get(node);
     if (s == null) {

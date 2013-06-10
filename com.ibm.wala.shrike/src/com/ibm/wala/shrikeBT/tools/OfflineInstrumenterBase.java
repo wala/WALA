@@ -239,6 +239,7 @@ public abstract class OfflineInstrumenterBase {
       throw new IllegalArgumentException("d is null");
     }
     File[] fs = d.listFiles(new FileFilter() {
+      @Override
       public boolean accept(File f) {
         return f.isDirectory() || f.getName().endsWith(".class");
       }

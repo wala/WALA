@@ -23,6 +23,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSet#copySet(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public void copySet(IntSet set) {
     if (set == null) {
       throw new IllegalArgumentException("null set");
@@ -56,6 +57,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSet#addAll(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public boolean addAll(IntSet set) {
     if (set instanceof BitVectorIntSet && !(impl instanceof BitVectorIntSet)) {
       // change the representation before performing the operation
@@ -71,6 +73,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSet#addAll(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public boolean addAllInIntersection(IntSet other, IntSet filter) {
     if (other instanceof BitVectorIntSet && !(impl instanceof BitVectorIntSet)) {
       // change the representation before performing the operation
@@ -117,6 +120,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSet#add(int)
    */
+  @Override
   public boolean add(int i) {
     boolean result = impl.add(i);
     if (result) {
@@ -128,6 +132,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSet#remove(int)
    */
+  @Override
   public boolean remove(int i) {
     boolean result = impl.remove(i);
     maybeChangeRepresentation();
@@ -137,6 +142,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSet#intersectWith(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public void intersectWith(IntSet set) throws UnimplementedError {
     if (set == null) {
       throw new IllegalArgumentException("null set");
@@ -152,6 +158,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#contains(int)
    */
+  @Override
   public boolean contains(int i) {
     return impl.contains(i);
   }
@@ -159,6 +166,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#intersection(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public IntSet intersection(IntSet that) throws UnimplementedError {
     if (that instanceof BimodalMutableIntSet) {
       BimodalMutableIntSet b = (BimodalMutableIntSet) that;
@@ -174,6 +182,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public IntSet union(IntSet that) {
     BimodalMutableIntSet temp = new BimodalMutableIntSet();
     temp.addAll(this);
@@ -185,6 +194,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#isEmpty()
    */
+  @Override
   public boolean isEmpty() {
     return impl.isEmpty();
   }
@@ -192,6 +202,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#size()
    */
+  @Override
   public int size() {
     return impl.size();
   }
@@ -199,6 +210,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#iterator()
    */
+  @Override
   public IntIterator intIterator() {
     return impl.intIterator();
   }
@@ -206,6 +218,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction)
    */
+  @Override
   public void foreach(IntSetAction action) {
     impl.foreach(action);
   }
@@ -213,6 +226,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#foreachExcluding(com.ibm.wala.util.intset.IntSet, com.ibm.wala.util.intset.IntSetAction)
    */
+  @Override
   public void foreachExcluding(IntSet X, IntSetAction action) {
     impl.foreachExcluding(X, action);
   }
@@ -220,6 +234,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#max()
    */
+  @Override
   public int max() throws IllegalStateException {
     return impl.max();
   }
@@ -259,6 +274,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /* 
    * @see com.ibm.wala.util.intset.MutableIntSet#clear()
    */
+  @Override
   public void clear() {
     impl = MutableSparseIntSet.makeEmpty();
   }
@@ -278,6 +294,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#sameValue(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public boolean sameValue(IntSet that) {
     return impl.sameValue(that);
   }
@@ -285,6 +302,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.SparseIntSet)
    */
+  @Override
   public boolean isSubset(IntSet that) throws IllegalArgumentException {
     if (that == null) {
       throw new IllegalArgumentException("that == null");
@@ -316,6 +334,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public boolean containsAny(IntSet that) throws IllegalArgumentException, UnimplementedError {
     if (that == null) {
       throw new IllegalArgumentException("that == null");

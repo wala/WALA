@@ -30,14 +30,17 @@ public abstract class LanguageImpl implements Language {
     base.registerDerivedLanguage(this);
   }
 
+  @Override
   public Language getBaseLanguage() {
     return baseLang;
   }
 
+  @Override
   public Set<Language> getDerivedLanguages() {
     return derivedLangs;
   }
 
+  @Override
   public void registerDerivedLanguage(Language l) {
     derivedLangs.add(l);
     if (baseLang != null)

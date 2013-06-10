@@ -67,6 +67,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       return governingTag.getElementPosition();
      }
     
+    @Override
     public void handleEndTag(ITag tag) {
       if (tag.getName().equalsIgnoreCase("script")) {
         assert currentScriptTag != null;
@@ -74,6 +75,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       }
     }
 
+    @Override
     public void handleText(Position p, String text) {
       if (currentScriptTag != null) {
         if (text.startsWith("<![CDATA[")) {
@@ -93,6 +95,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       }
     }
 
+    @Override
     public void handleStartTag(ITag tag) {
       if (tag.getName().equalsIgnoreCase("script")) {
         handleScript(tag);
@@ -228,6 +231,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       return file;
     }
 
+    @Override
     public void writeToFinalRegion(SourceRegion finalRegion) {
       // wrapping the embedded scripts with a fake method of the window. Required for making this == window.
       finalRegion.println("window.__MAIN__ = function __WINDOW_MAIN__(){");

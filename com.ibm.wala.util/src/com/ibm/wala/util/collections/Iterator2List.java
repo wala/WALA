@@ -26,42 +26,52 @@ public class Iterator2List<T> extends Iterator2Collection<T> implements List<T> 
     }
   }
 
+  @Override
   public void add(int index, T element) {
     delegate.add(index, element);
   }
 
+  @Override
   public boolean addAll(int index, Collection<? extends T> c) {
     return delegate.addAll(index, c);
   }
 
+  @Override
   public T get(int index) {
     return delegate.get(index);
   }
 
+  @Override
   public int indexOf(Object o) {
     return delegate.indexOf(o);
   }
 
+  @Override
   public int lastIndexOf(Object o) {
     return delegate.lastIndexOf(o);
   }
 
+  @Override
   public ListIterator<T> listIterator() {
     return delegate.listIterator();
   }
 
+  @Override
   public ListIterator<T> listIterator(int index) {
     return delegate.listIterator(index);
   }
 
+  @Override
   public T remove(int index) {
     return delegate.remove(index);
   }
 
+  @Override
   public T set(int index, T element) {
     return delegate.set(index, element);
   }
 
+  @Override
   public List<T> subList(int fromIndex, int toIndex) {
     return delegate.subList(fromIndex, toIndex);
   }

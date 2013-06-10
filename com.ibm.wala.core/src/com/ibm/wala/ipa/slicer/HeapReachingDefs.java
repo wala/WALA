@@ -214,21 +214,25 @@ public class HeapReachingDefs {
       return delegate.toString();
     }
 
+    @Override
     public void clear() {
       Assertions.UNREACHABLE();
       delegate.clear();
     }
 
+    @Override
     public boolean containsKey(Object key) {
       Assertions.UNREACHABLE();
       return delegate.containsKey(key);
     }
 
+    @Override
     public boolean containsValue(Object value) {
       Assertions.UNREACHABLE();
       return delegate.containsValue(value);
     }
 
+    @Override
     public Set<Entry<Statement, OrdinalSet<Statement>>> entrySet() {
       Assertions.UNREACHABLE();
       return delegate.entrySet();
@@ -240,6 +244,7 @@ public class HeapReachingDefs {
       return delegate.equals(o);
     }
 
+    @Override
     public OrdinalSet<Statement> get(Object key) {
       return delegate.get(key);
     }
@@ -250,35 +255,42 @@ public class HeapReachingDefs {
       return delegate.hashCode();
     }
 
+    @Override
     public boolean isEmpty() {
       Assertions.UNREACHABLE();
       return delegate.isEmpty();
     }
 
+    @Override
     public Set<Statement> keySet() {
       return delegate.keySet();
     }
 
+    @Override
     public OrdinalSet<Statement> put(Statement key, OrdinalSet<Statement> value) {
       Assertions.UNREACHABLE();
       return delegate.put(key, value);
     }
 
+    @Override
     public void putAll(Map<? extends Statement, ? extends OrdinalSet<Statement>> t) {
       Assertions.UNREACHABLE();
       delegate.putAll(t);
     }
 
+    @Override
     public OrdinalSet<Statement> remove(Object key) {
       Assertions.UNREACHABLE();
       return delegate.remove(key);
     }
 
+    @Override
     public int size() {
       Assertions.UNREACHABLE();
       return delegate.size();
     }
 
+    @Override
     public Collection<OrdinalSet<Statement>> values() {
       Assertions.UNREACHABLE();
       return delegate.values();
@@ -505,6 +517,7 @@ public class HeapReachingDefs {
       }
     }
 
+    @Override
     public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(IExplodedBasicBlock src, IExplodedBasicBlock dst) {
       if (DEBUG) {
         System.err.println("getEdgeXfer: " + src + " " + dst + " " + src.isEntryBlock());
@@ -546,18 +559,22 @@ public class HeapReachingDefs {
       }
     }
 
+    @Override
     public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
       return BitVectorUnion.instance();
     }
 
+    @Override
     public UnaryOperator<BitVectorVariable> getNodeTransferFunction(IExplodedBasicBlock node) {
       return null;
     }
 
+    @Override
     public boolean hasEdgeTransferFunctions() {
       return true;
     }
 
+    @Override
     public boolean hasNodeTransferFunctions() {
       return false;
     }
@@ -627,6 +644,7 @@ public class HeapReachingDefs {
         } else {
           // only static fields are actually killed
           Filter staticFilter = new Filter() {
+            @Override
             public boolean accepts(Object o) {
               return o instanceof StaticFieldKey;
             }
@@ -638,6 +656,7 @@ public class HeapReachingDefs {
           } else {
             Filter f = new Filter() {
               // accept any statement which writes a killed location.
+              @Override
               public boolean accepts(Object o) {
                 Statement s = (Statement) o;
                 Collection m = getMod(s, node, h, pa, exclusions);

@@ -45,7 +45,8 @@ public class InnerClasses extends Temp {
 	Object supportLocalBusiness() {
 		final int x = 54;
 		class FooBar {
-			public int hashCode() { return x; }
+			@Override
+      public int hashCode() { return x; }
 		}
 		return new FooBar();
 	}
@@ -53,7 +54,8 @@ public class InnerClasses extends Temp {
 	static Object anonymousCoward() {
 		final int x = 5;
 		return new Object() {
-			public int hashCode() { return x; }
+			@Override
+      public int hashCode() { return x; }
 		};
 	}
 	
@@ -64,7 +66,8 @@ public class InnerClasses extends Temp {
 		System.out.println(anonymousCoward().hashCode());
 		final String xx = "crazy";
 		Outie outie = new Outie("weird") {
-			public String toString() {
+			@Override
+      public String toString() {
 				return "bogus" + x + xx + xxxx;
 			}
 		};

@@ -25,6 +25,7 @@ class FooIT1 implements IFoo {
     public FooIT1(char ch) {
 	fValue= ch;
     }
+    @Override
     public char getValue() {
 	return fValue;
     }

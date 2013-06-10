@@ -24,6 +24,7 @@ public abstract class IntSetVariable<T extends IntSetVariable> extends AbstractV
 
   private MutableIntSet V;
 
+  @Override
   public void copyState(T other) {
     if (V == null) {
       if (other.V == null) {

@@ -44,6 +44,7 @@ class PhiValue implements Value {
   /*
    * @see com.ibm.wala.ssa.Value#isStringConstant()
    */
+  @Override
   public boolean isStringConstant() {
     return false;
   }
@@ -51,6 +52,7 @@ class PhiValue implements Value {
   /*
    * @see com.ibm.wala.ssa.Value#isNullConstant()
    */
+  @Override
   public boolean isNullConstant() {
     return false;
   }

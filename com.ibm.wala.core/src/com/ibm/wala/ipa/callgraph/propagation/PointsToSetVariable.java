@@ -122,6 +122,7 @@ public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
     }
     b.foreach(new IntSetAction() {
 
+      @Override
       public void act(int x) {
         InstanceKey ik = instanceKeys.getMappedObject(x);
         IClass concreteType = ik.getConcreteType();

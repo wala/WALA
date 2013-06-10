@@ -341,6 +341,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
   public RTAContextInterpreter getInterpreter() {
     return new RTAContextInterpreter() {
 
+      @Override
       public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
         ArrayList<NewSiteReference> result = new ArrayList<NewSiteReference>();
         SSAInstruction[] statements = getStatements(options.getSSAOptions());
@@ -364,37 +365,45 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
         return result.iterator();
       }
 
+      @Override
       public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
         final Iterator<SSAInstruction> I = getInvokeStatements();
         return new Iterator<CallSiteReference>() {
+          @Override
           public boolean hasNext() {
             return I.hasNext();
           }
 
+          @Override
           public CallSiteReference next() {
             SSAInvokeInstruction s = (SSAInvokeInstruction) I.next();
             return s.getCallSite();
           }
 
+          @Override
           public void remove() {
             Assertions.UNREACHABLE();
           }
         };
       }
 
+      @Override
       public boolean understands(CGNode node) {
         return node.getMethod().getDeclaringClass().getReference().equals(FakeRootClass.FAKE_ROOT_CLASS);
       }
 
+      @Override
       public boolean recordFactoryType(CGNode node, IClass klass) {
         // not a factory type
         return false;
       }
 
+      @Override
       public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
         return EmptyIterator.instance();
       }
 
+      @Override
       public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
         return EmptyIterator.instance();
       }

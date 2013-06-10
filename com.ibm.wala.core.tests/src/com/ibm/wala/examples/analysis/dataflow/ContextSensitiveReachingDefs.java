@@ -75,6 +75,7 @@ public class ContextSensitiveReachingDefs {
   private class ReachingDefsDomain extends MutableMapping<Pair<CGNode, Integer>> implements
       TabulationDomain<Pair<CGNode, Integer>, BasicBlockInContext<IExplodedBasicBlock>> {
 
+    @Override
     public boolean hasPriorityOver(PathEdge<BasicBlockInContext<IExplodedBasicBlock>> p1,
         PathEdge<BasicBlockInContext<IExplodedBasicBlock>> p2) {
       // don't worry about worklist priorities
@@ -96,6 +97,7 @@ public class ContextSensitiveReachingDefs {
      * 
      * @see ReachingDefsProblem
      */
+    @Override
     public IFlowFunction getUnbalancedReturnFlowFunction(BasicBlockInContext<IExplodedBasicBlock> src,
         BasicBlockInContext<IExplodedBasicBlock> dest) {
       return IdentityFlowFunction.identity();
@@ -104,6 +106,7 @@ public class ContextSensitiveReachingDefs {
     /**
      * flow function from caller to callee; just the identity function
      */
+    @Override
     public IUnaryFlowFunction getCallFlowFunction(BasicBlockInContext<IExplodedBasicBlock> src,
         BasicBlockInContext<IExplodedBasicBlock> dest, BasicBlockInContext<IExplodedBasicBlock> ret) {
       return IdentityFlowFunction.identity();
@@ -112,6 +115,7 @@ public class ContextSensitiveReachingDefs {
     /**
      * flow function from call node to return node when there are no targets for the call site; not a case we are expecting
      */
+    @Override
     public IUnaryFlowFunction getCallNoneToReturnFlowFunction(BasicBlockInContext<IExplodedBasicBlock> src,
         BasicBlockInContext<IExplodedBasicBlock> dest) {
       // if we're missing callees, just keep what information we have
@@ -122,6 +126,7 @@ public class ContextSensitiveReachingDefs {
      * flow function from call node to return node at a call site when callees exist. We kill everything; surviving facts should
      * flow out of the callee
      */
+    @Override
     public IUnaryFlowFunction getCallToReturnFlowFunction(BasicBlockInContext<IExplodedBasicBlock> src,
         BasicBlockInContext<IExplodedBasicBlock> dest) {
       return KillEverything.singleton();
@@ -130,6 +135,7 @@ public class ContextSensitiveReachingDefs {
     /**
      * flow function for normal intraprocedural edges
      */
+    @Override
     public IUnaryFlowFunction getNormalFlowFunction(final BasicBlockInContext<IExplodedBasicBlock> src,
         BasicBlockInContext<IExplodedBasicBlock> dest) {
       final IExplodedBasicBlock ebb = src.getDelegate();
@@ -139,6 +145,7 @@ public class ContextSensitiveReachingDefs {
         if (putInstr.isStatic()) {
           return new IUnaryFlowFunction() {
 
+            @Override
             public IntSet getTargets(int d1) {
               // first, gen this statement
               int factNum = domain.getMappedIndex(Pair.make(src.getNode(), ebb.getFirstInstructionIndex()));
@@ -159,6 +166,7 @@ public class ContextSensitiveReachingDefs {
               return result;
             }
 
+            @Override
             public String toString() {
               return "Reaching Defs Normal Flow";
             }
@@ -172,6 +180,7 @@ public class ContextSensitiveReachingDefs {
     /**
      * standard flow function from callee to caller; just identity
      */
+    @Override
     public IFlowFunction getReturnFlowFunction(BasicBlockInContext<IExplodedBasicBlock> call,
         BasicBlockInContext<IExplodedBasicBlock> src, BasicBlockInContext<IExplodedBasicBlock> dest) {
       return IdentityFlowFunction.identity();
@@ -202,6 +211,7 @@ public class ContextSensitiveReachingDefs {
     /**
      * we use the entry block of the CGNode as the fake entry when propagating from callee to caller with unbalanced parens
      */
+    @Override
     public BasicBlockInContext<IExplodedBasicBlock> getFakeEntry(BasicBlockInContext<IExplodedBasicBlock> node) {
       final CGNode cgNode = node.getNode();
       return getFakeEntry(cgNode);
@@ -240,10 +250,12 @@ public class ContextSensitiveReachingDefs {
       return result;
     }
 
+    @Override
     public IPartiallyBalancedFlowFunctions<BasicBlockInContext<IExplodedBasicBlock>> getFunctionMap() {
       return flowFunctions;
     }
 
+    @Override
     public TabulationDomain<Pair<CGNode, Integer>, BasicBlockInContext<IExplodedBasicBlock>> getDomain() {
       return domain;
     }
@@ -251,14 +263,17 @@ public class ContextSensitiveReachingDefs {
     /**
      * we don't need a merge function; the default unioning of tabulation works fine
      */
+    @Override
     public IMergeFunction getMergeFunction() {
       return null;
     }
 
+    @Override
     public ISupergraph<BasicBlockInContext<IExplodedBasicBlock>, CGNode> getSupergraph() {
       return supergraph;
     }
 
+    @Override
     public Collection<PathEdge<BasicBlockInContext<IExplodedBasicBlock>>> initialSeeds() {
       return initialSeeds;
     }

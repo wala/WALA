@@ -96,14 +96,17 @@ import com.ibm.wala.util.graph.labeled.SlowSparseNumberedLabeledGraph;
 public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<Object, IFlowLabel> implements IFlowGraph {
 
   private final static IFlowLabel defaultLabel = new IFlowLabel() {
+    @Override
     public IFlowLabel bar() {
       return defaultLabel;
     }
 
+    @Override
     public boolean isBarred() {
       return false;
     }
 
+    @Override
     public void visit(IFlowLabelVisitor v, Object dst) {
     }
 
@@ -153,6 +156,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
    * @see com.ibm.wala.demandpa.flowgraph.IFlowLabelGraph#visitSuccs(java.lang.Object,
    * com.ibm.wala.demandpa.flowgraph.IFlowLabel.IFlowLabelVisitor)
    */
+  @Override
   public void visitSuccs(Object node, IFlowLabelVisitor v) {
     for (Iterator<? extends IFlowLabel> succLabelIter = getSuccLabels(node); succLabelIter.hasNext();) {
       final IFlowLabel label = succLabelIter.next();
@@ -166,6 +170,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
    * @see com.ibm.wala.demandpa.flowgraph.IFlowLabelGraph#visitPreds(java.lang.Object,
    * com.ibm.wala.demandpa.flowgraph.IFlowLabel.IFlowLabelVisitor)
    */
+  @Override
   public void visitPreds(Object node, IFlowLabelVisitor v) {
     for (Iterator<? extends IFlowLabel> predLabelIter = getPredLabels(node); predLabelIter.hasNext();) {
       final IFlowLabel label = predLabelIter.next();
@@ -210,10 +215,12 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     }
   }
 
+  @Override
   public boolean isParam(LocalPointerKey pk) {
     return params.get(pk) != null;
   }
 
+  @Override
   public Iterator<SSAInvokeInstruction> getInstrsPassingParam(LocalPointerKey pk) {
     Set<SSAInvokeInstruction> instrs = callParams.get(pk);
     if (instrs == null) {
@@ -223,10 +230,12 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     }
   }
 
+  @Override
   public SSAInvokeInstruction getInstrReturningTo(LocalPointerKey pk) {
     return callDefs.get(pk);
   }
 
+  @Override
   public Iterator<? extends Object> getWritesToStaticField(StaticFieldKey sfk) throws IllegalArgumentException {
     if (sfk == null) {
       throw new IllegalArgumentException("sfk == null");
@@ -238,6 +247,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     return getSuccNodes(sfk, AssignGlobalLabel.v());
   }
 
+  @Override
   public Iterator<? extends Object> getReadsOfStaticField(StaticFieldKey sfk) throws IllegalArgumentException {
     if (sfk == null) {
       throw new IllegalArgumentException("sfk == null");
@@ -249,6 +259,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     return getPredNodes(sfk, AssignGlobalLabel.v());
   }
 
+  @Override
   public Iterator<PointerKey> getWritesToInstanceField(PointerKey pk, IField f) {
     // TODO: cache this!!
     if (f == ArrayContents.v()) {
@@ -309,6 +320,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     throw new UnsupportedOperationException("need to handle " + pk.getClass());
   }
 
+  @Override
   public Iterator<PointerKey> getReadsOfInstanceField(PointerKey pk, IField f) {
     // TODO: cache this!!
     if (f == ArrayContents.v()) {

@@ -50,10 +50,12 @@ public class JSCallGraph extends AstCallGraph {
       super(fakeRoot, cha.lookupClass(JavaScriptTypes.FakeRoot), cha, options, cache);
     }
 
+    @Override
     public InducedCFG makeControlFlowGraph(SSAInstruction[] instructions) {
       return new JSInducedCFG(instructions, this, Everywhere.EVERYWHERE);
     }
 
+    @Override
     public SSANewInstruction addAllocation(TypeReference T) {
       if (cha.isSubclassOf(cha.lookupClass(T), cha.lookupClass(JavaScriptTypes.Root))) {
         int instance = nextLocal++;
@@ -66,6 +68,7 @@ public class JSCallGraph extends AstCallGraph {
       }
     }
 
+    @Override
     public SSAAbstractInvokeInstruction addDirectCall(int function, int[] params, CallSiteReference site) {
       CallSiteReference newSite = new JSCallSiteReference(statements.size());
 
@@ -81,6 +84,7 @@ public class JSCallGraph extends AstCallGraph {
     return null;
   }
 
+  @Override
   protected CGNode makeFakeRootNode() throws com.ibm.wala.util.CancelException  {
     return findOrCreateNode(new JSFakeRoot(cha, options, getAnalysisCache()), Everywhere.EVERYWHERE);
   }

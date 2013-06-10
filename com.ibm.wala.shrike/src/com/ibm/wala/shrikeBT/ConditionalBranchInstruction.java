@@ -73,6 +73,7 @@ public final class ConditionalBranchInstruction extends Instruction implements I
     return r;
   }
 
+  @Override
   public int getTarget() {
     return label;
   }
@@ -89,6 +90,7 @@ public final class ConditionalBranchInstruction extends Instruction implements I
     }
   }
 
+  @Override
   public Operator getOperator() {
     if (opcode < OP_if_acmpeq) {
       return Operator.values()[opcode - OP_if_icmpeq];
@@ -97,6 +99,7 @@ public final class ConditionalBranchInstruction extends Instruction implements I
     }
   }
 
+  @Override
   public String getType() {
     return opcode < OP_if_acmpeq ? TYPE_int : TYPE_Object;
   }
@@ -119,6 +122,7 @@ public final class ConditionalBranchInstruction extends Instruction implements I
     v.visitConditionalBranch(this);
   }
 
+  @Override
   public boolean isPEI() {
     return false;
   }

@@ -45,6 +45,7 @@ public class IrAndSourceViewer {
 
     irViewer.addSelectedPcListner(new SelectedPcListner(){
 
+      @Override
       public void valueChanged(int pc) {
         IMethod method = ir.getMethod();
         int sourceLineNumber = IrViewer.NA;

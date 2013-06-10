@@ -24,15 +24,18 @@ public class ObjectPropertyCatalogKey extends AbstractPointerKey {
     this.object = object;
   }
 
+  @Override
   public boolean equals(Object x) {
     return (x instanceof ObjectPropertyCatalogKey) &&
       ((ObjectPropertyCatalogKey)x).object.equals(object);
   }
 
+  @Override
   public int hashCode() {
     return object.hashCode();
   }
 
+  @Override
   public String toString() {
     return "[" + getName() + "]";
   }

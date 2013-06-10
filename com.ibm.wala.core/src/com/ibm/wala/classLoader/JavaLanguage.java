@@ -74,6 +74,7 @@ import com.ibm.wala.util.warnings.Warnings;
 public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Constants {
 
   public static class JavaInstructionFactory implements SSAInstructionFactory {
+    @Override
     public SSAArrayLengthInstruction ArrayLengthInstruction(int result, int arrayref) {
       return new SSAArrayLengthInstruction(result, arrayref) {
         @Override
@@ -83,6 +84,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
+    @Override
     public SSAArrayLoadInstruction ArrayLoadInstruction(int result, int arrayref, int index, TypeReference declaredType) {
       return new SSAArrayLoadInstruction(result, arrayref, index, declaredType) {
         @Override
@@ -92,6 +94,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
+    @Override
     public SSAArrayStoreInstruction ArrayStoreInstruction(int arrayref, int index, int value, TypeReference declaredType) {
       return new SSAArrayStoreInstruction(arrayref, index, value, declaredType) {
         @Override
@@ -105,6 +108,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
+    @Override
     public SSABinaryOpInstruction BinaryOpInstruction(IBinaryOpInstruction.IOperator operator, boolean overflow, boolean unsigned,
         int result, int val1, int val2, boolean mayBeInteger) {
       assert !overflow;
@@ -128,10 +132,12 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
+    @Override
     public SSACheckCastInstruction CheckCastInstruction(int result, int val, int[] typeValues, boolean isPEI) {
       throw new UnsupportedOperationException();
     }
        
+    @Override
     public SSACheckCastInstruction CheckCastInstruction(int result, int val, TypeReference[] types, boolean isPEI) {
        assert types.length == 1;
        assert isPEI;
@@ -143,25 +149,30 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
      
+    @Override
     public SSACheckCastInstruction CheckCastInstruction(int result, int val, int typeValue, boolean isPEI) {
       assert isPEI;
       return CheckCastInstruction(result, val, new int[]{ typeValue }, true);
     }
 
+    @Override
     public SSACheckCastInstruction CheckCastInstruction(int result, int val, TypeReference type, boolean isPEI) {
       assert isPEI;
       return CheckCastInstruction(result, val, new TypeReference[]{ type }, true);
     }
 
+    @Override
     public SSAComparisonInstruction ComparisonInstruction(IComparisonInstruction.Operator operator, int result, int val1, int val2) {
       return new SSAComparisonInstruction(operator, result, val1, val2);
     }
 
+    @Override
     public SSAConditionalBranchInstruction ConditionalBranchInstruction(IConditionalBranchInstruction.IOperator operator,
         TypeReference type, int val1, int val2) {
       return new SSAConditionalBranchInstruction(operator, type, val1, val2);
     }
 
+    @Override
     public SSAConversionInstruction ConversionInstruction(int result, int val, TypeReference fromType, TypeReference toType,
         boolean overflow) {
       assert !overflow;
@@ -177,15 +188,18 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
+    @Override
     public SSAGetCaughtExceptionInstruction GetCaughtExceptionInstruction(int bbNumber, int exceptionValueNumber) {
       return new SSAGetCaughtExceptionInstruction(bbNumber, exceptionValueNumber);
     }
 
+    @Override
     public SSAGetInstruction GetInstruction(int result, FieldReference field) {
       return new SSAGetInstruction(result, field) {
       };
     }
 
+    @Override
     public SSAGetInstruction GetInstruction(int result, int ref, FieldReference field) {
       return new SSAGetInstruction(result, ref, field) {
         @Override
@@ -195,14 +209,17 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
+    @Override
     public SSAGotoInstruction GotoInstruction() {
       return new SSAGotoInstruction();
     }
 
+    @Override
     public SSAInstanceofInstruction InstanceofInstruction(int result, int ref, TypeReference checkedType) {
       return new SSAInstanceofInstruction(result, ref, checkedType);
     }
 
+    @Override
     public SSAInvokeInstruction InvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
       return new SSAInvokeInstruction(result, params, exception, site) {
         @Override
@@ -216,6 +233,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
+    @Override
     public SSAInvokeInstruction InvokeInstruction(int[] params, int exception, CallSiteReference site) {
       return new SSAInvokeInstruction(params, exception, site) {
         @Override
@@ -229,6 +247,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
+    @Override
     public SSAMonitorInstruction MonitorInstruction(int ref, boolean isEnter) {
       return new SSAMonitorInstruction(ref, isEnter) {
         @Override
@@ -238,6 +257,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
+    @Override
     public SSANewInstruction NewInstruction(int result, NewSiteReference site) {
       return new SSANewInstruction(result, site) {
         @Override
@@ -251,11 +271,13 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
+    @Override
     public SSAPhiInstruction PhiInstruction(int result, int[] params) throws IllegalArgumentException {
       return new SSAPhiInstruction(result, params) {
       };
     }
 
+    @Override
     public SSAPutInstruction PutInstruction(int ref, int value, FieldReference field) {
       return new SSAPutInstruction(ref, value, field) {
         @Override
@@ -265,23 +287,28 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
+    @Override
     public SSAPutInstruction PutInstruction(int value, FieldReference field) {
       return new SSAPutInstruction(value, field) {
       };
     }
 
+    @Override
     public SSAReturnInstruction ReturnInstruction() {
       return new SSAReturnInstruction();
     }
 
+    @Override
     public SSAReturnInstruction ReturnInstruction(int result, boolean isPrimitive) {
       return new SSAReturnInstruction(result, isPrimitive);
     }
 
+    @Override
     public SSASwitchInstruction SwitchInstruction(int val, int defaultLabel, int[] casesAndLabels) {
       return new SSASwitchInstruction(val, defaultLabel, casesAndLabels);
     }
 
+    @Override
     public SSAThrowInstruction ThrowInstruction(int exception) {
       return new SSAThrowInstruction(exception) {
         @Override
@@ -291,10 +318,12 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
+    @Override
     public SSAUnaryOpInstruction UnaryOpInstruction(IUnaryOpInstruction.IOperator operator, int result, int val) {
       return new SSAUnaryOpInstruction(operator, result, val);
     }
 
+    @Override
     public SSALoadMetadataInstruction LoadMetadataInstruction(int lval, TypeReference entityType, Object token) {
       return new SSALoadMetadataInstruction(lval, entityType, token) {
         @Override
@@ -304,6 +333,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
+    @Override
     public SSANewInstruction NewInstruction(int result, NewSiteReference site, int[] params) {
       return new SSANewInstruction(result, site, params) {
         @Override
@@ -313,26 +343,32 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
+    @Override
     public SSAPiInstruction PiInstruction(int result, int val, int piBlock, int successorBlock, SSAInstruction cause) {
       return new SSAPiInstruction(result, val, piBlock, successorBlock, cause);
     }
 
+    @Override
     public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, TypeReference pointeeType) {
       throw new UnsupportedOperationException();
     }
 
+    @Override
     public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, int indexVal, TypeReference pointeeType) {
       throw new UnsupportedOperationException();
    }
 
+    @Override
     public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, FieldReference field, TypeReference pointeeType) {
       throw new UnsupportedOperationException();
     }
 
+    @Override
     public SSALoadIndirectInstruction LoadIndirectInstruction(int lval, TypeReference t, int addressVal) {
       throw new UnsupportedOperationException();
     }
 
+    @Override
     public SSAStoreIndirectInstruction StoreIndirectInstruction(int addressVal, int rval, TypeReference pointeeType) {
       throw new UnsupportedOperationException();
     }
@@ -406,18 +442,22 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     return exceptionInInitializerError;
   }
 
+  @Override
   public Atom getName() {
     return ClassLoaderReference.Java;
   }
 
+  @Override
   public TypeReference getRootType() {
     return TypeReference.JavaLangObject;
   }
 
+  @Override
   public TypeReference getThrowableType() {
     return TypeReference.JavaLangThrowable;
   }
 
+  @Override
   public TypeReference getConstantType(Object o) {
     if (o == null) {
       // TODO: do we really want null here instead of TypeReference.Null?
@@ -446,14 +486,17 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     }
   }
 
+  @Override
   public boolean isNullType(TypeReference type) {
     return type == null || type == TypeReference.Null;
   }
 
+  @Override
   public TypeReference[] getArrayInterfaces() {
     return new TypeReference[] { TypeReference.JavaIoSerializable, TypeReference.JavaLangCloneable };
   }
 
+  @Override
   public TypeName lookupPrimitiveType(String name) {
     throw new UnsupportedOperationException();
   }
@@ -464,6 +507,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
    * @throws IllegalArgumentException if target is null
    * @throws IllegalArgumentException if cha is null
    */
+  @Override
   public Collection<TypeReference> inferInvokeExceptions(MethodReference target, IClassHierarchy cha)
       throws InvalidClassFileException {
 
@@ -509,6 +553,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
    * 
    * @throws IllegalArgumentException if pei is null
    */
+  @Override
   public Collection<TypeReference> getImplicitExceptionTypes(IInstruction pei) {
     if (pei == null) {
       throw new IllegalArgumentException("pei is null");
@@ -575,48 +620,59 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     }
   }
 
+  @Override
   public SSAInstructionFactory instructionFactory() {
     return javaShrikeFactory;
   }
 
   private final static SSAInstructionFactory javaShrikeFactory = new JavaInstructionFactory();
 
+  @Override
   public boolean isDoubleType(TypeReference type) {
     return type == TypeReference.Double;
   }
 
+  @Override
   public boolean isFloatType(TypeReference type) {
     return type == TypeReference.Float;
   }
 
+  @Override
   public boolean isIntType(TypeReference type) {
     return type == TypeReference.Int;
   }
 
+  @Override
   public boolean isLongType(TypeReference type) {
     return type == TypeReference.Long;
   }
   
+  @Override
   public boolean isVoidType(TypeReference type) {
     return type == TypeReference.Void;
   }
 
+  @Override
   public boolean isMetadataType(TypeReference type) {
     return type == TypeReference.JavaLangClass;
   }
   
+  @Override
   public boolean isStringType(TypeReference type) {
     return type == TypeReference.JavaLangString;
   }
   
+  @Override
   public boolean isBooleanType(TypeReference type) {
     return type == TypeReference.Boolean;
   }
   
+  @Override
   public boolean isCharType(TypeReference type) {
     return type == TypeReference.Char;
   }
 
+  @Override
   public Object getMetadataToken(Object value) {
     if (value instanceof ClassToken) {
       return ShrikeUtil.makeTypeReference(ClassLoaderReference.Primordial, ((ClassToken) value).getTypeName());
@@ -626,14 +682,17 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     }
   }
 
+  @Override
   public TypeReference getPointerType(TypeReference pointee) throws UnsupportedOperationException {
     throw new UnsupportedOperationException("Java does not permit explicit pointers");
   }
 
+  @Override
   public TypeReference getMetadataType() {
     return TypeReference.JavaLangClass;
   }
 
+  @Override
   public TypeReference getStringType() {
     return TypeReference.JavaLangString;
   }
@@ -642,6 +701,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     JavaPrimitiveType.init();
   }
   
+  @Override
   @SuppressWarnings("static-access")
   public PrimitiveType getPrimitive(TypeReference reference) {
     return JavaPrimitiveType.getPrimitive(reference);

@@ -82,17 +82,21 @@ public class JsdtUtil {
   public static CGInfo buildJSDTCallGraph(Set<ModuleEntry> mes) {
     final CGInfo info = new CGInfo();
     HeadlessUtil.parseModules(mes, new EclipseCompiler<IJavaScriptUnit, JavaScriptUnit>() {
+      @Override
       public IJavaScriptUnit getCompilationUnit(IFile file) {
         return JavaScriptCore.createCompilationUnitFrom(file);
       }
+      @Override
       public Parser<IJavaScriptUnit, JavaScriptUnit> getParser() {
         return new Parser<IJavaScriptUnit, JavaScriptUnit>() {
           IJavaScriptProject project;
 
+          @Override
           public void setProject(IProject project) {
             this.project = JavaScriptCore.create(project);
           }
           
+          @Override
           public void processASTs(Map<IJavaScriptUnit, EclipseSourceFileModule> files, Function<Object[], Boolean> errors) {
             final ASTVisitor visitor = new ASTVisitor() {
               private final CallHierarchy ch = CallHierarchy.getDefault();

@@ -48,6 +48,7 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
   
   private final HashSet<URL> loadedFiles = HashSetFactory.make();
 
+  @Override
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
     IMethod target = base.getCalleeTarget(caller, site, receiver);
     if (target != null && target.getReference().equals(loadFileFunRef)) {

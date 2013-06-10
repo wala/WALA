@@ -22,6 +22,7 @@ public class MutableSparseLongSetFactory implements MutableLongSetFactory {
    * @param set
    * @throws IllegalArgumentException  if set is null
    */
+  @Override
   public MutableLongSet make(long[] set) {
     if (set == null) {
       throw new IllegalArgumentException("set is null");
@@ -45,6 +46,7 @@ public class MutableSparseLongSetFactory implements MutableLongSetFactory {
     }
   }
 
+  @Override
   public MutableLongSet parse(String string) throws NumberFormatException {
     int[] backingStore = SparseIntSet.parseIntArray(string);
     long[] bs = new long[ backingStore.length ];
@@ -55,6 +57,7 @@ public class MutableSparseLongSetFactory implements MutableLongSetFactory {
   /*
    * @see com.ibm.wala.util.intset.MutableLongSetFactory#make(com.ibm.wala.util.intset.LongSet)
    */
+  @Override
   public MutableLongSet makeCopy(LongSet x) throws IllegalArgumentException {
     if (x == null) {
       throw new IllegalArgumentException("x == null");
@@ -65,6 +68,7 @@ public class MutableSparseLongSetFactory implements MutableLongSetFactory {
   /*
    * @see com.ibm.wala.util.intset.MutableLongSetFactory#make()
    */
+  @Override
   public MutableLongSet make() {
     return new MutableSparseLongSet();
   }

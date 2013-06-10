@@ -88,6 +88,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
   /*
    * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#addSubgraphForNode(com.ibm.wala.ipa.callgraph.CGNode)
    */
+  @Override
   public void addSubgraphForNode(CGNode node) throws IllegalArgumentException {
     if (node == null) {
       throw new IllegalArgumentException("node == null");
@@ -108,6 +109,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
   /*
    * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#hasSubgraphForNode(com.ibm.wala.ipa.callgraph.CGNode)
    */
+  @Override
   public boolean hasSubgraphForNode(CGNode node) {
     return cgNodesVisited.contains(cg.getNumber(node));
   }
@@ -352,6 +354,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
 
   final Map<CGNode, Set<CallerSiteContext>> callerCache = HashMapFactory.make();
 
+  @Override
   public Set<CallerSiteContext> getPotentialCallers(PointerKey formalPk) {
     CGNode callee = null;
     if (formalPk instanceof LocalPointerKey) {
@@ -376,6 +379,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     return ret;
   }
 
+  @Override
   public Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site, LocalPointerKey actualPk) {
     return cg.getPossibleTargets(node, site);
   }

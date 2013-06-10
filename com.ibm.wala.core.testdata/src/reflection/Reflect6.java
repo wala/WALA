@@ -22,7 +22,8 @@ public class Reflect6 {
 	public static class A {
 		private A(int i) {
 		}
-		public String toString() {
+		@Override
+    public String toString() {
 			return "Instance of A";
 		}
 	}

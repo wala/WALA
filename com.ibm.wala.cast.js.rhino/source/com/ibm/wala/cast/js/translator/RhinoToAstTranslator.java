@@ -415,35 +415,43 @@ public class RhinoToAstTranslator {
       return "<JS function " + getName() + ">";
     }
 
+    @Override
     public String getName() {
       return name;
     }
 
+    @Override
     public String getSignature() {
       Assertions.UNREACHABLE();
       return null;
     }
 
+    @Override
     public int getKind() {
       return kind;
     }
 
+    @Override
     public String[] getArgumentNames() {
       return arguments;
     }
 
+    @Override
     public CAstNode[] getArgumentDefaults() {
       return new CAstNode[0];
     }
 
+    @Override
     public int getArgumentCount() {
       return arguments.length;
     }
 
+    @Override
     public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
       return Collections.unmodifiableMap(subs);
     }
 
+    @Override
     public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
       if (subs.containsKey(construct))
         return subs.get(construct).iterator();
@@ -451,35 +459,43 @@ public class RhinoToAstTranslator {
         return EmptyIterator.instance();
     }
 
+    @Override
     public CAstNode getAST() {
       return ast;
     }
 
+    @Override
     public CAstControlFlowMap getControlFlow() {
       return map;
     }
 
+    @Override
     public CAstSourcePositionMap getSourceMap() {
       return pos;
     }
 
+    @Override
     public CAstSourcePositionMap.Position getPosition() {
       return entityPosition;
     }
 
+    @Override
     public CAstNodeTypeMap getNodeTypeMap() {
       return null;
     }
 
+    @Override
     public Collection<CAstAnnotation> getAnnotations() {
       return null;
     }
 
+    @Override
     public Collection<CAstQualifier> getQualifiers() {
       Assertions.UNREACHABLE("JuliansUnnamedCAstEntity$2.getQualifiers()");
       return null;
     }
 
+    @Override
     public CAstType getType() {
       Assertions.UNREACHABLE("JuliansUnnamedCAstEntity$2.getType()");
       return null;
@@ -2263,6 +2279,7 @@ private CAstNode[] walkChildren(final Node n, WalkContext context) {
     class CAstErrorReporter implements ErrorReporter {
       private Warning w = null;
       
+      @Override
       public void error(final String arg0, final String arg1, final int arg2, final String arg3, int arg4) {
         w = new Warning(Warning.SEVERE) {
           @Override
@@ -2272,11 +2289,13 @@ private CAstNode[] walkChildren(final Node n, WalkContext context) {
         };
       }
 
+      @Override
       public EvaluatorException runtimeError(String arg0, String arg1, int arg2, String arg3, int arg4) {
         error(arg0, arg1, arg2, arg3, arg4);
         return null;
       }
 
+      @Override
       public void warning(String arg0, String arg1, int arg2, String arg3, int arg4) {
         // ignore warnings
       } 

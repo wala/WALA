@@ -48,6 +48,7 @@ class JavaLangClassContextSelector implements ContextSelector {
    * If the {@link CallSiteReference} invokes a method we understand and c is a type constant, return a {@link JavaTypeContext}
    * representing the type named by s, if we can resolve it in the {@link IClassHierarchy}.
    */
+  @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (receiver != null && receiver.length > 0 && mayUnderstand(caller, site, callee, receiver[0])) {
       return new JavaTypeContext(new PointType(getTypeConstant(receiver[0])));
@@ -87,6 +88,7 @@ class JavaLangClassContextSelector implements ContextSelector {
 
   private static final IntSet thisParameter = IntSetUtil.make(new int[]{0});
 
+  @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     if (site.isDispatch() || site.getDeclaredTarget().getNumberOfParameters() > 0) {
       return thisParameter;

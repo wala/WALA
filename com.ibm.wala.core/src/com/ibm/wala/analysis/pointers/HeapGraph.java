@@ -46,12 +46,14 @@ public abstract class HeapGraph implements NumberedGraph<Object> {
     this.pa = pa;
   }
 
+  @Override
   public Iterator<Object> iterateNodes(IntSet s) {
     return new NumberedNodeIterator<Object>(s, this);
   }
 
   public Collection<Object> getReachableInstances(Set<Object> roots) {
     Filter f = new Filter() {
+      @Override
       public boolean accepts(Object o) {
         return (o instanceof InstanceKey);
       }
@@ -59,6 +61,7 @@ public abstract class HeapGraph implements NumberedGraph<Object> {
     return DFS.getReachableNodes(this, roots, f);
   }
 
+  @Override
   public void removeNodeAndEdges(Object N) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }

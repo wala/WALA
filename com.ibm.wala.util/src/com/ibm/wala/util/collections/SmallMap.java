@@ -35,6 +35,7 @@ public class SmallMap<K, V> implements Map<K, V> {
 
   /*
    */
+  @Override
   public int size() {
     if (keysAndValues == null) {
       return 0;
@@ -79,6 +80,7 @@ public class SmallMap<K, V> implements Map<K, V> {
   /*
    * @see java.util.Map#isEmpty()
    */
+  @Override
   public boolean isEmpty() {
     return (keysAndValues == null);
   }
@@ -86,6 +88,7 @@ public class SmallMap<K, V> implements Map<K, V> {
   /*
    * @see java.util.Map#containsKey(java.lang.Object)
    */
+  @Override
   public boolean containsKey(Object key) {
     for (int i = 0; i < size(); i++) {
       if (keysAndValues[i].equals(key)) {
@@ -98,6 +101,7 @@ public class SmallMap<K, V> implements Map<K, V> {
   /*
    * @see java.util.Map#containsValue(java.lang.Object)
    */
+  @Override
   public boolean containsValue(Object value) {
     if (keysAndValues == null) {
       return false;
@@ -120,6 +124,7 @@ public class SmallMap<K, V> implements Map<K, V> {
   /*
    * @see java.util.Map#get(java.lang.Object)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public V get(Object key) {
 
@@ -149,6 +154,7 @@ public class SmallMap<K, V> implements Map<K, V> {
   /*
    * @see java.util.Map#put(java.lang.Object, java.lang.Object)
    */
+  @Override
   @SuppressWarnings({ "unchecked", "unused" })
   public V put(Object key, Object value) {
     if (key == null) {
@@ -173,6 +179,7 @@ public class SmallMap<K, V> implements Map<K, V> {
   /*
    * @see java.util.Map#remove(java.lang.Object)
    */
+  @Override
   public V remove(Object key) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
@@ -180,6 +187,7 @@ public class SmallMap<K, V> implements Map<K, V> {
   /*
    * @see java.util.Map#putAll(java.util.Map)
    */
+  @Override
   public void putAll(Map<? extends K, ? extends V> t) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
@@ -187,6 +195,7 @@ public class SmallMap<K, V> implements Map<K, V> {
   /*
    * @see java.util.Map#clear()
    */
+  @Override
   public void clear() {
     keysAndValues = null;
   }
@@ -194,6 +203,7 @@ public class SmallMap<K, V> implements Map<K, V> {
   /*
    * @see java.util.Map#keySet()
    */
+  @Override
   @SuppressWarnings("unchecked")
   public Set<K> keySet() {
     // TODO: use a better set implementation, SOON!!
@@ -207,6 +217,7 @@ public class SmallMap<K, V> implements Map<K, V> {
   /*
    * @see java.util.Map#values()
    */
+  @Override
   @SuppressWarnings("unchecked")
   public Collection<V> values() {
     int s = size();
@@ -223,6 +234,7 @@ public class SmallMap<K, V> implements Map<K, V> {
   /**
    * @throws UnimplementedError 
    */
+  @Override
   public Set<Map.Entry<K, V>> entrySet() throws UnimplementedError {
     Assertions.UNREACHABLE("must implement entrySet");
     return null;

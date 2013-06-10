@@ -104,18 +104,22 @@ public class PutInstruction extends Instruction implements IPutInstruction {
     }
   }
 
+  @Override
   public String getClassType() {
     return classType;
   }
 
+  @Override
   public String getFieldType() {
     return type;
   }
 
+  @Override
   public String getFieldName() {
     return fieldName;
   }
 
+  @Override
   final public boolean isStatic() {
     return opcode == OP_putstatic;
   }
@@ -141,6 +145,7 @@ public class PutInstruction extends Instruction implements IPutInstruction {
     v.visitPut(this);
   }
 
+  @Override
   public boolean isPEI() {
     return !isStatic();
   }

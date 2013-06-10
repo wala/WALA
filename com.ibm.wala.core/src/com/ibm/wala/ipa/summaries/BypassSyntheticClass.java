@@ -73,6 +73,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getSuperclass()
    */
+  @Override
   public IClass getSuperclass()  {
     if (realType.isInterface()) {
       IClass result = loader.lookupClass(TypeReference.JavaLangObject.getName());
@@ -88,6 +89,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllInterfaces()
    */
+  @Override
   public Collection<IClass> getAllImplementedInterfaces() {
     Collection<IClass> realIfaces = realType.getAllImplementedInterfaces();
     if (realType.isInterface()) {
@@ -102,6 +104,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
    */
+  @Override
   public IMethod getMethod(Selector selector) {
     return realType.getMethod(selector);
   }
@@ -109,6 +112,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
    */
+  @Override
   public IField getField(Atom name) {
     return realType.getField(name);
   }
@@ -124,6 +128,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getClassInitializer()
    */
+  @Override
   public IMethod getClassInitializer() {
     return null;
   }
@@ -131,6 +136,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getDeclaredMethods()
    */
+  @Override
   public Collection<IMethod> getDeclaredMethods() {
     return realType.getDeclaredMethods();
   }
@@ -138,6 +144,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getDeclaredInstanceFields()
    */
+  @Override
   public Collection<IField> getDeclaredInstanceFields() {
     return realType.getDeclaredInstanceFields();
   }
@@ -145,6 +152,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getDeclaredStaticFields()
    */
+  @Override
   public Collection<IField> getDeclaredStaticFields() {
     return realType.getDeclaredStaticFields();
   }
@@ -185,6 +193,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getModifiers()
    */
+  @Override
   public int getModifiers() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return 0;
@@ -193,6 +202,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#isReferenceType()
    */
+  @Override
   public boolean isReferenceType() {
     return getReference().isReferenceType();
   }
@@ -200,6 +210,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getDirectInterfaces()
    */
+  @Override
   public Collection<IClass> getDirectInterfaces() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
@@ -208,6 +219,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllInstanceFields()
    */
+  @Override
   public Collection<IField> getAllInstanceFields() {
     return realType.getAllInstanceFields();
   }
@@ -215,6 +227,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllStaticFields()
    */
+  @Override
   public Collection<IField> getAllStaticFields(){
     return realType.getAllStaticFields();
   }
@@ -222,6 +235,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllMethods()
    */
+  @Override
   public Collection<IMethod> getAllMethods() {
     return realType.getAllMethods();
   }
@@ -229,14 +243,17 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllFields()
    */
+  @Override
   public Collection<IField> getAllFields()  {
     return realType.getAllFields();
   }
 
+  @Override
   public boolean isPublic() {
     return realType.isPublic();
   }
   
+  @Override
   public boolean isPrivate() {
     return realType.isPrivate();
   }
@@ -246,6 +263,7 @@ public class BypassSyntheticClass extends SyntheticClass {
     return null;
   }
 
+  @Override
   public Collection<Annotation> getAnnotations() {
     return Collections.emptySet();
   }

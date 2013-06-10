@@ -121,6 +121,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
   /**
    * Return the entry basic block for the CFG.
    */
+  @Override
   public T entry() {
     return getNode(0);
   }
@@ -128,10 +129,12 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
   /**
    * Return the exit basic block for the CFG.
    */
+  @Override
   public T exit() {
     return exit;
   }
 
+  @Override
   public int getPredNodeCount(T N) {
     if (N == null) {
       throw new IllegalArgumentException("N is null");
@@ -218,6 +221,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
     return getNumberOfExceptionalOut(getNumber(N));
   }
 
+  @Override
   public Iterator<T> getPredNodes(T N) {
     if (N == null) {
       throw new IllegalArgumentException("N is null");
@@ -261,6 +265,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
     }
   }
 
+  @Override
   public int getSuccNodeCount(T N) {
     if (N == null) {
       throw new IllegalArgumentException("N is null");
@@ -299,6 +304,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
     return Iterator2Collection.toSet(getSuccNodes(N)).size();
   }
 
+  @Override
   public Iterator<T> getSuccNodes(T N) {
     int number = getNumber(N);
     if (normalToExit.get(number) && exceptionalToExit.get(number)) {
@@ -392,38 +398,47 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
   /**
    * @param n
    */
+  @Override
   public void addNode(T n) {
     nodeManager.addNode(n);
   }
 
+  @Override
   public int getMaxNumber() {
     return nodeManager.getMaxNumber();
   }
 
+  @Override
   public T getNode(int number) {
     return nodeManager.getNode(number);
   }
 
+  @Override
   public int getNumber(T N) {
     return nodeManager.getNumber(N);
   }
 
+  @Override
   public int getNumberOfNodes() {
     return nodeManager.getNumberOfNodes();
   }
 
+  @Override
   public Iterator<T> iterator() {
     return nodeManager.iterator();
   }
 
+  @Override
   public void addEdge(T src, T dst) throws UnimplementedError {
     Assertions.UNREACHABLE("Don't call me .. use addNormalEdge or addExceptionalEdge");
   }
 
+  @Override
   public void removeEdge(T src, T dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public boolean hasEdge(T src, T dst) {
     if (dst == null) {
       throw new IllegalArgumentException("dst is null");
@@ -507,6 +522,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
   /*
    * @see com.ibm.wala.util.graph.Graph#removeNode(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public void removeNodeAndEdges(T N) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
@@ -514,6 +530,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
   /*
    * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public void removeNode(T n) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
@@ -521,6 +538,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
   /*
    * @see com.ibm.wala.util.graph.NodeManager#containsNode(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public boolean containsNode(T N) {
     return nodeManager.containsNode(N);
   }
@@ -557,10 +575,12 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
   /**
    * Returns the catchBlocks.
    */
+  @Override
   public BitVector getCatchBlocks() {
     return catchBlocks;
   }
 
+  @Override
   public IMethod getMethod() {
     return method;
   }
@@ -568,6 +588,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(java.lang.Object)
    */
+  @Override
   public void removeAllIncidentEdges(T node) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
@@ -575,6 +596,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
   /*
    * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalSuccessors(com.ibm.wala.cfg.T)
    */
+  @Override
   public List<T> getExceptionalSuccessors(T b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
@@ -589,6 +611,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
   /*
    * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalSuccessors(com.ibm.wala.cfg.T)
    */
+  @Override
   public Collection<T> getNormalSuccessors(T b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
@@ -599,14 +622,17 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
   /*
    * @see com.ibm.wala.util.graph.NumberedNodeManager#iterateNodes(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public Iterator<T> iterateNodes(IntSet s) {
     return new NumberedNodeIterator<T>(s, this);
   }
 
+  @Override
   public void removeIncomingEdges(T node) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
+  @Override
   public void removeOutgoingEdges(T node) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
@@ -622,6 +648,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
   /*
    * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalPredecessors(com.ibm.wala.cfg.T)
    */
+  @Override
   public Collection<T> getExceptionalPredecessors(T b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
@@ -632,6 +659,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
   /*
    * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalPredecessors(com.ibm.wala.cfg.T)
    */
+  @Override
   public Collection<T> getNormalPredecessors(T b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
@@ -639,6 +667,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
     return Iterator2Collection.toSet(iterateNormalPredecessors(b));
   }
 
+  @Override
   public IntSet getPredNodeNumbers(T node) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
@@ -647,6 +676,7 @@ public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements Contro
   /*
    * TODO: optimize this.
    */
+  @Override
   public IntSet getSuccNodeNumbers(T node) {
     int number = getNumber(node);
     IntSet s = normalEdgeManager.getSuccNodeNumbers(node);

@@ -219,6 +219,7 @@ public class CallGraphTest extends WalaTestCase {
       }
     }
     return new Iterable<Entrypoint>() {
+      @Override
       public Iterator<Entrypoint> iterator() {
         return result.iterator();
       }
@@ -275,6 +276,7 @@ public class CallGraphTest extends WalaTestCase {
       }
     }
     return new Iterable<Entrypoint>() {
+      @Override
       public Iterator<Entrypoint> iterator() {
         return result.iterator();
       }
@@ -458,6 +460,7 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
        */
+      @Override
       public Iterator<MethodReference> iterator() {
         return nodes.iterator();
       }
@@ -465,6 +468,7 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.NodeManager#containsNode(java.lang.Object)
        */
+      @Override
       public boolean containsNode(MethodReference N) {
         return nodes.contains(N);
       }
@@ -472,6 +476,7 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
        */
+      @Override
       public int getNumberOfNodes() {
         return nodes.size();
       }
@@ -479,6 +484,7 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
        */
+      @Override
       public Iterator<MethodReference> getPredNodes(MethodReference N) {
         Set<MethodReference> pred = HashSetFactory.make(10);
         MethodReference methodReference = N;
@@ -492,6 +498,7 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
        */
+      @Override
       public int getPredNodeCount(MethodReference N) {
         int count = 0;
         for (Iterator<? extends MethodReference> ps = getPredNodes(N); ps.hasNext(); count++, ps.next())
@@ -502,6 +509,7 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
        */
+      @Override
       public Iterator<MethodReference> getSuccNodes(MethodReference N) {
         Set<MethodReference> succ = HashSetFactory.make(10);
         MethodReference methodReference = N;
@@ -515,6 +523,7 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
        */
+      @Override
       public int getSuccNodeCount(MethodReference N) {
         int count = 0;
         for (Iterator<MethodReference> ps = getSuccNodes(N); ps.hasNext(); count++, ps.next())
@@ -525,6 +534,7 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
        */
+      @Override
       public void addNode(MethodReference n) {
         Assertions.UNREACHABLE();
       }
@@ -532,6 +542,7 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.NodeManager#removeNode(java.lang.Object)
        */
+      @Override
       public void removeNode(MethodReference n) {
         Assertions.UNREACHABLE();
       }
@@ -539,10 +550,12 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object, java.lang.Object)
        */
+      @Override
       public void addEdge(MethodReference src, MethodReference dst) {
         Assertions.UNREACHABLE();
       }
 
+      @Override
       public void removeEdge(MethodReference src, MethodReference dst) {
         Assertions.UNREACHABLE();
       }
@@ -550,6 +563,7 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.EdgeManager#removeAllIncidentEdges(java.lang.Object)
        */
+      @Override
       public void removeAllIncidentEdges(MethodReference node) {
         Assertions.UNREACHABLE();
       }
@@ -557,22 +571,26 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(java.lang.Object)
        */
+      @Override
       public void removeNodeAndEdges(MethodReference N) {
         Assertions.UNREACHABLE();
       }
 
+      @Override
       public void removeIncomingEdges(MethodReference node) {
         // TODO Auto-generated method stubMethodReference
         Assertions.UNREACHABLE();
 
       }
 
+      @Override
       public void removeOutgoingEdges(MethodReference node) {
         // TODO Auto-generated method stub
         Assertions.UNREACHABLE();
 
       }
 
+      @Override
       public boolean hasEdge(MethodReference src, MethodReference dst) {
         for (Iterator<MethodReference> succNodes = getSuccNodes(src); succNodes.hasNext();) {
           if (dst.equals(succNodes.next())) {

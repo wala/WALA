@@ -28,6 +28,7 @@ public class TypeVariable extends AbstractVariable<TypeVariable> {
     this.type = type;
   }
 
+  @Override
   public void copyState(TypeVariable other) throws IllegalArgumentException {
     if (other == null) {
       throw new IllegalArgumentException("v == null");

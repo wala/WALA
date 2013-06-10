@@ -20,6 +20,7 @@ public class UnorderedDomain<T, U> extends MutableMapping<T> implements Tabulati
   /*
    * @see com.ibm.wala.dataflow.IFDS.TabulationDomain#isWeakerThan(int, int)
    */
+  @Override
   public boolean hasPriorityOver(PathEdge<U> p1, PathEdge<U> p2) {
     return false;
   }

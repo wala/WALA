@@ -27,6 +27,7 @@ public class MappedSourceFileModule extends SourceFileModule implements MappedSo
     this.fileMapping = fileMapping;
   }
 
+  @Override
   public FileMapping getMapping() {
     return fileMapping;
   }

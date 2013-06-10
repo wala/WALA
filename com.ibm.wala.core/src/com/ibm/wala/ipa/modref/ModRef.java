@@ -105,6 +105,7 @@ public class ModRef {
 
     return CallGraphTransitiveClosure.collectNodeResults(cg, new Function<CGNode, Collection<PointerKey>>() {
 
+      @Override
       public Collection<PointerKey> apply(CGNode n) {
         return scanNodeForMod(n, pa, heapExclude);
       }
@@ -120,6 +121,7 @@ public class ModRef {
   private Map<CGNode, Collection<PointerKey>> scanForRef(CallGraph cg, final PointerAnalysis pa, final HeapExclusions heapExclude) {
     return CallGraphTransitiveClosure.collectNodeResults(cg, new Function<CGNode, Collection<PointerKey>>() {
 
+      @Override
       public Collection<PointerKey> apply(CGNode n) {
         return scanNodeForRef(n, pa, heapExclude);
       }

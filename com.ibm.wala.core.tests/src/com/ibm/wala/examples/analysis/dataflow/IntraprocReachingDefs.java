@@ -103,6 +103,7 @@ public class IntraprocReachingDefs {
 
   private class TransferFunctions implements ITransferFunctionProvider<IExplodedBasicBlock, BitVectorVariable> {
 
+    @Override
     public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(IExplodedBasicBlock src, IExplodedBasicBlock dst) {
       throw new UnsupportedOperationException();
     }
@@ -110,10 +111,12 @@ public class IntraprocReachingDefs {
     /**
      * our meet operator is set union
      */
+    @Override
     public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
       return BitVectorUnion.instance();
     }
 
+    @Override
     public UnaryOperator<BitVectorVariable> getNodeTransferFunction(IExplodedBasicBlock node) {
       SSAInstruction instruction = node.getInstruction();
       int instructionIndex = node.getFirstInstructionIndex();
@@ -132,11 +135,13 @@ public class IntraprocReachingDefs {
       }
     }
 
+    @Override
     public boolean hasEdgeTransferFunctions() {
       // we only need transfer functions on nodes
       return false;
     }
 
+    @Override
     public boolean hasNodeTransferFunctions() {
       return true;
     }

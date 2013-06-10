@@ -53,6 +53,7 @@ public class SparseVector<T> implements IVector<T> {
   /*
    * @see com.ibm.wala.util.intset.IntVector#get(int)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public T get(int x) {
     int index = indices.getIndex(x);
@@ -68,6 +69,7 @@ public class SparseVector<T> implements IVector<T> {
    * 
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
+  @Override
   public void set(int x, T value) {
     int index = indices.getIndex(x);
     if (index == -1) {
@@ -92,6 +94,7 @@ public class SparseVector<T> implements IVector<T> {
   /*
    * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
    */
+  @Override
   public void performVerboseAction() {
     System.err.println((getClass() + " stats: "));
     System.err.println(("data.length " + data.length));
@@ -102,15 +105,18 @@ public class SparseVector<T> implements IVector<T> {
   /*
    * @see com.ibm.wala.util.intset.IVector#iterator()
    */
+  @Override
   public Iterator<T> iterator() {
     return new Iterator<T>() {
 
       int i = 0;
 
+      @Override
       public boolean hasNext() {
         return i < indices.size();
       }
 
+      @Override
       @SuppressWarnings("unchecked")
       public T next() {
         if (!hasNext()) {
@@ -119,6 +125,7 @@ public class SparseVector<T> implements IVector<T> {
         return (T) data[i++];
       }
 
+      @Override
       public void remove() {
         // TODO Auto-generated method stub
         Assertions.UNREACHABLE();
@@ -130,6 +137,7 @@ public class SparseVector<T> implements IVector<T> {
   /**
    * @return max i s.t get(i) != null
    */
+  @Override
   public int getMaxIndex() throws IllegalStateException {
     return indices.max();
   }

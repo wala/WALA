@@ -48,10 +48,12 @@ public class ExposedNamesCollector extends CAstVisitor<ExposedNamesCollector.Ent
       this.top = top;
     }
 
+    @Override
     public CAstEntity top() {
       return top;
     }
 
+    @Override
     public CAstSourcePositionMap getSourceMap() {
       return top.getSourceMap();
     }

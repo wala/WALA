@@ -54,10 +54,12 @@ public abstract class AstLexicalAccess extends SSAInstruction {
       return Pair.make(variableName, variableDefiner);
     }
     
+    @Override
     public int hashCode() {
       return variableName.hashCode() * valueNumber;
     }
 
+    @Override
     public boolean equals(Object other) {
       return (other instanceof Access) &&
 	variableName.equals( ((Access)other).variableName ) &&
@@ -67,6 +69,7 @@ public abstract class AstLexicalAccess extends SSAInstruction {
 	  variableDefiner.equals(((Access)other).variableDefiner) );
     }
 
+    @Override
     public String toString() {
       return "Access(" + variableName + "@" + variableDefiner + ":" + valueNumber + ")";
     }
@@ -94,14 +97,17 @@ public abstract class AstLexicalAccess extends SSAInstruction {
     return accesses.length; 
   }
 
+  @Override
   public boolean isFallThrough() {
     return true;
   }
 
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return null;
   }
 
+  @Override
   public int hashCode() {
     int v = 1;
     for(int i = 0; i < accesses.length; i++) 

@@ -102,6 +102,7 @@ public class SparseLongSet implements LongSet {
       S.foreach(new IntSetAction() {
         private int index = 0;
 
+        @Override
         public void act(int i) {
           elements[index++] = i;
         }
@@ -114,6 +115,7 @@ public class SparseLongSet implements LongSet {
    * 
    * @see com.ibm.wala.util.intset.IntSet#contains(int)
    */
+  @Override
   public final boolean contains(long x) {
     if (elements == null) {
       return false;
@@ -132,10 +134,12 @@ public class SparseLongSet implements LongSet {
     return LongSetUtil.binarySearch(elements, x, 0, size - 1);
   }
 
+  @Override
   public final int size() {
     return size;
   }
 
+  @Override
   public final boolean isEmpty() {
     return size == 0;
   }
@@ -160,6 +164,7 @@ public class SparseLongSet implements LongSet {
     }
   }
 
+  @Override
   public boolean sameValue(LongSet that) throws IllegalArgumentException, UnimplementedError {
     if (that == null) {
       throw new IllegalArgumentException("that == null");
@@ -344,6 +349,7 @@ public class SparseLongSet implements LongSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#intersect(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public LongSet intersection(LongSet that) throws IllegalArgumentException, UnimplementedError {
     if (that == null) {
       throw new IllegalArgumentException("that == null");
@@ -361,14 +367,17 @@ public class SparseLongSet implements LongSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#iterator()
    */
+  @Override
   public LongIterator longIterator() {
     return new LongIterator() {
       int i = 0;
 
+      @Override
       public boolean hasNext() {
         return (i < size);
       }
 
+      @Override
       public long next() throws NoSuchElementException {
         if (elements == null) {
           throw new NoSuchElementException();
@@ -378,6 +387,7 @@ public class SparseLongSet implements LongSet {
     };
   }
 
+  @Override
   public void foreach(LongSetAction action) {
     if (action == null) {
       throw new IllegalArgumentException("null action");
@@ -386,6 +396,7 @@ public class SparseLongSet implements LongSet {
       action.act(elements[i]);
   }
 
+  @Override
   public void foreachExcluding(LongSet X, LongSetAction action) {
     if (X == null) {
       throw new IllegalArgumentException("null X");
@@ -403,6 +414,7 @@ public class SparseLongSet implements LongSet {
   /**
    * @return the largest element in the set
    */
+  @Override
   public final long max() throws IllegalStateException {
     if (elements == null) {
       throw new IllegalStateException("Illegal to ask max() on an empty int set");
@@ -441,6 +453,7 @@ public class SparseLongSet implements LongSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public boolean isSubset(LongSet that) throws IllegalArgumentException, UnimplementedError {
     if (that == null) {
       throw new IllegalArgumentException("that == null");
@@ -456,6 +469,7 @@ public class SparseLongSet implements LongSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public boolean containsAny(LongSet set) {
     if (set == null) {
       throw new IllegalArgumentException("set == null");

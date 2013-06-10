@@ -202,6 +202,7 @@ public class PointsToMap {
    */
   public Iterator<PointerKey> getTransitiveRoots() {
     return new FilterIterator<PointerKey>(iterateKeys(), new Filter() {
+      @Override
       public boolean accepts(Object o) {
         return isTransitiveRoot((PointerKey) o);
       }

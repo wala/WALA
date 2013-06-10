@@ -60,6 +60,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
    * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getProcedureGraph()
    */
+  @Override
   public Graph<? extends P> getProcedureGraph() {
     return delegate.getProcedureGraph();
   }
@@ -67,6 +68,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#isCall(java.lang.Object)
    */
+  @Override
   public boolean isCall(T n) {
     return delegate.isReturn(n);
   }
@@ -78,6 +80,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
     /*
      * @see com.ibm.wala.util.Filter#accepts(java.lang.Object)
      */
+    @Override
     @SuppressWarnings("unchecked")
     public boolean accepts(Object o) {
       return delegate.isExit((T) o);
@@ -89,6 +92,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
    * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getCalledNodes(java.lang.Object)
    */
+  @Override
   public Iterator<T> getCalledNodes(T ret) {
     if (DEBUG_LEVEL > 1) {
       System.err.println(getClass() + " getCalledNodes " + ret);
@@ -103,9 +107,11 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
    * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getCalledNodes(java.lang.Object)
    */
+  @Override
   public Iterator<T> getNormalSuccessors(final T ret) {
     Iterator<? extends Object> allPreds = delegate.getPredNodes(ret);
     Filter sameProc = new Filter<T>() {
+      @Override
       public boolean accepts(T o) {
         // throw out the exit node, which can be a predecessor due to tail recursion.
         return getProcOf(ret).equals(getProcOf(o)) && !delegate.isExit(o);
@@ -113,6 +119,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
     };
     Iterator<Object> sameProcPreds = new FilterIterator<Object>(allPreds, sameProc);
     Filter notCall = new Filter<T>() {
+      @Override
       public boolean accepts(T o) {
         return !delegate.isCall(o);
       }
@@ -123,6 +130,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getReturnSites(java.lang.Object)
    */
+  @Override
   public Iterator<? extends T> getReturnSites(T c, P callee) {
     return delegate.getCallSites(c, callee);
   }
@@ -130,6 +138,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#isExit(java.lang.Object)
    */
+  @Override
   public boolean isExit(T n) {
     return delegate.isEntry(n);
   }
@@ -137,6 +146,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getProcOf(java.lang.Object)
    */
+  @Override
   public P getProcOf(T n) {
     return delegate.getProcOf(n);
   }
@@ -144,11 +154,13 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(java.lang.Object)
    */
+  @Override
   public void removeNodeAndEdges(Object N) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
 
   }
 
+  @Override
   public Iterator<T> iterator() {
     return delegate.iterator();
   }
@@ -156,6 +168,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
    */
+  @Override
   public int getNumberOfNodes() {
     return delegate.getNumberOfNodes();
   }
@@ -163,6 +176,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
    */
+  @Override
   public void addNode(Object n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
@@ -170,6 +184,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.util.graph.NodeManager#removeNode(java.lang.Object)
    */
+  @Override
   public void removeNode(Object n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
 
@@ -178,6 +193,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.util.graph.NodeManager#containsNode(java.lang.Object)
    */
+  @Override
   public boolean containsNode(T N) {
     return delegate.containsNode(N);
   }
@@ -185,6 +201,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
    */
+  @Override
   public Iterator<T> getPredNodes(T N) {
     return delegate.getSuccNodes(N);
   }
@@ -192,6 +209,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
    */
+  @Override
   public int getPredNodeCount(T N) {
     return delegate.getSuccNodeCount(N);
   }
@@ -199,10 +217,12 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
    */
+  @Override
   public Iterator<T> getSuccNodes(T N) {
     return delegate.getPredNodes(N);
   }
 
+  @Override
   public boolean hasEdge(T src, T dst) {
     return delegate.hasEdge(dst, src);
   }
@@ -210,6 +230,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
    */
+  @Override
   public int getSuccNodeCount(T N) {
     return delegate.getPredNodeCount(N);
   }
@@ -217,10 +238,12 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object, java.lang.Object)
    */
+  @Override
   public void addEdge(Object src, Object dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public void removeEdge(Object src, Object dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
@@ -228,6 +251,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(java.lang.Object)
    */
+  @Override
   public void removeAllIncidentEdges(Object node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
@@ -235,6 +259,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getEntriesForProcedure(java.lang.Object)
    */
+  @Override
   public T[] getEntriesForProcedure(P object) {
     return delegate.getExitsForProcedure(object);
   }
@@ -242,6 +267,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getEntriesForProcedure(java.lang.Object)
    */
+  @Override
   public T[] getExitsForProcedure(P object) {
     return delegate.getEntriesForProcedure(object);
   }
@@ -249,6 +275,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#isReturn(java.lang.Object)
    */
+  @Override
   public boolean isReturn(T n) throws UnimplementedError {
     return delegate.isCall(n);
   }
@@ -256,6 +283,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getCallSites(java.lang.Object)
    */
+  @Override
   public Iterator<? extends T> getCallSites(T r, P callee) {
     return delegate.getReturnSites(r, callee);
   }
@@ -263,6 +291,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#isEntry(java.lang.Object)
    */
+  @Override
   public boolean isEntry(T n) {
     return delegate.isExit(n);
   }
@@ -270,6 +299,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#classifyEdge(java.lang.Object, java.lang.Object)
    */
+  @Override
   public byte classifyEdge(T src, T dest) {
     byte d = delegate.classifyEdge(dest, src);
     switch (d) {
@@ -292,11 +322,13 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
     return "Backwards of delegate\n" + delegate;
   }
 
+  @Override
   public void removeIncomingEdges(Object node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
 
   }
 
+  @Override
   public void removeOutgoingEdges(T node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
@@ -304,6 +336,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getNumberOfBlocks(java.lang.Object)
    */
+  @Override
   public int getNumberOfBlocks(P procedure) {
     return delegate.getNumberOfBlocks(procedure);
   }
@@ -311,6 +344,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getLocalBlockNumber(java.lang.Object)
    */
+  @Override
   public int getLocalBlockNumber(T n) {
     return delegate.getLocalBlockNumber(n);
   }
@@ -318,31 +352,38 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getLocalBlock(java.lang.Object, int)
    */
+  @Override
   public T getLocalBlock(P procedure, int i) {
     return delegate.getLocalBlock(procedure, i);
   }
 
+  @Override
   public int getNumber(T N) {
     return delegate.getNumber(N);
   }
 
+  @Override
   public T getNode(int number) {
     return delegate.getNode(number);
   }
 
+  @Override
   public int getMaxNumber() {
     return delegate.getMaxNumber();
   }
 
+  @Override
   public Iterator<T> iterateNodes(IntSet s) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
 
+  @Override
   public IntSet getSuccNodeNumbers(T node) {
     return delegate.getPredNodeNumbers(node);
   }
 
+  @Override
   public IntSet getPredNodeNumbers(Object node) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;

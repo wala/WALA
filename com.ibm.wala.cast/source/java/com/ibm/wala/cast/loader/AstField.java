@@ -43,54 +43,67 @@ public class AstField implements IField {
   }
 
   
+  @Override
   public Collection<Annotation> getAnnotations() {
     return annotations;
   }
 
+  @Override
   public IClass getDeclaringClass() {
     return declaringClass;
   }
   
+  @Override
   public String toString() {
     return "field " + ref.getName();
   }
 
+  @Override
   public Atom getName() {
     return ref.getName();
   }
 
+  @Override
   public TypeReference getFieldTypeReference() {
     return ref.getFieldType();
   }
   
+  @Override
   public FieldReference getReference() {
     return ref;
   }
 
+  @Override
   public boolean isStatic() {
     return qualifiers.contains(CAstQualifier.STATIC);
   }
 
+  @Override
   public boolean isFinal() {
     return qualifiers.contains(CAstQualifier.CONST) || qualifiers.contains(CAstQualifier.FINAL);
   }
 
+  @Override
   public boolean isPrivate() {
     return qualifiers.contains(CAstQualifier.PRIVATE);
   }
 
+  @Override
   public boolean isProtected() {
     return qualifiers.contains(CAstQualifier.PROTECTED);
   }
 
+  @Override
   public boolean isPublic() {
     return qualifiers.contains(CAstQualifier.PUBLIC);
   }
 
+  @Override
   public boolean isVolatile() {
     return qualifiers.contains(CAstQualifier.VOLATILE);
   }
 
+  @Override
   public IClassHierarchy getClassHierarchy() {
     return cha;
   }

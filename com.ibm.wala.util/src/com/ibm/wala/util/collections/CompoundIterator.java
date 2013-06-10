@@ -28,10 +28,12 @@ public class CompoundIterator<T> implements Iterator<T> {
     this.B = B;
   }
 
+  @Override
   public boolean hasNext() {
     return A.hasNext() || B.hasNext();
   }
 
+  @Override
   public T next() throws NoSuchElementException {
     if (A.hasNext()) {
       return A.next();
@@ -43,6 +45,7 @@ public class CompoundIterator<T> implements Iterator<T> {
   /**
    * @see java.util.Iterator#remove()
    */
+  @Override
   public void remove() {
   }
 

@@ -683,13 +683,17 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
       B.getOptions().setTraceStringConstants(true);
       final long startTime = System.currentTimeMillis();
       CallGraph CG = B.makeCallGraph(B.getOptions(), new IProgressMonitor() {
+        @Override
         public void beginTask(String task, int totalWork) {
         }
+        @Override
         public boolean isCanceled() {
            return System.currentTimeMillis() > (startTime + 10000L);
         }
+        @Override
         public void done() {
         }
+        @Override
         public void worked(int units) {
         }
       });
@@ -720,6 +724,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
             if (pointsToSet == null || pointsToSet.getBackingSet() == null)
               continue;
             pointsToSet.getBackingSet().foreach(new IntSetAction() {
+              @Override
               public void act(int ikId) {
                 Set<Pair<CGNode, Integer>> s = ret.get(ikId);
                 if (s == null) {

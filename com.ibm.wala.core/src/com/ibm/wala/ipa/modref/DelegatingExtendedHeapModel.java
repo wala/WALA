@@ -38,30 +38,37 @@ public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
      this.h = h;
    }
 
+  @Override
   public IClassHierarchy getClassHierarchy() {
     return h.getClassHierarchy();
   }
 
+  @Override
   public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter) {
     return h.getFilteredPointerKeyForLocal(node, valueNumber, filter);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
     return h.getInstanceKeyForAllocation(node, allocation);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
     return h.getInstanceKeyForClassObject(type);
   }
 
+  @Override
   public <T> InstanceKey getInstanceKeyForConstant(TypeReference type, T S) {
     return h.getInstanceKeyForConstant(type, S);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
     return h.getInstanceKeyForMultiNewArray(node, allocation, dim);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type) {
     if (node == null) {
       throw new IllegalArgumentException("null node");
@@ -69,6 +76,7 @@ public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
     return h.getInstanceKeyForPEI(node, instr, type);
   }
 
+  @Override
   public PointerKey getPointerKeyForArrayContents(InstanceKey I) {
     if (I == null) {
       throw new IllegalArgumentException("I is null");
@@ -76,10 +84,12 @@ public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
     return h.getPointerKeyForArrayContents(I);
   }
 
+  @Override
   public PointerKey getPointerKeyForExceptionalReturnValue(CGNode node) {
     return h.getPointerKeyForExceptionalReturnValue(node);
   }
 
+  @Override
   public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField field) {
     if (field == null) {
       throw new IllegalArgumentException("field is null");
@@ -87,22 +97,27 @@ public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
     return h.getPointerKeyForInstanceField(I, field);
   }
 
+  @Override
   public PointerKey getPointerKeyForLocal(CGNode node, int valueNumber) {
     return h.getPointerKeyForLocal(node, valueNumber);
   }
 
+  @Override
   public PointerKey getPointerKeyForReturnValue(CGNode node) {
     return h.getPointerKeyForReturnValue(node);
   }
 
+  @Override
   public PointerKey getPointerKeyForStaticField(IField f) {
     return h.getPointerKeyForStaticField(f);
   }
 
+  @Override
   public Iterator<PointerKey> iteratePointerKeys() {
     return h.iteratePointerKeys();
   }
 
+  @Override
   public PointerKey getPointerKeyForArrayLength(InstanceKey I) {
     return new ArrayLengthKey(I);
   }

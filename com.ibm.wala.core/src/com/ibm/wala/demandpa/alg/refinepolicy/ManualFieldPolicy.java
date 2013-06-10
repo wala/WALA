@@ -67,6 +67,7 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
 
   final private IClass[] encounteredClasses = new IClass[NUM_DECISIONS_TO_TRACK];
 
+  @Override
   public boolean shouldRefine(IField field, PointerKey basePtr, PointerKey val, IFlowLabel label, StateMachine.State state) {
     if (field == null) {
       throw new IllegalArgumentException("null field");
@@ -132,6 +133,7 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
     this.refinePattern = refinePattern;
   }
 
+  @Override
   public boolean nextPass() {
     return false;
   }

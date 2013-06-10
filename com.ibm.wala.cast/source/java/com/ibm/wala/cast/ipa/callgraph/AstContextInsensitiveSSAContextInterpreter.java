@@ -41,6 +41,7 @@ public class AstContextInsensitiveSSAContextInterpreter extends ContextInsensiti
     return method instanceof AstMethod;
   }
 
+  @Override
   public Iterator<NewSiteReference> iterateNewSites(CGNode N) {
     IR ir = getIR(N);
     if (ir == null) {
@@ -50,6 +51,7 @@ public class AstContextInsensitiveSSAContextInterpreter extends ContextInsensiti
     }
   }
 
+  @Override
   public Iterator<CallSiteReference> iterateCallSites(CGNode N) {
     IR ir = getIR(N);
     if (ir == null) {

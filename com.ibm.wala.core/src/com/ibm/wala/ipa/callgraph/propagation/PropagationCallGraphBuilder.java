@@ -216,6 +216,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   /*
    * @see com.ibm.wala.ipa.callgraph.CallGraphBuilder#makeCallGraph(com.ibm.wala.ipa.callgraph.AnalysisOptions)
    */
+  @Override
   public CallGraph makeCallGraph(AnalysisOptions options, IProgressMonitor monitor) throws IllegalArgumentException,
       CallGraphBuilderCancelException {
     if (options == null) {
@@ -507,6 +508,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     /*
      * @see com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey#getTypeFilter()
      */
+    @Override
     public TypeFilter getTypeFilter() {
       return new SingleClassFilter(type);
     }
@@ -622,6 +624,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     /*
      * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
      */
+    @Override
     public boolean isComplex() {
       return false;
     }
@@ -671,6 +674,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   /*
    * @see com.ibm.detox.ipa.callgraph.CallGraphBuilder#getPointerAnalysis()
    */
+  @Override
   public PointerAnalysis getPointerAnalysis() {
     return system.extractPointerAnalysis(this);
   }
@@ -821,6 +825,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
 
       final MutableBoolean sideEffect = new MutableBoolean();
       IntSetAction action = new IntSetAction() {
+        @Override
         public void act(int i) {
           InstanceKey I = system.getInstanceKey(i);
           if (!I.getConcreteType().isArrayClass()) {
@@ -869,6 +874,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     /*
      * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
      */
+    @Override
     public boolean isComplex() {
       return true;
     }
@@ -944,6 +950,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       return 9859 + super.hashCode();
     }
 
+    @Override
     public boolean isComplex() {
       return true;
     }
@@ -1003,6 +1010,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       }
       final MutableBoolean sideEffect = new MutableBoolean();
       IntSetAction action = new IntSetAction() {
+        @Override
         public void act(int i) {
           InstanceKey I = system.getInstanceKey(i);
           if (!representsNullType(I)) {
@@ -1062,6 +1070,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     /*
      * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
      */
+    @Override
     public boolean isComplex() {
       return true;
     }
@@ -1089,6 +1098,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     /*
      * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
      */
+    @Override
     public boolean isComplex() {
       return true;
     }
@@ -1116,6 +1126,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       }
       final MutableBoolean sideEffect = new MutableBoolean();
       IntSetAction action = new IntSetAction() {
+        @Override
         public void act(int i) {
           InstanceKey I = system.getInstanceKey(i);
           if (!representsNullType(I)) {
@@ -1218,6 +1229,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       IntSet value = ref.getValue();
       final MutableBoolean sideEffect = new MutableBoolean();
       IntSetAction action = new IntSetAction() {
+        @Override
         public void act(int i) {
           InstanceKey I = system.getInstanceKey(i);
           if (!representsNullType(I)) {
@@ -1256,6 +1268,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     /*
      * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
      */
+    @Override
     public boolean isComplex() {
       return true;
     }
@@ -1290,6 +1303,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       IntSet value = arrayref.getValue();
       final MutableBoolean sideEffect = new MutableBoolean();
       IntSetAction action = new IntSetAction() {
+        @Override
         public void act(int i) {
           InstanceKey I = system.getInstanceKey(i);
           if (!I.getConcreteType().isArrayClass()) {
@@ -1346,6 +1360,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     /*
      * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
      */
+    @Override
     public boolean isComplex() {
       return true;
     }
@@ -1455,6 +1470,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     boolean b = false;
   }
 
+  @Override
   public AnalysisCache getAnalysisCache() {
     return analysisCache;
   };

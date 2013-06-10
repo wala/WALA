@@ -34,9 +34,11 @@ public class ReflectionContextSelector {
     
     // start with a dummy
     ContextSelector result = new ContextSelector() {
+      @Override
       public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
         return null;
       }
+      @Override
       public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
         return EmptyIntSet.instance;
       }

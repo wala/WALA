@@ -44,6 +44,7 @@ public class ChaPanel extends JSplitPane {
     this.setRightComponent(methodList);
     
     tree.addTreeSelectionListener(new TreeSelectionListener(){
+      @Override
       public void valueChanged(TreeSelectionEvent e) {
         TreePath newLeadSelectionPath = e.getNewLeadSelectionPath();
         if (null == newLeadSelectionPath){
@@ -69,6 +70,7 @@ public class ChaPanel extends JSplitPane {
 
     tree.addTreeExpansionListener(new TreeExpansionListener() {
 
+      @Override
       public void treeExpanded(TreeExpansionEvent event) {
         TreePath path = event.getPath();
         if (path == null) {
@@ -78,6 +80,7 @@ public class ChaPanel extends JSplitPane {
         expandNode(lastNode);
       }
 
+      @Override
       public void treeCollapsed(TreeExpansionEvent event) {
 
       }

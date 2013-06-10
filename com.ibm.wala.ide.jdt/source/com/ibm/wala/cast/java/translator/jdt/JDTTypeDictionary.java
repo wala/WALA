@@ -69,6 +69,7 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl {
     fIdentityMapper = identityMapper;
   }
 
+  @Override
   public CAstType getCAstTypeFor(Object astType) {
 
     ITypeBinding jdtType = JDT2CAstUtils.getErasedType((ITypeBinding) astType, fAst);
@@ -104,18 +105,22 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl {
       fEltCAstType = getCAstTypeFor(fEltJdtType);
     }
 
+    @Override
     public int getNumDimensions() {
       return 1; // always 1 for Java
     }
 
+    @Override
     public CAstType getElementType() {
       return fEltCAstType;
     }
 
+    @Override
     public String getName() {
       return "[" + fEltCAstType.getName();
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public Collection getSupertypes() {
       if (fEltJdtType.isPrimitive())
@@ -139,6 +144,7 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl {
 
     private Collection<CAstType> fSuperTypes = null;
 
+    @Override
     public String toString() {
       return super.toString() + ":" + getName();
     }
@@ -148,10 +154,12 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl {
       fType = type;
     }
 
+    @Override
     public String getName() {
       return fIdentityMapper.getTypeRef(fType).getName().toString();
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public Collection getSupertypes() {
       if (fSuperTypes == null) {
@@ -175,10 +183,12 @@ public class JDTTypeDictionary extends CAstTypeDictionaryImpl {
         fSuperTypes.add(getCAstTypeFor(t));
     }
 
+    @Override
     public Collection<CAstQualifier> getQualifiers() {
       return JDT2CAstUtils.mapModifiersToQualifiers(fType.getModifiers(), fType.isInterface(), fType.isAnnotation());
     }
 
+    @Override
     public boolean isInterface() {
       return fType.isInterface();
     }

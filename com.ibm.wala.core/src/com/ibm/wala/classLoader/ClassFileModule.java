@@ -37,14 +37,17 @@ public class ClassFileModule extends FileModule {
     return "ClassFileModule:" + getFile();
   }
 
+  @Override
   public boolean isClassFile() {
     return true;
   }
 
+  @Override
   public String getClassName() {
     return className;
   }
 
+  @Override
   public boolean isSourceFile() {
     return false;
   }

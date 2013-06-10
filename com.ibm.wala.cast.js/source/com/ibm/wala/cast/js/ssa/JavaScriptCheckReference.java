@@ -60,14 +60,17 @@ public class JavaScriptCheckReference extends SSAInstruction {
     ((JSInstructionVisitor)v).visitCheckRef(this);
   }
 
+  @Override
   public boolean isPEI() {
     return true;
   }
   
+  @Override
   public int getNumberOfUses() {
     return 1;
   }
   
+  @Override
   public int getUse(int i) {
     assert i == 0;
     return ref;

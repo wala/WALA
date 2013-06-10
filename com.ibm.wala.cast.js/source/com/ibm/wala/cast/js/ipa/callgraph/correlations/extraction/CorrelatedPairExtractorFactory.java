@@ -13,7 +13,6 @@ package com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.Map;
 
 import com.ibm.wala.cast.js.ipa.callgraph.correlations.CorrelationFinder;
@@ -42,6 +41,7 @@ public class CorrelatedPairExtractorFactory implements CAstRewriterFactory<NodeP
     this.summaries = summaries;
   }
 
+  @Override
   public ClosureExtractor createCAstRewriter(CAst ast) {
     ExtractionPolicyFactory policyFactory = new ExtractionPolicyFactory() {
       @Override

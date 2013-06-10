@@ -33,10 +33,12 @@ public class GlobalObjectKey implements InstanceKey {
     this.concreteType = concreteType;
   }
   
+  @Override
   public IClass getConcreteType() {
     return concreteType;
   }
 
+  @Override
   public String toString() {
     return "JS Global Object";
   }

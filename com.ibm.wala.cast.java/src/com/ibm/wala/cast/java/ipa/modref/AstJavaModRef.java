@@ -32,16 +32,19 @@ public class AstJavaModRef extends AstModRef {
       super(n, result, pa, h);
     }
 
+    @Override
     public void visitJavaInvoke(AstJavaInvokeInstruction instruction) {
 
     }
 
+    @Override
     public void visitEnclosingObjectReference(EnclosingObjectReference inst) {
 
     }
 
   }
 
+  @Override
   protected RefVisitor makeRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis pa, ExtendedHeapModel h) {
     return new AstJavaRefVisitor(n, result, pa, h);
   }
@@ -56,10 +59,12 @@ public class AstJavaModRef extends AstModRef {
     }
 
 
+    @Override
     public void visitJavaInvoke(AstJavaInvokeInstruction instruction) {
 
     }
 
+    @Override
     public void visitEnclosingObjectReference(EnclosingObjectReference inst) {
 
     }

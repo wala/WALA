@@ -131,6 +131,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       this.shrikeCFG = shrikeCFG;
     }
 
+    @Override
     public int meetStack(int slot, int[] rhs, BasicBlock bb) {
 
       assert bb != null : "null basic block";
@@ -171,6 +172,7 @@ public class SSABuilder extends AbstractIntStackMachine {
     /**
      * @see com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine.Meeter#meetLocal(int, int[], BasicBlock)
      */
+    @Override
     public int meetLocal(int n, int[] rhs, BasicBlock bb) {
       if (allTheSame(rhs)) {
         for (int i = 0; i < rhs.length; i++) {
@@ -232,6 +234,7 @@ public class SSABuilder extends AbstractIntStackMachine {
     /**
      * @see com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine.Meeter#meetStackAtCatchBlock(BasicBlock)
      */
+    @Override
     public int meetStackAtCatchBlock(BasicBlock bb) {
       int bbNumber = shrikeCFG.getNumber(bb);
       SSACFG.ExceptionHandlerBasicBlock newBB = (SSACFG.ExceptionHandlerBasicBlock) cfg.getNode(bbNumber);
@@ -967,6 +970,7 @@ public class SSABuilder extends AbstractIntStackMachine {
      * @param index - index into IR instruction array
      * @param vn - value number
      */
+    @Override
     public String[] getLocalNames(int index, int vn) {
       try {
         if (!shrikeCFG.getMethod().hasLocalVariableTable()) {

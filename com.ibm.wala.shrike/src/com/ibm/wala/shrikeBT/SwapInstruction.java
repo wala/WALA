@@ -53,6 +53,7 @@ public final class SwapInstruction extends Instruction {
     v.visitSwap(this);
   }
 
+  @Override
   public boolean isPEI() {
     return false;
   }

@@ -29,6 +29,7 @@ public class TestSimpleCallGraphShapeRhino extends TestSimpleCallGraphShape {
     justThisTest(TestSimpleCallGraphShapeRhino.class);
   }
 
+  @Override
   @Before
   public void setUp() {
     com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());

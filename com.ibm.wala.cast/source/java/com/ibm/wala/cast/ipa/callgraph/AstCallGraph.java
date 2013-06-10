@@ -54,6 +54,7 @@ public class AstCallGraph extends ExplicitCallGraph {
       super(rootMethod, cha, options, cache);
     }
 
+    @Override
     public InducedCFG makeControlFlowGraph(SSAInstruction[] statements) {
       return new AstInducedCFG(statements, this, Everywhere.EVERYWHERE);
     }
@@ -147,6 +148,7 @@ public class AstCallGraph extends ExplicitCallGraph {
       targets.remove(cs.getProgramCounter());
     }
     
+    @Override
     public boolean addTarget(CallSiteReference site, CGNode node) {
       if (super.addTarget(site, node)) {
         if (((AstCGNode) node).callbacks != null) {
@@ -160,10 +162,12 @@ public class AstCallGraph extends ExplicitCallGraph {
     }
   }
 
+  @Override
   protected ExplicitNode makeNode(IMethod method, Context context) {
     return new AstCGNode(method, context);
   }
 
+  @Override
   protected CGNode makeFakeRootNode() throws CancelException {
     return findOrCreateNode(new AstFakeRoot(FakeRootMethod.rootMethod, cha, options, getAnalysisCache()), Everywhere.EVERYWHERE);
   }

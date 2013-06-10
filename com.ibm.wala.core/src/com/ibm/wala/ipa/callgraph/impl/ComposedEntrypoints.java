@@ -39,6 +39,7 @@ public class ComposedEntrypoints implements Iterable<Entrypoint> {
     }
   }
 
+  @Override
   public Iterator<Entrypoint> iterator() {
     return entrypoints.iterator();
   }

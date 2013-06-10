@@ -199,6 +199,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
    * iterate over the nodes <bf>without</bf> constructing any new ones. Use with extreme care. May break graph traversals that
    * lazily add more nodes.
    */
+  @Override
   public Iterator<? extends Statement> iterateLazyNodes() {
     return nodeMgr.iterateLazyNodes();
   }
@@ -279,14 +280,17 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
   }
 
   private class Edges implements NumberedEdgeManager<Statement> {
+    @Override
     public void addEdge(Statement src, Statement dst) {
       Assertions.UNREACHABLE();
     }
 
+    @Override
     public int getPredNodeCount(Statement N) {
       return IteratorUtil.count(getPredNodes(N));
     }
 
+    @Override
     public Iterator<Statement> getPredNodes(Statement N) {
       if (dOptions.isIgnoreExceptions()) {
         assert !N.getKind().equals(Kind.EXC_RET_CALLEE);
@@ -441,10 +445,12 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
       }
     }
 
+    @Override
     public int getSuccNodeCount(Statement N) {
       return IteratorUtil.count(getSuccNodes(N));
     }
 
+    @Override
     public Iterator<Statement> getSuccNodes(Statement N) {
       if (dOptions.isTerminateAtCast() && isUninformativeForReflection(N.getNode())) {
         return EmptyIterator.instance();
@@ -607,6 +613,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
       return false;
     }
 
+    @Override
     public boolean hasEdge(Statement src, Statement dst) {
       addPDGStatementNodes(src.getNode());
       addPDGStatementNodes(dst.getNode());
@@ -723,26 +730,31 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
       }
     }
 
+    @Override
     public void removeAllIncidentEdges(Statement node) {
       Assertions.UNREACHABLE();
 
     }
 
+    @Override
     public void removeEdge(Statement src, Statement dst) {
       Assertions.UNREACHABLE();
 
     }
 
+    @Override
     public void removeIncomingEdges(Statement node) {
       Assertions.UNREACHABLE();
 
     }
 
+    @Override
     public void removeOutgoingEdges(Statement node) {
       Assertions.UNREACHABLE();
 
     }
 
+    @Override
     public IntSet getPredNodeNumbers(Statement node) {
       // TODO: optimize me.
       MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
@@ -753,6 +765,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
       return result;
     }
 
+    @Override
     public IntSet getSuccNodeNumbers(Statement node) {
       // TODO: optimize me.
       MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
@@ -774,6 +787,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
     return nodeMgr;
   }
 
+  @Override
   public PDG getPDG(CGNode node) {
     PDG result = pdgMap.get(node);
     if (result == null) {
@@ -787,6 +801,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
     return result;
   }
 
+  @Override
   public ControlDependenceOptions getCOptions() {
     return cOptions;
   }
@@ -799,6 +814,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
     return cg;
   }
 
+  @Override
   public IClassHierarchy getClassHierarchy() {
     return cg.getClassHierarchy();
   }

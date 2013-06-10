@@ -28,43 +28,53 @@ public class InvertingEdgeManager<T> implements EdgeManager<T> {
     this.original = original;
   }
 
+  @Override
   public Iterator<T> getPredNodes(T N) throws IllegalArgumentException {
     return original.getSuccNodes(N);
   }
 
+  @Override
   public int getPredNodeCount(T N) throws IllegalArgumentException{
     return original.getSuccNodeCount(N);
   }
 
+  @Override
   public Iterator<T> getSuccNodes(T N) throws IllegalArgumentException{
     return original.getPredNodes(N);
   }
 
+  @Override
   public int getSuccNodeCount(T N) throws IllegalArgumentException{
     return original.getPredNodeCount(N);
   }
 
+  @Override
   public void addEdge(T src, T dst)throws IllegalArgumentException {
     original.addEdge(dst, src);
   }
   
+  @Override
   public void removeEdge(T src, T dst) throws IllegalArgumentException{
     original.removeEdge(dst, src);
   }
 
  
+  @Override
   public boolean hasEdge(T src, T dst) {
     return original.hasEdge(dst, src);
   }
 
+  @Override
   public void removeAllIncidentEdges(T node) throws IllegalArgumentException {
     original.removeAllIncidentEdges(node);
   }
   
+  @Override
   public void removeIncomingEdges(T node) throws IllegalArgumentException{
     original.removeOutgoingEdges(node);
   }
   
+  @Override
   public void removeOutgoingEdges(T node)throws IllegalArgumentException {
     original.removeIncomingEdges(node);
   }

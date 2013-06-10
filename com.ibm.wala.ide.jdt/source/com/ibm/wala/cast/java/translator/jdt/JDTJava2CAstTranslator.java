@@ -53,7 +53,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
-import org.eclipse.jdt.core.dom.Annotation;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
 import org.eclipse.jdt.core.dom.AnnotationTypeMemberDeclaration;
 import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
@@ -294,75 +293,92 @@ public class JDTJava2CAstTranslator {
 	}
 
 
-	public int getKind() {
+	@Override
+  public int getKind() {
       return TYPE_ENTITY;
     }
 
+    @Override
     public String getName() {
       return fName; // unqualified?
     }
 
+    @Override
     public String getSignature() {
       return "L" + fName.replace('.', '/') + ";";
     }
 
+    @Override
     public String[] getArgumentNames() {
       return new String[0];
     }
 
+    @Override
     public CAstNode[] getArgumentDefaults() {
       return new CAstNode[0];
     }
 
+    @Override
     public int getArgumentCount() {
       return 0;
     }
 
+    @Override
     public CAstNode getAST() {
       // This entity has no AST nodes, really.
       return null;
     }
 
+    @Override
     public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
       return Collections.singletonMap(null, fEntities);
     }
 
+    @Override
     public Iterator getScopedEntities(CAstNode construct) {
       Assertions.UNREACHABLE("Non-AST-bearing entity (ClassEntity) asked for scoped entities related to a given AST node");
       return null;
     }
 
+    @Override
     public CAstControlFlowMap getControlFlow() {
       // This entity has no AST nodes, really.
       return null;
     }
 
+    @Override
     public CAstSourcePositionMap getSourceMap() {
       // This entity has no AST nodes, really.
       return null;
     }
 
+    @Override
     public CAstSourcePositionMap.Position getPosition() {
       return fSourcePosition;
     }
 
+    @Override
     public CAstNodeTypeMap getNodeTypeMap() {
       // This entity has no AST nodes, really.
       return new CAstNodeTypeMap() {
+        @Override
         public CAstType getNodeType(CAstNode node) {
           throw new UnsupportedOperationException();
         }
 
-		public Collection<CAstNode> getMappedNodes() {
+		@Override
+    public Collection<CAstNode> getMappedNodes() {
 			throw new UnsupportedOperationException();
 		}
       };
     }
 
+    @Override
     public Collection getQualifiers() {
       return fQuals;
     }
 
+    @Override
     public CAstType getType() {
       // return new JdtJavaType(fCT, getTypeDict(), fTypeSystem);
       return fTypeDict.new JdtJavaType(fJdtType);
@@ -826,10 +842,12 @@ public class JDTJava2CAstTranslator {
     // From Code Body Entity
     private final Map<CAstNode, Collection<CAstEntity>> fEntities;
 
+    @Override
     public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
       return Collections.unmodifiableMap(fEntities);
     }
 
+    @Override
     public Iterator getScopedEntities(CAstNode construct) {
       if (fEntities.containsKey(construct)) {
         return (fEntities.get(construct)).iterator();
@@ -838,6 +856,7 @@ public class JDTJava2CAstTranslator {
       }
     }
 
+    @Override
     public String getSignature() {
       return Util.methodEntityToSelector(this).toString();
     }
@@ -937,14 +956,17 @@ public class JDTJava2CAstTranslator {
 		return annotations;
 	}
 
-	public String toString() {
+	@Override
+  public String toString() {
       return fDecl == null ? "<clinit>" : fDecl.toString();
     }
 
+    @Override
     public int getKind() {
       return CAstEntity.FUNCTION_ENTITY;
     }
 
+    @Override
     public String getName() {
       if (fDecl == null)
         return MethodReference.clinitName.toString();
@@ -957,10 +979,12 @@ public class JDTJava2CAstTranslator {
     /**
      * INCLUDING first parameter 'this' (for non-static methods)
      */
+    @Override
     public String[] getArgumentNames() {
       return fParameterNames;
     }
 
+    @Override
     public CAstNode[] getArgumentDefaults() {
       return new CAstNode[0];
     }
@@ -968,30 +992,37 @@ public class JDTJava2CAstTranslator {
     /**
      * INCLUDING first parameter 'this' (for non-static methods)
      */
+    @Override
     public int getArgumentCount() {
       return fParameterNames.length;
     }
 
+    @Override
     public CAstNode getAST() {
       return fAst;
     }
 
+    @Override
     public CAstControlFlowMap getControlFlow() {
       return fContext.cfg();
     }
 
+    @Override
     public CAstSourcePositionMap getSourceMap() {
       return fContext.pos();
     }
 
+    @Override
     public CAstSourcePositionMap.Position getPosition() {
       return fDecl==null? getSourceMap().getPosition(fAst): makePosition(fDecl);
     }
 
+    @Override
     public CAstNodeTypeMap getNodeTypeMap() {
       return fContext.getNodeTypeMap();
     }
 
+    @Override
     public Collection getQualifiers() {
       if (fDecl == null)
         return JDT2CAstUtils.mapModifiersToQualifiers(Modifier.STATIC, false, false); // static init
@@ -999,10 +1030,12 @@ public class JDTJava2CAstTranslator {
         return JDT2CAstUtils.mapModifiersToQualifiers(fModifiers, false, false);
     }
 
+    @Override
     public CAstType getType() {
       return new CAstType.Method() {
         private Collection<CAstType> fExceptionTypes = null;
 
+        @Override
         @SuppressWarnings("deprecation")
         public CAstType getReturnType() {
           if (fReturnType != null)
@@ -1017,6 +1050,7 @@ public class JDTJava2CAstTranslator {
         /**
          * NOT INCLUDING first parameter 'this' (for non-static methods)
          */
+        @Override
         public List getArgumentTypes() {
           return fParameterTypes;
         }
@@ -1024,20 +1058,24 @@ public class JDTJava2CAstTranslator {
         /**
          * NOT INCLUDING first parameter 'this' (for non-static methods)
          */
+        @Override
         public int getArgumentCount() {
           return fDecl == null ? 0 : fParameterTypes.size();
         }
 
+        @Override
         public String getName() {
           Assertions.UNREACHABLE("CAstType.FunctionImpl#getName() called???");
           return "?";
         }
 
+        @Override
         public Collection getSupertypes() {
           Assertions.UNREACHABLE("CAstType.FunctionImpl#getSupertypes() called???");
           return null;
         }
 
+        @Override
         public Collection/* <CAstType> */getExceptionTypes() {
           if (fExceptionTypes == null) {
             fExceptionTypes = new LinkedHashSet<CAstType>();
@@ -1048,6 +1086,7 @@ public class JDTJava2CAstTranslator {
           return fExceptionTypes;
         }
 
+        @Override
         public CAstType getDeclaringType() {
           return fTypeDict.getCAstTypeFor(fType);
         }
@@ -1122,70 +1161,85 @@ public class JDTJava2CAstTranslator {
 		return annotations;
 	}
 
-	public int getKind() {
+	@Override
+  public int getKind() {
       return CAstEntity.FIELD_ENTITY;
     }
 
+    @Override
     public String getName() {
       return name;
     }
 
+    @Override
     public String getSignature() {
       return name + fIdentityMapper.typeToTypeID(type);
     }
 
+    @Override
     public String[] getArgumentNames() {
       return new String[0];
     }
 
+    @Override
     public CAstNode[] getArgumentDefaults() {
       return new CAstNode[0];
     }
 
+    @Override
     public int getArgumentCount() {
       return 0;
     }
 
+    @Override
     public Iterator getScopedEntities(CAstNode construct) {
       return EmptyIterator.instance();
     }
 
+    @Override
     public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
       return Collections.emptyMap();
     }
 
+    @Override
     public CAstNode getAST() {
       // No AST for a field decl; initializers folded into
       // constructor processing...
       return null;
     }
 
+    @Override
     public CAstControlFlowMap getControlFlow() {
       // No AST for a field decl; initializers folded into
       // constructor processing...
       return null;
     }
 
+    @Override
     public CAstSourcePositionMap getSourceMap() {
       // No AST for a field decl; initializers folded into
       // constructor processing...
       return null;
     }
 
+    @Override
     public CAstSourcePositionMap.Position getPosition() {
       return position;
     }
 
+    @Override
     public CAstNodeTypeMap getNodeTypeMap() {
       // No AST for a field decl; initializers folded into
       // constructor processing...
       return null;
     }
 
+    @Override
     public Collection getQualifiers() {
       return quals;
     }
 
+    @Override
     public CAstType getType() {
       return fTypeDict.getCAstTypeFor(type);
     }
@@ -2906,67 +2960,82 @@ public class JDTJava2CAstTranslator {
 		return null;
 	}
 
-	public int getKind() {
+	@Override
+  public int getKind() {
       return FILE_ENTITY;
     }
 
+    @Override
     public String getName() {
       return fName;
     }
 
+    @Override
     public String getSignature() {
       Assertions.UNREACHABLE();
       return null;
     }
 
+    @Override
     public String[] getArgumentNames() {
       return new String[0];
     }
 
+    @Override
     public CAstNode[] getArgumentDefaults() {
       return new CAstNode[0];
     }
 
+    @Override
     public int getArgumentCount() {
       return 0;
     }
 
+    @Override
     public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
       return Collections.singletonMap(null, fTopLevelDecls);
     }
 
+    @Override
     public Iterator getScopedEntities(CAstNode construct) {
       Assertions.UNREACHABLE("CompilationUnitEntity asked for AST-related entities, but it has no AST.");
       return null;
     }
 
+    @Override
     public CAstNode getAST() {
       return null;
     }
 
+    @Override
     public CAstControlFlowMap getControlFlow() {
       Assertions.UNREACHABLE("CompilationUnitEntity.getControlFlow()");
       return null;
     }
 
+    @Override
     public CAstSourcePositionMap getSourceMap() {
       Assertions.UNREACHABLE("CompilationUnitEntity.getSourceMap()");
       return null;
     }
 
+    @Override
     public CAstSourcePositionMap.Position getPosition() {
       return null;
     }
 
+    @Override
     public CAstNodeTypeMap getNodeTypeMap() {
       Assertions.UNREACHABLE("CompilationUnitEntity.getNodeTypeMap()");
       return null;
     }
 
+    @Override
     public Collection getQualifiers() {
       return Collections.EMPTY_LIST;
     }
 
+    @Override
     public CAstType getType() {
       Assertions.UNREACHABLE("CompilationUnitEntity.getType()");
       return null;
@@ -3001,15 +3070,18 @@ public class JDTJava2CAstTranslator {
       super(parent);
     }
 
+    @Override
     public Collection<Pair<ITypeBinding, Object>> getCatchTargets(ITypeBinding type) {
       return parent.getCatchTargets(type);
     }
 
+    @Override
     public Map<ASTNode, String> getLabelMap() {
       return parent.getLabelMap();
     }
 
-     public boolean needLValue() {
+     @Override
+    public boolean needLValue() {
       return parent.needLValue();
     }
   }
@@ -3018,16 +3090,19 @@ public class JDTJava2CAstTranslator {
    * Root context. Doesn't do anything.
    */
   public static class RootContext extends TranslatorToCAst.RootContext<WalkContext, ASTNode> implements WalkContext {
-     public Collection<Pair<ITypeBinding, Object>> getCatchTargets(ITypeBinding type) {
+     @Override
+    public Collection<Pair<ITypeBinding, Object>> getCatchTargets(ITypeBinding type) {
       Assertions.UNREACHABLE("RootContext.getCatchTargets()");
       return null;
     }
 
+    @Override
     public Map<ASTNode, String> getLabelMap() {
       Assertions.UNREACHABLE("RootContext.getLabelMap()");
       return null;
     }
 
+    @Override
     public boolean needLValue() {
       Assertions.UNREACHABLE("Rootcontext.needLValue()");
       return false;
@@ -3040,6 +3115,7 @@ public class JDTJava2CAstTranslator {
       super(parent);
     }
 
+    @Override
     public boolean needLValue() {
       return true;
     }
@@ -3059,6 +3135,7 @@ public class JDTJava2CAstTranslator {
       }
     }
 
+    @Override
     public Collection<Pair<ITypeBinding, Object>> getCatchTargets(ITypeBinding label) {
       // Look for all matching targets for this thrown type:
       // if supertpe match, then return only matches at this catch
@@ -3098,6 +3175,7 @@ public class JDTJava2CAstTranslator {
       this.breakTo = breakTo;
     }
 
+    @Override
     public ASTNode getBreakFor(String label) {
       return (label == null || label.equals(this.label)) ? breakTo : super.getBreakFor(label);
     }
@@ -3111,6 +3189,7 @@ public class JDTJava2CAstTranslator {
       this.continueTo = continueTo;
     }
 
+    @Override
     public ASTNode getContinueFor(String label) {
       return (label == null || label.equals(this.label)) ? continueTo : super.getContinueFor(label);
     }
@@ -3127,6 +3206,7 @@ public class JDTJava2CAstTranslator {
       fEntities = entities;
     }
 
+    @Override
     public Map<ASTNode, String> getLabelMap() {
       return labelMap; // labels are kept within a method.
     }
@@ -3137,22 +3217,27 @@ public class JDTJava2CAstTranslator {
 
     final CAstNodeTypeMapRecorder fNodeTypeMap = new CAstNodeTypeMapRecorder();
 
+    @Override
     public CAstControlFlowRecorder cfg() {
       return fCFG;
     }
 
+    @Override
     public void addScopedEntity(CAstNode node, CAstEntity entity) {
       fEntities.put(node, entity);
     }
 
+    @Override
     public CAstSourcePositionRecorder pos() {
       return fSourceMap;
     }
 
+    @Override
     public CAstNodeTypeMapRecorder getNodeTypeMap() {
       return fNodeTypeMap;
     }
 
+    @Override
     public Collection<Pair<ITypeBinding, Object>> getCatchTargets(ITypeBinding label) {
       // TAGALONG (need fRuntimeExcType)
       // Why do we seemingly catch a RuntimeException in every method? this won't catch the RuntimeException above where
@@ -3162,6 +3247,7 @@ public class JDTJava2CAstTranslator {
       return result;
     }
 
+    @Override
     public boolean needLValue() {
       return false;
     }
@@ -3397,6 +3483,7 @@ public class JDTJava2CAstTranslator {
 
     // constants are unsorted by default
     Collections.sort(constants, new Comparator<IVariableBinding>() {
+      @Override
       public int compare(IVariableBinding arg0, IVariableBinding arg1) {
         return arg0.getVariableId() - arg1.getVariableId();
       }

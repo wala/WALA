@@ -60,6 +60,7 @@ public class TunedRefinementPolicy extends AbstractRefinementPolicy {
       this.cha = cha;
     }
 
+    @Override
     public RefinementPolicy make() {
       return new TunedRefinementPolicy(cha);
     }

@@ -91,6 +91,7 @@ public class BypassSyntheticClassLoader implements IClassLoader {
     return me.getName().toString();
   }
 
+  @Override
   public IClass lookupClass(TypeName className) {
     IClass pc = parent.lookupClass(className);
     if (pc == null) {
@@ -112,6 +113,7 @@ public class BypassSyntheticClassLoader implements IClassLoader {
   /**
    * Return the ClassLoaderReference for this class loader.
    */
+  @Override
   public ClassLoaderReference getReference() {
     return me;
   }
@@ -119,6 +121,7 @@ public class BypassSyntheticClassLoader implements IClassLoader {
   /**
    * @return an Iterator of all classes loaded by this loader
    */
+  @Override
   public Iterator<IClass> iterateAllClasses() {
     return syntheticClasses.values().iterator();
   }
@@ -126,6 +129,7 @@ public class BypassSyntheticClassLoader implements IClassLoader {
   /**
    * @return the number of classes in scope to be loaded by this loader
    */
+  @Override
   public int getNumberOfClasses() {
     return syntheticClasses.size();
   }
@@ -133,6 +137,7 @@ public class BypassSyntheticClassLoader implements IClassLoader {
   /**
    * @return the unique name that identifies this class loader.
    */
+  @Override
   public Atom getName() {
     return me.getName();
   }
@@ -141,6 +146,7 @@ public class BypassSyntheticClassLoader implements IClassLoader {
    * @return the unique name that identifies the programming language
    *  from which this class loader loads code.
    */
+  @Override
   public Language getLanguage() {
     return Language.JAVA;
   }
@@ -148,6 +154,7 @@ public class BypassSyntheticClassLoader implements IClassLoader {
   /*
    * @see com.ibm.wala.classLoader.IClassLoader#getNumberOfMethods()
    */
+  @Override
   public int getNumberOfMethods() {
     // TODO Auto-generated method stub
     return 0;
@@ -156,6 +163,7 @@ public class BypassSyntheticClassLoader implements IClassLoader {
   /*
    * @see com.ibm.wala.classLoader.IClassLoader#getSourceFileName(com.ibm.wala.classLoader.IClass)
    */
+  @Override
   public String getSourceFileName(IClass klass) {
     return null;
   }
@@ -163,16 +171,19 @@ public class BypassSyntheticClassLoader implements IClassLoader {
   /**
    * @see com.ibm.wala.classLoader.IClassLoader#getParent()
    */
+  @Override
   public IClassLoader getParent() {
     return parent;
   }
 
+  @Override
   public void init(List<Module> modules) throws IOException {
   }
 
   /*
    * @see com.ibm.wala.classLoader.IClassLoader#removeAll(java.util.Collection)
    */
+  @Override
   public void removeAll(Collection<IClass> toRemove) {
     if (toRemove == null) {
       throw new IllegalArgumentException("toRemove is null");
@@ -183,18 +194,22 @@ public class BypassSyntheticClassLoader implements IClassLoader {
     }
   }
 
+  @Override
   public InputStream getSource(IClass klass) {
     return null;
   }
 
+  @Override
   public SSAInstructionFactory getInstructionFactory() {
     return getLanguage().instructionFactory();
   }
 
+  @Override
   public InputStream getSource(IMethod method, int offset) {
     return null;
   }
 
+  @Override
   public String getSourceFileName(IMethod method, int offset) {
     return null;
   }

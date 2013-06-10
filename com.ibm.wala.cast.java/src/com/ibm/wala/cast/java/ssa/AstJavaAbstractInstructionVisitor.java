@@ -17,10 +17,12 @@ public class AstJavaAbstractInstructionVisitor
     implements AstJavaInstructionVisitor 
 {
 
+  @Override
   public void visitJavaInvoke(AstJavaInvokeInstruction instruction) {
 
   }
 
+  @Override
   public void visitEnclosingObjectReference(EnclosingObjectReference inst) {
 
   }

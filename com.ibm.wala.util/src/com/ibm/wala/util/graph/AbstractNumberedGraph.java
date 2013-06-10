@@ -23,16 +23,19 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implemen
   /**
    * @return the object which manages nodes in the graph
    */
+  @Override
   protected abstract NumberedNodeManager<T> getNodeManager();
 
   /**
    * @return the object which manages edges in the graph
    */
+  @Override
   protected abstract NumberedEdgeManager<T> getEdgeManager();
 
   /*
    * @see com.ibm.wala.util.graph.NumberedNodeManager#getMaxNumber()
    */
+  @Override
   public int getMaxNumber() {
     return getNodeManager().getMaxNumber();
   }
@@ -40,6 +43,7 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implemen
   /*
    * @see com.ibm.wala.util.graph.NumberedNodeManager#getNode(int)
    */
+  @Override
   public T getNode(int number) {
     return getNodeManager().getNode(number);
   }
@@ -47,6 +51,7 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implemen
   /*
    * @see com.ibm.wala.util.graph.NumberedNodeManager#getNumber(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public int getNumber(T N) {
     if (N == null) {
       throw new IllegalArgumentException("N cannot be null");
@@ -57,6 +62,7 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implemen
   /*
    * @see com.ibm.wala.util.graph.NumberedNodeManager#iterateNodes(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public Iterator<T> iterateNodes(final IntSet s) {
     return new NumberedNodeIterator<T>(s, this);
   }
@@ -64,6 +70,7 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implemen
   /* 
    * @see com.ibm.wala.util.graph.NumberedEdgeManager#getPredNodeNumbers(java.lang.Object)
    */
+  @Override
   public IntSet getPredNodeNumbers(T node) throws IllegalArgumentException {
     assert getEdgeManager() != null;
     return getEdgeManager().getPredNodeNumbers(node);
@@ -72,6 +79,7 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implemen
   /* 
    * @see com.ibm.wala.util.graph.NumberedEdgeManager#getSuccNodeNumbers(java.lang.Object)
    */
+  @Override
   public IntSet getSuccNodeNumbers(T node) throws IllegalArgumentException {
     return getEdgeManager().getSuccNodeNumbers(node);
   }
