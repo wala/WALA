@@ -22,6 +22,13 @@ import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 
+/**
+ * Floyd-Warshall algorithm to compute all-pairs shortest path in graph with no negative cycles.
+ * 
+ * TODO: this API should be cleaned up.
+ * 
+ * @param <T> node type in the graph
+ */
 public class FloydWarshall<T> {
 
   public interface GetPath<T> {
@@ -46,7 +53,7 @@ public class FloydWarshall<T> {
     
   }
   
-  int[][] allPairsShortestPaths() {
+  public int[][] allPairsShortestPaths() {
     final int[][] result = new int[G.getNumberOfNodes()][G.getNumberOfNodes()];
 
     for(int i = 0; i < result.length; i++) {
