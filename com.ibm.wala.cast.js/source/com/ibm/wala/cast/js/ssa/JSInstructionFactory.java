@@ -11,7 +11,6 @@
 package com.ibm.wala.cast.js.ssa;
 
 import com.ibm.wala.cast.ir.ssa.AstInstructionFactory;
-import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
