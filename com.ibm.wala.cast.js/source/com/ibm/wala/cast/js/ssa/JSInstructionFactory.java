@@ -26,8 +26,6 @@ public interface JSInstructionFactory extends AstInstructionFactory {
   
   JavaScriptInvoke Invoke(int function, int results[], int[] params, int exception, CallSiteReference site);
   
-  JavaScriptInvoke Invoke(int function, int results[], int[] params, int exception, CallSiteReference site, Access[] lexicalReads, Access[] lexicalWrites);
-  
   JavaScriptInvoke Invoke(int function, int result, int[] params, int exception, CallSiteReference site);
   
   JavaScriptInvoke Invoke(int function, int[] params, int exception, CallSiteReference site);

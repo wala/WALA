@@ -234,12 +234,6 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         @Override
-        public JavaScriptInvoke Invoke(int function, int[] results, int[] params, int exception, CallSiteReference site,
-            Access[] lexicalReads, Access[] lexicalWrites) {
-          return new JavaScriptInvoke(function, results, params, exception, site, lexicalReads, lexicalWrites);
-        }
-
-        @Override
         public JavaScriptInvoke Invoke(int function, int result, int[] params, int exception, CallSiteReference site) {
           return new JavaScriptInvoke(function, result, params, exception, site);
         }

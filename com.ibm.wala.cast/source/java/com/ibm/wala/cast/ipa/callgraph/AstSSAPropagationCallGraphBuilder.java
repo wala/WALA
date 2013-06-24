@@ -18,7 +18,6 @@ import java.util.Set;
 import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
 import com.ibm.wala.cast.ipa.callgraph.AstCallGraph.AstCGNode;
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys.ScopeMappingInstanceKey;
-import com.ibm.wala.cast.ir.ssa.AbstractLexicalInvoke;
 import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
 import com.ibm.wala.cast.ir.ssa.AstEchoInstruction;
 import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
@@ -61,7 +60,6 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterprete
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -535,43 +533,6 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
     }
 
-    @Override
-    protected void visitInvokeInternal(final SSAAbstractInvokeInstruction instruction, InvariantComputer invs) {
-      super.visitInvokeInternal(instruction, invs);
-      if (instruction instanceof AbstractLexicalInvoke) {
-        AbstractLexicalInvoke I = (AbstractLexicalInvoke) instruction;
-        for (int wi = 0; wi < I.getNumberOfDefs(); wi++) {
-          if (I.isLexicalDef(wi)) {
-            Access w = I.getLexicalDef(wi);
-            for (int ri = 0; ri < I.getNumberOfUses(); ri++) {
-              if (I.isLexicalUse(ri)) {
-                Access r = I.getLexicalUse(ri);
-                if (w.variableName.equals(r.variableName)) {
-                  if (w.variableDefiner == null ? r.variableDefiner == null : w.variableDefiner.equals(r.variableDefiner)) {
-                    // handle the control-flow paths through the (transitive)
-                    // callees where the name is not written;
-                    // in such cases, the original value (rk) is preserved
-                    PointerKey rk = getBuilder().getPointerKeyForLocal(node, r.valueNumber);
-                    PointerKey wk = getBuilder().getPointerKeyForLocal(node, w.valueNumber);
-                    if (contentsAreInvariant(node.getIR().getSymbolTable(), du, r.valueNumber)) {
-                      system.recordImplicitPointsToSet(rk);
-                      final InstanceKey[] objKeys = getInvariantContents(r.valueNumber);
-
-                      for (int i = 0; i < objKeys.length; i++) {
-                        system.newConstraint(wk, objKeys[0]);
-                      }
-                    } else {
-                      system.newConstraint(wk, assignOperator, rk);
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
     // /////////////////////////////////////////////////////////////////////////
     //
     // lexical scoping handling
@@ -949,8 +910,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
         @Override
         public byte evaluate(PointsToSetVariable lhs, final PointsToSetVariable[] rhs) {
-          final IntSetVariable receivers = (IntSetVariable) rhs[0];
-          final IntSetVariable fields = (IntSetVariable) rhs[1];
+          final IntSetVariable receivers = rhs[0];
+          final IntSetVariable fields = rhs[1];
           if (receivers.getValue() != null && fields.getValue() != null) {
             receivers.getValue().foreach(new IntSetAction() {
               @Override
