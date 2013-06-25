@@ -283,6 +283,7 @@ public class PolyglotJava2CAstTranslator {
   }
 
   protected class JavaTranslatingVisitorImpl implements TranslatingVisitor {
+    @Override
     public CAstNode visit(MethodDecl m, MethodContext mc) {
       if (m.body() == null || m.body().statements().size() == 0)
         return makeNode(mc, fFactory, m, CAstNode.RETURN);
@@ -290,6 +291,7 @@ public class PolyglotJava2CAstTranslator {
         return walkNodes(m.body(), mc);
     }
 
+    @Override
     public CAstNode visit(ConstructorDecl cd, MethodContext mc) {
       // Needs to examine the initializers in the ClassContext
       // and glue that code into the right place relative to the
@@ -360,6 +362,7 @@ public class PolyglotJava2CAstTranslator {
       return null;
     }
 
+    @Override
     public CAstNode visit(FieldDecl f, MethodContext ctorContext) {
       // Generate CAST node for the initializer (init())
       // Type targetType = f.memberInstance().container();
@@ -386,21 +389,25 @@ public class PolyglotJava2CAstTranslator {
       return assNode;
     }
 
+    @Override
     public CAstNode visit(Import i, WalkContext wc) {
       Assertions.UNREACHABLE("walkNodes.ASTTraverser.visit(Import)");
       return null;
     }
 
+    @Override
     public CAstNode visit(PackageNode p, WalkContext wc) {
       Assertions.UNREACHABLE("walkNodes.ASTTraverser.visit(PackageNode)");
       return null;
     }
 
+    @Override
     public CAstNode visit(CanonicalTypeNode ctn, WalkContext wc) {
       // We'll take care of this in its surrounding context...
       return makeNode(wc, fFactory, null, CAstNode.EMPTY);
     }
 
+    @Override
     public CAstNode visit(ArrayTypeNode ctn, WalkContext wc) {
       // We'll take care of this in its surrounding context...
       Assertions.UNREACHABLE("walkNodes.ASTTraverser.visit(CanonicalTypeNode)");
@@ -411,6 +418,7 @@ public class PolyglotJava2CAstTranslator {
      * If we've handled all the parent cases, this should never be called --
      * visit(ArrayInit,WalkContext,Type) should be instead.
      */
+    @Override
     public CAstNode visit(ArrayInit ai, WalkContext wc) {
       if (((ArrayType) ai.type()).base().isNull()) {
         Assertions.productionAssertion(false, "bad type " + ai.type() + " for " + ai + " at " + ai.position());
@@ -464,14 +472,17 @@ public class PolyglotJava2CAstTranslator {
       return makeNode(wc, fFactory, ai, CAstNode.ARRAY_LITERAL, eltNodes);
     }
 
+    @Override
     public CAstNode visit(ArrayAccessAssign aaa, WalkContext wc) {
       return processAssign(aaa, wc);
     }
 
+    @Override
     public CAstNode visit(FieldAssign fa, WalkContext wc) {
       return processAssign(fa, wc);
     }
 
+    @Override
     public CAstNode visit(LocalAssign la, WalkContext wc) {
       return processAssign(la, wc);
     }
@@ -544,6 +555,7 @@ public class PolyglotJava2CAstTranslator {
       return null;
     }
 
+    @Override
     public CAstNode visit(Binary b, WalkContext wc) {
       Expr left = b.left();
       Expr right = b.right();
@@ -619,6 +631,7 @@ public class PolyglotJava2CAstTranslator {
       }
     }
 
+    @Override
     public CAstNode visit(Call c, WalkContext wc) {
       MethodInstance methodInstance = c.methodInstance();
       boolean isStatic = methodInstance.flags().isStatic();
@@ -681,6 +694,7 @@ public class PolyglotJava2CAstTranslator {
       return result;
     }
 
+    @Override
     public CAstNode visit(ConstructorCall cc, WalkContext wc) {
       ConstructorInstance ctorInstance = cc.constructorInstance();
       StructType methodOwner = ctorInstance.container();
@@ -715,6 +729,7 @@ public class PolyglotJava2CAstTranslator {
       return result;
     }
 
+    @Override
     public CAstNode visit(Cast c, WalkContext wc) {
       Expr arg = c.expr();
       Type castedFrom = arg.type();
@@ -745,46 +760,56 @@ public class PolyglotJava2CAstTranslator {
       return ast;
     }
 
+    @Override
     public CAstNode visit(Conditional c, WalkContext wc) {
       return makeNode(wc, fFactory, c, CAstNode.IF_EXPR, walkNodes(c.cond(), wc), walkNodes(c.consequent(), wc), walkNodes(c
           .alternative(), wc));
     }
 
+    @Override
     public CAstNode visit(Instanceof io, WalkContext wc) {
       return makeNode(wc, fFactory, io, CAstNode.INSTANCEOF, fFactory.makeConstant(getTypeDict().getCAstTypeFor(
           io.compareType().type())), walkNodes(io.expr(), wc));
     }
 
+    @Override
     public CAstNode visit(BooleanLit bl, WalkContext wc) {
       return fFactory.makeConstant(bl.value());
     }
 
+    @Override
     public CAstNode visit(ClassLit cl, WalkContext wc) {
       Type litType = cl.typeNode().type();
       String typeName = fIdentityMapper.typeToTypeID(litType);
       return makeNode(wc, fFactory, cl, CAstNode.TYPE_LITERAL_EXPR, fFactory.makeConstant(typeName));
     }
 
+    @Override
     public CAstNode visit(FloatLit fl, WalkContext wc) {
       return (fl.kind() == FloatLit.FLOAT) ? fFactory.makeConstant((float) fl.value()) : fFactory.makeConstant(fl.value());
     }
 
+    @Override
     public CAstNode visit(NullLit nl, WalkContext wc) {
       return fFactory.makeConstant(null);
     }
 
+    @Override
     public CAstNode visit(CharLit cl, WalkContext wc) {
       return fFactory.makeConstant(cl.value());
     }
 
+    @Override
     public CAstNode visit(IntLit il, WalkContext wc) {
       return fFactory.makeConstant((int) il.value());
     }
 
+    @Override
     public CAstNode visit(StringLit sl, WalkContext wc) {
       return fFactory.makeConstant(sl.value());
     }
 
+    @Override
     public CAstNode visit(New n, WalkContext wc) {
       CAstEntity anonClass = null;
       String newTypeNameStr;
@@ -848,6 +873,7 @@ public class PolyglotJava2CAstTranslator {
           fFactory, n, CAstNode.VAR, fFactory.makeConstant(tmpName))));
     }
 
+    @Override
     public CAstNode visit(NewArray na, WalkContext wc) {
       Type newType = na.type();
       ArrayInit ai = na.init();
@@ -872,6 +898,7 @@ public class PolyglotJava2CAstTranslator {
       }
     }
 
+    @Override
     public CAstNode visit(Special s, WalkContext wc) {
       if (s.qualifier() != null) {
         Type owningType = s.qualifier().type();
@@ -884,6 +911,7 @@ public class PolyglotJava2CAstTranslator {
       }
     }
 
+    @Override
     public CAstNode visit(Unary u, WalkContext wc) {
       if (isAssignOp(u.operator())) {
         WalkContext lvc = new AssignmentContext(wc);
@@ -911,6 +939,7 @@ public class PolyglotJava2CAstTranslator {
       return operator == Unary.POST_DEC || operator == Unary.POST_INC || operator == Unary.PRE_DEC || operator == Unary.PRE_INC;
     }
 
+    @Override
     public CAstNode visit(ArrayAccess aa, WalkContext wc) {
       TypeReference eltTypeRef = fIdentityMapper.getTypeRef(aa.type());
 
@@ -939,6 +968,7 @@ public class PolyglotJava2CAstTranslator {
       }
     }
 
+    @Override
     public CAstNode visit(Field f, WalkContext wc) {
       Receiver target = f.target();
       Type targetType = target.type();
@@ -992,30 +1022,36 @@ public class PolyglotJava2CAstTranslator {
       }
     }
 
+    @Override
     public CAstNode visit(Local l, WalkContext wc) {
       return makeNode(wc, fFactory, l, CAstNode.VAR, fFactory.makeConstant(l.name().id().toString()));
     }
 
+    @Override
     public CAstNode visit(ClassBody cb, WalkContext wc) {
       Assertions.UNREACHABLE("walkNodes.ASTTraverser.visit(ClassBody)");
       return null;
     }
 
+    @Override
     public CAstNode visit(ClassDecl cd, WalkContext wc) {
       Assertions.UNREACHABLE("walkNodes.ASTTraverser.visit(ClassDecl)");
       return null;
     }
 
+    @Override
     public CAstNode visit(Initializer i, WalkContext wc) {
       // Perhaps this is invoked from within the ConstructorDecl visit()
       // method...
       return walkNodes(i.body(), wc);
     }
 
+    @Override
     public CAstNode visit(Assert a, WalkContext wc) {
       return PolyglotJava2CAstTranslator.this.makeNode(wc, fFactory, a, CAstNode.ASSERT, walkNodes(a.cond(), wc));
     }
 
+    @Override
     public CAstNode visit(Branch b, WalkContext wc) {
       Node target = null;
       Id labelNode = b.labelNode();
@@ -1036,6 +1072,7 @@ public class PolyglotJava2CAstTranslator {
       return result;
     }
 
+    @Override
     public CAstNode visit(Block b, WalkContext wc) {
       CAstNode[] stmtNodes = new CAstNode[b.statements().size()];
 
@@ -1047,6 +1084,7 @@ public class PolyglotJava2CAstTranslator {
       return makeNode(wc, fFactory, b, CAstNode.LOCAL_SCOPE, makeNode(wc, fFactory, b, CAstNode.BLOCK_STMT, stmtNodes));
     }
 
+    @Override
     public CAstNode visit(SwitchBlock sb, WalkContext wc) {
       CAstNode[] stmtNodes = new CAstNode[sb.statements().size()];
 
@@ -1058,6 +1096,7 @@ public class PolyglotJava2CAstTranslator {
       return makeNode(wc, fFactory, sb, CAstNode.BLOCK_STMT, stmtNodes);
     }
 
+    @Override
     public CAstNode visit(Catch c, WalkContext wc) {
       Block body = c.body();
       Formal f = c.formal();
@@ -1070,11 +1109,13 @@ public class PolyglotJava2CAstTranslator {
       return localScope;
     }
 
+    @Override
     public CAstNode visit(If i, WalkContext wc) {
       return makeNode(wc, fFactory, i, CAstNode.IF_STMT, walkNodes(i.cond(), wc), walkNodes(i.consequent(), wc), walkNodes(i
           .alternative(), wc));
     }
 
+    @Override
     public CAstNode visit(Labeled l, WalkContext wc) {
       Node breakTarget = makeBreakTarget(l);
 
@@ -1105,6 +1146,7 @@ public class PolyglotJava2CAstTranslator {
       return result;
     }
 
+    @Override
     public CAstNode visit(LocalClassDecl lcd, WalkContext wc) {
       fIdentityMapper.mapLocalAnonTypeToMethod(lcd.decl().classDef().asType(), wc.getEnclosingMethod());
 
@@ -1128,6 +1170,7 @@ public class PolyglotJava2CAstTranslator {
           fNodeFactory.Empty(Position.COMPILER_GENERATED));
     }
 
+    @Override
     public CAstNode visit(Do d, WalkContext wc) {
       Node breakTarget = makeBreakTarget(d);
       Node continueTarget = makeContinueTarget(d);
@@ -1146,6 +1189,7 @@ public class PolyglotJava2CAstTranslator {
     }
 
     
+    @Override
     public CAstNode visit(For f, WalkContext wc) {
       Node breakTarget = makeBreakTarget(f);
       Node continueTarget = makeContinueTarget(f);
@@ -1171,6 +1215,7 @@ public class PolyglotJava2CAstTranslator {
 
     }
 
+    @Override
     public CAstNode visit(While w, WalkContext wc) {
       Expr c = w.cond();
       Stmt b = w.body();
@@ -1187,6 +1232,7 @@ public class PolyglotJava2CAstTranslator {
           fFactory, w, CAstNode.BLOCK_STMT, walkNodes(b, lc), walkNodes(continueTarget, wc))), walkNodes(breakTarget, wc));
     }
 
+    @Override
     public CAstNode visit(Switch s, WalkContext wc) {
 	Node breakLabel = fNodeFactory.Labeled(s.position(),
 	        fNodeFactory.Id(s.position(), "switchBreakLabel" + s.position().toString().replace('.', '_')),
@@ -1230,6 +1276,7 @@ public class PolyglotJava2CAstTranslator {
       return makeNode(wc, fFactory, s, CAstNode.BLOCK_STMT, switchAst, breakAst);
     }
 
+    @Override
     public CAstNode visit(Synchronized s, WalkContext wc) {
       CAstNode exprNode = walkNodes(s.expr(), wc);
       String exprName = fFactory.makeUnique();
@@ -1246,6 +1293,7 @@ public class PolyglotJava2CAstTranslator {
       return makeNode(wc, fFactory, s, CAstNode.BLOCK_STMT, declStmt, bigBody);
     }
 
+    @Override
     public CAstNode visit(Try t, WalkContext wc) {
       List catchBlocks = t.catchBlocks();
       Block finallyBlock = t.finallyBlock();
@@ -1275,16 +1323,19 @@ public class PolyglotJava2CAstTranslator {
       }
     }
 
+    @Override
     public CAstNode visit(Empty e, WalkContext wc) {
       CAstNode result = makeNode(wc, fFactory, e, CAstNode.EMPTY);
       wc.cfg().map(e, result);
       return result;
     }
 
+    @Override
     public CAstNode visit(Eval e, WalkContext wc) {
       return walkNodes(e.expr(), wc);
     }
 
+    @Override
     public CAstNode visit(LocalDecl ld, WalkContext wc) {
       Expr init = ld.init();
       Type type = ld.declType();
@@ -1315,6 +1366,7 @@ public class PolyglotJava2CAstTranslator {
           defaultValue)), initNode);
     }
 
+    @Override
     public CAstNode visit(Return r, WalkContext wc) {
       Expr retExpr = r.expr();
       if (retExpr == null)
@@ -1323,6 +1375,7 @@ public class PolyglotJava2CAstTranslator {
         return makeNode(wc, fFactory, r, CAstNode.RETURN, walkNodes(retExpr, wc));
     }
 
+    @Override
     public CAstNode visit(Case c, WalkContext wc) {
       CAstNode label = makeNode(wc, fFactory, c, CAstNode.LABEL_STMT, fFactory.makeConstant(c.value()));
 
@@ -1330,6 +1383,7 @@ public class PolyglotJava2CAstTranslator {
       return label;
     }
 
+    @Override
     public CAstNode visit(Throw t, WalkContext wc) {
       CAstNode result = makeNode(wc, fFactory, t, CAstNode.THROW, walkNodes(t.expr(), wc));
       Type label = t.expr().type();
@@ -1347,6 +1401,7 @@ public class PolyglotJava2CAstTranslator {
       return result;
     }
 
+    @Override
     public CAstNode visit(Formal f, WalkContext wc) {
       return makeNode(wc, fFactory, f, CAstNode.VAR, fFactory.makeConstant(f.name().id().toString()));
     }
@@ -1362,40 +1417,49 @@ public class PolyglotJava2CAstTranslator {
       fTopLevelDecls = topLevelDecls;
     }
 
+    @Override
     public int getKind() {
       return FILE_ENTITY;
     }
 
+    @Override
     public String getName() {
       return fName;
     }
 
+    @Override
     public String getSignature() {
       Assertions.UNREACHABLE();
       return null;
     }
 
+    @Override
     public String[] getArgumentNames() {
       return new String[0];
     }
 
+    @Override
     public CAstNode[] getArgumentDefaults() {
       return new CAstNode[0];
     }
 
+    @Override
     public int getArgumentCount() {
       return 0;
     }
 
+    @Override
     public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
       return Collections.singletonMap(null, fTopLevelDecls);
     }
 
+    @Override
     public Iterator getScopedEntities(CAstNode construct) {
       Assertions.UNREACHABLE("CompilationUnitEntity asked for AST-related entities, but it has no AST.");
       return null;
     }
 
+    @Override
     public CAstNode getAST() {
       return null;
     }
@@ -1405,29 +1469,35 @@ public class PolyglotJava2CAstTranslator {
         return null;
     }
 
+    @Override
     public CAstControlFlowMap getControlFlow() {
       Assertions.UNREACHABLE("CompilationUnitEntity.getControlFlow()");
       return null;
     }
 
+    @Override
     public CAstSourcePositionMap getSourceMap() {
       Assertions.UNREACHABLE("CompilationUnitEntity.getSourceMap()");
       return null;
     }
 
+    @Override
     public CAstSourcePositionMap.Position getPosition() {
       return null;
     }
 
+    @Override
     public CAstNodeTypeMap getNodeTypeMap() {
       Assertions.UNREACHABLE("CompilationUnitEntity.getNodeTypeMap()");
       return null;
     }
 
+    @Override
     public Collection getQualifiers() {
       return Collections.EMPTY_LIST;
     }
 
+    @Override
     public CAstType getType() {
       Assertions.UNREACHABLE("CompilationUnitEntity.getType()");
       return null;
@@ -1450,6 +1520,7 @@ public class PolyglotJava2CAstTranslator {
       fType = type;
     }
 
+    @Override
     public String getName() {
       // TODO Will the IdentityMapper do the right thing for anonymous classes?
       // If so, we can delete most of the following logic...
@@ -1459,6 +1530,7 @@ public class PolyglotJava2CAstTranslator {
         return fIdentityMapper.getTypeRef(fType).getName().toString();
     }
 
+    @Override
     public Collection<CAstType> getSupertypes() {
       if (fSuperTypes == null) {
         buildSuperTypes();
@@ -1495,10 +1567,12 @@ public class PolyglotJava2CAstTranslator {
       }
     }
 
+    @Override
     public Collection<CAstQualifier> getQualifiers() {
       return mapFlagsToQualifiers(fType.flags());
     }
 
+    @Override
     public boolean isInterface() {
       if (fType == fSystem.Object()) {
         return false; // fSystem.Object() MUST be a class, as far as WALA is concerned
@@ -1514,10 +1588,12 @@ public class PolyglotJava2CAstTranslator {
       fEntities = new LinkedHashMap<CAstNode, Collection<CAstEntity>>(entities);
     }
 
+    @Override
     public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
       return Collections.unmodifiableMap(fEntities);
     }
 
+    @Override
     public Iterator getScopedEntities(CAstNode construct) {
       if (fEntities.containsKey(construct)) {
         return (fEntities.get(construct)).iterator();
@@ -1526,6 +1602,7 @@ public class PolyglotJava2CAstTranslator {
       }
     }
 
+    @Override
     public String getSignature() {
       return Util.methodEntityToSelector(this).toString();
     }
@@ -1555,30 +1632,37 @@ public class PolyglotJava2CAstTranslator {
       sourcePosition = makePosition(p);
     }
 
+    @Override
     public int getKind() {
       return TYPE_ENTITY;
     }
 
+    @Override
     public String getName() {
       return fName; // unqualified?
     }
 
+    @Override
     public String getSignature() {
       return "L" + fName.replace('.', '/') + ";";
     }
 
+    @Override
     public String[] getArgumentNames() {
       return new String[0];
     }
 
+    @Override
     public CAstNode[] getArgumentDefaults() {
       return new CAstNode[0];
     }
 
+    @Override
     public int getArgumentCount() {
       return 0;
     }
 
+    @Override
     public CAstNode getAST() {
       // This entity has no AST nodes, really.
       return null;
@@ -1589,42 +1673,51 @@ public class PolyglotJava2CAstTranslator {
         return null;
     }
 
+    @Override
     public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
       return Collections.singletonMap(null, fEntities);
     }
 
+    @Override
     public Iterator getScopedEntities(CAstNode construct) {
       Assertions.UNREACHABLE("Non-AST-bearing entity (ClassEntity) asked for scoped entities related to a given AST node");
       return null;
     }
 
+    @Override
     public CAstControlFlowMap getControlFlow() {
       // This entity has no AST nodes, really.
       return null;
     }
 
+    @Override
     public CAstSourcePositionMap getSourceMap() {
       // This entity has no AST nodes, really.
       return null;
     }
 
+    @Override
     public CAstSourcePositionMap.Position getPosition() {
       return sourcePosition;
     }
 
+    @Override
     public CAstNodeTypeMap getNodeTypeMap() {
       // This entity has no AST nodes, really.
       return new CAstNodeTypeMap() {
+        @Override
         public CAstType getNodeType(CAstNode node) {
           throw new UnsupportedOperationException();
         }
         
+        @Override
         public Collection<CAstNode> getMappedNodes() {
           throw new UnsupportedOperationException();
         }
       };
     }
 
+    @Override
     public Collection getQualifiers() {
       if (fCT == fTypeSystem.Object()) { // pretend the root of the hierarchy is always a class
         return mapFlagsToQualifiers(fCT.flags().clear(Flags.INTERFACE));
@@ -1632,6 +1725,7 @@ public class PolyglotJava2CAstTranslator {
       return mapFlagsToQualifiers(fCT.flags());
     }
 
+    @Override
     public CAstType getType() {
       return new PolyglotJavaType(fCT, getTypeDict(), fTypeSystem);
     }
@@ -1680,14 +1774,17 @@ public class PolyglotJava2CAstTranslator {
       }
     }
 
+    @Override
     public String toString() {
       return fPd.toString();
     }
 
+    @Override
     public int getKind() {
       return CAstEntity.FUNCTION_ENTITY;
     }
 
+    @Override
     public String getName() {
       if (fPd instanceof ConstructorInstance) {
         return MethodReference.initAtom.toString();
@@ -1701,10 +1798,12 @@ public class PolyglotJava2CAstTranslator {
       }
     }
 
+    @Override
     public String[] getArgumentNames() {
       return argumentNames;
     }
 
+    @Override
     public CAstNode[] getArgumentDefaults() {
       return new CAstNode[0];
     }
@@ -1727,45 +1826,55 @@ public class PolyglotJava2CAstTranslator {
         return false;
     }
 
+    @Override
     public int getArgumentCount() {
       return isStatic() ? formalTypes().size() : formalTypes().size() + 1;
     }
 
+    @Override
     public CAstNode getAST() {
       return fPdast;
     }
 
+    @Override
     public CAstControlFlowMap getControlFlow() {
       return fMc.cfg();
     }
 
+    @Override
     public CAstSourcePositionMap getSourceMap() {
       return fMc.pos();
     }
 
+    @Override
     public CAstSourcePositionMap.Position getPosition() {
       return getSourceMap().getPosition(fPdast);
     }
 
+    @Override
     public CAstNodeTypeMap getNodeTypeMap() {
       return fMc.getNodeTypeMap();
     }
 
+    @Override
     public Collection getQualifiers() {
       return mapFlagsToQualifiers(getFlags());
     }
 
+    @Override
     public CAstType getType() {
       return new CAstType.Method() {
         private Collection<CAstType> fExceptionTypes = null;
 
         private List<CAstType> fParameterTypes = null;
 
+        @Override
         public CAstType getReturnType() {
           return fMc.getTypeDictionary().getCAstTypeFor(
               (fPd instanceof MethodInstance) ? ((MethodInstance) fPd).returnType() : fSystem.Void());
         }
 
+        @Override
         public List<CAstType> getArgumentTypes() {
           if (fParameterTypes == null) {
             final List formalTypes = formalTypes();
@@ -1778,16 +1887,19 @@ public class PolyglotJava2CAstTranslator {
           return fParameterTypes;
         }
 
+        @Override
         public String getName() {
           Assertions.UNREACHABLE("CAstType.FunctionImpl#getName() called???");
           return "?";
         }
 
+        @Override
         public Collection<CAstType> getSupertypes() {
           Assertions.UNREACHABLE("CAstType.FunctionImpl#getSupertypes() called???");
           return null;
         }
 
+        @Override
         public Collection/* <CAstType> */<CAstType> getExceptionTypes() {
           if (fExceptionTypes == null) {
             fExceptionTypes = new LinkedHashSet<CAstType>();
@@ -1807,10 +1919,12 @@ public class PolyglotJava2CAstTranslator {
           return fExceptionTypes;
         }
 
+        @Override
         public int getArgumentCount() {
           return formalTypes().size();
         }
 
+        @Override
         public CAstType getDeclaringType() {
           return getTypeDict().getCAstTypeFor(declaringType);
         }
@@ -1834,38 +1948,47 @@ public class PolyglotJava2CAstTranslator {
       fContext = context;
     }
 
+    @Override
     public int getKind() {
       return CAstEntity.FIELD_ENTITY;
     }
 
+    @Override
     public String getName() {
       return fFI.name().toString();
     }
 
+    @Override
     public String getSignature() {
       return fFI.name() + fIdentityMapper.typeToTypeID(fFI.type());
     }
 
+    @Override
     public String[] getArgumentNames() {
       return new String[0];
     }
 
+    @Override
     public CAstNode[] getArgumentDefaults() {
       return new CAstNode[0];
     }
 
+    @Override
     public int getArgumentCount() {
       return 0;
     }
 
+    @Override
     public Iterator getScopedEntities(CAstNode construct) {
       return EmptyIterator.instance();
     }
 
+    @Override
     public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
       return Collections.emptyMap();
     }
 
+    @Override
     public CAstNode getAST() {
       // No AST for a field decl; initializers folded into
       // constructor processing...
@@ -1877,32 +2000,38 @@ public class PolyglotJava2CAstTranslator {
         return null;
     }
 
+    @Override
     public CAstControlFlowMap getControlFlow() {
       // No AST for a field decl; initializers folded into
       // constructor processing...
       return null;
     }
 
+    @Override
     public CAstSourcePositionMap getSourceMap() {
       // No AST for a field decl; initializers folded into
       // constructor processing...
       return null;
     }
 
+    @Override
     public CAstSourcePositionMap.Position getPosition() {
       return makePosition(fFI.position());
     }
 
+    @Override
     public CAstNodeTypeMap getNodeTypeMap() {
       // No AST for a field decl; initializers folded into
       // constructor processing...
       return null;
     }
 
+    @Override
     public Collection getQualifiers() {
       return mapFlagsToQualifiers(fFI.flags());
     }
 
+    @Override
     public CAstType getType() {
       return fContext.getTypeDictionary().getCAstTypeFor(fFI.type());
     }
@@ -1933,38 +2062,47 @@ public class PolyglotJava2CAstTranslator {
       super(parent);
     }
 
+    @Override
     public Collection<Pair<Type, Object>> getCatchTargets(Type label) {
       return parent.getCatchTargets(label);
     }
 
+    @Override
     public Node getFinally() {
       return parent.getFinally();
     }
 
+    @Override
     public CodeInstance getEnclosingMethod() {
       return parent.getEnclosingMethod();
     }
 
+    @Override
     public Type getEnclosingType() {
       return parent.getEnclosingType();
     }
 
+    @Override
     public CAstTypeDictionary getTypeDictionary() {
       return parent.getTypeDictionary();
     }
 
+    @Override
     public List<ClassMember> getStaticInitializers() {
       return parent.getStaticInitializers();
     }
 
+    @Override
     public List<ClassMember> getInitializers() {
       return parent.getInitializers();
     }
 
+    @Override
     public Map<Node, String> getLabelMap() {
       return parent.getLabelMap();
     }
 
+    @Override
     public boolean needLVal() {
       return parent.needLVal();
     }
@@ -1986,6 +2124,7 @@ public class PolyglotJava2CAstTranslator {
       fChildren = entities;
     }
 
+    @Override
     public void addScopedEntity(CAstNode node, CAstEntity e) {
       Assertions.productionAssertion(node == null);
       fChildren.add(e);
@@ -1995,18 +2134,22 @@ public class PolyglotJava2CAstTranslator {
     // return null; // fChildren;
     // }
 
+    @Override
     public Type getEnclosingType() {
       return type;
     }
 
+    @Override
     public List<ClassMember> getInitializers() {
       return fInitializers;
     }
 
+    @Override
     public List<ClassMember> getStaticInitializers() {
       return fStaticInitializers;
     }
 
+    @Override
     public CAstControlFlowRecorder cfg() {
       Assertions.UNREACHABLE("ClassContext.cfg()");
       return null;
@@ -2017,11 +2160,13 @@ public class PolyglotJava2CAstTranslator {
       return null;
     }
 
+    @Override
     public Node getFinally() {
       Assertions.UNREACHABLE("ClassContext.getFinally()");
       return null;
     }
 
+    @Override
     public CodeInstance getEnclosingMethod() {
       // No one outside a method defining a local class can see it,
       // so it clearly can't escape through to the method's enclosing
@@ -2030,28 +2175,33 @@ public class PolyglotJava2CAstTranslator {
       return null;
     }
 
+    @Override
     public CAstSourcePositionRecorder pos() {
       // No AST, so no AST map
       Assertions.UNREACHABLE("ClassContext.pos()");
       return null;
     }
 
+    @Override
     public Node getContinueFor(String label) {
       Assertions.UNREACHABLE("ClassContext.getContinueFor() with label " + label + " in " + type);
       return null;
     }
 
+    @Override
     public Node getBreakFor(String label) {
       System.err.println("Cannot find break target for " + label + " in " + type);
       Assertions.UNREACHABLE("ClassContext.getBreakFor()");
       return null;
     }
 
+    @Override
     public Map<Node, String> getLabelMap() {
       Assertions.UNREACHABLE("ClassContext.getLabelMap()");
       return null;
     }
 
+    @Override
     public boolean needLVal() {
       Assertions.UNREACHABLE("ClassContext.needLVal()");
       return false;
@@ -2074,31 +2224,38 @@ public class PolyglotJava2CAstTranslator {
       fEntities = entities;
     }
 
+    @Override
     public CAstNodeTypeMapRecorder getNodeTypeMap() {
       return fNodeTypeMap;
     }
 
+    @Override
     public CAstSourcePositionRecorder pos() {
       return fSourceMap;
     }
 
+    @Override
     public CAstControlFlowRecorder cfg() {
       return fCFG;
     }
 
+    @Override
     public void addScopedEntity(CAstNode node, CAstEntity entity) {
       if (! fEntities.containsKey(node)) { fEntities.put(node, new HashSet<CAstEntity>(1)); }
       fEntities.get(node).add(entity);
     }
 
+    @Override
     public Map<CAstNode, Collection<CAstEntity>> getScopedEntities() {
       return fEntities;
     }
 
+    @Override
     public Map<Node, String> getLabelMap() {
       return labelMap;
     }
 
+    @Override
     public boolean needLVal() {
       return false;
     }
@@ -2112,11 +2269,13 @@ public class PolyglotJava2CAstTranslator {
       fPI = pi;
     }
 
+    @Override
     public Collection<Pair<Type, Object>> getCatchTargets(Type label) {
       Collection<Pair<Type, Object>> result = Collections.singleton(Pair.<Type,Object>make(fREType, CAstControlFlowMap.EXCEPTION_TO_EXIT));
       return result;
     }
 
+    @Override
     public CodeInstance getEnclosingMethod() {
       return fPI;
     }
@@ -2143,6 +2302,7 @@ public class PolyglotJava2CAstTranslator {
       }
     }
 
+    @Override
     public Collection<Pair<Type, Object>> getCatchTargets(Type label) {
       // Look for all matching targets for this thrown type:
       // if supertpe match, then return only matches at this catch
@@ -2168,10 +2328,12 @@ public class PolyglotJava2CAstTranslator {
       return catchNodes;
     }
 
+    @Override
     public List<ClassMember> getStaticInitializers() {
       return null;
     }
 
+    @Override
     public List<ClassMember> getInitializers() {
       return null;
     }
@@ -2184,45 +2346,54 @@ public class PolyglotJava2CAstTranslator {
       fTypeDict = typeDict;
     }
 
+    @Override
     public Collection<Pair<Type, Object>> getCatchTargets(Type label) {
       Assertions.UNREACHABLE("RootContext.getCatchTargets()");
       return null;
     }
 
+    @Override
     public Node getFinally() {
       Assertions.UNREACHABLE("RootContext.getFinally()");
       return null;
     }
 
+    @Override
     public CodeInstance getEnclosingMethod() {
       Assertions.UNREACHABLE("RootContext.getEnclosingMethod()");
       return null;
     }
 
+    @Override
     public Type getEnclosingType() {
       Assertions.UNREACHABLE("RootContext.getEnclosingType()");
       return null;
     }
 
+    @Override
     public CAstTypeDictionary getTypeDictionary() {
       return fTypeDict;
     }
 
+    @Override
     public List<ClassMember> getStaticInitializers() {
       Assertions.UNREACHABLE("RootContext.getStaticInitializers()");
       return null;
     }
 
+    @Override
     public List<ClassMember> getInitializers() {
       Assertions.UNREACHABLE("RootContext.getInitializers()");
       return null;
     }
 
+    @Override
     public Map<Node, String> getLabelMap() {
       Assertions.UNREACHABLE("RootContext.getLabelMap()");
       return null;
     }
 
+    @Override
     public boolean needLVal() {
       Assertions.UNREACHABLE("ClassContext.needLVal()");
       return false;
@@ -2240,14 +2411,17 @@ public class PolyglotJava2CAstTranslator {
       this.breakTo = breakTo;
     }
 
+    @Override
     public Node getBreakFor(String label) {
       return (label == null || label.equals(this.label)) ? breakTo : super.getBreakFor(label);
     }
 
+    @Override
     public List<ClassMember> getStaticInitializers() {
       return null;
     }
 
+    @Override
     public List<ClassMember> getInitializers() {
       return null;
     }
@@ -2261,6 +2435,7 @@ public class PolyglotJava2CAstTranslator {
       this.continueTo = continueTo;
     }
 
+    @Override
     public Node getContinueFor(String label) {
       return (label == null || label.equals(this.label)) ? continueTo : super.getContinueFor(label);
     }
@@ -2272,6 +2447,7 @@ public class PolyglotJava2CAstTranslator {
       super(parent);
     }
 
+    @Override
     public boolean needLVal() {
       return true;
     }
@@ -2297,30 +2473,37 @@ public class PolyglotJava2CAstTranslator {
       this.p = p;
     }
 
+    @Override
     public int getFirstLine() {
       return p.line();
     }
 
+    @Override
     public int getLastLine() {
       return p.endLine();
     }
 
+    @Override
     public int getFirstCol() {
       return p.column();
     }
 
+    @Override
     public int getLastCol() {
       return p.endColumn();
     }
      
+    @Override
     public int getFirstOffset() {
       return p.offset();
     }
 
+    @Override
     public int getLastOffset() {
       return p.endOffset();
     }
 
+    @Override
     public URL getURL() {
       try {
         String path = p.path();
@@ -2331,6 +2514,7 @@ public class PolyglotJava2CAstTranslator {
       }
     }
 
+    @Override
     public InputStream getInputStream() throws IOException {
       return getURL().openConnection().getInputStream();
     }

@@ -64,6 +64,7 @@ final public class ComparisonInstruction extends Instruction implements ICompari
   /**
    * @return OPR_cmp (for long), OPR_cmpl, or OPR_cmpg (for float and double)
    */
+  @Override
   public Operator getOperator() {
     switch (opcode) {
     case OP_lcmp:
@@ -79,6 +80,7 @@ final public class ComparisonInstruction extends Instruction implements ICompari
     }
   }
 
+  @Override
   public String getType() {
     switch (opcode) {
     case OP_lcmp:
@@ -124,6 +126,7 @@ final public class ComparisonInstruction extends Instruction implements ICompari
     return "Comparison(" + getType() + "," + getOperator() + ")";
   }
 
+  @Override
   public boolean isPEI() {
     return false;
   }

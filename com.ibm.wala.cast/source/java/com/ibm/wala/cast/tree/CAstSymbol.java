@@ -13,6 +13,7 @@ package com.ibm.wala.cast.tree;
 public interface CAstSymbol {
 
   public static Object NULL_DEFAULT_VALUE = new Object() {
+    @Override
     public String toString() {
       return "NULL DEFAULT VALUE";
     }

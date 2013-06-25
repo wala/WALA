@@ -104,18 +104,22 @@ public class GetInstruction extends Instruction implements IGetInstruction {
     }
   }
 
+  @Override
   public String getClassType() {
     return classType;
   }
 
+  @Override
   public String getFieldName() {
     return fieldName;
   }
 
+  @Override
   public String getFieldType() {
     return type;
   }
 
+  @Override
   final public boolean isStatic() {
     return opcode == OP_getstatic;
   }
@@ -154,6 +158,7 @@ public class GetInstruction extends Instruction implements IGetInstruction {
     v.visitGet(this);
   }
 
+  @Override
   public boolean isPEI() {
     return !isStatic();
   }
@@ -161,6 +166,7 @@ public class GetInstruction extends Instruction implements IGetInstruction {
   /**
    * Java does not permit this
    */
+  @Override
   public boolean isAddressOf() {
     return false;
   }

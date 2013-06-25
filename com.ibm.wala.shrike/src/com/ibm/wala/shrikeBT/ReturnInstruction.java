@@ -84,6 +84,7 @@ public final class ReturnInstruction extends Instruction {
     return "Return(" + getType() + ")";
   }
 
+  @Override
   public boolean isPEI() {
     return false;
   }

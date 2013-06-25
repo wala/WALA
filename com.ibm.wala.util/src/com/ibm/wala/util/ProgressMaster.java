@@ -44,6 +44,7 @@ public class ProgressMaster implements IProgressMonitor {
     return new ProgressMaster(monitor);
   }
 
+  @Override
   public synchronized void beginTask(String name, int totalWork) {
     delegate.beginTask(name, totalWork);
     startNanny();
@@ -72,6 +73,7 @@ public class ProgressMaster implements IProgressMonitor {
     return timedOut;
   }
 
+  @Override
   public synchronized void done() {
     killNanny();
     delegate.done();
@@ -88,6 +90,7 @@ public class ProgressMaster implements IProgressMonitor {
     }
   }
 
+  @Override
   public boolean isCanceled() {
     return delegate.isCanceled() || timedOut;
   }
@@ -96,6 +99,7 @@ public class ProgressMaster implements IProgressMonitor {
     killNanny();
   }
 
+  @Override
   public synchronized void worked(int work) {
     killNanny();
     delegate.worked(work);

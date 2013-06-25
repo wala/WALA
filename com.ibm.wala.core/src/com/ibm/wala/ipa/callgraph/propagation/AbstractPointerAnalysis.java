@@ -43,6 +43,7 @@ public abstract class AbstractPointerAnalysis implements PointerAnalysis {
     this.instanceKeys = instanceKeys;
   }
 
+  @Override
   public HeapGraph getHeapGraph() {
     if (heapGraph == null) {
       heapGraph = new BasicHeapGraph(this, cg);
@@ -54,10 +55,12 @@ public abstract class AbstractPointerAnalysis implements PointerAnalysis {
     return cg;
   }
 
+  @Override
   public Collection<InstanceKey> getInstanceKeys() {
     return Collections.unmodifiableCollection(instanceKeys.getObjects());
   }
 
+  @Override
   public OrdinalSetMapping<InstanceKey> getInstanceKeyMapping() {
     return instanceKeys;
   }

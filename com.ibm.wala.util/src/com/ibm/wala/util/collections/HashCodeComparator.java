@@ -23,6 +23,7 @@ public class HashCodeComparator<T> implements Comparator<T> {
   /*
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare(T o1, T o2) throws NullPointerException {
     // by convention null is less than non-null
     if (o1 == null) {

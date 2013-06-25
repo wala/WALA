@@ -95,6 +95,7 @@ public class CopyWriter {
 
     instrumenter = new OfflineInstrumenter();
     instrumenter.setManifestBuilder(new OfflineInstrumenter.ManifestBuilder() {
+      @Override
       public void addEntry(ZipEntry ze) {
         entries.add(ze);
       }

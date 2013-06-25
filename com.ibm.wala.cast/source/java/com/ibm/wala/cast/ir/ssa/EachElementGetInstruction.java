@@ -35,18 +35,22 @@ public class EachElementGetInstruction extends SSAAbstractUnaryInstruction {
     super(lValue, objectRef);
   }
 
+  @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((AstInstructionFactory)insts).EachElementGetInstruction((defs == null) ? getDef(0) : defs[0], (uses == null) ? getUse(0) : uses[0]);
   }
 
+  @Override
   public String toString(SymbolTable symbolTable) {
     return getValueString(symbolTable, getDef(0)) + " = a property name of " + getValueString(symbolTable, getUse(0));
   }
 
+  @Override
   public void visit(IVisitor v) {
     ((AstInstructionVisitor) v).visitEachElementGet(this);
   }
 
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return Collections.emptySet();
   }

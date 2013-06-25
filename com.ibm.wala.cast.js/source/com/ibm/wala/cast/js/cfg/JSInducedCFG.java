@@ -37,27 +37,34 @@ public class JSInducedCFG extends AstInducedCFG {
       super(r);
     }
 
+    @Override
     public void visitJavaScriptInvoke(JavaScriptInvoke inst) {
       breakBasicBlock();
     }
 
+    @Override
     public void visitJavaScriptPropertyRead(JavaScriptPropertyRead inst) {
     }
 
+    @Override
     public void visitJavaScriptPropertyWrite(JavaScriptPropertyWrite inst) {
     }
 
+    @Override
     public void visitTypeOf(JavaScriptTypeOfInstruction inst) {
     }
 
+    @Override
     public void visitJavaScriptInstanceOf(JavaScriptInstanceOf instruction) {
       
     }
 
+    @Override
     public void visitCheckRef(JavaScriptCheckReference instruction) {
       breakBasicBlock();
     }
 
+    @Override
     public void visitWithRegion(JavaScriptWithRegion instruction) {
       
     }
@@ -77,24 +84,31 @@ public class JSInducedCFG extends AstInducedCFG {
       super(r);
     }
 
+    @Override
     public void visitJavaScriptInvoke(JavaScriptInvoke inst) {
     }
 
+    @Override
     public void visitJavaScriptPropertyRead(JavaScriptPropertyRead inst) {
     }
 
+    @Override
     public void visitJavaScriptPropertyWrite(JavaScriptPropertyWrite inst) {
     }
 
+    @Override
     public void visitTypeOf(JavaScriptTypeOfInstruction inst) {
     }
 
+    @Override
     public void visitJavaScriptInstanceOf(JavaScriptInstanceOf instruction) {      
     }
 
+    @Override
     public void visitCheckRef(JavaScriptCheckReference instruction) {      
     }
 
+    @Override
     public void visitWithRegion(JavaScriptWithRegion instruction) {
     }
 
@@ -107,10 +121,12 @@ public class JSInducedCFG extends AstInducedCFG {
     }
   }
     
+  @Override
   protected BranchVisitor makeBranchVisitor(boolean[] r) {
     return new JSBranchVisitor(r);
   }
 
+  @Override
   protected PEIVisitor makePEIVisitor(boolean[] r) {
     return new JSPEIVisitor(r);
   }

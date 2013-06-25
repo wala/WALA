@@ -53,22 +53,27 @@ public class JSAstTranslator extends AstTranslator {
     return JavaScriptLoader.bootstrapFileNames.contains( context.getModule().getName() );
   }
 
+  @Override
   protected boolean useDefaultInitValues() {
     return false;
   }
 
+  @Override
   protected boolean hasImplicitGlobals() {
     return true;
   }
 
+  @Override
   protected boolean treatGlobalsAsLexicallyScoped() {
     return false;
   }
   
+  @Override
   protected TypeReference defaultCatchType() {
     return JavaScriptTypes.Root;
   }
 
+  @Override
   protected TypeReference makeType(CAstType type) {
     Assertions.UNREACHABLE("JavaScript does not use CAstType");
     return null;
@@ -90,6 +95,7 @@ public class JSAstTranslator extends AstTranslator {
     context.cfg().newBlock(true);
   }
 
+  @Override
   protected int doLexicallyScopedRead(CAstNode n, WalkContext context, String name) {
     int readVn = super.doLexicallyScopedRead(n, context, name);
     // should get an exception if name is undefined
@@ -97,6 +103,7 @@ public class JSAstTranslator extends AstTranslator {
     return readVn;
   }
 
+  @Override
   protected int doGlobalRead(CAstNode n, WalkContext context, String name) {
     int readVn = super.doGlobalRead(n, context, name);
     // add a check if name is undefined, unless we're reading the value 'undefined'
@@ -106,15 +113,18 @@ public class JSAstTranslator extends AstTranslator {
     return readVn;
   }
 
+  @Override
   protected boolean defineType(CAstEntity type, WalkContext wc) {
     Assertions.UNREACHABLE("JavaScript doesn't have types. I suggest you look elsewhere for your amusement.");
     return false;
   }
 
+  @Override
   protected void defineField(CAstEntity topEntity, WalkContext wc, CAstEntity n) {
     Assertions.UNREACHABLE("JavaScript doesn't have fields");
   }
 
+  @Override
   protected String composeEntityName(WalkContext parent, CAstEntity f) {
     if (f.getKind() == CAstEntity.SCRIPT_ENTITY)
       return f.getName();
@@ -122,6 +132,7 @@ public class JSAstTranslator extends AstTranslator {
       return parent.getName() + "/" + f.getName();
   }
 
+  @Override
   protected void declareFunction(CAstEntity N, WalkContext context) {
     String fnName = composeEntityName(context, N);
     if (N.getKind() == CAstEntity.SCRIPT_ENTITY) {
@@ -133,6 +144,7 @@ public class JSAstTranslator extends AstTranslator {
     }
   }
 
+  @Override
   protected void defineFunction(CAstEntity N, WalkContext definingContext, AbstractCFG cfg, SymbolTable symtab,
       boolean hasCatchBlock, Map<IBasicBlock,TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation LI,
       DebuggingInformation debugInfo) {
@@ -147,10 +159,12 @@ public class JSAstTranslator extends AstTranslator {
         debugInfo);
   }
 
+  @Override
   protected void doThrow(WalkContext context, int exception) {
     context.cfg().addInstruction(insts.ThrowInstruction(exception));
   }
 
+  @Override
   protected void doCall(WalkContext context, CAstNode call, int result, int exception, CAstNode name, int receiver, int[] arguments) {
     MethodReference ref = 
       name.getValue().equals("ctor") ? JavaScriptMethods.ctorReference 
@@ -173,6 +187,7 @@ public class JSAstTranslator extends AstTranslator {
       context.cfg().addPreEdgeToExit(call, true);
   }
 
+  @Override
   protected void doNewObject(WalkContext context, CAstNode newNode, int result, Object type, int[] arguments) {
     assert arguments == null;
     TypeReference typeRef = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName("L" + type));
@@ -181,6 +196,7 @@ public class JSAstTranslator extends AstTranslator {
         insts.NewInstruction(result, NewSiteReference.make(context.cfg().getCurrentInstruction(), typeRef)));
   }
 
+  @Override
   protected void doMaterializeFunction(CAstNode n, WalkContext context, int result, int exception, CAstEntity fn) {
     int nm = context.currentScope().getConstantValue("L" + composeEntityName(context, fn));
     // "Function" is the name we use to model the constructor of function values
@@ -190,14 +206,17 @@ public class JSAstTranslator extends AstTranslator {
             JavaScriptMethods.ctorReference, context.cfg().getCurrentInstruction())));
   }
 
+  @Override
   public void doArrayRead(WalkContext context, int result, int arrayValue, CAstNode arrayRef, int[] dimValues) {
     Assertions.UNREACHABLE("JSAstTranslator.doArrayRead() called!");
   }
 
+  @Override
   public void doArrayWrite(WalkContext context, int arrayValue, CAstNode arrayRef, int[] dimValues, int rval) {
     Assertions.UNREACHABLE("JSAstTranslator.doArrayWrite() called!");
   }
 
+  @Override
   protected void doFieldRead(WalkContext context, int result, int receiver, CAstNode elt, CAstNode readNode) {
     this.visit(elt, context, this);
     int x = context.currentScope().allocateTempValue();
@@ -228,6 +247,7 @@ public class JSAstTranslator extends AstTranslator {
     }
   }
 
+  @Override
   protected void doFieldWrite(WalkContext context, int receiver, CAstNode elt, CAstNode parent, int rval) {
     this.visit(elt, context, this);
     if (elt.getKind() == CAstNode.CONSTANT && elt.getValue() instanceof String) {
@@ -262,6 +282,7 @@ public class JSAstTranslator extends AstTranslator {
     context.cfg().addInstruction(((JSInstructionFactory) insts).PutInstruction(resultVal, rval, "class"));
   }
 
+  @Override
   protected void doPrimitive(int resultVal, WalkContext context, CAstNode primitiveCall) {
     try {
       String name = (String) primitiveCall.getChild(0).getValue();
@@ -327,6 +348,7 @@ public class JSAstTranslator extends AstTranslator {
     }
   }
 
+  @Override
   protected void doIsFieldDefined(WalkContext context, int result, int ref, CAstNode f) {
     if (f.getKind() == CAstNode.CONSTANT && f.getValue() instanceof String) {
       String field = (String) f.getValue();
@@ -342,6 +364,7 @@ public class JSAstTranslator extends AstTranslator {
     }
   }
 
+  @Override
   protected boolean visitInstanceOf(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
     WalkContext context = (WalkContext) c;
     int result = context.currentScope().allocateTempValue();
@@ -349,6 +372,7 @@ public class JSAstTranslator extends AstTranslator {
     return false;
   }
 
+  @Override
   protected void leaveInstanceOf(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
     WalkContext context = (WalkContext) c;
     int result = context.getValue(n);
@@ -362,6 +386,7 @@ public class JSAstTranslator extends AstTranslator {
     context.cfg().addInstruction(new JavaScriptInstanceOf(result, value, type));
   }
 
+  @Override
   protected void doPrologue(WalkContext context) {
     super.doPrologue(context);
     
@@ -372,6 +397,7 @@ public class JSAstTranslator extends AstTranslator {
     //context.cfg().addInstruction(((JSInstructionFactory) insts).PutInstruction(1, tempVal, "arguments"));
   }
 
+  @Override
   protected boolean doVisit(CAstNode n, WalkContext cntxt, CAstVisitor<WalkContext> visitor) {
     WalkContext context = (WalkContext) cntxt;
     switch (n.getKind()) {

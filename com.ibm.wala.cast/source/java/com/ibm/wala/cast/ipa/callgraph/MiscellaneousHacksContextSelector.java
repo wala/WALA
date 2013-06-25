@@ -108,6 +108,7 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
     System.err.println(("hacking context selector for methods " + methodsToSpecialize));
   }
 
+  @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (methodsToSpecialize.contains(site.getDeclaredTarget()) || methodsToSpecialize.contains(callee.getReference())) {
       return specialPolicy.getCalleeTarget(caller, site, callee, receiver);
@@ -116,6 +117,7 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
     }
   }
 
+  @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     return specialPolicy.getRelevantParameters(caller, site).union(basePolicy.getRelevantParameters(caller, site));
   }

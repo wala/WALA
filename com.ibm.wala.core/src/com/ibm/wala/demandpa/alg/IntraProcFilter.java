@@ -58,6 +58,7 @@ public class IntraProcFilter implements StateMachine<IFlowLabel> {
   private static final State DUMMY = new State() {
   };
 
+  @Override
   public State getStartState() {
     return DUMMY;
   }
@@ -87,6 +88,7 @@ public class IntraProcFilter implements StateMachine<IFlowLabel> {
 
   }
 
+  @Override
   public State transition(State prevState, IFlowLabel label) throws IllegalArgumentException {
     if (label == null) {
       throw new IllegalArgumentException("label == null");
@@ -102,6 +104,7 @@ public class IntraProcFilter implements StateMachine<IFlowLabel> {
 
   public static class Factory implements StateMachineFactory<IFlowLabel> {
 
+    @Override
     public StateMachine<IFlowLabel> make() {
       return new IntraProcFilter();
     }

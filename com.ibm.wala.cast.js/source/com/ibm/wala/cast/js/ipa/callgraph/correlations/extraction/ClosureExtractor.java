@@ -50,7 +50,6 @@ import com.ibm.wala.cast.tree.impl.CAstControlFlowRecorder;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
 import com.ibm.wala.cast.tree.rewrite.CAstBasicRewriter.NoKey;
-import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
@@ -534,10 +533,15 @@ public class ClosureExtractor extends CAstRewriterExt {
       theChildren.putAll(copyChildren(root.getChild(i), nodes, entity.getAllScopedEntities()));
 
     Rewrite rw = new Rewrite() {
+      @Override
       public CAstNode newRoot() { return newRoot; }
+      @Override
       public CAstControlFlowMap newCfg() { return theCfg; }
+      @Override
       public CAstSourcePositionMap newPos() { return theSource; }
+      @Override
       public CAstNodeTypeMap newTypes() { return theTypes; }
+      @Override
       public Map<CAstNode, Collection<CAstEntity>> newChildren() { return theChildren; }
     };
     new_entity.setRewrite(rw);

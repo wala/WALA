@@ -30,10 +30,12 @@ public class VectorGenFlowFunction implements IReversibleFlowFunction {
     assert gen.contains(0);
   }
 
+  @Override
   public IntSet getTargets(int i) {
     return (i == 0) ? gen : gen.contains(i) ? null : SparseIntSet.singleton(i);
   }
 
+  @Override
   public IntSet getSources(int i) {
     return (gen.contains(i)) ? SparseIntSet.singleton(0) : SparseIntSet.singleton(i);
   }

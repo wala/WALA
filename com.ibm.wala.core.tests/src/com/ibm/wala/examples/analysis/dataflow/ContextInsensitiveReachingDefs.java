@@ -113,10 +113,12 @@ public class ContextInsensitiveReachingDefs {
     /**
      * our meet operator is set union
      */
+    @Override
     public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
       return BitVectorUnion.instance();
     }
 
+    @Override
     public UnaryOperator<BitVectorVariable> getNodeTransferFunction(BasicBlockInContext<IExplodedBasicBlock> node) {
       IExplodedBasicBlock ebb = node.getDelegate();
       SSAInstruction instruction = ebb.getInstruction();
@@ -141,10 +143,12 @@ public class ContextInsensitiveReachingDefs {
      * here we need an edge transfer function for call-to-return edges (see
      * {@link #getEdgeTransferFunction(BasicBlockInContext, BasicBlockInContext)})
      */
+    @Override
     public boolean hasEdgeTransferFunctions() {
       return true;
     }
 
+    @Override
     public boolean hasNodeTransferFunctions() {
       return true;
     }
@@ -153,6 +157,7 @@ public class ContextInsensitiveReachingDefs {
      * for direct call-to-return edges at a call site, the edge transfer function will kill all facts, since we only want to
      * consider facts that arise from going through the callee
      */
+    @Override
     public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(BasicBlockInContext<IExplodedBasicBlock> src,
         BasicBlockInContext<IExplodedBasicBlock> dst) {
       if (isCallToReturnEdge(src, dst)) {

@@ -21,6 +21,7 @@ public interface CAstTypeDictionary/*<ASTType>*/ extends Iterable {
 
   CAstReference resolveReference(CAstReference ref);
 
+  @Override
   Iterator iterator();
 
 }

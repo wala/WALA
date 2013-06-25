@@ -34,38 +34,47 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
     this.base = base;
   }
 
+  @Override
   public PointerKey getPointerKeyForLocal(CGNode node, int valueNumber) {
     return base.getPointerKeyForLocal(node, valueNumber);
   }
 
+  @Override
   public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter) {
     return base.getFilteredPointerKeyForLocal(node, valueNumber, filter);
   }
 
+  @Override
   public PointerKey getPointerKeyForReturnValue(CGNode node) {
     return base.getPointerKeyForReturnValue(node);
   }
 
+  @Override
   public PointerKey getPointerKeyForExceptionalReturnValue(CGNode node) {
     return base.getPointerKeyForExceptionalReturnValue(node);
   }
 
+  @Override
   public PointerKey getPointerKeyForStaticField(IField f) {
     return base.getPointerKeyForStaticField(f);
   }
 
+  @Override
   public PointerKey getPointerKeyForObjectCatalog(InstanceKey I) {
     return new ObjectPropertyCatalogKey(I);
   }
 
+  @Override
   public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField f) {
     return base.getPointerKeyForInstanceField(I, f);
   }
 
+  @Override
   public PointerKey getPointerKeyForArrayContents(InstanceKey I) {
     return base.getPointerKeyForArrayContents(I);
   }
 
+  @Override
   public Iterator<PointerKey> getPointerKeysForReflectedFieldWrite(InstanceKey I, InstanceKey F) {
     List<PointerKey> result = new LinkedList<PointerKey>();
 
@@ -106,6 +115,7 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
     return null;
   }
   
+  @Override
   public Iterator<PointerKey> getPointerKeysForReflectedFieldRead(InstanceKey I, InstanceKey F) {
     if (F instanceof ConstantKey) {
       PointerKey ifk = getInstanceFieldPointerKeyForConstant(I, (ConstantKey) F);

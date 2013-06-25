@@ -65,6 +65,7 @@ public class GetFieldBarLabel implements IFlowLabel {
    * 
    * @see demandGraph.IFlowLabel#bar()
    */
+  @Override
   public GetFieldLabel bar() {
     return GetFieldLabel.make(field);
   }
@@ -75,6 +76,7 @@ public class GetFieldBarLabel implements IFlowLabel {
    * @see demandGraph.IFlowLabel#visit(demandGraph.IFlowLabel.IFlowLabelVisitor,
    *      java.lang.Object)
    */
+  @Override
   public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException("v == null");
@@ -107,6 +109,7 @@ public class GetFieldBarLabel implements IFlowLabel {
     return true;
   }
 
+  @Override
   public boolean isBarred() {
     return true;
   }

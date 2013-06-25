@@ -35,6 +35,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
   /*
    * @see com.ibm.wala.util.graph.NumberedGraph#getNumber(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public int getNumber(T N) {
     if (N == null) {
       throw new IllegalArgumentException("N is null");
@@ -43,6 +44,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
     return n.getGraphNodeId();
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public T getNode(int number) {
     try {
@@ -55,6 +57,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
   /*
    * @see com.ibm.wala.util.graph.NumberedGraph#getMaxNumber()
    */
+  @Override
   public int getMaxNumber() {
     return maxNumber;
   }
@@ -62,6 +65,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
   /*
    * @see com.ibm.wala.util.graph.Graph#iterateNodes()
    */
+  @Override
   public Iterator<T> iterator() {
     final INodeWithNumber[] arr = nodes;
     return new Iterator<T>() {
@@ -80,10 +84,12 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
         next = -1;
       }
 
+      @Override
       public boolean hasNext() {
         return next != -1;
       }
 
+      @Override
       @SuppressWarnings("unchecked")
       public T next() {
         if (hasNext()) {
@@ -95,6 +101,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
         }
       }
 
+      @Override
       public void remove() {
         Assertions.UNREACHABLE();
       }
@@ -104,6 +111,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
   /*
    * @see com.ibm.wala.util.graph.Graph#getNumberOfNodes()
    */
+  @Override
   public int getNumberOfNodes() {
     return numberOfNodes;
   }
@@ -114,6 +122,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
    * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
    * @throws IllegalArgumentException if n is null
    */
+  @Override
   public void addNode(T n) {
     if (n == null) {
       throw new IllegalArgumentException("n is null");
@@ -152,6 +161,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
   /*
    * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public void removeNode(T n) {
     if (n == null) {
       throw new IllegalArgumentException("n is null");
@@ -183,6 +193,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
   /*
    * @see com.ibm.wala.util.graph.NodeManager#containsNode(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public boolean containsNode(T n) {
     if (n == null) {
       throw new IllegalArgumentException("n is null");
@@ -208,6 +219,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
   /*
    * @see com.ibm.wala.util.graph.NumberedNodeManager#iterateNodes(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public Iterator<T> iterateNodes(IntSet s) {
     return new NumberedNodeIterator<T>(s, this);
   }

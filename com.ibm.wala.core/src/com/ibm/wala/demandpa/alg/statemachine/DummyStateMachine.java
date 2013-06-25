@@ -48,6 +48,7 @@ public class DummyStateMachine<T> implements StateMachine<T> {
 
   public static class Factory<T> implements StateMachineFactory<T> {
 
+    @Override
     public StateMachine<T> make() {
       return new DummyStateMachine<T>();
     }
@@ -66,10 +67,12 @@ public class DummyStateMachine<T> implements StateMachine<T> {
    * 
    * @see statemachine.StateMachine#transition(int, java.lang.Object)
    */
+  @Override
   public State transition(State prevState, T label) {
     return DUMMY;
   }
 
+  @Override
   public State getStartState() {
     return DUMMY;
   }

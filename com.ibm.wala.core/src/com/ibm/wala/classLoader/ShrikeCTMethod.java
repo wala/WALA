@@ -308,10 +308,12 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     }
   }
 
+  @Override
   public TypeReference getReturnType() {
     return getReference().getReturnType();
   }
 
+  @Override
   public IClassHierarchy getClassHierarchy() {
     return cha;
   }
@@ -355,6 +357,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     return Annotation.getAnnotationsFromReader(r, getDeclaringClass().getClassLoader().getReference());
   }
 
+  @Override
   public Collection<Annotation> getAnnotations() {
     Collection<Annotation> result = HashSetFactory.make();
     try {
@@ -370,16 +373,19 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
 
     private final int[] NOTHING = new int[0];
     
+    @Override
     public int[] indirectlyReadLocals(int instructionIndex) {
       return NOTHING;
     }
 
+    @Override
     public int[] indirectlyWrittenLocals(int instructionIndex) {
       return NOTHING;
     }
     
   };
   
+  @Override
   public IndirectionData getIndirectionData() {
     return NO_INDIRECTIONS;
   }

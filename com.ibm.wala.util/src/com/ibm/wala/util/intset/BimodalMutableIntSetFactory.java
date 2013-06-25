@@ -22,6 +22,7 @@ public class BimodalMutableIntSetFactory implements MutableIntSetFactory<Bimodal
   /**
    * @param set
    */
+  @Override
   public BimodalMutableIntSet make(int[] set) {
     BimodalMutableIntSet result = new BimodalMutableIntSet();
     result.impl = factory.make(set);
@@ -31,6 +32,7 @@ public class BimodalMutableIntSetFactory implements MutableIntSetFactory<Bimodal
   /**
    * @param string
    */
+  @Override
   public BimodalMutableIntSet parse(String string) throws NumberFormatException {
     BimodalMutableIntSet result = new BimodalMutableIntSet();
     result.impl = factory.parse(string);
@@ -40,6 +42,7 @@ public class BimodalMutableIntSetFactory implements MutableIntSetFactory<Bimodal
   /*
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#make(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public BimodalMutableIntSet makeCopy(IntSet x) throws UnimplementedError, IllegalArgumentException {
     if (x == null) {
       throw new IllegalArgumentException("x == null");
@@ -50,6 +53,7 @@ public class BimodalMutableIntSetFactory implements MutableIntSetFactory<Bimodal
   /*
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#make()
    */
+  @Override
   public BimodalMutableIntSet make() {
     return new BimodalMutableIntSet();
   }

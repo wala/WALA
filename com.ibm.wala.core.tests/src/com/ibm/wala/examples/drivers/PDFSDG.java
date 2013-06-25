@@ -162,6 +162,7 @@ public class PDFSDG {
 
   private static Graph<Statement> pruneSDG(final SDG sdg) {
     Filter<Statement> f = new Filter<Statement>() {
+      @Override
       public boolean accepts(Statement o) {
         Statement s = (Statement) o;
         if (s.getNode().equals(sdg.getCallGraph().getFakeRootNode())) {
@@ -178,6 +179,7 @@ public class PDFSDG {
 
   private static NodeDecorator makeNodeDecorator() {
     return new NodeDecorator() {
+      @Override
       public String getLabel(Object o) throws WalaException {
         Statement s = (Statement) o;
         switch (s.getKind()) {

@@ -55,6 +55,7 @@ public class SimpleIntVector implements IntVector {
   /*
    * @see com.ibm.wala.util.intset.IntVector#get(int)
    */
+  @Override
   public int get(int x) {
     if (x < 0) {
       throw new IllegalArgumentException("illegal x: " + x);
@@ -69,6 +70,7 @@ public class SimpleIntVector implements IntVector {
   /*
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
+  @Override
   public void set(int x, int value) {
     if (x < 0) {
       throw new IllegalArgumentException("illegal x: " + x);
@@ -125,6 +127,7 @@ public class SimpleIntVector implements IntVector {
     return (double) count / (double) store.length;
   }
   
+  @Override
   public int getMaxIndex() {
     return maxIndex;
   }

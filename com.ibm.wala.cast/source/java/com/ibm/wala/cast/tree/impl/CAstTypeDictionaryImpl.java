@@ -24,6 +24,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 public class CAstTypeDictionaryImpl implements CAstTypeDictionary {
   protected final Map fMap = HashMapFactory.make();
 
+  @Override
   public CAstType getCAstTypeFor(Object/*ASTType*/ astType) {
       return (CAstType) fMap.get(astType);
   }
@@ -33,10 +34,12 @@ public class CAstTypeDictionaryImpl implements CAstTypeDictionary {
     fMap.put(astType, castType);
   }
 
+  @Override
   public Iterator iterator() {
     return fMap.values().iterator();
   }
 
+  @Override
   public CAstReference resolveReference(CAstReference ref) {
     return ref;
   }

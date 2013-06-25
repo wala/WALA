@@ -21,6 +21,7 @@ public class BitVectorIntSetFactory implements MutableIntSetFactory<BitVectorInt
    * @param set
    * @throws IllegalArgumentException  if set is null
    */
+  @Override
   public BitVectorIntSet make(int[] set) {
     if (set == null) {
       throw new IllegalArgumentException("set is null");
@@ -45,6 +46,7 @@ public class BitVectorIntSetFactory implements MutableIntSetFactory<BitVectorInt
   /**
    * @param string
    */
+  @Override
   public BitVectorIntSet parse(String string) throws NumberFormatException {
     int[] data = SparseIntSet.parseIntArray(string);
     BitVectorIntSet result = new BitVectorIntSet();
@@ -57,6 +59,7 @@ public class BitVectorIntSetFactory implements MutableIntSetFactory<BitVectorInt
   /*
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#make(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public BitVectorIntSet makeCopy(IntSet x) throws IllegalArgumentException {
     if (x == null) {
       throw new IllegalArgumentException("x == null");
@@ -67,6 +70,7 @@ public class BitVectorIntSetFactory implements MutableIntSetFactory<BitVectorInt
   /*
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#make()
    */
+  @Override
   public BitVectorIntSet make() {
     return new BitVectorIntSet();
   }

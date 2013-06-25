@@ -149,6 +149,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
         System.err.println(("filtered value: " + value));
       }
       IntSetAction action = new IntSetAction() {
+        @Override
         public void act(int ptr) {
           if (DEBUG) {
             System.err.println(("    dispatch to ptr " + ptr));

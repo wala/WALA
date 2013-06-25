@@ -26,6 +26,7 @@ public class CAstNodeTypeMapRecorder
 {
   private static final long serialVersionUID= 7812144102027916961L;
 
+  @Override
   public CAstType getNodeType(CAstNode node) {
     return (CAstType) get(node);
   }
@@ -34,6 +35,7 @@ public class CAstNodeTypeMapRecorder
     put(node, type);
   }
 
+  @Override
   public Collection<CAstNode> getMappedNodes() {
     return keySet();
   }

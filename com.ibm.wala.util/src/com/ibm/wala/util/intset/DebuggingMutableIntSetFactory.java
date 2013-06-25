@@ -38,6 +38,7 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory<Debug
     this(new MutableSparseIntSetFactory(), new MutableSharedBitVectorIntSetFactory());
   }
 
+  @Override
   public DebuggingMutableIntSet make(int[] set) {
     if (set == null) {
       throw new IllegalArgumentException("null set");
@@ -45,11 +46,13 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory<Debug
     return new DebuggingMutableIntSet(primary.make(set), secondary.make(set));
   }
 
+  @Override
   public DebuggingMutableIntSet parse(String string) {
     int[] backingStore = SparseIntSet.parseIntArray(string);
     return make(backingStore);
   }
 
+  @Override
   public DebuggingMutableIntSet makeCopy(IntSet x) throws UnimplementedError {
     if (x == null) {
       throw new IllegalArgumentException("null x");
@@ -70,6 +73,7 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory<Debug
     }
   }
 
+  @Override
   public DebuggingMutableIntSet make() {
     return new DebuggingMutableIntSet(primary.make(), secondary.make());
   }

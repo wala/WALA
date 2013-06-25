@@ -32,6 +32,7 @@ public class RangePosition extends AbstractSourcePosition implements Position {
     this.endOffset = endOffset;
   }
 
+  @Override
   public int compareTo(Object o) {
     Position other = (Position) o;
     if (startOffset != other.getFirstOffset()) {
@@ -41,34 +42,42 @@ public class RangePosition extends AbstractSourcePosition implements Position {
     }
   }
 
+  @Override
   public int getFirstLine() {
     return line;
   }
 
+  @Override
   public int getLastLine() {
     return -1;
   }
 
+  @Override
   public int getFirstCol() {
     return -1;
   }
 
+  @Override
   public int getLastCol() {
     return -1;
   }
 
+  @Override
   public int getFirstOffset() {
     return startOffset;
   }
 
+  @Override
   public int getLastOffset() {
     return endOffset;
   }
 
+  @Override
   public URL getURL() {
     return url;
   }
 
+  @Override
   public InputStream getInputStream() throws IOException {
     return url.openStream();
   }

@@ -45,6 +45,7 @@ public class DummyLinkedList {
   public Iter iterator() {
     return new Iter() {
       
+      @Override
       public Object next() {
         // just return some arbitrary element, from the point of view of flow-insensitive points-to analysis
         Element tmp = head;

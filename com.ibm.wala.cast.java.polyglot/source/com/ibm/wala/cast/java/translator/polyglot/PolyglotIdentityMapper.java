@@ -62,6 +62,7 @@ public class PolyglotIdentityMapper implements IdentityMapper<Type, CodeInstance
     fClassLoaderRef= clr;
   }
 
+  @Override
   public FieldReference getFieldRef(FieldInstance field) {
     if (!fFieldMap.containsKey(field)) {
       FieldReference ref= referenceForField(field);
@@ -71,6 +72,7 @@ public class PolyglotIdentityMapper implements IdentityMapper<Type, CodeInstance
     return fFieldMap.get(field);
   }
 
+  @Override
   public TypeReference getTypeRef(Type type) {
     if (!fTypeMap.containsKey(type)) {
       TypeReference ref= referenceForType(type);
@@ -80,6 +82,7 @@ public class PolyglotIdentityMapper implements IdentityMapper<Type, CodeInstance
     return fTypeMap.get(type);
   }
 
+  @Override
   public MethodReference getMethodRef(CodeInstance method) {
     if (!fMethodMap.containsKey(method)) {
       MethodReference sel= referenceForMethod(method);

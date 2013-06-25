@@ -60,6 +60,7 @@ public class JDTClassLoaderFactory extends ClassLoaderFactoryImpl {
     super(exclusions);
   }
 
+  @Override
   protected IClassLoader makeNewClassLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, IClassLoader parent,
       AnalysisScope scope) throws IOException {
     if (classLoaderReference.equals(JavaSourceAnalysisScope.SOURCE)) {

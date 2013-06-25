@@ -18,6 +18,7 @@ public abstract class JLexTest extends IRTests {
     super(null);
   }
 
+  @Override
   protected String singleJavaInputForTest() {
     return "JLex";
   }
@@ -26,6 +27,7 @@ public abstract class JLexTest extends IRTests {
     runTest(singleTestSrc(), rtJar, new String[] { "LJLex/Main" }, emptyList, false);
   }
 
+  @Override
   protected String singleJavaPkgInputForTest(String pkgName) {
     return "";
   }

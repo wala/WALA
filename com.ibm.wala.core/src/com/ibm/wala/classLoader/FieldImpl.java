@@ -50,6 +50,7 @@ public final class FieldImpl implements IField {
   /*
    * @see com.ibm.wala.classLoader.IMember#getDeclaringClass()
    */
+  @Override
   public IClass getDeclaringClass() {
     return declaringClass;
   }
@@ -79,6 +80,7 @@ public final class FieldImpl implements IField {
     return fr.toString();
   }
 
+  @Override
   public FieldReference getReference() {
     return FieldReference.findOrCreate(getDeclaringClass().getReference(), getName(), getFieldTypeReference());
   }
@@ -86,6 +88,7 @@ public final class FieldImpl implements IField {
   /*
    * @see com.ibm.wala.classLoader.IMember#getName()
    */
+  @Override
   public Atom getName() {
     return fieldRef.getName();
   }
@@ -93,38 +96,47 @@ public final class FieldImpl implements IField {
   /*
    * @see com.ibm.wala.classLoader.IField#getFieldTypeReference()
    */
+  @Override
   public TypeReference getFieldTypeReference() {
     return fieldRef.getFieldType();
   }
 
+  @Override
   public boolean isStatic() {
     return ((accessFlags & ClassConstants.ACC_STATIC) != 0);
   }
 
+  @Override
   public boolean isFinal() {
     return ((accessFlags & ClassConstants.ACC_FINAL) != 0);
   }
 
+  @Override
   public boolean isPrivate() {
     return ((accessFlags & ClassConstants.ACC_PRIVATE) != 0);
   }
 
+  @Override
   public boolean isProtected() {
     return ((accessFlags & ClassConstants.ACC_PROTECTED) != 0);
   }
 
+  @Override
   public boolean isPublic() {
     return ((accessFlags & ClassConstants.ACC_PUBLIC) != 0);
   }
   
+  @Override
   public boolean isVolatile() {
     return ((accessFlags & ClassConstants.ACC_VOLATILE) != 0);
   }
 
+  @Override
   public IClassHierarchy getClassHierarchy() {
     return declaringClass.getClassHierarchy();
   }
 
+  @Override
   public Collection<Annotation> getAnnotations() {
     return annotations == null ? null : Collections.unmodifiableCollection(annotations);
   }

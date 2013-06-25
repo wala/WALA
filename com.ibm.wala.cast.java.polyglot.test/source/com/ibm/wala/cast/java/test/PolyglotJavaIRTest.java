@@ -28,6 +28,7 @@ public class PolyglotJavaIRTest extends JavaIRTests {
   @Override
   protected AbstractAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
     JavaSourceAnalysisEngine engine = new PolyglotJavaSourceAnalysisEngine() {
+      @Override
       protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
         return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
       }

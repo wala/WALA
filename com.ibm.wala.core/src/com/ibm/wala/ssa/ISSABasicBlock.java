@@ -24,16 +24,19 @@ public interface ISSABasicBlock extends IBasicBlock<SSAInstruction> {
   /**
    * Is this block a catch block
    */
+  @Override
   public boolean isCatchBlock();
 
   /**
    * Does this block represent the unique exit from a {@link ControlFlowGraph}?
    */
+  @Override
   public boolean isExitBlock();
 
   /**
    * Does this block represent the unique entry to a {@link ControlFlowGraph}
    */
+  @Override
   public boolean isEntryBlock();
 
   /**

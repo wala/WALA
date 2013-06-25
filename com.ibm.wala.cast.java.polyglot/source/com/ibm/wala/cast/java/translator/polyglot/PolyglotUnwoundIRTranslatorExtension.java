@@ -24,9 +24,11 @@ public class PolyglotUnwoundIRTranslatorExtension
     this.unrollDepth = unrollDepth;
   }
 
+  @Override
   public CAstRewriterFactory<CAstRewriter.RewriteContext<AstLoopUnwinder.UnwindKey>,AstLoopUnwinder.UnwindKey> getCAstRewriterFactory() {
 	  return new CAstRewriterFactory<CAstRewriter.RewriteContext<AstLoopUnwinder.UnwindKey>,AstLoopUnwinder.UnwindKey>() {
-		  public AstLoopUnwinder createCAstRewriter(CAst ast) {
+		  @Override
+      public AstLoopUnwinder createCAstRewriter(CAst ast) {
 			  return new AstLoopUnwinder(ast, true, unrollDepth);
 		  }  
 	  };

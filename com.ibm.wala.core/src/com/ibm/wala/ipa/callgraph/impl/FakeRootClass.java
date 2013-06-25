@@ -62,50 +62,62 @@ public class FakeRootClass extends SyntheticClass {
     }
 
     fakeRootStaticFields.put(name, new IField() {
+      @Override
       public IClassHierarchy getClassHierarchy() {
         return FakeRootClass.this.getClassHierarchy();
       }
 
+      @Override
       public TypeReference getFieldTypeReference() {
         return fieldType;
       }
 
+      @Override
       public IClass getDeclaringClass() {
         return FakeRootClass.this;
       }
 
+      @Override
       public Atom getName() {
         return name;
       }
 
+      @Override
       public boolean isStatic() {
         return true;
       }
 
+      @Override
       public boolean isVolatile() {
         return false;
       }
 
+      @Override
       public FieldReference getReference() {
         return FieldReference.findOrCreate(FAKE_ROOT_CLASS, name, fieldType);
       }
 
+      @Override
       public boolean isFinal() {
         return false;
       }
 
+      @Override
       public boolean isPrivate() {
         return true;
       }
 
+      @Override
       public boolean isProtected() {
         return false;
       }
 
+      @Override
       public boolean isPublic() {
         return false;
       }
 
+      @Override
       public Collection<Annotation> getAnnotations() {
         return Collections.emptySet();
       }
@@ -115,6 +127,7 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getModifiers()
    */
+  @Override
   public int getModifiers() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
@@ -122,6 +135,7 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getSuperclass()
    */
+  @Override
   public IClass getSuperclass() throws UnsupportedOperationException {
     return getClassHierarchy().getRootClass();
   }
@@ -129,6 +143,7 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllImplementedInterfaces()
    */
+  @Override
   public Collection<IClass> getAllImplementedInterfaces() throws UnsupportedOperationException {
     return Collections.emptySet();
   }
@@ -143,6 +158,7 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
    */
+  @Override
   public IMethod getMethod(Selector selector) throws UnsupportedOperationException {
     for (IMethod m : methods) {
       if (m.getSelector().equals(selector)) {
@@ -155,6 +171,7 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
    */
+  @Override
   public IField getField(Atom name) {
     if (fakeRootStaticFields != null) {
       return fakeRootStaticFields.get(name);
@@ -166,6 +183,7 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getClassInitializer()
    */
+  @Override
   public IMethod getClassInitializer() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
@@ -174,6 +192,7 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getDeclaredMethods()
    */
+  @Override
   public Collection<IMethod> getDeclaredMethods() throws UnsupportedOperationException {
     return Collections.unmodifiableCollection(methods);
   }
@@ -181,6 +200,7 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getDeclaredInstanceFields()
    */
+  @Override
   public Collection<IField> getDeclaredInstanceFields() throws UnsupportedOperationException {
     return Collections.emptySet();
   }
@@ -188,6 +208,7 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getDeclaredStaticFields()
    */
+  @Override
   public Collection<IField> getDeclaredStaticFields() {
     if (fakeRootStaticFields != null) {
       return fakeRootStaticFields.values();
@@ -199,6 +220,7 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#isReferenceType()
    */
+  @Override
   public boolean isReferenceType() {
     return getReference().isReferenceType();
   }
@@ -206,6 +228,7 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getDirectInterfaces()
    */
+  @Override
   public Collection<IClass> getDirectInterfaces() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
@@ -213,6 +236,7 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllInstanceFields()
    */
+  @Override
   public Collection<IField> getAllInstanceFields()  {
     return Collections.emptySet();
   }
@@ -220,6 +244,7 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllStaticFields()
    */
+  @Override
   public Collection<IField> getAllStaticFields() {
     return getDeclaredStaticFields();
   }
@@ -227,6 +252,7 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllMethods()
    */
+  @Override
   public Collection<IMethod> getAllMethods()  {
     throw new UnsupportedOperationException();
   }
@@ -234,14 +260,17 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllFields()
    */
+  @Override
   public Collection<IField> getAllFields()  {
     return getDeclaredStaticFields();
   }
 
+  @Override
   public boolean isPublic() {
     return false;
   }
   
+  @Override
   public boolean isPrivate() {
     return false;
   }

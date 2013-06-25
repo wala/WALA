@@ -27,11 +27,13 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T> {
   final private MutableMapping<T> map = MutableMapping.make();
 
 
+  @Override
   public int getNumber(T obj) {
     return map.getMappedIndex(obj);
   }
 
 
+  @Override
   public T getNode(int number)  {
     if (number < 0) {
       throw new IllegalArgumentException("number must be >= 0");
@@ -43,20 +45,24 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T> {
   /*
    * @see com.ibm.wala.util.graph.NumberedGraph#getMaxNumber()
    */
+  @Override
   public int getMaxNumber() {
     return map.getMaximumIndex();
   }
 
 
+  @Override
   public Iterator<T> iterator() {
     return map.iterator();
   }
 
 
+  @Override
   public int getNumberOfNodes() {
     return map.getSize();
   }
 
+  @Override
   public void addNode(T n) {
     if (n == null) {
       throw new IllegalArgumentException("n is null");
@@ -67,6 +73,7 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T> {
   /*
    * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public void removeNode(T n) {
     map.deleteMappedObject(n);
   }
@@ -85,6 +92,7 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T> {
   /*
    * @see com.ibm.wala.util.graph.NodeManager#containsNode(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public boolean containsNode(T N) {
     return getNumber(N) != -1;
   }
@@ -92,6 +100,7 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T> {
   /*
    * @see com.ibm.wala.util.graph.NumberedNodeManager#iterateNodes(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public Iterator<T> iterateNodes(IntSet s) {
     return new NumberedNodeIterator<T>(s, this);
   }

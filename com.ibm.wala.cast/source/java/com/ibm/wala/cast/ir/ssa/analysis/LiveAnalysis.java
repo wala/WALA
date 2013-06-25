@@ -86,14 +86,17 @@ public class LiveAnalysis {
      * Gen/kill operator specific to exit basic blocks
      */
     final class ExitBlockGenKillOperator extends UnaryOperator<BitVectorVariable> {
+      @Override
       public String toString() {
         return "ExitGenKill";
       }
 
+      @Override
       public boolean equals(Object o) {
         return o == this;
       }
 
+      @Override
       public int hashCode() {
         return 37721;
       }
@@ -101,6 +104,7 @@ public class LiveAnalysis {
       /**
        * Evaluate the transfer between two nodes in the flow graph within an exit block.
        */
+      @Override
       public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) {
         boolean changed = lhs.getValue() == null ? !considerLiveAtExit.isZero() : !lhs.getValue().sameValue(liveAtExit);
 
@@ -120,14 +124,17 @@ public class LiveAnalysis {
         this.block = block;
       }
 
+      @Override
       public String toString() {
         return "GenKill:" + block;
       }
 
+      @Override
       public boolean equals(Object o) {
         return (o instanceof BlockValueGenKillOperator) && ((BlockValueGenKillOperator) o).block.equals(block);
       }
 
+      @Override
       public int hashCode() {
         return block.hashCode() * 17;
       }
@@ -156,6 +163,7 @@ public class LiveAnalysis {
       /**
        * Evaluate the transfer between two nodes in the flow graph within one basic block.
        */
+      @Override
       public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) {
         // Calculate here the result of the transfer
         BitVectorIntSet bits = new BitVectorIntSet();
@@ -204,17 +212,21 @@ public class LiveAnalysis {
     final BitVectorSolver<ISSABasicBlock> S = new BitVectorSolver<ISSABasicBlock>(new IKilldallFramework<ISSABasicBlock, BitVectorVariable>() {
       private final Graph<ISSABasicBlock> G = GraphInverter.invert(cfg);
 
+      @Override
       public Graph<ISSABasicBlock> getFlowGraph() {
         return G;
       }
 
+      @Override
       public ITransferFunctionProvider<ISSABasicBlock, BitVectorVariable> getTransferFunctionProvider() {
         return new ITransferFunctionProvider<ISSABasicBlock, BitVectorVariable>() {
 
+          @Override
           public boolean hasNodeTransferFunctions() {
             return true;
           }
 
+          @Override
           public boolean hasEdgeTransferFunctions() {
             return false;
           }
@@ -222,6 +234,7 @@ public class LiveAnalysis {
           /**
            * Create the specialized operator for regular and exit basic blocks.
            */
+          @Override
           public UnaryOperator<BitVectorVariable> getNodeTransferFunction(ISSABasicBlock node) {
             if (node.isExitBlock()) {
               return new ExitBlockGenKillOperator();
@@ -230,6 +243,7 @@ public class LiveAnalysis {
             }
           }
 
+          @Override
           public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(ISSABasicBlock s, ISSABasicBlock d) {
             Assertions.UNREACHABLE();
             return null;
@@ -238,6 +252,7 @@ public class LiveAnalysis {
           /**
            * Live analysis uses 'union' as 'meet operator'
            */
+          @Override
           public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
             return BitVectorUnion.instance();
           }
@@ -259,6 +274,7 @@ public class LiveAnalysis {
      */
     return new Result() {
 
+      @Override
       public String toString() {
         StringBuffer s = new StringBuffer();
         for (int i = 0; i < cfg.getNumberOfNodes(); i++) {
@@ -270,10 +286,12 @@ public class LiveAnalysis {
         return s.toString();
       }
 
+      @Override
       public boolean isLiveEntry(ISSABasicBlock bb, int valueNumber) {
         return S.getOut(bb).get(valueNumber);
       }
 
+      @Override
       public boolean isLiveExit(ISSABasicBlock bb, int valueNumber) {
         return S.getIn(bb).get(valueNumber);
       }
@@ -285,6 +303,7 @@ public class LiveAnalysis {
        * @see <a href="http://en.wikipedia.org/wiki/Data_flow_analysis#Backward_Analysis">
        * how the 'in' and 'out' variable sets work</a>
        */
+      @Override
       public BitVector getLiveBefore(int instr) {
         ISSABasicBlock bb = cfg.getBlockForInstruction(instr);
 

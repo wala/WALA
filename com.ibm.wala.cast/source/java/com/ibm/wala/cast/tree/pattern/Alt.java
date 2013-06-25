@@ -26,6 +26,7 @@ public class Alt implements NodePattern {
     this.right = right;
   }
 
+  @Override
   public boolean matches(CAstNode node) {
     return left.matches(node) || right.matches(node);
   }

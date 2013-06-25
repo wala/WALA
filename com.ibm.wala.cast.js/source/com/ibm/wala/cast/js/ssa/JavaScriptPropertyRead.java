@@ -22,6 +22,7 @@ public class JavaScriptPropertyRead extends AbstractReflectiveGet {
     super(result, objectRef, memberRef);
   }
 
+  @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return
       ((JSInstructionFactory)insts).PropertyRead(
@@ -33,6 +34,7 @@ public class JavaScriptPropertyRead extends AbstractReflectiveGet {
   /* (non-Javadoc)
    * @see com.ibm.domo.ssa.Instruction#isPEI()
    */
+  @Override
   public boolean isPEI() {
     return true;
   }
@@ -40,6 +42,7 @@ public class JavaScriptPropertyRead extends AbstractReflectiveGet {
   /* (non-Javadoc)
    * @see com.ibm.domo.ssa.Instruction#getExceptionTypes()
    */
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return Util.typeErrorExceptions();
   }
@@ -48,6 +51,7 @@ public class JavaScriptPropertyRead extends AbstractReflectiveGet {
   /* (non-Javadoc)
    * @see com.ibm.domo.ssa.SSAInstruction#visit(com.ibm.domo.ssa.SSAInstruction.Visitor)
    */
+  @Override
   public void visit(IVisitor v) {
     assert v instanceof JSInstructionVisitor;
     ((JSInstructionVisitor)v).visitJavaScriptPropertyRead(this);

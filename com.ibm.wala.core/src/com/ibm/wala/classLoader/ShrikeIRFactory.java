@@ -36,6 +36,7 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod> {
     return ShrikeCFG.make(method);
   }
 
+  @Override
   public IR makeIR(final IBytecodeMethod method, Context C, final SSAOptions options) throws IllegalArgumentException {
 
     if (method == null) {
@@ -113,6 +114,7 @@ public class ShrikeIRFactory implements IRFactory<IBytecodeMethod> {
     };
   }
 
+  @Override
   public boolean contextIsIrrelevant(IBytecodeMethod method) {
     // this factory always returns the same IR for a method
     return true;

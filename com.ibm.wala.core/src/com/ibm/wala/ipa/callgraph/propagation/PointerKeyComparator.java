@@ -180,6 +180,7 @@ public class PointerKeyComparator implements Comparator {
       return -1;
   }
 
+  @Override
   public int compare(Object key1, Object key2) {
     if (key1 == key2) return 0;
 

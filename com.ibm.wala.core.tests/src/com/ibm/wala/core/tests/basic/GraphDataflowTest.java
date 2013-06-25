@@ -130,23 +130,28 @@ public class GraphDataflowTest extends WalaTestCase {
     final OrdinalSetMapping<String> values = new MutableMapping<String>(nodes);
     ITransferFunctionProvider<String, BitVectorVariable> functions = new ITransferFunctionProvider<String, BitVectorVariable>() {
 
+      @Override
       public UnaryOperator<BitVectorVariable> getNodeTransferFunction(String node) {
         return new BitVectorUnionConstant(values.getMappedIndex(node));
       }
 
+      @Override
       public boolean hasNodeTransferFunctions() {
         return true;
       }
 
+      @Override
       public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(String from, String to) {
         Assertions.UNREACHABLE();
         return null;
       }
 
+      @Override
       public boolean hasEdgeTransferFunctions() {
         return false;
       }
 
+      @Override
       public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
         return BitVectorUnion.instance();
       }
@@ -163,14 +168,17 @@ public class GraphDataflowTest extends WalaTestCase {
     final OrdinalSetMapping<String> values = new MutableMapping<String>(nodes);
     ITransferFunctionProvider<String, BitVectorVariable> functions = new ITransferFunctionProvider<String, BitVectorVariable>() {
 
+      @Override
       public UnaryOperator<BitVectorVariable> getNodeTransferFunction(String node) {
         return new BitVectorUnionConstant(values.getMappedIndex(node));
       }
 
+      @Override
       public boolean hasNodeTransferFunctions() {
         return true;
       }
 
+      @Override
       public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(String from, String to) {
         if (from == nodes[1] && to == nodes[3])
           return new BitVectorFilter(zero());
@@ -181,10 +189,12 @@ public class GraphDataflowTest extends WalaTestCase {
         }
       }
 
+      @Override
       public boolean hasEdgeTransferFunctions() {
         return true;
       }
 
+      @Override
       public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
         return BitVectorUnion.instance();
       }

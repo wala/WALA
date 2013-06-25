@@ -19,8 +19,10 @@ public class AnonymousClass {
 
 	Foo f= new Foo() {
 	    int value = 3;
-	    public int getValue() { return value; }
-	    public int getValueBase() { return value - base.intValue(); }
+	    
+      public int getValue() { return value; }
+	    
+      public int getValueBase() { return value - base.intValue(); }
 	};
 
 	System.out.println(f.getValue());
@@ -35,19 +37,22 @@ public class AnonymousClass {
 	abstract class FooImpl implements Foo {
 	    int y;
 
-	    public abstract int getValue();
+	    
+      public abstract int getValue();
 
 	    FooImpl(int _y) {
 	      y = _y;
 	    }
 
-	    public int getValueBase() { 
+	    
+      public int getValueBase() { 
 	      return y + getValue() - base.intValue(); 
 	    }
 	}
 
 	Foo f= new FooImpl(-4) {
-	  public int getValue() { return 7; }
+	  
+    public int getValue() { return 7; }
 	};
 
 	System.out.println(f.getValue());

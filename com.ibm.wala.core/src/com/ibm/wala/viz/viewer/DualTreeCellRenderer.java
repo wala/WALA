@@ -47,6 +47,7 @@ class DualTreeCellRenderer implements TreeCellRenderer {
     pkTreeCellRenderer.setLeafIcon(createImageIcon("images/pk_leaf.png"));
   }
   
+  @Override
   public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf,
       int row, boolean hasFocus) {
     TreeCellRenderer delegate = getTreeCellRenderer(value);

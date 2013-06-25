@@ -105,6 +105,7 @@ public abstract class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
        * All values used as property names get implicitly converted to strings in JavaScript.
        * @see com.ibm.wala.cast.ipa.callgraph.DelegatingAstPointerKeys#getFieldNameType(com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
        */
+      @Override
       protected IClass getFieldNameType(InstanceKey F) {
         return F.getConcreteType().getClassHierarchy().lookupClass(JavaScriptTypes.String);
       }

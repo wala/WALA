@@ -69,13 +69,15 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 	/*
 	 * @see com.ibm.wala.util.intset.MutableIntSet#clear()
 	 */
-	public void clear() {
+	@Override
+  public void clear() {
 		size = 0;
 	}
 
 	/**
    */
-	public boolean remove(int value) {
+	@Override
+  public boolean remove(int value) {
 		if (elements != null) {
 			int remove;
 			for (remove = 0; remove < size; remove++) {
@@ -117,7 +119,8 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 	 * @param value
 	 * @return true iff this value changes
 	 */
-	@SuppressWarnings("unused")
+	@Override
+  @SuppressWarnings("unused")
 	public boolean add(int value) {
 		if (elements == null) {
 			elements = new int[getInitialNonEmptySize()];
@@ -176,7 +179,8 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 	 * @throws IllegalArgumentException
 	 *             if that == null
 	 */
-	@SuppressWarnings("unused")
+	@Override
+  @SuppressWarnings("unused")
 	public void copySet(IntSet that) throws IllegalArgumentException {
 		if (that == null) {
 			throw new IllegalArgumentException("that == null");
@@ -201,7 +205,8 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 			that.foreach(new IntSetAction() {
 				private int index = 0;
 
-				public void act(int i) {
+				@Override
+        public void act(int i) {
 					elements[index++] = i;
 				}
 			});
@@ -211,7 +216,8 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 		}
 	}
 
-	public void intersectWith(IntSet set) {
+	@Override
+  public void intersectWith(IntSet set) {
 		if (set == null) {
 			throw new IllegalArgumentException("null set");
 		}
@@ -307,7 +313,8 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 	 * @throws IllegalArgumentException
 	 *             if set == null
 	 */
-	@SuppressWarnings("unused")
+	@Override
+  @SuppressWarnings("unused")
 	public boolean addAll(IntSet set) throws IllegalArgumentException {
 		if (set == null) {
 			throw new IllegalArgumentException("set == null");
@@ -317,7 +324,8 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 		} else {
 			int oldSize = size;
 			set.foreach(new IntSetAction() {
-				public void act(int i) {
+				@Override
+        public void act(int i) {
 					if (!contains(i))
 						add(i);
 				}
@@ -474,7 +482,8 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 	 * com.ibm.wala.util.intset.MutableIntSet#addAllInIntersection(com.ibm.wala
 	 * .util.intset.IntSet, com.ibm.wala.util.intset.IntSet)
 	 */
-	public boolean addAllInIntersection(IntSet other, IntSet filter) {
+	@Override
+  public boolean addAllInIntersection(IntSet other, IntSet filter) {
 		if (other == null) {
 			throw new IllegalArgumentException("other is null");
 		}

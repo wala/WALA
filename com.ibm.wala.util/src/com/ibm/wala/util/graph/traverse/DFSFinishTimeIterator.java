@@ -58,6 +58,7 @@ public abstract class DFSFinishTimeIterator<T> extends Stack<T> implements Itera
    * 
    * @return true if there nodes left to enumerate.
    */
+  @Override
   public boolean hasNext() {
     return (!empty() || (theNextElement != null && getPendingChildren(theNextElement) == null));
   }
@@ -71,6 +72,7 @@ public abstract class DFSFinishTimeIterator<T> extends Stack<T> implements Itera
    * 
    * @return the next graph node in finishing time order.
    */
+  @Override
   @SuppressWarnings("unchecked")
   public T next() throws NoSuchElementException {
     if (!hasNext()) {
@@ -122,6 +124,7 @@ public abstract class DFSFinishTimeIterator<T> extends Stack<T> implements Itera
   /**
    * @see java.util.Iterator#remove()
    */
+  @Override
   public void remove() throws UnimplementedError {
     throw new UnimplementedError();
   }

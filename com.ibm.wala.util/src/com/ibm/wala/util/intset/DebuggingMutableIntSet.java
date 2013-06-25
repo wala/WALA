@@ -37,6 +37,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
   /* 
    * @see com.ibm.wala.util.intset.MutableIntSet#clear()
    */
+  @Override
   public void clear() {
     primaryImpl.clear();
     secondaryImpl.clear();
@@ -45,6 +46,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
   /**
    * @return true iff this set contains integer i
    */
+  @Override
   public boolean contains(int i) {
     assert primaryImpl.contains(i) == secondaryImpl.contains(i);
     return primaryImpl.contains(i);
@@ -52,6 +54,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
 
   /**
    */
+  @Override
   public boolean isEmpty() {
     if (primaryImpl.isEmpty() != secondaryImpl.isEmpty()) {
       System.err.println(primaryImpl + ".isEmpty() = " + primaryImpl.isEmpty() + " and " + secondaryImpl + ".isEmpty() = "
@@ -64,6 +67,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
 
   /**
    */
+  @Override
   public int size() {
     if (primaryImpl.size() != secondaryImpl.size()) {
       assert primaryImpl.size() == secondaryImpl.size() : "size " + primaryImpl.size() + " of " + primaryImpl
@@ -73,6 +77,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
     return primaryImpl.size();
   }
 
+  @Override
   public int max() {
     assert primaryImpl.max() == secondaryImpl.max();
     return primaryImpl.max();
@@ -83,6 +88,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
    * 
    * @return true iff the value of this changes.
    */
+  @Override
   public boolean add(int i) {
     boolean pr = primaryImpl.add(i);
     boolean sr = secondaryImpl.add(i);
@@ -98,6 +104,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
   /**
    * Remove an integer from this set.
    */
+  @Override
   public boolean remove(int i) {
     boolean result = primaryImpl.remove(i);
     secondaryImpl.remove(i);
@@ -108,6 +115,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
   /**
    * @return true iff this set contains integer i
    */
+  @Override
   public boolean containsAny(IntSet set) {
     if (set instanceof DebuggingMutableIntSet) {
       DebuggingMutableIntSet db = (DebuggingMutableIntSet) set;
@@ -129,6 +137,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
    * 
    * @return a new IntSet which is the intersection of this and that
    */
+  @Override
   public IntSet intersection(IntSet that) {
     if (that instanceof DebuggingMutableIntSet) {
       DebuggingMutableIntSet db = (DebuggingMutableIntSet) that;
@@ -147,6 +156,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public IntSet union(IntSet that) {
     MutableSparseIntSet temp = new MutableSparseIntSet();
     temp.addAll(this);
@@ -158,6 +168,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
   /**
    * @return true iff <code>this</code> has the same value as <code>that</code>.
    */
+  @Override
   public boolean sameValue(IntSet that) {
     if (that instanceof DebuggingMutableIntSet) {
       DebuggingMutableIntSet db = (DebuggingMutableIntSet) that;
@@ -176,6 +187,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
   /**
    * @return true iff <code>this</code> is a subset of <code>that</code>.
    */
+  @Override
   public boolean isSubset(IntSet that) {
     if (that instanceof DebuggingMutableIntSet) {
       DebuggingMutableIntSet db = (DebuggingMutableIntSet) that;
@@ -194,6 +206,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
   /**
    * Set the value of this to be the same as the value of set
    */
+  @Override
   public void copySet(IntSet set) {
     if (set instanceof DebuggingMutableIntSet) {
       DebuggingMutableIntSet db = (DebuggingMutableIntSet) set;
@@ -211,6 +224,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
    * 
    * @return true iff the value of this changes.
    */
+  @Override
   public boolean addAll(IntSet set) {
     if (set instanceof DebuggingMutableIntSet) {
       DebuggingMutableIntSet db = (DebuggingMutableIntSet) set;
@@ -236,6 +250,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
   /**
    * Intersect this with another set.
    */
+  @Override
   public void intersectWith(IntSet set) {
     if (set instanceof DebuggingMutableIntSet) {
       DebuggingMutableIntSet db = (DebuggingMutableIntSet) set;
@@ -252,6 +267,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
 
   /**
    */
+  @Override
   public boolean addAllInIntersection(IntSet other, IntSet filter) {
     if (other instanceof DebuggingMutableIntSet && filter instanceof DebuggingMutableIntSet) {
       DebuggingMutableIntSet db = (DebuggingMutableIntSet) other;
@@ -271,6 +287,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#intIterator()
    */
+  @Override
   public IntIterator intIterator() {
     MutableSparseIntSet bits = MutableSparseIntSet.makeEmpty();
     for (IntIterator pi = primaryImpl.intIterator(); pi.hasNext();) {
@@ -291,15 +308,18 @@ class DebuggingMutableIntSet implements MutableIntSet {
   /**
    * Invoke an action on each element of the Set
    */
+  @Override
   public void foreach(IntSetAction action) {
     final Set<Integer> bits = HashSetFactory.make();
     primaryImpl.foreach(new IntSetAction() {
+      @Override
       public void act(int x) {
         assert !bits.contains(new Integer(x));
         bits.add(new Integer(x));
       }
     });
     secondaryImpl.foreach(new IntSetAction() {
+      @Override
       public void act(int x) {
         assert bits.contains(new Integer(x));
         bits.remove(new Integer(x));
@@ -313,15 +333,18 @@ class DebuggingMutableIntSet implements MutableIntSet {
   /**
    * Invoke an action on each element of the Set, excluding elements of Set X
    */
+  @Override
   public void foreachExcluding(IntSet X, IntSetAction action) {
     final Set<Integer> bits = HashSetFactory.make();
     primaryImpl.foreachExcluding(X, new IntSetAction() {
+      @Override
       public void act(int x) {
         assert !bits.contains(new Integer(x));
         bits.add(new Integer(x));
       }
     });
     secondaryImpl.foreachExcluding(X, new IntSetAction() {
+      @Override
       public void act(int x) {
         assert bits.contains(new Integer(x));
         bits.remove(new Integer(x));

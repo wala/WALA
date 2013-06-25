@@ -29,54 +29,67 @@ public class DelegatingCFG<I, T extends IBasicBlock<I>> extends AbstractNumbered
     this.parent = parent;
   }
 
+  @Override
   protected NumberedNodeManager<T> getNodeManager() {
     return parent;
   }
 
+  @Override
   protected NumberedEdgeManager<T> getEdgeManager() {
     return parent;
   }
 
+  @Override
   public T entry() {
     return parent.entry();
   }
 
+  @Override
   public T exit() {
     return parent.exit();
   }
 
+  @Override
   public BitVector getCatchBlocks() {
     return parent.getCatchBlocks();
   }
 
+  @Override
   public T getBlockForInstruction(int index) {
     return parent.getBlockForInstruction(index);
   }
 
+  @Override
   public I[] getInstructions() {
     return parent.getInstructions();
   }
 
+  @Override
   public int getProgramCounter(int index) {
     return parent.getProgramCounter(index);
   }
 
+  @Override
   public IMethod getMethod() {
     return parent.getMethod();
   }
 
+  @Override
   public List<T> getExceptionalSuccessors(T b) {
     return parent.getExceptionalSuccessors(b);
   }
 
+  @Override
   public Collection<T> getNormalSuccessors(T b) {
     return parent.getNormalSuccessors(b);
   }
 
+  @Override
   public Collection<T> getExceptionalPredecessors(T b) {
     return parent.getExceptionalPredecessors(b);
   }
 
+  @Override
   public Collection<T> getNormalPredecessors(T b) {
     return parent.getNormalPredecessors(b);
   }

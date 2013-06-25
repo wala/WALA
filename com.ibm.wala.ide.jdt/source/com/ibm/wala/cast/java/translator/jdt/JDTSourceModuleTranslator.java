@@ -113,6 +113,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
    * Project -> AST code from org.eclipse.jdt.core.tests.performance
    */
 
+  @Override
   public void loadAllSources(Set<ModuleEntry> modules) {
     // TODO: we might need one AST (-> "Object" class) for all files.
     // TODO: group by project and send 'em in
@@ -137,6 +138,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
  
       Set<ICompilationUnit> units = proj.getValue().keySet();
       parser.createASTs(units.toArray(new ICompilationUnit[units.size()]), new String[0], new ASTRequestor() {
+        @Override
         public void acceptAST(ICompilationUnit source, CompilationUnit ast) {
 
           try {

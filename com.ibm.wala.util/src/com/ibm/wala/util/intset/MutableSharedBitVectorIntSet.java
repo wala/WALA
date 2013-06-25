@@ -163,6 +163,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#contains(int)
    */
+  @Override
   public boolean contains(int i) {
     if (privatePart != null && privatePart.contains(i)) {
       return true;
@@ -176,6 +177,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#intersection(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public IntSet intersection(IntSet that) {
     if (that == null) {
       throw new IllegalArgumentException("null that");
@@ -204,6 +206,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public IntSet union(IntSet that) {
     MutableSharedBitVectorIntSet temp = new MutableSharedBitVectorIntSet();
     temp.addAll(this);
@@ -228,6 +231,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#isEmpty()
    */
+  @Override
   public boolean isEmpty() {
     return privatePart == null && sharedPart == null;
   }
@@ -235,6 +239,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#size()
    */
+  @Override
   public int size() {
     int result = 0;
     result += (privatePart == null) ? 0 : privatePart.size();
@@ -245,6 +250,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#iterator()
    */
+  @Override
   public IntIterator intIterator() {
     if (privatePart == null) {
       return (sharedPart == null) ? EmptyIntIterator.instance() : sharedPart.intIterator();
@@ -257,6 +263,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction)
    */
+  @Override
   public void foreach(IntSetAction action) {
     if (privatePart != null) {
       privatePart.foreach(action);
@@ -269,6 +276,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#foreachExcluding(com.ibm.wala.util.intset.IntSet, com.ibm.wala.util.intset.IntSetAction)
    */
+  @Override
   public void foreachExcluding(IntSet X, IntSetAction action) {
     if (X instanceof MutableSharedBitVectorIntSet) {
       foreachExcludingInternal((MutableSharedBitVectorIntSet) X, action);
@@ -315,6 +323,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#max()
    */
+  @Override
   public int max() {
     int result = -1;
     if (privatePart != null && privatePart.size() > 0) {
@@ -329,6 +338,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#sameValue(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public boolean sameValue(IntSet that) throws IllegalArgumentException, UnimplementedError {
     if (that == null) {
       throw new IllegalArgumentException("that == null");
@@ -461,6 +471,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public boolean isSubset(IntSet that) {
     if (that == null) {
       throw new IllegalArgumentException("null that");
@@ -572,6 +583,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSet#copySet(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public void copySet(IntSet set) {
     if (set instanceof MutableSharedBitVectorIntSet) {
       MutableSharedBitVectorIntSet other = (MutableSharedBitVectorIntSet) set;
@@ -595,6 +607,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSet#addAll(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public boolean addAll(IntSet set) throws IllegalArgumentException {
     if (set == null) {
       throw new IllegalArgumentException("set == null");
@@ -775,6 +788,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSet#add(int)
    */
+  @Override
   public boolean add(int i) {
     if (privatePart == null) {
       if (sharedPart == null) {
@@ -810,6 +824,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSet#remove(int)
    */
+  @Override
   public boolean remove(int i) {
     if (privatePart != null) {
       if (privatePart.contains(i)) {
@@ -838,6 +853,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSet#intersectWith(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public void intersectWith(IntSet set) {
     if (set instanceof MutableSharedBitVectorIntSet) {
       intersectWithInternal((MutableSharedBitVectorIntSet) set);
@@ -978,6 +994,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public boolean containsAny(IntSet set) {
     if (set instanceof MutableSharedBitVectorIntSet) {
       MutableSharedBitVectorIntSet other = (MutableSharedBitVectorIntSet) set;
@@ -1009,6 +1026,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSet#addAllExcluding(com.ibm.wala.util.intset.IntSet, com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public boolean addAllInIntersection(IntSet other, IntSet filter) {
     if (other instanceof MutableSharedBitVectorIntSet) {
       return addAllInIntersectionInternal((MutableSharedBitVectorIntSet) other, filter);
@@ -1089,6 +1107,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     }
   }
 
+  @Override
   public void clear() {
     privatePart = null;
     sharedPart = null;

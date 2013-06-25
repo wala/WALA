@@ -26,7 +26,8 @@ import com.ibm.wala.cast.tree.rewrite.CAstBasicRewriter.NoKey;
 public abstract class NodePos implements CAstRewriter.RewriteContext<CAstBasicRewriter.NoKey> {
 	public abstract <A> A accept(PosSwitch<A> ps);
 	
-	public NoKey key() {
+	@Override
+  public NoKey key() {
 		return null;
 	}
 

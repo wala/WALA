@@ -24,10 +24,12 @@ public class AstJavaNewEnclosingInstruction extends SSANewInstruction {
 
   int enclosing;
   
+  @Override
   public int getNumberOfUses() {
     return 1;
   }
   
+  @Override
   public int getUse(int i) {
     assert i == 0;
     return enclosing;
@@ -42,14 +44,17 @@ public class AstJavaNewEnclosingInstruction extends SSANewInstruction {
     return this.enclosing;
   }
   
+  @Override
   public String toString() {
     return super.toString() + " ENCLOSING v" + enclosing;
   }
 
+  @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((AstJavaInstructionFactory)insts).JavaNewEnclosingInstruction(defs==null? getDef(0): defs[0], getNewSite(), uses==null? enclosing: uses[0]);
   }
   
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return JavaLanguage.getNewScalarExceptions();
   }

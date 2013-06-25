@@ -84,6 +84,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
    */
+  @Override
   public Iterator<T> getPredNodes(T N) throws IllegalArgumentException {
     int number = nodeManager.getNumber(N);
     if (number < 0) {
@@ -97,6 +98,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
    */
+  @Override
   public int getPredNodeCount(T N) throws IllegalArgumentException {
     int number = nodeManager.getNumber(N);
     if (number < 0) {
@@ -108,6 +110,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
    */
+  @Override
   public Iterator<T> getSuccNodes(T N) throws IllegalArgumentException {
     int number = nodeManager.getNumber(N);
     if (number == -1) {
@@ -127,6 +130,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
     return (s == null) ? empty : nodeManager.iterateNodes(s);
   }
 
+  @Override
   public IntSet getSuccNodeNumbers(T node) throws IllegalArgumentException {
     if (nodeManager.getNumber(node) < 0) {
       throw new IllegalArgumentException("Node not in graph " + node);
@@ -134,6 +138,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
     return successors.getRelated(nodeManager.getNumber(node));
   }
 
+  @Override
   public IntSet getPredNodeNumbers(T node) throws IllegalArgumentException {
     if (nodeManager.getNumber(node) < 0) {
       throw new IllegalArgumentException("Node not in graph " + node);
@@ -144,6 +149,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
    */
+  @Override
   public int getSuccNodeCount(T N) throws IllegalArgumentException {
     return getSuccNodeCount(nodeManager.getNumber(N));
   }
@@ -159,6 +165,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
    * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   public void addEdge(T src, T dst) throws IllegalArgumentException {
     int x = nodeManager.getNumber(src);
     int y = nodeManager.getNumber(dst);
@@ -173,6 +180,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
     hasSuccessor.set(x);
   }
 
+  @Override
   public boolean hasEdge(T src, T dst) {
     int x = nodeManager.getNumber(src);
     int y = nodeManager.getNumber(dst);
@@ -185,6 +193,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(java.lang.Object)
    */
+  @Override
   public void removeAllIncidentEdges(T node) throws IllegalArgumentException {
     final int number = nodeManager.getNumber(node);
     if (number < 0) {
@@ -193,6 +202,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
     IntSet succ = successors.getRelated(number);
     if (succ != null) {
       succ.foreach(new IntSetAction() {
+        @Override
         public void act(int x) {
           predecessors.remove(x, number);
         }
@@ -201,6 +211,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
     IntSet pred = predecessors.getRelated(number);
     if (pred != null) {
       pred.foreach(new IntSetAction() {
+        @Override
         public void act(int x) {
           successors.remove(x, number);
           if (successors.getRelatedCount(x) == 0) {
@@ -217,6 +228,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(java.lang.Object)
    */
+  @Override
   public void removeIncomingEdges(T node) throws IllegalArgumentException {
     final int number = nodeManager.getNumber(node);
     if (number < 0) {
@@ -225,6 +237,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
     IntSet pred = predecessors.getRelated(number);
     if (pred != null) {
       pred.foreach(new IntSetAction() {
+        @Override
         public void act(int x) {
           successors.remove(x, number);
           if (successors.getRelatedCount(x) == 0) {
@@ -236,6 +249,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
     predecessors.removeAll(number);
   }
 
+  @Override
   public void removeEdge(T src, T dst) throws IllegalArgumentException {
     final int srcNumber = nodeManager.getNumber(src);
     final int dstNumber = nodeManager.getNumber(dst);
@@ -255,6 +269,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(java.lang.Object)
    */
+  @Override
   public void removeOutgoingEdges(T node) throws IllegalArgumentException {
     final int number = nodeManager.getNumber(node);
     if (number < 0) {
@@ -263,6 +278,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
     IntSet succ = successors.getRelated(number);
     if (succ != null) {
       succ.foreach(new IntSetAction() {
+        @Override
         public void act(int x) {
           predecessors.remove(x, number);
         }

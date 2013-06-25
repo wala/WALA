@@ -93,6 +93,7 @@ public class MultiModalIntVector implements IntVector {
   /*
    * @see com.ibm.wala.util.intset.IntVector#get(int)
    */
+  @Override
   public int get(int x) {
     if (x < 0) {
       throw new IllegalArgumentException("illegal x: " + x);
@@ -119,6 +120,7 @@ public class MultiModalIntVector implements IntVector {
   /*
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
+  @Override
   public void set(int x, int value) {
     if (x < 0) {
       throw new IllegalArgumentException("illegal x: " + x);
@@ -244,6 +246,7 @@ public class MultiModalIntVector implements IntVector {
     }
   }
 
+  @Override
   public int getMaxIndex() {
     return maxIndex;
   }

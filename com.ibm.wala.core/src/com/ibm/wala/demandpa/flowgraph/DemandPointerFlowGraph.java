@@ -477,6 +477,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     /**
      * The calling loop must call this in each iteration!
      */
+    @Override
     public void setBasicBlock(ISSABasicBlock block) {
       basicBlock = block;
     }

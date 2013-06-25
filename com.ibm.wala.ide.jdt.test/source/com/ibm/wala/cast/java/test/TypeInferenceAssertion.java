@@ -30,6 +30,7 @@ final class TypeInferenceAssertion implements IRAssertion {
   }
 
   // For now just check things in the main method
+  @Override
   public void check(CallGraph cg) {
     IR ir = getIR(cg, typeName, "main", "[Ljava/lang/String;", "V");
     AstJavaTypeInference inference = new AstJavaTypeInference(ir, cg.getClassHierarchy(), true);

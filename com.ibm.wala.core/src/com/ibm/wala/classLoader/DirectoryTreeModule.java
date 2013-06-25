@@ -66,6 +66,7 @@ public abstract class DirectoryTreeModule implements Module {
     return result;
   }
 
+  @Override
   public Iterator<ModuleEntry> getEntries() {
     return getEntriesRecursive(root).iterator();
   }

@@ -15,22 +15,27 @@ public class AbstractClassEntity extends AbstractDataEntity {
     this.type = type;
   }
 
+  @Override
   public String toString() {
     return "class " + type.getName();
   }
 
+  @Override
   public int getKind() {
     return TYPE_ENTITY;
   }
 
+  @Override
   public String getName() {
     return type.getName();
   }
 
+  @Override
   public CAstType getType() {
     return type;
   }
 
+  @Override
   public Collection<CAstQualifier> getQualifiers() {
     return type.getQualifiers();
   }

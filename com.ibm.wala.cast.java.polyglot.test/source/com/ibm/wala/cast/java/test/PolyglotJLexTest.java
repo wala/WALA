@@ -23,6 +23,7 @@ public class PolyglotJLexTest extends JLexTest {
   @Override
   protected JavaSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
     JavaSourceAnalysisEngine engine = new PolyglotJavaSourceAnalysisEngine() {
+      @Override
       protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
         return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, new String[] { "LJLex/Main" });
       }

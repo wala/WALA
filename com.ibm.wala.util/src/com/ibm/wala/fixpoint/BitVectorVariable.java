@@ -28,6 +28,7 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
   /* 
    * @see com.ibm.wala.fixpoint.IVariable#copyState(com.ibm.wala.fixpoint.IVariable)
    */
+  @Override
   public void copyState(BitVectorVariable other) {
     if (other == null) {
       throw new IllegalArgumentException("null other");

@@ -94,6 +94,7 @@ public final class GotoInstruction extends Instruction {
     v.visitGoto(this);
   }
 
+  @Override
   public boolean isPEI() {
     return false;
   }

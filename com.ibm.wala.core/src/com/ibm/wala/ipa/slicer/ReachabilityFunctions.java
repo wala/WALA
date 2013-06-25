@@ -26,6 +26,7 @@ public class ReachabilityFunctions<T> implements IFlowFunctionMap<T> {
   public final static VectorGenFlowFunction FLOW_REACHES = VectorGenFlowFunction.make(SparseIntSet.singleton(0));
 
   public final static IUnaryFlowFunction KILL_FLOW = new IUnaryFlowFunction() {
+    @Override
     public SparseIntSet getTargets(int d1) {
       // kill even the reachability predicate 0.
       return new SparseIntSet();
@@ -46,19 +47,23 @@ public class ReachabilityFunctions<T> implements IFlowFunctionMap<T> {
   /* 
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getCallNoneToReturnFlowFunction(java.lang.Object, java.lang.Object)
    */
+  @Override
   public IUnaryFlowFunction getCallNoneToReturnFlowFunction(T src, T dest) {
     return FLOW_REACHES;
   }
 
+  @Override
   public IUnaryFlowFunction getCallToReturnFlowFunction(T src, T dest) {
     // force flow into callee and back.
     return KILL_FLOW;
   }
 
+  @Override
   public IUnaryFlowFunction getNormalFlowFunction(T src, T dest) {
     return FLOW_REACHES;
   }
 
+  @Override
   public IFlowFunction getReturnFlowFunction(T call, T src, T dest) {
     return FLOW_REACHES;
   }
@@ -67,6 +72,7 @@ public class ReachabilityFunctions<T> implements IFlowFunctionMap<T> {
     return FLOW_REACHES;
   }
 
+  @Override
   public IUnaryFlowFunction getCallFlowFunction(T src, T dest, T ret) {
     return FLOW_REACHES;
   }

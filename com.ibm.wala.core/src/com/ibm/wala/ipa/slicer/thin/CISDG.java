@@ -71,16 +71,19 @@ public class CISDG implements ISDG {
     invRef = MapUtil.inverseMap(ref);
   }
 
+  @Override
   public void addEdge(Statement src, Statement dst) {
     Assertions.UNREACHABLE();
     noHeap.addEdge(src, dst);
   }
 
+  @Override
   public void addNode(Statement n) {
     Assertions.UNREACHABLE();
     noHeap.addNode(n);
   }
 
+  @Override
   public boolean containsNode(Statement N) {
     return noHeap.containsNode(N);
   }
@@ -91,42 +94,51 @@ public class CISDG implements ISDG {
     return noHeap.equals(obj);
   }
 
+  @Override
   public ControlDependenceOptions getCOptions() {
     Assertions.UNREACHABLE();
     return noHeap.getCOptions();
   }
 
+  @Override
   public int getMaxNumber() {
     return noHeap.getMaxNumber();
   }
 
+  @Override
   public Statement getNode(int number) {
     Assertions.UNREACHABLE();
     return noHeap.getNode(number);
   }
 
+  @Override
   public int getNumber(Statement N) {
     return noHeap.getNumber(N);
   }
 
+  @Override
   public int getNumberOfNodes() {
     return noHeap.getNumberOfNodes();
   }
 
+  @Override
   public PDG getPDG(CGNode node) {
     Assertions.UNREACHABLE();
     return noHeap.getPDG(node);
   }
 
+  @Override
   public int getPredNodeCount(Statement N) {
     return IteratorUtil.count(getPredNodes(N));
   }
 
+  @Override
   public IntSet getPredNodeNumbers(Statement node) {
     Assertions.UNREACHABLE();
     return noHeap.getPredNodeNumbers(node);
   }
 
+  @Override
   public Iterator<Statement> getPredNodes(Statement N) {
     if (DEBUG) {
       System.err.println("getPredNodes " + N);
@@ -145,15 +157,18 @@ public class CISDG implements ISDG {
     }
   }
 
+  @Override
   public int getSuccNodeCount(Statement N) {
     return IteratorUtil.count(getSuccNodes(N));
   }
 
+  @Override
   public IntSet getSuccNodeNumbers(Statement node) {
     Assertions.UNREACHABLE();
     return noHeap.getSuccNodeNumbers(node);
   }
 
+  @Override
   public Iterator<Statement> getSuccNodes(Statement N) {
     if (DEBUG) {
       System.err.println("getSuccNodes " + N);
@@ -172,6 +187,7 @@ public class CISDG implements ISDG {
     }
   }
 
+  @Override
   public boolean hasEdge(Statement src, Statement dst) {
     Assertions.UNREACHABLE();
     return noHeap.hasEdge(src, dst);
@@ -184,45 +200,54 @@ public class CISDG implements ISDG {
 
   }
 
+  @Override
   public Iterator<? extends Statement> iterateLazyNodes() {
     Assertions.UNREACHABLE();
     return noHeap.iterateLazyNodes();
   }
 
+  @Override
   public Iterator<Statement> iterator() {
     return noHeap.iterator();
   }
 
+  @Override
   public Iterator<Statement> iterateNodes(IntSet s) {
     Assertions.UNREACHABLE();
     return noHeap.iterateNodes(s);
   }
 
+  @Override
   public void removeAllIncidentEdges(Statement node) {
     Assertions.UNREACHABLE();
     noHeap.removeAllIncidentEdges(node);
   }
 
+  @Override
   public void removeEdge(Statement src, Statement dst) {
     Assertions.UNREACHABLE();
     noHeap.removeEdge(src, dst);
   }
 
+  @Override
   public void removeIncomingEdges(Statement node) {
     Assertions.UNREACHABLE();
     noHeap.removeIncomingEdges(node);
   }
 
+  @Override
   public void removeNode(Statement n) {
     Assertions.UNREACHABLE();
     noHeap.removeNode(n);
   }
 
+  @Override
   public void removeNodeAndEdges(Statement N) {
     Assertions.UNREACHABLE();
     noHeap.removeNodeAndEdges(N);
   }
 
+  @Override
   public void removeOutgoingEdges(Statement node) {
     Assertions.UNREACHABLE();
     noHeap.removeOutgoingEdges(node);
@@ -234,6 +259,7 @@ public class CISDG implements ISDG {
     return noHeap.toString();
   }
 
+  @Override
   public IClassHierarchy getClassHierarchy() {
     return noHeap.getClassHierarchy();
   }

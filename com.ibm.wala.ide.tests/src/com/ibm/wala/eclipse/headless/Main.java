@@ -30,6 +30,7 @@ import com.ibm.wala.ide.util.JdtUtil;
  */
 public class Main implements IApplication  {
 
+  @Override
   public Object start(IApplicationContext context) throws Exception {
     Collection<IJavaProject> jp = JdtUtil.getWorkspaceJavaProjects();
     for (IJavaProject p : jp) {
@@ -40,6 +41,7 @@ public class Main implements IApplication  {
     return null;
   }
 
+  @Override
   public void stop() {
   }
 }

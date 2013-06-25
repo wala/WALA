@@ -24,30 +24,37 @@ public abstract class AbstractNumberedLabeledGraph<T, U> extends AbstractNumbere
   @Override
   protected abstract NumberedLabeledEdgeManager<T, U> getEdgeManager();
 
+  @Override
   public void addEdge(T src, T dst, U label) {
     getEdgeManager().addEdge(src, dst, label);
   }
 
+  @Override
   public Iterator<? extends U> getPredLabels(T N) {
     return getEdgeManager().getPredLabels(N);
   }
 
+  @Override
   public int getPredNodeCount(T N, U label) {
     return getEdgeManager().getPredNodeCount(N, label);
   }
 
+  @Override
   public Iterator<T> getPredNodes(T N, U label) {
     return getEdgeManager().getPredNodes(N, label);
   }
 
+  @Override
   public Iterator<? extends U> getSuccLabels(T N) {
     return getEdgeManager().getSuccLabels(N);
   }
 
+  @Override
   public int getSuccNodeCount(T N, U label) {
     return getEdgeManager().getSuccNodeCount(N, label);
   }
 
+  @Override
   public Iterator<? extends T> getSuccNodes(T N, U label) {
     return getEdgeManager().getSuccNodes(N, label);
   }
@@ -60,18 +67,22 @@ public abstract class AbstractNumberedLabeledGraph<T, U> extends AbstractNumbere
     return getEdgeManager().getSuccNodeNumbers(node, label);
   }
   
+  @Override
   public boolean hasEdge(T src, T dst, U label) {
     return getEdgeManager().hasEdge(src, dst, label);
   }
 
+  @Override
   public void removeEdge(T src, T dst, U label) {
     getEdgeManager().removeEdge(src, dst, label);
   }
 
+  @Override
   public Set<? extends U> getEdgeLabels(T src, T dst) {
     return getEdgeManager().getEdgeLabels(src, dst);
   }
 
+  @Override
   public U getDefaultLabel() {
     return getEdgeManager().getDefaultLabel();
   }

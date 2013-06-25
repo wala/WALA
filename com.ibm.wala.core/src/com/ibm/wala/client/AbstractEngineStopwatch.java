@@ -36,6 +36,7 @@ public abstract class AbstractEngineStopwatch implements EngineStopwatch {
     }
   }
 
+  @Override
   public final String report() {
     StringBuffer result = new StringBuffer();
     long total = 0;
@@ -50,6 +51,7 @@ public abstract class AbstractEngineStopwatch implements EngineStopwatch {
   /**
    * 
    */
+  @Override
   public void start(byte category) {
     stopwatch[category].start();
   }
@@ -57,10 +59,12 @@ public abstract class AbstractEngineStopwatch implements EngineStopwatch {
   /**
    * 
    */
+  @Override
   public void stop(byte category) {
     stopwatch[category].stop();
   }
   
+  @Override
   public StopwatchGC getTimer(byte category) {
   	return stopwatch[category];
   }

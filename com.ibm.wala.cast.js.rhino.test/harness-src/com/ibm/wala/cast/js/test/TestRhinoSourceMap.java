@@ -16,7 +16,6 @@ import static com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFa
 import static com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil.makeScriptScope;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Map;
 
 import junit.framework.Assert;

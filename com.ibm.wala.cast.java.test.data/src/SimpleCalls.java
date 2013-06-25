@@ -13,7 +13,8 @@ interface ISimpleCalls {
 	public void helloWorld();
 }
 public class SimpleCalls implements ISimpleCalls {
-	public void helloWorld() {
+	
+  public void helloWorld() {
 		System.out.println("hello world!");
 	}
 	public int anotherCall() {

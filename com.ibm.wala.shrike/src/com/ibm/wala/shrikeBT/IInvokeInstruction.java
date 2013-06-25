@@ -42,6 +42,7 @@ public interface IInvokeInstruction extends IInstruction {
       }
     };
 
+    @Override
     public boolean hasImplicitThis() {
       return true;
     }

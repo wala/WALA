@@ -30,23 +30,28 @@ public class AstGlobalRead extends SSAGetInstruction {
     super(lhs, global);
   }
 
+  @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((AstInstructionFactory)insts).GlobalRead((defs==null)? getDef(): defs[0], getDeclaredField());
   }
 
+  @Override
   public String toString(SymbolTable symbolTable) {
     return getValueString(symbolTable, getDef()) + " = global:" + getGlobalName();
   }
 
+  @Override
   public void visit(IVisitor v) {
     if (v instanceof AstInstructionVisitor) 
       ((AstInstructionVisitor)v).visitAstGlobalRead(this);
   }
 
+  @Override
   public boolean isFallThrough() {
     return true;
   }
 
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return null;
   }

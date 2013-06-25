@@ -69,6 +69,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
 
   /**
    */
+  @Override
   public void remove(long value) {
     if (elements != null) {
       int remove;
@@ -98,6 +99,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
    * @param value
    * @return true iff this value changes
    */
+  @Override
   public boolean add(long value) {
     if (value < 0) {
       throw new IllegalArgumentException("illegal value: " + value);
@@ -150,6 +152,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
   /**
    * @throws UnimplementedError if not ( that instanceof com.ibm.wala.util.intset.SparseLongSet )
    */
+  @Override
   public void copySet(LongSet that) throws UnimplementedError {
     if (that instanceof SparseLongSet) {
       SparseLongSet set = (SparseLongSet) that;
@@ -165,6 +168,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
     }
   }
 
+  @Override
   public void intersectWith(LongSet set) {
     if (set == null) {
       throw new IllegalArgumentException("null set");
@@ -260,6 +264,7 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
    * @return true iff this set changes
    * @throws UnimplementedError if not ( set instanceof com.ibm.wala.util.intset.SparseLongSet )
    */
+  @Override
   public boolean addAll(LongSet set) throws UnimplementedError {
     if (set instanceof SparseLongSet) {
       return addAll((SparseLongSet) set);

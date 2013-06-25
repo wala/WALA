@@ -33,10 +33,12 @@ public class IteratorPlusOne<T> implements Iterator<T> {
     this.xtra = xtra;
   }
     
+  @Override
   public boolean hasNext() {
     return it.hasNext() || (xtra != null);
   }
 
+  @Override
   public T next() {
     if (it.hasNext()) {
       return it.next();
@@ -47,6 +49,7 @@ public class IteratorPlusOne<T> implements Iterator<T> {
     }
   }
   
+  @Override
   public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }

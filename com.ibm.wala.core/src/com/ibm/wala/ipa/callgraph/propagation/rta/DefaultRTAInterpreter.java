@@ -52,6 +52,7 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
     }
   }
 
+  @Override
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -59,6 +60,7 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
     return getNodeInterpreter(node).iterateNewSites(node);
   }
 
+  @Override
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -66,6 +68,7 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
     return getNodeInterpreter(node).iterateCallSites(node);
   }
 
+  @Override
   public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -73,6 +76,7 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
     return getNodeInterpreter(node).iterateFieldsRead(node);
   }
 
+  @Override
   public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -80,10 +84,12 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
     return getNodeInterpreter(node).iterateFieldsWritten(node);
   }
 
+  @Override
   public boolean understands(CGNode node) {
     return true;
   }
 
+  @Override
   public boolean recordFactoryType(CGNode node, IClass klass) {
     // not a factory type
     return false;

@@ -58,4 +58,9 @@ public interface ModuleEntry {
    */
   String getClassName();
 
+  /**
+   * the containing module
+   */
+  Module getContainer();
+   
 }

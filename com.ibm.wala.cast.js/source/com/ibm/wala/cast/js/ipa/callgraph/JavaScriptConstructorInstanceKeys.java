@@ -26,6 +26,7 @@ public class JavaScriptConstructorInstanceKeys implements InstanceKeyFactory {
     this.base = base;
   }
 
+  @Override
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
     if (node.getMethod() instanceof JavaScriptConstructTargetSelector.JavaScriptConstructor) {
       InstanceKey bk = base.getInstanceKeyForAllocation(node, allocation);
@@ -35,18 +36,22 @@ public class JavaScriptConstructorInstanceKeys implements InstanceKeyFactory {
     }
   }
 
+  @Override
   public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
     return base.getInstanceKeyForClassObject(type);
   }
 
+  @Override
   public <T> InstanceKey getInstanceKeyForConstant(TypeReference type, T S) {
     return base.getInstanceKeyForConstant(type, S);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
     return base.getInstanceKeyForMultiNewArray(node, allocation, dim);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type) {
     return base.getInstanceKeyForPEI(node, instr, type);
   }

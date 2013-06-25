@@ -155,10 +155,12 @@ public final class BitSet<T> {
         }
       }
 
+      @Override
       public boolean hasNext() {
         return (next != -1);
       }
 
+      @Override
       public T next() {
         T result = map.getMappedObject(next);
         int start = next + 1;
@@ -172,6 +174,7 @@ public final class BitSet<T> {
         return result;
       }
 
+      @Override
       public void remove() {
         Assertions.UNREACHABLE();
       }

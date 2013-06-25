@@ -255,6 +255,7 @@ public class Slicer {
     /*
      * @see com.ibm.wala.dataflow.IFDS.TabulationProblem#getDomain()
      */
+    @Override
     public TabulationDomain<Object, Statement> getDomain() {
       // a dummy
       return new UnorderedDomain<Object, Statement>();
@@ -263,6 +264,7 @@ public class Slicer {
     /*
      * @see com.ibm.wala.dataflow.IFDS.TabulationProblem#getFunctionMap()
      */
+    @Override
     public IPartiallyBalancedFlowFunctions<Statement> getFunctionMap() {
       return f;
     }
@@ -270,6 +272,7 @@ public class Slicer {
     /*
      * @see com.ibm.wala.dataflow.IFDS.TabulationProblem#getMergeFunction()
      */
+    @Override
     public IMergeFunction getMergeFunction() {
       return null;
     }
@@ -277,10 +280,12 @@ public class Slicer {
     /*
      * @see com.ibm.wala.dataflow.IFDS.TabulationProblem#getSupergraph()
      */
+    @Override
     public ISupergraph<Statement, PDG> getSupergraph() {
       return supergraph;
     }
 
+    @Override
     public Collection<PathEdge<Statement>> initialSeeds() {
       if (backward) {
         Collection<PathEdge<Statement>> result = HashSetFactory.make();
@@ -299,6 +304,7 @@ public class Slicer {
       }
     }
 
+    @Override
     public Statement getFakeEntry(Statement node) {
       return backward ? new MethodExitStatement(node.getNode()) : new MethodEntryStatement(node.getNode());
     }

@@ -55,7 +55,8 @@ public class SimpleNames {
 		
 		final int i = 5;
 		new Object() {
-			public int hashCode() {
+			
+      public int hashCode() {
 				f = 5; // SimpleNames.this = 5
 				s = 6; // SimpleNames.s = 6
 				

@@ -21,7 +21,8 @@ public class TestJQueryExamplesRhino extends TestJQueryExamples {
 		    justThisTest(TestJQueryExamplesRhino.class);
 		  }
 
-	  @Before
+	  @Override
+    @Before
 	  public void setUp() {
 		  JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
 	  }

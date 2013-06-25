@@ -81,6 +81,7 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
       this.base = base;
     }
 
+    @Override
     public IClass getConcreteType() {
       return base.getConcreteType();
     }
@@ -113,15 +114,18 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
     }
 
 
+    @Override
     public int hashCode() {
       return base.hashCode() * creator.hashCode();
     }
 
+    @Override
     public boolean equals(Object o) {
       return (o instanceof ScopeMappingInstanceKey) && ((ScopeMappingInstanceKey) o).base.equals(base)
           && ((ScopeMappingInstanceKey) o).creator.equals(creator);
     }
 
+    @Override
     public String toString() {
       return "SMIK:" + base + "@creator:" + creator;
     }
@@ -134,10 +138,12 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
       return creator;
     }
 
+    @Override
     public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
       return new FilterIterator<Pair<CGNode, NewSiteReference>>(
           base.getCreationSites(CG),
           new Filter<Pair<CGNode, NewSiteReference>>() {
+            @Override
             public boolean accepts(Pair<CGNode, NewSiteReference> o) {
               return o.fst.equals(creator);
             }
@@ -145,6 +151,7 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
     }
   }
 
+  @Override
   public InstanceKey getInstanceKeyForAllocation(CGNode creatorNode, NewSiteReference allocationSite) {
     InstanceKey base = basic.getInstanceKeyForAllocation(creatorNode, allocationSite);
     if (base != null && needsScopeMappingKey(base)) {
@@ -159,18 +166,22 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
    */
   protected abstract Collection<CGNode> getConstructorCallers(ScopeMappingInstanceKey smik, Pair<String, String> name);
   
+  @Override
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
     return basic.getInstanceKeyForMultiNewArray(node, allocation, dim);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForConstant(TypeReference type, Object S) {
     return basic.getInstanceKeyForConstant(type, S);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type) {
     return basic.getInstanceKeyForPEI(node, instr, type);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
     return basic.getInstanceKeyForClassObject(type);
   }

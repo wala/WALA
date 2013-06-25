@@ -70,6 +70,7 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
     invRef = MapUtil.inverseMap(ref);
   }
 
+  @Override
   public Collection<MemoryAccess> getArrayReads(PointerKey arrayRef) {
     Collection<MemoryAccess> memAccesses = new ArrayList<MemoryAccess>();
     if (DEBUG) {
@@ -82,6 +83,7 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
     return memAccesses;
   }
 
+  @Override
   public Collection<MemoryAccess> getArrayWrites(PointerKey arrayRef) {
     Collection<MemoryAccess> memAccesses = new ArrayList<MemoryAccess>();
     if (DEBUG) {
@@ -97,6 +99,7 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
     return memAccesses;
   }
 
+  @Override
   public Collection<MemoryAccess> getFieldReads(PointerKey baseRef, IField field) {
     Collection<MemoryAccess> memAccesses = new ArrayList<MemoryAccess>();
     for (InstanceKey ik : pa.getPointsToSet(baseRef)) {
@@ -106,6 +109,7 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
     return memAccesses;
   }
 
+  @Override
   public Collection<MemoryAccess> getFieldWrites(PointerKey baseRef, IField field) {
     Collection<MemoryAccess> memAccesses = new ArrayList<MemoryAccess>();
     for (InstanceKey ik : pa.getPointsToSet(baseRef)) {
@@ -115,12 +119,14 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
     return memAccesses;
   }
 
+  @Override
   public Collection<MemoryAccess> getStaticFieldReads(IField field) {
     Collection<MemoryAccess> result = new ArrayList<MemoryAccess>();
     convertStmtsToMemoryAccess(invRef.get(heapModel.getPointerKeyForStaticField(field)), result);
     return result;
   }
 
+  @Override
   public Collection<MemoryAccess> getStaticFieldWrites(IField field) {
     Collection<MemoryAccess> result = new ArrayList<MemoryAccess>();
     convertStmtsToMemoryAccess(invMod.get(heapModel.getPointerKeyForStaticField(field)), result);
@@ -146,6 +152,7 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
     }
   }
 
+  @Override
   public HeapModel getHeapModel() {
     return heapModel;
   }

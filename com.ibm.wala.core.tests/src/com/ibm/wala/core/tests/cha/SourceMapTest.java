@@ -15,7 +15,9 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.ibm.wala.classLoader.BytecodeClass;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -60,5 +62,8 @@ public class SourceMapTest extends WalaTestCase {
     String sourceFile = klass.getSourceFileName();
     Assert.assertTrue(sourceFile != null);
     System.err.println("Source file: " + sourceFile);
+    Module container = ((BytecodeClass)klass).getContainer();
+    Assert.assertTrue(container != null);
+    System.err.println("container: " + container);
   }
 }

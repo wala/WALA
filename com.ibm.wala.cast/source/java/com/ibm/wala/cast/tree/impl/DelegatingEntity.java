@@ -30,66 +30,82 @@ public class DelegatingEntity implements CAstEntity {
 	this.base = base;
     }
 
+    @Override
     public int getKind() {
 	return base.getKind();
     }
 
+    @Override
     public String getName() {
 	return base.getName();
     }
 
+    @Override
     public String getSignature() {
 	return base.getSignature();
     }
 
+    @Override
     public String[] getArgumentNames() {
 	return base.getArgumentNames();
     }
 
+    @Override
     public CAstNode[] getArgumentDefaults() {
 	return base.getArgumentDefaults();
     }
 
+    @Override
     public int getArgumentCount() {
 	return base.getArgumentCount();
     }
 
+    @Override
     public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
 	return base.getAllScopedEntities();
     }
 
+    @Override
     public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
 	return base.getScopedEntities(construct);
     }
 
+    @Override
     public CAstNode getAST() {
 	return base.getAST();
     }
 
+    @Override
     public CAstControlFlowMap getControlFlow() {
 	return base.getControlFlow();
     }
 
+    @Override
     public CAstSourcePositionMap getSourceMap() {
 	return base.getSourceMap();
     }
 
+    @Override
     public CAstSourcePositionMap.Position getPosition() {
 	return base.getPosition();
     }
 
+    @Override
     public CAstNodeTypeMap getNodeTypeMap() {
 	return base.getNodeTypeMap();
     }
 
+    @Override
     public Collection<CAstQualifier> getQualifiers() {
 	return base.getQualifiers();
     }
 
+    @Override
     public CAstType getType() {
 	return base.getType();
     }
 
+    @Override
     public Collection<CAstAnnotation> getAnnotations() {
       return base.getAnnotations();
     }

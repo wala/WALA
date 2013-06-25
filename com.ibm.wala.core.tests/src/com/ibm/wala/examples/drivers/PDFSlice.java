@@ -245,6 +245,7 @@ public class PDFSlice {
    */
   public static Graph<Statement> pruneSDG(SDG sdg, final Collection<Statement> slice) {
     Filter<Statement> f = new Filter<Statement>() {
+      @Override
       public boolean accepts(Statement o) {
         return slice.contains(o);
       }
@@ -257,6 +258,7 @@ public class PDFSlice {
    */
   public static NodeDecorator makeNodeDecorator() {
     return new NodeDecorator() {
+      @Override
       public String getLabel(Object o) throws WalaException {
         Statement s = (Statement) o;
         switch (s.getKind()) {

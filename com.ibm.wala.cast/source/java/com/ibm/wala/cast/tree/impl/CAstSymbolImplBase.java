@@ -45,24 +45,30 @@ public abstract class CAstSymbolImplBase implements CAstSymbol {
     this._defaultInitValue= defaultInitValue;
   }
 
+  @Override
   public String name() {
     return _name;
   }
 
+  @Override
   public boolean isFinal() {
     return _isFinal;
   }
 
+  @Override
   public boolean isCaseInsensitive() {
     return _isCaseInsensitive;
   }
 
+  @Override
   public Object defaultInitValue() {
     return _defaultInitValue;
   }
 
+  @Override
   public abstract boolean isInternalName();
 
+  @Override
   public String toString() {
     return _name;
   }

@@ -22,11 +22,13 @@ import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.classLoader.SourceModule;
 
 public class TestCorrelatedPairExtractionRhino extends TestCorrelatedPairExtraction {
-	protected CorrelationFinder makeCorrelationFinder() {
+	@Override
+  protected CorrelationFinder makeCorrelationFinder() {
 		return new CorrelationFinder(new CAstRhinoTranslatorFactory());
 	}
 	
-	protected CAstEntity parseJS(CAstImpl ast, SourceModule module) throws IOException {
+	@Override
+  protected CAstEntity parseJS(CAstImpl ast, SourceModule module) throws IOException {
 		RhinoToAstTranslator translator = new RhinoToAstTranslator(ast, module, module.getName(), false);
 		CAstEntity entity = null;
 		try {

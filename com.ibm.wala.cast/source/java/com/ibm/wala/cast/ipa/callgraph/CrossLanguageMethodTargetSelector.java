@@ -57,6 +57,7 @@ public class CrossLanguageMethodTargetSelector
     return (MethodTargetSelector)languageSelectors.get(getLanguage(site));
   }
 
+  @Override
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
     assert getSelector(site) != null: "no selector for " + getLanguage(site) + " method " + site;
     return getSelector(site).getCalleeTarget(caller, site, receiver);

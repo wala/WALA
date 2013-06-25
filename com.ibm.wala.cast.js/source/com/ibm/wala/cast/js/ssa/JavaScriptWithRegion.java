@@ -56,10 +56,12 @@ public class JavaScriptWithRegion extends SSAInstruction {
     ((JSInstructionVisitor)v).visitWithRegion(this);
   }
 
+  @Override
   public int getNumberOfUses() {
     return 1;
   }
   
+  @Override
   public int getUse(int i) {
     assert i == 0;
     return expr;
