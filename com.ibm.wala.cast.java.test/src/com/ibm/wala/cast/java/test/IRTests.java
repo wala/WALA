@@ -159,6 +159,7 @@ public abstract class IRTests {
       return ea;
     }
 
+    @Override
     public void check(CallGraph callGraph) {
       MethodReference srcMethod = descriptorToMethodRef(this.srcDescriptor, callGraph.getClassHierarchy());
       Set<CGNode> srcNodes = callGraph.getNodes(srcMethod);
@@ -213,6 +214,7 @@ public abstract class IRTests {
       this.definingLineNumber = definingLineNumber;
     }
 
+    @Override
     public void check(CallGraph cg) {
 
       MethodReference mref = descriptorToMethodRef(method, cg.getClassHierarchy());
@@ -278,6 +280,7 @@ public abstract class IRTests {
     public final Set<ClassAnnotation> classAnnotations = HashSetFactory.make();
     public final Set<MethodAnnotation> methodAnnotations = HashSetFactory.make();
     
+    @Override
     public void check(CallGraph cg) {
       classes: for(ClassAnnotation ca : classAnnotations) {
         IClass cls = cg.getClassHierarchy().lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Application, ca.className));
@@ -476,7 +479,7 @@ public abstract class IRTests {
       if (f.isDirectory()) {
         engine.addSourceModule(new SourceDirectoryTreeModule(f));
       } else {
-        engine.addSourceModule(new SourceFileModule(f, srcFileName));
+        engine.addSourceModule(new SourceFileModule(f, srcFileName, null));
       }
     }
   }

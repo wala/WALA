@@ -81,10 +81,12 @@ public class SSAConversion extends AbstractSSAConversion {
       this.instructionIndex = instructionIndex;
     }
 
+    @Override
     public int hashCode() {
       return useNumber * instructionIndex;
     }
 
+    @Override
     public boolean equals(Object o) {
       return (o instanceof UseRecord) && instructionIndex == ((UseRecord) o).instructionIndex
           && useNumber == ((UseRecord) o).useNumber;
@@ -104,10 +106,12 @@ public class SSAConversion extends AbstractSSAConversion {
       this.useNumber = useNumber;
     }
 
+    @Override
     public int hashCode() {
       return phiNumber * BBnumber * useNumber;
     }
 
+    @Override
     public boolean equals(Object o) {
       return (o instanceof PhiUseRecord) && BBnumber == ((PhiUseRecord) o).BBnumber && phiNumber == ((PhiUseRecord) o).phiNumber
           && useNumber == ((PhiUseRecord) o).useNumber;
@@ -123,10 +127,12 @@ public class SSAConversion extends AbstractSSAConversion {
 
     private final Set<CopyPropagationRecord> childRecords = HashSetFactory.make(1);
 
+    @Override
     public int hashCode() {
       return instructionIndex;
     }
 
+    @Override
     public boolean equals(Object o) {
       return (o instanceof CopyPropagationRecord) && instructionIndex == ((CopyPropagationRecord) o).instructionIndex;
     }
@@ -232,6 +238,7 @@ public class SSAConversion extends AbstractSSAConversion {
   //
   private class SSAInformation implements com.ibm.wala.ssa.IR.SSA2LocalMap {
 
+    @Override
     public String[] getLocalNames(int pc, int vn) {
       int v = skip(vn) || vn >= valueMap.length ? vn : valueMap[vn];
       String[][] namesData = debugInfo.getSourceNamesForValues();
@@ -279,34 +286,42 @@ public class SSAConversion extends AbstractSSAConversion {
   // implementation of AbstractSSAConversion hooks
   //
 
+  @Override
   protected int getNumberOfDefs(SSAInstruction inst) {
     return inst.getNumberOfDefs();
   }
 
+  @Override
   protected int getDef(SSAInstruction inst, int index) {
     return inst.getDef(index);
   }
 
+  @Override
   protected int getNumberOfUses(SSAInstruction inst) {
     return inst.getNumberOfUses();
   }
 
+  @Override
   protected int getUse(SSAInstruction inst, int index) {
     return inst.getUse(index);
   }
 
+  @Override
   protected boolean isAssignInstruction(SSAInstruction inst) {
     return inst instanceof AssignInstruction;
   }
 
+  @Override
   protected int getMaxValueNumber() {
     return symtab.getMaxValueNumber();
   }
 
+  @Override
   protected boolean skip(int vn) {
     return false;
   }
 
+  @Override
   protected boolean isLive(SSACFG.BasicBlock Y, int V) {
     return (liveness.isLiveEntry(Y, V));
   }
@@ -315,6 +330,7 @@ public class SSAConversion extends AbstractSSAConversion {
     BB.addPhiForLocal(phiCounts[BB.getGraphNodeId()], phi);
   }
 
+  @Override
   protected void placeNewPhiAt(int value, SSACFG.BasicBlock Y) {
     int[] params = new int[CFG.getPredNodeCount(Y)];
     for (int i = 0; i < params.length; i++)
@@ -328,18 +344,22 @@ public class SSAConversion extends AbstractSSAConversion {
     addPhi(Y, phi);
   }
 
+  @Override
   protected SSAPhiInstruction getPhi(SSACFG.BasicBlock B, int index) {
     return B.getPhiForLocal(index);
   }
 
+  @Override
   protected void setPhi(SSACFG.BasicBlock B, int index, SSAPhiInstruction inst) {
     B.addPhiForLocal(index, inst);
   }
 
+  @Override
   protected SSAPhiInstruction repairPhiDefs(SSAPhiInstruction phi, int[] newDefs) {
     return (SSAPhiInstruction) phi.copyForSSA(CFG.getMethod().getDeclaringClass().getClassLoader().getInstructionFactory(), newDefs, null);
   }
 
+  @Override
   protected void repairPhiUse(SSACFG.BasicBlock BB, int phiIndex, int rvalIndex, int newRval) {
     SSAPhiInstruction phi = getPhi(BB, phiIndex);
 
@@ -357,6 +377,7 @@ public class SSAConversion extends AbstractSSAConversion {
     phi.setValues(newUses);
   }
 
+  @Override
   protected void pushAssignment(SSAInstruction inst, int index, int newRhs) {
     int lhs = getDef(inst, 0);
     int rhs = getUse(inst, 0);
@@ -370,6 +391,7 @@ public class SSAConversion extends AbstractSSAConversion {
     }
   }
 
+  @Override
   protected void repairInstructionUses(SSAInstruction inst, int index, int[] newUses) {
     for (int j = 0; j < getNumberOfUses(inst); j++) {
       if (topR(getUse(inst, j)) != null) {
@@ -398,18 +420,22 @@ public class SSAConversion extends AbstractSSAConversion {
     }
   }
 
+  @Override
   protected void repairInstructionDefs(SSAInstruction inst, int index, int[] newDefs, int[] newUses) {
     instructions[index] = inst.copyForSSA(CFG.getMethod().getDeclaringClass().getClassLoader().getInstructionFactory(), newDefs, newUses);
   }
 
+  @Override
   protected void popAssignment(SSAInstruction inst, int index) {
     instructions[index] = null;
   }
 
+  @Override
   protected boolean isConstant(int valueNumber) {
     return symtab.isConstant(valueNumber);
   }
 
+  @Override
   protected boolean skipRepair(SSAInstruction inst, int index) {
     if (!super.skipRepair(inst, index)) {
       return false;
@@ -475,6 +501,7 @@ public class SSAConversion extends AbstractSSAConversion {
     }
   }
 
+  @Override
   protected int getNextNewValueNumber() {
     while (symtab.isConstant(nextSSAValue) || skip(nextSSAValue))
       ++nextSSAValue;
@@ -499,6 +526,7 @@ public class SSAConversion extends AbstractSSAConversion {
     }
   }
 
+  @Override
   protected void initializeVariables() {
     for (int V = 1; V <= getMaxValueNumber(); V++) {
       if (!skip(V)) {
@@ -516,6 +544,7 @@ public class SSAConversion extends AbstractSSAConversion {
 
   }
 
+  @Override
   protected void repairExit() {
     int[] exitLives = lexicalInfo.getExitExposedUses();
     if (exitLives != null) {
@@ -532,6 +561,7 @@ public class SSAConversion extends AbstractSSAConversion {
   // Global control.
   //
 
+  @Override
   protected void fail(int v) {
     System.err.println("during SSA conversion of the following IR:");
     System.err.println(ir);
@@ -542,6 +572,7 @@ public class SSAConversion extends AbstractSSAConversion {
     return computedLocalMap;
   }
 
+  @Override
   public void perform() {
     super.perform();
 
@@ -603,6 +634,7 @@ public class SSAConversion extends AbstractSSAConversion {
       SSAConversion ssa = new SSAConversion(M, ir, options) {
         final int limit = ir.getSymbolTable().getMaxValueNumber();
 
+        @Override
         protected boolean skip(int i) {
           return (i >= 0) && (i <= limit) && (!values.contains(i));
         }
