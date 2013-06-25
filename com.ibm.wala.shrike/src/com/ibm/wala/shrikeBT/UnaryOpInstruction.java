@@ -46,6 +46,7 @@ public final class UnaryOpInstruction extends Instruction implements IUnaryOpIns
     }
   }
 
+  @Override
   public IUnaryOpInstruction.Operator getOperator() {
     return IUnaryOpInstruction.Operator.NEG;
   }
@@ -70,6 +71,7 @@ public final class UnaryOpInstruction extends Instruction implements IUnaryOpIns
     return Util.getWordSize(getType());
   }
 
+  @Override
   public String getType() {
     return indexedTypes[opcode - OP_ineg];
   }
@@ -84,6 +86,7 @@ public final class UnaryOpInstruction extends Instruction implements IUnaryOpIns
     return "UnaryOp(" + getType() + "," + getOperator() + ")";
   }
 
+  @Override
   public boolean isPEI() {
     return false;
   }

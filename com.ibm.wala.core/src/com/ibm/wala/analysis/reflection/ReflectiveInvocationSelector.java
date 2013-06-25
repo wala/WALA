@@ -47,6 +47,7 @@ class ReflectiveInvocationSelector implements ContextSelector {
    * <li>Otherwise, return a new {@link ReceiverInstanceContext} for <code>receiver</code>.
    * </ol>
    */
+  @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (receiver == null || receiver.length == 0 || !mayUnderstand(caller, site, callee, receiver[0])) {
       return null;
@@ -126,6 +127,7 @@ class ReflectiveInvocationSelector implements ContextSelector {
 
   private static final IntSet thisParameter = IntSetUtil.make(new int[]{0});
 
+  @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     if (site.isDispatch() || site.getDeclaredTarget().getNumberOfParameters() > 0) {
       return thisParameter;

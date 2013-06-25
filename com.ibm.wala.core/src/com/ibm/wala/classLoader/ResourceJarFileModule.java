@@ -19,6 +19,7 @@ public class ResourceJarFileModule extends AbstractNestedJarFileModule {
   private final URL resourceURL;
     
   public ResourceJarFileModule(URL resourceURL) {
+    super(new SourceURLModule(resourceURL));
     this.resourceURL = resourceURL;
   }
 

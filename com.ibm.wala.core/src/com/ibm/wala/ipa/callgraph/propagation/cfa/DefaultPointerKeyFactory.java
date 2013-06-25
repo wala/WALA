@@ -31,6 +31,7 @@ public class DefaultPointerKeyFactory implements PointerKeyFactory {
   public DefaultPointerKeyFactory() {
   }
 
+  @Override
   public PointerKey getPointerKeyForLocal(CGNode node, int valueNumber) {
     if (valueNumber <= 0) {
       throw new IllegalArgumentException("illegal value number: " + valueNumber + " in " + node);
@@ -38,6 +39,7 @@ public class DefaultPointerKeyFactory implements PointerKeyFactory {
     return new LocalPointerKey(node, valueNumber);
   }
 
+  @Override
   public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter) {
     if (filter == null) {
       throw new IllegalArgumentException("null filter");
@@ -47,14 +49,17 @@ public class DefaultPointerKeyFactory implements PointerKeyFactory {
     return new LocalPointerKeyWithFilter(node, valueNumber, filter);
   }
 
+  @Override
   public PointerKey getPointerKeyForReturnValue(CGNode node) {
     return new ReturnValueKey(node);
   }
 
+  @Override
   public PointerKey getPointerKeyForExceptionalReturnValue(CGNode node) {
     return new ExceptionReturnValueKey(node);
   }
 
+  @Override
   public PointerKey getPointerKeyForStaticField(IField f) {
     if (f == null) {
       throw new IllegalArgumentException("null f");
@@ -62,6 +67,7 @@ public class DefaultPointerKeyFactory implements PointerKeyFactory {
     return new StaticFieldKey(f);
   }
 
+  @Override
   public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField field) {
     if (field == null) {
       throw new IllegalArgumentException("field is null");
@@ -69,6 +75,7 @@ public class DefaultPointerKeyFactory implements PointerKeyFactory {
     return new InstanceFieldKey(I, field);
   }
 
+  @Override
   public PointerKey getPointerKeyForArrayContents(InstanceKey I) {
     return new ArrayContentsKey(I);
   }

@@ -36,6 +36,7 @@ class ClassNewInstanceContextSelector implements ContextSelector {
    * representing the type of the IClass. (This corresponds to the case where we know the exact type that will be
    * allocated by the <code>Class.newInstance()</code> call.)  Otherwise, return <code>null</code>.    
    */
+  @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (callee.getReference().equals(ClassNewInstanceContextInterpreter.CLASS_NEW_INSTANCE_REF) && isTypeConstant(receiver[0])) {
       IClass c = (IClass) ((ConstantKey) receiver[0]).getValue();
@@ -58,6 +59,7 @@ class ClassNewInstanceContextSelector implements ContextSelector {
 
   private static final IntSet thisParameter = IntSetUtil.make(new int[]{0});
 
+  @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     if (site.isDispatch() || site.getDeclaredTarget().getNumberOfParameters() > 0) {
       return thisParameter;

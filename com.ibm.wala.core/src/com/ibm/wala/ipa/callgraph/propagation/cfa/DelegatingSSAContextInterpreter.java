@@ -44,6 +44,7 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
     }
   }
 
+  @Override
   public IR getIR(CGNode node) {
     if (A != null) {
       if (A.understands(node)) {
@@ -54,6 +55,7 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
     return B.getIR(node);
   }
 
+  @Override
   public int getNumberOfStatements(CGNode node) {
     if (A != null) {
       if (A.understands(node)) {
@@ -79,6 +81,7 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
     return result;
   }
 
+  @Override
   public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode node) {
     if (A != null) {
       if (A.understands(node)) {
@@ -89,6 +92,7 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
     return B.getCFG(node);
   }
 
+  @Override
   public DefUse getDU(CGNode node) {
     if (A != null) {
       if (A.understands(node)) {

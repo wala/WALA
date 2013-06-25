@@ -20,35 +20,43 @@ public class AbstractVertexVisitor<T> implements VertexVisitor<T> {
 		return null;
 	}
 	
-	public T visitVarVertex(VarVertex varVertex) {
+	@Override
+  public T visitVarVertex(VarVertex varVertex) {
 		return visitVertex(varVertex);
 	}
 
-	public T visitPropVertex(PropVertex propVertex) {
+	@Override
+  public T visitPropVertex(PropVertex propVertex) {
 		return visitVertex(propVertex);
 	}
 
-	public T visitUnknownVertex(UnknownVertex unknownVertex) {
+	@Override
+  public T visitUnknownVertex(UnknownVertex unknownVertex) {
 		return visitVertex(unknownVertex);
 	}
 
-	public T visitFuncVertex(FuncVertex funcVertex) {
+	@Override
+  public T visitFuncVertex(FuncVertex funcVertex) {
 		return visitVertex(funcVertex);
 	}
 
-	public T visitParamVertex(ParamVertex paramVertex) {
+	@Override
+  public T visitParamVertex(ParamVertex paramVertex) {
 		return visitVertex(paramVertex);
 	}
 
-	public T visitRetVertex(RetVertex retVertex) {
+	@Override
+  public T visitRetVertex(RetVertex retVertex) {
 		return visitVertex(retVertex);
 	}
 
-	public T visitCalleeVertex(CallVertex calleeVertex) {
+	@Override
+  public T visitCalleeVertex(CallVertex calleeVertex) {
 		return visitVertex(calleeVertex);
 	}
 
-	public T visitLexicalAccessVertex(LexicalVarVertex lexicalAccessVertex) {
+	@Override
+  public T visitLexicalAccessVertex(LexicalVarVertex lexicalAccessVertex) {
 		return visitVertex(lexicalAccessVertex);
 	}
 

@@ -31,6 +31,7 @@ public class CollectionFilter<T> implements Filter<T> {
   /*
    * @see com.ibm.wala.util.Filter#accepts(java.lang.Object)
    */
+  @Override
   public boolean accepts(T o) {
     return S.contains(o);
   }

@@ -26,6 +26,7 @@ public class SyntheticIRFactory implements IRFactory<SyntheticMethod> {
     return method.makeControlFlowGraph(method.getStatements());
   }
 
+  @Override
   public IR makeIR(SyntheticMethod method, Context C, SSAOptions options) {
     if (method == null) {
       throw new IllegalArgumentException("method is null");
@@ -33,6 +34,7 @@ public class SyntheticIRFactory implements IRFactory<SyntheticMethod> {
     return method.makeIR(C, options);
   }
 
+  @Override
   public boolean contextIsIrrelevant(SyntheticMethod method) {
     // conservatively return false .. the context might matter.
     return false;

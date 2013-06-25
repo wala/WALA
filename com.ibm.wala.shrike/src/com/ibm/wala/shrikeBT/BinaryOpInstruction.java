@@ -70,6 +70,7 @@ final public class BinaryOpInstruction extends Instruction implements IBinaryOpI
     }
   }
 
+  @Override
   public Operator getOperator() {
     if (opcode < OP_iand) {
       // For these opcodes, there are 4 variants (i,l,f,d)
@@ -101,6 +102,7 @@ final public class BinaryOpInstruction extends Instruction implements IBinaryOpI
     return Util.getWordSize(getType());
   }
 
+  @Override
   public String getType() {
     int t;
     if (opcode < OP_iand) {
@@ -121,14 +123,17 @@ final public class BinaryOpInstruction extends Instruction implements IBinaryOpI
     return "BinaryOp(" + getType() + "," + getOperator() + ")";
   }
 
+  @Override
   public boolean isPEI() {
     return opcode == Constants.OP_idiv || opcode == Constants.OP_ldiv || opcode == Constants.OP_irem || opcode == Constants.OP_lrem;
   }
 
+  @Override
   public boolean throwsExceptionOnOverflow() {
     return false;
   }
 
+  @Override
   public boolean isUnsigned() {
     return false;
   }

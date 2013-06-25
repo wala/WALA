@@ -22,6 +22,13 @@ import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 
+/**
+ * Floyd-Warshall algorithm to compute all-pairs shortest path in graph with no negative cycles.
+ * 
+ * TODO: this API should be cleaned up.
+ * 
+ * @param <T> node type in the graph
+ */
 public class FloydWarshall<T> {
 
   public interface GetPath<T> {
@@ -46,7 +53,7 @@ public class FloydWarshall<T> {
     
   }
   
-  int[][] allPairsShortestPaths() {
+  public int[][] allPairsShortestPaths() {
     final int[][] result = new int[G.getNumberOfNodes()][G.getNumberOfNodes()];
 
     for(int i = 0; i < result.length; i++) {
@@ -59,6 +66,7 @@ public class FloydWarshall<T> {
       final int fn = G.getNumber(from);
       IntSet tos = G.getSuccNodeNumbers(from);
       tos.foreach(new IntSetAction() {
+        @Override
         public void act(int x) {
           result[fn][x] = edgeCost(fn, x);
         }
@@ -107,6 +115,7 @@ public class FloydWarshall<T> {
          
          final int[][] paths = allPairsShortestPaths();
          return new GetPath<T>() {
+          @Override
           public List<T> getPath(T from, T to) {
             int fn = G.getNumber(from);
             int tn = G.getNumber(to);
@@ -145,7 +154,8 @@ public class FloydWarshall<T> {
       private GetPaths<T> doit() {        
         final int[][] paths = allPairsShortestPaths();
         return new GetPaths<T>() {
-         public Set<List<T>> getPaths(final T from, final T to) {
+         @Override
+        public Set<List<T>> getPaths(final T from, final T to) {
            int fn = G.getNumber(from);
            int tn = G.getNumber(to);
            if (paths[fn][tn] == Integer.MAX_VALUE) {
@@ -159,6 +169,7 @@ public class FloydWarshall<T> {
                final Set<List<T>> result = new HashSet<List<T>>();
               
                intermediate.foreach(new IntSetAction() {
+                @Override
                 public void act(int x) {
                   T in = G.getNode(x);
                   for(List<T> pre : getPaths(from, in)) {

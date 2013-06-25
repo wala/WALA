@@ -21,6 +21,7 @@ public class NestedJarFileModule extends AbstractNestedJarFileModule {
   private final ZipEntry entry;
 
   public NestedJarFileModule(JarFileModule parent, ZipEntry entry) {
+    super(parent);
     this.parent = parent;
     this.entry = entry;
     if (parent == null) {

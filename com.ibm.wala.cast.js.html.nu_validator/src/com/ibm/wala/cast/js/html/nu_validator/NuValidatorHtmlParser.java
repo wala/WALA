@@ -40,6 +40,7 @@ import com.ibm.wala.util.collections.Pair;
 
 public class NuValidatorHtmlParser implements IHtmlParser {
 
+  @Override
   public void parse(final URL url, final InputStream reader, final IHtmlCallback handler, final String fileName) {
     URL xx = null;
 	try {
@@ -65,18 +66,22 @@ public class NuValidatorHtmlParser implements IHtmlParser {
         return r.getLineNumber();
       }
       
+      @Override
       public void setDocumentLocator(Locator locator) {
         this.locator = locator;
       }
 
+      @Override
       public void startElement(String uri, final String localName, String qName, final Attributes atts) throws SAXException {
         final Position line = new LineNumberPosition(url, localFileName, locator.getLineNumber());
         tags.push(new ITag() {
 
+          @Override
           public String getName() {
              return localName;
           }
 
+          @Override
           public Pair<String,Position> getAttributeByName(String name) {
         	  if (atts.getValue(name) != null) {
         		  return Pair.make(atts.getValue(name), line);
@@ -85,6 +90,7 @@ public class NuValidatorHtmlParser implements IHtmlParser {
         	  }
           }
 
+          @Override
           public Map<String, Pair<String,Position>> getAllAttributes() {
             return new AbstractMap<String,Pair<String,Position>>() {
               private Set<Map.Entry<String,Pair<String,Position>>> es = null;
@@ -97,10 +103,12 @@ public class NuValidatorHtmlParser implements IHtmlParser {
                     final int index = i;
                     es.add(new Map.Entry<String,Pair<String,Position>>() {
 
+                      @Override
                       public String getKey() {
                         return atts.getLocalName(index).toLowerCase();
                       }
 
+                      @Override
                       public Pair<String,Position> getValue() {
                     	  if (atts.getValue(index) != null) {
                     		  return Pair.make(atts.getValue(index), line);
@@ -109,6 +117,7 @@ public class NuValidatorHtmlParser implements IHtmlParser {
                     	  }
                       }
 
+                      @Override
                       public Pair<String,Position> setValue(Pair<String,Position> value) {
                         throw new UnsupportedOperationException();
                       }
@@ -120,10 +129,12 @@ public class NuValidatorHtmlParser implements IHtmlParser {
              };
           }
 
+          @Override
           public Position getElementPosition() {
             return line;
           }
 
+          @Override
           public Position getContentPosition() {
               return line;
             }
@@ -132,38 +143,47 @@ public class NuValidatorHtmlParser implements IHtmlParser {
         handler.handleStartTag(tags.peek());
       }
 
+      @Override
       public void endElement(String uri, String localName, String qName) throws SAXException {
         handler.handleEndTag(tags.pop());
       }
 
+      @Override
       public void characters(char[] ch, int start, int length) throws SAXException {
         handler.handleText(new LineNumberPosition(url, localFileName, locator.getLineNumber() - countLines(ch, start, length)), new String(ch, start, length));
       }
 
+      @Override
       public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
         handler.handleText(new LineNumberPosition(url, localFileName, locator.getLineNumber()), new String(ch, start, length));
       }
 
+      @Override
       public void startDocument() throws SAXException {
         // do nothing
       }
 
+      @Override
       public void endDocument() throws SAXException {
         // do nothing
       }
 
+      @Override
       public void startPrefixMapping(String prefix, String uri) throws SAXException {
         // do nothing
       }
 
+      @Override
       public void endPrefixMapping(String prefix) throws SAXException {
         // do nothing
       }
 
+      @Override
       public void processingInstruction(String target, String data) throws SAXException {
         // do nothing
       }
 
+      @Override
       public void skippedEntity(String name) throws SAXException {
         // do nothing
       }

@@ -44,6 +44,7 @@ public class SelectiveCPAContext implements Context {
     hashCode = base.hashCode() ^ parameterObjs.hashCode();
   }
 
+  @Override
   public ContextItem get(ContextKey name) {
     if (parameterObjs.containsKey(name)) {
       return new FilteredPointerKey.SingleInstanceFilter(parameterObjs.get(name));

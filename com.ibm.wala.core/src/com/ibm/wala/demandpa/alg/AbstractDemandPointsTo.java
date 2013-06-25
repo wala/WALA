@@ -84,6 +84,7 @@ public abstract class AbstractDemandPointsTo implements IDemandPointerAnalysis {
     this.options = options;
   }
 
+  @Override
   public HeapModel getHeapModel() {
     return heapModel;
   }
@@ -106,10 +107,12 @@ public abstract class AbstractDemandPointsTo implements IDemandPointerAnalysis {
     return numNodesTraversed;
   }
 
+  @Override
   public CallGraph getBaseCallGraph() {
     return cg;
   }
 
+  @Override
   public IClassHierarchy getClassHierarchy() {
     return cha;
   }

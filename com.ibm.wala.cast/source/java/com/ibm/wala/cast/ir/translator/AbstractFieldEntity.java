@@ -32,23 +32,28 @@ class AbstractFieldEntity extends AbstractDataEntity {
     }
   }
 
+  @Override
   public String toString() {
     return "field " + name + " of " + declaringClass.getName();
   }
 
+  @Override
   public int getKind() {
     return FIELD_ENTITY;
   }
 
+  @Override
   public String getName() {
     return name;
   }
 
+  @Override
   public CAstType getType() {
     Assertions.UNREACHABLE();
     return null;
   }
 
+  @Override
   public Collection<CAstQualifier> getQualifiers() {
     return modifiers;
   }

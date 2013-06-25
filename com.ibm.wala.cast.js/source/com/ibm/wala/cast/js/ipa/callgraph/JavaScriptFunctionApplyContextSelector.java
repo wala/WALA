@@ -52,6 +52,7 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
     this.oneLevel = new OneLevelSiteContextSelector(base);
   }
 
+  @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     // 0 for function (synthetic apply), 1 for this (function being invoked), 2
     // for this arg of function being invoked,
@@ -77,6 +78,7 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
       this.isNonNullArray = ContextItem.Value.make(isNonNullArray);
     }
 
+    @Override
     public ContextItem get(ContextKey name) {
       if (APPLY_NON_NULL_ARGS.equals(name)) {
         return isNonNullArray;
@@ -117,6 +119,7 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
 
   }
 
+  @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     IClass declaringClass = callee.getDeclaringClass();
     IMethod method = declaringClass.getMethod(AstMethodReference.fnSelector);

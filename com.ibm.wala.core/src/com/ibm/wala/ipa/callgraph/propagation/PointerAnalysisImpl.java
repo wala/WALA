@@ -107,6 +107,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#getPointsToSet(com.ibm.wala.ipa.callgraph.propagation.PointerKey)
    */
+  @Override
   @SuppressWarnings("unchecked")
   public OrdinalSet<InstanceKey> getPointsToSet(PointerKey key) {
     if (pointsToMap.isImplicit(key)) {
@@ -141,6 +142,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   /**
    * did the pointer analysis use a type filter for a given points-to set? (this is ugly).
    */
+  @Override
   public boolean isFiltered(PointerKey key) {
     if (pointsToMap.isImplicit(key)) {
       return false;
@@ -447,32 +449,39 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#getHeapModel()
    */
+  @Override
   public HeapModel getHeapModel() {
     return H;
   }
 
   private class HModel implements HeapModel {
 
+    @Override
     public Iterator<PointerKey> iteratePointerKeys() {
       return pointsToMap.iterateKeys();
     }
 
+    @Override
     public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
       return iKeyFactory.getInstanceKeyForAllocation(node, allocation);
     }
 
+    @Override
     public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
       return iKeyFactory.getInstanceKeyForMultiNewArray(node, allocation, dim);
     }
 
+    @Override
     public <T> InstanceKey getInstanceKeyForConstant(TypeReference type, T S) {
       return iKeyFactory.getInstanceKeyForConstant(type, S);
     }
 
+    @Override
     public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter peiLoc, TypeReference type) {
       return iKeyFactory.getInstanceKeyForPEI(node, peiLoc, type);
     }
 
+    @Override
     public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
       return iKeyFactory.getInstanceKeyForClassObject(type);
     }
@@ -480,10 +489,12 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     /*
      * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForLocal(com.ibm.detox.ipa.callgraph.CGNode, int)
      */
+    @Override
     public PointerKey getPointerKeyForLocal(CGNode node, int valueNumber) {
       return pointerKeys.getPointerKeyForLocal(node, valueNumber);
     }
 
+    @Override
     public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter) {
       return pointerKeys.getFilteredPointerKeyForLocal(node, valueNumber, filter);
     }
@@ -491,6 +502,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     /*
      * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForReturnValue(com.ibm.detox.ipa.callgraph.CGNode)
      */
+    @Override
     public PointerKey getPointerKeyForReturnValue(CGNode node) {
       return pointerKeys.getPointerKeyForReturnValue(node);
     }
@@ -500,6 +512,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
      * com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForExceptionalReturnValue(com.ibm.detox.ipa.callgraph
      * .CGNode)
      */
+    @Override
     public PointerKey getPointerKeyForExceptionalReturnValue(CGNode node) {
       return pointerKeys.getPointerKeyForExceptionalReturnValue(node);
     }
@@ -508,6 +521,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
      * @see
      * com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForStaticField(com.ibm.wala.classLoader.FieldReference)
      */
+    @Override
     public PointerKey getPointerKeyForStaticField(IField f) {
       return pointerKeys.getPointerKeyForStaticField(f);
     }
@@ -517,6 +531,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
      * com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForInstance(com.ibm.wala.ipa.callgraph.propagation.
      * InstanceKey, com.ibm.wala.classLoader.FieldReference)
      */
+    @Override
     public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField field) {
       assert field != null;
       return pointerKeys.getPointerKeyForInstanceField(I, field);
@@ -527,10 +542,12 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
      * com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForArrayContents(com.ibm.wala.ipa.callgraph.propagation
      * .InstanceKey)
      */
+    @Override
     public PointerKey getPointerKeyForArrayContents(InstanceKey I) {
       return pointerKeys.getPointerKeyForArrayContents(I);
     }
 
+    @Override
     public IClassHierarchy getClassHierarchy() {
       return getCallGraph().getClassHierarchy();
     }
@@ -539,10 +556,12 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#iteratePointerKeys()
    */
+  @Override
   public Iterable<PointerKey> getPointerKeys() {
     return Iterator2Iterable.make(pointsToMap.iterateKeys());
   }
 
+  @Override
   public IClassHierarchy getClassHierarchy() {
     return builder.getClassHierarchy();
   }

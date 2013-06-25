@@ -44,10 +44,12 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
  */
 public class AlwaysRefineCGPolicy implements CallGraphRefinePolicy {
 
+  @Override
   public boolean shouldRefine(CallerSiteContext callSiteAndCGNode) {
     return true;
   }
 
+  @Override
   public boolean nextPass() {
     return false;
   }

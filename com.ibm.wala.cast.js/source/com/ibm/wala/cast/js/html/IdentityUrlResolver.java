@@ -14,10 +14,12 @@ import java.net.URL;
 
 public class IdentityUrlResolver implements IUrlResolver{
 
+  @Override
   public URL resolve(URL input) {
     return input;
   }
 
+  @Override
   public URL deResolve(URL input) {
     return input;
   }

@@ -84,6 +84,7 @@ public abstract class JavaIRTests extends IRTests {
 
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
         final String typeStr = singleInputForTest();
 
@@ -115,6 +116,7 @@ public abstract class JavaIRTests extends IRTests {
      */
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
         final String typeStr = "IFoo";
 
@@ -132,6 +134,7 @@ public abstract class JavaIRTests extends IRTests {
      */
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
         final String typeStr = "FooIT1";
 
@@ -157,6 +160,7 @@ public abstract class JavaIRTests extends IRTests {
      */
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
         final String typeStr = "Derived";
 
@@ -186,6 +190,7 @@ public abstract class JavaIRTests extends IRTests {
      */
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
 
         MethodReference mref = descriptorToMethodRef("Source#Array1#foo#()V", cg.getClassHierarchy());
@@ -215,6 +220,7 @@ public abstract class JavaIRTests extends IRTests {
      */
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
 
         MethodReference mref = descriptorToMethodRef("Source#ArrayLiteral1#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
@@ -236,6 +242,7 @@ public abstract class JavaIRTests extends IRTests {
      */
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
 
         MethodReference mref = descriptorToMethodRef("Source#ArrayLiteral2#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
@@ -297,6 +304,7 @@ public abstract class JavaIRTests extends IRTests {
      */
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
 
         MethodReference mref = descriptorToMethodRef("Source#QualifiedStatic#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
@@ -319,6 +327,7 @@ public abstract class JavaIRTests extends IRTests {
 
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
         final String typeStr = singleInputForTest() + "$WhatsIt";
 
@@ -349,6 +358,7 @@ public abstract class JavaIRTests extends IRTests {
 
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
         final String typeStr = singleInputForTest();
 
@@ -465,6 +475,7 @@ public abstract class JavaIRTests extends IRTests {
        * Classes local to method are enclosed in the class the methods belong
        * to.
        */
+      @Override
       public void check(CallGraph cg) {
         final String typeStr = singleInputForTest();
         final String localClassStr = "Foo";
@@ -501,6 +512,7 @@ public abstract class JavaIRTests extends IRTests {
 
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
         final String typeStr = singleInputForTest();
 

@@ -64,6 +64,7 @@ public class StringConstantCharArray implements InstanceKey {
     return true;
   }
 
+  @Override
   public IClass getConcreteType() {
     return constant.getConcreteType().getClassHierarchy().lookupClass(TypeReference.CharArray);
   }
@@ -73,6 +74,7 @@ public class StringConstantCharArray implements InstanceKey {
     return "StringConstantCharArray:" + constant;
   }
 
+  @Override
   public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
     return EmptyIterator.instance();
   }

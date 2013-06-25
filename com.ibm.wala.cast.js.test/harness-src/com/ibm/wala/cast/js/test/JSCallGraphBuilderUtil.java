@@ -84,6 +84,9 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
     }
   }
 
+  /**
+   * create a CG builder for script.  Note that the script at dir/name is loaded via the classloader, not from the filesystem.
+   */
   public static JSCFABuilder makeScriptCGBuilder(String dir, String name, CGBuilderType builderType) throws IOException, WalaException {
     URL script = getURLforFile(dir, name);
     CAstRewriterFactory preprocessor = builderType.extractCorrelatedPairs ? new CorrelatedPairExtractorFactory(translatorFactory, script) : null;

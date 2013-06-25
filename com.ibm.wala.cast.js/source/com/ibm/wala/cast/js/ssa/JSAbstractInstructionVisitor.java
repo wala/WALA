@@ -17,30 +17,37 @@ public class JSAbstractInstructionVisitor
     implements JSInstructionVisitor
 {
 
+  @Override
   public void visitJavaScriptInvoke(JavaScriptInvoke instruction) {
   
   }
     
+  @Override
   public void visitJavaScriptPropertyRead(JavaScriptPropertyRead instruction) {
   
   }
   
+  @Override
   public void visitJavaScriptPropertyWrite(JavaScriptPropertyWrite instruction) {
   
   }
 
+  @Override
   public void visitTypeOf(JavaScriptTypeOfInstruction instruction) {
       
   }
 
+  @Override
   public void visitJavaScriptInstanceOf(JavaScriptInstanceOf instruction) {
      
   }
 
+  @Override
   public void visitCheckRef(JavaScriptCheckReference instruction) {
  
   }
 
+  @Override
   public void visitWithRegion(JavaScriptWithRegion instruction) {
     
   }

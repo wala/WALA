@@ -140,6 +140,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
     return (NodeImpl) nodes.get(K);
   }
 
+  @Override
   public CGNode getFakeRootNode() {
     return fakeRoot;
   }
@@ -158,6 +159,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
   /**
    * Note: not all successors of the root node are entrypoints
    */
+  @Override
   public Collection<CGNode> getEntrypointNodes() {
     return entrypointNodes;
   }
@@ -186,6 +188,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
       assert C != null;
     }
 
+    @Override
     public IMethod getMethod() {
       return method;
     }
@@ -210,12 +213,15 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
       return "Node: " + method.toString() + " Context: " + context.toString();
     }
 
+    @Override
     public Context getContext() {
       return context;
     }
 
+    @Override
     public abstract boolean addTarget(CallSiteReference reference, CGNode target);
 
+    @Override
     public IClassHierarchy getClassHierarchy() {
       return method.getClassHierarchy();
     }
@@ -252,6 +258,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
   /**
    * @return NodeImpl, or null if none found
    */
+  @Override
   public CGNode getNode(IMethod method, Context C) {
     Key key = new Key(method, C);
     return getNode(key);
@@ -288,6 +295,7 @@ public abstract class BasicCallGraph<T> extends AbstractNumberedGraph<CGNode> im
 
   }
 
+  @Override
   public Set<CGNode> getNodes(MethodReference m) {
     IMethod im = getClassHierarchy().resolveMethod(m);
     if (im == null) {

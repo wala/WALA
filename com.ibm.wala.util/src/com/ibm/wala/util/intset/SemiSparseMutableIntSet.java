@@ -227,6 +227,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   /* 
    * @see com.ibm.wala.util.intset.MutableIntSet#clear()
    */
+  @Override
   public void clear() {
     sparsePart.clear();
     densePart = null;
@@ -236,6 +237,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
    * @param i
    * @return true iff this set contains integer i
    */
+  @Override
   public boolean contains(int i) {
     if (densePart != null && inDenseRange(i)) {
       return densePart.contains(i);
@@ -247,6 +249,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   /**
    * @return true iff this set contains integer i
    */
+  @Override
   public boolean containsAny(IntSet set) {
     if (set == null) {
       throw new IllegalArgumentException("null set");
@@ -273,6 +276,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
    * 
    * @return a new IntSet which is the intersection of this and that
    */
+  @Override
   public IntSet intersection(IntSet that) {
     if (that == null) {
       throw new IllegalArgumentException("null that");
@@ -290,6 +294,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public IntSet union(IntSet that) {
     SemiSparseMutableIntSet temp = new SemiSparseMutableIntSet();
     temp.addAll(this);
@@ -301,6 +306,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   /**
    * @return true iff this set is empty
    */
+  @Override
   public boolean isEmpty() {
     return sparsePart.isEmpty() && (densePart == null || densePart.isZero());
   }
@@ -308,6 +314,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   /**
    * @return the number of elements in this set
    */
+  @Override
   public int size() {
     return sparsePart.size() + (densePart == null ? 0 : densePart.populationCount());
   }
@@ -315,14 +322,17 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   /**
    * @return a perhaps more efficient iterator
    */
+  @Override
   public IntIterator intIterator() {
     class DensePartIterator implements IntIterator {
       private int i = -1;
 
+      @Override
       public boolean hasNext() {
         return densePart.nextSetBit(i + 1) != -1;
       }
 
+      @Override
       public int next() {
         int next = densePart.nextSetBit(i + 1);
         i = next;
@@ -349,6 +359,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   /**
    * Invoke an action on each element of the Set
    */
+  @Override
   public void foreach(IntSetAction action) {
     if (action == null) {
       throw new IllegalArgumentException("null action");
@@ -366,6 +377,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
    * 
    * @param action
    */
+  @Override
   public void foreachExcluding(IntSet X, IntSetAction action) {
     sparsePart.foreachExcluding(X, action);
     if (densePart != null) {
@@ -380,6 +392,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   /**
    * @return maximum integer in this set.
    */
+  @Override
   public int max() throws IllegalStateException {
     if (densePart == null) {
       return sparsePart.max();
@@ -392,6 +405,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
    * @return true iff <code>this</code> has the same value as <code>that</code>.
    * @throws IllegalArgumentException if that is null
    */
+  @Override
   public boolean sameValue(IntSet that) {
     if (that == null) {
       throw new IllegalArgumentException("that is null");
@@ -418,6 +432,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
    * @return true iff <code>this</code> is a subset of <code>that</code>.
    * @throws IllegalArgumentException if that is null
    */
+  @Override
   public boolean isSubset(IntSet that) {
     if (that == null) {
       throw new IllegalArgumentException("that is null");
@@ -448,6 +463,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
    * 
    * @throws IllegalArgumentException if set == null
    */
+  @Override
   public void copySet(IntSet set) throws IllegalArgumentException {
     if (set == null) {
       throw new IllegalArgumentException("set == null");
@@ -479,6 +495,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
    * @return true iff the value of this changes.
    * @throws IllegalArgumentException if set == null
    */
+  @Override
   public boolean addAll(IntSet set) throws IllegalArgumentException {
     if (set == null) {
       throw new IllegalArgumentException("set == null");
@@ -556,6 +573,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
    * @param i integer to add
    * @return true iff the value of this changes.
    */
+  @Override
   public boolean add(int i) {
     if (densePart != null && inDenseRange(i)) {
       if (!densePart.get(i)) {
@@ -579,6 +597,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
    * @param i integer to remove
    * @return true iff the value of this changes.
    */
+  @Override
   public boolean remove(int i) {
     if (densePart != null && densePart.get(i)) {
       densePart.clear(i);
@@ -599,6 +618,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
    * 
    * @param set
    */
+  @Override
   public void intersectWith(IntSet set) {
     sparsePart.intersectWith(set);
     if (densePart != null) {
@@ -613,6 +633,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   /**
    * @throws IllegalArgumentException if other is null
    */
+  @Override
   public boolean addAllInIntersection(IntSet other, IntSet filter) {
     if (other == null) {
       throw new IllegalArgumentException("other is null");

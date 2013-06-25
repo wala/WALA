@@ -48,6 +48,7 @@ public class ThisAssignmentChecker implements MethodData.Results {
   /**
    * This should not be called by any client.
    */
+  @Override
   public boolean notifyUpdate(MethodData info, IInstruction[] newInstructions, ExceptionHandler[][] newHandlers,
       int[] newInstructionMap) {
     // just throw this away and we'll recalculate from scratch if necessary

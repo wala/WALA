@@ -44,10 +44,12 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 
 public class NeverRefineFieldsPolicy implements FieldRefinePolicy {
 
+  @Override
   public boolean shouldRefine(IField field, PointerKey basePtr, PointerKey val, IFlowLabel label, StateMachine.State state) {
     return false;
   }
 
+  @Override
   public boolean nextPass() {
     return false;
   }

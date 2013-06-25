@@ -49,51 +49,62 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
 
   private final class Edges implements NumberedEdgeManager<T> {
 
+    @Override
     public void addEdge(T src, T dst) {
       Assertions.UNREACHABLE();
     }
 
+    @Override
     public int getPredNodeCount(T N) {
       Assertions.UNREACHABLE();
       return 0;
     }
 
+    @Override
     public Iterator<T> getPredNodes(T N) {
       Assertions.UNREACHABLE();
       return null;
     }
 
+    @Override
     public int getSuccNodeCount(T N) {
       Assertions.UNREACHABLE();
       return 0;
     }
 
+    @Override
     public Iterator<T> getSuccNodes(T N) {
       Assertions.UNREACHABLE();
       return null;
     }
 
+    @Override
     public boolean hasEdge(T src, T dst) {
       Assertions.UNREACHABLE();
       return false;
     }
 
+    @Override
     public void removeAllIncidentEdges(T node) throws UnsupportedOperationException {
       Assertions.UNREACHABLE();
     }
 
+    @Override
     public void removeEdge(T src, T dst) throws UnsupportedOperationException {
       Assertions.UNREACHABLE();
     }
 
+    @Override
     public void removeIncomingEdges(T node) throws UnsupportedOperationException {
       Assertions.UNREACHABLE();
     }
 
+    @Override
     public void removeOutgoingEdges(T node) throws UnsupportedOperationException {
       Assertions.UNREACHABLE();
     }
 
+    @Override
     public IntSet getPredNodeNumbers(T node) {
       IntSet s = delegate.getPredNodeNumbers(node);
       MutableIntSet result = MutableSparseIntSet.makeEmpty();
@@ -106,6 +117,7 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
       return result;
     }
 
+    @Override
     public IntSet getSuccNodeNumbers(T node) {
       Assertions.UNREACHABLE();
       return null;

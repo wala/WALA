@@ -29,6 +29,7 @@ public class KillEverything implements IUnaryFlowFunction {
   private KillEverything() {
   }
 
+  @Override
   public SparseIntSet getTargets(int d1) {
     return null;
   }

@@ -28,6 +28,7 @@ public class IdentityFlowFunctions<T> implements IFlowFunctionMap<T> {
   /* 
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getNormalFlowFunction(java.lang.Object, java.lang.Object)
    */
+  @Override
   public IUnaryFlowFunction getNormalFlowFunction(T src, T dest) {
     return IdentityFlowFunction.identity();
   }
@@ -35,6 +36,7 @@ public class IdentityFlowFunctions<T> implements IFlowFunctionMap<T> {
   /* 
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getReturnFlowFunction(java.lang.Object, java.lang.Object, java.lang.Object)
    */
+  @Override
   public IFlowFunction getReturnFlowFunction(T call, T src, T dest) {
     return IdentityFlowFunction.identity();
   }
@@ -49,6 +51,7 @@ public class IdentityFlowFunctions<T> implements IFlowFunctionMap<T> {
   /* 
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getCallToReturnFlowFunction(java.lang.Object, java.lang.Object)
    */
+  @Override
   public IUnaryFlowFunction getCallToReturnFlowFunction(T src, T dest) {
     return IdentityFlowFunction.identity();
   }
@@ -56,10 +59,12 @@ public class IdentityFlowFunctions<T> implements IFlowFunctionMap<T> {
   /* 
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getCallNoneToReturnFlowFunction(java.lang.Object, java.lang.Object)
    */
+  @Override
   public IUnaryFlowFunction getCallNoneToReturnFlowFunction(T src, T dest) {
     return IdentityFlowFunction.identity();
   }
 
+  @Override
   public IUnaryFlowFunction getCallFlowFunction(T src, T dest, T ret) {
     return IdentityFlowFunction.identity();
   }

@@ -100,6 +100,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
    * 
    * @throws IllegalArgumentException if site is null
    */
+  @Override
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass dispatchType) {
 
     if (site == null) {

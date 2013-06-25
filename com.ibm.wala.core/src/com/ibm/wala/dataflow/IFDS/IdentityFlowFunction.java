@@ -19,10 +19,12 @@ public class IdentityFlowFunction implements IReversibleFlowFunction {
 
   private final static IdentityFlowFunction singleton = new IdentityFlowFunction();
 
+  @Override
   public SparseIntSet getTargets(int i) {
     return SparseIntSet.singleton(i);
   }
 
+  @Override
   public SparseIntSet getSources(int i) {
     return SparseIntSet.singleton(i);
   }

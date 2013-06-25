@@ -55,22 +55,27 @@ public abstract class AbstractRefinementPolicy implements RefinementPolicy {
     this(fieldRefinePolicy, cgRefinePolicy, DEFAULT_NUM_PASSES, DEFAULT_BUDGET_PER_PASS);
   }
 
+  @Override
   public int getBudgetForPass(int passNum) {
     return budgetPerPass[passNum];
   }
 
+  @Override
   public CallGraphRefinePolicy getCallGraphRefinePolicy() {
     return cgRefinePolicy;
   }
 
+  @Override
   public FieldRefinePolicy getFieldRefinePolicy() {
     return fieldRefinePolicy;
   }
 
+  @Override
   public int getNumPasses() {
     return numPasses;
   }
 
+  @Override
   public boolean nextPass() {    
     // don't short-circuit since nextPass() can have side-effects
     boolean fieldNextPass = fieldRefinePolicy.nextPass();

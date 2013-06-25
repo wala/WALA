@@ -23,6 +23,7 @@ public class JSCallSiteReference extends CallSiteReference {
   public static enum Dispatch implements IInvokeInstruction.IDispatch {
     JS_CALL;
 
+    @Override
     public boolean hasImplicitThis() {
       return false;
     }
@@ -36,10 +37,12 @@ public class JSCallSiteReference extends CallSiteReference {
     this(AstMethodReference.fnReference(JavaScriptTypes.CodeBody), pc);
   }
 
+  @Override
   public IInvokeInstruction.IDispatch getInvocationCode() {
     return Dispatch.JS_CALL;
   }
 
+  @Override
   public String toString() {
     return "JSCall@" + getProgramCounter();
   }

@@ -57,6 +57,7 @@ final public class ArrayStoreInstruction extends Instruction implements IArraySt
     return 3;
   }
 
+  @Override
   public String getType() {
     return Decoder.indexedTypes[opcode - OP_iastore];
   }
@@ -71,6 +72,7 @@ final public class ArrayStoreInstruction extends Instruction implements IArraySt
     v.visitArrayStore(this);
   }
 
+  @Override
   public boolean isPEI() {
     return true;
   }

@@ -54,6 +54,7 @@ public abstract class Iterator2Collection<T> implements Collection<T> {
   /*
    * @see java.util.Collection#size()
    */
+  @Override
   public int size() {
     return getDelegate().size();
   }
@@ -61,6 +62,7 @@ public abstract class Iterator2Collection<T> implements Collection<T> {
   /*
    * @see java.util.Collection#clear()
    */
+  @Override
   public void clear() {
     getDelegate().clear();
   }
@@ -68,6 +70,7 @@ public abstract class Iterator2Collection<T> implements Collection<T> {
   /*
    * @see java.util.Collection#isEmpty()
    */
+  @Override
   public boolean isEmpty() {
     return getDelegate().isEmpty();
   }
@@ -75,6 +78,7 @@ public abstract class Iterator2Collection<T> implements Collection<T> {
   /*
    * @see java.util.Collection#toArray()
    */
+  @Override
   public Object[] toArray() {
     return getDelegate().toArray();
   }
@@ -82,6 +86,7 @@ public abstract class Iterator2Collection<T> implements Collection<T> {
   /*
    * @see java.util.Collection#add(java.lang.Object)
    */
+  @Override
   public boolean add(T arg0) {
     return getDelegate().add(arg0);
   }
@@ -89,6 +94,7 @@ public abstract class Iterator2Collection<T> implements Collection<T> {
   /*
    * @see java.util.Collection#contains(java.lang.Object)
    */
+  @Override
   public boolean contains(Object arg0) {
     return getDelegate().contains(arg0);
   }
@@ -96,6 +102,7 @@ public abstract class Iterator2Collection<T> implements Collection<T> {
   /*
    * @see java.util.Collection#remove(java.lang.Object)
    */
+  @Override
   public boolean remove(Object arg0) {
     return getDelegate().remove(arg0);
   }
@@ -103,6 +110,7 @@ public abstract class Iterator2Collection<T> implements Collection<T> {
   /*
    * @see java.util.Collection#addAll(java.util.Collection)
    */
+  @Override
   public boolean addAll(Collection<? extends T> arg0) {
     return getDelegate().addAll(arg0);
   }
@@ -110,6 +118,7 @@ public abstract class Iterator2Collection<T> implements Collection<T> {
   /*
    * @see java.util.Collection#containsAll(java.util.Collection)
    */
+  @Override
   public boolean containsAll(Collection<?> arg0) {
     return getDelegate().containsAll(arg0);
   }
@@ -117,6 +126,7 @@ public abstract class Iterator2Collection<T> implements Collection<T> {
   /*
    * @see java.util.Collection#removeAll(java.util.Collection)
    */
+  @Override
   public boolean removeAll(Collection<?> arg0) {
     return getDelegate().removeAll(arg0);
   }
@@ -124,6 +134,7 @@ public abstract class Iterator2Collection<T> implements Collection<T> {
   /*
    * @see java.util.Collection#retainAll(java.util.Collection)
    */
+  @Override
   public boolean retainAll(Collection<?> arg0) {
     return getDelegate().retainAll(arg0);
   }
@@ -131,10 +142,12 @@ public abstract class Iterator2Collection<T> implements Collection<T> {
   /*
    * @see java.util.Collection#iterator()
    */
+  @Override
   public Iterator<T> iterator() {
     return getDelegate().iterator();
   }
 
+  @Override
   @SuppressWarnings("hiding")
   public <T> T[] toArray(T[] a) {
     return getDelegate().toArray(a);

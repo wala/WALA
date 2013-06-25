@@ -126,6 +126,7 @@ public class DFS {
       this.order = order;
     }
 
+    @Override
     public int compare(T o1, T o2) {
       // throws an exception if either argument is not a Node object
       if (o1 == o2) {

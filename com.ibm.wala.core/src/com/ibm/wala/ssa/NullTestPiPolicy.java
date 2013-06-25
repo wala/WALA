@@ -35,6 +35,7 @@ public class NullTestPiPolicy implements SSAPiNodePolicy {
    * @see com.ibm.wala.ssa.SSAPiNodePolicy#getPi(com.ibm.wala.ssa.SSAConditionalBranchInstruction,
    *      com.ibm.wala.ssa.SSAInstruction, com.ibm.wala.ssa.SSAInstruction, com.ibm.wala.ssa.SymbolTable)
    */
+  @Override
   public Pair<Integer, SSAInstruction> getPi(SSAConditionalBranchInstruction cond, SSAInstruction def1, SSAInstruction def2,
       SymbolTable symbolTable) {
     if (symbolTable == null) {
@@ -52,6 +53,7 @@ public class NullTestPiPolicy implements SSAPiNodePolicy {
     return null;
   }
 
+  @Override
   public Pair<Integer, SSAInstruction> getPi(SSAAbstractInvokeInstruction call, SymbolTable symbolTable) {
     return null;
   }

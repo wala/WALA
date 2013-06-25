@@ -45,16 +45,19 @@ public class GenericMemberClasses<T>
     {
     	T x = null;
         private int localChangeID;
-		public boolean hasNext() {
+		
+    public boolean hasNext() {
 			return ( localChangeID == 5 );
 		}
 
-		public T next() {
+		
+    public T next() {
 			localChangeID = 5;
 			return x;
 		}
 
-		public void remove() {
+		
+    public void remove() {
 		}
     }
     public static void main(String args[]) {

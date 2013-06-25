@@ -20,10 +20,12 @@ import com.ibm.wala.util.debug.Assertions;
 
 public class ContextInsensitiveCHAContextInterpreter implements CHAContextInterpreter {
 
+  @Override
   public boolean understands(CGNode node) {
     return true;
   }
 
+  @Override
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");

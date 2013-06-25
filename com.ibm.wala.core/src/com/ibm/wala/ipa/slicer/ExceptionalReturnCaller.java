@@ -23,6 +23,7 @@ public class ExceptionalReturnCaller extends StatementWithInstructionIndex imple
     super(node, callIndex);
   }
   
+  @Override
   public int getValueNumber() {
     return getInstruction().getException();
   }

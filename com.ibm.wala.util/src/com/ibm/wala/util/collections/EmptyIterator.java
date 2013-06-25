@@ -33,14 +33,17 @@ public final class EmptyIterator<T> implements Iterator<T> {
   private EmptyIterator() {
   }
 
+  @Override
   public boolean hasNext() {
     return false;
   }
 
+  @Override
   public T next() {
     throw new NoSuchElementException();
   }
 
+  @Override
   public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }

@@ -23,6 +23,7 @@ public class AbstractScriptEntity extends AbstractCodeEntity {
     this(new File(file), type);
   }
 
+  @Override
   public int getKind() {
     return SCRIPT_ENTITY;
   }
@@ -31,26 +32,32 @@ public class AbstractScriptEntity extends AbstractCodeEntity {
     return file;
   }
 
+  @Override
   public String getName() {
     return "script " + file.getName();
   }
 
+  @Override
   public String toString() {
     return "script " + file.getName();
   }
 
+  @Override
   public String[] getArgumentNames() {
     return new String[] { "script object" };
   }
 
+  @Override
   public CAstNode[] getArgumentDefaults() {
     return new CAstNode[0];
   }
 
+  @Override
   public int getArgumentCount() {
     return 1;
   }
 
+  @Override
   public Collection<CAstQualifier> getQualifiers() {
     return Collections.emptySet();
   }

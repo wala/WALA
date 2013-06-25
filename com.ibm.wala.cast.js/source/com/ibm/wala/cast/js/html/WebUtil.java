@@ -27,6 +27,7 @@ public class WebUtil {
   public static final String preamble = "preamble.js";
 
   private static IHtmlParserFactory factory = new IHtmlParserFactory() {
+    @Override
     public IHtmlParser getParser() {
       return new JerichoHtmlParser();
     }

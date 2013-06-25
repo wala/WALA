@@ -64,10 +64,12 @@ public interface CAstType {
     
     public static final CAstType DYNAMIC = new CAstType() {
     
+      @Override
       public String getName() {
 	return "DYNAMIC";
       }
 
+      @Override
       public Collection/*<CAstType>*/ getSupertypes() {
 	return Collections.EMPTY_SET;
       }

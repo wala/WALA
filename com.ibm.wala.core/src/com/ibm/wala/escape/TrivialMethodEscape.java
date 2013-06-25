@@ -56,6 +56,7 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
     this.cg = cg;
   }
 
+  @Override
   public boolean mayEscape(MethodReference allocMethod, int allocPC, MethodReference m) throws WalaException {
 
     if (allocMethod == null) {
@@ -75,6 +76,7 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
     return mayEscape(allocN, allocPC, nodes);
   }
 
+  @Override
   public boolean mayEscape(CGNode allocNode, int allocPC, CGNode node) throws WalaException {
     return mayEscape(Collections.singleton(allocNode), allocPC, Collections.singleton(node));
   }

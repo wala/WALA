@@ -30,6 +30,7 @@ public class ReceiverTypeContextSelector implements ContextSelector {
   public ReceiverTypeContextSelector() {
   }
 
+  @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (site.isStatic()) {
       return Everywhere.EVERYWHERE;
@@ -44,6 +45,7 @@ public class ReceiverTypeContextSelector implements ContextSelector {
 
   private static final IntSet receiver = IntSetUtil.make(new int[]{ 0 });
   
+  @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     if (site.isStatic()) {
       return EmptyIntSet.instance;

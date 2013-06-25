@@ -95,6 +95,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
    * @see util.LabelledEdgeManager#addEdge(java.lang.Object, java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   public void addEdge(T src, T dst, U label) {
     nodeToSuccLabels.put(src, label);
     nodeToPredLabels.put(dst, label);
@@ -105,6 +106,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
    * @see util.LabelledEdgeManager#getPredNodeCount(java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   public int getPredNodeCount(T N, U label) {
     return getManagerForLabel(label).getPredNodeCount(N);
   }
@@ -113,6 +115,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
    * @see util.LabelledEdgeManager#getPredNodes(java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   public Iterator<T> getPredNodes(T N, U label) {
     return getManagerForLabel(label).getPredNodes(N);
   }
@@ -121,6 +124,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
    * @see util.LabelledEdgeManager#getSuccNodeCount(java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   public int getSuccNodeCount(T N, U label) {
     return getManagerForLabel(label).getSuccNodeCount(N);
   }
@@ -129,6 +133,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
    * @see util.LabelledEdgeManager#getSuccNodes(java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   public Iterator<? extends T> getSuccNodes(T N, U label) {
     return getManagerForLabel(label).getSuccNodes(N);
   }
@@ -137,6 +142,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
    * @see util.LabelledEdgeManager#hasEdge(java.lang.Object, java.lang.Object,
    *      java.lang.Object)
    */
+  @Override
   public boolean hasEdge(T src, T dst, U label) {
     return getManagerForLabel(label).hasEdge(src, dst);
   }
@@ -146,6 +152,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
    * 
    * @see util.LabelledEdgeManager#removeAllIncidentEdges(java.lang.Object)
    */
+  @Override
   public void removeAllIncidentEdges(T node) {
     removeIncomingEdges(node);
     removeOutgoingEdges(node);
@@ -155,6 +162,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
    * @see util.LabelledEdgeManager#removeEdge(java.lang.Object,
    *      java.lang.Object, java.lang.Object)
    */
+  @Override
   public void removeEdge(T src, T dst, U label) throws IllegalArgumentException {
     getManagerForLabel(label).removeEdge(src, dst);
   }
@@ -162,6 +170,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
   /*
    * @see util.LabelledEdgeManager#removeIncomingEdges(java.lang.Object)
    */
+  @Override
   public void removeIncomingEdges(T node) throws IllegalArgumentException {
     for (Iterator<U> inLabelIter = nodeToPredLabels.get(node).iterator(); inLabelIter.hasNext();) {
       U label = inLabelIter.next();
@@ -173,6 +182,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
   /*
    * @see util.LabelledEdgeManager#removeOutgoingEdges(java.lang.Object)
    */
+  @Override
   public void removeOutgoingEdges(T node) throws IllegalArgumentException {
     for (Iterator<U> outLabelIter = nodeToSuccLabels.get(node).iterator(); outLabelIter.hasNext();) {
       U label = outLabelIter.next();
@@ -193,14 +203,17 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
     }
   }
 
+  @Override
   public Iterator<? extends U> getPredLabels(T N) {
     return nodeToPredLabels.get(N).iterator();
   }
 
+  @Override
   public Iterator<? extends U> getSuccLabels(T N) {
     return nodeToSuccLabels.get(N).iterator();
   }
 
+  @Override
   public Set<? extends U> getEdgeLabels(T src, T dst) {
     Set<U> labels = HashSetFactory.make();
 
@@ -213,10 +226,12 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
     return labels;
   }
 
+  @Override
   public void addEdge(T src, T dst) {
     addEdge(src, dst, defaultLabel);
   }
 
+  @Override
   public int getPredNodeCount(T N) {
     int count = 0;
     for (U label : nodeToPredLabels.get(N)) {
@@ -225,6 +240,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
     return count;
   }
 
+  @Override
   public Iterator<T> getPredNodes(T N) {
     Collection<T> preds = HashSetFactory.make();
     for (U label : nodeToPredLabels.get(N)) {
@@ -233,6 +249,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
     return preds.iterator();
   }
 
+  @Override
   public int getSuccNodeCount(T N) {
     int count = 0;
     for (U label : nodeToSuccLabels.get(N)) {
@@ -241,6 +258,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
     return count;
   }
 
+  @Override
   public Iterator<T> getSuccNodes(T N) {
     Collection<T> succs = HashSetFactory.make();
     for (U label : nodeToSuccLabels.get(N)) {
@@ -249,26 +267,32 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
     return succs.iterator();
   }
 
+  @Override
   public boolean hasEdge(T src, T dst) {
     return hasEdge(src, dst, defaultLabel);
   }
 
+  @Override
   public void removeEdge(T src, T dst) throws UnsupportedOperationException {
     removeEdge(src, dst, defaultLabel);
   }
 
+  @Override
   public U getDefaultLabel() {
     return defaultLabel;
   }
 
+  @Override
   public IntSet getPredNodeNumbers(T node, U label) throws IllegalArgumentException {
     return getManagerForLabel(label).getPredNodeNumbers(node);
   }
 
+  @Override
   public IntSet getSuccNodeNumbers(T node, U label) throws IllegalArgumentException {
     return getManagerForLabel(label).getSuccNodeNumbers(node);
   }
 
+  @Override
   public IntSet getPredNodeNumbers(T node) {
     BitVectorIntSet preds = new BitVectorIntSet();
     
@@ -279,6 +303,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
     return preds;
   }
 
+  @Override
   public IntSet getSuccNodeNumbers(T node) {
     BitVectorIntSet succs = new BitVectorIntSet();
     

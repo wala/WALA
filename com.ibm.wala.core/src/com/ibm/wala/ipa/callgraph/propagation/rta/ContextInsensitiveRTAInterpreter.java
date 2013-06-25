@@ -13,7 +13,6 @@ package com.ibm.wala.ipa.callgraph.propagation.rta;
 
 import java.util.Iterator;
 
-import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.CodeScanner;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -40,6 +39,7 @@ public abstract class ContextInsensitiveRTAInterpreter extends ContextInsensitiv
     return analysisCache;
   }
 
+  @Override
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -53,6 +53,7 @@ public abstract class ContextInsensitiveRTAInterpreter extends ContextInsensitiv
     }
   }
 
+  @Override
   public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -66,6 +67,7 @@ public abstract class ContextInsensitiveRTAInterpreter extends ContextInsensitiv
     }
   }
 
+  @Override
   public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -79,6 +81,7 @@ public abstract class ContextInsensitiveRTAInterpreter extends ContextInsensitiv
     }
   }
 
+  @Override
   public boolean recordFactoryType(CGNode node, IClass klass) {
     // not a factory type
     return false;

@@ -62,6 +62,7 @@ public class ObjectSensitivityContextSelector implements ContextSelector {
     return false;
   }
 
+  @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] arguments) {
     Context baseContext = base.getCalleeTarget(caller, site, callee, arguments);
     if(returnsThis(callee)) {
@@ -72,6 +73,7 @@ public class ObjectSensitivityContextSelector implements ContextSelector {
     return baseContext;
   }
 
+  @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     if (caller.getIR().getCalls(site)[0].getNumberOfUses() > 1) {
       return IntSetUtil.make(new int[]{1}).union(base.getRelevantParameters(caller, site));

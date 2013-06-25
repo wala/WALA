@@ -26,6 +26,7 @@ public class LocalPointerKeyWithFilter extends LocalPointerKey implements Filter
   }
 
 
+  @Override
   public TypeFilter getTypeFilter() {
     return typeFilter;
   }

@@ -100,7 +100,8 @@ public class CAstDumper {
 				m.put(scopedEntity, e.getKey());
 			}
 		Collections.sort(scopedEntities, new Comparator<CAstEntity>() {
-			public int compare(CAstEntity o1, CAstEntity o2) {
+			@Override
+      public int compare(CAstEntity o1, CAstEntity o2) {
 				return o1.getName().compareTo(o2.getName());
 			}
 		});

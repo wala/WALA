@@ -313,10 +313,12 @@ public abstract class IR {
       }
     }
 
+    @Override
     public boolean hasNext() {
       return currentBlockIndex != -1;
     }
 
+    @Override
     public SSAInstruction next() {
       SSAInstruction result = currentBlockIterator.next();
       if (!currentBlockIterator.hasNext()) {
@@ -325,6 +327,7 @@ public abstract class IR {
       return result;
     }
 
+    @Override
     public void remove() {
       Assertions.UNREACHABLE();
     }
@@ -405,10 +408,12 @@ public abstract class IR {
       }
     }
 
+    @Override
     public boolean hasNext() {
       return currentBlockIndex != -1;
     }
 
+    @Override
     public SSAInstruction next() {
       ExceptionHandlerBasicBlock bb = (ExceptionHandlerBasicBlock) cfg.getNode(currentBlockIndex);
       SSAInstruction result = bb.getCatchInstruction();
@@ -416,6 +421,7 @@ public abstract class IR {
       return result;
     }
 
+    @Override
     public void remove() {
       Assertions.UNREACHABLE();
     }
@@ -475,14 +481,17 @@ public abstract class IR {
       nextIndex = -1;
     }
 
+    @Override
     public boolean hasNext() {
       return nextIndex != -1;
     }
 
+    @Override
     public void remove() {
       Assertions.UNREACHABLE();
     }
 
+    @Override
     public SSAInstruction next() {
       SSAInstruction result = instructions[nextIndex];
       advanceIndex(nextIndex + 1);
@@ -591,16 +600,19 @@ public abstract class IR {
           ;
       }
 
+      @Override
       public boolean hasNext() {
         return i <= limit;
       }
 
+      @Override
       public CallSiteReference next() {
         int index = callSiteMapping.getRelated(i).max();
         advance();
         return ((SSAAbstractInvokeInstruction) instructions[index]).getCallSite();
       }
 
+      @Override
       public void remove() {
         throw new UnsupportedOperationException();
       }

@@ -31,6 +31,7 @@ public class StandardFunctionTargetSelector implements MethodTargetSelector {
     this.base = base;
   }
 
+  @Override
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
    ClassLoaderReference loader =
       (site.isStatic() || receiver==null)? 

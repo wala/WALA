@@ -46,6 +46,7 @@ public class CrossLanguageClassTargetSelector implements ClassTargetSelector {
     return (ClassTargetSelector)languageSelectors.get(getLanguage(site));
   }
 
+  @Override
   public IClass getAllocatedTarget(CGNode caller, NewSiteReference site) {
     return getSelector(site).getAllocatedTarget(caller, site);
   }

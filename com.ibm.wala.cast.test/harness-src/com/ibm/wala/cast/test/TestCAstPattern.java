@@ -36,6 +36,7 @@ public class TestCAstPattern extends WalaTestCase {
   private static class TestingCAstImpl extends CAstImpl {
     private final Map testNameMap = new HashMap();
 
+    @Override
     @SuppressWarnings("unchecked")
     public CAstNode makeNode(int kind, CAstNode children[]) {
       if (kind == NAME_ASSERTION_SINGLE || kind == NAME_ASSERTION_MULTI) {

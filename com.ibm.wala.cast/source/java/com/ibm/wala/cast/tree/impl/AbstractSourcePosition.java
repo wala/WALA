@@ -16,6 +16,7 @@ import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 
 public abstract class AbstractSourcePosition implements Position {
     
+  @Override
   public boolean equals(Object o){
     if (o instanceof Position) {
       Position p = (Position)o;
@@ -33,10 +34,12 @@ public abstract class AbstractSourcePosition implements Position {
     }
   }
 
+  @Override
   public int hashCode() { 
     return getFirstLine()*getLastLine()*getFirstCol()*getLastCol();
   }
 
+  @Override
   public int compareTo(Object o) {
     if (o instanceof Position) {
       Position p = (Position)o;
@@ -54,6 +57,7 @@ public abstract class AbstractSourcePosition implements Position {
     }
   }
 
+  @Override
   public String toString() {
     URL x = getURL();
     String xf = x.toString();

@@ -77,6 +77,7 @@ public class AstJavaSlicer extends Slicer {
 
   public static Set<Statement> gatherAssertions(CallGraph CG, Collection<CGNode> partialRoots) {
     return gatherStatements(CG, partialRoots, new Filter<SSAInstruction>() {
+      @Override
       public boolean accepts(SSAInstruction o) {
         return o instanceof AstAssertInstruction;
       }
@@ -85,6 +86,7 @@ public class AstJavaSlicer extends Slicer {
 
   public static Set<Statement> gatherMonitors(CallGraph CG, Collection<CGNode> partialRoots) {
     return gatherStatements(CG, partialRoots, new Filter<SSAInstruction>() {
+      @Override
       public boolean accepts(SSAInstruction o) {
         return o instanceof SSAMonitorInstruction;
       }
@@ -93,6 +95,7 @@ public class AstJavaSlicer extends Slicer {
 
   public static Set<Statement> gatherWrites(CallGraph CG, Collection<CGNode> partialRoots) {
     return gatherStatements(CG, partialRoots, new Filter<SSAInstruction>() {
+      @Override
       public boolean accepts(SSAInstruction o) {
         return (o instanceof SSAPutInstruction) || (o instanceof SSAArrayStoreInstruction);
       }
@@ -101,6 +104,7 @@ public class AstJavaSlicer extends Slicer {
 
   public static Set<Statement> gatherReads(CallGraph CG, Collection<CGNode> partialRoots) {
     return gatherStatements(CG, partialRoots, new Filter<SSAInstruction>() {
+      @Override
       public boolean accepts(SSAInstruction o) {
         return (o instanceof SSAGetInstruction) || (o instanceof SSAArrayLoadInstruction);
       }

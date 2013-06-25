@@ -86,6 +86,7 @@ public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
     systemEntries.add(M);
   }
 
+  @Override
   protected void addApplicationModulesToScope() {
     ClassLoaderReference app = scope.getApplicationLoader();
     for (Module M : userEntries) {
@@ -99,6 +100,7 @@ public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
     }
   }
 
+  @Override
   public void buildAnalysisScope() throws IOException {
     scope = makeSourceAnalysisScope();
 
@@ -120,6 +122,7 @@ public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
 
   protected abstract ClassLoaderFactory getClassLoaderFactory(SetOfClasses exclusions);
   
+  @Override
   public IClassHierarchy buildClassHierarchy() {
     IClassHierarchy cha = null;
     ClassLoaderFactory factory = getClassLoaderFactory(scope.getExclusions());
@@ -134,6 +137,7 @@ public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
     return cha;
   }
 
+  @Override
   protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
     return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha);
   }
@@ -143,11 +147,13 @@ public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
     return new AnalysisCache(AstIRFactory.makeDefaultFactory());
   }
 
+  @Override
   public AnalysisOptions getDefaultOptions(Iterable<Entrypoint> entrypoints) {
     AnalysisOptions options = new AnalysisOptions(getScope(), entrypoints);
 
     SSAOptions ssaOptions = new SSAOptions();
     ssaOptions.setDefaultValues(new SSAOptions.DefaultValues() {
+      @Override
       public int getDefaultValue(SymbolTable symtab, int valueNumber) {
         return symtab.getDefaultValue(valueNumber);
       }

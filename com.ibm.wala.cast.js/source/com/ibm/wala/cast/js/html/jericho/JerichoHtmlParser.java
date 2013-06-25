@@ -101,7 +101,8 @@ public class JerichoHtmlParser implements IHtmlParser{
       Config.LoggerProvider = new CAstLoggerProvider();
     }
 
-	public void parse(URL url, InputStream reader, IHtmlCallback callback, String fileName) throws TranslatorToCAst.Error {
+	@Override
+  public void parse(URL url, InputStream reader, IHtmlCallback callback, String fileName) throws TranslatorToCAst.Error {
 	  warnings.clear();
 		Parser parser = new Parser(callback, fileName);
 		Source src;

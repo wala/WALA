@@ -149,6 +149,7 @@ public interface IInstruction {
   /**
    * Subclasses must implement toString.
    */
+  @Override
   public String toString();
 
   /**

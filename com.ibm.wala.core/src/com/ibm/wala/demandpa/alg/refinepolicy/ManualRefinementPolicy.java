@@ -58,6 +58,7 @@ public class ManualRefinementPolicy extends AbstractRefinementPolicy {
       this.cha = cha;
     }
 
+    @Override
     public RefinementPolicy make() {
       return new ManualRefinementPolicy(cha);
     }

@@ -22,9 +22,11 @@ public abstract class ReflectedFieldPointerKey extends AbstractFieldPointerKey {
   public abstract Object getFieldIdentifier();
 
   private static final Object arrayStateKey = new Object() {
+    @Override
     public String toString() { return "ArrayStateKey"; }
   };
 
+  @Override
   public boolean equals(Object obj) {
     if (obj == this) {
       return true;
@@ -39,14 +41,17 @@ public abstract class ReflectedFieldPointerKey extends AbstractFieldPointerKey {
     }
   }
 
+  @Override
   public int hashCode() {
     return getFieldIdentifier().hashCode() ^ getInstanceKey().hashCode();
   }
 
+  @Override
   public String toString() { return "[" + getInstanceKey() + "; " + getFieldIdentifier() + "]"; }
   
   public static ReflectedFieldPointerKey literal(final String lit, InstanceKey instance) {
     return new ReflectedFieldPointerKey(instance) {
+      @Override
       public Object getFieldIdentifier() {
 	return lit;
       }
@@ -55,6 +60,7 @@ public abstract class ReflectedFieldPointerKey extends AbstractFieldPointerKey {
 
   public static ReflectedFieldPointerKey mapped(final InstanceKey mapFrom, InstanceKey instance) {
     return new ReflectedFieldPointerKey(instance) {
+      @Override
       public Object getFieldIdentifier() {
 	return mapFrom;
       }
@@ -63,6 +69,7 @@ public abstract class ReflectedFieldPointerKey extends AbstractFieldPointerKey {
 
   public static ReflectedFieldPointerKey index(InstanceKey instance) {
     return new ReflectedFieldPointerKey(instance) {
+      @Override
       public Object getFieldIdentifier() {
 	return arrayStateKey;
       }

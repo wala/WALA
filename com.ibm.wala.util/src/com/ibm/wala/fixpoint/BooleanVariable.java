@@ -28,6 +28,7 @@ public class BooleanVariable extends AbstractVariable<BooleanVariable> {
     this.B = b;
   }
 
+  @Override
   public void copyState(BooleanVariable other) {
     if (other == null) {
       throw new IllegalArgumentException("other null");

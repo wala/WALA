@@ -250,7 +250,8 @@ public class ImmutableStack<T> implements Iterable<T> {
 		return new ImmutableStack<T>(tmpEntries);
 	}
 
-	public Iterator<T> iterator() {
+	@Override
+  public Iterator<T> iterator() {
 		if (entries.length == 0) {
 			return EmptyIterator.instance();
 		}

@@ -34,6 +34,7 @@ public class TargetMethodContextSelector implements ContextSelector {
     this.selector = selector;
   }
 
+  @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] R) {
     if (R == null || R[0] == null) {
       throw new IllegalArgumentException("R is null");
@@ -47,6 +48,7 @@ public class TargetMethodContextSelector implements ContextSelector {
         return M;
       }
 
+      @Override
       public ContextItem get(ContextKey name) {
         if (name.equals(ContextKey.PARAMETERS[0])) {
           return new FilteredPointerKey.TargetMethodFilter(M);
@@ -77,6 +79,7 @@ public class TargetMethodContextSelector implements ContextSelector {
 
   private static final IntSet thisParameter = IntSetUtil.make(new int[]{0});
 
+  @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     return thisParameter;
   }

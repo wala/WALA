@@ -34,10 +34,12 @@ public class JavaScriptLoaderFactory extends SingleClassLoaderFactory {
     this.preprocessor = preprocessor;
   }
 
+  @Override
   protected IClassLoader makeTheLoader(IClassHierarchy cha) {
     return new JavaScriptLoader( cha, translatorFactory, preprocessor );
   }
 
+  @Override
   public ClassLoaderReference getTheReference() {
     return JavaScriptTypes.jsLoader;
   }

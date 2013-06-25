@@ -58,6 +58,7 @@ public class OrdinalSet<T> implements Iterable<T> {
     return (S == null) ? 0 : S.size();
   }
 
+  @Override
   public Iterator<T> iterator() {
     if (S == null) {
       return EmptyIterator.instance();
@@ -66,14 +67,17 @@ public class OrdinalSet<T> implements Iterable<T> {
       return new Iterator<T>() {
         IntIterator it = S.intIterator();
 
+        @Override
         public boolean hasNext() {
           return it.hasNext();
         }
 
+        @Override
         public T next() {
           return mapping.getMappedObject(it.next());
         }
 
+        @Override
         public void remove() {
           Assertions.UNREACHABLE();
         }

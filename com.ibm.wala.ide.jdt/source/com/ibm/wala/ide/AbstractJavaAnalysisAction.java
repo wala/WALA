@@ -59,6 +59,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
   /*
    * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
    */
+  @Override
   public void setActivePart(IAction action, IWorkbenchPart targetPart) {
   }
 
@@ -190,6 +191,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
   /*
    * @see IActionDelegate#run(IAction)
    */
+  @Override
   public void run(IAction action) {
     IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
     try {
@@ -205,6 +207,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
   /*
    * @see IActionDelegate#selectionChanged(IAction, ISelection)
    */
+  @Override
   public void selectionChanged(IAction action, ISelection selection) {
     currentSelection = selection;
   }

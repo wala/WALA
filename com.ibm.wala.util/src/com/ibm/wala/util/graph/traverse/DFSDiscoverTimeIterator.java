@@ -56,6 +56,7 @@ public abstract class DFSDiscoverTimeIterator<T> extends Stack<T> implements Ite
    * 
    * @return true if there nodes left to enumerate.
    */
+  @Override
   public boolean hasNext() {
     return (!empty());
   }
@@ -69,6 +70,7 @@ public abstract class DFSDiscoverTimeIterator<T> extends Stack<T> implements Ite
    * 
    * @return the next graph node in discover time order.
    */
+  @Override
   public T next() throws NoSuchElementException {
 
     if (empty()) {
@@ -122,6 +124,7 @@ public abstract class DFSDiscoverTimeIterator<T> extends Stack<T> implements Ite
    */
   abstract protected Iterator<? extends T> getConnected(T n);
 
+  @Override
   public void remove() throws UnimplementedError {
     throw new UnimplementedError();
   }

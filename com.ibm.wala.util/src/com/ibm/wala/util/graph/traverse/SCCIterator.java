@@ -57,6 +57,7 @@ public class SCCIterator<T> implements Iterator<Set<T>> {
   /**
    * Determine whether there are any more SCCs remaining in this enumeration.
    */
+  @Override
   public boolean hasNext() {
     return rev.hasNext();
   }
@@ -64,6 +65,7 @@ public class SCCIterator<T> implements Iterator<Set<T>> {
   /**
    * Find the next SCC in this enumeration
    */
+  @Override
   public Set<T> next() throws NoSuchElementException {
     Set<T> currentSCC = HashSetFactory.make();
 
@@ -78,6 +80,7 @@ public class SCCIterator<T> implements Iterator<Set<T>> {
   }
 
 
+  @Override
   public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }

@@ -51,10 +51,12 @@ public final class LoadInstruction extends Instruction implements ILoadInstructi
   /**
    * @return the index of the local variable loaded
    */
+  @Override
   public int getVarIndex() {
     return index;
   }
 
+  @Override
   public String getType() {
     if (opcode < OP_iload_0) {
       return indexedTypes[opcode - OP_iload];
@@ -98,6 +100,7 @@ public final class LoadInstruction extends Instruction implements ILoadInstructi
     return "LocalLoad(" + getType() + "," + index + ")";
   }
 
+  @Override
   public boolean isPEI() {
     return false;
   }
@@ -106,6 +109,7 @@ public final class LoadInstruction extends Instruction implements ILoadInstructi
    * Java does not permit this.
    * @see com.ibm.wala.shrikeBT.IMemoryOperation#isAddressOf()
    */
+  @Override
   public boolean isAddressOf() {
     return false;
   }

@@ -35,6 +35,7 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
     }
   }
 
+  @Override
   public boolean understands(CGNode node) {
     if (A != null) {
       return A.understands(node) || B.understands(node);
@@ -43,6 +44,7 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
     }
   }
 
+  @Override
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
     if (A != null) {
       if (A.understands(node)) {
@@ -53,6 +55,7 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
     return B.iterateNewSites(node);
   }
 
+  @Override
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
     if (A != null) {
       if (A.understands(node)) {
@@ -63,6 +66,7 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
     return B.iterateCallSites(node);
   }
 
+  @Override
   public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
     if (A != null) {
       if (A.understands(node)) {
@@ -73,6 +77,7 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
     return B.iterateFieldsRead(node);
   }
 
+  @Override
   public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
     if (A != null) {
       if (A.understands(node)) {
@@ -83,6 +88,7 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
     return B.iterateFieldsWritten(node);
   }
 
+  @Override
   public boolean recordFactoryType(CGNode node, IClass klass) {
     boolean result = false;
     if (A != null) {

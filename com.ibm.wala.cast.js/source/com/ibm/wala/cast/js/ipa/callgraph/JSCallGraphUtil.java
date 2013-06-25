@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.ipa.callgraph.StandardFunctionTargetSelector;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
@@ -107,6 +108,11 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     return makeLoaders(null);
   }
 
+  public static IClassHierarchy makeHierarchyForScripts(String... scriptFiles) throws IOException, ClassHierarchyException {
+    JavaScriptLoaderFactory loaders = makeLoaders();
+    AnalysisScope scope = CAstCallGraphUtil.makeScope(scriptFiles, loaders, JavaScriptLoader.JS);
+    return makeHierarchy(scope, loaders);
+  }
   public static IClassHierarchy makeHierarchy(AnalysisScope scope, ClassLoaderFactory loaders) throws ClassHierarchyException {
     return ClassHierarchy.make(scope, loaders, JavaScriptLoader.JS);
   }

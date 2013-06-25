@@ -59,11 +59,13 @@ public interface FilteredPointerKey extends PointerKey {
       return (o instanceof SingleClassFilter) && ((SingleClassFilter) o).getConcreteType().equals(concreteType);
     }
 
+    @Override
     public boolean addFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
       IntSet f = system.getInstanceKeysForClass(concreteType);
       return (f == null) ? false : L.addAllInIntersection(R, f);
     }
 
+    @Override
     public boolean addInverseFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
       IntSet f = system.getInstanceKeysForClass(concreteType);
 
@@ -73,6 +75,7 @@ public interface FilteredPointerKey extends PointerKey {
       return (f == null) ? L.addAll(R) : L.addAll(IntSetUtil.diff(R.getValue(), f));
     }
 
+    @Override
     public boolean isRootFilter() {
       return concreteType.equals(concreteType.getClassHierarchy().getRootClass());
     }
@@ -132,11 +135,13 @@ public interface FilteredPointerKey extends PointerKey {
       return f;
     }
     
+    @Override
     public boolean addFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
       IntSet f = bits(system);
       return (f == null) ? false : L.addAllInIntersection(R, f);
     }
 
+    @Override
     public boolean addInverseFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
       IntSet f = bits(system);
 
@@ -146,6 +151,7 @@ public interface FilteredPointerKey extends PointerKey {
       return (f == null) ? L.addAll(R) : L.addAll(IntSetUtil.diff(R.getValue(), f));
     }
 
+    @Override
     public boolean isRootFilter() {
       return concreteType.length == 1 && concreteType[0].getClassHierarchy().getRootClass().equals(concreteType[0]);
     }
@@ -177,6 +183,7 @@ public interface FilteredPointerKey extends PointerKey {
       return (o instanceof SingleInstanceFilter) && ((SingleInstanceFilter) o).getInstance().equals(concreteType);
     }
 
+    @Override
     public boolean addFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
       int idx = system.findOrCreateIndexForInstanceKey(concreteType);
       if (R.contains(idx)) {
@@ -189,6 +196,7 @@ public interface FilteredPointerKey extends PointerKey {
       return false;
     }
 
+    @Override
     public boolean addInverseFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
       int idx = system.findOrCreateIndexForInstanceKey(concreteType);
       if (!R.contains(idx) || L.contains(idx)) {
@@ -200,6 +208,7 @@ public interface FilteredPointerKey extends PointerKey {
       }
     }
 
+    @Override
     public boolean isRootFilter() {
        return false;
     }
@@ -246,6 +255,7 @@ public interface FilteredPointerKey extends PointerKey {
         this.system = system;
       }
 
+      @Override
       public void act(int i) {
         InstanceKey I = system.getInstanceKey(i);
         IClass C = I.getConcreteType();
@@ -258,6 +268,7 @@ public interface FilteredPointerKey extends PointerKey {
       }
     }
 
+    @Override
     public boolean addFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
       if (R.getValue() == null) {
         return false;
@@ -268,6 +279,7 @@ public interface FilteredPointerKey extends PointerKey {
       }
     }
 
+    @Override
     public boolean addInverseFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R) {
       if (R.getValue() == null) {
         return false;
@@ -278,6 +290,7 @@ public interface FilteredPointerKey extends PointerKey {
       }
     }
 
+    @Override
     public boolean isRootFilter() {
       return false;
     }

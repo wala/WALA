@@ -17,6 +17,7 @@ import com.ibm.wala.util.WalaException;
 public interface NodeDecorator {
   
   public static final NodeDecorator DEFAULT = new NodeDecorator() {
+    @Override
     public String getLabel(Object o) {
       return o.toString();
     } };

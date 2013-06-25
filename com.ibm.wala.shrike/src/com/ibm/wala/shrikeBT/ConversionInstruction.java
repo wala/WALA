@@ -69,6 +69,7 @@ public final class ConversionInstruction extends Instruction implements IConvers
     return 1;
   }
 
+  @Override
   public String getFromType() {
     return fromType;
   }
@@ -77,6 +78,7 @@ public final class ConversionInstruction extends Instruction implements IConvers
     return a < b ? a : a + 1;
   }
 
+  @Override
   public String getToType() {
     return toType;
   }
@@ -116,10 +118,12 @@ public final class ConversionInstruction extends Instruction implements IConvers
     v.visitConversion(this);
   }
 
+  @Override
   public boolean isPEI() {
     return false;
   }
 
+  @Override
   public boolean throwsExceptionOnOverflow() {
     return false;
   }

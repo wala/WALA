@@ -45,6 +45,7 @@ public abstract class AbstractLexicalInvoke extends MultiReturnValueInvokeInstru
     this.lexicalWrites = lexicalWrites;
   }
 
+  @Override
   public int getNumberOfUses() {
     if (lexicalReads == null)
       return getNumberOfParameters();
@@ -76,6 +77,7 @@ public abstract class AbstractLexicalInvoke extends MultiReturnValueInvokeInstru
     }
   }
 
+  @Override
   public int getUse(int j) {
     assert j >= getNumberOfParameters();
     assert lexicalReads != null;
@@ -83,6 +85,7 @@ public abstract class AbstractLexicalInvoke extends MultiReturnValueInvokeInstru
     return lexicalReads[j - getNumberOfParameters()].valueNumber;
   }
 
+  @Override
   public int getNumberOfDefs() {
     if (lexicalWrites == null)
       return super.getNumberOfDefs();
@@ -90,6 +93,7 @@ public abstract class AbstractLexicalInvoke extends MultiReturnValueInvokeInstru
       return super.getNumberOfDefs() + lexicalWrites.length;
   }
 
+  @Override
   public int getDef(int j) {
     if (j < super.getNumberOfDefs())
       return super.getDef(j);
@@ -132,10 +136,12 @@ public abstract class AbstractLexicalInvoke extends MultiReturnValueInvokeInstru
     return lexicalWrites[i - super.getNumberOfDefs()];
   }
 
+  @Override
   public int hashCode() {
     return site.hashCode() * 7529;
   }
 
+  @Override
   public String toString(SymbolTable symbolTable) {
     StringBuffer s = new StringBuffer(super.toString(symbolTable));
 

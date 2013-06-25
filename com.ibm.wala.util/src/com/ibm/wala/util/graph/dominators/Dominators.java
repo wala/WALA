@@ -116,14 +116,17 @@ public abstract class Dominators<T> {
     return new Iterator<T>() {
       private T current = node;
 
+      @Override
       public void remove() {
         throw new UnsupportedOperationException();
       }
 
+      @Override
       public boolean hasNext() {
         return current != null;
       }
 
+      @Override
       public T next() {
         if (current == null)
           throw new NoSuchElementException();
@@ -165,6 +168,7 @@ public abstract class Dominators<T> {
           }
         }
 
+        @Override
         public Iterator<T> getPredNodes(T N) {
           if (N == root)
             return EmptyIterator.instance();
@@ -172,10 +176,12 @@ public abstract class Dominators<T> {
             return new NonNullSingletonIterator<T>(getIdom(N));
         }
 
+        @Override
         public int getPredNodeCount(Object N) {
           return (N == root) ? 0 : 1;
         }
 
+        @Override
         public Iterator<T> getSuccNodes(Object N) {
           if (nextMap.containsKey(N))
             return nextMap.get(N).iterator();
@@ -183,6 +189,7 @@ public abstract class Dominators<T> {
             return EmptyIterator.instance();
         }
 
+        @Override
         public int getSuccNodeCount(Object N) {
           if (nextMap.containsKey(N))
             return nextMap.get(N).size();
@@ -190,30 +197,36 @@ public abstract class Dominators<T> {
             return 0;
         }
 
+        @Override
         public void addEdge(Object src, Object dst) {
           Assertions.UNREACHABLE();
         }
 
+        @Override
         public void removeEdge(Object src, Object dst) {
           Assertions.UNREACHABLE();
         }
 
+        @Override
         public void removeAllIncidentEdges(Object node) {
           Assertions.UNREACHABLE();
         }
 
+        @Override
         public void removeIncomingEdges(Object node) {
           // TODO Auto-generated method stub
           Assertions.UNREACHABLE();
 
         }
 
+        @Override
         public void removeOutgoingEdges(Object node) {
           // TODO Auto-generated method stub
           Assertions.UNREACHABLE();
 
         }
 
+        @Override
         public boolean hasEdge(Object src, Object dst) {
           // TODO Auto-generated method stub
           Assertions.UNREACHABLE();

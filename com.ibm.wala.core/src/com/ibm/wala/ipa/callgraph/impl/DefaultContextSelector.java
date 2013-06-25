@@ -39,6 +39,7 @@ public class DefaultContextSelector implements ContextSelector {
     delegate = new DelegatingContextSelector(new CloneContextSelector(cha), s);
   }
 
+  @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (caller == null) {
       throw new IllegalArgumentException("null caller");
@@ -46,6 +47,7 @@ public class DefaultContextSelector implements ContextSelector {
     return delegate.getCalleeTarget(caller, site, callee, receiver);
   }
 
+  @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     return delegate.getRelevantParameters(caller, site);
   }

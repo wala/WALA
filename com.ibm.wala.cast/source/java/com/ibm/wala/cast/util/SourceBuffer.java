@@ -55,6 +55,7 @@ public class SourceBuffer {
     }
   }
     
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer();
     for(int i = 0; i < lines.length; i++) {
@@ -94,14 +95,22 @@ public class SourceBuffer {
 
       final Position hack = range;
       range = new AbstractSourcePosition() {
-	public int getFirstLine() { return hack.getFirstLine(); }
-	public int getLastLine() { return hack.getFirstLine(); }
-	public int getFirstCol() { return hack.getFirstCol(); }
-	public int getLastCol() { return hack.getFirstCol(); }
-	public int getFirstOffset() { return hack.getFirstOffset(); }
-	public int getLastOffset() { return hack.getFirstOffset(); }
-	public URL getURL() { return hack.getURL(); }
-	public InputStream getInputStream() throws IOException { 
+	@Override
+  public int getFirstLine() { return hack.getFirstLine(); }
+	@Override
+  public int getLastLine() { return hack.getFirstLine(); }
+	@Override
+  public int getFirstCol() { return hack.getFirstCol(); }
+	@Override
+  public int getLastCol() { return hack.getFirstCol(); }
+	@Override
+  public int getFirstOffset() { return hack.getFirstOffset(); }
+	@Override
+  public int getLastOffset() { return hack.getFirstOffset(); }
+	@Override
+  public URL getURL() { return hack.getURL(); }
+	@Override
+  public InputStream getInputStream() throws IOException { 
 	  return hack.getInputStream();
 	}
       };

@@ -35,20 +35,24 @@ public class EnclosingObjectReference extends SSAInstruction {
     this.type = type;
   }
 
+  @Override
   public boolean hasDef() {
     return true;
   }
 
+  @Override
   public int getDef() {
     return lval;
   }
 
+  @Override
   public int getDef(int i) {
     assert i == 0;
 
     return lval;
   }
 
+  @Override
   public int getNumberOfDefs() {
     return 1;
   }
@@ -57,26 +61,32 @@ public class EnclosingObjectReference extends SSAInstruction {
     return type;
   }
 
+  @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((AstJavaInstructionFactory) insts).EnclosingObjectReference(defs == null ? lval : defs[0], type);
   }
 
+  @Override
   public String toString(SymbolTable symbolTable) {
     return getValueString(symbolTable, lval) + " = enclosing " + type.getName();
   }
 
+  @Override
   public void visit(IVisitor v) {
     ((AstJavaInstructionVisitor) v).visitEnclosingObjectReference(this);
   }
 
+  @Override
   public int hashCode() {
     return lval * type.hashCode();
   }
 
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return Collections.emptySet();
   }
 
+  @Override
   public boolean isFallThrough() {
     return true;
   }

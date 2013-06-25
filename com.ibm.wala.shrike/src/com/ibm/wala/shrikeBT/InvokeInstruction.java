@@ -127,14 +127,17 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
     }
   }
 
+  @Override
   public String getClassType() {
     return classType;
   }
 
+  @Override
   public String getMethodName() {
     return methodName;
   }
 
+  @Override
   public String getMethodSignature() {
     return type;
   }
@@ -195,10 +198,12 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
     return "Invoke(" + getInvocationModeString() + "," + getClassType() + "," + getMethodName() + "," + getMethodSignature() + ")";
   }
 
+  @Override
   public boolean isPEI() {
     return true;
   }
 
+  @Override
   public Dispatch getInvocationCode() {
     switch (opcode) {
     case Constants.OP_invokestatic:

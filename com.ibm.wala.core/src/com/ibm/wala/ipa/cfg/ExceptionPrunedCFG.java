@@ -25,10 +25,12 @@ public class ExceptionPrunedCFG {
       this.cfg = cfg;
     }
 
+    @Override
     public boolean hasNormalEdge(T src, T dst) {
       return cfg.getNormalSuccessors(src).contains(dst);
     }
 
+    @Override
     public boolean hasExceptionalEdge(T src, T dst) {
       return false;
     }

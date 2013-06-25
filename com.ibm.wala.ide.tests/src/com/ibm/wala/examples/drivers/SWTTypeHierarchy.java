@@ -107,6 +107,7 @@ public class SWTTypeHierarchy {
    */
   static Graph<IClass> pruneForAppLoader(Graph<IClass> g) throws WalaException {
     Filter<IClass> f = new Filter<IClass>() {
+      @Override
       public boolean accepts(IClass c) {
         return (c.getClassLoader().getReference().equals(ClassLoaderReference.Application));
       }

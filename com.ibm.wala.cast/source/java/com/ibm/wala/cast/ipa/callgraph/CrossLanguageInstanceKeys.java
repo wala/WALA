@@ -57,23 +57,28 @@ public class CrossLanguageInstanceKeys implements InstanceKeyFactory {
   }
 
 
+  @Override
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
     return getSelector(allocation).getInstanceKeyForAllocation(node, allocation);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
     return getSelector(allocation).getInstanceKeyForMultiNewArray(node, allocation, dim);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForConstant(TypeReference type, Object S) {
     return getSelector(type).getInstanceKeyForConstant(type, S);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type) {
     assert getSelector(type) != null : "no instance keys for " + type;
     return getSelector(type).getInstanceKeyForPEI(node, instr, type);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
     return getSelector(type).getInstanceKeyForClassObject(type);
   }

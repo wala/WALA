@@ -40,11 +40,13 @@ public class CompoundIntIterator implements IntIterator {
   }
 
 
+  @Override
   public boolean hasNext() {
     return A.hasNext() || B.hasNext();
   }
 
 
+  @Override
   public int next() {
     if (A.hasNext()) {
       return A.next();

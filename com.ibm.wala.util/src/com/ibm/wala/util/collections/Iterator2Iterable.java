@@ -27,6 +27,7 @@ public class Iterator2Iterable<T> implements Iterable<T> {
     this.iter = iter;
   }
 
+  @Override
   public Iterator<T> iterator() {
     return iter;
   }

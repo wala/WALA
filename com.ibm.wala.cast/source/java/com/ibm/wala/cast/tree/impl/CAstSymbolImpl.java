@@ -35,5 +35,6 @@ public class CAstSymbolImpl extends CAstSymbolImplBase {
     super(_name, _isFinal, _isCaseInsensitive, _defaultInitValue);
   }
 
+  @Override
   public boolean isInternalName() { return false; }
 }

@@ -75,6 +75,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
   
   private Iterator<ModuleEntry> getMessages(final byte severity) {
     return new MapIterator<Map.Entry<ModuleEntry,Set<Warning>>, ModuleEntry>(new FilterIterator<Map.Entry<ModuleEntry,Set<Warning>>>(errors.entrySet().iterator(), new Filter<Map.Entry<ModuleEntry,Set<Warning>>>()  {
+      @Override
       public boolean accepts(Entry<ModuleEntry, Set<Warning>> o) {
          for(Warning w : o.getValue()) {
            if (w.getLevel() == severity) {
@@ -84,6 +85,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
          return false;
       }
     }), new Function<Map.Entry<ModuleEntry,Set<Warning>>, ModuleEntry>() {
+      @Override
       public ModuleEntry apply(Entry<ModuleEntry, Set<Warning>> object) {
         return object.getKey();
       }      
@@ -112,22 +114,27 @@ public abstract class CAstAbstractLoader implements IClassLoader {
     return (IClass) types.get(TypeName.string2TypeName(className));
   }
 
+  @Override
   public IClass lookupClass(TypeName className) {
     return (IClass) types.get(className);
   }
 
+  @Override
   public Iterator<IClass> iterateAllClasses() {
     return types.values().iterator();
   }
 
+  @Override
   public int getNumberOfClasses() {
     return types.size();
   }
 
+  @Override
   public Atom getName() {
     return getReference().getName();
   }
 
+  @Override
   public int getNumberOfMethods() {
     int i = 0;
     for (Iterator cls = types.values().iterator(); cls.hasNext();) {
@@ -142,6 +149,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
     return i;
   }
 
+  @Override
   public String getSourceFileName(IMethod method, int bcOffset) {
     if (!(method instanceof AstMethod)){
       return null;
@@ -153,10 +161,12 @@ public abstract class CAstAbstractLoader implements IClassLoader {
     return pos.getURL().getFile();
   }
   
+  @Override
   public String getSourceFileName(IClass klass) {
     return ((AstClass)klass).getSourcePosition().getURL().getFile();
   }
   
+  @Override
   public InputStream getSource(IClass klass) {
     try {
       return ((AstClass)klass).getSourcePosition().getInputStream();
@@ -165,6 +175,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
     }
   }
 
+  @Override
   public InputStream getSource(IMethod method, int bcOffset) {
     try {
       return ((AstMethod)method).getSourcePosition(bcOffset).getInputStream();
@@ -173,11 +184,13 @@ public abstract class CAstAbstractLoader implements IClassLoader {
     }
   }
 
+  @Override
   public IClassLoader getParent() {
     assert parent != null;
     return parent;
   }
 
+  @Override
   public void removeAll(Collection<IClass> toRemove) {
     Set<TypeName> keys = HashSetFactory.make();
 

@@ -121,6 +121,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   private HeapGraph heapGraph;
 
   private EntrypointBuilder entrypointBuilder = new EntrypointBuilder() {
+    @Override
     public Iterable<Entrypoint> createEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
       return makeDefaultEntrypoints(scope, cha);
     }
@@ -141,6 +142,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     return builder;
   }
 
+  @Override
   public void setModuleFiles(Collection moduleFiles) {
     this.moduleFiles = moduleFiles;
   }
@@ -218,6 +220,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     }
   }
 
+  @Override
   public void setJ2SELibraries(JarFile[] libs) {
     if (libs == null) {
       throw new IllegalArgumentException("libs is null");
@@ -228,6 +231,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     }
   }
 
+  @Override
   public void setJ2SELibraries(Module[] libs) {
     if (libs == null) {
       throw new IllegalArgumentException("libs is null");
@@ -238,6 +242,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     }
   }
 
+  @Override
   public void setClosedWorld(boolean b) {
     this.closedWorld = b;
   }
@@ -269,6 +274,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     this.exclusionsFile = exclusionsFile;
   }
 
+  @Override
   public AnalysisOptions getDefaultOptions(Iterable<Entrypoint> entrypoints) {
     return new AnalysisOptions(getScope(), entrypoints);
   }

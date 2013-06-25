@@ -42,9 +42,11 @@ public class Cocovariant {
                 A foo(String x) { return null; }
         }
         static class B extends A {
+                
                 B foo(String x) { return null; }
         }
         static class C extends B {
+                
                 C foo(String x) { return null; }
         }
         public static void main(String[] args) {

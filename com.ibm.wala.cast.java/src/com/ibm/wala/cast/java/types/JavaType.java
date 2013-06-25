@@ -16,5 +16,6 @@ package com.ibm.wala.cast.java.types;
 import com.ibm.wala.cast.tree.CAstType;
 
 public interface JavaType extends CAstType.Class {
+    @Override
     boolean isInterface();
 }

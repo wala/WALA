@@ -30,6 +30,7 @@ public abstract class UnaryStatement<T extends IVariable> extends AbstractStatem
    * 
    * @return true if the lhs value changed. false otherwise
    */
+  @Override
   public byte evaluate() {
     UnaryOperator<T> op = getOperator();
     return op.evaluate(lhs, rhs);
@@ -40,6 +41,7 @@ public abstract class UnaryStatement<T extends IVariable> extends AbstractStatem
    * 
    * @return the lattice cell this equation computes
    */
+  @Override
   public T getLHS() {
     return lhs;
   }
@@ -66,6 +68,7 @@ public abstract class UnaryStatement<T extends IVariable> extends AbstractStatem
    * @param cell the cell in question
    * @return true or false
    */
+  @Override
   public boolean hasVariable(T cell) {
     if (lhs == cell)
       return true;
@@ -152,6 +155,7 @@ public abstract class UnaryStatement<T extends IVariable> extends AbstractStatem
     return result;
   }
   
+  @Override
   public T[] getRHS() throws UnsupportedOperationException {
     // This should never be called ...use the more efficient getRightHandSide instead
     throw new UnsupportedOperationException();

@@ -52,10 +52,12 @@ public abstract class AbstractVariable<T extends AbstractVariable> extends NodeW
     return hashCode;
   }
 
+  @Override
   public int getOrderNumber() {
     return orderNumber;
   }
 
+  @Override
   public void setOrderNumber(int orderNumber) {
     this.orderNumber = orderNumber;
   }

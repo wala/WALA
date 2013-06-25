@@ -72,6 +72,7 @@ public final class ConcreteTypeKey implements InstanceKey {
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKey#getConcreteType()
    */
+  @Override
   public IClass getConcreteType() {
     return type;
   }
@@ -102,6 +103,7 @@ public final class ConcreteTypeKey implements InstanceKey {
     return result;
   }
 
+  @Override
   public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
     return new ComposedIterator<CGNode, Pair<CGNode, NewSiteReference>>(CG.iterator()) {
       @Override
@@ -110,12 +112,14 @@ public final class ConcreteTypeKey implements InstanceKey {
             new FilterIterator<NewSiteReference>(
                 outer.iterateNewSites(),
                 new Filter<NewSiteReference>() {
+                  @Override
                   public boolean accepts(NewSiteReference o) {
                     return o.getDeclaredType().equals(type.getReference());
                   }
                 }
             ),
             new Function<NewSiteReference, Pair<CGNode, NewSiteReference>>() {
+              @Override
               public Pair<CGNode, NewSiteReference> apply(NewSiteReference object) {
                 return Pair.make(outer, object);
               }

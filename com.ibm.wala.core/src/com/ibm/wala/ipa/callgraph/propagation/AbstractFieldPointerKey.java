@@ -24,6 +24,7 @@ public abstract class AbstractFieldPointerKey extends AbstractPointerKey impleme
     this.instance = container;
   }
 
+  @Override
   public InstanceKey getInstanceKey() {
     return instance;
   }

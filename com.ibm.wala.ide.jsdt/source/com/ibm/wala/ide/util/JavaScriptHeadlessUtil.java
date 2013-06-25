@@ -21,7 +21,8 @@ public class JavaScriptHeadlessUtil extends HeadlessUtil {
 
 	  public static IJavaScriptProject getJavaScriptProjectFromWorkspace(final String projectName) {
 		    IJavaScriptProject jp = getProjectFromWorkspace(new Function<IProject, IJavaScriptProject>() {
-		      public IJavaScriptProject apply(IProject p) {
+		      @Override
+          public IJavaScriptProject apply(IProject p) {
 		        try {
 		          if (p.hasNature(JavaScriptCore.NATURE_ID)) {
 		            IJavaScriptProject jp = JavaScriptCore.create(p);

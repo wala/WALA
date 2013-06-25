@@ -58,6 +58,7 @@ public class IrViewer extends JPanel{
     
     
     irLines.addListSelectionListener(new ListSelectionListener() {
+      @Override
       public void valueChanged(ListSelectionEvent e) {
         int index = irLines.getSelectedIndex();
         Integer pc = lineToPc.get(index);

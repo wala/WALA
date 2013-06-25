@@ -70,6 +70,7 @@ public final class ThrowInstruction extends Instruction {
     return "Throw()";
   }
 
+  @Override
   public boolean isPEI() {
     return true;
   }

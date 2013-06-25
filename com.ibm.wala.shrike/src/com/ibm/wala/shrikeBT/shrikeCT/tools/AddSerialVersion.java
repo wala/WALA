@@ -118,6 +118,7 @@ public class AddSerialVersion {
         }
       }
       Arrays.sort(fields, 0, fieldCount, new Comparator<Integer>() {
+        @Override
         public int compare(Integer o1, Integer o2) {
           String name1 = fieldNames[o1.intValue()];
           String name2 = fieldNames[o2.intValue()];
@@ -153,6 +154,7 @@ public class AddSerialVersion {
         }
       }
       Arrays.sort(methods, 0, methodCount, new Comparator<Integer>() {
+        @Override
         public int compare(Integer o1, Integer o2) {
           int m1 = o1.intValue();
           int m2 = o2.intValue();

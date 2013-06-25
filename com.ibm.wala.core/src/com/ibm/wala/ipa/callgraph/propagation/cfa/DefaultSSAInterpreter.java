@@ -51,10 +51,12 @@ public class DefaultSSAInterpreter extends DefaultRTAInterpreter implements SSAC
 
   }
 
+  @Override
   public IR getIR(CGNode node) {
     return getCFAInterpreter(node).getIR(node);
   }
 
+  @Override
   public int getNumberOfStatements(CGNode node) {
     return getCFAInterpreter(node).getNumberOfStatements(node);
   }
@@ -75,10 +77,12 @@ public class DefaultSSAInterpreter extends DefaultRTAInterpreter implements SSAC
     return false;
   }
 
+  @Override
   public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode N) {
     return getCFAInterpreter(N).getCFG(N);
   }
 
+  @Override
   public DefUse getDU(CGNode node) {
     return getCFAInterpreter(node).getDU(node);
   }
