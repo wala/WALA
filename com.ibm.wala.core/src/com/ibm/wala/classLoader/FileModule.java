@@ -27,11 +27,14 @@ public abstract class FileModule implements Module, ModuleEntry {
 
   private final File file;
 
-  public FileModule(File f) throws IllegalArgumentException {
+  private final Module container;
+  
+  public FileModule(File f, Module container) throws IllegalArgumentException {
     if (f == null) {
       throw new IllegalArgumentException("f is null");
     }
     this.file = f;
+    this.container = container;
     if (!f.exists()) {
       throw new IllegalArgumentException("bad file " + f.getAbsolutePath());
     }
@@ -44,6 +47,7 @@ public abstract class FileModule implements Module, ModuleEntry {
   /*
    * @see com.ibm.wala.classLoader.Module#getEntries()
    */
+  @Override
   public Iterator<ModuleEntry> getEntries() {
     return new NonNullSingletonIterator<ModuleEntry>(this);
   }
@@ -69,6 +73,7 @@ public abstract class FileModule implements Module, ModuleEntry {
   /*
    * @see com.ibm.wala.classLoader.ModuleEntry#getName()
    */
+  @Override
   public String getName() {
     return file.getName();
   }
@@ -76,6 +81,7 @@ public abstract class FileModule implements Module, ModuleEntry {
   /*
    * @see com.ibm.wala.classLoader.ModuleEntry#getInputStream()
    */
+  @Override
   public InputStream getInputStream() {
     try {
       if (!file.exists()) {
@@ -92,6 +98,7 @@ public abstract class FileModule implements Module, ModuleEntry {
   /*
    * @see com.ibm.wala.classLoader.ModuleEntry#isModuleFile()
    */
+  @Override
   public boolean isModuleFile() {
     return false;
   }
@@ -103,8 +110,15 @@ public abstract class FileModule implements Module, ModuleEntry {
     return file;
   }
 
+  @Override
   public Module asModule() throws UnimplementedError {
     Assertions.UNREACHABLE("implement me");
     return null;
   }
+  
+  @Override
+  public Module getContainer() {
+    return container;
+  }
+
 }

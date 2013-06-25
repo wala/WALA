@@ -228,6 +228,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     return getAnnotations(false);
   }
   
+  @Override
   public Collection<Annotation> getAnnotations() {
     Collection<Annotation> result = HashSetFactory.make();
     try {
@@ -429,5 +430,9 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
       }
     }
     return null;
+  }
+  
+  public Module getContainer() {
+    return reader.getModuleEntry().getContainer();
   }
 }

@@ -734,6 +734,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
             if (pointsToSet == null || pointsToSet.getBackingSet() == null)
               continue;
             pointsToSet.getBackingSet().foreach(new IntSetAction() {
+              @Override
               public void act(int ikId) {
                 Set<Pair<CGNode, Integer>> s = ret.get(ikId);
                 if (s == null) {
