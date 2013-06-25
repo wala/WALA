@@ -698,7 +698,6 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
         public void worked(int units) {
         }
       });
-      CAstCallGraphUtil.AVOID_DUMP = false;
       CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     }
 
@@ -706,7 +705,6 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   public void testTutorialExample() throws IllegalArgumentException, IOException, CancelException, WalaException {
     PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "tutorial-example.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
-    CAstCallGraphUtil.AVOID_DUMP = false;
     CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     // verifyGraphAssertions(CG, assertionsForDateProperty);
   }
