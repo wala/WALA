@@ -18,13 +18,12 @@ import java.util.List;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeCT.AnnotationsReader;
+import com.ibm.wala.shrikeCT.AnnotationsReader.AnnotationType;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
 import com.ibm.wala.shrikeCT.InnerClassesReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
-import com.ibm.wala.shrikeCT.RuntimeInvisibleAnnotationsReader;
-import com.ibm.wala.shrikeCT.RuntimeVisibleAnnotationsReader;
 import com.ibm.wala.shrikeCT.SignatureReader;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
@@ -47,9 +46,10 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
    * The Shrike object that knows how to read the class file
    */
   private final ShrikeClassReaderHandle reader;
-  
+
   /**
-   * @throws IllegalArgumentException if reader is null
+   * @throws IllegalArgumentException
+   *           if reader is null
    */
   public ShrikeClass(ShrikeClassReaderHandle reader, IClassLoader loader, IClassHierarchy cha) throws InvalidClassFileException {
     super(loader, cha);
@@ -70,7 +70,8 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
   /**
    * Compute the fields declared by this class
    * 
-   * @throws InvalidClassFileException iff Shrike fails to read the class file correctly
+   * @throws InvalidClassFileException
+   *           iff Shrike fails to read the class file correctly
    */
   private void computeFields() throws InvalidClassFileException {
     ClassReader cr = reader.get();
@@ -82,7 +83,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
         int accessFlags = cr.getFieldAccessFlags(i);
         Atom name = Atom.findOrCreateUnicodeAtom(cr.getFieldName(i));
         ImmutableByteArray b = ImmutableByteArray.make(cr.getFieldType(i));
-        Collection<Annotation> annotations = HashSetFactory.make(); 
+        Collection<Annotation> annotations = HashSetFactory.make();
         annotations.addAll(getRuntimeInvisibleAnnotations(i));
         annotations.addAll(getRuntimeVisibleAnnotations(i));
         annotations = annotations.isEmpty() ? null : annotations;
@@ -111,9 +112,11 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     modifiers = reader.get().getAccessFlags();
   }
 
-   /**
-   * Note that this is called from the constructor, at which point this class is not yet ready to actually load the superclass.
-   * Instead, we pull out the name of the superclass and cache it here, to avoid hitting the reader later.
+  /**
+   * Note that this is called from the constructor, at which point this class is
+   * not yet ready to actually load the superclass. Instead, we pull out the
+   * name of the superclass and cache it here, to avoid hitting the reader
+   * later.
    */
   private void computeSuperName() {
     try {
@@ -127,8 +130,10 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
   }
 
   /**
-   * Note that this is called from the constructor, at which point this class is not yet ready to actually load the interfaces.
-   * Instead, we pull out the name of the interfaces and cache it here, to avoid hitting the reader later.
+   * Note that this is called from the constructor, at which point this class is
+   * not yet ready to actually load the interfaces. Instead, we pull out the
+   * name of the interfaces and cache it here, to avoid hitting the reader
+   * later.
    */
   private void computeInterfaceNames() {
     try {
@@ -161,11 +166,11 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     return result;
   }
 
- 
   /**
    * initialize the TypeReference field for this instance
    * 
-   * @throws InvalidClassFileException iff Shrike can't read this class
+   * @throws InvalidClassFileException
+   *           iff Shrike can't read this class
    */
   private void computeTypeReference() throws InvalidClassFileException {
     String className = "L" + reader.get().getName();
@@ -174,7 +179,6 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     typeReference = TypeReference.findOrCreate(getClassLoader().getReference(), TypeName.findOrCreate(name));
   }
 
-  
   /**
    * @see java.lang.Object#equals(Object)
    */
@@ -198,7 +202,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
       return null;
     }
   }
-  
+
   /**
    * Clear all optional cached data associated with this class
    */
@@ -227,7 +231,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
   public Collection<Annotation> getRuntimeVisibleAnnotations() throws InvalidClassFileException {
     return getAnnotations(false);
   }
-  
+
   @Override
   public Collection<Annotation> getAnnotations() {
     Collection<Annotation> result = HashSetFactory.make();
@@ -235,7 +239,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
       result.addAll(getAnnotations(true));
       result.addAll(getAnnotations(false));
     } catch (InvalidClassFileException e) {
-      
+
     }
     return result;
   }
@@ -250,29 +254,10 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
     r.initClassAttributeIterator(attrs);
 
-    // search for the desired attribute
-    AnnotationsReader result = null;
-    try {
-      for (; attrs.isValid(); attrs.advance()) {
-        if (runtimeInvisable){
-          if (attrs.getName().equals(RuntimeInvisibleAnnotationsReader.attrName)) {
-            result = new RuntimeInvisibleAnnotationsReader(attrs);
-            break;
-          }
-        } else {
-          if (attrs.getName().equals(RuntimeVisibleAnnotationsReader.attrName)) {
-            result = new RuntimeVisibleAnnotationsReader(attrs);
-            break;
-          }
-        }
-      }
-    } catch (InvalidClassFileException e) {
-      Assertions.UNREACHABLE();
-    }
-    return result;
+    return AnnotationsReader.getReaderForAnnotation(runtimeInvisable ? AnnotationType.RuntimeInvisibleAnnotations
+        : AnnotationType.RuntimeVisibleAnnotations, attrs);
   }
 
-  
   private InnerClassesReader getInnerClassesReader() throws InvalidClassFileException {
     ClassReader r = reader.get();
     ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
@@ -297,26 +282,8 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     ClassReader.AttrIterator iter = new AttrIterator();
     reader.get().initFieldAttributeIterator(fieldIndex, iter);
 
-    // search for the desired attribute
-    AnnotationsReader result = null;
-    try {
-      for (; iter.isValid(); iter.advance()) {
-        if (runtimeInvisible) {
-          if (iter.getName().equals(RuntimeInvisibleAnnotationsReader.attrName)) {
-            result = new RuntimeInvisibleAnnotationsReader(iter);
-            break;
-          }
-        } else {
-          if (iter.getName().equals(RuntimeVisibleAnnotationsReader.attrName)) {
-            result = new RuntimeVisibleAnnotationsReader(iter);
-            break;
-          }
-        }
-      }
-    } catch (InvalidClassFileException e) {
-      Assertions.UNREACHABLE();
-    }
-    return result;
+    return AnnotationsReader.getReaderForAnnotation(runtimeInvisible ? AnnotationType.RuntimeInvisibleAnnotations
+        : AnnotationType.RuntimeVisibleAnnotations, iter);
   }
 
   /**
@@ -332,7 +299,7 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
   public Collection<Annotation> getRuntimeVisibleAnnotations(int fieldIndex) throws InvalidClassFileException {
     return getFieldAnnotations(fieldIndex, false);
   }
-  
+
   protected Collection<Annotation> getFieldAnnotations(int fieldIndex, boolean runtimeInvisible) throws InvalidClassFileException {
     AnnotationsReader r = getFieldAnnotationsReader(runtimeInvisible, fieldIndex);
     return Annotation.getAnnotationsFromReader(r, getClassLoader().getReference());
@@ -373,7 +340,8 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
   }
 
   /**
-   * Does the class file indicate that this class is a member of some other class?
+   * Does the class file indicate that this class is a member of some other
+   * class?
    * 
    * @throws InvalidClassFileException
    */
@@ -411,10 +379,11 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     }
     return false;
   }
-  
+
   /**
-   * If this is an inner class, return the outer class.   Else return null.
-   * @throws InvalidClassFileException 
+   * If this is an inner class, return the outer class. Else return null.
+   * 
+   * @throws InvalidClassFileException
    */
   public TypeReference getOuterClass() throws InvalidClassFileException {
     if (!isInnerClass()) {
@@ -431,7 +400,8 @@ public final class ShrikeClass extends JVMClass<IClassLoader> {
     }
     return null;
   }
-  
+
+  @Override
   public Module getContainer() {
     return reader.getModuleEntry().getContainer();
   }
