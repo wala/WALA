@@ -73,13 +73,7 @@ public class Annotation {
   public static Collection<Annotation> getAnnotationsFromReader(AnnotationsReader r, ClassLoaderReference clRef) throws InvalidClassFileException {
     if (r != null) {
       AnnotationAttribute[] allAnnotations = r.getAllAnnotations();      
-      Collection<Annotation> result = HashSetFactory.make();
-      for (AnnotationAttribute annot : allAnnotations) {
-        String type = annot.type;
-        type = type.replaceAll(";", "");
-        TypeReference t = TypeReference.findOrCreate(clRef, type);
-        result.add(makeWithNamed(t, annot.elementValues));
-      }
+      Collection<Annotation> result = convertToAnnotations(clRef, allAnnotations);
       return result;
     } else {
       return Collections.emptySet();
@@ -87,6 +81,35 @@ public class Annotation {
     
   }
 
+  /**
+   * If r != null, return parameter annotations as an array with length equal to
+   * number of annotatable parameters. Otherwise, return null.
+   */
+  @SuppressWarnings("unchecked")
+  public static Collection<Annotation>[] getParameterAnnotationsFromReader(AnnotationsReader r, ClassLoaderReference clRef) throws InvalidClassFileException {
+    if (r != null) {
+      AnnotationAttribute[][] allAnnots = r.getAllParameterAnnotations();
+      Collection<Annotation>[] result = new Collection[allAnnots.length];
+      for (int i = 0; i < result.length; i++) {
+        result[i] = convertToAnnotations(clRef, allAnnots[i]);
+      }
+      return result;
+    } else {
+      return null;
+    }
+  }
+
+  protected static Collection<Annotation> convertToAnnotations(ClassLoaderReference clRef, AnnotationAttribute[] allAnnotations) {
+    Collection<Annotation> result = HashSetFactory.make();
+    for (AnnotationAttribute annot : allAnnotations) {
+      String type = annot.type;
+      type = type.replaceAll(";", "");
+      TypeReference t = TypeReference.findOrCreate(clRef, type);
+      result.add(makeWithNamed(t, annot.elementValues));
+    }
+    return result;
+  }
+  
   @Override
   public String toString() {
     StringBuffer sb = new StringBuffer("Annotation type " + type);

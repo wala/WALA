@@ -32,8 +32,6 @@ import com.ibm.wala.shrikeCT.ConstantValueReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.shrikeCT.LineNumberTableReader;
 import com.ibm.wala.shrikeCT.LocalVariableTableReader;
-import com.ibm.wala.shrikeCT.RuntimeInvisibleAnnotationsReader;
-import com.ibm.wala.shrikeCT.RuntimeVisibleAnnotationsReader;
 import com.ibm.wala.shrikeCT.SignatureReader;
 import com.ibm.wala.shrikeCT.SourceFileReader;
 
@@ -266,11 +264,8 @@ public class ClassPrinter {
       } else if (name.equals("Signature")) {
         SignatureReader sr = new SignatureReader(attrs);
         w.write("    signature: " + cr.getCP().getCPUtf8(sr.getSignatureCPIndex()) + "\n");
-      } else if (name.equals(RuntimeInvisibleAnnotationsReader.attrName)) {
-        AnnotationsReader r = new RuntimeInvisibleAnnotationsReader(attrs);
-        printAnnotations(cr, attrs, r);
-      } else if (name.equals(RuntimeVisibleAnnotationsReader.attrName)) {
-        AnnotationsReader r = new RuntimeVisibleAnnotationsReader(attrs);
+      } else if (AnnotationsReader.isKnownAnnotation(name)) {
+        AnnotationsReader r = new AnnotationsReader(attrs, name);
         printAnnotations(cr, attrs, r);
       } else {
         int len = attrs.getDataSize();

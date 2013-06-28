@@ -17,6 +17,7 @@ import com.ibm.wala.shrikeBT.Decoder;
 import com.ibm.wala.shrikeBT.IndirectionData;
 import com.ibm.wala.shrikeBT.shrikeCT.CTDecoder;
 import com.ibm.wala.shrikeCT.AnnotationsReader;
+import com.ibm.wala.shrikeCT.AnnotationsReader.AnnotationType;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
 import com.ibm.wala.shrikeCT.CodeReader;
@@ -24,9 +25,8 @@ import com.ibm.wala.shrikeCT.ExceptionsReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.shrikeCT.LineNumberTableReader;
 import com.ibm.wala.shrikeCT.LocalVariableTableReader;
-import com.ibm.wala.shrikeCT.RuntimeInvisibleAnnotationsReader;
-import com.ibm.wala.shrikeCT.RuntimeVisibleAnnotationsReader;
 import com.ibm.wala.shrikeCT.SignatureReader;
+import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.types.generics.MethodTypeSignature;
@@ -273,30 +273,11 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     return result;
   }
 
-  private AnnotationsReader getAnnotationsReader(boolean runtimeInvisible) {
+  private AnnotationsReader getAnnotationsReader(AnnotationType type) {
     ClassReader.AttrIterator iter = new AttrIterator();
     getClassReader().initMethodAttributeIterator(shrikeMethodIndex, iter);
 
-    // search for the desired attribute
-    AnnotationsReader result = null;
-    try {
-      for (; iter.isValid(); iter.advance()) {
-        if (runtimeInvisible) {
-          if (iter.getName().equals(RuntimeInvisibleAnnotationsReader.attrName)) {
-            result = new RuntimeInvisibleAnnotationsReader(iter);
-            break;
-          }
-        } else {
-          if (iter.getName().equals(RuntimeVisibleAnnotationsReader.attrName)) {
-            result = new RuntimeVisibleAnnotationsReader(iter);
-            break;
-          }
-        }
-      }
-    } catch (InvalidClassFileException e) {
-      Assertions.UNREACHABLE();
-    }
-    return result;
+    return AnnotationsReader.getReaderForAnnotation(type, iter);
   }
 
   private String computeGenericsSignature() throws InvalidClassFileException {
@@ -353,7 +334,8 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
   }
 
   public Collection<Annotation> getAnnotations(boolean runtimeInvisible) throws InvalidClassFileException {
-    AnnotationsReader r = getAnnotationsReader(runtimeInvisible);
+    AnnotationsReader r = getAnnotationsReader(runtimeInvisible ? AnnotationType.RuntimeInvisibleAnnotations
+        : AnnotationType.RuntimeVisibleAnnotations);
     return Annotation.getAnnotationsFromReader(r, getDeclaringClass().getClassLoader().getReference());
   }
 
@@ -369,6 +351,42 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     return result;
   }
 
+  /**
+   * get annotations on parameters as an array of Collections, where each array
+   * element gives the annotations on the corresponding parameter. Note that the
+   * 'this' parameter for an instance method cannot have annotations.
+   */
+  public Collection<Annotation>[] getParameterAnnotations() {
+    int numAnnotatedParams = isStatic() ? getNumberOfParameters() : getNumberOfParameters() - 1;
+    @SuppressWarnings("unchecked")
+    Collection<Annotation>[] result = new Collection[numAnnotatedParams];
+    for (int i = 0; i < result.length; i++) {
+      result[i] = HashSetFactory.make();
+    }
+    try {
+      ClassLoaderReference reference = getDeclaringClass().getClassLoader().getReference();
+      AnnotationsReader r = getAnnotationsReader(AnnotationType.RuntimeInvisibleParameterAnnotations);
+      Collection<Annotation>[] paramAnnots = Annotation.getParameterAnnotationsFromReader(r, reference);
+      if (paramAnnots != null) {
+        assert paramAnnots.length == result.length : paramAnnots.length + " != " + result.length;
+        for (int i = 0; i < result.length; i++) {
+          result[i].addAll(paramAnnots[i]);
+        }
+      }
+      r = getAnnotationsReader(AnnotationType.RuntimeVisibleParameterAnnotations);
+      paramAnnots = Annotation.getParameterAnnotationsFromReader(r, reference);
+      if (paramAnnots != null) {
+        assert paramAnnots.length == result.length;
+        for (int i = 0; i < result.length; i++) {
+          result[i].addAll(paramAnnots[i]);
+        }
+      }
+    } catch (InvalidClassFileException e) {
+      e.printStackTrace();
+    }
+    return result;
+  }
+  
   private static final IndirectionData NO_INDIRECTIONS = new IndirectionData() {
 
     private final int[] NOTHING = new int[0];

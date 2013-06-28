@@ -172,4 +172,43 @@ public class AnnotationTest extends WalaTestCase {
             annots.toString());
 
   }
+  
+  @Test
+  public void testParamAnnotations1() throws Exception {
+
+    TypeReference typeRef = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lannotations/ParameterAnnotations1");
+
+    checkParameterAnnots(typeRef, "foo(Ljava/lang/String;)V",
+        "[Annotation type <Application,Lannotations/RuntimeVisableAnnotation>]");
+    checkParameterAnnots(
+        typeRef,
+        "bar(Ljava/lang/Integer;)V",
+        "[Annotation type <Application,Lannotations/AnnotationWithParams> {enumParam=EnumElementValue [type=Lannotations/AnnotationEnum;, val=VAL1], strArrParam=ArrayElementValue [vals=[biz, boz]], annotParam=AnnotationElementValue [type=Lannotations/AnnotationWithSingleParam;, elementValues={value=sdfevs}], strParam=sdfsevs, intParam=25, klassParam=Ljava/lang/Integer;}]");
+    checkParameterAnnots(typeRef, "foo2(Ljava/lang/String;Ljava/lang/Integer;)V",
+        "[Annotation type <Application,Lannotations/RuntimeVisableAnnotation>]",
+        "[Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>]");
+    checkParameterAnnots(typeRef, "foo3(Ljava/lang/String;Ljava/lang/Integer;)V",
+        "[Annotation type <Application,Lannotations/RuntimeVisableAnnotation>]",
+        "[Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>]");
+    checkParameterAnnots(typeRef, "foo4(Ljava/lang/String;Ljava/lang/Integer;)V",
+        "[Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>, Annotation type <Application,Lannotations/RuntimeVisableAnnotation>]",
+        "[]");
+
+  }
+
+  protected void checkParameterAnnots(TypeReference typeRef, String selector, String... expected) {
+    MethodReference methodRefUnderTest = MethodReference.findOrCreate(typeRef, Selector.make(selector));
+
+    IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
+    Assert.assertNotNull(methodRefUnderTest.toString() + " not found", methodUnderTest);
+    Assert.assertTrue(methodUnderTest instanceof ShrikeCTMethod);
+    ShrikeCTMethod shrikeCTMethodUnderTest = (ShrikeCTMethod) methodUnderTest;
+
+    Collection<Annotation>[] parameterAnnotations = shrikeCTMethodUnderTest.getParameterAnnotations();
+    Assert.assertEquals(expected.length, parameterAnnotations.length);
+    for (int i = 0; i < expected.length; i++) {
+      Assert.assertEquals(expected[i], parameterAnnotations[i].toString());
+    }
+  }
+
 }
