@@ -60,6 +60,7 @@ import com.ibm.wala.classLoader.BytecodeClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.TypeReference;
@@ -87,13 +88,14 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
 
     private int clinitId = -1;
 
+    private final DexModuleEntry dexModuleEntry;
 //    public IClassLoader loader;
 
     public DexIClass(IClassLoader loader, IClassHierarchy cha,
             final DexModuleEntry dexEntry) {
         super(loader, cha);
+        this.dexModuleEntry = dexEntry;
         classDef = dexEntry.getClassDefItem();
-
 //        this.loader = loader;
 
         // Set modifiers
@@ -329,5 +331,10 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
 	@Override
 	public Collection<Annotation> getAnnotations() {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Module getContainer() {
+		return dexModuleEntry.asModule();
 	}
 }

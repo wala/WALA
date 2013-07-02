@@ -122,4 +122,9 @@ public class DexModuleEntry implements ModuleEntry {
         return false;
     }
 
+	@Override
+	public Module getContainer() {
+		return asModule();
+	}
+
 }
