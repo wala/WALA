@@ -3,6 +3,9 @@
     <feature id="com.ibm.wala-feature">
         <category name="main"/>
     </feature>
+    <feature id="com.ibm.wala-feature.source">
+        <category name="main"/>
+    </feature>
     <feature id="com.ibm.wala.ide-feature">
         <category name="main"/>
     </feature>
