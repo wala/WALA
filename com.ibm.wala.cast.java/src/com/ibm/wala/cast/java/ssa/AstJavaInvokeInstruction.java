@@ -12,7 +12,7 @@ package com.ibm.wala.cast.java.ssa;
 
 import java.util.Collection;
 
-import com.ibm.wala.cast.ir.ssa.FixedParametersLexicalInvokeInstruction;
+import com.ibm.wala.cast.ir.ssa.FixedParametersInvokeInstruction;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.JavaLanguage;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -20,7 +20,7 @@ import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
 
-public class AstJavaInvokeInstruction extends FixedParametersLexicalInvokeInstruction {
+public class AstJavaInvokeInstruction extends FixedParametersInvokeInstruction {
 
   protected AstJavaInvokeInstruction(int results[], int[] params, int exception, CallSiteReference site) {
     super(results, params, exception, site);

@@ -12,17 +12,19 @@ package com.ibm.wala.cast.ir.ssa;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstruction.IVisitor;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 
 /**
- *  This abstract instruction extends the abstract lexical invoke with
+ *  This abstract instruction extends the abstract invoke with
  * functionality to support invocations with a fixed number of
  * arguments---the only case in some languages and a common case even
  * in scripting languages.
  *
+ * 
  * @author Julian Dolby (dolby@us.ibm.com)
  */
-public abstract class FixedParametersLexicalInvokeInstruction
+public abstract class FixedParametersInvokeInstruction
     extends MultiReturnValueInvokeInstruction 
 {
 
@@ -33,12 +35,12 @@ public abstract class FixedParametersLexicalInvokeInstruction
    */
   private final int[] params;
 
-  public FixedParametersLexicalInvokeInstruction(int results[], int[] params, int exception, CallSiteReference site) {
+  public FixedParametersInvokeInstruction(int results[], int[] params, int exception, CallSiteReference site) {
     super(results, exception, site);
     this.params = params;
   }
 
-  public FixedParametersLexicalInvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
+  public FixedParametersInvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
     this(new int[]{result}, params, exception, site);
   }
 
@@ -47,7 +49,7 @@ public abstract class FixedParametersLexicalInvokeInstruction
    * @param i
    * @param params
    */
-  public FixedParametersLexicalInvokeInstruction(int[] params, int exception, CallSiteReference site) {
+  public FixedParametersInvokeInstruction(int[] params, int exception, CallSiteReference site) {
     this(null, params, exception, site);
   }
 
@@ -93,6 +95,26 @@ public abstract class FixedParametersLexicalInvokeInstruction
     } else {
       return params.length;
     }
+  }
+
+  
+  @Override
+  public void visit(IVisitor v) {
+    // TODO Auto-generated method stub
+    assert false;
+    
+  }
+
+  @Override
+  public int getNumberOfUses() {
+    return getNumberOfParameters();
+  }
+
+  @Override
+  public int hashCode() {
+    // TODO Auto-generated method stub
+    assert false;
+    return 0;
   }
 
   @Override
