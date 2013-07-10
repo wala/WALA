@@ -12,8 +12,7 @@ package com.ibm.wala.cast.js.ssa;
 
 import java.util.Collection;
 
-import com.ibm.wala.cast.ir.ssa.AbstractLexicalInvoke;
-import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
+import com.ibm.wala.cast.ir.ssa.MultiReturnValueInvokeInstruction;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -21,7 +20,7 @@ import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 
-public class JavaScriptInvoke extends AbstractLexicalInvoke {
+public class JavaScriptInvoke extends MultiReturnValueInvokeInstruction {
   /**
    * The value numbers of the arguments passed to the call.
    */
@@ -31,13 +30,6 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
 
   public JavaScriptInvoke(int function, int results[], int[] params, int exception, CallSiteReference site) {
     super(results, exception, site);
-    this.function = function;
-    this.params = params;
-  }
-
-  public JavaScriptInvoke(int function, int results[], int[] params, int exception, CallSiteReference site, Access[] lexicalReads,
-      Access[] lexicalWrites) {
-    super(results, exception, site, lexicalReads, lexicalWrites);
     this.function = function;
     this.params = params;
   }
@@ -54,7 +46,6 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     int fn = function;
     int newParams[] = params;
-    Access[] reads = lexicalReads;
 
     if (uses != null) {
       int i = 0;
@@ -65,17 +56,11 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
       for (int j = 0; j < newParams.length; j++)
         newParams[j] = uses[i++];
 
-      if (lexicalReads != null) {
-        reads = new Access[lexicalReads.length];
-        for (int j = 0; j < reads.length; j++)
-          reads[j] = new Access(lexicalReads[j].variableName, lexicalReads[j].variableDefiner, uses[i++]);
-      }
     }
 
     int newLvals[] = new int[results.length];
     System.arraycopy(results, 0, newLvals, 0, results.length);
     int newExp = exception;
-    Access[] writes = lexicalWrites;
 
     if (defs != null) {
       int i = 0;
@@ -87,14 +72,15 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
         newLvals[j] = defs[i++];
       }
 
-      if (lexicalWrites != null) {
-        writes = new Access[lexicalWrites.length];
-        for (int j = 0; j < writes.length; j++)
-          writes[j] = new Access(lexicalWrites[j].variableName, lexicalWrites[j].variableDefiner, defs[i++]);
-      }
     }
 
-    return ((JSInstructionFactory)insts).Invoke(fn, newLvals, newParams, newExp, site, reads, writes);
+    return ((JSInstructionFactory)insts).Invoke(fn, newLvals, newParams, newExp, site);
+  }
+
+  
+  @Override
+  public int getNumberOfUses() {
+    return getNumberOfParameters();
   }
 
   @Override
@@ -130,30 +116,9 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
       s.append(" exception:").append(getValueString(symbolTable, exception));
     }
 
-    if (lexicalReads != null) {
-      s.append(" (reads:");
-      for (int i = 0; i < lexicalReads.length; i++) {
-        s.append(" ").append(lexicalReads[i].variableName).append(":").append(
-            getValueString(symbolTable, lexicalReads[i].valueNumber));
-      }
-      s.append(")");
-    }
-
-    if (lexicalWrites != null) {
-      s.append(" (writes:");
-      for (int i = 0; i < lexicalWrites.length; i++) {
-        s.append(" ").append(lexicalWrites[i].variableName).append(":").append(
-            getValueString(symbolTable, lexicalWrites[i].valueNumber));
-      }
-      s.append(")");
-    }
-
     return s.toString();
   }
 
-  /**
-   * @see com.ibm.domo.ssa.Instruction#visit(Visitor)
-   */
   @Override
   public void visit(IVisitor v) {
     assert v instanceof JSInstructionVisitor;
@@ -169,9 +134,6 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
     }
   }
 
-  /**
-   * @see com.ibm.domo.ssa.Instruction#getUse(int)
-   */
   @Override
   public int getUse(int j) {
     if (j == 0)

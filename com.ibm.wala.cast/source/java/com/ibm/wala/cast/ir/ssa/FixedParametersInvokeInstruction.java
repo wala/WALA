@@ -10,21 +10,22 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.ssa;
 
-import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstruction.IVisitor;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 
 /**
- *  This abstract instruction extends the abstract lexical invoke with
+ *  This abstract instruction extends the abstract invoke with
  * functionality to support invocations with a fixed number of
  * arguments---the only case in some languages and a common case even
  * in scripting languages.
  *
+ * 
  * @author Julian Dolby (dolby@us.ibm.com)
  */
-public abstract class FixedParametersLexicalInvokeInstruction
-    extends AbstractLexicalInvoke 
+public abstract class FixedParametersInvokeInstruction
+    extends MultiReturnValueInvokeInstruction 
 {
 
   /**
@@ -34,12 +35,12 @@ public abstract class FixedParametersLexicalInvokeInstruction
    */
   private final int[] params;
 
-  public FixedParametersLexicalInvokeInstruction(int results[], int[] params, int exception, CallSiteReference site) {
+  public FixedParametersInvokeInstruction(int results[], int[] params, int exception, CallSiteReference site) {
     super(results, exception, site);
     this.params = params;
   }
 
-  public FixedParametersLexicalInvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
+  public FixedParametersInvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
     this(new int[]{result}, params, exception, site);
   }
 
@@ -48,61 +49,43 @@ public abstract class FixedParametersLexicalInvokeInstruction
    * @param i
    * @param params
    */
-  public FixedParametersLexicalInvokeInstruction(int[] params, int exception, CallSiteReference site) {
+  public FixedParametersInvokeInstruction(int[] params, int exception, CallSiteReference site) {
     this(null, params, exception, site);
   }
 
-  protected FixedParametersLexicalInvokeInstruction(int results[], int[] params, int exception, CallSiteReference site, Access[] lexicalReads, Access[] lexicalWrites) {
-    super(results, exception, site, lexicalReads, lexicalWrites);
-    this.params = params;
-  }
-
-  protected abstract SSAInstruction copyInstruction(SSAInstructionFactory insts, int result[], int[] params, int exception, Access[] lexicalReads, Access[] lexicalWrites);
+  protected abstract SSAInstruction copyInstruction(SSAInstructionFactory insts, int result[], int[] params, int exception);
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     int newParams[] = params;
-    Access[] reads = lexicalReads;
 
     if (uses != null) {
       int i = 0;
 
-      newParams = new int[ params.length ];
-      for(int j = 0; j < newParams.length; j++)
-	newParams[j] = uses[i++];
-
-      if (lexicalReads != null) {
-	reads = new Access[ lexicalReads.length ];
-	for(int j = 0; j < reads.length; j++)
-	  reads[j] = new Access(lexicalReads[j].variableName, lexicalReads[j].variableDefiner, uses[i++]);
-      }
+      newParams = new int[params.length];
+      for (int j = 0; j < newParams.length; j++)
+        newParams[j] = uses[i++];
     }
 
     int newLvals[] = null;
     if (getNumberOfReturnValues() > 0) {
-      newLvals = new int[ results.length ];
+      newLvals = new int[results.length];
       System.arraycopy(results, 0, newLvals, 0, results.length);
     }
     int newExp = exception;
-    Access[] writes = lexicalWrites;
-    
+
     if (defs != null) {
       int i = 0;
       if (getNumberOfReturnValues() > 0) {
-	newLvals[0] = defs[i++];
+        newLvals[0] = defs[i++];
       }
       newExp = defs[i++];
-      for(int j = 1; j < getNumberOfReturnValues(); j++) {
-	newLvals[j] = defs[i++];
-      }
-      if (lexicalWrites != null) {
-	writes = new Access[ lexicalWrites.length ];
-	for(int j = 0; j < writes.length; j++)
-	  writes[j] = new Access(lexicalWrites[j].variableName, lexicalWrites[j].variableDefiner, defs[i++]);
+      for (int j = 1; j < getNumberOfReturnValues(); j++) {
+        newLvals[j] = defs[i++];
       }
     }
 
-    return copyInstruction(insts, newLvals, newParams, newExp, reads, writes);
+    return copyInstruction(insts, newLvals, newParams, newExp);
   }
 
   @Override
@@ -114,9 +97,26 @@ public abstract class FixedParametersLexicalInvokeInstruction
     }
   }
 
-  /**
-   * @see com.ibm.wala.ssa.Instruction#getUse(int)
-   */
+  
+  @Override
+  public void visit(IVisitor v) {
+    // TODO Auto-generated method stub
+    assert false;
+    
+  }
+
+  @Override
+  public int getNumberOfUses() {
+    return getNumberOfParameters();
+  }
+
+  @Override
+  public int hashCode() {
+    // TODO Auto-generated method stub
+    assert false;
+    return 0;
+  }
+
   @Override
   public int getUse(int j) {
     if (j < getNumberOfParameters())
