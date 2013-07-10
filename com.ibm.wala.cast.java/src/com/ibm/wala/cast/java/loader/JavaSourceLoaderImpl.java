@@ -63,8 +63,8 @@ import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeCT.AnnotationsReader.ElementValue;
 import com.ibm.wala.shrikeCT.AnnotationsReader.ConstantElementValue;
+import com.ibm.wala.shrikeCT.AnnotationsReader.ElementValue;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.ssa.SymbolTable;
@@ -551,19 +551,9 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     }
 
     @Override
-    public AstJavaInvokeInstruction JavaInvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
-      return new AstJavaInvokeInstruction(result, params, exception, site);
-    }
-
-    @Override
-    public AstJavaInvokeInstruction JavaInvokeInstruction(int[] params, int exception, CallSiteReference site) {
-      return new AstJavaInvokeInstruction(params, exception, site);
-    }
-
-    @Override
-    public AstJavaInvokeInstruction JavaInvokeInstruction(int[] results, int[] params, int exception, CallSiteReference site,
-        Access[] lexicalReads, Access[] lexicalWrites) {
-      return new AstJavaInvokeInstruction(results, params, exception, site, lexicalReads, lexicalWrites);
+    public AstJavaInvokeInstruction JavaInvokeInstruction(int result[], int[] params, int exception, CallSiteReference site) {
+      return result == null ? new AstJavaInvokeInstruction(params, exception, site) : new AstJavaInvokeInstruction(result[0],
+          params, exception, site);
     }
 
     @Override
