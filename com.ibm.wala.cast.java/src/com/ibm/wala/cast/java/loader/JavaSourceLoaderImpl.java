@@ -552,7 +552,8 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 
     @Override
     public AstJavaInvokeInstruction JavaInvokeInstruction(int result[], int[] params, int exception, CallSiteReference site) {
-      return new AstJavaInvokeInstruction(result[0], params, exception, site);
+      return result == null ? new AstJavaInvokeInstruction(params, exception, site) : new AstJavaInvokeInstruction(result[0],
+          params, exception, site);
     }
 
     @Override
