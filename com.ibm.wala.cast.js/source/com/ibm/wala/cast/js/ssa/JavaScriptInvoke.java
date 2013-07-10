@@ -77,6 +77,12 @@ public class JavaScriptInvoke extends MultiReturnValueInvokeInstruction {
     return ((JSInstructionFactory)insts).Invoke(fn, newLvals, newParams, newExp, site);
   }
 
+  
+  @Override
+  public int getNumberOfUses() {
+    return getNumberOfParameters();
+  }
+
   @Override
   public String toString(SymbolTable symbolTable) {
     StringBuffer s = new StringBuffer();
