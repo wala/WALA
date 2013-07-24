@@ -18,6 +18,8 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
+import com.ibm.wala.cast.js.callgraph.fieldbased.FieldBasedCallGraphBuilder;
+import com.ibm.wala.cast.js.callgraph.fieldbased.PessimisticCallGraphBuilder;
 import com.ibm.wala.cast.js.client.impl.ZeroCFABuilderFactory;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
@@ -31,11 +33,14 @@ import com.ibm.wala.ide.util.JavaScriptEclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.NullProgressMonitor;
 
 public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysisEngine<IJavaScriptProject> {
 
@@ -91,4 +96,9 @@ public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysi
 	    return new ZeroCFABuilderFactory().make((JSAnalysisOptions)options, cache, cha, scope, false);
   }
 
+  public CallGraph getFieldBasedCallGraph() throws CancelException {
+    Iterable<Entrypoint> roots = JSCallGraphUtil.makeScriptRoots(getClassHierarchy());
+    FieldBasedCallGraphBuilder builder = new PessimisticCallGraphBuilder(getClassHierarchy(), getDefaultOptions(roots), makeDefaultCache());
+    return builder.buildCallGraph(new NullProgressMonitor());
+  }
 }

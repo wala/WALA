@@ -62,4 +62,13 @@ abstract public class EclipseProjectAnalysisEngine<P> extends AbstractAnalysisEn
     return ePath;
   }
 
+  @Override
+  public IClassHierarchy getClassHierarchy() {
+    if (super.getClassHierarchy() == null) {
+      setClassHierarchy( buildClassHierarchy() );
+    }
+
+    return super.getClassHierarchy();
+  }
+
 }

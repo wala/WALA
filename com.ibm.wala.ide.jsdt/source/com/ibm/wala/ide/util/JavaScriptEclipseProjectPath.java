@@ -80,9 +80,8 @@ public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePat
 	}
 
 	@Override
-	protected void resolveProjectClasspathEntries(IJavaScriptProject project,
-			boolean includeSource) {
-	    try {
+	protected void resolveProjectClasspathEntries(IJavaScriptProject project, boolean includeSource) {
+	  try {
 			resolveClasspathEntries(project, Arrays.asList(project.getRawIncludepath()), Loader.EXTENSION, includeSource, true);
 		} catch (JavaScriptModelException e) {
 			// TODO Auto-generated catch block
