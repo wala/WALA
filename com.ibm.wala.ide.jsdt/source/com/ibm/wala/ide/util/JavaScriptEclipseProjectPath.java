@@ -11,7 +11,12 @@
 package com.ibm.wala.ide.util;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -20,8 +25,18 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
+import com.ibm.wala.cast.js.html.MappedSourceModule;
+import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.loader.CAstAbstractLoader;
+import com.ibm.wala.classLoader.FileModule;
+import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.classLoader.SourceModule;
+import com.ibm.wala.classLoader.SourceURLModule;
+import com.ibm.wala.ide.classloader.EclipseSourceDirectoryTreeModule;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.util.collections.MapUtil;
 
 public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePathEntry, IJavaScriptProject> {
 

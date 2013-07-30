@@ -15,5 +15,6 @@ Require-Bundle: com.ibm.wala.cast.js.rhino;bundle-version="1.0.0",
  org.junit;bundle-version="4.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: com.ibm.wala.cast.js.rhino.test,
+Export-Package: com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test,
+ com.ibm.wala.cast.js.rhino.test,
  com.ibm.wala.cast.js.test

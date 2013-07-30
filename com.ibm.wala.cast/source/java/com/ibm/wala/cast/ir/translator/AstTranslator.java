@@ -69,6 +69,7 @@ import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.ShiftInstruction;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
+import com.ibm.wala.ssa.SSAGotoInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAMonitorInstruction;
@@ -603,7 +604,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       return "PreBB" + number + ":" + firstIndex + ".." + lastIndex;
     }
 
-    List<SSAInstruction> instructions() {
+    private List<SSAInstruction> instructions() {
       return instructions;
     }
 
@@ -1062,6 +1063,9 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       if (currentBlock.instructions().size() == 0) {
         currentBlock.setFirstIndex(inst);
       } else {
+        for(SSAInstruction priorInst : currentBlock.instructions()) {
+          assert ! (priorInst instanceof SSAGotoInstruction);
+        }
         assert !(n instanceof SSAGetCaughtExceptionInstruction);
       }
 
@@ -1114,12 +1118,33 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       }
     }
     
-    AstCFG(CAstEntity n, IncipientCFG icfg, SymbolTable symtab) {
+    private boolean checkBlockBoundaries(IncipientCFG icfg) {
+      MutableIntSet boundaries = IntSetUtil.make();
+      for(PreBasicBlock b : icfg) {
+        if (b.getFirstInstructionIndex() >= 0) {
+          if (boundaries.contains(b.getFirstInstructionIndex()))  {
+            return false;
+          }
+          boundaries.add(b.getFirstInstructionIndex());
+        }
+        if (b.getLastInstructionIndex() >= 0 && b.getLastInstructionIndex() != b.getFirstInstructionIndex()) {
+          if (boundaries.contains(b.getLastInstructionIndex())) {
+            return false;            
+          }
+          boundaries.add(b.getLastInstructionIndex());
+        }
+      }
+      return true;
+    }
+    
+    AstCFG(CAstEntity n, IncipientCFG icfg, SymbolTable symtab, SSAInstructionFactory insts) {
       super(null);
       
       Set<PreBasicBlock> liveBlocks = DFS.getReachableNodes(icfg, Collections.singleton(icfg.entryBlock));
       List<PreBasicBlock> blocks = icfg.blocks;
       boolean hasDeadBlocks = blocks.size() > liveBlocks.size();
+      
+      assert checkBlockBoundaries(icfg);
       
       this.symtab = symtab;
       functionName = n.getName();
@@ -1149,11 +1174,15 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         });
       }
       
+      int instruction = 0;
       for (int i = 0, blockNumber = 0; i < blocks.size(); i++) {
-        PreBasicBlock pb = blocks.get(i);
         PreBasicBlock block = blocks.get(i);
         block.setGraphNodeId(-1);
-        if (liveBlocks.contains(pb)) {
+        if (liveBlocks.contains(block)) {
+          if (block.getFirstInstructionIndex() >= 0) {
+            block.setFirstIndex(instruction);
+            block.setLastIndex((instruction += block.instructions().size()) - 1);
+          }
           instructionToBlockMap[blockNumber] = block.getLastInstructionIndex();
 
           this.addNode(block);
@@ -1209,7 +1238,14 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         if (liveBlocks.contains(blocks.get(i))) {
           List<SSAInstruction> bi = blocks.get(i).instructions();
           for (int j = 0; j < bi.size(); j++) {
-            instructions[x++] = bi.get(j);
+            SSAInstruction inst = bi.get(j);
+            if (inst instanceof SSAGetCaughtExceptionInstruction) {
+              SSAGetCaughtExceptionInstruction ci = (SSAGetCaughtExceptionInstruction) inst;
+              if (ci.getBasicBlockNumber() != blocks.get(i).getNumber()) {
+                inst = insts.GetCaughtExceptionInstruction(blocks.get(i).getNumber(), ci.getException());
+              }
+            }
+            instructions[x++] = inst;
           }
         }
       }
@@ -3107,7 +3143,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     // create code entry stuff for this entity
     SymbolTable symtab = ((AbstractScope) functionContext.currentScope()).getUnderlyingSymtab();
     Map<IBasicBlock,TypeReference[]> catchTypes = functionContext.getCatchTypes();
-    AstCFG cfg = new AstCFG(n, functionContext.cfg(), symtab);
+    AstCFG cfg = new AstCFG(n, functionContext.cfg(), symtab, insts);
     Position[] line = functionContext.cfg().getLinePositionMap();
     boolean katch = functionContext.cfg().hasCatchBlock();
     boolean monitor = functionContext.cfg().hasMonitorOp();
@@ -3526,13 +3562,13 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     WalkContext context = (WalkContext) c;
     if (!context.cfg().isDeadBlock(context.cfg().getCurrentBlock())) {
       context.cfg().addPreNode(n, context.getUnwindState());
-      context.cfg().addInstruction(insts.GotoInstruction());
-      context.cfg().newBlock(false);
+           context.cfg().addPreEdge(n, context.getControlFlow().getTarget(n, null), false);
+      context.cfg().addInstruction(insts.GotoInstruction());            
       if (context.getControlFlow().getTarget(n, null) == null) {
         assert context.getControlFlow().getTarget(n, null) != null : context.getControlFlow() + " does not map " + n + " ("
             + context.getSourceMap().getPosition(n) + ")";
       }
-      context.cfg().addPreEdge(n, context.getControlFlow().getTarget(n, null), false);
+      context.cfg().newBlock(false);
     }
   }
 

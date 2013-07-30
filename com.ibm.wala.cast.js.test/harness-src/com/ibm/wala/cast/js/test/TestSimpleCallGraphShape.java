@@ -671,6 +671,11 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
       JSCallGraphBuilderUtil.makeScriptCG("tests", "dead_catch.js");
     }
 
+    @Test
+    public void testUglyLoopCrash() throws IllegalArgumentException, IOException, CancelException, WalaException {
+      JSCallGraphBuilderUtil.makeScriptCG("tests", "ssa-crash.js");
+    }
+
     @Ignore("need a bug fix")
     @Test
     public void testTryFinallyCrash() throws IllegalArgumentException, IOException, CancelException, WalaException {      

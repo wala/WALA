@@ -294,7 +294,7 @@ public class RhinoToAstTranslator {
   }
 
   private CAstNode handleNew(WalkContext context, String globalName, CAstNode arguments[]) {
-    return handleNew(context, readName(context, globalName), arguments);
+    return handleNew(context, readName(context, null, globalName), arguments);
   }
 
   private CAstNode handleNew(WalkContext context, CAstNode value, CAstNode arguments[]) {
@@ -557,9 +557,13 @@ public class RhinoToAstTranslator {
     return n;
   }
   
-  private CAstNode readName(WalkContext context, String name) {
+  private CAstNode readName(WalkContext context, AstNode node, String name) {
     CAstNode cn = makeVarRef(name);
-    context.cfg().map(cn, cn);
+    if (node != null) {
+      context.cfg().map(node, cn);      
+    } else {
+      context.cfg().map(cn, cn);
+    }
     CAstNode target = context.getCatchTarget();
     if (target != null) {
       context.cfg().add(cn, target, JavaScriptTypes.ReferenceError);
@@ -729,14 +733,16 @@ public class RhinoToAstTranslator {
 	public CAstNode visitContinueStatement(ContinueStatement node,
 			WalkContext arg) {
 		CAstNode continueStmt;
+		Node target;
 		if (node.getLabel() != null) {
 			continueStmt = Ast.makeNode(CAstNode.GOTO, Ast.makeConstant(node.getLabel().getIdentifier()));
+			target = arg.getContinueFor(node.getLabel().getIdentifier());
 		} else {
 			continueStmt = Ast.makeNode(CAstNode.GOTO);
+			target = arg.getContinueFor(null);
 		}
+		
 		arg.cfg().map(node, continueStmt);
-
-		Node target = node.getTarget();
 		arg.cfg().add(node, target, null);
 		
 		return continueStmt;
@@ -805,15 +811,15 @@ public class RhinoToAstTranslator {
 	}
 
 	@Override
-	public CAstNode visitForInLoop(ForInLoop node, WalkContext arg) {
-		String tempName = "for in loop temp";
-		
+	public CAstNode visitForInLoop(ForInLoop node, WalkContext arg) {		
 		// set up 		
-		AstNode object = node.getIteratedObject();
-		CAstNode loopTemp =
-			Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(tempName)),
-				  visit(object, arg));
-
+		CAstNode object = visit(node.getIteratedObject(), arg);
+    String tempName = "for in loop temp";   
+		CAstNode[] loopHeader = new CAstNode[]{
+		    Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(tempName))),
+        Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)), object)
+		};
+		
 		CAstNode initNode;
 		AstNode var = node.getIterator();
 		assert var instanceof Name || var instanceof VariableDeclaration || var instanceof LetNode : var.getClass()  + " " + var;
@@ -844,7 +850,7 @@ public class RhinoToAstTranslator {
 		  } else {
 		    arg.addNameDecl(
 		        Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(init.getTarget().getString())),
-		            readName(arg, "$$undefined")));
+		            readName(arg, null, "$$undefined")));
 
 		    initNode = 
 		      Ast.makeNode(CAstNode.ASSIGN, 
@@ -858,15 +864,21 @@ public class RhinoToAstTranslator {
 		CAstNode breakLabel = visit(breakStmt, arg);
 		AstNode contStmt = makeEmptyLabelStmt("contLabel");
 		CAstNode contLabel = visit(contStmt, arg);
+		// TODO: Figure out why this is needed to make the correlation extraction tests pass
+		// TODO: remove this silly label
+    AstNode garbageStmt = makeEmptyLabelStmt("garbageLabel");
+    CAstNode garbageLabel = visit(garbageStmt, arg);
 		WalkContext loopContext = makeLoopContext(node, arg, breakStmt, contStmt);
 		CAstNode body = Ast.makeNode(CAstNode.BLOCK_STMT,
 				initNode,
 				visit(node.getBody(), loopContext),
-				contLabel);
+				garbageLabel);
 		
 		CAstNode loop = Ast.makeNode(CAstNode.LOCAL_SCOPE,
 				Ast.makeNode(CAstNode.BLOCK_STMT,
-						loopTemp,
+						loopHeader[0],
+						loopHeader[1],
+						contLabel,
 						Ast.makeNode(CAstNode.LOOP,
 								Ast.makeNode(CAstNode.EACH_ELEMENT_HAS_NEXT, 
 										Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName))),
@@ -885,9 +897,10 @@ public class RhinoToAstTranslator {
 
 		WalkContext loopContext = makeLoopContext(node, arg, breakStmt, contStmt);
 
-		CAstNode loop = Ast.makeNode(CAstNode.BLOCK_STMT, 
+		CAstNode loop;
+		CAstNode top = Ast.makeNode(CAstNode.BLOCK_STMT, 
 		   visit(node.getInitializer(), arg),
-		   Ast.makeNode(CAstNode.LOOP, 
+		   loop = Ast.makeNode(CAstNode.LOOP, 
 				   visit(node.getCondition(), arg), 
 				   Ast.makeNode(CAstNode.BLOCK_STMT,
 				     visit(node.getBody(), loopContext),
@@ -895,7 +908,7 @@ public class RhinoToAstTranslator {
 				     visit(node.getIncrement(), arg))),
 		   breakLabel);
 		arg.cfg().map(node, loop);
-		return loop;
+		return top;
 	}
 
 	private CAstNode[] gatherCallArguments(Node call, WalkContext context) {
@@ -912,7 +925,7 @@ public class RhinoToAstTranslator {
 	public CAstNode visitFunctionCall(FunctionCall n, WalkContext context) {
 		if (!isPrimitiveCall(context, n)) {
 			AstNode callee = n.getTarget();
-			int thisBaseVarNum = ++baseVarNum;
+			int thisBaseVarNum = ++tempVarNum;
 			WalkContext child = new MemberDestructuringContext(context, callee, thisBaseVarNum);
 			CAstNode fun = visit(callee, child);
 
@@ -1107,7 +1120,7 @@ public class RhinoToAstTranslator {
 
 	@Override
 	public CAstNode visitName(Name n, WalkContext context) {
-	      return readName(context, n.getString());
+	      return readName(context, n, n.getString());
 	}
 
 	@Override
@@ -1345,7 +1358,7 @@ public class RhinoToAstTranslator {
 					noteSourcePosition(
 							arg,
 							Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(init.getTarget().getString())),
-									readName(arg, "$$undefined")),
+									readName(arg, null, "$$undefined")),
 							node));
 				
 			if (init.getInitializer() == null) {
@@ -1380,11 +1393,10 @@ public class RhinoToAstTranslator {
 		WalkContext loopContext = makeLoopContext(node, arg, breakStmt, contStmt);
 	
 		CAstNode loop = Ast.makeNode(CAstNode.BLOCK_STMT, 
+		   contLabel,
 		   Ast.makeNode(CAstNode.LOOP, 
 				   visit(node.getCondition(), arg), 
-				   Ast.makeNode(CAstNode.BLOCK_STMT,
-				     visit(node.getBody(), loopContext),
-				     contLabel)),
+				   visit(node.getBody(), loopContext)),
 		   breakLabel);
 		
 		arg.cfg().map(node, loop);
@@ -2337,7 +2349,7 @@ private CAstNode[] walkChildren(final Node n, WalkContext context) {
 
   final private Reader sourceReader;
 
-  private int baseVarNum = 0;
+  private int tempVarNum = 0;
 
   private final DoLoopTranslator doLoopTranslator;
   

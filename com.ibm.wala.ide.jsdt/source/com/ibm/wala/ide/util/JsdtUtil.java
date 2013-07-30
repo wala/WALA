@@ -72,7 +72,7 @@ public class JsdtUtil {
     List<Module> modules = s.getModules(JavaScriptTypes.jsLoader);
     Set<ModuleEntry> mes = HashSetFactory.make();
     for(Module m : modules) {
-      for(Iterator<ModuleEntry> mm = m.getEntries(); mm.hasNext(); ) {
+      for(Iterator<? extends ModuleEntry> mm = m.getEntries(); mm.hasNext(); ) {
         mes.add(mm.next());
       }
     }

@@ -36,7 +36,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
 
-public class AbstractJSProjectScopeTest {
+public abstract class AbstractJSProjectScopeTest {
 
   protected final ZippedProjectData project;
 
@@ -55,10 +55,14 @@ public class AbstractJSProjectScopeTest {
   public void testProjectScope() throws IOException, CoreException {
     IJavaScriptProject p = JavaScriptHeadlessUtil.getJavaScriptProjectFromWorkspace(project.projectName);
     JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
-    AnalysisScope s = JavaScriptEclipseProjectPath.make(p).toAnalysisScope(new CAstAnalysisScope(JSCallGraphUtil.makeLoaders(), Collections.singleton(JavaScriptLoader.JS)));
+    AnalysisScope s = makeProjectPath(p).toAnalysisScope(new CAstAnalysisScope(JSCallGraphUtil.makeLoaders(), Collections.singleton(JavaScriptLoader.JS)));
     System.err.println(s);
     Assert.assertTrue("cannot make scope", s != null);
     Assert.assertFalse("cannot find files", s.getModules(JavaScriptTypes.jsLoader).isEmpty());
+  }
+
+  protected JavaScriptEclipseProjectPath makeProjectPath(IJavaScriptProject p) throws IOException, CoreException {
+    return JavaScriptEclipseProjectPath.make(p);
   }
 
   @Test
@@ -77,7 +81,7 @@ public class AbstractJSProjectScopeTest {
   @Test
   public void testEngine() throws IOException, CoreException, IllegalArgumentException, CancelException {
     IJavaScriptProject p = JavaScriptHeadlessUtil.getJavaScriptProjectFromWorkspace(project.projectName);
-    EclipseJavaScriptAnalysisEngine e = new EclipseJavaScriptAnalysisEngine(p);
+    EclipseJavaScriptAnalysisEngine e = makeAnalysisEngine(p);
     JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
     e.buildAnalysisScope();
     IClassHierarchy cha = e.getClassHierarchy();
@@ -85,16 +89,8 @@ public class AbstractJSProjectScopeTest {
     Assert.assertTrue(cha != null);
   }
 
-  @Test
-  public void testFieldBasedCG() throws IOException, CoreException, IllegalArgumentException, CancelException {
-    IJavaScriptProject p = JavaScriptHeadlessUtil.getJavaScriptProjectFromWorkspace(project.projectName);
-    EclipseJavaScriptAnalysisEngine e = new EclipseJavaScriptAnalysisEngine(p);
-    JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
-    e.buildAnalysisScope();
-    CallGraph CG = e.getFieldBasedCallGraph();
-    System.err.println(CG);
-    Assert.assertTrue(CG.getNumberOfNodes() > 0);
-    Assert.assertTrue(CG != null);
+  protected EclipseJavaScriptAnalysisEngine makeAnalysisEngine(IJavaScriptProject p) throws IOException, CoreException {
+    return new EclipseJavaScriptAnalysisEngine(p);
   }
 
 }

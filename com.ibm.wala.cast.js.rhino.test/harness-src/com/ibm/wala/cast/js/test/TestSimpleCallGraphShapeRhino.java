@@ -74,7 +74,12 @@ public class TestSimpleCallGraphShapeRhino extends TestSimpleCallGraphShape {
   public void testNonLoopBreakLabel() throws IllegalArgumentException, IOException, CancelException, WalaException {
 	  JSCallGraphBuilderUtil.makeScriptCG("tests", "non_loop_break.js");
   }
-  
+
+  @Test
+  public void testForInName() throws IllegalArgumentException, IOException, CancelException, WalaException {
+    JSCallGraphBuilderUtil.makeScriptCG("tests", "for_in_name.js");
+  }
+
   @Test(expected = WalaException.class)
   public void testParseError() throws IllegalArgumentException, IOException, CancelException, WalaException {
     PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "portal-example-simple.html");
