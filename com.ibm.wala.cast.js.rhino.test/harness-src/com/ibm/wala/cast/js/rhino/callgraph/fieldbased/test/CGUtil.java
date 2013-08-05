@@ -84,7 +84,7 @@ public class CGUtil {
 		}
 		
 		try {
-			return builder.buildCallGraph(new NullProgressMonitor());
+			return builder.buildCallGraph(roots, new NullProgressMonitor());
 		} catch (CancelException e) {
 			return null;
 		}

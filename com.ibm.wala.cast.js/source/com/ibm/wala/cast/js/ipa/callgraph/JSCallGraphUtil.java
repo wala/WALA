@@ -117,7 +117,7 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     return ClassHierarchy.make(scope, loaders, JavaScriptLoader.JS);
   }
 
-  public static Iterable<Entrypoint> makeScriptRoots(IClassHierarchy cha) {
+  public static JavaScriptEntryPoints makeScriptRoots(IClassHierarchy cha) {
     return new JavaScriptEntryPoints(cha, cha.getLoader(JavaScriptTypes.jsLoader));
   }
 

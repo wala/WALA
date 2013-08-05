@@ -46,9 +46,8 @@ public class PessimisticCallGraphBuilder extends FieldBasedCallGraphBuilder {
 
 	@Override
 	public FlowGraph buildFlowGraph(IProgressMonitor monitor) {
-		FlowGraphBuilder builder = new FlowGraphBuilder(cha, cache);
-		FlowGraph flowgraph = builder.buildFlowGraph();
-		resolveLocalCalls(flowgraph);
+	  FlowGraph flowgraph = flowGraphFactory();
+	  resolveLocalCalls(flowgraph);
 		return flowgraph;
 	}
 

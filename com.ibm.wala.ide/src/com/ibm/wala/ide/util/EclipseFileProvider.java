@@ -198,11 +198,11 @@ public class EclipseFileProvider extends FileProvider {
     if (p == null) {
       return getFileFromClassLoader(fileName, loader); 
     } else {
-       File f = getFileFromPlugin(p, fileName);
-       if (f == null) {
-         f = getFileFromClassLoader(fileName, loader); 
-       }
-       return f;
+        try {
+          return getFileFromPlugin(p, fileName);
+        } catch (IOException e) {
+          return getFileFromClassLoader(fileName, loader); 
+        }
     }
   }
   

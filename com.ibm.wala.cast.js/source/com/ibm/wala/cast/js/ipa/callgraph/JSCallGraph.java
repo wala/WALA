@@ -106,5 +106,4 @@ public class JSCallGraph extends AstCallGraph {
     }
   }
   
-  
 }

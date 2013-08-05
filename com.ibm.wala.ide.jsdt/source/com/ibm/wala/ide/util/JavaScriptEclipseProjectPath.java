@@ -10,13 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.ide.util;
 
+import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -25,20 +22,27 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 
-import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
-import com.ibm.wala.cast.js.html.MappedSourceModule;
-import com.ibm.wala.cast.js.html.WebUtil;
+import com.ibm.wala.cast.js.JavaScriptPlugin;
+import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
-import com.ibm.wala.cast.loader.CAstAbstractLoader;
-import com.ibm.wala.classLoader.FileModule;
 import com.ibm.wala.classLoader.Module;
-import com.ibm.wala.classLoader.SourceModule;
-import com.ibm.wala.classLoader.SourceURLModule;
-import com.ibm.wala.ide.classloader.EclipseSourceDirectoryTreeModule;
+import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.MapUtil;
+import com.ibm.wala.util.io.FileProvider;
 
 public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePathEntry, IJavaScriptProject> {
+
+  protected File getProlgueFile(String file) {
+    try {
+      FileProvider fileProvider = new EclipseFileProvider(JavaScriptPlugin.getDefault());
+      JavaScriptLoader.addBootstrapFile(file);
+      return fileProvider.getFile("dat/" + file, getClass().getClassLoader());
+    } catch (IOException e) {
+      assert false : "cannot find " + file;
+      return null;
+    }
+  }
 
 	public enum JSLoader implements ILoader {
 		JAVASCRIPT(JavaScriptTypes.jsLoader);
@@ -58,6 +62,10 @@ public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePat
 	protected JavaScriptEclipseProjectPath(IJavaScriptProject p) throws IOException,
 			CoreException {
 		super(p.getProject(), AnalysisScopeType.SOURCE_FOR_PROJ_AND_LINKED_PROJS);
+		
+    List<Module> s = MapUtil.findOrCreateList(modules, JSLoader.JAVASCRIPT);
+    File preamble = getProlgueFile("prologue.js");
+    s.add(new SourceFileModule(preamble, "prologue.js", null));
 	}
 
 	public static JavaScriptEclipseProjectPath make(IJavaScriptProject p) throws IOException, CoreException {

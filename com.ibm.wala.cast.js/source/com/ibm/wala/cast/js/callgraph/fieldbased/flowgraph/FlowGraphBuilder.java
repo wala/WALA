@@ -79,33 +79,42 @@ public class FlowGraphBuilder {
 		
 		addPrimitives(flowgraph);
 		
-		for(IClass klass : cha) {
-			for(IMethod method : klass.getDeclaredMethods()) {
-				if(method.getDescriptor().equals(AstMethodReference.fnDesc)) {
-					IR ir = cache.getIR(method);
-					FlowGraphSSAVisitor visitor = new FlowGraphSSAVisitor(ir, flowgraph);
-
-					// first visit normal instructions
-					SSAInstruction[] normalInstructions = ir.getInstructions();
-					for(int i=0;i<normalInstructions.length;++i)
-						if(normalInstructions[i] != null) {
-							visitor.instructionIndex  = i;
-							normalInstructions[i].visit(visitor);
-						}
-					
-					// now visit phis and catches
-					visitor.instructionIndex = -1;
-					for(Iterator<? extends SSAInstruction> iter=ir.iteratePhis();iter.hasNext();)
-						iter.next().visit(visitor);
-					
-					for(Iterator<SSAInstruction> iter=ir.iterateCatchInstructions();iter.hasNext();)
-						iter.next().visit(visitor);
-				}
-			}
-		}
+		visitProgram(flowgraph);
 					
 		return flowgraph;
 	}
+
+  protected void visitProgram(FlowGraph flowgraph) {
+    for(IClass klass : cha) {
+			for(IMethod method : klass.getDeclaredMethods()) {
+				if(method.getDescriptor().equals(AstMethodReference.fnDesc))
+          visitFunction(flowgraph, method);
+			}
+		}
+  }
+
+  protected void visitFunction(FlowGraph flowgraph, IMethod method) {
+    {
+    	IR ir = cache.getIR(method);
+    	FlowGraphSSAVisitor visitor = new FlowGraphSSAVisitor(ir, flowgraph);
+
+    	// first visit normal instructions
+    	SSAInstruction[] normalInstructions = ir.getInstructions();
+    	for(int i=0;i<normalInstructions.length;++i)
+    		if(normalInstructions[i] != null) {
+    			visitor.instructionIndex  = i;
+    			normalInstructions[i].visit(visitor);
+    		}
+    	
+    	// now visit phis and catches
+    	visitor.instructionIndex = -1;
+    	for(Iterator<? extends SSAInstruction> iter=ir.iteratePhis();iter.hasNext();)
+    		iter.next().visit(visitor);
+    	
+    	for(Iterator<SSAInstruction> iter=ir.iterateCatchInstructions();iter.hasNext();)
+    		iter.next().visit(visitor);
+    }
+  }
 	
 	// primitive functions that are treated specially
 	private static String[] primitiveFunctions = { "Object", "Function", "Array", "String", "Number", "RegExp" };

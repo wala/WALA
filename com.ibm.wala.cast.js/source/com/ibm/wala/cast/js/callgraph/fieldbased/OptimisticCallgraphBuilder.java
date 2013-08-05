@@ -53,8 +53,7 @@ public class OptimisticCallgraphBuilder extends FieldBasedCallGraphBuilder {
 
 	@Override
 	public FlowGraph buildFlowGraph(IProgressMonitor monitor) throws CancelException {
-		FlowGraphBuilder builder = new FlowGraphBuilder(cha, cache);
-		FlowGraph flowgraph = builder.buildFlowGraph();
+	   FlowGraph flowgraph = flowGraphFactory();
 		
 		// keep track of which call edges we already know about
 		Set<Pair<CallVertex, FuncVertex>> knownEdges = HashSetFactory.make();

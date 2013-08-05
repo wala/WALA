@@ -1092,6 +1092,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     private final int[] instructionToBlockMap;
 
+    private final int[] pcMap;
+    
     private final String functionName;
 
     private final SymbolTable symtab;
@@ -1149,7 +1151,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       this.symtab = symtab;
       functionName = n.getName();
       instructionToBlockMap = new int[liveBlocks.size()];
-
+      pcMap = hasDeadBlocks? new int[ icfg.currentInstruction ]: null;
+      
       final Map<PreBasicBlock, Collection<PreBasicBlock>> normalEdges = 
         hasDeadBlocks? HashMapFactory.<PreBasicBlock,Collection<PreBasicBlock>>make() : null;
       final Map<PreBasicBlock, Collection<PreBasicBlock>> exceptionalEdges = 
@@ -1179,6 +1182,14 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         PreBasicBlock block = blocks.get(i);
         block.setGraphNodeId(-1);
         if (liveBlocks.contains(block)) {
+          if (hasDeadBlocks) {
+            int offset = 0;
+            for(int oldPC = block.getFirstInstructionIndex(); 
+                offset < block.instructions().size();
+                oldPC++, offset++) {
+              pcMap[instruction + offset] = oldPC;
+            }
+          }
           if (block.getFirstInstructionIndex() >= 0) {
             block.setFirstIndex(instruction);
             block.setLastIndex((instruction += block.instructions().size()) - 1);
@@ -1277,12 +1288,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     @Override
     public int getProgramCounter(int index) {
-      return index;
+      return pcMap == null? index: pcMap[index];
     }
 
     @Override
     public String toString() {
-      SSAInstruction[] insts = (SSAInstruction[]) getInstructions();
+      SSAInstruction[] insts = getInstructions();
       StringBuffer s = new StringBuffer("CAst CFG of " + functionName);
       int params[] = symtab.getParameterValueNumbers();
       for (int i = 0; i < params.length; i++)
@@ -1290,7 +1301,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       s.append("\n");
 
       for (int i = 0; i < getNumberOfNodes(); i++) {
-        PreBasicBlock bb = (PreBasicBlock) getNode(i);
+        PreBasicBlock bb = getNode(i);
         s.append(bb).append("\n");
 
         for (Iterator ss = getSuccNodes(bb); ss.hasNext();)
@@ -1843,12 +1854,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
       @Override
       public boolean isLexicallyScoped(Symbol s) {
-        return ((AbstractScope) getEntityScope()).isLexicallyScoped(s);
+        return getEntityScope().isLexicallyScoped(s);
       }
 
       @Override
       public CAstEntity getEntity() {
-        return ((AbstractScope) getEntityScope()).getEntity();
+        return getEntityScope().getEntity();
       }
 
       @Override
