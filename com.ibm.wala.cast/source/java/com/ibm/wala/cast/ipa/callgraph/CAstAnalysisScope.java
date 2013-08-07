@@ -42,13 +42,6 @@ public class CAstAnalysisScope extends AnalysisScope {
     }
   }
 
-  public CAstAnalysisScope(URL[] sources, SingleClassLoaderFactory loaders, Collection<Language> languages) throws IOException {
-    this(loaders, languages);
-    for (int i = 0; i < sources.length; i++) {
-      addToScope(theLoader, new SourceURLModule(sources[i]));
-    }
-  }
-
   public CAstAnalysisScope(SourceModule[] sources, SingleClassLoaderFactory loaders, Collection<Language> languages)
       throws IOException {
     this(loaders, languages);

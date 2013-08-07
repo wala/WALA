@@ -68,11 +68,6 @@ public class CAstCallGraphUtil {
     return result;
   }
 
-  public static AnalysisScope makeScope(URL[] files, SingleClassLoaderFactory loaders, Language language) throws IOException {
-    CAstAnalysisScope result = new CAstAnalysisScope(files, loaders, Collections.singleton(language));
-    return result;
-  }
-
   public static AnalysisCache makeCache(IRFactory<IMethod> factory) {
     return new AnalysisCache(factory);
   }
