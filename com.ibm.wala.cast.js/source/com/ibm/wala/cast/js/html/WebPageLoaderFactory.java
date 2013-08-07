@@ -17,10 +17,12 @@ import com.ibm.wala.cast.js.ssa.JSInstructionFactory;
 import com.ibm.wala.cast.js.translator.JSAstTranslator;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
+import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
@@ -98,6 +100,18 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
             } 
             
             super.doLocalWrite(context, nm, rval);
+          }
+          
+          @Override
+          protected void leaveFunctionStmt(CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {
+            super.leaveFunctionStmt(n, context, visitor);
+            if (isScriptBody(context)) {
+              CAstEntity fn = (CAstEntity) n.getChild(0).getValue();
+              int fnValue = context.currentScope().lookup(fn.getName()).valueNumber();
+              assert fnValue > 0;
+              int windowVal = super.doLocalRead(context, "this");
+              context.cfg().addInstruction(((JSInstructionFactory) insts).PutInstruction(windowVal, fnValue, fn.getName()));
+            }
           }
         };
       }
