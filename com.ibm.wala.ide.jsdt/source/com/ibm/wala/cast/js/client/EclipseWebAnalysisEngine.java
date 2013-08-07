@@ -1,13 +1,16 @@
 package com.ibm.wala.cast.js.client;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
+import com.ibm.wala.cast.js.JavaScriptPlugin;
 import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
@@ -21,11 +24,17 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Pair;
 
 public class EclipseWebAnalysisEngine extends EclipseJavaScriptAnalysisEngine {
 
-  public EclipseWebAnalysisEngine(IJavaScriptProject project) throws IOException, CoreException {
+  private final Set<Pair<String, Plugin>> models = HashSetFactory.make();
+  
+  public EclipseWebAnalysisEngine(IJavaScriptProject project, Collection<Pair<String, Plugin>> models) throws IOException, CoreException {
     super(project);
+    // core DOM model
+    this.models.add(Pair.make("preamble.js", (Plugin)JavaScriptPlugin.getDefault()));
+    this.models.addAll(models);
   }
 
   @Override
@@ -40,15 +49,19 @@ public class EclipseWebAnalysisEngine extends EclipseJavaScriptAnalysisEngine {
 
   @Override
   protected JavaScriptEclipseProjectPath createProjectPath(IJavaScriptProject project) throws IOException, CoreException {
-    return new EclipseWebProjectPath(project);
+    return EclipseWebProjectPath.make(project, models);
   }
 
   @Override
   public CallGraph getFieldBasedCallGraph(String scriptName) throws CancelException {
     Set<Entrypoint> eps= HashSetFactory.make();
     eps.add(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make(scriptName));
-    eps.add(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make("Lpreamble.js"));
     eps.add(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make("Lprologue.js"));
+    
+    for(Pair<String,Plugin> model : models) {
+      eps.add(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make("L" + model.fst));
+    }
+
     return getFieldBasedCallGraph(eps);
   }
 

@@ -47,13 +47,15 @@ public class JavaEclipseProjectPath extends EclipseProjectPath<IClasspathEntry, 
 		}
 	}
 	
-  protected JavaEclipseProjectPath(IProject project, com.ibm.wala.ide.util.EclipseProjectPath.AnalysisScopeType scopeType)
+  protected JavaEclipseProjectPath(com.ibm.wala.ide.util.EclipseProjectPath.AnalysisScopeType scopeType)
       throws IOException, CoreException {
-    super(project, scopeType);
+    super(scopeType);
   }
 
   public static JavaEclipseProjectPath make(IJavaProject p, AnalysisScopeType scopeType) throws IOException, CoreException {
-    return new JavaEclipseProjectPath(p.getProject(), scopeType);
+    JavaEclipseProjectPath path = new JavaEclipseProjectPath(scopeType);
+    path.create(p.getProject());
+    return path;
   }
 
   @Override
@@ -78,7 +80,8 @@ public class JavaEclipseProjectPath extends EclipseProjectPath<IClasspathEntry, 
 	  entry = JavaCore.getResolvedClasspathEntry(entry);
 	  switch (entry.getEntryKind()) {
 	  case IClasspathEntry.CPE_SOURCE: {
-		  resolveSourcePathEntry(includeSource? JavaSourceLoader.SOURCE: Loader.APPLICATION, includeSource, cpeFromMainProject, entry.getPath(), entry.getOutputLocation(), "java");
+		  resolveSourcePathEntry(includeSource? JavaSourceLoader.SOURCE: Loader.APPLICATION, includeSource, cpeFromMainProject, entry.getPath(), entry.getOutputLocation(), entry.getExclusionPatterns()
+, "java");
 		  break;
 	  }
 	  case IClasspathEntry.CPE_LIBRARY: {

@@ -123,20 +123,21 @@ public abstract class EclipseProjectPath<E, P> {
       MapUtil.findOrCreateList(modules, loader);
     }
   }
-  
-  protected EclipseProjectPath(IProject project, AnalysisScopeType scopeType) throws IOException, CoreException {
-    this(scopeType);
-
+    
+  public EclipseProjectPath create(IProject project) throws CoreException, IOException {
     assert project != null;
     if (project == null) {
       throw new IllegalArgumentException("null project");
     }
-    
+
     boolean includeSource = (scopeType != AnalysisScopeType.NO_SOURCE);
+    
     resolveProjectClasspathEntries(makeProject(project), includeSource);
     if (isPluginProject(project)) {
       resolvePluginClassPath(project, includeSource);
     }
+    
+    return this;
   }
 
 
@@ -158,10 +159,10 @@ public abstract class EclipseProjectPath<E, P> {
     }
   }
 
-  protected void resolveSourcePathEntry(ILoader loader, boolean includeSource, boolean cpeFromMainProject, IPath p, IPath o, String fileExtension) {
+  protected void resolveSourcePathEntry(ILoader loader, boolean includeSource, boolean cpeFromMainProject, IPath p, IPath o, IPath[] excludePaths, String fileExtension) {
     if (includeSource) {
       List<Module> s = MapUtil.findOrCreateList(modules, loader);
-      s.add(new EclipseSourceDirectoryTreeModule(p, fileExtension));
+      s.add(new EclipseSourceDirectoryTreeModule(p, excludePaths, fileExtension));
     } else if (o != null) {
       File output = makeAbsolute(o).toFile();
       List<Module> s = MapUtil.findOrCreateList(modules, cpeFromMainProject ? Loader.APPLICATION : loader);
@@ -332,7 +333,7 @@ public abstract class EclipseProjectPath<E, P> {
     return toAnalysisScope(getClass().getClassLoader(), null);
   }
 
-  public Collection<Module> getModules(Loader loader, boolean binary) {
+  public Collection<Module> getModules(ILoader loader, boolean binary) {
     return Collections.unmodifiableCollection(modules.get(loader));
   }
 

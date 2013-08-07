@@ -20,11 +20,13 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.js.callgraph.fieldbased.FieldBasedCallGraphBuilder;
+import com.ibm.wala.cast.js.callgraph.fieldbased.OptimisticCallgraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.PessimisticCallGraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FilteredFlowGraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FlowGraph;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FlowGraphBuilder;
 import com.ibm.wala.cast.js.client.impl.ZeroCFABuilderFactory;
+import com.ibm.wala.cast.js.html.IncludedPosition;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
@@ -32,6 +34,7 @@ import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.loader.AstMethod;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ide.client.EclipseProjectSourceAnalysisEngine;
@@ -85,7 +88,7 @@ public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysi
 
   @Override
   protected JavaScriptEclipseProjectPath createProjectPath(IJavaScriptProject project) throws IOException, CoreException {
-    return JavaScriptEclipseProjectPath.make(project);
+    return JavaScriptEclipseProjectPath.make(project, Collections.EMPTY_SET);
   }
 
   @Override
@@ -116,7 +119,14 @@ public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysi
   }
   
   private String getScriptName(AstMethod m) {
-    String fileName = m.getSourcePosition().getURL().getFile();
+    
+    // we want the original including file, since that will be the "script"
+    Position p = m.getSourcePosition();
+    while (p instanceof IncludedPosition) {
+      p = ((IncludedPosition)p).getIncludePosition();
+    }
+    
+    String fileName = p.getURL().getFile();
     return fileName.substring(fileName.lastIndexOf('/') + 1);    
   }
   
@@ -127,14 +137,14 @@ public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysi
       scripts.add(scriptName);
     }
     
-    FieldBasedCallGraphBuilder builder = new PessimisticCallGraphBuilder(getClassHierarchy(), getDefaultOptions(roots), makeDefaultCache()) {
+    FieldBasedCallGraphBuilder builder = new OptimisticCallgraphBuilder(getClassHierarchy(), getDefaultOptions(roots), makeDefaultCache()) {
       @Override
       protected FlowGraph flowGraphFactory() {
         FlowGraphBuilder b = new FilteredFlowGraphBuilder(cha, cache, new Function<IMethod, Boolean>() {
           @Override
           public Boolean apply(IMethod object) {
             if (object instanceof AstMethod) {
-              return scripts.contains(getScriptName((AstMethod)object));
+               return scripts.contains(getScriptName((AstMethod)object));
             } else {
               return true;
             }

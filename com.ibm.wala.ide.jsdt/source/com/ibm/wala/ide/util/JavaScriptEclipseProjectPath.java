@@ -13,36 +13,26 @@ package com.ibm.wala.ide.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
+import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 
 import com.ibm.wala.cast.js.JavaScriptPlugin;
-import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.collections.MapUtil;
-import com.ibm.wala.util.io.FileProvider;
+import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Pair;
 
 public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePathEntry, IJavaScriptProject> {
-
-  protected File getProlgueFile(String file) {
-    try {
-      FileProvider fileProvider = new EclipseFileProvider(JavaScriptPlugin.getDefault());
-      JavaScriptLoader.addBootstrapFile(file);
-      return fileProvider.getFile("dat/" + file, getClass().getClassLoader());
-    } catch (IOException e) {
-      assert false : "cannot find " + file;
-      return null;
-    }
-  }
 
 	public enum JSLoader implements ILoader {
 		JAVASCRIPT(JavaScriptTypes.jsLoader);
@@ -59,20 +49,36 @@ public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePat
 		}
 	}
 	
-	protected JavaScriptEclipseProjectPath(IJavaScriptProject p) throws IOException,
+  private final Set<Pair<String, Plugin>> models = HashSetFactory.make();
+
+	protected JavaScriptEclipseProjectPath(Set<Pair<String, Plugin>> models) throws IOException,
 			CoreException {
-		super(p.getProject(), AnalysisScopeType.SOURCE_FOR_PROJ_AND_LINKED_PROJS);
-		
-    List<Module> s = MapUtil.findOrCreateList(modules, JSLoader.JAVASCRIPT);
-    File preamble = getProlgueFile("prologue.js");
-    s.add(new SourceFileModule(preamble, "prologue.js", null));
+		super(AnalysisScopeType.SOURCE_FOR_PROJ_AND_LINKED_PROJS);
+		this.models.addAll(models);
+		this.models.add(Pair.make("prologue.js", (Plugin)JavaScriptPlugin.getDefault()));
 	}
 
-	public static JavaScriptEclipseProjectPath make(IJavaScriptProject p) throws IOException, CoreException {
-		return new JavaScriptEclipseProjectPath(p);
+	public static JavaScriptEclipseProjectPath make(IJavaScriptProject p, Set<Pair<String, Plugin>> models) throws IOException, CoreException {
+	  JavaScriptEclipseProjectPath path = new JavaScriptEclipseProjectPath(models);
+	  path.create(p.getProject());  
+	  return path;
 	}
 
+	
 	@Override
+  public EclipseProjectPath create(IProject project) throws CoreException, IOException {
+    EclipseProjectPath path = super.create(project);
+  
+    Collection<Module> s = modules.get(JSLoader.JAVASCRIPT);
+    for(Pair<String,Plugin> model : models) {
+      File modelFile = JsdtUtil.getProlgueFile(model.fst, model.snd);
+      s.add(new SourceFileModule(modelFile, model.fst, null));
+    }
+
+    return path;
+}
+
+  @Override
 	protected IJavaScriptProject makeProject(IProject p) {
 		try {
 			if (p.hasNature(JavaScriptCore.NATURE_ID)) {
@@ -98,7 +104,7 @@ public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePat
 		IIncludePathEntry e = JavaScriptCore.getResolvedIncludepathEntry(entry);
 		switch (e.getEntryKind()) {
 		case IIncludePathEntry.CPE_SOURCE:
-			resolveSourcePathEntry(JSLoader.JAVASCRIPT, true, cpeFromMainProject, e.getPath(), null, "js");
+			resolveSourcePathEntry(JSLoader.JAVASCRIPT, true, cpeFromMainProject, e.getPath(), null, e.getExclusionPatterns(), "js");
 		}
 	}
 

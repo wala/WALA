@@ -32,7 +32,7 @@ abstract public class EclipseProjectAnalysisEngine<P> extends AbstractAnalysisEn
   
   protected final IPath workspaceRootPath;
 
-  protected final EclipseProjectPath<?,P> ePath;
+  protected EclipseProjectPath<?,P> ePath;
 
   public EclipseProjectAnalysisEngine(P project) throws IOException, CoreException {
     super();
@@ -40,7 +40,6 @@ abstract public class EclipseProjectAnalysisEngine<P> extends AbstractAnalysisEn
     this.workspaceRootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
     assert project != null;
     assert workspaceRootPath != null;
-    this.ePath = createProjectPath(project);
   }
 
   abstract protected EclipseProjectPath<?,P> createProjectPath(P project) throws IOException, CoreException;
@@ -52,9 +51,14 @@ abstract public class EclipseProjectAnalysisEngine<P> extends AbstractAnalysisEn
   
   @Override
   public void buildAnalysisScope() throws IOException {
-    super.scope = ePath.toAnalysisScope(makeAnalysisScope());
-    if (getExclusionsFile() != null) {
-      scope.setExclusions(FileOfClasses.createFileOfClasses(new File(getExclusionsFile())));
+    try {
+      ePath = createProjectPath(project);
+      super.scope = ePath.toAnalysisScope(makeAnalysisScope());
+      if (getExclusionsFile() != null) {
+        scope.setExclusions(FileOfClasses.createFileOfClasses(new File(getExclusionsFile())));
+      }
+    } catch (CoreException e) {
+      assert false : e.getMessage();
     }
   }
 
