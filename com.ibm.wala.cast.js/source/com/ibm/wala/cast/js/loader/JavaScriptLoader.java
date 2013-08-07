@@ -1012,29 +1012,6 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     bootstrapFileNames.add(prologueFileName);
   }
 
-  /**
-   * adds the {@link #bootstrapFileNames bootstrap files} to the list of modules
-   * and then invokes the superclass method
-   */
-  @Override
-  public void init(List<Module> modules) {
-
-    List<Module> all = new LinkedList<Module>();
-
-    for (final String fn : bootstrapFileNames) {
-      all.add(new SourceURLModule(getClass().getClassLoader().getResource(fn)) {
-        @Override
-        public String getName() {
-          return fn;
-        }
-      });
-    }
-
-    all.addAll(modules);
-
-    super.init(all);
-  }
-
   @SuppressWarnings("unchecked")
   @Override
   protected TranslatorToCAst getTranslatorToCAst(final CAst ast, SourceModule module) {
