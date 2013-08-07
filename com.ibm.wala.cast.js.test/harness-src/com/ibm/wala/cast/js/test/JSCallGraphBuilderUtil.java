@@ -48,6 +48,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
+import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
  * TODO this class is a mess. rewrite.
@@ -111,14 +112,12 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
   }
 
   static AnalysisScope makeScriptScope(URL script, String dir, String name, JavaScriptLoaderFactory loaders) throws IOException {
-    AnalysisScope scope;
-    if (script.openConnection() instanceof JarURLConnection) {
-      scope = makeScope(new URL[] { script }, loaders, JavaScriptLoader.JS);
-    } else {
-      scope = makeScope(new SourceFileModule[] { makeSourceModule(script, dir, name) }, loaders, JavaScriptLoader.JS);
-    }
-
-    return scope;
+    return makeScope(
+        new SourceModule[] { 
+            (script.openConnection() instanceof JarURLConnection)? new SourceURLModule(script): makeSourceModule(script, dir, name), 
+            new SourceFileModule(new File(JSCallGraphBuilderUtil.class.getClassLoader().getResource("prologue.js").getFile()), "prologue.js", null)
+        }, loaders, JavaScriptLoader.JS);
+    
   }
 
   public static JSCFABuilder makeScriptCGBuilder(String dir, String name) throws IOException, WalaException {
@@ -151,24 +150,35 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
   }
 
   public static JSCFABuilder makeHTMLCGBuilder(URL url, CGBuilderType builderType) throws IOException, WalaException {
-    JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
-    SourceModule[] scripts;
     IRFactory<IMethod> irFactory = AstIRFactory.makeDefaultFactory();
     CAstRewriterFactory preprocessor = builderType.extractCorrelatedPairs ? new CorrelatedPairExtractorFactory(translatorFactory, url) : null;
     JavaScriptLoaderFactory loaders = new WebPageLoaderFactory(translatorFactory, preprocessor);
-    try {
-      Set<MappedSourceModule> script = WebUtil.extractScriptFromHTML(url).fst;
-      scripts = script.toArray(new SourceModule[script.size()]);
-    } catch (Error e) {
-      SourceModule dummy = new SourceURLModule(url);
-      scripts = new SourceModule[]{ dummy };
-      ((CAstAbstractLoader)loaders.getTheLoader()).addMessage(dummy, e.warning);
-    }
-    JSCFABuilder builder = makeCGBuilder(loaders, scripts, builderType, irFactory);
+    SourceModule[] scriptsArray = makeHtmlScope(url, loaders);
+    
+    JSCFABuilder builder = makeCGBuilder(loaders, scriptsArray, builderType, irFactory);
     if(builderType.extractCorrelatedPairs)
       builder.setContextSelector(new PropertyNameContextSelector(builder.getAnalysisCache(), 2, builder.getContextSelector()));
     builder.setBaseURL(url);
     return builder;
+  }
+
+  public static SourceModule[] makeHtmlScope(URL url, JavaScriptLoaderFactory loaders) {
+    Set<SourceModule> scripts = HashSetFactory.make();
+    
+    JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
+    scripts.add(new SourceFileModule(new File(JSCallGraphBuilderUtil.class.getClassLoader().getResource("prologue.js").getFile()), "prologue.js", null));
+    scripts.add(new SourceFileModule(new File(JSCallGraphBuilderUtil.class.getClassLoader().getResource("preamble.js").getFile()), "preamble.js", null));
+
+    try {
+      scripts.addAll(WebUtil.extractScriptFromHTML(url).fst);
+    } catch (Error e) {
+      SourceModule dummy = new SourceURLModule(url);
+      scripts.add(dummy);
+      ((CAstAbstractLoader)loaders.getTheLoader()).addMessage(dummy, e.warning);
+    }
+        
+    SourceModule[] scriptsArray = scripts.toArray(new SourceModule[ scripts.size() ]);
+    return scriptsArray;
   }
 
   public static CallGraph makeHTMLCG(URL url) throws IOException, IllegalArgumentException, CancelException, WalaException {
