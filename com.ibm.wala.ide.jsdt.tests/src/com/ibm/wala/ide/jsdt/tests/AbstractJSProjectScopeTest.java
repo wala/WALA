@@ -62,7 +62,7 @@ public abstract class AbstractJSProjectScopeTest {
   }
 
   protected JavaScriptEclipseProjectPath makeProjectPath(IJavaScriptProject p) throws IOException, CoreException {
-    return JavaScriptEclipseProjectPath.make(p);
+    return JavaScriptEclipseProjectPath.make(p, Collections.EMPTY_SET);
   }
 
   @Test
