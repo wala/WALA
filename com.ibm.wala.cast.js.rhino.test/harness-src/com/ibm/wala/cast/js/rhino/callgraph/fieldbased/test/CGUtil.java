@@ -31,10 +31,12 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
+import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.js.util.CallGraph2JSON;
 import com.ibm.wala.cast.js.util.Util;
+import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -61,9 +63,17 @@ public class CGUtil {
 	}
 
 	public JSCallGraph buildCG(URL url, BuilderType builderType) throws IOException, WalaException, Error {
-		JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
-		SourceModule[] scripts = extractScript(url).toArray(new SourceModule[]{});
-		JavaScriptLoaderFactory loaders = makeLoaderFactory(url);
+    JavaScriptLoaderFactory loaders = makeLoaderFactory(url);
+    SourceModule[] scripts;
+    if (url.getFile().endsWith(".js")) {
+		  scripts = new SourceModule[]{
+		     new SourceURLModule(url),
+		     new SourceFileModule(new File(JSCallGraphBuilderUtil.class.getClassLoader().getResource("prologue.js").getFile()), "prologue.js", null)
+		  };
+		} else {
+		  scripts = JSCallGraphBuilderUtil.makeHtmlScope(url, loaders);
+		}
+		
 		CAstAnalysisScope scope = new CAstAnalysisScope(scripts, loaders, Collections.singleton(JavaScriptLoader.JS));
 		IClassHierarchy cha = ClassHierarchy.make(scope, loaders, JavaScriptLoader.JS);
 		Util.checkForFrontEndErrors(cha);
@@ -92,14 +102,6 @@ public class CGUtil {
 
 	private JavaScriptLoaderFactory makeLoaderFactory(URL url) {
 		return url.getFile().endsWith(".js") ? new JavaScriptLoaderFactory(translatorFactory) : new WebPageLoaderFactory(translatorFactory);
-	}
-
-	private Set<? extends SourceModule> extractScript(URL url) throws Error {
-		if(url.getFile().endsWith(".js")) {
-			return Collections.singleton(new SourceURLModule(url));
-		} else {
-			return WebUtil.extractScriptFromHTML(url).fst;
-		}
 	}
 
 	public static void main(String[] args) throws IOException, WalaException, Error {
