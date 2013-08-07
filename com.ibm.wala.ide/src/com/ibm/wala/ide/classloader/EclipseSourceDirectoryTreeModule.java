@@ -11,6 +11,7 @@
 package com.ibm.wala.ide.classloader;
 
 import java.io.File;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
@@ -25,15 +26,34 @@ import com.ibm.wala.ide.util.EclipseProjectPath;
 public class EclipseSourceDirectoryTreeModule extends SourceDirectoryTreeModule {
 
   private final IPath rootIPath;
+  private final Pattern[] excludePatterns;
   
-  public EclipseSourceDirectoryTreeModule(IPath root) {
+  private static Pattern interpretPattern(IPath pattern) {
+    return Pattern.compile("^" + pattern.toString().replace(".",  "\\.").replace("**", "~~~").replace("*", "[^/]*").replace("~~~",  ".*") + "$");
+  }
+  
+  private static Pattern[] interpretExcludes(IPath[] excludes) {
+    if (excludes == null) {
+      return null;
+    } else {
+      Pattern[] stuff = new Pattern[ excludes.length ];
+      for(int i = 0; i < excludes.length; i++) {
+        stuff[i] = interpretPattern(excludes[i]);
+      }
+      return stuff;
+      }
+  }
+  
+  public EclipseSourceDirectoryTreeModule(IPath root, IPath[] excludePaths) {
     super(EclipseProjectPath.makeAbsolute(root).toFile());
     this.rootIPath = root;
+    this.excludePatterns = interpretExcludes(excludePaths);
   }
 
-  public EclipseSourceDirectoryTreeModule(IPath root, String fileExt) {
+  public EclipseSourceDirectoryTreeModule(IPath root, IPath[] excludePaths, String fileExt) {
     super(EclipseProjectPath.makeAbsolute(root).toFile(), fileExt);
     this.rootIPath = root;
+    this.excludePatterns = interpretExcludes(excludePaths);
 }
 
   @Override
@@ -46,6 +66,23 @@ public class EclipseSourceDirectoryTreeModule extends SourceDirectoryTreeModule 
     return EclipseSourceFileModule.createEclipseSourceFileModule(ifile);
   }
   
+  @Override
+  protected boolean includeFile(File file) {
+    if (!super.includeFile(file)) {
+      return false;
+    } else {
+      if (excludePatterns != null) {
+        IPath p = rootIPath.append(file.getPath().substring(root.getPath().length()));
+        for(Pattern exclude : excludePatterns) {
+          if (exclude.matcher(p.toOSString()).matches()) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+  }
+
   @Override
   public String toString() {
     return "EclipseSourceDirectoryTreeModule:" + rootIPath;
