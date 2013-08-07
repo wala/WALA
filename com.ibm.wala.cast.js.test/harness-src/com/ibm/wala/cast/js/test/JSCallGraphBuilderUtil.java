@@ -20,7 +20,6 @@ import junit.framework.Assert;
 
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
-import com.ibm.wala.cast.js.html.MappedSourceModule;
 import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
 import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
@@ -34,7 +33,6 @@ import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.loader.CAstAbstractLoader;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -111,11 +109,20 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
     return makeScriptScope(getURLforFile(dir, name), dir, name, loaders);
   }
 
+  public static SourceModule getPrologueFile(final String name) {
+    return new SourceURLModule(JSCallGraphBuilderUtil.class.getClassLoader().getResource(name)) {
+      @Override
+      public String getName() {
+        return name;
+      }      
+    };
+  }
+  
   static AnalysisScope makeScriptScope(URL script, String dir, String name, JavaScriptLoaderFactory loaders) throws IOException {
     return makeScope(
         new SourceModule[] { 
             (script.openConnection() instanceof JarURLConnection)? new SourceURLModule(script): makeSourceModule(script, dir, name), 
-            new SourceFileModule(new File(JSCallGraphBuilderUtil.class.getClassLoader().getResource("prologue.js").getFile()), "prologue.js", null)
+            getPrologueFile("prologue.js")
         }, loaders, JavaScriptLoader.JS);
     
   }
@@ -166,8 +173,8 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
     Set<SourceModule> scripts = HashSetFactory.make();
     
     JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
-    scripts.add(new SourceFileModule(new File(JSCallGraphBuilderUtil.class.getClassLoader().getResource("prologue.js").getFile()), "prologue.js", null));
-    scripts.add(new SourceFileModule(new File(JSCallGraphBuilderUtil.class.getClassLoader().getResource("preamble.js").getFile()), "preamble.js", null));
+    scripts.add(getPrologueFile("prologue.js"));
+    scripts.add(getPrologueFile("preamble.js"));
 
     try {
       scripts.addAll(WebUtil.extractScriptFromHTML(url).fst);

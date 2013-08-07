@@ -68,7 +68,7 @@ public class CGUtil {
     if (url.getFile().endsWith(".js")) {
 		  scripts = new SourceModule[]{
 		     new SourceURLModule(url),
-		     new SourceFileModule(new File(JSCallGraphBuilderUtil.class.getClassLoader().getResource("prologue.js").getFile()), "prologue.js", null)
+		     JSCallGraphBuilderUtil.getPrologueFile("prologue.js")
 		  };
 		} else {
 		  scripts = JSCallGraphBuilderUtil.makeHtmlScope(url, loaders);
