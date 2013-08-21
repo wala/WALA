@@ -486,7 +486,7 @@ public class DexIMethod implements IBytecodeMethod {
 	 * @see com.ibm.wala.classLoader.IMethod#isSynthetic()
 	 */
 	public boolean isSynthetic() {
-		return (eMethod.accessFlags & SYNTHETIC.getValue()) != 0;
+		return false;
 	}
 
 	/*
