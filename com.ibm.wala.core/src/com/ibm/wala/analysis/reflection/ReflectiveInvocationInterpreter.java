@@ -83,7 +83,6 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     }
     
 /** END Custom change: caching */
-    result = makeIR(node.getMethod(), m, recv);
     return result;
   }
 
