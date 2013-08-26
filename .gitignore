@@ -22,6 +22,7 @@ com.ibm.wala.core.tests/dat/wala.examples.properties
 com.ibm.wala.core/@dot
 com.ibm.wala.core/com.ibm.wala.core*.jar
 com.ibm.wala.core/dat/wala.properties
+com.ibm.wala.dalvik/src/logback.xml
 com.ibm.wala.ide.jdt.test/testdata/
 edu.kit.wala.smali.test/out/
 target/
