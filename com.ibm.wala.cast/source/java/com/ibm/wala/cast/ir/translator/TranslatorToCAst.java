@@ -26,12 +26,13 @@ import com.ibm.wala.cast.tree.rewrite.CAstRewriter;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriter.CopyKey;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriter.RewriteContext;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.warnings.Warning;
 
 public interface TranslatorToCAst {
   public <C extends RewriteContext<K>, K extends CopyKey<K>> void addRewriter(CAstRewriterFactory<C, K> factory, boolean prepend);
 
-  public class Error extends Exception {
+  public class Error extends WalaException {
     public final Warning warning;
     
     public Error(Warning message) {
