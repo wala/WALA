@@ -80,11 +80,11 @@ Object.prototype = {
   
   constructor: Object,
 
-  toString: function toString() {
+  toString: function Object_prototype_toString() {
     return primitive("ObjectToString", this);
   },
 
-  toLocaleString: function toLocaleString() {
+  toLocaleString: function Object_prototype_toLocaleString() {
     return primitive("ObjectToLocaleString", this);
   },
 
