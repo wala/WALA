@@ -62,7 +62,7 @@ public class CGUtil {
 		this.translatorFactory = translatorFactory;
 	}
 
-	public JSCallGraph buildCG(URL url, BuilderType builderType) throws IOException, WalaException, Error {
+	public JSCallGraph buildCG(URL url, BuilderType builderType) throws IOException, WalaException  {
     JavaScriptLoaderFactory loaders = makeLoaderFactory(url);
     SourceModule[] scripts;
     if (url.getFile().endsWith(".js")) {
