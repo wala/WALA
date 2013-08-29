@@ -41,7 +41,6 @@ public class TestSimpleCallGraphShapeRhino extends TestSimpleCallGraphShape {
     b.makeCallGraph(b.getOptions());
     PointerAnalysis PA = b.getPointerAnalysis();
     // just make sure this does not crash
-    computeIkIdToVns(PA);
   }
 
   @Test
