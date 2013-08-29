@@ -16,6 +16,7 @@ import java.net.URL;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.html.IHtmlParser;
 import com.ibm.wala.cast.js.html.IHtmlParserFactory;
 import com.ibm.wala.cast.js.html.WebUtil;
@@ -269,7 +270,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
 //    JSCallGraphBuilderUtil.AVOID_DUMP = false;
-    JSCallGraphBuilderUtil.dumpCG(builder.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
     verifySourceAssertions(CG, sourceAssertionsForList);
   }
 
@@ -291,7 +292,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     URL url = getClass().getClassLoader().getResource("pages/windowx.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
-    JSCallGraphBuilderUtil.dumpCG(builder.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForWindowx);
   }
   

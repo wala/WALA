@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.ipa.callgraph.PropertyNameContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
@@ -37,7 +38,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
     URL url = getClass().getClassLoader().getResource("pages/page3.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
-    JSCallGraphBuilderUtil.dumpCG(builder.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
   }
 
   @Test public void testPage3WithHack() throws IOException, IllegalArgumentException, CancelException, WalaException {
@@ -45,7 +46,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     addHackedForInLoopSensitivity(builder);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
-    JSCallGraphBuilderUtil.dumpCG(builder.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
   }
 
   @Ignore("This test now blows up due to proper handling of the || construct, used in extend().  Should handle this eventually.")
@@ -54,7 +55,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     addHackedForInLoopSensitivity(builder);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
-    JSCallGraphBuilderUtil.dumpCG(builder.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
   }
 
   /*
@@ -87,7 +88,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
   @Test public void testBadForInWithoutHack() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "badforin.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
-    JSCallGraphBuilderUtil.dumpCG(B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForBadForin);
   }
 
@@ -106,7 +107,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "badforin.js");
     addHackedForInLoopSensitivity(B);
     CallGraph CG = B.makeCallGraph(B.getOptions());
-    JSCallGraphBuilderUtil.dumpCG(B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForBadForin);
     verifyGraphAssertions(CG, assertionsForBadForinHackPrecision);
   }
@@ -131,7 +132,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
   @Test public void testbadforin2WithoutHack() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "badforin2.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
-    JSCallGraphBuilderUtil.dumpCG(B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForbadforin2);
   }
 
@@ -150,7 +151,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "badforin2.js");
     addHackedForInLoopSensitivity(B);
     CallGraph CG = B.makeCallGraph(B.getOptions());
-    JSCallGraphBuilderUtil.dumpCG(B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForbadforin2);
     verifyGraphAssertions(CG, assertionsForbadforin2HackPrecision);
   }
@@ -159,7 +160,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "badforin3.js");
     addHackedForInLoopSensitivity(B);
     CallGraph CG = B.makeCallGraph(B.getOptions());
-    JSCallGraphBuilderUtil.dumpCG(B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
   }
 
 

@@ -11,39 +11,24 @@
 package com.ibm.wala.cast.js.test;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import junit.framework.Assert;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
-import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.PropertyNameContextSelector;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
-import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
-import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
-import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.WalaException;
-import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.IVector;
 import com.ibm.wala.util.collections.Iterator2Collection;
-import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.collections.SparseVector;
-import com.ibm.wala.util.intset.IntSetAction;
-import com.ibm.wala.util.intset.OrdinalSet;
 
 public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 
@@ -163,7 +148,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "forin.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
 //    JSCallGraphUtil.AVOID_DUMP = false;
-    JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForForin);
   }
 
@@ -255,7 +240,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     B.getOptions().setTraceStringConstants(true);
     CallGraph CG = B.makeCallGraph(B.getOptions());
 //    JSCallGraphUtil.AVOID_DUMP = false;
-    JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForStringPrims);
   }
 
@@ -466,7 +451,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "return_this.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
 //    JSCallGraphUtil.AVOID_DUMP = false;
-    JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForReturnThis);
   }
   
@@ -561,7 +546,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "dispatch.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
 //    JSCallGraphUtil.AVOID_DUMP = false;
-    JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForDispatch);
   }
 
@@ -711,53 +696,6 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     CallGraph CG = B.makeCallGraph(B.getOptions());
     CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     // verifyGraphAssertions(CG, assertionsForDateProperty);
-  }
-
-  protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {
-
-    // Created by reversing the points to mapping for local pointer keys.
-    // Instead of mapping (local) pointer keys to instance keys (with id), we
-    // map instance keys to VnInContext (which carry the same information as
-    // local pointer keys)
-
-    final IVector<Set<Pair<CGNode, Integer>>> ret = new SparseVector<Set<Pair<CGNode, Integer>>>();
-
-    for (PointerKey pk : pa.getPointerKeys()) {
-      if (pk instanceof LocalPointerKey) {
-
-        final LocalPointerKey lpk = (LocalPointerKey) pk;
-        // we filter out local pointer keys that have no uses.
-        // NOTE: do to some weird behavior, we get pointer keys with vns that
-        // don't exist, so we have to filter those before asking about uses.
-        if (lpk.getNode().getDU().getDef(lpk.getValueNumber()) != null) {
-          Iterator<SSAInstruction> uses = lpk.getNode().getDU().getUses(lpk.getValueNumber());
-          if (uses.hasNext()) {
-            OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(pk);
-            if (pointsToSet == null || pointsToSet.getBackingSet() == null)
-              continue;
-            pointsToSet.getBackingSet().foreach(new IntSetAction() {
-              @Override
-              public void act(int ikId) {
-                Set<Pair<CGNode, Integer>> s = ret.get(ikId);
-                if (s == null) {
-                  s = HashSetFactory.make();
-                  ret.set(ikId, s);
-                }
-                s.add(Pair.make(lpk.getNode(), lpk.getValueNumber()));
-              }
-            });
-          } else {
-            int i = 0;
-            i++;
-          }
-        } else {
-          int i = 0;
-          i++;
-        }
-      }
-    }
-
-    return ret;
   }
 
 }

@@ -18,6 +18,7 @@ import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.ArgumentSpecialization;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
+import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSZeroOrOneXCFABuilder;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -41,15 +42,15 @@ public abstract class TestArgumentSensitivity extends TestJSCallGraphShape {
     new Object[] { "tests/args.js/a", new String[] { "tests/args.js/y", "tests/args.js/z", "!tests/args.js/wrong" } } };
 
   @Test public void testArgs() throws IOException, IllegalArgumentException, CancelException, ClassHierarchyException, WalaException {
-    JavaScriptLoaderFactory loaders = JSCallGraphBuilderUtil.makeLoaders(null);
+    JavaScriptLoaderFactory loaders = JSCallGraphUtil.makeLoaders(null);
     AnalysisScope scope = JSCallGraphBuilderUtil.makeScriptScope("tests", "args.js", loaders);
 
-    IClassHierarchy cha = JSCallGraphBuilderUtil.makeHierarchy(scope, loaders);
+    IClassHierarchy cha = JSCallGraphUtil.makeHierarchy(scope, loaders);
     com.ibm.wala.cast.js.util.Util.checkForFrontEndErrors(cha);
-    Iterable<Entrypoint> roots = JSCallGraphBuilderUtil.makeScriptRoots(cha);
-    JSAnalysisOptions options = JSCallGraphBuilderUtil.makeOptions(scope, cha, roots);
+    Iterable<Entrypoint> roots = JSCallGraphUtil.makeScriptRoots(cha);
+    JSAnalysisOptions options = JSCallGraphUtil.makeOptions(scope, cha, roots);
 
-    AnalysisCache cache = JSCallGraphBuilderUtil.makeCache(new ArgumentSpecialization.ArgumentCountIRFactory(options.getSSAOptions()));
+    AnalysisCache cache = CAstCallGraphUtil.makeCache(new ArgumentSpecialization.ArgumentCountIRFactory(options.getSSAOptions()));
 
     JSCFABuilder builder = new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, ZeroXInstanceKeys.ALLOCATIONS, false);
     builder.setContextSelector(new ArgumentSpecialization.ArgumentCountContextSelector(builder.getContextSelector()));
