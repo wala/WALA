@@ -47,7 +47,6 @@ import static org.jf.dexlib.Util.AccessFlags.PRIVATE;
 import static org.jf.dexlib.Util.AccessFlags.PROTECTED;
 import static org.jf.dexlib.Util.AccessFlags.PUBLIC;
 import static org.jf.dexlib.Util.AccessFlags.STATIC;
-import static org.jf.dexlib.Util.AccessFlags.SYNTHETIC;
 import static org.jf.dexlib.Util.AccessFlags.VOLATILE;
 
 import java.util.ArrayList;
@@ -63,6 +62,7 @@ import org.jf.dexlib.MethodIdItem;
 import org.jf.dexlib.StringIdItem;
 import org.jf.dexlib.TypeIdItem;
 import org.jf.dexlib.Code.Opcode;
+import org.jf.dexlib.Code.TwoRegisterInstruction;
 import org.jf.dexlib.Code.Format.ArrayDataPseudoInstruction;
 import org.jf.dexlib.Code.Format.Instruction10t;
 import org.jf.dexlib.Code.Format.Instruction11n;
@@ -1202,18 +1202,10 @@ public class DexIMethod implements IBytecodeMethod {
 			case FILL_ARRAY_DATA:
 				//              System.out.println("Array Reference: " + ((Instruction31t)inst).getRegisterA());
 				//              System.out.println("Table Address Offset: " + ((Instruction31t)inst).getTargetAddressOffset());
-				Instruction prev_inst = getInstructionFromIndex(instCounter-1);
-				if (prev_inst instanceof NewArray &&
-						((NewArray)prev_inst).destination == ((Instruction31t)inst).getRegisterA())
-				{
-					instructions.add(new ArrayFill(instLoc, ((Instruction31t)inst).getRegisterA(), ((Instruction31t)inst).getTargetAddressOffset(),
-							TypeReference.findOrCreate(myClass.getClassLoader().getReference(), ((NewArray)prev_inst).newSiteRef.getDeclaredType().getArrayElementType().getName().toString()), inst.opcode, this));
-				}
-				else
-				{
-					//TODO: shouldn't go into this else statement
-					throw new UnsupportedOperationException("FILL_ARRAY_DATA else statement reached, please look into it");
-				}
+
+				TypeReference arrayElementType = findOutArrayElementType(instrucs, instructions.toArray(new Instruction[0]), instCounter);
+				instructions.add(new ArrayFill(instLoc, ((Instruction31t)inst).getRegisterA(), ((Instruction31t)inst).getTargetAddressOffset(),
+						TypeReference.findOrCreate(myClass.getClassLoader().getReference(), arrayElementType.getName().toString()), inst.opcode, this));
 				break;
 			case THROW:
 				instructions.add(new Throw(instLoc, ((Instruction11x)inst).getRegisterA(), inst.opcode, this));
@@ -3185,6 +3177,42 @@ public class DexIMethod implements IBytecodeMethod {
 		// TODO Auto-generated method stub
 		//return iinstructions;
 		//return instrucs;
+	}
+
+	private TypeReference findOutArrayElementType(
+			org.jf.dexlib.Code.Instruction[] instrucs, Instruction[] walaInstructions, int instCounter) {
+		if (instCounter < 0 || instrucs[instCounter].opcode != Opcode.FILL_ARRAY_DATA) {
+			throw new IllegalArgumentException();
+		} else if (instCounter == 0) {
+			throw new UnsupportedOperationException("fill-array-data as first instruction is not supported!");
+		}
+		Instruction31t arrayFill = (Instruction31t)instrucs[instCounter];
+		int interestingRegister = arrayFill.getRegisterA();
+		int curCounter = instCounter - 1;
+
+		while (curCounter >= 0) {
+			org.jf.dexlib.Code.Instruction curInst = instrucs[curCounter];
+			// do we have a 'new-array'-instruction, where the destination register coincides with the current interesting register?
+			// then we return the element type of that array
+			if (curInst.opcode == Opcode.NEW_ARRAY) {
+				Instruction22c newArrayInst = (Instruction22c) curInst;
+				if (newArrayInst.getRegisterA() == interestingRegister) {
+					NewArray newArray = (NewArray) walaInstructions[curCounter];
+					return newArray.newSiteRef.getDeclaredType().getArrayElementType();
+				}
+			} else if (curInst.opcode == Opcode.MOVE_OBJECT || curInst.opcode == Opcode.MOVE_OBJECT_16 || curInst.opcode == Opcode.MOVE_OBJECT_FROM16) {
+				TwoRegisterInstruction tri = (TwoRegisterInstruction) curInst;
+				int regA = tri.getRegisterA();
+				int regB = tri.getRegisterB();
+				if (regA == interestingRegister) {
+					interestingRegister = regB;
+				}
+			}
+			// all other instructions are ignored
+			curCounter--;
+		}
+
+		throw new UnsupportedOperationException("found a fill-array-data instruction without a corresponding new-array instruction. This should not happen!");
 	}
 
 	protected void handleINVOKE_VIRTUAL(int instLoc, String cname, String mname, String pname, int[] args, Opcode opcode ) {
