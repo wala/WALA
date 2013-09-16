@@ -26,7 +26,7 @@ import com.ibm.wala.util.intset.IntSetUtil;
 /**
  * A {@link ContextSelector} to intercept calls to Object.getClass()
  */
-class GetClassContextSelector implements ContextSelector {
+public class GetClassContextSelector implements ContextSelector {
 
   public final static MethodReference GET_CLASS = MethodReference.findOrCreate(TypeReference.JavaLangObject, "getClass",
       "()Ljava/lang/Class;");
