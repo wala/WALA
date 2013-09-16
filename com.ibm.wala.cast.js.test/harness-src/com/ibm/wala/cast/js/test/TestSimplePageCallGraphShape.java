@@ -295,7 +295,22 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForWindowx);
   }
+
+  private static final Object[][] assertionsForWindowOnload = new Object[][] {
+    new Object[] { ROOT, new String[] { "windowonload.html" } },
+    new Object[] { "windowonload.html", new String[] { "windowonload.html/__WINDOW_MAIN__" } },
+    new Object[] { "windowonload.html/__WINDOW_MAIN__", new String[] { "windowonload.html/__WINDOW_MAIN__/onload_handler" } },
+  };
+
+  @Test public void testWindowOnload() throws IOException, IllegalArgumentException, CancelException, WalaException {
+    URL url = getClass().getClassLoader().getResource("pages/windowonload.html");
+    JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
+    CallGraph CG = builder.makeCallGraph(builder.getOptions());
+    CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
+    verifyGraphAssertions(CG, assertionsForWindowOnload);
+  }
   
+
   /*
   @Test public void testJQuery() throws IOException, IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/jquery.html");
