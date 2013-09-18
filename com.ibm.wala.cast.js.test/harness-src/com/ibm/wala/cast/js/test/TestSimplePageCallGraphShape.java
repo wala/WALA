@@ -295,7 +295,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForWindowx);
   }
-  
+
   /*
   @Test public void testJQuery() throws IOException, IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/jquery.html");
