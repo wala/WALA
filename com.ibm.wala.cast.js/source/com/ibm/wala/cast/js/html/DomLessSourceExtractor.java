@@ -28,7 +28,10 @@ import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.util.collections.Pair;
 
-
+/**
+ * extracts JavaScript source code from HTML, with no model of the actual
+ * DOM data structure
+ */
 public class DomLessSourceExtractor extends JSSourceExtractor {
   private static final Pattern LEGAL_JS_IDENTIFIER_REGEXP = Pattern.compile("[a-zA-Z$_][a-zA-Z\\d$_]*");
   protected interface IGeneratorCallback extends IHtmlCallback {
@@ -57,8 +60,14 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       this.scriptRegion = new SourceRegion();
       this.domRegion = new SourceRegion();
       this.entrypointRegion = new SourceRegion();
+      addDefaultHandlerInvocations();
     }
  
+    private void addDefaultHandlerInvocations() {
+      // always invoke window.onload
+      entrypointRegion.println("window.onload();");
+    }
+
     protected Position makePos(int lineNumber, ITag governingTag) {
       return makePos(entrypointUrl, lineNumber, governingTag);
     }
