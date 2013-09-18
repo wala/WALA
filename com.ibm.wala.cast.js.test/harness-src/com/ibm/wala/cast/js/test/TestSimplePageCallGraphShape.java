@@ -296,8 +296,6 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     verifyGraphAssertions(CG, assertionsForWindowx);
   }
 
-<<<<<<< HEAD
-=======
   private static final Object[][] assertionsForWindowOnload = new Object[][] {
     new Object[] { ROOT, new String[] { "windowonload.html" } },
     new Object[] { "windowonload.html", new String[] { "windowonload.html/__WINDOW_MAIN__" } },
@@ -312,8 +310,6 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     verifyGraphAssertions(CG, assertionsForWindowOnload);
   }
   
-
->>>>>>> 8984637b86dd09a60d973627e83d1daf648826a8
   /*
   @Test public void testJQuery() throws IOException, IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/jquery.html");
