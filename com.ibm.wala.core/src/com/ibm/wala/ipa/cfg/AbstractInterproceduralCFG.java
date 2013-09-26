@@ -760,6 +760,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
         addIntraproceduralNodesAndEdgesForCGNodeIfNeeded(src.getNode());
       }
     }
+    addedSuccs.add(getNumber(src));
     return g.hasEdge(src, dst);
   }
 
