@@ -12,6 +12,7 @@ package com.ibm.wala.examples.drivers;
 
 import java.io.File;
 import java.util.Properties;
+import java.util.jar.JarFile;
 
 import org.eclipse.jface.window.ApplicationWindow;
 
@@ -21,6 +22,7 @@ import com.ibm.wala.ide.ui.SWTTreeViewer;
 import com.ibm.wala.ide.ui.ViewIRAction;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphStats;
@@ -95,9 +97,21 @@ public class SWTCallGraph {
 
       ClassHierarchy cha = ClassHierarchy.make(scope);
 
-      Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
+      Iterable<Entrypoint> entrypoints = null;
+      JarFile jar = new JarFile(appJar);
+      if (jar.getManifest() != null) {
+        String mainClass = jar.getManifest().getMainAttributes().getValue("Main-Class");
+        if (mainClass != null) {
+          entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "L" + mainClass);
+        }
+      }
+      if (entrypoints == null) {
+        entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
+      }
+      
       AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
-
+      options.setReflectionOptions(ReflectionOptions.ONE_FLOW_TO_CASTS_NO_METHOD_INVOKE);
+      
       // //
       // build the call graph
       // //
