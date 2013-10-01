@@ -170,7 +170,20 @@ public class AnalysisScopeReader {
       while (paths.hasMoreTokens()) {
         String path = paths.nextToken();
         if (path.endsWith(".jar")) {
-          scope.addToScope(loader, new JarFile(path));
+          JarFile jar = new JarFile(path);
+          scope.addToScope(loader, jar);
+          try {
+            if (jar.getManifest() != null) {
+              String cp = jar.getManifest().getMainAttributes().getValue("Class-Path");
+              if (cp != null) {
+                for(String cpEntry : cp.split(" ")) { 
+                  addClassPathToScope(new File(path).getParent() + File.separator + cpEntry, scope, loader);
+                }
+              }
+            }
+          } catch (RuntimeException e) {
+            System.err.println("warning: trouble processing class path of " + path);
+          }
         } else {
           File f = new File(path);
           if (f.isDirectory()) {
