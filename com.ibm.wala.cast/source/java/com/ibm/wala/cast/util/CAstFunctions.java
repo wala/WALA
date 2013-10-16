@@ -58,12 +58,12 @@ public class CAstFunctions {
 
           @Override
           public boolean hasNext() {
-            return i < ((CAstNode) n).getChildCount();
+            return i < n.getChildCount();
           }
 
           @Override
           public CAstNode next() {
-            return ((CAstNode) n).getChild(i++);
+            return n.getChild(i++);
           }
 
           @Override

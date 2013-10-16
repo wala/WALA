@@ -67,7 +67,7 @@ public final class ClassReader implements ClassConstants {
     if (majorVersion < 45 || majorVersion > 51) {
       throw new InvalidClassFileException(offset, "unknown class file version: " + majorVersion + "." + minorVersion);
     }
-
+    
     cpParser = new ConstantPoolParser(bytes, offset, constantPoolCount);
     offset += cpParser.getRawSize();
 

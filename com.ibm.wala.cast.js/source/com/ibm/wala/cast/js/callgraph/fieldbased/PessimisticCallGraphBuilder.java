@@ -52,11 +52,15 @@ public class PessimisticCallGraphBuilder extends FieldBasedCallGraphBuilder {
 		return flowgraph;
 	}
 
+	protected boolean filterFunction(IMethod function) {
+	  return function.getDescriptor().equals(AstMethodReference.fnDesc);
+	}
+	
 	// add inter-procedural flow for local calls
 	private void resolveLocalCalls(FlowGraph flowgraph) {
 		for(IClass klass : cha) {
 			for(IMethod method : klass.getDeclaredMethods()) {
-				if(method.getDescriptor().equals(AstMethodReference.fnDesc)) {
+				if (filterFunction(method)) {
 					IR ir = cache.getIR(method);
 					ir.visitAllInstructions(new LocalCallSSAVisitor(method, ir.getSymbolTable(), cache.getDefUse(ir), flowgraph));
 				}

@@ -261,7 +261,7 @@ public abstract class AbstractSSAConversion {
 
     initializeVariables();
 
-    SEARCH((SSACFG.BasicBlock) CFG.entry());
+    SEARCH(CFG.entry());
   }
 
   

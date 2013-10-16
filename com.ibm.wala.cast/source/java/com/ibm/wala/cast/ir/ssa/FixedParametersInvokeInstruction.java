@@ -12,7 +12,6 @@ package com.ibm.wala.cast.ir.ssa;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAInstruction.IVisitor;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 
 /**

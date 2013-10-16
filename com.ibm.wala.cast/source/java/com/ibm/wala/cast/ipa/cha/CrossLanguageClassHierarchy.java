@@ -71,7 +71,7 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
   }
 
   private IClassHierarchy getHierarchy(Atom language) {
-    return (IClassHierarchy) hierarchies.get(language);
+    return hierarchies.get(language);
   }
 
   private IClassHierarchy getHierarchy(IClassLoader loader) {
@@ -105,7 +105,7 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
       loaders.add(getLoader((ClassLoaderReference) ldrs.next()));
     }
 
-    return (IClassLoader[]) loaders.toArray(new IClassLoader[loaders.size()]);
+    return loaders.toArray(new IClassLoader[loaders.size()]);
   }
 
   @Override

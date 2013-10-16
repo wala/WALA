@@ -111,12 +111,12 @@ public abstract class CAstAbstractLoader implements IClassLoader {
   
   public IClass lookupClass(String className, IClassHierarchy cha) {
     assert this.cha == cha;
-    return (IClass) types.get(TypeName.string2TypeName(className));
+    return types.get(TypeName.string2TypeName(className));
   }
 
   @Override
   public IClass lookupClass(TypeName className) {
-    return (IClass) types.get(className);
+    return types.get(className);
   }
 
   @Override

@@ -30,8 +30,8 @@ public class EclipseWebAnalysisEngine extends EclipseJavaScriptAnalysisEngine {
 
   private final Set<Pair<String, Plugin>> models = HashSetFactory.make();
   
-  public EclipseWebAnalysisEngine(IJavaScriptProject project, Collection<Pair<String, Plugin>> models) throws IOException, CoreException {
-    super(project);
+  public EclipseWebAnalysisEngine(IJavaScriptProject project, Collection<Pair<String, Plugin>> models, BuilderType builderType) throws IOException, CoreException {
+    super(project, builderType);
     // core DOM model
     this.models.add(Pair.make("preamble.js", (Plugin)JavaScriptPlugin.getDefault()));
     this.models.addAll(models);

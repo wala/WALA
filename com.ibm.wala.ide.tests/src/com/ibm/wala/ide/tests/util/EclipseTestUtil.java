@@ -28,6 +28,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
+import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
+import org.eclipse.ui.wizards.datatransfer.IImportStructureProvider;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 import org.eclipse.ui.wizards.datatransfer.ZipFileStructureProvider;
 import org.osgi.framework.Bundle;
@@ -57,9 +59,8 @@ public class EclipseTestUtil {
   
   public static void importZippedProject(Plugin plugin, String projectName, String zipFileName, IProgressMonitor monitor) {
     ZipFile zipFile = getZipFile(plugin, zipFileName);
-    ZipFileStructureProvider zp = new ZipFileStructureProvider(zipFile);
     createOpenProject(projectName);
-    importZipfile(projectName, zipFile, zp, monitor);
+    importZipfile(projectName, zipFile, monitor);
   }
 
   public static void createOpenProject(String projectName) {
@@ -83,29 +84,40 @@ public class EclipseTestUtil {
     }
   }
 
-  protected static void importZipfile(String projectName, ZipFile sourceZip, ZipFileStructureProvider provider, IProgressMonitor monitor) {
+  public static void importProjectFromFilesystem(String projectName, File root, IProgressMonitor monitor) {
+    FileSystemStructureProvider fs = FileSystemStructureProvider.INSTANCE;
+    importProject(fs, monitor, projectName, root);
+  }
+  
+  public static void importZipfile(String projectName, ZipFile zipFile, IProgressMonitor monitor) {
+    ZipFileStructureProvider provider = new ZipFileStructureProvider(zipFile);
+
+    importProject(provider, monitor, projectName, provider.getRoot());
+
+    try {
+      zipFile.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  protected static <T> void importProject(IImportStructureProvider provider, IProgressMonitor monitor, String projectName, T root) {
     IPath containerPath = getWorkspacePath().append(projectName).addTrailingSeparator();
 
-    ImportOperation importOp = new ImportOperation(containerPath, provider.getRoot(), provider, new IOverwriteQuery() {
+    ImportOperation importOp = new ImportOperation(containerPath, root, provider, new IOverwriteQuery() {
       @Override
       public String queryOverwrite(String pathString) {
         return IOverwriteQuery.ALL;
       }
     });
 
-    importOp.setCreateContainerStructure(true);
+    importOp.setCreateContainerStructure(false);
     importOp.setOverwriteResources(true);
     try {
       importOp.run(monitor);
     } catch (InvocationTargetException e) {
       e.printStackTrace();
     } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-
-    try {
-      sourceZip.close();
-    } catch (IOException e) {
       e.printStackTrace();
     }
   }
