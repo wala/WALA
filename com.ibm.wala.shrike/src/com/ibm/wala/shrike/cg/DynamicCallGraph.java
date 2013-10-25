@@ -12,14 +12,13 @@ package com.ibm.wala.shrike.cg;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.io.PrintStream;
 import java.io.Writer;
+import java.util.regex.Pattern;
 
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.Disassembler;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
-import com.ibm.wala.shrikeBT.Instruction;
 import com.ibm.wala.shrikeBT.LoadInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.MethodEditor;
@@ -58,6 +57,8 @@ public class DynamicCallGraph {
 
 	private static Class<?> runtime = Runtime.class;
 	
+	private static Pattern filter;
+	
 	public static void main(String[] args) throws Exception {
 	  instrumenter = new OfflineInstrumenter();
 
@@ -68,6 +69,8 @@ public class DynamicCallGraph {
 	  for(int i = 0; i < args.length - 1; i++) {
 	    if ("--runtime".equals(args[i])) {
 	      runtime = Class.forName(args[i+1]);
+	    } else if ("--filter".equals(args[i])) {
+	      filter = Pattern.compile(args[i+1]);
 	    }
 	  }
 	  
@@ -82,6 +85,9 @@ public class DynamicCallGraph {
 
 	private static void doClass(final ClassInstrumenter ci, Writer w) throws Exception {
 		final String className = ci.getReader().getName();
+    if (filter != null && ! filter.matcher(className).find()) {
+      return;
+    }
 		w.write("Class: " + className + "\n");
 		w.flush();
 

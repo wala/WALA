@@ -25,7 +25,7 @@ public class Runtime {
   public static void termination(String method, Object receiver, boolean exception) {
     runtime.output.printf("ending %s\n", method);    
     runtime.output.flush();
-     }
+  }
   
   public static void pop(String method) {
     
