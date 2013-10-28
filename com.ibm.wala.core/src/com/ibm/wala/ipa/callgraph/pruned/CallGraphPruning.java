@@ -10,12 +10,28 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 
+
 public final class CallGraphPruning {
+  
+  /**
+   * Keeps a given CGNode if it stems from application code
+   * @author Martin Mohr
+   *
+   */
+  private class ApplicationLoaderPolicy implements PruningPolicy {
+
+    @Override
+    public boolean check(CGNode n) {
+      return n.getMethod().getDeclaringClass().getClassLoader().getName().equals(AnalysisScope.APPLICATION);
+    }
+    
+  }
 	
 	public CallGraphPruning(CallGraph cg) {
 		this.cg = cg;
 	}
 	
+	private PruningPolicy pruningPolicy;
 	private Set<CGNode> keep;
 	private LinkedList<CGNode> visited;
 	private List<CGNode> marked;
@@ -42,19 +58,31 @@ public final class CallGraphPruning {
 	 * @return Set of relevant callgraph nodes.
 	 */
 	public Set<CGNode> findApplicationNodes(final int depth) {
-		
-		if (DEBUG) {
-			 System.out.println("Running optimization with depth: " + depth);
-		}
-		
-		this.marked = new LinkedList<CGNode>();
-		this.keep = new HashSet<CGNode>();
-		this.visited = new LinkedList<CGNode>();
-		this.depth = depth;
-		
-		dfs(cg.getFakeRootNode());
-		
-		return keep;
+	  return findNodes(depth, new ApplicationLoaderPolicy());
+	}
+	
+	/**
+	 * Searches all nodes in the callgraph according to the given pruning policy. It includes all methods which
+	 * transitively may call methods which comply to the given pruning policy. All other methods are cut at the level
+	 * provided by parameter 'depth'
+	 * @param depth the level at which methods which do not comply to the given pruning policy are cut off.
+	 * @param policy pruning policy which decides which branches are kept in the call graph
+	 * @return set of relevant callgraph nodes
+	 */
+	public Set<CGNode> findNodes(final int depth, PruningPolicy policy) {
+	  if (DEBUG) {
+      System.out.println("Running optimization with depth: " + depth);
+   }
+   
+   this.marked = new LinkedList<CGNode>();
+   this.keep = new HashSet<CGNode>();
+   this.visited = new LinkedList<CGNode>();
+   this.depth = depth;
+   this.pruningPolicy = policy;
+   
+   dfs(cg.getFakeRootNode());
+   
+   return keep;
 	}
 	
 	private void dfs(CGNode root) {
@@ -74,15 +102,11 @@ public final class CallGraphPruning {
 			}
 		}
 		
-		if (checkLoader(root)) {
+		if (pruningPolicy.check(root)) {
 			keep.addAll(visited);
 			addDepth(root);
 		}
 		visited.removeLast();		
-	}
-	
-	private static boolean checkLoader(CGNode node) {
-		return node.getMethod().getDeclaringClass().getClassLoader().getName().equals(AnalysisScope.APPLICATION);
 	}
 	
 	private void addDepth(CGNode node) {
