@@ -6,28 +6,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 
 
 public final class CallGraphPruning {
   
-  /**
-   * Keeps a given CGNode if it stems from application code
-   * @author Martin Mohr
-   *
-   */
-  private class ApplicationLoaderPolicy implements PruningPolicy {
-
-    @Override
-    public boolean check(CGNode n) {
-      return n.getMethod().getDeclaringClass().getClassLoader().getName().equals(AnalysisScope.APPLICATION);
-    }
-    
-  }
-	
-	public CallGraphPruning(CallGraph cg) {
+  public CallGraphPruning(CallGraph cg) {
 		this.cg = cg;
 	}
 	
@@ -58,7 +43,7 @@ public final class CallGraphPruning {
 	 * @return Set of relevant callgraph nodes.
 	 */
 	public Set<CGNode> findApplicationNodes(final int depth) {
-	  return findNodes(depth, new ApplicationLoaderPolicy());
+	  return findNodes(depth, ApplicationLoaderPolicy.INSTANCE);
 	}
 	
 	/**
