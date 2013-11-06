@@ -366,7 +366,7 @@ final public class ClassInstrumenter {
         }
       }
 
-      int[] rawTable = LocalVariableTableWriter.makeRawTable(newMap);
+      int[] rawTable = LocalVariableTableWriter.makeRawTable(newMap, output);
       if (rawTable == null || rawTable.length == 0) {
         return null;
       } else {
