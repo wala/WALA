@@ -79,6 +79,12 @@ public class JSAstTranslator extends AstTranslator {
     return null;
   }
 
+  
+  @Override
+  protected boolean ignoreName(String name) {
+    return super.ignoreName(name) || name.endsWith(" temp");
+  }
+
   /**
    * generate an instruction that checks if readVn is undefined and throws an exception if it isn't
    */

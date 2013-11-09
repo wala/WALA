@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
@@ -51,12 +52,18 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.functions.Function;
 
 public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysisEngine<IJavaScriptProject> {
 
-  public EclipseJavaScriptAnalysisEngine(IJavaScriptProject project) throws IOException, CoreException {
+  public enum BuilderType { PESSIMISTIC, OPTIMISTIC, REFLECTIVE };
+  
+  private final BuilderType builderType;
+  
+  public EclipseJavaScriptAnalysisEngine(IJavaScriptProject project, BuilderType builderType) throws IOException, CoreException {
     super(project, "js");
+    this.builderType = builderType;
   }
 
   
@@ -88,7 +95,7 @@ public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysi
 
   @Override
   protected JavaScriptEclipseProjectPath createProjectPath(IJavaScriptProject project) throws IOException, CoreException {
-    return JavaScriptEclipseProjectPath.make(project, Collections.EMPTY_SET);
+    return JavaScriptEclipseProjectPath.make(project, Collections.<Pair<String,Plugin>>emptySet());
   }
 
   @Override
@@ -136,23 +143,43 @@ public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysi
       String scriptName = getScriptName(((AstMethod)e.getMethod()));
       scripts.add(scriptName);
     }
-    
-    FieldBasedCallGraphBuilder builder = new OptimisticCallgraphBuilder(getClassHierarchy(), getDefaultOptions(roots), makeDefaultCache()) {
+ 
+    final Function<IMethod, Boolean> filter = new Function<IMethod, Boolean>() {
       @Override
-      protected FlowGraph flowGraphFactory() {
-        FlowGraphBuilder b = new FilteredFlowGraphBuilder(cha, cache, new Function<IMethod, Boolean>() {
-          @Override
-          public Boolean apply(IMethod object) {
-            if (object instanceof AstMethod) {
-               return scripts.contains(getScriptName((AstMethod)object));
-            } else {
-              return true;
-            }
-          }
-        });
-        return b.buildFlowGraph();
-      }  
+      public Boolean apply(IMethod object) {
+        if (object instanceof AstMethod) {
+           return scripts.contains(getScriptName((AstMethod)object));
+        } else {
+          return true;
+        }
+      }
     };
+
+    AnalysisOptions options = getDefaultOptions(roots);
+    if (builderType.equals(BuilderType.OPTIMISTIC)) {
+      ((JSAnalysisOptions)options).setHandleCallApply(false);
+    }
+
+    FieldBasedCallGraphBuilder builder = 
+        builderType.equals(BuilderType.PESSIMISTIC)? 
+            new PessimisticCallGraphBuilder(getClassHierarchy(), options, makeDefaultCache()) {
+              @Override
+              protected FlowGraph flowGraphFactory() {
+                FlowGraphBuilder b = new FilteredFlowGraphBuilder(cha, cache, filter);
+                return b.buildFlowGraph();
+              }
+              @Override
+              protected boolean filterFunction(IMethod function) {
+                 return super.filterFunction(function) && filter.apply(function);
+              }     
+            }      
+            : new OptimisticCallgraphBuilder(getClassHierarchy(), options, makeDefaultCache()) {
+              @Override
+              protected FlowGraph flowGraphFactory() {
+                FlowGraphBuilder b = new FilteredFlowGraphBuilder(cha, cache, filter);
+                return b.buildFlowGraph();
+              }  
+            };
     
     return builder.buildCallGraph(roots, new NullProgressMonitor());
   }

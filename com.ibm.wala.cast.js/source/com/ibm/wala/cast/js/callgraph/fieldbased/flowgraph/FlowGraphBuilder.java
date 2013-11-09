@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
 import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
+import com.ibm.wala.cast.ir.ssa.AstIRFactory.AstIR;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
@@ -333,6 +334,10 @@ public class FlowGraphBuilder {
 				
 				// find the function being defined here
 				IClass klass = cha.lookupClass(TypeReference.findOrCreate(JavaScriptTypes.jsLoader, fn_name));
+				if (klass == null) {
+				  System.err.println("cannot find " + fn_name + " at " +  ((AstMethod)ir.getMethod()).getSourcePosition(ir.getCallInstructionIndices(invk.getCallSite()).intIterator().next()));
+				  return;
+				}
 				IMethod fn = klass.getMethod(AstMethodReference.fnSelector);
 				FuncVertex fnVertex = factory.makeFuncVertex(klass);
 				

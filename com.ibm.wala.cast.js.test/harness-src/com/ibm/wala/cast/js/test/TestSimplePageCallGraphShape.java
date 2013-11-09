@@ -310,7 +310,6 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     verifyGraphAssertions(CG, assertionsForWindowOnload);
   }
   
-
   /*
   @Test public void testJQuery() throws IOException, IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/jquery.html");

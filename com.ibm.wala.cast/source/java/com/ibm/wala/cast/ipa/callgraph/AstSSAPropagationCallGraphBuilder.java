@@ -423,7 +423,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         system.newSideEffect(new UnaryOperator<PointsToSetVariable>() {
           @Override
           public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-            final IntSetVariable objects = (IntSetVariable) rhs;
+            final IntSetVariable objects = rhs;
             if (objects.getValue() != null) {
               objects.getValue().foreach(new IntSetAction() {
                 @Override
@@ -489,7 +489,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         system.newSideEffect(new UnaryOperator<PointsToSetVariable>() {
           @Override
           public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-            final IntSetVariable objects = (IntSetVariable) rhs;
+            final IntSetVariable objects = rhs;
             if (objects.getValue() != null) {
               objects.getValue().foreach(new IntSetAction() {
                 @Override
@@ -971,7 +971,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       system.newSideEffect(new UnaryOperator<PointsToSetVariable>() {
         @Override
         public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-          final IntSetVariable objects = (IntSetVariable) rhs;
+          final IntSetVariable objects = rhs;
           if (objects.getValue() != null) {
             objects.getValue().foreach(new IntSetAction() {
               @Override
@@ -1035,7 +1035,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       system.newSideEffect(new UnaryOperator<PointsToSetVariable>() {
         @Override
         public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-          final IntSetVariable fields = (IntSetVariable) rhs;
+          final IntSetVariable fields = rhs;
           if (fields.getValue() != null) {
             fields.getValue().foreach(new IntSetAction() {
               @Override

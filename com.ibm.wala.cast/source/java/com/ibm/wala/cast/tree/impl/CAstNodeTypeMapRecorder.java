@@ -28,7 +28,7 @@ public class CAstNodeTypeMapRecorder
 
   @Override
   public CAstType getNodeType(CAstNode node) {
-    return (CAstType) get(node);
+    return get(node);
   }
 
   public void add(CAstNode node, CAstType type) {

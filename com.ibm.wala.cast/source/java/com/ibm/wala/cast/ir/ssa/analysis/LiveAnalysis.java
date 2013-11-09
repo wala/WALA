@@ -80,7 +80,7 @@ public class LiveAnalysis {
    */
   public static Result perform(final ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, final SymbolTable symtab, final BitVector considerLiveAtExit) {
     final BitVectorIntSet liveAtExit = new BitVectorIntSet(considerLiveAtExit);
-    final SSAInstruction[] instructions = (SSAInstruction[]) cfg.getInstructions();
+    final SSAInstruction[] instructions = cfg.getInstructions();
 
     /**
      * Gen/kill operator specific to exit basic blocks

@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.js.client.EclipseJavaScriptAnalysisEngine;
+import com.ibm.wala.cast.js.client.EclipseJavaScriptAnalysisEngine.BuilderType;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
@@ -90,7 +91,7 @@ public abstract class AbstractJSProjectScopeTest {
   }
 
   protected EclipseJavaScriptAnalysisEngine makeAnalysisEngine(IJavaScriptProject p) throws IOException, CoreException {
-    return new EclipseJavaScriptAnalysisEngine(p);
+    return new EclipseJavaScriptAnalysisEngine(p, BuilderType.REFLECTIVE);
   }
 
 }

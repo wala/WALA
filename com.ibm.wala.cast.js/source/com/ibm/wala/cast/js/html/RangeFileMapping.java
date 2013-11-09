@@ -114,8 +114,8 @@ public class RangeFileMapping implements FileMapping {
         }
         @Override
         public InputStream getInputStream() throws IOException {
-          return includedURL.openConnection().getInputStream();
-        }
+          return RangeFileMapping.this.getInputStream();
+         }
         @Override
         public Position getIncludePosition() {
           return includePosition;
@@ -132,5 +132,8 @@ public class RangeFileMapping implements FileMapping {
     }
   }
 
+  public InputStream getInputStream() throws IOException {
+    return includedURL.openConnection().getInputStream();
+  }
 
 }

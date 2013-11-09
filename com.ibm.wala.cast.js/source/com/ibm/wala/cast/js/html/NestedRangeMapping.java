@@ -70,7 +70,7 @@ public class NestedRangeMapping implements FileMapping {
 
             @Override
             public InputStream getInputStream() throws IOException {
-             return pos.getInputStream();
+              return pos.getInputStream();
             }
           });
     } else {

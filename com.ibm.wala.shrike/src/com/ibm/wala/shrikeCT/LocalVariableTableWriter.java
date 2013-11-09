@@ -12,6 +12,8 @@ package com.ibm.wala.shrikeCT;
 
 import java.util.Arrays;
 
+import com.ibm.wala.shrikeBT.Compiler;
+
 /**
  * This class helps emit LocalVariableTable attributes.
  */
@@ -87,7 +89,7 @@ public final class LocalVariableTableWriter extends ClassWriter.Element {
    *          information about that local variable at that offset
    * @throws IllegalArgumentException if varMap == null
    */
-  public static int[] makeRawTable(int[][] varMap) throws IllegalArgumentException {
+  public static int[] makeRawTable(int[][] varMap, Compiler.Output output) throws IllegalArgumentException {
     if (varMap == null) {
       throw new IllegalArgumentException("varMap == null");
     }
@@ -110,7 +112,7 @@ public final class LocalVariableTableWriter extends ClassWriter.Element {
           lastVector = varMap[i];
 
           if (lastVector != null) {
-            for (int k = 0; k < lastVector.length / 2; k++) {
+            for (int k = 0; k < lastVector.length / 2 && k < output.getMaxLocals(); k++) {
               if (lastVector[k * 2] > 0 && i >= varEnd[k]) {
                 int entryOffset = entryCount * 5;
                 entryCount++;

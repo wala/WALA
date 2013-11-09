@@ -116,7 +116,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
       for (Iterator ts = types.keySet().iterator(); ts.hasNext();) {
         TypeName tn = (TypeName) ts.next();
         try {
-          System.err.println(("found type " + tn + " : " + types.get(tn) + " < " + ((IClass) types.get(tn)).getSuperclass()));
+          System.err.println(("found type " + tn + " : " + types.get(tn) + " < " + types.get(tn).getSuperclass()));
         } catch (Exception e) {
           System.err.println(e);
         }

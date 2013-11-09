@@ -18,6 +18,7 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.FuncVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VertexFactory;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -51,11 +52,15 @@ public class PessimisticCallGraphBuilder extends FieldBasedCallGraphBuilder {
 		return flowgraph;
 	}
 
+	protected boolean filterFunction(IMethod function) {
+	  return function.getDescriptor().equals(AstMethodReference.fnDesc);
+	}
+	
 	// add inter-procedural flow for local calls
 	private void resolveLocalCalls(FlowGraph flowgraph) {
 		for(IClass klass : cha) {
 			for(IMethod method : klass.getDeclaredMethods()) {
-				if(method.getDescriptor().equals(AstMethodReference.fnDesc)) {
+				if (filterFunction(method)) {
 					IR ir = cache.getIR(method);
 					ir.visitAllInstructions(new LocalCallSSAVisitor(method, ir.getSymbolTable(), cache.getDefUse(ir), flowgraph));
 				}
@@ -91,6 +96,10 @@ public class PessimisticCallGraphBuilder extends FieldBasedCallGraphBuilder {
 				// the name of the function
 				String fnName = symtab.getStringValue(invk.getUse(1));
 				IClass fnClass = cha.lookupClass(TypeReference.findOrCreate(JavaScriptTypes.jsLoader, fnName));
+        if (fnClass == null) {
+          System.err.println("cannot find " + fnName + " at " +  ((AstMethod)method).getSourcePosition());
+          return;
+        }
 				IMethod fn = fnClass.getMethod(AstMethodReference.fnSelector);
 				FuncVertex callee = factory.makeFuncVertex(fnClass);
 				

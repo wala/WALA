@@ -206,7 +206,7 @@ public class SSAConversion extends AbstractSSAConversion {
           PhiUseRecord use = (PhiUseRecord) x;
           int bb = use.BBnumber;
           int phi = use.phiNumber;
-          SSACFG.BasicBlock BB = (SSACFG.BasicBlock) CFG.getNode(bb);
+          SSACFG.BasicBlock BB = CFG.getNode(bb);
           BB.addPhiForLocal(phi, (SSAPhiInstruction) undo(BB.getPhiForLocal(phi), use.useNumber, lhs));
           copyPropagationMap.remove(use);
         }
@@ -273,7 +273,7 @@ public class SSAConversion extends AbstractSSAConversion {
 
   private CopyPropagationRecord topR(int v) {
     if (R[v] != null && !R[v].isEmpty()) {
-      CopyPropagationRecord rec = (CopyPropagationRecord) R[v].peek();
+      CopyPropagationRecord rec = R[v].peek();
       if (top(v) == rec.rhs) {
         return rec;
       }
@@ -474,7 +474,7 @@ public class SSAConversion extends AbstractSSAConversion {
     this.R = new Stack[ir.getSymbolTable().getMaxValueNumber() + 1];
 
     for (int i = 0; i < CFG.getNumberOfNodes(); i++) {
-      SSACFG.BasicBlock bb = (SSACFG.BasicBlock) CFG.getNode(i);
+      SSACFG.BasicBlock bb = CFG.getNode(i);
       if (bb.hasPhi()) {
         int n = 0;
         for (Iterator X = bb.iteratePhis(); X.hasNext(); n++)

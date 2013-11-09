@@ -100,7 +100,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
           e.printStackTrace();
         }
 
-        scriptRegion.println(text, currentScriptTag.getContentPosition(), url);
+        scriptRegion.println(text, currentScriptTag.getContentPosition(), url, true);
       }
     }
 
@@ -158,9 +158,9 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
         String fName = tag.getName().toLowerCase() + "_" + attName + "_" + funcName;
         String signatureLine = "function " + fName + "(event) {";
         // Defines the function  
-        domRegion.println(signatureLine + "\n" + extructJS(attValue) + "\n}", pos, url);
+        domRegion.println(signatureLine + "\n" + extructJS(attValue) + "\n}", pos, url, true);
         // Run it
-        entrypointRegion.println("\t" + fName + "(null);", pos, url);
+        entrypointRegion.println("\t" + fName + "(null);", pos, url, true);
       }
     }
 
@@ -224,7 +224,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
           x.append(line).append("\n");
         }
 
-        scriptRegion.println(x.toString(), scriptTag.getElementPosition(), scriptSrc);
+        scriptRegion.println(x.toString(), scriptTag.getElementPosition(), scriptSrc, false);
 
       } finally {
         if (scriptReader != null) {
