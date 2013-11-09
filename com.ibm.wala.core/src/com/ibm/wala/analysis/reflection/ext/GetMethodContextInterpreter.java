@@ -42,21 +42,21 @@ import com.ibm.wala.util.strings.Atom;
 public class GetMethodContextInterpreter implements SSAContextInterpreter {
   /**
    * TODO
-   *  MH: Hard-code those in {@link com.ibm.wala.types.TypeReference}?
+   *  MH: Maybe hard-code those in {@link com.ibm.wala.types.TypeReference}?
    */
   public final static MethodReference GET_METHOD = MethodReference.findOrCreate(TypeReference.JavaLangClass, "getMethod",
       "(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;");
 
   /**
    * TODO
-   *  MH: Hard-code those in {@link com.ibm.wala.types.TypeReference}?
+   *  MH: Maybe hard-code those in {@link com.ibm.wala.types.TypeReference}?
    */
   public final static MethodReference GET_DECLARED_METHOD = MethodReference.findOrCreate(TypeReference.JavaLangClass,
       "getDeclaredMethod", "(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;");
 
   private static final boolean DEBUG = false;
 
-  /*
+  /**
    * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getIR(com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
@@ -85,7 +85,7 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
     return null;
   }
 
-  /*
+  /**
    * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getNumberOfStatements(com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
@@ -94,7 +94,7 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
     return getIR(node).getInstructions().length;
   }
 
-  /*
+  /**
    * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#understands(com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
@@ -130,8 +130,13 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
   }
 
   /**
-   * Get all non-constructor, non-class-initializer methods declared by a class
-   * if their name is equal to the specified name.
+   * @brief
+   *  Get all non-constructor, non-class-initializer methods declared by a class
+   *  if their name is equal to the specified name.
+   * @param cls
+   *  The class.
+   * @param name
+   *  The name.
    */
   private Collection<IMethod> getDeclaredNormalMethods(IClass cls,Atom name) {
     Collection<IMethod> result = HashSetFactory.make();
@@ -144,8 +149,13 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
   }
 
   /**
-   * Get all non-constructor, non-class-initializer methods declared by a class
-   * and all its superclasses if their name is equal to the specifed name.
+   * @brief
+   *  Get all non-constructor, non-class-initializer methods declared by a class
+   *  and all its superclasses if their name is equal to the specified name.
+   * @param cls
+   *  The class.
+   * @param name
+   *  The name.
    */
   private Collection<IMethod> getAllNormalPublicMethods(IClass cls,Atom name) {
     Collection<IMethod> result = HashSetFactory.make();
@@ -160,12 +170,15 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
   }
 
   /**
-   * Create statements for methods like getMethod() and getDeclaredMethod(),
-   * which return a single method. This creates a return statement for each
-   * possible return value, each of which is a {@link ConstantValue} for an
-   * {@link IMethod}.
-   * 
-   * @param returnValues the possible return values for this method.
+   * @brief
+   *  Create statements for methods like getMethod() and getDeclaredMethod(),
+   *  which return a single method. This creates a return statement for each
+   *  possible return value, each of which is a {@link ConstantValue} for an
+   *  {@link IMethod}.
+   * @param returnValues
+   *  the possible return values for this method.
+   * @return
+   *  the statements.
    */
   private SSAInstruction[] getParticularMethodStatements
       (

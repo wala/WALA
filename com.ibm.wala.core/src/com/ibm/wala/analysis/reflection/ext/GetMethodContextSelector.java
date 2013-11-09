@@ -75,7 +75,7 @@ public class GetMethodContextSelector implements ContextSelector {
             System.out.println(" " + instanceKey);
           }
         }
-        // ... return an GetMethdContext.
+        // ... return an GetMethodContext.
         ConstantKey ck = makeConstantKey(caller.getClassHierarchy(),sym);
         System.out.println(ck);
         return new GetMethodContext(new PointType(getTypeConstant(receiver[0])),ck);
@@ -84,6 +84,7 @@ public class GetMethodContextSelector implements ContextSelector {
         System.out.println(", with constant := no");
       }
       // Otherwise, return null.
+      // TODO Remove this, just fall-through.
       return null;
     }
     return null;
@@ -143,6 +144,7 @@ public class GetMethodContextSelector implements ContextSelector {
   /**
    * TODO
    *  MH: Shouldn't be the first TWO parameters be relevant?
+   *      Documentation is not too helpful about the implications.
    */
   private static final IntSet thisParameter = IntSetUtil.make(new int[]{0});
 
