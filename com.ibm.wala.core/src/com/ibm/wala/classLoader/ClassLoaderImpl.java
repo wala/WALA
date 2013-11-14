@@ -27,7 +27,6 @@ import java.util.TreeSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
-import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
@@ -39,6 +38,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Iterator2Iterable;
+import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.io.FileSuffixes;
 import com.ibm.wala.util.shrike.ShrikeClassReaderHandle;

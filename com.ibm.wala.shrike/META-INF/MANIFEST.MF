@@ -7,6 +7,7 @@ Bundle-Vendor: %providerName
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Export-Package: com.ibm.wala.shrike.bench,
+ com.ibm.wala.shrike.cg,
  com.ibm.wala.shrike.copywriter,
  com.ibm.wala.shrikeBT,
  com.ibm.wala.shrikeBT.analysis,

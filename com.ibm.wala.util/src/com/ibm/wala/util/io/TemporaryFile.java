@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *****************************************************************************/
-package com.ibm.wala.cast.util;
+package com.ibm.wala.util.io;
 
 import java.io.File;
 import java.io.FileOutputStream;

@@ -44,9 +44,9 @@ import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.ClassLoaderImpl;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.util.config.SetOfClasses;
 
 public class JDTClassLoaderFactory extends ClassLoaderFactoryImpl {
 

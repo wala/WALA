@@ -56,9 +56,9 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
-import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.util.config.SetOfClasses;
 
 public class JDTJavaSourceAnalysisEngine extends EclipseProjectSourceAnalysisEngine<IJavaProject> {
 
