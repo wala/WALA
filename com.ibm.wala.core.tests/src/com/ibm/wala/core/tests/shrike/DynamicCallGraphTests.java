@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
+import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -32,10 +33,9 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.io.TemporaryFile;
 
-public class DynamicCallGraphTests {
+public class DynamicCallGraphTests extends WalaTestCase {
   
   private static final URL testJarLocation = DynamicCallGraphTests.class.getClassLoader().getResource("com.ibm.wala.core.testdata_1.0.0.jar");
   
