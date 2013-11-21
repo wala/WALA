@@ -17,32 +17,51 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.Graph;
-import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
+import com.ibm.wala.util.graph.NumberedGraph;
+import com.ibm.wala.util.graph.impl.DelegatingNumberedGraph;
+import com.ibm.wala.util.graph.impl.NodeWithNumberedEdges;
 import com.ibm.wala.util.graph.traverse.WelshPowell;
 
 public class WelshPowellTest {
 
-  private <T> void assertColoring(Graph<T> G, Map<T,Integer> colors) {
-    for(T n : G) {
-      for(Iterator<T> ss = G.getSuccNodes(n); ss.hasNext(); ) {
+  private class TypedNode<T> extends NodeWithNumberedEdges {
+    private final T data;
+    
+    private TypedNode(T data) {
+      this.data = data;
+    }
+    
+    @Override
+    public String toString() {
+      return data.toString();
+    }
+  }
+  
+  private <T> void assertColoring(NumberedGraph<TypedNode<T>> G, Map<TypedNode<T>,Integer> colors) {
+    for(TypedNode<T> n : G) {
+      for(Iterator<TypedNode<T>> ss = G.getSuccNodes(n); ss.hasNext(); ) {
         Assert.assertTrue(colors.get(n).intValue() != colors.get(ss.next()).intValue()); 
       }
-      for(Iterator<T> ps = G.getPredNodes(n); ps.hasNext(); ) {
+      for(Iterator<TypedNode<T>> ps = G.getPredNodes(n); ps.hasNext(); ) {
         Assert.assertTrue(colors.get(n).intValue() != colors.get(ps.next()).intValue()); 
       }
     }
   }
   
-  private <T> Graph<T> buildGraph(T[][] data) {
-    SlowSparseNumberedGraph<T> G = SlowSparseNumberedGraph.make();
+  private <T> NumberedGraph<TypedNode<T>> buildGraph(T[][] data) {
+    DelegatingNumberedGraph<TypedNode<T>> G = new DelegatingNumberedGraph<TypedNode<T>>();
+    Map<T,TypedNode<T>> nodes = HashMapFactory.make();
     for(int i = 0; i < data.length; i++) {
-      G.addNode(data[i][0]);
+      TypedNode<T> n = new TypedNode<T>(data[i][0]);
+      nodes.put(data[i][0], n);
+      G.addNode(n);
     }
     for(int i = 0; i < data.length; i++) {
       for(int j = 1; j < data[i].length; j++) {
-        G.addEdge(data[i][0], data[i][j]);
+        G.addEdge(nodes.get(data[i][0]), nodes.get(data[i][j]));
       }
     }
     
@@ -51,7 +70,7 @@ public class WelshPowellTest {
   
     @Test
     public void testOne() {
-      Graph<Integer> G = 
+      NumberedGraph<TypedNode<Integer>> G = 
         buildGraph(new Integer[][]{
             new Integer[]{1, 6, 7, 8},
             new Integer[]{2, 5, 7, 8},
@@ -61,7 +80,7 @@ public class WelshPowellTest {
             new Integer[]{6, 3, 1, 4},
             new Integer[]{7, 1, 2, 4},
             new Integer[]{8, 1, 2, 3}});
-      Pair<Map<Integer, Integer>,Integer> colors = new WelshPowell<Integer>().color(G);
+      Pair<Map<TypedNode<Integer>, Integer>,Integer> colors = new WelshPowell<TypedNode<Integer>>().color(G);
       System.err.println(colors);
       assertColoring(G, colors.fst);
       Assert.assertTrue(colors.snd.intValue() <= 4);
@@ -69,7 +88,7 @@ public class WelshPowellTest {
     
     @Test
     public void testTwo() {
-      Graph<String> G =
+      NumberedGraph<TypedNode<String>> G =
         buildGraph(new String[][] {
            new String[]{"poly1", "poly2", "star1", "poly5"},
            new String[]{"poly2", "poly1", "star2", "poly3"},
@@ -81,7 +100,7 @@ public class WelshPowellTest {
            new String[]{"star3", "poly3", "star1", "star5"},
            new String[]{"star4", "poly4", "star1", "star2"},
            new String[]{"star5", "poly5", "star2", "star3"}});
-      Pair<Map<String, Integer>,Integer> colors = new WelshPowell<String>().color(G);
+      Pair<Map<TypedNode<String>, Integer>,Integer> colors = new WelshPowell<TypedNode<String>>().color(G);
       System.err.println(colors);
       assertColoring(G, colors.fst);
       Assert.assertTrue(colors.snd.intValue() == 3);       
