@@ -48,51 +48,50 @@ public class WelshPowell<T extends INodeWithNumber> {
     for(int i = 0; i < colors.length; i++) {
       colors[i] = -1;
     }
-    
+
     SortedSet<T> vertices = new TreeSet<T>(order);
-    
+
     for(T n : G) {
       vertices.add(n);
     }
-    
+
     int currentColor = 0;
     int colored = 0;
-    
-    while(colored < G.getNumberOfNodes()) {
-      for(T n : vertices) {
-        int id = n.getGraphNodeId();
-        if (colors[id] == -1) {
-          colors[id] = currentColor;
-          colored++;
-          
-          for(T m : vertices) {
-            if (colors[m.getGraphNodeId()] == -1) {
-              color_me: {
-                for(Iterator<T> ps = G.getPredNodes(m); ps.hasNext(); ) {
-                  T p = ps.next();
-                  if (colors[ p.getGraphNodeId() ] == currentColor) {
-                    break color_me;
-                  }
+
+    for(T n : vertices) {
+      int id = n.getGraphNodeId();
+      if (colors[id] == -1) {
+        colors[id] = currentColor;
+        colored++;
+
+        for(T m : vertices) {
+          if (colors[m.getGraphNodeId()] == -1) {
+            color_me: {
+              for(Iterator<T> ps = G.getPredNodes(m); ps.hasNext(); ) {
+                T p = ps.next();
+                if (colors[ p.getGraphNodeId() ] == currentColor) {
+                  break color_me;
                 }
-                
-                for(Iterator<T> ss = G.getSuccNodes(m); ss.hasNext(); ) {
-                  T s = ss.next();
-                  if (colors[s.getGraphNodeId()] == currentColor) {
-                    break color_me;
-                  }
-                }
-                
-                colors[m.getGraphNodeId()] = currentColor;
-                colored++;
               }
+  
+              for(Iterator<T> ss = G.getSuccNodes(m); ss.hasNext(); ) {
+                T s = ss.next();
+                if (colors[s.getGraphNodeId()] == currentColor) {
+                  break color_me;
+                }
+              }
+  
+              colors[m.getGraphNodeId()] = currentColor;
+              colored++;
             }
           }
-          
-          currentColor++;
         }
+
+        currentColor++;
       }
     }
-    
+    assert colored == G.getNumberOfNodes();
+
     Map<T,Integer> colorMap = HashMapFactory.make();
     for(int i = 0; i < colors.length; i++) {
       colorMap.put(G.getNode(i), colors[i]);
