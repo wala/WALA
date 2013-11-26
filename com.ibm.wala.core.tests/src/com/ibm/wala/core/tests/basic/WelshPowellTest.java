@@ -17,10 +17,10 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.graph.traverse.WelshPowell;
+import com.ibm.wala.util.graph.traverse.WelshPowell.ColoredVertices;
 
 public class WelshPowellTest {
 
@@ -61,10 +61,10 @@ public class WelshPowellTest {
             new Integer[]{6, 3, 1, 4},
             new Integer[]{7, 1, 2, 4},
             new Integer[]{8, 1, 2, 3}});
-      Pair<Map<Integer, Integer>,Integer> colors = new WelshPowell<Integer>().color(G);
+      ColoredVertices<Integer> colors = new WelshPowell<Integer>().color(G);
       System.err.println(colors);
-      assertColoring(G, colors.fst);
-      Assert.assertTrue(colors.snd.intValue() <= 4);
+      assertColoring(G, colors.getColors());
+      Assert.assertTrue(colors.getNumColors() <= 4);
     }
     
     @Test
@@ -81,9 +81,9 @@ public class WelshPowellTest {
            new String[]{"star3", "poly3", "star1", "star5"},
            new String[]{"star4", "poly4", "star1", "star2"},
            new String[]{"star5", "poly5", "star2", "star3"}});
-      Pair<Map<String, Integer>,Integer> colors = new WelshPowell<String>().color(G);
+      ColoredVertices<String> colors = new WelshPowell<String>().color(G);
       System.err.println(colors);
-      assertColoring(G, colors.fst);
-      Assert.assertTrue(colors.snd.intValue() == 3);       
+      assertColoring(G, colors.getColors());
+      Assert.assertTrue(colors.getNumColors() == 3);       
     }
 }
