@@ -1,5 +1,14 @@
-/* Copyright (c) 2013 Michael Heilmann */
-package com.ibm.wala.analysis.reflection.ext;
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package com.ibm.wala.analysis.reflection;
 
 import com.ibm.wala.analysis.typeInference.PointType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
@@ -20,6 +29,10 @@ import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
  *  - The value of the first argument (the method name) is a constant.
  * @author
  *  Michael Heilmann
+ * @see
+ *  com.ibm.wala.analysis.reflection.GetMethodContextInterpreter
+ * @see
+ *  com.ibm.wala.analysis.reflection.GetMethodContextSelector
  */
 public class GetMethodContext implements Context {
   /**

@@ -1,9 +1,17 @@
-/* Copyright (c) 2013 Michael Heilmann */
-package com.ibm.wala.analysis.reflection.ext;
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package com.ibm.wala.analysis.reflection;
 
 import java.util.Collection;
 
-import com.ibm.wala.analysis.reflection.JavaLangClassContextInterpreter;
 import com.ibm.wala.analysis.typeInference.PointType;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -26,7 +34,7 @@ import com.ibm.wala.util.intset.IntSetUtil;
 
 /**
  * @brief
- *  Produces {@link com.ibm.wala.analysis.reflection.ext.GetMethodContext} if the following is true:
+ *  Produces {@link com.ibm.wala.analysis.reflection.GetMethodContext} if the following is true:
  *  - The method to be interpreted is either
  *    {@link java.lang.Class#getMethod(String, Class...)} or
  *    {@link java.lang.Class#getDeclaredMethod(String, Class...)}.
@@ -34,6 +42,10 @@ import com.ibm.wala.util.intset.IntSetUtil;
  *  - The value of the first argument (the method name) is a constant.
  * @author
  *  Michael Heilmann
+ * @see
+ *  com.ibm.wala.analysis.reflection.GetMethodContext
+ * @see
+ *  com.ibm.wala.analysis.reflection.GetMethodContextInterpreter
  */
 public class GetMethodContextSelector implements ContextSelector {
   
