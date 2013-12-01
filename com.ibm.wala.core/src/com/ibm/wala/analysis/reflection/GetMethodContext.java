@@ -20,40 +20,57 @@ import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 
 /**
- * @brief
- *  A context which may only be used if the following is true:
- *  - The method to be interpreted is either
- *    {@link java.lang.Class#getMethod(String, Class...)} or
- *    {@link java.lang.Class#getDeclaredMethod(String, Class...)}.
- *  - The type of the "this" argument is known.
- *  - The value of the first argument (the method name) is a constant.
- * @author
- *  Michael Heilmann
- * @see
- *  com.ibm.wala.analysis.reflection.GetMethodContextInterpreter
- * @see
- *  com.ibm.wala.analysis.reflection.GetMethodContextSelector
+ * A context which may be used if
+ * <ul>
+ *  <li>the method to be interpreted is either
+ *  {@link java.lang.Class#getMethod(String, Class...)} or
+ *  {@link java.lang.Class#getDeclaredMethod(String, Class...)},</li>
+ *  <li>the type of the "this" argument is known and</li>
+ *  <li>the value of the first argument (the method name) is a constant.</li>
+ * </ul>
+ * 
+ * In the special case described above,
+ * {@link GetMethodContextInterpreter}
+ * and
+ * {@link GetMethodContextSelector}
+ * should be preferred over
+ * {@link JavaLangClassContextInterpreter}
+ * and
+ * {@link JavaLangClassContextSelector},
+ * as
+ * {@link GetMethodContextInterpreter}
+ * and
+ * {@link GetMethodContextSelector}
+ * drastically reduce the number of methods returned increasing the precision of the analysis.
+ * Thus,
+ * {@link GetMethodContextInterpreter}
+ * and
+ * {@link GetMethodContextSelector}
+ * should be placed in be placed in front of
+ * {@link JavaLangClassContextInterpreter}
+ * and
+ * {@link JavaLangClassContextSelector}
+ * .
+ * @author Michael Heilmann
+ * @see com.ibm.wala.analysis.reflection.GetMethodContextInterpreter
+ * @see com.ibm.wala.analysis.reflection.GetMethodContextSelector
+ * TODO Do the same for {@link Class#getField(String)} and {@link Class#getDeclaredField(String)}. 
  */
 public class GetMethodContext implements Context {
   /**
-   * @brief
-   *  The type abstraction.
+   * The type abstraction.
    */
   private final TypeAbstraction type;
 
   /**
-   * @brief
-   *  The method name.
+   * The method name.
    */
   private final ConstantKey name;
   
   /**
-   * @brief
-   *  Construct this GetMethodContext.
-   * @param type
-   *  The type.
-   * @param name
-   *  The name of the method.
+   * Construct this GetMethodContext.
+   * @param type the type
+   * @param name the name of the method
    */
   public GetMethodContext(TypeAbstraction type,ConstantKey name) {
     if (type == null) {
@@ -108,20 +125,16 @@ public class GetMethodContext implements Context {
   }
 
   /**
-   * @brief
-   *  Get the type.
-   * @return
-   *  The type.
+   * Get the type.
+   * @return the type
    */
   public TypeAbstraction getType() {
     return type;
   }
   
   /**
-   * @brief
-   *  Get the name.
-   * @return
-   *  The name.
+   * Get the name.
+   * @return the name
    */
   public String getName() {
     return (String)name.getValue();

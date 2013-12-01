@@ -33,35 +33,25 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 
 /**
- * @brief
- *  Produces {@link com.ibm.wala.analysis.reflection.GetMethodContext} if the following is true:
- *  - The method to be interpreted is either
- *    {@link java.lang.Class#getMethod(String, Class...)} or
- *    {@link java.lang.Class#getDeclaredMethod(String, Class...)}.
- *  - The type of the "this" argument is known.
- *  - The value of the first argument (the method name) is a constant.
- * @author
- *  Michael Heilmann
- * @see
- *  com.ibm.wala.analysis.reflection.GetMethodContext
- * @see
- *  com.ibm.wala.analysis.reflection.GetMethodContextInterpreter
+ * Produces {@link com.ibm.wala.analysis.reflection.GetMethodContext} if appropriate.
+ * @author Michael Heilmann
+ * @see com.ibm.wala.analysis.reflection.GetMethodContext
+ * @see com.ibm.wala.analysis.reflection.GetMethodContextInterpreter
  */
 public class GetMethodContextSelector implements ContextSelector {
   
   /**
-   * @brief
-   *  If @a true, debug information is emitted.
+   * If <tt>true</tt>, debug information is emitted.
    */
   protected static final boolean DEBUG = false;
 
   /**
-   * @brief 
    *  If
-   *  - the {@link CallSiteReference} invokes either {@link java.lang.Class#getMethod}
-   *    or {@link java.lang.Class#getDeclaredMethod}, 
-   *  - and the receiver is a type constant and
-   *  - the first argument is a constant,
+   *  <ul>
+   *    <li>the {@link CallSiteReference} invokes either {@link java.lang.Class#getMethod} or {@link java.lang.Class#getDeclaredMethod},</li> 
+   *    <li>and the receiver is a type constant and</li>
+   *    <li>the first argument is a constant,</li>
+   *  </ul>
    *  then return a {@link GetMethodContextSelector}.
    */
   @Override
@@ -89,7 +79,9 @@ public class GetMethodContextSelector implements ContextSelector {
         }
         // ... return an GetMethodContext.
         ConstantKey ck = makeConstantKey(caller.getClassHierarchy(),sym);
-        System.out.println(ck);
+        if (DEBUG) {
+          System.out.println(ck);
+        }
         return new GetMethodContext(new PointType(getTypeConstant(receiver[0])),ck);
       }
       if (DEBUG) {
@@ -103,9 +95,8 @@ public class GetMethodContextSelector implements ContextSelector {
   }
 
   /**
-   * @brief
-   *  If @a instance is a ConstantKey and its value is an instance of IClass,
-   *  return that value. Otherwise, return @a null.
+   * If <tt>instance</tt> is a {@link ConstantKey} and its value is an instance of {@link IClass},
+   * return that value. Otherwise, return <tt>null</tt>.
    */
   private IClass getTypeConstant(InstanceKey instance) {
     if (instance instanceof ConstantKey) {
@@ -118,14 +109,10 @@ public class GetMethodContextSelector implements ContextSelector {
   }
   
   /**
-   * @brief
-   *  Create a constant key for a string.
-   * @param cha
-   *  The class hierarchy.
-   * @param str
-   *  The string.
-   * @return 
-   *  The constant key.
+   * Create a constant key for a string.
+   * @param cha the class hierarchy
+   * @param str the string
+   * @return the constant key
    */
   protected static ConstantKey<String> makeConstantKey(IClassHierarchy cha,String str) {
     IClass cls = cha.lookupClass(TypeReference.JavaLangString);
@@ -136,17 +123,13 @@ public class GetMethodContextSelector implements ContextSelector {
   private static final Collection<MethodReference> UNDERSTOOD_METHOD_REFS = HashSetFactory.make();
 
   static {
-    UNDERSTOOD_METHOD_REFS.add(JavaLangClassContextInterpreter.GET_METHOD);
-    UNDERSTOOD_METHOD_REFS.add(JavaLangClassContextInterpreter.GET_DECLARED_METHOD);
+    UNDERSTOOD_METHOD_REFS.add(GetMethodContextInterpreter.GET_METHOD);
+    UNDERSTOOD_METHOD_REFS.add(GetMethodContextInterpreter.GET_DECLARED_METHOD);
   }
 
   /**
-   * @brief
-   *  This object might understand a dispatch to
-   *  {@link java.lang.Class#getMethod(String, Class...)}
-   *  or
-   *  {@link java.lang.Class#getDeclaredMethod}
-   *  when the receiver is a type constant.
+   * This object understands a dispatch to {@link java.lang.Class#getMethod(String, Class...)}
+   * or {@link java.lang.Class#getDeclaredMethod} when the receiver is a type constant.
    */
   private boolean mayUnderstand(CGNode caller,CallSiteReference site,IMethod targetMethod,InstanceKey instance) {
     return UNDERSTOOD_METHOD_REFS.contains(targetMethod.getReference())
