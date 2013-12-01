@@ -43,26 +43,22 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * @brief
- *  Understands {@link com.ibm.wala.analysis.reflection.GetMethodContext}.
- * @author
- *  Michael Heilmann
- * @see
- *  com.ibm.wala.analysis.reflection.GetMethodContext
- * @see
- *  com.ibm.wala.analysis.reflection.GetMethodContextSelector
+ * Understands {@link com.ibm.wala.analysis.reflection.GetMethodContext}.
+ * @author Michael Heilmann
+ * @see com.ibm.wala.analysis.reflection.GetMethodContext
+ * @see com.ibm.wala.analysis.reflection.GetMethodContextSelector
  */
 public class GetMethodContextInterpreter implements SSAContextInterpreter {
   /**
    * TODO
-   *  MH: Maybe hard-code those in {@link com.ibm.wala.types.TypeReference}?
+   *  MH: Maybe hard-code those in {@link com.ibm.wala.types.MethodReference}?
    */
   public final static MethodReference GET_METHOD = MethodReference.findOrCreate(TypeReference.JavaLangClass, "getMethod",
       "(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;");
 
   /**
    * TODO
-   *  MH: Maybe hard-code those in {@link com.ibm.wala.types.TypeReference}?
+   *  MH: Maybe hard-code those in {@link com.ibm.wala.types.MethodReference}?
    */
   public final static MethodReference GET_DECLARED_METHOD = MethodReference.findOrCreate(TypeReference.JavaLangClass,
       "getDeclaredMethod", "(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;");
@@ -143,13 +139,10 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
   }
 
   /**
-   * @brief
-   *  Get all non-constructor, non-class-initializer methods declared by a class
-   *  if their name is equal to the specified name.
-   * @param cls
-   *  The class.
-   * @param name
-   *  The name.
+   * Get all non-constructor, non-class-initializer methods declared by a class
+   * if their name is equal to the specified name.
+   * @param cls the class
+   * @param name the name
    */
   private Collection<IMethod> getDeclaredNormalMethods(IClass cls,Atom name) {
     Collection<IMethod> result = HashSetFactory.make();
@@ -162,13 +155,10 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
   }
 
   /**
-   * @brief
-   *  Get all non-constructor, non-class-initializer methods declared by a class
-   *  and all its superclasses if their name is equal to the specified name.
-   * @param cls
-   *  The class.
-   * @param name
-   *  The name.
+   * Get all non-constructor, non-class-initializer methods declared by a class
+   * and all its superclasses if their name is equal to the specified name.
+   * @param cls the class
+   * @param name the name
    */
   private Collection<IMethod> getAllNormalPublicMethods(IClass cls,Atom name) {
     Collection<IMethod> result = HashSetFactory.make();
@@ -183,15 +173,12 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
   }
 
   /**
-   * @brief
-   *  Create statements for methods like getMethod() and getDeclaredMethod(),
-   *  which return a single method. This creates a return statement for each
-   *  possible return value, each of which is a {@link ConstantValue} for an
-   *  {@link IMethod}.
-   * @param returnValues
-   *  the possible return values for this method.
-   * @return
-   *  the statements.
+   * Create statements for methods like getMethod() and getDeclaredMethod(),
+   * which return a single method. This creates a return statement for each
+   * possible return value, each of which is a {@link ConstantValue} for an
+   * {@link IMethod}.
+   * @param returnValues the possible return values for this method
+   * @return the statements
    */
   private SSAInstruction[] getParticularMethodStatements
       (
@@ -239,7 +226,7 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
   }
 
   /**
-   * create statements for getDeclaredMethod()
+   * Create statements for {@link Class#getDeclaredMethod(String, Class...)}.
    */
   private SSAInstruction[] makeGetDeclaredMethodStatements(GetMethodContext context, Map<Integer, ConstantValue> constants,Atom name) {
     IClass cls = context.getType().getType();
