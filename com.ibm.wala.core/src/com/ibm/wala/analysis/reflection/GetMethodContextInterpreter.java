@@ -1,5 +1,14 @@
-/* Copyright (c) 2013 Michael Heilmann */
-package com.ibm.wala.analysis.reflection.ext;
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package com.ibm.wala.analysis.reflection;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,9 +44,13 @@ import com.ibm.wala.util.strings.Atom;
 
 /**
  * @brief
- *  Understands {@link com.ibm.wala.analysis.reflection.ext.GetMethodContext}.
+ *  Understands {@link com.ibm.wala.analysis.reflection.GetMethodContext}.
  * @author
  *  Michael Heilmann
+ * @see
+ *  com.ibm.wala.analysis.reflection.GetMethodContext
+ * @see
+ *  com.ibm.wala.analysis.reflection.GetMethodContextSelector
  */
 public class GetMethodContextInterpreter implements SSAContextInterpreter {
   /**
