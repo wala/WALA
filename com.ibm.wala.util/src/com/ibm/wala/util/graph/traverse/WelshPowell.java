@@ -46,7 +46,9 @@ public class WelshPowell<T extends INodeWithNumber> {
     private static <T> Map<T, Integer> makeMap(NumberedGraph<T> G, int[] colors) {
       Map<T,Integer> colorMap = HashMapFactory.make();
       for(int i = 0; i < colors.length; i++) {
-        colorMap.put(G.getNode(i), colors[i]);
+        if (colors[i] != -1) {
+          colorMap.put(G.getNode(i), colors[i]);
+        }
       }
       return colorMap;
     }
