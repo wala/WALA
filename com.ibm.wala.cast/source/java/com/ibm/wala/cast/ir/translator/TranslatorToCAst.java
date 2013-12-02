@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstEntity;
@@ -33,10 +34,10 @@ public interface TranslatorToCAst {
   public <C extends RewriteContext<K>, K extends CopyKey<K>> void addRewriter(CAstRewriterFactory<C, K> factory, boolean prepend);
 
   public class Error extends WalaException {
-    public final Warning warning;
+    public final Set<Warning> warning;
     
-    public Error(Warning message) {
-      super(message.getMsg());
+    public Error(Set<Warning> message) {
+      super(message.iterator().next().getMsg());
       warning = message;
     }
     

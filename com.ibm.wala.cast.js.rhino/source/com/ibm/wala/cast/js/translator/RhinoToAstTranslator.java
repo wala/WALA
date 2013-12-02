@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.mozilla.javascript.CompilerEnvirons;
 import org.mozilla.javascript.ErrorReporter;
@@ -108,6 +109,7 @@ import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.Warning;
 
@@ -2289,16 +2291,16 @@ private CAstNode[] walkChildren(final Node n, WalkContext context) {
    */
   public CAstEntity translateToCAst() throws Error, IOException, com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error {
     class CAstErrorReporter implements ErrorReporter {
-      private Warning w = null;
+      private Set<Warning> w = HashSetFactory.make();
       
       @Override
       public void error(final String arg0, final String arg1, final int arg2, final String arg3, int arg4) {
-        w = new Warning(Warning.SEVERE) {
+        w.add(new Warning(Warning.SEVERE) {
           @Override
           public String getMsg() {
             return arg0 + ": " + arg1 + "@" + arg2 + ": " + arg3;
           }
-        };
+        });
       }
 
       @Override
@@ -2327,7 +2329,7 @@ private CAstNode[] walkChildren(final Node n, WalkContext context) {
 
     AstRoot top = P.parse(sourceReader, scriptName, 1);
 
-    if (reporter.w != null) {
+    if (! reporter.w.isEmpty()) {
       throw new TranslatorToCAst.Error(reporter.w);
     }
     

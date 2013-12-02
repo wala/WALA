@@ -17,9 +17,10 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.graph.Graph;
+import com.ibm.wala.util.graph.INodeWithNumber;
+import com.ibm.wala.util.graph.NumberedGraph;
 
-public class WelshPowell<T> {
+public class WelshPowell<T extends INodeWithNumber> {
 
   public static class ColoredVertices<T> {
     private final boolean fullColoring;
@@ -38,6 +39,18 @@ public class WelshPowell<T> {
       return numColors;
     }
 
+    public ColoredVertices(boolean fullColoring, NumberedGraph<T> G, int colors[], int numColors) {
+      this(fullColoring, makeMap(G, colors), numColors);
+    }
+
+    private static <T> Map<T, Integer> makeMap(NumberedGraph<T> G, int[] colors) {
+      Map<T,Integer> colorMap = HashMapFactory.make();
+      for(int i = 0; i < colors.length; i++) {
+        colorMap.put(G.getNode(i), colors[i]);
+      }
+      return colorMap;
+    }
+    
     public ColoredVertices(boolean fullColoring, Map<T, Integer> colors, int numColors) {
       this.fullColoring = fullColoring;
       this.colors = colors;
@@ -46,7 +59,7 @@ public class WelshPowell<T> {
 
   }
 
-  public static <T> Comparator<T> defaultComparator(final Graph<T> G) {
+  public static <T> Comparator<T> defaultComparator(final NumberedGraph<T> G) {
     return new Comparator<T>() {
 
       @Override
@@ -61,59 +74,74 @@ public class WelshPowell<T> {
       }
     };
   }
-
-  public ColoredVertices<T> color(final Graph<T> G) {
+  
+  public ColoredVertices<T> color(final NumberedGraph<T> G) {
     return color(G, defaultComparator(G), Integer.MAX_VALUE);
   }
   
-  public ColoredVertices<T> color(final Graph<T> G, int maxColors) {
+  public ColoredVertices<T> color(final NumberedGraph<T> G, int maxColors) {
     return color(G, defaultComparator(G), maxColors);
   }
 
-  public ColoredVertices<T> color(final Graph<T> G, Comparator<T> order, int maxColors) {
-    Map<T, Integer> colors = HashMapFactory.make();
+  public ColoredVertices<T> color(final NumberedGraph<T> G, Comparator<T> order, int maxColors) {
+    int[] colors = new int[ G.getMaxNumber() + 1];
 
     SortedSet<T> vertices = new TreeSet<T>(order);
 
     for (T n : G) {
+      colors[n.getGraphNodeId()] = -1;
       vertices.add(n);
     }
 
     int currentColor = 0;
-    for (T n : vertices) {
-      if (!colors.containsKey(n)) {
-        colors.put(n, currentColor);
+    int colored = 0;
 
-        for (T m : vertices) {
-          if (!colors.containsKey(m)) {
+    for(T n : vertices) {
+      int id = n.getGraphNodeId();
+      if (colors[id] == -1) {
+        colors[id] = currentColor;
+        colored++;
+
+        for(T m : vertices) {
+          if (colors[m.getGraphNodeId()] == -1) {
             color_me: {
-            for (Iterator<T> ps = G.getPredNodes(m); ps.hasNext();) {
-              T p = ps.next();
-              if (colors.containsKey(p) && colors.get(p) == currentColor) {
-                break color_me;
+              for(Iterator<T> ps = G.getPredNodes(m); ps.hasNext(); ) {
+                T p = ps.next();
+                if (colors[ p.getGraphNodeId() ] == currentColor) {
+                  break color_me;
+                }
               }
+  
+              for(Iterator<T> ss = G.getSuccNodes(m); ss.hasNext(); ) {
+                T s = ss.next();
+                if (colors[s.getGraphNodeId()] == currentColor) {
+                  break color_me;
+                }
+              }
+  
+              colors[m.getGraphNodeId()] = currentColor;
+              colored++;
+              
+              if (currentColor == maxColors - 1) {
+                return new ColoredVertices<T>(false, G, colors, currentColor);
+              }
+
             }
 
-            for (Iterator<T> ss = G.getSuccNodes(m); ss.hasNext();) {
-              T s = ss.next();
-              if (colors.containsKey(s) && colors.get(s) == currentColor) {
-                break color_me;
-              }
-            }
+          }
+        }
 
-            colors.put(m, currentColor);
-          }
-          }
-        }
-        if (currentColor == maxColors - 1) {
-          return new ColoredVertices<T>(false, colors, currentColor);
-        }
         currentColor++;
+
+        if (currentColor == maxColors - 1) {
+          return new ColoredVertices<T>(false, G, colors, currentColor);
+        }
       }
     }
+    
+    assert colored == G.getNumberOfNodes();
 
-    assert colors.size() == G.getNumberOfNodes();
-    return new ColoredVertices<T>(true, colors, currentColor);
+    return new ColoredVertices<T>(true, G, colors, currentColor);
   }
 
 }

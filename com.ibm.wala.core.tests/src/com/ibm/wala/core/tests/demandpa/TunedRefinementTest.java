@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.ibm.wala.demandpa.alg.ContextSensitiveStateMachine;
@@ -125,6 +126,7 @@ public class TunedRefinementTest extends AbstractPtrTest {
     doPointsToSizeTest(TestInfo.TEST_ARRAY_SET_ITER, 1);
   }
 
+  @Ignore
   @Test
   public void testArrayList() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_ARRAY_LIST, 1);

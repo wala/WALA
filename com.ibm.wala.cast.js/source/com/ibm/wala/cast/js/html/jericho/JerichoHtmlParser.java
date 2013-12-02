@@ -115,7 +115,7 @@ public class JerichoHtmlParser implements IHtmlParser{
 				parser.parse(e);
 			}
 			if (! warnings.isEmpty()) {
-			  throw new TranslatorToCAst.Error(warnings.iterator().next());
+			  throw new TranslatorToCAst.Error(warnings);
 			}
 		} catch (IOException e) {
 			System.err.println("Error parsing file: " + e.getMessage());

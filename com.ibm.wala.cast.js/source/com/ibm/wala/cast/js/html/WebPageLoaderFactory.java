@@ -44,6 +44,10 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
         return new JSAstTranslator(this) {
           private final CAst Ast = new CAstImpl();
 
+          private boolean isNestedWithinScriptBody(WalkContext context) {
+            return isScriptBody(context) || context.getName().contains("__WINDOW_MAIN__");
+          }
+          
           private boolean isScriptBody(WalkContext context) {
             return context.top().getName().equals( "__WINDOW_MAIN__" );
           }
@@ -51,10 +55,10 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
           @Override
           protected int doGlobalRead(CAstNode n, WalkContext context, String name) {
             int result = context.currentScope().allocateTempValue();
-            if (isScriptBody(context) && ! "$$undefined".equals(name)  && ! "window".equals(name)) {
+            if (isNestedWithinScriptBody(context) && ! "$$undefined".equals(name)  && ! "window".equals(name)) {
               
               // check if field is defined on 'window'
-              int windowVal = super.doLocalRead(context, "this");
+              int windowVal = isScriptBody(context)? super.doLocalRead(context, "this"): super.doGlobalRead(n, context, "window");
               int isDefined = context.currentScope().allocateTempValue();
               context.currentScope().getConstantValue(name);
               doIsFieldDefined(context, isDefined, windowVal, Ast.makeConstant(name));
