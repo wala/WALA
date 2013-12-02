@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.ide.util;
 
-import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -57,19 +57,13 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
-import com.ibm.wala.util.io.FileProvider;
 
 public class JsdtUtil {
 
-  public static File getProlgueFile(String file, Plugin plugin) {
-    try {
-      FileProvider fileProvider = new EclipseFileProvider(plugin!= null? plugin: JavaScriptPlugin.getDefault());
-      JavaScriptLoader.addBootstrapFile(file);
-      return fileProvider.getFile("dat/" + file, JsdtUtil.class.getClassLoader());
-    } catch (IOException e) {
-      assert false : "cannot find " + file;
-      return null;
-    }
+  public static URL getProlgueFile(String file, Plugin plugin) {
+    plugin = plugin!= null? plugin: JavaScriptPlugin.getDefault();
+    JavaScriptLoader.addBootstrapFile(file);
+    return plugin.getClass().getClassLoader().getResource(file);
   }
 
   private static final boolean useCreateASTs = false;
