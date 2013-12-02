@@ -18,7 +18,6 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.impl.DelegatingNumberedGraph;
@@ -28,6 +27,25 @@ import com.ibm.wala.util.graph.traverse.WelshPowell.ColoredVertices;
 
 public class WelshPowellTest {
 
+  public static <T> void assertColoring(Graph<T> G, Map<T,Integer> colors, boolean fullColor) {
+    for(T n : G) {
+      for(Iterator<T> ss = G.getSuccNodes(n); ss.hasNext(); ) {
+        T succ = ss.next();
+        if (!fullColor && ! (colors.containsKey(n) && colors.containsKey(succ)) ) {
+          continue;
+        }
+        Assert.assertTrue(n + " and succ: " + succ + " have same color", colors.get(n).intValue() != colors.get(succ).intValue()); 
+      }
+      for(Iterator<T> ps = G.getPredNodes(n); ps.hasNext(); ) {
+        T pred = ps.next();
+        if (!fullColor && ! (colors.containsKey(n) && colors.containsKey(pred)) ) {
+          continue;
+        }
+        Assert.assertTrue(n + " and pred: " + pred + " have same color", colors.get(n).intValue() != colors.get(pred).intValue()); 
+      }
+    }
+  }
+  
   private class TypedNode<T> extends NodeWithNumberedEdges {
     private final T data;
     
@@ -40,18 +58,7 @@ public class WelshPowellTest {
       return data.toString();
     }
   }
-  
-  private <T> void assertColoring(NumberedGraph<TypedNode<T>> G, Map<TypedNode<T>,Integer> colors) {
-    for(TypedNode<T> n : G) {
-      for(Iterator<TypedNode<T>> ss = G.getSuccNodes(n); ss.hasNext(); ) {
-        Assert.assertTrue(colors.get(n).intValue() != colors.get(ss.next()).intValue()); 
-      }
-      for(Iterator<TypedNode<T>> ps = G.getPredNodes(n); ps.hasNext(); ) {
-        Assert.assertTrue(colors.get(n).intValue() != colors.get(ps.next()).intValue()); 
-      }
-    }
-  }
-  
+    
   private <T> NumberedGraph<TypedNode<T>> buildGraph(T[][] data) {
     DelegatingNumberedGraph<TypedNode<T>> G = new DelegatingNumberedGraph<TypedNode<T>>();
     Map<T,TypedNode<T>> nodes = HashMapFactory.make();
@@ -83,7 +90,7 @@ public class WelshPowellTest {
             new Integer[]{8, 1, 2, 3}});
       ColoredVertices<TypedNode<Integer>> colors = new WelshPowell<TypedNode<Integer>>().color(G);
       System.err.println(colors.getColors());
-      assertColoring(G, colors.getColors());
+      assertColoring(G, colors.getColors(), true);
       Assert.assertTrue(colors.getNumColors() <= 4);
     }
     
@@ -103,7 +110,7 @@ public class WelshPowellTest {
            new String[]{"star5", "poly5", "star2", "star3"}});
       ColoredVertices<TypedNode<String>> colors = new WelshPowell<TypedNode<String>>().color(G);
       System.err.println(colors.getColors());
-      assertColoring(G, colors.getColors());
+      assertColoring(G, colors.getColors(), true);
       Assert.assertTrue(colors.getNumColors() == 3);       
     }
-}
+ }
