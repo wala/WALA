@@ -19,18 +19,27 @@ import org.junit.Test;
 
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
+import com.ibm.wala.util.graph.impl.SparseNumberedGraph;
 import com.ibm.wala.util.graph.traverse.WelshPowell;
 import com.ibm.wala.util.graph.traverse.WelshPowell.ColoredVertices;
 
 public class WelshPowellTest {
 
-  private <T> void assertColoring(Graph<T> G, Map<T,Integer> colors) {
+  public static <T> void assertColoring(Graph<T> G, Map<T,Integer> colors, boolean fullColor) {
     for(T n : G) {
       for(Iterator<T> ss = G.getSuccNodes(n); ss.hasNext(); ) {
-        Assert.assertTrue(colors.get(n).intValue() != colors.get(ss.next()).intValue()); 
+        T succ = ss.next();
+        if (!fullColor && ! (colors.containsKey(n) && colors.containsKey(succ)) ) {
+          continue;
+        }
+        Assert.assertTrue(n + " and succ: " + succ + " have same color", colors.get(n).intValue() != colors.get(succ).intValue()); 
       }
       for(Iterator<T> ps = G.getPredNodes(n); ps.hasNext(); ) {
-        Assert.assertTrue(colors.get(n).intValue() != colors.get(ps.next()).intValue()); 
+        T pred = ps.next();
+        if (!fullColor && ! (colors.containsKey(n) && colors.containsKey(pred)) ) {
+          continue;
+        }
+        Assert.assertTrue(n + " and pred: " + pred + " have same color", colors.get(n).intValue() != colors.get(pred).intValue()); 
       }
     }
   }
@@ -63,7 +72,7 @@ public class WelshPowellTest {
             new Integer[]{8, 1, 2, 3}});
       ColoredVertices<Integer> colors = new WelshPowell<Integer>().color(G);
       System.err.println(colors);
-      assertColoring(G, colors.getColors());
+      assertColoring(G, colors.getColors(), true);
       Assert.assertTrue(colors.getNumColors() <= 4);
     }
     
@@ -83,7 +92,25 @@ public class WelshPowellTest {
            new String[]{"star5", "poly5", "star2", "star3"}});
       ColoredVertices<String> colors = new WelshPowell<String>().color(G);
       System.err.println(colors);
-      assertColoring(G, colors.getColors());
+      assertColoring(G, colors.getColors(), true);
       Assert.assertTrue(colors.getNumColors() == 3);       
     }
+    
+    @Test
+    public void testThree() {
+      Graph<Integer> G = SlowSparseNumberedGraph.make();
+      for (int i = 0; i < 7; i++) {
+        G.addNode(i);
+      }
+      for (int i = 1; i < 7; i++) {
+        G.addEdge(0, i);
+      }
+      G.addEdge(2, 0);
+      G.addEdge(2, 6);
+      ColoredVertices<Integer> colors = new WelshPowell<Integer>().color(G);
+      System.err.println(colors);
+      assertColoring(G, colors.getColors(), true);
+      Assert.assertTrue(colors.getNumColors() <= 7);
+    }
+    
 }

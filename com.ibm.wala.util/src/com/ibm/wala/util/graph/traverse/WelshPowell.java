@@ -54,9 +54,9 @@ public class WelshPowell<T> {
         int o1edges = G.getSuccNodeCount(o1) + G.getPredNodeCount(o1);
         int o2edges = G.getSuccNodeCount(o2) + G.getPredNodeCount(o2);
         if (o1edges != o2edges) {
-          return o1edges - o2edges;
+          return o2edges - o1edges;
         } else {
-          return o1.toString().compareTo(o2.toString());
+          return o2.toString().compareTo(o1.toString());
         }
       }
     };
