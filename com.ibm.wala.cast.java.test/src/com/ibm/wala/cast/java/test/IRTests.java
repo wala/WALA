@@ -351,7 +351,7 @@ public abstract class IRTests {
       CallGraph callGraph;
       try {
         callGraph = engine.buildDefaultCallGraph();
-        System.err.println(callGraph.toString());
+        //System.err.println(callGraph.toString());
 
         // If we've gotten this far, IR has been produced.
         //dumpIR(callGraph, sources, assertReachable);
