@@ -89,7 +89,7 @@ public abstract class AbstractJSProjectScopeTest {
     JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
     e.buildAnalysisScope();
     IClassHierarchy cha = e.getClassHierarchy();
-    System.err.println(cha);
+    //System.err.println(cha);
     Assert.assertTrue(cha != null);
   }
 
