@@ -87,11 +87,13 @@ public class WelshPowell<T extends INodeWithNumber> {
 
   public ColoredVertices<T> color(final NumberedGraph<T> G, Comparator<T> order, int maxColors) {
     int[] colors = new int[ G.getMaxNumber() + 1];
-
+    for(int i = 0; i < colors.length; i++) {
+      colors[i] = -1;
+    }
+    
     SortedSet<T> vertices = new TreeSet<T>(order);
 
     for (T n : G) {
-      colors[n.getGraphNodeId()] = -1;
       vertices.add(n);
     }
 
