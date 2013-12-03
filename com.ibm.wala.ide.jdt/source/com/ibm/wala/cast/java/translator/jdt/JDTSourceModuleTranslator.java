@@ -149,16 +149,18 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
             e.printStackTrace();
           }
 
-          IProblem[] problems = ast.getProblems();
-          int length = problems.length;
-          if (length > 0) {
-            StringBuffer buffer = new StringBuffer();
-            for (int i = 0; i < length; i++) {
-              buffer.append(problems[i].getMessage());
-              buffer.append('\n');
+          if (! System.getProperty("wala.jdt.quiet").equals("true")) {
+            IProblem[] problems = ast.getProblems();
+            int length = problems.length;
+            if (length > 0) {
+              StringBuffer buffer = new StringBuffer();
+              for (int i = 0; i < length; i++) {
+                buffer.append(problems[i].getMessage());
+                buffer.append('\n');
+              }
+              if (length != 0)
+                System.err.println("Unexpected problems in " + source.getElementName() + buffer.toString());
             }
-            if (length != 0)
-              System.err.println("Unexpected problems in " + source.getElementName() + buffer.toString());
           }
         }
       }, null);
