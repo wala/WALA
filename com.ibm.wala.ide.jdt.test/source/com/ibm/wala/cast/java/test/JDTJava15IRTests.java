@@ -13,6 +13,10 @@ import org.junit.Test;
 
 public class JDTJava15IRTests extends JDTJavaTest {
 
+  static {
+    System.setProperty("wala.jdt.quiet", "true");
+  }
+
   public JDTJava15IRTests() {
     super(JDTJavaIRTests.PROJECT);
   }
