@@ -32,6 +32,10 @@ import com.ibm.wala.util.io.TemporaryFile;
 
 public abstract class JDTJavaTest extends IRTests {
 
+  static {
+    System.setProperty("wala.jdt.quiet", "true");
+  }
+
   private final ZippedProjectData project;
   
   public JDTJavaTest(ZippedProjectData project) {

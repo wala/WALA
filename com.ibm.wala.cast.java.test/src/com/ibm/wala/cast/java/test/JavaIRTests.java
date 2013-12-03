@@ -604,7 +604,7 @@ public abstract class JavaIRTests extends IRTests {
     Set<CGNode> roots = cg.getNodes(sliceRootRef);
     Pair<Collection<Statement>, SDG> y = AstJavaSlicer.computeAssertionSlice(cg, pa, roots, false);
     Collection<Statement> slice = y.fst;
-    SlicerTest.dumpSlice(slice);
+    //SlicerTest.dumpSlice(slice);
     Assert.assertEquals(0, SlicerTest.countAllocations(slice));
     Assert.assertEquals(1, SlicerTest.countPutfields(slice));
 
@@ -613,7 +613,7 @@ public abstract class JavaIRTests extends IRTests {
     roots = cg.getNodes(sliceRootRef);
     y = AstJavaSlicer.computeAssertionSlice(cg, pa, roots, false);
     slice = y.fst;
-    SlicerTest.dumpSlice(slice);
+    // SlicerTest.dumpSlice(slice);
     Assert.assertEquals(2, SlicerTest.countAllocations(slice));
     Assert.assertEquals(2, SlicerTest.countPutfields(slice));
   }

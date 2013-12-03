@@ -45,10 +45,6 @@ import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.ide.tests.util.EclipseTestUtil.ZippedProjectData;
 
 public class JDTJavaIRTests extends JavaIRTests {
-
-  static {
-    System.setProperty("wala.jdt.quiet", "true");
-  }
   
   public static final String PROJECT_NAME = "com.ibm.wala.cast.java.test.data";
  
