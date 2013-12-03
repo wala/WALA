@@ -354,7 +354,7 @@ public abstract class IRTests {
         System.err.println(callGraph.toString());
 
         // If we've gotten this far, IR has been produced.
-        dumpIR(callGraph, sources, assertReachable);
+        //dumpIR(callGraph, sources, assertReachable);
 
         // Now check any assertions as to source mapping
         for (IRAssertion IRAssertion : ca) {
