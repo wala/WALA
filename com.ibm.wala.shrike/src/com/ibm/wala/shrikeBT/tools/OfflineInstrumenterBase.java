@@ -207,10 +207,8 @@ public abstract class OfflineInstrumenterBase {
     JarFile jf = new JarFile(f);
     for (Enumeration<JarEntry> e = jf.entries(); e.hasMoreElements();) {
       JarEntry entry = e.nextElement();
-      if (!entry.isDirectory()) {
-        String name = entry.getName();
-        inputs.add(new JarInput(f, name));
-      }
+      String name = entry.getName();
+      inputs.add(new JarInput(f, name));
     }
     jf.close();
   }
