@@ -78,7 +78,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
     } else {
       File f = File.createTempFile("module", ".txt");
       f.deleteOnExit();
-      TemporaryFile.streamToFile(f.getAbsolutePath(), M.getInputStream());
+      TemporaryFile.streamToFile(f, M.getInputStream());
       return f;
     }
   }
