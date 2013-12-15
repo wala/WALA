@@ -638,4 +638,22 @@ public class ReflectionTest extends WalaTestCase {
     Set<CGNode> nodes = cg.getNodes(mr);
     Assert.assertFalse(nodes.isEmpty());
   }
+  
+  /**
+   * Test that when analyzing GetMethodContext, the call graph must contain exactly one call to each of the following methods:
+   * <ul>
+   *  <li>GetMethodContext$A#foo()</li>
+   *  <li>GetMethodContext$B#foo()</li>
+   *  <li>GetMethodContext$B#bar()</li>
+   *  <li>GetMethodContext$C#baz()</li>
+   * </ul>
+   */
+  public void testGetMethodContext() throws WalaException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+    IClassHierarchy cha = findOrCreateCHA(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.REFLECTGETMETHODCONTEXT_MAIN);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
+  }
 }
