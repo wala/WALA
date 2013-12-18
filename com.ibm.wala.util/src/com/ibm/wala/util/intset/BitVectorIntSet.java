@@ -175,7 +175,7 @@ public final class BitVectorIntSet implements MutableIntSet {
    * @see com.ibm.wala.util.intset.IntSet#intersection(com.ibm.wala.util.intset.IntSet)
    */
   @Override
-  public IntSet intersection(IntSet that) {
+  public BitVectorIntSet intersection(IntSet that) {
     BitVectorIntSet newbie = new BitVectorIntSet();
     newbie.copySet(this);
     newbie.intersectWith(that);
