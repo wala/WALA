@@ -2,14 +2,16 @@ package com.ibm.wala.core.tests.shrike;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.zip.GZIPInputStream;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -77,7 +79,7 @@ public class DynamicCallGraphTests extends WalaTestCase {
   }
   
   private void check(CallGraph staticCG) throws IOException {
-    BufferedReader dynamicEdgesFile = new BufferedReader(new FileReader(System.getProperty("dynamicCGFile")));
+    BufferedReader dynamicEdgesFile = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(System.getProperty("dynamicCGFile")))));
     String line;
     while ((line = dynamicEdgesFile.readLine()) != null) {
       StringTokenizer edge = new StringTokenizer(line, "\t");

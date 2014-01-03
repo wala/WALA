@@ -1,10 +1,12 @@
 package com.ibm.wala.shrike.cg;
 
 import java.io.FileInputStream;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.Stack;
+import java.util.zip.GZIPOutputStream;
 
 import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.config.SetOfClasses;
@@ -29,16 +31,22 @@ public class Runtime {
     }
 
     try {
-      output = new PrintWriter(new FileWriter(fileName));
+      output = new PrintWriter(new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(fileName))));
     } catch (IOException e) {
       output = new PrintWriter(System.err);
     }
   }
 
+  public static Object NULL_TAG = new Object() {
+    @Override
+    public String toString() {
+      return "NULL TAG";
+    }
+  };
+  
   public static void execution(String klass, String method, Object receiver) {
     if (runtime.filter == null || ! runtime.filter.contains(klass)) {
       runtime.output.printf(runtime.callStack.peek() + "\t" + klass + "\t" + method + "\n");
-      runtime.output.flush();
     }
 
     runtime.callStack.push(klass + "\t" + method);
@@ -46,6 +54,9 @@ public class Runtime {
   
   public static void termination(String klass, String method, Object receiver, boolean exception) {
     runtime.callStack.pop();
+    if ("root".equals(runtime.callStack.peek())) {
+      runtime.output.close();
+    }
   }
   
   public static void pop(String klass, String method) {

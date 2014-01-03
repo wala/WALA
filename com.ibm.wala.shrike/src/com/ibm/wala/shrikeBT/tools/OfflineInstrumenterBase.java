@@ -90,6 +90,11 @@ public abstract class OfflineInstrumenterBase {
     }
 
     /**
+     * get name of resource used for input
+     */
+    public abstract String getInputName();
+    
+    /**
      * Open the resource for reading as a stream.
      */
     public abstract InputStream open() throws IOException;
@@ -133,6 +138,11 @@ public abstract class OfflineInstrumenterBase {
     @Override
     public boolean isClass() {
       return name.endsWith(".class");
+    }
+
+    @Override
+    public String getInputName() {
+      return name;
     }
 
     /**
@@ -181,6 +191,11 @@ public abstract class OfflineInstrumenterBase {
     public String toString() {
       return file.getPath();
     }
+
+    @Override
+    public String getInputName() {
+      return file.getPath();
+    }    
   }
 
   protected OfflineInstrumenterBase() {
@@ -360,7 +375,7 @@ public abstract class OfflineInstrumenterBase {
     inputIndex = 0;
   }
 
-  protected abstract Object makeClassFromStream(BufferedInputStream s) throws IOException;
+  protected abstract Object makeClassFromStream(String inputName, BufferedInputStream s) throws IOException;
 
   protected abstract String getClassName(Object cl);
 
@@ -378,7 +393,7 @@ public abstract class OfflineInstrumenterBase {
         }
         BufferedInputStream s = new BufferedInputStream(in.open());
         try {
-          Object r = makeClassFromStream(s);
+          Object r = makeClassFromStream(in.getInputName(), s);
           String name = getClassName(r);
           in.setClassName(name);
           return r;
@@ -415,9 +430,8 @@ public abstract class OfflineInstrumenterBase {
     return outputFile;
   }
 
-  final protected boolean internalOutputModifiedClass(Object cf, Object mods) throws IOException {
+  final protected boolean internalOutputModifiedClass(Object cf, String name, Object mods) throws IOException {
     makeOutputJar();
-    String name = toEntryName(getClassName(cf));
     if (entryNames.contains(name)) {
       return false;
     } else {
@@ -549,7 +563,7 @@ public abstract class OfflineInstrumenterBase {
         if (name == null) {
           BufferedInputStream s = new BufferedInputStream(in.open(), 65536);
           try {
-            Object cl = makeClassFromStream(s);
+            Object cl = makeClassFromStream(in.getInputName(), s);
             String entryName = toEntryName(getClassName(cl));
             if (!entryNames.contains(entryName)) {
               putNextEntry(new ZipEntry(entryName));

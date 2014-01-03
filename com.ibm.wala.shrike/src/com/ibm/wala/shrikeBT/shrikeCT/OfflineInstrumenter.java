@@ -31,11 +31,11 @@ final public class OfflineInstrumenter extends OfflineInstrumenterBase {
   }
 
   @Override
-  protected Object makeClassFromStream(BufferedInputStream s) throws IOException {
+  protected Object makeClassFromStream(String inputName, BufferedInputStream s) throws IOException {
     byte[] bytes = new byte[s.available()];
     Util.readFully(s, bytes);
     try {
-      return new ClassInstrumenter(bytes);
+      return new ClassInstrumenter(inputName, bytes);
     } catch (InvalidClassFileException e) {
       throw new IOException("Class is invalid: " + e.getMessage());
     }
@@ -73,7 +73,7 @@ final public class OfflineInstrumenter extends OfflineInstrumenterBase {
    * methods to 'code' (or make other changes) before calling this method.
    */
   public void outputModifiedClass(ClassInstrumenter out, ClassWriter code) throws IllegalStateException, IOException {
-    internalOutputModifiedClass(out, code);
+    internalOutputModifiedClass(out, out.getInputName(), code);
   }
 
   /**
@@ -84,7 +84,7 @@ final public class OfflineInstrumenter extends OfflineInstrumenterBase {
       throw new IllegalArgumentException();
     }
     try {
-      internalOutputModifiedClass(out, out.emitClass());
+      internalOutputModifiedClass(out, out.getInputName(), out.emitClass());
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
       throw new IOException("Invalid class file");

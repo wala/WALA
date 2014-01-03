@@ -52,13 +52,22 @@ final public class ClassInstrumenter {
 
   private int fakeLineOffset;
 
+  private final String inputName;
+  
   /**
    * Create a class instrumenter from raw bytes.
    */
-  public ClassInstrumenter(byte[] bytes) throws InvalidClassFileException {
-    this(new ClassReader(bytes));
+  public ClassInstrumenter(String inputName, byte[] bytes) throws InvalidClassFileException {
+    this(inputName, new ClassReader(bytes));
   }
 
+  /**
+   * @return name of resource from which this class was read
+   */
+  public String getInputName() {
+    return inputName;
+  }
+  
   /**
    * Calling this means that methods without line numbers get fake line numbers added: each bytecode instruction is treated as at
    * line 'offset' + the offset of the instruction.
@@ -73,7 +82,7 @@ final public class ClassInstrumenter {
    * 
    * @throws IllegalArgumentException if cr is null
    */
-  public ClassInstrumenter(ClassReader cr) throws InvalidClassFileException {
+  public ClassInstrumenter(String inputName, ClassReader cr) throws InvalidClassFileException {
     if (cr == null) {
       throw new IllegalArgumentException("cr is null");
     }
@@ -82,6 +91,7 @@ final public class ClassInstrumenter {
     oldCode = new CodeReader[methods.length];
     cpr = CTDecoder.makeConstantPoolReader(cr);
     deletedMethods = new boolean[methods.length];
+    this.inputName = inputName;
   }
 
   /**
