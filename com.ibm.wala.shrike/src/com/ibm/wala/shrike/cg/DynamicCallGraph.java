@@ -43,9 +43,6 @@ import com.ibm.wala.util.config.SetOfClasses;
  * System.err.println() at ever method call, and a System.err.println() at every
  * method entry.
  * 
- * In Unix, I run it like this: java -cp ~/dev/shrike/shrike
- * com.ibm.dynHLRace.shrikeInstrumentor test.jar -o output.jar
- * 
  * The instrumented classes are placed in the directory "output" under the
  * current directory. Disassembled code is written to the file "report" under
  * the current directory.
@@ -90,7 +87,7 @@ public class DynamicCallGraph {
 
 	private static void doClass(final ClassInstrumenter ci, Writer w) throws InvalidClassFileException, IOException, FailureException {
 		final String className = ci.getReader().getName();
-    if (filter != null && ! filter.contains(className)) {
+    if (filter != null && filter.contains(className)) {
       return;
     }
 		w.write("Class: " + className + "\n");
@@ -102,6 +99,10 @@ public class DynamicCallGraph {
 
 			// d could be null, e.g., if the method is abstract or native
 			if (d != null) {
+		    if (filter != null && filter.contains(className + "." + ci.getReader().getMethodName(m))) {
+		      return;
+		    }
+
 				w.write("Instrumenting " + ci.getReader().getMethodName(m) + " " + ci.getReader().getMethodType(m) + ":\n");
 				w.flush();
 
@@ -131,7 +132,8 @@ public class DynamicCallGraph {
 				    if (nonStatic && !isConstructor)
 				      w.emit(LoadInstruction.make(Constants.TYPE_Object, 0)); //load this
 				    else
-				      w.emit(ConstantInstruction.make(Constants.TYPE_null, null));
+              w.emit(Util.makeGet(runtime, "NULL_TAG"));
+				      // w.emit(ConstantInstruction.make(Constants.TYPE_null, null));
 				    w.emit(Util.makeInvoke(runtime, "execution", new Class[] {String.class, String.class, Object.class}));
 				  }
 				});
@@ -147,7 +149,8 @@ public class DynamicCallGraph {
 								if (nonStatic)
 									w.emit(LoadInstruction.make(Constants.TYPE_Object, 0)); //load this
 								else
-									w.emit(ConstantInstruction.make(Constants.TYPE_null, null));
+								  w.emit(Util.makeGet(runtime, "NULL_TAG"));
+									// w.emit(ConstantInstruction.make(Constants.TYPE, null));
 								w.emit(ConstantInstruction.make(0)); // false
 								w.emit(Util.makeInvoke(runtime, "termination", new Class[] {String.class, String.class, Object.class, boolean.class}));
 							}
@@ -164,7 +167,8 @@ public class DynamicCallGraph {
 								if (nonStatic)
 									w.emit(LoadInstruction.make(Constants.TYPE_Object, 0)); //load this
 								else
-									w.emit(ConstantInstruction.make(Constants.TYPE_null, null));
+                  w.emit(Util.makeGet(runtime, "NULL_TAG"));
+									// w.emit(ConstantInstruction.make(Constants.TYPE_null, null));
 								w.emit(ConstantInstruction.make(1)); // true
 								w.emit(Util.makeInvoke(runtime, "termination", new Class[] {String.class, String.class, Object.class, boolean.class}));
 							}
@@ -190,7 +194,8 @@ public class DynamicCallGraph {
 								w.emit(ConstantInstruction.makeString(calleeClass));
 				        w.emit(ConstantInstruction.makeString(calleeMethod));
 				        // target unknown
-								w.emit(ConstantInstruction.make(Constants.TYPE_null, null));
+                w.emit(Util.makeGet(runtime, "NULL_TAG"));
+								// w.emit(ConstantInstruction.make(Constants.TYPE_null, null));
 								w.emit(Util.makeInvoke(runtime, "addToCallStack", new Class[] {String.class, String.class, Object.class}));
 							}
 						});
