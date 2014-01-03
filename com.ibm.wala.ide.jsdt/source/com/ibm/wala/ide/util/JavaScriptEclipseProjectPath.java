@@ -72,6 +72,7 @@ public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePat
     Collection<Module> s = modules.get(JSLoader.JAVASCRIPT);
     for(Pair<String,Plugin> model : models) {
       URL modelFile = JsdtUtil.getProlgueFile(model.fst, model.snd);
+      assert modelFile != null : "cannot find file for " + model;
       s.add(new SourceURLModule(modelFile) {
         @Override
         public String getName() {
