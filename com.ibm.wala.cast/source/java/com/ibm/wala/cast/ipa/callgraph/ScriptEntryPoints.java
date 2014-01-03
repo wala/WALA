@@ -105,7 +105,7 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
 
   public Entrypoint make(String scriptName) {
     IClass cls = cha.lookupClass(TypeReference.findOrCreate(scriptType.getClassLoader().getReference(), scriptName));
-    assert cls != null && cha.isSubclassOf(cls, scriptType) && !cls.isAbstract();
+    assert cls != null && cha.isSubclassOf(cls, scriptType) && !cls.isAbstract() : String.valueOf(cls) + " for " + scriptName;
     for (IMethod method : cls.getDeclaredMethods()) {
       if (keep(method)) {
         return new ScriptEntryPoint(method);
