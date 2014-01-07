@@ -1528,7 +1528,7 @@ public abstract class Compiler implements Constants {
         // extractable method, because changing 'len' might mean we have more
         // untouched stack elements. But we'll do this in a dumb way to avoid
         // being caught in some N^2 loop looking for extractable code.
-        while (len > 0 && stackTypes[start + len] == null || stackTypes[start + len].length > untouchedStack) {
+        while (len > 0 && (stackTypes[start + len] == null || stackTypes[start + len].length > untouchedStack)) {
           len--;
         }
         continue;
