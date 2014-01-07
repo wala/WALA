@@ -138,6 +138,22 @@ public class DynamicCallGraph {
 				  }
 				});
 
+				me.addMethodExceptionHandler(null, new MethodEditor.Patch() { 
+          @Override
+          public void emitTo(Output w) {
+            w.emit(ConstantInstruction.makeString(theClass));
+            w.emit(ConstantInstruction.makeString(theMethod));
+            //if (nonStatic)
+            //  w.emit(LoadInstruction.make(Constants.TYPE_Object, 0)); //load this
+            //else
+              w.emit(Util.makeGet(runtime, "NULL_TAG"));
+              // w.emit(ConstantInstruction.make(Constants.TYPE_null, null));
+            w.emit(ConstantInstruction.make(1)); // true
+            w.emit(Util.makeInvoke(runtime, "termination", new Class[] {String.class, String.class, Object.class, boolean.class}));
+            w.emit(ThrowInstruction.make(false));
+          }
+        });
+				
 				me.visitInstructions(new MethodEditor.Visitor() {
 					@Override
 					public void visitReturn(ReturnInstruction instruction) {
@@ -153,58 +169,6 @@ public class DynamicCallGraph {
 									// w.emit(ConstantInstruction.make(Constants.TYPE, null));
 								w.emit(ConstantInstruction.make(0)); // false
 								w.emit(Util.makeInvoke(runtime, "termination", new Class[] {String.class, String.class, Object.class, boolean.class}));
-							}
-						});
-					}
-					
-					@Override
-					public void visitThrow(ThrowInstruction instruction) {
-						insertBefore(new MethodEditor.Patch() {
-							@Override
-              public void emitTo(Output w) {
-                w.emit(ConstantInstruction.makeString(theClass));
-								w.emit(ConstantInstruction.makeString(theMethod));
-								if (nonStatic)
-									w.emit(LoadInstruction.make(Constants.TYPE_Object, 0)); //load this
-								else
-                  w.emit(Util.makeGet(runtime, "NULL_TAG"));
-									// w.emit(ConstantInstruction.make(Constants.TYPE_null, null));
-								w.emit(ConstantInstruction.make(1)); // true
-								w.emit(Util.makeInvoke(runtime, "termination", new Class[] {String.class, String.class, Object.class, boolean.class}));
-							}
-						});
-					}
-					
-					@Override
-					public void visitInvoke(IInvokeInstruction inv) {
-						final String calleeClass = inv.getClassType();
-						final String calleeMethod = inv.getMethodName() + inv.getMethodSignature();
-						addInstructionExceptionHandler(/*"java.lang.Throwable"*/null, new MethodEditor.Patch() {
-							@Override
-              public void emitTo(MethodEditor.Output w) {
-								w.emit(ConstantInstruction.makeString(calleeClass));
-				        w.emit(ConstantInstruction.makeString(calleeMethod));
-				        w.emit(Util.makeInvoke(runtime, "pop", new Class[] {String.class, String.class}));
-								w.emit(ThrowInstruction.make(true));
-							}
-						});
-						insertBefore(new MethodEditor.Patch() {
-							@Override
-              public void emitTo(MethodEditor.Output w) {
-								w.emit(ConstantInstruction.makeString(calleeClass));
-				        w.emit(ConstantInstruction.makeString(calleeMethod));
-				        // target unknown
-                w.emit(Util.makeGet(runtime, "NULL_TAG"));
-								// w.emit(ConstantInstruction.make(Constants.TYPE_null, null));
-								w.emit(Util.makeInvoke(runtime, "addToCallStack", new Class[] {String.class, String.class, Object.class}));
-							}
-						});
-						insertAfter(new MethodEditor.Patch() {
-							@Override
-              public void emitTo(MethodEditor.Output w) {
-								w.emit(ConstantInstruction.makeString(calleeClass));
-	              w.emit(ConstantInstruction.makeString(calleeMethod));
-								w.emit(Util.makeInvoke(runtime, "pop", new Class[] {String.class, String.class}));
 							}
 						});
 					}
