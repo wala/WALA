@@ -7,8 +7,20 @@ public class MainClass {
     this.x = x;
   }
 
+  private final String printNull() {
+    return "*null*";
+  }
+  
+  private String callSomething(Object x) {
+    return "mc:" + (x==null? printNull(): x.toString());
+  }
+  
   private String toStringImpl() {
-    return "mc:" + x.toString();
+    try {
+      return "mc:" + x.toString();
+    } catch (NullPointerException e) {
+      return callSomething(x);
+    }
   }
   
   @Override
@@ -17,7 +29,11 @@ public class MainClass {
   }
   
   public static void main(String[] args) {
-    MainClass mc = new MainClass(new ExtraClass());
+    MainClass mc = new MainClass(new ExtraClass("ExtraClass"));
+    System.err.println(mc.toString());
+    mc = new MainClass(null);
+    System.err.println(mc.toString());
+    mc = new MainClass(new ExtraClass());
     System.err.println(mc.toString());
   }
 }

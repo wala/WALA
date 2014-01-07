@@ -66,7 +66,12 @@ public class DynamicCallGraphTests extends WalaTestCase {
       File tmpFile = TemporaryFile.urlToFile("exclusions.txt", getClass().getClassLoader().getResource(exclusionsFile));
       System.setProperty("dynamicCGFilter", tmpFile.getCanonicalPath());
     }
-    testMain.invoke(null, (Object)new String[0]);
+    try {
+      testMain.invoke(null, (Object)new String[0]);
+    } catch (Throwable e) {
+      // exceptions allowed here, just collecting CG
+    }
+    
     Assert.assertTrue("expected to create call graph", new File(System.getProperty("dynamicCGFile")).exists());
   }
   
@@ -101,7 +106,7 @@ public class DynamicCallGraphTests extends WalaTestCase {
       Assert.assertEquals(1, nodes.size());
       CGNode callee = nodes.iterator().next();
       
-      Assert.assertTrue(staticCG.getPossibleSites(caller, callee).hasNext());
+      Assert.assertTrue("no edge for " + caller + " --> " + callee, staticCG.getPossibleSites(caller, callee).hasNext());
       System.err.println("found expected edge" + caller + " --> " + callee);
     }
     

@@ -1,17 +1,26 @@
 package dynamicCG;
 
 public class ExtraClass {
-
-  public ExtraClass() {
-
+  private final Object x;
+  
+  public ExtraClass(Object x) {
+    this.x = x;
   }
 
-  private static String getName() {
-    return "ExtraClass";
+  public ExtraClass() {
+    this(null);
+  }
+
+  private static String printObject() {
+    return " (object)";
+  }
+  
+  private static String getName(Object x) {
+    return x.toString() + printObject();
   }
   
   @Override
   public String toString() {
-     return getName();
+     return getName(x);
    }
 }
