@@ -67,11 +67,18 @@ public class DynamicCallGraphTests extends WalaTestCase {
       System.setProperty("dynamicCGFilter", tmpFile.getCanonicalPath());
     }
     try {
-      testMain.invoke(null, (Object)new String[0]);
+      testMain.invoke(null, (Object)new String[0]);      
     } catch (Throwable e) {
       // exceptions allowed here, just collecting CG
     }
     
+    // the VM is not exiting, so stop tracing explicitly
+    Class<?> runtimeClass = jcl.loadClass("com.ibm.wala.shrike.cg.Runtime");
+    Assert.assertNotNull(runtimeClass);
+    Method endTrace = runtimeClass.getDeclaredMethod("endTrace");
+    Assert.assertNotNull(endTrace);
+    endTrace.invoke(null);
+
     Assert.assertTrue("expected to create call graph", new File(System.getProperty("dynamicCGFile")).exists());
   }
   
