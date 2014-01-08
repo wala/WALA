@@ -18,12 +18,18 @@ public class Runtime {
   private PrintWriter output;
   private SetOfClasses filter;
   
-  private Stack<String> callStack;
+  private ThreadLocal<Stack<String>> callStacks = new ThreadLocal<Stack<String>>() {
+
+    @Override
+    protected Stack<String> initialValue() {
+      Stack<String> callStack = new Stack<String>();
+      callStack.push("root");
+      return callStack;
+    }
+ 
+  };
   
   private Runtime(String fileName, String filterFileName) {
-    callStack = new Stack<String>();
-    callStack.push("root");
-
     try {
       filter = new FileOfClasses(new FileInputStream(filterFileName));
     } catch (Exception e) {
@@ -35,8 +41,22 @@ public class Runtime {
     } catch (IOException e) {
       output = new PrintWriter(System.err);
     }
+    
+    java.lang.Runtime.getRuntime().addShutdownHook(new Thread() {
+      @Override
+      public void run() {
+        endTrace();
+      }
+    });
   }
 
+  public static void endTrace() {
+    if (runtime.output != null) {
+      runtime.output.close();
+      runtime.output = null;
+    }
+  }
+  
   public static Object NULL_TAG = new Object() {
     @Override
     public String toString() {
@@ -46,17 +66,19 @@ public class Runtime {
   
   public static void execution(String klass, String method, Object receiver) {
     if (runtime.filter == null || ! runtime.filter.contains(klass)) {
-      runtime.output.printf(runtime.callStack.peek() + "\t" + klass + "\t" + method + "\n");
+      if (runtime.output != null) {
+        String line = runtime.callStacks.get().peek() + "\t" + klass + "\t" + method + "\n";
+        synchronized (runtime) {
+          runtime.output.printf(line);
+        }
+      }
     }
 
-    runtime.callStack.push(klass + "\t" + method);
+    runtime.callStacks.get().push(klass + "\t" + method);
   }
   
   public static void termination(String klass, String method, Object receiver, boolean exception) {
-    runtime.callStack.pop();
-    if ("root".equals(runtime.callStack.peek())) {
-      runtime.output.close();
-    }
+    runtime.callStacks.get().pop();
   }
   
   public static void pop(String klass, String method) {
