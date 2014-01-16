@@ -10,7 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.ibm.wala.util.functions.Function;
 
@@ -50,4 +52,11 @@ public class MapIterator<X, Y> implements Iterator<Y> {
     return "map: " + f + " of " + i;
   }
 
+  public static <X,Y> Iterator<Y> map(Function<X, Y> f, Iterator<X> i) {
+    return new MapIterator<X,Y>(i, f);
+  }
+
+  public static <X,Y> Set<Y> map(Function<X, Y> f, Collection<X> i) {
+    return Iterator2Collection.toSet(new MapIterator<X,Y>(i.iterator(), f));
+  }
 }
