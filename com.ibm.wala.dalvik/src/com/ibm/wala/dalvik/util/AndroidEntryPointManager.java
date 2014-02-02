@@ -64,7 +64,6 @@ import java.lang.Class;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.helpers.NOPLogger;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
 
@@ -76,11 +75,13 @@ import com.ibm.wala.util.NullProgressMonitor;
  *  @author Tobias Blaschke <code@tobiasblaschke.de>
  */
 public final /* singleton */ class AndroidEntryPointManager implements Serializable {
-    //private static final Logger logger = LoggerFactory.getLogger(AndroidEntryPointManager.class);
-    private static final Logger logger = NOPLogger.NOP_LOGGER;
+    private static final Logger logger = LoggerFactory.getLogger(AndroidEntryPointManager.class);
 
-    public transient static final AndroidEntryPointManager MANAGER = new AndroidEntryPointManager();
-    public transient static List<AndroidEntryPoint> ENTRIES = new ArrayList<AndroidEntryPoint>();
+    public static final AndroidEntryPointManager MANAGER = new AndroidEntryPointManager();
+    public static List<AndroidEntryPoint> ENTRIES = new ArrayList<AndroidEntryPoint>();
+    /**
+     * This is TRANSIENT!
+     */
     private transient IInstantiationBehavior instantiation = null;
 
     //
@@ -221,4 +222,84 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
         }
         this.abstractAndroidModel = abstractAndroidModel;
     }
+
+    //
+    //  Propertys of the analyzed app
+    //
+    private transient String pack = null;
+   
+    /**
+     *  Set the package of the analyzed application.
+     *
+     *  Setting the package of the application is completely optional. However if you do it it helps
+     *  determining whether an Intent has an internal target.
+     *
+     *  @param  pack    The package of the analyzed application
+     *  @throws IllegalArgumentException if the package has already been set and the value of the
+     *      packages differ. Or if the given package is null.
+     */
+    public void setPackage(String pack) {
+        if (pack == null) {
+            throw new IllegalArgumentException("Setting the package to null is disallowed.");
+        }
+        if ((! pack.startsWith("L") || pack.contains("."))) {
+            pack = StringStuff.deployment2CanonicalTypeString(pack);
+        }
+        if (this.pack == null) {
+            logger.info("Setting the package to {}", pack);
+            this.pack = pack;
+        } else if (!(this.pack.equals(pack))) {
+            throw new IllegalArgumentException("The already set package " + this.pack + " and " + pack +
+                    " differ. You can only set pack once.");
+        }
+    }
+
+    /**
+     *  Return the package of the analyzed app.
+     *
+     *  This only returns a value other than null if the package has explicitly been set using 
+     *  setPackage (which is for example called when reading in the Manifest).
+     *
+     *  If you didn't read the manifest you can still try and retrieve the package name using
+     *  guessPackage().
+     *
+     *  @return The package or null if it was indeterminable.
+     *  @see    guessPacakge()
+     */
+    public String getPackage() {
+        if (this.pack == null) {
+            logger.warn("Returning null as package");
+            return null;
+        } else {
+            return this.pack;
+        }
+    }
+
+    /**
+     *  Get the package of the analyzed app.
+     *
+     *  If the package has been set using setPackage() return this value. Else try and determine 
+     *  the package based on the first entrypoint.
+     *
+     *  @return The package or null if it was indeterminable.
+     *  @see    getPackage()
+     */
+    public String guessPackage() {
+        if (this.pack != null) {
+            return this.pack;
+        } else {
+            if (ENTRIES.isEmpty()) {
+                logger.error("guessPackage() called when no entrypoints had been set");
+                return null;
+            }
+            final String first = ENTRIES.get(0).getMethod().getReference().getDeclaringClass().getName().getPackage().toString();
+            // TODO: Iterate all?
+            return first;
+        }
+    }
+  
+    /**
+     *  Last 8 digits encode the date.
+     */
+    private final static long serialVersionUID = 8740020131212L;
 }

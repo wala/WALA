@@ -82,10 +82,12 @@ import com.ibm.wala.util.ssa.IInstantiator;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior.InstanceBehavior;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.AbstractAndroidModel;
-
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.AndroidStartComponentTool;
 
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.dalvik.util.AndroidTypes;
+import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters;
+import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StarterFlags;
 
 import com.ibm.wala.util.strings.StringStuff;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -348,7 +350,6 @@ public class AndroidModel /* makes SummarizedMethod */
 
         final TypeSafeInstructionFactory tsif = new TypeSafeInstructionFactory(this.cha);
         final Instantiator instantiator = new Instantiator (this.body, tsif, this.paramManager, this.cha, this.mRef, this.scope);
-
         
         logger.info("Populating the AndroidModel with {} entryPoints", this.maxProgress);
 
@@ -536,18 +537,24 @@ public class AndroidModel /* makes SummarizedMethod */
      *  @see    com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters
      *
      *  @param  asMethod    The signature to generate
+     *  @param  flags       Control the behavior of the wrapper, may be null
      *  @param  caller      The class of the caller; only needed depending on the flags
      *  @param  info        The IntentSterter used
      *  @param  callerNd    CGNoodle of the caller - may be null
      *  @return A wrapper that calls the model
      */
-    public SummarizedMethod getMethodAs(MethodReference asMethod, TypeReference caller, CGNode callerNd) throws CancelException {
+    public SummarizedMethod getMethodAs(MethodReference asMethod, TypeReference caller,
+            IntentStarters.StartInfo info, CGNode callerNd) throws CancelException {
+        Set<StarterFlags> flags = info.getFlags();
         //System.out.println("\n\nAS: " + asMethod + "\n\n");
         if (!built) {
             getMethod();
         }
         if (asMethod == null) {
             throw new IllegalArgumentException("asMethod may not be null");
+        }
+        if (flags == null) {
+            flags = Collections.EMPTY_SET;
         }
 
         final TypeSafeInstructionFactory instructionFactory = new TypeSafeInstructionFactory(getClassHierarchy());
@@ -613,6 +620,9 @@ public class AndroidModel /* makes SummarizedMethod */
             }
         }
 
+        final AndroidStartComponentTool tool = new AndroidStartComponentTool(getClassHierarchy(), asMethod, flags, caller, instructionFactory,
+                acc, pm, redirect, self, info, callerNd);
+
         try { // Add additional Info if Exception occurs...
 
         // TODO: Check, that caller is an activity where necessary!
@@ -655,6 +665,52 @@ public class AndroidModel /* makes SummarizedMethod */
             redirect.addStatement(invokation);
         }
 
+        // Optionally call onActivityResult
+        if (flags.contains(StarterFlags.CALL_ON_ACTIVITY_RESULT) &&      // TODO: Test multiple activities
+           (! flags.contains(StarterFlags.CONTEXT_FREE))) {             // TODO: Doesn't this work without context?
+            // Collect all Activity.mResultCode and Activity.mResultData
+
+            // Result information of all activities.
+            final List<SSAValue> resultCodes = new ArrayList<SSAValue>();
+            final List<SSAValue> resultData = new ArrayList<SSAValue>();
+            final SSAValue mResultCode; // = Phi(resultCodes)
+            final SSAValue mResultData; // = Phi(resultData)
+           
+            tool.fetchResults(resultCodes, resultData, allActivities); 
+
+            if (resultCodes.size() == 0) {
+                logger.error("Can't read back results from the started Activity => Can't call onActivityResult - " +
+                        "The Activity has to be marked as REUSE in the IInstructionBehavior.");
+                throw new IllegalStateException("The call " + asMethod + " from " + caller + " failed, as the model " + this.model + 
+                        " did not take an activity to read the result from");
+            }
+
+            mResultCode = tool.addPhi(resultCodes);
+            mResultData = tool.addPhi(resultData);
+
+            { // Send back the results
+                // TODO: Assert caller is an Activity
+                final SSAValue outRequestCode = acc.firstOf(TypeReference.Int);   // TODO: Check is's the right parameter
+                logger.debug("Calling onActivityResult");
+                final int callPC = redirect.getNextProgramCounter();
+                // void onActivityResult (int requestCode, int resultCode, Intent data)
+                final Selector mSel = Selector.make("onActivityResult(IILandroid/content/Intent;)V");
+                final MethodReference mRef = MethodReference.findOrCreate(caller, mSel);
+                final CallSiteReference site = CallSiteReference.make(callPC, mRef, IInvokeInstruction.Dispatch.VIRTUAL);
+                //final SSAValue exception = new SSAValue(pm.getUnmanaged(), TypeReference.JavaLangException, asMethod, "exception");
+                final SSAValue exception = pm.getException();
+                final List<SSAValue> params = new ArrayList<SSAValue>();
+                params.add(self);
+                params.add(outRequestCode); // Was an agument to start...
+                params.add(mResultCode);
+                params.add(mResultData);
+                final SSAInstruction invokation = instructionFactory.InvokeInstruction(callPC, params, exception, site);
+                redirect.addStatement(invokation);
+                
+                logger.info("Calling this.onActivityResult");
+            } // */
+        }
+
         final IClass declaringClass = this.cha.lookupClass(asMethod.getDeclaringClass());   
         if (declaringClass == null) {
             throw new IllegalStateException("Unable to retreive te IClass of " + asMethod.getDeclaringClass() + " from " +
@@ -677,8 +733,11 @@ public class AndroidModel /* makes SummarizedMethod */
             System.err.println("\tself=\t" + self);
             System.err.println("\tmodelAcc=\t" + acc.dump());
             
+            //final List<Parameter> modelsActivities = modelAcc.allExtend(AndroidTypes.ActivityName, getClassHierarchy()); // are in models scope
+            //final List<SSAValue> allActivities = new ArrayList<SSAValue>(modelsActivities.size());   // create instances in this scope 
             System.err.println("\tasMethod=\t" + asMethod);
             System.err.println("\tcaller=\t" + caller);
+            System.err.println("\tinfo=\t" + info);
             System.err.println("\tcallerND=\t" + callerNd);
             System.err.println("\tthis=\t" + this.getClass().toString());
             System.err.println("\tthis.name=\t" + this.name);
