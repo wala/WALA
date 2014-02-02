@@ -70,6 +70,8 @@ public class StandardSolver extends AbstractPointsToSolver {
         System.err.println("adding constraints again");
       }
       getBuilder().addConstraintsFromNewNodes(monitor);
+
+      monitor.worked(i);
       // Note that we may have added stuff to the
       // worklist; so,
     } while (!getSystem().emptyWorkList());

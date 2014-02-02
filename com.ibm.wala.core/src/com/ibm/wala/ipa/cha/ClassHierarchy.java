@@ -218,7 +218,7 @@ public class ClassHierarchy implements IClassHierarchy {
       int idx = 0;
 
       if (progressMonitor != null) {
-        progressMonitor.beginTask("Build Class Hierarchy", numLoaders);
+        progressMonitor.beginTask("Build Class Hierarchy", (numLoaders) * 2 - 1);
       }
       for (ClassLoaderReference ref : scope.getLoaders()) {
         if (progressMonitor != null) {
@@ -232,16 +232,19 @@ public class ClassHierarchy implements IClassHierarchy {
           loaders[idx++] = icl;
 
           if (progressMonitor != null) {
-            progressMonitor.worked(1);
+            progressMonitor.worked(idx);
           }
         }
       }
 
       for (IClassLoader icl : loaders) {
+        if (progressMonitor != null) {
+          progressMonitor.subTask("From " + icl.getName().toString());
+        }
         addAllClasses(icl, progressMonitor);
 
         if (progressMonitor != null) {
-          progressMonitor.worked(1);
+          progressMonitor.worked(idx++);
         }
       }
 
