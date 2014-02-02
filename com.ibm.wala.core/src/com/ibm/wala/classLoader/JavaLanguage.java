@@ -112,7 +112,7 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     public SSABinaryOpInstruction BinaryOpInstruction(int iindex, IBinaryOpInstruction.IOperator operator, boolean overflow, boolean unsigned,
         int result, int val1, int val2, boolean mayBeInteger) {
       assert !overflow;
-      assert !unsigned;
+      assert (!unsigned) : "BinaryOpInstuction: unsigned disallowed! iIndex: " + iindex + ", operation: " + val1 + " " + operator.toString() + " " + val2 ;
       return new SSABinaryOpInstruction(iindex, operator, result, val1, val2, mayBeInteger) {
 
         @Override
@@ -212,6 +212,10 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     @Override
     public SSAGotoInstruction GotoInstruction(int iindex) {
       return new SSAGotoInstruction(iindex);
+    }
+
+    public SSAGotoInstruction GotoInstruction(int iindex, int target) {
+      return new SSAGotoInstruction(iindex, target);
     }
 
     @Override

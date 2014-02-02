@@ -175,6 +175,10 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
       }
     }
 
+    assert(instructions.length <= r.length);
+    if (DEBUG) {
+      System.err.println("Searching " + instructions.length + " instructions for basic clocks and Phi/Pi");
+    }
     BasicBlock b = null;
     for (int i = 0; i < r.length; i++) {
       if (r[i]) {
@@ -184,6 +188,9 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
         while (instructions[j] instanceof SSAPhiInstruction) {
           b.addPhi((SSAPhiInstruction) instructions[j]);
           j++;
+          if (j >= instructions.length) {
+            break;
+          }
         }
 
         if (DEBUG) {
@@ -234,7 +241,6 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
 
     @Override
     public void visitGoto(SSAGotoInstruction instruction) {
-      Assertions.UNREACHABLE("haven't implemented logic for goto yet.");
       breakBasicBlock(index);
     }
 
@@ -424,6 +430,10 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
      * @param last the last instruction in a basic block.
      */
     private void addExceptionalEdges(SSAInstruction last) {
+      if (last == null) {
+          throw new IllegalStateException("Missing last SSA-Instruction in basic block (null).");   // XXX: When does this happen?
+          // simply Return?
+      }
       if (last.isPEI()) {
         // we don't currently model catch blocks here ... instead just link
         // to the exit block
@@ -444,10 +454,23 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
       if (DEBUG) {
         System.err.println(("Block " + this + ": computeOutgoingEdges()"));
       }
-      // TODO: we don't currently model branches
 
       SSAInstruction last = getInstructions()[getLastInstructionIndex()];
       addExceptionalEdges(last);
+
+      if (last instanceof SSAGotoInstruction) {
+      	  int tgt = ((SSAGotoInstruction)last).getTarget();
+
+          if (tgt != -1) {
+              int tgtNd = getIndexFromIIndex(tgt);
+
+              if (DEBUG) {
+        	  	  System.out.println("GOTO: Add additional CF to " + tgt + " is " + getNode(tgtNd).toString());
+              }
+	      	  addNormalEdgeTo(getNode(tgtNd));
+		  }
+	  }
+
       // this CFG is odd in that we assume fallthru might always
       // happen .. this is because I'm too lazy to code control
       // flow in all method summaries yet.
@@ -600,6 +623,37 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     } else {
       return index;
     }
+  }
+
+  /**
+   * Get the position of a instruction with a given iindex in the internal list.
+   *
+   * @param     iindex  The iindex used when generating the SSAInstruction
+   * @return    index into the internal list of instructions
+   * @throws    IllegalStateException if no instruction exists with iindex or it's not in the internal array (Phi)
+   */
+  public int getIndexFromIIndex(int iindex) {
+    if (iindex <= 0) {
+        throw new IllegalArgumentException("The iindex may not be negative (is " + iindex + ". Method: " + getMethod() + ", Contenxt: " + this.context);
+    }
+
+    final SSAInstruction[] instructions = getInstructions();
+    if (instructions == null) {
+        throw new IllegalStateException("This CFG contains no Instructions? " + getMethod() + ", Contenxt: " + this.context);
+    }
+    for (int i=0; i < instructions.length; ++i) {
+        if (instructions[i] == null) {
+            // It was a Phi or something...
+            throw new IllegalStateException("The " + i +"th instrction is null! Mathod: " + getMethod() + 
+                    ", Contenxt: " + this.context + "Insts: " + java.util.Arrays.toString(instructions));
+            //continue;
+        }
+        if (instructions[i].iindex == iindex) {
+            return i;
+        }
+    }
+
+    throw new IllegalStateException("The searched iindex does not exist!" + getMethod() + ", Contenxt: " + this.context);
   }
 
   public Collection<SSAPhiInstruction> getAllPhiInstructions() {

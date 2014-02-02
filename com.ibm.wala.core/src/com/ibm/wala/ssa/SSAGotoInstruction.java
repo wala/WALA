@@ -14,9 +14,24 @@ package com.ibm.wala.ssa;
  * Unconditional branch instruction for SSA form.
  */
 public class SSAGotoInstruction extends SSAInstruction {
+  int targetIndex = -1;
 
   public SSAGotoInstruction(int index) {
     super(index);
+  }
+
+  //@Warning("SSAGotoInstruction requires a BasicBlock change at targetIndex, but has no method to enforce it!")
+  public SSAGotoInstruction(int index, int targetIndex) {
+    super(index);
+    this.targetIndex = targetIndex;
+  }
+
+  /**
+   *    getTarget returns the IIndex for the Goto-target. Not to be confused with
+   *    the array-index in InducedCFG.getStatements()
+   */
+  public int getTarget() {
+	return this.targetIndex;
   }
 
   @Override
@@ -26,7 +41,7 @@ public class SSAGotoInstruction extends SSAInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return "goto";
+    return "goto (iindex = " + this.targetIndex  + ")";
   }
 
   /**
@@ -44,7 +59,7 @@ public class SSAGotoInstruction extends SSAInstruction {
 
   @Override
   public int hashCode() {
-    return 1409; // XXX weak!
+    return 1409 + 17 * targetIndex;
   }
 
   /*
