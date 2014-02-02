@@ -157,6 +157,31 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
         return prev;
     }
 
+    private boolean doBootSequence = true;
+    /**
+     *  Whether to generate a global android environment.
+     *
+     *  It's possible to analyze android-applications without creating these structures and save 
+     *  some memory. In this case some calls to the OS (like getting the Activity-manager or so)
+     *  will not be able to be resolved.
+     */
+    public boolean getDoBootSequence() {
+        return this.doBootSequence;
+    }
+
+    /**
+     *  Whether to generate a global android environment.
+     *
+     *  See the {@link #getDoBootSequence()} documentation.
+     *
+     *  @return the previous setting of doBootSequence
+     */
+    public boolean setDoBootSequence(boolean doBootSequence) {
+        boolean prev = this.doBootSequence;
+        this.doBootSequence = doBootSequence;
+        return prev;
+    }
+
     private Class abstractAndroidModel = LoopAndroidModel.class;
     /**
      *  What special handling to insert into the model.

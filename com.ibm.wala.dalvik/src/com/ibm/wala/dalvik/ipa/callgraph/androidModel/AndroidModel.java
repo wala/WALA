@@ -82,7 +82,9 @@ import com.ibm.wala.util.ssa.IInstantiator;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior.InstanceBehavior;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.AbstractAndroidModel;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.AndroidBoot;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.AndroidStartComponentTool;
+
 
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.dalvik.util.AndroidTypes;
@@ -159,6 +161,11 @@ public class AndroidModel /* makes SummarizedMethod */
 
     private IProgressMonitor monitor;
     private int maxProgress;
+ 
+    /*
+     *  static: "boot" only once. How to assert done by the right one?
+     */
+    protected static boolean doBoot = true;
 
     protected IClass klass;
     protected boolean built;
@@ -258,6 +265,8 @@ public class AndroidModel /* makes SummarizedMethod */
         this.monitor = AndroidEntryPointManager.MANAGER.getProgressMonitor();
         this.maxProgress = entrypoints.size();
 
+        this.doBoot &= AndroidEntryPointManager.MANAGER.getDoBootSequence();
+
         // BUILD
         this.monitor.beginTask("Building " + name, this.maxProgress);
         populate(entrypoints);
@@ -350,6 +359,52 @@ public class AndroidModel /* makes SummarizedMethod */
 
         final TypeSafeInstructionFactory tsif = new TypeSafeInstructionFactory(this.cha);
         final Instantiator instantiator = new Instantiator (this.body, tsif, this.paramManager, this.cha, this.mRef, this.scope);
+
+        //
+        //  Add preparing code to the model
+        //
+        if (this.doBoot) {
+            final Set<Parameter> allActivities = new HashSet(modelAcc.allExtend(AndroidTypes.ActivityName, getClassHierarchy()));
+            //assert(allActivities.size() > 0) : "There are no Activities in the Model"; // XXX
+            final IntentStarters.StartInfo toolInfo = IntentStarters.StartInfo.makeContextFree(null);
+            final AndroidStartComponentTool tool = new AndroidStartComponentTool(this.cha, this.mRef, toolInfo.getFlags(),
+                    /* caller */ null, tsif, modelAcc, this.paramManager, this.body, /* self */ null, toolInfo, /* callerNd */ null);
+            final SSAValue application;
+            {
+                final SSAValue tmpApp = modelAcc.firstExtends(AndroidTypes.ApplicationName, this.cha);
+                if (tmpApp != null) {
+                    application = tmpApp;
+                } else {
+                    // Generate a real one?
+                    logger.warn("I didn't get an application");
+                    application = paramManager.getUnmanaged(AndroidTypes.Application, "app");
+                    this.body.addConstant(application.getNumber(), new ConstantValue(null));
+                    application.setAssigned();
+                }
+            }
+            final SSAValue nullIntent;
+            {
+                nullIntent = paramManager.getUnmanaged(AndroidTypes.Intent, "nullIntent");
+                this.body.addConstant(nullIntent.getNumber(), new ConstantValue(null));
+                nullIntent.setAssigned();
+            }
+            final SSAValue nullBinder;
+            {
+                nullBinder = paramManager.getUnmanaged(AndroidTypes.IBinder, "nullBinder");
+                this.body.addConstant(nullBinder.getNumber(), new ConstantValue(null));
+                nullBinder.setAssigned();
+            }
+
+            logger.info("Adding Boot-Code to the Android model");
+            {
+                final AndroidBoot boot = new AndroidBoot(null); 
+                boot.addBootCode(tsif, null, paramManager, this.body);
+                tool.attachActivities(allActivities, application, boot.getMainThread(), /* Should be application context TODO */
+                        boot.getPackageContext(), nullBinder, nullIntent); 
+            }
+
+            // TODO: Assign context to the other components
+        }
         
         logger.info("Populating the AndroidModel with {} entryPoints", this.maxProgress);
 
@@ -623,11 +678,19 @@ public class AndroidModel /* makes SummarizedMethod */
         final AndroidStartComponentTool tool = new AndroidStartComponentTool(getClassHierarchy(), asMethod, flags, caller, instructionFactory,
                 acc, pm, redirect, self, info, callerNd);
 
+        final AndroidTypes.AndroidContextType contextType;
+        final SSAValue androidContext;  // of AndroidTypes.Context: The callers android-context
+        
+        androidContext = tool.fetchCallerContext();
+        contextType = tool.typeOfCallerContext();
+
         try { // Add additional Info if Exception occurs...
 
         // TODO: Check, that caller is an activity where necessary!
 
         // TODO: Call Activity.setIntent
+        final SSAValue iBinder = tool.fetchIBinder(androidContext);
+        tool.assignIBinder(iBinder, allActivities);
 
         // Call the model
         {
@@ -735,6 +798,8 @@ public class AndroidModel /* makes SummarizedMethod */
             
             //final List<Parameter> modelsActivities = modelAcc.allExtend(AndroidTypes.ActivityName, getClassHierarchy()); // are in models scope
             //final List<SSAValue> allActivities = new ArrayList<SSAValue>(modelsActivities.size());   // create instances in this scope 
+            System.err.println("\tcontextType=\t" + contextType);
+            System.err.println("\tandroidContetx=\t" + androidContext);
             System.err.println("\tasMethod=\t" + asMethod);
             System.err.println("\tcaller=\t" + caller);
             System.err.println("\tinfo=\t" + info);
