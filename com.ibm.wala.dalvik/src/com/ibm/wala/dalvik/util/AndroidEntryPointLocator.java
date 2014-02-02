@@ -31,6 +31,7 @@
  */
 package com.ibm.wala.dalvik.util;
 
+import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.ExecutionOrder;
 
@@ -79,6 +80,7 @@ import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
 /**
  *  Searches an Android application for its EntryPoints.
@@ -90,6 +92,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class AndroidEntryPointLocator {
     private static final Logger logger = LoggerFactory.getLogger(AndroidEntryPointLocator.class);
+    private final IProgressMonitor mon;
 
     /**
      *  Used to control the search mechanisms of AndroidEntryPointLocator.
@@ -129,6 +132,7 @@ public final class AndroidEntryPointLocator {
         } else {
             this.flags = flags;
         }
+        this.mon = AndroidEntryPointManager.MANAGER.getProgressMonitor();
 
         populatePossibleEntryPoints();
     }
@@ -137,7 +141,10 @@ public final class AndroidEntryPointLocator {
      *  Searches a ClassHierarchy for EntryPoints by their method-signature (optionally with heuristics).
      *
      *  Matches the hardcoded signatures against the methods in cha. 
-     *  Uses heuristics depending on the LocatorFlags given to the constructor .
+     *  Uses heuristics depending on the LocatorFlags given to the constructor.
+     *
+     *  After retrieving the EntryPoints it might be a good idea to set them in the 
+     *  AndroidEntryPointManager.
      *
      *  @param  cha The ClassHierarchy to be searched
      *  @return partially sorted list of applicable EntryPoints
@@ -149,8 +156,10 @@ public final class AndroidEntryPointLocator {
 
         Set<AndroidEntryPoint> entryPoints = new HashSet<AndroidEntryPoint>();
 
+        mon.beginTask("Locating Entrypoints", IProgressMonitor.UNKNOWN);
         int dummy = 0;  // for the progress monitor
         for (IClass cls : cha) {
+            mon.worked(dummy++);
             if (!cls.isInterface() && !cls.isAbstract() && cls.getClassLoader().getName().equals(AnalysisScope.APPLICATION)) {
 nextMethod:
                 for (final IMethod m : cls.getDeclaredMethods()) {
@@ -191,6 +200,7 @@ nextMethod:
 
         List<AndroidEntryPoint> ret = new ArrayList<AndroidEntryPoint>(entryPoints);
         Collections.sort(ret, new AndroidEntryPoint.ExecutionOrderComperator());
+        mon.done();
         return ret;
     }
 
@@ -206,6 +216,7 @@ nextMethod:
     private void heuristicScan(Collection<? extends TypeReference> bases, Set<? super AndroidEntryPoint> eps, IClassHierarchy cha) {
         for (final TypeReference base : bases) {
             final IClass baseClass = cha.lookupClass(base);
+            this.mon.subTask("Heuristic scan in " + base);
             final Collection<IClass> candids = cha.computeSubClasses(base);
             for (final IClass candid : candids) {
                 if (! candid.getClassLoader().getReference().equals(ClassLoaderReference.Application)) {   
