@@ -1323,7 +1323,7 @@ public class ParameterAccessor { // extends Param-Manager
                 }
        
                 if (instantiator != null) {
-                    logger.info("Creating new instance of: {}", param);
+                    logger.info("Creating new instance of: {} in call to {}", param, callee);
                     /*{ // DEBUG
                         System.out.println("Creating new instance of: " + param);
                         System.out.println("in connectThrough");
@@ -1401,7 +1401,8 @@ public class ParameterAccessor { // extends Param-Manager
         if (from.getName().equals(to.getName())) return true;
 
         if (from.isPrimitiveType() && to.isPrimitiveType()) {
-            return PrimitiveAssignability.isAssignableFrom(from.getName(), to.getName());
+            //return PrimitiveAssignability.isAssignableFrom(from.getName(), to.getName());
+            return PrimitiveAssignability.isAssignableFrom(to.getName(), from.getName()); // TODO: Which way
         }
         
         if (from.isPrimitiveType() || to.isPrimitiveType()) {
@@ -1412,11 +1413,11 @@ public class ParameterAccessor { // extends Param-Manager
         IClass toClass = cha.lookupClass(to);
 
         if (fromClass == null) {
-            logger.error("Unable to look up the type of from=" + from + " in the ClassHierarchy - tying other loaders...");
+            logger.debug("Unable to look up the type of from=" + from + " in the ClassHierarchy - tying other loaders...");
             for (final IClassLoader loader: cha.getLoaders()) {
                 final IClass cand = loader.lookupClass(from.getName());
                 if (cand != null) {
-                    logger.info("Using alternative for from: {}", cand);
+                    logger.debug("Using alternative for from: {}", cand);
                     fromClass = cand;
                     break;
                 }
@@ -1429,11 +1430,11 @@ public class ParameterAccessor { // extends Param-Manager
         }
 
         if (toClass == null) {
-            logger.error("Unable to look up the type of to=" + to + " in the ClassHierarchy - tying other loaders...");
+            logger.debug("Unable to look up the type of to=" + to + " in the ClassHierarchy - tying other loaders...");
             for (final IClassLoader loader: cha.getLoaders()) {
                 final IClass cand = loader.lookupClass(to.getName());
                 if (cand != null) {
-                    logger.info("Using alternative for to: {}", cand);
+                    logger.debug("Using alternative for to: {}", cand);
                     toClass = cand;
                     break;
                 }
@@ -1447,10 +1448,10 @@ public class ParameterAccessor { // extends Param-Manager
             }
         }
         
-       // cha.isAssignableFrom (IClass c1, IClass c2)
-       //  Does an expression c1 x := c2 y typecheck? 
+        // cha.isAssignableFrom (IClass c1, IClass c2)
+        //  Does an expression c1 x := c2 y typecheck? 
          
-        logger.debug("isAssignableFrom({}, {}) = {}", toClass, fromClass, cha.isAssignableFrom(toClass, fromClass));
+        logger.trace("isAssignableFrom({}, {}) = {}", toClass, fromClass, cha.isAssignableFrom(toClass, fromClass));
         return cha.isAssignableFrom(toClass, fromClass);
     }
 
@@ -1551,4 +1552,7 @@ public class ParameterAccessor { // extends Param-Manager
         return ret;
     }
 
+    public String toString() {
+        return "<ParamAccessor forMethod=" + this.forMethod() + " />";
+    }
 }

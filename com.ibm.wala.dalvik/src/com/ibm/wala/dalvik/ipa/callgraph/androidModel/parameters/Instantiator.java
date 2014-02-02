@@ -191,11 +191,24 @@ public class Instantiator implements IInstantiator {
             assert(newInst.getDef() == instance.getNumber());
             return instance;
         } else if (klass.isArrayClass()) {      
+            logger.info("Creating Array-Class {}", klass.toString());
+
             final TypeReference payloadType = T.getArrayElementType();
-            final SSAValue payload = createInstance(payloadType, false, new UniqueKey(), seen); 
-
+            SSAValue payload = null;
+            {
+                for (final SSAValue see : seen) {
+                    if (ParameterAccessor.isAssignable(see.getType(), payloadType, this.cha)) {
+                        // Happens on Array of interfaces
+                        logger.trace("Reusing {} for array payload {}", see, payload);
+                        payload = see;
+                    }
+                }
+                if (payload == null) {
+                    payload = createInstance(payloadType, false, new UniqueKey(), seen); 
+                }
+            }
             //assert (types.size() == 1);   // TODO
-
+            
             // Generate an array of length 1
             final SSANewInstruction newInst;
             {
@@ -230,7 +243,7 @@ public class Instantiator implements IInstantiator {
             for (final TypeReference type : types) {
                 final IClass subKlass = this.cha.lookupClass(type);
 
-                if (subKlass.isAbstract() || subKlass.isInterface()) { // TODO: arrayClass?
+                if (subKlass.isAbstract() || subKlass.isInterface()) { 
                     // All "regular" classes in consideration should already be in types
                     continue;
                 }
@@ -570,6 +583,11 @@ public class Instantiator implements IInstantiator {
                     candidScore -= 1;
                 } else if (paramType.isArrayType()) {       // TODO: Reevaluate scores
                      candidScore-=30;
+
+                     if (paramType.getInnermostElementType().equals(T)) {
+                         // Array of itself
+                         candidScore -= 1000;
+                     }
                 } else if (paramType.isClassType()) {
                      candidScore-=101;
                 } else if (paramType.isReferenceType()) {    // TODO: Avoid interfaces
