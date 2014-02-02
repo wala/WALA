@@ -35,6 +35,7 @@ import com.ibm.wala.ipa.callgraph.ContextSelector;
 
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentContext;
+import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.AndroidContext;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentContextInterpreter;
 
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -96,6 +97,7 @@ public class IntentContextSelector implements ContextSelector {
     private final ContextSelector parent;
     private final IntentStarters intentStarters;
     private final Map<InstanceKey, Intent> seen;
+    private final Map<InstanceKey, AndroidContext> seenContext;
 
     public IntentContextSelector(final IClassHierarchy cha) {
         this(null, cha);
@@ -107,6 +109,7 @@ public class IntentContextSelector implements ContextSelector {
     public IntentContextSelector(final ContextSelector parent, final IClassHierarchy cha) {
         this.parent = parent;
         this.seen = HashMapFactory.make();
+        this.seenContext = HashMapFactory.make();
         this.intentStarters = new IntentStarters(cha);
     }
 
@@ -139,6 +142,12 @@ public class IntentContextSelector implements ContextSelector {
             {
                 final InstanceKey self = actualParameters[0];
                 assert (self != null) : "This-Pointer was not marked as relevant!";
+                
+                if (seenContext.containsKey(self)) {
+                    ctx = new AndroidContext(ctx, seenContext.get(self).getContextType());
+                } else {
+                    logger.warn("No Android-Context seen for {}", caller);
+                }
             }
 
             // Seach intent and attach as context
@@ -286,6 +295,42 @@ public class IntentContextSelector implements ContextSelector {
                 default:
                     logger.warn("Can't extract Info from Intent-Constructor: {} (not implemented)", site);
                     //System.out.println("\t\tFOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO: " + callee.getSelector()); // XXX
+            }
+        } else if (callee.isInit() && callee.getDeclaringClass().getName().equals(AndroidTypes.IntentSenderName)) {
+            // TODO
+        } else if (site.isSpecial() && callee.getDeclaringClass().getName().equals(
+                    AndroidTypes.ContextWrapperName)) {
+            final InstanceKey baseKey = actualParameters[1];  
+            final InstanceKey wrapperKey = actualParameters[0];  
+
+            logger.debug("Handling ContextWrapper(Context base)");
+            if (seenContext.containsKey(baseKey)) {
+                seenContext.put(wrapperKey, seenContext.get(baseKey));
+            } else {
+                if (baseKey == null) {
+                    logger.warn("Got baseKey as 'null'. Obviously can't handle this. Caller was: {}", caller.getMethod());
+                } else {
+                    logger.warn("ContextWrapper: No AndroidContext was seen for baseKey");
+                }
+            }
+        } else if ((site.isSpecial() && callee.getDeclaringClass().getName().equals(
+                        AndroidTypes.ContextImplName))) {
+            final InstanceKey self = actualParameters[0];
+            seenContext.put(self, new AndroidContext(ctx, AndroidTypes.AndroidContextType.CONTEXT_IMPL)); 
+        } else if (callee.getDeclaringClass().getName().equals(AndroidTypes.ContextWrapperName) &&
+                callee.getSelector().equals(Selector.make("attachBaseContext(Landroid/content/Context;)V"))) {
+            final InstanceKey baseKey = actualParameters[1];  
+            final InstanceKey wrapperKey = actualParameters[0];  
+       
+            logger.debug("Handling ContextWrapper.attachBaseContext(base)");
+             if (seenContext.containsKey(baseKey)) {
+                seenContext.put(wrapperKey, seenContext.get(baseKey));
+            } else {
+                if (baseKey == null) {
+                    logger.warn("Got baseKey as 'null'. Obviously can't handle this. Caller was: {}", caller.getMethod());
+                } else {
+                    logger.warn("ContextWrapper: No AndroidContext was seen for baseKey");
+                }
             }
         } 
 
