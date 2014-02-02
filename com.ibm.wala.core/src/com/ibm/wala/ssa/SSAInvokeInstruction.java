@@ -114,7 +114,8 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
 
   @Override
   public int getReturnValue(int i) {
-    assert i == 0 && result != -1;
+    assert i == 0 : "i != 0";
+    assert (result != -1) : "SSA-Result is -1";
     return result;
   }
 

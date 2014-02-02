@@ -20,6 +20,10 @@ import com.ibm.wala.util.intset.IntSet;
 
 /**
  * A context selector that first checks with A, then defaults to B.
+ *
+ * If A generates a Context B is ignored completely regardless of the ContextKeys in A.
+ *
+ * @see com.ibm.wala.ipa.callgraph.impl.UnionContextSelector
  */
 public class DelegatingContextSelector implements ContextSelector {
 
@@ -43,6 +47,8 @@ public class DelegatingContextSelector implements ContextSelector {
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (DEBUG) {
       System.err.println(("getCalleeTarget " + caller + " " + site + " " + callee));
+      System.err.println("Trying with A: " +  A.getClass());
+      System.err.println("Trying with B: " +  B.getClass());
     }
     if (A != null) {
       Context C = A.getCalleeTarget(caller, site, callee, receiver);

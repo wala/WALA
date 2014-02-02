@@ -1112,7 +1112,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       IClass klass = iKey.getConcreteType();
 
       if (DEBUG) {
-        System.err.println("visitNew: " + instruction + " " + iKey + " " + system.findOrCreateIndexForInstanceKey(iKey));
+        System.err.println("visitNew: " + instruction + " i:" + iKey + " " + system.findOrCreateIndexForInstanceKey(iKey));
       }
 
       if (klass == null) {

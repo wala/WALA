@@ -50,6 +50,9 @@ public class SubtypesEntrypoint extends DefaultEntrypoint {
       return new TypeReference[] { nominal };
     else {
       IClass nc = getCha().lookupClass(nominal);
+      if (nc == null) {
+          throw new IllegalStateException("Could not resolve in cha: " + nominal);
+      }
       Collection<IClass> subcs = nc.isInterface() ? getCha().getImplementors(nominal) : getCha().computeSubClasses(nominal);
       Set<TypeReference> subs = HashSetFactory.make();
       for (IClass cs : subcs) {
