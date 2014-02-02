@@ -35,6 +35,8 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.DefaultInstantiationBehavior;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.AbstractAndroidModel;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.LoopAndroidModel;
 
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
@@ -152,4 +154,71 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
         return prev;
     }
 
+    private Class abstractAndroidModel = LoopAndroidModel.class;
+    /**
+     *  What special handling to insert into the model.
+     *
+     *  At given points in the model (called labels) special code is inserted into it (like loops).
+     *  This setting controls what code is inserted there.
+     *
+     *  @see    com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.SequentialAndroidModel
+     *  @see    com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.LoopAndroidModel
+     *  @return An object that handles "events" that occur while generating the model.
+     *  @throws IllegalStateException if initialization fails
+     */
+    public AbstractAndroidModel makeModelBehavior(VolatileMethodSummary body, TypeSafeInstructionFactory insts,
+            SSAValueManager paramManager, Iterable<? extends Entrypoint> entryPoints) {
+        if (abstractAndroidModel == null) {
+            return new LoopAndroidModel(body, insts, paramManager, entryPoints);
+        } else {
+            try {
+                final Constructor<AbstractAndroidModel> ctor = this.abstractAndroidModel.getDeclaredConstructor(
+                    VolatileMethodSummary.class, TypeSafeInstructionFactory.class, SSAValueManager.class,
+                    Iterable.class);
+                if (ctor == null) {
+                    throw new IllegalStateException("Canot find the constructor of " + this.abstractAndroidModel);
+                }
+                return (AbstractAndroidModel) ctor.newInstance(body, insts, paramManager, entryPoints);
+            } catch (java.lang.InstantiationException e) {
+                throw new IllegalStateException(e);
+            } catch (java.lang.IllegalAccessException e) {
+                throw new IllegalStateException(e);
+            } catch (java.lang.reflect.InvocationTargetException e) {
+                throw new IllegalStateException(e);
+            } catch (java.lang.NoSuchMethodException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+    }
+
+    /**
+     *  The behavior set using setModelBehavior(Class).
+     *
+     *  Use {@link makeModelBehavior(VolatileMethodSummary, JavaInstructionFactory, AndroidModelParameterManager, Iterable<? extends Entrypoint>} 
+     *  to retrieve an instance of this class.
+     *
+     *  If no class was set it returns null, makeModelBehavior will generate a LoopAndroidModel by default.
+     *
+     *  @return null or the class set using setModelBehavior
+     */
+    public Class getModelBehavior() {
+        return this.abstractAndroidModel;
+    }
+
+    /**
+     *  Set the class instantiated by makeModelBehavior.
+     *
+     *  @throws IllgealArgumentException if the abstractAndroidModel does not subclass AbstractAndroidModel
+     */
+    public void setModelBehavior(Class abstractAndroidModel) {
+        if (abstractAndroidModel == null) {
+            throw new IllegalArgumentException("abstractAndroidModel may not be null. Use SequentialAndroidModel " +
+                    "if no special handling shall be inserted.");
+        }
+        if (! AbstractAndroidModel.class.isAssignableFrom(abstractAndroidModel)) {
+            throw new IllegalArgumentException("The given argument abstractAndroidModel does not subclass " +
+                    "AbtractAndroidModel");
+        }
+        this.abstractAndroidModel = abstractAndroidModel;
+    }
 }

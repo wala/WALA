@@ -81,6 +81,8 @@ import com.ibm.wala.ipa.cha.IClassHierarchyDweller;
 import com.ibm.wala.util.ssa.IInstantiator;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior.InstanceBehavior;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.AbstractAndroidModel;
+
 
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.dalvik.util.AndroidTypes;
@@ -143,6 +145,7 @@ public class AndroidModel /* makes SummarizedMethod */
     protected IClassHierarchy cha;
     protected AnalysisOptions options;
     protected AnalysisCache cache;
+    private AbstractAndroidModel labelSpecial;
     private IInstantiationBehavior instanceBehavior;
     private SSAValueManager paramManager;
     private ParameterAccessor modelAcc;
@@ -154,7 +157,7 @@ public class AndroidModel /* makes SummarizedMethod */
 
     private IProgressMonitor monitor;
     private int maxProgress;
- 
+
     protected IClass klass;
     protected boolean built;
     protected SummarizedMethod model;
@@ -246,6 +249,9 @@ public class AndroidModel /* makes SummarizedMethod */
         }
         this.body = new VolatileMethodSummary(new MethodSummary(this.mRef));
         this.body.setStatic(true);
+
+        this.labelSpecial = AndroidEntryPointManager.MANAGER.makeModelBehavior(this.body, new TypeSafeInstructionFactory(cha),
+                this.paramManager, entrypoints);
 
         this.monitor = AndroidEntryPointManager.MANAGER.getProgressMonitor();
         this.maxProgress = entrypoints.size();
@@ -343,7 +349,7 @@ public class AndroidModel /* makes SummarizedMethod */
         final TypeSafeInstructionFactory tsif = new TypeSafeInstructionFactory(this.cha);
         final Instantiator instantiator = new Instantiator (this.body, tsif, this.paramManager, this.cha, this.mRef, this.scope);
 
-       
+        
         logger.info("Populating the AndroidModel with {} entryPoints", this.maxProgress);
 
         for (final AndroidEntryPoint ep : entrypoints) {
@@ -354,6 +360,14 @@ public class AndroidModel /* makes SummarizedMethod */
                 logger.info("SKIP: " + ep);
                 currentProgress++;
                 continue;
+            }
+
+            //
+            //  Is special handling to be inserted?
+            //
+            if (this.labelSpecial.hadSectionSwitch(ep.order)) {
+                logger.info("Adding special handling before: {}.", ep);
+                this.labelSpecial.enter(ep.getSection(), body.getNextProgramCounter());
             }
 
             //
@@ -502,6 +516,7 @@ public class AndroidModel /* makes SummarizedMethod */
 
         logger.debug("All EntryPoints have been added - now closing the model");
         //  Close all sections by "jumping over" the remaining labels
+        labelSpecial.finish(body.getNextProgramCounter());
 
         this.monitor.done();
     }
