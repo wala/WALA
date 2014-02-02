@@ -48,6 +48,8 @@ import com.ibm.wala.util.ssa.SSAValueManager;
 import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
 import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
 
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent;
 import com.ibm.wala.classLoader.CallSiteReference;
 
 import com.ibm.wala.util.strings.Atom;
@@ -298,6 +300,225 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
         }
     }
   
+    //
+    //  Intent stuff
+    //
+
+    /**
+     *  Overrides Intents.
+     *
+     *  @see    com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent
+     *  @see    com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentContextInterpreter
+     */
+    public final Map<Intent, Intent> overrideIntents = HashMapFactory.make();
+
+
+    /**
+     *  Set more information to an Intent.
+     *
+     *  You can call this method multiple times on the same Intent as long as you don't lower the associated
+     *  information. So if you only want to change a specific value of it it is more safe to retrieve the Intent
+     *  first and union it yourself before registering it.
+     *
+     *  @param  intent  An Intent with more or the same information as known to the system before.
+     *  @throws IllegalArgumentException if you lower the information on an already registered Intent or the 
+     *      information is incompatible.
+     *  @see    registerIntentForce()
+     */
+    public void registerIntent(Intent intent) {
+        if (overrideIntents.containsKey(intent)) {
+            final Intent original = overrideIntents.get(intent);
+            final Intent.IntentType oriType = original.getType();
+            final Intent.IntentType newType = intent.getType();
+
+            if ((newType == Intent.IntentType.UNKNOWN_TARGET) && (oriType != Intent.IntentType.UNKNOWN_TARGET)) {
+                throw new IllegalArgumentException("You are lowering information on the Intent-Target of the " +
+                        "Intent " + original + " from " + oriType + " to " + newType + ". Use registerIntentForce()" +
+                        "If you are sure you want to do this!");
+            } else if (oriType != newType) {
+                throw new IllegalArgumentException("You are changing the Intents target to a contradicting one! " +
+                        newType + "(new) is incompatible to " + oriType + "(before). On Intent " + intent +
+                        ". Use registerIntentForce() if you are sure you want to do this!");
+            }
+
+            // TODO: Add actual target to the Intent and compare these?
+            registerIntentForce(intent);
+        } else {
+            registerIntentForce(intent);
+        }
+    }
+
+    /**
+     *  Set intent possibly overwriting more specific information.
+     *
+     *  If you are sure that you want to override an existing registered Intent with information that is 
+     *  possibly incompatible with the information originally set.
+     */
+    public void registerIntentForce(Intent intent) {
+        if (intent == null) {
+            throw new IllegalArgumentException("The given Intent is null");
+        }
+
+        logger.info("Register Intent {}", intent);
+        // Looks a bit weired but works as Intents are only matched based on their action and uri
+        overrideIntents.put(intent, intent);
+    }
+
+    /**
+     *  Override target of an Intent (or add an alias).
+     *
+     *  Use this for example to add an internal target to an implicit Intent, add an alias to an Intent, 
+     *  resolve a System-name to an internal Intent, do weird stuff...
+     *
+     *  None of the Intents have to be registered before. However if the source is registered you may not 
+     *  lower information on it.
+     *
+     *  Currently only one target to an Intent is supported! If you want to emulate multiple Targets you
+     *  may have to add a synthetic class and register it as an Intent. If the target is not set to Internal
+     *  multiple targets may implicitly emulated. See the Documentation for these targets for detail.
+     *
+     *  @param  from    the Intent to override
+     *  @param  to      the new Intent to resolve once 'from' is seen
+     *  @see    setOverrideForce()
+     *  @throws IllegalArgumentException if you override an Intent with itself
+     */
+    public void setOverride(Intent from, Intent to) {
+        if (from == null) {
+            throw new IllegalArgumentException("The Intent given as 'from' is null");
+        }
+        if (to == null) {
+            throw new IllegalArgumentException("The Intent given as 'to' is null");
+        }
+        if (from.equals(to)) {
+            throw new IllegalArgumentException("You cannot override an Intent with itself! If you want to " +
+                    "alter Information on an Intent use registerIntent (you may register it multiple times).");
+        }
+
+        if (overrideIntents.containsKey(from)) {
+            final Intent ori = overrideIntents.get(from);
+            final Intent source;
+            if (ori == from) {
+                // The Intent has been registered before. Set the registered variant as source so Information
+                // that may have been altered is not lost. Not that it would matter now...
+                final Intent.IntentType oriType = ori.getType();
+                final Intent.IntentType newType = from.getType();
+                if ((newType == Intent.IntentType.UNKNOWN_TARGET) && (oriType != Intent.IntentType.UNKNOWN_TARGET)) {
+                    // TODO: Test target resolvability
+                    source = ori;
+                } else {
+                    source = from;
+                }
+            } else {
+                source = from;
+            }
+
+            // Make sure the new target is not less specific than a known override
+            final Intent original = overrideIntents.get(to);
+            final Intent.IntentType oriType = original.getType();
+            final Intent.IntentType newType = to.getType();
+
+            if ((newType == Intent.IntentType.UNKNOWN_TARGET) && (oriType != Intent.IntentType.UNKNOWN_TARGET)) {
+                throw new IllegalArgumentException("You are lowering information on the Intent-Target of the " +
+                        "Intent " + original + " from " + oriType + " to " + newType + ". Use setOverrideForce()" +
+                        "If you are sure you want to do this!");
+            } else if (oriType != newType) {
+                throw new IllegalArgumentException("You are changing the Intents target to a contradicting one! " +
+                        newType + "(new) is incompatible to " + oriType + "(before). On Intent " + to +
+                        ". Use setOverrideForce() if you are sure you want to do this!");
+            }
+
+            // TODO: Check resolvable Target is not overridden with unresolvable one
+
+            setOverrideForce(source, to);
+        } else {
+            setOverrideForce(from, to);
+        }
+    }
+
+    /**
+     *  Just throw in the override.
+     */
+    public void setOverrideForce(Intent from, Intent to) {
+        if (from == null) {
+            throw new IllegalArgumentException("The Intent given as 'from' is null");
+        }
+        if (to == null) {
+            throw new IllegalArgumentException("The Intent given as 'to' is null");
+        }
+
+        logger.info("Override Intent {} to {}", from, to);
+        overrideIntents.put(from, to);
+    }
+
+    /**
+     *  Get Intent with applied overrides.
+     *
+     *  If there are no overrides or the Intent is not registered return it as is.
+     */
+    public Intent getIntent(Intent intent) {
+        if (overrideIntents.containsKey(intent)) {
+            Intent ret = overrideIntents.get(intent);
+            while (!(ret.equals(intent))) {
+                // Follow the chain of overrides
+                if (!overrideIntents.containsKey(intent)) {
+                    logger.info("Resolved {} to {}", intent, ret);
+                    return ret;
+                } else {
+                    logger.debug("Resolving {} hop over {}", intent, ret);
+                    ret = overrideIntents.get(ret);
+                }
+            }
+            ret = overrideIntents.get(ret); // Once again to get Info set in register
+            logger.info("Resolved {} to {}", intent, ret);
+            return ret;
+        } else {
+            logger.info("No information on {} hash: {}", intent, intent.hashCode());
+            for (Intent known : overrideIntents.keySet()) {
+                logger.debug("Known Intents: {} hash: {}", known, known.hashCode());
+            }
+            return intent;
+        }
+    }
+
+    /**
+     *  Searches Intent specifications for the occurrence of clazz.
+     */
+    public boolean existsIntentFor(TypeName clazz) {
+        for (Intent i : overrideIntents.keySet()) {
+            if (i.action.toString().equals(clazz.toString())) { // XXX toString-Matches are shitty
+                return true;
+            }
+        }
+
+        for (Intent i : overrideIntents.values()) {
+            if (i.action.toString().equals(clazz.toString())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private transient Map<CallSiteReference, Intent> seenIntentCalls = HashMapFactory.make();
+    /**
+     *  DO NOT CALL! - This is for IntentContextSelector.
+     *
+     *  Add information that an Intent was called to the later summary. This is for information-purpose
+     *  only and does not change any behavior.
+     *
+     *  Intents are added as seen - without any resolved overrides.
+     */
+    public void addCallSeen(CallSiteReference from, Intent intent) {
+        seenIntentCalls.put(from, intent);
+    }
+
+    /**
+     *  Return all Sites, that start Components based on Intents.
+     */
+    public  Map<CallSiteReference, Intent> getSeen() {
+        return seenIntentCalls; // No need to make read-only
+    }
+
     /**
      *  Last 8 digits encode the date.
      */
