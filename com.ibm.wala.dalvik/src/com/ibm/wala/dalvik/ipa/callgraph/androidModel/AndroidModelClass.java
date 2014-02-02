@@ -1,0 +1,302 @@
+/*
+ *  Copyright (c) 2013,
+ *      Tobias Blaschke <code@tobiasblaschke.de>
+ *  All rights reserved.
+
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright notice,
+ *     this list of conditions and the following disclaimer.
+ *
+ *  2. Redistributions in binary form must reproduce the above copyright notice,
+ *     this list of conditions and the following disclaimer in the documentation
+ *     and/or other materials provided with the distribution.
+ *
+ *  3. The names of the contributors may not be used to endorse or promote
+ *     products derived from this software without specific prior written
+ *     permission.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ *  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ *  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ *  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ *  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ *  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ *  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ *  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ *  POSSIBILITY OF SUCH DAMAGE.
+ */
+package com.ibm.wala.dalvik.ipa.callgraph.androidModel;
+
+import com.ibm.wala.shrikeCT.ClassConstants;
+
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.SyntheticClass;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.Selector;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.annotations.Annotation;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
+import com.ibm.wala.util.strings.Atom;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
+
+/**
+ *  Encapsulates synthetic methods for modeling Androids lifecycle.
+ *  
+ *  In the generated code this class may be found as "Lcom/ibm/wala/AndroidModelClass"
+ *
+ *  @see    com.ibm.wala.dalvik.ipa.callgraph.impl.FakeRootClass
+ *
+ *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ *  @todo   Move this class into an other loader? Currently: Primordial
+ */
+public final /* singleton */ class AndroidModelClass extends SyntheticClass {
+    private static Logger logger = LoggerFactory.getLogger(AndroidModelClass.class);
+
+    public static final TypeReference ANDROID_MODEL_CLASS = TypeReference.findOrCreate(
+            ClassLoaderReference.Primordial, TypeName.string2TypeName("Lcom/ibm/wala/AndroidModelClass"));
+    private static IClassHierarchy cha;
+
+    private static class AndroidModelClassHolder {
+        private static final AndroidModelClass INSTANCE = new AndroidModelClass(AndroidModelClass.cha);
+    }
+
+    public static AndroidModelClass getInstance(IClassHierarchy cha) {
+        if (AndroidModelClass.cha == null) {
+            if (cha == null) {
+                throw new IllegalArgumentException("Cha may not be null if there had not been an Instance AndroidModelClass before!");
+            } else {
+                AndroidModelClass.cha = cha;
+            }
+        } else {
+            if (cha == null) {
+                logger.warn("Giving null as cha is discouraged in getInstance()");
+            } else if (! cha.equals(AndroidModelClass.cha)) {
+                throw new IllegalArgumentException("Cha differs!");
+            }
+        }
+        return AndroidModelClassHolder.INSTANCE;
+    }
+
+    private AndroidModelClass(IClassHierarchy cha) {
+        super(ANDROID_MODEL_CLASS, cha);
+
+        if (AndroidModelClassHolder.INSTANCE != null) { // May be caused when using reflection
+            throw new IllegalStateException("AndroidModelClass is a singleton and already instantiated!");
+        }
+    }
+
+
+    //
+    //  Contents of the class: Methods
+    //
+    private IMethod macroModel = null;
+    private IMethod allActivitiesModel = null;
+    private Map<Selector, IMethod> methods = HashMapFactory.make(); // does not contain macroModel
+
+    public boolean containsMethod(Selector selector) {
+        return (
+                ((macroModel != null) && macroModel.getSelector().equals(selector)) ||
+                methods.containsKey(selector));
+    }
+
+    @Override
+    public IMethod getMethod(Selector selector) {
+        assert (macroModel != null) : "Macro Model was not set yet!";
+
+        if (macroModel.getSelector().equals(selector)) {
+            return macroModel;
+        }
+    
+        if (methods.containsKey(selector)) {
+            return methods.get(selector);
+        }
+        if (selector.equals(MethodReference.initSelector)) {
+            logger.warn("AndroidModelClass is not intended to be initialized");
+            return null;
+        }
+        throw new IllegalArgumentException("Could not resolve " + selector);
+    }
+
+    @Override
+    public Collection<IMethod> getDeclaredMethods() {
+        assert this.macroModel != null;
+
+        Set<IMethod> methods = HashSetFactory.make();
+        methods.add(macroModel);
+
+        methods.addAll(this.methods.values());
+
+        return Collections.unmodifiableCollection(methods);
+    }
+    
+    @Override
+    public Collection<IMethod> getAllMethods()  {
+        return getDeclaredMethods();
+    }
+
+    /* package private */ void setMacroModel(IMethod model) {
+        assert(this.macroModel == null);
+        this.macroModel = model;
+    }
+
+    public void addMethod(IMethod method) {
+        if (this.methods.containsKey(method.getSelector())) {
+            // TODO: Check this matches on signature not on contents!
+            // TODO: What on different Context versions
+            throw new IllegalStateException("The AndroidModelClass already contains a Method called" + method.getName());
+        }
+        assert(this.methods != null);
+        this.methods.put(method.getSelector(), method);
+    }
+
+    /**
+     *  There is none.
+     */
+    @Override
+    public IMethod getClassInitializer()  {
+        return null;
+    }
+
+
+    //
+    //  Contents of the class: Fields
+    //  We have none...
+    //
+
+    /**
+     *  This class does not contain any fields.
+     */
+    @Override
+    public IField getField(Atom name) {
+        return null;
+    }
+
+    /**
+     *  This class does not contain any fields.
+     */
+    @Override
+    public Collection<IField> getAllFields()  {
+        return Collections.emptySet();
+    }
+
+    /**
+     *  This class does not contain any fields.
+     */
+    @Override
+    public Collection<IField> getDeclaredStaticFields() {
+        return Collections.emptySet();
+    }
+
+    /**
+     *  This class does not contain any fields.
+     */
+    @Override
+    public Collection<IField> getAllStaticFields() {
+        return Collections.emptySet();
+    }
+
+     /**
+     *  This class does not contain any fields.
+     */
+    @Override
+    public Collection<IField> getDeclaredInstanceFields() throws UnsupportedOperationException {
+        return Collections.emptySet();
+    }
+
+    /**
+     *  This class does not contain any fields.
+     */
+    @Override
+    public Collection<IField> getAllInstanceFields()  {
+        return Collections.emptySet();
+    }
+
+
+
+    //
+    //  Class Modifiers
+    //
+
+    /**
+     *  This is a public final class.
+     */
+    @Override
+    public int getModifiers() {
+        return  ClassConstants.ACC_PUBLIC |
+                ClassConstants.ACC_FINAL;
+    }
+    @Override
+    public boolean isPublic() {         return true;  }
+    @Override
+    public boolean isPrivate() {        return false; }
+    @Override
+    public boolean isInterface() {      return false; }
+    @Override
+    public boolean isAbstract() {       return false; }
+    @Override
+    public boolean isArrayClass () {    return false; }
+
+    /**
+     *  This is a subclass of the root class.
+     */
+    @Override
+    public IClass getSuperclass() throws UnsupportedOperationException {
+        return getClassHierarchy().getRootClass();
+    }
+
+    /**
+     *  This class does not impement any interfaces.
+     */
+    @Override 
+    public Collection<IClass> getAllImplementedInterfaces() {
+        return Collections.emptySet();
+    }
+
+    @Override
+    public Collection<IClass> getDirectInterfaces() {
+        return Collections.emptySet();
+    }
+
+    //
+    //  Misc
+    //
+
+    @Override
+    public boolean isReferenceType() {
+        return getReference().isReferenceType();
+    }
+
+
+    @Override
+    public InputStream getSource() {
+        return null;
+    }
+
+}
+
