@@ -45,6 +45,10 @@ import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
 
+/**
+ *  @deprecated The Android-Model has been moved out from DrexFakeRootMethod, so DexExplicitCallGraph is not needed any longer
+ */
+@Deprecated
 public class DexExplicitCallGraph extends ExplicitCallGraph {
 
 	public DexExplicitCallGraph(IClassHierarchy cha, AnalysisOptions options,
