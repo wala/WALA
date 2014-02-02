@@ -141,10 +141,7 @@ public final class AndroidEntryPointLocator {
      *  Searches a ClassHierarchy for EntryPoints by their method-signature (optionally with heuristics).
      *
      *  Matches the hardcoded signatures against the methods in cha. 
-     *  Uses heuristics depending on the LocatorFlags given to the constructor.
-     *
-     *  After retrieving the EntryPoints it might be a good idea to set them in the 
-     *  AndroidEntryPointManager.
+     *  Uses heuristics depending on the LocatorFlags given to the constructor .
      *
      *  @param  cha The ClassHierarchy to be searched
      *  @return partially sorted list of applicable EntryPoints
@@ -180,21 +177,33 @@ nextMethod:
 
             if (this.flags.contains(LocatorFlags.EP_HEURISTIC)) {
                 // Add bases for EP-Heuristic
-                bases.add(AndroidTypes.Application);
-                bases.add(AndroidTypes.Activity);
-                /** @todo TODO: add Fragments in getEntryPoints */
-                //bases.add(AndroidTypes.Fragment);
-                bases.add(AndroidTypes.Service);
-                bases.add(AndroidTypes.ContentProvider);
-                bases.add(AndroidTypes.BroadcastReceiver);
+
+                if (this.flags.contains(LocatorFlags.INCLUDE_CALLBACKS)) {
+                    /** @todo TODO: Add Callbacks to EP_HEURISTIC */
+                    for (final AndroidComponent compo : AndroidComponent.values()) {
+                        if (compo == AndroidComponent.UNKNOWN) continue;
+                        if (compo.toReference() == null) {
+                            logger.error("Null-Reference for " + compo);
+                        } else {
+                            bases.add(compo.toReference());
+                        }
+                    }
+                } else {
+                    // Restrict the set
+                    bases.add(AndroidTypes.Application);
+                    bases.add(AndroidTypes.Activity);
+                    /** @todo TODO: add Fragments in getEntryPoints */
+                    //bases.add(AndroidTypes.Fragment);
+                    bases.add(AndroidTypes.Service);
+                    bases.add(AndroidTypes.ContentProvider);
+                    bases.add(AndroidTypes.BroadcastReceiver);
+                }
+
+                heuristicScan(bases, entryPoints, cha);       
             }
             if (this.flags.contains(LocatorFlags.CB_HEURISTIC)) {
-                //* @todo CB_HEURISTIC not implemented */
-                throw new UnsupportedOperationException("CB_HEURISTIC not implemented");
+                heuristicAnyAndroid(entryPoints, cha);
             }
-
-            heuristicAnyAndroid(entryPoints, cha);
-            heuristicScan(bases, entryPoints, cha);       
         }
 
 
@@ -217,7 +226,13 @@ nextMethod:
         for (final TypeReference base : bases) {
             final IClass baseClass = cha.lookupClass(base);
             this.mon.subTask("Heuristic scan in " + base);
-            final Collection<IClass> candids = cha.computeSubClasses(base);
+            final Collection<IClass> candids;
+            try {
+                candids = cha.computeSubClasses(base);
+            } catch (IllegalArgumentException e) {  // Pretty agan :(
+                logger.error(e.getMessage());
+                continue;
+            }
             for (final IClass candid : candids) {
                 if (! candid.getClassLoader().getReference().equals(ClassLoaderReference.Application)) {   
                     // Don't consider internal overrides
@@ -226,7 +241,7 @@ nextMethod:
                 final Collection<IMethod> methods = candid.getDeclaredMethods();
                 for (final IMethod method : methods) {
                     if ((method.isInit()) && (! this.flags.contains(LocatorFlags.WITH_CTOR))) {
-                        logger.debug("Skipping constructor of " + method); 
+                        logger.debug("Skipping constructor of {}", method); 
                         continue;
                     }
                     if (baseClass.getMethod(method.getSelector()) != null) {
@@ -234,7 +249,7 @@ nextMethod:
                        
                         if (! eps.contains(ep)) {  // Just to be sure that a previous element stays as-is
                             if (eps.add(ep)) {
-                                logger.debug("Heuristic 1: selecting " + method + " for base " + base);
+                                logger.debug("Heuristic 1: selecting {} for base {}", method, base);
                             }
                         }
                     }
@@ -256,7 +271,7 @@ nextMethod:
         final Iterator<IClass> appIt = appLoader.iterateAllClasses();
 
         for (IClass appClass = ((appIt.hasNext())?appIt.next():null); appIt.hasNext(); appClass = appIt.next()) {
-            IClass androidClass = appClass.getSuperclass(); 
+            IClass androidClass = appClass; //.getSuperclass(); Override on new
             { // Only for android-classes
                 boolean isAndroidClass = false;
                 while (androidClass != null) {
@@ -264,27 +279,42 @@ nextMethod:
                         isAndroidClass = true;
                         break;
                     }
+                    logger.debug("Heuristic: \t {} is {}", appClass.getName().toString(), androidClass.getName().toString()); // XXX trace
+                    for (IClass iface : appClass.getAllImplementedInterfaces ()) {
+                        logger.debug("Heuristic: \t implements {}", iface.getName().toString()); // XXX trace
+                        if (iface.getName().toString().startsWith("Landroid")) {
+                            isAndroidClass = true;
+                            break;
+                        }
+                    }
+                    if (isAndroidClass) break;
                     androidClass = androidClass.getSuperclass();
                 }
                 if (! isAndroidClass) {
+                    logger.debug("Heuristic: Skipping non andoid {}", appClass.getName().toString()); // XXX trace
                     continue; // continue appClass;
                 }
             }
 
+            logger.debug("Heuristic: Scanning methods of {}", appClass.getName().toString());
             { // Overridden methods
                 final Collection<IMethod> methods = appClass.getDeclaredMethods();
                 for (final IMethod method : methods) {
                     if ((method.isInit()) && (! this.flags.contains(LocatorFlags.WITH_CTOR))) {
-                        logger.debug("Skipping constructor of " + method); 
+                        logger.debug("Skipping constructor of {}", method); 
                         continue;
                     }
+                    assert (method.getSelector() != null): "Method has no selector: " + method;
+                    assert (androidClass != null): "androidClass is null";
                     if (androidClass.getMethod(method.getSelector()) != null) {
                         final AndroidEntryPoint ep = new AndroidEntryPoint(selectPositionForHeuristic(method), method, cha);
 
                         if (! eps.contains(ep)) {  // Just to be sure that a previous element stays as-is
                         if (eps.add(ep)) {
-                            logger.debug("Heuristic 2a: selecting " + method);
-                        }}
+                            logger.debug("Heuristic 2a: selecting {}", method);
+                        }} else {
+                            logger.debug("Heuristic 2a: already selected {}", method);
+                        }
                     }
                 }
             }
@@ -293,10 +323,10 @@ nextMethod:
                 final Collection<IClass> iFaces = appClass.getAllImplementedInterfaces();
                 for (final IClass iFace : iFaces) {
                     if (! iFace.getName().toString().startsWith("Landroid")) {
-                        logger.debug("Skipping iFace: " + iFace);
+                        logger.debug("Skipping iFace: {}", iFace);
                         continue;
                     }
-                    logger.debug("Searching Interface " + iFace);
+                    logger.debug("Searching Interface {}", iFace);
                     final Collection<IMethod> ifMethods = iFace.getDeclaredMethods();
                     for (final IMethod ifMethod : ifMethods) {
                         final IMethod method = appClass.getMethod(ifMethod.getSelector());
@@ -306,7 +336,7 @@ nextMethod:
 
                             if (! eps.contains(ep)) {  // Just to be sure that a previous element stays as-is
                             if (eps.add(ep)) {
-                                logger.debug("Heuristic 2b: selecting " + method);
+                                logger.debug("Heuristic 2b: selecting {}", method);
                             }}
                         } else {
                             // The function is taken from the super-class
@@ -322,7 +352,7 @@ nextMethod:
                                             System.arraycopy(oldTypes, 0, newTypes, 0, oldTypes.length);
                                             newTypes[oldTypes.length] = appClass.getReference();
                                             eps_ep.setParameterTypes(0, newTypes);
-                                            logger.debug("New This-Types for " + method.getSelector() + " are " + Arrays.toString(newTypes));
+                                            logger.debug("New This-Types for {} are {}", method.getSelector(), Arrays.toString(newTypes));
                                         }
                                     }
                                 } else {
@@ -330,10 +360,10 @@ nextMethod:
                                         ep.setParameterTypes(0, new TypeReference[]{appClass.getReference()});
                                     }
                                     eps.add(ep);
-                                    logger.debug("Heuristic 2b: selecting from super " + method);
+                                    logger.debug("Heuristic 2b: selecting from super {}", method);
                                 }
                             } else {
-                                logger.debug("Heuristic 2b: Skipping " + method);
+                                logger.debug("Heuristic 2b: Skipping {}", method);
                             }
                         }
                     }
