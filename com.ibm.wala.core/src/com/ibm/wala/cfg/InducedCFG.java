@@ -431,8 +431,10 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
      */
     private void addExceptionalEdges(SSAInstruction last) {
       if (last == null) {
-          throw new IllegalStateException("Missing last SSA-Instruction in basic block (null).");   // XXX: When does this happen?
-          // simply Return?
+          // XXX: Bug here?
+          // throw new IllegalStateException("Missing last SSA-Instruction in basic block (null).");   // XXX: When does this happen?
+          System.err.println("Missing last SSA-Instruction in basic block (null).");
+          return;
       }
       if (last.isPEI()) {
         // we don't currently model catch blocks here ... instead just link
