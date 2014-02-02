@@ -157,6 +157,32 @@ public final class Atom implements Serializable {
   }
 
   /**
+   * New Atom containing first count bytes
+   */
+  public final Atom left(int count) {
+    return findOrCreate(val, 0, count);  
+  }
+
+  /**
+   * New Atom containing last count bytes
+   */
+  public final Atom right(int count) {
+    return findOrCreate(val, val.length - count, count);  
+  }
+
+  public final boolean startsWith(Atom start) {
+      assert (start != null);
+
+      for (int i = 0; i < start.val.length; ++i) {
+          if (val[i] != start.val[i])
+              return false;
+      }
+
+      return true;
+  }
+
+
+  /**
    * Return array descriptor corresponding to "this" array-element descriptor. this: array-element descriptor - something like "I"
    * or "Ljava/lang/Object;"
    * 
@@ -394,6 +420,15 @@ public final class Atom implements Serializable {
     return false;
   }
 
+  public int rIndex(byte b) {
+    for (int i = val.length - 1; i >=0; --i) {
+      if (val[i] == b) {
+        return val.length - i;
+      }
+    }
+    return -1;
+  }
+
   private static Atom concat(byte c, byte[] bs) {
     byte[] val = new byte[bs.length + 1];
     val[0] = c;
@@ -406,6 +441,22 @@ public final class Atom implements Serializable {
       throw new IllegalArgumentException("b is null");
     }
     return concat(c, b.b);
+  }
+
+  public static Atom concat(Atom a, Atom b) {
+     if ((a == null ) || (b == null)) {
+      throw new IllegalArgumentException("argument may not be null!");
+    }
+
+    Atom ma = (Atom) a;
+    Atom mb = (Atom) b;
+
+    byte[] val = new byte[ma.val.length + mb.val.length];
+ 
+    System.arraycopy(ma.val, 0, val, 0, ma.val.length);
+    System.arraycopy(mb.val, 0, val, ma.val.length, mb.val.length);
+
+    return findOrCreate(val);
   }
 
   public static boolean isArrayDescriptor(ImmutableByteArray b) {
