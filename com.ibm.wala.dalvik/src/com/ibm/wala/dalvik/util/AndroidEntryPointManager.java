@@ -33,6 +33,9 @@ package com.ibm.wala.dalvik.util;
 
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.DefaultInstantiationBehavior;
+
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 import com.ibm.wala.types.MethodReference;
@@ -59,6 +62,7 @@ import java.lang.Class;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.helpers.NOPLogger;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
 
@@ -70,13 +74,12 @@ import com.ibm.wala.util.NullProgressMonitor;
  *  @author Tobias Blaschke <code@tobiasblaschke.de>
  */
 public final /* singleton */ class AndroidEntryPointManager implements Serializable {
-    private static final Logger logger = LoggerFactory.getLogger(AndroidEntryPointManager.class);
+    //private static final Logger logger = LoggerFactory.getLogger(AndroidEntryPointManager.class);
+    private static final Logger logger = NOPLogger.NOP_LOGGER;
 
-    public static final AndroidEntryPointManager MANAGER = new AndroidEntryPointManager();
-    public static List<AndroidEntryPoint> ENTRIES = new ArrayList<AndroidEntryPoint>();
-    /**
-     * This is TRANSIENT!
-     */
+    public transient static final AndroidEntryPointManager MANAGER = new AndroidEntryPointManager();
+    public transient static List<AndroidEntryPoint> ENTRIES = new ArrayList<AndroidEntryPoint>();
+    private transient IInstantiationBehavior instantiation = null;
 
     //
     // EntryPoint stuff
@@ -98,6 +101,33 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
     //
     //  General settings
     //
+
+    /**
+     *  Controls the instantiation of variables in the model.
+     *
+     *  On which occasions a new instance of a class shall be used? 
+     *  This also changes the parameters to the later model.
+     *
+     *  @param  cha     Optional parameter given to the DefaultInstantiationBehavior if no other
+     *      behavior has been set
+     */
+    public IInstantiationBehavior getInstantiationBehavior(IClassHierarchy cha) {
+        if (this.instantiation == null) {
+            this.instantiation = new DefaultInstantiationBehavior(cha);
+        }
+        return this.instantiation;
+    }
+
+    /**
+     *  Set the value returned by {@link getInstantiationBehavior()}
+     *
+     *  @return the previous IInstantiationBehavior
+     */
+    public IInstantiationBehavior setInstantiationBehavior(IInstantiationBehavior instantiation) {
+        final IInstantiationBehavior prev = this.instantiation;
+        this.instantiation = instantiation;
+        return prev;
+    }
 
     private transient IProgressMonitor progressMonitor = null;
     /**
@@ -122,8 +152,4 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
         return prev;
     }
 
-    /**
-     *  Last 8 digits encode the date.
-     */
-    private final static long serialVersionUID = 8740020140202L;
 }
