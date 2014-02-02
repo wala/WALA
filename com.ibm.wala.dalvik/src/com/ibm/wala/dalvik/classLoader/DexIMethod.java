@@ -51,6 +51,7 @@ import static org.jf.dexlib.Util.AccessFlags.VOLATILE;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import org.jf.dexlib.AnnotationItem;
 import org.jf.dexlib.AnnotationSetItem;
@@ -208,8 +209,13 @@ public class DexIMethod implements IBytecodeMethod {
 	public TypeReference[] getDeclaredExceptions()
 			throws InvalidClassFileException, UnsupportedOperationException {
 
-		ArrayList<String> strings = new ArrayList<String>();
-		AnnotationSetItem annotationSet = myClass.getClassDefItem().getAnnotations().getMethodAnnotations(eMethod.method);
+		assert (eMethod.method != null);
+        if (myClass.getClassDefItem().getAnnotations() == null) {
+            logger.error("Get Annotations is null for method " + eMethod + " in getDeclaredExceptions");
+            return null;
+        }
+        ArrayList<String> strings = new ArrayList<String>();
+        AnnotationSetItem annotationSet = myClass.getClassDefItem().getAnnotations().getMethodAnnotations(eMethod.method);
 		if (annotationSet != null) {
 			for (AnnotationItem annotationItem: annotationSet.getAnnotations())
 			{
@@ -3283,11 +3289,48 @@ public class DexIMethod implements IBytecodeMethod {
 //		}
 //	}
 
+    /**
+     *
+     * hrows InvalidClassFileException
+     * @throws UnsupportedOperationException
+     *
+     * @todo    Review this implementation - it may be horribly wrong!
+     */
 	@Override
 	public Collection<CallSiteReference> getCallSites()
 			throws InvalidClassFileException {
-		throw new UnsupportedOperationException("getCallSites() not implemented");
-		//return null;
+        Collection<CallSiteReference> empty = Collections.emptySet();
+        if (isNative()) {
+            return empty;
+        }
+
+        assert(false) : "Please review getCallSites-Implementation before use!";        // TODO
+
+        ArrayList<CallSiteReference> csites = new ArrayList<CallSiteReference>();
+        // XXX The call Sites in this method or to this method?!!!
+        for (Instruction inst: instructions()) {
+            if (inst instanceof Invoke) {
+                // Locate the Target
+                MethodReference target;
+                ClassLoaderReference loader = ClassLoaderReference.Primordial;
+                target = MethodReference.findOrCreate(
+                    loader,    // XXX: Is this the correct class loader?
+                    ((Invoke)inst).clazzName,
+                    ((Invoke)inst).methodName,
+                    ((Invoke)inst).descriptor );
+
+                csites.add(
+                    CallSiteReference.make(
+                        inst.pc,    // programCounter
+                        target,     // declaredTarget
+                        ((Invoke)inst).getInvocationCode() // invocationCode
+                        ));
+                logger.info("\tClass Name:\t" + ((Invoke)inst).clazzName);
+                logger.info("\tMethod Name:\t" + ((Invoke)inst).methodName);
+                logger.info("\tSignature:\t" + ((Invoke)inst).descriptor );
+            }
+        }
+        return Collections.unmodifiableCollection(csites);
 	}
 
 	@Override
