@@ -187,13 +187,11 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior impleme
                     InstanceBehavior.CREATE,
                     Exactness.EXACT,
                     null));
-        /*
-        // TODO: These settings cause failure:
-        // Endless recursion in: edu.kit.joana.wala.core.graphs.GraphWalker.dfs (GraphWalker.java:63)
+
         behaviours.put(BehaviorKey.mkPackage("Landroid/support/v4/view"), new BehviourValue(
                     InstanceBehavior.REUSE,
                     Exactness.EXACT,
-                    null)); // */
+                    null)); 
         /* 
         behaviours.put(Atom.findOrCreateAsciiAtom("Landroid/database"), IInstanciationBehavior.InstanceBehavior.REUSE);
         behaviours.put(Atom.findOrCreateAsciiAtom("Landroid/support/v4/app/FragmentActivity"), IInstanciationBehavior.InstanceBehavior.REUSE);
