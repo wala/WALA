@@ -188,7 +188,7 @@ public class AndroidPreFlightChecks {
         for (AndroidEntryPoint ep : entrypoits) {
             final TypeName test = ep.getMethod().getDeclaringClass().getName();
             if (! this.manager.existsIntentFor(test)) {
-                if (test.toString().startsWith("Landroid/app/")) {
+                if (test.toString().startsWith("Landroid/")) {
                     continue;
                 }
                 logger.warn("No Intent-Specification was found for {}", test);

@@ -231,7 +231,7 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
                     throw new IllegalStateException("The operation was canceled.", e);
                 }
             } else {
-                logger.error("No target: IntentContextSelector didn't add an IntentContext to this call.");
+                logger.error("No target: IntentContextSelector didn't add an IntentContext for the call to: {}, Context: {}", node.getMethod(), node.getContext() );
                 return null;
             }
         }

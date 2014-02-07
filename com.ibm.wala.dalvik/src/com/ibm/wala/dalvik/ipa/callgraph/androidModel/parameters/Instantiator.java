@@ -163,7 +163,11 @@ public class Instantiator implements IInstantiator {
             createPrimitive(instance);
             return instance;
         } else if (klass == null) {
-            logger.error("The Type {} is not in the ClassHierarchy! Returning null as instance", T);
+            if (! T.getName().toString().startsWith("Landroid/")) {
+                logger.error("The Type {} is not in the ClassHierarchy! Returning null as instance", T);
+            } else {
+                logger.debug("The Type {} is not in the ClassHierarchy! Returning null as instance", T);
+            }
             this.body.addConstant(instance.getNumber(), new ConstantValue(null));
             instance.setAssigned();
             return instance;
@@ -435,7 +439,11 @@ public class Instantiator implements IInstantiator {
             final Set<IClass> impls = cha.getImplementors(T);
             if (impls.isEmpty()) {
                 //throw new IllegalStateException("The interface " + T + " has no known implementors");
-                logger.error("The interface {} has no known implementors - skipping over it", T);
+                if (! T.getName().toString().startsWith("Landroid/")) {
+                    logger.error("The interface {} has no known implementors - skipping over it", T);
+                } else {
+                    logger.debug("The interface {} has no known implementors - skipping over it", T);
+                }
                 return ret; // XXX: This is a bad idea?
             } else {
                 // ADD all
