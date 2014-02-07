@@ -152,6 +152,8 @@ public final class AndroidTypes {
     public static final TypeName ConfigurationName = TypeName.findOrCreate("Landroid/content/res/Configuration");
     public static final TypeReference Configuration = TypeReference.findOrCreate(ClassLoaderReference.Primordial, ConfigurationName);
 
+    public static final TypeName KeyEventName = TypeName.findOrCreate("Landroid/view/KeyEvent");
+
     public enum AndroidContextType {
         CONTEXT_IMPL,
         CONTEXT_BRIDGE,
