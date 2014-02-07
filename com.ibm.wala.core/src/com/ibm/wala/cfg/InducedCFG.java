@@ -42,6 +42,8 @@ import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * A {@link ControlFlowGraph} computed from a set of {@link SSAInstruction} instructions.
  * 
@@ -49,7 +51,7 @@ import com.ibm.wala.util.graph.impl.NodeWithNumber;
  * unsuited for flow-sensitive analysis.  Someday this should be nuked.
  */
 public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBlock> {
-
+  private static final Logger logger = LoggerFactory.getLogger(InducedCFG.class);
   private static final boolean DEBUG = false;
 
   /**
@@ -645,10 +647,16 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     }
     for (int i=0; i < instructions.length; ++i) {
         if (instructions[i] == null) {
-            // It was a Phi or something...
-            throw new IllegalStateException("The " + i +"th instrction is null! Mathod: " + getMethod() + 
-                    ", Contenxt: " + this.context + "Insts: " + java.util.Arrays.toString(instructions));
-            //continue;
+            // There are holes in the instructions array ?!
+            // Perhaps from Phi-functions?
+            logger.debug("The " + i +"th instrction is null! Mathod: " + getMethod());
+            if (i > 0) {
+                logger.debug("  Instuction before is: " + instructions[i - 1]);
+            }
+            if (i < instructions.length - 1) {
+                logger.debug("  Instuction after is: " + instructions[i + 1]);
+            }
+            continue;
         }
         if (instructions[i].iindex == iindex) {
             return i;
