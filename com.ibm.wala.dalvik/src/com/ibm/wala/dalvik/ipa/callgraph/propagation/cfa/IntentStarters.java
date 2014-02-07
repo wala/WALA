@@ -95,6 +95,10 @@ public class IntentStarters {
         CONTEXT_FREE,
     }
 
+    /** Handling IntentSenders causes issues */
+    private final boolean doIntentSender = true;
+
+
     /**
      *  Contains information on how to call a starter-function.
      */
@@ -290,19 +294,21 @@ public class IntentStarters {
         starters.put( /* MethodReference.findOrCreate(tContextWrapper, */ Selector.make("startActivity(Landroid/content/Intent;Landroid/os/Bundle;)V"),
                 new StartInfo(tContextWrapper, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1}));
                 //  Delegates directly to android.content.Context.
-        //  android.content.ContextWrapper.startIntentSender(IntentSender intent, Intent fillInIntent, int flagsMask, int flagsValues, 
-        //           int extraFlags, Bundle options)
-        starters.put( /* MethodReference.findOrCreate(tContextWrapper, */ Selector.make(   // TODO
-                        "startIntentSender(Landroid/content/IntentSender;Landroid/content/Intent;IIILandroid/os/Bundle;)V"),
-                new StartInfo(tContextWrapper, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1, 2},
-                        EnumSet.of(StarterFlags.QUENCH_PERMISSIONS)));
-                //  Delegates directly to android.content.Context.
-        // android.content.ContextWrapper.startIntentSender(IntentSender intent, Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags)
-        starters.put( /* MethodReference.findOrCreate(tContextWrapper, */ Selector.make(   // TODO
-                        "startIntentSender(Landroid/content/IntentSender;Landroid/content/Intent;III)V"),
-                new StartInfo(tContextWrapper, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1, 2},
-                        EnumSet.of(StarterFlags.QUENCH_PERMISSIONS)));
-                //  Delegates directly to android.content.Context.
+        if (doIntentSender) {
+            //  android.content.ContextWrapper.startIntentSender(IntentSender intent, Intent fillInIntent, int flagsMask, int flagsValues, 
+            //           int extraFlags, Bundle options)
+            starters.put( /* MethodReference.findOrCreate(tContextWrapper, */ Selector.make(   // TODO
+                            "startIntentSender(Landroid/content/IntentSender;Landroid/content/Intent;IIILandroid/os/Bundle;)V"),
+                    new StartInfo(tContextWrapper, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1, 2},
+                            EnumSet.of(StarterFlags.QUENCH_PERMISSIONS)));
+                    //  Delegates directly to android.content.Context.
+            // android.content.ContextWrapper.startIntentSender(IntentSender intent, Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags)
+            starters.put( /* MethodReference.findOrCreate(tContextWrapper, */ Selector.make(   // TODO
+                            "startIntentSender(Landroid/content/IntentSender;Landroid/content/Intent;III)V"),
+                    new StartInfo(tContextWrapper, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1, 2},
+                            EnumSet.of(StarterFlags.QUENCH_PERMISSIONS)));
+                    //  Delegates directly to android.content.Context.
+        }
         // android.content.ContextWrapper.startService(Intent service)
         starters.put( /* MethodReference.findOrCreate(tContextWrapper, */ Selector.make("startService(Landroid/content/Intent;)Landroid/content/ComponentName;"),
                 new StartInfo(tContextWrapper, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.SERVICE), new int[] {1}));
@@ -376,17 +382,19 @@ public class IntentStarters {
         // android.content.Context.startActivity(Intent intents, Bundle options)
         starters.put( /* MethodReference.findOrCreate(tContext, */ Selector.make("startActivity(Landroid/content/Intent;Landroid/os/Bundle;)V"),
                 new StartInfo(tContext, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1}));
-        //  android.content.Context.startIntentSender(IntentSender intent, Intent fillInIntent, int flagsMask, int flagsValues, 
-        //           int extraFlags, Bundle options)
-        starters.put( /* MethodReference.findOrCreate(tContext, */ Selector.make(   // TODO
-                        "startIntentSender(Landroid/content/IntentSender;Landroid/content/Intent;IIILandroid/os/Bundle;)V"),
-                new StartInfo(tContext, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1, 2},
-                        EnumSet.of(StarterFlags.QUENCH_PERMISSIONS)));
-        // android.content.Context.startIntentSender(IntentSender intent, Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags)
-        starters.put( /* MethodReference.findOrCreate(tContext, */ Selector.make(   // TODO
-                        "startIntentSender(Landroid/content/IntentSender;Landroid/content/Intent;III)V"),
-                new StartInfo(tContext, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1, 2},
-                        EnumSet.of(StarterFlags.QUENCH_PERMISSIONS)));
+        if (doIntentSender) {
+            //  android.content.Context.startIntentSender(IntentSender intent, Intent fillInIntent, int flagsMask, int flagsValues, 
+            //           int extraFlags, Bundle options)
+            starters.put( /* MethodReference.findOrCreate(tContext, */ Selector.make(   // TODO
+                            "startIntentSender(Landroid/content/IntentSender;Landroid/content/Intent;IIILandroid/os/Bundle;)V"),
+                    new StartInfo(tContext, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1, 2},
+                            EnumSet.of(StarterFlags.QUENCH_PERMISSIONS)));
+            // android.content.Context.startIntentSender(IntentSender intent, Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags)
+            starters.put( /* MethodReference.findOrCreate(tContext, */ Selector.make(   // TODO
+                            "startIntentSender(Landroid/content/IntentSender;Landroid/content/Intent;III)V"),
+                    new StartInfo(tContext, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1, 2},
+                            EnumSet.of(StarterFlags.QUENCH_PERMISSIONS)));
+        }
         // android.content.Context.startService(Intent service)
         starters.put( /* MethodReference.findOrCreate(tContext, */ Selector.make("startService(Landroid/content/Intent;)Landroid/content/ComponentName;"),
                 new StartInfo(tContext, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.SERVICE), new int[] {1}));
@@ -433,41 +441,43 @@ public class IntentStarters {
         // android.app.Activity.startActivityIfNeeded(Intent intent, int requestCode, Bundle options)
         starters.put( /* MethodReference.findOrCreate(tActivity, */ Selector.make("startActivityIfNeeded(Landroid/content/Intent;ILandroid/os/Bundle;)Z"),
                 new StartInfo(tActivity, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1}));
-        //  android.app.Activity.startIntentSender(IntentSender intent, Intent fillInIntent, int flagsMask, int flagsValues, 
-        //           int extraFlags, Bundle options)
-        starters.put( /* MethodReference.findOrCreate(tActivity, */ Selector.make(   // TODO
-                        "startIntentSender(Landroid/content/IntentSender;Landroid/content/Intent;IIILandroid/os/Bundle;)V"),
-                new StartInfo(tActivity, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1, 2},
-                        EnumSet.of(StarterFlags.QUENCH_PERMISSIONS)));
-        // android.app.Activity.startIntentSender(IntentSender intent, Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags)
-        starters.put( /* MethodReference.findOrCreate(tActivity, */ Selector.make(   // TODO
-                        "startIntentSender(Landroid/content/IntentSender;Landroid/content/Intent;III)V"),
-                new StartInfo(tActivity, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1, 2},
-                        EnumSet.of(StarterFlags.QUENCH_PERMISSIONS)));
-        // android.app.Activity.startIntentSenderForResult(IntentSender intent, int requestCode, Intent fillInIntent, 
-        //          int flagsMask, int flagsValues, int extraFlags, Bundle options)
-        starters.put( /* MethodReference.findOrCreate(tActivity, */ Selector.make(   // TODO
-                        "startIntentSenderForResult(Landroid/content/IntentSender;ILandroid/content/Intent;IIILandroid/os/Bundle;)V"),
-                new StartInfo(tActivity, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1, 2},
-                        EnumSet.of(StarterFlags.CALL_ON_ACTIVITY_RESULT, StarterFlags.QUENCH_PERMISSIONS)));
-        // android.app.Activity.startIntentSenderForResult(IntentSender intent, int requestCode, Intent fillInIntent, 
-        //          int flagsMask, int flagsValues, int extraFlags)
-        starters.put( /* MethodReference.findOrCreate(tActivity, */ Selector.make(   // TODO
-                        "startIntentSenderForResult(Landroid/content/IntentSender;ILandroid/content/Intent;III)V"),
-                new StartInfo(tActivity, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1, 2},
-                        EnumSet.of(StarterFlags.CALL_ON_ACTIVITY_RESULT, StarterFlags.QUENCH_PERMISSIONS)));
-        // android.app.Activity.startIntentSenderFromChild(Activity child, IntentSender intent, int requestCode, 
-        //          Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags)
-        starters.put( /* MethodReference.findOrCreate(tActivity, */ Selector.make(   // TODO
-                        "startIntentSenderFromChild(Landroid/app/Activity;Landroid/content/IntentSender;ILandroid/content/Intent;III)V"),
-                new StartInfo(tActivity, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1, 2},
-                        EnumSet.of(StarterFlags.QUENCH_PERMISSIONS)));
-        // android.app.Activity.startIntentSenderFromChild(Activity child, IntentSender intent, int requestCode, 
-        //          Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags, Bundle options)
-        starters.put( /* MethodReference.findOrCreate(tActivity, */ Selector.make(   // TODO
-                        "startIntentSenderFromChild(Landroid/app/Activity;Landroid/content/IntentSender;ILandroid/content/Intent;IIILandroid/os/Bundle;)V"),
-                new StartInfo(tActivity, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1, 2},
-                        EnumSet.of(StarterFlags.QUENCH_PERMISSIONS)));
+        if (doIntentSender) {
+            //  android.app.Activity.startIntentSender(IntentSender intent, Intent fillInIntent, int flagsMask, int flagsValues, 
+            //           int extraFlags, Bundle options)
+            starters.put( /* MethodReference.findOrCreate(tActivity, */ Selector.make(   // TODO
+                            "startIntentSender(Landroid/content/IntentSender;Landroid/content/Intent;IIILandroid/os/Bundle;)V"),
+                    new StartInfo(tActivity, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1, 2},
+                            EnumSet.of(StarterFlags.QUENCH_PERMISSIONS)));
+            // android.app.Activity.startIntentSender(IntentSender intent, Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags)
+            starters.put( /* MethodReference.findOrCreate(tActivity, */ Selector.make(   // TODO
+                            "startIntentSender(Landroid/content/IntentSender;Landroid/content/Intent;III)V"),
+                    new StartInfo(tActivity, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1, 2},
+                            EnumSet.of(StarterFlags.QUENCH_PERMISSIONS)));
+            // android.app.Activity.startIntentSenderForResult(IntentSender intent, int requestCode, Intent fillInIntent, 
+            //          int flagsMask, int flagsValues, int extraFlags, Bundle options)
+            starters.put( /* MethodReference.findOrCreate(tActivity, */ Selector.make(   // TODO
+                            "startIntentSenderForResult(Landroid/content/IntentSender;ILandroid/content/Intent;IIILandroid/os/Bundle;)V"),
+                    new StartInfo(tActivity, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1, 2},
+                            EnumSet.of(StarterFlags.CALL_ON_ACTIVITY_RESULT, StarterFlags.QUENCH_PERMISSIONS)));
+            // android.app.Activity.startIntentSenderForResult(IntentSender intent, int requestCode, Intent fillInIntent, 
+            //          int flagsMask, int flagsValues, int extraFlags)
+            starters.put( /* MethodReference.findOrCreate(tActivity, */ Selector.make(   // TODO
+                            "startIntentSenderForResult(Landroid/content/IntentSender;ILandroid/content/Intent;III)V"),
+                    new StartInfo(tActivity, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1, 2},
+                            EnumSet.of(StarterFlags.CALL_ON_ACTIVITY_RESULT, StarterFlags.QUENCH_PERMISSIONS)));
+            // android.app.Activity.startIntentSenderFromChild(Activity child, IntentSender intent, int requestCode, 
+            //          Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags)
+            starters.put( /* MethodReference.findOrCreate(tActivity, */ Selector.make(   // TODO
+                            "startIntentSenderFromChild(Landroid/app/Activity;Landroid/content/IntentSender;ILandroid/content/Intent;III)V"),
+                    new StartInfo(tActivity, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1, 2},
+                            EnumSet.of(StarterFlags.QUENCH_PERMISSIONS)));
+            // android.app.Activity.startIntentSenderFromChild(Activity child, IntentSender intent, int requestCode, 
+            //          Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags, Bundle options)
+            starters.put( /* MethodReference.findOrCreate(tActivity, */ Selector.make(   // TODO
+                            "startIntentSenderFromChild(Landroid/app/Activity;Landroid/content/IntentSender;ILandroid/content/Intent;IIILandroid/os/Bundle;)V"),
+                    new StartInfo(tActivity, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1, 2},
+                            EnumSet.of(StarterFlags.QUENCH_PERMISSIONS)));
+        }
         // android.app.Activity.startNextMatchingActivity(Intent intent)
         starters.put( /* MethodReference.findOrCreate(tActivity, */ Selector.make("startNextMatchingActivity(Landroid/content/Intent;)Z"),
                 new StartInfo(tActivity, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1}));
