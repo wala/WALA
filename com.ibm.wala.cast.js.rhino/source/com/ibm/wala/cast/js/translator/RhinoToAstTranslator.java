@@ -1074,6 +1074,9 @@ public class RhinoToAstTranslator {
 		case Token.NULL: {
 			return Ast.makeConstant(null);
 		}
+    case Token.DEBUGGER: {
+      return Ast.makeConstant(null);
+    }
 		}
 		throw new RuntimeException("unexpected keyword literal " + node + " (" + node.getType() +")");
 	}
