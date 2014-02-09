@@ -79,6 +79,7 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
+                                        <compilerArgument>-err:-forbidden</compilerArgument>
                                         <compilerArguments>                 
                                           <properties>${project.basedir}/.settings/org.eclipse.jdt.core.prefs</properties>
                                         </compilerArguments>
