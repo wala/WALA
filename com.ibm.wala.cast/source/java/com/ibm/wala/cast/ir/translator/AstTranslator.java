@@ -2982,7 +2982,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
   }
 
-  private String[] makeNameMap(CAstEntity n, Set<Scope> scopes) {
+  protected String[] makeNameMap(CAstEntity n, Set<Scope> scopes, SSAInstruction[] insts) {
     // all scopes share the same underlying symtab, which is what
     // size really refers to.
     String[] map = new String[scopes.iterator().next().size() + 1];
@@ -3170,7 +3170,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     Position[] line = functionContext.cfg().getLinePositionMap();
     boolean katch = functionContext.cfg().hasCatchBlock();
     boolean monitor = functionContext.cfg().hasMonitorOp();
-    String[] nms = makeNameMap(n, functionContext.entityScopes());
+    String[] nms = makeNameMap(n, functionContext.entityScopes(), cfg.getInstructions());
 
     /*
      * Set reachableBlocks = DFS.getReachableNodes(cfg,
