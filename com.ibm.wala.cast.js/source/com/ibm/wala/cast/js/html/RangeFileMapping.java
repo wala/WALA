@@ -19,7 +19,7 @@ import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
 
 public class RangeFileMapping implements FileMapping {
 
-  public static class Range {
+  public final static class Range {
     private final int rangeStart;
     private final int rangeEnd;
     private final int rangeStartingLine;
