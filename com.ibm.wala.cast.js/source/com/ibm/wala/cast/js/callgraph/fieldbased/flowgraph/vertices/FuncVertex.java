@@ -10,7 +10,14 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
 
+import java.util.Iterator;
+
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.util.collections.Pair;
 
 /**
  * A function vertex represents a function object (or, more precisely, all function objects
@@ -18,7 +25,7 @@ import com.ibm.wala.classLoader.IClass;
  * 
  * @author mschaefer
  */
-public class FuncVertex extends Vertex {
+public class FuncVertex extends Vertex implements InstanceKey {
 	// the IClass representing this function in the class hierarchy
 	private final IClass klass;
 
@@ -26,7 +33,8 @@ public class FuncVertex extends Vertex {
 		this.klass = method;
 	}
 	
-	public IClass getIClass() {
+	@Override
+  public IClass getConcreteType() {
 		return klass;
 	}
 	
@@ -44,4 +52,10 @@ public class FuncVertex extends Vertex {
 		String methodName = klass.getName().toString();
     return "Func(" + methodName.substring(methodName.lastIndexOf('/')+1) + ")";
 	}
+
+  @Override
+  public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
+    assert false;
+    return null;
+  }
 }
