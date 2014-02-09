@@ -77,8 +77,8 @@
 				<artifactId>tycho-compiler-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.7</source>
+					<target>1.7</target>
                                         <compilerArguments>                 
                                           <properties>${project.basedir}/.settings/org.eclipse.jdt.core.prefs</properties>
                                         </compilerArguments>
@@ -122,6 +122,8 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
+				  <useuiharness>false</useuiharness>
+				  <useuithread>false</useuithread>
 					<providerHint>junit47</providerHint>
 					<argLine>${tycho.test.jvmArgs}</argLine>
                                         <includes>
