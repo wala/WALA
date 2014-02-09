@@ -24,7 +24,7 @@ public interface OrdinalSetMapping<T> extends Iterable<T> {
   /**
    * @return the number of a given object, or -1 if the object is not currently in the range.
    */
-  public int getMappedIndex(T o);
+  public int getMappedIndex(Object o);
 
   /**
    * @return whether the given object is mapped by this mapping
