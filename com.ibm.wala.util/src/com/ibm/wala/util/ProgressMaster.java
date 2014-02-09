@@ -10,7 +10,23 @@
  *******************************************************************************/
 package com.ibm.wala.util;
 
+import java.lang.management.GarbageCollectorMXBean;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryUsage;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import javax.management.ListenerNotFoundException;
+import javax.management.Notification;
+import javax.management.NotificationEmitter;
+import javax.management.NotificationFilter;
+import javax.management.NotificationListener;
+import javax.management.openmbean.CompositeData;
+
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.sun.management.GarbageCollectionNotificationInfo;
 
 
 
@@ -26,22 +42,28 @@ public class ProgressMaster implements IProgressMonitor {
 
   private volatile boolean timedOut = false;
 
+  private volatile boolean tooMuchMemory = false;
+
   /**
    * If -1, work items can run forever.
    */
-  private int msPerWorkItem = -1;
+  private final int msPerWorkItem;
 
+  private final boolean checkMemory;
+  
   private Timeout currentNanny;
 
-  private ProgressMaster(IProgressMonitor monitor) {
+  private ProgressMaster(IProgressMonitor monitor, int msPerWorkItem, boolean checkMemory) {
     this.delegate = monitor;
+    this.msPerWorkItem = msPerWorkItem;
+    this.checkMemory = checkMemory;
   }
 
-  public static ProgressMaster make(IProgressMonitor monitor) {
+  public static ProgressMaster make(IProgressMonitor monitor, int msPerWorkItem, boolean checkMemory) {
     if (monitor == null) {
       throw new IllegalArgumentException("null monitor");
     }
-    return new ProgressMaster(monitor);
+    return new ProgressMaster(monitor, msPerWorkItem, checkMemory);
   }
 
   @Override
@@ -52,8 +74,8 @@ public class ProgressMaster implements IProgressMonitor {
 
   private synchronized void startNanny() {
     killNanny();
-    if (msPerWorkItem >= 1) {
-      currentNanny = new Timeout(msPerWorkItem);
+    if (msPerWorkItem >= 1 || checkMemory) {
+      currentNanny = new Timeout();
       // don't let nanny thread prevent JVM exit
       currentNanny.setDaemon(true);
       currentNanny.start();
@@ -64,6 +86,7 @@ public class ProgressMaster implements IProgressMonitor {
     killNanny();
     setCanceled(false);
     timedOut = false;
+    tooMuchMemory = false;
   }
 
   /**
@@ -73,6 +96,10 @@ public class ProgressMaster implements IProgressMonitor {
     return timedOut;
   }
 
+  public boolean lastItemTooMuchMemory() {
+    return tooMuchMemory;
+  }
+  
   @Override
   public synchronized void done() {
     killNanny();
@@ -92,7 +119,7 @@ public class ProgressMaster implements IProgressMonitor {
 
   @Override
   public boolean isCanceled() {
-    return delegate.isCanceled() || timedOut;
+    return delegate.isCanceled() || timedOut || tooMuchMemory;
   }
 
   public void setCanceled(boolean value) {
@@ -110,30 +137,81 @@ public class ProgressMaster implements IProgressMonitor {
     return msPerWorkItem;
   }
 
-  public void setMillisPerWorkItem(int msPerWorkItem) {
-    this.msPerWorkItem = msPerWorkItem;
+  public static class TooMuchMemoryUsed extends Exception {
+
   }
 
   private class Timeout extends Thread {
+    
     @Override
     public void run() {
       try {
-        Thread.sleep(sleepMillis);
+        Map<NotificationEmitter,NotificationListener> gcListeners = Collections.emptyMap();;
+
+        if (checkMemory) {
+          gcListeners = HashMapFactory.make();
+          final Thread nannyThread = this;
+          List<GarbageCollectorMXBean> gcbeans = ManagementFactory.getGarbageCollectorMXBeans();
+          for (GarbageCollectorMXBean gcbean : gcbeans) {
+            final NotificationEmitter emitter = (NotificationEmitter) gcbean;
+            NotificationFilter filter = new NotificationFilter() {
+              @Override
+              public boolean isNotificationEnabled(Notification notification) {
+                return notification.getType().equals(GarbageCollectionNotificationInfo.GARBAGE_COLLECTION_NOTIFICATION);
+              }
+            };
+            NotificationListener listener = new NotificationListener() {
+              @Override
+              public void handleNotification(Notification notification, Object arg1) {
+                GarbageCollectionNotificationInfo info = GarbageCollectionNotificationInfo.from((CompositeData) notification.getUserData());
+
+                long used = 0;
+                for(MemoryUsage usage : info.getGcInfo().getMemoryUsageAfterGc().values()) {
+                  used += usage.getUsed();
+                }
+
+                long max = Runtime.getRuntime().maxMemory();
+
+                if (((double)used/(double)max) > MAX_USED_MEM_BEFORE_BACKING_OUT) {
+                  tooMuchMemory = true;
+                  nannyThread.interrupt();
+                }
+              }
+            };
+            emitter.addNotificationListener(listener, filter, null);
+            gcListeners.put(emitter,listener);
+          }
+        }
+
+        Thread.sleep(msPerWorkItem);
+
+        if (checkMemory) {
+          try {
+            for(Map.Entry<NotificationEmitter,NotificationListener> gc : gcListeners.entrySet()) {
+              gc.getKey().removeNotificationListener(gc.getValue());
+            }
+          } catch (ListenerNotFoundException e) {
+            assert false : "cannot remove listener that was added";
+          }
+        }
+        
         if (isInterrupted()) {
           return;
         }
+        
         timedOut = true;
       } catch (InterruptedException e) {
         return;
       }
     }
+    
+    private static final double MAX_USED_MEM_BEFORE_BACKING_OUT = .8;
+    
+  }
 
-    private final int sleepMillis;
-
-    Timeout(int sleepMillis) {
-      assert sleepMillis >= 1;
-      this.sleepMillis = sleepMillis;
-    }
+  @Override
+  public String getCanecelMessage() {
+    return tooMuchMemory? "too much memory": timedOut? "timed out" : "unknown";
   }
 
 }
