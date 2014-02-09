@@ -15,6 +15,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.junit.Test;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
@@ -26,7 +27,8 @@ import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
+import com.ibm.wala.util.NullProgressMonitor;
+import com.ibm.wala.util.ProgressMaster;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Iterator2Collection;
 
@@ -671,22 +673,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     public void testManyStrings() throws IllegalArgumentException, IOException, CancelException, WalaException {
       SSAPropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "many-strings.js");
       B.getOptions().setTraceStringConstants(true);
-      final long startTime = System.currentTimeMillis();
-      CallGraph CG = B.makeCallGraph(B.getOptions(), new IProgressMonitor() {
-        @Override
-        public void beginTask(String task, int totalWork) {
-        }
-        @Override
-        public boolean isCanceled() {
-           return System.currentTimeMillis() > (startTime + 10000L);
-        }
-        @Override
-        public void done() {
-        }
-        @Override
-        public void worked(int units) {
-        }
-      });
+      ProgressMaster monitor = ProgressMaster.make(new NullProgressMonitor(), 10000, false);
+      monitor.beginTask("build CG", 1);
+      CallGraph CG = B.makeCallGraph(B.getOptions(), monitor);
+      monitor.done();
       CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     }
 
