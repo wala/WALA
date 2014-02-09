@@ -10,13 +10,16 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.translator;
 
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
 
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.ssa.JSInstructionFactory;
 import com.ibm.wala.cast.js.ssa.JavaScriptInstanceOf;
+import com.ibm.wala.cast.js.ssa.PrototypeLookup;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
@@ -30,6 +33,8 @@ import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
@@ -85,6 +90,19 @@ public class JSAstTranslator extends AstTranslator {
     return super.ignoreName(name) || name.endsWith(" temp");
   }
 
+  @Override
+  protected String[] makeNameMap(CAstEntity n, Set<Scope> scopes, SSAInstruction[] insts) {
+    String[] names = super.makeNameMap(n, scopes, insts);
+    for(SSAInstruction inst : insts) {
+      if (inst instanceof PrototypeLookup) {
+        if (names[ inst.getUse(0)] != null) {
+          names[ inst.getDef() ] = names[ inst.getUse(0) ];
+        }
+      }
+    }
+    return names;
+  }
+  
   /**
    * generate an instruction that checks if readVn is undefined and throws an exception if it isn't
    */
