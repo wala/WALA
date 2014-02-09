@@ -56,7 +56,7 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
       Set<String> names = new HashSet<String>();
       SSAInstruction call = caller.getIR().getInstructions()[caller.getIR().getCallInstructionIndices(site).intIterator().next()];
       LocalPointerKey fileNameV = new LocalPointerKey(caller, call.getUse(1));
-      OrdinalSet<InstanceKey> ptrs = builder.getPointerAnalysis().getPointsToSet(fileNameV);
+      OrdinalSet<? extends InstanceKey> ptrs = builder.getPointerAnalysis().getPointsToSet(fileNameV);
       for(InstanceKey k : ptrs) {
         if (k instanceof ConstantKey) {
           Object v = ((ConstantKey)k).getValue();
