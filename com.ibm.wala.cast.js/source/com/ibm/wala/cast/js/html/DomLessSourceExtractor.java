@@ -196,8 +196,9 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     }
 
     private void getScriptFromUrl(String urlAsString, ITag scriptTag) throws IOException, MalformedURLException {
-      URL absoluteUrl = UrlManipulator.relativeToAbsoluteUrl(urlAsString, this.entrypointUrl);
-      URL scriptSrc = urlResolver.resolve(absoluteUrl);
+//      URL absoluteUrl = UrlManipulator.relativeToAbsoluteUrl(urlAsString, this.entrypointUrl);
+//      URL scriptSrc = urlResolver.resolve(absoluteUrl);
+      URL scriptSrc = new URL(entrypointUrl, urlAsString);
       if (scriptSrc == null) { //Error resolving URL
         return;
       }
@@ -293,10 +294,14 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
 
   private File createOutputFile(URL url, boolean delete, boolean useTempName) throws IOException {
     File outputFile;
+    String fileName = new File(url.getFile()).getName();
+    if (fileName.length() < 5) {
+      fileName = "xxxx" + fileName; 
+    }
     if (useTempName) {
-      outputFile = File.createTempFile(new File(url.getFile()).getName(), ".js");
+      outputFile = File.createTempFile(fileName, ".js");
     } else {
-      outputFile = new File(new File(url.getFile()).getName());
+      outputFile = new File(fileName);
     }
     if (outputFile.exists()){
       outputFile.delete();
