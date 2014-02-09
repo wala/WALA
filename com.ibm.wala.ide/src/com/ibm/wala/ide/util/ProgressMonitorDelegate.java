@@ -51,4 +51,9 @@ public class ProgressMonitorDelegate implements IProgressMonitor {
     delegate.worked(units);
   }
 
+  @Override
+  public String getCanecelMessage() {
+    return "cancelled by eclipse monitor: " + delegate.toString();
+  }
+
 }
