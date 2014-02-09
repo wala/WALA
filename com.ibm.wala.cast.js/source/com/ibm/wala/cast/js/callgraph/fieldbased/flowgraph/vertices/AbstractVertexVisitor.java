@@ -51,6 +51,11 @@ public class AbstractVertexVisitor<T> implements VertexVisitor<T> {
 	}
 
 	@Override
+	public T visitArgVertex(ArgVertex argVertex) {
+	  return visitVertex(argVertex);
+	}
+
+	@Override
   public T visitCalleeVertex(CallVertex calleeVertex) {
 		return visitVertex(calleeVertex);
 	}

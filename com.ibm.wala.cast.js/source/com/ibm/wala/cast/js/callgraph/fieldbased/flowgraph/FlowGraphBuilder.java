@@ -14,7 +14,6 @@ import java.util.Iterator;
 
 import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
 import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
-import com.ibm.wala.cast.ir.ssa.AstIRFactory.AstIR;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
@@ -29,6 +28,7 @@ import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
 import com.ibm.wala.cast.js.ssa.PrototypeLookup;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.js.util.Util;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
 import com.ibm.wala.cast.types.AstMethodReference;
@@ -288,6 +288,14 @@ public class FlowGraphBuilder {
 					   w = factory.makeVarVertex(func, pr.getDef());
 				flowgraph.addEdge(v, w);
 			}
+			
+			IntSet argVns = Util.getArgumentsArrayVns(ir, du);
+			if (argVns.contains(pr.getObjectRef())) {
+			  Vertex v = factory.makeArgVertex(func),
+            w = factory.makeVarVertex(func, pr.getDef());
+       flowgraph.addEdge(v, w);
+			}
+			
 			handleLexicalDef(pr.getDef());
 		}
 		

@@ -10,16 +10,27 @@
  *******************************************************************************/
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph;
 
+import java.util.Collection;
 import java.util.Iterator;
 
+import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.AbstractVertexVisitor;
+import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.FuncVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.UnknownVertex;
+import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VarVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.Vertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VertexFactory;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.Predicate;
-import com.ibm.wala.util.collections.IndiscriminateFilter;
+import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphReachability;
 import com.ibm.wala.util.graph.GraphSlicer;
@@ -27,6 +38,7 @@ import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.impl.InvertedGraph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.intset.OrdinalSet;
+import com.ibm.wala.util.intset.OrdinalSetMapping;
 
 /**
  * A flow graph models data flow between vertices representing local variables, properties,
@@ -43,7 +55,7 @@ public class FlowGraph implements Iterable<Vertex> {
 	
 	// the transitive closure of the inverse of this.graph, 
 	// but without paths going through the Unknown vertex
-	private GraphReachability<Vertex> optimistic_closure;
+	private GraphReachability<Vertex,FuncVertex> optimistic_closure;
 	
 	public FlowGraph() {
 		this.graph = new SlowSparseNumberedGraph<Vertex>(1);
@@ -74,8 +86,17 @@ public class FlowGraph implements Iterable<Vertex> {
 		});
 		
 		// compute transitive closure
-		optimistic_closure = new GraphReachability<Vertex>(new InvertedGraph<Vertex>(pruned_flowgraph),
-														   IndiscriminateFilter.singleton());
+		optimistic_closure = 
+		    new GraphReachability<Vertex,FuncVertex>(
+		      new InvertedGraph<Vertex>(pruned_flowgraph),
+		      new Filter<Vertex>() {
+		        @Override
+		        public boolean accepts(Vertex o) {
+		          return o instanceof FuncVertex;
+		        } 
+		      }
+		    );
+		
 		optimistic_closure.solve(monitor);
 	}
 	
@@ -103,7 +124,7 @@ public class FlowGraph implements Iterable<Vertex> {
 	 * Computes the set of vertices that may reach <code>dest</code> along paths not containing an
 	 * {@link UnknownVertex}.
 	 */
-	public OrdinalSet<Vertex> getReachingSet(Vertex dest, IProgressMonitor monitor) throws CancelException {
+	public OrdinalSet<FuncVertex> getReachingSet(Vertex dest, IProgressMonitor monitor) throws CancelException {
 		if(!graph.containsNode(dest))
 			return OrdinalSet.empty();
 		
@@ -118,5 +139,69 @@ public class FlowGraph implements Iterable<Vertex> {
   @Override
   public Iterator<Vertex> iterator() {
     return graph.iterator();
+  }
+  
+  public PointerAnalysis getPointerAnalysis(final IProgressMonitor monitor) {
+    return new PointerAnalysis() {
+
+      @Override
+      public OrdinalSet<? extends InstanceKey> getPointsToSet(PointerKey key) {
+        if (key instanceof LocalPointerKey) {
+          CGNode node = ((LocalPointerKey)key).getNode();
+          FuncVertex fn = factory.makeFuncVertex(node.getMethod().getDeclaringClass());
+          int vn = ((LocalPointerKey)key).getValueNumber();
+          VarVertex v = factory.makeVarVertex(fn, vn);
+          try {
+            return getReachingSet(v, monitor);
+          } catch (CancelException e) {
+            return null;
+          }
+        } else {
+          return null;
+        }
+      }
+
+      @Override
+      public OrdinalSetMapping<InstanceKey> getInstanceKeyMapping() {
+        // TODO Auto-generated method stub
+        return null;
+      }
+
+      @Override
+      public Iterable<PointerKey> getPointerKeys() {
+        // TODO Auto-generated method stub
+        return null;
+      }
+
+      @Override
+      public Collection<InstanceKey> getInstanceKeys() {
+        // TODO Auto-generated method stub
+        return null;
+      }
+
+      @Override
+      public boolean isFiltered(PointerKey pk) {
+         return false;
+      }
+
+      @Override
+      public HeapModel getHeapModel() {
+        assert false;
+        return null;
+      }
+
+      @Override
+      public HeapGraph getHeapGraph() {
+        assert false;
+        return null;
+      }
+
+      @Override
+      public IClassHierarchy getClassHierarchy() {
+        assert false;
+        return null;
+      }
+      
+    };
   }
 }

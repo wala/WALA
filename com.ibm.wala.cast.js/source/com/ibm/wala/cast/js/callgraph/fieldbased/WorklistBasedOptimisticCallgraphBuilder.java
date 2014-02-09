@@ -136,6 +136,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
 		
 		for(int i=1;i<invk.getNumberOfParameters();++i) {
 		  // only flow receiver into 'this' if invk is, in fact, a method call
+      flowgraph.addEdge(factory.makeVarVertex(caller, invk.getUse(i)), factory.makeArgVertex(callee));
 		  if(i > 1 || invk.getDeclaredTarget().equals(JavaScriptMethods.dispatchReference))
 		    addFlowEdge(flowgraph, factory.makeVarVertex(caller, invk.getUse(i)), factory.makeParamVertex(callee, i-1), worklist);
 		}
