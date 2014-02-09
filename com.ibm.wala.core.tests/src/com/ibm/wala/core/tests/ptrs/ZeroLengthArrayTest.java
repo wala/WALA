@@ -60,10 +60,10 @@ public class ZeroLengthArrayTest {
         cha.resolveMethod(MethodReference.findOrCreate(
             TypeReference.findOrCreate(ClassLoaderReference.Application, TestConstants.ZERO_LENGTH_ARRAY_MAIN),
             Selector.make("main([Ljava/lang/String;)V"))), Everywhere.EVERYWHERE);
-    OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(heapModel.getPointerKeyForLocal(mainNode, 4));
+    OrdinalSet<? extends InstanceKey> pointsToSet = pa.getPointsToSet(heapModel.getPointerKeyForLocal(mainNode, 4));
     Assert.assertEquals(1, pointsToSet.size());
     InstanceKey arrayKey = pointsToSet.iterator().next();
-    OrdinalSet<InstanceKey> arrayContents = pa.getPointsToSet(heapModel.getPointerKeyForArrayContents(arrayKey));
+    OrdinalSet<? extends InstanceKey> arrayContents = pa.getPointsToSet(heapModel.getPointerKeyForArrayContents(arrayKey));
     System.err.println(arrayContents);
     Assert.assertEquals(0, arrayContents.size());
     
