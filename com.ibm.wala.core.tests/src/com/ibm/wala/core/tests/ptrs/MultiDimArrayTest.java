@@ -70,7 +70,7 @@ public class MultiDimArrayTest extends WalaTestCase {
     
     CGNode node = findDoNothingNode(cg);
     PointerKey pk = pa.getHeapModel().getPointerKeyForLocal(node, 1);
-    OrdinalSet<InstanceKey> ptsTo = pa.getPointsToSet(pk);
+    OrdinalSet<? extends InstanceKey> ptsTo = pa.getPointsToSet(pk);
     Assert.assertEquals(1, ptsTo.size());
   }
   

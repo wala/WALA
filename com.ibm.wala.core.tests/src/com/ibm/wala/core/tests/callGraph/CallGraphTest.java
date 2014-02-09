@@ -257,7 +257,7 @@ public class CallGraphTest extends WalaTestCase {
     PointerAnalysis pa = builder.getPointerAnalysis();
     CGNode mainMethod = AbstractPtrTest.findMainMethod(cg);
     PointerKey keyToQuery = AbstractPtrTest.getParam(mainMethod, "testThisVar", pa.getHeapModel());
-    OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(keyToQuery);
+    OrdinalSet<? extends InstanceKey> pointsToSet = pa.getPointsToSet(keyToQuery);
     Assert.assertEquals(1, pointsToSet.size());
     
   }

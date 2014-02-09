@@ -27,7 +27,7 @@ public interface PointerAnalysis {
    * @return Set of InstanceKey, representing the instance abstractions that define
    * the points-to set computed for the pointer key
    */
-  OrdinalSet<InstanceKey> getPointsToSet(PointerKey key);
+  OrdinalSet<? extends InstanceKey> getPointsToSet(PointerKey key);
 
   /**
    * @return an Object that determines how to model abstract locations in the heap.
