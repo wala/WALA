@@ -102,8 +102,7 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
           result = new CompoundIterator<CGNode>(result, new NonNullSingletonIterator<CGNode>(callerOfConstructor));
         } else {
           PointerKey funcKey = builder.getPointerKeyForLocal(callerOfConstructor, 1);
-          OrdinalSet<InstanceKey> funcPtrs = builder.getPointerAnalysis().getPointsToSet(funcKey);
-          for (InstanceKey funcPtr : funcPtrs) {
+          for (InstanceKey funcPtr : builder.getPointerAnalysis().getPointsToSet(funcKey)) {
             if (funcPtr instanceof ScopeMappingInstanceKey) {
               result = new CompoundIterator<CGNode>(result, ((ScopeMappingInstanceKey) funcPtr).getFunargNodes(name));
             }
