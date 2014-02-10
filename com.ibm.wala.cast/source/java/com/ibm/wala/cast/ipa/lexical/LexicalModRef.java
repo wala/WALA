@@ -121,7 +121,7 @@ public class LexicalModRef {
     Collection<Pair<CGNode, String>> result = HashSetFactory.make();
     // use scope-mapping instance keys in pointer analysis. may need a different
     // scheme for CG construction not based on pointer analysis
-    OrdinalSet<InstanceKey> functionValues = pa.getPointsToSet(pa.getHeapModel().getPointerKeyForLocal(n, 1));
+    OrdinalSet<? extends InstanceKey> functionValues = pa.getPointsToSet(pa.getHeapModel().getPointerKeyForLocal(n, 1));
     for (InstanceKey ik : functionValues) {
       if (ik instanceof ScopeMappingInstanceKey) {
         ScopeMappingInstanceKey smik = (ScopeMappingInstanceKey) ik;
