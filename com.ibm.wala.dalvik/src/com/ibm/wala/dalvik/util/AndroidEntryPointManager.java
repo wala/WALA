@@ -479,6 +479,8 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      *  Get Intent with applied overrides.
      *
      *  If there are no overrides or the Intent is not registered return it as is.
+     *
+     *  @todo TODO: Malicious Intent-Table could cause endless loops
      */
     public Intent getIntent(Intent intent) {
         if (overrideIntents.containsKey(intent)) {
@@ -490,7 +492,14 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
                     return ret;
                 } else {
                     logger.debug("Resolving {} hop over {}", intent, ret);
+                    final Intent old = ret;
                     ret = overrideIntents.get(ret);
+
+                    if (ret == old) { // Yes, ==
+                        // This is an evil hack(tm). I should fix the Intent-Table!
+                        logger.warn("Malformend Intent-Table, staying with " + ret + " for " + intent);
+                        return ret;
+                    }
                 }
             }
             ret = overrideIntents.get(ret); // Once again to get Info set in register
