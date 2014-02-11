@@ -41,7 +41,7 @@ public class SSAGotoInstruction extends SSAInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return "goto (iindex = " + this.targetIndex  + ")";
+    return "goto (from iindex= " + this.iindex + " to iindex = " + this.targetIndex  + ")";
   }
 
   /**

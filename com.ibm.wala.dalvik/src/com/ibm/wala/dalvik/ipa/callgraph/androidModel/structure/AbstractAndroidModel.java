@@ -94,8 +94,12 @@ public abstract class AbstractAndroidModel  {
      *
      *  @todo   Find a better way to break a basic block, but an endless loop!
      *  @return The PC after insertion.
+     *  @deprecated The GoTo instruction breaks basic blocks by itself now, no need to call this
+     *      function any longer
      */
+    @Deprecated
     protected int makeBrakingNOP(int PC) {
+        logger.info("Adding Jump-Target at " + PC);
         body.addStatement(insts.GotoInstruction(PC, PC));
         PC++;
         return PC;

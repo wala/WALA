@@ -117,9 +117,10 @@ public class LoopAndroidModel extends AbstractAndroidModel {
      * {@inheritDoc}
      */
     protected int enterSTART_OF_LOOP (int PC) {
-        this.outerLoopPC = PC;
         logger.info("PC {} is the jump target of START_OF_LOOP", PC);
-        PC = makeBrakingNOP(PC);
+        
+        this.outerLoopPC = PC;
+        PC = makeBrakingNOP(this.outerLoopPC);
         paramManager.scopeDown(true);
 
         // Top-Half of Phi-Handling
