@@ -125,12 +125,14 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
             throw new IllegalArgumentException("node is null");
         }
         assert understands(node);   // Should already have been checked before
+        logger.info("IntentContextInterpreter - Retreiving IR of " + node.getMethod().getSignature());
         {
             // TODO: CACHE!
             final Context ctx = node.getContext();
 
 
             if (ctx.get(Intent.INTENT_KEY) != null) {
+                logger.debug("Got an Intent-Context");
                 try { // Translate CancelException to IllegalStateException
                 final Intent inIntent = (Intent) ctx.get(Intent.INTENT_KEY);                // Intent without overrides
                 final Intent intent = AndroidEntryPointManager.MANAGER.getIntent(inIntent); // Apply overrides

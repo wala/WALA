@@ -128,7 +128,7 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
     @Override
     public IMethod getMethod(Selector selector) {
         assert (macroModel != null) : "Macro Model was not set yet!";
-
+        
         if (macroModel.getSelector().equals(selector)) {
             return macroModel;
         }

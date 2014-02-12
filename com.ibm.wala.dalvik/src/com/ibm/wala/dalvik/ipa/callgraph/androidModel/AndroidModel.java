@@ -376,7 +376,7 @@ public class AndroidModel /* makes SummarizedMethod */
                     application = tmpApp;
                 } else {
                     // Generate a real one?
-                    logger.warn("I didn't get an application");
+                    logger.warn("I didn't get an application. Generating a new object.");
                     application = paramManager.getUnmanaged(AndroidTypes.Application, "app");
                     this.body.addConstant(application.getNumber(), new ConstantValue(null));
                     application.setAssigned();
