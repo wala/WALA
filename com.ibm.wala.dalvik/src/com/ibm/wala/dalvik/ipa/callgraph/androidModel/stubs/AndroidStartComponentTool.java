@@ -251,7 +251,9 @@ public class AndroidStartComponentTool {
         
         logger.debug("Fetching caller context...");
         final SSAValue androidContext;
-        if (caller.getName().equals(AndroidTypes.ContextWrapperName)) {
+        if (caller == null) {
+            return null;
+        } else if (caller.getName().equals(AndroidTypes.ContextWrapperName)) {
             { // Fetch ContextWrapperName.mBase => androidContext
                 androidContext = pm.getUnmanaged(AndroidTypes.Context, "callerContext");
                 logger.debug("Fetching ContextWrapperName.mBase");

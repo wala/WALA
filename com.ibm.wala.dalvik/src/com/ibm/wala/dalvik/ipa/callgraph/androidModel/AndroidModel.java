@@ -43,6 +43,7 @@ import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
 import com.ibm.wala.util.ssa.SSAValueManager;
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.Instantiator;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.FlatInstantiator;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.types.FieldReference;
@@ -88,6 +89,7 @@ import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.AndroidStartComponen
 
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.dalvik.util.AndroidTypes;
+import com.ibm.wala.dalvik.util.AndroidComponent;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StarterFlags;
 
@@ -695,13 +697,13 @@ public class AndroidModel /* makes SummarizedMethod */
         // Call the model
         {
             logger.debug("Calling model: {}", this.model.getReference().getName());
+            final List<SSAValue> redirectParams = acc.connectThrough(modelAcc, new HashSet<SSAValue>(allActivities), defaults,
+                    getClassHierarchy(), /* IInstantiator this.createInstance(type, redirect, pm)  */ instantiator, false, null, null);
             final int callPC = redirect.getNextProgramCounter();
             final CallSiteReference site = CallSiteReference.make(callPC, this.model.getReference(),
                     IInvokeInstruction.Dispatch.STATIC);
             final SSAAbstractInvokeInstruction invokation;
             final SSAValue exception = pm.getException();
-            final List<SSAValue> redirectParams = acc.connectThrough(modelAcc, new HashSet<SSAValue>(allActivities), defaults,
-                    getClassHierarchy(), /* IInstantiator this.createInstance(type, redirect, pm)  */ instantiator, false, null, null);
          
             if (this.model.getReference().getReturnType().equals(TypeReference.Void)) {
                 invokation = instructionFactory.InvokeInstruction(callPC, redirectParams, exception, site);
@@ -809,6 +811,68 @@ public class AndroidModel /* makes SummarizedMethod */
 
             throw new IllegalStateException(e);
         }
+    }
+
+    /**
+     *  Creates an "encapsulated" version of the model.
+     *
+     *  The generated method will take no parameters. New instances for REUSE-Parameters will
+     *  be created.
+     *
+     *  This variant is useful for the start of an analysis.
+     */
+    public IMethod getMethodEncap() throws CancelException {
+        final MethodReference asMethod;
+        {
+            final TypeReference clazz = AndroidModelClass.ANDROID_MODEL_CLASS;
+            final Atom methodName = Atom.concat(this.getName(), Atom.findOrCreateAsciiAtom("Encap"));
+            //final TypeName returnType = this.getReturnType();
+            final TypeName returnType = TypeReference.VoidName;
+            final Descriptor descr = Descriptor.findOrCreate(new TypeName[]{}, returnType);
+            asMethod = MethodReference.findOrCreate(clazz, methodName, descr);
+        }
+
+        final AndroidModelClass mClass = AndroidModelClass.getInstance(cha);
+
+        if (mClass.containsMethod(asMethod.getSelector())) {
+            // There's already an encap for this method
+            return mClass.getMethod(asMethod.getSelector());
+        }
+
+        final VolatileMethodSummary encap = new VolatileMethodSummary(new MethodSummary(asMethod));
+        encap.setStatic(true);
+        final TypeSafeInstructionFactory instructionFactory = new TypeSafeInstructionFactory(getClassHierarchy());
+        final ParameterAccessor acc = new ParameterAccessor(asMethod, /* hasImplicitThis: */ false);
+        final SSAValueManager pm = new SSAValueManager(acc);
+        final SummarizedMethod model = getMethod();
+
+        final List<SSAValue> params = new ArrayList<SSAValue>();
+        { // Collect Params
+            final FlatInstantiator instantiator = new FlatInstantiator(encap, instructionFactory, pm, this.cha, asMethod, this.scope);
+
+            for (int i = 0; i < model.getNumberOfParameters(); ++i) {
+                final TypeReference argT = model.getParameterType(i);
+                final boolean managed = false;
+                final SSAValue.VariableKey key = new SSAValue.TypeKey(argT.getName());
+                final SSAValue arg = instantiator.createInstance (argT, managed, key, null);
+                params.add(arg);
+            }
+        }
+
+        { // Call the model
+            final int callPC = encap.getNextProgramCounter();
+            final CallSiteReference site = CallSiteReference.make(callPC, model.getReference(), IInvokeInstruction.Dispatch.STATIC);
+            final SSAValue exception = pm.getException();
+        
+            final SSAAbstractInvokeInstruction invokation = instructionFactory.InvokeInstruction(callPC, params, exception, site);
+            encap.addStatement(invokation);
+        }
+
+        encap.setLocalNames(pm.makeLocalNames());
+        final SummarizedMethod method = new SummarizedMethodWithNames(asMethod, encap, mClass);
+        mClass.addMethod(method);
+
+        return method;
     }
 
     public IClassHierarchy getClassHierarchy() {

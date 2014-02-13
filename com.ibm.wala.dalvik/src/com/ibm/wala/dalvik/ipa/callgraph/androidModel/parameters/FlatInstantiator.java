@@ -81,21 +81,22 @@ import org.slf4j.LoggerFactory;
 /**
  *  Add code to create an instance of a type in a synthetic method.
  *
- *  Creates an instance of (hopefully) anything.
+ *  This variant limits recursion depth.
  *
  *  @author Tobias Blaschke <code@tobiasblaschke.de>
  */
-public class Instantiator implements IInstantiator {
-    private static final Logger logger = LoggerFactory.getLogger(Instantiator.class);
+public class FlatInstantiator implements IInstantiator {
+    private static final Logger logger = LoggerFactory.getLogger(FlatInstantiator.class);
 
     final IClassHierarchy cha;
     final VolatileMethodSummary body;
     final TypeSafeInstructionFactory instructionFactory;
     final SSAValueManager pm;
     final MethodReference scope;
-    final AnalysisScope analysisScope; 
+    final AnalysisScope analysisScope;
+    final int maxDepth;
 
-    public Instantiator(final VolatileMethodSummary body, final TypeSafeInstructionFactory instructionFactory,
+    public FlatInstantiator(final VolatileMethodSummary body, final TypeSafeInstructionFactory instructionFactory,
             final SSAValueManager pm, final IClassHierarchy cha, final MethodReference scope, final AnalysisScope analysisScope) {
         this.body = body;
         this.instructionFactory = instructionFactory;
@@ -103,7 +104,21 @@ public class Instantiator implements IInstantiator {
         this.cha = cha;
         this.scope = scope;
         this.analysisScope = analysisScope;
+        this.maxDepth = 1;
     }
+
+    public FlatInstantiator(final VolatileMethodSummary body, final TypeSafeInstructionFactory instructionFactory,
+            final SSAValueManager pm, final IClassHierarchy cha, final MethodReference scope, final AnalysisScope analysisScope,
+            final int maxDepth) {
+        this.body = body;
+        this.instructionFactory = instructionFactory;
+        this.pm = pm;
+        this.cha = cha;
+        this.scope = scope;
+        this.analysisScope = analysisScope;
+        this.maxDepth = maxDepth;
+    }
+
 
     private boolean isExcluded(IClass cls) {
         if (this.analysisScope.getExclusions().contains(cls.getName().toString())) {   // XXX FUUUUU
@@ -130,6 +145,10 @@ public class Instantiator implements IInstantiator {
      *  @todo   What about clinit?
      */
     public SSAValue createInstance(final TypeReference T, final boolean asManaged, VariableKey key, Set<? extends SSAValue> seen) {
+        return createInstance(T, asManaged, key, seen, 0);
+    }
+
+    private SSAValue createInstance(final TypeReference T, final boolean asManaged, VariableKey key, Set<? extends SSAValue> seen, int currentDepth) {
         if (T == null) {
             throw new IllegalArgumentException("Can't create an instance of null");
         }
@@ -137,7 +156,14 @@ public class Instantiator implements IInstantiator {
             logger.debug("Empty seen");
             seen = new HashSet<SSAValue>();
         }
-        
+       
+        if (currentDepth > this.maxDepth) {
+            System.out.println("Depth-Limit exceeded for: " + T);               // TODO: Remove
+            final SSAValue instance = this.pm.getUnmanaged(T, key);
+            instance.setAssigned();
+            return instance;
+        }
+
         final IClass klass = this.cha.lookupClass(T);
         final SSAValue instance;
         { // fetch new value
@@ -188,7 +214,7 @@ public class Instantiator implements IInstantiator {
         if ((types.size() == 1) && (! klass.isAbstract()) && (! klass.isArrayClass()) && (! klass.isInterface() )) {
             // It's a "regular" class
             final SSANewInstruction newInst = addNew(instance);
-            selectAndCallCtor(instance, seen);
+            selectAndCallCtor(instance, seen, currentDepth);
             if (asManaged) {
                 this.pm.setAllocation(instance, newInst);
             }
@@ -208,7 +234,7 @@ public class Instantiator implements IInstantiator {
                     }
                 }
                 if (payload == null) {
-                    payload = createInstance(payloadType, false, new UniqueKey(), seen); 
+                    payload = createInstance(payloadType, false, new UniqueKey(), seen, currentDepth); 
                 }
             }
             //assert (types.size() == 1);   // TODO
@@ -255,7 +281,7 @@ public class Instantiator implements IInstantiator {
                 { // Create instance of subInstance
                     final SSAValue subInstance = pm.getUnmanaged(type, new UniqueKey());
                     final SSANewInstruction newInst = addNew(subInstance);
-                    selectAndCallCtor(subInstance, seen);
+                    selectAndCallCtor(subInstance, seen, currentDepth);
                     assert (subInstance.getNumber() == newInst.getDef()) : "Unexpected: number and def differ: " + subInstance.getNumber() + ", " +
                                     newInst.getDef();
                     final Set<SSAValue> newSeen = new HashSet<SSAValue>();  // Narf
@@ -370,7 +396,7 @@ public class Instantiator implements IInstantiator {
         body.addStatement(ctorCall);
     }
 
-    private MethodReference selectAndCallCtor(SSAValue val, final Set<? extends SSAValue> overrides) {
+    private MethodReference selectAndCallCtor(SSAValue val, final Set<? extends SSAValue> overrides, final int currentDepth) {
         final IMethod cTor = lookupConstructor(val.getType());
         final ParameterAccessor ctorAcc = new ParameterAccessor(cTor);
         assert (ctorAcc.hasImplicitThis()) : "CTor detected as not having implicit this pointer";
@@ -390,7 +416,7 @@ public class Instantiator implements IInstantiator {
         logger.debug("Recursing for: {}", cTor);
         logger.debug("With seen: {}", seen);
         final List<SSAValue> ctorParams = acc.connectThrough(ctorAcc, overrides, /* defaults */ null, this.cha, 
-                this, /* managed */ false, /* key */ null, seen); // XXX This starts the recursion!
+                this, /* managed */ false, /* key */ null, seen, currentDepth + 1); // XXX This starts the recursion!
         addCallCtor(val, cTor.getReference(), ctorParams);
         return cTor.getReference();
     }
@@ -646,6 +672,14 @@ public class Instantiator implements IInstantiator {
             throw new IllegalArgumentException("Argument 2 to createInstance has to be null or an instance of Set<? extends SSAValue>, " +
                     "got: " + instantiatorArgs[2].getClass()); 
         }
+        final int currentDepth;
+        {
+            if (instantiatorArgs.length == 4) {
+                currentDepth = (Integer) instantiatorArgs[3];
+            } else {
+                currentDepth = 0;
+            }
+        }
         if (instantiatorArgs[2] != null) {
             final Set seen = (Set) instantiatorArgs[2];
             if (! seen.isEmpty()) {
@@ -658,6 +692,6 @@ public class Instantiator implements IInstantiator {
         }
 
         return createInstance(type, (Boolean) instantiatorArgs[0], (VariableKey) instantiatorArgs[1], (Set<? extends SSAValue>) 
-                instantiatorArgs[2]).getNumber();
+                instantiatorArgs[2], currentDepth).getNumber();
     }
 }
