@@ -53,6 +53,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.types.ClassLoaderReference;
 
 import com.ibm.wala.classLoader.IMethod;
@@ -69,6 +70,8 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.types.FieldReference;
+
+import com.ibm.wala.ipa.callgraph.propagation.AbstractTypeInNode;
 
 import java.util.Iterator;
 import com.ibm.wala.util.collections.EmptyIterator;
@@ -138,7 +141,23 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
                 final Intent intent = AndroidEntryPointManager.MANAGER.getIntent(inIntent); // Apply overrides
                 final Atom target = intent.action;
                 final IMethod method = node.getMethod();
-                final TypeReference callingClass = node.getMethod().getReference().getDeclaringClass(); // TODO: This may not necessarily fit!
+                final TypeReference callingClass;
+                {
+                    if (ctx.get(ContextKey.CALLER) != null) {
+                        System.out.println("CALLER CONTEXT" + ctx.get(ContextKey.CALLER));
+                        callingClass = node.getMethod().getReference().getDeclaringClass(); // TODO: This may not necessarily fit!
+                    } else if (ctx.get(ContextKey.CALLSITE) != null) {
+                        System.out.println("CALLSITE CONTEXT" + ctx.get(ContextKey.CALLSITE));
+                        callingClass = node.getMethod().getReference().getDeclaringClass(); // TODO: This may not necessarily fit!
+                    } else if (ctx.get(ContextKey.RECEIVER) != null) {
+                        //System.out.println("RECEIVER CONTEXT" + ctx.get(ContextKey.RECEIVER).getClass());
+                        final AbstractTypeInNode aType = (AbstractTypeInNode) ctx.get(ContextKey.RECEIVER);
+                        callingClass = aType.getConcreteType().getReference();
+                    } else {
+                        callingClass = node.getMethod().getReference().getDeclaringClass(); // TODO: This may not necessarily fit!
+                    }
+                }
+
 
                 final Intent.IntentType type = intent.getType();
                 final IR ir;

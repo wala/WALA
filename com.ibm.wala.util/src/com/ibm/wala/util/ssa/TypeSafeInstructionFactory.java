@@ -397,6 +397,41 @@ public class TypeSafeInstructionFactory {
     }
 
     /**
+     *  Reads static field into targetValue.
+     *
+     *  If type check passes the corresponding GetInstruction of the JavaInstructionFactory is called.
+     *  Calls targetValue.setAssigned()
+     *
+     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory.GetInstruction(int, int, int, FieldReference)
+     *
+     *  @param  iindex      Zero or a positive number unique to any instruction of the same method
+     *  @param  targetValue the result of the GetInstruction is placed there
+     *  @param  containingInstance The Object instance to read the field from
+     *  @param  field       The description of the field
+     */
+    public SSAGetInstruction GetInstruction(final int iindex, final SSAValue targetValue, FieldReference field) {
+        logger.info("Now: Get {} into {}", field, targetValue);
+        
+        if (iindex < 0) {
+            throw new IllegalArgumentException("iIndex may not be negative");
+        }
+        if (targetValue == null) {
+            throw new IllegalArgumentException("targetValue may not be null");
+        }
+        if (field == null) {
+            throw new IllegalArgumentException("field may not be null");
+        }
+        if (! isAssignableFrom(field.getFieldType(), targetValue.getType())) {
+            throw new IllegalArgumentException("The field " + targetValue + " is not assignable from " + field);
+        }
+
+        targetValue.setAssigned();
+        return insts.GetInstruction(iindex, targetValue.getNumber(), field);
+    }
+
+
+
+    /**
      *  Writes newValue to field of targetInstance.
      *
      *  If type check passes the corresponding PutInstruction of the JavaInstructionFactory is called.
@@ -442,6 +477,40 @@ public class TypeSafeInstructionFactory {
 
         return insts.PutInstruction(iindex, targetInstance.getNumber(), newValue.getNumber(), field);
     }
+
+    /**
+     *  Writes newValue to static field.
+     *
+     *  If type check passes the corresponding PutInstruction of the JavaInstructionFactory is called.
+     *
+     *  @see    com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory.PutInstruction(int, int, int, FieldReference)
+     *
+     *  @param  iindex      Zero or a psitive number unique to any instruction of the same method
+     *  @param  targetInstance the instance of the object to write a field of
+     *  @param  newValue    The value to write to the field
+     *  @param  field       The description of the target
+     */
+    public SSAPutInstruction PutInstruction(final int iindex, final SSAValue newValue, FieldReference field) {
+        logger.info("Now: Put {} to {}", newValue, field);
+        
+        if (iindex < 0) {
+            throw new IllegalArgumentException("iIndex may not be negative");
+        }
+        if (newValue == null) {
+            throw new IllegalArgumentException("newValue may not be null");
+        }
+        if (field == null) {
+            throw new IllegalArgumentException("field may not be null");
+        }
+        if (! isAssignableFrom(newValue.getType(), field.getFieldType())) {
+            throw new IllegalArgumentException("The field " + field + " is not assignable from " + newValue);
+        }
+    
+        final MethodReference newValueValidIn = newValue.getValidIn();
+
+        return insts.PutInstruction(iindex, newValue.getNumber(), field);
+    }
+
 
     public SSANewInstruction NewInstruction(int iindex, SSAValue result, NewSiteReference site) {
         logger.info("Now: New {}", result);

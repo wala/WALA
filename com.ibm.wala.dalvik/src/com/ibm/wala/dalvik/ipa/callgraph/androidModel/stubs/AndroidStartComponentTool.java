@@ -32,6 +32,7 @@
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs;
 
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
@@ -248,12 +249,16 @@ public class AndroidStartComponentTool {
             logger.warn("Asking for context when Context-Free");
             return null;    // XXX: Return a synthetic null?
         }*/
-        
-        logger.debug("Fetching caller context...");
-        final SSAValue androidContext;
         if (caller == null) {
             return null;
-        } else if (caller.getName().equals(AndroidTypes.ContextWrapperName)) {
+        } 
+
+        final IClass iCaller = cha.lookupClass(caller);
+        final IClass iActivity = cha.lookupClass(AndroidTypes.Activity);
+
+        logger.debug("Fetching caller context...");
+        final SSAValue androidContext;
+        if (caller.getName().equals(AndroidTypes.ContextWrapperName)) {
             { // Fetch ContextWrapperName.mBase => androidContext
                 androidContext = pm.getUnmanaged(AndroidTypes.Context, "callerContext");
                 logger.debug("Fetching ContextWrapperName.mBase");
@@ -276,7 +281,7 @@ public class AndroidStartComponentTool {
                 logger.info("Caller has android-context type: ContextImpl");
                 return androidContext;
             }
-        } else if (caller.getName().equals(AndroidTypes.ActivityName)) {
+        } else if (cha.isAssignableFrom(iActivity, iCaller)) {
             // We don't need it for now - TODO grab anyway
             androidContext = null;
             this.callerContext = AndroidTypes.AndroidContextType.ACTIVITY;
@@ -349,7 +354,8 @@ public class AndroidStartComponentTool {
        
             logger.info("The context to use for the call is from an IBinder");
             return iBinder;
-        } else if (caller.getName().equals(AndroidTypes.ActivityName)) {
+        //} else if (caller.getName().equals(AndroidTypes.ActivityName)) {
+        } else if (this.callerContext == AndroidTypes.AndroidContextType.ACTIVITY) {
             
             // The IBinder is Activity.mMainThread.getApplicationThread()   // TODO: Verify
             final SSAValue mMainThread = pm.getUnmanaged(AndroidTypes.ActivityThread, "callersMainThred");

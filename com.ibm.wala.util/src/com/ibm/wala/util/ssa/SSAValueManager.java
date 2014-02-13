@@ -80,6 +80,9 @@ public class SSAValueManager {
     private String description;
     private MethodReference forMethod;
 
+    /** User-Defined debugging info */
+    public String breadCrumb = "";
+
     private static class Managed<T extends SSAValue> {
         public ValueStatus status = ValueStatus.UNUSED;
         public SSAInstruction setBy = null;

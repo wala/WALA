@@ -158,7 +158,6 @@ public class FlatInstantiator implements IInstantiator {
         }
        
         if (currentDepth > this.maxDepth) {
-            System.out.println("Depth-Limit exceeded for: " + T);               // TODO: Remove
             final SSAValue instance = this.pm.getUnmanaged(T, key);
             instance.setAssigned();
             return instance;

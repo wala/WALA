@@ -56,6 +56,9 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.strings.Atom;
+import com.ibm.wala.classLoader.FieldImpl;
+
+import com.ibm.wala.shrikeCT.ClassConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +67,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  *  Encapsulates synthetic methods for modeling Androids lifecycle.
@@ -188,13 +193,23 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
     //  Contents of the class: Fields
     //  We have none...
     //
+    private Map<Atom, IField> fields = new HashMap<Atom, IField>();
 
-    /**
-     *  This class does not contain any fields.
-     */
     @Override
     public IField getField(Atom name) {
-        return null;
+        if (fields.containsKey(name)) {
+            return fields.get(name);
+        } else {
+            return null;
+        }
+    }
+
+    public void putField(Atom name, TypeReference type) {
+        final FieldReference fdRef = FieldReference.findOrCreate(this.getReference(), name, type);
+        final int accessFlags = ClassConstants.ACC_STATIC | ClassConstants.ACC_PUBLIC;
+        final IField field = new FieldImpl(this, fdRef, accessFlags, null); 
+
+        this.fields.put(name, field);
     }
 
     /**
@@ -202,7 +217,7 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
      */
     @Override
     public Collection<IField> getAllFields()  {
-        return Collections.emptySet();
+        return fields.values();
     }
 
     /**
@@ -210,7 +225,7 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
      */
     @Override
     public Collection<IField> getDeclaredStaticFields() {
-        return Collections.emptySet();
+        return fields.values();
     }
 
     /**
@@ -218,7 +233,7 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
      */
     @Override
     public Collection<IField> getAllStaticFields() {
-        return Collections.emptySet();
+        return fields.values();
     }
 
      /**

@@ -113,6 +113,28 @@ public enum AndroidComponent {
         }
     }
 
+    public static boolean isAndroidComponent(final TypeReference T, final IClassHierarchy cha) {
+        for (final AndroidComponent candid : AndroidComponent.values()) {
+            if (candid == AndroidComponent.UNKNOWN) continue;
+            if (candid.getName().equals(T.getName())) {
+                return true;
+            }
+
+            final IClass iT = cha.lookupClass(T);
+            final IClass iCand = cha.lookupClass(candid.toReference());
+            if (iT == null) {
+                return false; // TODO
+            }
+            if (iCand == null) {
+                return false; // ???!!!
+            }
+            if (cha.isAssignableFrom(iCand, iT)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      *  A name usable for display-output.
      *

@@ -86,6 +86,7 @@ import com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.AbstractAndroidM
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.AndroidBoot;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.AndroidStartComponentTool;
 
+import com.ibm.wala.classLoader.IField;
 
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.dalvik.util.AndroidTypes;
@@ -618,6 +619,11 @@ public class AndroidModel /* makes SummarizedMethod */
         final ParameterAccessor acc = new ParameterAccessor(asMethod, /* hasImplicitThis: */ true);
         //final AndroidModelParameterManager pm = new AndroidModelParameterManager(acc);
         final SSAValueManager pm = new SSAValueManager(acc);
+        if (callerNd != null) {
+            pm.breadCrumb = "Caller: " + caller + " Context: " + callerNd.getContext() + " Model: " + this.getClass() + " Name: " + this.getName();
+        } else {
+            pm.breadCrumb = "Caller: " + caller + " Model: " + this.getClass();
+        }
         final VolatileMethodSummary redirect = new VolatileMethodSummary(new MethodSummary(asMethod));
         redirect.setStatic(false);
         final Parameter self = acc.getThis();
@@ -648,8 +654,28 @@ public class AndroidModel /* makes SummarizedMethod */
             if (inAsMethod != null) {
                 allActivities.add(inAsMethod);
             } else {
-                final SSAValue newInstance = instantiator.createInstance(activityType, false, null, null);
-                allActivities.add(newInstance);
+                final Atom fdName = activityType.getName().getClassName();
+                final AndroidModelClass mClass = AndroidModelClass.getInstance(cha);
+
+                if (mClass.getField(fdName) != null) {
+                    final IField field = mClass.getField(fdName);
+                    final int instPC = redirect.getNextProgramCounter();
+                    final SSAValue target = pm.getUnallocated(activityType, new SSAValue.WeaklyNamedKey(activityType.getName(), 
+                                "got" + fdName.toString()));
+                    final SSAInstruction getInst = instructionFactory.GetInstruction(instPC, target, field.getReference());
+                    redirect.addStatement(getInst);
+                    pm.setAllocation(target, getInst);
+                    allActivities.add(target);
+                } else {
+                    final SSAValue newInstance = instantiator.createInstance(activityType, false, null, null);
+                    allActivities.add(newInstance);
+
+                    mClass.putField(fdName, activityType);
+                    final int instPC = redirect.getNextProgramCounter();
+                    final FieldReference fdRef = FieldReference.findOrCreate(mClass.getReference(), fdName, activityType);
+                    final SSAInstruction putInst = instructionFactory.PutInstruction(instPC, newInstance, fdRef);
+                    redirect.addStatement(putInst);
+                }
             }
         }
         assert(allActivities.size() == modelsActivities.size());
@@ -844,6 +870,7 @@ public class AndroidModel /* makes SummarizedMethod */
         final TypeSafeInstructionFactory instructionFactory = new TypeSafeInstructionFactory(getClassHierarchy());
         final ParameterAccessor acc = new ParameterAccessor(asMethod, /* hasImplicitThis: */ false);
         final SSAValueManager pm = new SSAValueManager(acc);
+        pm.breadCrumb = "Encap: " + this.getClass().toString();
         final SummarizedMethod model = getMethod();
 
         final List<SSAValue> params = new ArrayList<SSAValue>();
@@ -852,9 +879,34 @@ public class AndroidModel /* makes SummarizedMethod */
 
             for (int i = 0; i < model.getNumberOfParameters(); ++i) {
                 final TypeReference argT = model.getParameterType(i);
-                final boolean managed = false;
-                final SSAValue.VariableKey key = new SSAValue.TypeKey(argT.getName());
-                final SSAValue arg = instantiator.createInstance (argT, managed, key, null);
+                final SSAValue arg;
+
+                if (AndroidComponent.isAndroidComponent(argT, cha)) { 
+                    // Get / Put filed in AndroidModelClass for Android-Components
+                    final Atom fdName = argT.getName().getClassName();
+
+                    if (mClass.getField(fdName) != null) {
+                        final IField field = mClass.getField(fdName);
+                        final int instPC = encap.getNextProgramCounter();
+                        arg = pm.getUnallocated(argT, new SSAValue.WeaklyNamedKey(argT.getName(), 
+                                    "got" + fdName.toString()));
+                        final SSAInstruction getInst = instructionFactory.GetInstruction(instPC, arg, field.getReference());
+                        encap.addStatement(getInst);
+                        pm.setAllocation(arg, getInst);
+                    } else {
+                        arg = instantiator.createInstance(argT, false, null, null);
+
+                        mClass.putField(fdName, argT);
+                        final int instPC = encap.getNextProgramCounter();
+                        final FieldReference fdRef = FieldReference.findOrCreate(mClass.getReference(), fdName, argT);
+                        final SSAInstruction putInst = instructionFactory.PutInstruction(instPC, arg, fdRef);
+                        encap.addStatement(putInst);
+                    }
+                } else {
+                    final boolean managed = false;
+                    final SSAValue.VariableKey key = new SSAValue.TypeKey(argT.getName());
+                    arg = instantiator.createInstance (argT, managed, key, null);
+                }
                 params.add(arg);
             }
         }
