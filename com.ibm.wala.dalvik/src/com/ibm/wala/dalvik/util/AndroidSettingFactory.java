@@ -68,11 +68,26 @@ public class AndroidSettingFactory {
         public boolean equals(Object o) { return super.equals(o); }
     }
 
+    public static class ExternalIntent extends Intent {
+        @Override
+        public IntentType getType() {
+            return Intent.IntentType.EXTERNAL_TARGET;
+        }
+        public ExternalIntent(String action) { super(action); }
+        public ExternalIntent(Atom action) { super(action); }
+        public ExternalIntent(Atom action, Atom uri) { super(action, uri); }
+        @Override   // Force clash!
+        public int hashCode() { return super.hashCode(); }
+        @Override   // Force clash!
+        public boolean equals(Object o) { return super.equals(o); }
+    }
+
     public static class StandardIntent extends Intent {
         @Override
         public IntentType getType() {
             return Intent.IntentType.STANDARD_ACTION;
         }
+        public StandardIntent(String action) { super(action); }
         public StandardIntent(Atom action) { super(action); }
         public StandardIntent(Atom action, Atom uri) { super(action, uri); }
         @Override   // Force clash!
@@ -80,6 +95,21 @@ public class AndroidSettingFactory {
         @Override   // Force clash!
         public boolean equals(Object o) { return super.equals(o); }
     }
+
+    public static class IgnoreIntent extends Intent {
+        @Override
+        public IntentType getType() {
+            return Intent.IntentType.IGNORE;
+        }
+        public IgnoreIntent(String action) { super(action); }
+        public IgnoreIntent(Atom action) { super(action); }
+        public IgnoreIntent(Atom action, Atom uri) { super(action, uri); }
+        @Override   // Force clash!
+        public int hashCode() { return super.hashCode(); }
+        @Override   // Force clash!
+        public boolean equals(Object o) { return super.equals(o); }
+    }
+
 
     /**
      *  Make an intent.

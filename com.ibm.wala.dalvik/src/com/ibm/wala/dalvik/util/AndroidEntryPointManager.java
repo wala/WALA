@@ -337,7 +337,6 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      */
     public final Map<Intent, Intent> overrideIntents = HashMapFactory.make();
 
-
     /**
      *  Set more information to an Intent.
      *
@@ -457,6 +456,24 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
             setOverrideForce(source, to);
         } else {
             setOverrideForce(from, to);
+        }
+    }
+
+    public static final Map<Intent, Intent> DEFAULT_INTENT_OVERRIDES = new HashMap<Intent, Intent>();
+    static {
+        DEFAULT_INTENT_OVERRIDES.put(
+                new AndroidSettingFactory.StandardIntent("Landroid/intent/action/DIAL"),
+                new AndroidSettingFactory.ExternalIntent("Landroid/intent/action/DIAL"));
+    }
+
+    public void setOverrides(Map<Intent, Intent> overrides) {
+        for (final Intent from : overrides.keySet()) {
+            final Intent to = overrides.get(from);
+            if (from.equals(to)) {
+                registerIntent(to);
+            } else {
+                setOverride(from, overrides.get(from));
+            }
         }
     }
 

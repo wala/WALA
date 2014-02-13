@@ -176,7 +176,7 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
                     final SummarizedMethod override = model.getMethodAs(method.getReference(), callingClass, intentStarters.getInfo(method.getReference()), node);
                     ir = override.makeIR(ctx, this.options.getSSAOptions());
                 } else if (type == Intent.IntentType.STANDARD_ACTION) { // TODO:        Handle as such!
-                    logger.warn("Still handling STANDARD_ACTION as UNKONOWN_TARGET...");
+                    logger.warn("Still handling STANDARD_ACTION as UNKONOWN_TARGET: {}", intent.action);
                     final AndroidComponent targetComponent;
                     if (intent.getComponent() != null) {
                         targetComponent = intent.getComponent();
@@ -225,6 +225,8 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
                     final UnknownTargetModel model = new UnknownTargetModel(this.cha, this.options, this.cache, targetComponent);
                     final SummarizedMethod override = model.getMethodAs(method.getReference(), callingClass, intentStarters.getInfo(method.getReference()), node);
                     ir = override.makeIR(ctx, this.options.getSSAOptions());
+                } else if (type == Intent.IntentType.IGNORE) {
+                    return null;
                 } else {
                     throw new java.lang.UnsupportedOperationException("The Intent-Type " + type + " is not known to IntentContextInterpreter");
                 }

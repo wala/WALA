@@ -82,13 +82,22 @@ public class Intent implements ContextItem {
      */
     public static final ContextKey INTENT_KEY = new ContextKey() {};
     public enum IntentType {
-        UNKNOWN_TARGET,     /** The target could not be Identified for sure */
-        INTERNAL_TARGET,    /** The Class the Intent Action refers to belongs to this App */
-        EXTERNAL_TARGET,    /** The Class the Intent Action refers to belongs to an external App */
-        STANDARD_ACTION,    /** The Action is a Constant defined on the Android-Reference Manual */
-        BROADCAST,          /** So External and maybe internal */
-        EXPLICIT,           /** For INTERNAL use only */
-        IMPLICIT            /** For INTERNAL use only */
+        /** The target could not be Identified for sure */
+        UNKNOWN_TARGET,     
+        /** The Class the Intent Action refers to belongs to this App */
+        INTERNAL_TARGET,   
+        /** The Class the Intent Action refers to belongs to an external App */
+        EXTERNAL_TARGET,    
+        /** The Action is a Constant defined on the Android-Reference Manual */
+        STANDARD_ACTION,    
+        /** So External and maybe internal */
+        BROADCAST,          
+        /** For INTERNAL use only */
+        EXPLICIT,           
+        /** For INTERNAL use only */
+        IMPLICIT,           
+        /** Do not handle intent */
+        IGNORE
     };
 
     public final Atom action;
