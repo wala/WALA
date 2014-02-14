@@ -402,8 +402,8 @@ public class AndroidModel /* makes SummarizedMethod */
             {
                 final AndroidBoot boot = new AndroidBoot(null); 
                 boot.addBootCode(tsif, null, paramManager, this.body);
-                tool.attachActivities(allActivities, application, boot.getMainThread(), /* Should be application context TODO */
-                        boot.getPackageContext(), nullBinder, nullIntent); 
+                //tool.attachActivities(allActivities, application, boot.getMainThread(), /* Should be application context TODO */
+                //        boot.getPackageContext(), nullBinder, nullIntent); 
             }
 
             // TODO: Assign context to the other components
@@ -414,9 +414,9 @@ public class AndroidModel /* makes SummarizedMethod */
         for (final AndroidEntryPoint ep : entrypoints) {
             this.monitor.subTask(ep.getMethod().getReference().getSignature() );
             
-            if (! selectEntryPoint(ep)) {                       // TODO: Remove
+            if (! selectEntryPoint(ep)) {
                 assert(false): "The ep should not reach here!";
-                logger.info("SKIP: " + ep);
+                logger.warn("SKIP: " + ep);
                 currentProgress++;
                 continue;
             }
@@ -431,7 +431,7 @@ public class AndroidModel /* makes SummarizedMethod */
 
             //
             //  Collect arguments to ep
-            //  if their are multiple paramses call the entrypoint multiple times
+            //  if there are multiple paramses call the entrypoint multiple times
             //
             List<List<SSAValue>> paramses = new ArrayList<List<SSAValue>>(1);
             {
@@ -440,7 +440,6 @@ public class AndroidModel /* makes SummarizedMethod */
                     final List<SSAValue> params = new ArrayList<SSAValue>(ep.getNumberOfParameters());
                     paramses.add(params);
 
-                    //InterfaceConstructor.clearSeen();           // TODO: Remove
                     for (int i = 0; i < ep.getNumberOfParameters(); ++i) {
                         if (ep.getParameterTypes(i).length != 1) {
                             logger.debug("Got multiple types: {}",  Arrays.toString(ep.getParameterTypes(i)));
@@ -546,7 +545,7 @@ public class AndroidModel /* makes SummarizedMethod */
                         this.paramManager.invalidate(returnKey);
                         final SSAValue returnValue = paramManager.getUnallocated(returnType, returnKey);
 
-                        invokation = tsif.InvokeInstruction(callPC, returnValue, params, exception, site); // TODO: clallPC?
+                        invokation = tsif.InvokeInstruction(callPC, returnValue, params, exception, site); 
                         this.body.addStatement(invokation);
                         this.paramManager.setAllocation(returnValue, invokation);
 
@@ -562,7 +561,7 @@ public class AndroidModel /* makes SummarizedMethod */
                         this.paramManager.setPhi(newValue, phi);
                     } else {
                         // Just throw away the return value
-                        final SSAValue returnValue = paramManager.getUnmanaged(returnType, "trash");   // XXX trash not unique!
+                        final SSAValue returnValue = paramManager.getUnmanaged(returnType, new SSAValue.UniqueKey());
                         invokation = tsif.InvokeInstruction(callPC, returnValue, params, exception, site);
                         this.body.addStatement(invokation);
                     }
@@ -871,6 +870,7 @@ public class AndroidModel /* makes SummarizedMethod */
         final ParameterAccessor acc = new ParameterAccessor(asMethod, /* hasImplicitThis: */ false);
         final SSAValueManager pm = new SSAValueManager(acc);
         pm.breadCrumb = "Encap: " + this.getClass().toString();
+
         final SummarizedMethod model = getMethod();
 
         final List<SSAValue> params = new ArrayList<SSAValue>();

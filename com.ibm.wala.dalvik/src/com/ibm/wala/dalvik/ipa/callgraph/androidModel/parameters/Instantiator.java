@@ -177,7 +177,7 @@ public class Instantiator implements IInstantiator {
                     return instance;
                 } else {
                     System.out.println("NEW Component " + instance + "\n\tbreadCrumb: " + pm.breadCrumb);
-                    assert(false);
+                    //assert(false);
                 }
             }
         } // */
