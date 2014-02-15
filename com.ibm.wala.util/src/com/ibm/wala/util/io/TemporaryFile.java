@@ -40,17 +40,19 @@ public class TemporaryFile {
     return streamToFile(F, input.openStream());
   }
   
-  public static File streamToFile(File F, InputStream input) throws IOException {
+  public static File streamToFile(File F, InputStream... inputs) throws IOException {
     FileOutputStream output = new FileOutputStream(F);
+    
     int read;
     byte[] buffer = new byte[ 1024 ];
-    while ( (read = input.read(buffer)) != -1 ) {
-      output.write(buffer, 0, read);
+    for(InputStream input : inputs) {
+      while ( (read = input.read(buffer)) != -1 ) {
+        output.write(buffer, 0, read);
+      }
+      input.close();
     }
     
     output.close();
-    input.close();
-    
     return F;
   }
 }
