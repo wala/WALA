@@ -125,6 +125,27 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
     //  General settings
     //
 
+    private boolean flatComponents = false;
+    /**
+     *  Controlls the initialization of Components.
+     *
+     *  Flat components are more conservative.
+     */
+    public boolean doFlatComponents() {
+        return flatComponents;
+    }
+
+    /**
+     *  Controlls the initialization of Components.
+     *
+     *  @returns previous setting
+     */
+    public boolean setDoFlatComponents(boolean flatComponents) {
+        boolean pre = this.flatComponents;
+        this.flatComponents = flatComponents;
+        return pre;
+    }
+
     /**
      *  Controls the instantiation of variables in the model.
      *

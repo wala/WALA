@@ -654,32 +654,38 @@ public class AndroidModel /* makes SummarizedMethod */
         for (Parameter activity: modelsActivities) {
             final TypeReference activityType = activity.getType();
             final Parameter inAsMethod = acc.firstOf(activityType);
+
             if (inAsMethod != null) {
                 allActivities.add(inAsMethod);
             } else {
                 final Atom fdName = activityType.getName().getClassName();
                 final AndroidModelClass mClass = AndroidModelClass.getInstance(cha);
 
-                if (mClass.getField(fdName) != null) {
-                    final IField field = mClass.getField(fdName);
-                    final int instPC = redirect.getNextProgramCounter();
-                    final SSAValue target = pm.getUnallocated(activityType, new SSAValue.WeaklyNamedKey(activityType.getName(), 
-                                "got" + fdName.toString()));
-                    final SSAInstruction getInst = instructionFactory.GetInstruction(instPC, target, field.getReference());
-                    redirect.addStatement(getInst);
-                    pm.setAllocation(target, getInst);
-                    allActivities.add(target);
-                    System.out.println("All activities get: " + target);
+                if (AndroidEntryPointManager.MANAGER.doFlatComponents()) {
+                    if (mClass.getField(fdName) != null) {
+                        final IField field = mClass.getField(fdName);
+                        final int instPC = redirect.getNextProgramCounter();
+                        final SSAValue target = pm.getUnallocated(activityType, new SSAValue.WeaklyNamedKey(activityType.getName(), 
+                                    "got" + fdName.toString()));
+                        final SSAInstruction getInst = instructionFactory.GetInstruction(instPC, target, field.getReference());
+                        redirect.addStatement(getInst);
+                        pm.setAllocation(target, getInst);
+                        allActivities.add(target);
+                        System.out.println("All activities get: " + target);
+                    } else {
+                        final SSAValue newInstance = instantiator.createInstance(activityType, false, null, null);
+                        allActivities.add(newInstance);
+
+                        mClass.putField(fdName, activityType);
+                        final int instPC = redirect.getNextProgramCounter();
+                        final FieldReference fdRef = FieldReference.findOrCreate(mClass.getReference(), fdName, activityType);
+                        final SSAInstruction putInst = instructionFactory.PutInstruction(instPC, newInstance, fdRef);
+                        redirect.addStatement(putInst);
+                        System.out.println("All activities new: " + newInstance);
+                    }
                 } else {
                     final SSAValue newInstance = instantiator.createInstance(activityType, false, null, null);
                     allActivities.add(newInstance);
-
-                    mClass.putField(fdName, activityType);
-                    final int instPC = redirect.getNextProgramCounter();
-                    final FieldReference fdRef = FieldReference.findOrCreate(mClass.getReference(), fdName, activityType);
-                    final SSAInstruction putInst = instructionFactory.PutInstruction(instPC, newInstance, fdRef);
-                    redirect.addStatement(putInst);
-                    System.out.println("All activities new: " + newInstance);
                 }
             }
         }
@@ -887,7 +893,8 @@ public class AndroidModel /* makes SummarizedMethod */
                 final TypeReference argT = model.getParameterType(i);
                 final SSAValue arg;
 
-                if (AndroidComponent.isAndroidComponent(argT, cha)) { 
+                if  ( ( AndroidEntryPointManager.MANAGER.doFlatComponents()) &&  
+                            (AndroidComponent.isAndroidComponent(argT, cha)) ) { 
                     // Get / Put filed in AndroidModelClass for Android-Components
                     final Atom fdName = argT.getName().getClassName();
 

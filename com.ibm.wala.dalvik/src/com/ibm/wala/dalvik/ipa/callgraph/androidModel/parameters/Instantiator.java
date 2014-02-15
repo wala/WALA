@@ -79,6 +79,8 @@ import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModelClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.util.strings.Atom;
 
+import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -173,19 +175,22 @@ public class Instantiator implements IInstantiator {
      
         { // Try fetch Android-Components from AndroidModelClass
             if (com.ibm.wala.dalvik.util.AndroidComponent.isAndroidComponent(T, cha)) {
-                final AndroidModelClass mClass = AndroidModelClass.getInstance(cha);
-                final Atom fdName = T.getName().getClassName();
+                if ( AndroidEntryPointManager.MANAGER.doFlatComponents()) {
+                    final AndroidModelClass mClass = AndroidModelClass.getInstance(cha);
+                    final Atom fdName = T.getName().getClassName();
 
-                if (mClass.getField(fdName) != null) {
-                    final IField field = mClass.getField(fdName);
-                    final int instPC = this.body.getNextProgramCounter();
-                    final SSAInstruction getInst = instructionFactory.GetInstruction(instPC, instance, field.getReference());
-                    this.body.addStatement(getInst);
-                    pm.setAllocation(instance, getInst);
-                    return instance;
+                    if (mClass.getField(fdName) != null) {
+                        final IField field = mClass.getField(fdName);
+                        final int instPC = this.body.getNextProgramCounter();
+                        final SSAInstruction getInst = instructionFactory.GetInstruction(instPC, instance, field.getReference());
+                        this.body.addStatement(getInst);
+                        pm.setAllocation(instance, getInst);
+                        return instance;
+                    } else {
+                        System.out.println("NEW Component " + instance + "\n\tbreadCrumb: " + pm.breadCrumb);
+                    }
                 } else {
                     System.out.println("NEW Component " + instance + "\n\tbreadCrumb: " + pm.breadCrumb);
-                    //assert(false);
                 }
             }
         } // */

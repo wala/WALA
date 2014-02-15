@@ -143,31 +143,33 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
         final Set<TypeReference> components = AndroidEntryPointManager.MANAGER.getComponents();
         int ssaNo = 1;
 
-        for (TypeReference component : components) {
-            final SSAValue instance = new SSAValue(ssaNo++, component, clinitRef);
-            { // New
-                final int pc = clinit.getNextProgramCounter();
-                final NewSiteReference nRef = NewSiteReference.make(pc, component);
-                final SSAInstruction instr = instructionFactory.NewInstruction(pc, instance, nRef);
-                clinit.addStatement(instr);
-            }
-            { // Call cTor
-                final int pc = clinit.getNextProgramCounter();
-                final MethodReference ctor = MethodReference.findOrCreate(component, MethodReference.initSelector);
-                final CallSiteReference site = CallSiteReference.make(pc, ctor, IInvokeInstruction.Dispatch.SPECIAL);
-                final SSAValue exception = new SSAValue(ssaNo++, TypeReference.JavaLangException, clinitRef);
-                final List<SSAValue> params = new ArrayList<SSAValue>();
-                params.add(instance);
-                final SSAInstruction ctorCall = instructionFactory.InvokeInstruction(pc, params, exception, site);
-                clinit.addStatement(ctorCall);
-            }
-            { // Put into AndroidModelClass
-                final Atom fdName = component.getName().getClassName();
-                putField(fdName, component);
-                final int pc = clinit.getNextProgramCounter();
-                final FieldReference fdRef = FieldReference.findOrCreate(this.getReference(), fdName, component);
-                final SSAInstruction putInst = instructionFactory.PutInstruction(pc, instance, fdRef);
-                clinit.addStatement(putInst);
+        if (AndroidEntryPointManager.MANAGER.doFlatComponents()) {
+            for (TypeReference component : components) {
+                final SSAValue instance = new SSAValue(ssaNo++, component, clinitRef);
+                { // New
+                    final int pc = clinit.getNextProgramCounter();
+                    final NewSiteReference nRef = NewSiteReference.make(pc, component);
+                    final SSAInstruction instr = instructionFactory.NewInstruction(pc, instance, nRef);
+                    clinit.addStatement(instr);
+                }
+                { // Call cTor
+                    final int pc = clinit.getNextProgramCounter();
+                    final MethodReference ctor = MethodReference.findOrCreate(component, MethodReference.initSelector);
+                    final CallSiteReference site = CallSiteReference.make(pc, ctor, IInvokeInstruction.Dispatch.SPECIAL);
+                    final SSAValue exception = new SSAValue(ssaNo++, TypeReference.JavaLangException, clinitRef);
+                    final List<SSAValue> params = new ArrayList<SSAValue>();
+                    params.add(instance);
+                    final SSAInstruction ctorCall = instructionFactory.InvokeInstruction(pc, params, exception, site);
+                    clinit.addStatement(ctorCall);
+                }
+                { // Put into AndroidModelClass
+                    final Atom fdName = component.getName().getClassName();
+                    putField(fdName, component);
+                    final int pc = clinit.getNextProgramCounter();
+                    final FieldReference fdRef = FieldReference.findOrCreate(this.getReference(), fdName, component);
+                    final SSAInstruction putInst = instructionFactory.PutInstruction(pc, instance, fdRef);
+                    clinit.addStatement(putInst);
+                }
             }
         }
 

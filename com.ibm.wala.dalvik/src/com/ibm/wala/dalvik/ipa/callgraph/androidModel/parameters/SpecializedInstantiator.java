@@ -82,6 +82,8 @@ import com.ibm.wala.util.ssa.ParameterAccessor;
 
 import com.ibm.wala.types.Descriptor;
 
+import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -183,37 +185,50 @@ public class SpecializedInstantiator extends FlatInstantiator {
     public SSAValue createContext(final TypeReference T, final boolean asManaged, VariableKey key, Set<? extends SSAValue> seen) {
         final List<SSAValue> appComponents = new ArrayList<SSAValue>();
         {
-            final AndroidModelClass mClass = AndroidModelClass.getInstance(cha);
-
+            // TODO: Can we create a tighter conterxt?
             // TODO: Force an Application-Context?
 
-            // At a given time context is expected to be only of one component already seen.
-            // If it's seen there is a field in AndroidModelClass.
-            for (final IField f : mClass.getAllFields()) {
-                assert(f.isStatic()) : "All fields of AndroidModelClass are expected to be static! " + f + " is not.";
-                
-                final TypeReference fdType = f.getReference().getFieldType();
-                { // Test assignable
-                    if (! ParameterAccessor.isAssignable(fdType, T, cha) ) {
-                        assert(false) : "Unexpected but not fatal - remove assertion if this happens";
-                        continue;
+            if (AndroidEntryPointManager.MANAGER.doFlatComponents()) {
+                final AndroidModelClass mClass = AndroidModelClass.getInstance(cha);
+
+                // At a given time context is expected to be only of one component already seen.
+                // If it's seen there is a field in AndroidModelClass.
+                for (final IField f : mClass.getAllFields()) {
+                    assert(f.isStatic()) : "All fields of AndroidModelClass are expected to be static! " + f + " is not.";
+                    
+                    final TypeReference fdType = f.getReference().getFieldType();
+                    { // Test assignable
+                        if (! ParameterAccessor.isAssignable(fdType, T, cha) ) {
+                            assert(false) : "Unexpected but not fatal - remove assertion if this happens";
+                            continue;
+                        }
+                    }
+                                                                                                           
+                    final VariableKey iKey = new SSAValue.TypeKey(fdType.getName());
+                    final SSAValue instance;
+                    if (this.pm.isSeen(iKey)) {
+                        instance = this.pm.getCurrent(iKey);
+                    } else {
+                        final int pc = this.body.getNextProgramCounter();
+                        final VariableKey subKey = new SSAValue.WeaklyNamedKey(fdType.getName(), "ctx" + fdType.getName().getClassName().toString());
+                        instance = this.pm.getUnallocated(fdType, subKey);
+                        final SSAInstruction getInst = instructionFactory.GetInstruction(pc, instance, f.getReference());
+                        this.body.addStatement(getInst);
+                        this.pm.setAllocation(instance, getInst);
+                    }
+
+                    appComponents.add(instance);
+                }
+            } else {
+                for (TypeReference component : AndroidEntryPointManager.MANAGER.getComponents()) {
+                    final VariableKey iKey = new SSAValue.TypeKey(component.getName());
+
+                    if (this.pm.isSeen(iKey)) {
+                        final SSAValue instance;
+                        instance = this.pm.getCurrent(iKey);
+                        appComponents.add(instance);
                     }
                 }
-                                                                                                       
-                final VariableKey iKey = new SSAValue.TypeKey(fdType.getName());
-                final SSAValue instance;
-                if (this.pm.isSeen(iKey)) {
-                    instance = this.pm.getCurrent(iKey);
-                } else {
-                    final int pc = this.body.getNextProgramCounter();
-                    final VariableKey subKey = new SSAValue.WeaklyNamedKey(fdType.getName(), "ctx" + fdType.getName().getClassName().toString());
-                    instance = this.pm.getUnallocated(fdType, subKey);
-                    final SSAInstruction getInst = instructionFactory.GetInstruction(pc, instance, f.getReference());
-                    this.body.addStatement(getInst);
-                    this.pm.setAllocation(instance, getInst);
-                }
-
-                appComponents.add(instance);
             }
         }
 
