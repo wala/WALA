@@ -56,6 +56,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.types.ClassLoaderReference;
 
+import com.ibm.wala.classLoader.CodeScanner;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.summaries.SummarizedMethod;
 
@@ -325,19 +326,25 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
 
     @Override
     public boolean recordFactoryType(CGNode node, IClass klass) {
-        //assert understands(node);
-        this.logger.error("FATAL: recordFactoryType does not understand Node " + node.toString());
+        //this.logger.error("FATAL: recordFactoryType does not understand Node " + node.toString());
         return false;
     }
 
     @Override
     public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
         assert understands(node);
-        return EmptyIterator.instance();
+        
+        final SSAInstruction[] statements = getIR(node).getInstructions();
+
+        return CodeScanner.getFieldsWritten(statements).iterator();
     }
 
     @Override
     public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
-        return EmptyIterator.instance();
+        assert understands(node);
+        
+        final SSAInstruction[] statements = getIR(node).getInstructions();
+
+        return CodeScanner.getFieldsRead(statements).iterator();
     }
 }

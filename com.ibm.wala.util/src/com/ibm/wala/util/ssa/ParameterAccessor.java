@@ -567,19 +567,37 @@ public class ParameterAccessor { // extends Param-Manager
      *  @throws IllegalStateException if the function has no implicit this
      */
     public Parameter getThis() {
-        // Exception handed through from getThisNo()
+        final int self = getThisNo();
+        final TypeReference selfType;
+        switch (this.base) {
+            case IMETHOD:
+                selfType = this.method.getParameterType(self);
+                break;
+            case METHOD_REFERENCE:
+                selfType = this.mRef.getDeclaringClass();
+                break;
+            default:
+                throw new UnsupportedOperationException("No implementation of getThis() for base " + this.base);
+        }
+        return getThis(selfType);
+    }
+
+    public Parameter getThis(final TypeReference asType) {
+        // TODO assert asType is a subtype of self.type
         final int self = getThisNo();
 
         switch (this.base) {
             case IMETHOD:
-                return new Parameter(self, "this", this.method.getParameterType(self), ParamerterDisposition.THIS, 
+                return new Parameter(self, "this", asType, ParamerterDisposition.THIS, 
                         this.base, this.method.getReference(), this.descriptorOffset);
             case METHOD_REFERENCE:
-                return new Parameter(self, "this", this.mRef.getDeclaringClass(), ParamerterDisposition.THIS,
+                return new Parameter(self, "this", asType, ParamerterDisposition.THIS,
                         this.base, this.mRef, this.descriptorOffset);
             default:
                 throw new UnsupportedOperationException("No implementation of getThis() for base " + this.base);
         }
+
+        
     }
 
     /**

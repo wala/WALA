@@ -625,8 +625,8 @@ public class AndroidModel /* makes SummarizedMethod */
         }
         final VolatileMethodSummary redirect = new VolatileMethodSummary(new MethodSummary(asMethod));
         redirect.setStatic(false);
-        final Parameter self = acc.getThis();
         final Instantiator instantiator = new Instantiator(redirect, instructionFactory, pm, this.cha, asMethod, this.scope);
+        final Parameter self = acc.getThis(caller);
 
         final ParameterAccessor modelAcc = new ParameterAccessor(this.model);
         /*{ // DEBUG
