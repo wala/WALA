@@ -291,9 +291,9 @@ public class TypeSafeInstructionFactory {
 
             aParams[0] = givenThis.getNumber();
 
-            if (! isAssignableFrom(givenThis.getType(), targetThis.getType())) {
+            /*if (! isAssignableFrom(givenThis.getType(), targetThis.getType())) {
                 throw new IllegalArgumentException("Parameter 'this' is not assignable from " + givenThis + " to " + targetThis);
-            }
+            }*/
 
             for (int i = 1; i < params.size(); ++i) {    // "regular" parameters
                 final SSAValue givenParam = params.get(i);

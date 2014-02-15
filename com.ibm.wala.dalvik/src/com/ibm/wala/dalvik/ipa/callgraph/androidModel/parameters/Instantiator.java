@@ -141,7 +141,15 @@ public class Instantiator implements IInstantiator {
             logger.debug("Empty seen");
             seen = new HashSet<SSAValue>();
         }
-        
+
+        { // Special type?
+            final SpecializedInstantiator sInst = new SpecializedInstantiator(body, instructionFactory, pm,
+                    cha, scope, analysisScope, this);
+            if (sInst.understands(T)) {
+                return sInst.createInstance(T, asManaged, key, seen);
+            }
+        }
+
         final IClass klass = this.cha.lookupClass(T);
         final SSAValue instance;
         { // fetch new value

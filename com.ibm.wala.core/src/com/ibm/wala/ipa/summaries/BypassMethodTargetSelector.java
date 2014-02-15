@@ -108,7 +108,13 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
     }
     // first, see if we'd like to bypass the CHA-based target for the site
     MethodReference ref = site.getDeclaredTarget();    
-    IMethod chaTarget = chaMethodTargetSelector.getCalleeTarget(caller, site, dispatchType);
+    IMethod chaTarget;
+    try {
+        chaTarget = chaMethodTargetSelector.getCalleeTarget(caller, site, dispatchType);
+    } catch (IllegalArgumentException e) {
+        System.err.println("Context: " + caller.getContext() + " CallerMethod: " + caller.getMethod() + " site: " + site);
+        throw e;
+    }
     IMethod target = (chaTarget == null) ? findOrCreateSyntheticMethod(ref, site.isStatic()) : findOrCreateSyntheticMethod(chaTarget,
         site.isStatic());
 

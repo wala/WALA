@@ -163,6 +163,14 @@ public class FlatInstantiator implements IInstantiator {
             return instance;
         }
 
+        { // Special type?
+            final SpecializedInstantiator sInst = new SpecializedInstantiator(body, instructionFactory, pm,
+                    cha, scope, analysisScope, this);
+            if (sInst.understands(T)) {
+                return sInst.createInstance(T, asManaged, key, seen, currentDepth);
+            }
+        }
+
         final IClass klass = this.cha.lookupClass(T);
         final SSAValue instance;
         { // fetch new value
@@ -384,7 +392,7 @@ public class FlatInstantiator implements IInstantiator {
      *  @param  ctor the constructor to call
      *  @param  params parameters to the ctor _without_ implicit this
      */
-    private void addCallCtor(SSAValue self, MethodReference ctor, List<SSAValue> ctorParams) {
+    protected void addCallCtor(SSAValue self, MethodReference ctor, List<SSAValue> ctorParams) {
         final int pc = this.body.getNextProgramCounter();
         final SSAValue exception = pm.getException();
         final CallSiteReference site = CallSiteReference.make(pc, ctor, IInvokeInstruction.Dispatch.SPECIAL);

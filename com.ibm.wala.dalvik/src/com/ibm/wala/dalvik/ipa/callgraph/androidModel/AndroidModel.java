@@ -626,7 +626,11 @@ public class AndroidModel /* makes SummarizedMethod */
         final VolatileMethodSummary redirect = new VolatileMethodSummary(new MethodSummary(asMethod));
         redirect.setStatic(false);
         final Instantiator instantiator = new Instantiator(redirect, instructionFactory, pm, this.cha, asMethod, this.scope);
-        final Parameter self = acc.getThis(caller);
+        final Parameter self;
+        { 
+            //self = acc.getThisAs(caller);
+            self = acc.getThis();
+        }
 
         final ParameterAccessor modelAcc = new ParameterAccessor(this.model);
         /*{ // DEBUG
@@ -665,6 +669,7 @@ public class AndroidModel /* makes SummarizedMethod */
                     redirect.addStatement(getInst);
                     pm.setAllocation(target, getInst);
                     allActivities.add(target);
+                    System.out.println("All activities get: " + target);
                 } else {
                     final SSAValue newInstance = instantiator.createInstance(activityType, false, null, null);
                     allActivities.add(newInstance);
@@ -674,6 +679,7 @@ public class AndroidModel /* makes SummarizedMethod */
                     final FieldReference fdRef = FieldReference.findOrCreate(mClass.getReference(), fdName, activityType);
                     final SSAInstruction putInst = instructionFactory.PutInstruction(instPC, newInstance, fdRef);
                     redirect.addStatement(putInst);
+                    System.out.println("All activities new: " + newInstance);
                 }
             }
         }

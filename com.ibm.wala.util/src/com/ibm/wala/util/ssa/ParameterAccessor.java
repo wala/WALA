@@ -579,10 +579,10 @@ public class ParameterAccessor { // extends Param-Manager
             default:
                 throw new UnsupportedOperationException("No implementation of getThis() for base " + this.base);
         }
-        return getThis(selfType);
+        return getThisAs(selfType);
     }
 
-    public Parameter getThis(final TypeReference asType) {
+    public Parameter getThisAs(final TypeReference asType) {
         // TODO assert asType is a subtype of self.type
         final int self = getThisNo();
 
