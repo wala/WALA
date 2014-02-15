@@ -60,6 +60,18 @@ import com.ibm.wala.classLoader.FieldImpl;
 
 import com.ibm.wala.shrikeCT.ClassConstants;
 
+import com.ibm.wala.ipa.summaries.SummarizedMethod;
+import com.ibm.wala.ipa.summaries.SummarizedMethodWithNames;
+import com.ibm.wala.ipa.summaries.MethodSummary;
+import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
+import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.util.ssa.SSAValue;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,10 +122,56 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
 
     private AndroidModelClass(IClassHierarchy cha) {
         super(ANDROID_MODEL_CLASS, cha);
+        this.addMethod(this.clinit());
 
         if (AndroidModelClassHolder.INSTANCE != null) { // May be caused when using reflection
             throw new IllegalStateException("AndroidModelClass is a singleton and already instantiated!");
         }
+    }
+
+    /**
+     *  Generate clinit for AndroidModelClass.
+     *
+     *  clinit initializes AndroidComponents
+     */
+    private SummarizedMethod clinit() {
+        final MethodReference clinitRef = MethodReference.findOrCreate(this.getReference(), MethodReference.clinitSelector);
+        final VolatileMethodSummary clinit = new VolatileMethodSummary(new MethodSummary(clinitRef));
+        clinit.setStatic(true);
+        final TypeSafeInstructionFactory instructionFactory = new TypeSafeInstructionFactory(cha);
+        
+        final Set<TypeReference> components = AndroidEntryPointManager.MANAGER.getComponents();
+        int ssaNo = 1;
+
+        for (TypeReference component : components) {
+            final SSAValue instance = new SSAValue(ssaNo++, component, clinitRef);
+            { // New
+                final int pc = clinit.getNextProgramCounter();
+                final NewSiteReference nRef = NewSiteReference.make(pc, component);
+                final SSAInstruction instr = instructionFactory.NewInstruction(pc, instance, nRef);
+                clinit.addStatement(instr);
+            }
+            { // Call cTor
+                final int pc = clinit.getNextProgramCounter();
+                final MethodReference ctor = MethodReference.findOrCreate(component, MethodReference.initSelector);
+                final CallSiteReference site = CallSiteReference.make(pc, ctor, IInvokeInstruction.Dispatch.SPECIAL);
+                final SSAValue exception = new SSAValue(ssaNo++, TypeReference.JavaLangException, clinitRef);
+                final List<SSAValue> params = new ArrayList<SSAValue>();
+                params.add(instance);
+                final SSAInstruction ctorCall = instructionFactory.InvokeInstruction(pc, params, exception, site);
+                clinit.addStatement(ctorCall);
+            }
+            { // Put into AndroidModelClass
+                final Atom fdName = component.getName().getClassName();
+                putField(fdName, component);
+                final int pc = clinit.getNextProgramCounter();
+                final FieldReference fdRef = FieldReference.findOrCreate(this.getReference(), fdName, component);
+                final SSAInstruction putInst = instructionFactory.PutInstruction(pc, instance, fdRef);
+                clinit.addStatement(putInst);
+            }
+        }
+
+        return new SummarizedMethodWithNames(clinitRef, clinit, this);
     }
 
 
@@ -132,9 +190,9 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
 
     @Override
     public IMethod getMethod(Selector selector) {
-        assert (macroModel != null) : "Macro Model was not set yet!";
+        //assert (macroModel != null) : "Macro Model was not set yet!";
         
-        if (macroModel.getSelector().equals(selector)) {
+        if ((macroModel != null) && (macroModel.getSelector().equals(selector))) {
             return macroModel;
         }
     
@@ -180,12 +238,9 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
         this.methods.put(method.getSelector(), method);
     }
 
-    /**
-     *  There is none.
-     */
     @Override
     public IMethod getClassInitializer()  {
-        return null;
+        return getMethod(MethodReference.clinitSelector);
     }
 
 

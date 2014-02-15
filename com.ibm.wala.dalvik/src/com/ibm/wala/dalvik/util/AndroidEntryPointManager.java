@@ -51,6 +51,7 @@ import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent;
 import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.types.TypeReference;
 
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.StringStuff;
@@ -58,6 +59,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
 import com.ibm.wala.util.collections.HashMapFactory;
 
 import java.io.Serializable;
@@ -102,6 +105,21 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
     }
 
     private AndroidEntryPointManager() {} 
+
+    public Set<TypeReference> getComponents() {
+        if (this.ENTRIES.isEmpty()) {
+            throw new IllegalStateException("No entrypoints loaded yet.");
+        }
+        
+        final Set<TypeReference> ret = new HashSet<TypeReference>();
+        for (final AndroidEntryPoint ep : ENTRIES) {
+            final TypeReference epClass = ep.getMethod().getDeclaringClass().getReference();
+            if (AndroidComponent.isAndroidComponent(epClass , ep.getClassHierarchy())) {
+                ret.add(epClass);
+            }
+        }
+        return ret;
+    }
 
     //
     //  General settings
