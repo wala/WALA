@@ -831,13 +831,26 @@ public class ClassHierarchy implements IClassHierarchy {
     if (a == null) {
       throw new IllegalArgumentException("a is null");
     }
+/** BEGIN Custom change: remember unresolved classes */
+    
+    final IClass cls = lookupClassRecursive(a);
+    
+    if (cls == null) {
+      unresolved.add(a);
+    }
+    
+    return cls;
+  }
+  
+  private IClass lookupClassRecursive(TypeReference a) {
+/** END Custom change: remember unresolved classes */
     ClassLoaderReference loader = a.getClassLoader();
 
     ClassLoaderReference parent = loader.getParent();
     // first delegate lookup to the parent loader.
     if (parent != null) {
       TypeReference p = TypeReference.findOrCreate(parent, a.getName());
-      IClass c = lookupClass(p);
+      IClass c = lookupClassRecursive(p);
       if (c != null) {
         return c;
       }
@@ -850,12 +863,9 @@ public class ClassHierarchy implements IClassHierarchy {
         // look it up with the primordial loader.
         return getRootClass().getClassLoader().lookupClass(a.getName());
       } else {
-        IClass c = lookupClass(elt);
+        IClass c = lookupClassRecursive(elt);
         if (c == null) {
           // can't load the element class, so give up.
-/** BEGIN Custom change: remember unresolved classes */
-          unresolved.add(elt);
-/** END Custom change: remember unresolved classes */
           return null;
         } else {
           // we know it comes from c's class loader.
@@ -867,9 +877,6 @@ public class ClassHierarchy implements IClassHierarchy {
       if (n != null) {
         return n.klass;
       } else {
-/** BEGIN Custom change: remember unresolved classes */
-        unresolved.add(a);
-/** END Custom change: remember unresolved classes */
         return null;
       }
     }
@@ -1323,6 +1330,7 @@ public class ClassHierarchy implements IClassHierarchy {
 /** BEGIN Custom change: remember unresolved classes */
   private final Set<TypeReference> unresolved = HashSetFactory.make();
 
+  @Override
   public final Set<TypeReference> getUnresolvedClasses() {
     return unresolved;
   }
