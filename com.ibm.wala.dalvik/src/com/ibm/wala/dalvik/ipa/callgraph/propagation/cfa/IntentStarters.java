@@ -196,7 +196,9 @@ public class IntentStarters {
     public IntentStarters(IClassHierarchy cha) {
         final ClassLoaderReference searchLoader = ClassLoaderReference.Primordial;
         final TypeReference tContextWrapper = TypeReference.find(searchLoader, "Landroid/content/ContextWrapper");
-
+        final TypeReference tContext = TypeReference.find(searchLoader, "Landroid/content/Context");
+        final TypeReference tActivity = TypeReference.find(searchLoader, "Landroid/app/Activity");
+        
         // Stubs may be to old for:
         final boolean doFragments = (cha.lookupClass(AndroidTypes.Fragment) != null); 
         final boolean doUsers = (cha.lookupClass(AndroidTypes.UserHandle) != null);
@@ -208,6 +210,14 @@ public class IntentStarters {
             System.out.println("WARNING: IntentStarters skipping starters with UserHandles - Stubs to old!");
         }
 
+
+        // This does not belong here:
+        /*
+        starters.put(Selector.make("getSystemService(Ljava/lang/String;)Ljava/lang/Object;"),
+                new StartInfo(tContext, EnumSet.of(IntentType.EXTERNAL_TARGET), EnumSet.of(AndroidComponent.SERVICE), new int[] {1}));
+        starters.put(Selector.make("getSystemService(Ljava/lang/String;)Ljava/lang/Object;"),
+                new StartInfo(tActivity, EnumSet.of(IntentType.EXTERNAL_TARGET), EnumSet.of(AndroidComponent.SERVICE), new int[] {1}));
+        */
 
 
         // android.content.ContextWrapper.bindService(Intent service, ServiceConnection conn, int flags)
@@ -315,7 +325,6 @@ public class IntentStarters {
                 //  Delegates directly to android.content.Context.
 
 
-        final TypeReference tContext = TypeReference.find(searchLoader, "Landroid/content/Context");
         // android.content.Context.bindService(Intent service, ServiceConnection conn, int flags)
         starters.put( /* MethodReference.findOrCreate(tContext, */ Selector.make("bindService(Landroid/content/Intent;Landroid/content/ServiceConnection;I)Z"),
                 new StartInfo(tContext, EnumSet.of(IntentType.UNKNOWN_TARGET, IntentType.EXPLICIT), EnumSet.of(AndroidComponent.SERVICE), new int[] {1}));
@@ -400,7 +409,6 @@ public class IntentStarters {
                 new StartInfo(tContext, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.SERVICE), new int[] {1}));
 
 
-        final TypeReference tActivity = TypeReference.find(searchLoader, "Landroid/app/Activity");
         // android.app.Activity.startActivities(Intent[] intents)
         starters.put( /* MethodReference.findOrCreate(tActivity, */ Selector.make("startActivities([Landroid/content/Intent;)V"),
                 new StartInfo(tActivity, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.ACTIVITY), new int[] {1}));

@@ -90,6 +90,7 @@ public class Intent implements ContextItem {
         EXTERNAL_TARGET,    
         /** The Action is a Constant defined on the Android-Reference Manual */
         STANDARD_ACTION,    
+        SYSTEM_SERVICE,
         /** So External and maybe internal */
         BROADCAST,          
         /** For INTERNAL use only */

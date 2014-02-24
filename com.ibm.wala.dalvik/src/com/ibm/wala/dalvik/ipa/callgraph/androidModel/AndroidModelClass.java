@@ -210,10 +210,10 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
 
     @Override
     public Collection<IMethod> getDeclaredMethods() {
-        assert this.macroModel != null;
-
         Set<IMethod> methods = HashSetFactory.make();
-        methods.add(macroModel);
+        if ( this.macroModel != null ) {
+            methods.add(macroModel);
+        }
 
         methods.addAll(this.methods.values());
 

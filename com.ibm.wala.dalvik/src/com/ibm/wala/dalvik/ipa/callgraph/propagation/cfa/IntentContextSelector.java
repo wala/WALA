@@ -133,6 +133,7 @@ public class IntentContextSelector implements ContextSelector {
         //      Intent.fillIn
         
         if (intentStarters.isStarter(callee.getReference())) {
+            System.out.println("NOW: " + callee.getReference());
             // Handle startActivity(), startActivityForResult(), startService() and such
             Intent intent = null;
 
@@ -171,9 +172,42 @@ public class IntentContextSelector implements ContextSelector {
                 }
             }
 
+
             // Add the context
             if (intent != null) {
                 logger.info("Intent Resolved: {}", intent);
+                AndroidEntryPointManager.MANAGER.addCallSeen(site, intent); 
+                return new IntentContext(ctx, intent);
+            }
+        } else if (callee.getReference().toString().contains("getSystemService")) {
+            assert(actualParameters.length == 2) : "PARAMS LENGTH IS" + actualParameters.length;
+            final InstanceKey param = actualParameters[1];
+
+            final Intent intent;
+            { // Extract target-Service as intent
+                if (param instanceof ConstantKey) {
+                    final String targetJ = (String) ((ConstantKey)param).getValue();
+                    final String target = StringStuff.deployment2CanonicalTypeString(targetJ);
+                    intent = new Intent(target) {
+                        @Override
+                        public Intent.IntentType getType() {
+                            return Intent.IntentType.SYSTEM_SERVICE;
+                        }
+                        // TODO override equals and hashCode?
+                    };   
+                    logger.info("Add SystemService target {}", intent);
+                } else {
+                    intent = null;
+                    if (param == null) {
+                        logger.warn("Got param as 'null'. Obviously can't handle this. Caller was: {}", caller.getMethod());
+                    } else {
+                        logger.warn("Got param as {}. Can't handle this :(", param.getClass());
+                    }
+                }
+            }
+            
+            // Add the context
+            if (intent != null) {
                 AndroidEntryPointManager.MANAGER.addCallSeen(site, intent); 
                 return new IntentContext(ctx, intent);
             }
@@ -203,7 +237,7 @@ public class IntentContextSelector implements ContextSelector {
                             logger.debug("Add Intent Constructor info {}", intent);
                         } else {
                             if (actionKey == null) {
-                                logger.warn("Got action as 'null'. Obviously can't handle this. Caller was: {}", caller.getMethod());
+                                logger.trace("Got action as 'null'. Obviously can't handle this. Caller was: {}", caller.getMethod());
                             } else {
                                 logger.warn("Got action as {}. Can't handle this :(", actionKey.getClass());
                             }
@@ -236,7 +270,7 @@ public class IntentContextSelector implements ContextSelector {
                             logger.debug("Add Intent Constructor info {}", intent);
                         } else {
                             if (actionKey == null) {
-                                logger.warn("Got action as 'null'. Obviously can't handle this. Caller was {}", caller.getMethod());
+                                logger.trace("Got action as 'null'. Obviously can't handle this. Caller was {}", caller.getMethod());
                             } else {
                                 logger.warn("Got action as {}. Can't handle this :(", actionKey.getClass());
                             }
@@ -256,7 +290,7 @@ public class IntentContextSelector implements ContextSelector {
                             }
                         } else {
                             if (actionKey == null) {
-                                logger.warn("Got action as 'null'. Obviously can't handle this. Caller was {}", caller.getMethod());
+                                logger.trace("Got action as 'null'. Obviously can't handle this. Caller was {}", caller.getMethod());
                             } else {
                                 logger.warn("Got action as {}. Can't handle this :(", actionKey.getClass());
                             }
@@ -282,7 +316,7 @@ public class IntentContextSelector implements ContextSelector {
                             }
                         } else {
                             if (actionKey == null) {
-                                logger.warn("Got action as 'null'. Obviously can't handle this. Caller was {}", caller.getMethod());
+                                logger.trace("Got action as 'null'. Obviously can't handle this. Caller was {}", caller.getMethod());
                             } else {
                                 logger.warn("Got action as {}. Can't handle this :(", actionKey.getClass());
                             }
@@ -308,7 +342,7 @@ public class IntentContextSelector implements ContextSelector {
                 seenContext.put(wrapperKey, seenContext.get(baseKey));
             } else {
                 if (baseKey == null) {
-                    logger.warn("Got baseKey as 'null'. Obviously can't handle this. Caller was: {}", caller.getMethod());
+                    logger.trace("Got baseKey as 'null'. Obviously can't handle this. Caller was: {}", caller.getMethod());
                 } else {
                     logger.warn("ContextWrapper: No AndroidContext was seen for baseKey");
                 }
@@ -327,7 +361,7 @@ public class IntentContextSelector implements ContextSelector {
                 seenContext.put(wrapperKey, seenContext.get(baseKey));
             } else {
                 if (baseKey == null) {
-                    logger.warn("Got baseKey as 'null'. Obviously can't handle this. Caller was: {}", caller.getMethod());
+                    logger.trace("Got baseKey as 'null'. Obviously can't handle this. Caller was: {}", caller.getMethod());
                 } else {
                     logger.warn("ContextWrapper: No AndroidContext was seen for baseKey");
                 }
@@ -414,7 +448,12 @@ public class IntentContextSelector implements ContextSelector {
                 target.getSelector().equals(Selector.make("attachBaseContext(Landroid/content/Context;)V"))) {
             logger.debug("Encountered ContextWrapper.attachBaseContext()");
             return IntSetUtil.make(new int[] { 0, 1 });
-        } 
+        } else if (target.getSelector().equals(Selector.make("getSystemService(Ljava/lang/String;)Ljava/lang/Object;"))) {
+            logger.debug("Encountered Context.getSystemService()");
+            return IntSetUtil.make(new int[] { 0, 1 });
+        }
+
+
 
         return ret;
     } //else if (site.isSpecial() && target.getDeclaringClass().getName().equals(

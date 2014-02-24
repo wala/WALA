@@ -165,6 +165,21 @@ public class AndroidPreFlightChecks {
             pass = false;
         }
 
+        if (this.cha.resolveMethod(
+                        this.cha.lookupClass(AndroidTypes.Activity),
+                        Selector.make("getSystemService(Ljava/lang/String;)Ljava/lang/Object;")) == null) {
+            logger.warn("Stubs do not contain function Activity.getSystemService");
+            pass = false;
+        }
+
+        if (this.cha.resolveMethod(
+                        this.cha.lookupClass(AndroidTypes.Context),
+                        Selector.make("getSystemService(Ljava/lang/String;)Ljava/lang/Object;")) == null) {
+            logger.warn("Stubs do not contain function Context.getSystemService");
+            pass = false;
+        }
+
+
         return pass;
     }
 

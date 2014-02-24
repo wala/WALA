@@ -36,6 +36,7 @@ import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StartInfo;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.MicroModel;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.ExternalModel;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.SystemServiceModel;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.UnknownTargetModel;
 
 import com.ibm.wala.types.TypeReference;
@@ -77,6 +78,7 @@ import com.ibm.wala.ipa.callgraph.propagation.AbstractTypeInNode;
 import java.util.Iterator;
 import com.ibm.wala.util.collections.EmptyIterator;
 import java.util.Set;
+import java.util.EnumSet;
 
 import com.ibm.wala.util.CancelException;
 
@@ -169,6 +171,17 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
                 if (type == Intent.IntentType.INTERNAL_TARGET) {
                     final MicroModel model = new MicroModel(this.cha, this.options, this.cache, target);
                     final SummarizedMethod override = model.getMethodAs(method.getReference(), callingClass, intentStarters.getInfo(method.getReference()), node);
+                    ir = override.makeIR(ctx, this.options.getSSAOptions());
+                } else if (type == Intent.IntentType.SYSTEM_SERVICE) {
+                    logger.debug("Generating SystemService");
+                    final IntentStarters.StartInfo info = new IntentStarters.StartInfo(
+                            node.getMethod().getReference().getDeclaringClass(),
+                            EnumSet.of(Intent.IntentType.SYSTEM_SERVICE),
+                            EnumSet.of(AndroidComponent.SERVICE),
+                            new int[] {1}
+                            );
+                    final SystemServiceModel model = new SystemServiceModel(this.cha, this.options, this.cache, target);
+                    final SummarizedMethod override = model.getMethodAs(method.getReference(), callingClass, info, node);
                     ir = override.makeIR(ctx, this.options.getSSAOptions());
                 } else if (type == Intent.IntentType.EXTERNAL_TARGET) {
                     final AndroidComponent targetComponent;
@@ -272,6 +285,13 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
             throw new IllegalArgumentException("node is null");
         }
         final MethodReference target = node.getMethod().getReference();
+
+        { // DEBUG
+            if (target.toString().contains("getSystemService")) {
+                return true;
+            }
+        }
+
         return (
                 intentStarters.isStarter(target) 
         );

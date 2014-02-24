@@ -100,6 +100,9 @@ public final class AndroidTypes {
     public static final TypeName MenuItemName = TypeName.findOrCreate("Landroid/view/MenuItem");
     public static final TypeReference MenuItem = TypeReference.findOrCreate(ClassLoaderReference.Primordial, MenuItemName);
 
+    public static final TypeName TelephonyManagerName = TypeName.findOrCreate("Landroid/telephony/TelephonyManager");
+    public static final TypeReference TelephonyManager = TypeReference.findOrCreate(ClassLoaderReference.Primordial, TelephonyManagerName);
+
     public static final TypeName ActionModeName = TypeName.findOrCreate("Landroid/view/ActionMode");
     public static final TypeReference ActionMode = TypeReference.findOrCreate(ClassLoaderReference.Primordial, ActionModeName);
     public static final TypeName AttributeSetName = TypeName.findOrCreate("Landroid/util/AttributeSet");

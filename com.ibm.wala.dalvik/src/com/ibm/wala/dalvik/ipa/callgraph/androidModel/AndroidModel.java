@@ -31,6 +31,9 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel;
 
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.SystemServiceModel;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.ExternalModel;
+
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.ReuseParameters;
 import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
 import com.ibm.wala.util.ssa.SSAValue;
@@ -628,8 +631,9 @@ public class AndroidModel /* makes SummarizedMethod */
         final Instantiator instantiator = new Instantiator(redirect, instructionFactory, pm, this.cha, asMethod, this.scope);
         final Parameter self;
         { 
-            //self = acc.getThisAs(caller);
-            self = acc.getThis();
+            self = acc.getThisAs(caller);
+            pm.setAllocation(self, null);
+            //self = acc.getThis();
         }
 
         final ParameterAccessor modelAcc = new ParameterAccessor(this.model);
@@ -654,7 +658,7 @@ public class AndroidModel /* makes SummarizedMethod */
         for (Parameter activity: modelsActivities) {
             final TypeReference activityType = activity.getType();
             final Parameter inAsMethod = acc.firstOf(activityType);
-
+            
             if (inAsMethod != null) {
                 allActivities.add(inAsMethod);
             } else {
@@ -671,7 +675,6 @@ public class AndroidModel /* makes SummarizedMethod */
                         redirect.addStatement(getInst);
                         pm.setAllocation(target, getInst);
                         allActivities.add(target);
-                        System.out.println("All activities get: " + target);
                     } else {
                         final SSAValue newInstance = instantiator.createInstance(activityType, false, null, null);
                         allActivities.add(newInstance);
@@ -728,8 +731,8 @@ public class AndroidModel /* makes SummarizedMethod */
         // TODO: Check, that caller is an activity where necessary!
 
         // TODO: Call Activity.setIntent
-        final SSAValue iBinder = tool.fetchIBinder(androidContext);
-        tool.assignIBinder(iBinder, allActivities);
+        //final SSAValue iBinder = tool.fetchIBinder(androidContext);
+        //tool.assignIBinder(iBinder, allActivities);
 
         // Call the model
         {
@@ -745,24 +748,32 @@ public class AndroidModel /* makes SummarizedMethod */
             if (this.model.getReference().getReturnType().equals(TypeReference.Void)) {
                 invokation = instructionFactory.InvokeInstruction(callPC, redirectParams, exception, site);
             } else {
-                // it's startExternal...
-                final SSAValue trash = pm.getUnmanaged(AndroidTypes.Intent, "trash");
-                /*{ // DEBUG
-                    System.out.println("\nCalling External with: " + redirectParams);
-                    System.out.println("\n---------------------------------------------------------------------------------------");
-                    System.out.println("\nThis Acc: " + acc.dump());
-                    System.out.println("\nOverrides:");
-                    for (SSAValue ovr : allActivities) {
-                        System.out.println("\t" + ovr);
+                // it's startExternal or SystemService
+                if (this instanceof SystemServiceModel) {
+                    final SSAValue svc = pm.getUnmanaged(TypeReference.JavaLangObject, "systemService");
+                    invokation = instructionFactory.InvokeInstruction(callPC, svc, redirectParams, exception, site);
+
+                    // SHORTCUT:
+                    redirect.addStatement(invokation);
+
+                    final int returnPC = redirect.getNextProgramCounter();
+                    final SSAInstruction returnInstruction = instructionFactory.ReturnInstruction(returnPC, svc);
+                    redirect.addStatement(returnInstruction);
+
+                    final IClass declaringClass = this.cha.lookupClass(asMethod.getDeclaringClass());   
+                    if (declaringClass == null) {
+                        throw new IllegalStateException("Unable to retreive te IClass of " + asMethod.getDeclaringClass() + " from " +
+                                "Method " + asMethod.toString());
                     }
-                    System.out.println("\nModel Acc: " + modelAcc.dump());
-                    System.out.println("Assign from:");
-                    for (SSAValue v : redirectParams) {
-                        System.out.println("\t" + v);
-                    }
-                    System.out.println("---------------------------------------------------------------------------------------");
-                } // */
-                invokation = instructionFactory.InvokeInstruction(callPC, trash, redirectParams, exception, site);
+                    redirect.setLocalNames(pm.makeLocalNames());
+                    SummarizedMethod override = new SummarizedMethodWithNames(mRef, redirect, declaringClass);
+                    return override;
+                } else if (this instanceof ExternalModel) {
+                    final SSAValue trash = pm.getUnmanaged(AndroidTypes.Intent, "trash");
+                    invokation = instructionFactory.InvokeInstruction(callPC, trash, redirectParams, exception, site);
+                } else {
+                    throw new UnsupportedOperationException("Can't handle a " + this.model.getClass());
+                }
             }
             redirect.addStatement(invokation);
         }
