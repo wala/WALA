@@ -588,10 +588,10 @@ public class ParameterAccessor { // extends Param-Manager
 
         switch (this.base) {
             case IMETHOD:
-                return new Parameter(self, "this", asType, ParamerterDisposition.THIS, 
+                return new Parameter(self, "self", asType, ParamerterDisposition.THIS, 
                         this.base, this.method.getReference(), this.descriptorOffset);
             case METHOD_REFERENCE:
-                return new Parameter(self, "this", asType, ParamerterDisposition.THIS,
+                return new Parameter(self, "self", asType, ParamerterDisposition.THIS,
                         this.base, this.mRef, this.descriptorOffset);
             default:
                 throw new UnsupportedOperationException("No implementation of getThis() for base " + this.base);
@@ -1442,7 +1442,7 @@ public class ParameterAccessor { // extends Param-Manager
             }
 
             if (fromClass == null) {
-                throw new IllegalArgumentException("Unable to look up the type of from=" + from + 
+                throw new ClassLookupException("Unable to look up the type of from=" + from + 
                         " in the ClassHierarchy");
             }
         }
@@ -1461,7 +1461,7 @@ public class ParameterAccessor { // extends Param-Manager
             if (toClass == null) {
                 logger.error("Unable to look up the type of to={} in the ClassHierarchy", to);
                 return false;
-                //throw new IllegalArgumentException("Unable to look up the type of to=" + to + 
+                //throw new ClassLookupException("Unable to look up the type of to=" + to + 
                 //        " in the ClassHierarchy");
             }
         }
