@@ -187,10 +187,10 @@ public class Instantiator implements IInstantiator {
                         pm.setAllocation(instance, getInst);
                         return instance;
                     } else {
-                        System.out.println("NEW Component " + instance + "\n\tbreadCrumb: " + pm.breadCrumb);
+                        logger.info("NEW Component {} \n\tbreadCrumb: {}", instance, pm.breadCrumb);
                     }
                 } else {
-                    System.out.println("NEW Component " + instance + "\n\tbreadCrumb: " + pm.breadCrumb);
+                    logger.info("NEW Component {} \n\tbreadCrumb: {}", instance, pm.breadCrumb);
                 }
             }
         } // */
