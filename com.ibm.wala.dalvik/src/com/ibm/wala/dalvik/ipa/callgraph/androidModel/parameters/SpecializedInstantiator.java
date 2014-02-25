@@ -226,6 +226,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
                     if (this.pm.isSeen(iKey)) {
                         final SSAValue instance;
                         instance = this.pm.getCurrent(iKey);
+                        assert (instance.getNumber() > 0);
                         appComponents.add(instance);
                     }
                 }
@@ -233,12 +234,22 @@ public class SpecializedInstantiator extends FlatInstantiator {
         }
 
         final SSAValue instance;
-        { // Phi them together
-            final int pc = this.body.getNextProgramCounter();
-            instance = this.pm.getFree(T, key);
-            final SSAInstruction phi = instructionFactory.PhiInstruction(pc, instance, appComponents);
-            this.body.addStatement(phi);
-            this.pm.setPhi(instance, phi);
+        if ( appComponents.size() == 1) {
+            instance = appComponents.get(0);
+        } else if ( appComponents.size() > 0) {
+            { // Phi them together
+                final int pc = this.body.getNextProgramCounter();
+                instance = this.pm.getFree(T, key);
+                assert (pc > 0);
+                assert (instance.getNumber() > 0);
+                final SSAInstruction phi = instructionFactory.PhiInstruction(pc, instance, appComponents);
+                this.body.addStatement(phi);
+                this.pm.setPhi(instance, phi);
+            }
+        } else {
+            instance = this.pm.getUnmanaged(T, key);
+            this.body.addConstant(instance.getNumber(), new ConstantValue(null));
+            instance.setAssigned();
         }
 
         logger.info("Created Android-Context from " + appComponents.size() + " components");
