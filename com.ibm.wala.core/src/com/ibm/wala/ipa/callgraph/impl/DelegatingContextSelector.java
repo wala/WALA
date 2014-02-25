@@ -71,4 +71,8 @@ public class DelegatingContextSelector implements ContextSelector {
     return A.getRelevantParameters(caller, site).union(B.getRelevantParameters(caller, site));
   }
 
+  @Override
+  public String toString() {
+    return "<DelegatingContextSelector A=" + A + " B=" + B + " />";
+  }
 }

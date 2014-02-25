@@ -1060,12 +1060,22 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           params = IntSetUtil.makeMutableCopy(params);
           ((MutableIntSet)params).add(0);
         }
+        final IntSet paramsDebug = params;
         final int vns[] = new int[ params.size() ];
         params.foreach(new IntSetAction() {
           private int i = 0;
           @Override
           public void act(int x) {
-            vns[i++] = instruction.getUse(x);
+            try {
+                vns[i++] = instruction.getUse(x);
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.err.println("ArrayIndexOutOfBoundsException: i = " + i + " x = " + x + " instr = " + instruction);
+                System.err.println("Params: " + paramsDebug);
+                System.err.println("From ContextSelector: " + getBuilder().getContextSelector());
+                System.err.println("In Node: " + node);
+                e.printStackTrace();
+                throw e;
+            }
           }
         });
         

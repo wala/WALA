@@ -59,4 +59,9 @@ public class UnionContextSelector implements ContextSelector {
     public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
         return A.getRelevantParameters(caller, site).union(B.getRelevantParameters(caller, site));
     }
+
+    @Override
+    public String toString() {
+        return "<UnionContextSelector A=" + A + " B=" + B + " />";
+    }
 }
