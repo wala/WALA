@@ -101,8 +101,10 @@ public class Intent implements ContextItem {
         IGNORE
     };
 
-    public final Atom action;
-    private final Atom uri;
+    public static final Atom UNBOUND = Atom.findOrCreateAsciiAtom("Unbound");
+
+    public Atom action;
+    public Atom uri;
     private IntentType type;
     private AndroidComponent targetCompontent;  // Activity, Service, ...
 
@@ -193,6 +195,10 @@ public class Intent implements ContextItem {
             return override.isExternal(true);   // The isExternal defined later not this one!
         }*/
 
+        if (intent.action.equals(UNBOUND)) {
+            return false; // Is Unknown
+        }
+
         String pack = AndroidEntryPointManager.MANAGER.guessPackage();
         logger.debug("Is external? {} startsWith {}", intent.action, pack);
        
@@ -265,7 +271,14 @@ public class Intent implements ContextItem {
 
     @Override
     public String toString() {
-        StringBuffer ret = new StringBuffer("Intent(");
+        StringBuffer ret;
+        if (this.action.equals(UNBOUND)) {
+            return "Unbound Intent";
+        } else if (getType() == IntentType.SYSTEM_SERVICE) {
+            ret = new StringBuffer("SystemService(");
+        } else {
+            ret = new StringBuffer("Intent(");
+        }
         ret.append(this.action.toString());
         if (uri != null) {
             ret.append(", ");

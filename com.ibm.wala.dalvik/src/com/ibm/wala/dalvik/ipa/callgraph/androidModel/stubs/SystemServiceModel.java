@@ -238,7 +238,7 @@ public class SystemServiceModel extends AndroidModel {
         //final SSAValue context = pAcc.firstOf(AndroidTypes.ContextName);
         final SSAValue retVal;
 
-        if (this.target.equals("Lphone")) {
+        if (this.target.equals("phone")) {
             logger.info("Creating new TelephonyManager");
             retVal = instantiator.createInstance(AndroidTypes.TelephonyManager, false, new SSAValue.UniqueKey(), new HashSet<Parameter>(pAcc.all()));
         //} else if (this.target.equals("Lwindow")) { // TODO: Is an interface
@@ -246,59 +246,48 @@ public class SystemServiceModel extends AndroidModel {
         //    final TypeName wmN = TypeName.findOrCreate("Landroid/view/WindowManager");
         //    final TypeReference wmT = TypeReference.findOrCreate(ClassLoaderReference.Primordial, wmN);
         //    retVal = instantiator.createInstance(wmT, false, new SSAValue.UniqueKey(), new HashSet<Parameter>(pAcc.all()));
-        //} else if (this.target.equals("layout_inflater")) {
-        //} else if (this.target.equals("activity")) {
-        } else if (this.target.equals("power")) {
-            // PowerManager(Context context, IPowerManager service, Handler handler);
-            logger.info("Creating new PowerManager"); 
-            final TypeName n = TypeName.findOrCreate("Landroid/os/PowerManager");
-            final TypeReference T = TypeReference.findOrCreate(ClassLoaderReference.Primordial, n);
-            retVal = instantiator.createInstance(T, false, new SSAValue.UniqueKey(), new HashSet<Parameter>(pAcc.all()));
-        //} else if (this.target.equals("alarm")) {
-        //} else if (this.target.equals("notification")) {
-        } else if (this.target.equals("display")) {
-            //public DisplayManager(Context context) {
-            logger.info("Creating new DisplayManager");
-            final TypeName n = TypeName.findOrCreate("Landroid/hardware/display/DisplayManager");
-            final TypeReference T = TypeReference.findOrCreate(ClassLoaderReference.Primordial, n);
-            retVal = instantiator.createInstance(T, false, new SSAValue.UniqueKey(), new HashSet<Parameter>(pAcc.all()));
+        //} else if (this.target.equals("Llayout_inflater")) {
+        //} else if (this.target.equals("Lactivity")) {
+        //} else if (this.target.equals("Lpower")) {
+        //} else if (this.target.equals("Lalarm")) {
+        //} else if (this.target.equals("Lnotification")) {
         } else if (this.target.equals("keyguard")) {
             logger.info("Creating new KeyguardManager"); 
             final TypeName n = TypeName.findOrCreate("Landroid/app/KeyguardManager");
             final TypeReference T = TypeReference.findOrCreate(ClassLoaderReference.Primordial, n);
             retVal = instantiator.createInstance(T, false, new SSAValue.UniqueKey(), new HashSet<Parameter>(pAcc.all()));
-        } else if (this.target.equals("Llocation")) {
+        } else if (this.target.equals("location")) {
             logger.info("Creating new LocationManager"); 
             final TypeName n = TypeName.findOrCreate("Landroid/location/LocationManager");
             final TypeReference T = TypeReference.findOrCreate(ClassLoaderReference.Primordial, n);
             retVal = instantiator.createInstance(T, false, new SSAValue.UniqueKey(), new HashSet<Parameter>(pAcc.all()));
-        } else if (this.target.equals("Lsearch")) {
+        } else if (this.target.equals("search")) {
             logger.info("Creating new SearchManager"); // TODO: Param: Handler
             final TypeName n = TypeName.findOrCreate("Landroid/app/SearchManager");
             final TypeReference T = TypeReference.findOrCreate(ClassLoaderReference.Primordial, n);
             retVal = instantiator.createInstance(T, false, new SSAValue.UniqueKey(), new HashSet<Parameter>(pAcc.all()));
         //} else if (this.target.equals("Lvibrator")) { // TODO: Is abstract
-        } else if (this.target.equals("Lconnection")) {
+        } else if (this.target.equals("connection")) {
             logger.info("Creating new ConnectivityManager"); // TODO: use ConnectivityManager.from
             final TypeName n = TypeName.findOrCreate("Landroid/net/ConnectivityManager");
             final TypeReference T = TypeReference.findOrCreate(ClassLoaderReference.Primordial, n);
             retVal = instantiator.createInstance(T, false, new SSAValue.UniqueKey(), new HashSet<Parameter>(pAcc.all()));
-        } else if (this.target.equals("Lwifi")) {
+        } else if (this.target.equals("wifi")) {
             logger.info("Creating new WifiManager"); // Handle Params: Context context, IWifiManager service
             final TypeName n = TypeName.findOrCreate("Landroid/net/wifi/WifiManager");
             final TypeReference T = TypeReference.findOrCreate(ClassLoaderReference.Primordial, n);
             retVal = instantiator.createInstance(T, false, new SSAValue.UniqueKey(), new HashSet<Parameter>(pAcc.all()));
-        } else if (this.target.equals("Linput_method")) {
+        } else if (this.target.equals("input_method")) {
             logger.info("Creating new InputMethodManager"); // TODO: Use InputMethodManager.getInstance?
             final TypeName n = TypeName.findOrCreate("Landroid/view/inputmethod/InputMethodManager");
             final TypeReference T = TypeReference.findOrCreate(ClassLoaderReference.Primordial, n);
             retVal = instantiator.createInstance(T, false, new SSAValue.UniqueKey(), new HashSet<Parameter>(pAcc.all()));
-        } else if (this.target.equals("Luimode")) {
+        } else if (this.target.equals("uimode")) {
             logger.info("Creating new UiModeManager");
             final TypeName n = TypeName.findOrCreate("Landroid/app/UiModeManager");
             final TypeReference T = TypeReference.findOrCreate(ClassLoaderReference.Primordial, n);
             retVal = instantiator.createInstance(T, false, new SSAValue.UniqueKey(), new HashSet<Parameter>(pAcc.all()));
-        } else if (this.target.equals("Ldownload")) {
+        } else if (this.target.equals("download")) {
             logger.info("Creating new DownloadManager");    // TODO: Params ContentResolver resolver, String packageName
             final TypeName n = TypeName.findOrCreate("Landroid/app/DownloadManager");
             final TypeReference T = TypeReference.findOrCreate(ClassLoaderReference.Primordial, n);

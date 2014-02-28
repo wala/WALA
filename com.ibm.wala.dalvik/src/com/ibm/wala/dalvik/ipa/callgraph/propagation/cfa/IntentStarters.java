@@ -168,6 +168,10 @@ public class IntentStarters {
             return this.componentType;
         }
 
+        public boolean isSystemService() {
+            return this.targetAccuracy.contains(IntentType.SYSTEM_SERVICE); // XXX Nah.. not so nice :(
+        }
+
         @Override
         public String toString() {
             return "<StartInfo flags=" + flags + " to possible " + componentType + " with allowed Accuracies of " + targetAccuracy + "/>";

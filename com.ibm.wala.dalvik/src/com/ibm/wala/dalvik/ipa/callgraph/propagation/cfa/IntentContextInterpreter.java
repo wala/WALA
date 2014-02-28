@@ -34,6 +34,7 @@ package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StartInfo;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModel;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.MicroModel;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.ExternalModel;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.SystemServiceModel;
@@ -120,6 +121,44 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
     }
 
     /**
+     *  Read possible targets of the intents Infos.
+     */
+    private AndroidComponent fetchTargetComponent(final Intent intent, final IMethod method) { 
+        if (intent.getComponent() != null) {
+            return intent.getComponent();
+        } else {
+            final Set<AndroidComponent> possibleTargets = intentStarters.getInfo(method.getReference()).getComponentsPossible(); 
+            if (possibleTargets.size() == 1) {
+                final Iterator<AndroidComponent> it = possibleTargets.iterator();
+                return it.next();
+            } else {
+                // TODO: Go interactive and ask user?
+                final Iterator<AndroidComponent> it = possibleTargets.iterator();
+                final AndroidComponent targetComponent = it.next();
+                logger.error("Unable to determine the exact type of component of the function {} calls." +
+                        "Possible targets are {} we'll assume {} for now in " + 
+                        "order to not break fatally here.", method, possibleTargets, targetComponent);
+                return targetComponent;
+            }
+        }
+    } 
+
+    private TypeReference getCaller(final Context ctx, final CGNode node) {
+        if (ctx.get(ContextKey.CALLER) != null) {
+            System.out.println("CALLER CONTEXT" + ctx.get(ContextKey.CALLER));
+            return node.getMethod().getReference().getDeclaringClass();
+        } else if (ctx.get(ContextKey.CALLSITE) != null) {
+            System.out.println("CALLSITE CONTEXT" + ctx.get(ContextKey.CALLSITE));
+            return node.getMethod().getReference().getDeclaringClass(); 
+        } else if (ctx.get(ContextKey.RECEIVER) != null) {
+            final AbstractTypeInNode aType = (AbstractTypeInNode) ctx.get(ContextKey.RECEIVER);
+            return aType.getConcreteType().getReference();
+        } else {
+            return node.getMethod().getReference().getDeclaringClass(); // TODO: This may not necessarily fit!
+        }
+    }
+
+    /**
      *  Generates an adapted IR of the managed functions on each call.
      *
      *  @param  node    The function to create the IR of
@@ -135,141 +174,81 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
         {
             // TODO: CACHE!
             final Context ctx = node.getContext();
-
+            final TypeReference callingClass = getCaller(ctx, node);
 
             if (ctx.get(Intent.INTENT_KEY) != null) {
-                logger.debug("Got an Intent-Context");
                 try { // Translate CancelException to IllegalStateException
                 final Intent inIntent = (Intent) ctx.get(Intent.INTENT_KEY);                // Intent without overrides
                 final Intent intent = AndroidEntryPointManager.MANAGER.getIntent(inIntent); // Apply overrides
-                final Atom target = intent.action;
                 final IMethod method = node.getMethod();
-                final TypeReference callingClass;
-                {
-                    if (ctx.get(ContextKey.CALLER) != null) {
-                        System.out.println("CALLER CONTEXT" + ctx.get(ContextKey.CALLER));
-                        callingClass = node.getMethod().getReference().getDeclaringClass(); // TODO: This may not necessarily fit!
-                    } else if (ctx.get(ContextKey.CALLSITE) != null) {
-                        System.out.println("CALLSITE CONTEXT" + ctx.get(ContextKey.CALLSITE));
-                        callingClass = node.getMethod().getReference().getDeclaringClass(); // TODO: This may not necessarily fit!
-                    } else if (ctx.get(ContextKey.RECEIVER) != null) {
-                        //System.out.println("RECEIVER CONTEXT" + ctx.get(ContextKey.RECEIVER).getClass());
-                        final AbstractTypeInNode aType = (AbstractTypeInNode) ctx.get(ContextKey.RECEIVER);
-                        callingClass = aType.getConcreteType().getReference();
-                    } else {
-                        callingClass = node.getMethod().getReference().getDeclaringClass(); // TODO: This may not necessarily fit!
-                    }
-                }
-
-
-                final Intent.IntentType type = intent.getType();
-                final IR ir;
 
                 logger.info("Generating IR for {} in {} as {}", node.getMethod().getName(), inIntent, intent);
-               
-                // TODO: Deduplicate
-                if (type == Intent.IntentType.INTERNAL_TARGET) {
-                    final MicroModel model = new MicroModel(this.cha, this.options, this.cache, target);
-                    final SummarizedMethod override = model.getMethodAs(method.getReference(), callingClass, intentStarters.getInfo(method.getReference()), node);
-                    ir = override.makeIR(ctx, this.options.getSSAOptions());
-                } else if (type == Intent.IntentType.SYSTEM_SERVICE) {
-                    logger.debug("Generating SystemService");
-                    final IntentStarters.StartInfo info = new IntentStarters.StartInfo(
-                            node.getMethod().getReference().getDeclaringClass(),
-                            EnumSet.of(Intent.IntentType.SYSTEM_SERVICE),
-                            EnumSet.of(AndroidComponent.SERVICE),
-                            new int[] {1}
-                            );
-                    final SystemServiceModel model = new SystemServiceModel(this.cha, this.options, this.cache, target);
-                    final SummarizedMethod override = model.getMethodAs(method.getReference(), callingClass, info, node);
-                    ir = override.makeIR(ctx, this.options.getSSAOptions());
-                } else if (type == Intent.IntentType.EXTERNAL_TARGET) {
-                    final AndroidComponent targetComponent;
-                    if (intent.getComponent() != null) {
-                        targetComponent = intent.getComponent();
-                    } else {
-                        assert(intentStarters.getInfo(method.getReference()) != null) : "IntentInfo is null! Understands should" +
-                                                    " not have dispatched here - Every Starter should have an StartInfo...";
-                        final Set<AndroidComponent> possibleTargets = intentStarters.getInfo(method.getReference()).getComponentsPossible(); 
-                        if (possibleTargets.size() == 1) {
-                            final Iterator<AndroidComponent> it = possibleTargets.iterator();
-                            targetComponent = it.next();
-                        } else {
-                            // TODO: Go interactive and ask user?
-                            final Iterator<AndroidComponent> it = possibleTargets.iterator();
-                            targetComponent = it.next();
-                            logger.error("Unable to determine the exact type of component of the function {} calls." +
-                                    "Possible targets are {} we'll assume {} for now in " + 
-                                    "order to not break fatally here.", method, possibleTargets, targetComponent);
 
-                        }
+                final AndroidModel model;
+                final IntentStarters.StartInfo info;
+                { // Fetch model and info
+                    switch (intent.getType()) {
+                        case INTERNAL_TARGET:
+                            info = intentStarters.getInfo(method.getReference());
+                            
+                            model = new MicroModel(this.cha, this.options, this.cache, intent.action);
+                            break;
+                        case SYSTEM_SERVICE:
+                            info = new IntentStarters.StartInfo(
+                                    node.getMethod().getReference().getDeclaringClass(),
+                                    EnumSet.of(Intent.IntentType.SYSTEM_SERVICE),
+                                    EnumSet.of(AndroidComponent.SERVICE),
+                                    new int[] {1} );
+
+                            model = new SystemServiceModel(this.cha, this.options, this.cache, intent.action);
+                            break;
+                        case EXTERNAL_TARGET:
+                            info = intentStarters.getInfo(method.getReference());
+
+                            model = new ExternalModel(this.cha, this.options, this.cache, fetchTargetComponent(intent,method));
+                            break;
+                        case STANDARD_ACTION:
+                            logger.warn("Still handling STANDARD_ACTION as UNKONOWN_TARGET: {}", intent.action);        // TODO!
+                            // In Order to correctly evaluate a standard-action we would also have to look
+                            // at the URI of the Intent.
+                        case UNKNOWN_TARGET:
+                            info = intentStarters.getInfo(method.getReference());
+
+                            model = new UnknownTargetModel(this.cha, this.options, this.cache, fetchTargetComponent(intent, method));
+                            break;
+                        case IGNORE:
+                            return null;
+                        default:
+                            throw new java.lang.UnsupportedOperationException("The Intent-Type " + intent.getType() + " is not known to IntentContextInterpreter");
+                            // return method.makeIR(ctx, this.options.getSSAOptions());
                     }
-                    logger.debug("Generating ExternalModel for {} as {}", targetComponent, method);
-                    final ExternalModel model = new ExternalModel(this.cha, this.options, this.cache, targetComponent);
-                    final SummarizedMethod override = model.getMethodAs(method.getReference(), callingClass, intentStarters.getInfo(method.getReference()), node);
-                    ir = override.makeIR(ctx, this.options.getSSAOptions());
-                } else if (type == Intent.IntentType.STANDARD_ACTION) { // TODO:        Handle as such!
-                    logger.warn("Still handling STANDARD_ACTION as UNKONOWN_TARGET: {}", intent.action);
-                    final AndroidComponent targetComponent;
-                    if (intent.getComponent() != null) {
-                        targetComponent = intent.getComponent();
-                    } else {
-                        assert(intentStarters.getInfo(method.getReference()) != null) : "IntentInfo is null! Understands should" +
-                                                    " not have dispatched here - Every Starter should have an StartInfo...";
-                        final Set<AndroidComponent> possibleTargets = intentStarters.getInfo(method.getReference()).getComponentsPossible(); 
-                        if (possibleTargets.size() == 1) {
-                            final Iterator<AndroidComponent> it = possibleTargets.iterator();
-                            targetComponent = it.next();
-                        } else {
-                            // TODO: Go interactive and ask user?
-                            final Iterator<AndroidComponent> it = possibleTargets.iterator();
-                            targetComponent = it.next();
-                            logger.error("Unable to determine the exact type of component of the function {} calls." +
-                                    "Possible targets are {} we'll assume {} for now in " + 
-                                    "order to not break fatally here.", method, possibleTargets, targetComponent);
-                        }
-                    }
-                    logger.debug("Generating UnknownTargetModel for {} as {}", targetComponent, method);
-                    final UnknownTargetModel model = new UnknownTargetModel(this.cha, this.options, this.cache, targetComponent);
-                    final SummarizedMethod override = model.getMethodAs(method.getReference(), callingClass, intentStarters.getInfo(method.getReference()), node);
-                    ir = override.makeIR(ctx, this.options.getSSAOptions());
-                } else if (type == Intent.IntentType.UNKNOWN_TARGET) {
-                    logger.warn("Target of Intent still not known when generating IR...");
-                    final AndroidComponent targetComponent;
-                    if (intent.getComponent() != null) {
-                        targetComponent = intent.getComponent();
-                    } else {
-                        assert(intentStarters.getInfo(method.getReference()) != null) : "IntentInfo is null! Understands should" +
-                                                    " not have dispatched here - Every Starter should have an StartInfo...";
-                        final Set<AndroidComponent> possibleTargets = intentStarters.getInfo(method.getReference()).getComponentsPossible(); 
-                        if (possibleTargets.size() == 1) {
-                            final Iterator<AndroidComponent> it = possibleTargets.iterator();
-                            targetComponent = it.next();
-                        } else {
-                            // TODO: Go interactive and ask user?
-                            final Iterator<AndroidComponent> it = possibleTargets.iterator();
-                            targetComponent = it.next();
-                            logger.error("Unable to determine the exact type of component of the function {} calls." +
-                                    "Possible targets are {} we'll assume {} for now in " +
-                                    "order to not break fatally here.", method, possibleTargets, targetComponent);
-                        }
-                    }
-                    logger.debug("Generating UnknownTargetModel for {} as {}", targetComponent, method);
-                    final UnknownTargetModel model = new UnknownTargetModel(this.cha, this.options, this.cache, targetComponent);
-                    final SummarizedMethod override = model.getMethodAs(method.getReference(), callingClass, intentStarters.getInfo(method.getReference()), node);
-                    ir = override.makeIR(ctx, this.options.getSSAOptions());
-                } else if (type == Intent.IntentType.IGNORE) {
-                    return null;
-                } else {
-                    throw new java.lang.UnsupportedOperationException("The Intent-Type " + type + " is not known to IntentContextInterpreter");
-                }
-                return ir;
+
+                    assert (info != null) : "IntentInfo is null! Every Starter should have an StartInfo...";
+                } // of model and info
+
+                final SummarizedMethod override = model.getMethodAs(method.getReference(), callingClass, info, node);
+                return override.makeIR(ctx, this.options.getSSAOptions());
                 } catch (CancelException e) {
                     throw new IllegalStateException("The operation was canceled.", e);
                 }
             } else {
-                logger.error("No target: IntentContextSelector didn't add an IntentContext for the call to: {}, Context: {}", node.getMethod(), node.getContext() );
-                return null;
+                // This should _not_ happen: IntentContextSelector should always create an IntentContext.
+                //
+                logger.error("No target: IntentContextSelector didn't add an IntentContext for the call to: {}, Context: {}", 
+                        node.getMethod(), node.getContext() );
+                final IMethod method = node.getMethod();
+                final IntentStarters.StartInfo info = intentStarters.getInfo(method.getReference());
+                assert (info != null) : "IntentInfo is null! Every Starter should have an StartInfo...";
+                final Intent intent = new Intent(Intent.UNBOUND);
+                final AndroidComponent targetComponent = fetchTargetComponent(intent, method);
+
+                try {
+                    final UnknownTargetModel model = new UnknownTargetModel(this.cha, this.options, this.cache, targetComponent);
+                    final SummarizedMethod override = model.getMethodAs(method.getReference(), callingClass, intentStarters.getInfo(method.getReference()), node);
+                    return override.makeIR(ctx, this.options.getSSAOptions());
+                } catch (CancelException e) {
+                    throw new IllegalStateException("The operation was canceled.", e);
+                }
             }
         }
     }

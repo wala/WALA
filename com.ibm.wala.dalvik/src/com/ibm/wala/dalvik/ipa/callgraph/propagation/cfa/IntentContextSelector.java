@@ -34,6 +34,7 @@ package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent;
+import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentMap;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentContext;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.AndroidContext;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentContextInterpreter;
@@ -94,9 +95,9 @@ import org.slf4j.LoggerFactory;
 public class IntentContextSelector implements ContextSelector {
     private static final Logger logger = LoggerFactory.getLogger(IntentContextSelector.class);
 
+    private final IntentMap intents = new IntentMap();
     private final ContextSelector parent;
     private final IntentStarters intentStarters;
-    private final Map<InstanceKey, Intent> seen;
     private final Map<InstanceKey, AndroidContext> seenContext;
 
     public IntentContextSelector(final IClassHierarchy cha) {
@@ -108,7 +109,6 @@ public class IntentContextSelector implements ContextSelector {
      */
     public IntentContextSelector(final ContextSelector parent, final IClassHierarchy cha) {
         this.parent = parent;
-        this.seen = HashMapFactory.make();
         this.seenContext = HashMapFactory.make();
         this.intentStarters = new IntentStarters(cha);
     }
@@ -128,19 +128,11 @@ public class IntentContextSelector implements ContextSelector {
             ctx = parent.getCalleeTarget(caller, site, callee, actualParameters);
         }
 
-        // TODO: More Intent-functions have to be covered...
-        //      Intent.setAction(String action)
-        //      Intent.fillIn
-        
         if (intentStarters.isStarter(callee.getReference())) {
-            System.out.println("NOW: " + callee.getReference());
             // Handle startActivity(), startActivityForResult(), startService() and such
-            Intent intent = null;
-
-            // System.out.println("======================================> CALLER" + caller);
 
             // Search Android-Context and attach corresponding WALA-Context
-            {
+            /* {
                 final InstanceKey self = actualParameters[0];
                 assert (self != null) : "This-Pointer was not marked as relevant!";
                 
@@ -149,33 +141,36 @@ public class IntentContextSelector implements ContextSelector {
                 } else {
                     logger.warn("No Android-Context seen for {}", caller);
                 }
-            }
+            } // */
 
-            // Seach intent and attach as context
-            for (int j = 0; j < actualParameters.length; ++j) {
-                final InstanceKey param = actualParameters[j];
-                if (param == null) {
-                    //logger.debug("Skipping over parameter " + j +  " of " + callee.getSelector());
-                    continue;
-                }
-                
-                if (param.getConcreteType().getName().equals(AndroidTypes.IntentName)) { 
-                    if (this.seen.containsKey(param)) {
-                        intent = this.seen.get(param);
-                    } else {
-                        logger.warn("Unable to resolve Intent called from {}", caller.getMethod());
-                        logger.debug("Search Key: {} hash: {}", param, param.hashCode());
-                        for (InstanceKey cand : this.seen.keySet()) {
-                            logger.debug("\tSeen is {} hash: {}", cand, cand.hashCode());
+
+            Intent intent = null;
+            { // Seach intent 
+                for (int j = 0; j < actualParameters.length; ++j) {
+                    final InstanceKey param = actualParameters[j];
+                    if (param == null) {
+                        continue;
+                    } else if (param.getConcreteType().getName().equals(AndroidTypes.IntentName)) { 
+                        if (! intents.contains(param) ) {
+                            logger.error("Unable to resolve Intent called from {}", caller.getMethod());
+                            logger.error("Search Key: {} hash: {}", param, param.hashCode());
+                            break;
+                        } else {
+                            intent = intents.find(param);
+                            break;
                         }
                     }
                 }
             }
 
-
             // Add the context
             if (intent != null) {
                 logger.info("Intent Resolved: {}", intent);
+                AndroidEntryPointManager.MANAGER.addCallSeen(site, intent); 
+                return new IntentContext(ctx, intent);
+            } else {
+                logger.warn("Encountered unresolvable Intent");
+                intent = new Intent("Unresolvable");
                 AndroidEntryPointManager.MANAGER.addCallSeen(site, intent); 
                 return new IntentContext(ctx, intent);
             }
@@ -186,8 +181,7 @@ public class IntentContextSelector implements ContextSelector {
             final Intent intent;
             { // Extract target-Service as intent
                 if (param instanceof ConstantKey) {
-                    final String targetJ = (String) ((ConstantKey)param).getValue();
-                    final String target = StringStuff.deployment2CanonicalTypeString(targetJ);
+                    final String target = (String) ((ConstantKey)param).getValue();
                     intent = new Intent(target) {
                         @Override
                         public Intent.IntentType getType() {
@@ -218,120 +212,93 @@ public class IntentContextSelector implements ContextSelector {
             final InstanceKey self = actualParameters[0];
             final Selector calleeSel = callee.getSelector();
 
-            // TODO: Deduplicate!
-            switch (callee.getNumberOfParameters()) { 
-                case 1:
-                    // Just ignore: Intent()
-                    break;
-                
-                case 2:    
-                    if (calleeSel.equals(Selector.make("<init>(Ljava/lang/String;)V"))) {
-                        final InstanceKey actionKey = actualParameters[1];  
-                        
-                        logger.debug("Handling Intent(String action)");
-                        if (actionKey instanceof ConstantKey) {
-                            final String actionJ = (String) ((ConstantKey)actionKey).getValue();
-                            final String action = StringStuff.deployment2CanonicalTypeString(actionJ);
-                            final Intent intent = new Intent(action);
-                            this.seen.put(self, intent);
-                            logger.debug("Add Intent Constructor info {}", intent);
-                        } else {
-                            if (actionKey == null) {
-                                logger.trace("Got action as 'null'. Obviously can't handle this. Caller was: {}", caller.getMethod());
-                            } else {
-                                logger.warn("Got action as {}. Can't handle this :(", actionKey.getClass());
-                            }
-                        }
-                    } else if (calleeSel.equals(Selector.make("<init>(Landroid/content/Intent;)V"))) {
-                        final InstanceKey inIntent = actualParameters[1];
+            final InstanceKey uriKey;
+            final InstanceKey actionKey;
+            { // fetch actionKey, uriKey
+                switch (callee.getNumberOfParameters()) { 
+                    case 1:
+                        logger.debug("Handling Intent()");
+                        actionKey = null;
+                        uriKey = null;
+                        break;
+                    case 2:    
+                        if (calleeSel.equals(Selector.make("<init>(Ljava/lang/String;)V"))) {
+                            logger.debug("Handling Intent(String action)");
+                            actionKey = actualParameters[1];  
+                        } else if (calleeSel.equals(Selector.make("<init>(Landroid/content/Intent;)V"))) {
+                            logger.debug("Handling Intent(Intent other)");
 
-                        if (this.seen.containsKey(inIntent)) {
-                            final Intent intent = this.seen.get(inIntent);  // XXX: clone() ?
-                            this.seen.put(self, intent);
-                            logger.debug("Add Intent Constructor info {}", intent);
-                        } else {
-                            logger.warn("In Intent-Copy constructor: Unable to find the original");
-                        }
-                    } else {
-                        logger.warn("No handling implemented for: {}", calleeSel);
-                    }
-                    break;
-                case 3:
-                    if (calleeSel.equals(Selector.make("<init>(Ljava/lang/String;Landroid/net/Uri;)V"))) {
-                        final InstanceKey actionKey = actualParameters[1];  
-                        // TODO: Use Information of the URL...
-                        
-                        logger.debug("Handling Intent(String action, Uri uri)");
-                        if (actionKey instanceof ConstantKey) {
-                            final String actionJ = (String) ((ConstantKey)actionKey).getValue();
-                            final String action = StringStuff.deployment2CanonicalTypeString(actionJ);
-                            final Intent intent = new Intent(action);
-                            this.seen.put(self, intent);
-                            logger.debug("Add Intent Constructor info {}", intent);
-                        } else {
-                            if (actionKey == null) {
-                                logger.trace("Got action as 'null'. Obviously can't handle this. Caller was {}", caller.getMethod());
-                            } else {
-                                logger.warn("Got action as {}. Can't handle this :(", actionKey.getClass());
-                            }
-                        }
-                    } else if (calleeSel.equals(Selector.make("<init>(Landroid/content/Context;Ljava/lang/Class;)V"))) {
-                        final InstanceKey actionKey = actualParameters[2];
-                        if (actionKey instanceof ConstantKey) {
-                            final ConstantKey key = (ConstantKey) actionKey;
-                            if (key.getValue() instanceof IClass) {
-                                // YESSSSSS!!!
-                                final IClass target = (IClass) key.getValue();
-                                final Intent intent = new Intent(target.getName());
-                                this.seen.put(self, intent);
-                                logger.debug("Add Intent Constructor info {}", intent);
-                            } else {
-                                throw new IllegalArgumentException("Wrong type");
-                            }
-                        } else {
-                            if (actionKey == null) {
-                                logger.trace("Got action as 'null'. Obviously can't handle this. Caller was {}", caller.getMethod());
-                            } else {
-                                logger.warn("Got action as {}. Can't handle this :(", actionKey.getClass());
-                            }
-                        }
-                    } else {
-                        logger.warn("No handling implemented for: {}",  calleeSel);
-                    }
-                    break;
-                case 5:
-                    if (calleeSel.equals(Selector.make("<init>(Ljava/lang/String;Landroid/net/Uri;Landroid/content/Context;Ljava/lang/Class;)V"))) {
-                        // TODO: Test if this works!
-                        // TODO: Grab the URI
-                        final InstanceKey actionKey = actualParameters[4];
-                        if (actionKey instanceof ConstantKey) {
-                            final ConstantKey key = (ConstantKey) actionKey;
-                            if (key.getValue() instanceof IClass) {
-                                final IClass target = (IClass) key.getValue();
-                                final Intent intent = new Intent(target.getName());
-                                this.seen.put(self, intent);
-                                logger.debug("Add Intent Constructor info {}", intent);
-                            } else {
-                                throw new IllegalArgumentException("Wrong type");
-                            }
-                        } else {
-                            if (actionKey == null) {
-                                logger.trace("Got action as 'null'. Obviously can't handle this. Caller was {}", caller.getMethod());
-                            } else {
-                                logger.warn("Got action as {}. Can't handle this :(", actionKey.getClass());
-                            }
-                        }
-                    } else {
-                        logger.warn("No handling implemented for: {}", calleeSel);
-                    }
-                    break;
+                            final InstanceKey inIntent = actualParameters[1];
 
-                default:
-                    logger.warn("Can't extract Info from Intent-Constructor: {} (not implemented)", site);
-                    //System.out.println("\t\tFOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO: " + callee.getSelector()); // XXX
+                            if (intents.contains(inIntent)) {
+                                intents.put(self, intents.find(inIntent));
+                            } else {
+                                logger.warn("In Intent-Copy constructor: Unable to find the original");
+                            }
+                            actionKey = null;
+                        } else {
+                            logger.error("No handling implemented for: {}", calleeSel);
+                            actionKey = null;
+                        }
+                        uriKey = null;
+                        break;
+                    case 3:
+                        if (calleeSel.equals(Selector.make("<init>(Ljava/lang/String;Landroid/net/Uri;)V"))) {
+                            logger.debug("Handling Intent(String action, Uri uri)");
+                            // TODO: Use Information of the URI...
+                            actionKey = actualParameters[1];  
+                            uriKey = actualParameters[2];
+                        } else if (calleeSel.equals(Selector.make("<init>(Landroid/content/Context;Ljava/lang/Class;)V"))) {
+                            logger.debug("Handling Intent(Context, Class)");
+                            actionKey = actualParameters[2];
+                            uriKey = null;
+                        } else {
+                            logger.error("No handling implemented for: {}",  calleeSel);
+                            actionKey = null;
+                            uriKey = null;
+                        }
+                        break;
+                    case 5:
+                        if (calleeSel.equals(Selector.make("<init>(Ljava/lang/String;Landroid/net/Uri;Landroid/content/Context;Ljava/lang/Class;)V"))) {
+                            logger.debug("Handling Intent(String action, Uri uri, Context, Class)");
+                            actionKey = actualParameters[4];
+                            uriKey = actualParameters[2];
+                        } else {
+                            logger.error("No handling implemented for: {}", calleeSel);
+                            actionKey = null;
+                            uriKey = null;
+                        }
+                        break;
+                    default:
+                        logger.error("Can't extract Info from Intent-Constructor: {} (not implemented)", site);
+                        actionKey = null;
+                        uriKey = null;
+                }
+            } // of fetch actionKey
+
+            intents.findOrCreate(self);   // Creates Wala-internal Intent
+            if (actionKey == null) {
+                logger.trace("Got action as 'null'. Obviously can't handle this. Caller was {}", caller.getMethod());
+            } else {
+                intents.setAction(self, actionKey);
             }
+            // TODO: Evaluate uriKey
+        } else if (callee.getSelector().equals(Selector.make("setAction(Ljava/lang/String;)Landroid/content/Intent;")) && 
+                callee.getDeclaringClass().getName().equals(AndroidTypes.IntentName)) {
+            final InstanceKey self = actualParameters[0];
+            final InstanceKey actionKey = actualParameters[1];
+
+            // Also we _could_ set the new target this is probably a bad idea: If setAction is called 
+            // from a branch in execution the original target could still be called. 
+            // We should implement intents, that can have multiple targets.                     TODO
+            //intents.setAction(self, actionKey);
+            intents.unbind(self);
+        } else if (callee.getSelector().equals(Selector.make("fillIn(Landroid/content/Intent;I)I"))) {
+            // See 'setAction' before...                                                        TODO
+            final InstanceKey self = actualParameters[0];
+            intents.unbind(self);
         } else if (callee.isInit() && callee.getDeclaringClass().getName().equals(AndroidTypes.IntentSenderName)) {
-            // TODO
+            logger.error("Unable to evaluate IntentSender: Not implemented!");   // TODO
         } else if (site.isSpecial() && callee.getDeclaringClass().getName().equals(
                     AndroidTypes.ContextWrapperName)) {
             final InstanceKey baseKey = actualParameters[1];  
@@ -450,6 +417,8 @@ public class IntentContextSelector implements ContextSelector {
             return IntSetUtil.make(new int[] { 0, 1 });
         } else if (target.getSelector().equals(Selector.make("getSystemService(Ljava/lang/String;)Ljava/lang/Object;"))) {
             logger.debug("Encountered Context.getSystemService()");
+            return IntSetUtil.make(new int[] { 0, 1 });
+        } else if (target.getSelector().equals(Selector.make("setAction(Ljava/lang/String;)Landroid/content/Intent;"))) {
             return IntSetUtil.make(new int[] { 0, 1 });
         }
 

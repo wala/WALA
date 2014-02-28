@@ -1,0 +1,177 @@
+/*
+ *  Copyright (c) 2013,
+ *      Tobias Blaschke <code@tobiasblaschke.de>
+ *  All rights reserved.
+
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions are met:
+ *
+ *  1. Redistributions of source code must retain the above copyright notice,
+ *     this list of conditions and the following disclaimer.
+ *
+ *  2. Redistributions in binary form must reproduce the above copyright notice,
+ *     this list of conditions and the following disclaimer in the documentation
+ *     and/or other materials provided with the distribution.
+ *
+ *  3. The names of the contributors may not be used to endorse or promote
+ *     products derived from this software without specific prior written
+ *     permission.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ *  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ *  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ *  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ *  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ *  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ *  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ *  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ *  POSSIBILITY OF SUCH DAMAGE.
+ */
+package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
+
+import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.util.strings.Atom;
+import com.ibm.wala.util.strings.StringStuff;
+
+import java.util.Map;
+import java.util.HashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ *  Stores references to the WALA-Intent objects.
+ *
+ *  This class is only of use in conjunction with the IntentContextSelector
+ *
+ *  @author Tobias Blaschke <code@tobiasblaschke.de>
+ */
+/*package*/ class IntentMap {
+    private static final Logger logger = LoggerFactory.getLogger(IntentContextSelector.class);
+
+    /* package */ final Map<InstanceKey, Intent> seen = new HashMap<InstanceKey, Intent>();
+
+
+    public Intent find(final InstanceKey key) throws IndexOutOfBoundsException {
+        if (key == null) {
+            throw new IllegalArgumentException("InstanceKey may not be null");
+        }
+        if (! seen.containsKey(key)) {
+            throw new IndexOutOfBoundsException("No Intent was seen for key " + key);
+        }
+        return seen.get(key);
+    }
+
+    public Intent create(final InstanceKey key, final String action) {
+        if (key == null) {
+            throw new IllegalArgumentException("InstanceKey may not be null");
+        }
+        if (seen.containsKey(key)) {
+            throw new IndexOutOfBoundsException("There may only be one Intent for " + key);
+        }
+        final Intent intent = new Intent(action);
+        seen.put(key, intent);
+        return intent;
+    }
+
+    public Intent create(final InstanceKey key, final Atom action) {
+        if (key == null) {
+            throw new IllegalArgumentException("InstanceKey may not be null");
+        }
+        if (seen.containsKey(key)) {
+            throw new IndexOutOfBoundsException("There may only be one Intent for " + key);
+        }
+        final Intent intent = new Intent(action);
+        seen.put(key, intent);
+        return intent;
+    }
+
+    public Intent create(final InstanceKey key) {
+        return create(key, Intent.UNBOUND);
+    }
+
+    public Intent findOrCreate(final InstanceKey key) {
+        if (seen.containsKey(key)) {
+            return find(key);
+        } else {
+            return create(key);
+        }
+    }
+
+    public void put(final InstanceKey key, final Intent intent) {
+        seen.put(key, intent);
+    }
+
+    public boolean contains(final InstanceKey key) {
+        return seen.containsKey(key);
+    }
+
+    public Intent findOrCreate(final InstanceKey key, String action) {
+        final Intent intent = findOrCreate(key);
+        if (! intent.action.equals(Atom.findOrCreateAsciiAtom(action))) {
+            throw new IllegalArgumentException("Actions differ (" + action + ", " +
+                    intent.action.toString() + ") for Intent " + key);
+        }
+        return intent;
+    }
+
+    public Intent setAction(final InstanceKey key, final String action) {
+        return setAction(key, Atom.findOrCreateAsciiAtom(action));
+    }
+
+    public Intent unbind(final InstanceKey key) {
+        return setAction(key, Intent.UNBOUND);
+    }
+
+    public Intent setAction(final InstanceKey key, final Atom action) {
+        if (contains(key)) {
+            final Intent intent = find(key);
+            intent.action = action;
+            return intent;
+        } else {
+            logger.error("setAction: No Intent found for key " + key);
+            final Intent intent = create(key, action);
+            return intent;
+        }
+    }
+
+    public Intent setAction(final Intent intent, final String action) {
+        for (final InstanceKey candKey : seen.keySet()) {
+            if (seen.get(candKey).equals(intent)) {
+                return setAction(candKey, action);
+            }
+        }
+
+        throw new IllegalStateException("The Intent " + intent + " was not registered before!");
+    }
+
+    public Intent setAction(final InstanceKey key, final InstanceKey actionKey) {
+        if (actionKey == null) {
+            logger.trace("Intent: given action is null, keeping it untouched.");
+            return find(key);
+        }
+        final String action;
+        {
+            if (actionKey instanceof ConstantKey) {
+                final Object actionO = ((ConstantKey)actionKey).getValue();
+                if (actionO instanceof String) {
+                    action = StringStuff.deployment2CanonicalTypeString((String) actionO);
+                } else if (actionO instanceof IClass) {
+                    action = ((IClass) actionO).getName().toString();
+                } else {
+                    throw new IllegalArgumentException("Wrong action type: " + actionO.getClass());
+                }
+            } else {
+                logger.error("Can't extract the action from Key {} Type {}", actionKey, actionKey.getClass());
+                return null;
+            }
+        }
+
+        return setAction(key, action);
+    }
+}
