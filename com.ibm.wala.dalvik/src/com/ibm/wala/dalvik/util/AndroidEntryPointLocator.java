@@ -120,7 +120,12 @@ public final class AndroidEntryPointLocator {
          *  If a class does not override a method of a component, add a call to the method in the
          *  super-class to the entriepoints.
          */
-        WITH_SUPER
+        WITH_SUPER,
+        /**
+         *  This will pull in components defined in the Android-API. 
+         *  In most cases this is not wanted.
+         */
+        WITH_ANDROID
     }
 
     private final static List<AndroidPossibleEntryPoint> possibleEntryPoints = new ArrayList<AndroidPossibleEntryPoint>();
@@ -157,13 +162,18 @@ public final class AndroidEntryPointLocator {
         int dummy = 0;  // for the progress monitor
         for (IClass cls : cha) {
             mon.worked(dummy++);
+            if (isExcluded(cls)) continue;
             if (!cls.isInterface() && !cls.isAbstract() && cls.getClassLoader().getName().equals(AnalysisScope.APPLICATION)) {
 nextMethod:
                 for (final IMethod m : cls.getDeclaredMethods()) {
                 	// If there is a Method signature in the possible entry points use thatone
                     for (AndroidPossibleEntryPoint e: possibleEntryPoints) {
                         if (e.name.equals(m.getName().toString()) ) {
-                            entryPoints.add(new AndroidEntryPoint(e, m, cha));
+                            if (this.flags.contains(LocatorFlags.WITH_ANDROID)) {
+                                entryPoints.add(new AndroidEntryPoint(e, m, cha));
+                            } else if (! isAPIComponent(m)) {
+                                entryPoints.add(new AndroidEntryPoint(e, m, cha));
+                            }
                             continue nextMethod;
                         }
                     }
@@ -234,13 +244,16 @@ nextMethod:
                 continue;
             }
             for (final IClass candid : candids) {
-                if (! candid.getClassLoader().getReference().equals(ClassLoaderReference.Application)) {   
+                if (isExcluded(candid)) continue;
+                if ((! this.flags.contains(LocatorFlags.WITH_ANDROID) ) && (isAPIComponent(candid))) {   
                     // Don't consider internal overrides
                     continue;
                 }
                 final Collection<IMethod> methods = candid.getDeclaredMethods();
                 for (final IMethod method : methods) {
-                    if ((method.isInit()) && (! this.flags.contains(LocatorFlags.WITH_CTOR))) {
+
+
+                    if ((method.isInit() || method.isClinit()) && (! this.flags.contains(LocatorFlags.WITH_CTOR))) {
                         logger.debug("Skipping constructor of {}", method); 
                         continue;
                     }
@@ -292,14 +305,14 @@ nextMethod:
             { // Only for android-classes
                 boolean isAndroidClass = false;
                 while (androidClass != null) {
-                    if (androidClass.getName().toString().startsWith("Landroid")) {
+                    if (isAPIComponent(androidClass)) {
                         isAndroidClass = true;
                         break;
                     }
-                    logger.debug("Heuristic: \t {} is {}", appClass.getName().toString(), androidClass.getName().toString()); // XXX trace
+                    logger.trace("Heuristic: \t {} is {}", appClass.getName().toString(), androidClass.getName().toString()); 
                     for (IClass iface : appClass.getAllImplementedInterfaces ()) {
-                        logger.debug("Heuristic: \t implements {}", iface.getName().toString()); // XXX trace
-                        if (iface.getName().toString().startsWith("Landroid")) {
+                        logger.trace("Heuristic: \t implements {}", iface.getName().toString()); 
+                        if (isAPIComponent(iface)) {
                             isAndroidClass = true;
                             break;
                         }
@@ -308,16 +321,18 @@ nextMethod:
                     androidClass = androidClass.getSuperclass();
                 }
                 if (! isAndroidClass) {
-                    logger.debug("Heuristic: Skipping non andoid {}", appClass.getName().toString()); // XXX trace
+                    logger.trace("Heuristic: Skipping non andoid {}", appClass.getName().toString()); 
                     continue; // continue appClass;
                 }
             }
 
             logger.debug("Heuristic: Scanning methods of {}", appClass.getName().toString());
             { // Overridden methods
+                if (isAPIComponent(appClass)) continue;
+                if (isExcluded(appClass)) continue;
                 final Collection<IMethod> methods = appClass.getDeclaredMethods();
                 for (final IMethod method : methods) {
-                    if ((method.isInit()) && (! this.flags.contains(LocatorFlags.WITH_CTOR))) {
+                    if ((method.isInit() || method.isClinit()) && (! this.flags.contains(LocatorFlags.WITH_CTOR))) {
                         logger.debug("Skipping constructor of {}", method); 
                         continue;
                     }
@@ -339,10 +354,11 @@ nextMethod:
             { // Implemented interfaces
                 final Collection<IClass> iFaces = appClass.getAllImplementedInterfaces();
                 for (final IClass iFace : iFaces) {
-                    if (! iFace.getName().toString().startsWith("Landroid")) {
+                    if (isAPIComponent(iFace)) {
                         logger.debug("Skipping iFace: {}", iFace);
                         continue;
                     }
+                    if (isExcluded(iFace)) continue;
                     logger.debug("Searching Interface {}", iFace);
                     final Collection<IMethod> ifMethods = iFace.getDeclaredMethods();
                     for (final IMethod ifMethod : ifMethods) {
@@ -387,6 +403,25 @@ nextMethod:
                 }
             } // Of 'Implemented interfaces'
         }
+    }
+
+    private boolean isAPIComponent(final IMethod method) {
+        return isAPIComponent(method.getDeclaringClass());
+    }
+
+    private boolean isAPIComponent(final IClass cls) {
+        if (cls.getClassLoader().getReference().equals(ClassLoaderReference.Application)) {
+            if (cls.getName().toString().startsWith("Landroid/")) {
+                return true;
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean isExcluded(final IClass cls) {
+        return (cls.getClassHierarchy().getScope().getExclusions().contains(cls.getReference()));
     }
 
     /**
