@@ -1378,9 +1378,15 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
      * Build the IR
      */
     public void build() {
-        solve();
-        if (localMap != null) {
-            localMap.finishLocalMap(this);
+        try {
+            solve();
+            if (localMap != null) {
+                localMap.finishLocalMap(this);
+            }
+        } catch (AssertionError e) {
+            System.err.println("When handling method " + method.getReference());
+            e.printStackTrace();
+            //throw e;
         }
     }
 
