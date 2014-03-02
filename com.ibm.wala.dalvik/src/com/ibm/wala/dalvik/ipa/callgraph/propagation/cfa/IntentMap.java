@@ -129,12 +129,14 @@ import org.slf4j.LoggerFactory;
         return intent;
     }
 
-    public Intent setAction(final InstanceKey key, final String action) {
-        return setAction(key, Atom.findOrCreateAsciiAtom(action));
+    public Intent setAction(final InstanceKey key, final String action, boolean isExplicit) {
+        return setAction(key, Atom.findOrCreateAsciiAtom(action), isExplicit);
     }
 
     public Intent unbind(final InstanceKey key) {
-        return setAction(key, Intent.UNBOUND);
+        final Intent intent = find(key);
+        intent.unbind();
+        return intent;
     }
 
     public Intent setExplicit(final InstanceKey key) {
@@ -150,10 +152,14 @@ import org.slf4j.LoggerFactory;
         }
     }
 
-    public Intent setAction(final InstanceKey key, final Atom action) {
+    public Intent setAction(final InstanceKey key, final Atom action, boolean isExplicit) {
         if (contains(key)) {
             final Intent intent = find(key);
-            intent.setAction(action);
+            if (isExplicit) {
+                intent.setActionExplicit(action);
+            } else {
+                intent.setAction(action);
+            }
             return intent;
         } else {
             logger.error("setAction: No Intent found for key " + key);
@@ -162,17 +168,17 @@ import org.slf4j.LoggerFactory;
         }
     }
 
-    public Intent setAction(final Intent intent, final String action) {
+    public Intent setAction(final Intent intent, final String action, boolean isExplicit) {
         for (final InstanceKey candKey : seen.keySet()) {
             if (seen.get(candKey).equals(intent)) {
-                return setAction(candKey, action);
+                return setAction(candKey, action, isExplicit);
             }
         }
 
         throw new IllegalStateException("The Intent " + intent + " was not registered before!");
     }
 
-    public Intent setAction(final InstanceKey key, final InstanceKey actionKey) {
+    public Intent setAction(final InstanceKey key, final InstanceKey actionKey, boolean isExplicit) {
         if (actionKey == null) {
             logger.trace("Intent: given action is null, keeping it untouched.");
             return find(key);
@@ -195,6 +201,6 @@ import org.slf4j.LoggerFactory;
             }
         }
 
-        return setAction(key, action);
+        return setAction(key, action, isExplicit);
     }
 }

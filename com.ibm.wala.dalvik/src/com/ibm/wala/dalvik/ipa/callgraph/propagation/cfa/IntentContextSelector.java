@@ -165,7 +165,6 @@ public class IntentContextSelector implements ContextSelector {
 
             // Add the context
             if (intent != null) {
-                logger.info("Intent Resolved: {}", intent);
                 AndroidEntryPointManager.MANAGER.addCallSeen(site, intent); 
                 return new IntentContext(ctx, intent);
             } else {
@@ -189,7 +188,6 @@ public class IntentContextSelector implements ContextSelector {
                         }
                         // TODO override equals and hashCode?
                     };   
-                    logger.info("Add SystemService target {}", intent);
                 } else {
                     intent = null;
                     if (param == null) {
@@ -203,6 +201,7 @@ public class IntentContextSelector implements ContextSelector {
             // Add the context
             if (intent != null) {
                 AndroidEntryPointManager.MANAGER.addCallSeen(site, intent); 
+                logger.info("SystemService {} in {} by {}", intent, site, caller);
                 return new IntentContext(ctx, intent);
             }
         } else if (callee.isInit() && callee.getDeclaringClass().getName().equals(AndroidTypes.IntentName)) {
@@ -212,6 +211,7 @@ public class IntentContextSelector implements ContextSelector {
             final InstanceKey self = actualParameters[0];
             final Selector calleeSel = callee.getSelector();
 
+            boolean isExplicit = false;
             final InstanceKey uriKey;
             final InstanceKey actionKey;
             { // fetch actionKey, uriKey
@@ -237,7 +237,7 @@ public class IntentContextSelector implements ContextSelector {
                             }
                             actionKey = null;
                         } else {
-                            logger.error("No handling implemented for: {}", calleeSel);
+                            logger.error("No handling implemented for: {}", callee);
                             actionKey = null;
                         }
                         uriKey = null;
@@ -252,8 +252,9 @@ public class IntentContextSelector implements ContextSelector {
                             logger.debug("Handling Intent(Context, Class)");
                             actionKey = actualParameters[2];
                             uriKey = null;
+                            isExplicit = true;
                         } else {
-                            logger.error("No handling implemented for: {}",  calleeSel);
+                            logger.error("No handling implemented for: {}",  callee);
                             actionKey = null;
                             uriKey = null;
                         }
@@ -263,8 +264,9 @@ public class IntentContextSelector implements ContextSelector {
                             logger.debug("Handling Intent(String action, Uri uri, Context, Class)");
                             actionKey = actualParameters[4];
                             uriKey = actualParameters[2];
+                            isExplicit = true;
                         } else {
-                            logger.error("No handling implemented for: {}", calleeSel);
+                            logger.error("No handling implemented for: {}", callee);
                             actionKey = null;
                             uriKey = null;
                         }
@@ -276,12 +278,23 @@ public class IntentContextSelector implements ContextSelector {
                 }
             } // of fetch actionKey
 
-            intents.findOrCreate(self);   // Creates Wala-internal Intent
+            final Intent intent = intents.findOrCreate(self);   // Creates Wala-internal Intent
+
             if (actionKey == null) {
                 logger.trace("Got action as 'null'. Obviously can't handle this. Caller was {}", caller.getMethod());
+                if (isExplicit) {
+                    logger.warn("An Intent with undeteminable target would be explicit - unbinding. Caller was {}", caller.getMethod());
+                    intent.unbind();
+                }
             } else {
-                intents.setAction(self, actionKey);
+                intents.setAction(self, actionKey, isExplicit);
             }
+            //final Intent intent = intents.find(self);
+            //if (isExplicit && (! intent.isExplicit())) {    // Has to check if already explicit as we get here multiple times
+            //    intents.setExplicit(self);
+            //}
+
+            logger.debug("Setting the target of Intent {} in {} by {}", intent, site, caller);
             // TODO: Evaluate uriKey
         } else if (callee.getSelector().equals(Selector.make("setAction(Ljava/lang/String;)Landroid/content/Intent;")) && 
                 callee.getDeclaringClass().getName().equals(AndroidTypes.IntentName)) {

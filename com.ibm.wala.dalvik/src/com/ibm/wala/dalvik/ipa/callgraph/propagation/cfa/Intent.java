@@ -144,14 +144,50 @@ public class Intent implements ContextItem {
                 break;
             case EXPLICIT:
                 logger.warn("setExplicit was called multiple times on {}", this);
-                explicit = Explicit.MULTI;
-                action = UNBOUND;
-                type = IntentType.UNKNOWN_TARGET;
+                unbind();
         }
     }
 
     public boolean isExplicit() {
         return explicit == Explicit.EXPLICIT;
+    }
+
+
+
+    /**
+     *  Set the explicit target of the intent.
+     *
+     *  If setAction is called multible times on an Intent it becomes UNBOUND.
+     */
+    public void setActionExplicit(Atom action) {
+        if (action == null) {
+            throw new IllegalArgumentException("Action may not be null!");
+        }
+
+        if (this.action == null) {
+            assert (this.explicit == Explicit.UNSET) : "No Action but Intent is not UNSET - is " + this.explicit;
+            this.action = action;
+            this.explicit = Explicit.EXPLICIT;
+            logger.info("Intent({})", action);
+        } else if (isExplicit() && (! this.action.equals(action))) {
+            // We already have the explicit target. Ignore the change.
+            logger.warn("Explicit Intent {} becomes ubound! Secod action {} requested", this, action);
+            unbind();
+        } else if (! isExplicit() ) {
+            logger.warn("Making implicit Intent {} explictit! Target: {}", this, action);
+            this.action = action;
+            this.explicit = Explicit.EXPLICIT;
+            // TODO: Set type?
+        } else {
+            // Set to same values - OK
+        }
+    }
+
+
+    public void unbind() {
+        this.action = UNBOUND;
+        this.type = IntentType.UNKNOWN_TARGET;
+        this.explicit = Explicit.MULTI;             // XXX shoulb we do this?
     }
 
     /**
@@ -166,13 +202,13 @@ public class Intent implements ContextItem {
         } else if (isExplicit()) {
             // We already have the explicit target. Ignore the change.
         } else if (! action.equals(this.action)) {
-            this.action = UNBOUND;
-            type = IntentType.UNKNOWN_TARGET;
+            unbind();
         }
     }
 
     public Atom getAction() {
-        if (this.action == null) {
+        if (this.action == null)  {
+            assert (! isExplicit()) : "Beeing explicit implies having an action!";
             return UNBOUND; 
         }
         return this.action;
