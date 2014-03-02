@@ -261,7 +261,9 @@ public class AndroidStartComponentTool {
         logger.debug("Fetching caller context...");
         final SSAValue androidContext;
         if (caller.getName().equals(AndroidTypes.ContextWrapperName)) {
-            { // Fetch ContextWrapperName.mBase => androidContext
+            this.callerContext = AndroidTypes.AndroidContextType.USELESS;
+            return null;
+            /*{ // Fetch ContextWrapperName.mBase => androidContext
                 androidContext = pm.getUnmanaged(AndroidTypes.Context, "callerContext");
                 logger.debug("Fetching ContextWrapperName.mBase");
 
@@ -275,7 +277,7 @@ public class AndroidStartComponentTool {
                 this.callerContext = AndroidTypes.AndroidContextType.CONTEXT_IMPL;
                 logger.info("Caller has android-context type: ContextWrapper(ContextImpl)");
                 return androidContext;
-            }
+            } */
         } else if (caller.getName().equals(AndroidTypes.ContextImplName)) {
             { // self is already the right context
                 androidContext = self;

@@ -123,9 +123,14 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
     /**
      *  Read possible targets of the intents Infos.
      */
-    private AndroidComponent fetchTargetComponent(final Intent intent, final IMethod method) { 
+    private AndroidComponent fetchTargetComponent(final Intent intent, final IMethod method) {
+        assert (method != null);
+        assert (intentStarters.getInfo(method.getReference()) != null) : "No IntentStarter for Method " + method + " " + intent;
         if (intent.getComponent() != null) {
             return intent.getComponent();
+        } else if (intent.getType() == Intent.IntentType.SYSTEM_SERVICE) {
+            logger.error("Called fetchTargetComponent on a SystemService");
+            return null;
         } else {
             final Set<AndroidComponent> possibleTargets = intentStarters.getInfo(method.getReference()).getComponentsPossible(); 
             if (possibleTargets.size() == 1) {

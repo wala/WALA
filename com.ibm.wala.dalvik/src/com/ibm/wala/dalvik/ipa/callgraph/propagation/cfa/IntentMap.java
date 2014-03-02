@@ -54,8 +54,22 @@ import org.slf4j.LoggerFactory;
 /*package*/ class IntentMap {
     private static final Logger logger = LoggerFactory.getLogger(IntentContextSelector.class);
 
-    /* package */ final Map<InstanceKey, Intent> seen = new HashMap<InstanceKey, Intent>();
+    private final Map<InstanceKey, Intent> seen = new HashMap<InstanceKey, Intent>();
+    private final Map<Intent, Intent> immutables = new HashMap<Intent, Intent>();
 
+    public Intent findOrCreateImmutable(final Intent intent) {
+        if (immutables.containsKey(intent)) {
+            final Intent immutable = immutables.get(intent);
+            assert (immutable.getAction().equals(intent.getAction()));
+            return immutable;
+        } else {
+            final Intent immutable = intent.clone();
+            immutable.setImmutable();
+            immutables.put(intent, immutable);
+            logger.debug("Now {} immutables", immutables.size());
+            return immutable;
+        }
+    }
 
     public Intent find(final InstanceKey key) throws IndexOutOfBoundsException {
         if (key == null) {

@@ -74,7 +74,7 @@ import org.slf4j.LoggerFactory;
  * @author  Tobias Blaschke <code@tobiasblaschke.de>
  * @since   2013-10-12
  */
-public class Intent implements ContextItem {
+public class Intent implements ContextItem, Comparable<Intent> {
     private static final Logger logger = LoggerFactory.getLogger(Intent.class);
 
     /**
@@ -112,6 +112,7 @@ public class Intent implements ContextItem {
     private IntentType type;
     private Explicit explicit = Explicit.UNSET;
     private AndroidComponent targetCompontent;  // Activity, Service, ...
+    private boolean immutable = false;
 
     public Intent() {
         this.action = null;
@@ -152,6 +153,19 @@ public class Intent implements ContextItem {
         return explicit == Explicit.EXPLICIT;
     }
 
+    public void setImmutable() {
+        this.immutable = true;
+    }
+
+    public Intent clone() {
+        final Intent clone = new Intent();
+        clone.action = this.action; // OK here?
+        clone.uri = this.uri;
+        clone.type = this.type;
+        clone.explicit = this.explicit;
+        clone.targetCompontent = this.targetCompontent;
+        return clone;
+    }
 
 
     /**
@@ -166,6 +180,7 @@ public class Intent implements ContextItem {
 
         if (this.action == null) {
             assert (this.explicit == Explicit.UNSET) : "No Action but Intent is not UNSET - is " + this.explicit;
+            assert (! immutable) : "Intent was marked immutable - can't change it.";
             this.action = action;
             this.explicit = Explicit.EXPLICIT;
             logger.info("Intent({})", action);
@@ -175,6 +190,7 @@ public class Intent implements ContextItem {
             unbind();
         } else if (! isExplicit() ) {
             logger.warn("Making implicit Intent {} explictit! Target: {}", this, action);
+            assert (! immutable) : "Intent was marked immutable - can't change it.";
             this.action = action;
             this.explicit = Explicit.EXPLICIT;
             // TODO: Set type?
@@ -185,6 +201,7 @@ public class Intent implements ContextItem {
 
 
     public void unbind() {
+        assert (! immutable) : "Intent was marked immutable - can't change it.";
         this.action = UNBOUND;
         this.type = IntentType.UNKNOWN_TARGET;
         this.explicit = Explicit.MULTI;             // XXX shoulb we do this?
@@ -197,6 +214,7 @@ public class Intent implements ContextItem {
      */
     public void setAction(Atom action) {
         if (this.action == null) {
+            assert (! immutable) : "Intent was marked immutable - can't change it.";
             this.action = action;
             logger.info("Intent({})", action);
         } else if (isExplicit()) {
@@ -218,7 +236,9 @@ public class Intent implements ContextItem {
         if (this.type != null) {
             return this.type;
         } else {
-            if (isStandardAction(this)) {
+            if (isSystemService(this)) {
+                this.type = IntentType.SYSTEM_SERVICE;
+            } else if (isStandardAction(this)) {
                 this.type = IntentType.STANDARD_ACTION;
             } else if (isInternal(this)) {
                 this.type = IntentType.INTERNAL_TARGET;
@@ -243,6 +263,11 @@ public class Intent implements ContextItem {
      */
     public AndroidComponent getComponent() {
         return this.targetCompontent;
+    }
+
+    private static boolean isSystemService(Intent intent) {  
+        assert (intent.action != null);
+        return ((intent.action.getVal(0) != 'L') && (intent.action.rIndex((byte) '/') < 0) && (intent.action.rIndex((byte) '.') < 0));
     }
 
     /**
@@ -417,13 +442,22 @@ public class Intent implements ContextItem {
 
             // DO NOT USE TYPE!
             if (this.uri != null) {
-                return ( (this.uri.equals(other.uri)) && equalAction(other));
+                return ( (this.uri.equals(other.uri)) && equalAction(other) ); // && (this.explicit == other.explicit));
             } else {
-                return ( (other.uri == null) && equalAction(other) ) ;
+                return ( (other.uri == null) && equalAction(other) ); // && (this.explicit == other.explicit)) ;
             }
         } else {
             System.err.println("WARNING: Can't compare Intent to " + o.getClass());
             return false;
         }
+    }
+
+    public Intent resolve() {
+        return AndroidEntryPointManager.MANAGER.getIntent(this);
+    }
+
+    @Override
+    public int compareTo(Intent other) {
+        return getAction().toString().compareTo(other.getAction().toString());
     }
 }

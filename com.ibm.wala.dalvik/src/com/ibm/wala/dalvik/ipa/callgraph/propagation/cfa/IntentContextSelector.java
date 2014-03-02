@@ -126,6 +126,7 @@ public class IntentContextSelector implements ContextSelector {
 
         if (this.parent != null) {
             ctx = parent.getCalleeTarget(caller, site, callee, actualParameters);
+            assert (ctx.get(Intent.INTENT_KEY) == null) : "Already have Intent: " + ctx + " caller " + caller + " callee " + callee;
         }
 
         if (intentStarters.isStarter(callee.getReference())) {
@@ -165,13 +166,17 @@ public class IntentContextSelector implements ContextSelector {
 
             // Add the context
             if (intent != null) {
-                AndroidEntryPointManager.MANAGER.addCallSeen(site, intent); 
-                return new IntentContext(ctx, intent);
+                AndroidEntryPointManager.MANAGER.addCallSeen(site, intent);
+                final Intent iintent = intents.findOrCreateImmutable(intent);
+                return new IntentContext(ctx, iintent);
+                //return new IntentContext(iintent);
             } else {
                 logger.warn("Encountered unresolvable Intent");
                 intent = new Intent("Unresolvable");
+                intent.setImmutable();
                 AndroidEntryPointManager.MANAGER.addCallSeen(site, intent); 
                 return new IntentContext(ctx, intent);
+                //return new IntentContext(intent);
             }
         } else if (callee.getReference().toString().contains("getSystemService")) {
             assert(actualParameters.length == 2) : "PARAMS LENGTH IS" + actualParameters.length;
@@ -202,7 +207,9 @@ public class IntentContextSelector implements ContextSelector {
             if (intent != null) {
                 AndroidEntryPointManager.MANAGER.addCallSeen(site, intent); 
                 logger.info("SystemService {} in {} by {}", intent, site, caller);
-                return new IntentContext(ctx, intent);
+                final Intent iintent = intents.findOrCreateImmutable(intent);
+                return new IntentContext(ctx, iintent);
+                //return new IntentContext(iintent);
             }
         } else if (callee.isInit() && callee.getDeclaringClass().getName().equals(AndroidTypes.IntentName)) {
             //
@@ -302,18 +309,20 @@ public class IntentContextSelector implements ContextSelector {
             final InstanceKey actionKey = actualParameters[1];
             final Intent intent = intents.find(self);
 
-            logger.warn("Re-Setting the target of Intent {} in {} by {}", intent, site, caller);
-            // Also we _could_ set the new target this is probably a bad idea: If setAction is called 
-            // from a branch in execution the original target could still be called. 
-            // We should implement intents, that can have multiple targets.                     
-            intents.setAction(self, actionKey, false); // May unbind internally
-            //intents.unbind(self);
+            if (AndroidEntryPointManager.MANAGER.isAllowIntentRerouting()) {
+                logger.warn("Re-Setting the target of Intent {} in {} by {}", intent, site, caller);
+                intents.setAction(self, actionKey, false); // May unbind internally
+            } else {
+                intents.unbind(self);
+            }
+            logger.info("Encountered Intent.setAction - Intent is now: {}", intent);
         } else if (callee.getSelector().equals(Selector.make("setComponent(Landroid/content/ComponentName;)Landroid/content/Intent;"))) {
             // TODO: We can't extract from ComponentName yet.
             final InstanceKey self = actualParameters[0];
             final Intent intent = intents.find(self);
 
             logger.warn("Re-Setting the target of Intent {} in {} by {}", intent, site, caller);
+            
             intent.setExplicit();
             intents.unbind(self);
         } else if (callee.getSelector().equals(Selector.make("setClass(Landroid/content/Context;Ljava/lang/Class;)Landroid/content/Intent;")) || 
@@ -323,8 +332,13 @@ public class IntentContextSelector implements ContextSelector {
             final InstanceKey actionKey = actualParameters[2];
             final Intent intent = intents.find(self);
 
-            logger.warn("Re-Setting the target of Intent {} in {} by {}", intent, site, caller);
-            intents.setAction(self, actionKey, true);
+            if (AndroidEntryPointManager.MANAGER.isAllowIntentRerouting()) {
+                logger.warn("Re-Setting the target of Intent {} in {} by {}", intent, site, caller);
+                intents.setAction(self, actionKey, true);
+            } else {
+                intents.unbind(self);
+            }
+            logger.info("Encountered Intent.setClass - Intent is now: {}", intent);
         } else if (callee.getSelector().equals(Selector.make("fillIn(Landroid/content/Intent;I)I"))) {
             // See 'setAction' before...                                                        TODO
             logger.warn("Intent.fillIn not implemented - Caller: {}", caller);
