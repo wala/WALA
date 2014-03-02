@@ -107,7 +107,7 @@ public class Intent implements ContextItem {
 
     public static final Atom UNBOUND = Atom.findOrCreateAsciiAtom("Unbound");
 
-    public Atom action;
+    private Atom action;
     public Atom uri;
     private IntentType type;
     private Explicit explicit = Explicit.UNSET;

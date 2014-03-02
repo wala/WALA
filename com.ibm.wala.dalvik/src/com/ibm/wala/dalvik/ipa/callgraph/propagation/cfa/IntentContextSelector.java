@@ -300,14 +300,34 @@ public class IntentContextSelector implements ContextSelector {
                 callee.getDeclaringClass().getName().equals(AndroidTypes.IntentName)) {
             final InstanceKey self = actualParameters[0];
             final InstanceKey actionKey = actualParameters[1];
+            final Intent intent = intents.find(self);
 
+            logger.warn("Re-Setting the target of Intent {} in {} by {}", intent, site, caller);
             // Also we _could_ set the new target this is probably a bad idea: If setAction is called 
             // from a branch in execution the original target could still be called. 
-            // We should implement intents, that can have multiple targets.                     TODO
-            //intents.setAction(self, actionKey);
+            // We should implement intents, that can have multiple targets.                     
+            intents.setAction(self, actionKey, false); // May unbind internally
+            //intents.unbind(self);
+        } else if (callee.getSelector().equals(Selector.make("setComponent(Landroid/content/ComponentName;)Landroid/content/Intent;"))) {
+            // TODO: We can't extract from ComponentName yet.
+            final InstanceKey self = actualParameters[0];
+            final Intent intent = intents.find(self);
+
+            logger.warn("Re-Setting the target of Intent {} in {} by {}", intent, site, caller);
+            intent.setExplicit();
             intents.unbind(self);
+        } else if (callee.getSelector().equals(Selector.make("setClass(Landroid/content/Context;Ljava/lang/Class;)Landroid/content/Intent;")) || 
+                callee.getSelector().equals(Selector.make("setClassName(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;")) ||
+                callee.getSelector().equals(Selector.make("setClassName(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"))) {
+            final InstanceKey self = actualParameters[0];
+            final InstanceKey actionKey = actualParameters[2];
+            final Intent intent = intents.find(self);
+
+            logger.warn("Re-Setting the target of Intent {} in {} by {}", intent, site, caller);
+            intents.setAction(self, actionKey, true);
         } else if (callee.getSelector().equals(Selector.make("fillIn(Landroid/content/Intent;I)I"))) {
             // See 'setAction' before...                                                        TODO
+            logger.warn("Intent.fillIn not implemented - Caller: {}", caller);
             final InstanceKey self = actualParameters[0];
             intents.unbind(self);
         } else if (callee.isInit() && callee.getDeclaringClass().getName().equals(AndroidTypes.IntentSenderName)) {
@@ -433,6 +453,14 @@ public class IntentContextSelector implements ContextSelector {
             return IntSetUtil.make(new int[] { 0, 1 });
         } else if (target.getSelector().equals(Selector.make("setAction(Ljava/lang/String;)Landroid/content/Intent;"))) {
             return IntSetUtil.make(new int[] { 0, 1 });
+        } else if (target.getSelector().equals(Selector.make("setComponent(Landroid/content/ComponentName;)Landroid/content/Intent;"))) {
+            return IntSetUtil.make(new int[] { 0 });
+        } else if (target.getSelector().equals(Selector.make("setClass(Landroid/content/Context;Ljava/lang/Class;)Landroid/content/Intent;"))) {
+            return IntSetUtil.make(new int[] { 0, 2 });
+        } else if (target.getSelector().equals(Selector.make("setClassName(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"))) {
+            return IntSetUtil.make(new int[] { 0, 2 });
+        } else if (target.getSelector().equals(Selector.make("setClassName(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;"))) {
+            return IntSetUtil.make(new int[] { 0, 2 });
         }
 
 
