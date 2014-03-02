@@ -1311,21 +1311,27 @@ public class ParameterAccessor { // extends Param-Manager
             // If we got here we need cha
             if (cha != null) {
                 { // Assignable from overrides
-                    for (final SSAValue cand : overrides) {
-                        if (isAssignable(cand, param, cha)) {
-                            assigned.add(cand);
-                            logger.debug("\t\tAsigning: {} from the overrides (ass)", cand);
-                            continue forEachParameter;
+                    try {
+                        for (final SSAValue cand : overrides) {
+                            if (isAssignable(cand, param, cha)) {
+                                assigned.add(cand);
+                                logger.debug("\t\tAsigning: {} from the overrides (ass)", cand);
+                                continue forEachParameter;
+                            }
                         }
+                    } catch (ClassLookupException e) {
                     }
                 }
 
                 { // Assignable from this params
                     for (final Parameter cand : thisParams) {
-                        if (isAssignable(cand, param, cha)) {
-                            assigned.add(cand);
-                            logger.debug("\t\tAsigning: {} from the callrs params (ass)", cand);
-                            continue forEachParameter;
+                        try {
+                            if (isAssignable(cand, param, cha)) {
+                                assigned.add(cand);
+                                logger.debug("\t\tAsigning: {} from the callrs params (ass)", cand);
+                                continue forEachParameter;
+                            }
+                        } catch (ClassLookupException e) {
                         }
                     }
                 }
