@@ -41,6 +41,7 @@ import com.ibm.wala.ipa.callgraph.impl.FakeRootClass;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StartInfo;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StarterFlags;
 import com.ibm.wala.dalvik.util.AndroidTypes;
+import com.ibm.wala.dalvik.util.AndroidComponent;
 
 import com.ibm.wala.types.FieldReference;
 
@@ -110,7 +111,8 @@ public class IntentModel extends AndroidModel {
      *  {@inheritDoc}
      */
     protected boolean selectEntryPoint(AndroidEntryPoint ep) {
-        return ep.isMemberOf(this.target);
+        return ep.isMemberOf(this.target) || ep.belongsTo(AndroidComponent.APPLICATION) ||
+            ep.belongsTo(AndroidComponent.PROVIDER);
     }
 
     public IntentModel(final IClassHierarchy cha, final AnalysisOptions options, final AnalysisCache cache, Atom target) {
