@@ -95,6 +95,9 @@ public class AndroidEntryPoint extends DexEntryPoint {
     }
 
     public boolean belongsTo(AndroidComponent compo) {
+        if ((compo == AndroidComponent.SERVICE) && (this.superType.equals(AndroidComponent.INTENT_SERVICE))) {
+            return true;
+        }
         return (this.superType.equals(compo));
     }
 

@@ -121,7 +121,16 @@ public class MiniModel extends AndroidModel {
      *  {@inheritDoc}
      */
     protected boolean selectEntryPoint(AndroidEntryPoint ep) {
-        return ep.belongsTo(forCompo);
+        if (ep.belongsTo(forCompo)) {
+            logger.debug("MiniModel calls: {}", ep); 
+            return true;
+        }
+        return false;
+    }
+    public Descriptor getDescriptor() throws CancelException {
+        final Descriptor descr = super.getDescriptor();
+        logger.info("MiniModel: {}", descr); 
+        return descr;
     }
 
     public MiniModel(final IClassHierarchy cha, final AnalysisOptions options, final AnalysisCache cache, 
@@ -154,6 +163,11 @@ public class MiniModel extends AndroidModel {
         if (!(mClass.containsMethod(model.getSelector()))) {
             mClass.addMethod(super.model);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "<" + this.getClass() + " name=" + this.name + " for=" + forCompo + " />";
     }
 }
 

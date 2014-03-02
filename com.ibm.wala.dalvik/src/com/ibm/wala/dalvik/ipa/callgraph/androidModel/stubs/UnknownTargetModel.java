@@ -31,6 +31,7 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs;
 
+import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
@@ -121,13 +122,25 @@ public class UnknownTargetModel  extends AndroidModel {
     private static Logger logger = LoggerFactory.getLogger(UnknownTargetModel.class);
 
     public final Atom name;
+    private boolean doMini = true;
+    private MiniModel miniModel = null;
+    private ExternalModel externalModel = null;
     private final AndroidComponent target;
     // uses AndroidModel.cha;
-    private final MiniModel allInternal;
-    private final ExternalModel external;
 
     /**
-     *  @param  target  Component Type, may be null
+     *  The UnknownTargetModel does not call any entrypoints on it's own.
+     *
+     *  Instead it first creates a restricted AndroidModel and an ExternalModel.
+     *  These are actually called.
+     */
+    @Override
+    protected boolean selectEntryPoint(AndroidEntryPoint ep) {
+        return false;
+    }
+   
+    /**
+     *  @param  target  Component Type, may be null: No restrictions are imposed on AndroidModel then
      */
     public UnknownTargetModel(final IClassHierarchy cha, final AnalysisOptions options, final AnalysisCache cache, 
             AndroidComponent target) throws CancelException {
@@ -136,11 +149,13 @@ public class UnknownTargetModel  extends AndroidModel {
         if (target == null) {   // TODO: Enable
             throw new IllegalArgumentException("The component type requested to create an UnknownTargetModel for was null");
         }
-        this.name = Atom.findOrCreateAsciiAtom("startUnknown" + target.toString());
+        String sName = target.toString();
+        String cName = Character.toUpperCase(sName.charAt(0)) + sName.substring(1).toLowerCase();
+        this.name = Atom.findOrCreateAsciiAtom("startUnknown" + cName);
         this.target = target;
 
-        this.allInternal = new MiniModel(cha, options, cache, target);
-        this.external = new ExternalModel(cha, options, cache, target);
+        //this.allInternal = new MiniModel(cha, options, cache, target);
+        //this.external = new ExternalModel(cha, options, cache, target);
 
         logger.debug("Will be known as {}/{}", AndroidModelClass.ANDROID_MODEL_CLASS.getName(), this.name); 
     }
@@ -164,100 +179,95 @@ public class UnknownTargetModel  extends AndroidModel {
     }
  
     
-    @Override
-    protected boolean selectEntryPoint(AndroidEntryPoint ep) {
-        try {
-            if (! (ep.getMethod().equals(this.allInternal.getMethod()) || ep.getMethod().equals(this.external.getMethod()))) {
-                // logger.error("Asked for unexpected EP: " + ep); - is ok
-                return false;
-            } else {
-                return true;
-            }
-        } catch (CancelException e) {
-            throw new IllegalStateException(e);
-        }
-    }
  
     @Override
     protected void build(Atom name, Collection<? extends AndroidEntryPoint> entrypoints) throws CancelException {
-        // Start evil hack(TM)
-        final AndroidEntryPoint internalAsEp = new AndroidEntryPoint(new ExecutionOrder(1), this.allInternal.getMethod(), this.cha);
-        final AndroidEntryPoint externalAsEp = new AndroidEntryPoint(new ExecutionOrder(2), this.external.getMethod(), this.cha);
-        List<AndroidEntryPoint> pseudoEps = new ArrayList<AndroidEntryPoint>(2);
-        pseudoEps.add(internalAsEp);
-        pseudoEps.add(externalAsEp);
-        super.build(name, pseudoEps);
-    }
+        assert ((entrypoints == null) || (! entrypoints.iterator().hasNext()));
 
-    /*
-    @Override 
-    protected void build(Atom name, Iterable<? extends Entrypoint> entrypoints) throws CancelException {
-
-        final IMethod allInternalMethod = allInternal.getMethod();
-        final int allIntenalParamCount = allInternalMethod.getNumberOfParameters();
-        final IMethod externalMethod = external.getMethod();
-        final int externalParamcount = externalMethod.getNumberOfParameters();
-
-        final List<TypeName> myParams = new ArrayList<TypeName>(allIntenalParamCount);
-
-        for (int i = 0 ; i < allIntenalParamCount; ++i) {
-            myParams.add(allInternalMethod.getParameterType(i).getName());
-        }
-
-        for (int i = 0 ; i < externalParamcount; ++i) {
-            final TypeName param = externalMethod.getParameterType(i).getName();
-            if (!(myParams.contains(param))) {
-                myParams.add(param);
-            }
-        }
-
-        TypeName[] aMyParams = new TypeName[myParams.size()];
-        aMyParams = myParams.toArray(aMyParams);
-
-        this.descr = Descriptor.findOrCreate(aMyParams, TypeReference.VoidName);
-        this.mRef = MethodReference.findOrCreate(AndroidModelClass.ANDROID_MODEL_CLASS, name, this.descr);
-        final Selector selector = this.mRef.getSelector();
-
-        // Assert not registered yet
-        final AndroidModelClass mClass = AndroidModelClass.getInstance(this.cha);
-        this.klass = mClass;
-        if (mClass.containsMethod(selector)) {
-            this.model = (SummarizedMethod) mClass.getMethod(selector);
-            return;
-        }
-
-         this.body = new VolatileMethodSummary(new MethodSummary(this.mRef));
-         this.body.setStatic(true);
-
-         logger.debug("The Selector of the method will be " + selector);
-         populate(null);
-
-         this.model = new SummarizedMethod(this.mRef, this.body.getMethodSummary(), this.klass) {
-            @Override
-            public TypeReference getParameterType (int i) {
-                IClassHierarchy cha = getClassHierarchy();
-                TypeReference tRef = super.getParameterType(i);
-
-                if (tRef.isClassType()) {
-                    if (cha.lookupClass(tRef) != null) {
-                        return tRef;
-                    } else {
-                        for (IClass c : cha) {
-                            if (c.getName().toString().equals(tRef.getName().toString())) {
-                                return c.getReference();
-                            }
-                        }
-                    }
-
-                    throw new IllegalStateException("Error looking up " + tRef);
-                } else {
-                    return tRef;
+        {   // Check if this Application has components, that implement target. If not we don't
+            // have to build a MiniModel.
+            doMini = false;
+            for (final AndroidEntryPoint ep : AndroidEntryPointManager.ENTRIES) {
+                if (ep.belongsTo(this.target)) {
+                    doMini = true;
+                    break;
                 }
             }
-        };
+        }
+       
+        if (doMini) {
+            miniModel = new MiniModel(this.cha, this.options, this.cache, this.target);
+        }
+        externalModel = new ExternalModel(this.cha, this.options, this.cache, this.target);
+
+        final Descriptor descr;
+        final Selector selector;
+        {
+            if (doMini) {
+                final TypeName[] othersA = miniModel.getDescriptor().getParameters();
+                final Set<TypeName> others;
+                if (othersA != null) {
+                    others = new HashSet<TypeName>(Arrays.asList(othersA));
+                } else {
+                    logger.error("{} has no paramteres!", miniModel);
+                    others = new HashSet<TypeName>();
+                }
+                doMini = others.size() > 0;
+                others.addAll(Arrays.asList(externalModel.getDescriptor().getParameters()));
+                descr = Descriptor.findOrCreate(others.toArray(new TypeName[] {}), TypeReference.VoidName); // Return the intent of external? TODO
+            } else {
+                descr = Descriptor.findOrCreate(externalModel.getDescriptor().getParameters(), TypeReference.VoidName);
+           }
+           selector = new Selector(name, descr);
+        }
+
+        /*{   // Skip construction if there already exists a model wit this name. This should
+            // not happen.
+            final AndroidModelClass mClass = AndroidModelClass.getInstance(this.cha);
+            if (mClass.containsMethod(selector)) {
+                logger.error("There is already an Android-Model with name {}!", selector);
+                this.built = true;
+                this.model = (SummarizedMethod) mClass.getMethod(selector);
+                return;
+            }
+        } // */
+
+        {   // Set some properties of the later method
+            this.klass = AndroidModelClass.getInstance(this.cha);
+            this.mRef = MethodReference.findOrCreate(AndroidModelClass.ANDROID_MODEL_CLASS, name, descr);
+            this.body = new VolatileMethodSummary(new MethodSummary(this.mRef));
+            this.body.setStatic(true);
+        }
+
+        {   // Start building
+            populate(null);
+            this.model = new SummarizedMethod(this.mRef, this.body.getMethodSummary(), this.klass) {
+                @Override
+                public TypeReference getParameterType (int i) {
+                    IClassHierarchy cha = getClassHierarchy();
+                    TypeReference tRef = super.getParameterType(i);
+
+                    if (tRef.isClassType()) {
+                        if (cha.lookupClass(tRef) != null) {
+                            return tRef;
+                        } else {
+                            for (IClass c : cha) {
+                                if (c.getName().toString().equals(tRef.getName().toString())) {
+                                    return c.getReference();
+                                }
+                            }
+                        }
+
+                        throw new IllegalStateException("Error looking up " + tRef);
+                    } else {
+                        return tRef;
+                    }
+                }
+            }; // of this.model
+        }
 
         this.built = true;
-    }*/
+    }
 
     /**
      *  Fill the model with instructions.
@@ -266,15 +276,51 @@ public class UnknownTargetModel  extends AndroidModel {
      */
      //@Override
      private void populate(Iterable<? extends AndroidEntryPoint> entrypoints) throws CancelException {
+        assert ((entrypoints == null) || (! entrypoints.iterator().hasNext())); 
         assert (! built) : "You can only build once";
 
+        final TypeSafeInstructionFactory instructionFactory = new TypeSafeInstructionFactory(this.cha);
+        final ParameterAccessor pAcc = new ParameterAccessor(this.mRef, /* hasImplicitThis */ false);
+        final SSAValueManager pm = new SSAValueManager(pAcc);
+        final Instantiator instantiator = new Instantiator(this.body, instructionFactory, pm, this.cha, this.mRef, this.scope);
+
+        if (doMini) { // Call a MiniModel
+            //final MiniModel miniModel = new MiniModel(this.cha, this.options, this.cache, this.target);
+            final IMethod mini = miniModel.getMethod();
+            final ParameterAccessor miniAcc = new ParameterAccessor(mini);
+            final List<SSAValue> params = pAcc.connectThrough(miniAcc, null, null, this.cha, instantiator, false, null, null);
+            final SSAValue excpetion = pm.getException();
+            final int pc = this.body.getNextProgramCounter();
+            final CallSiteReference site = CallSiteReference.make(pc, mini.getReference(), IInvokeInstruction.Dispatch.STATIC);
+            final SSAInstruction invokation = instructionFactory.InvokeInstruction(pc, params, excpetion, site);
+            this.body.addStatement(invokation);
+        }
+
+        final SSAValue extRet;
+        { // Call the externalTarget Model
+            //final ExternalModel externalModel = new ExternalModel(this.cha, this.options, this.cache, this.target);
+            final IMethod external = externalModel.getMethod();
+            final ParameterAccessor externalAcc = new ParameterAccessor(external);
+            final List<SSAValue> params = pAcc.connectThrough(externalAcc, null, null, this.cha, instantiator, false, null, null);
+            final SSAValue excpetion = pm.getException();
+            extRet = pm.getUnmanaged(external.getReturnType() , "extRet");
+            final int pc = this.body.getNextProgramCounter();
+            final CallSiteReference site = CallSiteReference.make(pc, external.getReference(), IInvokeInstruction.Dispatch.STATIC);
+            final SSAInstruction invokation = instructionFactory.InvokeInstruction(pc, extRet, params, excpetion, site);
+            this.body.addStatement(invokation);
+        }
+        // TODO: Do somethig with extRet?
+
+        this.body.setLocalNames(pm.makeLocalNames());
+     }
+        /*
         final ParameterAccessor internalAcc = new ParameterAccessor(this.allInternal.getMethod());
         final ParameterAccessor externalAcc = new ParameterAccessor(this.external.getMethod());
-        final ParameterAccessor thisAcc = new ParameterAccessor(this.mRef, /* hasImplicitThis */ false);
+        final ParameterAccessor thisAcc = new ParameterAccessor(this.mRef,  false);
         final SSAValueManager pm = new SSAValueManager(thisAcc);
         final JavaInstructionFactory instructionFactory = new JavaInstructionFactory(); // TODO: Use a typesafe factory?
-        final Instantiator instantiator = new Instantiator(this.body, new TypeSafeInstructionFactory(getClassHierarchy()), 
-                pm, getClassHierarchy(), this.mRef, this.scope);
+    final Instantiator instantiator = new Instantiator(this.body, new TypeSafeInstructionFactory(getClassHierarchy()), 
+            pm, getClassHierarchy(), this.mRef, this.scope);
 
         int nextLocal = thisAcc.getFirstAfter();    // TODO: Use manager?
       
@@ -301,7 +347,7 @@ public class UnknownTargetModel  extends AndroidModel {
 
         final int externalReturnIntent = nextLocal++;
         {   // Call the external model
-            final List<SSAValue> args = thisAcc.connectThrough(externalAcc, null, null /*internalArgs*/, getClassHierarchy(), instantiator,
+            final List<SSAValue> args = thisAcc.connectThrough(externalAcc, null, null , getClassHierarchy(), instantiator,
                     false, null, null);
             final IMethod externalMethod = this.external.getMethod();
 
@@ -318,7 +364,7 @@ public class UnknownTargetModel  extends AndroidModel {
         }
        
         // TODO: Phi-Together returnIntents and return it. Or at least handle external
-    }
+    }*/
 
 }
 

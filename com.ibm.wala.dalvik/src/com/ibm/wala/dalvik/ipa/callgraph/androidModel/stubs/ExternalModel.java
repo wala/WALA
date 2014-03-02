@@ -116,6 +116,7 @@ public class ExternalModel extends AndroidModel {
     private SummarizedMethod activityModel;
     private final AndroidComponent target;
     // uses AndroidModel.cha;
+
     /**
      *  Do not call any EntryPoint.
      *  

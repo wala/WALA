@@ -220,6 +220,10 @@ public class AndroidModel /* makes SummarizedMethod */
         return TypeReference.VoidName;
     }
 
+    public Descriptor getDescriptor() throws CancelException {
+        return getMethod().getDescriptor();
+    }
+
     /**
      *  Generate the SummarizedMethod for the model (in this.model).
      *
@@ -301,8 +305,8 @@ public class AndroidModel /* makes SummarizedMethod */
                             }
                         }
                     }
-
-                    throw new IllegalStateException("Error looking up " + tRef);
+                    return tRef;
+                    //throw new IllegalStateException("Error looking up " + tRef);
                 } else {
                     return tRef;
                 }
@@ -953,5 +957,10 @@ public class AndroidModel /* makes SummarizedMethod */
 
     public IClassHierarchy getClassHierarchy() {
         return this.cha;
+    }
+
+    @Override
+    public String toString() {
+        return "<" + this.getClass() + " name=" + this.name + " />";
     }
 }
