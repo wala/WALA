@@ -720,6 +720,7 @@ public class AndroidModel /* makes SummarizedMethod */
                 defaults.add(unpackedIntent);
             }
         }
+        final SSAValue intent = acc.firstExtends(AndroidTypes.Intent, cha);
 
         final AndroidStartComponentTool tool = new AndroidStartComponentTool(getClassHierarchy(), asMethod, flags, caller, instructionFactory,
                 acc, pm, redirect, self, info, callerNd);
@@ -734,9 +735,13 @@ public class AndroidModel /* makes SummarizedMethod */
 
         // TODO: Check, that caller is an activity where necessary!
 
-        // TODO: Call Activity.setIntent
         //final SSAValue iBinder = tool.fetchIBinder(androidContext);
         //tool.assignIBinder(iBinder, allActivities);
+        if (intent != null) {
+            tool.setIntent(intent, allActivities);
+        } else if (! info.isSystemService()) {  // it's normal for SystemServices
+            logger.warn("Got no Intent in call to: {} as {}", this.name, asMethod);
+        }
 
         // Call the model
         {

@@ -255,6 +255,8 @@ public class AndroidStartComponentTool {
 
         final IClass iCaller = cha.lookupClass(caller);
         final IClass iActivity = cha.lookupClass(AndroidTypes.Activity);
+        final IClass iApp = cha.lookupClass(AndroidTypes.Application);
+        final IClass iService = cha.lookupClass(AndroidTypes.Service);
 
         logger.debug("Fetching caller context...");
         final SSAValue androidContext;
@@ -296,6 +298,16 @@ public class AndroidStartComponentTool {
             androidContext = self;
             this.callerContext = AndroidTypes.AndroidContextType.CONTEXT_BRIDGE;
             logger.info("Caller has android-context type: BridgeContext");
+            return androidContext;
+        } else if (cha.isAssignableFrom(iApp, iCaller)) {
+            androidContext = self;
+            this.callerContext = AndroidTypes.AndroidContextType.APPLICATION;
+            logger.info("Caller has android-context type: Application");
+            return androidContext;
+        } else if (cha.isAssignableFrom(iService, iCaller)) {
+            androidContext = self;
+            this.callerContext = AndroidTypes.AndroidContextType.SERVICE;
+            logger.info("Caller has android-context type: Service");
             return androidContext;
         } else {
             throw new UnsupportedOperationException("Can not handle the callers android-context of " + caller);
@@ -438,6 +450,32 @@ public class AndroidStartComponentTool {
             redirect.addStatement(putInst);
         }
     }
+
+    /**
+     *  Call Activity.setIntent.
+     */
+    public void setIntent(SSAValue intent, List<? extends SSAValue> allActivities) {
+        if (intent == null) {
+            throw new IllegalArgumentException("Null-Intent");
+        }
+        logger.info("Assigning the intent");
+        // TODO: Use Phi?
+        for (SSAValue activity : allActivities) {
+            logger.debug("\tto: {}", activity);
+
+            final int callPC = redirect.getNextProgramCounter();
+            final Selector mSel = Selector.make("setIntent(Landroid/content/Intent;)V");
+            final MethodReference mRef = MethodReference.findOrCreate(AndroidTypes.Activity, mSel);
+            final CallSiteReference site = CallSiteReference.make(callPC, mRef, IInvokeInstruction.Dispatch.VIRTUAL);
+            final SSAValue exception = pm.getException();
+            final List<SSAValue> params = new ArrayList<SSAValue>(1);
+            params.add(activity);
+            params.add(intent);
+            final SSAInstruction invokation = instructionFactory.InvokeInstruction(callPC, params, exception, site);
+            redirect.addStatement(invokation);
+        }
+    }
+
 
 
     /**
