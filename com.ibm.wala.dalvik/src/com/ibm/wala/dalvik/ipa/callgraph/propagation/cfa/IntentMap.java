@@ -92,7 +92,15 @@ import org.slf4j.LoggerFactory;
     }
 
     public Intent create(final InstanceKey key) {
-        return create(key, Intent.UNBOUND);
+        if (key == null) {
+            throw new IllegalArgumentException("InstanceKey may not be null");
+        }
+        if (seen.containsKey(key)) {
+            throw new IndexOutOfBoundsException("There may only be one Intent for " + key);
+        }
+        final Intent intent = new Intent();
+        seen.put(key, intent);
+        return intent;
     }
 
     public Intent findOrCreate(final InstanceKey key) {
@@ -113,9 +121,10 @@ import org.slf4j.LoggerFactory;
 
     public Intent findOrCreate(final InstanceKey key, String action) {
         final Intent intent = findOrCreate(key);
-        if (! intent.action.equals(Atom.findOrCreateAsciiAtom(action))) {
+        final Atom foundAction = intent.getAction();
+        if (! foundAction.equals(Atom.findOrCreateAsciiAtom(action))) {
             throw new IllegalArgumentException("Actions differ (" + action + ", " +
-                    intent.action.toString() + ") for Intent " + key);
+                    foundAction.toString() + ") for Intent " + key);
         }
         return intent;
     }
@@ -128,10 +137,23 @@ import org.slf4j.LoggerFactory;
         return setAction(key, Intent.UNBOUND);
     }
 
+    public Intent setExplicit(final InstanceKey key) {
+        if (contains(key)) {
+            final Intent intent = find(key);
+            intent.setExplicit();
+            return intent;
+        } else {
+            throw new IllegalArgumentException("setAction: No Intent found for key " + key);
+            //final Intent intent = create(key);
+            //intent.setExplicit();
+            //return intent;
+        }
+    }
+
     public Intent setAction(final InstanceKey key, final Atom action) {
         if (contains(key)) {
             final Intent intent = find(key);
-            intent.action = action;
+            intent.setAction(action);
             return intent;
         } else {
             logger.error("setAction: No Intent found for key " + key);
@@ -167,7 +189,8 @@ import org.slf4j.LoggerFactory;
                     throw new IllegalArgumentException("Wrong action type: " + actionO.getClass());
                 }
             } else {
-                logger.error("Can't extract the action from Key {} Type {}", actionKey, actionKey.getClass());
+                logger.error("Can't extract the action from Key {} Type {} - unbinding", actionKey, actionKey.getClass());
+                unbind(key);
                 return null;
             }
         }

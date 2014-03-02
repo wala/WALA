@@ -575,13 +575,13 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      */
     public boolean existsIntentFor(TypeName clazz) {
         for (Intent i : overrideIntents.keySet()) {
-            if (i.action.toString().equals(clazz.toString())) { // XXX toString-Matches are shitty
+            if (i.getAction().toString().equals(clazz.toString())) { // XXX toString-Matches are shitty
                 return true;
             }
         }
 
         for (Intent i : overrideIntents.values()) {
-            if (i.action.toString().equals(clazz.toString())) {
+            if (i.getAction().toString().equals(clazz.toString())) {
                 return true;
             }
         }

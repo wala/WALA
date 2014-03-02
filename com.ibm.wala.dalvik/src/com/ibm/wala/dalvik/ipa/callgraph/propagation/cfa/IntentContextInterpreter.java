@@ -170,7 +170,7 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
             throw new IllegalArgumentException("node is null");
         }
         assert understands(node);   // Should already have been checked before
-        logger.info("IntentContextInterpreter - Retreiving IR of " + node.getMethod().getSignature());
+        logger.debug("IntentContextInterpreter - Retreiving IR of " + node.getMethod().getSignature());
         {
             // TODO: CACHE!
             final Context ctx = node.getContext();
@@ -182,16 +182,19 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
                 final Intent intent = AndroidEntryPointManager.MANAGER.getIntent(inIntent); // Apply overrides
                 final IMethod method = node.getMethod();
 
-                logger.info("Generating IR for {} in {} as {}", node.getMethod().getName(), inIntent, intent);
-
                 final AndroidModel model;
                 final IntentStarters.StartInfo info;
+                Intent.IntentType type = intent.getType();
+                if (intent.getAction().equals(Intent.UNBOUND)) {
+                    type = Intent.IntentType.UNKNOWN_TARGET;
+                }
                 { // Fetch model and info
-                    switch (intent.getType()) {
+                    switch (type) {
                         case INTERNAL_TARGET:
                             info = intentStarters.getInfo(method.getReference());
                             
-                            model = new MicroModel(this.cha, this.options, this.cache, intent.action);
+                            model = new MicroModel(this.cha, this.options, this.cache, intent.getAction());
+                            logger.info("{} resolved to {} - internal", inIntent, intent);
                             break;
                         case SYSTEM_SERVICE:
                             info = new IntentStarters.StartInfo(
@@ -200,23 +203,27 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
                                     EnumSet.of(AndroidComponent.SERVICE),
                                     new int[] {1} );
 
-                            model = new SystemServiceModel(this.cha, this.options, this.cache, intent.action);
+                            model = new SystemServiceModel(this.cha, this.options, this.cache, intent.getAction());
+                            logger.info("{} resolved to {} - SystemService", inIntent, intent);
                             break;
                         case EXTERNAL_TARGET:
                             info = intentStarters.getInfo(method.getReference());
 
                             model = new ExternalModel(this.cha, this.options, this.cache, fetchTargetComponent(intent,method));
+                            logger.info("{} resolved to {} - External {}", inIntent, intent, fetchTargetComponent(intent,method));
                             break;
                         case STANDARD_ACTION:
-                            logger.warn("Still handling STANDARD_ACTION as UNKONOWN_TARGET: {}", intent.action);        // TODO!
+                            logger.warn("Still handling STANDARD_ACTION as UNKONOWN_TARGET: {}", intent.getAction());        // TODO!
                             // In Order to correctly evaluate a standard-action we would also have to look
                             // at the URI of the Intent.
                         case UNKNOWN_TARGET:
                             info = intentStarters.getInfo(method.getReference());
 
                             model = new UnknownTargetModel(this.cha, this.options, this.cache, fetchTargetComponent(intent, method));
+                            logger.info("{} resolved to {} - {}", inIntent, intent, fetchTargetComponent(intent,method));
                             break;
                         case IGNORE:
+                            logger.info("{} ignored", inIntent);
                             return null;
                         default:
                             throw new java.lang.UnsupportedOperationException("The Intent-Type " + intent.getType() + " is not known to IntentContextInterpreter");
@@ -283,7 +290,7 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
         }
         assert understands(node);   // Should already have been checked before
         {
-            logger.info("My new site for {} in {}", node.getMethod(), node.getContext());
+            logger.debug("My new site for {} in {}", node.getMethod(), node.getContext());
             final IR ir = getIR(node); // Speeeed
             return ir.iterateNewSites();
         }
@@ -296,7 +303,7 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
         }
         assert understands(node);   // Should already have been checked before
         {
-            logger.info("My call sites");
+            logger.debug("My call sites");
             final IR ir = getIR(node); // Speeeed
             return ir.iterateCallSites();
         }

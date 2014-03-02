@@ -93,21 +93,29 @@ public class Intent implements ContextItem {
         SYSTEM_SERVICE,
         /** So External and maybe internal */
         BROADCAST,          
-        /** For INTERNAL use only */
-        EXPLICIT,           
-        /** For INTERNAL use only */
-        IMPLICIT,           
         /** Do not handle intent */
         IGNORE
     };
+
+    private enum Explicit {
+        UNSET,
+        IMPLICIT,
+        EXPLICIT,
+        /** An other target was set for an explicit Intent */
+        MULTI
+    }
 
     public static final Atom UNBOUND = Atom.findOrCreateAsciiAtom("Unbound");
 
     public Atom action;
     public Atom uri;
     private IntentType type;
+    private Explicit explicit = Explicit.UNSET;
     private AndroidComponent targetCompontent;  // Activity, Service, ...
 
+    public Intent() {
+        this.action = null;
+    }
     public Intent(String action) {
         this(Atom.findOrCreateAsciiAtom(action));
     }
@@ -115,6 +123,7 @@ public class Intent implements ContextItem {
         this(action, null);
     }
     public Intent(Atom action, Atom uri) {
+        logger.info("Intent({})", action);
         this.action = action;
         this.uri = uri;
         this.type = null;   // Delay computation upon it's need
@@ -125,6 +134,48 @@ public class Intent implements ContextItem {
     }
     public Intent(TypeName action) {
         this(action, null);
+    }
+
+    public void setExplicit() {
+        switch (explicit) {
+            case UNSET:
+                // TODO: This is dangerous?
+                explicit = Explicit.EXPLICIT;
+                break;
+            case EXPLICIT:
+                logger.warn("setExplicit was called multiple times on {}", this);
+                explicit = Explicit.MULTI;
+                action = UNBOUND;
+                type = IntentType.UNKNOWN_TARGET;
+        }
+    }
+
+    public boolean isExplicit() {
+        return explicit == Explicit.EXPLICIT;
+    }
+
+    /**
+     *  Set the target of the intent.
+     *
+     *  If setAction is called multible times on an Intent it becomes UNBOUND.
+     */
+    public void setAction(Atom action) {
+        if (this.action == null) {
+            this.action = action;
+            logger.info("Intent({})", action);
+        } else if (isExplicit()) {
+            // We already have the explicit target. Ignore the change.
+        } else if (! action.equals(this.action)) {
+            this.action = UNBOUND;
+            type = IntentType.UNKNOWN_TARGET;
+        }
+    }
+
+    public Atom getAction() {
+        if (this.action == null) {
+            return UNBOUND; 
+        }
+        return this.action;
     }
 
     public IntentType getType() {
@@ -195,7 +246,7 @@ public class Intent implements ContextItem {
             return override.isExternal(true);   // The isExternal defined later not this one!
         }*/
 
-        if (intent.action.equals(UNBOUND)) {
+        if ((intent.action == null ) || (intent.action.equals(UNBOUND))) {
             return false; // Is Unknown
         }
 
@@ -222,6 +273,9 @@ public class Intent implements ContextItem {
         if (override.getType() != IntentType.UNKNOWN_TARGET) {
             return override.isStandard(true);
         }*/
+        if ((intent.action == null ) || (intent.action.equals(UNBOUND))) {
+            return false; // Is Unknown
+        }
 
         // TODO: Make this static or so
         final Atom andoidIntentAction = Atom.findOrCreateAsciiAtom("Landroid/intent/action");
@@ -272,7 +326,7 @@ public class Intent implements ContextItem {
     @Override
     public String toString() {
         StringBuffer ret;
-        if (this.action.equals(UNBOUND)) {
+        if ((this.action == null) || (this.action.equals(UNBOUND))) {
             return "Unbound Intent";
         } else if (getType() == IntentType.SYSTEM_SERVICE) {
             ret = new StringBuffer("SystemService(");
@@ -300,9 +354,9 @@ public class Intent implements ContextItem {
     public int hashCode() {
         // DO NOT USE TYPE!
         if (this.uri != null) {
-            return this.action.hashCode() * this.uri.hashCode();
+            return getAction().hashCode() * this.uri.hashCode();
         } else {
-            return this.action.hashCode();
+            return getAction().hashCode();
         }
     }
 
@@ -310,7 +364,7 @@ public class Intent implements ContextItem {
      *  Does not consider the associated URI.
      */
     public boolean equalAction(Intent other) {
-        return this.action.equals(other.action);
+        return getAction().equals(other.getAction());
     }
 
     /**
@@ -327,9 +381,9 @@ public class Intent implements ContextItem {
 
             // DO NOT USE TYPE!
             if (this.uri != null) {
-                return ( (this.uri.equals(other.uri)) && (this.action.equals(other.action)));
+                return ( (this.uri.equals(other.uri)) && equalAction(other));
             } else {
-                return ( (other.uri == null) && (this.action.equals(other.action) )) ;
+                return ( (other.uri == null) && equalAction(other) ) ;
             }
         } else {
             System.err.println("WARNING: Can't compare Intent to " + o.getClass());

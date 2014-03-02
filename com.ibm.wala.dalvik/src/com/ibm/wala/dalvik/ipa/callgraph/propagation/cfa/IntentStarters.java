@@ -226,7 +226,7 @@ public class IntentStarters {
 
         // android.content.ContextWrapper.bindService(Intent service, ServiceConnection conn, int flags)
         starters.put(/*MethodReference.findOrCreate(tContextWrapper,*/ Selector.make("bindService(Landroid/content/Intent;Landroid/content/ServiceConnection;I)Z"),
-                new StartInfo(tContextWrapper, EnumSet.of(IntentType.UNKNOWN_TARGET, IntentType.EXPLICIT), EnumSet.of(AndroidComponent.SERVICE), new int[] {1}));
+                new StartInfo(tContextWrapper, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.SERVICE), new int[] {1}));
                 // Delegates directly to android.content.Context.bindService
         // android.content.ContextWrapper.sendBroadcast(Intent intent)
         starters.put( /* MethodReference.findOrCreate(tContextWrapper, */ Selector.make("sendBroadcast(Landroid/content/Intent;)V"),
@@ -331,7 +331,7 @@ public class IntentStarters {
 
         // android.content.Context.bindService(Intent service, ServiceConnection conn, int flags)
         starters.put( /* MethodReference.findOrCreate(tContext, */ Selector.make("bindService(Landroid/content/Intent;Landroid/content/ServiceConnection;I)Z"),
-                new StartInfo(tContext, EnumSet.of(IntentType.UNKNOWN_TARGET, IntentType.EXPLICIT), EnumSet.of(AndroidComponent.SERVICE), new int[] {1}));
+                new StartInfo(tContext, EnumSet.of(IntentType.UNKNOWN_TARGET), EnumSet.of(AndroidComponent.SERVICE), new int[] {1}));
         // android.content.Context.sendBroadcast(Intent intent)
         starters.put( /* MethodReference.findOrCreate(tContext, */ Selector.make("sendBroadcast(Landroid/content/Intent;)V"),
                 new StartInfo(tContext, EnumSet.of(IntentType.BROADCAST), EnumSet.of(AndroidComponent.BROADCAST_RECEIVER), new int[] {1}));

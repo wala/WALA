@@ -1444,6 +1444,7 @@ public class ParameterAccessor { // extends Param-Manager
             if (fromClass == null) {
                 throw new ClassLookupException("Unable to look up the type of from=" + from + 
                         " in the ClassHierarchy");
+                //return false; // TODO
             }
         }
 

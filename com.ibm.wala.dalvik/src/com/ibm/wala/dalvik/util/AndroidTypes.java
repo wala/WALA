@@ -161,6 +161,8 @@ public final class AndroidTypes {
         CONTEXT_IMPL,
         CONTEXT_BRIDGE,
         ACTIVITY,
+        APPLICATION,
+        SERVICE,
         /**
          *  For internal use during development
          */

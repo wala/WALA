@@ -87,7 +87,7 @@ public class SummarizedMethodWithNames extends SummarizedMethod {
         this.summary = summary.getMethodSummary();
         this.localNames = ((VolatileMethodSummary)summary).getLocalNames();
         if (this.localNames.isEmpty()) {
-            logger.warn("Local names are empty");
+            logger.warn("Local names are empty for " + ref);
         }
 
         /*{ // DEBUG
