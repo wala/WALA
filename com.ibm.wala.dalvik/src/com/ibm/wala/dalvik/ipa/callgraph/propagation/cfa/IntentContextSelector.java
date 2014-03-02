@@ -299,7 +299,7 @@ public class IntentContextSelector implements ContextSelector {
             intents.unbind(self);
         } else if (callee.isInit() && callee.getDeclaringClass().getName().equals(AndroidTypes.IntentSenderName)) {
             logger.error("Unable to evaluate IntentSender: Not implemented!");   // TODO
-        } else if (site.isSpecial() && callee.getDeclaringClass().getName().equals(
+        } /*else if (site.isSpecial() && callee.getDeclaringClass().getName().equals(
                     AndroidTypes.ContextWrapperName)) {
             final InstanceKey baseKey = actualParameters[1];  
             final InstanceKey wrapperKey = actualParameters[0];  
@@ -333,7 +333,7 @@ public class IntentContextSelector implements ContextSelector {
                     logger.warn("ContextWrapper: No AndroidContext was seen for baseKey");
                 }
             }
-        } 
+        } */
 
         return ctx;
     }
@@ -403,7 +403,7 @@ public class IntentContextSelector implements ContextSelector {
             // public IntentSender(IBinder target)
             logger.warn("Encountered an IntentSender-Object");
             return IntSetUtil.make(new int[] { 0, 1 });
-        } else if (site.isSpecial() && target.getDeclaringClass().getName().equals(
+        } /*else if (site.isSpecial() && target.getDeclaringClass().getName().equals(
                     AndroidTypes.ContextWrapperName)) {
             logger.debug("Fetched ContextWrapper ctor");
             return IntSetUtil.make(new int[] { 0, 1 });
@@ -415,7 +415,7 @@ public class IntentContextSelector implements ContextSelector {
                 target.getSelector().equals(Selector.make("attachBaseContext(Landroid/content/Context;)V"))) {
             logger.debug("Encountered ContextWrapper.attachBaseContext()");
             return IntSetUtil.make(new int[] { 0, 1 });
-        } else if (target.getSelector().equals(Selector.make("getSystemService(Ljava/lang/String;)Ljava/lang/Object;"))) {
+        }*/ else if (target.getSelector().equals(Selector.make("getSystemService(Ljava/lang/String;)Ljava/lang/Object;"))) {
             logger.debug("Encountered Context.getSystemService()");
             return IntSetUtil.make(new int[] { 0, 1 });
         } else if (target.getSelector().equals(Selector.make("setAction(Ljava/lang/String;)Landroid/content/Intent;"))) {
