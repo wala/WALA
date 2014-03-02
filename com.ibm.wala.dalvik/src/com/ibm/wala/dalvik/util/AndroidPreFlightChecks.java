@@ -39,6 +39,7 @@ import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationB
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
 
 import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.dalvik.util.AndroidTypes;
 
@@ -77,7 +78,8 @@ public class AndroidPreFlightChecks {
         OVERRIDES,
         INTENTS,
         REUSE,
-        STUBS_VERSION
+        STUBS_VERSION,
+        OBJECT_IN_EP
     }
 
     /**
@@ -110,7 +112,9 @@ public class AndroidPreFlightChecks {
         if (! skip.contains(Test.STUBS_VERSION)) {
             pass &= checkStubsVersion();
         }
-
+        if (! skip.contains(Test.OBJECT_IN_EP)) {
+                pass &= checkNoObjectInEntryPoints();
+        }
         return pass;
     }
 
@@ -235,6 +239,12 @@ public class AndroidPreFlightChecks {
             IInstantiationBehavior.InstanceBehavior behave = behaviour.getBehavior(test,
                     /* asParameterTo=  */ null, /* inCall= */ null, /* withName= */ null);
             if (behave != IInstantiationBehavior.InstanceBehavior.REUSE) {
+                if (pass) {
+                    logger.info("Android Components should be marked REUSE in order to");
+                    logger.info("be able to read back their results.");
+                    logger.info("Additionally the MiniModel expects them to be REUSE and");
+                    logger.info("may fail to be constructed if not.");
+                }
                 logger.warn("The Type {} belongs to a {} and should be marked as REUSE", test, ep.getComponent());
                 pass = false;
             }
@@ -243,4 +253,30 @@ public class AndroidPreFlightChecks {
         return pass;
     }
 
+    /**
+     *  Check if an Entrypoint takes an object.
+     */
+    public boolean checkNoObjectInEntryPoints() {
+        boolean pass = true;
+
+        final List <AndroidEntryPoint> entrypoits = this.manager.ENTRIES;
+        for (AndroidEntryPoint ep : entrypoits) {
+            final TypeName[] params =  ep.getMethod().getDescriptor().getParameters();
+            if (params == null) continue;
+            for (final TypeName type : params) {
+                if (type.equals(TypeReference.JavaLangObject.getName())) {  // Why if JavaLangObjectName private? .. narf
+                    if (pass) {
+                        logger.info("When an Entry-Point takes a parameter of type Object all Objects");
+                        logger.info("have to be considdered candidates. This will not exactly increase");
+                        logger.info("the accuracy of the result.");
+                        logger.info("You should take a look into this Entry-Points and check if you can");
+                        logger.info("zap these completely.");
+                    }
+                    logger.warn("The entypoint {} has a parameter of type Object", ep);
+                    pass = false;
+                }
+            }
+        }
+        return pass;
+    }
 }
