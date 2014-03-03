@@ -210,7 +210,7 @@ public class ProgressMaster implements IProgressMonitor {
   }
 
   @Override
-  public String getCanecelMessage() {
+  public String getCancelMessage() {
     return tooMuchMemory? "too much memory": timedOut? "timed out" : "unknown";
   }
 
