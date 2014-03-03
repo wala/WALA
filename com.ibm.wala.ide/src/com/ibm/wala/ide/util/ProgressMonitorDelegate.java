@@ -52,7 +52,7 @@ public class ProgressMonitorDelegate implements IProgressMonitor {
   }
 
   @Override
-  public String getCanecelMessage() {
+  public String getCancelMessage() {
     return "cancelled by eclipse monitor: " + delegate.toString();
   }
 
