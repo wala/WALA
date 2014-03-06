@@ -245,7 +245,7 @@ nextMethod:
                         continue;
                     }
                     if (baseClass.getMethod(method.getSelector()) != null) {
-                        final AndroidEntryPoint ep = new AndroidEntryPoint(selectPositionForHeuristic(method), method, cha);
+                        final AndroidEntryPoint ep = makeEntryPointForHeuristic(method, cha);
                        
                         if (! eps.contains(ep)) {  // Just to be sure that a previous element stays as-is
                             if (eps.add(ep)) {
@@ -256,6 +256,23 @@ nextMethod:
                 }
             }
         }
+    }
+
+    private boolean isInnerClass(final TypeReference test) {
+        return test.getName().toString().contains("$"); // PRETTY!
+    }
+
+    private AndroidEntryPoint makeEntryPointForHeuristic(final IMethod method, final IClassHierarchy cha) {
+        AndroidComponent compo;
+        { // Guess component
+            compo = AndroidComponent.from(method, cha);
+            if (compo == AndroidComponent.UNKNOWN) {
+
+            }
+        }
+        final AndroidEntryPoint ep = new AndroidEntryPoint(selectPositionForHeuristic(method), method, cha, compo);
+
+        return ep;
     }
 
     /**
@@ -307,7 +324,7 @@ nextMethod:
                     assert (method.getSelector() != null): "Method has no selector: " + method;
                     assert (androidClass != null): "androidClass is null";
                     if (androidClass.getMethod(method.getSelector()) != null) {
-                        final AndroidEntryPoint ep = new AndroidEntryPoint(selectPositionForHeuristic(method), method, cha);
+                        final AndroidEntryPoint ep = makeEntryPointForHeuristic(method, cha);
 
                         if (! eps.contains(ep)) {  // Just to be sure that a previous element stays as-is
                         if (eps.add(ep)) {
@@ -341,7 +358,7 @@ nextMethod:
                         } else {
                             // The function is taken from the super-class
                             if (this.flags.contains(LocatorFlags.WITH_SUPER)) {
-                                final AndroidEntryPoint ep = new AndroidEntryPoint(selectPositionForHeuristic(method), method, cha);
+                                final AndroidEntryPoint ep = makeEntryPointForHeuristic(method, cha);
 
                                 if ((eps.contains(ep)) && (! method.isStatic())) {
                                     // eps.get(ep) ... suuuuuper!

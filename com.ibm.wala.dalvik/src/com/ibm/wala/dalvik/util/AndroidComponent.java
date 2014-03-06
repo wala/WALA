@@ -221,7 +221,8 @@ public enum AndroidComponent {
      */
     public static AndroidComponent from(final IClass type, final IClassHierarchy cha) {
         for (AndroidComponent test: AndroidComponent.values()) {
-            if (cha.isSubclassOf(type, cha.lookupClass(test.toReference()))) {
+            if (    (type.getReference().equals(test.toReference())) ||
+                    (cha.isSubclassOf(type, cha.lookupClass(test.toReference())))) {
                 return test;
             }
         }

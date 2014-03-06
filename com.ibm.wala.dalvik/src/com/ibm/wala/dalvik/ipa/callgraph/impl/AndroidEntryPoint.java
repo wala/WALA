@@ -64,12 +64,23 @@ public class AndroidEntryPoint extends DexEntryPoint {
         //implements AndroidEntryPoint.IExecutionOrder { 
     public ExecutionOrder order; // XXX protect?
 
-    protected final AndroidComponent superType;
+    protected AndroidComponent superType;
+
+    public AndroidEntryPoint(AndroidPossibleEntryPoint p, IMethod method, IClassHierarchy cha, AndroidComponent inComponent) {
+        super(method, cha);
+        this.order = p.order;
+        this.superType = inComponent;
+    }
 
     public AndroidEntryPoint(AndroidPossibleEntryPoint p, IMethod method, IClassHierarchy cha) {
         super(method, cha);
         this.order = p.order;
         this.superType = AndroidComponent.from(method, cha);
+    }
+
+    public AndroidEntryPoint(ExecutionOrder o, IMethod method, IClassHierarchy cha, AndroidComponent inComponent) {
+        this(o, method, cha);
+        this.superType = inComponent;
     }
 
     public AndroidEntryPoint(ExecutionOrder o, IMethod method, IClassHierarchy cha) {
