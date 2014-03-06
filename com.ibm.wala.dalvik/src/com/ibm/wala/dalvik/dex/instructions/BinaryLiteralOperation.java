@@ -221,4 +221,8 @@ public class BinaryLiteralOperation extends Instruction {
         }
     }
 
+    @Override
+    public String toString() {
+        return String.format("%04dpc: v%d = v%d %s v%d", this.pc, this.destination, this.oper1, this.op.toString(), this.oper2.value);
+    }
 }
