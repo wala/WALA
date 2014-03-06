@@ -155,6 +155,15 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior impleme
                     InstanceBehavior.REUSE,
                     Exactness.EXACT,
                     null));
+        behaviours.put(BehaviorKey.mk(AndroidTypes.BroadcastReceiverName), new BehviourValue(
+                    InstanceBehavior.REUSE,
+                    Exactness.EXACT,
+                    null));
+        behaviours.put(BehaviorKey.mk(AndroidTypes.ContentProviderName), new BehviourValue(
+                    InstanceBehavior.REUSE,
+                    Exactness.EXACT,
+                    null));
+       
         // Walas method to create instances has problems with the menu-stuff
         behaviours.put(BehaviorKey.mk(AndroidTypes.MenuName), new BehviourValue(
                     InstanceBehavior.CREATE,
