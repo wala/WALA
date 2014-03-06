@@ -75,7 +75,7 @@ import com.ibm.wala.util.NullProgressMonitor;
 /**
  *  Model configuration and Global list of entrypoints.
  *
- *  AnalysisOptions.getEntrypoints may change during an analysis. This does not.
+ *  See the single settings for further description.
  *
  *  @author Tobias Blaschke <code@tobiasblaschke.de>
  */
@@ -128,8 +128,8 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
     private boolean flatComponents = false;
     /**
      *  Controlls the initialization of Components.
-     *
-     *  Flat components are more conservative.
+     *  
+     *  See {@link #setDoFlatComponents(boolean)}.
      */
     public boolean doFlatComponents() {
         return flatComponents;
@@ -138,7 +138,16 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
     /**
      *  Controlls the initialization of Components.
      *
-     *  @returns previous setting
+     *  If flatComponents is active an Instance of each Component of the application is generated
+     *  in the AndroidModelClass. Whenever the model requires a new instance of a component this
+     *  "globalone" is used.
+     *
+     *  This resembles the seldomly used Flat-Setting of the start of components in Android. Activating
+     *  this generates a more conservative model.
+     *
+     *  The default is to deactivate this behavior.
+     *
+     *  @return previous setting
      */
     public boolean setDoFlatComponents(boolean flatComponents) {
         boolean pre = this.flatComponents;
@@ -149,11 +158,10 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
     /**
      *  Controls the instantiation of variables in the model.
      *
-     *  On which occasions a new instance of a class shall be used? 
-     *  This also changes the parameters to the later model.
+     *  See {@link #setInstantiationBehavior(IInstantiationBehavior)}.
      *
-     *  @param  cha     Optional parameter given to the DefaultInstantiationBehavior if no other
-     *      behavior has been set
+     *  @param  cha     Optional parameter given to the IInstantiationBehavior
+     *  @return DefaultInstantiationBehavior if no other behavior has been set
      */
     public IInstantiationBehavior getInstantiationBehavior(IClassHierarchy cha) {
         if (this.instantiation == null) {
@@ -163,8 +171,18 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
     }
 
     /**
-     *  Set the value returned by {@link getInstantiationBehavior()}
+     *  Controls the instantiation of variables in the model.
      *
+     *  Controlls on which occasions a new instance to a given type shall be generated and when
+     *  to reuse an existing instance.
+     *
+     *  This also changes the parameters to the later model.
+     *
+     *  The default is DefaultInstantiationBehavior.
+     *
+     *  See {@link #setDoFlatComponents(boolean)} for more instantiation settings that affect components
+     *  @see    com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior for more
+     *      information
      *  @return the previous IInstantiationBehavior
      */
     public IInstantiationBehavior setInstantiationBehavior(IInstantiationBehavior instantiation) {
@@ -200,9 +218,9 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
     /**
      *  Whether to generate a global android environment.
      *
-     *  It's possible to analyze android-applications without creating these structures and save 
-     *  some memory. In this case some calls to the OS (like getting the Activity-manager or so)
-     *  will not be able to be resolved.
+     *  See the {@link #setDoBootSequence()} documentation.
+     *
+     *  @return the setting, defaults to true
      */
     public boolean getDoBootSequence() {
         return this.doBootSequence;
@@ -211,7 +229,16 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
     /**
      *  Whether to generate a global android environment.
      *
-     *  See the {@link #getDoBootSequence()} documentation.
+     *  Inserts some code ath the start of the model to attach some Android-context. This is mainly
+     *  interesting for inter-application communication.
+     *
+     *  It's possible to analyze android-applications without creating these structures and save 
+     *  some memory. In this case some calls to the OS (like getting the Activity-manager or so)
+     *  will not be able to be resolved.
+     *
+     *  It is to be noted that the generated information is far from beeing complete.
+     *
+     *  The default is to insert the code.
      *
      *  @return the previous setting of doBootSequence
      */
@@ -228,6 +255,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      *  At given points in the model (called labels) special code is inserted into it (like loops).
      *  This setting controls what code is inserted there.
      *
+     *  @see    com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.AbstractAndroidModel
      *  @see    com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.SequentialAndroidModel
      *  @see    com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.LoopAndroidModel
      *  @return An object that handles "events" that occur while generating the model.
@@ -300,6 +328,8 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      *  Setting the package of the application is completely optional. However if you do it it helps
      *  determining whether an Intent has an internal target.
      *
+     *  If a AndroidManifest.xml is read this getts set automaticly.
+     *
      *  @param  pack    The package of the analyzed application
      *  @throws IllegalArgumentException if the package has already been set and the value of the
      *      packages differ. Or if the given package is null.
@@ -328,6 +358,8 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      *
      *  If you didn't read the manifest you can still try and retrieve the package name using
      *  guessPackage().
+     *
+     *  See: {@link #setPackage(String)}
      *
      *  @return The package or null if it was indeterminable.
      *  @see    guessPacakge()
@@ -440,6 +472,8 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      *  may have to add a synthetic class and register it as an Intent. If the target is not set to Internal
      *  multiple targets may implicitly emulated. See the Documentation for these targets for detail.
      *
+     *  If you only intend to make an Intent known see {@link #registerIntent(Intent)}.
+     *
      *  @param  from    the Intent to override
      *  @param  to      the new Intent to resolve once 'from' is seen
      *  @see    setOverrideForce()
@@ -501,10 +535,15 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
     public static final Map<Intent, Intent> DEFAULT_INTENT_OVERRIDES = new HashMap<Intent, Intent>();
     static {
         DEFAULT_INTENT_OVERRIDES.put(
-                new AndroidSettingFactory.StandardIntent("Landroid/intent/action/DIAL"),
+                new AndroidSettingFactory.ExternalIntent("Landroid/intent/action/DIAL"),
                 new AndroidSettingFactory.ExternalIntent("Landroid/intent/action/DIAL"));
     }
 
+    /**
+     *  Set multiple overrides at the same time.
+     *
+     *  See {@link #setOverride(Intent, Intent)}. 
+     */
     public void setOverrides(Map<Intent, Intent> overrides) {
         for (final Intent from : overrides.keySet()) {
             final Intent to = overrides.get(from);
@@ -518,6 +557,8 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
 
     /**
      *  Just throw in the override.
+     *
+     *  See {@link #setOverride(Intent, Intent)}.
      */
     public void setOverrideForce(Intent from, Intent to) {
         if (from == null) {
@@ -535,6 +576,12 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      *  Get Intent with applied overrides.
      *
      *  If there are no overrides or the Intent is not registered return it as is.
+     *  
+     *  See {@link #setOverride(Intent, Intent)}.
+     *  See {@link #registerIntent(Intent)}.
+     *
+     *  @param  intent  The intent to resolve
+     *  @return where to resolve it to or the given intent if no information is available
      *
      *  @todo TODO: Malicious Intent-Table could cause endless loops
      */
@@ -572,6 +619,8 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
 
     /**
      *  Searches Intent specifications for the occurrence of clazz.
+     *
+     *  @return the intent is registered or there exists an override.
      */
     public boolean existsIntentFor(TypeName clazz) {
         for (Intent i : overrideIntents.keySet()) {
@@ -607,6 +656,47 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      */
     public  Map<CallSiteReference, Intent> getSeen() {
         return seenIntentCalls; // No need to make read-only
+    }
+
+    private boolean allowIntentRerouting = true;
+
+    /**
+     *  Controll modification of an Intents target after construction.
+     *
+     *  After an Intent has been constructed its target may be changed using functions like
+     *  setAction or setComponent. 
+     *  This setting controlls the behavior of the model on occurrence of such a function:
+     *
+     *  If set to false the Intent will be marked as unresolvable.
+     *  
+     *  If set to true the first occurrence of such a function changes the target of the
+     *  Intent unless:
+     *
+     *  * The Intent was explicit and the new action is not: The call gets ignored
+     *  * The Intent was explicit and the new target is explicit: It becomes unresolvable
+     *  * It's the second occurrence of such a function: It becomes unresolvable
+     *  * It was resolvable: It becomes unresolvable
+     *
+     *  The default is to activate this behavior.
+     *
+     *  @param  allow   Allow rerouting as described
+     *  @return previous setting
+     */
+    public boolean setAllowIntentRerouting(boolean allow) {
+        boolean prev = allowIntentRerouting;
+        allowIntentRerouting = allow;
+        return prev;
+    }
+
+    /**
+     *  Controll modification of an Intents target after construction.
+     *
+     *  See: {@link #setAllowIntentRerouting(boolean)}. 
+     *
+     *  @return the set behavior or true, the default
+     */
+    public boolean isAllowIntentRerouting() {
+        return allowIntentRerouting;
     }
 
     /**
