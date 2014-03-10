@@ -146,15 +146,32 @@ public final class WalaProperties {
   }
 
 /** BEGIN Custom change: create default properties if no file exists */
-  public static String guessJavaLib() {
+  public static String guessJavaLib() throws IOException {
     final Properties p = System.getProperties();
+    final String home = System.getProperty("java.home");
+    final String bestGuess = home + File.separator + "lib";
     final String os = p.getProperty("os.name");
-        
+
     if (os.contains("Mac OS X")) {
-      return "/System/Library/Frameworks/JavaVM.framework/Classes";
+      final File f = new File(bestGuess);
+      if (f.exists() && f.isDirectory()) {
+        final File rt = new File(bestGuess + File.separator + "rt.jar");
+        if (rt.exists() && rt.isFile()) {
+          return bestGuess;
+        }
+      }
+
+      // no rt.jar? try old osx java version that have their runtime libraries at a different location.
+      final File guess1 = new File("/System/Library/Frameworks/JavaVM.framework/Classes");
+      if (guess1.exists() && guess1.isDirectory()) {
+        return "/System/Library/Frameworks/JavaVM.framework/Classes";
+      }
+
+      // no luck either? too bad
+      throw new IOException("Could not guess java.home for OSX. "
+          + "Please create a wala.properties file and set it manually.");
     } else {
-      final String home = System.getProperty("java.home");
-      return home + File.separator + "lib";
+      return bestGuess;
     }
   }
   
