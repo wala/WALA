@@ -526,6 +526,8 @@ public interface Constants {
 
   public static final String TYPE_String = "Ljava/lang/String;";
 
+  public static final String TYPE_MethodHandle = "Ljava/lang/invoke/MethodHandle;";
+
   public static final String TYPE_Object = "Ljava/lang/Object;";
 
   public static final String TYPE_Throwable = "Ljava/lang/Throwable;";
