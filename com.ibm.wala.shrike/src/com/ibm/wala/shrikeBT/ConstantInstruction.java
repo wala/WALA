@@ -609,7 +609,7 @@ public abstract class ConstantInstruction extends Instruction {
 
     @Override
     public String getType() {
-      return TYPE_String;
+      return TYPE_MethodHandle;
     }
     
   }
