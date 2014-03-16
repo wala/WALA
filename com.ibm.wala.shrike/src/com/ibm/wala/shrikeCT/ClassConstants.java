@@ -38,6 +38,12 @@ public interface ClassConstants {
 
   public static final byte CONSTANT_NameAndType = 12;
 
+  public static final byte CONSTANT_MethodHandle = 15;
+  
+  public static final byte CONSTANT_MethodType = 16;
+  
+  public static final byte CONSTANT_InvokeDynamic = 18;
+
   public static final short ACC_PUBLIC = 0x1;
 
   public static final short ACC_PRIVATE = 0x2;
@@ -63,4 +69,23 @@ public interface ClassConstants {
   public static final short ACC_ABSTRACT = 0x400;
 
   public static final short ACC_STRICT = 0x800;
+  
+  public static final byte REF_getField = 1;
+  
+  public static final byte REF_getStatic = 2;
+  
+  public static final byte REF_putField = 3;
+  
+  public static final byte REF_putStatic = 4;
+  
+  public static final byte REF_invokeVirtual = 5;
+  
+  public static final byte REF_invokeStatic = 6;
+  
+  public static final byte REF_invokeSpecial = 7;
+  
+  public static final byte REF_newInvokeSpecial = 8;
+  
+  public static final byte REF_invokeInterface = 9;
+  
 }
