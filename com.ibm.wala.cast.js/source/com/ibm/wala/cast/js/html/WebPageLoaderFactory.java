@@ -16,6 +16,7 @@ import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.ssa.JSInstructionFactory;
 import com.ibm.wala.cast.js.translator.JSAstTranslator;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
@@ -25,6 +26,7 @@ import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.TypeReference;
 
 public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
 
@@ -53,12 +55,12 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
           }
           
           @Override
-          protected int doGlobalRead(CAstNode n, WalkContext context, String name) {
+          protected int doGlobalRead(CAstNode n, WalkContext context, String name, TypeReference type) {
             int result = context.currentScope().allocateTempValue();
             if (isNestedWithinScriptBody(context) && ! "$$undefined".equals(name)  && ! "window".equals(name)) {
               
               // check if field is defined on 'window'
-              int windowVal = isScriptBody(context)? super.doLocalRead(context, "this"): super.doGlobalRead(n, context, "window");
+              int windowVal = isScriptBody(context)? super.doLocalRead(context, "this", JavaScriptTypes.Root): super.doGlobalRead(n, context, "window", type);
               int isDefined = context.currentScope().allocateTempValue();
               context.currentScope().getConstantValue(name);
               doIsFieldDefined(context, isDefined, windowVal, Ast.makeConstant(name));
@@ -79,7 +81,7 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
               // read global
               context.cfg().newBlock(false);
               PreBasicBlock falseB = context.cfg().getCurrentBlock();
-              int sr = super.doGlobalRead(n, context, name);
+              int sr = super.doGlobalRead(n, context, name, type);
               context.cfg().addInstruction(((JSInstructionFactory) insts).AssignInstruction(result, sr));
 
               // end
@@ -91,19 +93,19 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
               return result;
               
             } else {  
-              return super.doGlobalRead(n, context, name);
+              return super.doGlobalRead(n, context, name, type);
             }
           }
 
           @Override
-          protected void doLocalWrite(WalkContext context, String nm, int rval) {
+          protected void doLocalWrite(WalkContext context, String nm, TypeReference type, int rval) {
             if (isScriptBody(context)) {
-              int windowVal = super.doLocalRead(context, "this");
+              int windowVal = super.doLocalRead(context, "this", type);
               context.currentScope().getConstantValue(nm);
               context.cfg().addInstruction(((JSInstructionFactory) insts).PutInstruction(windowVal, rval, nm));
             } 
             
-            super.doLocalWrite(context, nm, rval);
+            super.doLocalWrite(context, nm, type, rval);
           }
           
           @Override
@@ -113,7 +115,7 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
               CAstEntity fn = (CAstEntity) n.getChild(0).getValue();
               int fnValue = context.currentScope().lookup(fn.getName()).valueNumber();
               assert fnValue > 0;
-              int windowVal = super.doLocalRead(context, "this");
+              int windowVal = super.doLocalRead(context, "this", JavaScriptTypes.Function);
               context.cfg().addInstruction(((JSInstructionFactory) insts).PutInstruction(windowVal, fnValue, fn.getName()));
             }
           }

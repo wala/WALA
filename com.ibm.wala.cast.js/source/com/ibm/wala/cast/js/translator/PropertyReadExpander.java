@@ -164,7 +164,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
       result = Ast.makeNode(
          CAstNode.BLOCK_EXPR,
               // declare loop variable and initialize to the receiver
-              Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(receiverTemp, false, false)), receiver),
+              Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(receiverTemp, JSAstTranslator.Any, false, false)), receiver),
               Ast.makeNode(CAstNode.LOOP,
               // while the desired property of the loop variable is not
               // defined...
@@ -208,8 +208,8 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
     CAstNode get;
     CAstNode result = Ast.makeNode(
         CAstNode.BLOCK_EXPR,
-        Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(receiverTemp, false, false)), receiver),
-        Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(elementTemp, false, false)), element),
+        Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(receiverTemp, JSAstTranslator.Any, false, false)), receiver),
+        Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(elementTemp, JSAstTranslator.Any, false, false)), element),
         Ast.makeNode(
             CAstNode.LOOP,
             Ast.makeNode(
@@ -260,11 +260,11 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
         CAstNode copy = Ast.makeNode(
             CAstNode.BLOCK_EXPR,
             // assign lval to temp1 (where lval is a block that includes the prototype chain loop)
-            Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(temp1, true, false)), lval),
+            Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(temp1, JSAstTranslator.Any, true, false)), lval),
             // ? --MS
             //rval,
             // assign temp2 the new value to be assigned
-            Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(temp2, true, false)),
+            Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(temp2, JSAstTranslator.Any, true, false)),
                 Ast.makeNode(CAstNode.BINARY_EXPR, op, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(temp1)), rval)),
             // write temp2 into the property
             Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.OBJECT_REF, ctxt.receiverTemp, ctxt.elementTemp),

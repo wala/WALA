@@ -149,7 +149,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
             e.printStackTrace();
           }
 
-          if (! System.getProperty("wala.jdt.quiet").equals("true")) {
+          if (! "true".equals(System.getProperty("wala.jdt.quiet"))) {
             IProblem[] problems = ast.getProblems();
             int length = problems.length;
             if (length > 0) {

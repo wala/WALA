@@ -32,5 +32,6 @@ public interface CAstSymbol {
 
   public boolean isInternalName();
 
+  public CAstType type();
 }
 

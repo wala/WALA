@@ -499,8 +499,7 @@ public class RhinoToAstTranslator {
 
     @Override
     public CAstType getType() {
-      Assertions.UNREACHABLE("JuliansUnnamedCAstEntity$2.getType()");
-      return null;
+      return JSAstTranslator.Any;
     }
   }
 
@@ -818,7 +817,7 @@ public class RhinoToAstTranslator {
 		CAstNode object = visit(node.getIteratedObject(), arg);
     String tempName = "for in loop temp";   
 		CAstNode[] loopHeader = new CAstNode[]{
-		    Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(tempName))),
+		    Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(tempName, JSAstTranslator.Any))),
         Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)), object)
 		};
 		
@@ -846,12 +845,12 @@ public class RhinoToAstTranslator {
 		  if (isLet) {
 		    initNode = 
 		      Ast.makeNode(CAstNode.DECL_STMT, 
-		          Ast.makeConstant(new CAstSymbolImpl(init.getTarget().getString())),
+		          Ast.makeConstant(new CAstSymbolImpl(init.getTarget().getString(), JSAstTranslator.Any)),
 		          Ast.makeNode(CAstNode.EACH_ELEMENT_GET, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName))));
 
 		  } else {
 		    arg.addNameDecl(
-		        Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(init.getTarget().getString())),
+		        Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(init.getTarget().getString(), JSAstTranslator.Any)),
 		            readName(arg, null, "$$undefined")));
 
 		    initNode = 
@@ -939,10 +938,10 @@ public class RhinoToAstTranslator {
 				Ast.makeNode(CAstNode.LOCAL_SCOPE,
 		        Ast.makeNode(CAstNode.BLOCK_EXPR,
 		          Ast.makeNode(CAstNode.DECL_STMT, 
-		            Ast.makeConstant(new CAstSymbolImpl(operationReceiverName(thisBaseVarNum))),
+		            Ast.makeConstant(new CAstSymbolImpl(operationReceiverName(thisBaseVarNum), JSAstTranslator.Any)),
 		            Ast.makeConstant(null)),
 		        Ast.makeNode(CAstNode.DECL_STMT, 
-		          Ast.makeConstant(new CAstSymbolImpl(operationElementName(thisBaseVarNum))),
+		          Ast.makeConstant(new CAstSymbolImpl(operationElementName(thisBaseVarNum), JSAstTranslator.Any)),
 		          Ast.makeConstant(null)),
 		        fun,
 		        makeCall(operationElementVar(thisBaseVarNum), operationReceiverVar(thisBaseVarNum), args, context, "dispatch")));
@@ -1010,7 +1009,7 @@ public class RhinoToAstTranslator {
 		      CAstNode r = visit(node.getRight(), arg);
 		      return Ast.makeNode(CAstNode.LOCAL_SCOPE,
 		      		  Ast.makeNode(CAstNode.BLOCK_EXPR,
-		      		    Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl("or temp")), l),
+		      		    Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl("or temp", JSAstTranslator.Any)), l),
 		    		    Ast.makeNode(CAstNode.IF_EXPR,
 		    				  Ast.makeNode(CAstNode.VAR, Ast.makeConstant("or temp")),
 		    				  Ast.makeNode(CAstNode.VAR, Ast.makeConstant("or temp")),
@@ -1020,7 +1019,7 @@ public class RhinoToAstTranslator {
 			      CAstNode r = visit(node.getRight(), arg);
 			      return Ast.makeNode(CAstNode.LOCAL_SCOPE,
 			    		  Ast.makeNode(CAstNode.BLOCK_EXPR,
-			    		    Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl("and temp")), l),
+			    		    Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl("and temp", JSAstTranslator.Any)), l),
 			    		    Ast.makeNode(CAstNode.IF_EXPR,
 			    				  Ast.makeNode(CAstNode.VAR, Ast.makeConstant("and temp")),
 			    				  r,
@@ -1116,7 +1115,7 @@ public class RhinoToAstTranslator {
 		for(VariableInitializer init : decl.getVariables()) {
 			stmts[i++] = 
 				Ast.makeNode(CAstNode.DECL_STMT, 
-					Ast.makeConstant(new CAstSymbolImpl(init.getTarget().getString())),
+					Ast.makeConstant(new CAstSymbolImpl(init.getTarget().getString(), JSAstTranslator.Any)),
 					visit(init, arg));
 		}
 		stmts[i++] = visit(node.getBody(), arg);
@@ -1362,7 +1361,7 @@ public class RhinoToAstTranslator {
 			arg.addNameDecl(
 					noteSourcePosition(
 							arg,
-							Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(init.getTarget().getString())),
+							Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(init.getTarget().getString(), JSAstTranslator.Any)),
 									readName(arg, null, "$$undefined")),
 							node));
 				

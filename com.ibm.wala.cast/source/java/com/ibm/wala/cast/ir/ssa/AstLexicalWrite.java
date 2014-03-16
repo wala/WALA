@@ -13,6 +13,7 @@ package com.ibm.wala.cast.ir.ssa;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.types.TypeReference;
 
 /**
  * A set of lexical writes. This instruction represents writes of a set of variables that are defined by a pair of
@@ -24,8 +25,8 @@ import com.ibm.wala.ssa.SymbolTable;
  */
 public class AstLexicalWrite extends AstLexicalAccess {
 
-  public AstLexicalWrite(String definer, String globalName, int rhs) {
-    this(new Access(globalName, definer, rhs));
+  public AstLexicalWrite(String definer, String globalName, TypeReference type, int rhs) {
+    this(new Access(globalName, definer, type, rhs));
   }
 
   public AstLexicalWrite(Access access) {
@@ -44,7 +45,7 @@ public class AstLexicalWrite extends AstLexicalAccess {
       Access[] accesses = new Access[getAccessCount()];
       for (int i = 0; i < accesses.length; i++) {
         Access oldAccess = getAccess(i);
-        accesses[i] = new Access(oldAccess.variableName, oldAccess.variableDefiner, uses[i]);
+        accesses[i] = new Access(oldAccess.variableName, oldAccess.variableDefiner, oldAccess.type, uses[i]);
       }
 
       return ((AstInstructionFactory)insts).LexicalWrite(accesses);
