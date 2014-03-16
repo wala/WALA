@@ -37,9 +37,9 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.io.TemporaryFile;
 
-public class DynamicCallGraphTests extends WalaTestCase {
+public class DynamicCallGraphTest extends WalaTestCase {
   
-  private static final URL testJarLocation = DynamicCallGraphTests.class.getClassLoader().getResource("com.ibm.wala.core.testdata_1.0.0.jar");
+  private static final URL testJarLocation = DynamicCallGraphTest.class.getClassLoader().getResource("com.ibm.wala.core.testdata_1.0.0.jar");
   
   private boolean instrumentedJarBuilt = false;
   
@@ -54,7 +54,7 @@ public class DynamicCallGraphTests extends WalaTestCase {
   private void run(String exclusionsFile) throws IOException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
     String shrikeBin = new File("../com.ibm.wala.shrike/bin/").getCanonicalPath();
     String utilBin = new File("../com.ibm.wala.util/bin/").getCanonicalPath();
-    URLClassLoader jcl = new URLClassLoader(new URL[]{ new URL("file:///tmp/test.jar"), new URL("file://" + shrikeBin + "/"), new URL("file://" + utilBin + "/") }, DynamicCallGraphTests.class.getClassLoader().getParent());
+    URLClassLoader jcl = new URLClassLoader(new URL[]{ new URL("file:///tmp/test.jar"), new URL("file://" + shrikeBin + "/"), new URL("file://" + utilBin + "/") }, DynamicCallGraphTest.class.getClassLoader().getParent());
  
     Class<?> testClass = jcl.loadClass("dynamicCG.MainClass");
     Assert.assertNotNull(testClass);
