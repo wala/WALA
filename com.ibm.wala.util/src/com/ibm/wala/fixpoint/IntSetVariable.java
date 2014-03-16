@@ -22,7 +22,7 @@ import com.ibm.wala.util.intset.MutableIntSet;
 @SuppressWarnings("rawtypes")
 public abstract class IntSetVariable<T extends IntSetVariable> extends AbstractVariable<T> {
 
-  private MutableIntSet V;
+  MutableIntSet V;
 
   @Override
   public void copyState(T other) {
