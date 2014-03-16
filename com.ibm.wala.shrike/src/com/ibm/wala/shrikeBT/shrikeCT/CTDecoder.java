@@ -120,6 +120,15 @@ final public class CTDecoder extends Decoder {
     }
 
     @Override
+    public String getConstantPoolMethodType(int index) {
+      try {
+        return cp.getCPMethodType(index);
+      } catch (InvalidClassFileException e) {
+        throw convertToError(e);
+      }
+    }
+
+    @Override
     public String getConstantPoolString(int index) {
       try {
         return cp.getCPString(index);
@@ -159,6 +168,33 @@ final public class CTDecoder extends Decoder {
     public String getConstantPoolMemberType(int index) {
       try {
         return cp.getCPRefType(index);
+      } catch (InvalidClassFileException e) {
+        throw convertToError(e);
+      }
+    }
+
+    @Override
+    public String getConstantPoolHandleClassType(int index) {
+      try {
+        return cp.getCPHandleClass(index);
+      } catch (InvalidClassFileException e) {
+        throw convertToError(e);
+      }
+    }
+
+    @Override
+    public String getConstantPoolHandleName(int index) {
+      try {
+        return cp.getCPHandleName(index);
+      } catch (InvalidClassFileException e) {
+        throw convertToError(e);
+      }
+    }
+
+    @Override
+    public String getConstantPoolHandleType(int index) {
+      try {
+        return cp.getCPHandleType(index);
       } catch (InvalidClassFileException e) {
         throw convertToError(e);
       }
