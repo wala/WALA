@@ -195,6 +195,16 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       int[] arguments);
 
   /**
+   * the most-general type for the language being translated
+   */
+  protected abstract CAstType topType();
+  
+  /**
+   * the most-general exception type for the language being translated
+   */
+  protected abstract CAstType exceptionType();
+  
+  /**
    * used to generate instructions for array operations; defaults to this
    */
   private ArrayOpHandler arrayOpHandler;
@@ -248,13 +258,17 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     final CAstEntity entity = context.top();
     Set<String> exposedNames = entity2ExposedNames.get(entity);
     if (exposedNames != null) {
+      int i = 0;
       for (String arg : entity.getArgumentNames()) {
         if (exposedNames.contains(arg)) {
           final Scope currentScope = context.currentScope();
           Symbol symbol = currentScope.lookup(arg);
           assert symbol.getDefiningScope() == currentScope;
           int argVN = symbol.valueNumber();
-          Access A = new Access(arg, context.getEntityName(entity), argVN);
+          CAstType type = (entity.getType() instanceof CAstType.Method)?
+            (CAstType)((CAstType.Method)entity.getType()).getArgumentTypes().get(i):
+            topType();
+          Access A = new Access(arg, context.getEntityName(entity), makeType(type), argVN);
           context.cfg().addInstruction(new AstLexicalWrite(A));
         }
       }
@@ -272,11 +286,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * method) by looking up the name in context.currentScope(). Note that the
    * caller is responsible for ensuring that name is defined in the local scope.
    */
-  protected int doLocalRead(WalkContext context, String name) {
+  protected int doLocalRead(WalkContext context, String name, TypeReference type) {
     CAstEntity entity = context.top();
     Set<String> exposed = entity2ExposedNames.get(entity);
     if (exposed != null && exposed.contains(name)) {
-      return doLexReadHelper(context, name);
+      return doLexReadHelper(context, name, type);
     }
     return context.currentScope().lookup(name).valueNumber();
   }
@@ -286,12 +300,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * value number of local nm. Note that the caller is responsible for ensuring
    * that nm is defined in the local scope.
    */
-  protected void doLocalWrite(WalkContext context, String nm, int rval) {
+  protected void doLocalWrite(WalkContext context, String nm, TypeReference type, int rval) {
     CAstEntity entity = context.top();
     Set<String> exposed = entity2ExposedNames.get(entity);
     if (exposed != null && exposed.contains(nm)) {
       // use a lexical write
-      doLexicallyScopedWrite(context, nm, rval);
+      doLexicallyScopedWrite(context, nm, type, rval);
       return;
     }
     int lval = context.currentScope().lookup(nm).valueNumber();
@@ -310,8 +324,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * @param name
    * @return
    */
-  protected int doLexicallyScopedRead(CAstNode node, WalkContext context, final String name) {
-    return doLexReadHelper(context, name);
+  protected int doLexicallyScopedRead(CAstNode node, WalkContext context, final String name, TypeReference type) {
+    return doLexReadHelper(context, name, type);
   }
 
   /**
@@ -327,7 +341,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * call sites, as would be required for
    * {@link #doLexicallyScopedRead(CAstNode, WalkContext, String)}
    */
-  private int doLexReadHelper(WalkContext context, final String name) {
+  private int doLexReadHelper(WalkContext context, final String name, TypeReference type) {
     Symbol S = context.currentScope().lookup(name);
     Scope definingScope = S.getDefiningScope();
     CAstEntity E = definingScope.getEntity();
@@ -335,9 +349,9 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     addExposedName(E, E, name, definingScope.lookup(name).valueNumber(), false, context);
     final String entityName = context.getEntityName(E);
     int result = context.currentScope().allocateTempValue();
-    Access A = new Access(name, entityName, result);
+    Access A = new Access(name, entityName, type, result);
     context.cfg().addInstruction(new AstLexicalRead(A));
-    markExposedInEnclosingEntities(context, name, definingScope, E, entityName, false);
+    markExposedInEnclosingEntities(context, name, definingScope, type, E, entityName, false);
     return result;
   }
 
@@ -354,13 +368,13 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * @param entityName
    * @param isWrite
    */
-  private void markExposedInEnclosingEntities(WalkContext context, final String name, Scope definingScope, CAstEntity E,
+  private void markExposedInEnclosingEntities(WalkContext context, final String name, Scope definingScope, TypeReference type, CAstEntity E,
       final String entityName, boolean isWrite) {
     Scope curScope = context.currentScope();
     while (!curScope.equals(definingScope)) {
       final Symbol curSymbol = curScope.lookup(name);
       final int vn = curSymbol.valueNumber();
-      final Access A = new Access(name, entityName, vn);
+      final Access A = new Access(name, entityName, type, vn);
       final CAstEntity entity = curScope.getEntity();
       if (entity != definingScope.getEntity()) {
         addExposedName(entity, E, name, vn, isWrite, context);
@@ -378,7 +392,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * lexical scope.
    * 
    */
-  protected void doLexicallyScopedWrite(WalkContext context, String name, int rval) {
+  protected void doLexicallyScopedWrite(WalkContext context, String name, TypeReference type, int rval) {
     Symbol S = context.currentScope().lookup(name);
     Scope definingScope = S.getDefiningScope();
     CAstEntity E = definingScope.getEntity();
@@ -386,20 +400,20 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     addExposedName(E, E, name, definingScope.lookup(name).valueNumber(), true, context);
 
     // lexically-scoped variables must be written in their scope each time
-    Access A = new Access(name, context.getEntityName(E), rval);
+    Access A = new Access(name, context.getEntityName(E), type, rval);
     context.cfg().addInstruction(new AstLexicalWrite(A));
-    markExposedInEnclosingEntities(context, name, definingScope, E, context.getEntityName(E), true);
+    markExposedInEnclosingEntities(context, name, definingScope, type, E, context.getEntityName(E), true);
   }
 
   /**
    * generate instructions for a read of a global
    */
-  protected int doGlobalRead(CAstNode node, WalkContext context, String name) {
+  protected int doGlobalRead(CAstNode node, WalkContext context, String name, TypeReference type) {
     // Global variables can be treated as lexicals defined in the CG root, or
     if (treatGlobalsAsLexicallyScoped()) {
 
       int result = context.currentScope().allocateTempValue();
-      Access A = new Access(name, null, result);
+      Access A = new Access(name, null, type, result);
       context.cfg().addInstruction(new AstLexicalRead(A));
       addAccess(context, context.top(), A);
       return result;
@@ -416,12 +430,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   /**
    * generate instructions for a write of a global
    */
-  protected void doGlobalWrite(WalkContext context, String name, int rval) {
+  protected void doGlobalWrite(WalkContext context, String name, TypeReference type, int rval) {
 
     // Global variables can be treated as lexicals defined in the CG root, or
     if (treatGlobalsAsLexicallyScoped()) {
 
-      Access A = new Access(name, null, rval);
+      Access A = new Access(name, null, type, rval);
       context.cfg().addInstruction(new AstLexicalWrite(A));
       addAccess(context, context.top(), A);
 
@@ -1333,11 +1347,20 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
   protected class FinalCAstSymbol implements CAstSymbol {
     private final String _name;
-
-    private FinalCAstSymbol(String _name) {
+    private final CAstType type;
+    
+    private FinalCAstSymbol(String _name, CAstType type) {
       this._name = _name;
+      this.type = type;
+      assert _name != null;
+      assert type != null;
     }
 
+    @Override
+    public CAstType type() {
+      return type;
+    }
+    
     @Override
     public String name() {
       return _name;
@@ -1365,20 +1388,20 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   }
 
   public static class InternalCAstSymbol extends CAstSymbolImplBase {
-    public InternalCAstSymbol(String _name) {
-      super(_name, false, false, null);
+    public InternalCAstSymbol(String _name, CAstType type) {
+      super(_name, type, false, false, null);
     }
 
-    public InternalCAstSymbol(String _name, boolean _isFinal) {
-      super(_name, _isFinal, false, null);
+    public InternalCAstSymbol(String _name, CAstType type, boolean _isFinal) {
+      super(_name, type, _isFinal, false, null);
     }
 
-    public InternalCAstSymbol(String _name, boolean _isFinal, boolean _isCaseInsensitive) {
-      super(_name, _isFinal, _isCaseInsensitive, null);
+    public InternalCAstSymbol(String _name, CAstType type, boolean _isFinal, boolean _isCaseInsensitive) {
+      super(_name, type, _isFinal, _isCaseInsensitive, null);
     }
 
-    public InternalCAstSymbol(String _name, boolean _isFinal, boolean _isCaseInsensitive, Object _defaultInitValue) {
-      super(_name, _isFinal, _isCaseInsensitive, _defaultInitValue);
+    public InternalCAstSymbol(String _name, CAstType type, boolean _isFinal, boolean _isCaseInsensitive, Object _defaultInitValue) {
+      super(_name, type, _isFinal, _isCaseInsensitive, _defaultInitValue);
     }
 
     @Override
@@ -1408,6 +1431,8 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     boolean isInternalName();
 
     Object defaultInitValue();
+    
+    CAstType type();
   }
 
   /**
@@ -1590,14 +1615,14 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
 
     protected Symbol makeSymbol(CAstSymbol s) {
-      return makeSymbol(s.name(), s.isFinal(), s.isInternalName(), s.defaultInitValue(), -1, this);
+      return makeSymbol(s.name(), s.type(), s.isFinal(), s.isInternalName(), s.defaultInitValue(), -1, this);
     }
 
     protected Symbol makeSymbol(CAstSymbol s, int vn) {
-      return makeSymbol(s.name(), s.isFinal(), s.isInternalName(), s.defaultInitValue(), vn, this);
+      return makeSymbol(s.name(), s.type(), s.isFinal(), s.isInternalName(), s.defaultInitValue(), vn, this);
     }
 
-    abstract protected Symbol makeSymbol(String nm, boolean isFinal, boolean isInternalName, Object defaultInitValue, int vn,
+    abstract protected Symbol makeSymbol(String nm, CAstType type, boolean isFinal, boolean isInternalName, Object defaultInitValue, int vn,
         Scope parent);
 
     @Override
@@ -1613,7 +1638,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         Symbol scoped = parent.lookup(nm);
         if (scoped != null && getEntityScope() == this && (isGlobal(scoped) || isLexicallyScoped(scoped))) {
           values.put(nm,
-              makeSymbol(nm, scoped.isFinal(), scoped.isInternalName(), scoped.defaultInitValue(), -1, scoped.getDefiningScope()));
+              makeSymbol(nm, scoped.type(), scoped.isFinal(), scoped.isInternalName(), scoped.defaultInitValue(), -1, scoped.getDefiningScope()));
           if (scoped.getDefiningScope().isCaseInsensitive(nm)) {
             caseInsensitiveNames.put(nm.toLowerCase(), nm);
           }
@@ -1677,8 +1702,10 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       }
 
       @Override
-      protected Symbol makeSymbol(final String nm, final boolean isFinal, final boolean isInternalName,
+      protected Symbol makeSymbol(final String nm, final CAstType type, final boolean isFinal, final boolean isInternalName,
           final Object defaultInitValue, int vn, Scope definer) {
+        assert nm != null;
+        assert type != null;
         final int v = vn == -1 ? getUnderlyingSymtab().newSymbol() : vn;
         if (useDefaultInitValues() && defaultInitValue != null) {
           if (getUnderlyingSymtab().getValue(v) == null) {
@@ -1691,6 +1718,10 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
             return nm + ":" + System.identityHashCode(this);
           }
 
+          @Override 
+          public CAstType type() {
+            return type;
+          }
           @Override
           public int valueNumber() {
             return v;
@@ -1734,6 +1765,21 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
               return params[yuck];
             }
 
+            @Override
+            public CAstType type() {
+              if (f.getType() instanceof CAstType.Method) {
+                if (yuck == 0) {
+                  return ((CAstType.Method)f.getType()).getDeclaringType();
+                } else {
+                  return (CAstType) ((CAstType.Method)f.getType()).getArgumentTypes().get(yuck-1);
+                }
+              } else if (f.getType() instanceof CAstType.Function) {
+                return (CAstType) ((CAstType.Function)f.getType()).getArgumentTypes().get(yuck);
+              } else {
+                return topType();
+              }
+            }
+            
             @Override
             public boolean isFinal() {
               return false;
@@ -1797,8 +1843,10 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       }
 
       @Override
-      protected Symbol makeSymbol(final String nm, final boolean isFinal, final boolean isInternalName,
+      protected Symbol makeSymbol(final String nm, final CAstType type, final boolean isFinal, final boolean isInternalName,
           final Object defaultInitValue, final int valueNumber, Scope definer) {
+        assert nm != null;
+        assert type != null;
         return new AbstractSymbol(definer, isFinal, defaultInitValue) {
           final int vn;
 
@@ -1819,6 +1867,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
             }
           }
 
+          @Override
+          public CAstType type() {
+            return type;
+          }
+          
           @Override
           public String toString() {
             return nm + ":" + System.identityHashCode(this);
@@ -1871,7 +1924,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       }
 
       @Override
-      protected Symbol makeSymbol(final String nm, boolean isFinal, final boolean isInternalName, final Object defaultInitValue,
+      protected Symbol makeSymbol(final String nm, final CAstType type, boolean isFinal, final boolean isInternalName, final Object defaultInitValue,
           int vn, Scope definer) {
         final int v = vn == -1 ? getUnderlyingSymtab().newSymbol() : vn;
         if (useDefaultInitValues() && defaultInitValue != null) {
@@ -1879,12 +1932,19 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
             setDefaultValue(getUnderlyingSymtab(), v, defaultInitValue);
           }
         }
+        assert nm != null;
+        assert type != null;
         return new AbstractSymbol(definer, isFinal, defaultInitValue) {
           @Override
           public String toString() {
             return nm + ":" + System.identityHashCode(this);
           }
 
+          @Override
+          public CAstType type() {
+            return type;
+          }
+          
           @Override
           public int valueNumber() {
             return v;
@@ -2007,6 +2067,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
               public Object defaultInitValue() {
                 return null;
               }
+
+              @Override
+              public CAstType type() {
+                return topType();
+              }
             });
           } else if (hasSpecialUndeclaredVariables()) {
             return null;
@@ -2036,6 +2101,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
             return name + ":" + System.identityHashCode(this);
           }
 
+          @Override
+          public CAstType type() {
+            return s.type();
+          }
+          
           @Override
           public boolean isParameter() {
             return false;
@@ -2156,6 +2226,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
             return name + ":" + System.identityHashCode(this);
           }
 
+          @Override
+          public CAstType type() {
+            return s.type();
+          }
+          
           @Override
           public boolean isParameter() {
             return false;
@@ -3106,7 +3181,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   protected void leaveGlobalEntity(CAstEntity n, WalkContext context, CAstVisitor<WalkContext> visitor) {
     // Define a new field in the enclosing type, if the language we're
     // processing allows such.
-    context.getGlobalScope().declare(new CAstSymbolImpl(n.getName()));
+    context.getGlobalScope().declare(new CAstSymbolImpl(n.getName(), n.getType()));
   }
 
   @Override
@@ -3240,10 +3315,10 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       // value to that local
       assignValue(n, context, cs.lookup(fn.getName()), fn.getName(), result);
     } else if (topLevelFunctionsInGlobalScope() && context.top().getKind() == CAstEntity.SCRIPT_ENTITY) {
-      context.getGlobalScope().declare(new FinalCAstSymbol(fn.getName()));
+      context.getGlobalScope().declare(new FinalCAstSymbol(fn.getName(), fn.getType()));
       assignValue(n, context, cs.lookup(fn.getName()), fn.getName(), result);
     } else {
-      context.currentScope().declare(new FinalCAstSymbol(fn.getName()), result);
+      context.currentScope().declare(new FinalCAstSymbol(fn.getName(), fn.getType()), result);
     }
   }
 
@@ -3328,7 +3403,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   protected void leaveGetCaughtException(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
     WalkContext context = c;
     String nm = (String) n.getChild(0).getValue();
-    context.currentScope().declare(new FinalCAstSymbol(nm));
+    context.currentScope().declare(new FinalCAstSymbol(nm, exceptionType()));
     context.cfg().addInstruction(
         insts.GetCaughtExceptionInstruction(context.cfg().getCurrentBlock().getNumber(), context.currentScope().lookup(nm)
             .valueNumber()));
@@ -3388,12 +3463,14 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     assert nm != null : "cannot find var for " + CAstPrinter.print(n, context.getSourceMap());
     Symbol s = context.currentScope().lookup(nm);
     assert s != null : "cannot find symbol for " + nm + " at " + CAstPrinter.print(n, context.getSourceMap());
+    assert s.type() != null : "no type for " + nm + " at " + CAstPrinter.print(n, context.getSourceMap());
+    TypeReference type = makeType(s.type());
     if (context.currentScope().isGlobal(s)) {
-      c.setValue(n, doGlobalRead(n, context, nm));
+      c.setValue(n, doGlobalRead(n, context, nm, type));
     } else if (context.currentScope().isLexicallyScoped(s)) {
-      c.setValue(n, doLexicallyScopedRead(n, context, nm));
+      c.setValue(n, doLexicallyScopedRead(n, context, nm, type));
     } else {
-      c.setValue(n, doLocalRead(context, nm));
+      c.setValue(n, doLocalRead(context, nm, type));
     }
   }
 
@@ -3514,17 +3591,18 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   protected void leaveDeclStmt(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
     CAstSymbol s = (CAstSymbol) n.getChild(0).getValue();
     String nm = s.name();
+    CAstType t = s.type();
     Scope scope = c.currentScope();
     if (n.getChildCount() == 2) {
       CAstNode v = n.getChild(1);
       if (scope.contains(nm) && scope.lookup(nm).getDefiningScope() == scope) {
         assert !s.isFinal();
-        doLocalWrite(c, nm, c.getValue(v));
+        doLocalWrite(c, nm, makeType(t), c.getValue(v));
       } else if (v.getKind() != CAstNode.CONSTANT && v.getKind() != CAstNode.VAR && v.getKind() != CAstNode.THIS) {
         scope.declare(s, c.getValue(v));
       } else {
         scope.declare(s);
-        doLocalWrite(c, nm, c.getValue(v));
+        doLocalWrite(c, nm, makeType(t), c.getValue(v));
       }
     } else {
       c.currentScope().declare(s);
@@ -3903,12 +3981,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    */
   protected void assignValue(CAstNode n, WalkContext context, Symbol ls, String nm, int rval) {
     if (context.currentScope().isGlobal(ls))
-      doGlobalWrite(context, nm, rval);
+      doGlobalWrite(context, nm, makeType(ls.type()), rval);
     else if (context.currentScope().isLexicallyScoped(ls)) {
-      doLexicallyScopedWrite(context, nm, rval);
+      doLexicallyScopedWrite(context, nm, makeType(ls.type()), rval);
     } else {
       assert rval != -1 : CAstPrinter.print(n, context.top().getSourceMap());
-      doLocalWrite(context, nm, rval);
+      doLocalWrite(context, nm, makeType(ls.type()), rval);
     }
   }
 
@@ -3932,14 +4010,15 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     WalkContext context = c;
     String nm = (String) n.getChild(0).getValue();
     Symbol ls = context.currentScope().lookup(nm);
+    TypeReference type = makeType(ls.type());
     int temp;
 
     if (context.currentScope().isGlobal(ls))
-      temp = doGlobalRead(n, context, nm);
+      temp = doGlobalRead(n, context, nm, type);
     else if (context.currentScope().isLexicallyScoped(ls)) {
-      temp = doLexicallyScopedRead(n, context, nm);
+      temp = doLexicallyScopedRead(n, context, nm, type);
     } else {
-      temp = doLocalRead(context, nm);
+      temp = doLocalRead(context, nm, type);
     }
 
     if (!pre) {
@@ -3955,11 +4034,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
 
     if (context.currentScope().isGlobal(ls)) {
-      doGlobalWrite(context, nm, rval);
+      doGlobalWrite(context, nm, type, rval);
     } else if (context.currentScope().isLexicallyScoped(ls)) {
-      doLexicallyScopedWrite(context, nm, rval);
+      doLexicallyScopedWrite(context, nm, type, rval);
     } else {
-      doLocalWrite(context, nm, rval);
+      doLocalWrite(context, nm, type, rval);
     }
   }
 
@@ -4147,7 +4226,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     String id = (String) n.getChild(0).getValue();
     context.cfg().setCurrentBlockAsHandler();
     if (!context.currentScope().contains(id)) {
-      context.currentScope().declare(new FinalCAstSymbol(id));
+      context.currentScope().declare(new FinalCAstSymbol(id, exceptionType()));
     }
     context.cfg().addInstruction(
         insts.GetCaughtExceptionInstruction(context.cfg().getCurrentBlock().getNumber(), context.currentScope().lookup(id)

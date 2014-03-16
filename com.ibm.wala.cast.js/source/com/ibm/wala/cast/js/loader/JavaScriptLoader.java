@@ -341,8 +341,8 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         @Override
-        public AstLexicalRead LexicalRead(int lhs, String definer, String globalName) {
-          return new AstLexicalRead(lhs, definer, globalName);
+        public AstLexicalRead LexicalRead(int lhs, String definer, String globalName, TypeReference type) {
+          return new AstLexicalRead(lhs, definer, globalName, type);
         }
 
         @Override
@@ -356,8 +356,8 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         @Override
-        public AstLexicalWrite LexicalWrite(String definer, String globalName, int rhs) {
-          return new AstLexicalWrite(definer, globalName, rhs);
+        public AstLexicalWrite LexicalWrite(String definer, String globalName, TypeReference type, int rhs) {
+          return new AstLexicalWrite(definer, globalName, type, rhs);
         }
 
         @Override

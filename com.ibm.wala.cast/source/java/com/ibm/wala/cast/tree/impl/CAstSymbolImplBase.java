@@ -11,40 +11,51 @@
 package com.ibm.wala.cast.tree.impl;
 
 import com.ibm.wala.cast.tree.CAstSymbol;
+import com.ibm.wala.cast.tree.CAstType;
 
 public abstract class CAstSymbolImplBase implements CAstSymbol {
   private final String _name;
   private final boolean _isFinal;
   private final boolean _isCaseInsensitive;
   private final Object _defaultInitValue;
+  private final CAstType type;
 
-  public CAstSymbolImplBase(String name) {
-    this(name, false);
+  public CAstSymbolImplBase(String name, CAstType type) {
+    this(name, type, false);
   }
 
-  public CAstSymbolImplBase(String name, boolean isFinal) {
-    this(name, isFinal, false);
+  public CAstSymbolImplBase(String name, CAstType type, boolean isFinal) {
+    this(name, type, isFinal, false);
   }
 
-  public CAstSymbolImplBase(String name,  boolean isFinal, boolean isCaseSensitive) {
-    this(name, isFinal, isCaseSensitive, null);
+  public CAstSymbolImplBase(String name,  CAstType type, boolean isFinal, boolean isCaseSensitive) {
+    this(name, type, isFinal, isCaseSensitive, null);
   }
 
-  public CAstSymbolImplBase(String name, Object defaultInitValue) {
-    this(name, false, defaultInitValue);
+  public CAstSymbolImplBase(String name, CAstType type, Object defaultInitValue) {
+    this(name, type, false, defaultInitValue);
   }
 
-  public CAstSymbolImplBase(String name, boolean isFinal, Object defaultInitValue) {
-    this(name, isFinal, false, defaultInitValue);
+  public CAstSymbolImplBase(String name, CAstType type, boolean isFinal, Object defaultInitValue) {
+    this(name, type, isFinal, false, defaultInitValue);
   }
 
-  public CAstSymbolImplBase(String name,  boolean isFinal, boolean isCaseSensitive, Object defaultInitValue) {
+  public CAstSymbolImplBase(String name, CAstType type, boolean isFinal, boolean isCaseSensitive, Object defaultInitValue) {
     this._name= name;
+    this.type = type;
     this._isFinal= isFinal;
     this._isCaseInsensitive= isCaseSensitive;
     this._defaultInitValue= defaultInitValue;
+    
+    assert name != null;
+    assert type != null;
   }
 
+  @Override
+  public CAstType type() {
+    return type;
+  }
+  
   @Override
   public String name() {
     return _name;

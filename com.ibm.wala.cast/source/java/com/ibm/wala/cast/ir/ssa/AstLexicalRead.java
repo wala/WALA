@@ -13,6 +13,7 @@ package com.ibm.wala.cast.ir.ssa;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.types.TypeReference;
 
 /**
  * A set of lexical reads. This instruction represents reads of a set of variables that are defined by a pair of
@@ -32,8 +33,8 @@ public class AstLexicalRead extends AstLexicalAccess {
     this(new Access[] { access });
   }
 
-  public AstLexicalRead(int lhs, String definer, String globalName) {
-    this(new Access(globalName, definer, lhs));
+  public AstLexicalRead(int lhs, String definer, String globalName, TypeReference type) {
+    this(new Access(globalName, definer, type, lhs));
   }
 
   @Override
@@ -44,7 +45,7 @@ public class AstLexicalRead extends AstLexicalAccess {
       Access[] accesses = new Access[getAccessCount()];
       for (int i = 0; i < accesses.length; i++) {
         Access oldAccess = getAccess(i);
-        accesses[i] = new Access(oldAccess.variableName, oldAccess.variableDefiner, defs[i]);
+        accesses[i] = new Access(oldAccess.variableName, oldAccess.variableDefiner, oldAccess.type, defs[i]);
       }
 
       return ((AstInstructionFactory)insts).LexicalRead(accesses);

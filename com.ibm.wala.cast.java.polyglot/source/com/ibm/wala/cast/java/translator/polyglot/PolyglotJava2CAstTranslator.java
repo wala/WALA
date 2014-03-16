@@ -869,7 +869,7 @@ public class PolyglotJava2CAstTranslator {
       handleThrowsFromCall(ctorInst, n, wc);
 
       return makeNode(wc, fFactory, n, CAstNode.LOCAL_SCOPE, makeNode(wc, fFactory, n, CAstNode.BLOCK_EXPR, makeNode(wc, fFactory,
-          n, CAstNode.DECL_STMT, fFactory.makeConstant(new InternalCAstSymbol(tmpName, true)), newNode), callNode, makeNode(wc,
+          n, CAstNode.DECL_STMT, fFactory.makeConstant(new InternalCAstSymbol(tmpName, getTypeDict().getCAstTypeFor(n.type()), true)), newNode), callNode, makeNode(wc,
           fFactory, n, CAstNode.VAR, fFactory.makeConstant(tmpName))));
     }
 
@@ -1280,7 +1280,7 @@ public class PolyglotJava2CAstTranslator {
     public CAstNode visit(Synchronized s, WalkContext wc) {
       CAstNode exprNode = walkNodes(s.expr(), wc);
       String exprName = fFactory.makeUnique();
-      CAstNode declStmt = makeNode(wc, fFactory, s, CAstNode.DECL_STMT, fFactory.makeConstant(new CAstSymbolImpl(exprName, true)),
+      CAstNode declStmt = makeNode(wc, fFactory, s, CAstNode.DECL_STMT, fFactory.makeConstant(new CAstSymbolImpl(exprName, getTypeDict().getCAstTypeFor(s.expr().type()), true)),
           exprNode);
       CAstNode monitorEnterNode = makeNode(wc, fFactory, s, CAstNode.MONITOR_ENTER, makeNode(wc, fFactory, s, CAstNode.VAR,
           fFactory.makeConstant(exprName)));
@@ -1362,7 +1362,7 @@ public class PolyglotJava2CAstTranslator {
 
       boolean isFinal = ld.flags().flags().isFinal();
 
-      return makeNode(wc, fFactory, ld, CAstNode.DECL_STMT, fFactory.makeConstant(new CAstSymbolImpl(ld.name().id().toString(), isFinal,
+      return makeNode(wc, fFactory, ld, CAstNode.DECL_STMT, fFactory.makeConstant(new CAstSymbolImpl(ld.name().id().toString(), getTypeDict().getCAstTypeFor(type), isFinal,
           defaultValue)), initNode);
     }
 

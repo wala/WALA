@@ -128,6 +128,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.core.dom.WhileStatement;
 
+import com.ibm.wala.analysis.typeInference.JavaPrimitiveType;
 import com.ibm.wala.cast.ir.translator.AstTranslator.InternalCAstSymbol;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.DoLoopTranslator;
@@ -605,7 +606,9 @@ public class JDTJava2CAstTranslator {
         IInvokeInstruction.Dispatch.SPECIAL);
     children[1] = fFactory.makeConstant(callSiteRef);
     for (int i = 1; i < fakeArguments.length; i++) {
-      children[i + 1] = makeNode(context, fFactory, n, CAstNode.VAR, fFactory.makeConstant(fakeArguments[i]));
+      CAstNode argName = fFactory.makeConstant(fakeArguments[i]);
+      CAstNode argType = fFactory.makeConstant(paramTypes.get(i-1));
+      children[i + 1] = makeNode(context, fFactory, n, CAstNode.VAR, argName, argType);
     }
     bodyNodes[0] = makeNode(context, fFactory, n, CAstNode.CALL, children);
     // QUESTION: no handleExceptions?
@@ -1291,7 +1294,7 @@ public class JDTJava2CAstTranslator {
       initNode = visitNode(init, context);
 
     Object defaultValue = JDT2CAstUtils.defaultValueForType(type);
-    return makeNode(context, fFactory, n, CAstNode.DECL_STMT, fFactory.makeConstant(new CAstSymbolImpl(n.getName().getIdentifier(),
+    return makeNode(context, fFactory, n, CAstNode.DECL_STMT, fFactory.makeConstant(new CAstSymbolImpl(n.getName().getIdentifier(), fTypeDict.getCAstTypeFor(type),
         isFinal, defaultValue)), initNode);
   }
 
@@ -1393,7 +1396,7 @@ public class JDTJava2CAstTranslator {
     int idx = 0; // args: [ this, callsiteref, <actual args> ]
 
     // arg 0: this
-    argNodes[idx++] = makeNode(context, fFactory, nn, CAstNode.VAR, fFactory.makeConstant(tmpName));
+    argNodes[idx++] = makeNode(context, fFactory, nn, CAstNode.VAR, fFactory.makeConstant(tmpName), fFactory.makeConstant(fTypeDict.getCAstTypeFor(newType)));
     // contains output from newNode (see part III)
 
     // arg 1: call site ref (WHY?)
@@ -1419,7 +1422,7 @@ public class JDTJava2CAstTranslator {
     // 3) access this temporary variable. Since the value of the block is the last thing in the block, the resultant
     // value will be the variable
     return makeNode(context, fFactory, nn, CAstNode.LOCAL_SCOPE, makeNode(context, fFactory, nn, CAstNode.BLOCK_EXPR, makeNode(
-        context, fFactory, nn, CAstNode.DECL_STMT, fFactory.makeConstant(new InternalCAstSymbol(tmpName, true)), newNode),
+        context, fFactory, nn, CAstNode.DECL_STMT, fFactory.makeConstant(new InternalCAstSymbol(tmpName, fTypeDict.getCAstTypeFor(newType), true)), newNode),
         callNode, makeNode(context, fFactory, nn, CAstNode.VAR, fFactory.makeConstant(tmpName))));
   }
 
@@ -1698,13 +1701,13 @@ public class JDTJava2CAstTranslator {
     final String tmpName = "temp generic preop hack"; // illegal Java identifier
     CAstNode exprNode = visitNode(field.getExpression(), context);
     CAstNode tmpDeclNode = makeNode(context, fFactory, left, CAstNode.DECL_STMT, fFactory.makeConstant(new InternalCAstSymbol(
-        tmpName, true)), exprNode);
+        tmpName, fTypeDict.getCAstTypeFor(field.getExpression().resolveTypeBinding()), true)), exprNode);
 
     // need two object refndoes "temp.y"
-    CAstNode obref1 = createFieldAccess(makeNode(context, fFactory, left, CAstNode.VAR, fFactory.makeConstant(tmpName)), field
+    CAstNode obref1 = createFieldAccess(makeNode(context, fFactory, left, CAstNode.VAR, fFactory.makeConstant(tmpName), fFactory.makeConstant(fTypeDict.getCAstTypeFor(field.resolveFieldBinding().getType()))), field
         .getName().getIdentifier(), field.resolveFieldBinding(), left, new AssignmentContext(context));
 
-    CAstNode obref2 = createFieldAccess(makeNode(context, fFactory, left, CAstNode.VAR, fFactory.makeConstant(tmpName)), field
+    CAstNode obref2 = createFieldAccess(makeNode(context, fFactory, left, CAstNode.VAR, fFactory.makeConstant(tmpName), fFactory.makeConstant(fTypeDict.getCAstTypeFor(field.resolveFieldBinding().getType()))), field
         .getName().getIdentifier(), field.resolveFieldBinding(), left, context);
     ITypeBinding realtype = JDT2CAstUtils.getErasedType(field.resolveFieldBinding().getType(), ast);
     ITypeBinding fromtype = JDT2CAstUtils
@@ -1806,7 +1809,8 @@ public class JDTJava2CAstTranslator {
 
     } else {
       // local
-      return makeNode(context, fFactory, n, CAstNode.VAR, fFactory.makeConstant(n.getIdentifier()));
+      CAstType t = fTypeDict.getCAstTypeFor(((IVariableBinding)n.resolveBinding()).getType());
+      return makeNode(context, fFactory, n, CAstNode.VAR, fFactory.makeConstant(n.getIdentifier()), fFactory.makeConstant(t));
     }
 
   }
@@ -2499,7 +2503,7 @@ public class JDTJava2CAstTranslator {
     context.cfg().map(o1, iterCallNode); // TODO: this might not work, lots of calls in this one statement.
 
     CAstNode iterAssignNode = makeNode(context, fFactory, n, CAstNode.DECL_STMT, fFactory.makeConstant(new InternalCAstSymbol(
-        tmpName, true)), iterCallNode);
+        tmpName, fTypeDict.getCAstTypeFor(ast.resolveWellKnownType("int")), true)), iterCallNode);
 
     // MATCHUP: wrap in a block
     iterAssignNode = makeNode(context, fFactory, n, CAstNode.BLOCK_STMT, iterAssignNode);
@@ -2539,12 +2543,12 @@ public class JDTJava2CAstTranslator {
 
     Object defaultValue = JDT2CAstUtils.defaultValueForType(svd.resolveBinding().getType());
     CAstNode nextAssignNode = makeNode(context, fFactory, n, CAstNode.DECL_STMT, fFactory.makeConstant(new CAstSymbolImpl(svd
-        .getName().getIdentifier(), (svd.getModifiers() & Modifier.FINAL) != 0, defaultValue)), castedNode);
+        .getName().getIdentifier(), fTypeDict.getCAstTypeFor(svd.resolveBinding().getType()), (svd.getModifiers() & Modifier.FINAL) != 0, defaultValue)), castedNode);
 
     /*----------- put it all together ----------*/
     ASTNode breakTarget = makeBreakOrContinueTarget(n, "breakLabel" + n.getStartPosition());
     ASTNode continueTarget = makeBreakOrContinueTarget(n, "continueLabel" + n.getStartPosition());
-    String loopLabel = (String) context.getLabelMap().get(n);
+    String loopLabel = context.getLabelMap().get(n);
     WalkContext loopContext = new LoopContext(context, loopLabel, breakTarget, continueTarget);
 
     // LOCAL_SCOPE(BLOCK(iterassign,LOOP(cond,BLOCK(BLOCK(paramassign,bodyblock),continuetarget,BLOCK())),breaktarget))
@@ -2575,18 +2579,18 @@ public class JDTJava2CAstTranslator {
     final String tmpArrayName = "for temp array"; // illegal java identifier
     CAstNode exprNode = visitNode(n.getExpression(), context);
     CAstNode arrayDeclNode = makeNode(context, fFactory, n, CAstNode.DECL_STMT, fFactory.makeConstant(new InternalCAstSymbol(
-        tmpArrayName, true)), exprNode);
+        tmpArrayName, fTypeDict.getCAstTypeFor(n.getExpression().resolveTypeBinding()), true)), exprNode);
 
     /*------ indexDecl --------- int tmpindex = 0 ------*/
     final String tmpIndexName = "for temp index";
     CAstNode indexDeclNode = makeNode(context, fFactory, n, CAstNode.DECL_STMT, fFactory.makeConstant(new InternalCAstSymbol(
-        tmpIndexName, true)), fFactory.makeConstant(new Integer(0)));
+        tmpIndexName, fTypeDict.getCAstTypeFor(ast.resolveWellKnownType("int")), true)), fFactory.makeConstant(new Integer(0)));
 
     /*------ cond ------------- tmpindex < tmparray.length ------*/
     CAstNode tmpArrayLengthNode = makeNode(context, fFactory, n, CAstNode.ARRAY_LENGTH, makeNode(context, fFactory, n,
-        CAstNode.VAR, fFactory.makeConstant(tmpArrayName)));
+        CAstNode.VAR, fFactory.makeConstant(tmpArrayName), fFactory.makeConstant(fTypeDict.getCAstTypeFor(n.getExpression().resolveTypeBinding()))));
     CAstNode condNode = makeNode(context, fFactory, n, CAstNode.BINARY_EXPR, CAstOperator.OP_LT, makeNode(context, fFactory, n,
-        CAstNode.VAR, fFactory.makeConstant(tmpIndexName)), tmpArrayLengthNode);
+        CAstNode.VAR, fFactory.makeConstant(tmpIndexName), fFactory.makeConstant(JavaPrimitiveType.INT)), tmpArrayLengthNode);
 
     /*------ tmpIndexInc -------- tmpindex++ ------*/
     CAstNode tmpArrayIncNode = makeNode(context, fFactory, n, CAstNode.ASSIGN_POST_OP, makeNode(context, fFactory, n, CAstNode.VAR,
@@ -2601,7 +2605,8 @@ public class JDTJava2CAstTranslator {
     SingleVariableDeclaration svd = n.getParameter();
     Object defaultValue = JDT2CAstUtils.defaultValueForType(svd.resolveBinding().getType());
     CAstNode nextAssignNode = makeNode(context, fFactory, n, CAstNode.DECL_STMT, fFactory.makeConstant(new CAstSymbolImpl(svd
-        .getName().getIdentifier(), (svd.getModifiers() & Modifier.FINAL) != 0, defaultValue)), tmpArrayAccessNode);
+        .getName().getIdentifier(), fTypeDict.getCAstTypeFor(n.getExpression()
+        .resolveTypeBinding().getComponentType()), (svd.getModifiers() & Modifier.FINAL) != 0, defaultValue)), tmpArrayAccessNode);
 
     // LOCAL_SCOPE(BLOCK(arrayDecl,LOCAL_SCOPE(BLOCK(BLOCK(indexDecl),LOOP(cond,BLOCK(LOCAL_SCOPE(BLOCK(nextAssign,bodyblock)),continuetarget,BLOCK(iter))),breaktarget))))
     // more complicated than it has to be, but it matches up exactly with the Java expansion above.
@@ -2772,7 +2777,7 @@ public class JDTJava2CAstTranslator {
     CAstNode exprNode = visitNode(n.getExpression(), context);
     String exprName = fFactory.makeUnique();
     CAstNode declStmt = makeNode(context, fFactory, n, CAstNode.DECL_STMT, fFactory
-        .makeConstant(new CAstSymbolImpl(exprName, true)), exprNode);
+        .makeConstant(new CAstSymbolImpl(exprName, fTypeDict.getCAstTypeFor(n.getExpression().resolveTypeBinding()), true)), exprNode);
 
     CAstNode monitorEnterNode = makeNode(context, fFactory, n, CAstNode.MONITOR_ENTER, makeNode(context, fFactory, n, CAstNode.VAR,
         fFactory.makeConstant(exprName)));
@@ -3407,7 +3412,7 @@ public class JDTJava2CAstTranslator {
 
     CAstNode typeLit = makeNode(context, fFactory, fakeMet, CAstNode.TYPE_LITERAL_EXPR, fFactory.makeConstant(fIdentityMapper
         .typeToTypeID(enumType)));
-    CAstNode stringSvar = makeNode(context, fFactory, fakeMet, CAstNode.VAR, fFactory.makeConstant("s"));
+    CAstNode stringSvar = makeNode(context, fFactory, fakeMet, CAstNode.VAR, fFactory.makeConstant("s"), fFactory.makeConstant(fTypeDict.getCAstTypeFor(ast.resolveWellKnownType("java.lang.String"))));
     ArrayList<Object> args = new ArrayList<Object>();
     args.add(typeLit);
     args.add(stringSvar);
@@ -3585,12 +3590,12 @@ public class JDTJava2CAstTranslator {
     CallSiteReference callSiteRef = CallSiteReference.make(0, fIdentityMapper.getMethodRef(superCtor),
         IInvokeInstruction.Dispatch.SPECIAL);
     children[1] = fFactory.makeConstant(callSiteRef);
-    children[2] = makeNode(context, fFactory, n, CAstNode.VAR, fFactory.makeConstant(fakeArguments[1]));
-    children[3] = makeNode(context, fFactory, n, CAstNode.VAR, fFactory.makeConstant(fakeArguments[2]));
+    children[2] = makeNode(context, fFactory, n, CAstNode.VAR, fFactory.makeConstant(fakeArguments[1]), fFactory.makeConstant(paramTypes.get(0)));
+    children[3] = makeNode(context, fFactory, n, CAstNode.VAR, fFactory.makeConstant(fakeArguments[2]), fFactory.makeConstant(paramTypes.get(1)));
 
     if (ctor.isDefaultConstructor())
       for (int i = 0; i < ctor.getParameterTypes().length; i++)
-        children[i + 4] = makeNode(context, fFactory, n, CAstNode.VAR, fFactory.makeConstant(fakeArguments[i + 3]));
+        children[i + 4] = makeNode(context, fFactory, n, CAstNode.VAR, fFactory.makeConstant(fakeArguments[i + 3]), fFactory.makeConstant(paramTypes.get(i+2)));
 
     bodyNodes[0] = makeNode(context, fFactory, n, CAstNode.CALL, children);
     // QUESTION: no handleExceptions?

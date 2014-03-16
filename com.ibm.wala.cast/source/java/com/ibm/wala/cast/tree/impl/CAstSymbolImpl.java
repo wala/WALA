@@ -10,29 +10,31 @@
  *******************************************************************************/
 package com.ibm.wala.cast.tree.impl;
 
+import com.ibm.wala.cast.tree.CAstType;
+
 public class CAstSymbolImpl extends CAstSymbolImplBase {
-  public CAstSymbolImpl(String _name) {
-    super(_name);
+  public CAstSymbolImpl(String _name, CAstType type) {
+    super(_name, type);
   }
 
-  public CAstSymbolImpl(String _name, boolean _isFinal) {
-    super(_name, _isFinal);
+  public CAstSymbolImpl(String _name, CAstType type, boolean _isFinal) {
+    super(_name, type, _isFinal);
   }
 
-  public CAstSymbolImpl(String _name, boolean _isFinal, boolean _isCaseInsensitive) {
-    super(_name, _isFinal, _isCaseInsensitive);
+  public CAstSymbolImpl(String _name, CAstType type, boolean _isFinal, boolean _isCaseInsensitive) {
+    super(_name, type, _isFinal, _isCaseInsensitive);
   }
 
-  public CAstSymbolImpl(String _name, Object _defaultInitValue) {
-    super(_name, _defaultInitValue);
+  public CAstSymbolImpl(String _name, CAstType type, Object _defaultInitValue) {
+    super(_name, type, _defaultInitValue);
   }
 
-  public CAstSymbolImpl(String _name, boolean _isFinal, Object _defaultInitValue) {
-    super(_name, _isFinal, _defaultInitValue);
+  public CAstSymbolImpl(String _name, CAstType type, boolean _isFinal, Object _defaultInitValue) {
+    super(_name, type, _isFinal, _defaultInitValue);
   }
 
-  public CAstSymbolImpl(String _name, boolean _isFinal, boolean _isCaseInsensitive, Object _defaultInitValue) {
-    super(_name, _isFinal, _isCaseInsensitive, _defaultInitValue);
+  public CAstSymbolImpl(String _name, CAstType type, boolean _isFinal, boolean _isCaseInsensitive, Object _defaultInitValue) {
+    super(_name, type, _isFinal, _isCaseInsensitive, _defaultInitValue);
   }
 
   @Override
