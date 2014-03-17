@@ -43,7 +43,7 @@ public class DynamicCallGraphTest extends WalaTestCase {
   static {
     testJarLocation = DynamicCallGraphTest.class.getClassLoader().getResource("com.ibm.wala.core.testdata_1.0.0.jar");
     if (testJarLocation == null) {
-      testJarLocation = DynamicCallGraphTest.class.getClassLoader().getResource("com.ibm.wala.core.testdata_1.3.4-SNAPSHOT.jar");      
+      testJarLocation = DynamicCallGraphTest.class.getClassLoader().getResource("com.ibm.wala.core.testdata-1.3.4-SNAPSHOT.jar");      
     }
     assert testJarLocation != null;
   }
