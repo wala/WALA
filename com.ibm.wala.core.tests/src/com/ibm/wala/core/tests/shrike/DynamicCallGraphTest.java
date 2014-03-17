@@ -39,7 +39,14 @@ import com.ibm.wala.util.io.TemporaryFile;
 
 public class DynamicCallGraphTest extends WalaTestCase {
   
-  private static final URL testJarLocation = DynamicCallGraphTest.class.getClassLoader().getResource("com.ibm.wala.core.testdata_1.0.0.jar");
+  private static URL testJarLocation;
+  static {
+    testJarLocation = DynamicCallGraphTest.class.getClassLoader().getResource("com.ibm.wala.core.testdata_1.0.0.jar");
+    if (testJarLocation == null) {
+      testJarLocation = DynamicCallGraphTest.class.getClassLoader().getResource("com.ibm.wala.core.testdata_1.3.4-SNAPSHOT.jar");      
+    }
+    assert testJarLocation != null;
+  }
   
   private boolean instrumentedJarBuilt = false;
   
