@@ -177,9 +177,11 @@ public abstract class OfflineInstrumenterBase {
    */
   final class ClassInput extends Input {
     final private File file;
+    final private File baseDirectory;
 
-    public ClassInput(File f) {
+    public ClassInput(File baseDirectory, File f) {
       file = f;
+      this.baseDirectory = baseDirectory;
     }
 
     @Override
@@ -194,7 +196,8 @@ public abstract class OfflineInstrumenterBase {
 
     @Override
     public String getInputName() {
-      return file.getPath();
+      int base = baseDirectory.getPath().length() + 1;
+      return file.getPath().substring(base);
     }    
   }
 
@@ -238,8 +241,8 @@ public abstract class OfflineInstrumenterBase {
   /**
    * Add a class file containing a source class to instrument.
    */
-  final public void addInputClass(File f) {
-    inputs.add(new ClassInput(f));
+  final public void addInputClass(File baseDirectory, File f) {
+    inputs.add(new ClassInput(baseDirectory, f));
   }
 
   /**
@@ -247,7 +250,7 @@ public abstract class OfflineInstrumenterBase {
    * 
    * @throws IllegalArgumentException if d is null
    */
-  final public void addInputDirectory(File d) throws IOException, IllegalArgumentException {
+  final public void addInputDirectory(File baseDirectory, File d) throws IOException, IllegalArgumentException {
     if (d == null) {
       throw new IllegalArgumentException("d is null");
     }
@@ -263,9 +266,9 @@ public abstract class OfflineInstrumenterBase {
     for (int i = 0; i < fs.length; i++) {
       File f = fs[i];
       if (f.isDirectory()) {
-        addInputDirectory(f);
+        addInputDirectory(baseDirectory, f);
       } else {
-        addInputClass(f);
+        addInputClass(baseDirectory, f);
       }
     }
   }
@@ -276,7 +279,7 @@ public abstract class OfflineInstrumenterBase {
    * 
    * @throws IllegalArgumentException if a is null
    */
-  final public boolean addInputElement(String a) throws IOException {
+  final public boolean addInputElement(File baseDirectory, String a) throws IOException {
     if (a == null) {
       throw new IllegalArgumentException("a is null");
     }
@@ -288,11 +291,11 @@ public abstract class OfflineInstrumenterBase {
       }
       File f = new File(a);
       if (f.isDirectory()) {
-        addInputDirectory(f);
+        addInputDirectory(baseDirectory, f);
         return true;
       } else if (f.exists()) {
         if (a.endsWith(".class")) {
-          addInputClass(f);
+          addInputClass(baseDirectory, f);
           return true;
         } else if (a.endsWith(".jar") || a.endsWith(".zip")) {
           addInputJar(new File(a));
@@ -330,7 +333,7 @@ public abstract class OfflineInstrumenterBase {
         i++;
         continue;
       } else if (!a.startsWith("-")) {
-        if (addInputElement(a)) {
+        if (addInputElement(new File(a), a)) {
           continue;
         }
       } else if (a.startsWith("--")) {
@@ -352,20 +355,6 @@ public abstract class OfflineInstrumenterBase {
    */
   final public int getNumInputClasses() {
     return inputs.size();
-  }
-
-  /**
-   * Read a list of class file names from a stream and add them to the list of things to instrument.
-   */
-  final public void readInputClasses(InputStream s) throws IOException, IllegalArgumentException {
-    if (s == null) {
-      throw new IllegalArgumentException("illegal null inputStream");
-    }
-    String str;
-    BufferedReader r = new BufferedReader(new InputStreamReader(s));
-    while ((str = r.readLine()) != null) {
-      addInputElement(str);
-    }
   }
 
   /**
