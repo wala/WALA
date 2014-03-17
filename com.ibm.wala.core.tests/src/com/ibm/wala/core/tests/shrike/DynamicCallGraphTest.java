@@ -37,31 +37,40 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.io.TemporaryFile;
 
-public class DynamicCallGraphTests extends WalaTestCase {
+public class DynamicCallGraphTest extends WalaTestCase {
   
-  private static URL testJarLocation;
-  static {
-    testJarLocation = DynamicCallGraphTests.class.getClassLoader().getResource("com.ibm.wala.core.testdata_1.0.0.jar");
-    if (testJarLocation == null) {
-      testJarLocation = DynamicCallGraphTests.class.getClassLoader().getResource("com.ibm.wala.core.testdata-1.3.4-SNAPSHOT.jar");      
+  private static String getClasspathEntry(String elt) {
+    for (String s : System.getProperty("java.class.path").split(File.pathSeparator)) {
+      if (s.indexOf(elt) >= 0) {
+        File e = new File(s);
+         Assert.assertTrue(elt + " expected to exist", e.exists());
+        if (e.isDirectory() && !s.endsWith("/")) {
+          s = s + "/";
+        }
+        return s;
+      }
     }
-    Assert.assertNotNull("cannot find test jar is classpath", testJarLocation);
+    Assert.assertFalse("cannot find " + elt, true);
+    return null;
   }
+  
+  private static String testJarLocation = getClasspathEntry("com.ibm.wala.core.testdata");
   
   private boolean instrumentedJarBuilt = false;
   
   private void instrument() throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException {
     if (! instrumentedJarBuilt) {
-      DynamicCallGraph.main(new String[]{testJarLocation.getPath(), "-o", "/tmp/test.jar"});
+      System.err.println("core data jar to instrument: " + testJarLocation);
+      DynamicCallGraph.main(new String[]{testJarLocation, "-o", "/tmp/test.jar"});
       Assert.assertTrue("expected to create /tmp/test.jar", new File("/tmp/test.jar").exists());   
       instrumentedJarBuilt = true;
     }
   }
   
   private void run(String exclusionsFile) throws IOException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-    String shrikeBin = new File("../com.ibm.wala.shrike/bin/").getCanonicalPath();
-    String utilBin = new File("../com.ibm.wala.util/bin/").getCanonicalPath();
-    URLClassLoader jcl = new URLClassLoader(new URL[]{ new URL("file:///tmp/test.jar"), new URL("file://" + shrikeBin + "/"), new URL("file://" + utilBin + "/") }, DynamicCallGraphTests.class.getClassLoader().getParent());
+    String shrikeBin = getClasspathEntry("com.ibm.wala.shrike");
+    String utilBin = getClasspathEntry("com.ibm.wala.util");
+    URLClassLoader jcl = new URLClassLoader(new URL[]{ new URL("file:///tmp/test.jar"), new URL("file://" + shrikeBin), new URL("file://" + utilBin) }, DynamicCallGraphTest.class.getClassLoader().getParent());
  
     Class<?> testClass = jcl.loadClass("dynamicCG.MainClass");
     Assert.assertNotNull(testClass);
@@ -76,7 +85,9 @@ public class DynamicCallGraphTests extends WalaTestCase {
     try {
       testMain.invoke(null, (Object)new String[0]);      
     } catch (Throwable e) {
-      // exceptions allowed here, just collecting CG
+      // exceptions here are from program being instrumented
+      // this is fine, since we are collecting its call graph
+      // and exceptions are possible behavior.
     }
     
     // the VM is not exiting, so stop tracing explicitly
@@ -100,7 +111,9 @@ public class DynamicCallGraphTests extends WalaTestCase {
   private void check(CallGraph staticCG) throws IOException {
     BufferedReader dynamicEdgesFile = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(System.getProperty("dynamicCGFile")))));
     String line;
+    int lines = 0;
     while ((line = dynamicEdgesFile.readLine()) != null) {
+      lines++;
       StringTokenizer edge = new StringTokenizer(line, "\t");
       
       CGNode caller;
@@ -125,6 +138,8 @@ public class DynamicCallGraphTests extends WalaTestCase {
     }
     
     dynamicEdgesFile.close();
+    
+    Assert.assertTrue("more than one edge", lines > 0);
   }
   
   @Test
