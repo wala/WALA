@@ -37,15 +37,15 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.io.TemporaryFile;
 
-public class DynamicCallGraphTest extends WalaTestCase {
+public class DynamicCallGraphTests extends WalaTestCase {
   
   private static URL testJarLocation;
   static {
-    testJarLocation = DynamicCallGraphTest.class.getClassLoader().getResource("com.ibm.wala.core.testdata_1.0.0.jar");
+    testJarLocation = DynamicCallGraphTests.class.getClassLoader().getResource("com.ibm.wala.core.testdata_1.0.0.jar");
     if (testJarLocation == null) {
-      testJarLocation = DynamicCallGraphTest.class.getClassLoader().getResource("com.ibm.wala.core.testdata-1.3.4-SNAPSHOT.jar");      
+      testJarLocation = DynamicCallGraphTests.class.getClassLoader().getResource("com.ibm.wala.core.testdata-1.3.4-SNAPSHOT.jar");      
     }
-    assert testJarLocation != null;
+    Assert.assertNotNull("cannot find test jar is classpath", testJarLocation);
   }
   
   private boolean instrumentedJarBuilt = false;
@@ -61,7 +61,7 @@ public class DynamicCallGraphTest extends WalaTestCase {
   private void run(String exclusionsFile) throws IOException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
     String shrikeBin = new File("../com.ibm.wala.shrike/bin/").getCanonicalPath();
     String utilBin = new File("../com.ibm.wala.util/bin/").getCanonicalPath();
-    URLClassLoader jcl = new URLClassLoader(new URL[]{ new URL("file:///tmp/test.jar"), new URL("file://" + shrikeBin + "/"), new URL("file://" + utilBin + "/") }, DynamicCallGraphTest.class.getClassLoader().getParent());
+    URLClassLoader jcl = new URLClassLoader(new URL[]{ new URL("file:///tmp/test.jar"), new URL("file://" + shrikeBin + "/"), new URL("file://" + utilBin + "/") }, DynamicCallGraphTests.class.getClassLoader().getParent());
  
     Class<?> testClass = jcl.loadClass("dynamicCG.MainClass");
     Assert.assertNotNull(testClass);
