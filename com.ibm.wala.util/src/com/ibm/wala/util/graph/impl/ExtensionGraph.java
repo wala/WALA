@@ -112,7 +112,8 @@ public class ExtensionGraph<T> implements NumberedGraph<T> {
 
     @Override
     public boolean hasEdge(T src, T dst) {
-      return original.hasEdge(src, dst) || outEdges.get(src).contains(getNumber(dst));
+      return original.hasEdge(src, dst) || 
+          (outEdges.containsKey(src) && outEdges.get(src).contains(getNumber(dst)));
     }
 
     @Override
