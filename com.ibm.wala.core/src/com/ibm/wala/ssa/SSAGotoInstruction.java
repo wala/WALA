@@ -14,13 +14,15 @@ package com.ibm.wala.ssa;
  * Unconditional branch instruction for SSA form.
  */
 public class SSAGotoInstruction extends SSAInstruction {
+/** BEGIN Custom change: Add GoTo Instruction */    
   int targetIndex = -1;
+/** END Custom change: Add GoTo Instruction */  
 
   public SSAGotoInstruction(int index) {
     super(index);
   }
 
-  //@Warning("SSAGotoInstruction requires a BasicBlock change at targetIndex, but has no method to enforce it!")
+/** BEGIN Custom change: Add GoTo Instruction */  
   public SSAGotoInstruction(int index, int targetIndex) {
     super(index);
     this.targetIndex = targetIndex;
@@ -33,6 +35,7 @@ public class SSAGotoInstruction extends SSAInstruction {
   public int getTarget() {
 	return this.targetIndex;
   }
+/** END Custom change: Add GoTo Instruction */
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {

@@ -208,7 +208,7 @@ public class DexIMethod implements IBytecodeMethod {
 
 	public TypeReference[] getDeclaredExceptions()
 			throws InvalidClassFileException, UnsupportedOperationException {
-
+/** BEGIN Custom change: Variable Names in synth. methods */
 		assert (eMethod.method != null);
         if (myClass.getClassDefItem().getAnnotations() == null) {
             logger.error("Get Annotations is null for method " + eMethod + " in getDeclaredExceptions");
@@ -216,6 +216,8 @@ public class DexIMethod implements IBytecodeMethod {
         }
         ArrayList<String> strings = new ArrayList<String>();
         AnnotationSetItem annotationSet = myClass.getClassDefItem().getAnnotations().getMethodAnnotations(eMethod.method);
+/** END Custom change: Variable Names in synth. methods */
+
 		if (annotationSet != null) {
 			for (AnnotationItem annotationItem: annotationSet.getAnnotations())
 			{
@@ -3291,7 +3293,7 @@ public class DexIMethod implements IBytecodeMethod {
 
     /**
      *
-     * hrows InvalidClassFileException
+     * @throws InvalidClassFileException
      * @throws UnsupportedOperationException
      *
      * @todo    Review this implementation - it may be horribly wrong!
@@ -3299,6 +3301,7 @@ public class DexIMethod implements IBytecodeMethod {
 	@Override
 	public Collection<CallSiteReference> getCallSites()
 			throws InvalidClassFileException {
+/** BEGIN Custom change: Variable Names in synth. methods */
         Collection<CallSiteReference> empty = Collections.emptySet();
         if (isNative()) {
             return empty;
@@ -3331,6 +3334,7 @@ public class DexIMethod implements IBytecodeMethod {
             }
         }
         return Collections.unmodifiableCollection(csites);
+/** END Custom change: Variable Names in synth. methods */        
 	}
 
 	@Override

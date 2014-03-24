@@ -49,24 +49,32 @@ import com.ibm.wala.ipa.cha.IClassHierarchyDweller;
 
 public class DexEntryPoint extends DefaultEntrypoint implements IClassHierarchyDweller {
 	private static final Logger logger = LoggerFactory.getLogger(DexEntryPoint.class);
+/** BEGIN Custom change */    
     private IClassHierarchy cha;
+/** END Custom change */
 
 	public DexEntryPoint(IMethod method, IClassHierarchy cha) {
 		super(method, cha);
+/** BEGIN Custom change */        
         this.cha = cha;
+/** END Custom change */        
 		// TODO Auto-generated constructor stub
 	}
 
 	public DexEntryPoint(MethodReference method, IClassHierarchy cha) {
 		super(method, cha);
+/** BEGIN Custom change */        
         this.cha = cha;
+/** END Custom change */        
 		// TODO Auto-generated constructor stub
 	}
 
+/** BEGIN Custom change */    
     @Override
     public IClassHierarchy getClassHierarchy() {
         return cha;
     }
+/** END Custom change */    
 
 	@Override
 	protected TypeReference[] makeParameterTypes(IMethod method, int i) {

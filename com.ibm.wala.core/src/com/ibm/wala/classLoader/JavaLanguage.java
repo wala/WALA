@@ -214,9 +214,11 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       return new SSAGotoInstruction(iindex);
     }
 
+/** BEGIN Custom change: Add GoTo Instruction */    
     public SSAGotoInstruction GotoInstruction(int iindex, int target) {
       return new SSAGotoInstruction(iindex, target);
     }
+/** END Custom change: Add GoTo Instruction */    
 
     @Override
     public SSAInstanceofInstruction InstanceofInstruction(int iindex, int result, int ref, TypeReference checkedType) {

@@ -190,9 +190,11 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
         while (instructions[j] instanceof SSAPhiInstruction) {
           b.addPhi((SSAPhiInstruction) instructions[j]);
           j++;
+/** BEGIN Custom change */          
           if (j >= instructions.length) {
             break;
           }
+/** END Custom change */          
         }
 
         if (DEBUG) {
@@ -244,12 +246,14 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
 
     @Override
     public void visitGoto(SSAGotoInstruction instruction) {
+/** BEGIN Custom change */        
         logger.debug("Breaking Basic block after instruction " + instruction + " index " + index);
         breakBasicBlock(index);             // Breaks __after__ the GoTo-Instruction
         final int jumpTarget = getIndexFromIIndex(instruction.getTarget());
         assert(instructions[jumpTarget] != null) : "GoTo cant go to null";
         logger.debug("Breaking Basic block before instruction " + instructions[jumpTarget] + " index " + jumpTarget + " -1");
         breakBasicBlock(jumpTarget - 1);    // Breaks __before__ the target
+/** END Custom change */        
     }
 
     @Override
@@ -439,10 +443,12 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
      */
     private void addExceptionalEdges(SSAInstruction last) {
       if (last == null) {
+/** BEGIN Custom change */          
           // XXX: Bug here?
           // throw new IllegalStateException("Missing last SSA-Instruction in basic block (null).");   // XXX: When does this happen?
           System.err.println("Missing last SSA-Instruction in basic block (null).");
           return;
+/** END Custom change */          
       }
       if (last.isPEI()) {
         // we don't currently model catch blocks here ... instead just link
@@ -469,6 +475,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
       SSAInstruction last = getInstructions()[getLastInstructionIndex()];
       addExceptionalEdges(last);
 
+/** BEGIN Custom change: Add GoTo Instruction */      
       if (last instanceof SSAGotoInstruction) {
       	  int tgt = ((SSAGotoInstruction)last).getTarget();
 
@@ -494,6 +501,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
 	      	  addNormalEdgeTo(target);
 		  }
 	  }
+/** END Custom change: Add GoTo Instruction */
 
       // this CFG is odd in that we assume fallthru might always
       // happen .. this is because I'm too lazy to code control
@@ -650,6 +658,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     }
   }
 
+/** BEGIN Custom change: Needed for GoTo Instruction */  
   /**
    * Get the position of a instruction with a given iindex in the internal list.
    *
@@ -687,6 +696,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     throw new IllegalStateException("The searched iindex (" + iindex + ") does not exist! In " + 
             getMethod() + ", Contenxt: " + this.context);
   }
+/** END Custom change: Needed for GoTo Instruction */
 
   public Collection<SSAPhiInstruction> getAllPhiInstructions() {
     Collection<SSAPhiInstruction> result = HashSetFactory.make();

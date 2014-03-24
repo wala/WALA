@@ -26,6 +26,7 @@ public class FileSuffixes {
 
   private static final String WAR_SUFFIX = ".war";
 
+/** BEGIN Custom change: Fixes in AndroidAnalysisScope */  
   private static final String DEX_SUFFIX = ".dex";
   private static final String APK_SUFFIX = ".apk";
 
@@ -82,6 +83,7 @@ public class FileSuffixes {
     }
     return fileName.toLowerCase().endsWith(APK_SUFFIX);
   }
+/** END Custom change: Fixes in AndroidAnalysisScope */
 
   /**
    * Does the file name represent a .class file?
@@ -160,10 +162,12 @@ public class FileSuffixes {
     }
   }
 
+/** BEGIN Custom change: Fixes in AndroidAnalysisScope */  
     /**
      * Does the URI point to a ressource in a jar-file
      */
     public static boolean isRessourceFromJar(final URI uri) {
         return uri.toString().startsWith("jar:");   // How Pretty 
     }
+/** END Custom change: Fixes in AndroidAnalysisScope */    
 }

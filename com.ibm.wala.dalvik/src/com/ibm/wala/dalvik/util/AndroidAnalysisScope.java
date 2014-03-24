@@ -46,11 +46,13 @@ public class AndroidAnalysisScope {
 		return scope;
 	}
 
+/** BEGIN Custom change: Fixes in AndroidAnalysisScope */    
     public static AnalysisScope setUpAndroidAnalysisScope(String androidLib, String classpath, File exclusions) throws IOException {
 		AnalysisScope scope = DexAnalysisScopeReader.makeAndroidBinaryAnalysisScope(classpath, exclusions);
         setUpAnalysisScope(scope, new File(androidLib).toURI());
 		return scope;
 	}
+/** END Custom change: Fixes in AndroidAnalysisScope */    
 
 	public static AnalysisScope setUpAndroidAnalysisScope(URI androidLib, URI classpath, File exclusions) throws IOException {
 		AnalysisScope scope = DexAnalysisScopeReader.makeAndroidBinaryAnalysisScope(classpath, exclusions);
@@ -59,9 +61,11 @@ public class AndroidAnalysisScope {
 	}
 	
 	private static void setUpAnalysisScope(AnalysisScope scope, URI androidLib) throws IOException {
+/** BEGIN Custom change: Fixes in AndroidAnalysisScope */        
         if (androidLib == null) {
             throw new IllegalArgumentException("The argument androidLib may not be null.");
         }
+/** END Custom change: Fixes in AndroidAnalysisScope */
 
 		scope.setLoaderImpl(ClassLoaderReference.Application,
 				"com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
@@ -69,7 +73,9 @@ public class AndroidAnalysisScope {
 		scope.setLoaderImpl(ClassLoaderReference.Primordial,
 				"com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
 
+/** BEGIN Custom change: Fixes in AndroidAnalysisScope */
         if (FileSuffixes.isDexFile(androidLib)) {
+/** END Custom change: Fixes in AndroidAnalysisScope */            
 			Module dexMod = new DexFileModule(new File(androidLib));
 			
 //			Iterator<ModuleEntry> mitr = dexMod.getEntries();
@@ -80,6 +86,7 @@ public class AndroidAnalysisScope {
 
 			scope.addToScope(ClassLoaderReference.Primordial, dexMod);
 		} else {
+/** BEGIN Custom change: Fixes in AndroidAnalysisScope */            
             if (FileSuffixes.isRessourceFromJar(androidLib)) {
                 //final FileProvider fileProvider = new FileProvider();
                 final InputStream is = androidLib.toURL().openStream();
@@ -91,6 +98,7 @@ public class AndroidAnalysisScope {
     			scope.addToScope(ClassLoaderReference.Primordial, new JarFile(new File(
 	    			androidLib)));
             }
+/** END Custom change: Fixes in AndroidAnalysisScope */            
 		}
 	}
     

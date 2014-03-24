@@ -156,6 +156,7 @@ public final class Atom implements Serializable {
     return UTF8Convert.fromUTF8(val);
   }
 
+/** BEGIN Custom change: Handy helper functions */  
   /**
    * New Atom containing first count bytes
    */
@@ -180,7 +181,7 @@ public final class Atom implements Serializable {
 
       return true;
   }
-
+/** END Custom change: Handy helper functions */
 
   /**
    * Return array descriptor corresponding to "this" array-element descriptor. this: array-element descriptor - something like "I"
@@ -420,6 +421,7 @@ public final class Atom implements Serializable {
     return false;
   }
 
+/** BEGIN Custom change: Handy helper functions */  
   public int rIndex(byte b) {
     for (int i = val.length - 1; i >=0; --i) {
       if (val[i] == b) {
@@ -428,6 +430,7 @@ public final class Atom implements Serializable {
     }
     return -1;
   }
+/** END Custom change: Handy helper functions */
 
   private static Atom concat(byte c, byte[] bs) {
     byte[] val = new byte[bs.length + 1];
@@ -443,6 +446,7 @@ public final class Atom implements Serializable {
     return concat(c, b.b);
   }
 
+/** BEGIN Custom change: Handy helper functions */  
   public static Atom concat(Atom a, Atom b) {
      if ((a == null ) || (b == null)) {
       throw new IllegalArgumentException("argument may not be null!");
@@ -458,6 +462,7 @@ public final class Atom implements Serializable {
 
     return findOrCreate(val);
   }
+/** END Custom change: Handy helper functions */  
 
   public static boolean isArrayDescriptor(ImmutableByteArray b) {
     if (b == null) {
