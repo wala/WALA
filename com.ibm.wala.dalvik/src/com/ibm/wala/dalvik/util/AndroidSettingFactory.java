@@ -60,8 +60,23 @@ public class AndroidSettingFactory {
         public IntentType getType() {
             return Intent.IntentType.INTERNAL_TARGET;
         }
+        public InternalIntent(String action) { super(action); }
         public InternalIntent(Atom action) { super(action); }
         public InternalIntent(Atom action, Atom uri) { super(action, uri); }
+        @Override   // Force clash!
+        public int hashCode() { return super.hashCode(); }
+        @Override   // Force clash!
+        public boolean equals(Object o) { return super.equals(o); }
+    }
+
+    public static class UnknownIntent extends Intent {
+        @Override
+        public IntentType getType() {
+            return Intent.IntentType.UNKNOWN_TARGET;
+        }
+        public UnknownIntent(String action) { super(action); }
+        public UnknownIntent(Atom action) { super(action); }
+        public UnknownIntent(Atom action, Atom uri) { super(action, uri); }
         @Override   // Force clash!
         public int hashCode() { return super.hashCode(); }
         @Override   // Force clash!
