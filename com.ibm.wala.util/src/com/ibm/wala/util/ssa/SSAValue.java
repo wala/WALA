@@ -198,10 +198,16 @@ public class SSAValue {
         this.isAssigned = false;
     }
 
+    /**
+     *  Generates a SSAValue with a NamedKey (or TypeKey if name==null).
+     */
     public SSAValue(final int number, final TypeReference type, final MethodReference validIn, final String variableName) {
         this(number, type, validIn, ((variableName==null)?new TypeKey(type.getName()):new NamedKey(type.getName(), variableName)));
     }
 
+    /**
+     *  Generates a SSAValue with a UniqueKey.
+     */
     public SSAValue(final int number, final TypeReference type, final MethodReference validIn) {
         this(number, type, validIn, new UniqueKey());
     }

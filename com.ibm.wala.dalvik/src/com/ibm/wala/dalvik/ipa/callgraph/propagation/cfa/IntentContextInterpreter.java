@@ -250,7 +250,7 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
                         node.getMethod(), node.getContext() );
                 final IMethod method = node.getMethod();
                 final IntentStarters.StartInfo info = intentStarters.getInfo(method.getReference());
-                assert (info != null) : "IntentInfo is null! Every Starter should have an StartInfo...";
+                assert (info != null) : "IntentInfo is null! Every Starter should have an StartInfo... - Method " + method.getReference();
                 final Intent intent = new Intent(Intent.UNBOUND);
                 final AndroidComponent targetComponent = fetchTargetComponent(intent, method);
 

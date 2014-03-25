@@ -258,7 +258,6 @@ public class Intent implements ContextItem, Comparable<Intent> {
      *  IntentStarters.StartInfo to determine the Target. However it is nicer to set the Component
      *  here.
      *
-     *  TODO:
      *  @todo   Set the Component somewhere
      */
     public AndroidComponent getComponent() {

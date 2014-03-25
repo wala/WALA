@@ -31,6 +31,17 @@
  */
 package com.ibm.wala.util.ssa;
 
+/**
+ *  Class is not in scope.
+ *
+ *  A ClassLookupException will be thrown when the IClass to a TypeReferece
+ *  cannot be resolved using the ClassHierarchy.
+ *
+ *  In typical cases this should not be propergated out from the utility
+ *  classes.
+ *
+ *  @author     Tobias Blaschke <code@tobiasblaschke.de>
+ */
 public class ClassLookupException extends RuntimeException {
     public ClassLookupException(String message) {
         super(message);

@@ -119,8 +119,6 @@ public class SpecializedInstantiator extends FlatInstantiator {
      *  If T is an array-type a new array of length 1 is generated.
      *
      *  @todo   Do we want to mix in REUSE-Parameters?
-     *  @todo   What about cache.invalidate()?
-     *  @todo   What about clinit?
      */
     public SSAValue createInstance(final TypeReference T, final boolean asManaged, VariableKey key, Set<? extends SSAValue> seen) {
         return createInstance(T, asManaged, key, seen, 0);

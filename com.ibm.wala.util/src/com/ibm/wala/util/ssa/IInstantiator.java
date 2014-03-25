@@ -34,16 +34,21 @@ package com.ibm.wala.util.ssa;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * Implement to make instances in synthetic methods.
+ * Used for CallBacks to create an Instance.
  * 
- * This is called by helper-functions to create instances of types in synthetic
- * methods.
- * 
+ * When methods in this package detect, that they have to generate a new instance
+ * of a type this CallBack will be used.
+ *
+ * This mainly applies to the connectThrough-Function.
+ *
  * @author Tobias Blaschke <code@tobiasblaschke.de>
  */
 public interface IInstantiator {
     /**
      * Create an instance of type.
+     *
+     * The varArgs argument gets passed through from functions like connectThrough 
+     * (which have varArgs as well) to the instantiatior.
      *
      * @param type    Type to generate an instance from
      * @param instantiatorArgs passed through utility functions

@@ -220,8 +220,6 @@ public class SystemServiceModel extends AndroidModel {
     /**
      *  Fill the model with instructions.
      *
-     *  @todo handle params
-     *  @todo extend
      *  @todo use "global" instances
      */
     //@Override

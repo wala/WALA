@@ -55,7 +55,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *  Dispatches on TypeName only, does not consider inheritance.
+ *  Contains some predefined behaviors.
  *
  *  @author Tobias Blaschke <code@tobiasblaschke.de>
  *  @since  2013-10-25

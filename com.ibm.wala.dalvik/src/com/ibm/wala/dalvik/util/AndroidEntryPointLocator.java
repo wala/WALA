@@ -189,7 +189,6 @@ nextMethod:
                 // Add bases for EP-Heuristic
 
                 if (this.flags.contains(LocatorFlags.INCLUDE_CALLBACKS)) {
-                    /** @todo TODO: Add Callbacks to EP_HEURISTIC */
                     for (final AndroidComponent compo : AndroidComponent.values()) {
                         if (compo == AndroidComponent.UNKNOWN) continue;
                         if (compo.toReference() == null) {

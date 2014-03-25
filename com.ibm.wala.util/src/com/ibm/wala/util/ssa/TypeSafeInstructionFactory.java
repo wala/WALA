@@ -110,6 +110,8 @@ public class TypeSafeInstructionFactory {
     }
 
     /**
+     *  result = site(params).
+     *
      *  Instruction that calls a method which has a return-value.
      *
      *  All parameters (but exception) are typechecked first. If the check passes they get unpacked and handed over
@@ -348,8 +350,9 @@ public class TypeSafeInstructionFactory {
     }
 
     /**
-     *  Reads field from containingInstance into targetValue.
+     *  targetValue = containingInstance.field.
      *
+     *  Reads field from containingInstance into targetValue.
      *  If type check passes the corresponding GetInstruction of the JavaInstructionFactory is called.
      *  Calls targetValue.setAssigned()
      *
@@ -656,12 +659,9 @@ public class TypeSafeInstructionFactory {
     }
 
     /**
-     *  _CAUTION_ Read all.
+     *  Unconditionally jump to a (non-Phi) Instruction.
      *
-     *  It's an unconditional jump. There are limitations on the target:
-     *
-     *  1.  A basic block has to start there (one can hack this by placing an endless loop there)
-     *  2.  You can not jump to a Phi-Instruction
+     *  @param  target  the iindex of the instruction to jump to
      */
     public SSAGotoInstruction GotoInstruction(final int iindex, final int target) {
         if (iindex < 0) {
@@ -675,10 +675,13 @@ public class TypeSafeInstructionFactory {
     }
 
     /**
+     *  result = array[index].
+     *
      *  Load a a reference from an array.
      *
-     *  result = arrayref[index]
-     *
+     *  @param  result  The SSAValue to store the loaded stuff in
+     *  @param  array   The array to load from
+     *  @param  index   Te position in array to load from
      */
     public SSAArrayLoadInstruction ArrayLoadInstruction(final int iindex, final SSAValue result, final SSAValue array, 
             final int index) {
@@ -703,9 +706,18 @@ public class TypeSafeInstructionFactory {
         }
 
         result.setAssigned();
-        return insts.ArrayLoadInstruction(iindex, result.getNumber(), array.getNumber(), index, innerType); // TODO innerType?
+        return insts.ArrayLoadInstruction(iindex, result.getNumber(), array.getNumber(), index, innerType); 
     }
 
+    /**
+     *  array[index] = value.
+     *
+     *  Save a value to a specific position in an Array.
+     *
+     *  @param  array   the array to store to
+     *  @param  index   the position in the array to place value at
+     *  @param  value   The SSAValue to store in the array
+     */
     public SSAArrayStoreInstruction ArrayStoreInstruction(final int iindex, final SSAValue array, final int index, 
             final SSAValue value) {
         if (iindex < 0) {
@@ -729,6 +741,6 @@ public class TypeSafeInstructionFactory {
             throw new IllegalArgumentException("Can't assign to an array of " + innerType.getName() + " from " + value.getType().getName());
         }
 
-        return insts.ArrayStoreInstruction(iindex, array.getNumber(), index, value.getNumber(), innerType); // TODO innerType?
+        return insts.ArrayStoreInstruction(iindex, array.getNumber(), index, value.getNumber(), innerType); 
     }
 }

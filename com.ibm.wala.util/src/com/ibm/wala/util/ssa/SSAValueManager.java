@@ -142,8 +142,6 @@ public class SSAValueManager {
             throw new IllegalArgumentException("The SSA-Variable may not be null");
         }
 
-        // TODO: Call setAllocated?
-
         if (seenTypes.containsKey(value.key)) {
             for (Managed<? extends SSAValue> param : seenTypes.get(value.key)) {
                 if (param.status == ValueStatus.UNALLOCATED) {
@@ -423,7 +421,10 @@ public class SSAValueManager {
     }
 
     /**
-     * 
+     *  Returns all "free" and "allocated" variables and the invalid ones in a sub-scope.
+     *
+     *  This is a suggestion which variables to considder as parameter to a Phi-Function.
+     *
      *  @throws IllegalArgumentException if type was not seen before or is null
      */
     public List<SSAValue> getAllForPhi(VariableKey key) {
@@ -458,8 +459,8 @@ public class SSAValueManager {
      *
      *  @param  withSuper   when true return true if a managed key may be cast to type,
      *                      when false type has to match exactly
-     *  @param  type        the type in question
-     *  @throws IllegalArgumentException if type is null
+     *  @param  key         the type in question
+     *  @throws IllegalArgumentException if key is null
      */
     public boolean isSeen(VariableKey key, boolean withSuper) {
         if (key == null) {
@@ -479,6 +480,14 @@ public class SSAValueManager {
         }
     }
 
+    /**
+     *  Return if the type is managed by this class.
+     *
+     *  This variant respects super-types. Use isSeen(VariableKey, boolean) with a setting
+     *  for withSuper of false to enforce exact matches.
+     *
+     *  @return if the type is managed by this class.
+     */
     public boolean isSeen(VariableKey key) {
         return isSeen(key, true);
     }
@@ -547,6 +556,13 @@ public class SSAValueManager {
 
 
     /**
+     *  Marks all known instances of VariableKey invalid.
+     *
+     *  A call to this method is useful before a call to setAllocation. This methods sets all
+     *  known instances to invalid, setAllocation will assign the new "current" instance to
+     *  use.
+     *
+     *  @param  key     Which variables to invalidate.
      *  @throws IllegalArgumentException if type was not seen before or is null
      */
     public void invalidate(VariableKey key) {
@@ -622,6 +638,13 @@ public class SSAValueManager {
         return "<AndroidModelParameterManager " + this.description + ">";
     }
 
+    /**
+     *  Create new SSAValue with UniqueKey and Exception-Type.
+     *
+     *  The generated SSAValue will be unmanaged. It is mainly useful for SSAInvokeInstructions.
+     *
+     *  @return new unmanaged SSAValue with Exception-Type
+     */
     public SSAValue getException() {
         SSAValue exc = new SSAValue(nextLocal++, TypeReference.JavaLangException, this.forMethod, "exception_" + nextLocal); // UniqueKey
         this.unmanaged.add(exc);
