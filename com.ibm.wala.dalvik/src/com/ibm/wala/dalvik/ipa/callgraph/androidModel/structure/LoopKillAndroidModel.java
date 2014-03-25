@@ -56,23 +56,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *  Builds an Android Model incorporating two loops.
+ *  Builds an Android Model incorporating three loops.
+ * 
+ *  This variant adds a nother loop to the LoopAndroidModel. This additional loop emulates
+ *  the start of an Application with a savedIstanceState:
  *
- *  Functions are inserted in sequence until ExecutionOrder.START_OF_LOOP is reached.
- *  This loop is closed later when AFTER_LOOP gets stepped over.
+ *  When memory on a device gets short Apps may be removed from memory. When they are 
+ *  needed again they get started using that savedIstanceState.
  *
- *  Functions in MULTIPLE_TIMES_IN_LOOP are in a single inner loop.
- *
- *  This structure may be used to model an Application where no state is kept over the 
- *  restart of the Application (instance-state) or when the potential restart of the App
- *  shall be ignored.
- *
- *  {@inheritDoc}
- *
+ *  @see        com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.LoopAndroidModel
  *  @author     Tobias Blaschke <code@tobiasblaschke.de>
  */
-public class LoopAndroidModel extends SingleStartAndroidModel {
-    private static final Logger logger = LoggerFactory.getLogger(LoopAndroidModel.class);
+public class LoopKillAndroidModel extends LoopAndroidModel {
+    private static final Logger logger = LoggerFactory.getLogger(LoopKillAndroidModel.class);
     
     //protected VolatileMethodSummary body;
     //protected JavaInstructionFactory insts;
@@ -82,22 +78,20 @@ public class LoopAndroidModel extends SingleStartAndroidModel {
      *  @param  body    The MethodSummary to add instructions to
      *  @param  insts   Will be used to generate the instructions
      */
-    public LoopAndroidModel(VolatileMethodSummary body, TypeSafeInstructionFactory insts,
+    public LoopKillAndroidModel(VolatileMethodSummary body, TypeSafeInstructionFactory insts,
             SSAValueManager paramManager, Iterable<? extends Entrypoint> entryPoints) {
         super(body, insts, paramManager, entryPoints);
     }
 
     private int outerLoopPC = -1;
     Map<TypeReference, SSAValue> outerStartingPhis;
+
     /**
-     * Prepares the PC to get looped to.
-     *
-     * Thus it tries to assure a new basic block starts here. Additionally it reserves some
-     * space for the insertion of Phi-Functions.
+     *  Loop starts here.
      *
      * {@inheritDoc}
      */
-    protected int enterSTART_OF_LOOP (int PC) {
+    protected int enterAT_FIRST(int PC) {
         logger.info("PC {} is the jump target of START_OF_LOOP", PC);
         
         this.outerLoopPC = PC;
@@ -125,13 +119,13 @@ public class LoopAndroidModel extends SingleStartAndroidModel {
     }
 
     /**
-     *  Loops to START_OF_LOOP.
+     *  Loops to AT_FIRST.
      *
      *  It inserts a gotoInstruction and fills the space reserved before with actual PhiInstructions
      *
      *  {@inheritDoc}
      */
-    protected int enterAFTER_LOOP (int PC) {
+    protected int leaveAT_LAST (int PC) {
         assert(outerLoopPC > 0) : "Somehow you managed to get the loop-target negative. This is wierd!";
 
         // Insert the Phis at the beginning of the Block
@@ -177,15 +171,4 @@ public class LoopAndroidModel extends SingleStartAndroidModel {
         PC = body.getNextProgramCounter();
         return PC;
     }
-
-    /**
-     *  Does not insert any special handling.
-     *
-     *  {@inheritDoc}
-     */
-    protected int leaveAT_LAST (int PC) {
-        logger.info("Leaving Model with PC = {}", PC);
-        return PC;
-    }
-
 }

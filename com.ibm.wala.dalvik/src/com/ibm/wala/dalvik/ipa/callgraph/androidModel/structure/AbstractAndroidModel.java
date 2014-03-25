@@ -92,7 +92,6 @@ public abstract class AbstractAndroidModel  {
      *  <p>
      *  An endless loop is a really silly way to do that, but it worked for static analysis.
      *
-     *  @todo   Find a better way to break a basic block, but an endless loop!
      *  @return The PC after insertion.
      *  @deprecated The GoTo instruction breaks basic blocks by itself now, no need to call this
      *      function any longer
@@ -221,7 +220,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected abstract int enterAT_FIRST(int PC);
+    protected int enterAT_FIRST(int PC) { return PC; };
 
      /**
      *  Gets called when Label ExecutionOrder.BEFORE_LOOP got stepped over.
@@ -235,7 +234,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected abstract int enterBEFORE_LOOP (int PC);
+    protected int enterBEFORE_LOOP (int PC) { return PC; };
 
     /**
      *  Gets called when Label ExecutionOrder.START_OF_LOOP got stepped over.
@@ -249,7 +248,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected abstract int enterSTART_OF_LOOP (int PC);
+    protected int enterSTART_OF_LOOP (int PC) { return PC; };
 
     /**
      *  Gets called when Label ExecutionOrder.MIDDLE_OF_LOOP got stepped over.
@@ -263,7 +262,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected abstract int enterMIDDLE_OF_LOOP (int PC);
+    protected int enterMIDDLE_OF_LOOP (int PC) { return PC; };
     
     /**
      *  Gets called when Label ExecutionOrder.MULTIPLE_TIMES_IN_LOOP got stepped over.
@@ -277,7 +276,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected abstract int enterMULTIPLE_TIMES_IN_LOOP (int PC);
+    protected int enterMULTIPLE_TIMES_IN_LOOP (int PC) { return PC; };
 
     /**
      *  Gets called when Label ExecutionOrder.END_OF_LOOP got stepped over.
@@ -291,7 +290,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected abstract int enterEND_OF_LOOP (int PC);
+    protected int enterEND_OF_LOOP (int PC) { return PC; };
 
     /**
      *  Gets called when Label ExecutionOrder.AFTER_LOOP got stepped over.
@@ -305,7 +304,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected abstract int enterAFTER_LOOP (int PC);
+    protected int enterAFTER_LOOP (int PC) { return PC; };
 
     /**
      *  Gets called when Label ExecutionOrder.AT_LAST got stepped over.
@@ -319,7 +318,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected abstract int enterAT_LAST (int PC);
+    protected int enterAT_LAST (int PC) { return PC; };
 
     /**
      *  Gets called when the model gets finished.
@@ -333,7 +332,7 @@ public abstract class AbstractAndroidModel  {
      *      you'll simply pass body.getNextProgramCounter()
      *  @return             Program Counter after insertion of the code
      */
-    protected abstract int leaveAT_LAST (int PC);
+    protected int leaveAT_LAST (int PC) { return PC; };
 
     /**
      *  Dispatches to the enterLABEL-functions. Does also call functions to any labels that
