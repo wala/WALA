@@ -287,11 +287,13 @@ public class ParameterAccessor { // extends Param-Manager
      *
      *  Do _not_ use ParameterAceesor(IMethod.getReference()), but ParameterAceesor(IMehod)!
      *
-     *  Using this Constructor influences the SSA-Values returned later.
+     *  Using this Constructor influences the SSA-Values returned later. The cha is needed to
+     *  determine whether mRef is static. If this is already known one should prefer the faster
+     *  {@link #ParameterAccessor(ParameterAccessor, boolean)}.
      *
      *  @param  mRef    The method to read the parameters from.
      */
-    public ParameterAccessor(final MethodReference mRef, final IClassHierarchy cha) {  // TODO :document
+    public ParameterAccessor(final MethodReference mRef, final IClassHierarchy cha) {
         if (mRef == null) {
             throw new IllegalArgumentException("Can't read the arguments from null.");
         }
@@ -373,7 +375,7 @@ public class ParameterAccessor { // extends Param-Manager
         if (hasImplicitThis) {
             logger.info("The method {} has an implicit this pointer", mRef);
             this.implicitThis = 1;
-            this.descriptorOffset = -1;  // TODO: verify
+            this.descriptorOffset = -1;  
         } else {
             logger.info("The method {} has no implicit this pointer", mRef);
             this.implicitThis = -1;
@@ -381,8 +383,16 @@ public class ParameterAccessor { // extends Param-Manager
         }
     }
 
-
-    public ParameterAccessor(final MethodReference mRef, final boolean hasImplicitThis) {  // TODO :document
+    /**
+     *  Reads the parameters of a MethodReference CAUTION:.
+     *
+     *  Do _not_ use ParameterAceesor(IMethod.getReference()), but ParameterAceesor(IMehod)!
+     *
+     *  This constructor is faster than {@link #ParameterAccessor(MethodReference, IClassHierarchy}.
+     *
+     *  @param  mRef    The method to read the parameters from.
+     */
+    public ParameterAccessor(final MethodReference mRef, final boolean hasImplicitThis) {
         if (mRef == null) {
             throw new IllegalArgumentException("Can't read the arguments from null.");
         }
@@ -395,7 +405,7 @@ public class ParameterAccessor { // extends Param-Manager
         if (hasImplicitThis) {
             logger.info("The method {} has an implicit this pointer", mRef);
             this.implicitThis = 1;
-            this.descriptorOffset = -1;  // TODO: verify
+            this.descriptorOffset = -1;  
         } else {
             logger.info("The method {} has no implicit this pointer", mRef);
             this.implicitThis = -1;
@@ -449,8 +459,6 @@ public class ParameterAccessor { // extends Param-Manager
         // no is checked by getParameterNo(int)
         final int newNo = getParameterNo(no);
     
-        //assert(false):"DEFECT!";
-
         switch (this.base) {
             case IMETHOD:   // TODO: Try reading parameter name
                 return new Parameter(newNo, null, this.method.getParameterType(no), ParamerterDisposition.PARAM, 
@@ -582,22 +590,35 @@ public class ParameterAccessor { // extends Param-Manager
         return getThisAs(selfType);
     }
 
+    /**
+     *  Return the implicit this-pointer as a supertype.
+     *
+     *  @param  asType  A type of a super-class of this
+     */
     public Parameter getThisAs(final TypeReference asType) {
-        // TODO assert asType is a subtype of self.type
         final int self = getThisNo();
 
         switch (this.base) {
             case IMETHOD:
+                final IClassHierarchy cha = this.method.getClassHierarchy();
+                try {
+                    if (! isSubclassOf(this.method.getParameterType(self), asType, cha) ) {
+                        throw new IllegalArgumentException("Class " + asType + " is not a super-class of " +
+                                this.method.getParameterType(self));
+                    }
+                } catch (ClassLookupException e) {
+                    // Cant't test assume all fitts
+                }
+
                 return new Parameter(self, "self", asType, ParamerterDisposition.THIS, 
                         this.base, this.method.getReference(), this.descriptorOffset);
             case METHOD_REFERENCE:
+                // TODO assert asType is a subtype of self.type - we need cha to do that :(
                 return new Parameter(self, "self", asType, ParamerterDisposition.THIS,
                         this.base, this.mRef, this.descriptorOffset);
             default:
                 throw new UnsupportedOperationException("No implementation of getThis() for base " + this.base);
         }
-
-        
     }
 
     /**
@@ -1257,7 +1278,6 @@ public class ParameterAccessor { // extends Param-Manager
         if (callee.getNumberOfParameters() == 0) {
             return new ArrayList<SSAValue>(0);
         }
-        //final Logger logger = LoggerFactory.getLogger(ParameterAccessor.class);  // XXX
         
         final List<SSAValue> assigned = new ArrayList<SSAValue>(); // TODO: Set initial size
         final List<Parameter> calleeParams = callee.all();
@@ -1480,6 +1500,62 @@ public class ParameterAccessor { // extends Param-Manager
         return cha.isAssignableFrom(toClass, fromClass);
     }
 
+     /**
+     *  Is sub a subclass of superC (or the same).
+     */
+    public static boolean isSubclassOf(final TypeReference sub, final TypeReference superC, final IClassHierarchy cha)
+                throws ClassLookupException {
+        if (cha == null) {
+            throw new IllegalArgumentException("ClassHierarchy may not be null");
+        }
+
+        if (sub.getName().equals(superC.getName())) return true;
+
+        if (sub.isPrimitiveType() || superC.isPrimitiveType()) {
+            return false;
+        }
+
+        IClass subClass = cha.lookupClass(sub);
+        IClass superClass = cha.lookupClass(superC);
+
+        if (subClass == null) {
+            logger.debug("Unable to look up the type of from=" + sub + " in the ClassHierarchy - tying other loaders...");
+            for (final IClassLoader loader: cha.getLoaders()) {
+                final IClass cand = loader.lookupClass(sub.getName());
+                if (cand != null) {
+                    logger.debug("Using alternative for from: {}", cand);
+                    subClass = cand;
+                    break;
+                }
+            }
+
+            if (subClass == null) {
+                throw new ClassLookupException("Unable to look up the type of from=" + sub + 
+                        " in the ClassHierarchy");
+            }
+        }
+
+        if (superClass == null) {
+            logger.debug("Unable to look up the type of to=" + superC + " in the ClassHierarchy - tying other loaders...");
+            for (final IClassLoader loader: cha.getLoaders()) {
+                final IClass cand = loader.lookupClass(superC.getName());
+                if (cand != null) {
+                    logger.debug("Using alternative for to: {}", cand);
+                    superClass = cand;
+                    break;
+                }
+            }
+
+            if (superClass == null) {
+                logger.error("Unable to look up the type of to={} in the ClassHierarchy", superC);
+                throw new ClassLookupException("Unable to look up the type of to=" + superC + 
+                        " in the ClassHierarchy");
+            }
+        }
+        
+        return cha.isSubclassOf(subClass, superClass);
+    }
+   
     /**
      *  The method this accessor reads the parameters from.
      */
@@ -1528,7 +1604,17 @@ public class ParameterAccessor { // extends Param-Manager
         return (getReturnType() != TypeReference.Void); 
     }
 
-
+    /**
+     *  Assign parameters to a call based on their type.
+     *
+     *  this variant of connectThrough cannot create new instances if needed.
+     *
+     *  @param  callee      The function to generate the parameter-list for
+     *  @param  overrides   If a parameter occurs here, it is preferred over the ones present in this
+     *  @param  defaults    If a parameter is not present in this or the overrides, defaults are searched. If the parameter is not present there null is assigned.
+     *  @param cha          Optional class hierarchy for testing assignability 
+     *  @return the parameter-list for the call of toMethod 
+     */
     public List<SSAValue> connectThrough(final ParameterAccessor callee, Set<? extends SSAValue> overrides, Set<? extends SSAValue> defaults, 
             final IClassHierarchy cha) {
         return connectThrough(callee, overrides, defaults, cha, null);
@@ -1551,10 +1637,16 @@ public class ParameterAccessor { // extends Param-Manager
         }
     }
 
+    /**
+     * Number of parameters _excluding_ implicit this
+     */
     public int getNumberOfParameters() {
         return this.numberOfParameters;
     }
 
+    /**
+     *  Extensive output for debugging purposes.
+     */
     public String dump() {
         String ret = "Parameter Accessor for " + ((this.mRef!=null)?"mRef:" + this.mRef.toString():"IMethod: " + this.method.toString()) +
             "\nContains " + this.numberOfParameters + " Parameters " + this.base + "\n";
