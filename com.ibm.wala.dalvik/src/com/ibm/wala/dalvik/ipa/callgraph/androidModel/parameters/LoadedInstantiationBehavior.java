@@ -53,7 +53,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *  Behavior loaded from a file
+ *  Behavior loaded from a file.
+ *
+ *  This class generates an empty mutable IInstantiationBehavior.
  *
  *  @author Tobias Blaschke <code@tobiasblaschke.de>
  *  @since  2013-10-25

@@ -32,7 +32,7 @@
 /**
  *  Inserts synthetic code that resembles Androids lifecycle.
  *
- *  It generates a new synthetic class containing all methods necessary to do so.
+ *  It generates a new synthetic class (AndroidModelClass) containing all methods necessary to do so.
  *
  *  To model add a lifecycle-model one has to do the following steps:
  *
