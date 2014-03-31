@@ -64,13 +64,11 @@ public class AndroidAnalysisScope {
 //				ModuleEntry moduleEntry = (ModuleEntry) mitr.next();
 //				logger.error("dex module: {}", moduleEntry.getName());
 //			}
-			
+
 			scope.addToScope(ClassLoaderReference.Primordial, dexMod);
 		} else {
 			scope.addToScope(ClassLoaderReference.Primordial, new JarFile(new File(
 				androidLib)));
 		}
-		
-		scope.addToScope(AnalysisScopeReader.makePrimordialScope(null));
 	}
 }
