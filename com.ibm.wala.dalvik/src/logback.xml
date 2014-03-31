@@ -16,6 +16,6 @@
   <logger name="org.scandroid.flow.functions.TaintTransferFunctions" level="ALL"/>
 
   <root level="ALL">
-    <appender-ref ref="STDOUT" /> <!-- change to ref="DEVNULL" for no output -->
+    <appender-ref ref="DEVNULL" /> <!-- change to ref="STDOUT" for lots of output -->
   </root> 
 </configuration>
