@@ -396,6 +396,41 @@ public final class TypeReference implements Serializable {
     return findOrCreate(cl, TypeName.string2TypeName(typeName));
   }
 
+/** BEGIN Custom change: search types */
+  public static synchronized TypeReference find(ClassLoaderReference cl, String typeName) {
+    return find(cl, TypeName.string2TypeName(typeName));
+  }
+
+  /**
+   * Find the canonical TypeReference instance for the given pair. May return null.
+   * 
+   * @param cl the classloader (defining/initiating depending on usage)
+   */
+  public static synchronized TypeReference find(ClassLoaderReference cl, TypeName typeName) {
+
+    if (cl == null) {
+      throw new IllegalArgumentException("null cl");
+    }
+    TypeReference p = primitiveMap.get(typeName);
+    if (p != null) {
+      return p;
+    }
+    // Next actually findOrCreate the type reference using the proper
+    // classloader.
+    // [This is the only allocation site for TypeReference]
+    if (typeName.isArrayType()) {
+      TypeName e = typeName.getInnermostElementType();
+      if (e.isPrimitiveType()) {
+        cl = ClassLoaderReference.Primordial;
+      }
+    }
+
+    Key key = new Key(cl, typeName);
+    TypeReference val = dictionary.get(key);
+
+    return val;
+  }
+/** END Custom change: search types */
   public static TypeReference findOrCreateArrayOf(TypeReference t) {
     if (t == null) {
       throw new IllegalArgumentException("t is null");
