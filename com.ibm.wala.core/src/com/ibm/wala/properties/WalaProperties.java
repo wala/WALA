@@ -138,6 +138,11 @@ public final class WalaProperties {
     }
     Properties result = new Properties();
     result.load(propertyStream);
+    
+    if (!result.containsKey(J2SE_DIR)) {
+      final String j2selib = guessJavaLib();
+      result.setProperty(J2SE_DIR, j2selib);
+    }
     return result;
   }
 
@@ -145,7 +150,7 @@ public final class WalaProperties {
   public static String guessJavaLib() {
     final Properties p = System.getProperties();
     final String os = p.getProperty("os.name");
-    
+        
     if (os.contains("Mac OS X")) {
       return "/System/Library/Frameworks/JavaVM.framework/Classes";
     } else {
