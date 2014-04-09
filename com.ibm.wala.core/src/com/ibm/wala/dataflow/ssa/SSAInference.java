@@ -112,7 +112,7 @@ public abstract class SSAInference<T extends IVariable> extends DefaultFixedPoin
           newStatement(def, (NullaryOperator<T>) op, false, false);
         } else {
           int n = s.getNumberOfUses();
-          IVariable[] uses = new IVariable[n];
+          T[] uses = makeStmtRHS(n);
           for (int j = 0; j < n; j++) {
             if (s.getUse(j) > -1) {
               uses[j] = getVariable(s.getUse(j));

@@ -36,7 +36,7 @@ public class JavaTypeContext implements Context {
   public ContextItem get(ContextKey name) {
     if (name == ContextKey.RECEIVER) {
       return type;
-    } else if (name == ContextKey.FILTER) {
+    } else if (name == ContextKey.PARAMETERS[0]) {
       if (type instanceof PointType) {
         IClass cls = ((PointType) type).getIClass();
         return new FilteredPointerKey.SingleClassFilter(cls);
@@ -44,7 +44,6 @@ public class JavaTypeContext implements Context {
         return null;
       }
     } else {
-      Assertions.UNREACHABLE();
       return null;
     }
   }

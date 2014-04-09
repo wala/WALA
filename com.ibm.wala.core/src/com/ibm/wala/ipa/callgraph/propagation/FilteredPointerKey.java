@@ -29,6 +29,8 @@ public interface FilteredPointerKey extends PointerKey {
 
     boolean addInverseFiltered(PropagationSystem system, PointsToSetVariable L, PointsToSetVariable R);
 
+    boolean isRootFilter();
+    
   }
 
   public class SingleClassFilter implements TypeFilter {
@@ -69,6 +71,10 @@ public interface FilteredPointerKey extends PointerKey {
       // diffs in here. TODO: fix it. probably keep not(f) cached and
       // use addAllInIntersection
       return (f == null) ? L.addAll(R) : L.addAll(IntSetUtil.diff(R.getValue(), f));
+    }
+
+    public boolean isRootFilter() {
+      return concreteType.equals(concreteType.getClassHierarchy().getRootClass());
     }
   }
 
@@ -139,6 +145,10 @@ public interface FilteredPointerKey extends PointerKey {
       // use addAllInIntersection
       return (f == null) ? L.addAll(R) : L.addAll(IntSetUtil.diff(R.getValue(), f));
     }
+
+    public boolean isRootFilter() {
+      return concreteType.length == 1 && concreteType[0].getClassHierarchy().getRootClass().equals(concreteType[0]);
+    }
   }
 
   public class SingleInstanceFilter implements TypeFilter {
@@ -188,6 +198,10 @@ public interface FilteredPointerKey extends PointerKey {
         copy.remove(idx);
         return L.addAll(copy);
       }
+    }
+
+    public boolean isRootFilter() {
+       return false;
     }
   }
 
@@ -262,6 +276,10 @@ public interface FilteredPointerKey extends PointerKey {
         R.getValue().foreach(act);
         return act.result;
       }
+    }
+
+    public boolean isRootFilter() {
+      return false;
     }
   }
 

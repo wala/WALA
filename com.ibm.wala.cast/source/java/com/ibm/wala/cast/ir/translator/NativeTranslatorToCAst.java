@@ -11,6 +11,9 @@ import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
 
+/**
+ * common functionality for any {@link TranslatorToCAst} making use of native code
+ */
 public abstract class NativeTranslatorToCAst 
   extends NativeBridge 
   implements TranslatorToCAst

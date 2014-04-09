@@ -10,12 +10,9 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -25,8 +22,6 @@ import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory;
-import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.strings.Atom;
 
@@ -61,18 +56,8 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
     return new ObjectPropertyCatalogKey(I);
   }
 
-  private final Map<IField, Set<PointerKey>> specificStringKeys = HashMapFactory.make();
-
   public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField f) {
-    PointerKey fk = base.getPointerKeyForInstanceField(I, f);
-    if (!specificStringKeys.containsKey(f)) {
-      HashSet<PointerKey> s = HashSetFactory.make();
-      specificStringKeys.put(f, s);
-    }
-
-    specificStringKeys.get(f).add(fk);
-
-    return fk;
+    return base.getPointerKeyForInstanceField(I, f);
   }
 
   public PointerKey getPointerKeyForArrayContents(InstanceKey I) {

@@ -4,18 +4,20 @@ import java.util.Collection;
 import java.util.Set;
 
 import com.ibm.wala.analysis.typeInference.PrimitiveType;
+import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.SSAInstructionFactory;
+import com.ibm.wala.ssa.SSALoadMetadataInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * Main interface for language-specific information. This interface helps build analyses which can operate over multiple languages.
- * 
- * TODO: document the rest of this interface.
+ * Main interface for language-specific information. This interface helps build
+ * analyses which can operate over multiple languages.
+ *
  */
 public interface Language {
 
@@ -42,52 +44,94 @@ public interface Language {
   Set<Language> getDerivedLanguages();
 
   /**
-   * What is the root type in a type hierarchy for this language? e.g. java.lang.Object in Java.
+   * What is the root type in a type hierarchy for this language? e.g.
+   * java.lang.Object in Java.
    */
   TypeReference getRootType();
 
   /**
-   * What is the root type of exceptions in this language? e.g. java.lang.Throwable in Java
+   * What is the root type of exceptions in this language? e.g.
+   * java.lang.Throwable in Java
    */
   TypeReference getThrowableType();
 
+  /**
+   * Given a Java constant o, return the appropriate language type to associate
+   * with the constant. Possible types for o can be language dependent, but
+   * typically include Boolean, String, Integer, Float, etc.
+   */
   TypeReference getConstantType(Object o);
 
-  boolean isNullType(TypeReference type);
+  /**
+   * Is t the type of the language's null value? Should return true if
+   * <code>t == null</code> (?).
+   */
+  boolean isNullType(TypeReference t);
 
-  boolean isIntType(TypeReference type);
+  boolean isIntType(TypeReference t);
 
-  boolean isLongType(TypeReference type);
+  boolean isLongType(TypeReference t);
 
-  boolean isVoidType(TypeReference type);
-  
-  boolean isFloatType(TypeReference type);
+  boolean isVoidType(TypeReference t);
 
-  boolean isDoubleType(TypeReference type);
+  boolean isFloatType(TypeReference t);
 
-  boolean isStringType(TypeReference type);
+  boolean isDoubleType(TypeReference t);
 
-  boolean isMetadataType(TypeReference type);
+  boolean isStringType(TypeReference t);
 
-  boolean isCharType(TypeReference type);
-  
-  boolean isBooleanType(TypeReference type);
-  
+  /**
+   * Is t a "metadata" type for the language, i.e., a type describing some other
+   * type (e.g., java.lang.Class for Java)?
+   */
+  boolean isMetadataType(TypeReference t);
+
+  boolean isCharType(TypeReference t);
+
+  boolean isBooleanType(TypeReference t);
+
+  /**
+   * Get the representation of the meta-data corresponding to value. For
+   * example, in Java, if value represents some type, the returned object should
+   * be the corresponding {@link TypeReference}. The returned object should be
+   * appropriate for use as the token in an {@link SSALoadMetadataInstruction}
+   * for the language
+   * 
+   */
   Object getMetadataToken(Object value);
 
+  /**
+   * get the interfaces implemented by all arrays in the language
+   */
   TypeReference[] getArrayInterfaces();
 
+  /**
+   * Given a source-level primitive type name, get the corresponding "low-level"
+   * type name, e.g., the corresponding character to use in a Java method
+   * descriptor
+   */
   TypeName lookupPrimitiveType(String name);
 
   SSAInstructionFactory instructionFactory();
 
+  /**
+   * determine the set of possible exception types a call to target may throw
+   */
   Collection<TypeReference> inferInvokeExceptions(MethodReference target, IClassHierarchy cha) throws InvalidClassFileException;
 
   TypeReference getStringType();
 
+  /**
+   * get the metadata type for the language, e.g., java.lang.Class for Java
+   */
   TypeReference getMetadataType();
-  
+
   TypeReference getPointerType(TypeReference pointee);
-  
+
+  /**
+   * get the abstraction of a primitive type to be used for type inference
+   * 
+   * @see TypeInference
+   */
   PrimitiveType getPrimitive(TypeReference reference);
 }

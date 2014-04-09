@@ -38,10 +38,10 @@
 package com.ibm.wala.cast.java.translator.jdt;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
@@ -59,6 +59,7 @@ import com.ibm.wala.cast.java.translator.SourceModuleTranslator;
 import com.ibm.wala.classLoader.DirectoryTreeModule;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.ide.classloader.EclipseSourceFileModule;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -72,7 +73,7 @@ import com.ibm.wala.util.debug.Assertions;
  */
 // remove me comment: Jdt little-case = not OK, upper case = OK
 public class JDTSourceModuleTranslator implements SourceModuleTranslator {
-  private JDTSourceLoaderImpl sourceLoader;
+  protected JDTSourceLoaderImpl sourceLoader;
 
   public JDTSourceModuleTranslator(AnalysisScope scope, JDTSourceLoaderImpl sourceLoader) {
     computeClassPath(scope);
@@ -111,37 +112,38 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
    * Project -> AST code from org.eclipse.jdt.core.tests.performance
    */
 
-  @SuppressWarnings("unchecked")
-  public void loadAllSources(Set modules) {
+  public void loadAllSources(Set<ModuleEntry> modules) {
     // TODO: we might need one AST (-> "Object" class) for all files.
     // TODO: group by project and send 'em in
-    JDTJava2CAstTranslator jdt2cast = new JDTJava2CAstTranslator(sourceLoader);
-    final Java2IRTranslator java2ir = new Java2IRTranslator(jdt2cast, sourceLoader);
+    JDTJava2CAstTranslator jdt2cast = makeCAstTranslator();
+    final Java2IRTranslator java2ir = makeIRTranslator(jdt2cast);
 
     System.out.println(modules);
 
     // sort files into projects
-    HashMap<IProject, ArrayList<ICompilationUnit>> projectsFiles = new HashMap<IProject, ArrayList<ICompilationUnit>>();
-    for (Object m : modules) {
-      assert m instanceof EclipseSourceFileModule : "Expecing EclipseSourceFileModule";
+    Map<IProject, Map<ICompilationUnit,EclipseSourceFileModule>> projectsFiles = new HashMap<IProject, Map<ICompilationUnit,EclipseSourceFileModule>>();
+    for (ModuleEntry m : modules) {
+      assert m instanceof EclipseSourceFileModule : "Expecing EclipseSourceFileModule, not " + m.getClass();
       EclipseSourceFileModule entry = (EclipseSourceFileModule) m;
       IProject proj = entry.getIFile().getProject();
-      if (!projectsFiles.containsKey(proj))
-        projectsFiles.put(proj, new ArrayList<ICompilationUnit>());
-      projectsFiles.get(proj).add(JavaCore.createCompilationUnitFrom(entry.getIFile()));
+      if (!projectsFiles.containsKey(proj)) {
+        projectsFiles.put(proj, new HashMap<ICompilationUnit,EclipseSourceFileModule>());
+      }
+      projectsFiles.get(proj).put(JavaCore.createCompilationUnitFrom(entry.getIFile()), entry);
     }
 
     final ASTParser parser = ASTParser.newParser(AST.JLS3);
  
-    for (IProject proj : projectsFiles.keySet()) {
-      parser.setProject(JavaCore.create(proj));
+    for (final Map.Entry<IProject,Map<ICompilationUnit,EclipseSourceFileModule>> proj : projectsFiles.entrySet()) {
+      parser.setProject(JavaCore.create(proj.getKey()));
       parser.setResolveBindings(true);
-     ArrayList<ICompilationUnit> files = projectsFiles.get(proj);
-      parser.createASTs(files.toArray(new ICompilationUnit[files.size()]), new String[0], new ASTRequestor() {
+           
+      Set<ICompilationUnit> units = proj.getValue().keySet();
+      parser.createASTs(units.toArray(new ICompilationUnit[units.size()]), new String[0], new ASTRequestor() {
         public void acceptAST(ICompilationUnit source, CompilationUnit ast) {
 
           try {
-            java2ir.translate(ast, source.getUnderlyingResource().getLocation().toOSString());
+            java2ir.translate(proj.getValue().get(source), ast, source.getUnderlyingResource().getLocation().toOSString());
           } catch (JavaModelException e) {
             e.printStackTrace();
           }
@@ -161,6 +163,14 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
       }, null);
 
     }
+  }
+
+  protected Java2IRTranslator makeIRTranslator(JDTJava2CAstTranslator jdt2cast) {
+    return new Java2IRTranslator(jdt2cast, sourceLoader);
+  }
+
+  protected JDTJava2CAstTranslator makeCAstTranslator() {
+    return new JDTJava2CAstTranslator(sourceLoader);
   }
 
 }

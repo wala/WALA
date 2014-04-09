@@ -121,7 +121,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     {
       JSPrimitiveType.init();
     }
-    
+
     public Atom getName() {
       return Atom.findOrCreateUnicodeAtom("JavaScript");
     }
@@ -201,8 +201,8 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         public SSAGetInstruction GetInstruction(int iindex, int result, int ref, String field) {
-          return GetInstruction(iindex, result, ref, FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreateUnicodeAtom(field),
-              JavaScriptTypes.Root));
+          return GetInstruction(iindex, result, ref, 
+              FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreateUnicodeAtom(field), JavaScriptTypes.Root));
         }
 
         public JavaScriptInstanceOf InstanceOf(int iindex, int result, int objVal, int typeVal) {
@@ -237,8 +237,8 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         public SSAPutInstruction PutInstruction(int iindex, int ref, int value, String field) {
           try {
             byte[] utf8 = field.getBytes("UTF-8");
-            return PutInstruction(iindex, ref, value, FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreate(utf8, 0, utf8.length),
-                JavaScriptTypes.Root));
+            return PutInstruction(iindex, ref, value, 
+                FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreate(utf8, 0, utf8.length), JavaScriptTypes.Root));
           } catch (UnsupportedEncodingException e) {
             Assertions.UNREACHABLE();
             return null;
@@ -356,11 +356,11 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, int typeValue) {
-          return CheckCastInstruction(iindex, result, val, new int[]{ typeValue });
+          return CheckCastInstruction(iindex, result, val, new int[] { typeValue });
         }
 
         public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, TypeReference type) {
-          return CheckCastInstruction(iindex, result, val, new TypeReference[]{ type });
+          return CheckCastInstruction(iindex, result, val, new TypeReference[] { type });
         }
 
         public SSAComparisonInstruction ComparisonInstruction(int iindex, Operator operator, int result, int val1, int val2) {
@@ -498,7 +498,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
         public SSAAddressOfInstruction AddressOfInstruction(int iindex, int lval, int local, int indexVal, TypeReference pointeeType) {
           throw new UnsupportedOperationException();
-       }
+        }
 
         public SSAAddressOfInstruction AddressOfInstruction(int iindex, int lval, int local, FieldReference field, TypeReference pointeeType) {
           throw new UnsupportedOperationException();
@@ -544,7 +544,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     }
 
     public TypeReference getMetadataType() {
-       return null;
+      return null;
     }
 
     public TypeReference getStringType() {
@@ -552,15 +552,15 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     }
 
     public PrimitiveType getPrimitive(TypeReference reference) {
-       return JSPrimitiveType.getPrimitive(reference);
+      return JSPrimitiveType.getPrimitive(reference);
     }
 
     public boolean isBooleanType(TypeReference type) {
-       return JavaScriptTypes.Boolean.equals(type);
+      return JavaScriptTypes.Boolean.equals(type);
     }
 
     public boolean isCharType(TypeReference type) {
-       return false;
+      return false;
     }
 
   };
@@ -660,8 +660,8 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
     JavaScriptMethodObject(JavaScriptCodeBody cls, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
         TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
-      super(cls, functionQualifiers, cfg, symtab, AstMethodReference.fnReference(cls.getReference()), hasCatchBlock,
-          caughtTypes, hasMonitorOp, lexicalInfo, debugInfo);
+      super(cls, functionQualifiers, cfg, symtab, AstMethodReference.fnReference(cls.getReference()), hasCatchBlock, caughtTypes,
+          hasMonitorOp, lexicalInfo, debugInfo);
     }
 
     public IClassHierarchy getClassHierarchy() {
@@ -727,7 +727,11 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     }
 
     public TypeReference getParameterType(int i) {
-      return JavaScriptTypes.Root;
+      if (i == 0) {
+        return getDeclaringClass().getReference();
+      } else {
+        return JavaScriptTypes.Root;
+      }
     }
   }
 
@@ -748,7 +752,8 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
     JavaScriptCodeBody C = (JavaScriptCodeBody) lookupClass(clsName, cha);
     assert C != null : clsName;
-    return C.setCodeBody(new JavaScriptMethodObject(C, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo, debugInfo));
+    return C.setCodeBody(new JavaScriptMethodObject(C, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo,
+        debugInfo));
   }
 
   final JavaScriptRootClass ROOT = new JavaScriptRootClass(this, null);
@@ -805,6 +810,10 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     return JS.instructionFactory();
   }
 
+  /**
+   * JavaScript files with code to model various aspects of the language
+   * semantics. See com.ibm.wala.cast.js/dat/prologue.js.
+   */
   public static final Set<String> bootstrapFileNames;
 
   private static String prologueFileName = "prologue.js";
@@ -826,6 +835,10 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     bootstrapFileNames.add(prologueFileName);
   }
 
+  /**
+   * adds the {@link #bootstrapFileNames bootstrap files} to the list of modules
+   * and then invokes the superclass method
+   */
   public void init(List<Module> modules) {
 
     List<Module> all = new LinkedList<Module>();

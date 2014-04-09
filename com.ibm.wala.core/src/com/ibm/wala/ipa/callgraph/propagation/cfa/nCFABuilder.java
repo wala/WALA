@@ -37,7 +37,7 @@ public class nCFABuilder extends SSAPropagationCallGraphBuilder {
 
     setInstanceKeys(new ClassBasedInstanceKeys(options, cha));
 
-    ContextSelector def = new DefaultContextSelector(options);
+    ContextSelector def = new DefaultContextSelector(options, cha);
     ContextSelector contextSelector = new DelegatingContextSelector(appContextSelector, def);
     contextSelector = new nCFAContextSelector(n, contextSelector);
     setContextSelector(contextSelector);

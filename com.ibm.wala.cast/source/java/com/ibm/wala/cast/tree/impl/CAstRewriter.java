@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.ibm.wala.cast.tree.CAst;
@@ -30,26 +31,57 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.IteratorPlusOne;
 import com.ibm.wala.util.collections.Pair;
 
+/**
+ * Abstract superclass for types performing a rewrite operation on a CAst. The
+ * CAst is not mutated; instead, a new CAst is created which delegates to the
+ * original CAst where no transformation was performed.
+ * 
+ * @param <C>
+ *          type of the RewriteContext used when traversing the original CAst
+ *          during the rewrite operation
+ * @param <K>
+ *          a key used to ease cloning of partial ASTs. When rewriting an AST,
+ *          sub-classes maintain a mapping from (original node, key) pairs
+ *          (where key is of type K) to new nodes; see
+ *          {@link #copyNodes(CAstNode, RewriteContext, Map)}
+ */
 public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K extends CAstRewriter.CopyKey<K>> {
 
   protected static final boolean DEBUG = false;
 
+  /**
+   * interface to be implemented by keys used for cloning sub-trees during the
+   * rewrite
+   */
   public interface CopyKey<Self extends CopyKey> {
 
     int hashCode();
 
     boolean equals(Object o);
 
+    /**
+     * keys have parent pointers, useful for when nesting cloning must occur
+     * (e.g., unrolling of nested loops)
+     */
     Self parent();
 
   };
 
+  /**
+   * interface to be implemented by contexts used while traversing the AST
+   */
   public interface RewriteContext<K extends CopyKey> {
 
+    /**
+     * get the cloning key for this context
+     */
     K key();
 
   };
 
+  /**
+   * represents a rewritten CAst
+   */
   public interface Rewrite {
 
     CAstNode newRoot();
@@ -66,6 +98,10 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
 
   protected final CAst Ast;
 
+  /**
+   * for CAstEntity nodes r s.t. r.getAst() == null, should the scoped entities
+   * of r be rewritten?
+   */
   protected final boolean recursive;
 
   protected final C rootContext;
@@ -76,24 +112,51 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     this.rootContext = rootContext;
   }
 
-  protected abstract CAstNode copyNodes(CAstNode root, C context, Map<Pair,CAstNode> nodeMap);
+  /**
+   * rewrite the CAst rooted at root under some context, returning the node at
+   * the root of the rewritten tree. mutate nodeMap in the process, indicating
+   * how (original node, copy key) pairs are mapped to nodes in the rewritten
+   * tree.
+   */
+  protected abstract CAstNode copyNodes(CAstNode root, C context, Map<Pair<CAstNode, K>, CAstNode> nodeMap);
 
-  protected CAstNode flowOutTo(Map<Pair, CAstNode> nodeMap, CAstNode oldSource, Object label, CAstNode oldTarget,
+  /**
+   * in {@link #copyFlow(Map, CAstControlFlowMap, CAstSourcePositionMap)}, if
+   * the source of some original CFG edge is replicated, but we find no replica
+   * for the target, what node should be the target of the CFG edge in the
+   * rewritten AST? By default, just uses the original target.
+   * 
+   */
+  protected CAstNode flowOutTo(Map<Pair<CAstNode, K>, CAstNode> nodeMap, CAstNode oldSource, Object label, CAstNode oldTarget,
       CAstControlFlowMap orig, CAstSourcePositionMap src) {
     return oldTarget;
   }
 
-  private CAstControlFlowMap copyFlow(Map<Pair, CAstNode> nodeMap, CAstControlFlowMap orig, CAstSourcePositionMap newSrc) {
-    Set<CAstNode> mappedOutsideNodes = HashSetFactory.make(1);
-    Set<CAstNode> allNewTargetNodes = HashSetFactory.make(1);
-    CAstControlFlowRecorder newMap = new CAstControlFlowRecorder(newSrc);
-    Collection oldSources = orig.getMappedNodes();
+  /**
+   * create a control-flow map for the rewritten tree, given the mapping from
+   * (original node, copy key) pairs ot new nodes and the original control-flow
+   * map.
+   */
+  private CAstControlFlowMap copyFlow(Map<Pair<CAstNode, K>, CAstNode> nodeMap, CAstControlFlowMap orig,
+      CAstSourcePositionMap newSrc) {
 
-    for (Iterator NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
-      Map.Entry entry = (Map.Entry) NS.next();
-      Pair N = (Pair) entry.getKey();
-      CAstNode oldSource = (CAstNode) N.fst;
-      CopyKey key = (CopyKey) N.snd;
+    // the new control-flow map
+    final CAstControlFlowRecorder newMap = new CAstControlFlowRecorder(newSrc);
+    // tracks which CAstNodes not present in nodeMap's key set (under any copy
+    // key) are added as targets of CFG edges
+    // via a call to flowOutTo() (see below); used to ensure these nodes are
+    // only mapped to themselves once in newMap
+    final Set<CAstNode> mappedOutsideNodes = HashSetFactory.make(1);
+    // all edge targets in new control-flow map; must all be mapped to
+    // themselves
+    Set<CAstNode> allNewTargetNodes = HashSetFactory.make(1);
+    Collection<CAstNode> oldSources = orig.getMappedNodes();
+
+    for (Iterator<Entry<Pair<CAstNode, K>, CAstNode>> NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
+      Entry<Pair<CAstNode, K>, CAstNode> entry = NS.next();
+      Pair<CAstNode, K> N = entry.getKey();
+      CAstNode oldSource = N.fst;
+      CopyKey key = N.snd;
 
       CAstNode newSource = (CAstNode) entry.getValue();
       assert newSource != null;
@@ -119,6 +182,8 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
             System.err.println(("old: " + origLabel + " --> " + CAstPrinter.print(oldTarget)));
           }
 
+          // try to find a k in key's parent chain such that (oldTarget, k) is
+          // in nodeMap's key set
           Pair targetKey;
           CopyKey k = key;
           do {
@@ -131,12 +196,15 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
           } while (!nodeMap.containsKey(targetKey));
 
           Object newLabel;
-          if (nodeMap.containsKey(Pair.make(origLabel, targetKey.snd))){ // label is mapped too
-              newLabel = nodeMap.get(Pair.make(origLabel, targetKey.snd));  
+          if (nodeMap.containsKey(Pair.make(origLabel, targetKey.snd))) { // label
+                                                                          // is
+                                                                          // mapped
+                                                                          // too
+            newLabel = nodeMap.get(Pair.make(origLabel, targetKey.snd));
           } else {
-              newLabel = origLabel;
+            newLabel = origLabel;
           }
-          
+
           CAstNode newTarget;
           if (nodeMap.containsKey(targetKey)) {
             newTarget = (CAstNode) nodeMap.get(targetKey);
@@ -144,6 +212,10 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
             allNewTargetNodes.add(newTarget);
 
           } else {
+            // could not discover target of CFG edge in nodeMap under any key related to the current source key.
+            // the edge might have been deleted, or it may end at a node above the root where we were
+            // rewriting
+            // ask flowOutTo() to just choose a target
             newTarget = flowOutTo(nodeMap, oldSource, origLabel, oldTarget, orig, newSrc);
             allNewTargetNodes.add(newTarget);
             newMap.add(newSource, newTarget, newLabel);
@@ -154,29 +226,31 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
           }
 
           if (DEBUG) {
-            System.err.println(("mapping:old: " + CAstPrinter.print(oldSource) + "-- " + origLabel + " --> " + CAstPrinter.print(oldTarget)));
-            System.err.println(("mapping:new: " + CAstPrinter.print(newSource) + "-- " + newLabel + " --> " + CAstPrinter.print(newTarget)));
+            System.err.println(("mapping:old: " + CAstPrinter.print(oldSource) + "-- " + origLabel + " --> " + CAstPrinter
+                .print(oldTarget)));
+            System.err.println(("mapping:new: " + CAstPrinter.print(newSource) + "-- " + newLabel + " --> " + CAstPrinter
+                .print(newTarget)));
           }
         }
       }
     }
 
     allNewTargetNodes.removeAll(newMap.getMappedNodes());
-    for(CAstNode newTarget : allNewTargetNodes) {
+    for (CAstNode newTarget : allNewTargetNodes) {
       newMap.map(newTarget, newTarget);
     }
-    
+
     return newMap;
   }
 
-  private CAstSourcePositionMap copySource(Map nodeMap, CAstSourcePositionMap orig) {
+  private CAstSourcePositionMap copySource(Map<Pair<CAstNode, K>, CAstNode> nodeMap, CAstSourcePositionMap orig) {
     CAstSourcePositionRecorder newMap = new CAstSourcePositionRecorder();
-    for (Iterator NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
-      Map.Entry entry = (Map.Entry) NS.next();
-      Pair N = (Pair) entry.getKey();
-      CAstNode oldNode = (CAstNode) N.fst;
+    for (Iterator<Map.Entry<Pair<CAstNode, K>, CAstNode>> NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
+      Map.Entry<Pair<CAstNode, K>, CAstNode> entry = NS.next();
+      Pair<CAstNode, K> N = entry.getKey();
+      CAstNode oldNode = N.fst;
 
-      CAstNode newNode = (CAstNode) entry.getValue();
+      CAstNode newNode = entry.getValue();
 
       if (orig.getPosition(oldNode) != null) {
         newMap.setPosition(newNode, orig.getPosition(oldNode));
@@ -186,15 +260,15 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     return newMap;
   }
 
-  private CAstNodeTypeMap copyTypes(Map nodeMap, CAstNodeTypeMap orig) {
+  private CAstNodeTypeMap copyTypes(Map<Pair<CAstNode, K>, CAstNode> nodeMap, CAstNodeTypeMap orig) {
     if (orig != null) {
       CAstNodeTypeMapRecorder newMap = new CAstNodeTypeMapRecorder();
-      for (Iterator NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
-        Map.Entry entry = (Map.Entry) NS.next();
-        Pair N = (Pair) entry.getKey();
-        CAstNode oldNode = (CAstNode) N.fst;
+      for (Iterator<Entry<Pair<CAstNode, K>, CAstNode>> NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
+        Entry<Pair<CAstNode, K>, CAstNode> entry = NS.next();
+        Pair<CAstNode, K> N = entry.getKey();
+        CAstNode oldNode = N.fst;
 
-        CAstNode newNode = (CAstNode) entry.getValue();
+        CAstNode newNode = entry.getValue();
 
         if (orig.getNodeType(oldNode) != null) {
           newMap.add(newNode, orig.getNodeType(oldNode));
@@ -207,15 +281,16 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     }
   }
 
-  private Map<CAstNode, Collection<CAstEntity>> copyChildren(Map<Pair, CAstNode> nodeMap, Map<CAstNode, Collection<CAstEntity>> children) {
+  private Map<CAstNode, Collection<CAstEntity>> copyChildren(Map<Pair<CAstNode, K>, CAstNode> nodeMap,
+      Map<CAstNode, Collection<CAstEntity>> children) {
     final Map<CAstNode, Collection<CAstEntity>> newChildren = new LinkedHashMap<CAstNode, Collection<CAstEntity>>();
 
-    for (Iterator NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
-      Map.Entry entry = (Map.Entry) NS.next();
-      Pair N = (Pair) entry.getKey();
-      CAstNode oldNode = (CAstNode) N.fst;
+    for (Iterator<Entry<Pair<CAstNode, K>, CAstNode>> NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
+      Entry<Pair<CAstNode, K>, CAstNode> entry = NS.next();
+      Pair<CAstNode, K> N = entry.getKey();
+      CAstNode oldNode = N.fst;
 
-      CAstNode newNode = (CAstNode) entry.getValue();
+      CAstNode newNode = entry.getValue();
 
       if (children.containsKey(oldNode)) {
         Set<CAstEntity> newEntities = new LinkedHashSet<CAstEntity>();
@@ -229,7 +304,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     for (Iterator<Map.Entry<CAstNode, Collection<CAstEntity>>> keys = children.entrySet().iterator(); keys.hasNext();) {
       Map.Entry<CAstNode, Collection<CAstEntity>> entry = keys.next();
       CAstNode key = entry.getKey();
-      if (!(key instanceof CAstNode)) {
+      if (key == null) {
         Set<CAstEntity> newEntities = new LinkedHashSet<CAstEntity>();
         newChildren.put(key, newEntities);
         for (Iterator oldEntities = ((Collection) entry.getValue()).iterator(); oldEntities.hasNext();) {
@@ -241,9 +316,12 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     return newChildren;
   }
 
+  /**
+   * rewrite the CAst sub-tree rooted at root
+   */
   public Rewrite rewrite(CAstNode root, final CAstControlFlowMap cfg, final CAstSourcePositionMap pos, final CAstNodeTypeMap types,
       final Map<CAstNode, Collection<CAstEntity>> children) {
-    final Map<Pair, CAstNode> nodes = HashMapFactory.make();
+    final Map<Pair<CAstNode, K>, CAstNode> nodes = HashMapFactory.make();
     final CAstNode newRoot = copyNodes(root, rootContext, nodes);
     return new Rewrite() {
       private CAstControlFlowMap theCfg = null;
@@ -284,21 +362,25 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     };
   }
 
+  /**
+   * perform the rewrite on a {@link CAstEntity}, returning the new
+   * {@link CAstEntity} as the result
+   */
   public CAstEntity rewrite(final CAstEntity root) {
-    
+
     if (root.getAST() != null) {
-      final Rewrite rewrite = rewrite(root.getAST(), root.getControlFlow(), root.getSourceMap(), root.getNodeTypeMap(), root
-          .getAllScopedEntities());
+      final Rewrite rewrite = rewrite(root.getAST(), root.getControlFlow(), root.getSourceMap(), root.getNodeTypeMap(),
+          root.getAllScopedEntities());
 
       return new DelegatingEntity(root) {
         public String toString() {
           return root.toString() + " (clone)";
         }
 
-        public Iterator getScopedEntities(CAstNode construct) {
-          Map newChildren = getAllScopedEntities();
+        public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
+          Map<CAstNode, Collection<CAstEntity>> newChildren = getAllScopedEntities();
           if (newChildren.containsKey(construct)) {
-            return ((Collection) newChildren.get(construct)).iterator();
+            return newChildren.get(construct).iterator();
           } else {
             return EmptyIterator.instance();
           }
@@ -344,7 +426,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
           return root.toString() + " (clone)";
         }
 
-        public Iterator getScopedEntities(CAstNode construct) {
+        public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
           if (newChildren.containsKey(construct)) {
             return newChildren.get(construct).iterator();
           } else {

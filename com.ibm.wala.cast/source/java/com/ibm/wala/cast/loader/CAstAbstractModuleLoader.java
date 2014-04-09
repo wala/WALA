@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -35,12 +34,17 @@ import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.classLoader.SourceModule;
-import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.warnings.Warning;
 
+/**
+ * abstract class loader that performs CAst and IR generation for relevant
+ * entities in a list of {@link Module}s. Subclasses provide the CAst / IR
+ * translators appropriate for the language.
+ * 
+ */
 public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
 
   private static final boolean DEBUG = false;
@@ -53,121 +57,141 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
     this(cha, null);
   }
 
+  /**
+   * create the appropriate CAst translator for the language and source module
+   */
   protected abstract TranslatorToCAst getTranslatorToCAst(CAst ast, SourceModule M) throws IOException;
 
+  /**
+   * should IR be generated for entity?
+   */
   protected abstract boolean shouldTranslate(CAstEntity entity);
 
+  /**
+   * create the appropriate IR translator for the language
+   */
   protected abstract TranslatorToIR initTranslator();
 
   protected File getLocalFile(SourceModule M) throws IOException {
     if (M instanceof SourceFileModule) {
-      return ((SourceFileModule)M).getFile();
+      return ((SourceFileModule) M).getFile();
     } else {
-        File f = File.createTempFile("module", ".txt");
-        f.deleteOnExit();
-        TemporaryFile.streamToFile(f.getAbsolutePath(), M.getInputStream());
-        return f;
+      File f = File.createTempFile("module", ".txt");
+      f.deleteOnExit();
+      TemporaryFile.streamToFile(f.getAbsolutePath(), M.getInputStream());
+      return f;
     }
   }
-  
+
+  /**
+   * subclasses should override to perform actions after CAst and IR have been
+   * generated. by default, do nothing
+   */
   protected void finishTranslation() {
 
   }
 
   public void init(final List<Module> modules) {
+
     final CAst ast = new CAstImpl();
 
-    final Set<Pair> topLevelEntities = new LinkedHashSet<Pair>();
+    // convert everything to CAst
+    final Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities = new LinkedHashSet<Pair<CAstEntity, ModuleEntry>>();
 
+    for (Iterator<Module> mes = modules.iterator(); mes.hasNext();) {
+      translateModuleToCAst(mes.next(), ast, topLevelEntities);
+    }
+
+    // generate IR as needed
     final TranslatorToIR xlatorToIR = initTranslator();
 
-    class TranslatorNestingHack {
-
-      private void init(ModuleEntry moduleEntry) {
-        try {
-          if (moduleEntry.isModuleFile()) {
-            init(moduleEntry.asModule());
-          } else if (moduleEntry instanceof SourceModule) {
-            TranslatorToCAst xlatorToCAst = getTranslatorToCAst(ast, (SourceModule)moduleEntry);
-
-            CAstEntity fileEntity = xlatorToCAst.translateToCAst();
-
-            if (fileEntity != null) {
-              if(DEBUG){
-                CAstPrinter.printTo(fileEntity, new PrintWriter(System.err));
-              }
-              topLevelEntities.add(Pair.make(fileEntity, moduleEntry.getName()));
-             
-            }  else {
-              addMessage(moduleEntry, new Warning(Warning.SEVERE) {
-                 @Override
-                 public String getMsg() {
-                    return "parse error";
-                 }         
-               });
-             }
-          }
-       } catch (final MalformedURLException e) {
-          addMessage(moduleEntry, new Warning(Warning.SEVERE) {
-            @Override
-            public String getMsg() {
-               return "Malformed URL issue: " + e.getMessage();
-            }         
-          });
-        } catch (final IOException e) {
-          addMessage(moduleEntry, new Warning(Warning.SEVERE) {
-            @Override
-            public String getMsg() {
-               return "I/O issue: " + e.getMessage();
-            }         
-          });
-        } catch (final RuntimeException e) {
-          final ByteArrayOutputStream s = new ByteArrayOutputStream();
-          PrintStream ps = new PrintStream(s);
-          e.printStackTrace(ps);
-          addMessage(moduleEntry, new Warning(Warning.SEVERE) {
-            @Override
-            public String getMsg() {
-               return "Parsing issue: " + new String(s.toByteArray());
-            }         
-          });
-        }
-      }
-
-      private void init(Module module) {
-        for (Iterator mes = module.getEntries(); mes.hasNext();) {
-          init((ModuleEntry) mes.next());
-        }
-      }
-
-      private void init() {
-        for (Iterator mes = modules.iterator(); mes.hasNext();) {
-          init((Module) mes.next());
-        }
-
-        for (Iterator tles = topLevelEntities.iterator(); tles.hasNext();) {
-          Pair p = (Pair) tles.next();
-          if (shouldTranslate((CAstEntity) p.fst)) {
-            xlatorToIR.translate((CAstEntity) p.fst, (String) p.snd);
-          }
-        }
+    for (Iterator<Pair<CAstEntity, ModuleEntry>> tles = topLevelEntities.iterator(); tles.hasNext();) {
+      Pair<CAstEntity, ModuleEntry> p = tles.next();
+      if (shouldTranslate(p.fst)) {
+        xlatorToIR.translate(p.fst, p.snd);
       }
     }
 
-    (new TranslatorNestingHack()).init();
-
-    for (Iterator ts = types.keySet().iterator(); ts.hasNext();) {
-      TypeName tn = (TypeName) ts.next();
-      try {
-        if(DEBUG){
+    if (DEBUG) {
+      for (Iterator ts = types.keySet().iterator(); ts.hasNext();) {
+        TypeName tn = (TypeName) ts.next();
+        try {
           System.err.println(("found type " + tn + " : " + types.get(tn) + " < " + ((IClass) types.get(tn)).getSuperclass()));
+        } catch (Exception e) {
+          System.err.println(e);
         }
-      } catch (Exception e) {
-        System.err.println(e);
       }
     }
 
     finishTranslation();
+  }
+
+  /**
+   * translate moduleEntry to CAst and store result in topLevelEntities
+   * 
+   * @param ast
+   * @param topLevelEntities
+   */
+  private void translateModuleEntryToCAst(ModuleEntry moduleEntry, CAst ast, Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities) {
+    try {
+      if (moduleEntry.isModuleFile()) {
+        // nested module
+        translateModuleToCAst(moduleEntry.asModule(), ast, topLevelEntities);
+      } else if (moduleEntry instanceof SourceModule) {
+        TranslatorToCAst xlatorToCAst = getTranslatorToCAst(ast, (SourceModule) moduleEntry);
+
+        CAstEntity fileEntity = xlatorToCAst.translateToCAst();
+
+        if (fileEntity != null) {
+          if (DEBUG) {
+            CAstPrinter.printTo(fileEntity, new PrintWriter(System.err));
+          }
+          topLevelEntities.add(Pair.make(fileEntity, moduleEntry));
+
+        } else {
+          addMessage(moduleEntry, new Warning(Warning.SEVERE) {
+            @Override
+            public String getMsg() {
+              return "parse error";
+            }
+          });
+        }
+      }
+    } catch (final MalformedURLException e) {
+      addMessage(moduleEntry, new Warning(Warning.SEVERE) {
+        @Override
+        public String getMsg() {
+          return "Malformed URL issue: " + e.getMessage();
+        }
+      });
+    } catch (final IOException e) {
+      addMessage(moduleEntry, new Warning(Warning.SEVERE) {
+        @Override
+        public String getMsg() {
+          return "I/O issue: " + e.getMessage();
+        }
+      });
+    } catch (final RuntimeException e) {
+      final ByteArrayOutputStream s = new ByteArrayOutputStream();
+      PrintStream ps = new PrintStream(s);
+      e.printStackTrace(ps);
+      addMessage(moduleEntry, new Warning(Warning.SEVERE) {
+        @Override
+        public String getMsg() {
+          return "Parsing issue: " + new String(s.toByteArray());
+        }
+      });
+    }
+  }
+
+  /**
+   * translate all relevant entities in the module to CAst, storing the results
+   * in topLevelEntities
+   */
+  private void translateModuleToCAst(Module module, CAst ast, Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities) {
+    for (Iterator<ModuleEntry> mes = module.getEntries(); mes.hasNext();) {
+      translateModuleEntryToCAst(mes.next(), ast, topLevelEntities);
+    }
   }
 
 }

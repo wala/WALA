@@ -63,11 +63,16 @@ public class JDTClassLoaderFactory extends ClassLoaderFactoryImpl {
   protected IClassLoader makeNewClassLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, IClassLoader parent,
       AnalysisScope scope) throws IOException {
     if (classLoaderReference.equals(JavaSourceAnalysisScope.SOURCE)) {
-      ClassLoaderImpl cl = new JDTSourceLoaderImpl(classLoaderReference, parent, getExclusions(), cha);
+      ClassLoaderImpl cl = makeSourceLoader(classLoaderReference, cha, parent);
       cl.init(scope.getModules(classLoaderReference));
       return cl;
     } else {
       return super.makeNewClassLoader(classLoaderReference, cha, parent, scope);
     }
+  }
+
+  protected JDTSourceLoaderImpl makeSourceLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, IClassLoader parent)
+      throws IOException {
+    return new JDTSourceLoaderImpl(classLoaderReference, parent, getExclusions(), cha);
   }
 }

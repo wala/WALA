@@ -151,6 +151,10 @@ public class AstCallGraph extends ExplicitCallGraph {
       cachedDU = new DefUse(ir);
     }
     
+    public void clearMutatedCache(CallSiteReference cs) {
+      targets.remove(cs.getProgramCounter());
+    }
+    
     public IR getLexicallyMutatedIR() {
       if (lexicalScopingChanges) {
         return cachedIR;

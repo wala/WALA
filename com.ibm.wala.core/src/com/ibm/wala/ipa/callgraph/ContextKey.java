@@ -36,14 +36,35 @@ public interface ContextKey {
   public final static ContextKey RECEIVER = new ContextKey() {
   };
 
-  /**
-   * A property of contexts that might be generally useful: an identifier for the type filters applied to the receiver object ...
-   * used for filtering propagation across dynamic dispatched
-   * 
-   * Implementations (ContextItems) for FILTER are to be instances of FilteredContextKey.TypeFilter
-   * 
-   */
-  public final static ContextKey FILTER = new ContextKey() {
-  };
+  public static class ParameterKey implements ContextKey {
+    public final int index;
 
+    public ParameterKey(int index) {
+      super();
+      this.index = index;
+    }
+  }
+  
+  public static final ContextKey PARAMETERS[] = new ContextKey[]{
+    new ParameterKey(0),
+    new ParameterKey(1),
+    new ParameterKey(2),
+    new ParameterKey(3),
+    new ParameterKey(4),
+    new ParameterKey(5),
+    new ParameterKey(6),
+    new ParameterKey(7),
+    new ParameterKey(8),
+    new ParameterKey(9),
+    new ParameterKey(10),
+    new ParameterKey(11),
+    new ParameterKey(12),
+    new ParameterKey(13),
+    new ParameterKey(14),
+    new ParameterKey(15),
+    new ParameterKey(16),
+    new ParameterKey(17),
+    new ParameterKey(18),
+    new ParameterKey(19)
+  };
 }

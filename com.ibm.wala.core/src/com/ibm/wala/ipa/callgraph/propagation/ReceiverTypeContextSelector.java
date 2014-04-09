@@ -17,6 +17,8 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.IntSetUtil;
 
 /**
  * This context selector selects a context based on the concrete type of the receiver.
@@ -26,27 +28,18 @@ public class ReceiverTypeContextSelector implements ContextSelector {
   public ReceiverTypeContextSelector() {
   }
 
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
+  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (receiver == null) {
       throw new IllegalArgumentException("receiver is null");
     }
-    PointType P = new PointType(receiver.getConcreteType());
+    PointType P = new PointType(receiver[0].getConcreteType());
     return new JavaTypeContext(P);
   }
 
-  public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference reference, IMethod targetMethod) {
-    return -1;
+  private static final IntSet receiver = IntSetUtil.make(new int[]{ 0 });
+  
+  public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
+    return receiver;
   }
 
-  public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
-    return true;
-  }
-
-  public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
-    return false;
-  }
-
-  public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
-    return false;
-  }
 }

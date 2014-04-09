@@ -8,54 +8,63 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *****************************************************************************/
-/*
- * Created on Oct 6, 2005
- */
 package com.ibm.wala.cast.java.translator.polyglot;
 
-import polyglot.frontend.CyclicDependencyException;
+import polyglot.frontend.ExtensionInfo;
 import polyglot.frontend.Job;
-import polyglot.frontend.Pass;
 import polyglot.frontend.Scheduler;
-import polyglot.frontend.goals.AbstractGoal;
-import polyglot.frontend.goals.EndGoal;
-import polyglot.util.ErrorInfo;
+import polyglot.frontend.SourceGoal_c;
 
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.java.translator.Java2IRTranslator;
 
 /**
- * A kind of EndGoal that indicates that DOMO IR has been generated for the given compilation unit.
- * 
+ * A kind of EndGoal that indicates that WALA IR has been generated for the given compilation unit.
  * @author rfuhrer
  */
-public class IRGoal extends AbstractGoal implements EndGoal {
+public class IRGoal extends SourceGoal_c /* PORT1.7 removed 'implements EndGoal' */ {
+  /**
+   * 
+   */
+  private static final long serialVersionUID = -8023929848709826817L;
+
   private JavaSourceLoaderImpl fSourceLoader;
+
+  protected Java2IRTranslator fTranslator;
 
   public IRGoal(Job job, JavaSourceLoaderImpl sourceLoader) {
     super(job);
     fSourceLoader = sourceLoader;
-    try {
-      Scheduler scheduler = job.extensionInfo().scheduler();
 
-      addPrerequisiteGoal(scheduler.TypeChecked(job), scheduler);
-      // Need ConstantsChecked in order to make sure that case statements have non-zero labels.
-      addPrerequisiteGoal(scheduler.ConstantsChecked(job), scheduler);
-      // Need to add an AscriptionGoal as a prereq to make sure that empty array initializers get a type ascribed.
-      addPrerequisiteGoal(new AscriptionGoal(job), scheduler);
-    } catch (CyclicDependencyException e) {
-      job.compiler().errorQueue().enqueue(ErrorInfo.INTERNAL_ERROR, "Cycle encountered in goal graph?");
-      throw new IllegalStateException(e.getMessage());
-    }
+    Scheduler scheduler= job.extensionInfo().scheduler();
+
+    addPrereq(scheduler.TypeChecked(job));
+    // PORT1.7 - TypeChecked will suffice for what used to require ConstantsChecked.
+    // Need ConstantsChecked in order to make sure that case statements have non-zero labels.
+//  addPrereq(scheduler.ConstantsChecked(job));
+    // Need to add an AscriptionGoal as a prereq to make sure that empty array initializers get a type ascribed.
+    addPrereq(new AscriptionGoal(job));
   }
 
-  public Pass createPass(polyglot.frontend.ExtensionInfo extInfo) {
-    return new JavaIRPass(this, job(), new Java2IRTranslator(new PolyglotJava2CAstTranslator(fSourceLoader.getReference(), extInfo
-        .nodeFactory(), extInfo.typeSystem(), new PolyglotIdentityMapper(fSourceLoader.getReference(), this.job.extensionInfo()
-        .typeSystem())), fSourceLoader, ((IRTranslatorExtension) extInfo).getCAstRewriterFactory()));
+  @Override
+  public boolean runTask() {
+    ExtensionInfo extInfo= job.extensionInfo();
+
+    fTranslator= new Java2IRTranslator(
+        new PolyglotJava2CAstTranslator(
+            fSourceLoader.getReference(),
+            extInfo.nodeFactory(),
+            extInfo.typeSystem(),
+            new PolyglotIdentityMapper(fSourceLoader.getReference()),
+            ((IRTranslatorExtension)extInfo).getReplicateForDoLoops()),
+            fSourceLoader,
+            ((IRTranslatorExtension)extInfo).getCAstRewriterFactory());
+    ModuleSource src = (ModuleSource) job.source();
+    fTranslator.translate(src.getModule(),job.ast(), src.name());
+    return true;
   }
 
   public String name() {
-    return "<DOMO IR goal for " + job().source().path() + ">";
+    return "<WALA IR goal for " + job.source().path() + ">";
   }
 }

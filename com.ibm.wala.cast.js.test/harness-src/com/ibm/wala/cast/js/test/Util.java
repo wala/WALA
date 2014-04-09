@@ -69,14 +69,14 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
   public static CallGraph makeScriptCG(String dir, String name, boolean useOneCFA) throws IOException, IllegalArgumentException, CancelException {
     PropagationCallGraphBuilder b = makeScriptCGBuilder(dir, name, useOneCFA);
     CallGraph CG = b.makeCallGraph(b.getOptions());
-    dumpCG(b, CG);
+    dumpCG(b.getPointerAnalysis(), CG);
     return CG;
   }
 
   public static CallGraph makeScriptCG(SourceModule[] scripts, boolean useOneCFA) throws IOException, IllegalArgumentException, CancelException {
     PropagationCallGraphBuilder b = makeCGBuilder(scripts, useOneCFA);
     CallGraph CG = b.makeCallGraph(b.getOptions());
-    dumpCG(b, CG);
+    dumpCG(b.getPointerAnalysis(), CG);
     return CG;
   }
 
@@ -91,7 +91,7 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
   public static CallGraph makeHTMLCG(URL url) throws IOException, IllegalArgumentException, CancelException {
     PropagationCallGraphBuilder b = makeHTMLCGBuilder(url);
     CallGraph CG = b.makeCallGraph(b.getOptions());
-    dumpCG(b, CG);
+//    dumpCG(b, CG);
     return CG;
   }
 
@@ -105,6 +105,7 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
       throws IOException {
     try {
       IClassHierarchy cha = makeHierarchy(scope, loaders);
+      com.ibm.wala.cast.test.Util.checkForFrontEndErrors(cha);
       Iterable<Entrypoint> roots = makeScriptRoots(cha);
       AnalysisOptions options = makeOptions(scope, cha, roots);
       AnalysisCache cache = makeCache();

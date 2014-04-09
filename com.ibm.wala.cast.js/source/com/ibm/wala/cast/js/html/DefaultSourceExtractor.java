@@ -94,6 +94,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
 
       if (tag.getName().equalsIgnoreCase("FORM")) {
         forms.push(tag);
+        printlnIndented("  document.forms[document.formCount++] = this;", tag);
         printlnIndented("  var currentForm = this;", tag);
       } if (tag.getName().equalsIgnoreCase("INPUT")) {
         String prop = tag.getAttributeByName("NAME");

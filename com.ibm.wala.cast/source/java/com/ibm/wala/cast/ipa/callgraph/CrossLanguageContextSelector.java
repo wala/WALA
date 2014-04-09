@@ -18,6 +18,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -52,7 +53,11 @@ public class CrossLanguageContextSelector implements ContextSelector {
     return (ContextSelector)languageSelectors.get(getLanguage(site));
   }
 
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
+  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     return getSelector(site).getCalleeTarget(caller, site, callee, receiver);
+  }
+
+  public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
+    return getSelector(site).getRelevantParameters(caller, site);
   }
 }

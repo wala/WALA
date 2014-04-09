@@ -12,14 +12,37 @@ import com.ibm.wala.cast.tree.impl.CAstRewriter;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.util.collections.Pair;
 
+/**
+ * transforms each synchronized block to execute under a conditional test
+ * calling some method m(), where the block is duplicated in both the if and
+ * else branches. The transformation enables a static analysis to separately
+ * analyze the synchronized block for true and false return values from m().
+ * 
+ * See "Finding Concurrency-Related Bugs using Random Isolation," Kidd et al.,
+ * VMCAI'09, Section 3
+ */
 public class SynchronizedBlockDuplicator extends
     CAstRewriter<CAstRewriter.RewriteContext<SynchronizedBlockDuplicator.UnwindKey>, SynchronizedBlockDuplicator.UnwindKey> {
 
+  /**
+   * key type used for cloning the synchronized blocks and the true and false
+   * branches of the introduced conditional
+   */
   class UnwindKey implements CAstRewriter.CopyKey<UnwindKey> {
+    /**
+     * are we on the true or false branch?
+     */
     private boolean testDirection;
 
+    /**
+     * the AST node representing the synchronized block
+     */
     private CAstNode syncNode;
 
+    /**
+     * key associated with the {@link RewriteContext context} of the parent AST
+     * node of the synchronized block
+     */
     private UnwindKey rest;
 
     private UnwindKey(boolean testDirection, CAstNode syncNode, UnwindKey rest) {
@@ -48,6 +71,10 @@ public class SynchronizedBlockDuplicator extends
 
   // private static final boolean DEBUG = false;
 
+  /**
+   * method to be invoked in the conditional test (program counter is ignored?
+   * --MS)
+   */
   private final CallSiteReference f;
 
   public SynchronizedBlockDuplicator(CAst Ast, boolean recursive, CallSiteReference f) {
@@ -59,6 +86,9 @@ public class SynchronizedBlockDuplicator extends
     return rewrite(original);
   }
 
+  /**
+   * context used for nodes not contained in a synchronized block
+   */
   private static class RootContext implements RewriteContext<UnwindKey> {
 
     public UnwindKey key() {
@@ -66,11 +96,23 @@ public class SynchronizedBlockDuplicator extends
     }
   }
 
+  /**
+   * context used within synchronized blocks
+   */
   class SyncContext implements RewriteContext<UnwindKey> {
+    /**
+     * context used for the parent AST node of the synchronized block
+     */
     private final CAstRewriter.RewriteContext<UnwindKey> parent;
 
+    /**
+     * are we on the true or false branch of the introduced conditional?
+     */
     private final boolean testDirection;
 
+    /**
+     * the AST node representing the synchronized block
+     */
     private final CAstNode syncNode;
 
     private SyncContext(boolean testDirection, CAstNode syncNode, RewriteContext<UnwindKey> parent) {
@@ -83,6 +125,10 @@ public class SynchronizedBlockDuplicator extends
       return new UnwindKey(testDirection, syncNode, parent.key());
     }
 
+    /**
+     * is n our synchronized block node or the synchronized block node of a
+     * parent?
+     */
     private boolean containsNode(CAstNode n) {
       if (n == syncNode) {
         return true;
@@ -108,6 +154,10 @@ public class SynchronizedBlockDuplicator extends
     }
   }
 
+  /**
+   * does root represent a synchronized block? if so, return the variable whose
+   * lock is acquired. otherwise, return <code>null</code>
+   */
   private String isSynchronizedOnVar(CAstNode root) {
     if (root.getKind() == CAstNode.UNWIND) {
       CAstNode unwindBody = root.getChild(0);
@@ -136,22 +186,30 @@ public class SynchronizedBlockDuplicator extends
     return null;
   }
 
-  protected CAstNode copyNodes(CAstNode n, RewriteContext<UnwindKey> c, Map<Pair, CAstNode> nodeMap) {
+  protected CAstNode copyNodes(CAstNode n, RewriteContext<UnwindKey> c, Map<Pair<CAstNode, UnwindKey>, CAstNode> nodeMap) {
     String varName;
+    // don't copy operators or constants (presumably since they are immutable?)
     if (n instanceof CAstOperator) {
       return n;
 
     } else if (n.getValue() != null) {
       return Ast.makeConstant(n.getValue());
-
     } else if (!contains(c, n) && (varName = isSynchronizedOnVar(n)) != null) {
-      CAstNode test = Ast.makeNode(CAstNode.CALL, Ast.makeNode(CAstNode.VOID), Ast.makeConstant(f), Ast.makeNode(CAstNode.VAR, Ast
-          .makeConstant(varName)));
+      // we call contains() above since we pass n to copyNodes() below for the
+      // true and false branches of the conditional, and in those recursive
+      // calls we want n to be copied normally
 
-      return Ast.makeNode(CAstNode.IF_STMT, test, copyNodes(n, new SyncContext(true, n, c), nodeMap), copyNodes(n, new SyncContext(
-          false, n, c), nodeMap));
+      // the conditional test
+      CAstNode test = Ast.makeNode(CAstNode.CALL, Ast.makeNode(CAstNode.VOID), Ast.makeConstant(f),
+          Ast.makeNode(CAstNode.VAR, Ast.makeConstant(varName)));
+
+      // the new if conditional
+      return Ast.makeNode(CAstNode.IF_STMT, test, copyNodes(n, new SyncContext(true, n, c), nodeMap),
+          copyNodes(n, new SyncContext(false, n, c), nodeMap));
 
     } else {
+      // invoke copyNodes() on the children with context c, ensuring, e.g., that
+      // the body of a synchronized block gets cloned
       CAstNode[] newChildren = new CAstNode[n.getChildCount()];
       for (int i = 0; i < newChildren.length; i++)
         newChildren[i] = copyNodes(n.getChild(i), c, nodeMap);

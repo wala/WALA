@@ -226,6 +226,9 @@ function DOMHTMLElement() { // An impostor for the HTMLElement class
 	this.lang = null;
 	this.dir = null;
 	this.className = null;
+    
+    this.forms = new Array();
+    this.formCount = 0;
 }
 
 var dynamic_node = 0;

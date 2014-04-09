@@ -13,18 +13,25 @@ package com.ibm.wala.cast.ir.translator;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.core.plugin.CorePlugin;
 
-public class NativeBridge {
+/**
+ * superclass for CAst parsers / translators making use of native code. performs
+ * initialization of the core CAst native library.
+ */
+public abstract class NativeBridge {
 
   protected final CAst Ast;
 
   protected static boolean isInitialized;
-  
+
   protected NativeBridge(CAst Ast) {
     this.Ast = Ast;
   }
 
+  /**
+   * initialize the CAst native library
+   */
   protected static native void initialize();
-  
+
   static {
     isInitialized = false;
     if (CorePlugin.IS_RESOURCES_BUNDLE_AVAILABLE) {

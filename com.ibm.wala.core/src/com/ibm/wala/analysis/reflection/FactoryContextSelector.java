@@ -19,6 +19,8 @@ import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CallString;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CallStringContext;
+import com.ibm.wala.util.intset.EmptyIntSet;
+import com.ibm.wala.util.intset.IntSet;
 
 /**
  * For synthetic methods marked as "Factories", we analyze in a context defined by the caller.
@@ -31,7 +33,7 @@ class FactoryContextSelector implements ContextSelector {
   /*
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#getCalleeTarget(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod)
    */
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
+  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (callee == null) {
       throw new IllegalArgumentException("callee is null");
     }
@@ -42,6 +44,10 @@ class FactoryContextSelector implements ContextSelector {
       }
     }
     return null;
+  }
+
+  public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
+    return EmptyIntSet.instance;
   }
 
 }

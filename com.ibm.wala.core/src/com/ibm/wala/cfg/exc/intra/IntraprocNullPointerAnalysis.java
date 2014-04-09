@@ -176,6 +176,11 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
 		protected NullPointerState makeNodeVariable(B n, boolean IN) {
 			return new NullPointerState(maxVarNum, ir.getSymbolTable(), parameterState);
 		}
+
+    @Override
+    protected NullPointerState[] makeStmtRHS(int size) {
+      return new NullPointerState[size];
+    }
 		
 	}
 	

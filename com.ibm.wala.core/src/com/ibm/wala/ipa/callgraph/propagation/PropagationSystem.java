@@ -192,7 +192,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");
     }
-    assert klass.getReference() != TypeReference.JavaLangObject;
+    assert klass != klass.getClassHierarchy().getRootClass();
     return class2InstanceKey.get(klass);
   }
 
@@ -568,6 +568,21 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     newStatement(null, op, v1, true, true);
   }
 
+  public void newSideEffect(AbstractOperator<PointsToSetVariable> op, PointerKey[] arg0) {
+    if (arg0 == null) {
+      throw new IllegalArgumentException("null arg0");
+    }
+    if (DEBUG) {
+      System.err.println("add constraint D: " + op + " " + arg0);
+    }
+    PointsToSetVariable[] vs = new PointsToSetVariable[ arg0.length ];
+    for(int i = 0; i < arg0.length; i++) {
+      assert !pointsToMap.isUnified(arg0[i]);
+      vs[i] = findOrCreatePointsToSet(arg0[i]);
+    }
+    newStatement(null, op, vs, true, true);
+  }
+
   public void newSideEffect(AbstractOperator<PointsToSetVariable> op, PointerKey arg0, PointerKey arg1) {
     if (DEBUG) {
       System.err.println("add constraint D: " + op + " " + arg0);
@@ -887,5 +902,10 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
   public int getNumber(PointerKey p) {
     return pointsToMap.getIndex(p);
+  }
+
+  @Override
+  protected PointsToSetVariable[] makeStmtRHS(int size) {
+    return new PointsToSetVariable[size];
   }
 }

@@ -183,7 +183,6 @@ public abstract class DataflowSolver<T, V extends IVariable> extends DefaultFixe
     }
   }
 
-  @SuppressWarnings("unchecked")
   protected void buildEquations(boolean toWorkList, boolean eager) {
     ITransferFunctionProvider<T, V> functions = problem.getTransferFunctionProvider();
     Graph<T> G = problem.getFlowGraph();
@@ -202,7 +201,7 @@ public abstract class DataflowSolver<T, V extends IVariable> extends DefaultFixe
       int nPred = G.getPredNodeCount(node);
       if (nPred >= meetThreshold) {
         // todo: optimize further using unary operators when possible?
-        V[] rhs = (V[]) new IVariable[nPred];
+        V[] rhs = makeStmtRHS(nPred);
         int i = 0;
         for (Iterator<?> it2 = G.getPredNodes(node); it2.hasNext();) {
           rhs[i++] = (functions.hasEdgeTransferFunctions()) ? getEdge(it2.next(), node) : getOut(it2.next());

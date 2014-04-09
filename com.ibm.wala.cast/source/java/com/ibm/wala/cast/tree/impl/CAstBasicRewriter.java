@@ -8,11 +8,18 @@ import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 
+/**
+ * abstract base class for {@link CAstRewriter}s that do no cloning of nodes
+ *
+ */
 public abstract class CAstBasicRewriter
   extends CAstRewriter<CAstBasicRewriter.NonCopyingContext, 
 	               CAstBasicRewriter.NoKey> 
 {
 
+  /**
+   * context indicating that no cloning is being performed
+   */
   public static class NonCopyingContext implements CAstRewriter.RewriteContext<NoKey> {
     private final Map nodeMap = new HashMap();
 
@@ -26,6 +33,9 @@ public abstract class CAstBasicRewriter
 
   }
 
+  /**
+   * key indicating that no duplication is being performed
+   */
   public static class NoKey implements CAstRewriter.CopyKey<NoKey> {
     private NoKey() {
       Assertions.UNREACHABLE();
@@ -48,6 +58,6 @@ public abstract class CAstBasicRewriter
     super(Ast, recursive, new NonCopyingContext());
   }
 
-  protected abstract CAstNode copyNodes(CAstNode root, NonCopyingContext context, Map<Pair, CAstNode> nodeMap);
+  protected abstract CAstNode copyNodes(CAstNode root, NonCopyingContext context, Map<Pair<CAstNode,NoKey>, CAstNode> nodeMap);
   
 }

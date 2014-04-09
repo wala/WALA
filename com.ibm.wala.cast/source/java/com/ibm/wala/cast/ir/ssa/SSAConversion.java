@@ -115,8 +115,6 @@ public class SSAConversion extends AbstractSSAConversion {
   }
 
   private class CopyPropagationRecord {
-    final int lhs;
-
     final int rhs;
 
     final int instructionIndex;
@@ -136,7 +134,6 @@ public class SSAConversion extends AbstractSSAConversion {
     private CopyPropagationRecord(int instructionIndex, int lhs, int rhs) {
       if (DEBUG_UNDO)
         System.err.println(("new copy record for instruction #" + instructionIndex + ", rhs value is " + rhs));
-      this.lhs = lhs;
       this.rhs = rhs;
       this.instructionIndex = instructionIndex;
     }

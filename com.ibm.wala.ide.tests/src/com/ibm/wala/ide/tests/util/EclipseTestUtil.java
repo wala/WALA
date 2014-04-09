@@ -26,9 +26,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.jdt.core.IJavaModel;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 import org.eclipse.ui.wizards.datatransfer.ZipFileStructureProvider;
@@ -36,7 +33,6 @@ import org.osgi.framework.Bundle;
 
 public class EclipseTestUtil {
 
-  @SuppressWarnings("unchecked")
   public static void importZippedProject(Plugin plugin, String projectName, String zipFileName, IProgressMonitor monitor) {
     ZipFile zipFile = getZipFile(plugin, zipFileName);
     ZipFileStructureProvider zp = new ZipFileStructureProvider(zipFile);
@@ -134,13 +130,6 @@ public class EclipseTestUtil {
   private static void reportException(Exception e) {
     // TODO: add to appropriate error log? Report differently ??
     e.printStackTrace();
-  }
-
-  public static IJavaProject getNamedProject(String projectName) {
-    IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-    IJavaModel javaModel = JavaCore.create(workspaceRoot);
-    IJavaProject helloWorldProject = javaModel.getJavaProject(projectName);
-    return helloWorldProject;
   }
 
 }

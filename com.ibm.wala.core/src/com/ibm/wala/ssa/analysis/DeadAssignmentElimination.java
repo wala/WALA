@@ -186,5 +186,10 @@ public class DeadAssignmentElimination {
       }
     }
 
+    @Override
+    protected BooleanVariable[] makeStmtRHS(int size) {
+      return new BooleanVariable[size];
+    }
+
   }
 }

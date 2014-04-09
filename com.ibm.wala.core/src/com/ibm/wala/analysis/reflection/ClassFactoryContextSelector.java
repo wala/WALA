@@ -26,6 +26,9 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.intset.EmptyIntSet;
+import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.StringStuff;
 
@@ -55,11 +58,11 @@ class ClassFactoryContextSelector implements ContextSelector {
   public ClassFactoryContextSelector() {
   }
 
-  public static boolean isClassFactory(IMethod m) {
-    if (m.getReference().equals(FOR_NAME_REF)) {
+  public static boolean isClassFactory(MethodReference m) {
+    if (m.equals(FOR_NAME_REF)) {
       return true;
     }
-    if (m.getReference().equals(LOAD_CLASS_REF)) {
+    if (m.equals(LOAD_CLASS_REF)) {
       return true;
     }
     return false;
@@ -79,10 +82,10 @@ class ClassFactoryContextSelector implements ContextSelector {
    * 
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#getCalleeTarget(com.ibm.wala.ipa.callgraph.CGNode,
    *      com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
+   *      InstanceKey[])
    */
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
-    if (isClassFactory(callee)) {
+  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
+    if (isClassFactory(callee.getReference())) {
       IR ir = caller.getIR();
       SymbolTable symbolTable = ir.getSymbolTable();
       SSAAbstractInvokeInstruction[] invokeInstructions = caller.getIR().getCalls(site);
@@ -103,22 +106,24 @@ class ClassFactoryContextSelector implements ContextSelector {
     return null;
   }
 
-  /**
-   * This object may understand a dispatch to Class.forName(s) when s is a string constant.
-   */
-  public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
-    if (isClassFactory(targetMethod)) {
-      IR ir = caller.getIR();
-      SymbolTable symbolTable = ir.getSymbolTable();
+  private static final IntSet thisParameter = IntSetUtil.make(new int[]{0});
+
+  private static final IntSet firstParameter = IntSetUtil.make(new int[]{1});
+
+  public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
+    if (isClassFactory(site.getDeclaredTarget())) {
       SSAAbstractInvokeInstruction[] invokeInstructions = caller.getIR().getCalls(site);
       if (invokeInstructions.length != 1) {
-        return false;
+        if (invokeInstructions[0].isStatic()) {
+          return thisParameter;
+        } else {
+          return firstParameter;
+        }
+      } else {
+        return EmptyIntSet.instance;
       }
-      int use = getUseOfStringParameter(invokeInstructions[0]);
-      if (symbolTable.isStringConstant(use)) {
-        return true;
-      }
+    } else {
+      return EmptyIntSet.instance;      
     }
-    return false;
   }
 }

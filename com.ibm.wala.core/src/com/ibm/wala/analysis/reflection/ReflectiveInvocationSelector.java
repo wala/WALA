@@ -24,6 +24,9 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.intset.EmptyIntSet;
+import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.IntSetUtil;
 
 /**
  * A {@link ContextSelector} to intercept calls to reflective method invocations such as Constructor.newInstance and Method.invoke
@@ -44,20 +47,20 @@ class ReflectiveInvocationSelector implements ContextSelector {
    * <li>Otherwise, return a new {@link ReceiverInstanceContext} for <code>receiver</code>.
    * </ol>
    */
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
-    if (!mayUnderstand(caller, site, callee, receiver)) {
+  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
+    if (receiver == null || receiver.length == 0 || !mayUnderstand(caller, site, callee, receiver[0])) {
       return null;
     }
     IR ir = caller.getIR();
     SSAAbstractInvokeInstruction[] invokeInstructions = ir.getCalls(site);
     if (invokeInstructions.length != 1) {
-      return new ReceiverInstanceContext(receiver);
+      return new ReceiverInstanceContext(receiver[0]);
     }
     SymbolTable st = ir.getSymbolTable();
-    ConstantKey receiverConstantKey = (ConstantKey) receiver;
+    ConstantKey receiverConstantKey = (ConstantKey) receiver[0];
     IMethod m = (IMethod) receiverConstantKey.getValue();
     boolean isStatic = m.isStatic();
-    boolean isConstructor = isConstructorConstant(receiver);
+    boolean isConstructor = isConstructorConstant(receiver[0]);
 
     // If the method being invoked through reflection is not a constructor and is definitely static, then
     // we should not create a callee target for any method that is not static
@@ -79,7 +82,7 @@ class ReflectiveInvocationSelector implements ContextSelector {
     int paramUse = invokeInstructions[0].getUse(paramIndex);
     SSAInstruction instr = caller.getDU().getDef(paramUse);
     if (!(instr instanceof SSANewInstruction)) {
-      return new ReceiverInstanceContext(receiver);
+      return new ReceiverInstanceContext(receiver[0]);
     }
     SSANewInstruction newInstr = (SSANewInstruction) instr;
     if (!newInstr.getConcreteType().isArrayType()) {
@@ -89,12 +92,12 @@ class ReflectiveInvocationSelector implements ContextSelector {
     try {
       int arrayLength = st.getIntValue(vn);
       if (arrayLength == numberOfParams) {
-        return new ReceiverInstanceContext(receiver);
+        return new ReceiverInstanceContext(receiver[0]);
       } else {
         return new IllegalArgumentExceptionContext();
       }
     } catch (IllegalArgumentException e) {
-      return new ReceiverInstanceContext(receiver);
+      return new ReceiverInstanceContext(receiver[0]);
     }
   }
 
@@ -119,5 +122,15 @@ class ReflectiveInvocationSelector implements ContextSelector {
       }
     }
     return false;
+  }
+
+  private static final IntSet thisParameter = IntSetUtil.make(new int[]{0});
+
+  public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
+    if (site.isDispatch() || site.getDeclaredTarget().getNumberOfParameters() > 0) {
+      return thisParameter;
+    } else {
+      return EmptyIntSet.instance;
+    }
   }
 }

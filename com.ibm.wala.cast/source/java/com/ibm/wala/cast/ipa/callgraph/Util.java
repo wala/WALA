@@ -72,7 +72,7 @@ public class Util {
     return new AnalysisCache(AstIRFactory.makeDefaultFactory());
   }
 
-  public static void dumpCG(PropagationCallGraphBuilder builder, CallGraph CG) {
+  public static void dumpCG(PointerAnalysis PA, CallGraph CG) {
 
     for (Iterator x = CG.iterator(); x.hasNext();) {
       CGNode N = (CGNode) x.next();
@@ -90,7 +90,6 @@ public class Util {
     }
 
     System.err.println("pointer analysis");
-    PointerAnalysis PA = builder.getPointerAnalysis();
     for (Iterator x = PA.getPointerKeys().iterator(); x.hasNext();) {
       PointerKey n = (PointerKey) x.next();
       try {

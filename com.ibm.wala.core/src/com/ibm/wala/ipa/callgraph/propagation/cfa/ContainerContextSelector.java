@@ -27,6 +27,9 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.intset.EmptyIntSet;
+import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -100,11 +103,15 @@ public class ContainerContextSelector implements ContextSelector {
    * com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod,
    * com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
    */
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
+  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] keys) {
     if (DEBUG) {
       System.err.println("ContainerContextSelector: getCalleeTarget " + callee);
     }
-    if (mayUnderstand(caller, site, callee, receiver)) {
+    InstanceKey receiver = null;
+    if (keys != null && keys.length > 0 && keys[0] != null) {
+      receiver = keys[0];
+    }
+    if (receiver != null && mayUnderstand(caller, site, callee, receiver)) {
       if (DEBUG) {
         System.err.println("May Understand: " + callee + " recv " + receiver);
       }
@@ -258,12 +265,6 @@ public class ContainerContextSelector implements ContextSelector {
     return (n == null) ? null : n.getContext();
   }
 
-  public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference site, IMethod targetMethod) {
-    // if we understand this call, we don't know how many target contexts we may
-    // create.
-    return -1;
-  }
-
   public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey receiver) {
     if (targetMethod == null) {
       throw new IllegalArgumentException("targetMethod is null");
@@ -326,15 +327,18 @@ public class ContainerContextSelector implements ContextSelector {
     return ContainerUtil.isContainer(C);
   }
 
-  public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
-    return false;
-  }
-
   protected IClassHierarchy getClassHierarchy() {
     return cha;
   }
 
-  public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
-    return false;
+  private static final IntSet thisParameter = IntSetUtil.make(new int[]{0});
+
+  public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
+    if (site.isDispatch() || site.getDeclaredTarget().getNumberOfParameters() > 0) {
+      return thisParameter;
+    } else {
+      return EmptyIntSet.instance;
+    }
   }
+
 }

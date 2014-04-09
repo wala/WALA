@@ -16,29 +16,39 @@ import java.net.URL;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.ibm.wala.cast.js.html.IHtmlParser;
+import com.ibm.wala.cast.js.html.IHtmlParserFactory;
+import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
 
-public class TestSimplePageCallGraphShapeRhino extends TestSimplePageCallGraphShape {
+public abstract class TestSimplePageCallGraphShapeRhino extends TestSimplePageCallGraphShape {
 
-	  private static final Object[][] assertionsForPage3 = new Object[][] {
-		    new Object[] { ROOT, new String[] { "page3.html" } },
-		    new Object[] { "page3.html", new String[] { "page3.html/__WINDOW_MAIN__" } }
-		  };
-		  
-		  @Test public void testPage3() throws IOException, IllegalArgumentException, CancelException {
-		    URL url = getClass().getClassLoader().getResource("pages/page3.html");
-		    CallGraph CG = Util.makeHTMLCG(url);
-		    verifyGraphAssertions(CG, assertionsForPage3);
-		  }
+	private static final Object[][] assertionsForPage3 = new Object[][] {
+		new Object[] { ROOT, new String[] { "page3.html" } },
+		new Object[] { "page3.html", new String[] { "page3.html/__WINDOW_MAIN__" } }
+	};
 
-  public static void main(String[] args) {
-    justThisTest(TestSimplePageCallGraphShapeRhino.class);
-  }
+	@Test public void testPage3() throws IOException, IllegalArgumentException, CancelException {
+		URL url = getClass().getClassLoader().getResource("pages/page3.html");
+		CallGraph CG = Util.makeHTMLCG(url);
+		verifyGraphAssertions(CG, assertionsForPage3);
+	}
 
-  @Before
-  public void setUp() {
-	com.ibm.wala.cast.js.ipa.callgraph.Util.setTranslatorFactory(new CAstRhinoTranslatorFactory());
-  }
+	public static void main(String[] args) {
+		justThisTest(TestSimplePageCallGraphShapeRhino.class);
+	}
+
+	 protected abstract IHtmlParser getParser();
+	  
+	  @Before
+	  public void setUp() {
+		    com.ibm.wala.cast.js.ipa.callgraph.Util.setTranslatorFactory(new CAstRhinoTranslatorFactory());
+			WebUtil.setFactory(new IHtmlParserFactory() {
+				public IHtmlParser getParser() {
+					return TestSimplePageCallGraphShapeRhino.this.getParser();
+				}
+			});
+	  }
 }

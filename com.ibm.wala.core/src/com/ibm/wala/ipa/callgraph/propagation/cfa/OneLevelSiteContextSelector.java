@@ -17,6 +17,7 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.util.intset.IntSet;
 
 /**
  * This is a context selector that adds one level of calling context to a base context selector.
@@ -36,13 +37,17 @@ public class OneLevelSiteContextSelector implements ContextSelector {
     this.baseSelector = baseSelector;
   }
 
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
+  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     Context baseContext = baseSelector.getCalleeTarget(caller, site, callee, receiver);
     if (baseContext.equals(Everywhere.EVERYWHERE)) {
       return new CallerSiteContext(caller, site);
     } else {
       return new CallerSiteContextPair(caller, site, baseContext);
     }
+  }
+
+  public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
+    return baseSelector.getRelevantParameters(caller, site);
   }
 
 }

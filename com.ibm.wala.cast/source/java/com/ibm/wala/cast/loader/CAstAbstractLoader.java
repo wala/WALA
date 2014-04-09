@@ -26,14 +26,24 @@ import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warning;
 
+/**
+ * basic abstract class loader implementation
+ *
+ */
 public abstract class CAstAbstractLoader implements IClassLoader {
 
+  /**
+   * types loaded by this
+   */
   protected final Map<TypeName,IClass> types = HashMapFactory.make();
 
   protected final IClassHierarchy cha;
 
   protected final IClassLoader parent;
 
+  /**
+   * warnings generated while loading each module
+   */
   private final Map<ModuleEntry, Set<Warning>> errors = new HashMap<ModuleEntry, Set<Warning>>();
   
   public CAstAbstractLoader(IClassHierarchy cha, IClassLoader parent) {
@@ -45,7 +55,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
     this(cha, null);
   }
 
-  protected void addMessage(ModuleEntry module, Warning message) {
+  public void addMessage(ModuleEntry module, Warning message) {
     if (! errors.containsKey(module)) {
       errors.put(module, new HashSet<Warning>());
     }

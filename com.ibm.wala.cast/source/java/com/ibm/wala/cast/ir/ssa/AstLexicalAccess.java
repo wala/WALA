@@ -30,14 +30,23 @@ public abstract class AstLexicalAccess extends SSAInstruction {
    * @author Julian Dolby (dolby@us.ibm.com)
    */
   public static class Access {
+    /**
+     * name being accessed
+     */
     public final String variableName;
+    /**
+     * name of entity that defines the variable
+     */
     public final String variableDefiner; 
+    /**
+     * value number used for name where access is being performed (not in the declaring entity)
+     */
     public final int valueNumber;
 
-    public Access(String name, String definer, int lhsOrRhs) {
+    public Access(String name, String definer, int vn) {
       variableName = name;
       variableDefiner = definer;
-      valueNumber = lhsOrRhs;
+      valueNumber = vn;
     }
 
     public int hashCode() {

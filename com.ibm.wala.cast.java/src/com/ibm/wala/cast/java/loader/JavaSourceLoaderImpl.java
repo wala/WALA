@@ -54,6 +54,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.ModuleEntry;
@@ -426,11 +427,15 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 
   protected void loadAllSources(Set<ModuleEntry> modules) {
     getTranslator().loadAllSources(modules);
-    fTypeMap = null;
   }
 
   protected abstract SourceModuleTranslator getTranslator();
-  
+
+  public void init(List<Module> modules) throws IOException {
+    super.init(modules);
+    fTypeMap = null;
+  }
+
   public void defineFunction(CAstEntity n, IClass owner, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
       TypeReference[][] catchTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
     ((JavaClass) owner).addMethod(n, owner, cfg, symtab, hasCatchBlock, catchTypes, hasMonitorOp, lexicalInfo, debugInfo);

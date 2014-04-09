@@ -16,7 +16,6 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -137,9 +136,9 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
           "tests/simple-lexical.js/outer",
           new String[] { "tests/simple-lexical.js/outer/indirect", "tests/simple-lexical.js/outer/inner",
               "tests/simple-lexical.js/outer/inner2", "tests/simple-lexical.js/outer/inner3" } },
-      new Object[] { "tests/simple-lexical.js/outer/indirect",
-          new String[] { "tests/simple-lexical.js/outer/inner", "tests/simple-lexical.js/outer/inner3" } },
       new Object[] { "tests/simple-lexical.js/outer/inner2",
+          new String[] { "tests/simple-lexical.js/outer/inner", "tests/simple-lexical.js/outer/inner3" } },
+      new Object[] { "tests/simple-lexical.js/outer/indirect",
           new String[] { "tests/simple-lexical.js/outer/inner", "tests/simple-lexical.js/outer/inner3" } } };
 
   @Test public void testSimpleLexical() throws IOException, IllegalArgumentException, CancelException {
@@ -242,6 +241,11 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     CallGraph CG = Util.makeScriptCG("tests", "crash2.js");
     verifyGraphAssertions(CG, null);
   }
+  
+  @Test public void testLexicalCtor() throws IOException, IllegalArgumentException, CancelException {
+    CallGraph CG = Util.makeScriptCG("tests", "lexical-ctor.js");
+    verifyGraphAssertions(CG, null);
+  }
 
   private static final Object[][] assertionsForMultivar = new Object[][] {
     new Object[] { ROOT, new String[] { "tests/multivar.js" } },
@@ -273,17 +277,12 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyNoEdges(CG, "suffix:test2", "suffix:foo_of_A");
   }
   
-  @Test public void testRewriterDoesNotChangeLablesBug() throws IOException, IllegalArgumentException, CancelException {
-    Util.makeScriptCG("tests", "rewrite_does_not_change_lables_bug.js");
-    // all we need is for it to finish building CG successfully.
-  }
-
   @Test public void testStackOverflowOnSsaConversionBug() throws IOException, IllegalArgumentException, CancelException {
     Util.makeScriptCG("tests", "stack_overflow_on_ssa_conversion.js");
     // all we need is for it to finish building CG successfully.
   }
 
-  private IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {
+  protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {
 
     // Created by reversing the points to mapping for local pointer keys.
     // Instead of mapping (local) pointer keys to instance keys (with id), we
@@ -327,14 +326,6 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     }
 
     return ret;
-  }
-
-  @Test public void test214631() throws IOException, IllegalArgumentException, CancelException {
-    JSCFABuilder b = Util.makeScriptCGBuilder("tests", "214631.js");
-    b.makeCallGraph(b.getOptions());
-    PointerAnalysis PA = b.getPointerAnalysis();
-    // just make sure this does not crash
-    computeIkIdToVns(PA);
   }
 
 }

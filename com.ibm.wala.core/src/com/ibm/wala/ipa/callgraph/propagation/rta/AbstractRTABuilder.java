@@ -238,7 +238,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     IInvokeInstruction.IDispatch code = site.getInvocationCode();
 
     if (code == IInvokeInstruction.Dispatch.STATIC) {
-      CGNode n = getTargetForCall(node, site, (InstanceKey) null);
+      CGNode n = getTargetForCall(node, site, null, null);
       if (n != null) {
         processResolvedCall(node, site, n);
 
@@ -372,7 +372,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   }
 
   protected ContextSelector makeContextSelector(ContextSelector appContextSelector) {
-    ContextSelector def = new DefaultContextSelector(options);
+    ContextSelector def = new DefaultContextSelector(options, cha);
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
     return contextSelector;
   }

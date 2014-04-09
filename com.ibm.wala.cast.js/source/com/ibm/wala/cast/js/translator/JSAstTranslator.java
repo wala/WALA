@@ -38,6 +38,10 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
+/**
+ * Specialization of {@link AstTranslator} for JavaScript.
+ *
+ */
 public class JSAstTranslator extends AstTranslator {
   private final static boolean DEBUG = false;
 
@@ -49,15 +53,15 @@ public class JSAstTranslator extends AstTranslator {
     return false;
   }
 
-  protected boolean hasImplicitGlobals() { 
-    return true;
-  }
-  
-  protected boolean treatGlobalsAsLexicallyScoped() { 
+  protected boolean hasImplicitGlobals() {
     return true;
   }
 
-  protected boolean useLocalValuesForLexicalVars() { 
+  protected boolean treatGlobalsAsLexicallyScoped() {
+    return true;
+  }
+
+  protected boolean useLocalValuesForLexicalVars() {
     return true;
   }
 
@@ -70,6 +74,9 @@ public class JSAstTranslator extends AstTranslator {
     return null;
   }
 
+  /**
+   * generate an instruction that checks if readVn is undefined and throws an exception if it isn't
+   */
   private void addDefinedCheck(CAstNode n, WalkContext context, int readVn) {
     context.cfg().addPreNode(n);
     context.cfg().addInstruction(((JSInstructionFactory)insts).CheckReference(context.cfg().getCurrentInstruction(), readVn));
@@ -80,164 +87,156 @@ public class JSAstTranslator extends AstTranslator {
     } else {
       context.cfg().addPreEdgeToExit(n, true);
     }
-    context.cfg().newBlock(true);    
+    context.cfg().newBlock(true);
   }
-  
+
   protected int doLexicallyScopedRead(CAstNode n, WalkContext context, String name) {
     int readVn = super.doLexicallyScopedRead(n, context, name);
+    // should get an exception if name is undefined
     addDefinedCheck(n, context, readVn);
     return readVn;
   }
-  
+
   protected int doGlobalRead(CAstNode n, WalkContext context, String name) {
     int readVn = super.doGlobalRead(n, context, name);
-    if (! ("undefined".equals(name) || "$$undefined".equals(name))) {
+    // add a check if name is undefined, unless we're reading the value 'undefined'
+    if (!("undefined".equals(name) || "$$undefined".equals(name))) {
       addDefinedCheck(n, context, readVn);
     }
     return readVn;
   }
-      
+
   protected boolean defineType(CAstEntity type, WalkContext wc) {
-      Assertions.UNREACHABLE("JavaScript doesn't have types. I suggest you look elsewhere for your amusement.");
-      return false;
+    Assertions.UNREACHABLE("JavaScript doesn't have types. I suggest you look elsewhere for your amusement.");
+    return false;
   }
 
   protected void defineField(CAstEntity topEntity, WalkContext wc, CAstEntity n) {
-      Assertions.UNREACHABLE("JavaScript doesn't have fields, numb-nuts!");
+    Assertions.UNREACHABLE("JavaScript doesn't have fields, numb-nuts!");
   }
 
   protected String composeEntityName(WalkContext parent, CAstEntity f) {
-      if (f.getKind() == CAstEntity.SCRIPT_ENTITY)
-        return f.getName();
-      else
-        return parent.getName() + "/" + f.getName();
-    }
+    if (f.getKind() == CAstEntity.SCRIPT_ENTITY)
+      return f.getName();
+    else
+      return parent.getName() + "/" + f.getName();
+  }
 
   protected void declareFunction(CAstEntity N, WalkContext context) {
     String fnName = composeEntityName(context, N);
     if (N.getKind() == CAstEntity.SCRIPT_ENTITY) {
-      ((JavaScriptLoader)loader).defineScriptType("L"+fnName, N.getPosition());
+      ((JavaScriptLoader) loader).defineScriptType("L" + fnName, N.getPosition());
     } else if (N.getKind() == CAstEntity.FUNCTION_ENTITY) {
-      ((JavaScriptLoader)loader).defineFunctionType("L"+fnName, N.getPosition());
+      ((JavaScriptLoader) loader).defineFunctionType("L" + fnName, N.getPosition());
     } else {
       Assertions.UNREACHABLE();
     }
   }
 
-  protected void defineFunction(CAstEntity N, 
-				WalkContext definingContext, 
-				AbstractCFG cfg,
-				SymbolTable symtab, 
-				boolean hasCatchBlock, 
-				TypeReference[][] caughtTypes,
-				boolean hasMonitorOp,
-				AstLexicalInformation LI,
-				DebuggingInformation debugInfo)
-  {
+  protected void defineFunction(CAstEntity N, WalkContext definingContext, AbstractCFG cfg, SymbolTable symtab,
+      boolean hasCatchBlock, TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation LI,
+      DebuggingInformation debugInfo) {
     if (DEBUG)
       System.err.println(("\n\nAdding code for " + N));
     String fnName = composeEntityName(definingContext, N);
-    
+
     if (DEBUG)
       System.err.println(cfg);
 
+    // force creation of these constants by calling the getter methods
     symtab.getNullConstant();
     symtab.getConstant("arguments");
     symtab.getConstant("length");
-    for(int i = 0; i < 20; i++) {
+    for (int i = 0; i < 20; i++) {
       symtab.getConstant(i);
     }
 
-    ((JavaScriptLoader)loader).defineCodeBodyCode("L"+fnName, 
-			      cfg, 
-			      symtab, 
-			      hasCatchBlock, 
-			      caughtTypes,
-			      hasMonitorOp,
-			      LI,
-			      debugInfo);
+    ((JavaScriptLoader) loader).defineCodeBodyCode("L" + fnName, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, LI,
+        debugInfo);
   }
 
   protected void doThrow(WalkContext context, int exception) {
     context.cfg().addInstruction(insts.ThrowInstruction(context.cfg().getCurrentInstruction(), exception));
   }
-    
+
   protected void doCall(WalkContext context, CAstNode call, int result, int exception, CAstNode name, int receiver, int[] arguments) {
-    MethodReference ref = 
-      name.getValue().equals("ctor")?
-	JavaScriptMethods.ctorReference:
-	AstMethodReference.fnReference(JavaScriptTypes.CodeBody);
-    
+    MethodReference ref = name.getValue().equals("ctor") ? JavaScriptMethods.ctorReference : AstMethodReference
+        .fnReference(JavaScriptTypes.CodeBody);
+
     context.cfg().addInstruction(
         ((JSInstructionFactory)insts).Invoke(context.cfg().getCurrentInstruction(), receiver, result, arguments, exception, 
         new JSCallSiteReference(ref, context.cfg().getCurrentInstruction())));
 
     context.cfg().addPreNode(call, context.getUnwindState());
 
-    context.cfg().newBlock( true );
+    // this new block is for the normal termination case
+    context.cfg().newBlock(true);
 
+    // exceptional case: flow to target given in CAst, or if null, the exit node
     if (context.getControlFlow().getTarget(call, null) != null)
       context.cfg().addPreEdge(call, context.getControlFlow().getTarget(call, null), true);
     else
-      context.cfg().addPreEdgeToExit( call, true );
+      context.cfg().addPreEdgeToExit(call, true);
   }
 
   protected void doNewObject(WalkContext context, CAstNode newNode, int result, Object type, int[] arguments) {
     assert arguments == null;
-    TypeReference typeRef = 
-      TypeReference.findOrCreate(
-        JavaScriptTypes.jsLoader, 
-        TypeName.string2TypeName( "L" + type ));
+    TypeReference typeRef = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName("L" + type));
 
-    context.cfg().addInstruction(
-      insts.NewInstruction(context.cfg().getCurrentInstruction(), 
-        result,
-	NewSiteReference.make( 
-          context.cfg().getCurrentInstruction(), 
-	  typeRef)));
+    context.cfg().addInstruction(insts.NewInstruction(context.cfg().getCurrentInstruction(), result, 
+        NewSiteReference.make(context.cfg().getCurrentInstruction(), typeRef)));
   }
 
   protected void doMaterializeFunction(CAstNode n, WalkContext context, int result, int exception, CAstEntity fn) {
-    int nm = context.currentScope().getConstantValue("L"+composeEntityName(context, fn));
+    int nm = context.currentScope().getConstantValue("L" + composeEntityName(context, fn));
+    // "Function" is the name we use to model the constructor of function values
     int tmp = super.doGlobalRead(n, context, "Function");
     context.cfg().addInstruction(
       ((JSInstructionFactory)insts).Invoke(context.cfg().getCurrentInstruction(), tmp, result, new int[]{ nm }, exception,
-        new JSCallSiteReference(
-          JavaScriptMethods.ctorReference,
-	  context.cfg().getCurrentInstruction())));
+        new JSCallSiteReference(JavaScriptMethods.ctorReference, context.cfg().getCurrentInstruction())));
   }
 
   public void doArrayRead(WalkContext context, int result, int arrayValue, CAstNode arrayRef, int[] dimValues) {
-      Assertions.UNREACHABLE("JSAstTranslator.doArrayRead() called!");
+    Assertions.UNREACHABLE("JSAstTranslator.doArrayRead() called!");
   }
 
   public void doArrayWrite(WalkContext context, int arrayValue, CAstNode arrayRef, int[] dimValues, int rval) {
-      Assertions.UNREACHABLE("JSAstTranslator.doArrayWrite() called!");
+    Assertions.UNREACHABLE("JSAstTranslator.doArrayWrite() called!");
   }
 
-  protected void doFieldRead(WalkContext context, int result, int receiver, CAstNode elt, CAstNode parent) {
+  protected void doFieldRead(WalkContext context, int result, int receiver, CAstNode elt, CAstNode readNode) {
     this.visit(elt, context, this);
     int x = context.currentScope().allocateTempValue();
 
     context.cfg().addInstruction(((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), x, receiver));
 
-    if (elt.getKind()==CAstNode.CONSTANT && elt.getValue() instanceof String) {
-      String field = (String)elt.getValue();
+    if (elt.getKind() == CAstNode.CONSTANT && elt.getValue() instanceof String) {
+      String field = (String) elt.getValue();
       // symtab needs to have this value
       context.currentScope().getConstantValue(field);
       context.cfg().addInstruction(
         ((JSInstructionFactory)insts).GetInstruction(context.cfg().getCurrentInstruction(), result, x, field));
     } else {
-      context.cfg().addInstruction(
-          ((JSInstructionFactory)insts).PropertyRead(context.cfg().getCurrentInstruction(), result, x, getValue(elt) ));
+      context.cfg().addInstruction(((JSInstructionFactory) insts).PropertyRead(context.cfg().getCurrentInstruction(), result, x, getValue(elt)));
+    }
+
+    // generate code to handle read of non-existent property
+    if (context.getControlFlow().getMappedNodes().contains(readNode)) {
+      context.cfg().addPreNode(readNode, context.getUnwindState());
+
+      context.cfg().newBlock(true);
+
+      if (context.getControlFlow().getTarget(readNode, JavaScriptTypes.TypeError) != null)
+        context.cfg().addPreEdge(readNode, context.getControlFlow().getTarget(readNode, JavaScriptTypes.TypeError), true);
+      else
+        context.cfg().addPreEdgeToExit(readNode, true);
     }
   }
-    
+
   protected void doFieldWrite(WalkContext context, int receiver, CAstNode elt, CAstNode parent, int rval) {
     this.visit(elt, context, this);
-    if (elt.getKind() == CAstNode.CONSTANT && elt.getValue() instanceof String)
-    {
-      String field = (String)elt.getValue();
+    if (elt.getKind() == CAstNode.CONSTANT && elt.getValue() instanceof String) {
+      String field = (String) elt.getValue();
       context.currentScope().getConstantValue(field);
       SSAPutInstruction put = ((JSInstructionFactory)insts).PutInstruction(context.cfg().getCurrentInstruction(), receiver, rval, field);
       try {
@@ -247,15 +246,13 @@ public class JSAstTranslator extends AstTranslator {
       }
       context.cfg().addInstruction(put);
     } else {
-      context.cfg().addInstruction(
-          ((JSInstructionFactory)insts).PropertyWrite(context.cfg().getCurrentInstruction(), receiver, getValue(elt), rval));
+      context.cfg().addInstruction(((JSInstructionFactory) insts).PropertyWrite(context.cfg().getCurrentInstruction(), receiver, getValue(elt), rval));
     }
   }
 
-  private void 
-    doPrimitiveNew(WalkContext context, int resultVal, String typeName) 
-  {
+  private void doPrimitiveNew(WalkContext context, int resultVal, String typeName) {
     doNewObject(context, null, resultVal, typeName + "Object", null);
+    // set the class property of the new object
     int rval = context.currentScope().getConstantValue(typeName);
     context.currentScope().getConstantValue("class");
     context.cfg().addInstruction(
@@ -264,114 +261,95 @@ public class JSAstTranslator extends AstTranslator {
 
   protected void doPrimitive(int resultVal, WalkContext context, CAstNode primitiveCall) {
     try {
-      String name = (String)primitiveCall.getChild(0).getValue();
+      String name = (String) primitiveCall.getChild(0).getValue();
       if (name.equals("GlobalNaN")) {
 	context.cfg().addInstruction(
 	    ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-	    resultVal, 
-	    context.currentScope().getConstantValue(new Float(Float.NaN))));
+	    resultVal, context.currentScope().getConstantValue(new Float(Float.NaN))));
       } else if (name.equals("GlobalInfinity")) {
         context.cfg().addInstruction(
             ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, 
-            context.currentScope().getConstantValue(new Float(Float.POSITIVE_INFINITY))));
+            resultVal, context.currentScope().getConstantValue(new Float(Float.POSITIVE_INFINITY))));
       } else if (name.equals("MathE")) {
         context.cfg().addInstruction(
             ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, 
-            context.currentScope().getConstantValue(new Double(Math.E))));
+            resultVal, context.currentScope().getConstantValue(new Double(Math.E))));
       } else if (name.equals("MathPI")) {
         context.cfg().addInstruction(
             ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, 
-            context.currentScope().getConstantValue(new Double(Math.PI))));
+            resultVal, context.currentScope().getConstantValue(new Double(Math.PI))));
       } else if (name.equals("MathSQRT1_2")) {
         context.cfg().addInstruction(
             ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, 
-            context.currentScope().getConstantValue(new Double(Math.sqrt(.5)))));
+            resultVal, context.currentScope().getConstantValue(new Double(Math.sqrt(.5)))));
       } else if (name.equals("MathSQRT2")) {
         context.cfg().addInstruction(
             ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, 
-            context.currentScope().getConstantValue(new Double(Math.sqrt(2)))));
+            resultVal, context.currentScope().getConstantValue(new Double(Math.sqrt(2)))));
       } else if (name.equals("MathLN2")) {
         context.cfg().addInstruction(
             ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, 
-            context.currentScope().getConstantValue(new Double(Math.log(2)))));
+            resultVal, context.currentScope().getConstantValue(new Double(Math.log(2)))));
       } else if (name.equals("MathLN10")) {
         context.cfg().addInstruction(
             ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, 
-            context.currentScope().getConstantValue(new Double(Math.log(10)))));
+            resultVal, context.currentScope().getConstantValue(new Double(Math.log(10)))));
       } else if (name.equals("NewObject")) {
-	doNewObject(context, null, resultVal, "Object", null);
+        doNewObject(context, null, resultVal, "Object", null);
 
       } else if (name.equals("NewArray")) {
-	doNewObject(context, null, resultVal, "Array", null);
+        doNewObject(context, null, resultVal, "Array", null);
 
       } else if (name.equals("NewString")) {
-	doPrimitiveNew(context, resultVal, "String");
+        doPrimitiveNew(context, resultVal, "String");
 
       } else if (name.equals("NewNumber")) {
-	doPrimitiveNew(context, resultVal, "Number");
+        doPrimitiveNew(context, resultVal, "Number");
 
       } else if (name.equals("NewRegExp")) {
-	doPrimitiveNew(context, resultVal, "RegExp");
+        doPrimitiveNew(context, resultVal, "RegExp");
 
       } else if (name.equals("NewFunction")) {
-	doNewObject(context, null, resultVal, "Function", null);
+        doNewObject(context, null, resultVal, "Function", null);
 
       } else if (name.equals("NewUndefined")) {
-	doNewObject(context, null, resultVal, "Undefined", null);
+        doNewObject(context, null, resultVal, "Undefined", null);
 
       } else {
 	context.cfg().addInstruction(
 	    ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
-            resultVal, 
-            context.currentScope().getConstantValue( null )));
+            resultVal, context.currentScope().getConstantValue( null )));
       }
     } catch (ClassCastException e) {
       throw new RuntimeException("Cannot translate primitive " + primitiveCall.getChild(0).getValue());
     }
   }
 
-  protected void doIsFieldDefined(WalkContext context, 
-				  int result, 
-				  int ref,
-				  CAstNode f) 
-  {
+  protected void doIsFieldDefined(WalkContext context, int result, int ref, CAstNode f) {
     if (f.getKind() == CAstNode.CONSTANT && f.getValue() instanceof String) {
       String field = (String) f.getValue();
 
-      FieldReference fieldRef =
-        FieldReference.findOrCreate(
-          JavaScriptTypes.Root,
-	  Atom.findOrCreateUnicodeAtom((String)field),
-	  JavaScriptTypes.Root);
+      FieldReference fieldRef = FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreateUnicodeAtom((String)field), JavaScriptTypes.Root);
     
-      context.cfg()
-	.addInstruction(((JSInstructionFactory)insts).IsDefinedInstruction(context.cfg().getCurrentInstruction(), result, ref, fieldRef));
+      context.cfg().addInstruction(((JSInstructionFactory)insts).IsDefinedInstruction(context.cfg().getCurrentInstruction(), result, ref, fieldRef));
 
     } else {
 
-      context.cfg()
-        .addInstruction(((JSInstructionFactory)insts).IsDefinedInstruction(context.cfg().getCurrentInstruction(), result, ref, getValue(f)));
+      context.cfg().addInstruction(((JSInstructionFactory)insts).IsDefinedInstruction(context.cfg().getCurrentInstruction(), result, ref, getValue(f)));
     }
   }
 
   protected boolean visitInstanceOf(CAstNode n, Context c, CAstVisitor visitor) {
-    WalkContext context = (WalkContext)c;
+    WalkContext context = (WalkContext) c;
     int result = context.currentScope().allocateTempValue();
     setValue(n, result);
     return false;
   }
-  
+
   protected void leaveInstanceOf(CAstNode n, Context c, CAstVisitor visitor) {
-    WalkContext context = (WalkContext)c;
+    WalkContext context = (WalkContext) c;
     int result = getValue(n);
- 
+
     visit(n.getChild(0), context, visitor);
     int value = getValue(n.getChild(0));
 
@@ -379,20 +357,20 @@ public class JSAstTranslator extends AstTranslator {
     int type = getValue(n.getChild(1));
 
     context.cfg().addInstruction(new JavaScriptInstanceOf(context.cfg().getCurrentInstruction(), result, value, type));
-}
+  }
 
   protected void doPrologue(WalkContext context) {
     super.doPrologue(context);
+    
     int tempVal = context.currentScope().allocateTempValue();
     doNewObject(context, null, tempVal, "Array", null);
     CAstSymbol args = new CAstSymbolImpl("arguments");
     context.currentScope().declare(args, tempVal);
-    context.cfg().addInstruction(
-        ((JSInstructionFactory)insts).PutInstruction(context.cfg().getCurrentInstruction(), 1, tempVal, "arguments"));
+    context.cfg().addInstruction(((JSInstructionFactory)insts).PutInstruction(context.cfg().getCurrentInstruction(), 1, tempVal, "arguments"));
   }
 
   protected boolean doVisit(CAstNode n, Context cntxt, CAstVisitor visitor) {
-    WalkContext context = (WalkContext)cntxt;
+    WalkContext context = (WalkContext) cntxt;
     switch (n.getKind()) {
     case CAstNode.TYPE_OF: {
       int result = context.currentScope().allocateTempValue();
@@ -400,20 +378,20 @@ public class JSAstTranslator extends AstTranslator {
       this.visit(n.getChild(0), context, this);
       int ref = getValue(n.getChild(0));
 
-      context.cfg().addInstruction(
-          ((JSInstructionFactory)insts).TypeOfInstruction(context.cfg().getCurrentInstruction(), result, ref));
+      context.cfg().addInstruction(((JSInstructionFactory)insts).TypeOfInstruction(context.cfg().getCurrentInstruction(), result, ref));
 
       setValue(n, result);
       return true;
     }
-    
+
     case JavaScriptCAstNode.ENTER_WITH:
     case JavaScriptCAstNode.EXIT_WITH: {
 
       this.visit(n.getChild(0), context, this);
       int ref = getValue(n.getChild(0));
 
-      context.cfg().addInstruction(((JSInstructionFactory)insts).WithRegion(context.cfg().getCurrentInstruction(), ref, n.getKind()==JavaScriptCAstNode.ENTER_WITH));
+      context.cfg().addInstruction(((JSInstructionFactory)insts).WithRegion(context.cfg().getCurrentInstruction(), ref, 
+          n.getKind() == JavaScriptCAstNode.ENTER_WITH));
 
       return true;
     }

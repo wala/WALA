@@ -26,6 +26,9 @@ public abstract class ReflectedFieldPointerKey extends AbstractFieldPointerKey {
   };
 
   public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    }
     if (obj instanceof ReflectedFieldPointerKey) {
       ReflectedFieldPointerKey other = (ReflectedFieldPointerKey) obj;
       return
@@ -37,11 +40,11 @@ public abstract class ReflectedFieldPointerKey extends AbstractFieldPointerKey {
   }
 
   public int hashCode() {
-    return getFieldIdentifier().hashCode();
+    return getFieldIdentifier().hashCode() ^ getInstanceKey().hashCode();
   }
 
   public String toString() { return "field:" + getFieldIdentifier(); }
-
+  
   public static ReflectedFieldPointerKey literal(final String lit, InstanceKey instance) {
     return new ReflectedFieldPointerKey(instance) {
       public Object getFieldIdentifier() {

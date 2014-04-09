@@ -14,6 +14,11 @@ import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.classLoader.SourceModule;
 
+/**
+ * Factory interface for creating translators that generate the CAst for some
+ * JavaScript source file. Used to abstract which JavaScript parser is being
+ * used.
+ */
 public interface JavaScriptTranslatorFactory {
 
   TranslatorToCAst make(CAst ast, SourceModule M);

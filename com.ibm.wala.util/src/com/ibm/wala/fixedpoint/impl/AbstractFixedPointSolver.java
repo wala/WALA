@@ -37,7 +37,7 @@ import com.ibm.wala.util.debug.VerboseAction;
  * Fixed-point iteration proceeds in a topological order according to these edges.
  */
 @SuppressWarnings("rawtypes")
-public abstract class AbstractFixedPointSolver<T extends IVariable> implements IFixedPointSolver<T>, FixedPointConstants,
+public abstract class AbstractFixedPointSolver<T extends IVariable<?>> implements IFixedPointSolver<T>, FixedPointConstants,
     VerboseAction {
 
   static final boolean DEBUG = false;
@@ -101,6 +101,8 @@ public abstract class AbstractFixedPointSolver<T extends IVariable> implements I
    */
   private boolean firstSolve = true;
 
+  protected abstract T[] makeStmtRHS(int size);
+  
   /**
    * Some setup which occurs only before the first solve
    */
@@ -331,6 +333,31 @@ public abstract class AbstractFixedPointSolver<T extends IVariable> implements I
     return true;
   }
 
+  protected class Statement extends GeneralStatement<T> {
+
+    public Statement(T lhs, AbstractOperator<T> operator, T op1, T op2, T op3) {
+      super(lhs, operator, op1, op2, op3);
+    }
+
+    public Statement(T lhs, AbstractOperator<T> operator, T op1, T op2) {
+      super(lhs, operator, op1, op2);
+    }
+
+    public Statement(T lhs, AbstractOperator<T> operator, T[] rhs) {
+      super(lhs, operator, rhs);
+    }
+
+    public Statement(T lhs, AbstractOperator<T> operator) {
+      super(lhs, operator);
+    }
+
+    @Override
+    protected T[] makeRHS(int size) {
+      return makeStmtRHS(size);
+    }
+    
+  }
+  
   /**
    * Add an equation with two operands on the right-hand side.
    * 
@@ -342,7 +369,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable> implements I
   public void newStatement(T lhs, AbstractOperator<T> operator, T op1, T op2, boolean toWorkList, boolean eager) {
     // add to the list of graph
 
-    GeneralStatement<T> s = new GeneralStatement<T>(lhs, operator, op1, op2);
+    GeneralStatement<T> s = new Statement(lhs, operator, op1, op2);
     if (getFixedPointSystem().containsStatement(s)) {
       return;
     }
@@ -371,7 +398,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable> implements I
     }
     // add to the list of graph
     lhs.setOrderNumber(nextOrderNumber++);
-    GeneralStatement<T> s = new GeneralStatement<T>(lhs, operator, op1, op2, op3);
+    GeneralStatement<T> s = new Statement(lhs, operator, op1, op2, op3);
     if (getFixedPointSystem().containsStatement(s)) {
       nextOrderNumber--;
       return;
@@ -390,11 +417,11 @@ public abstract class AbstractFixedPointSolver<T extends IVariable> implements I
    * @param operator the operator
    * @param rhs the operands on the rhs
    */
-  public void newStatement(T lhs, AbstractOperator<T> operator, IVariable[] rhs, boolean toWorkList, boolean eager) {
+  public void newStatement(T lhs, AbstractOperator<T> operator, T[] rhs, boolean toWorkList, boolean eager) {
     // add to the list of graph
     if (lhs != null)
       lhs.setOrderNumber(nextOrderNumber++);
-    GeneralStatement<T> s = new GeneralStatement<T>(lhs, operator, rhs);
+    GeneralStatement<T> s = new Statement(lhs, operator, rhs);
     if (getFixedPointSystem().containsStatement(s)) {
       nextOrderNumber--;
       return;

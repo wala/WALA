@@ -9,6 +9,8 @@ import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.IntSetUtil;
 
 public class ScopeMappingKeysContextSelector implements ContextSelector {
   
@@ -59,12 +61,20 @@ public class ScopeMappingKeysContextSelector implements ContextSelector {
     this.base = base;
   }
   
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
+  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     Context bc = base.getCalleeTarget(caller, site, callee, receiver);
-    if (receiver instanceof ScopeMappingInstanceKey) {
-      return new ScopeMappingContext(bc, (ScopeMappingInstanceKey) receiver);
+    if (receiver[0] instanceof ScopeMappingInstanceKey) {
+      return new ScopeMappingContext(bc, (ScopeMappingInstanceKey) receiver[0]);
     } else {
       return bc;
     }
   }
+
+  private static final IntSet thisParameter = IntSetUtil.make(new int[]{0});
+  
+  public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
+    return thisParameter;
+  }
+  
+  
 }

@@ -3,7 +3,6 @@ package com.ibm.wala.cfg.exc.intra;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.fixpoint.AbstractVariable;
 import com.ibm.wala.fixpoint.FixedPointConstants;
-import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.ssa.SymbolTable;
 
@@ -278,12 +277,12 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
 		 */
 		@SuppressWarnings("rawtypes")
 		@Override
-		public byte evaluate(NullPointerState lhs, IVariable[] rhs) {
+		public byte evaluate(NullPointerState lhs, NullPointerState[] rhs) {
 			boolean changed = false;
 			
 			// meet rhs first
-			for (IVariable state : rhs) {
-				changed |= lhs.meet((NullPointerState) state);
+			for (NullPointerState state : rhs) {
+				changed |= lhs.meet(state);
 			}
 
 			return (changed ? FixedPointConstants.CHANGED : FixedPointConstants.NOT_CHANGED);
@@ -304,7 +303,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
 		public String toString() {
 			return "EdgeStateMeet";
 		}
-		
+
 	}
 	
 	private static class PhiValueMeet extends UnaryOperator<NullPointerState> {

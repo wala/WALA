@@ -34,8 +34,10 @@ import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
 import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
+import com.ibm.wala.cast.ir.ssa.SSAConversion;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
+import com.ibm.wala.cast.loader.CAstAbstractLoader;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
@@ -56,6 +58,7 @@ import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.shrikeBT.BinaryOpInstruction;
 import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
@@ -72,6 +75,7 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.INodeWithNumber;
@@ -80,50 +84,117 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.strings.Atom;
+import com.ibm.wala.util.warnings.Warning;
 
 /**
- * @author Julian Dolby TODO: document me.
+ * Common code to translate CAst to IR. Must be specialized by each language to
+ * handle semantics appropriately.
  */
 public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandler, TranslatorToIR {
 
+  /**
+   * does the language care about using type-appropriate default values? For
+   * Java, the answer is yes (ints should get a default value of 0, null for
+   * pointers, etc.). For JavaScript, the answer is no, as any variable can hold
+   * the value 'undefined'.
+   */
   protected abstract boolean useDefaultInitValues();
 
+  /**
+   * can lexical reads / writes access globals?
+   */
   protected abstract boolean treatGlobalsAsLexicallyScoped();
 
+  /**
+   * given accesses in a method to variables defined in an enclosing lexical
+   * scope, is it legal to read the variable into a local l once at the
+   * beginning of the method, operate on l through the method body (rather than
+   * performing separate lexical read / write operations), and write back the
+   * value in l (if necessary) at the end of the method?
+   */
   protected abstract boolean useLocalValuesForLexicalVars();
 
+  /**
+   * for a block that catches all exceptions, what is the root exception type
+   * that it can catch? E.g., for Java, java.lang.Throwable
+   */
   protected abstract TypeReference defaultCatchType();
 
   protected abstract TypeReference makeType(CAstType type);
 
+  /**
+   * define a new (presumably nested) type. return true if type was successfully
+   * defined, false otherwise
+   */
   protected abstract boolean defineType(CAstEntity type, WalkContext wc);
 
+  /**
+   * declare a new function, represented by N
+   */
   protected abstract void declareFunction(CAstEntity N, WalkContext context);
 
+  /**
+   * fully define a function. invoked after all the code of the function has
+   * been processed
+   */
   protected abstract void defineFunction(CAstEntity N, WalkContext definingContext, AbstractCFG cfg, SymbolTable symtab,
-      boolean hasCatchBlock, TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo);
+      boolean hasCatchBlock, TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo,
+      DebuggingInformation debugInfo);
 
-  protected abstract void defineField(CAstEntity topEntity, WalkContext context, CAstEntity n);
+  /**
+   * define a new field fieldEntity within topEntity
+   */
+  protected abstract void defineField(CAstEntity topEntity, WalkContext context, CAstEntity fieldEntity);
 
+  /**
+   * create the language-appropriate name for f
+   */
   protected abstract String composeEntityName(WalkContext parent, CAstEntity f);
 
+  /**
+   * generate IR for a CAst throw expression, updating context.cfg()
+   */
   protected abstract void doThrow(WalkContext context, int exception);
 
+  /**
+   * generate IR for a CAst array read, updating context.cfg()
+   */
   public abstract void doArrayRead(WalkContext context, int result, int arrayValue, CAstNode arrayRef, int[] dimValues);
 
+  /**
+   * generate IR for a CAst array write, updating context.cfg()
+   */
   public abstract void doArrayWrite(WalkContext context, int arrayValue, CAstNode arrayRef, int[] dimValues, int rval);
 
+  /**
+   * generate IR for a CAst field read, updating context.cfg()
+   */
   protected abstract void doFieldRead(WalkContext context, int result, int receiver, CAstNode elt, CAstNode parent);
 
+  /**
+   * generate IR for a CAst field write, updating context.cfg()
+   */
   protected abstract void doFieldWrite(WalkContext context, int receiver, CAstNode elt, CAstNode parent, int rval);
 
+  /**
+   * generate IR for a CAst function expression, updating context.cfg()
+   */
   protected abstract void doMaterializeFunction(CAstNode node, WalkContext context, int result, int exception, CAstEntity fn);
 
+  /**
+   * generate IR for a CAst new expression, updating context.cfg()
+   */
   protected abstract void doNewObject(WalkContext context, CAstNode newNode, int result, Object type, int[] arguments);
 
+  /**
+   * generate IR for a CAst method call expression, updating context.cfg()
+   */
   protected abstract void doCall(WalkContext context, CAstNode call, int result, int exception, CAstNode name, int receiver,
       int[] arguments);
 
+  /**
+   * used to generate instructions for array operations; defaults to this
+   */
   private ArrayOpHandler arrayOpHandler;
 
   protected boolean isExceptionLabel(Object label) {
@@ -139,38 +210,65 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
   }
 
   /**
-   * If this returns true, new global declarations get created for any attempt to access a non-existent variable
-   * (believe it or not, JavaScript actually does this!)
+   * If this returns true, new global declarations get created for any attempt
+   * to access a non-existent variable (believe it or not, JavaScript actually
+   * does this!)
    */
   protected boolean hasImplicitGlobals() {
     return false;
   }
 
   /**
-   * If this returns true, then attempts to lookup non-existent names return `null' rather than tripping an assertion.
-   * This can be used when special handling is needed for built-in names. (PHP does this)
+   * If this returns true, then attempts to lookup non-existent names return
+   * `null' rather than tripping an assertion. This can be used when special
+   * handling is needed for built-in names. (PHP does this)
    */
   protected boolean hasSpecialUndeclaredVariables() {
     return false;
   }
 
+  /**
+   * some languages let you omit initialization of certain fields when writing
+   * an object literal (e.g., PHP). This method should be overridden to handle
+   * such cases.
+   */
   protected void handleUnspecifiedLiteralKey(WalkContext context, CAstNode objectLiteralNode, int unspecifiedLiteralIndex,
       CAstVisitor visitor) {
     Assertions.UNREACHABLE();
   }
 
+  /**
+   * generate prologue code for each function body
+   */
   protected void doPrologue(WalkContext context) {
+    // if we are SSA converting lexical accesses, add a placeholder instruction
+    // eventually (via mutation of its Access array) reads all relevant lexical
+    // variables at the beginning of the method.
     if (useLocalValuesForLexicalVars()) {
       context.cfg().addInstruction(new AstLexicalRead(context.cfg().currentInstruction, new Access[0]));
     }
   }
 
+  /**
+   * generate IR for call modeling creation of primitive value, updating
+   * context.cfg()
+   */
   protected abstract void doPrimitive(int resultVal, WalkContext context, CAstNode primitiveCall);
 
+  /**
+   * get the value number for a name defined locally (i.e., within the current
+   * method) by looking up the name in context.currentScope(). Note that the
+   * caller is responsible for ensuring that name is defined in the local scope.
+   */
   protected int doLocalRead(WalkContext context, String name) {
     return context.currentScope().lookup(name).valueNumber();
   }
 
+  /**
+   * add an {@link AssignInstruction} to context.cfg() that copies rval to the
+   * value number of local nm. Note that the caller is responsible for ensuring
+   * that nm is defined in the local scope.
+   */
   protected void doLocalWrite(WalkContext context, String nm, int rval) {
     int lval = context.currentScope().lookup(nm).valueNumber();
     if (lval != rval) {
@@ -178,23 +276,42 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   }
 
+  /**
+   * Note that the caller is responsible for ensuring that name is defined in a
+   * lexical scope.
+   * 
+   * @param node
+   *          the AST node representing the read
+   * @param context
+   * @param name
+   * @return
+   */
   protected int doLexicallyScopedRead(CAstNode node, WalkContext context, String name) {
+    // record in declaring scope that the name is exposed to a nested scope
     Symbol S = context.currentScope().lookup(name);
-    int vn = S.valueNumber();
     CAstEntity E = S.getDefiningScope().getEntity();
     addExposedName(E, E, name, S.getDefiningScope().lookup(name).valueNumber());
 
-    // lexically-scoped variables can be given a single vn in a method, or
+    int vn = S.valueNumber();
     if (useLocalValuesForLexicalVars()) {
+      // lexically-scoped variables can be given a single vn in a method
       Access A = new Access(name, getEntityName(E), vn);
 
+      // (context.top() is current entity)
+      // record the name as exposed for the current entity, since if the name is
+      // updated via a call to a nested function, SSA for the current entity may
+      // need to be updated with the new definition
       addExposedName(context.top(), E, name, vn);
+
+      // record the access; later, the Accesses in the instruction
+      // defining vn will be adjusted based on this information; see
+      // patchLexicalAccesses()
       addAccess(context.top(), A);
 
       return vn;
 
-      // lexically-scoped variables can be read from their scope each time
     } else {
+      // lexically-scoped variables should be read from their scope each time
       int result = context.currentScope().allocateTempValue();
       Access A = new Access(name, getEntityName(E), result);
       context.cfg().addInstruction(new AstLexicalRead(context.cfg().currentInstruction, A));
@@ -202,7 +319,13 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   }
 
+  /**
+   * Note that the caller is responsible for ensuring that name is defined in a
+   * lexical scope.
+   * 
+   */
   protected void doLexicallyScopedWrite(WalkContext context, String name, int rval) {
+    // record in declaring scope that the name is exposed
     Symbol S = context.currentScope().lookup(name);
     CAstEntity E = S.getDefiningScope().getEntity();
     addExposedName(E, E, name, S.getDefiningScope().lookup(name).valueNumber());
@@ -216,6 +339,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       addAccess(context.top(), A);
 
       context.cfg().addInstruction(new AssignInstruction(context.cfg().currentInstruction, vn, rval));
+      // we add write instructions at every access for now
+      // eventually, we may restructure the method to do a single combined write
+      // before exit
       context.cfg().addInstruction(new AstLexicalWrite(context.cfg().currentInstruction, A));
 
       // lexically-scoped variables can be read from their scope each time
@@ -225,6 +351,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   }
 
+  /**
+   * generate instructions for a read of a global
+   */
   protected int doGlobalRead(CAstNode node, WalkContext context, String name) {
     Symbol S = context.currentScope().lookup(name);
 
@@ -258,6 +387,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   }
 
+  /**
+   * generate instructions for a write of a global
+   */
   protected void doGlobalWrite(WalkContext context, String name, int rval) {
     Symbol S = context.currentScope().lookup(name);
 
@@ -288,22 +420,32 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   }
 
+  /**
+   * generate instructions to check if ref has field, storing answer in result
+   */
   protected void doIsFieldDefined(WalkContext context, int result, int ref, CAstNode field) {
     Assertions.UNREACHABLE();
   }
 
+  /**
+   * creates a reference to a global named globalName. the declaring type and
+   * type of the global are both the root type.
+   */
   protected FieldReference makeGlobalRef(String globalName) {
-    return FieldReference.findOrCreate(TypeReference.findOrCreate(loader.getReference(), AstTypeReference.rootTypeName), Atom
-        .findOrCreateUnicodeAtom("global " + globalName), TypeReference.findOrCreate(loader.getReference(),
-        AstTypeReference.rootTypeName));
+    TypeReference rootTypeRef = TypeReference.findOrCreate(loader.getReference(), AstTypeReference.rootTypeName);
+    return FieldReference.findOrCreate(rootTypeRef, Atom.findOrCreateUnicodeAtom("global " + globalName), rootTypeRef);
   }
 
   protected final IClassLoader loader;
 
+  /**
+   * for handling languages that let you include other source files named
+   * statically (e.g., ABAP)
+   */
   protected final Map namedEntityResolver;
 
   protected final SSAInstructionFactory insts;
-  
+
   protected AstTranslator(IClassLoader loader, Map namedEntityResolver) {
     this.loader = loader;
     this.namedEntityResolver = namedEntityResolver;
@@ -319,6 +461,10 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     this.arrayOpHandler = arrayOpHandler;
   }
 
+  /**
+   * for keeping position information for the generated SSAInstructions and SSA
+   * locals
+   */
   private static class AstDebuggingInformation implements DebuggingInformation {
     private Position codeBodyPosition;
 
@@ -364,6 +510,10 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   public static final boolean DEBUG_LEXICAL = DEBUG_ALL || false;
 
+  /**
+   * basic block implementation used in the CFGs constructed during the
+   * IR-generating AST traversal
+   */
   protected final static class PreBasicBlock implements INodeWithNumber, IBasicBlock<SSAInstruction> {
     private static final int NORMAL = 0;
 
@@ -502,11 +652,18 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   }
 
+  /**
+   * holds the control-flow graph as it is being constructed. When construction
+   * is complete, information is stored in an {@link AstCFG}
+   */
   public final class IncipientCFG extends SparseNumberedGraph<PreBasicBlock> {
 
     protected class Unwind {
       private final Map<PreBasicBlock, UnwindState> unwindData = new LinkedHashMap<PreBasicBlock, UnwindState>();
 
+      /**
+       * a cache of generated blocks
+       */
       private final Map<Pair<UnwindState, Pair<PreBasicBlock, Boolean>>, PreBasicBlock> code = new LinkedHashMap<Pair<UnwindState, Pair<PreBasicBlock, Boolean>>, PreBasicBlock>();
 
       void setUnwindState(PreBasicBlock block, UnwindState context) {
@@ -517,6 +674,15 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         unwindData.put(nodeToBlock.get(node), context);
       }
 
+      /**
+       * When adding an edge from source to target, it is possible that certain
+       * exception-handling code needs to be executed before the control is
+       * actually transfered to target. This method determines if this is the
+       * case, and if so, it generates the exception handler blocks and adds an
+       * appropriate edge to the target. It returns the basic block that should
+       * be the target of the edge from source (target itself if there is no
+       * exception-handling code, the initial catch block otherwise)
+       */
       public PreBasicBlock findOrCreateCode(PreBasicBlock source, PreBasicBlock target, final boolean exception) {
         UnwindState sourceContext = unwindData.get(source);
         final CAstNode dummy = exception ? (new CAstImpl()).makeNode(CAstNode.EMPTY) : null;
@@ -534,8 +700,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         if (targetContext != null && targetContext.covers(sourceContext))
           return target;
 
-        Pair<UnwindState, Pair<PreBasicBlock, Boolean>> key = Pair.make(sourceContext, Pair.make(target, exception ? Boolean.TRUE
-            : Boolean.FALSE));
+        Pair<UnwindState, Pair<PreBasicBlock, Boolean>> key = Pair.make(sourceContext, Pair.make(target, exception));
 
         if (code.containsKey(key)) {
           return code.get(key);
@@ -557,8 +722,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
           while (sourceContext != null && (targetContext == null || !targetContext.covers(sourceContext))) {
             final CAstRewriter.Rewrite ast = (new CAstCloner(new CAstImpl()) {
-              protected CAstNode flowOutTo(Map<Pair, CAstNode> nodeMap, CAstNode oldSource, Object label, CAstNode oldTarget,
-                  CAstControlFlowMap orig, CAstSourcePositionMap src) {
+              protected CAstNode flowOutTo(Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap, CAstNode oldSource, Object label,
+                  CAstNode oldTarget, CAstControlFlowMap orig, CAstSourcePositionMap src) {
                 if (exception && !isExceptionLabel(label)) {
                   return dummy;
                 } else {
@@ -624,8 +789,11 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
     private boolean hasCatchBlock = false;
 
+    /**
+     * does the method have any monitor operations?
+     */
     private boolean hasMonitorOp = false;
-    
+
     private int currentInstruction = 0;
 
     private Position currentPosition = null;
@@ -643,7 +811,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     boolean hasCatchBlock() {
       return hasCatchBlock;
     }
-    
+
     boolean hasMonitorOp() {
       return hasMonitorOp;
     }
@@ -664,7 +832,18 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       return linePositions;
     }
 
+    /**
+     * create a new basic block, and set it as the current block.
+     * 
+     * @param fallThruFromPrior
+     *          should a fall-through edge be added from the previous block
+     *          (value of currentBlock at entry)? if false, the newly created
+     *          block is marked as a dead block, as it has no incoming edges.
+     * @return the new block
+     */
     public PreBasicBlock newBlock(boolean fallThruFromPrior) {
+      // optimization: if we have a fall-through from an empty block, just
+      // return the empty block
       if (fallThruFromPrior && !currentBlock.isEntryBlock() && currentBlock.instructions().size() == 0) {
         return currentBlock;
       }
@@ -687,15 +866,13 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       return currentBlock;
     }
 
+    /**
+     * record a delayed edge addition from src to dst. Edge will be added when
+     * appropriate; see {@link #checkForRealizedEdges(CAstNode)} and
+     * {@link #checkForRealizedExitEdges(PreBasicBlock)}
+     */
     private void addDelayedEdge(PreBasicBlock src, Object dst, boolean exception) {
-      Pair<PreBasicBlock, Boolean> v = Pair.make(src, exception ? Boolean.TRUE : Boolean.FALSE);
-      if (delayedEdges.containsKey(dst))
-        delayedEdges.get(dst).add(v);
-      else {
-        Set<Pair<PreBasicBlock, Boolean>> s = new LinkedHashSet<Pair<PreBasicBlock, Boolean>>();
-        s.add(v);
-        delayedEdges.put(dst, s);
-      }
+      MapUtil.findOrCreateSet(delayedEdges, dst).add(Pair.make(src, exception));
     }
 
     void makeEntryBlock(PreBasicBlock bb) {
@@ -708,6 +885,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       for (Iterator<? extends PreBasicBlock> ps = getPredNodes(bb); ps.hasNext();)
         normalToExit.add(ps.next());
 
+      // now that we have created the exit block, add the delayed edges to the
+      // exit
       checkForRealizedExitEdges(bb);
     }
 
@@ -715,17 +894,25 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       currentBlock.makeHandlerBlock();
     }
 
+    boolean hasDelayedEdges(CAstNode n) {
+      return delayedEdges.containsKey(n);
+    }
+
+    /**
+     * given some n which is now mapped by nodeToBlock, add any delayed edges to
+     * n's block
+     */
     private void checkForRealizedEdges(CAstNode n) {
       if (delayedEdges.containsKey(n)) {
-        for (Iterator ss = delayedEdges.get(n).iterator(); ss.hasNext();) {
-          Pair s = (Pair) ss.next();
-          PreBasicBlock that = (PreBasicBlock) s.fst;
-          boolean exception = ((Boolean) s.snd).booleanValue();
+        for (Iterator<Pair<PreBasicBlock, Boolean>> ss = delayedEdges.get(n).iterator(); ss.hasNext();) {
+          Pair<PreBasicBlock, Boolean> s = ss.next();
+          PreBasicBlock src = s.fst;
+          boolean exception = s.snd;
           if (unwind == null) {
-            addEdge(that, nodeToBlock.get(n));
+            addEdge(src, nodeToBlock.get(n));
           } else {
             PreBasicBlock target = nodeToBlock.get(n);
-            addEdge(that, unwind.findOrCreateCode(that, target, exception));
+            addEdge(src, unwind.findOrCreateCode(src, target, exception));
           }
         }
 
@@ -733,17 +920,20 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       }
     }
 
-    private void checkForRealizedExitEdges(PreBasicBlock n) {
+    /**
+     * add any delayed edges to the exit block
+     */
+    private void checkForRealizedExitEdges(PreBasicBlock exitBlock) {
       if (delayedEdges.containsKey(exitMarker)) {
-        for (Iterator ss = delayedEdges.get(exitMarker).iterator(); ss.hasNext();) {
-          Pair s = (Pair) ss.next();
-          PreBasicBlock that = (PreBasicBlock) s.fst;
-          boolean exception = ((Boolean) s.snd).booleanValue();
-          addEdge(that, n);
+        for (Iterator<Pair<PreBasicBlock, Boolean>> ss = delayedEdges.get(exitMarker).iterator(); ss.hasNext();) {
+          Pair<PreBasicBlock, Boolean> s = ss.next();
+          PreBasicBlock src = s.fst;
+          boolean exception = s.snd;
+          addEdge(src, exitBlock);
           if (exception)
-            exceptionalToExit.add(that);
+            exceptionalToExit.add(src);
           else
-            normalToExit.add(that);
+            normalToExit.add(src);
         }
 
         delayedEdges.remove(exitMarker);
@@ -760,6 +950,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       addPreNode(n, null);
     }
 
+    /**
+     * associate n with the current block, and update the current unwind state
+     */
     public void addPreNode(CAstNode n, UnwindState context) {
       if (DEBUG_CFG)
         System.err.println(("adding pre-node " + n));
@@ -767,6 +960,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       deadBlocks.remove(currentBlock);
       if (context != null)
         setUnwindState(n, context);
+      // now that we've associated n with a block, add associated delayed edges
       checkForRealizedEdges(n);
     }
 
@@ -775,6 +969,10 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       addPreEdge(nodeToBlock.get(src), dst, exception);
     }
 
+    /**
+     * if dst is associated with a basic block b, add an edge from src to b.
+     * otherwise, record the edge addition as delayed.
+     */
     public void addPreEdge(PreBasicBlock src, CAstNode dst, boolean exception) {
       if (dst == CAstControlFlowMap.EXCEPTION_TO_EXIT) {
         assert exception;
@@ -825,6 +1023,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       return nodeToBlock.get(n);
     }
 
+    /**
+     * mark the current position as the position for the instruction
+     */
     private void noteLinePosition(int instruction) {
       if (linePositions.length < (instruction + 1)) {
         Position[] newData = new Position[instruction * 2 + 1];
@@ -855,13 +1056,17 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       if (n instanceof SSAMonitorInstruction) {
         hasMonitorOp = true;
       }
-      
+
       currentBlock.instructions().add(n);
 
       currentBlock.setLastIndex(inst);
     }
   }
 
+  /**
+   * data structure for the final CFG for a method, based on the information in
+   * an {@link IncipientCFG}
+   */
   protected final static class AstCFG extends AbstractCFG<SSAInstruction, PreBasicBlock> {
     private final SSAInstruction[] instructions;
 
@@ -974,15 +1179,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   }
 
-  protected final static int TYPE_LOCAL = 1;
-
-  protected final static int TYPE_GLOBAL = 2;
-
-  protected final static int TYPE_SCRIPT = 3;
-
-  protected final static int TYPE_FUNCTION = 4;
-
-  protected final static int TYPE_TYPE = 5;
+  public static enum ScopeType {
+    LOCAL, GLOBAL, SCRIPT, FUNCTION, TYPE
+  };
 
   private static final boolean DEBUG = false;
 
@@ -1036,6 +1235,11 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   }
 
+  /**
+   * interface for name information stored in a symbol table.
+   * 
+   * @see Scope
+   */
   protected interface Symbol {
     int valueNumber();
 
@@ -1054,8 +1258,12 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     Object defaultInitValue();
   }
 
+  /**
+   * a scope in the symbol table built during AST traversal
+   */
   public interface Scope {
-    int type();
+
+    ScopeType type();
 
     int allocateTempValue();
 
@@ -1167,7 +1375,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       } else if (o instanceof Byte) {
         return getUnderlyingSymtab().getConstant(((Byte) o).byteValue());
       } else if (o instanceof Short) {
-          return getUnderlyingSymtab().getConstant(((Short) o).shortValue());
+        return getUnderlyingSymtab().getConstant(((Short) o).shortValue());
       } else if (o == null) {
         return getUnderlyingSymtab().getNullConstant();
       } else if (o == CAstControlFlowMap.SWITCH_DEFAULT) {
@@ -1236,8 +1444,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       } else {
         Symbol scoped = parent.lookup(nm);
         if (scoped != null && getEntityScope() == this && (isGlobal(scoped) || isLexicallyScoped(scoped))) {
-          values.put(nm, makeSymbol(nm, scoped.isFinal(), scoped.isInternalName(), scoped.defaultInitValue(), -1, scoped
-              .getDefiningScope()));
+          values.put(nm,
+              makeSymbol(nm, scoped.isFinal(), scoped.isInternalName(), scoped.defaultInitValue(), -1, scoped.getDefiningScope()));
           if (scoped.getDefiningScope().isCaseInsensitive(nm)) {
             caseInsensitiveNames.put(nm.toLowerCase(), nm);
           }
@@ -1287,8 +1495,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         return s;
       }
 
-      public int type() {
-        return TYPE_SCRIPT;
+      public ScopeType type() {
+        return ScopeType.SCRIPT;
       }
 
       protected Symbol makeSymbol(final String nm, final boolean isFinal, final boolean isInternalName,
@@ -1374,8 +1582,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         return f;
       }
 
-      public int type() {
-        return TYPE_FUNCTION;
+      public ScopeType type() {
+        return ScopeType.FUNCTION;
       }
 
       private int find(String n) {
@@ -1432,8 +1640,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   private Scope makeLocalScope(CAstNode s, final Scope parent) {
     return new AbstractScope(parent) {
-      public int type() {
-        return TYPE_LOCAL;
+      public ScopeType type() {
+        return ScopeType.LOCAL;
       }
 
       public SymbolTable getUnderlyingSymtab() {
@@ -1530,8 +1738,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         throw new UnsupportedOperationException();
       }
 
-      public int type() {
-        return TYPE_GLOBAL;
+      public ScopeType type() {
+        return ScopeType.GLOBAL;
       }
 
       public boolean contains(String name) {
@@ -1656,8 +1864,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         throw new UnsupportedOperationException();
       }
 
-      public int type() {
-        return TYPE_TYPE;
+      public ScopeType type() {
+        return ScopeType.TYPE;
       }
 
       public boolean contains(String name) {
@@ -1709,6 +1917,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   public interface WalkContext extends Context {
 
+    ModuleEntry getModule();
+
     String getName();
 
     String file();
@@ -1738,6 +1948,10 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
     DelegatingContext(WalkContext parent) {
       this.parent = parent;
+    }
+
+    public ModuleEntry getModule() {
+      return parent.getModule();
     }
 
     public String getName() {
@@ -1953,62 +2167,89 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   }
 
+  /**
+   * lexical access information for some entity scope. used during call graph
+   * construction to handle lexical accesses.
+   */
   public static class AstLexicalInformation implements LexicalInformation {
-    private final Pair[] exposedNames;
+    /**
+     * names possibly accessed in a nested lexical scope, represented as pairs
+     * (name,nameOfDefiningEntity)
+     */
+    private final Pair<String, String>[] exposedNames;
 
+    /**
+     * map from instruction index and exposed name (via its index in
+     * {@link #exposedNames}) to the value number for the name at that
+     * instruction index. This can vary at different instructions due to SSA
+     * (and this information is updated during {@link SSAConversion}).
+     */
     private final int[][] instructionLexicalUses;
 
+    /**
+     * maps each exposed name (via its index in {@link #exposedNames}) to its
+     * value number at method exit.
+     */
     private final int[] exitLexicalUses;
 
+    /**
+     * the names of the enclosing methods declaring names that are lexically
+     * accessed by the entity
+     */
     private final String[] scopingParents;
-    
+
+    /**
+     * all value numbers appearing as entries in {@link #instructionLexicalUses}
+     * and {@link #exitLexicalUses}, computed lazily
+     */
     private MutableIntSet allExposedUses = null;
-    
+
+    @SuppressWarnings("unchecked")
     public AstLexicalInformation(AstLexicalInformation original) {
       if (original.exposedNames != null) {
-        exposedNames = new Pair[ original.exposedNames.length ];
-        for(int i = 0; i < exposedNames.length; i++) {
+        exposedNames = new Pair[original.exposedNames.length];
+        for (int i = 0; i < exposedNames.length; i++) {
           exposedNames[i] = Pair.make(original.exposedNames[i].fst, original.exposedNames[i].snd);
         }
       } else {
         exposedNames = null;
       }
-      
-      instructionLexicalUses = new int[ original.instructionLexicalUses.length ][];
-      for(int i= 0; i < instructionLexicalUses.length; i++) {
+
+      instructionLexicalUses = new int[original.instructionLexicalUses.length][];
+      for (int i = 0; i < instructionLexicalUses.length; i++) {
         int[] x = original.instructionLexicalUses[i];
         if (x != null) {
-          instructionLexicalUses[i] = new int[ x.length ];
-          for(int j = 0; j < x.length; j++) {
+          instructionLexicalUses[i] = new int[x.length];
+          for (int j = 0; j < x.length; j++) {
             instructionLexicalUses[i][j] = x[j];
           }
         }
       }
-      
+
       if (original.exitLexicalUses != null) {
-        exitLexicalUses = new int[ original.exitLexicalUses.length ];
-        for(int i = 0; i < exitLexicalUses.length; i++) {
+        exitLexicalUses = new int[original.exitLexicalUses.length];
+        for (int i = 0; i < exitLexicalUses.length; i++) {
           exitLexicalUses[i] = original.exitLexicalUses[i];
         }
       } else {
         exitLexicalUses = null;
       }
-      
+
       if (original.scopingParents != null) {
-        scopingParents = new String[ original.scopingParents.length ];
-        for(int i = 0; i < scopingParents.length; i++) {
+        scopingParents = new String[original.scopingParents.length];
+        for (int i = 0; i < scopingParents.length; i++) {
           scopingParents[i] = original.scopingParents[i];
         }
       } else {
         scopingParents = null;
       }
     }
-   
-    private int[] buildLexicalUseArray(Pair[] exposedNames) {
+
+    private int[] buildLexicalUseArray(Pair<Pair<String, String>, Integer>[] exposedNames) {
       if (exposedNames != null) {
         int[] lexicalUses = new int[exposedNames.length];
         for (int j = 0; j < exposedNames.length; j++) {
-          lexicalUses[j] = ((Integer) exposedNames[j].snd).intValue();
+          lexicalUses[j] = exposedNames[j].snd;
         }
 
         return lexicalUses;
@@ -2017,11 +2258,12 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       }
     }
 
-    private Pair[] buildLexicalNamesArray(Pair[] exposedNames) {
+    private Pair<String, String>[] buildLexicalNamesArray(Pair<Pair<String, String>, Integer>[] exposedNames) {
       if (exposedNames != null) {
-        Pair[] lexicalNames = new Pair[exposedNames.length];
+        @SuppressWarnings("unchecked")
+        Pair<String, String>[] lexicalNames = new Pair[exposedNames.length];
         for (int j = 0; j < exposedNames.length; j++) {
-          lexicalNames[j] = (Pair) exposedNames[j].fst;
+          lexicalNames[j] = exposedNames[j].fst;
         }
 
         return lexicalNames;
@@ -2030,14 +2272,19 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       }
     }
 
-    AstLexicalInformation(Scope scope, SSAInstruction[] instrs, Set<Pair<Pair<String, String>, Integer>> exposedNamesSet, Set accesses) {
-      Pair[] EN = null;
+    @SuppressWarnings("unchecked")
+    AstLexicalInformation(Scope scope, SSAInstruction[] instrs, Set<Pair<Pair<String, String>, Integer>> exposedNamesSet,
+        Set<Access> accesses) {
+      Pair<Pair<String, String>, Integer>[] EN = null;
       if (exposedNamesSet != null) {
-        EN = (Pair[]) exposedNamesSet.toArray(new Pair[exposedNamesSet.size()]);
+        EN = exposedNamesSet.toArray(new Pair[exposedNamesSet.size()]);
       }
 
       this.exposedNames = buildLexicalNamesArray(EN);
 
+      // the value numbers stored in exitLexicalUses and instructionLexicalUses
+      // are identical at first; they will be updated
+      // as needed during the final SSA conversion
       this.exitLexicalUses = buildLexicalUseArray(EN);
 
       this.instructionLexicalUses = new int[instrs.length][];
@@ -2049,8 +2296,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
       if (accesses != null) {
         Set<String> parents = new LinkedHashSet<String>();
-        for (Iterator ACS = accesses.iterator(); ACS.hasNext();) {
-          Access AC = (Access) ACS.next();
+        for (Iterator<Access> ACS = accesses.iterator(); ACS.hasNext();) {
+          Access AC = ACS.next();
           if (AC.variableDefiner != null) {
             parents.add(AC.variableDefiner);
           }
@@ -2107,25 +2354,35 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
           }
         }
       }
-      
+
       return allExposedUses;
     }
 
-    public Pair[] getExposedNames() {
+    public Pair<String, String>[] getExposedNames() {
       return exposedNames;
     }
 
     public String[] getScopingParents() {
       return scopingParents;
     }
-    
+
+    /**
+     * reset cached info about value numbers that may have changed
+     */
     public void handleAlteration() {
       allExposedUses = null;
     }
   };
 
+  /**
+   * stack of maps stored in the results field, used to handle nested functions
+   */
   private final Stack<Map<CAstNode, Integer>> resultStack = new Stack<Map<CAstNode, Integer>>();
-  
+
+  /**
+   * maps nodes in the current function to the value number holding their value
+   * or, for constants, to their constant value.
+   */
   private Map<CAstNode, Integer> results = new LinkedHashMap<CAstNode, Integer>();
 
   protected boolean hasValue(CAstNode n) {
@@ -2141,7 +2398,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     if (results.containsKey(n))
       return results.get(n).intValue();
     else {
-      if (DEBUG){
+      if (DEBUG) {
         System.err.println(("no value for " + n.getKind()));
       }
       return -1;
@@ -2150,25 +2407,58 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   private final Map<CAstEntity, String> entityNames = new LinkedHashMap<CAstEntity, String>();
 
-  private final Map<CAstEntity, LinkedHashSet<Pair<Pair<String, String>, Integer>>> exposedNames = new LinkedHashMap<CAstEntity, LinkedHashSet<Pair<Pair<String, String>, Integer>>>();
+  /**
+   * maps entities to the names of their declared entities accessed in a nested
+   * lexical scope, represented as (name, nameOfDeclaringEntity, valueNumber)
+   */
+  private final Map<CAstEntity, Set<Pair<Pair<String, String>, Integer>>> exposedNames = new LinkedHashMap<CAstEntity, Set<Pair<Pair<String, String>, Integer>>>();
 
-  private final Map<CAstEntity, LinkedHashSet<Access>> accesses = new LinkedHashMap<CAstEntity, LinkedHashSet<Access>>();
+  /**
+   * maps an entity e to the set of implicit lexical accesses performed within
+   * that entity, i.e., lexical accesses that operate on a local representing
+   * the lexical value.
+   * 
+   * @see #useLocalValuesForLexicalVars()
+   */
+  private final Map<CAstEntity, Set<Access>> accesses = new LinkedHashMap<CAstEntity, Set<Access>>();
 
   private void addEntityName(CAstEntity e, String name) {
     entityNames.put(e, name);
   }
 
+  /**
+   * record that in entity e, the access is performed using a local variable. in
+   * {@link #patchLexicalAccesses(SSAInstruction[], Set)}, this information is
+   * used to update an instruction that performs all the accesses at the
+   * beginning of the method and defines the locals.
+   */
   private void addAccess(CAstEntity e, Access access) {
-    if (!accesses.containsKey(e))
-      accesses.put(e, new LinkedHashSet<Access>());
-    accesses.get(e).add(access);
+    assert useLocalValuesForLexicalVars();
+    MapUtil.findOrCreateSet(accesses, e).add(access);
   }
 
+  /**
+   * Record that a name assigned a value number in the scope of entity may be
+   * accessed by a lexically nested scope, i.e., the name may be
+   * <em>exposed</em> to lexically nested scopes. This information is needed
+   * during call graph construction to properly model the data flow due to the
+   * access in the nested scope.
+   * 
+   * @param entity
+   *          an entity in whose scope name is assigned a value number
+   * @param declaration
+   *          the declaring entity for name (possibly an enclosing scope of
+   *          entity, in the case where entity
+   *          {@link #useLocalValuesForLexicalVars() accesses the name via a
+   *          local})
+   * @param name
+   *          the accessed name
+   * @param valueNumber
+   *          the name's value number in the scope of entity
+   */
   private void addExposedName(CAstEntity entity, CAstEntity declaration, String name, int valueNumber) {
-    if (!exposedNames.containsKey(entity))
-      exposedNames.put(entity, new LinkedHashSet<Pair<Pair<String, String>, Integer>>());
-
-    exposedNames.get(entity).add(Pair.make(Pair.make(name, getEntityName(declaration)), new Integer(valueNumber)));
+    Pair<Pair<String, String>, Integer> newVal = Pair.make(Pair.make(name, getEntityName(declaration)), valueNumber);
+    MapUtil.findOrCreateSet(exposedNames, entity).add(newVal);
   }
 
   private String getEntityName(CAstEntity e) {
@@ -2294,7 +2584,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
           continue;
 
         assert map[v.valueNumber()] == null || map[v.valueNumber()].equals(nm) : "value number " + v.valueNumber()
-        + " mapped to multiple names in " + n.getName() + ": " + nm + " and " + map[v.valueNumber()];
+            + " mapped to multiple names in " + n.getName() + ": " + nm + " and " + map[v.valueNumber()];
 
         map[v.valueNumber()] = nm;
 
@@ -2315,16 +2605,42 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   }
 
+  /**
+   * find any AstLexicalAccess instructions in instrs with a zero access count,
+   * and change them to perform specified accesses. If accesses is empty, null
+   * out the pointers to the AstLexicalAccess instructions in the array.
+   * 
+   * Presumably, such empty AstLexicalAccess instructions should only exist if
+   * {@link #useLocalValuesForLexicalVars()} returns true?
+   */
   private void patchLexicalAccesses(SSAInstruction[] instrs, Set<Access> accesses) {
     Access[] AC = accesses == null ? (Access[]) null : (Access[]) accesses.toArray(new Access[accesses.size()]);
     for (int i = 0; i < instrs.length; i++) {
       if (instrs[i] instanceof AstLexicalAccess && ((AstLexicalAccess) instrs[i]).getAccessCount() == 0) {
+        // should just be AstLexicalRead for now; may add support for
+        // AstLexicalWrite later
+        assert instrs[i] instanceof AstLexicalRead;
         if (AC != null) {
           ((AstLexicalAccess) instrs[i]).setAccesses(AC);
         } else {
           instrs[i] = null;
         }
       }
+    }
+  }
+
+  private Position getPosition(CAstSourcePositionMap map, CAstNode n) {
+    if (map.getPosition(n) != null) {
+      return map.getPosition(n);
+    } else {
+      for (int i = 0; i < n.getChildCount(); i++) {
+        Position p = getPosition(map, n.getChild(i));
+        if (p != null) {
+          return p;
+        }
+      }
+
+      return null;
     }
   }
 
@@ -2380,9 +2696,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     // processing allows such.
     getGlobalScope().declare(new CAstSymbolImpl(n.getName()));
   }
-  
+
   protected boolean visitTypeEntity(CAstEntity n, Context context, Context typeContext, CAstVisitor visitor) {
-    return ! defineType(n, (WalkContext) context);
+    return !defineType(n, (WalkContext) context);
   }
 
   protected void leaveTypeEntity(CAstEntity n, Context context, Context typeContext, CAstVisitor visitor) { /* empty */
@@ -2417,7 +2733,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   public void initFunctionEntity(final CAstEntity n, WalkContext parentContext, WalkContext functionContext) {
     resultStack.push(results);
-    results = new LinkedHashMap<CAstNode,Integer>();
+    results = new LinkedHashMap<CAstNode, Integer>();
     // entry block
     functionContext.cfg().makeEntryBlock(functionContext.cfg().newBlock(false));
     // first real block
@@ -2440,38 +2756,51 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     String[] nms = makeNameMap(n, functionContext.entityScopes());
 
     /*
-     * Set reachableBlocks = DFS.getReachableNodes(cfg, Collections.singleton(cfg.entry()));
-     * Assertions._assert(reachableBlocks.size() == cfg.getNumberOfNodes(), cfg.toString());
+     * Set reachableBlocks = DFS.getReachableNodes(cfg,
+     * Collections.singleton(cfg.entry()));
+     * Assertions._assert(reachableBlocks.size() == cfg.getNumberOfNodes(),
+     * cfg.toString());
      */
 
     // (put here to allow subclasses to handle stuff in scoped entities)
     // assemble lexical information
     patchLexicalAccesses(cfg.getInstructions(), accesses.get(n));
-    AstLexicalInformation LI =
-    // TODO: Ask Julian if the below change is always correct
-    new AstLexicalInformation((AbstractScope) functionContext.currentScope(), cfg.getInstructions(), exposedNames.get(n), accesses
-        .get(n));
+    AstLexicalInformation LI = new AstLexicalInformation((AbstractScope) functionContext.currentScope(), cfg.getInstructions(),
+        exposedNames.get(n), accesses.get(n));
 
     DebuggingInformation DBG = new AstDebuggingInformation(n.getPosition(), line, nms);
 
     // actually make code body
     defineFunction(n, parentContext, cfg, symtab, katch, catchTypes, monitor, LI, DBG);
-    
+
     results = resultStack.pop();
   }
 
+  /**
+   * for storing position information for CAstNodes
+   * 
+   * @see #enterNode(CAstNode, Context, CAstVisitor)
+   * @see #postProcessNode(CAstNode, Context, CAstVisitor)
+   */
   private final Stack<Position> positions = new Stack<Position>();
 
-   protected Context makeLocalContext(Context context, CAstNode n) {
+  protected Context makeLocalContext(Context context, CAstNode n) {
     return new LocalContext((WalkContext) context, makeLocalScope(n, ((WalkContext) context).currentScope()));
   }
 
   protected Context makeUnwindContext(Context context, CAstNode n, CAstVisitor visitor) {
+    // here, n represents the "finally" block of the unwind
     return new UnwindContext(n, (WalkContext) context, visitor);
   }
 
   // FIXME: should it be possible to override visit() instead to do the below
   // and then call super.visit?
+  /**
+   * to record for which CAstNodes we need to pop the position stack when post-processing
+   * 
+   * @see #enterNode(CAstNode, Context, CAstVisitor)
+   * @see #postProcessNode(CAstNode, Context, CAstVisitor)
+   */
   private Map<CAstNode, Boolean> popPositionM = new LinkedHashMap<CAstNode, Boolean>();
 
   protected boolean enterNode(CAstNode n, Context c, CAstVisitor visitor) {
@@ -2480,13 +2809,14 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     if (context.getSourceMap() != null) {
       CAstSourcePositionMap.Position p = context.getSourceMap().getPosition(n);
       if (p != null) {
+        // store the current position (if any) on the stack, and then set it to be p
         if (context.cfg().getCurrentPosition() != null) {
           positions.push(context.cfg().getCurrentPosition());
           popPosition = true;
         }
 
         context.cfg().setCurrentPosition(p);
-       }
+      }
     }
 
     if (popPosition)
@@ -2530,11 +2860,12 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     int result = processFunctionExpr(n, c);
     CAstEntity fn = (CAstEntity) n.getChild(0).getValue();
     // FIXME: handle redefinitions of functions
-    Symbol s = context.currentScope().lookup(fn.getName());
-    if (!context.currentScope().contains(fn.getName())) {
-      context.currentScope().declare(new FinalCAstSymbol(fn.getName()), result);
+    Scope cs = context.currentScope();
+    if (cs.contains(fn.getName()) && !cs.isLexicallyScoped(cs.lookup(fn.getName())) && !cs.isGlobal(cs.lookup(fn.getName()))) {
+      // if we already have a local with the function's name, write the function value to that local 
+      assignValue(n, context, cs.lookup(fn.getName()), fn.getName(), result);
     } else {
-      assignValue(n, context, s, fn.getName(), result);
+      context.currentScope().declare(new FinalCAstSymbol(fn.getName()), result);
     }
   }
 
@@ -2568,9 +2899,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     PreBasicBlock headerB = context.cfg().getCurrentBlock();
     visitor.visit(n.getChild(0), context, visitor);
 
-    assert getValue(n.getChild(0)) != -1 : "error in loop test "
-    + CAstPrinter.print(n.getChild(0), context.top().getSourceMap()) + " of loop "
-    + CAstPrinter.print(n, context.top().getSourceMap());
+    assert getValue(n.getChild(0)) != -1 : "error in loop test " + CAstPrinter.print(n.getChild(0), context.top().getSourceMap())
+        + " of loop " + CAstPrinter.print(n, context.top().getSourceMap());
     context.cfg().addInstruction(
         insts.ConditionalBranchInstruction(context.cfg().currentInstruction, translateConditionOpcode(CAstOperator.OP_EQ), null, getValue(n
             .getChild(0)), context.currentScope().getConstantValue(new Integer(0))));
@@ -2738,8 +3068,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     WalkContext context = (WalkContext) c;
     int result = getValue(n);
     CAstNode v = n.getChild(1);
-    context.cfg()
-        .addInstruction(insts.UnaryOpInstruction(context.cfg().currentInstruction, translateUnaryOpcode(n.getChild(0)), result, getValue(v)));
+    context.cfg().addInstruction(insts.UnaryOpInstruction(context.cfg().currentInstruction, 
+        translateUnaryOpcode(n.getChild(0)), result, getValue(v)));
   }
 
   protected boolean visitArrayLength(CAstNode n, Context c, CAstVisitor visitor) {
@@ -2840,14 +3170,16 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   protected void leaveGoto(CAstNode n, Context c, CAstVisitor visitor) {
     WalkContext context = (WalkContext) c;
-    context.cfg().addPreNode(n, context.getUnwindState());
-    context.cfg().addInstruction(insts.GotoInstruction(context.cfg().currentInstruction));
-    context.cfg().newBlock(false);
-    if (context.getControlFlow().getTarget(n, null) == null) {
-      assert context.getControlFlow().getTarget(n, null) != null : context.getControlFlow() + " does not map " + n
-      + " (" + context.getSourceMap().getPosition(n) + ")";
+    if (!context.cfg().isDeadBlock(context.cfg().getCurrentBlock())) {
+      context.cfg().addPreNode(n, context.getUnwindState());
+      context.cfg().addInstruction(insts.GotoInstruction(context.cfg().currentInstruction));
+      context.cfg().newBlock(false);
+      if (context.getControlFlow().getTarget(n, null) == null) {
+        assert context.getControlFlow().getTarget(n, null) != null : context.getControlFlow() + " does not map " + n + " ("
+            + context.getSourceMap().getPosition(n) + ")";
+      }
+      context.cfg().addPreEdge(n, context.getControlFlow().getTarget(n, null), false);
     }
-    context.cfg().addPreEdge(n, context.getControlFlow().getTarget(n, null), false);
   }
 
   protected boolean visitLabelStmt(CAstNode n, Context c, CAstVisitor visitor) {
@@ -2869,8 +3201,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     CAstNode l = n.getChild(0);
     visitor.visit(l, context, visitor);
     context.cfg().addInstruction(
-        insts.ConditionalBranchInstruction(context.cfg().currentInstruction, translateConditionOpcode(CAstOperator.OP_EQ), null, getValue(l), context
-            .currentScope().getConstantValue(new Integer(0))));
+        insts.ConditionalBranchInstruction(context.cfg().currentInstruction, translateConditionOpcode(CAstOperator.OP_EQ), null, getValue(l),
+            context.currentScope().getConstantValue(new Integer(0))));
     PreBasicBlock srcB = context.cfg().getCurrentBlock();
     // true clause
     context.cfg().newBlock(true);
@@ -2985,8 +3317,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   protected void leaveArrayLiteralInitElement(CAstNode n, int i, Context c, CAstVisitor visitor) {
     WalkContext context = (WalkContext) c;
-    arrayOpHandler.doArrayWrite(context, getValue(n.getChild(0)), n, new int[] { context.currentScope().getConstantValue(
-        new Integer(i - 1)) }, getValue(n.getChild(i)));
+    arrayOpHandler.doArrayWrite(context, getValue(n.getChild(0)), n,
+        new int[] { context.currentScope().getConstantValue(new Integer(i - 1)) }, getValue(n.getChild(i)));
   }
 
   protected void leaveArrayLiteral(CAstNode n, Context c, CAstVisitor visitor) { /* empty */
@@ -3117,6 +3449,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     return false;
   }
 
+  /**
+   * assign rval to nm as appropriate, depending on the scope of ls
+   */
   protected void assignValue(CAstNode n, WalkContext context, Symbol ls, String nm, int rval) {
     if (context.currentScope().isGlobal(ls))
       doGlobalWrite(context, nm, rval);
@@ -3274,8 +3609,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       if (x != CAstControlFlowMap.SWITCH_DEFAULT) {
         visitor.visit((CAstNode) x, context, visitor);
         context.cfg().addInstruction(
-            insts.ConditionalBranchInstruction(context.cfg().currentInstruction, translateConditionOpcode(CAstOperator.OP_EQ), null, v,
-                getValue((CAstNode) x)));
+            insts.ConditionalBranchInstruction(context.cfg().currentInstruction, translateConditionOpcode(CAstOperator.OP_EQ), 
+                null, v, getValue((CAstNode) x)));
         labelToBlock.put(x, context.cfg().getCurrentBlock());
         context.cfg().newBlock(true);
       }
@@ -3384,11 +3719,37 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
   protected void leaveUnwind(CAstNode n, Context c, CAstVisitor visitor) { /* empty */
   }
 
-  protected boolean visitTry(CAstNode n, Context c, CAstVisitor visitor) {
-    WalkContext context = (WalkContext) c;
+  private boolean hasIncomingEdges(CAstNode n, WalkContext context) {
+    if (context.cfg().hasDelayedEdges(n)) {
+      return true;
+    } else {
+      for (int i = 0; i < n.getChildCount(); i++) {
+        if (hasIncomingEdges(n.getChild(i), context)) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+  }
+
+  protected boolean visitTry(final CAstNode n, Context c, CAstVisitor visitor) {
+    final WalkContext context = (WalkContext) c;
     boolean addSkipCatchGoto = false;
     visitor.visit(n.getChild(0), context, visitor);
     PreBasicBlock endOfTry = context.cfg().getCurrentBlock();
+
+    if (!hasIncomingEdges(n.getChild(1), context)) {
+      if (loader instanceof CAstAbstractLoader) {
+        ((CAstAbstractLoader) loader).addMessage(context.getModule(), new Warning(Warning.MILD) {
+          @Override
+          public String getMsg() {
+            return "Dead catch block at " + getPosition(context.getSourceMap(), n.getChild(1));
+          }
+        });
+      }
+      return true;
+    }
 
     if (!context.cfg().isDeadBlock(context.cfg().getCurrentBlock())) {
       addSkipCatchGoto = true;
@@ -3539,15 +3900,12 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       return (CAstEntity) n.getChild(0).getValue();
     }
   }
-  
-  protected void leaveInclude(final CAstNode n, 
-			      Context c, 
-			      CAstVisitor visitor) 
-  {
+
+  protected void leaveInclude(final CAstNode n, Context c, CAstVisitor visitor) {
     WalkContext wc = (WalkContext) c;
-      
+
     CAstEntity included = getIncludedEntity(n);
-    
+
     if (included == null) {
       System.err.println(("cannot find include for " + CAstPrinter.print(n)));
       System.err.println(("from:\n" + namedEntityResolver));
@@ -3574,8 +3932,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
           }
         }
 
-        @SuppressWarnings("unchecked")
-        protected CAstNode copyNodes(CAstNode root, NonCopyingContext c, Map nodeMap) {
+        protected CAstNode copyNodes(CAstNode root, NonCopyingContext c, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
           if (isMacroExpansion && root.getKind() == CAstNode.MACRO_VAR) {
             int arg = ((Number) root.getChild(0).getValue()).intValue();
             CAstNode expr = copyIncludeExpr(n.getChild(arg));
@@ -3605,7 +3962,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       }
     }
   }
-  
+
   protected final void walkEntities(CAstEntity N, Context c) {
     visitEntities(N, c, this);
   }
@@ -3615,16 +3972,20 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
     private final CAstEntity N;
 
-    private final String nm;
+    private final ModuleEntry module;
 
-    public DefaultContext(AstTranslator t, CAstEntity N, String nm) {
+    public DefaultContext(AstTranslator t, CAstEntity N, ModuleEntry module) {
       this.t = t;
       this.N = N;
-      this.nm = nm;
+      this.module = module;
+    }
+
+    public ModuleEntry getModule() {
+      return module;
     }
 
     public String file() {
-      return nm;
+      return module.getName();
     }
 
     public CAstEntity top() {
@@ -3674,15 +4035,18 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   };
 
-  public void translate(final CAstEntity N, final String nm) {
+  /**
+   * translate module, represented by {@link CAstEntity} N
+   */
+  public void translate(final CAstEntity N, final ModuleEntry module) {
     if (DEBUG_TOP)
-      System.err.println(("translating " + nm));
-//    this.inlinedSourceMap = inlinedSourceMap;
-    walkEntities(N, new DefaultContext(this, N, nm));
+      System.err.println(("translating " + module.getName()));
+    // this.inlinedSourceMap = inlinedSourceMap;
+    walkEntities(N, new DefaultContext(this, N, module));
   }
 
   private CAstSourcePositionMap inlinedSourceMap;
-  
+
   private final Scope globalScope = makeGlobalScope();
 
   protected Scope getGlobalScope() {

@@ -30,6 +30,7 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.strings.Atom;
 
 public class MiscellaneousHacksContextSelector implements ContextSelector {
@@ -107,7 +108,7 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
     System.err.println(("hacking context selector for methods " + methodsToSpecialize));
   }
 
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
+  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (methodsToSpecialize.contains(site.getDeclaredTarget()) || methodsToSpecialize.contains(callee.getReference())) {
       return specialPolicy.getCalleeTarget(caller, site, callee, receiver);
     } else {
@@ -115,15 +116,8 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
     }
   }
 
-  public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference reference, IMethod targetMethod) {
-    return -1;
+  public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
+    return specialPolicy.getRelevantParameters(caller, site).union(basePolicy.getRelevantParameters(caller, site));
   }
 
-  public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
-    return true;
-  }
-
-  public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
-    return false;
-  }
-}
+ }

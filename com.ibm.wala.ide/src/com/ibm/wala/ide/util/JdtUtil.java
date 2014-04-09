@@ -565,4 +565,11 @@ public class JdtUtil {
     return selection;
   }
 
+  public static IJavaProject getNamedProject(String projectName) {
+    IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+    IJavaModel javaModel = JavaCore.create(workspaceRoot);
+    IJavaProject helloWorldProject = javaModel.getJavaProject(projectName);
+    return helloWorldProject;
+  }
+
 }

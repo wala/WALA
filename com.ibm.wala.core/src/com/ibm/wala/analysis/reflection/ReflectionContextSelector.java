@@ -18,6 +18,8 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.util.intset.EmptyIntSet;
+import com.ibm.wala.util.intset.IntSet;
 
 /**
  * A {@link ContextSelector} to handle default reflection logic.
@@ -32,8 +34,11 @@ public class ReflectionContextSelector {
     
     // start with a dummy
     ContextSelector result = new ContextSelector() {
-      public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
+      public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
         return null;
+      }
+      public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
+        return EmptyIntSet.instance;
       }
     };
     if (options.getReflectionOptions().getNumFlowToCastIterations() > 0) {

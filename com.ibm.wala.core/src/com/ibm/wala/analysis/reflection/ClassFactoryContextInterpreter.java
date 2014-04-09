@@ -90,7 +90,7 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
     if (!(node.getContext() instanceof JavaTypeContext)) {
       return false;
     }
-    return ClassFactoryContextSelector.isClassFactory(node.getMethod());
+    return ClassFactoryContextSelector.isClassFactory(node.getMethod().getReference());
   }
 
   /*

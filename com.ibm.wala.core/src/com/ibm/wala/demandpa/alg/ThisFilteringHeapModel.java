@@ -81,7 +81,7 @@ class ThisFilteringHeapModel implements HeapModel {
   }
 
   private FilteredPointerKey.TypeFilter getFilter(CGNode target) {
-    FilteredPointerKey.TypeFilter filter = (FilteredPointerKey.TypeFilter) target.getContext().get(ContextKey.FILTER);
+    FilteredPointerKey.TypeFilter filter = (FilteredPointerKey.TypeFilter) target.getContext().get(ContextKey.PARAMETERS[0]);
 
     if (filter != null) {
       return filter;

@@ -26,6 +26,8 @@ import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.intset.EmptyIntSet;
+import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -54,7 +56,7 @@ public class J2EEContextSelector implements ContextSelector {
   /**
    * Analyze each call to Command.execute() in a different context
    */
-  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
+  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (callee.getReference().equals(ExecuteMethod)) {
       ReceiverTypeInference R = typeInference.findOrCreate(caller);
       if (R == null) {
@@ -71,42 +73,8 @@ public class J2EEContextSelector implements ContextSelector {
     }
   }
 
-  public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference site, IMethod callee) {
-    if (callee.getReference().equals(ExecuteMethod)) {
-      return 1;
-    } else {
-      return -1;
-    }
-  }
-
-  public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
-    Atom name = site.getDeclaredTarget().getName();
-    Descriptor d = site.getDeclaredTarget().getDescriptor();
-    if (name.equals(ExecuteAtom) && d.equals(ExecuteDesc)) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
-    // Atom name = site.getDeclaredTarget().getName();
-    // Descriptor d = site.getDeclaredTarget().getDescriptor();
-    // if (name.equals(ExecuteAtom) && d.equals(ExecuteDesc)) {
-    // return false;
-    // } else {
-    // return true;
-    // }
-    // todo: fix me
-    return false;
-  }
-
-  public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
-    if (targetMethod.getReference().equals(ExecuteMethod)) {
-      return true;
-    } else {
-      return false;
-    }
+  public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
+    return EmptyIntSet.instance;
   }
 
 }
