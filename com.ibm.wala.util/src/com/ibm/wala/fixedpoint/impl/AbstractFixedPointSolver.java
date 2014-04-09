@@ -265,7 +265,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<?>> implement
    * @param operator the step operator
    * @throws IllegalArgumentException if lhs is null
    */
-  public void newStatement(final T lhs, final NullaryOperator<T> operator, final boolean toWorkList, final boolean eager) {
+  public boolean newStatement(final T lhs, final NullaryOperator<T> operator, final boolean toWorkList, final boolean eager) {
     if (lhs == null) {
       throw new IllegalArgumentException("lhs is null");
     }
@@ -273,12 +273,13 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<?>> implement
     lhs.setOrderNumber(nextOrderNumber++);
     final NullaryStatement<T> s = new BasicNullaryStatement<T>(lhs, operator);
     if (getFixedPointSystem().containsStatement(s)) {
-      return;
+      return false;
     }
     nCreated++;
     getFixedPointSystem().addStatement(s);
     incorporateNewStatement(toWorkList, eager, s);
     topologicalCounter++;
+    return true;
   }
 
   @SuppressWarnings("unchecked")
@@ -366,12 +367,12 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<?>> implement
    * @param op1 first operand on the rhs
    * @param op2 second operand on the rhs
    */
-  public void newStatement(T lhs, AbstractOperator<T> operator, T op1, T op2, boolean toWorkList, boolean eager) {
+  public boolean newStatement(T lhs, AbstractOperator<T> operator, T op1, T op2, boolean toWorkList, boolean eager) {
     // add to the list of graph
 
     GeneralStatement<T> s = new Statement(lhs, operator, op1, op2);
     if (getFixedPointSystem().containsStatement(s)) {
-      return;
+      return false;
     }
     if (lhs != null) {
       lhs.setOrderNumber(nextOrderNumber++);
@@ -380,6 +381,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<?>> implement
     getFixedPointSystem().addStatement(s);
     incorporateNewStatement(toWorkList, eager, s);
     topologicalCounter++;
+    return true;
   }
 
   /**
@@ -392,7 +394,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<?>> implement
    * @param op3 third operand on the rhs
    * @throws IllegalArgumentException if lhs is null
    */
-  public void newStatement(T lhs, AbstractOperator<T> operator, T op1, T op2, T op3, boolean toWorkList, boolean eager) {
+  public boolean newStatement(T lhs, AbstractOperator<T> operator, T op1, T op2, T op3, boolean toWorkList, boolean eager) {
     if (lhs == null) {
       throw new IllegalArgumentException("lhs is null");
     }
@@ -401,13 +403,14 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<?>> implement
     GeneralStatement<T> s = new Statement(lhs, operator, op1, op2, op3);
     if (getFixedPointSystem().containsStatement(s)) {
       nextOrderNumber--;
-      return;
+      return false;
     }
     nCreated++;
     getFixedPointSystem().addStatement(s);
 
     incorporateNewStatement(toWorkList, eager, s);
     topologicalCounter++;
+    return true;
   }
 
   /**
@@ -417,19 +420,20 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<?>> implement
    * @param operator the operator
    * @param rhs the operands on the rhs
    */
-  public void newStatement(T lhs, AbstractOperator<T> operator, T[] rhs, boolean toWorkList, boolean eager) {
+  public boolean newStatement(T lhs, AbstractOperator<T> operator, T[] rhs, boolean toWorkList, boolean eager) {
     // add to the list of graph
     if (lhs != null)
       lhs.setOrderNumber(nextOrderNumber++);
     GeneralStatement<T> s = new Statement(lhs, operator, rhs);
     if (getFixedPointSystem().containsStatement(s)) {
       nextOrderNumber--;
-      return;
+      return false;
     }
     nCreated++;
     getFixedPointSystem().addStatement(s);
     incorporateNewStatement(toWorkList, eager, s);
     topologicalCounter++;
+    return true;
   }
 
   /**

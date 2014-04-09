@@ -53,12 +53,13 @@ public class CAstPrinter {
     case CAstNode.LABEL_STMT: return "LABEL_STMT";
     case CAstNode.IFGOTO: return "IFGOTO";
     case CAstNode.EMPTY: return "EMPTY";
-    case CAstNode.RETURN_WITHOUT_BRANCH: return "RET_WO_BRANCH";
+    case CAstNode.YIELD_STMT: return "YIELD";
     case CAstNode.CATCH: return "CATCH";
     case CAstNode.UNWIND: return "UNWIND";
     case CAstNode.MONITOR_ENTER: return "MONITOR_ENTER";
     case CAstNode.MONITOR_EXIT: return "MONITOR_EXIT";
     case CAstNode.ECHO: return "ECHO";
+    case CAstNode.FORIN_LOOP: return "FOR..IN";
 	
     // expression kinds
     case CAstNode.FUNCTION_EXPR: return "FUNCTION_EXPR";
@@ -89,6 +90,7 @@ public class CAstPrinter {
     case CAstNode.EACH_ELEMENT_GET: return "EACH_ELEMENT_GET";
     case CAstNode.LIST_EXPR: return "LIST_EXPR";
     case CAstNode.EMPTY_LIST_EXPR: return "EMPTY_LIST_EXPR";
+    case CAstNode.IS_DEFINED_EXPR: return "IS_DEFINED_EXPR";
 
     // explicit lexical scopes
     case CAstNode.LOCAL_SCOPE: return "SCOPE";

@@ -59,7 +59,11 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
    */
   final private Set<ExceptionHandler> exceptionHandlers = HashSetFactory.make(10);
 
-  public ShrikeCFG(IBytecodeMethod method) throws IllegalArgumentException {
+  public static ShrikeCFG make(IBytecodeMethod m) {
+    return new ShrikeCFG(m);
+  }
+    
+  private ShrikeCFG(IBytecodeMethod method) throws IllegalArgumentException {
     super(method);
     if (method == null) {
       throw new IllegalArgumentException("method cannot be null");
@@ -70,12 +74,12 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
     init();
     computeI2BMapping();
     computeEdges();
-
+    
     if (DEBUG) {
       System.err.println(this);
     }
   }
-
+  
   @Override
   public IBytecodeMethod getMethod() {
     return method;
@@ -426,7 +430,11 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
         // this is the last non-exit block
         return getInstructions().length - 1;
       } else {
-        BasicBlock next = getNode(getNumber() + 1);
+        int i = 1;
+        BasicBlock next;
+        do {
+          next = getNode(getNumber() + i);
+        } while (next == null);
         return next.getFirstInstructionIndex() - 1;
       }
     }
@@ -500,14 +508,6 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
       }
     }
     return s.toString();
-  }
-
-  public int getMaxStackHeight() {
-    return method.getMaxStackHeight();
-  }
-
-  public int getMaxLocals() {
-    return method.getMaxLocals();
   }
 
   public Set<ExceptionHandler> getExceptionHandlers() {

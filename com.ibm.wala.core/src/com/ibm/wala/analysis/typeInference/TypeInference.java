@@ -538,7 +538,9 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       TypeReference type = instruction.getDeclaredFieldType();
 
       if (doPrimitives && type.isPrimitiveType()) {
-        result = new DeclaredTypeOperator(language.getPrimitive(type));
+        PrimitiveType p = language.getPrimitive(type);
+        assert p != null : "no type for " + type;
+        result = new DeclaredTypeOperator(p);
       } else {
         IClass klass = cha.lookupClass(type);
         if (klass == null) {
@@ -593,10 +595,18 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
           // be pessimistic
           typeAbs = BOTTOM;
         } else {
-          if (typeAbs == null) {
-            typeAbs = new ConeType(klass);
-          } else {
-            typeAbs = typeAbs.meet(new ConeType(klass));           
+          TypeAbstraction x = null;
+          if (doPrimitives && type.isPrimitiveType()) {
+            x = language.getPrimitive(type);
+          } else if (type.isReferenceType()) {
+            x = new ConeType(klass);
+          }
+          if (x != null) {
+            if (typeAbs == null) {
+              typeAbs = x;
+            } else {
+              typeAbs = typeAbs.meet(x);           
+            }
           }
         }
       }

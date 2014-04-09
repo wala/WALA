@@ -51,8 +51,8 @@ public class TestId {
     Object o2 = new Object();
     Object o3 = id(o1);
     Object o4 = id(o2);
-    TestUtil.makeVarUsed(o3);
-    TestUtil.testThisVar(o4);
+    DemandPATestUtil.makeVarUsed(o3);
+    DemandPATestUtil.testThisVar(o4);
   }
 
 }

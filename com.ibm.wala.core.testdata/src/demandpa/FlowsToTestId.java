@@ -28,8 +28,8 @@ public class FlowsToTestId {
     Object o2 = new Object();
     Object o3 = id(o1);
     Object o4 = id(o2);
-    TestUtil.makeVarUsed(o3);
-    TestUtil.makeVarUsed(o4);
+    DemandPATestUtil.makeVarUsed(o3);
+    DemandPATestUtil.makeVarUsed(o4);
   }
 
 }

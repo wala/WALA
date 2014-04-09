@@ -19,36 +19,36 @@ public abstract class TestMozillaBugPages extends TestJSCallGraphShape {
     
   @Before
   public void config() {
-    JSSourceExtractor.USE_TEMP_NAME = false;
+    JSSourceExtractor.USE_TEMP_NAME = true;
     JSSourceExtractor.DELETE_UPON_EXIT = false;
   }
 
   @Test public void testMozilla439164() throws IOException, IllegalArgumentException, CancelException {
     URL url = getClass().getClassLoader().getResource("pages/mochitest/mozillaBug439164.html");
-    JSCFABuilder builder = Util.makeHTMLCGBuilder(url);
+    JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
-    Util.dumpCG(builder.getPointerAnalysis(), CG);
+    JSCallGraphBuilderUtil.dumpCG(builder.getPointerAnalysis(), CG);
   }
 
   @Test public void testMozilla488233() throws IOException, IllegalArgumentException, CancelException {
     URL url = getClass().getClassLoader().getResource("pages/mochitest/mozillaBug488233NoExtJS.html");
-    JSCFABuilder builder = Util.makeHTMLCGBuilder(url);
+    JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
-    Util.dumpCG(builder.getPointerAnalysis(), CG);
+    JSCallGraphBuilderUtil.dumpCG(builder.getPointerAnalysis(), CG);
   }
 
   @Test public void testMozilla490152() throws IOException, IllegalArgumentException, CancelException {
     URL url = getClass().getClassLoader().getResource("pages/mochitest/mozillaBug490152NoExtJS.html");
-    JSCFABuilder builder = Util.makeHTMLCGBuilder(url);
+    JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
-    Util.dumpCG(builder.getPointerAnalysis(), CG);
+    JSCallGraphBuilderUtil.dumpCG(builder.getPointerAnalysis(), CG);
   }
 
   @Test public void testMozilla625562() throws IOException, IllegalArgumentException, CancelException {
     URL url = getClass().getClassLoader().getResource("pages/mochitest/mozillaBug625562NoExtJS.html");
-    JSCFABuilder builder = Util.makeHTMLCGBuilder(url);
+    JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
-    Util.dumpCG(builder.getPointerAnalysis(), CG);
+    JSCallGraphBuilderUtil.dumpCG(builder.getPointerAnalysis(), CG);
   }
 
 }

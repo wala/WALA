@@ -1,6 +1,7 @@
 package com.ibm.wala.cast.js.ipa.callgraph;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
@@ -22,6 +23,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.intset.OrdinalSet;
 
 public class LoadFileTargetSelector implements MethodTargetSelector {
@@ -33,6 +35,8 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
   private final TypeReference loadFileRef = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName("Lprologue.js/loadFile"));
   
   private final MethodReference loadFileFunRef = AstMethodReference.fnReference(loadFileRef);
+  
+  private final HashSet<URL> loadedFiles = HashSetFactory.make();
 
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
     IMethod target = base.getCalleeTarget(caller, site, receiver);
@@ -56,9 +60,15 @@ public class LoadFileTargetSelector implements MethodTargetSelector {
         try {
           JavaScriptLoader cl = (JavaScriptLoader) builder.getClassHierarchy().getLoader(JavaScriptTypes.jsLoader);
           URL url = new URL(builder.getBaseURL(), str);
-          Util.loadAdditionalFile(builder.getClassHierarchy() , cl, str, url, url.getFile());
-          IClass script = builder.getClassHierarchy().lookupClass(TypeReference.findOrCreate(cl.getReference(), "L" + url.getFile()));
-          return script.getMethod(JavaScriptMethods.fnSelector);
+          if(!loadedFiles.contains(url)) {
+            // try to open the input stream for the URL.  if it fails, we'll get an IOException and fall through to default case
+            InputStream inputStream = url.openConnection().getInputStream();
+            inputStream.close();
+            JSCallGraphUtil.loadAdditionalFile(builder.getClassHierarchy() , cl, str, url);
+            loadedFiles.add(url);
+            IClass script = builder.getClassHierarchy().lookupClass(TypeReference.findOrCreate(cl.getReference(), "L" + url.getFile()));
+            return script.getMethod(JavaScriptMethods.fnSelector);
+          }
         } catch (MalformedURLException e1) {
           // do nothing, fall through and return 'target'
         } catch (IOException e) {

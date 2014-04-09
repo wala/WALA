@@ -46,7 +46,7 @@ class TestArraySetIter {
     s2.add(new B());
     A a = (A) s1.iterator().next();
     B b = (B) s2.iterator().next();
-    TestUtil.makeVarUsed(b);
-    TestUtil.testThisVar(a);
+    DemandPATestUtil.makeVarUsed(b);
+    DemandPATestUtil.testThisVar(a);
   }
 }

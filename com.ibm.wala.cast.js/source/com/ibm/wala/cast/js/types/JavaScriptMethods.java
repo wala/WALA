@@ -30,4 +30,11 @@ public class JavaScriptMethods extends AstMethodReference {
     return MethodReference.findOrCreate(cls, ctorAtom, ctorDesc);
   }
 
+  public final static String dispatchAtomStr = "dispatch";
+  public final static Atom dispatchAtom = Atom.findOrCreateUnicodeAtom(dispatchAtomStr);
+  public final static String dispatchDescStr = "()LRoot;";
+  public final static Descriptor dispatchDesc = Descriptor.findOrCreateUTF8(JavaScriptLoader.JS, dispatchDescStr);
+  public final static MethodReference dispatchReference =
+    MethodReference.findOrCreate(JavaScriptTypes.CodeBody, dispatchAtom, dispatchDesc);
+
 }

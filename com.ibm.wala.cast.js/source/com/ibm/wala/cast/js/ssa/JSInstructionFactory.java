@@ -32,4 +32,8 @@ public interface JSInstructionFactory extends AstInstructionFactory {
   
   JavaScriptWithRegion WithRegion(int iindex, int expr, boolean isEnter);
   
+  PrototypeLookup PrototypeLookup(int iindex, int lval, int object);
+
+  SetPrototype SetPrototype(int iindex, int object, int prototype);
+
 } 

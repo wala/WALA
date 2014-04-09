@@ -18,7 +18,6 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.classLoader.ShrikeClass;
-import com.ibm.wala.shrikeCT.AnnotationsReader.UnimplementedException;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.debug.Assertions;
@@ -39,10 +38,7 @@ public class Annotations {
       } catch (InvalidClassFileException e) {
         e.printStackTrace();
         Assertions.UNREACHABLE();
-      } catch (UnimplementedException e) {
-        e.printStackTrace();
-        Assertions.UNREACHABLE();
-      }
+      } 
       for (Annotation a : annotations) {
         if (a.getType().getName().equals(type)) {
           return true;
@@ -61,9 +57,6 @@ public class Annotations {
       try {
         annotations = ((ShrikeClass) c).getRuntimeInvisibleAnnotations();
       } catch (InvalidClassFileException e) {
-        e.printStackTrace();
-        Assertions.UNREACHABLE();
-      } catch (UnimplementedException e) {
         e.printStackTrace();
         Assertions.UNREACHABLE();
       }

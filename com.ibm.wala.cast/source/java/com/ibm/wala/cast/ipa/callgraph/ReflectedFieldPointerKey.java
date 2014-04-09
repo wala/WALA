@@ -43,7 +43,7 @@ public abstract class ReflectedFieldPointerKey extends AbstractFieldPointerKey {
     return getFieldIdentifier().hashCode() ^ getInstanceKey().hashCode();
   }
 
-  public String toString() { return "field:" + getFieldIdentifier(); }
+  public String toString() { return "[" + getInstanceKey() + "; " + getFieldIdentifier() + "]"; }
   
   public static ReflectedFieldPointerKey literal(final String lit, InstanceKey instance) {
     return new ReflectedFieldPointerKey(instance) {

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Set;
 
+import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.DomLessSourceExtractor;
 import com.ibm.wala.cast.js.html.IdentityUrlResolver;
@@ -14,7 +15,7 @@ import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
-import com.ibm.wala.cast.js.test.Util;
+import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.classLoader.SourceModule;
@@ -23,7 +24,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.CancelException;
 
-public class JsViewerDriver extends Util {
+public class JsViewerDriver extends JSCallGraphBuilderUtil {
 	public static void main(String args[]) throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException {
 
 		if (args.length != 1){
@@ -35,13 +36,13 @@ public class JsViewerDriver extends Util {
 		URL url = new URL(args[0]); 
 		
 		// computing CG + PA
-		Util.setTranslatorFactory(new CAstRhinoTranslatorFactory());
+		JSCallGraphBuilderUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
 		JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
 
 		SourceModule[] sources = getSources(domless, url);
 		
-		JSCFABuilder builder = makeCGBuilder(new WebPageLoaderFactory(translatorFactory), sources, false);
-    builder.setBaseURL(url);
+		JSCFABuilder builder = makeCGBuilder(new WebPageLoaderFactory(translatorFactory), sources, CGBuilderType.ZERO_ONE_CFA, AstIRFactory.makeDefaultFactory());
+		builder.setBaseURL(url);
 
 		CallGraph cg = builder.makeCallGraph(builder.getOptions());
 		PointerAnalysis pa = builder.getPointerAnalysis();

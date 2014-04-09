@@ -31,14 +31,14 @@ public class CAstCloner extends CAstBasicRewriter {
     this(Ast, false);
   }
 
-  protected CAstNode copyNodes(CAstNode root, NonCopyingContext c, Map<Pair<CAstNode,NoKey>, CAstNode> nodeMap) {
-    return copyNodesHackForEclipse(root, c, nodeMap);
+  protected CAstNode copyNodes(CAstNode root, final CAstControlFlowMap cfg, NonCopyingContext c, Map<Pair<CAstNode,NoKey>, CAstNode> nodeMap) {
+    return copyNodesHackForEclipse(root, cfg, c, nodeMap);
   }
   
   /**
    * what is the hack here?  --MS
    */
-  protected CAstNode copyNodesHackForEclipse(CAstNode root, NonCopyingContext c, Map<Pair<CAstNode,NoKey>, CAstNode> nodeMap) {
+  protected CAstNode copyNodesHackForEclipse(CAstNode root, final CAstControlFlowMap cfg, NonCopyingContext c, Map<Pair<CAstNode,NoKey>, CAstNode> nodeMap) {
     if (root instanceof CAstOperator) {
       nodeMap.put(Pair.make(root, c.key()), root);
       return root;
@@ -51,7 +51,7 @@ public class CAstCloner extends CAstBasicRewriter {
       CAstNode newChildren[] = new CAstNode[root.getChildCount()];
 
       for (int i = 0; i < root.getChildCount(); i++) {
-        newChildren[i] = copyNodes(root.getChild(i), c, nodeMap);
+        newChildren[i] = copyNodes(root.getChild(i), cfg, c, nodeMap);
       }
 
       CAstNode copy = Ast.makeNode(root.getKind(), newChildren);

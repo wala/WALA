@@ -39,15 +39,21 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
   private final TypeReference[] declaredResultTypes;
 
   /**
+   * whether the type test throws an exception
+   */
+  private final boolean isPEI;
+  
+  /**
    * @param result A new value number def'fed by this instruction when the type check succeeds.
    * @param val The value being checked by this instruction
    * @param type The type which this instruction checks
    */
-  protected SSACheckCastInstruction(int index, int result, int val, TypeReference[] types) {
-    super(index);
+  protected SSACheckCastInstruction(int iindex, int result, int val, TypeReference[] types, boolean isPEI) {
+    super(iindex);
     this.result = result;
     this.val = val;
     this.declaredResultTypes = types;
+    this.isPEI = isPEI;
   }
 
   @Override
@@ -58,7 +64,7 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
     if (uses != null && uses.length == 0) {
       throw new IllegalArgumentException("(uses != null) and (uses.length == 0)");
     }
-    return insts.CheckCastInstruction(iindex, defs == null ? result : defs[0], uses == null ? val : uses[0], declaredResultTypes);
+    return insts.CheckCastInstruction(iindex, defs == null ? result : defs[0], uses == null ? val : uses[0], declaredResultTypes, isPEI);
   }
 
   @Override
@@ -162,7 +168,7 @@ public abstract class SSACheckCastInstruction extends SSAInstruction {
    */
   @Override
   public boolean isPEI() {
-    return true;
+    return isPEI;
   }
 
   /*

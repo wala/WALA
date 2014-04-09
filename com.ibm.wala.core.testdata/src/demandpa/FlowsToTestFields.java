@@ -28,7 +28,7 @@ public class FlowsToTestFields {
     a2.f = o2;
     Object o3 = a1.f;
     Object o4 = a2.f;
-    TestUtil.makeVarUsed(o3);
-    TestUtil.makeVarUsed(o4);
+    DemandPATestUtil.makeVarUsed(o3);
+    DemandPATestUtil.makeVarUsed(o4);
   }
 }

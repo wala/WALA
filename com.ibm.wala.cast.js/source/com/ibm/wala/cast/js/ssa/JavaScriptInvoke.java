@@ -104,6 +104,8 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
     }
     if (site.getDeclaredTarget().equals(JavaScriptMethods.ctorReference))
       s.append("construct ");
+    else if (site.getDeclaredTarget().equals(JavaScriptMethods.dispatchReference))
+      s.append("dispatch ");
     else
       s.append("invoke ");
     s.append(getValueString(symbolTable, function));
@@ -151,8 +153,8 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
    * @see com.ibm.domo.ssa.Instruction#visit(Visitor)
    */
   public void visit(IVisitor v) {
-    assert v instanceof InstructionVisitor;
-    ((InstructionVisitor) v).visitJavaScriptInvoke(this);
+    assert v instanceof JSInstructionVisitor;
+    ((JSInstructionVisitor) v).visitJavaScriptInvoke(this);
   }
 
   public int getNumberOfParameters() {

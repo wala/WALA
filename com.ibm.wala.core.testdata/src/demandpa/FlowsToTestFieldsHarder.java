@@ -27,6 +27,6 @@ public class FlowsToTestFieldsHarder {
     a2.f = a1;
     A a3 = (A) a2.f;
     Object o2 = a3.f;
-    TestUtil.makeVarUsed(o2);
+    DemandPATestUtil.makeVarUsed(o2);
   }
 }

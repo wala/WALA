@@ -17,7 +17,6 @@ import java.util.HashSet;
 
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.Constants;
-import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
@@ -50,7 +49,7 @@ public class ArrayClass implements IClass, Constants {
         Assertions.UNREACHABLE("caller should not attempt to create an array with type " + type);
       }
     } else {
-      assert loader.getReference().equals(ClassLoaderReference.Primordial);
+      // assert loader.getReference().equals(ClassLoaderReference.Primordial);
     }
   }
 
@@ -123,7 +122,7 @@ public class ArrayClass implements IClass, Constants {
    * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
    */
   public IMethod getMethod(Selector sig) {
-    return loader.lookupClass(getClassLoader().getLanguage().getRootType().getName()).getMethod(sig);
+    return cha.lookupClass(getClassLoader().getLanguage().getRootType()).getMethod(sig);
   }
 
   public IField getField(Atom name) {

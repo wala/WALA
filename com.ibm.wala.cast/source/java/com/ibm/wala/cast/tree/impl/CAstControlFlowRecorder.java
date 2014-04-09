@@ -140,6 +140,14 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
     assert from != null;
     assert to != null;
 
+    if (CAstToNode.containsKey(to)) {
+      to = CAstToNode.get(to);
+    }
+
+    if (CAstToNode.containsKey(from)) {
+      from = CAstToNode.get(from);
+    }
+    
     table.put(new Key(label, from), to);
 
     Set<Object> ls = labelMap.get(from);
@@ -161,8 +169,8 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
   public void map(Object node, CAstNode ast) {
     assert node != null;
     assert ast != null;
-    assert !nodeToCAst.containsKey(node) : node + " already mapped:\n" + this;
-    assert !CAstToNode.containsKey(ast) : ast + " already mapped:\n" + this;
+    assert !nodeToCAst.containsKey(node) || nodeToCAst.get(node) == ast : node + " already mapped:\n" + this;
+    assert !CAstToNode.containsKey(ast) || CAstToNode.get(ast) == node : ast + " already mapped:\n" + this;
     nodeToCAst.put(node, ast);
     cachedMappedNodes = null;
     CAstToNode.put(ast, node);
@@ -170,8 +178,12 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
 
   public void addAll(CAstControlFlowMap other) {
     for (CAstNode n : other.getMappedNodes()) {
+      if (! CAstToNode.containsKey(n)) {
+        map(n, n);
+      }
       for (Object l : other.getTargetLabels(n)) {
-        add(n, l, other.getTarget(n, l));
+        CAstNode to = other.getTarget(n, l);
+        add(n, to, l);
       }
     }
   }

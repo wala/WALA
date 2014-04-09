@@ -10,33 +10,105 @@
  *******************************************************************************/
 package com.ibm.wala.types.annotations;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+
+import com.ibm.wala.shrikeCT.AnnotationsReader;
+import com.ibm.wala.shrikeCT.AnnotationsReader.AnnotationAttribute;
+import com.ibm.wala.shrikeCT.AnnotationsReader.ElementValue;
+import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Pair;
 
 /**
- * Represents a Java 5.0 class file annotation
+ * Represents a member annotation, e.g., Java 5.0 class file annotations
  */
 public class Annotation {
-  
+
   private final TypeReference type;
-  
-  private Annotation(TypeReference type) {
+
+  /**
+   * named arguments to the annotation, represented as a mapping from name to
+   * value. Note that for Java annotation arguments, the values are always
+   * Strings, independent of their actual type in the bytecode.
+   */
+  private final Map<String, ElementValue> namedArguments;
+
+  /**
+   * unnamed arguments to the annotation (e.g., constructor arguments for C#
+   * attributes), represented as an array of pairs (T,V), where T is the
+   * argument type and V is the value. The array preserves the order in which
+   * the arguments were passed.  If null, there are no unnamed arguments. 
+   */
+  private final Pair<TypeReference, Object>[] unnamedArguments;
+
+  private Annotation(TypeReference type, Map<String, ElementValue> namedArguments, Pair<TypeReference, Object>[] unnamedArguments) {
     this.type = type;
+    if (namedArguments == null) {
+      throw new IllegalArgumentException("namedArguments is null");
+    }
+    this.namedArguments = namedArguments;
+    this.unnamedArguments = unnamedArguments;
+  }
+
+  public static Annotation makeUnnamedAndNamed(TypeReference t, Map<String, ElementValue> namedArguments, Pair<TypeReference,Object>[] unnamedArguments) {
+    return new Annotation(t, namedArguments, unnamedArguments);
+  }
+  public static Annotation makeWithUnnamed(TypeReference t, Pair<TypeReference, Object>[] unnamedArguments) {
+    return new Annotation(t, Collections.<String,ElementValue>emptyMap(), unnamedArguments);
   }
 
   public static Annotation make(TypeReference t) {
-    return new Annotation(t);
+    return new Annotation(t, Collections.<String,ElementValue>emptyMap(), null);
+  }
+  
+  public static Annotation makeWithNamed(TypeReference t, Map<String,ElementValue> namedArguments) {
+    return new Annotation(t, namedArguments, null);
+  }
+  
+  public static Collection<Annotation> getAnnotationsFromReader(AnnotationsReader r, ClassLoaderReference clRef) throws InvalidClassFileException {
+    if (r != null) {
+      AnnotationAttribute[] allAnnotations = r.getAllAnnotations();      
+      Collection<Annotation> result = HashSetFactory.make();
+      for (AnnotationAttribute annot : allAnnotations) {
+        String type = annot.type;
+        type = type.replaceAll(";", "");
+        TypeReference t = TypeReference.findOrCreate(clRef, type);
+        result.add(makeWithNamed(t, annot.elementValues));
+      }
+      return result;
+    } else {
+      return Collections.emptySet();
+    }
+    
   }
 
   @Override
   public String toString() {
-    return "Annotation type " + type;
+    StringBuffer sb = new StringBuffer("Annotation type " + type);
+    if (unnamedArguments != null) {
+      sb.append("[");
+      for (Pair<TypeReference, Object> arg : unnamedArguments) {
+        sb.append(" " + arg.fst.getName().getClassName() + ":" + arg.snd);
+      }
+      sb.append(" ]");
+    }
+    if (!namedArguments.isEmpty()) {
+      sb.append(" " + namedArguments);
+    }
+    return sb.toString();
   }
 
   @Override
   public int hashCode() {
-    final int PRIME = 31;
+    final int prime = 31;
     int result = 1;
-    result = PRIME * result + ((type == null) ? 0 : type.hashCode());
+    result = prime * result + Arrays.hashCode(unnamedArguments);
+    result = prime * result + ((type == null) ? 0 : type.hashCode());
     return result;
   }
 
@@ -48,7 +120,9 @@ public class Annotation {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    final Annotation other = (Annotation) obj;
+    Annotation other = (Annotation) obj;
+    if (!Arrays.equals(unnamedArguments, other.unnamedArguments))
+      return false;
     if (type == null) {
       if (other.type != null)
         return false;
@@ -57,7 +131,14 @@ public class Annotation {
     return true;
   }
 
+  public Pair<TypeReference, Object>[] getUnnamedArguments() {
+    return unnamedArguments;
+  }
   
+  public Map<String,ElementValue> getNamedArguments() {
+    return namedArguments;
+  }
+
   public TypeReference getType() {
     return type;
   }

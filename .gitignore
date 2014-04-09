@@ -5,11 +5,15 @@
 *.out
 */bin/*
 com.ibm.wala.core/dat/wala.properties
-com.ibm.wala.cast.java.polyglot/lib/java_cup.jar
-com.ibm.wala.cast.java.polyglot/lib/polyglot.jar
 com.ibm.wala.cast.java.test.data/src/JLex/
 com.ibm.wala.cast.js.rhino/lib/
 com.ibm.wala.cast.js/lib/
 com.ibm.wala.cast.js.rhino.test/2009_swine_flu_outbreak
 com.ibm.wala.cast.js.rhino.test/*.html
 com.ibm.wala.cast.js.test/examples-src/ajaxslt/
+com.ibm.wala.cast.java.polyglot/lib/
+.metadata/
+com.ibm.wala.cast.js.test/examples-src/ajaxslt/
+com.ibm.wala.core.testdata/@dot/
+com.ibm.wala.core.testdata/lib/
+com.ibm.wala.cast.js.html.nu_validator/lib/

@@ -14,7 +14,6 @@ package com.ibm.wala.classLoader;
 import java.io.File;
 
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.shrike.ShrikeClassReaderHandle;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 
@@ -25,18 +24,10 @@ public class ClassFileModule extends FileModule {
 
   private final String className;
 
-  public ClassFileModule(File f) {
+  public ClassFileModule(File f) throws InvalidClassFileException {
     super(f);
-    // this is delicate: TODO, clean it up a bit.
     ShrikeClassReaderHandle reader = new ShrikeClassReaderHandle(this);
-    ImmutableByteArray name = null;
-    try {
-      name = ImmutableByteArray.make(reader.get().getName());
-    } catch (InvalidClassFileException e) {
-      System.err.println("Invalid class file: " + f.getAbsolutePath());
-      e.printStackTrace();
-      Assertions.UNREACHABLE();
-    }
+    ImmutableByteArray name = ImmutableByteArray.make(reader.get().getName());
     className = name.toString();
   }
 

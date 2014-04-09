@@ -3,11 +3,16 @@ primitive = new Primitives();
 
 // core definitions needed to make anything work, even what follows
 Object = primitive("NewObject");
-Function = primitive("NewFunction");
-Array = primitive("NewArray");
-String = primitive("NewString");
-Number = primitive("NewNumber");
-RegExp = primitive("NewRegExp");
+var local_function = primitive("NewFunction");
+Function = local_function;
+var local_array = primitive("NewArray");
+Array = local_array;
+var local_string = primitive("NewString");
+String = local_string;
+var local_number = primitive("NewNumber");
+Number = local_number;
+var local_regexp = primitive("NewRegExp");
+RegExp = local_regexp;
 
 /************************************************************************/
 /* Global properties, see spec 15.1					*/
@@ -104,7 +109,7 @@ Object.prototype = {
 /* Function properties, see spec 15.3					*/
 /************************************************************************/
 
-Function.prototype = {
+local_function.prototype = {
 
   constructor: Function,
 
@@ -124,12 +129,15 @@ Function.prototype = {
   }
 };
 
+local_function.__proto__ = Function.prototype;
 
 /************************************************************************/
 /* Array properties, see spec 15.4					*/
 /************************************************************************/
 
-Array.prototype = {
+local_array.__proto__ = Function.prototype;
+
+local_array.prototype = {
 
   __proto__: Object.prototype,
 
@@ -182,7 +190,7 @@ Array.prototype = {
   },
 
   push: function push () {
-    var n = this.length
+    var n = this.length;
     for(var i = 0; i < arguments.length; i++) {
       this[ n++ ] = arguments[i];
     }
@@ -248,7 +256,9 @@ Array.prototype = {
 /* String properties, see spec 15.4					*/
 /************************************************************************/
 
-String.prototype = {
+local_string.__proto__ = Function.prototype;
+
+local_string.prototype = {
 
   __proto__: Object.prototype,
 
@@ -324,7 +334,9 @@ String.prototype = {
 /* Number properties, see spec 15.7					*/
 /************************************************************************/
 
-Number.prototype = {
+local_number.__proto__ = Function.prototype;
+
+local_number.prototype = {
 
   __proto__: Object.prototype,
 
@@ -412,7 +424,9 @@ Math = {
 /* RegExp properties, see spec 15.10					*/
 /************************************************************************/
 
-RegExp.prototype = {
+local_regexp.__proto__ = Function.prototype;
+
+local_regexp.prototype = {
 
   __proto__: Object.prototype,
 

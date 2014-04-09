@@ -10,15 +10,19 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ipa.callgraph;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Set;
 
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.cast.ipa.callgraph.AstSSAPropagationCallGraphBuilder;
+import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
+import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
 import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
 import com.ibm.wala.cast.js.analysis.typeInference.JSTypeInference;
-import com.ibm.wala.cast.js.ssa.InstructionVisitor;
+import com.ibm.wala.cast.js.ipa.callgraph.JSSSAPropagationCallGraphBuilder.JSPointerAnalysisImpl.JSImplicitPointsToSetVisitor;
+import com.ibm.wala.cast.js.ssa.JSInstructionVisitor;
 import com.ibm.wala.cast.js.ssa.JavaScriptCheckReference;
 import com.ibm.wala.cast.js.ssa.JavaScriptInstanceOf;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
@@ -26,17 +30,25 @@ import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
 import com.ibm.wala.cast.js.ssa.JavaScriptTypeOfInstruction;
 import com.ibm.wala.cast.js.ssa.JavaScriptWithRegion;
+import com.ibm.wala.cast.js.ssa.PrototypeLookup;
+import com.ibm.wala.cast.js.ssa.SetPrototype;
+import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.fixpoint.AbstractOperator;
+import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.AbstractFieldPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
@@ -52,6 +64,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationSystem;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.BinaryOpInstruction;
+import com.ibm.wala.shrikeBT.IBinaryOpInstruction.IOperator;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
@@ -60,16 +73,57 @@ import com.ibm.wala.ssa.SSABinaryOpInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.MutableMapping;
+import com.ibm.wala.util.intset.MutableSparseIntSet;
+import com.ibm.wala.util.intset.OrdinalSet;
+import com.ibm.wala.util.strings.Atom;
 
+/**
+ * Specialized pointer analysis constraint generation for JavaScript.
+ * 
+ * <h2>Global object handling</h2>
+ * 
+ * The global object is represented by a {@link GlobalObjectKey} stored in
+ * {@link #globalObject}. {@link AstGlobalRead} and {@link AstGlobalWrite}
+ * instructions are treated as accessing properties of the global object; see
+ * {@link JSConstraintVisitor#visitAstGlobalRead(AstGlobalRead)},
+ * {@link JSConstraintVisitor#visitAstGlobalWrite(AstGlobalWrite)}, and
+ * {@link JSImplicitPointsToSetVisitor#visitAstGlobalRead(AstGlobalRead)}.
+ * Finally, we need to represent direct flow of the global object to handle
+ * receiver argument semantics (see
+ * {@link org.mozilla.javascript.RhinoToAstTranslator}). To do so, we create a
+ * reference to a global named {@link #GLOBAL_OBJ_VAR_NAME}, which is handled
+ * specially in {@link JSConstraintVisitor#visitAstGlobalRead(AstGlobalRead)}.
+ */
 public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraphBuilder {
 
   public static final boolean DEBUG_LEXICAL = false;
 
   public static final boolean DEBUG_TYPE_INFERENCE = false;
+
+  /**
+   * name to be used internally to pass around the global object
+   */
+  public static final String GLOBAL_OBJ_VAR_NAME = "__WALA__int3rnal__global";
+
+  /**
+   * is field a direct (WALA-internal) reference to the global object?
+   */
+  private static boolean directGlobalObjectRef(FieldReference field) {
+    return field.getName().toString().endsWith(GLOBAL_OBJ_VAR_NAME);
+  }
+
+  private static FieldReference makeNonGlobalFieldReference(FieldReference field) {
+    String nonGlobalFieldName = field.getName().toString().substring(7);
+    field = FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreateUnicodeAtom(nonGlobalFieldName),
+        JavaScriptTypes.Root);
+    return field;
+  }
 
   private URL scriptBaseURL;
 
@@ -108,7 +162,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       return true;
     }
     return "prototype".equals(fieldName) || "constructor".equals(fieldName) || "arguments".equals(fieldName)
-        || "class".equals(fieldName) || "$value".equals(fieldName);
+        || "class".equals(fieldName) || "$value".equals(fieldName) || "__proto__".equals(fieldName);
   }
 
   // ///////////////////////////////////////////////////////////////////////////
@@ -116,6 +170,8 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   // top-level node constraint generation
   //
   // ///////////////////////////////////////////////////////////////////////////
+
+  private final GlobalObjectKey globalObject = new GlobalObjectKey(cha.lookupClass(JavaScriptTypes.Object));
 
   protected ExplicitCallGraph createEmptyCallGraph(IClassHierarchy cha, AnalysisOptions options) {
     return new JSCallGraph(cha, options, getAnalysisCache());
@@ -144,7 +200,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     system.newConstraint(exceptionVar, assignOperator, e);
   }
 
-  public static class JSInterestingVisitor extends AstInterestingVisitor implements com.ibm.wala.cast.js.ssa.InstructionVisitor {
+  public static class JSInterestingVisitor extends AstInterestingVisitor implements com.ibm.wala.cast.js.ssa.JSInstructionVisitor {
     public JSInterestingVisitor(int vn) {
       super(vn);
     }
@@ -180,6 +236,16 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     public void visitWithRegion(JavaScriptWithRegion instruction) {
 
     }
+
+    @Override
+    public void visitSetPrototype(SetPrototype instruction) {
+      bingo = true;
+    }
+
+    @Override
+    public void visitPrototypeLookup(PrototypeLookup instruction) {
+      bingo = true;
+    }
   }
 
   protected InterestingVisitor makeInterestingVisitor(CGNode node, int vn) {
@@ -200,7 +266,8 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     }
 
     public static class JSImplicitPointsToSetVisitor extends AstImplicitPointsToSetVisitor implements
-        com.ibm.wala.cast.js.ssa.InstructionVisitor {
+        com.ibm.wala.cast.js.ssa.JSInstructionVisitor {
+
       public JSImplicitPointsToSetVisitor(AstPointerAnalysisImpl analysis, LocalPointerKey lpk) {
         super(analysis, lpk);
       }
@@ -232,6 +299,35 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       public void visitWithRegion(JavaScriptWithRegion instruction) {
 
       }
+
+      @Override
+      public void visitAstGlobalRead(AstGlobalRead instruction) {
+        JSPointerAnalysisImpl jsAnalysis = (JSPointerAnalysisImpl) analysis;
+        FieldReference field = makeNonGlobalFieldReference(instruction.getDeclaredField());
+        assert !directGlobalObjectRef(field);
+        IField f = jsAnalysis.builder.getCallGraph().getClassHierarchy().resolveField(field);
+        assert f != null;
+        MutableSparseIntSet S = MutableSparseIntSet.makeEmpty();
+        InstanceKey globalObj = ((JSSSAPropagationCallGraphBuilder) jsAnalysis.builder).globalObject;
+        PointerKey fkey = analysis.getHeapModel().getPointerKeyForInstanceField(globalObj, f);
+        if (fkey != null) {
+          OrdinalSet pointees = analysis.getPointsToSet(fkey);
+          IntSet set = pointees.getBackingSet();
+          if (set != null) {
+            S.addAll(set);
+          }
+        }
+        pointsToSet = new OrdinalSet<InstanceKey>(S, analysis.getInstanceKeyMapping());
+      }
+
+      @Override
+      public void visitSetPrototype(SetPrototype instruction) {
+      }
+
+      @Override
+      public void visitPrototypeLookup(PrototypeLookup instruction) {
+      }
+
     };
 
     protected ImplicitPointsToSetVisitor makeImplicitPointsToVisitor(LocalPointerKey lpk) {
@@ -266,7 +362,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     return new JSConstraintVisitor(this, node);
   }
 
-  private Position getSomePositionForMethod(IR ir, AstMethod method) {
+  public static Position getSomePositionForMethod(IR ir, AstMethod method) {
     SSAInstruction[] instructions = ir.getInstructions();
     for (int i = 0; i < instructions.length; i++) {
       Position p = method.getSourcePosition(i);
@@ -277,10 +373,14 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     return null;
   }
 
-  public static class JSConstraintVisitor extends AstConstraintVisitor implements InstructionVisitor {
+  public static class JSConstraintVisitor extends AstConstraintVisitor implements JSInstructionVisitor {
 
     public JSConstraintVisitor(AstSSAPropagationCallGraphBuilder builder, CGNode node) {
       super(builder, node);
+    }
+
+    protected JSSSAPropagationCallGraphBuilder getBuilder() {
+      return (JSSSAPropagationCallGraphBuilder) builder;
     }
 
     public void visitUnaryOp(SSAUnaryOpInstruction inst) {
@@ -320,6 +420,54 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       addLvalTypeKeyConstraint(instruction, JavaScriptTypes.String);
     }
 
+    @Override
+    public void visitAstGlobalRead(AstGlobalRead instruction) {
+      int lval = instruction.getDef();
+      FieldReference field = makeNonGlobalFieldReference(instruction.getDeclaredField());
+      PointerKey def = getPointerKeyForLocal(lval);
+      assert def != null;
+      IField f = getClassHierarchy().resolveField(field);
+      assert f != null : "could not resolve referenced global " + field;
+      if (hasNoInterestingUses(lval)) {
+        system.recordImplicitPointsToSet(def);
+      } else {
+        InstanceKey globalObj = getBuilder().globalObject;
+        if (directGlobalObjectRef(field)) {
+          // points-to set is just the global object
+          system.newConstraint(def, globalObj);
+        } else {
+          system.findOrCreateIndexForInstanceKey(globalObj);
+          PointerKey p = getPointerKeyForInstanceField(globalObj, f);
+          system.newConstraint(def, assignOperator, p);
+        }
+      }
+
+    }
+
+    @Override
+    public void visitAstGlobalWrite(AstGlobalWrite instruction) {
+      int rval = instruction.getVal();
+      FieldReference field = makeNonGlobalFieldReference(instruction.getDeclaredField());
+      IField f = getClassHierarchy().resolveField(field);
+      assert f != null : "could not resolve referenced global " + field;
+      assert !f.getFieldTypeReference().isPrimitiveType();
+      InstanceKey globalObj = getBuilder().globalObject;
+      system.findOrCreateIndexForInstanceKey(globalObj);
+      PointerKey p = getPointerKeyForInstanceField(globalObj, f);
+
+      PointerKey rvalKey = getPointerKeyForLocal(rval);
+      if (contentsAreInvariant(symbolTable, du, rval)) {
+        system.recordImplicitPointsToSet(rvalKey);
+        InstanceKey[] ik = getInvariantContents(rval);
+        for (int i = 0; i < ik.length; i++) {
+          system.newConstraint(p, ik[i]);
+        }
+      } else {
+        system.newConstraint(p, assignOperator, rvalKey);
+      }
+
+    }
+
     public void visitBinaryOp(final SSABinaryOpInstruction instruction) {
       handleBinaryOp(instruction, node, symbolTable, du);
     }
@@ -340,7 +488,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
         SSAInstruction[] instructions = ir.getInstructions();
         for (int ind = basicBlock.getFirstInstructionIndex(); ind <= basicBlock.getLastInstructionIndex(); ind++) {
           if (instruction.equals(instructions[ind])) {
-            return ((AstMethod)method).getSourcePosition(ind);
+            return ((AstMethod) method).getSourcePosition(ind);
           }
         }
       }
@@ -358,9 +506,135 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     }
 
     public void visitJavaScriptInvoke(JavaScriptInvoke instruction) {
-      visitInvokeInternal(instruction);
+      if (instruction.getDeclaredTarget().equals(JavaScriptMethods.dispatchReference)) {
+        handleJavascriptDispatch(instruction);
+      } else {
+        visitInvokeInternal(instruction, new DefaultInvariantComputer());
+      }
     }
 
+    private void handleJavascriptDispatch(final JavaScriptInvoke instruction, final InstanceKey receiverType) {
+      int functionVn = instruction.getFunction();
+
+      ReflectedFieldAction fieldDispatchAction = new ReflectedFieldAction() {
+        @Override
+        public void action(final AbstractFieldPointerKey fieldKey) {
+            class FieldValueDispatch extends UnaryOperator<PointsToSetVariable> {
+              private JavaScriptInvoke getInstruction() { return instruction; }
+              private InstanceKey getReceiver() { return receiverType; }
+              private AbstractFieldPointerKey getProperty() { return fieldKey; }
+              
+              @Override
+              public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable ptrs) {
+                if (ptrs.getValue() != null) {
+                  ptrs.getValue().foreach(new IntSetAction() {
+                    @Override
+                    public void act(int x) {
+                      final InstanceKey functionObj = system.getInstanceKey(x);
+                      visitInvokeInternal(instruction, new DefaultInvariantComputer() {
+                        @Override
+                        public InstanceKey[][] computeInvariantParameters(SSAAbstractInvokeInstruction call) {
+                          InstanceKey[][] x = super.computeInvariantParameters(call);
+                          if (x == null) {
+                            x = new InstanceKey[call.getNumberOfUses()][];
+                          }
+                          x[0] = new InstanceKey[]{ functionObj };
+                          x[1] = new InstanceKey[]{ receiverType };
+                          return x;
+                        }
+                      });
+                    } 
+                  });
+                }
+                return NOT_CHANGED;
+              }
+              @Override
+              public int hashCode() {
+                return instruction.hashCode() * fieldKey.hashCode() * receiverType.hashCode();
+              }
+              @Override
+              public boolean equals(Object o) {
+                return o instanceof FieldValueDispatch &&
+                ((FieldValueDispatch)o).getInstruction() == instruction &&
+                ((FieldValueDispatch)o).getProperty().equals(fieldKey) &&
+                ((FieldValueDispatch)o).getReceiver().equals(receiverType);
+              }
+              @Override
+              public String toString() {
+                return "sub-dispatch for " + instruction + ": " + receiverType + ", " + fieldKey;
+              } 
+            };
+          
+            system.newSideEffect(new FieldValueDispatch(), fieldKey);
+        }
+        @Override
+        public void dump(AbstractFieldPointerKey fieldKey, boolean constObj, boolean constProp) {
+          System.err.println("dispatch to " + receiverType + "." + fieldKey + " for " + instruction);
+        }
+      };
+
+      TransitivePrototypeKey prototypeObjs = new TransitivePrototypeKey(receiverType);
+      InstanceKey[] objKeys = new InstanceKey[]{ receiverType };
+      if (contentsAreInvariant(symbolTable, du, functionVn)) {
+        InstanceKey[] fieldsKeys = getInvariantContents(functionVn);
+        newFieldOperationObjectAndFieldConstant(true, fieldDispatchAction, objKeys, fieldsKeys);
+        newFieldOperationOnlyFieldConstant(true, fieldDispatchAction, prototypeObjs, fieldsKeys);
+      } else {
+        PointerKey fieldKey = getPointerKeyForLocal(functionVn);
+        newFieldOperationOnlyObjectConstant(true, fieldDispatchAction, fieldKey, objKeys);
+        newFieldFullOperation(true, fieldDispatchAction, prototypeObjs, fieldKey);
+      }
+    }
+    
+    private void handleJavascriptDispatch(final JavaScriptInvoke instruction) {
+      int receiverVn = instruction.getUse(1);
+      PointerKey receiverKey = getPointerKeyForLocal(receiverVn);
+      if (contentsAreInvariant(symbolTable, du, receiverVn)) {
+          system.recordImplicitPointsToSet(receiverKey);
+          InstanceKey[] ik = getInvariantContents(receiverVn);
+          for (int i = 0; i < ik.length; i++) {
+            handleJavascriptDispatch(instruction, ik[i]);
+          }
+      } else {
+        class ReceiverForDispatchOp extends UnaryOperator<PointsToSetVariable> {
+          private JavaScriptInvoke getInstruction() {
+            return instruction;
+          }
+          
+          @Override
+          public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
+            if (rhs.getValue() != null) {
+              rhs.getValue().foreach(new IntSetAction() {
+                @Override
+                public void act(int x) {
+                  InstanceKey ik = system.getInstanceKey(x);
+                  handleJavascriptDispatch(instruction, ik);
+                }
+              });
+            }
+            return NOT_CHANGED;
+          }
+
+          @Override
+          public int hashCode() {
+            return instruction.hashCode(); 
+          }
+
+          @Override
+          public boolean equals(Object o) {
+            return o instanceof ReceiverForDispatchOp && ((ReceiverForDispatchOp)o).getInstruction()==getInstruction();
+          }
+
+          @Override
+          public String toString() {
+            return "receiver for dispatch: " + instruction;
+          }
+        }
+
+        system.newSideEffect(new ReceiverForDispatchOp(), receiverKey);
+      }
+    }
+    
     // ///////////////////////////////////////////////////////////////////////////
     //
     // string manipulation handling for binary operators
@@ -474,20 +748,33 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           }
 
           if (doDefault) {
-            for (int i = 0; i < iks1.length; i++) {
-              if (addKey(new ConcreteTypeKey(iks1[i].getConcreteType()))) {
-                changed = CHANGED;
+              for (int i = 0; i < iks1.length; i++) {
+                for (int j = 0; j < iks2.length; j++) {
+                  if (handleBinaryOperatorArgs(iks1[i], iks2[j])) {
+                    changed = CHANGED;
+                  }
+                }
               }
-            }
-            for (int i = 0; i < iks2.length; i++) {
-              if (addKey(new ConcreteTypeKey(iks2[i].getConcreteType()))) {
-                changed = CHANGED;
-              }
-            }
           }
-
+          
           return changed;
         }
+        
+        private boolean isNumberType(Language l, TypeReference t) {
+          return l.isDoubleType(t)||l.isFloatType(t)||l.isIntType(t)||l.isLongType(t);
+        }
+        
+        protected boolean handleBinaryOperatorArgs(InstanceKey left, InstanceKey right) {
+          Language l = node.getMethod().getDeclaringClass().getClassLoader().getLanguage();
+          if (l.isStringType(left.getConcreteType().getReference()) || l.isStringType(right.getConcreteType().getReference())) {
+            return addKey(new ConcreteTypeKey(node.getClassHierarchy().lookupClass(l.getStringType())));
+          } else if (isNumberType(l, left.getConcreteType().getReference()) && isNumberType(l, right.getConcreteType().getReference())) {
+            return addKey(left) || addKey(right);
+          } else {
+            return false;
+          }
+         }
+
       }
 
       BinaryOperator B = new BinaryOperator();
@@ -516,6 +803,98 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       // TODO Auto-generated method stub
 
     }
+
+    private final UnaryOperator<PointsToSetVariable> transitivePrototypeOp = new UnaryOperator<PointsToSetVariable>() {
+      @Override
+      public byte evaluate(final PointsToSetVariable lhs, PointsToSetVariable rhs) {
+        class Op implements IntSetAction {
+          private boolean changed = false;
+          
+          @Override
+          public void act(int x) {
+            InstanceKey protoObj = system.getInstanceKey(x);
+            PointerKey protoObjKey = new TransitivePrototypeKey(protoObj);
+            changed |= system.newStatement(lhs, assignOperator, system.findOrCreatePointsToSet(protoObjKey), true, true);
+          }        
+        }
+        
+        if (rhs.getValue() != null) {
+          Op op = new Op();
+          rhs.getValue().foreach(op); 
+          return (op.changed? CHANGED: NOT_CHANGED);
+        }
+        return NOT_CHANGED;
+      }
+
+      @Override
+      public int hashCode() {
+        return -896435647;
+      }
+
+      @Override
+      public boolean equals(Object o) {
+        return o == this;
+      }
+
+      @Override
+      public String toString() {
+        return "transitivePrototypeOp";
+      }
+      
+    };
+    
+    private final FieldReference prototypeRef;
+    {
+      FieldReference x = null;
+      try {
+        byte[] utf8 = "__proto__".getBytes("UTF-8");
+        x = FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreate(utf8, 0, utf8.length), JavaScriptTypes.Root);
+      } catch (UnsupportedEncodingException e) {
+        assert false;
+      }
+      prototypeRef = x;
+    }
+    
+    @Override
+    public void visitSetPrototype(SetPrototype instruction) {
+      visitPutInternal(instruction.getUse(1), instruction.getUse(0), false, prototypeRef);
+      
+      assert contentsAreInvariant(symbolTable, du, instruction.getUse(0));      
+      if (contentsAreInvariant(symbolTable, du, instruction.getUse(1))) {
+        for(InstanceKey newObj : getInvariantContents(instruction.getUse(0))) {   
+          PointerKey newObjKey = new TransitivePrototypeKey(newObj);
+          for(InstanceKey protoObj : getInvariantContents(instruction.getUse(1))) {   
+            system.newConstraint(newObjKey, protoObj);
+            system.newConstraint(newObjKey, assignOperator, new TransitivePrototypeKey(protoObj));
+          }
+        }
+      } else {
+        for(InstanceKey newObj : getInvariantContents(instruction.getUse(0))) {   
+          PointerKey newObjKey = new TransitivePrototypeKey(newObj);
+          system.newConstraint(newObjKey, assignOperator, getPointerKeyForLocal(instruction.getUse(1)));
+          system.newConstraint(newObjKey, transitivePrototypeOp, getPointerKeyForLocal(instruction.getUse(1)));
+        }
+      }
+    }
+
+    @Override
+    public void visitPrototypeLookup(PrototypeLookup instruction) {
+      if (contentsAreInvariant(symbolTable, du, instruction.getUse(0))) {
+        for(InstanceKey rhsObj : getInvariantContents(instruction.getUse(0))) {   
+          // property can come from object itself...
+          system.newConstraint(getPointerKeyForLocal(instruction.getDef(0)), rhsObj);
+        
+          // ...or prototype objects
+          system.newConstraint(getPointerKeyForLocal(instruction.getDef(0)), assignOperator, new TransitivePrototypeKey(rhsObj));
+        }
+      } else {
+        // property can come from object itself...
+        system.newConstraint(getPointerKeyForLocal(instruction.getDef(0)), assignOperator, getPointerKeyForLocal(instruction.getUse(0)));
+      
+        // ...or prototype objects
+        system.newConstraint(getPointerKeyForLocal(instruction.getDef(0)), transitivePrototypeOp, getPointerKeyForLocal(instruction.getUse(0)));
+      }
+    }
   }
 
   // ///////////////////////////////////////////////////////////////////////////
@@ -527,6 +906,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   @Override
   protected void processCallingConstraints(CGNode caller, SSAAbstractInvokeInstruction instruction, CGNode target,
       InstanceKey[][] constParams, PointerKey uniqueCatchKey) {
+
 
     IR sourceIR = getCFAContextInterpreter().getIR(caller);
     SymbolTable sourceST = sourceIR.getSymbolTable();
@@ -549,10 +929,14 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     int paramCount = targetST.getParameterValueNumbers().length;
     int argCount = instruction.getNumberOfParameters();
+    
+    // the first two arguments are the function object and the receiver, neither of which
+    // should become part of the arguments array
+    int num_pseudoargs = 2;
 
     // pass actual arguments to formals in the normal way
     for (int i = 0; i < Math.min(paramCount, argCount); i++) {
-      InstanceKey[] fn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.Number, i) };
+      InstanceKey[] fn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.Number, i-num_pseudoargs) };
       PointerKey F = getTargetPointerKey(target, i);
 
       if (constParams != null && constParams[i] != null) {
@@ -560,15 +944,17 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           system.newConstraint(F, constParams[i][j]);
         }
 
-        if (av != -1)
+        if (av != -1 && i >= num_pseudoargs) {
           targetVisitor.newFieldWrite(target, av, fn, constParams[i]);
-
+        }
+        
       } else {
         PointerKey A = getPointerKeyForLocal(caller, instruction.getUse(i));
         system.newConstraint(F, (F instanceof FilteredPointerKey) ? filterOperator : assignOperator, A);
 
-        if (av != -1)
+        if (av != -1 && i >= num_pseudoargs) {
           targetVisitor.newFieldWrite(target, av, fn, F);
+        }
       }
     }
 
@@ -576,10 +962,10 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     if (paramCount < argCount) {
       if (av != -1) {
         for (int i = paramCount; i < argCount; i++) {
-          InstanceKey[] fn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.Number, i) };
-          if (constParams != null && constParams[i] != null) {
-            targetVisitor.newFieldWrite(target, av, fn, constParams[i]);
-          } else {
+          InstanceKey[] fn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.Number, i-num_pseudoargs) };
+          if (constParams != null && constParams[i] != null && i >= num_pseudoargs) {
+              targetVisitor.newFieldWrite(target, av, fn, constParams[i]);
+          } else if(i >= num_pseudoargs) {
             PointerKey A = getPointerKeyForLocal(caller, instruction.getUse(i));
             targetVisitor.newFieldWrite(target, av, fn, A);
           }
@@ -602,7 +988,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     // write `length' in argument objects
     if (av != -1) {
-      InstanceKey[] svn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.Number, argCount) };
+      InstanceKey[] svn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.Number, argCount-1) };
       InstanceKey[] lnv = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.String, "length") };
       targetVisitor.newFieldWrite(target, av, lnv, svn);
     }
@@ -623,5 +1009,4 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       system.newConstraint(EA, assignOperator, EF);
     }
   }
-
 }

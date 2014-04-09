@@ -101,7 +101,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
             }
           }
 
-          Assert.assertTrue("no name " + names[j].name + " for " + N, found);
+          Assert.assertTrue("no name " + names[j].name + " for " + N + "\n" + ir, found);
         }
       }
     }
@@ -129,14 +129,16 @@ public abstract class TestCallGraphShape extends WalaTestCase {
           targetName = targetName.substring(1);
         }
 
-        check_edges: while (srcs.hasNext()) {
+        while (srcs.hasNext()) {
           CGNode src = (CGNode) srcs.next();
           for (Iterator sites = src.iterateCallSites(); sites.hasNext();) {
             CallSiteReference sr = (CallSiteReference) sites.next();
            
             Iterator dsts = getNodes(CG, targetName).iterator();
-            Assert.assertTrue("cannot find " + targetName, dsts.hasNext());
-
+            if (! checkAbsence) {
+              Assert.assertTrue("cannot find " + targetName, dsts.hasNext());
+            }
+            
             while (dsts.hasNext()) {
               CGNode dst = (CGNode) dsts.next();
               for (Iterator tos = CG.getPossibleTargets(src, sr).iterator(); tos.hasNext();) {

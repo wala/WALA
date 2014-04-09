@@ -52,8 +52,8 @@ public class TestArrayList {
     l2.add(new Object());
     Object o1 = l1.get(0);
     Object o2 = l2.get(0);
-    TestUtil.makeVarUsed(o1);
-    TestUtil.testThisVar(o2);
+    DemandPATestUtil.makeVarUsed(o1);
+    DemandPATestUtil.testThisVar(o2);
   }
 
 }

@@ -57,7 +57,7 @@ public class JavaScriptInstanceOf extends SSAInstruction {
 
   @Override
   public void visit(IVisitor v) {
-     ((InstructionVisitor)v).visitJavaScriptInstanceOf(this);
+     ((JSInstructionVisitor)v).visitJavaScriptInstanceOf(this);
   }
   
   public int getNumberOfDefs() {

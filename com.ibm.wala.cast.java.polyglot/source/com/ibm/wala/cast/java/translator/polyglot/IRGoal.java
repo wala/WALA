@@ -51,16 +51,18 @@ public class IRGoal extends SourceGoal_c /* PORT1.7 removed 'implements EndGoal'
     ExtensionInfo extInfo= job.extensionInfo();
 
     fTranslator= new Java2IRTranslator(
+            fSourceLoader,
+            ((IRTranslatorExtension)extInfo).getCAstRewriterFactory());
+    ModuleSource src = (ModuleSource) job.source();
+    fTranslator.translate( 
+        src.getModule(),
         new PolyglotJava2CAstTranslator(
+            job.ast(),
             fSourceLoader.getReference(),
             extInfo.nodeFactory(),
             extInfo.typeSystem(),
             new PolyglotIdentityMapper(fSourceLoader.getReference()),
-            ((IRTranslatorExtension)extInfo).getReplicateForDoLoops()),
-            fSourceLoader,
-            ((IRTranslatorExtension)extInfo).getCAstRewriterFactory());
-    ModuleSource src = (ModuleSource) job.source();
-    fTranslator.translate(src.getModule(),job.ast(), src.name());
+            ((IRTranslatorExtension)extInfo).getReplicateForDoLoops()).translateToCAst());
     return true;
   }
 

@@ -50,7 +50,7 @@ public class TestGlobal {
   }
 
   public static void main(String[] args) {
-    TestUtil.testThisVar(getGlobal());
+    DemandPATestUtil.testThisVar(getGlobal());
   }
 
 }

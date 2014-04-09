@@ -11,58 +11,122 @@
 package com.ibm.wala.cast.js.ipa.callgraph;
 
 import com.ibm.wala.cast.ipa.callgraph.LexicalScopingResolverContexts;
+import com.ibm.wala.cast.ipa.callgraph.OneLevelForLexicalAccessFunctions;
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingKeysContextSelector;
+import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
+import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
+import com.ibm.wala.ipa.callgraph.impl.ContextInsensitiveSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.nCFAContextSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * 0-x-CFA Call graph builder, optimized to not disambiguate instances of "uninteresting" types
+ * 0-x-CFA Call graph builder, optimized to not disambiguate instances of
+ * "uninteresting" types
  */
 public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
 
-  public JSZeroOrOneXCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
-      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy,
-      boolean doOneCFA) {
+  private static final boolean USE_OBJECT_SENSITIVITY = false;
+  
+
+  public JSZeroOrOneXCFABuilder(IClassHierarchy cha, JSAnalysisOptions options, AnalysisCache cache,
+      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, int instancePolicy, boolean doOneCFA) {
     super(cha, options, cache);
 
-    SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha);
-    setContextInterpreter(contextInterpreter);
-
-    options.setSelector(new JavaScriptConstructTargetSelector(cha, options.getMethodTargetSelector()));
-    options.setSelector(new LoadFileTargetSelector(options.getMethodTargetSelector(), this));
+    if (!AstTranslator.NEW_LEXICAL && options.usePreciseLexical()) {
+      throw new IllegalArgumentException("usePreciseLexical only valid with new lexical scoping handling");
+    }
     
-    ContextSelector def = new DefaultContextSelector(options, cha);
+    SSAContextInterpreter contextInterpreter = setupSSAContextInterpreter(cha, options, cache, appContextInterpreter);
+
+    setupMethodTargetSelector(cha, options);
+
+    setupContextSelector(options, appContextSelector, doOneCFA);
+
+    setInstanceKeys(new JavaScriptScopeMappingInstanceKeys(cha, this, new JavaScriptConstructorInstanceKeys(new ZeroXInstanceKeys(
+        options, cha, contextInterpreter, instancePolicy))));
+  }
+
+  private void setupContextSelector(JSAnalysisOptions options, ContextSelector appContextSelector, boolean doOneCFA) {
+    // baseline selector
+    ContextSelector def = new ContextInsensitiveSelector();
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
-    contextSelector = new ScopeMappingKeysContextSelector(contextSelector);
-    contextSelector = new JavaScriptConstructorContextSelector(contextSelector);
-    contextSelector = new LexicalScopingResolverContexts(this, contextSelector);
+    
+    // JavaScriptConstructorContextSelector ensures at least a 0-1-CFA (i.e.,
+    // Andersen's-style) heap abstraction. This level of heap abstraction is
+    // _necessary_ for correctness (we rely on it when handling lexical scoping)
+    contextSelector = new JavaScriptConstructorContextSelector(contextSelector, options.usePreciseLexical());
+    
+    if (!AstTranslator.NEW_LEXICAL) {
+      contextSelector = new ScopeMappingKeysContextSelector(contextSelector);
+    }
+    
+    if (options.usePreciseLexical()) {
+      contextSelector = new OneLevelForLexicalAccessFunctions(contextSelector);
+    }
+    
+    if (USE_OBJECT_SENSITIVITY) {
+      contextSelector = new ObjectSensitivityContextSelector(contextSelector);
+    }
+    if (options.handleCallApply()) {
+      contextSelector = new JavaScriptFunctionApplyContextSelector(contextSelector);
+    }
+    if (!AstTranslator.NEW_LEXICAL) {
+      contextSelector = new LexicalScopingResolverContexts(this, contextSelector);
+    }
     if (doOneCFA) {
       contextSelector = new nCFAContextSelector(1, contextSelector);
     }
     setContextSelector(contextSelector);
+  }
 
-    setInstanceKeys(new JavaScriptScopeMappingInstanceKeys(cha, this, new JavaScriptConstructorInstanceKeys(new ZeroXInstanceKeys(options, cha, contextInterpreter,
-        instancePolicy))));
+  
+  private void setupMethodTargetSelector(IClassHierarchy cha, JSAnalysisOptions options) {
+    MethodTargetSelector targetSelector = new JavaScriptConstructTargetSelector(cha, options
+        .getMethodTargetSelector());
+    if (options.handleCallApply()) {
+      targetSelector = new JavaScriptFunctionApplyTargetSelector(new JavaScriptFunctionDotCallTargetSelector(targetSelector));
+    }
+    if (options.useLoadFileTargetSelector()) {
+      targetSelector = new LoadFileTargetSelector(targetSelector, this);
+    }
+    options.setSelector(targetSelector);
+  }
+
+  private SSAContextInterpreter setupSSAContextInterpreter(IClassHierarchy cha, JSAnalysisOptions options, AnalysisCache cache,
+      SSAContextInterpreter appContextInterpreter) {
+    SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha);
+    if (options.handleCallApply()) {
+      contextInterpreter = new DelegatingSSAContextInterpreter(new JavaScriptFunctionApplyContextInterpreter(options, cache),
+          contextInterpreter);
+    }
+    setContextInterpreter(contextInterpreter);
+    return contextInterpreter;
   }
 
   /**
-   * @param options options that govern call graph construction
-   * @param cha governing class hierarchy
-   * @param cl classloader that can find DOMO resources
-   * @param scope representation of the analysis scope
-   * @param xmlFiles set of Strings that are names of XML files holding bypass logic specifications.
-   * @param dmd deployment descriptor abstraction
+   * @param options
+   *          options that govern call graph construction
+   * @param cha
+   *          governing class hierarchy
+   * @param cl
+   *          classloader that can find DOMO resources
+   * @param scope
+   *          representation of the analysis scope
+   * @param xmlFiles
+   *          set of Strings that are names of XML files holding bypass logic
+   *          specifications.
+   * @param dmd
+   *          deployment descriptor abstraction
    * @return a 0-1-Opt-CFA Call Graph Builder.
    */
-  public static JSCFABuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, ClassLoader cl,
+  public static JSCFABuilder make(JSAnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, ClassLoader cl,
       AnalysisScope scope, String[] xmlFiles, byte instancePolicy, boolean doOneCFA) {
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     for (int i = 0; i < xmlFiles.length; i++) {

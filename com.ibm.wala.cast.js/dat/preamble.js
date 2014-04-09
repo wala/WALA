@@ -117,6 +117,9 @@ DOMNode = function DOMNode() { // An impostor for the Node class
           }
           this.childNodes.collect(predicate, result);
         }
+	this.addEventListener = function(name, fn) {
+		fn();
+	};
 }
 
 DOMDocument = function DOMDocument() {
@@ -170,6 +173,9 @@ DOMWindow = function DOMWindow(){
 	this.name = new String();
 	this.open = function window_open(url, stuff) { 
 		note_url(url); 
+	};
+	this.addEventListener = function(name, fn) {
+		fn();
 	};
 }
 

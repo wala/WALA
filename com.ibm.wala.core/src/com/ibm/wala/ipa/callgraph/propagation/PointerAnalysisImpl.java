@@ -70,7 +70,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
    */
   private final InstanceKeyFactory iKeyFactory;
 
-  private final PropagationCallGraphBuilder builder;
+  protected final PropagationCallGraphBuilder builder;
 
   public PointerAnalysisImpl(PropagationCallGraphBuilder builder, CallGraph cg, PointsToMap pointsToMap,
       MutableMapping<InstanceKey> instanceKeys, PointerKeyFactory pointerKeys, InstanceKeyFactory iKeyFactory) {

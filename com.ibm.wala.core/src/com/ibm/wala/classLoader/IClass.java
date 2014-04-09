@@ -70,7 +70,7 @@ public interface IClass extends IClassHierarchyDweller {
    * @return Collection of (IClass) interfaces this class directly implements. If this class is an interface, returns the interfaces
    *         it immediately extends.
    */
-  Collection<IClass> getDirectInterfaces();
+  Collection<? extends IClass> getDirectInterfaces();
 
   /**
    * @return Collection of (IClass) interfaces this class implements, including all ancestors of interfaces immediately implemented.

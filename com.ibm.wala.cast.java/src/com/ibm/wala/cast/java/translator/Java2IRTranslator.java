@@ -15,6 +15,7 @@ package com.ibm.wala.cast.java.translator;
 
 import java.io.PrintWriter;
 
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstEntity;
@@ -29,34 +30,29 @@ public class Java2IRTranslator {
 
   protected final JavaSourceLoaderImpl fLoader;
 
-  protected final TranslatorToCAst fSourceTranslator;
-
   CAstRewriterFactory castRewriterFactory = null;
 
-  public Java2IRTranslator(TranslatorToCAst sourceTranslator, JavaSourceLoaderImpl srcLoader) {
-    this(sourceTranslator, srcLoader, false);
+  public Java2IRTranslator(JavaSourceLoaderImpl srcLoader) {
+    this(srcLoader, false);
   }
 
-  public Java2IRTranslator(TranslatorToCAst sourceTranslator, JavaSourceLoaderImpl srcLoader, boolean debug) {
-    this(sourceTranslator, srcLoader, null, debug);
+  public Java2IRTranslator(JavaSourceLoaderImpl srcLoader, boolean debug) {
+    this(srcLoader, null, debug);
   }
 
-  public Java2IRTranslator(TranslatorToCAst sourceTranslator, JavaSourceLoaderImpl srcLoader,
+  public Java2IRTranslator(JavaSourceLoaderImpl srcLoader,
       CAstRewriterFactory castRewriterFactory) {
-    this(sourceTranslator, srcLoader, castRewriterFactory, false);
+    this(srcLoader, castRewriterFactory, false);
   }
 
-  public Java2IRTranslator(TranslatorToCAst sourceTranslator, JavaSourceLoaderImpl srcLoader,
+  public Java2IRTranslator(JavaSourceLoaderImpl srcLoader,
       CAstRewriterFactory castRewriterFactory, boolean debug) {
     DEBUG = debug;
     fLoader = srcLoader;
-    fSourceTranslator = sourceTranslator;
     this.castRewriterFactory = castRewriterFactory;
   }
 
-  public void translate(ModuleEntry module, Object ast, String N) {
-    CAstEntity ce = fSourceTranslator.translate(ast, N);
-
+  public void translate(ModuleEntry module, CAstEntity ce) {
     if (DEBUG) {
       PrintWriter printWriter = new PrintWriter(System.out);
       CAstPrinter.printTo(ce, printWriter);

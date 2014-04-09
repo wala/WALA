@@ -166,7 +166,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
         // insert a cast for v2 to filter out bogus types
         args[0] = nextLocal++;
         TypeReference type = target.getParameterType(0);
-        SSACheckCastInstruction cast = insts.CheckCastInstruction(m.allInstructions.size(), args[0], 2, type);
+        SSACheckCastInstruction cast = insts.CheckCastInstruction(m.allInstructions.size(), args[0], 2, type, true);
         m.addInstruction(null, cast, false);
       }
     }
@@ -186,7 +186,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
       args[j] = nextLocal++;
       TypeReference type = target.getParameterType(j);
       // we insert a cast to filter out bogus types
-      SSACheckCastInstruction cast = insts.CheckCastInstruction(m.allInstructions.size(), args[j], temp, type);
+      SSACheckCastInstruction cast = insts.CheckCastInstruction(m.allInstructions.size(), args[j], temp, type, true);
       m.addInstruction(null, cast, false);
       pc++;
     }

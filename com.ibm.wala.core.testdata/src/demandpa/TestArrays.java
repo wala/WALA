@@ -46,7 +46,7 @@ public class TestArrays {
     Object[] arr = new Object[10];
     arr[0] = new Object();
     arr[1] = new Object();
-    TestUtil.testThisVar(arr[1]);
+    DemandPATestUtil.testThisVar(arr[1]);
   }
 
 }

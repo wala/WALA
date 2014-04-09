@@ -128,13 +128,14 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
 
-    public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, int[] typeValues) {
+    public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, int[] typeValues, boolean isPEI) {
       throw new UnsupportedOperationException();
     }
        
-    public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, TypeReference[] types) {
+    public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, TypeReference[] types, boolean isPEI) {
        assert types.length == 1;
-      return new SSACheckCastInstruction(iindex, result, val, types) {
+       assert isPEI;
+      return new SSACheckCastInstruction(iindex, result, val, types, true) {
         @Override
         public Collection<TypeReference> getExceptionTypes() {
           return getClassCastException();
@@ -142,12 +143,14 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
       };
     }
      
-    public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, int typeValue) {
-      return CheckCastInstruction(iindex, result, val, new int[]{ typeValue });
+    public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, int typeValue, boolean isPEI) {
+      assert isPEI;
+      return CheckCastInstruction(iindex, result, val, new int[]{ typeValue }, true);
     }
 
-    public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, TypeReference type) {
-      return CheckCastInstruction(iindex, result, val, new TypeReference[]{ type });
+    public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, TypeReference type, boolean isPEI) {
+      assert isPEI;
+      return CheckCastInstruction(iindex, result, val, new TypeReference[]{ type }, true);
     }
 
     public SSAComparisonInstruction ComparisonInstruction(int iindex, IComparisonInstruction.Operator operator, int result, int val1, int val2) {

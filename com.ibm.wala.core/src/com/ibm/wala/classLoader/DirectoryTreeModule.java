@@ -36,6 +36,9 @@ public abstract class DirectoryTreeModule implements Module {
     }
   }
 
+  /**
+   * returns null if unsuccessful in creating FileModule
+   */
   protected abstract FileModule makeFile(File file);
 
   protected abstract boolean includeFile(File file);
@@ -48,7 +51,10 @@ public abstract class DirectoryTreeModule implements Module {
         if (files[i].isDirectory()) {
           result.addAll(getEntriesRecursive(files[i]));
         } else if (includeFile(files[i])) {
-          result.add(makeFile(files[i]));
+          FileModule fileModule = makeFile(files[i]);
+          if (fileModule != null) {
+            result.add(fileModule);
+          }
         }
       }
     } else {

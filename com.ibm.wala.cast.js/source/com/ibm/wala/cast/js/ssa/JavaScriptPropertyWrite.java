@@ -37,8 +37,8 @@ public class JavaScriptPropertyWrite extends AbstractReflectivePut {
    * @see com.ibm.domo.ssa.Instruction#visit(Visitor)
    */
   public void visit(IVisitor v) {
-    assert v instanceof InstructionVisitor;
-    ((InstructionVisitor) v).visitJavaScriptPropertyWrite(this);
+    assert v instanceof JSInstructionVisitor;
+    ((JSInstructionVisitor) v).visitJavaScriptPropertyWrite(this);
   }
 
   /*

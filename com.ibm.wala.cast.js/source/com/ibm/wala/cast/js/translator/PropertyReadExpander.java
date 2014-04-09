@@ -4,8 +4,8 @@ import java.util.Map;
 
 import com.ibm.wala.cast.ir.translator.AstTranslator.InternalCAstSymbol;
 import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstNode;
-import com.ibm.wala.cast.tree.impl.CAstBasicRewriter;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.impl.CAstRewriter;
 import com.ibm.wala.cast.tree.impl.CAstRewriter.CopyKey;
@@ -19,14 +19,11 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.RewriteContext, PropertyReadExpander.ExpanderKey> {
 
-  static class ExpanderKey implements CopyKey<ExpanderKey> {
-
-    public ExpanderKey parent() {
-      return null;
-    }
-   
-    static final ExpanderKey EVERYWHERE = new ExpanderKey();
-    static final ExpanderKey EXTRA = new ExpanderKey();
+  static enum ExpanderKey implements CopyKey<ExpanderKey> {
+    EVERYWHERE, EXTRA {
+      public ExpanderKey parent() { return EVERYWHERE; }
+    };
+    public ExpanderKey parent() { return null; }
   }
   
   private int readTempCounter = 0;
@@ -211,15 +208,15 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
     return result;
   }
 
-  protected CAstNode copyNodes(CAstNode root, RewriteContext context, Map<Pair<CAstNode, ExpanderKey>, CAstNode> nodeMap) {
+  protected CAstNode copyNodes(CAstNode root, final CAstControlFlowMap cfg, RewriteContext context, Map<Pair<CAstNode, ExpanderKey>, CAstNode> nodeMap) {
     int kind = root.getKind();
 
     if (kind == CAstNode.OBJECT_REF && context.inRead()) {
       // if we see a property access (OBJECT_REF) in a read context, transform
       // to a loop traversing the prototype chain
       CAstNode readLoop;
-      CAstNode receiver = copyNodes(root.getChild(0), READ, nodeMap);
-      CAstNode element = copyNodes(root.getChild(1), READ, nodeMap);
+      CAstNode receiver = copyNodes(root.getChild(0), cfg, READ, nodeMap);
+      CAstNode element = copyNodes(root.getChild(1), cfg, READ, nodeMap);
       if (element.getKind() == CAstNode.CONSTANT && element.getValue() instanceof String) {
         readLoop = makeConstRead(root, receiver, element, context, nodeMap);
       } else {
@@ -231,9 +228,9 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
       // handle cases like x.f++, represented as ASSIGN_POST_OP(x.f,1,+)
       AssignPreOrPostOpContext ctxt = new AssignPreOrPostOpContext();
       // generate loop for the first child (x.f for example), keeping the loop var and element var in ctxt
-      CAstNode lval = copyNodes(root.getChild(0), ctxt, nodeMap);
-      CAstNode rval = copyNodes(root.getChild(1), READ, nodeMap);
-      CAstNode op = copyNodes(root.getChild(2), READ, nodeMap);
+      CAstNode lval = copyNodes(root.getChild(0), cfg, ctxt, nodeMap);
+      CAstNode rval = copyNodes(root.getChild(1), cfg, READ, nodeMap);
+      CAstNode op = copyNodes(root.getChild(2), cfg, READ, nodeMap);
       if (ctxt.receiverTemp != null) {  // if we found a nested property access
         String temp1 = TEMP_NAME + (readTempCounter++);
         String temp2 = TEMP_NAME + (readTempCounter++);
@@ -242,7 +239,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
             // assign lval to temp1 (where lval is a block that includes the prototype chain loop)
             Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(temp1, true, false)), lval),
             // ? --MS
-            rval,
+            //rval,
             // assign temp2 the new value to be assigned
             Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(temp2, true, false)),
                 Ast.makeNode(CAstNode.BINARY_EXPR, op, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(temp1)), rval)),
@@ -261,8 +258,8 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
 
     } else if (kind == CAstNode.ASSIGN) {
       // use ASSIGN context for LHS so we don't translate property accesses there
-      CAstNode copy = Ast.makeNode(CAstNode.ASSIGN, copyNodes(root.getChild(0), ASSIGN, nodeMap),
-          copyNodes(root.getChild(1), READ, nodeMap));
+      CAstNode copy = Ast.makeNode(CAstNode.ASSIGN, copyNodes(root.getChild(0), cfg, ASSIGN, nodeMap),
+          copyNodes(root.getChild(1), cfg, READ, nodeMap));
       nodeMap.put(Pair.make(root, context.key()), copy);
       return copy;
 
@@ -270,9 +267,9 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
       CAstNode children[] = new CAstNode[root.getChildCount()];
       int last = (children.length - 1);
       for (int i = 0; i < last; i++) {
-        children[i] = copyNodes(root.getChild(i), READ, nodeMap);
+        children[i] = copyNodes(root.getChild(i), cfg, READ, nodeMap);
       }
-      children[last] = copyNodes(root.getChild(last), context, nodeMap);
+      children[last] = copyNodes(root.getChild(last), cfg, context, nodeMap);
 
       CAstNode copy = Ast.makeNode(CAstNode.BLOCK_EXPR, children);
       nodeMap.put(Pair.make(root, context.key()), copy);
@@ -290,7 +287,12 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
     } else {
       CAstNode children[] = new CAstNode[root.getChildCount()];
       for (int i = 0; i < children.length; i++) {
-        children[i] = copyNodes(root.getChild(i), READ, nodeMap);
+        children[i] = copyNodes(root.getChild(i), cfg, READ, nodeMap);
+      }
+      for(Object label: cfg.getTargetLabels(root)) {
+        if (label instanceof CAstNode) {
+          copyNodes((CAstNode)label, cfg, READ, nodeMap);
+        }
       }
       CAstNode copy = Ast.makeNode(kind, children);
       nodeMap.put(Pair.make(root, context.key()), copy);

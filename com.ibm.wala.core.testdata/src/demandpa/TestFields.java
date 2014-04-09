@@ -51,8 +51,8 @@ public class TestFields {
     a2.f = o2;
     Object o3 = a1.f;
     Object o4 = a2.f;
-    TestUtil.makeVarUsed(o3);
-    TestUtil.testThisVar(o4);
+    DemandPATestUtil.makeVarUsed(o3);
+    DemandPATestUtil.testThisVar(o4);
   }
 
 }

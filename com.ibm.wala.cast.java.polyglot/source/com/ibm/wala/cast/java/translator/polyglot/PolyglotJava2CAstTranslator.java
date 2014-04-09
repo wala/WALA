@@ -20,6 +20,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -34,6 +35,7 @@ import polyglot.ast.ArrayTypeNode;
 import polyglot.ast.Assert;
 import polyglot.ast.Assign;
 import polyglot.ast.Binary;
+import polyglot.ast.Binary.Operator;
 import polyglot.ast.Block;
 import polyglot.ast.BooleanLit;
 import polyglot.ast.Branch;
@@ -49,6 +51,7 @@ import polyglot.ast.ClassLit;
 import polyglot.ast.ClassMember;
 import polyglot.ast.Conditional;
 import polyglot.ast.ConstructorCall;
+import polyglot.ast.ConstructorCall.Kind;
 import polyglot.ast.ConstructorDecl;
 import polyglot.ast.Do;
 import polyglot.ast.Empty;
@@ -94,8 +97,6 @@ import polyglot.ast.TopLevelDecl;
 import polyglot.ast.Try;
 import polyglot.ast.Unary;
 import polyglot.ast.While;
-import polyglot.ast.Binary.Operator;
-import polyglot.ast.ConstructorCall.Kind;
 import polyglot.types.ArrayType;
 import polyglot.types.ClassType;
 import polyglot.types.CodeInstance;
@@ -117,9 +118,11 @@ import polyglot.types.Types;
 import polyglot.util.Position;
 
 import com.ibm.wala.cast.ir.translator.AstTranslator.InternalCAstSymbol;
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst.DoLoopTranslator;
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst.WalkContext;
 import com.ibm.wala.cast.java.loader.Util;
 import com.ibm.wala.cast.java.translator.JavaProcedureEntity;
-import com.ibm.wala.cast.java.translator.TranslatorToCAst;
 import com.ibm.wala.cast.java.types.JavaType;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
@@ -132,12 +135,10 @@ import com.ibm.wala.cast.tree.CAstSymbol;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.CAstTypeDictionary;
 import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
-import com.ibm.wala.cast.tree.impl.CAstCloner;
 import com.ibm.wala.cast.tree.impl.CAstControlFlowRecorder;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.tree.impl.CAstNodeTypeMapRecorder;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
-import com.ibm.wala.cast.tree.impl.CAstRewriter;
 import com.ibm.wala.cast.tree.impl.CAstSourcePositionRecorder;
 import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -155,8 +156,7 @@ import com.ibm.wala.util.collections.IteratorPlusOne;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 
-@SuppressWarnings("unchecked")
-public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
+public class PolyglotJava2CAstTranslator {
   protected final CAst fFactory = new CAstImpl();
 
   protected final NodeFactory fNodeFactory;
@@ -179,10 +179,12 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
   protected PolyglotIdentityMapper fIdentityMapper;
 
-  protected boolean replicateForDoLoops = false;
+  protected final DoLoopTranslator doLoopTranslator;
   
   protected final boolean DEBUG = true;
-
+ 
+  private final Node ast;
+ 
   final protected TranslatingVisitor getTranslator() {
     if (fTranslator == null)
       fTranslator = createTranslator();
@@ -1133,42 +1135,17 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       String loopLabel = (String) wc.getLabelMap().get(d);
 
       CAstNode continueNode = walkNodes(continueTarget, wc);
-      CAstNode breakBody = walkNodes(breakTarget, wc);
+      CAstNode breakNode = walkNodes(breakTarget, wc);
 
-      WalkContext lc = new LoopContext(wc, loopLabel, breakTarget, continueTarget);
-      CAstNode loopBody =  walkNodes(d.body(), lc);
       
-       if (replicateForDoLoops) {
-        CAstRewriter.Rewrite x = (new CAstCloner(fFactory, false)).copy(loopBody, wc.cfg(), wc.pos(), wc.getNodeTypeMap(), null);
-        CAstNode otherBody = x.newRoot();
-        
-        wc.cfg().addAll(x.newCfg());
-        wc.pos().addAll(x.newPos());
-        wc.getNodeTypeMap().addAll(x.newTypes());
+      WalkContext lc = new LoopContext(wc, loopLabel, breakTarget, continueTarget);
+      CAstNode loopExpr = walkNodes(d.cond(), wc);
+      CAstNode loopBody = walkNodes(d.body(), lc);
  
-        return makeNode(wc, fFactory, d, CAstNode.BLOCK_STMT, 
-            loopBody,
-            makeNode(wc, fFactory, d, CAstNode.LOOP, 
-                walkNodes(d.cond(), wc), 
-                makeNode(wc, fFactory, d, CAstNode.BLOCK_STMT, otherBody, continueNode)),
-            breakBody);
-        
-      } else {
-        Node header = fNodeFactory.Empty(Position.COMPILER_GENERATED);
- 
-        CAstNode loopGoto = makeNode(wc, fFactory, d, CAstNode.IFGOTO, walkNodes(d.cond(), wc));
-
-        wc.cfg().map(loopGoto, loopGoto);
-        wc.cfg().add(loopGoto, header, Boolean.TRUE);
-
-        return makeNode(wc, fFactory, d, CAstNode.BLOCK_STMT, 
-            walkNodes(header, wc), 
-            makeNode(wc, fFactory, d, CAstNode.BLOCK_STMT, loopBody, continueNode), 
-            loopGoto, 
-            breakBody);
-      }
+      return doLoopTranslator.translateDoLoop(loopExpr, loopBody, continueNode, breakNode, wc);
     }
 
+    
     public CAstNode visit(For f, WalkContext wc) {
       Node breakTarget = makeBreakTarget(f);
       Node continueTarget = makeContinueTarget(f);
@@ -1529,12 +1506,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
   protected abstract static class CodeBodyEntity implements CAstEntity {
     private final Map<CAstNode, Collection<CAstEntity>> fEntities;
 
-    public CodeBodyEntity(Map<CAstNode, CAstEntity> entities) {
-      fEntities = new LinkedHashMap<CAstNode, Collection<CAstEntity>>();
-      for (Iterator<CAstNode> keys = entities.keySet().iterator(); keys.hasNext();) {
-        CAstNode key = keys.next();
-        fEntities.put(key, Collections.singleton(entities.get(key)));
-      }
+    public CodeBodyEntity(Map<CAstNode, Collection<CAstEntity>> entities) {
+      fEntities = new LinkedHashMap<CAstNode, Collection<CAstEntity>>(entities);
     }
 
     public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
@@ -1674,7 +1647,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     private final String[] argumentNames;
 
     public ProcedureEntity(CAstNode pdast, TypeSystem system, CodeInstance pd, Type declaringType, String[] argumentNames,
-        Map<CAstNode, CAstEntity> entities, MethodContext mc) {
+        Map<CAstNode, Collection<CAstEntity>> entities, MethodContext mc) {
       super(entities);
       fPdast = pdast;
       fSystem = system;
@@ -1685,7 +1658,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     public ProcedureEntity(CAstNode pdast, TypeSystem system, CodeInstance pd, String[] argumentNames,
-        Map<CAstNode, CAstEntity> entities, MethodContext mc) {
+        Map<CAstNode, Collection<CAstEntity>> entities, MethodContext mc) {
         //PORT1.7 used to be this(pdast, system, pd, ((MemberInstance) pd).container(), argumentNames, entities, mc);
         this(pdast, system, pd, ((MemberDef) pd.def()).container().get(), argumentNames, entities, mc);
     }
@@ -1916,20 +1889,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
   }
 
-  public interface WalkContext {
-    void addScopedEntity(CAstNode node, CAstEntity e);
-
-    CAstControlFlowRecorder cfg();
-
-    CAstSourcePositionRecorder pos();
-
-    CAstNodeTypeMapRecorder getNodeTypeMap();
-
+  public interface WalkContext extends TranslatorToCAst.WalkContext<WalkContext, Node> {
     Collection<Pair<Type, Object>> getCatchTargets(Type label);
-
-    Node getContinueFor(String label);
-
-    Node getBreakFor(String label);
 
     Node getFinally();
 
@@ -1948,47 +1909,13 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     boolean needLVal();
   }
 
-  protected static class DelegatingContext implements WalkContext {
-    private final WalkContext parent;
-
-    public WalkContext getParent() {
-      return parent;
-    }
-
+  protected static class DelegatingContext extends TranslatorToCAst.DelegatingContext<WalkContext, Node> implements WalkContext {
     protected DelegatingContext(WalkContext parent) {
-      this.parent = parent;
-    }
-
-    public void addScopedEntity(CAstNode node, CAstEntity e) {
-      parent.addScopedEntity(node, e);
-    }
-
-    // public Map/*<CAstNode,CAstEntity>*/ getScopedEntities() {
-    // return parent.getScopedEntities();
-    // }
-
-    public CAstControlFlowRecorder cfg() {
-      return parent.cfg();
-    }
-
-    public CAstSourcePositionRecorder pos() {
-      return parent.pos();
-    }
-
-    public CAstNodeTypeMapRecorder getNodeTypeMap() {
-      return parent.getNodeTypeMap();
+      super(parent);
     }
 
     public Collection<Pair<Type, Object>> getCatchTargets(Type label) {
       return parent.getCatchTargets(label);
-    }
-
-    public Node getContinueFor(String label) {
-      return parent.getContinueFor(label);
-    }
-
-    public Node getBreakFor(String label) {
-      return parent.getBreakFor(label);
     }
 
     public Node getFinally() {
@@ -2121,9 +2048,9 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
     private final Map<Node, String> labelMap = HashMapFactory.make(2);
 
-    private final Map<CAstNode, CAstEntity> fEntities;
+    private final Map<CAstNode, Collection<CAstEntity>> fEntities;
 
-    public CodeBodyContext(WalkContext parent, Map<CAstNode, CAstEntity> entities) {
+    public CodeBodyContext(WalkContext parent, Map<CAstNode, Collection<CAstEntity>> entities) {
       super(parent);
       fEntities = entities;
     }
@@ -2141,10 +2068,11 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     public void addScopedEntity(CAstNode node, CAstEntity entity) {
-      fEntities.put(node, entity);
+      if (! fEntities.containsKey(node)) { fEntities.put(node, new HashSet<CAstEntity>(1)); }
+      fEntities.get(node).add(entity);
     }
 
-    public Map/* <CAstNode,CAstEntity> */<CAstNode, CAstEntity> getScopedEntities() {
+    public Map<CAstNode, Collection<CAstEntity>> getScopedEntities() {
       return fEntities;
     }
 
@@ -2160,7 +2088,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
   public class MethodContext extends CodeBodyContext {
     final CodeInstance fPI;
 
-    public MethodContext(CodeInstance pi, Map<CAstNode, CAstEntity> entities, WalkContext parent) {
+    public MethodContext(CodeInstance pi, Map<CAstNode, Collection<CAstEntity>> entities, WalkContext parent) {
       super(parent, entities);
       fPI = pi;
     }
@@ -2188,8 +2116,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       this.tryNode = tryNode;
       this.context = context;   
 
-      for (Iterator catchIter = tryNode.catchBlocks().iterator(); catchIter.hasNext();) {
-        Catch c = (Catch) catchIter.next();
+      for (Iterator<Catch> catchIter = tryNode.catchBlocks().iterator(); catchIter.hasNext();) {
+        Catch c = catchIter.next();
         Pair<Type,Object> p = Pair.make(c.catchType(), (Object)c);
 
         fCatchNodes.add(p);
@@ -2217,7 +2145,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
           continue;
         }
       }
-      catchNodes.addAll(getParent().getCatchTargets(label));
+      catchNodes.addAll(parent.getCatchTargets(label));
       return catchNodes;
     }
 
@@ -2230,20 +2158,11 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
   }
 
-  protected static class RootContext implements WalkContext {
+  protected static class RootContext extends TranslatorToCAst.RootContext<WalkContext, Node> implements WalkContext {
     final CAstTypeDictionary fTypeDict;
 
     public RootContext(CAstTypeDictionary typeDict) {
       fTypeDict = typeDict;
-    }
-
-    public void addScopedEntity(CAstNode node, CAstEntity e) {
-      Assertions.UNREACHABLE("Attempt to call addScopedEntity() on a RootContext.");
-    }
-
-    public CAstControlFlowRecorder cfg() {
-      Assertions.UNREACHABLE("RootContext.cfg()");
-      return null;
     }
 
     public Collection<Pair<Type, Object>> getCatchTargets(Type label) {
@@ -2251,29 +2170,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       return null;
     }
 
-    public CAstNodeTypeMapRecorder getNodeTypeMap() {
-      Assertions.UNREACHABLE("RootContext.getNodeTypeMap()");
-      return null;
-    }
-
     public Node getFinally() {
       Assertions.UNREACHABLE("RootContext.getFinally()");
-      return null;
-    }
-
-    public CAstSourcePositionRecorder pos() {
-      // No AST, so no AST map
-      Assertions.UNREACHABLE("RootContext.pos()");
-      return null;
-    }
-
-    public Node getContinueFor(String label) {
-      Assertions.UNREACHABLE("RootContext.getContinueFor()");
-      return null;
-    }
-
-    public Node getBreakFor(String label) {
-      Assertions.UNREACHABLE("RootContext.getBreakFor()");
       return null;
     }
 
@@ -2360,12 +2258,13 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
   }
 
-  public PolyglotJava2CAstTranslator(ClassLoaderReference clr, NodeFactory nf, TypeSystem ts, PolyglotIdentityMapper identityMapper, boolean replicateForDoLoops) {
+  public PolyglotJava2CAstTranslator(Node ast, ClassLoaderReference clr, NodeFactory nf, TypeSystem ts, PolyglotIdentityMapper identityMapper, boolean replicateForDoLoops) {
+    this.ast = ast;
     fClassLoaderRef = clr;
     fTypeSystem = ts;
     fNodeFactory = nf;
     fIdentityMapper = identityMapper;
-    this.replicateForDoLoops = replicateForDoLoops;
+    doLoopTranslator = new DoLoopTranslator(replicateForDoLoops, fFactory);
     fNPEType = fTypeSystem.NullPointerException();
     fCCEType = fTypeSystem.ClassCastException();
     fREType = fTypeSystem.RuntimeException();
@@ -2530,8 +2429,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     return cn;
   }
 
-  public CAstEntity translate(Object ast, String fileName) {
-    return walkEntity((Node) ast, new RootContext(getTypeDict()));
+  public CAstEntity translateToCAst() {
+    return walkEntity(ast, new RootContext(getTypeDict()));
   }
 
   /**
@@ -2623,7 +2522,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
         InitializerDef initDef = fTypeSystem.initializerDef(n.position(), Types.ref(classType), Flags.STATIC);
       InitializerInstance initInstance = fTypeSystem.createInitializerInstance(n.position(), Types.ref(initDef));
 
-      Map<CAstNode, CAstEntity> childEntities = HashMapFactory.make();
+      Map<CAstNode, Collection<CAstEntity>> childEntities = HashMapFactory.make();
       final MethodContext mc = new MethodContext(initInstance, childEntities, classContext);
 
       List inits = classContext.getStaticInitializers();
@@ -2644,7 +2543,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     for (Iterator iter = superConstructors.iterator(); iter.hasNext();) {
       ConstructorInstance superCtor = (ConstructorInstance) iter.next();
 
-      Map<CAstNode, CAstEntity> childEntities = HashMapFactory.make();
+      Map<CAstNode, Collection<CAstEntity>> childEntities = HashMapFactory.make();
       final MethodContext mc = new MethodContext(superCtor, childEntities, classContext);
 
       String[] fakeArguments = new String[superCtor.formalTypes().size() + 1];
@@ -2713,7 +2612,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       return new ClassEntity(classContext, memberEntities, anonType, anonTypeName, n.position());
     } else if (rootNode instanceof ProcedureDecl) {
       final ProcedureDecl pd = (ProcedureDecl) rootNode;
-      final Map<CAstNode, CAstEntity> memberEntities = new LinkedHashMap<CAstNode, CAstEntity>();
+      final Map<CAstNode, Collection<CAstEntity>> memberEntities = HashMapFactory.make();
       final MethodContext mc = new MethodContext(pd.procedureInstance().asInstance(), memberEntities, context);
 
       CAstNode pdAST = null;

@@ -10,6 +10,7 @@ import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
+import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
@@ -18,10 +19,14 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
   public WebPageLoaderFactory(JavaScriptTranslatorFactory factory) {
     super(factory);
   }
+  
+  public WebPageLoaderFactory(JavaScriptTranslatorFactory factory, CAstRewriterFactory preprocessor) {
+   super(factory, preprocessor); 
+  }
 
   @Override
   protected IClassLoader makeTheLoader(IClassHierarchy cha) {
-    return new JavaScriptLoader( cha, translatorFactory ) {
+    return new JavaScriptLoader( cha, translatorFactory, preprocessor ) {
       @Override
       protected TranslatorToIR initTranslator() {
         return new JSAstTranslator(this) {

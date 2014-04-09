@@ -121,10 +121,10 @@ public class CrossLanguageCallGraph extends AstCallGraph {
       return root.addGetStatic(ref);
     }
 
-    public int addCheckcast(TypeReference[] type, int rv) {
+    public int addCheckcast(TypeReference[] type, int rv, boolean isPEI) {
       Atom language = type[0].getClassLoader().getLanguage();
       AbstractRootMethod root = getLanguageRoot(language);
-      return root.addCheckcast(type, rv);
+      return root.addCheckcast(type, rv, isPEI);
     }
 
     public SSANewInstruction addAllocation(TypeReference type) {

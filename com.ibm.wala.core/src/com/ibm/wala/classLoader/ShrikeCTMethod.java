@@ -12,15 +12,12 @@ package com.ibm.wala.classLoader;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.Decoder;
 import com.ibm.wala.shrikeBT.IndirectionData;
 import com.ibm.wala.shrikeBT.shrikeCT.CTDecoder;
 import com.ibm.wala.shrikeCT.AnnotationsReader;
-import com.ibm.wala.shrikeCT.AnnotationsReader.UnimplementedException;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
 import com.ibm.wala.shrikeCT.CodeReader;
@@ -36,7 +33,6 @@ import com.ibm.wala.shrikeCT.SourcePositionTableReader.Position;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.types.generics.MethodTypeSignature;
-import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -382,7 +378,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     return result;
   }
 
-  private AnnotationsReader getAnnotationsReader(boolean runtimeInvisable) {
+  private AnnotationsReader getAnnotationsReader(boolean runtimeInvisible) {
     ClassReader.AttrIterator iter = new AttrIterator();
     getClassReader().initMethodAttributeIterator(shrikeMethodIndex, iter);
 
@@ -390,7 +386,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     AnnotationsReader result = null;
     try {
       for (; iter.isValid(); iter.advance()) {
-        if (runtimeInvisable) {
+        if (runtimeInvisible) {
           if (iter.getName().equals(RuntimeInvisibleAnnotationsReader.attrName)) {
             result = new RuntimeInvisibleAnnotationsReader(iter);
             break;
@@ -448,56 +444,22 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
   /**
    * read the runtime-invisible annotations from the class file
    */
-  public Collection<Annotation> getRuntimeInvisibleAnnotations() throws InvalidClassFileException, UnimplementedException {
+  public Collection<Annotation> getRuntimeInvisibleAnnotations() throws InvalidClassFileException {
     return getAnnotations(true);
   }
 
   /**
    * read the runtime-visible annotations from the class file
    */
-  public Collection<Annotation> getRuntimeVisibleAnnotations() throws InvalidClassFileException, UnimplementedException {
+  public Collection<Annotation> getRuntimeVisibleAnnotations() throws InvalidClassFileException {
     return getAnnotations(false);
   }
 
-  public Collection<Annotation> getAnnotations(boolean runtimeInvisable) throws InvalidClassFileException, UnimplementedException {
-    AnnotationsReader r = getAnnotationsReader(runtimeInvisable);
-    if (r != null) {
-      int[] offsets = r.getAnnotationOffsets();
-      Collection<Annotation> result = HashSetFactory.make();
-      for (int i : offsets) {
-        String type = r.getAnnotationType(i);
-        type = type.replaceAll(";", "");
-        TypeReference t = TypeReference.findOrCreate(getDeclaringClass().getClassLoader().getReference(), type);
-        result.add(Annotation.make(t));
-      }
-      return result;
-    } else {
-      return Collections.emptySet();
-    }
+  public Collection<Annotation> getAnnotations(boolean runtimeInvisible) throws InvalidClassFileException {
+    AnnotationsReader r = getAnnotationsReader(runtimeInvisible);
+    return Annotation.getAnnotationsFromReader(r, getDeclaringClass().getClassLoader().getReference());
   }
 
-  /**
-   * Retrieves all runtime-invisible annotations associated with a given index. Returns null if the index is not valid or the
-   * annotation contains arrays.
-   */
-  public HashMap<String, String> getAnnotations(int index) {
-    AnnotationsReader r = getAnnotationsReader(true);
-    if (r == null)
-      return null;
-    int offsets[];
-    try {
-      offsets = r.getAnnotationOffsets();
-      if (offsets.length <= index)
-        return null;
-    } catch (Exception e) {
-      return null;
-    }
-
-    int curOffset = offsets[index];
-    HashMap<String, String> res = r.getAnnotationValues(curOffset);
-
-    return res;
-  }
 
   private static final IndirectionData NO_INDIRECTIONS = new IndirectionData() {
 

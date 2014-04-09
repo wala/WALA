@@ -44,7 +44,7 @@ public class TestLocals {
    */
   public static void main(String[] args) {
     Object x = new Object();
-    TestUtil.testThisVar(x);
+    DemandPATestUtil.testThisVar(x);
   }
 
 }

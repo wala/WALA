@@ -87,11 +87,11 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
     return graph.toString();
   }
 
-  public void removeStatement(IFixedPointStatement s) {
+  public void removeStatement(IFixedPointStatement<T> s) {
     graph.removeNodeAndEdges(s);
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   public Iterator<AbstractStatement> getStatements() {
     return new FilterIterator(graph.iterator(), new Filter() {
       public boolean accepts(Object x) {
@@ -100,6 +100,7 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
     });
   }
 
+  @SuppressWarnings("rawtypes")
   public void addStatement(IFixedPointStatement statement) throws IllegalArgumentException, UnimplementedError {
     if (statement == null) {
       throw new IllegalArgumentException("statement == null");
@@ -115,12 +116,12 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
     }
   }
 
-  public void addStatement(GeneralStatement s) {
+  public void addStatement(GeneralStatement<?> s) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }
-    IVariable[] rhs = s.getRHS();
-    IVariable lhs = s.getLHS();
+    IVariable<?>[] rhs = s.getRHS();
+    IVariable<?> lhs = s.getLHS();
 
     equations.add(s);
     graph.addNode(s);
@@ -130,8 +131,8 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
       graph.addEdge(s, lhs);
     }
     for (int i = 0; i < rhs.length; i++) {
-      IVariable v = rhs[i];
-      IVariable variable = v;
+      IVariable<?> v = rhs[i];
+      IVariable<?> variable = v;
       if (variable != null) {
         variables.add(variable);
         graph.addNode(variable);
@@ -144,12 +145,12 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
     }
   }
 
-  public void addStatement(UnaryStatement s) {
+  public void addStatement(UnaryStatement<?> s) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }
-    IVariable lhs = s.getLHS();
-    IVariable rhs = s.getRightHandSide();
+    IVariable<?> lhs = s.getLHS();
+    IVariable<?> rhs = s.getRightHandSide();
 
     graph.addNode(s);
     if (lhs != null) {
@@ -166,11 +167,11 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
     }
   }
 
-  public void addStatement(NullaryStatement s) {
+  public void addStatement(NullaryStatement<?> s) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }
-    IVariable lhs = s.getLHS();
+    IVariable<?> lhs = s.getLHS();
 
     graph.addNode(s);
     if (lhs != null) {
@@ -184,7 +185,7 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
     }
   }
 
-  public void addVariable(IVariable v) {
+  public void addVariable(T v) {
     variables.add(v);
     graph.addNode(v);
     if (DEBUG) {
@@ -192,8 +193,8 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
     }
   }
 
-  public AbstractStatement getStep(int number) {
-    return (AbstractStatement) graph.getNode(number);
+  public AbstractStatement<?,?> getStep(int number) {
+    return (AbstractStatement<?,?>) graph.getNode(number);
   }
 
   public void reorder() {
@@ -206,7 +207,8 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
     while (order.hasNext()) {
       Object elt = order.next();
       if (elt instanceof IVariable) {
-        IVariable v = (IVariable) elt;
+        @SuppressWarnings("unchecked")
+        T v = (T) elt;
         v.setOrderNumber(number++);
       }
     }
@@ -224,30 +226,30 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
     }
   }
 
-  public Iterator getStatementsThatUse(IVariable v) {
+  public Iterator<?> getStatementsThatUse(T v) {
     return (graph.containsNode(v) ? graph.getSuccNodes(v) : EmptyIterator.instance());
   }
 
-  public Iterator getStatementsThatDef(IVariable v) {
+  public Iterator<?> getStatementsThatDef(T v) {
     return (graph.containsNode(v) ? graph.getPredNodes(v) : EmptyIterator.instance());
   }
 
-  public IVariable getVariable(int n) {
-    return (IVariable) graph.getNode(n);
+  @SuppressWarnings("unchecked")
+  public T getVariable(int n) {
+    return (T) graph.getNode(n);
   }
 
-  public int getNumberOfStatementsThatUse(IVariable v) {
+  public int getNumberOfStatementsThatUse(T v) {
     return (graph.containsNode(v) ? graph.getSuccNodeCount(v) : 0);
   }
 
-  public int getNumberOfStatementsThatDef(IVariable v) {
+  public int getNumberOfStatementsThatDef(T v) {
     return (graph.containsNode(v) ? graph.getPredNodeCount(v) : 0);
   }
 
-  @SuppressWarnings("unchecked")
-  public Iterator<IVariable> getVariables() {
-    return new FilterIterator(graph.iterator(), new Filter() {
-      public boolean accepts(Object x) {
+  public Iterator<T> getVariables() {
+    return new FilterIterator<T>(graph.iterator(), new Filter<T>() {
+      public boolean accepts(T x) {
         return x instanceof IVariable;
       }
     });
@@ -266,11 +268,11 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
     return graph.getPredNodeCount(n);
   }
 
-  public boolean containsStatement(IFixedPointStatement s) {
+  public boolean containsStatement(IFixedPointStatement<T> s) {
     return equations.contains(s);
   }
 
-  public boolean containsVariable(IVariable v) {
+  public boolean containsVariable(T v) {
     return variables.contains(v);
   }
 

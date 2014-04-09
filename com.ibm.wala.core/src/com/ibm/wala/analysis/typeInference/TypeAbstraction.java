@@ -33,7 +33,7 @@ public abstract class TypeAbstraction implements ContextItem {
 
     @Override
     public String toString() {
-      return "JavaTypeAbstraction.TOP";
+      return "WalaTypeAbstraction.TOP";
     }
 
     @Override

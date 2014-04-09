@@ -747,13 +747,22 @@ public class ClassHierarchy implements IClassHierarchy {
         Assertions.UNREACHABLE();
         superB = null;
       }
-      while (a != null) {
-        if (superB.contains(a)) {
-          return a;
+      IClass aa = a;
+      while (aa != null) {
+        if (superB.contains(aa)) {
+          return aa;
         }
-        a = a.getSuperclass();
+        aa = aa.getSuperclass();
       }
-      Assertions.UNREACHABLE("getLeastCommonSuperclass " + tempA + " " + b);
+      Set<IClass> superA;
+      try {
+        superA = getSuperclasses(a);
+      } catch (ClassHierarchyException e1) {
+        e1.printStackTrace();
+        Assertions.UNREACHABLE();
+        superA = null;
+      }
+      Assertions.UNREACHABLE("getLeastCommonSuperclass " + tempA + " " + b + ": " + superA + ", " + superB);
       return null;
     }
   }

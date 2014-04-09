@@ -279,7 +279,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getDirectInterfaces()
    */
-  public Collection<IClass> getDirectInterfaces() {
+  public Collection<? extends IClass> getDirectInterfaces() {
     return array2IClassSet(interfaceNames);
   }
 
@@ -416,9 +416,9 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
    * @return Collection of IClasses, representing the interfaces this class implements.
    */
   protected Collection<IClass> computeAllInterfacesAsCollection() {
-    Collection<IClass> c = getDirectInterfaces();
+    Collection<? extends IClass> c = getDirectInterfaces();
     Set<IClass> result = HashSetFactory.make();
-    for (Iterator<IClass> it = c.iterator(); it.hasNext();) {
+    for (Iterator<? extends IClass> it = c.iterator(); it.hasNext();) {
       IClass klass = it.next();
       if (klass.isInterface()) {
         result.add(klass);

@@ -86,16 +86,6 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
   final private ShrikeCFG cfg;
 
   /**
-   * The max height of the stack.
-   */
-  final private int maxStackHeight;
-
-  /**
-   * the max number of locals in play
-   */
-  final protected int maxLocals;
-
-  /**
    * Should uninitialized variables be considered TOP (optimistic) or BOTTOM (pessimistic);
    */
   final public static boolean OPTIMISTIC = true;
@@ -104,8 +94,6 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
-    maxStackHeight = G.getMaxStackHeight();
-    maxLocals = G.getMaxLocals();
     this.cfg = G;
   }
 
@@ -394,7 +382,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     // allocate lhs.stack if it's
     // not already allocated.
     if (L.stack == null) {
-      L.allocateStack();
+      L.allocateStack(1);
       L.stackHeight = 1;
     }
 
@@ -430,8 +418,8 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
     // if there's any stack height to meet, allocate lhs.stack if it's
     // not already allocated.
-    if (height > -1 && L.stack == null) {
-      L.allocateStack();
+    if (height > -1 && (L.stack == null || L.stack.length < height)) {
+      L.allocateStack(height);
       L.stackHeight = height;
       changed = true;
     }
@@ -441,7 +429,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       int[] R = new int[rhs.length];
       for (int j = 0; j < R.length; j++) {
         MachineState m = (MachineState) rhs[j];
-        if (m.stack == null) {
+        if (m.stack == null || m.stack.length < i+1) {
           R[j] = TOP;
         } else {
           R[j] = m.stack[i];
@@ -478,8 +466,8 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     MachineState L = (MachineState) lhs;
     // need we allocate lhs.locals?
     int nLocals = computeMeetNLocals(rhs);
-    if (nLocals > -1 && L.locals == null) {
-      L.allocateLocals();
+    if (nLocals > -1 && (L.locals == null || L.locals.length < nLocals)) {
+      L.allocateLocals(nLocals);
     }
 
     // evaluate the element-wise meet over the locals.
@@ -577,6 +565,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
     void setTOP() {
       stackHeight = -1;
+      stack = null;
     }
 
     boolean isTOP() {
@@ -584,8 +573,8 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     }
 
     public void push(int i) {
-      if (stack == null)
-        allocateStack();
+      if (stack == null || stackHeight >= stack.length)
+        allocateStack(stackHeight+1);
       stack[stackHeight++] = i;
     }
 
@@ -607,13 +596,30 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       stack[stackHeight - 2] = temp;
     }
 
-    private void allocateStack() {
-      stack = new int[maxStackHeight + 1];
-      stackHeight = 0;
+    private void allocateStack(int stackHeight) {
+      if (stack == null) {
+        stack = new int[stackHeight + 1 ];
+        this.stackHeight = 0;
+      } else {
+        int[] newStack = new int[ Math.max(stack.length, stackHeight) * 2 + 1 ];
+        System.arraycopy(stack, 0, newStack, 0, stack.length);
+        stack = newStack;
+      }
     }
 
-    private void allocateLocals() {
-      locals = allocateNewLocalsArray();
+    private void allocateLocals(int maxLocals) {
+      int[] result = new int[maxLocals];
+      int start = 0;
+      if (locals != null) {
+        System.arraycopy(locals, 0, result, 0, locals.length);
+        start = locals.length;
+      } 
+      
+      for (int i = start; i < maxLocals; i++) {
+        result[i] = OPTIMISTIC ? TOP : BOTTOM;
+      }
+      
+      locals = result;
     }
 
     public void clearStack() {
@@ -627,11 +633,11 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
      * @param j
      */
     public void setLocal(int i, int j) {
-      if (locals == null) {
+      if (locals == null || locals.length < i+1) {
         if (OPTIMISTIC && (j == TOP)) {
           return;
         } else {
-          allocateLocals();
+          allocateLocals(i+1);
         }
       }
       locals[i] = j;
@@ -642,7 +648,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
      * @return the number of the symbol corresponding to local i
      */
     public int getLocal(int i) {
-      if (locals == null) {
+      if (locals == null || locals.length < i+1) {
         if (OPTIMISTIC) {
           return TOP;
         } else {
@@ -660,7 +666,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
             stack[i] = to;
 
       if (locals != null)
-        for (int i = 0; i < maxLocals; i++)
+        for (int i = 0; i < locals.length; i++)
           if (locals[i] == from)
             locals[i] = to;
     }
@@ -672,7 +678,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
             return true;
 
       if (locals != null)
-        for (int i = 0; i < maxLocals; i++)
+        for (int i = 0; i < locals.length; i++)
           if (locals[i] == val)
             return true;
 
@@ -692,7 +698,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         result.append(array2StringBuffer(stack, stackHeight));
       }
       result.append("L");
-      result.append(array2StringBuffer(locals, maxLocals));
+      result.append(array2StringBuffer(locals, locals.length));
       result.append(">");
       return result.toString();
     }
@@ -773,14 +779,6 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       return locals;
     }
 
-  }
-
-  public int[] allocateNewLocalsArray() {
-    int[] result = new int[maxLocals];
-    for (int i = 0; i < maxLocals; i++) {
-      result[i] = OPTIMISTIC ? TOP : BOTTOM;
-    }
-    return result;
   }
 
   /**

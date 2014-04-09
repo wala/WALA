@@ -27,7 +27,12 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
  * Representation of a points-to set during an andersen-style analysis.
  */
 public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
-
+  /**
+   * if set, emits a warning whenever a points-to set grows bigger than {@link #SIZE_THRESHOLD}
+   */
+  public static final boolean CRY_ABOUT_BIG_POINTSTO_SETS = false;
+  public static final int SIZE_THRESHOLD = 100;
+  
   /**
    * if set, check that all instance keys in a points-to set are consistent with the type of the corresponding pointer key
    */
@@ -61,6 +66,15 @@ public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
     }
   }
 
+  private boolean cried = false;
+  @SuppressWarnings("unused")
+  private void cryIfTooBig() {
+    if (CRY_ABOUT_BIG_POINTSTO_SETS && !cried && super.size() > SIZE_THRESHOLD) {
+      cried = true;
+      System.err.println("too big: " + pointerKey + ": " + size());
+    }
+  }
+  
   @Override
   public void add(int b) {
     if (PARANOID) {
@@ -69,6 +83,7 @@ public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
       checkTypes(m);
     }
     super.add(b);
+    cryIfTooBig();
   }
 
   @Override
@@ -76,7 +91,9 @@ public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
     if (PARANOID) {
       checkTypes(B);
     }
-    return super.addAll(B);
+    boolean v = super.addAll(B);
+    cryIfTooBig();
+    return v;
   }
 
   /**
@@ -126,7 +143,9 @@ public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
       checkTypes(other.getValue());
     }
     // TODO Auto-generated method stub
-    return super.addAll(other);
+    boolean v = super.addAll(other);
+    cryIfTooBig();
+    return v;
   }
 
   /**

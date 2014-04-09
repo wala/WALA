@@ -40,4 +40,11 @@ public class PlatformUtil {
     return osname.toLowerCase().contains("windows");
   }
 
+  /**
+   * are we running on IKVM?  see http://www.ikvm.net
+   */
+  public static boolean onIKVM() {
+    return "IKVM.NET".equals(System.getProperty("java.runtime.name"));
+  }
+
 }

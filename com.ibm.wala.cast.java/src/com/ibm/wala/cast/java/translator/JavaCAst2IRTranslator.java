@@ -304,27 +304,24 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     return ((JavaSourceLoaderImpl) loader).defineType(type, type.getType().getName(), parentType) != null;
   }
 
-  protected void leaveThis(CAstNode n, Context c, CAstVisitor visitor) {
+  protected void leaveThis(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
     if (n.getChildCount() == 0) {
       super.leaveThis(n, c, visitor);
     } else {
-      WalkContext wc = (WalkContext) c;
-      int result = wc.currentScope().allocateTempValue();
-      setValue(n, result);
-      wc.cfg().addInstruction(new EnclosingObjectReference(wc.cfg().getCurrentInstruction(), result, (TypeReference) n.getChild(0).getValue()));
+      int result = c.currentScope().allocateTempValue();
+      c.setValue(n, result);
+      c.cfg().addInstruction(new EnclosingObjectReference(c.cfg().getCurrentInstruction(), result, (TypeReference) n.getChild(0).getValue()));
     }
   }
 
-  protected boolean visitCast(CAstNode n, Context c, CAstVisitor visitor) {
-    WalkContext context = (WalkContext) c;
+  protected boolean visitCast(CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {
     int result = context.currentScope().allocateTempValue();
-    setValue(n, result);
+    context.setValue(n, result);
     return false;
   }
 
-  protected void leaveCast(CAstNode n, Context c, CAstVisitor visitor) {
-    WalkContext context = (WalkContext) c;
-    int result = getValue(n);
+  protected void leaveCast(CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {
+    int result = context.getValue(n);
     CAstType toType = (CAstType) n.getChild(0).getValue();
     TypeReference toRef = makeType(toType);
 
@@ -332,48 +329,63 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     TypeReference fromRef = makeType(fromType);
 
     if (toRef.isPrimitiveType()) {
-      context.cfg().addInstruction(insts.ConversionInstruction(context.cfg().getCurrentInstruction(), result, getValue(n.getChild(1)), fromRef, toRef, false));
-
+      context.cfg().addInstruction(
+        insts.ConversionInstruction(
+          context.cfg().getCurrentInstruction(),
+          result, 
+          context.getValue(n.getChild(1)), 
+          fromRef,
+          toRef,
+          false));
     } else {
-      context.cfg().addInstruction(insts.CheckCastInstruction(context.cfg().getCurrentInstruction(), result, getValue(n.getChild(1)), toRef));
+      context.cfg().addInstruction(
+        insts.CheckCastInstruction(
+          context.cfg().getCurrentInstruction(),
+          result, 
+          context.getValue(n.getChild(1)), 
+          toRef,
+          true));
 
       processExceptions(n, context);
     }
   }
 
-  protected boolean visitInstanceOf(CAstNode n, Context c, CAstVisitor visitor) {
-    WalkContext context = (WalkContext) c;
+  protected boolean visitInstanceOf(CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {
     int result = context.currentScope().allocateTempValue();
-    setValue(n, result);
+    context.setValue(n, result);
     return false;
   }
-
-  protected void leaveInstanceOf(CAstNode n, Context c, CAstVisitor visitor) {
-    WalkContext context = (WalkContext) c;
-    int result = getValue(n);
+  
+  protected void leaveInstanceOf(CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {
+    int result = context.getValue(n);
     CAstType type = (CAstType) n.getChild(0).getValue();
 
-    TypeReference ref = makeType(type);
-    context.cfg().addInstruction(insts.InstanceofInstruction(context.cfg().getCurrentInstruction(), result, getValue(n.getChild(1)), ref));
+    TypeReference ref = makeType( type );
+    context.cfg().addInstruction(
+      insts.InstanceofInstruction(
+        context.cfg().getCurrentInstruction(),
+        result, 
+        context.getValue(n.getChild(1)), 
+        ref));
   }
 
-  protected boolean doVisit(CAstNode n, Context context, CAstVisitor visitor) {
-    WalkContext wc = (WalkContext) context;
+  protected boolean doVisit(CAstNode n, WalkContext wc, CAstVisitor<WalkContext> visitor) {
     if (n.getKind() == CAstNode.MONITOR_ENTER) {
       visitor.visit(n.getChild(0), wc, visitor);
-      wc.cfg().addInstruction(insts.MonitorInstruction(wc.cfg().getCurrentInstruction(), getValue(n.getChild(0)), true));
+      wc.cfg().addInstruction(insts.MonitorInstruction(wc.cfg().getCurrentInstruction(), wc.getValue(n.getChild(0)), true));
       processExceptions(n, wc);
 
       return true;
     } else if (n.getKind() == CAstNode.MONITOR_EXIT) {
       visitor.visit(n.getChild(0), wc, visitor);
-      wc.cfg().addInstruction(insts.MonitorInstruction(wc.cfg().getCurrentInstruction(), getValue(n.getChild(0)), false));
+      wc.cfg().addInstruction(insts.MonitorInstruction(wc.cfg().getCurrentInstruction(), wc.getValue(n.getChild(0)), false));
       processExceptions(n, wc);
-
       return true;
     } else {
       return super.doVisit(n, wc, visitor);
     }
   }
+
+
 
 }

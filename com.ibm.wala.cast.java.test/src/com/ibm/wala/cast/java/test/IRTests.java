@@ -27,6 +27,7 @@ import java.util.jar.JarFile;
 
 import org.junit.Assert;
 
+import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.classLoader.IClass;
@@ -282,6 +283,9 @@ public abstract class IRTests {
   public Pair runTest(Collection<String> sources, List<String> libs, String[] mainClassDescriptors, List<? extends IRAssertion> ca,
       boolean assertReachable) {
     try {
+      boolean currentState = AstTranslator.NEW_LEXICAL;
+      AstTranslator.NEW_LEXICAL = false;
+      
       JavaSourceAnalysisEngine engine = getAnalysisEngine(mainClassDescriptors);
 
       populateScope(engine, sources, libs);
@@ -296,6 +300,8 @@ public abstract class IRTests {
       for (IRAssertion IRAssertion : ca) {
         IRAssertion.check(callGraph);
       }
+
+      AstTranslator.NEW_LEXICAL = currentState;
 
       return Pair.make(callGraph, engine.getPointerAnalysis());
 

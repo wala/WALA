@@ -40,13 +40,13 @@ public interface SSAInstructionFactory {
   SSABinaryOpInstruction BinaryOpInstruction(int iindex, IBinaryOpInstruction.IOperator operator, boolean overflow, boolean unsigned,
       int result, int val1, int val2, boolean mayBeInteger);
 
-  SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, int[] typeValues);
+  SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, int[] typeValues, boolean isPEI);
 
-  SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, int typeValue);
+  SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, int typeValue, boolean isPEI);
 
-  SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, TypeReference[] types);
+  SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, TypeReference[] types, boolean isPEI);
 
-  SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, TypeReference type);
+  SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, TypeReference type, boolean isPEI);
 
   SSAComparisonInstruction ComparisonInstruction(int iindex, IComparisonInstruction.Operator operator, int result, int val1, int val2);
 

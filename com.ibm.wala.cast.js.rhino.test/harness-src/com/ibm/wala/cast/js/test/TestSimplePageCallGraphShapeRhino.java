@@ -32,7 +32,7 @@ public abstract class TestSimplePageCallGraphShapeRhino extends TestSimplePageCa
 
 	@Test public void testPage3() throws IOException, IllegalArgumentException, CancelException {
 		URL url = getClass().getClassLoader().getResource("pages/page3.html");
-		CallGraph CG = Util.makeHTMLCG(url);
+		CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
 		verifyGraphAssertions(CG, assertionsForPage3);
 	}
 
@@ -44,7 +44,7 @@ public abstract class TestSimplePageCallGraphShapeRhino extends TestSimplePageCa
 	  
 	  @Before
 	  public void setUp() {
-		    com.ibm.wala.cast.js.ipa.callgraph.Util.setTranslatorFactory(new CAstRhinoTranslatorFactory());
+		    com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
 			WebUtil.setFactory(new IHtmlParserFactory() {
 				public IHtmlParser getParser() {
 					return TestSimplePageCallGraphShapeRhino.this.getParser();
