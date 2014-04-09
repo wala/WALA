@@ -25,7 +25,8 @@ import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
-import com.ibm.wala.core.plugin.CorePlugin;
+import com.ibm.wala.ide.plugin.CorePlugin;
+import com.ibm.wala.ide.util.EclipseFileProvider;
 import com.ibm.wala.ide.util.EclipseProjectPath;
 import com.ibm.wala.ide.util.EclipseProjectPath.Loader;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -64,7 +65,7 @@ public class EclipseProjectSourceAnalysisEngine extends EclipseProjectAnalysisEn
     super(project);
     this.fileExt = fileExt;
     try {
-      setExclusionsFile(FileProvider.getFileFromPlugin(CorePlugin.getDefault(), "J2SEClassHierarchyExclusions.txt")
+      setExclusionsFile((new EclipseFileProvider()).getFileFromPlugin(CorePlugin.getDefault(), "J2SEClassHierarchyExclusions.txt")
           .getAbsolutePath());
     } catch (IOException e) {
       Assertions.UNREACHABLE("Cannot find exclusions file");

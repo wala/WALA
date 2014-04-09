@@ -79,7 +79,7 @@ public class SWTPointsTo {
   }
 
   public static Graph<Object> buildPointsTo(String appJar) throws WalaException, IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, FileProvider.getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+    AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
     
     ClassHierarchy cha = ClassHierarchy.make(scope);

@@ -1,70 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="com.ibm.wala.cast.java.test.data" default="getSources" basedir=".">
 
-	<property name="basews" value="${ws}"/>
-	<property name="baseos" value="${os}"/>
-	<property name="basearch" value="${arch}"/>
-	<property name="basenl" value="${nl}"/>
+  <property name="basews" value="${ws}"/>
+  <property name="baseos" value="${os}"/>
+  <property name="basearch" value="${arch}"/>
+  <property name="basenl" value="${nl}"/>
 
-	<!-- Compiler settings. -->
-	<property name="javacFailOnError" value="true"/>
-	<property name="javacDebugInfo" value="on"/>
-	<property name="javacVerbose" value="false"/>
-	<property name="logExtension" value=".log"/>
-	<property name="compilerArg" value=""/>
-	<property name="javacSource" value="1.5"/>
-	<property name="javacTarget" value="1.5"/>
-	<!-- This property has been updated to correspond to the paths used by the latest Java update
-	on Mac OS X 10.6 (Java version 1.6.0_22).  If you are not using this version of Mac OS X or Java,
-	try changing the value of the property to "${java.home}/../../../Classes" -->
-    <condition property="dir_bootclasspath" value="${java.home}/../Classes">
-            <os family="mac"/>
+  <!-- Compiler settings. -->
+  <property name="javacFailOnError" value="true"/>
+  <property name="javacDebugInfo" value="on"/>
+  <property name="javacVerbose" value="false"/>
+  <property name="logExtension" value=".log"/>
+  <property name="compilerArg" value=""/>
+  <property name="javacSource" value="1.5"/>
+  <property name="javacTarget" value="1.5"/>
+  <!-- This property has been updated to correspond to the paths used by the latest Java update
+       on Mac OS X 10.6 (Java version 1.6.0_22).  If you are not using this version of Mac OS X or Java,
+       try changing the value of the property to "${java.home}/../../../Classes" -->
+  <condition property="dir_bootclasspath" value="${java.home}/../Classes">
+    <os family="mac"/>
+  </condition>
+  <property name="dir_bootclasspath" value="${java.home}/lib"/>
+  <path id="path_bootclasspath">
+    <fileset dir="${dir_bootclasspath}">
+
+      <include name="*.jar"/>
+    </fileset>
+  </path>	
+  <property name="bootclasspath" refid="path_bootclasspath"/>
+  <property name="bundleJavacSource" value="${javacSource}"/>
+  <property name="bundleJavacTarget" value="${javacTarget}"/>
+  <property name="bundleBootClasspath" value="${bootclasspath}"/>
+
+  <target name="JLexPresent" depends="init">
+    <available file="${plugin.destination}/src/JLex/Main.java" property="jlex.present"/>
+  </target>
+
+  <target name="fetchJLex" depends="JLexPresent" unless="jlex.present">
+    <delete dir="${temp.folder}"/>
+    <mkdir dir="${temp.folder}/JLex"/>
+    <get src="http://www.cs.princeton.edu/~appel/modern/java/JLex/current/Main.java" dest="${temp.folder}/JLex/Main.java"/>
+    <delete dir="${plugin.destination}/src/JLex"/>
+    <mkdir dir="${plugin.destination}/src/JLex"/>
+    <copy file="${temp.folder}/JLex/Main.java" tofile="${plugin.destination}/src/JLex/Main.java"/>
+    <delete dir="${temp.folder}"/>
+  </target>
+  
+  <target name="getSources" depends="fetchJLex" />
+
+  <target name="testdatadir" depends="init,testdata.exists" unless="testdatadir.present">
+    <mkdir dir="${basedir}/../com.ibm.wala.cast.java.test/testdata"/>
+  </target>
+
+  <target name="testdata.exists" depends="init">
+    <available file="${basedir}/../com.ibm.wala.cast.java.test/testdata" 
+	       type="dir" 
+	       property="testdatadir.present"/>
+  </target>
+
+  <target name="compile" depends="getSources">
+    <javac srcdir="${basedir}/src"
+	   destdir="${basedir}/bin"
+	   excludes="**/Activator.java"/>
+  </target>
+  
+  <target name="jar" depends="compile,testdatadir">
+    <jar destfile="${basedir}/../com.ibm.wala.cast.java.test/testdata/test_project.zip" basedir="${basedir}"/>
+  </target>
+  
+  <target name="init" depends="properties">
+    <condition property="pluginTemp" value="${buildTempFolder}/plugins">
+      <isset property="buildTempFolder"/>
     </condition>
-    <property name="dir_bootclasspath" value="${java.home}/lib"/>
-    <path id="path_bootclasspath">
-            <fileset dir="${dir_bootclasspath}">
-
-                    <include name="*.jar"/>
-            </fileset>
-    </path>	
-	<property name="bootclasspath" refid="path_bootclasspath"/>
-	<property name="bundleJavacSource" value="${javacSource}"/>
-	<property name="bundleJavacTarget" value="${javacTarget}"/>
-	<property name="bundleBootClasspath" value="${bootclasspath}"/>
-
-     <target name="JLexPresent" depends="init">
-        <available file="${plugin.destination}/src/JLex/Main.java" property="jlex.present"/>
-     </target>
-
-   <target name="fetchJLex" depends="JLexPresent" unless="jlex.present">
-     <delete dir="${temp.folder}"/>
-     <mkdir dir="${temp.folder}/JLex"/>
-     <get src="http://www.cs.princeton.edu/~appel/modern/java/JLex/current/Main.java" dest="${temp.folder}/JLex/Main.java"/>
-     <delete dir="${plugin.destination}/src/JLex"/>
-     <mkdir dir="${plugin.destination}/src/JLex"/>
-     <copy file="${temp.folder}/JLex/Main.java" tofile="${plugin.destination}/src/JLex/Main.java"/>
-     <delete dir="${temp.folder}"/>
-   </target>
-	
-	<target name="getSources" depends="fetchJLex" />
-
-
-	<target name="init" depends="properties">
-		<condition property="pluginTemp" value="${buildTempFolder}/plugins">
-			<isset property="buildTempFolder"/>
-		</condition>
-		<property name="pluginTemp" value="${basedir}"/>
-		<condition property="build.result.folder" value="${pluginTemp}/com.ibm.wala.core.testdata">
-			<isset property="buildTempFolder"/>
-		</condition>
-		<property name="build.result.folder" value="${basedir}"/>
-		<property name="temp.folder" value="${basedir}/temp.folder"/>
-		<property name="plugin.destination" value="${basedir}"/>
-	</target>
-
-	<target name="properties" if="eclipse.running">
-		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
-
-	</target>
-
+    <property name="pluginTemp" value="${basedir}"/>
+    <condition property="build.result.folder" value="${pluginTemp}/com.ibm.wala.core.testdata">
+      <isset property="buildTempFolder"/>
+    </condition>
+    <property name="build.result.folder" value="${basedir}"/>
+    <property name="temp.folder" value="${basedir}/temp.folder"/>
+    <property name="plugin.destination" value="${basedir}"/>
+  </target>
+  
+  <target name="properties" if="eclipse.running">
+    <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+    
+  </target>
+  
 </project>

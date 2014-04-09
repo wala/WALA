@@ -40,7 +40,7 @@ public class JavaViewerDriver {
 
   private static void run(String classPath, String exclusionFilePath) throws IOException, ClassHierarchyException, CallGraphBuilderCancelException{
 
-    File exclusionFile = FileProvider.getFile(exclusionFilePath);
+    File exclusionFile = (new FileProvider()).getFile(exclusionFilePath);
     AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(classPath, exclusionFile != null ? exclusionFile
         : new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 

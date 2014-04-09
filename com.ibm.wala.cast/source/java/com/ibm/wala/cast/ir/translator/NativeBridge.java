@@ -11,7 +11,7 @@
 package com.ibm.wala.cast.ir.translator;
 
 import com.ibm.wala.cast.tree.CAst;
-import com.ibm.wala.core.plugin.CorePlugin;
+import com.ibm.wala.ide.plugin.CorePlugin;
 
 /**
  * superclass for CAst parsers / translators making use of native code. performs

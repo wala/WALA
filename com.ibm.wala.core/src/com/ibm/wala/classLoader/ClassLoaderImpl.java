@@ -510,7 +510,7 @@ public class ClassLoaderImpl implements IClassLoader {
     String jarFileName = archive.getJarFile().getName();
     InputStream s = null;
     try {
-      File jarFile = FileProvider.getFile(jarFileName);
+      File jarFile = (new FileProvider()).getFile(jarFileName);
       int bufferSize = 65536;
       s = new BufferedInputStream(new FileInputStream(jarFile), bufferSize);
       byte[] b = new byte[1024];

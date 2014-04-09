@@ -48,7 +48,7 @@ public class J2EEAnalysisScope extends AnalysisScope {
    * @param lifecycleEntrypoints Should EJB lifecycle entrypoints be considered as call graph entrypoints?
    */
   public J2EEAnalysisScope(String baseScope, ClassLoader loader, boolean lifecycleEntrypoints) throws IOException {
-    this(baseScope, loader, FileProvider.getFile(EXCLUSIONS_FILE), lifecycleEntrypoints);
+    this(baseScope, loader, (new FileProvider()).getFile(EXCLUSIONS_FILE), lifecycleEntrypoints);
   }
 
   /**
