@@ -284,15 +284,6 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 			}
 		});
 
-		if (options.pdfCG())
-			GraphUtil.makeCG(this);
-		if (options.pdfPartialCG())
-			GraphUtil.makePCG(this);
-		if (options.pdfOneLevelCG())
-			GraphUtil.makeOneLCG(this);
-		if (options.systemToApkCG())
-			GraphUtil.makeSystemToAPKCG(this);
-
 		if (options.stdoutCG()) {
 			for (Iterator<CGNode> nodeI = cg.iterator(); nodeI.hasNext();) {
 				CGNode node = nodeI.next();
