@@ -152,6 +152,9 @@
 		<copy todir="${destination.temp.folder}/com.ibm.wala.core.testdata_1.0.0" failonerror="true" overwrite="false">
 			<fileset dir="${basedir}" includes="META-INF/"			/>
 		</copy>
+		<copy todir="${destination.temp.folder}/com.ibm.wala.core.testdata_1.0.0" failonerror="true" overwrite="false">
+			<fileset dir="${basedir}/classes" includes="**"			/>
+		</copy>
 	</target>
 
 	<target name="build.zips" depends="init">

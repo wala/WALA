@@ -117,6 +117,11 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
     return loader.lookupClass(superReference.getName()).getField(name);
   }
 
+  public IField getField(Atom name, TypeName type) {
+    // assume that for AST classes, you can't have multiple fields with the same name    
+    return loader.lookupClass(superReference.getName()).getField(name);
+  }
+
   public TypeReference getReference() {
     return reference;
   }

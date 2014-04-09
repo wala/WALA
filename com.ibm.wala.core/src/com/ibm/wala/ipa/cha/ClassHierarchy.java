@@ -532,7 +532,7 @@ public class ClassHierarchy implements IClassHierarchy {
     if (f == null) {
       throw new IllegalArgumentException("f is null");
     }
-    return klass.getField(f.getName());
+    return klass.getField(f.getName(), f.getFieldType().getName());
   }
 
   /**
