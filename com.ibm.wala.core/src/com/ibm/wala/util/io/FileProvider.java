@@ -17,7 +17,6 @@ import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -38,21 +37,24 @@ import com.ibm.wala.util.debug.Assertions;
  * This class provides files that are packaged with this plug-in
  */
 public class FileProvider {
-  
+
   /**
-   * This class uses reflection to access classes and methods that are only available when Eclipse is
-   * running as an IDE environment. The choice to use reflection is related to builds: with this design
-   * the build doesn't need to provide IDE bundles during compilation and hence can spot invalid uses of
+   * This class uses reflection to access classes and methods that are only
+   * available when Eclipse is running as an IDE environment. The choice to use
+   * reflection is related to builds: with this design the build doesn't need to
+   * provide IDE bundles during compilation and hence can spot invalid uses of
    * such classes through this bundle.
    * 
-   * Because of this class, this bundle must OPTIONALY require 'org.eclipse.core.resources'.
+   * Because of this class, this bundle must OPTIONALY require
+   * 'org.eclipse.core.resources'.
    */
   private static final class EclipseUtil {
     private static Object workspaceRoot = null;
     private static Method workspaceRoot_getFile = null;
-    
+
     public static Module getJarFileModule(String fileName, ClassLoader loader) {
-      // Using reflection to enable this code to be built without the org.eclipse.core.resources bundle
+      // Using reflection to enable this code to be built without the
+      // org.eclipse.core.resources bundle
       //
       try {
         if (workspaceRoot_getFile == null) {
@@ -63,7 +65,7 @@ public class FileProvider {
           workspaceRoot = getRoot.invoke(workspace);
           workspaceRoot_getFile = workspaceRoot.getClass().getMethod("getFile", IPath.class);
         }
-        
+
         IPath path = new Path(fileName);
         if (workspaceRoot_getFile.invoke(workspaceRoot, path) != null) {
           return new JarFileModule(new JarFile(fileName, false));
@@ -72,7 +74,7 @@ public class FileProvider {
       }
       return null;
     }
-  }  
+  }
 
   private final static int DEBUG_LEVEL = 0;
 
@@ -82,7 +84,8 @@ public class FileProvider {
 
   /**
    * @param fileName
-   * @return the jar file packaged with this plug-in of the given name, or null if not found.
+   * @return the jar file packaged with this plug-in of the given name, or null
+   *         if not found.
    */
   public static Module getJarFileModule(String fileName) throws IOException {
     return getJarFileModule(fileName, FileProvider.class.getClassLoader());
@@ -91,7 +94,7 @@ public class FileProvider {
   public static Module getJarFileModule(String fileName, ClassLoader loader) throws IOException {
     if (CorePlugin.getDefault() == null) {
       return getJarFileFromClassLoader(fileName, loader);
-    } else if (CorePlugin.IS_RESOURCES_BUNDLE_AVAILABLE){
+    } else if (CorePlugin.IS_RESOURCES_BUNDLE_AVAILABLE) {
       Module module = EclipseUtil.getJarFileModule(fileName, loader);
       if (module != null) {
         return module;
@@ -132,8 +135,10 @@ public class FileProvider {
 
   /**
    * @param fileName
-   * @return the jar file packaged with this plug-in of the given name, or null if not found.
-   * @throws IllegalArgumentException if p is null
+   * @return the jar file packaged with this plug-in of the given name, or null
+   *         if not found.
+   * @throws IllegalArgumentException
+   *           if p is null
    */
   public static File getFileFromPlugin(Plugin p, String fileName) throws IOException {
 
@@ -152,7 +157,8 @@ public class FileProvider {
 
   /**
    * @param fileName
-   * @return the jar file packaged with this plug-in of the given name, or null if not found.
+   * @return the jar file packaged with this plug-in of the given name, or null
+   *         if not found.
    */
   private static JarFileModule getFromPlugin(Plugin p, String fileName) throws IOException {
     URL url = getFileURLFromPlugin(p, fileName);
@@ -162,7 +168,8 @@ public class FileProvider {
   /**
    * get a file URL for a file from a plugin
    * 
-   * @param fileName the file name
+   * @param fileName
+   *          the file name
    * @return the URL, or <code>null</code> if the file is not found
    * @throws IOException
    */
@@ -198,7 +205,8 @@ public class FileProvider {
   }
 
   /**
-   * escape spaces in a URL, primarily to work around a bug in {@link File#toURL()}
+   * escape spaces in a URL, primarily to work around a bug in
+   * {@link File#toURL()}
    * 
    * @param url
    * @return an escaped version of the URL
@@ -256,8 +264,8 @@ public class FileProvider {
   }
 
   /**
-   * @return the jar file packaged with this plug-in of the given name, or null if not found: wrapped as a JarFileModule or a
-   *         NestedJarFileModule
+   * @return the jar file packaged with this plug-in of the given name, or null
+   *         if not found: wrapped as a JarFileModule or a NestedJarFileModule
    * @throws IOException
    */
   public static Module getJarFileFromClassLoader(String fileName, ClassLoader loader) throws IOException {
@@ -293,25 +301,28 @@ public class FileProvider {
   }
 
   /**
-   * Properly creates the String file name of a {@link URL}. This works around a bug in the Sun implementation of
-   * {@link URL#getFile()}, which doesn't properly handle file paths with spaces (see <a
-   * href="http://sourceforge.net/tracker/index.php?func=detail&aid=1565842&group_id=176742&atid=878458">bug report</a>). For now,
-   * fails with an assertion if the url is malformed.
+   * Properly creates the String file name of a {@link URL}. This works around a
+   * bug in the Sun implementation of {@link URL#getFile()}, which doesn't
+   * properly handle file paths with spaces (see <a href=
+   * "http://sourceforge.net/tracker/index.php?func=detail&aid=1565842&group_id=176742&atid=878458"
+   * >bug report</a>). For now, fails with an assertion if the url is malformed.
    * 
    * @param url
    * @return the path name for the url
-   * @throws IllegalArgumentException if url is null
+   * @throws IllegalArgumentException
+   *           if url is null
    */
   public static String filePathFromURL(URL url) {
     if (url == null) {
       throw new IllegalArgumentException("url is null");
     }
-    URI uri = null;
-    try {
-      uri = new URI(url.toString());
-    } catch (URISyntaxException e) {
-      Assertions.UNREACHABLE();
-    }
+    // Old solution does not deal well with "<" | ">" | "#" | "%" |
+    // <">  "{" | "}" | "|" | "\" | "^" | "[" | "]" | "`" since they may occur
+    // inside an URL but are prohibited for an URI. See
+    // http://www.faqs.org/rfcs/rfc2396.html Section 2.4.3
+    // This solution works. See discussion at
+    // http://stackoverflow.com/questions/4494063/how-to-avoid-java-net-urisyntaxexception-in-url-touri
+    URI uri = new File(url.getPath()).toURI();
     String filePath = uri.getPath();
     return filePath;
   }

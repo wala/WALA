@@ -35,6 +35,8 @@ abstract public class AstClass implements IClass, ClassConstants {
 
   private final TypeName typeName;
 
+  private final TypeReference typeReference;
+
   private final IClassLoader loader;
 
   private final short modifiers;
@@ -51,6 +53,7 @@ abstract public class AstClass implements IClass, ClassConstants {
     this.modifiers = modifiers;
     this.declaredFields = declaredFields;
     this.declaredMethods = declaredMethods;
+    this.typeReference = TypeReference.findOrCreate(loader.getReference(), typeName);
   }
 
   public boolean isInterface() {
@@ -102,7 +105,7 @@ abstract public class AstClass implements IClass, ClassConstants {
   }
 
   public TypeReference getReference() {
-    return TypeReference.findOrCreate(loader.getReference(), typeName);
+    return typeReference;
   }
 
   public IClassLoader getClassLoader() {

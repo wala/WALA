@@ -18,8 +18,10 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
+import com.ibm.wala.util.collections.FilterPredicate;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.IteratorUtil;
@@ -29,6 +31,7 @@ import com.ibm.wala.util.graph.impl.GraphInverter;
 import com.ibm.wala.util.graph.traverse.DFS;
 
 /**
+ * Utilities related to simple graph subset operations.
  */
 public class GraphSlicer {
 
@@ -41,15 +44,14 @@ public class GraphSlicer {
    * @return the set of nodes in g, from which any of the targets (nodes that f accepts) is reachable.
    * @throws WalaException
    */
-  public static <T> Set<T> slice(Graph<T> g, Filter<T> f){
-
+  public static <T> Set<T> slice(Graph<T> g, Predicate<T> p){
     if (g == null) {
       throw new IllegalArgumentException("g is null");
     }
     HashSet<T> roots = HashSetFactory.make();
     for (Iterator<? extends T> it = g.iterator(); it.hasNext();) {
       T o = it.next();
-      if (f.accepts(o)) {
+      if (p.test(o)) {
         roots.add(o);
       }
     }
@@ -57,13 +59,22 @@ public class GraphSlicer {
     Set<T> result = DFS.getReachableNodes(GraphInverter.invert(g), roots);
 
     return result;
-
+  }
+  
+  @Deprecated
+  public static <T> Set<T> slice(Graph<T> g, Filter<T> f){
+    return slice(g, FilterPredicate.toPredicate(f));
+  }
+  
+  @Deprecated
+  public static <T> Graph<T> prune(final Graph<T> g, final Filter<T> f) {
+    return prune(g, FilterPredicate.toPredicate(f));
   }
 
   /**
-   * Prune a graph to only the nodes accepted by the filter f
+   * Prune a graph to only the nodes accepted by the {@link Predicate} p
    */
-  public static <T> Graph<T> prune(final Graph<T> g, final Filter<T> f) {
+  public static <T> Graph<T> prune(final Graph<T> g, final Predicate<T> p) {
     if (g == null) {
       throw new IllegalArgumentException("g is null");
     }
@@ -71,7 +82,7 @@ public class GraphSlicer {
       int nodeCount = -1;
 
       public Iterator<T> iterator() {
-        return new FilterIterator<T>(g.iterator(), f);
+        return Predicate.filter(g.iterator(), p).iterator();
       }
 
       public int getNumberOfNodes() {
@@ -89,23 +100,23 @@ public class GraphSlicer {
         Assertions.UNREACHABLE();
       }
 
-      public boolean containsNode(T N) {
-        return f.accepts(N) && g.containsNode(N);
+      public boolean containsNode(T n) {
+        return p.test(n) && g.containsNode(n);
       }
 
     };
     final EdgeManager<T> e = new EdgeManager<T>() {
 
-      public Iterator<T> getPredNodes(T N) {
-        return new FilterIterator<T>(g.getPredNodes(N), f);
+      public Iterator<T> getPredNodes(T n) {
+        return Predicate.filter(g.getPredNodes(n), p).iterator();
       }
 
-      public int getPredNodeCount(T N) {
-        return IteratorUtil.count(getPredNodes(N));
+      public int getPredNodeCount(T n) {
+        return IteratorUtil.count(getPredNodes(n));
       }
 
-      public Iterator<T> getSuccNodes(T N) {
-        return new FilterIterator<T>(g.getSuccNodes(N), f);
+      public Iterator<T> getSuccNodes(T n) {
+        return Predicate.filter(g.getSuccNodes(n), p).iterator();
       }
 
       public int getSuccNodeCount(T N) {
@@ -133,7 +144,7 @@ public class GraphSlicer {
       }
 
       public boolean hasEdge(T src, T dst) {
-        return g.hasEdge(src, dst) && f.accepts(src) && f.accepts(dst);
+        return g.hasEdge(src, dst) && p.test(src) && p.test(dst);
       }
 
     };

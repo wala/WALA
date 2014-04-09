@@ -282,6 +282,16 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     // all we need is for it to finish building CG successfully.
   }
 
+  @Test public void testExtJSSwitch() throws IOException, IllegalArgumentException, CancelException {
+    Util.makeScriptCG("tests", "extjs_switch.js");
+    // all we need is for it to finish building CG successfully.
+  }
+
+  @Test public void testFunctionDotCall() throws IOException, IllegalArgumentException, CancelException {
+    Util.makeScriptCG("tests", "function_call.js");
+    // TODO assert that foo() is reachable
+  }
+
   protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {
 
     // Created by reversing the points to mapping for local pointer keys.

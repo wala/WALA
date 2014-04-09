@@ -27,7 +27,10 @@ import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
 import com.ibm.wala.cast.js.ssa.JavaScriptTypeOfInstruction;
 import com.ibm.wala.cast.js.ssa.JavaScriptWithRegion;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.loader.AstMethod;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -251,7 +254,27 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   // ///////////////////////////////////////////////////////////////////////////
 
   protected JSConstraintVisitor makeVisitor(CGNode node) {
+    if (AstSSAPropagationCallGraphBuilder.DEBUG_PROPERTIES) {
+      final IMethod method = node.getMethod();
+      if (method instanceof AstMethod) {
+        System.err.println("\n\nNode: " + node);
+        final IR ir = node.getIR();
+        System.err.println("Position: " + getSomePositionForMethod(ir, (AstMethod) method));
+        // System.err.println(ir);
+      }
+    }
     return new JSConstraintVisitor(this, node);
+  }
+
+  private Position getSomePositionForMethod(IR ir, AstMethod method) {
+    SSAInstruction[] instructions = ir.getInstructions();
+    for (int i = 0; i < instructions.length; i++) {
+      Position p = method.getSourcePosition(i);
+      if (p != null) {
+        return p;
+      }
+    }
+    return null;
   }
 
   public static class JSConstraintVisitor extends AstConstraintVisitor implements InstructionVisitor {
@@ -302,10 +325,35 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     }
 
     public void visitJavaScriptPropertyRead(JavaScriptPropertyRead instruction) {
+      if (AstSSAPropagationCallGraphBuilder.DEBUG_PROPERTIES) {
+        Position instructionPosition = getInstructionPosition(instruction);
+        if (instructionPosition != null) {
+          System.err.println("processing read instruction " + instruction + ", position " + instructionPosition);
+        }
+      }
       newFieldRead(node, instruction.getUse(0), instruction.getUse(1), instruction.getDef(0));
     }
 
+    private Position getInstructionPosition(SSAInstruction instruction) {
+      IMethod method = node.getMethod();
+      if (method instanceof AstMethod) {
+        SSAInstruction[] instructions = ir.getInstructions();
+        for (int ind = basicBlock.getFirstInstructionIndex(); ind <= basicBlock.getLastInstructionIndex(); ind++) {
+          if (instruction.equals(instructions[ind])) {
+            return ((AstMethod)method).getSourcePosition(ind);
+          }
+        }
+      }
+      return null;
+    }
+
     public void visitJavaScriptPropertyWrite(JavaScriptPropertyWrite instruction) {
+      if (AstSSAPropagationCallGraphBuilder.DEBUG_PROPERTIES) {
+        Position instructionPosition = getInstructionPosition(instruction);
+        if (instructionPosition != null) {
+          System.err.println("processing write instruction " + instruction + ", position " + instructionPosition);
+        }
+      }
       newFieldWrite(node, instruction.getUse(0), instruction.getUse(1), instruction.getUse(2));
     }
 
@@ -470,11 +518,11 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     }
   }
 
-  /////////////////////////////////////////////////////////////////////////////
+  // ///////////////////////////////////////////////////////////////////////////
   //
   // function call handling
   //
-  ////////////////////////////////////////////////////////////////////////////
+  // //////////////////////////////////////////////////////////////////////////
 
   @Override
   protected void processCallingConstraints(CGNode caller, SSAAbstractInvokeInstruction instruction, CGNode target,
@@ -504,7 +552,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     // pass actual arguments to formals in the normal way
     for (int i = 0; i < Math.min(paramCount, argCount); i++) {
-      int fn = targetST.getConstant(i);
+      InstanceKey[] fn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.Number, i) };
       PointerKey F = getTargetPointerKey(target, i);
 
       if (constParams != null && constParams[i] != null) {
@@ -528,7 +576,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     if (paramCount < argCount) {
       if (av != -1) {
         for (int i = paramCount; i < argCount; i++) {
-          int fn = targetST.getConstant(i);
+          InstanceKey[] fn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.Number, i) };
           if (constParams != null && constParams[i] != null) {
             targetVisitor.newFieldWrite(target, av, fn, constParams[i]);
           } else {
@@ -554,8 +602,8 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     // write `length' in argument objects
     if (av != -1) {
-      int svn = targetST.getConstant(argCount);
-      int lnv = targetST.getConstant("length");
+      InstanceKey[] svn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.Number, argCount) };
+      InstanceKey[] lnv = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.String, "length") };
       targetVisitor.newFieldWrite(target, av, lnv, svn);
     }
 

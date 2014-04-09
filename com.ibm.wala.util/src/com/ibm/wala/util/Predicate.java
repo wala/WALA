@@ -38,6 +38,7 @@
 package com.ibm.wala.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -102,6 +103,18 @@ public abstract class Predicate<T> {
       @Override
       public boolean test(T t) {
         return originalPredicate.test(t) || disjunct.test(t);
+      }
+    };
+  }
+  
+  /**
+   * Create the predicate "is an element of c"
+   */
+  public static <T> Predicate<T> isElementOf(final Collection<T> c) {
+    return new Predicate<T>() {
+      @Override
+      public boolean test(T t) {
+        return c.contains(t);
       }
     };
   }

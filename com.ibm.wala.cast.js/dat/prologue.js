@@ -71,6 +71,8 @@ Object.prototype = {
 
   prototype: null,
 
+  __proto__: null,
+  
   constructor: Object,
 
   toString: function toString() {
@@ -97,6 +99,7 @@ Object.prototype = {
 };
 
 
+
 /************************************************************************/
 /* Function properties, see spec 15.3					*/
 /************************************************************************/
@@ -105,6 +108,8 @@ Function.prototype = {
 
   constructor: Function,
 
+  __proto__: Object.prototype, 
+  
   toString: function functionToString() {
     return primitive("FunctionToString", this);
   },
@@ -126,7 +131,7 @@ Function.prototype = {
 
 Array.prototype = {
 
-  prototype: Object.prototype,
+  __proto__: Object.prototype,
 
   constructor: Array,
 
@@ -245,7 +250,7 @@ Array.prototype = {
 
 String.prototype = {
 
-  prototype: Object.prototype,
+  __proto__: Object.prototype,
 
   constructor: String,
 
@@ -321,7 +326,7 @@ String.prototype = {
 
 Number.prototype = {
 
-  prototype: Object.prototype,
+  __proto__: Object.prototype,
 
   constructor: Number,
 
@@ -409,7 +414,7 @@ Math = {
 
 RegExp.prototype = {
 
-  prototype: Object.prototype,
+  __proto__: Object.prototype,
 
   constructor: RegExp
 

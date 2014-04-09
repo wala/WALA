@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.Pair;
 
 /**
  *  This abstract class provides helper functionality for recording
@@ -49,6 +50,10 @@ public abstract class AstLexicalAccess extends SSAInstruction {
       valueNumber = vn;
     }
 
+    public Pair<String,String> getName() {
+      return Pair.make(variableName, variableDefiner);
+    }
+    
     public int hashCode() {
       return variableName.hashCode() * valueNumber;
     }

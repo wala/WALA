@@ -10,10 +10,9 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import java.util.HashMap;
 import java.util.Iterator;
 
-import com.ibm.wala.cast.ir.translator.AstTranslator;
+import com.ibm.wala.cast.ipa.callgraph.LexicalScopingResolverContexts.LexicalScopingResolver;
 import com.ibm.wala.cast.loader.AstMethod.LexicalParent;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -21,23 +20,20 @@ import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.graph.impl.GraphInverter;
-import com.ibm.wala.util.graph.traverse.DFS;
+import com.ibm.wala.util.collections.CompoundIterator;
+import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.collections.NonNullSingletonIterator;
+import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.intset.OrdinalSet;
 
 /**
  * An {@link InstanceKeyFactory} that returns {@link ScopeMappingInstanceKey}s
  * as necessary to handle interprocedural lexical scoping
  */
 abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
-
-  /**
-   * return all {@link LexicalParent}s of methods represented by base (a single
-   * method for JavaScript, all instance methods in Java).
-   */
-  protected abstract LexicalParent[] getParents(InstanceKey base);
 
   /**
    * does base require a scope mapping key? Typically, true if base is allocated
@@ -76,47 +72,16 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
      */
     private final CGNode creator;
 
-    /**
-     * mapping from lexical parent names to the corresponding CGNodes
-     */
-    private final HashMap<String, CGNode> scopeMap;
 
     /**
      * compute the {@link CGNode} correspond to each specified
      * {@link LexicalParent} of {@link #base}, populating {@link #scopeMap}
      * 
      */
-    private void computeLexicalParentCGNodes() {
-      if (AstTranslator.DEBUG_LEXICAL)
-        System.err.println(("starting search for parents at " + creator));
-      final LexicalParent[] parents = getParents(base);
-      Iterator<CGNode> preds = DFS.iterateDiscoverTime(GraphInverter.invert(builder.getCallGraph()), creator);
-      int toDo = parents.length;
-      while (preds.hasNext()) {
-        CGNode pred = preds.next();
-        for (int i = 0; i < parents.length; i++) {
-          if (parents[i] != null) {
-            if (pred.getMethod() == parents[i].getMethod()) {
-              if (scopeMap.containsKey(parents[i].getName()))
-                assert scopeMap.get(parents[i].getName()) == pred;
-              else {
-                toDo--;
-                scopeMap.put(parents[i].getName(), pred);
-                if (AstTranslator.DEBUG_LEXICAL)
-                  System.err.println(("Adding lexical parent " + parents[i].getName() + " for " + base + " at " + creator
-                      + "(toDo is now " + toDo + ")"));
-              }
-            }
-          }
-        }
-      }
-    }
-
+    
     private ScopeMappingInstanceKey(CGNode creator, InstanceKey base) {
       this.creator = creator;
       this.base = base;
-      this.scopeMap = HashMapFactory.make();
-      computeLexicalParentCGNodes();
     }
 
     public IClass getConcreteType() {
@@ -128,8 +93,26 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
      * @param definer
      * @return
      */
-    CGNode getDefiningNode(String definer) {
-      return scopeMap.get(definer);
+    Iterator<CGNode> getFunargNodes(Pair<String,String> name) {
+      Iterator<CGNode> result = EmptyIterator.instance();
+      
+      LexicalScopingResolver r = (LexicalScopingResolver)creator.getContext().get(LexicalScopingResolverContexts.RESOLVER);
+      if (r != null) {
+        CGNode def = r.getOriginalDefiner(name);
+        if (def != null) {
+          result = new NonNullSingletonIterator<CGNode>(def);
+        }
+      }
+      
+      PointerKey funcKey = builder.getPointerKeyForLocal(creator, 1);
+      OrdinalSet<InstanceKey> funcPtrs = builder.getPointerAnalysis().getPointsToSet(funcKey);
+      for(InstanceKey x : funcPtrs) {
+        if (x instanceof ScopeMappingInstanceKey) {
+          result = new CompoundIterator<CGNode>(result, ((ScopeMappingInstanceKey)x).getFunargNodes(name));
+        }
+      }
+      
+      return result;
     }
 
     public int hashCode() {
@@ -146,10 +129,10 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
     }
   }
 
-  public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
-    InstanceKey base = basic.getInstanceKeyForAllocation(node, allocation);
+  public InstanceKey getInstanceKeyForAllocation(CGNode creatorNode, NewSiteReference allocationSite) {
+    InstanceKey base = basic.getInstanceKeyForAllocation(creatorNode, allocationSite);
     if (base != null && needsScopeMappingKey(base)) {
-      return new ScopeMappingInstanceKey(node, base);
+      return new ScopeMappingInstanceKey(creatorNode, base);
     } else {
       return base;
     }

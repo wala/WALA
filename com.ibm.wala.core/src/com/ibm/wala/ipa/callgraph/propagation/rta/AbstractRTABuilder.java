@@ -52,6 +52,7 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
@@ -112,7 +113,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
    * Visit all instructions in a node, and add dataflow constraints induced by each statement relevat to RTA
    */
   @Override
-  protected boolean addConstraintsFromNode(CGNode node) {
+  protected boolean addConstraintsFromNode(CGNode node, IProgressMonitor monitor) {
 
     if (haveAlreadyVisited(node)) {
       return false;
@@ -388,7 +389,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   }
 
   @Override
-  protected boolean unconditionallyAddConstraintsFromNode(CGNode node) {
+  protected boolean unconditionallyAddConstraintsFromNode(CGNode node, IProgressMonitor monitor) {
     // add all relevant constraints
     addNewConstraints(node);
     addCallConstraints(node);

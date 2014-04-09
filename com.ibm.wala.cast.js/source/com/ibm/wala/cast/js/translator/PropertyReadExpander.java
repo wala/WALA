@@ -8,7 +8,7 @@ import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.impl.CAstBasicRewriter;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.impl.CAstRewriter;
-import com.ibm.wala.cast.tree.impl.CAstBasicRewriter.NoKey;
+import com.ibm.wala.cast.tree.impl.CAstRewriter.CopyKey;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -17,13 +17,27 @@ import com.ibm.wala.util.debug.Assertions;
  * read is converted to a do loop that walks up the prototype chain until the
  * property is found or the chain has ended.
  */
-public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.RewriteContext, CAstBasicRewriter.NoKey> {
+public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.RewriteContext, PropertyReadExpander.ExpanderKey> {
 
+  static class ExpanderKey implements CopyKey<ExpanderKey> {
+
+    public ExpanderKey parent() {
+      return null;
+    }
+   
+    static final ExpanderKey EVERYWHERE = new ExpanderKey();
+    static final ExpanderKey EXTRA = new ExpanderKey();
+  }
+  
   private int readTempCounter = 0;
 
   private static final String TEMP_NAME = "readTemp";
 
-  abstract static class RewriteContext extends CAstBasicRewriter.NonCopyingContext {
+  abstract static class RewriteContext implements CAstRewriter.RewriteContext<ExpanderKey> {
+
+    public ExpanderKey key() {
+      return ExpanderKey.EVERYWHERE;
+    }
 
     /**
      * are we in a context where a property access should be treated as a read?
@@ -116,21 +130,20 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
    * @return
    */
   private CAstNode makeConstRead(CAstNode root, CAstNode receiver, CAstNode element, RewriteContext context,
-      Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
+      Map<Pair<CAstNode, ExpanderKey>, CAstNode> nodeMap) {
     CAstNode get, result;
     String receiverTemp = TEMP_NAME + (readTempCounter++);
     String elt = (String) element.getValue();
-    if (elt.equals("prototype")) {
-      result = Ast.makeNode(CAstNode.BLOCK_EXPR, get = Ast.makeNode(CAstNode.OBJECT_REF, receiver, Ast.makeConstant("prototype")));
+    if (elt.equals("prototype") || elt.equals("__proto__")) {
+      result = Ast.makeNode(CAstNode.BLOCK_EXPR, get = Ast.makeNode(CAstNode.OBJECT_REF, receiver, Ast.makeConstant(elt)));
     } else {
 
       if (context.inAssignment()) {
         context.setAssign(Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)), Ast.makeConstant(elt));
       }
 
-      result = Ast
-          .makeNode(
-              CAstNode.BLOCK_EXPR,
+      result = Ast.makeNode(
+         CAstNode.BLOCK_EXPR,
               // declare loop variable and initialize to the receiver
               Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new InternalCAstSymbol(receiverTemp, false, false)), receiver),
               Ast.makeNode(CAstNode.LOOP,
@@ -146,12 +159,13 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
                       CAstNode.ASSIGN,
                       Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
                       Ast.makeNode(CAstNode.OBJECT_REF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
-                          Ast.makeConstant("prototype")))),
+                          Ast.makeConstant("__proto__")))),
               get = Ast.makeNode(CAstNode.OBJECT_REF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
                   Ast.makeConstant(elt)));
     }
 
-    nodeMap.put(Pair.make(root, context.key()), get);
+    nodeMap.put(Pair.make(root, context.key()), result);
+    nodeMap.put(Pair.make(root, ExpanderKey.EXTRA), get);
 
     return result;
   }
@@ -163,7 +177,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
    * @see #makeConstRead(CAstNode, CAstNode, CAstNode, RewriteContext, Map)
    */
   private CAstNode makeVarRead(CAstNode root, CAstNode receiver, CAstNode element, RewriteContext context,
-      Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
+      Map<Pair<CAstNode, ExpanderKey>, CAstNode> nodeMap) {
     String receiverTemp = TEMP_NAME + (readTempCounter++);
     String elementTemp = TEMP_NAME + (readTempCounter++);
 
@@ -188,16 +202,16 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
                 CAstNode.ASSIGN,
                 Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
                 Ast.makeNode(CAstNode.OBJECT_REF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
-                    Ast.makeConstant("prototype")))),
+                    Ast.makeConstant("__proto__")))),
         get = Ast.makeNode(CAstNode.OBJECT_REF, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(receiverTemp)),
             Ast.makeNode(CAstNode.VAR, Ast.makeConstant(elementTemp))));
 
     nodeMap.put(Pair.make(root, context.key()), get);
-
+ 
     return result;
   }
 
-  protected CAstNode copyNodes(CAstNode root, RewriteContext context, Map<Pair<CAstNode, NoKey>, CAstNode> nodeMap) {
+  protected CAstNode copyNodes(CAstNode root, RewriteContext context, Map<Pair<CAstNode, ExpanderKey>, CAstNode> nodeMap) {
     int kind = root.getKind();
 
     if (kind == CAstNode.OBJECT_REF && context.inRead()) {

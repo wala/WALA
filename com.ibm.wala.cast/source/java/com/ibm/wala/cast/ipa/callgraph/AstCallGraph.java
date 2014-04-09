@@ -137,10 +137,10 @@ public class AstCallGraph extends ExplicitCallGraph {
           callbacks = HashSetFactory.make(1);
         }
 
-        callbacks.addAll(callbacks);
+        callbacks.addAll(callback);
 
         for (Iterator ps = getCallGraph().getPredNodes(this); ps.hasNext();) {
-          ((AstCGNode) ps.next()).addAllCallbacks(callbacks);
+          ((AstCGNode) ps.next()).addAllCallbacks(callback);
         }
       }
     }

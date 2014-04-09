@@ -34,18 +34,14 @@ import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
-import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder.DispatchOperator;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.functions.VoidFunction;
-import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
@@ -311,25 +307,27 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
 
   /**
    * Add constraints for a node.
+   * @param monitor 
    * 
    * @return true iff any new constraints are added.
    */
-  protected abstract boolean addConstraintsFromNode(CGNode n);
+  protected abstract boolean addConstraintsFromNode(CGNode n, IProgressMonitor monitor) throws CancelException;
 
   /**
    * Add constraints from newly discovered nodes. Note: the act of adding constraints may discover new nodes, so this routine is
    * iterative.
    * 
    * @return true iff any new constraints are added.
+   * @throws CancelException 
    */
-  protected boolean addConstraintsFromNewNodes() {
+  protected boolean addConstraintsFromNewNodes(IProgressMonitor monitor) throws CancelException {
     boolean result = false;
     while (!discoveredNodes.isEmpty()) {
       Iterator<CGNode> it = discoveredNodes.iterator();
       discoveredNodes = HashSetFactory.make();
       while (it.hasNext()) {
         CGNode n = it.next();
-        result |= addConstraintsFromNode(n);
+        result |= addConstraintsFromNode(n, monitor);
       }
     }
     return result;
@@ -1446,12 +1444,14 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
 
   /**
    * Add constraints when the interpretation of a node changes (e.g. reflection)
+   * @param monitor 
+   * @throws CancelException 
    */
-  public void addConstraintsFromChangedNode(CGNode node) {
-    unconditionallyAddConstraintsFromNode(node);
+  public void addConstraintsFromChangedNode(CGNode node, IProgressMonitor monitor) throws CancelException {
+    unconditionallyAddConstraintsFromNode(node, monitor);
   }
 
-  protected abstract boolean unconditionallyAddConstraintsFromNode(CGNode node);
+  protected abstract boolean unconditionallyAddConstraintsFromNode(CGNode node, IProgressMonitor monitor) throws CancelException;
 
   protected static class MutableBoolean {
     // a horrendous hack since we don't have closures

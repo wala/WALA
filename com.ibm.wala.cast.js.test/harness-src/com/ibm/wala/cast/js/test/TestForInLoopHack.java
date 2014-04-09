@@ -7,20 +7,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
+import com.ibm.wala.cast.js.ipa.callgraph.ForInContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
-import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.callgraph.ContextItem;
-import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.intset.IntSetUtil;
 
 public class TestForInLoopHack extends TestJSCallGraphShape {
 
@@ -45,6 +36,24 @@ public class TestForInLoopHack extends TestJSCallGraphShape {
     Util.dumpCG(builder.getPointerAnalysis(), CG);
   }
 
+  @Test public void testJQueryWithHack() throws IOException, IllegalArgumentException, CancelException {
+    URL url = getClass().getClassLoader().getResource("pages/jquery_hacked.html");
+    JSCFABuilder builder = Util.makeHTMLCGBuilder(url);
+    addHackedForInLoopSensitivity(builder);
+    CallGraph CG = builder.makeCallGraph(builder.getOptions());
+    Util.dumpCG(builder.getPointerAnalysis(), CG);
+  }
+
+  /*
+  @Test public void testJQueryEx1WithHack() throws IOException, IllegalArgumentException, CancelException {
+    URL url = getClass().getClassLoader().getResource("pages/jquery/ex1.html");
+    JSCFABuilder builder = Util.makeHTMLCGBuilder(url);
+    addHackedForInLoopSensitivity(builder);
+    CallGraph CG = builder.makeCallGraph(builder.getOptions());
+    Util.dumpCG(builder.getPointerAnalysis(), CG);
+  }
+  */
+  
   private static final Object[][] assertionsForBadForin = new Object[][] { 
     new Object[] { ROOT, 
       new String[] { "tests/badforin.js" } },
@@ -88,50 +97,62 @@ public class TestForInLoopHack extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForBadForin);
     verifyGraphAssertions(CG, assertionsForBadForinHackPrecision);
   }
+
+  private static final Object[][] assertionsForbadforin2 = new Object[][] { 
+    new Object[] { ROOT, 
+      new String[] { "tests/badforin2.js" } },
+    new Object[] { "tests/badforin2.js", 
+      new String[] { "tests/badforin2.js/testForIn", "tests/badforin2.js/_check_obj_foo", "tests/badforin2.js/_check_obj_bar", "tests/badforin2.js/_check_copy_foo", "tests/badforin2.js/_check_copy_bar"} },
+    new Object[] { "tests/badforin2.js/testForIn",
+      new String[] { "tests/badforin2.js/testForIn1", "tests/badforin2.js/testForIn2" } },
+    new Object[] { "tests/badforin2.js/_check_obj_foo",
+      new String[] { "tests/badforin2.js/testForIn1" } },
+    new Object[] { "tests/badforin2.js/_check_copy_foo",
+      new String[] { "tests/badforin2.js/testForIn1" } },
+    new Object[] { "tests/badforin2.js/_check_obj_bar",
+      new String[] { "tests/badforin2.js/testForIn2" } },
+    new Object[] { "tests/badforin2.js/_check_copy_bar",
+      new String[] { "tests/badforin2.js/testForIn2" } }
+  };
+
+  @Test public void testbadforin2WithoutHack() throws IOException, IllegalArgumentException, CancelException {
+    JSCFABuilder B = Util.makeScriptCGBuilder("tests", "badforin2.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    Util.dumpCG(B.getPointerAnalysis(), CG);
+    verifyGraphAssertions(CG, assertionsForbadforin2);
+  }
+
+  private static final Object[][] assertionsForbadforin2HackPrecision = new Object[][] { 
+    new Object[] { "tests/badforin2.js/_check_obj_foo",
+      new String[] { "!tests/badforin2.js/testForIn2" } },
+    new Object[] { "tests/badforin2.js/_check_copy_foo",
+      new String[] { "!tests/badforin2.js/testForIn2" } },
+    new Object[] { "tests/badforin2.js/_check_obj_bar",
+      new String[] { "!tests/badforin2.js/testForIn1" } },
+    new Object[] { "tests/badforin2.js/_check_copy_bar",
+      new String[] { "!tests/badforin2.js/testForIn1" } }
+  };
+
+  @Test public void testbadforin2WithHack() throws IOException, IllegalArgumentException, CancelException {
+    JSCFABuilder B = Util.makeScriptCGBuilder("tests", "badforin2.js");
+    addHackedForInLoopSensitivity(B);
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    Util.dumpCG(B.getPointerAnalysis(), CG);
+    verifyGraphAssertions(CG, assertionsForbadforin2);
+    verifyGraphAssertions(CG, assertionsForbadforin2HackPrecision);
+  }
+
+  /*
+  @Test public void testYahooWithoutHack() throws IOException, IllegalArgumentException, CancelException {
+    JSCFABuilder B = Util.makeScriptCGBuilder("frameworks", "yahoo.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    Util.dumpCG(B.getPointerAnalysis(), CG);
+  }
+  */
   
   private void addHackedForInLoopSensitivity(JSCFABuilder builder) {
     final ContextSelector orig = builder.getContextSelector();
-    builder.setContextSelector(new ContextSelector() {
-      public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, final InstanceKey[] receiver) {
-        final Context origContext = orig.getCalleeTarget(caller, site, callee, receiver);
-        if (callee.getDeclaringClass().getName().toString().contains("_forin_body")) {
-          class ForInContext implements Context {
-            private final InstanceKey obj = receiver[2];
-            public ContextItem get(ContextKey name) {
-              if (name.equals(ContextKey.PARAMETERS[2])) {
-                return new FilteredPointerKey.SingleInstanceFilter(obj);
-              } else {
-                return origContext.get(name);
-              }
-            }
-            @Override
-            public int hashCode() {
-              return obj.hashCode();
-            }
-            @Override
-            public boolean equals(Object other) {
-              return other != null &&
-                  getClass().equals(other.getClass()) &&
-                  obj.equals(((ForInContext)other).obj);
-            }     
-            @Override
-            public String toString() {
-              return "for in hack filter for " + obj;
-            }
-          };
-          return new ForInContext();
-        } else {
-          return origContext;
-        }
-      }
-      public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
-        if (caller.getIR().getCalls(site)[0].getNumberOfUses() > 2) {
-          return IntSetUtil.make(new int[]{2}).union(orig.getRelevantParameters(caller, site));
-        } else {
-          return orig.getRelevantParameters(caller, site);
-        }
-      }
-    });
+    builder.setContextSelector(new ForInContextSelector(orig));
   }
 
 }

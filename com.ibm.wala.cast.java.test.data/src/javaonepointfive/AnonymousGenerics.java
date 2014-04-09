@@ -83,5 +83,9 @@ public class AnonymousGenerics {
 		
 		Ops hack = ops;
 		hack.unary("whatever");
+		hack.nullary();
+		hack = strQuadrupler;
+		hack.unary("whatever");
+		hack.nullary();
 	}
 }

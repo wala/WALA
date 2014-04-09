@@ -67,7 +67,6 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
   public Iterator<PointerKey> getPointerKeysForReflectedFieldRead(InstanceKey I, InstanceKey F) {
     List<PointerKey> result = new LinkedList<PointerKey>();
 
-    // FIXME: current only constant string are handled
     if (F instanceof ConstantKey) {
       Object v = ((ConstantKey) F).getValue();
       if (v instanceof String) {

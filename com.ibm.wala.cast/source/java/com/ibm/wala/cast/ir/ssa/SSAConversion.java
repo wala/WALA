@@ -461,9 +461,13 @@ public class SSAConversion extends AbstractSSAConversion {
 
     int[] exitLive = lexicalInfo.getExitExposedUses();
     BitVector v = new BitVector();
-    if (exitLive != null)
-      for (int i = 0; i < exitLive.length; i++)
-        v.set(exitLive[i]);
+    if (exitLive != null) {
+      for (int i = 0; i < exitLive.length; i++) {
+        if (exitLive[i] > -1) {
+          v.set(exitLive[i]);
+        }
+      }
+    }
     this.liveness = LiveAnalysis.perform(CFG, symtab, v);
 
     if (DEBUG) {
@@ -514,7 +518,7 @@ public class SSAConversion extends AbstractSSAConversion {
     int[] exitLives = lexicalInfo.getExitExposedUses();
     if (exitLives != null) {
       for (int i = 0; i < exitLives.length; i++) {
-        if (!skip(exitLives[i])) {
+        if (exitLives[i] != -1 && !skip(exitLives[i])) {
           assert !S[exitLives[i]].isEmpty();
           exitLives[i] = top(exitLives[i]);
         }

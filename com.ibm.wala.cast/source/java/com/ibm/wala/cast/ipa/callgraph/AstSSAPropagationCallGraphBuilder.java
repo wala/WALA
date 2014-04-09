@@ -17,6 +17,7 @@ import java.util.Set;
 
 import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
 import com.ibm.wala.cast.ipa.callgraph.AstCallGraph.AstCGNode;
+import com.ibm.wala.cast.ipa.callgraph.LexicalScopingResolverContexts.LexicalScopingResolver;
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys.ScopeMappingInstanceKey;
 import com.ibm.wala.cast.ir.ssa.AbstractLexicalInvoke;
 import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
@@ -26,6 +27,7 @@ import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory.AstIR;
 import com.ibm.wala.cast.ir.ssa.AstInstructionVisitor;
 import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
+import com.ibm.wala.cast.ir.ssa.AstLexicalAccess;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
@@ -37,7 +39,6 @@ import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.fixpoint.AbstractOperator;
 import com.ibm.wala.fixpoint.IntSetVariable;
 import com.ibm.wala.fixpoint.UnaryOperator;
@@ -45,6 +46,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.AbstractFieldPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -67,12 +69,9 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.functions.Function;
-import com.ibm.wala.util.graph.traverse.NumberedDFSDiscoverTimeIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
@@ -301,39 +300,31 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       return ((AstPointerKeyFactory) getBuilder().getPointerKeyFactory()).getPointerKeysForReflectedFieldWrite(I, F);
     }
 
-    private void visitLexical(final LexicalOperator op) {
-      final PointerKey function = getPointerKeyForLocal(1);
-      if (contentsAreInvariant(symbolTable, du, 1)) {
-        op.doLexicalPointerKeys();
-      } else {
-        system.newSideEffect(op, function);
+    private void visitLexical(AstLexicalAccess instruction, final LexicalOperator op) {           
+      op.doLexicalPointerKeys(false);
+      if (! checkLexicalInstruction(instruction)) {
+        system.newSideEffect(op, getPointerKeyForLocal(1));
       }
-
-      // when a new caller is added for node, re-process the lexical access
-      class LexicalScopingCallback implements Function<Object, Object> {
-        public Object apply(Object ignore) {
-          op.doLexicalPointerKeys();
-          return null;
-        }
-
-        private LexicalOperator getOperator() {
-          return op;
-        }
-
-        public int hashCode() {
-          return op.hashCode();
-        }
-
-        public boolean equals(Object o) {
-          return (o instanceof LexicalScopingCallback) && ((LexicalScopingCallback) o).getOperator().equals(op);
-        }
-      }
-
-      ((AstCGNode) node).addCallback(new LexicalScopingCallback());
     }
 
-    public void visitAstLexicalRead(AstLexicalRead instruction) {
-      visitLexical(new LexicalOperator((AstCGNode) node, instruction.getAccesses(), true) {
+    private boolean checkLexicalInstruction(AstLexicalAccess instruction) {
+      LexicalScopingResolver r = (LexicalScopingResolver)node.getContext().get(LexicalScopingResolverContexts.RESOLVER);
+      if (r == null) {
+        return false;
+      } else {
+        for(Access a : instruction.getAccesses()) {
+          Pair<String,String> name = a.getName();
+          if ((r.isReadOnly(name)? r.getReadOnlyValue(name): r.getLexicalSites(name)) == null) {
+            return false;
+          }
+        }
+      }
+      
+      return true;
+    }
+    
+    public void visitAstLexicalRead(AstLexicalRead instruction) {    
+       visitLexical(instruction, new LexicalOperator((AstCGNode) node, instruction.getAccesses(), true) {
         protected void action(PointerKey lexicalKey, int vn) {
           PointerKey lval = getPointerKeyForLocal(vn);
           if (lexicalKey instanceof LocalPointerKey) {
@@ -360,7 +351,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     }
 
     public void visitAstLexicalWrite(AstLexicalWrite instruction) {
-      visitLexical(new LexicalOperator((AstCGNode) node, instruction.getAccesses(), false) {
+     visitLexical(instruction, new LexicalOperator((AstCGNode) node, instruction.getAccesses(), false) {
         protected void action(PointerKey lexicalKey, int vn) {
           PointerKey rval = getPointerKeyForLocal(vn);
           if (contentsAreInvariant(symbolTable, du, vn)) {
@@ -403,11 +394,10 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       } catch (UTFDataFormatException e) {
         Assertions.UNREACHABLE();
       }
-      int fieldNameVn = symtab.getConstant(fieldName);
 
       final PointerKey objKey = getPointerKeyForLocal(objVn);
 
-      final InstanceKey[] fieldNameKeys = getInvariantContents(fieldNameVn);
+      final InstanceKey[] fieldNameKeys = new InstanceKey[]{ getInstanceKeyForConstant(fieldName) };
       assert fieldNameKeys.length == 1;
 
       if (contentsAreInvariant(symtab, du, objVn)) {
@@ -539,12 +529,14 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
                     // callees where the name is not written;
                     // in such cases, the original value (rk) is preserved
                     PointerKey rk = getBuilder().getPointerKeyForLocal(node, r.valueNumber);
-                    PointerKey wk = getBuilder().getPointerKeyForLocal(node, w.valueNumber);
-                    if (contentsAreInvariant(symbolTable, du, r.valueNumber)) {
+                    PointerKey wk = getBuilder().getPointerKeyForLocal(node, w.valueNumber);                    
+                    if (contentsAreInvariant(node.getIR().getSymbolTable(), du, r.valueNumber)) {
                       system.recordImplicitPointsToSet(rk);
-                      for (InstanceKey ik : getInvariantContents(r.valueNumber)) {
-                        system.newConstraint(wk, ik);
-                      }
+                      final InstanceKey[] objKeys = getInvariantContents(r.valueNumber);
+
+                      for (int i = 0; i < objKeys.length; i++) {
+                        system.newConstraint(wk, objKeys[0]);
+                      } 
                     } else {
                       system.newConstraint(wk, assignOperator, rk);
                     }
@@ -600,7 +592,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
        * {@link AstConstraintVisitor#handleRootLexicalReference(String, String, CGNode)}
        * .
        */
-      private void doLexicalPointerKeys() {
+      private void doLexicalPointerKeys(boolean funargsOnly) {
+        LexicalScopingResolver r = (LexicalScopingResolver)node.getContext().get(LexicalScopingResolverContexts.RESOLVER);
         for (int i = 0; i < accesses.length; i++) {
           final String name = accesses[i].variableName;
           final String definer = accesses[i].variableDefiner;
@@ -609,49 +602,41 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           if (AstTranslator.DEBUG_LEXICAL)
             System.err.println(("looking up lexical parent " + definer));
 
-          for (Iterator<CGNode> DS = getLexicalDefiners(node, definer).iterator(); DS.hasNext();) {
-            final CGNode D = DS.next();
-
-            Iterator PS = new NumberedDFSDiscoverTimeIterator<CGNode>(getBuilder().getCallGraph(), node) {
-              /**
-               * 
-               */
-              private static final long serialVersionUID = 4546217460630659884L;
-
-              protected void visitEdge(CGNode callee, CGNode caller) {
-                CGNode from = (CGNode) caller;
-                CGNode to = (CGNode) callee;
-
-                for (Iterator SS = cg.getPossibleSites(from, to); SS.hasNext();) {
-                  CallSiteReference site = (CallSiteReference) SS.next();
-
-                  PointerKey V = isLoad ? getLocalReadKey(from, site, name, definer, D) : getLocalWriteKey(from, site, name,
-                      definer, D);
+          boolean foundOnStack = false;
+          if (r != null) {
+            if (! funargsOnly) {
+              if (r.isReadOnly(accesses[i].getName())) {
+                assert isLoad;
+                foundOnStack = true;
+                action(r.getReadOnlyValue(accesses[i].getName()), vn);
+              } else {
+                Iterator<Pair<CallSiteReference,CGNode>> sites = r.getLexicalSites(accesses[i].getName());
+                while(sites.hasNext()) {
+                  Pair<CallSiteReference,CGNode> x = sites.next();
+                  PointerKey V = 
+                    isLoad ? getLocalReadKey(x.snd, x.fst, name, definer) : getLocalWriteKey(x.snd, x.fst, name, definer);
 
                   if (V != null) {
+                    foundOnStack = true;
                     action(V, vn);
                   }
                 }
               }
-
-              protected Iterator<? extends CGNode> getConnected(CGNode n) {
-                if (n.equals(D))
-                  return EmptyIterator.instance();
-                else
-                  // traverse backwards
-                  return G.getPredNodes(n);
-              }
-            };
-
-            while (PS.hasNext()) {
-              PS.next();
+            }
+          } 
+          
+          if (! foundOnStack) {
+            Set<CGNode> creators = getLexicalDefiners(node, Pair.make(name, definer));
+            for(CGNode n : creators) {
+              PointerKey funargKey = handleRootLexicalReference(name, definer, n);
+              action(funargKey, vn);
             }
           }
         }
       }
 
       public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-        doLexicalPointerKeys();
+        doLexicalPointerKeys(true);
         return NOT_CHANGED;
       }
 
@@ -699,7 +684,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       }
     }
 
-    private Set<CGNode> getLexicalDefiners(final CGNode opNode, final String definer) {
+    private Set<CGNode> getLexicalDefiners(final CGNode opNode, final Pair<String,String> definer) {
       if (definer == null) {
         return Collections.singleton(getBuilder().getCallGraph().getFakeRootNode());
 
@@ -716,7 +701,10 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           for (int f = 0; f < functionKeys.length; f++) {
             system.findOrCreateIndexForInstanceKey(functionKeys[f]);
             ScopeMappingInstanceKey K = (ScopeMappingInstanceKey) functionKeys[f];
-            result.add(K.getDefiningNode(definer));
+            Iterator<CGNode> x = K.getFunargNodes(definer);
+            while (x.hasNext()) {
+              result.add(x.next());
+            }
           }
         } else {
           PointsToSetVariable FV = system.findOrCreatePointsToSet(F);
@@ -726,7 +714,10 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
                 InstanceKey iKey = system.getInstanceKey(ptr);
                 if (iKey instanceof ScopeMappingInstanceKey) {
                   ScopeMappingInstanceKey K = (ScopeMappingInstanceKey) iKey;
-                  result.add(K.getDefiningNode(definer));
+                  Iterator<CGNode> x = K.getFunargNodes(definer);
+                  while (x.hasNext()) {
+                    result.add(x.next());
+                  }
                 } else {
                   Assertions.UNREACHABLE("unexpected instance key " + iKey);
                 }
@@ -842,163 +833,136 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
      * now know the name is accessed by some transitive callee), thereby
      * requiring marking of the IR as mutated.
      */
-    private PointerKey getLocalReadKey(CGNode n, CallSiteReference callSite, String name, String definer, CGNode definingNode) {
-      IMethod M = n.getMethod();
-      if (n == getBuilder().getCallGraph().getFakeRootNode()) {
-        return handleRootLexicalReference(name, definer, definingNode);
+    private PointerKey getLocalReadKey(CGNode n, CallSiteReference callSite, String name, String definer) {
+      AstIR ir = (AstIR) n.getIR();
+      int pc = callSite.getProgramCounter();
+      LexicalInformation L = ((AstIR) n.getIR()).lexicalInfo();
+
+      AbstractLexicalInvoke I = (AbstractLexicalInvoke) ir.getInstructions()[pc];
+
+      // find existing explicit lexical use
+      for (int i = I.getNumberOfParameters(); i <= I.getLastLexicalUse(); i++) {
+        Access A = I.getLexicalUse(i);
+        if (A.variableName.equals(name) && isEqual(A.variableDefiner, definer)) {
+          return getBuilder().getPointerKeyForLocal(n, A.valueNumber);
+        }
       }
 
-      else if (M instanceof AstMethod) {
-        AstIR ir = (AstIR) n.getIR();
-        int pc = callSite.getProgramCounter();
-        LexicalInformation L = ((AstIR) n.getIR()).lexicalInfo();
+      // make new lexical use
+      int values[] = L.getExposedUses(pc);
+      Pair names[] = L.getExposedNames();
+      if (names != null && names.length > 0) {
+        for (int i = 0; i < names.length; i++) {
+          if (name.equals(names[i].fst) && isEqual(definer, names[i].snd)) {
+            if (values[i] == -1)
+              return null;
 
-        // some people have no lexical uses at all
-        if (L == null) {
-          return null;
-        }
+            I.addLexicalUse(new Access(name, definer, values[i]));
 
-        AbstractLexicalInvoke I = (AbstractLexicalInvoke) ir.getInstructions()[pc];
+            if (SSAConversion.DEBUG_UNDO)
+              System.err.println(("copy use #" + (-i - 1) + " to use #" + (I.getNumberOfUses() - 1) + " at inst " + pc));
 
-        // find existing explicit lexical use
-        for (int i = I.getNumberOfParameters(); i <= I.getLastLexicalUse(); i++) {
-          Access A = I.getLexicalUse(i);
-          if (A.variableName.equals(name) && isEqual(A.variableDefiner, definer)) {
-            return getBuilder().getPointerKeyForLocal(n, A.valueNumber);
+            SSAConversion.copyUse(ir, pc, -i - 1, pc, I.getNumberOfUses() - 1);
+
+            ((AstCallGraph.AstCGNode) n).setLexicallyMutatedIR(ir);
+
+            return getBuilder().getPointerKeyForLocal(n, values[i]);
           }
         }
-
-        // make new lexical use
-        int values[] = L.getExposedUses(pc);
-        Pair names[] = L.getExposedNames();
-        if (names != null && names.length > 0) {
-          for (int i = 0; i < names.length; i++) {
-            if (name.equals(names[i].fst) && isEqual(definer, names[i].snd)) {
-              if (values[i] == -1)
-                return null;
-
-              I.addLexicalUse(new Access(name, definer, values[i]));
-
-              if (SSAConversion.DEBUG_UNDO)
-                System.err.println(("copy use #" + (-i - 1) + " to use #" + (I.getNumberOfUses() - 1) + " at inst " + pc));
-
-              SSAConversion.copyUse(ir, pc, -i - 1, pc, I.getNumberOfUses() - 1);
-
-              ((AstCallGraph.AstCGNode) n).setLexicallyMutatedIR(ir);
-
-              return getBuilder().getPointerKeyForLocal(n, values[i]);
-            }
-          }
-        }
-
-        return null;
-
-      } else {
-        return null;
-      }
-    }
-
-    private PointerKey getLocalWriteKey(CGNode n, CallSiteReference callSite, String name, String definer, CGNode definingNode) {
-      IMethod M = n.getMethod();
-      if (n == getBuilder().getCallGraph().getFakeRootNode()) {
-        return handleRootLexicalReference(name, definer, definingNode);
       }
 
-      else if (M instanceof AstMethod) {
-        AstMethod AstM = (AstMethod) M;
-        AstIR ir = (AstIR) n.getIR();
-        LexicalInformation L = ir.lexicalInfo();
+      return null;
 
-        // some people have no lexical uses at all
-        if (L == null)
-          return null;
+    } 
 
-        int pc = callSite.getProgramCounter();
-        AbstractLexicalInvoke I = (AbstractLexicalInvoke) ir.getInstructions()[pc];
+    private PointerKey getLocalWriteKey(CGNode n, CallSiteReference callSite, String name, String definer) {
+      AstMethod AstM = (AstMethod) n.getMethod();;
+      AstIR ir = (AstIR) n.getIR();
+      LexicalInformation L = ir.lexicalInfo();
 
-        // find existing explicit lexical def
-        for (int i = 2; i < I.getNumberOfDefs(); i++) {
-          Access A = I.getLexicalDef(i);
-          if (A.variableName.equals(name) && isEqual(A.variableDefiner, definer)) {
-            return getBuilder().getPointerKeyForLocal(n, A.valueNumber);
-          }
+      int pc = callSite.getProgramCounter();
+      AbstractLexicalInvoke I = (AbstractLexicalInvoke) ir.getInstructions()[pc];
+
+      // find existing explicit lexical def
+      for (int i = 2; i < I.getNumberOfDefs(); i++) {
+        Access A = I.getLexicalDef(i);
+        if (A.variableName.equals(name) && isEqual(A.variableDefiner, definer)) {
+          return getBuilder().getPointerKeyForLocal(n, A.valueNumber);
         }
+      }
 
-        // make new lexical def
-        int values[] = L.getExposedUses(pc);
-        Pair names[] = L.getExposedNames();
-        if (names != null && names.length > 0) {
-          for (int i = 0; i < names.length; i++) {
-            if (name.equals(names[i].fst) && isEqual(definer, names[i].snd)) {
-              if (values[i] == -1)
-                return null;
+      // make new lexical def
+      int values[] = L.getExposedUses(pc);
+      Pair names[] = L.getExposedNames();
+      if (names != null && names.length > 0) {
+        for (int i = 0; i < names.length; i++) {
+          if (name.equals(names[i].fst) && isEqual(definer, names[i].snd)) {
+            if (values[i] == -1)
+              return null;
 
-              // find calls that may be altered, and clear their caches
-              DefUse newDU = getAnalysisCache().getSSACache().findOrCreateDU(ir, n.getContext());
-              Iterator<SSAInstruction> insts = newDU.getUses(values[i]);
-              while (insts.hasNext()) {
-                SSAInstruction inst = insts.next();
-                if (inst instanceof SSAAbstractInvokeInstruction) {
-                  System.err.println("clearing for " + inst);
-                  CallSiteReference cs = ((SSAAbstractInvokeInstruction) inst).getCallSite();
-                  ((AstCallGraph.AstCGNode) n).clearMutatedCache(cs);
-                }
+            // find calls that may be altered, and clear their caches
+            DefUse newDU = getAnalysisCache().getSSACache().findOrCreateDU(ir, n.getContext());
+            Iterator<SSAInstruction> insts = newDU.getUses(values[i]);
+            while (insts.hasNext()) {
+              SSAInstruction inst = insts.next();
+              if (inst instanceof SSAAbstractInvokeInstruction) {
+                System.err.println("clearing for " + inst);
+                CallSiteReference cs = ((SSAAbstractInvokeInstruction) inst).getCallSite();
+                ((AstCallGraph.AstCGNode) n).clearMutatedCache(cs);
               }
+            }
 
-              // if values[i] was altered by copy propagation, we must undo
-              // that to ensure we do not bash the wrong value number in the
-              // the next steps.
-              SSAConversion.undoCopyPropagation(ir, pc, -i - 1);
+            // if values[i] was altered by copy propagation, we must undo
+            // that to ensure we do not bash the wrong value number in the
+            // the next steps.
+            SSAConversion.undoCopyPropagation(ir, pc, -i - 1);
 
-              // possibly new instruction due to renames, so get it again
-              I = (AbstractLexicalInvoke) ir.getInstructions()[pc];
+            // possibly new instruction due to renames, so get it again
+            I = (AbstractLexicalInvoke) ir.getInstructions()[pc];
 
-              // we assume that the callee might not necessarily write,
-              // so the call becomes like a phi node. hence it needs a
-              // read of the old value
-              ensureRead: {
-                for (int l = 0; l < I.getNumberOfUses(); l++) {
-                  if (I.isLexicalUse(l)) {
-                    Access r = I.getLexicalUse(l);
-                    if (name.equals(r.variableName)) {
-                      if (definer == null ? r.variableDefiner == null : definer.equals(r.variableDefiner)) {
-                        break ensureRead;
-                      }
+            // we assume that the callee might not necessarily write,
+            // so the call becomes like a phi node. hence it needs a
+            // read of the old value
+            ensureRead: {
+              for (int l = 0; l < I.getNumberOfUses(); l++) {
+                if (I.isLexicalUse(l)) {
+                  Access r = I.getLexicalUse(l);
+                  if (name.equals(r.variableName)) {
+                    if (definer == null ? r.variableDefiner == null : definer.equals(r.variableDefiner)) {
+                      break ensureRead;
                     }
                   }
                 }
-                I.addLexicalUse(new Access(name, definer, values[i]));
               }
-
-              // add new lexical definition
-              I.addLexicalDef(new Access(name, definer, values[i]));
-
-              if (SSAConversion.DEBUG_UNDO)
-                System.err.println("new def of " + values[i] + " at inst " + pc + ": " + I);
-
-              // new def has broken SSA form for values[i], so fix for that
-              // value
-              MutableIntSet vs = IntSetUtil.make();
-              vs.add(values[i]);
-              SSAConversion.convert(AstM, ir, getOptions().getSSAOptions());
-
-              // force analysis to be redone
-              // TODO: only values[i] uses need to be re-done.
-              ir.lexicalInfo().handleAlteration();
-              ((AstCallGraph.AstCGNode) n).setLexicallyMutatedIR(ir);
-              getAnalysisCache().getSSACache().invalidateDU(M, n.getContext());
-              getBuilder().markChanged(n);
-
-              // get SSA-renamed def from call site instruction
-              return getLocalWriteKey(n, callSite, name, definer, definingNode);
+              I.addLexicalUse(new Access(name, definer, values[i]));
             }
+
+            // add new lexical definition
+            I.addLexicalDef(new Access(name, definer, values[i]));
+
+            if (SSAConversion.DEBUG_UNDO)
+              System.err.println("new def of " + values[i] + " at inst " + pc + ": " + I);
+
+            // new def has broken SSA form for values[i], so fix for that value
+            MutableIntSet vs = IntSetUtil.make();
+            vs.add(values[i]);
+            SSAConversion.convert(AstM, ir, getOptions().getSSAOptions());
+
+            // force analysis to be redone
+            // TODO: only values[i] uses need to be re-done.
+            ir.lexicalInfo().handleAlteration();
+            ((AstCallGraph.AstCGNode) n).setLexicallyMutatedIR(ir);
+            getAnalysisCache().getSSACache().invalidate(AstM, n.getContext());
+            getAnalysisCache().getSSACache().invalidate(AstM, Everywhere.EVERYWHERE);
+            getBuilder().markChanged(n);
+
+            // get SSA-renamed def from call site instruction
+            return getLocalWriteKey(n, callSite, name, definer);
           }
         }
-
-        return null;
-      } else {
-        return null;
       }
+
+      return null;
     }
 
     // /////////////////////////////////////////////////////////////////////////
@@ -1074,74 +1038,10 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           system.recordImplicitPointsToSet(fieldKey);
           InstanceKey[] fieldsKeys = getInvariantContents(symtab, du, opNode, fieldsVn);
 
-          for (int o = 0; o < objKeys.length; o++) {
-            PointerKey objCatalog = getPointerKeyForObjectCatalog(objKeys[o]);
-            for (int f = 0; f < fieldsKeys.length; f++) {
-              if (isLoadOperation) {
-                for (Iterator keys = getPointerKeysForReflectedFieldRead(objKeys[o], fieldsKeys[f]); keys.hasNext();) {
-                  AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
-                  if (DEBUG_PROPERTIES)
-                    action.dump(key, true, true);
-                  action.action(key);
-                }
-              } else {
-                if (objCatalog != null) {
-                  system.newConstraint(objCatalog, fieldsKeys[f]);
-                }
-                for (Iterator keys = getPointerKeysForReflectedFieldWrite(objKeys[o], fieldsKeys[f]); keys.hasNext();) {
-                  AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
-                  if (DEBUG_PROPERTIES)
-                    action.dump(key, true, true);
-                  action.action(key);
-                }
-              }
-            }
-          }
+          newFieldOperationObjectAndFieldConstant(isLoadOperation, action, objKeys, fieldsKeys);
 
         } else {
-          if (!isLoadOperation) {
-            for (int o = 0; o < objKeys.length; o++) {
-              PointerKey objCatalog = getPointerKeyForObjectCatalog(objKeys[o]);
-              if (objCatalog != null) {
-                system.newConstraint(objCatalog, assignOperator, fieldKey);
-              }
-            }
-          }
-
-          system.newSideEffect(new UnaryOperator<PointsToSetVariable>() {
-            public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-              final IntSetVariable fields = (IntSetVariable) rhs;
-              if (fields.getValue() != null) {
-                fields.getValue().foreach(new IntSetAction() {
-                  public void act(int fptr) {
-                    InstanceKey field = system.getInstanceKey(fptr);
-                    for (int o = 0; o < objKeys.length; o++) {
-                      for (Iterator keys = isLoadOperation ? getPointerKeysForReflectedFieldRead(objKeys[o], field)
-                          : getPointerKeysForReflectedFieldWrite(objKeys[o], field); keys.hasNext();) {
-                        AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
-                        if (DEBUG_PROPERTIES)
-                          action.dump(key, false, true);
-                        action.action(key);
-                      }
-                    }
-                  }
-                });
-              }
-              return NOT_CHANGED;
-            }
-
-            public int hashCode() {
-              return System.identityHashCode(this);
-            }
-
-            public boolean equals(Object o) {
-              return o == this;
-            }
-
-            public String toString() {
-              return "field op" + objVn + ", " + fieldsVn;
-            }
-          }, fieldKey);
+          newFieldOperationOnlyObjectConstant(isLoadOperation, action, fieldKey, objKeys);
         }
 
       } else {
@@ -1149,106 +1049,228 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           system.recordImplicitPointsToSet(fieldKey);
           final InstanceKey[] fieldsKeys = getInvariantContents(symtab, du, opNode, fieldsVn);
 
-          system.newSideEffect(new UnaryOperator<PointsToSetVariable>() {
-            public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-              final IntSetVariable objects = (IntSetVariable) rhs;
-              if (objects.getValue() != null) {
-                objects.getValue().foreach(new IntSetAction() {
-                  public void act(int optr) {
-                    InstanceKey object = system.getInstanceKey(optr);
-                    PointerKey objCatalog = getPointerKeyForObjectCatalog(object);
-                    for (int f = 0; f < fieldsKeys.length; f++) {
-                      if (isLoadOperation) {
-                        for (Iterator keys = getPointerKeysForReflectedFieldRead(object, fieldsKeys[f]); keys.hasNext();) {
-                          AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
-                          if (DEBUG_PROPERTIES)
-                            action.dump(key, true, false);
-                          action.action(key);
-                        }
-                      } else {
-                        if (objCatalog != null) {
-                          system.newConstraint(objCatalog, fieldsKeys[f]);
-                        }
-                        for (Iterator keys = getPointerKeysForReflectedFieldWrite(object, fieldsKeys[f]); keys.hasNext();) {
-                          AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
-                          if (DEBUG_PROPERTIES)
-                            action.dump(key, true, false);
-                          action.action(key);
-                        }
-                      }
-                    }
-                  }
-                });
-              }
-              return NOT_CHANGED;
-            }
-
-            public int hashCode() {
-              return System.identityHashCode(this);
-            }
-
-            public boolean equals(Object o) {
-              return o == this;
-            }
-
-            public String toString() {
-              return "field op" + objVn + ", " + fieldsVn;
-            }
-          }, objKey);
+          newFieldOperationOnlyFieldConstant(isLoadOperation, action, objKey, fieldsKeys);
 
         } else {
-          system.newSideEffect(new AbstractOperator<PointsToSetVariable>() {
-            public byte evaluate(PointsToSetVariable lhs, final PointsToSetVariable[] rhs) {
-              final IntSetVariable receivers = (IntSetVariable) rhs[0];
-              final IntSetVariable fields = (IntSetVariable) rhs[1];
-              if (receivers.getValue() != null && fields.getValue() != null) {
-                receivers.getValue().foreach(new IntSetAction() {
-                  public void act(int rptr) {
-                    final InstanceKey receiver = system.getInstanceKey(rptr);
-
-                    if (!isLoadOperation) {
-                      PointerKey cat = getPointerKeyForObjectCatalog(receiver);
-                      if (cat != null) {
-                        system.newConstraint(cat, assignOperator, fieldKey);
-                      }
-                    }
-
-                    fields.getValue().foreach(new IntSetAction() {
-                      public void act(int fptr) {
-                        InstanceKey field = system.getInstanceKey(fptr);
-                        for (Iterator keys = isLoadOperation ? getPointerKeysForReflectedFieldRead(receiver, field)
-                            : getPointerKeysForReflectedFieldWrite(receiver, field); keys.hasNext();) {
-                          AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
-                          if (DEBUG_PROPERTIES)
-                            action.dump(key, false, false);
-                          action.action(key);
-                        }
-                      }
-                    });
-                  }
-                });
-              }
-
-              return NOT_CHANGED;
-            }
-
-            public String toString() {
-              return "field op";
-            }
-
-            public boolean equals(Object o) {
-              return o == this;
-            }
-
-            public int hashCode() {
-              return System.identityHashCode(this);
-            }
-          }, objKey, fieldKey);
+          newFieldFullOperation(isLoadOperation, action, objKey, fieldKey);
         }
       }
 
       if (DEBUG_PROPERTIES) {
         System.err.println("finished\n");
+      }
+    }
+    
+    protected void newFieldOperationFieldConstant(CGNode opNode,
+        final boolean isLoadOperation, 
+        final ReflectedFieldAction action, 
+        final int objVn, 
+        final InstanceKey[] fieldsKeys)
+    {
+      IR ir = getBuilder().getCFAContextInterpreter().getIR(opNode);
+      SymbolTable symtab = ir.getSymbolTable();
+      DefUse du = getBuilder().getCFAContextInterpreter().getDU(opNode);
+      PointerKey objKey = getBuilder().getPointerKeyForLocal(opNode, objVn);
+
+      if (contentsAreInvariant(symtab, du, objVn)) {
+        system.recordImplicitPointsToSet(objKey);
+        InstanceKey[] objectKeys = getInvariantContents(symtab, du, opNode, objVn);
+
+        newFieldOperationObjectAndFieldConstant(isLoadOperation, action, objectKeys, fieldsKeys);
+
+      } else {
+        newFieldOperationOnlyFieldConstant(isLoadOperation, action, objKey, fieldsKeys);
+      }
+
+    }
+    
+    private void newFieldFullOperation(final boolean isLoadOperation, final ReflectedFieldAction action, PointerKey objKey,
+        final PointerKey fieldKey) {
+      system.newSideEffect(new AbstractOperator<PointsToSetVariable>() {
+        private final MutableIntSet doneReceiver = IntSetUtil.make();
+        private final MutableIntSet doneField = IntSetUtil.make();
+        public byte evaluate(PointsToSetVariable lhs, final PointsToSetVariable[] rhs) {
+          final IntSetVariable receivers = (IntSetVariable) rhs[0];
+          final IntSetVariable fields = (IntSetVariable) rhs[1];
+          if (receivers.getValue() != null && fields.getValue() != null) {
+            receivers.getValue().foreach(new IntSetAction() {
+              public void act(final int rptr) {
+                final InstanceKey receiver = system.getInstanceKey(rptr);
+
+                if (!isLoadOperation) {
+                  PointerKey cat = getPointerKeyForObjectCatalog(receiver);
+                  if (cat != null) {
+                    system.newConstraint(cat, assignOperator, fieldKey);
+                  }
+                }
+
+                fields.getValue().foreach(new IntSetAction() {
+                  public void act(int fptr) {
+                    if (!doneField.contains(fptr) || !doneReceiver.contains(rptr)) {
+                      InstanceKey field = system.getInstanceKey(fptr);
+                      for (Iterator keys = isLoadOperation ? 
+                              getPointerKeysForReflectedFieldRead(receiver, field)
+                              : getPointerKeysForReflectedFieldWrite(receiver, field); 
+                           keys.hasNext();) 
+                      {
+                        AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
+                        if (DEBUG_PROPERTIES)
+                          action.dump(key, false, false);
+                        action.action(key);
+                      }
+                    }
+                  }
+                });
+              }
+            });
+            doneReceiver.addAll(receivers.getValue());
+            doneField.addAll(fields.getValue());
+          }
+
+          return NOT_CHANGED;
+        }
+
+        public String toString() {
+          return "field op";
+        }
+
+        public boolean equals(Object o) {
+          return o == this;
+        }
+
+        public int hashCode() {
+          return System.identityHashCode(this);
+        }
+      }, objKey, fieldKey);
+    }
+
+    private void newFieldOperationOnlyFieldConstant(final boolean isLoadOperation, 
+        final ReflectedFieldAction action, 
+        final PointerKey objKey, 
+        final InstanceKey[] fieldsKeys)
+    {
+      system.newSideEffect(new UnaryOperator<PointsToSetVariable>() {
+        public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
+          final IntSetVariable objects = (IntSetVariable) rhs;
+          if (objects.getValue() != null) {
+            objects.getValue().foreach(new IntSetAction() {
+              public void act(int optr) {
+                InstanceKey object = system.getInstanceKey(optr);
+                PointerKey objCatalog = getPointerKeyForObjectCatalog(object);
+                for (int f = 0; f < fieldsKeys.length; f++) {
+                  if (isLoadOperation) {
+                    for (Iterator keys = getPointerKeysForReflectedFieldRead(object, fieldsKeys[f]); keys.hasNext();) {
+                      AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
+                      if (DEBUG_PROPERTIES)
+                        action.dump(key, true, false);
+                      action.action(key);
+                    }
+                  } else {
+                    if (objCatalog != null) {
+                      system.newConstraint(objCatalog, fieldsKeys[f]);
+                    }
+                    for (Iterator keys = getPointerKeysForReflectedFieldWrite(object, fieldsKeys[f]); keys.hasNext();) {
+                      AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
+                      if (DEBUG_PROPERTIES)
+                        action.dump(key, true, false);
+                      action.action(key);
+                    }
+                  }
+                }
+              }
+            });
+          }
+          return NOT_CHANGED;
+        }
+
+        public int hashCode() {
+          return System.identityHashCode(this);
+        }
+
+        public boolean equals(Object o) {
+          return o == this;
+        }
+
+        public String toString() {
+          return "field op" + objKey;
+        }
+      }, objKey);
+    }
+
+    private void newFieldOperationOnlyObjectConstant(final boolean isLoadOperation,
+        final ReflectedFieldAction action, 
+        final PointerKey fieldKey, 
+        final InstanceKey[] objKeys)
+    {
+      if (!isLoadOperation) {
+        for (int o = 0; o < objKeys.length; o++) {
+          PointerKey objCatalog = getPointerKeyForObjectCatalog(objKeys[o]);
+          if (objCatalog != null) {
+            system.newConstraint(objCatalog, assignOperator, fieldKey);
+          }
+        }
+      }
+
+      system.newSideEffect(new UnaryOperator<PointsToSetVariable>() {
+        public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
+          final IntSetVariable fields = (IntSetVariable) rhs;
+          if (fields.getValue() != null) {
+            fields.getValue().foreach(new IntSetAction() {
+              public void act(int fptr) {
+                InstanceKey field = system.getInstanceKey(fptr);
+                for (int o = 0; o < objKeys.length; o++) {
+                  for (Iterator keys = isLoadOperation ? getPointerKeysForReflectedFieldRead(objKeys[o], field)
+                      : getPointerKeysForReflectedFieldWrite(objKeys[o], field); keys.hasNext();) {
+                    AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
+                    if (DEBUG_PROPERTIES)
+                      action.dump(key, false, true);
+                    action.action(key);
+                  }
+                }
+              }
+            });
+          }
+          return NOT_CHANGED;
+        }
+
+        public int hashCode() {
+          return System.identityHashCode(this);
+        }
+
+        public boolean equals(Object o) {
+          return o == this;
+        }
+
+        public String toString() {
+          return "field op" + fieldKey;
+        }
+      }, fieldKey);
+    }
+
+    private void newFieldOperationObjectAndFieldConstant(final boolean isLoadOperation, final ReflectedFieldAction action,
+        final InstanceKey[] objKeys, InstanceKey[] fieldsKeys) {
+      for (int o = 0; o < objKeys.length; o++) {
+        PointerKey objCatalog = getPointerKeyForObjectCatalog(objKeys[o]);
+        for (int f = 0; f < fieldsKeys.length; f++) {
+          if (isLoadOperation) {
+            for (Iterator keys = getPointerKeysForReflectedFieldRead(objKeys[o], fieldsKeys[f]); keys.hasNext();) {
+              AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
+              if (DEBUG_PROPERTIES)
+                action.dump(key, true, true);
+              action.action(key);
+            }
+          } else {
+            if (objCatalog != null) {
+              system.newConstraint(objCatalog, fieldsKeys[f]);
+            }
+            for (Iterator keys = getPointerKeysForReflectedFieldWrite(objKeys[o], fieldsKeys[f]); keys.hasNext();) {
+              AbstractFieldPointerKey key = (AbstractFieldPointerKey) keys.next();
+              if (DEBUG_PROPERTIES)
+                action.dump(key, true, true);
+              action.action(key);
+            }
+          }
+        }
       }
     }
 
@@ -1265,46 +1287,61 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       }
     }
 
-    public void newFieldWrite(CGNode opNode, int objVn, int fieldsVn, final InstanceKey[] rhsFixedValues) {
-      try {
+    private final class ConstantWriter implements ReflectedFieldAction {
+      private final InstanceKey[] rhsFixedValues;
+      
+      private ConstantWriter(InstanceKey[] rhsFixedValues) {
+        this.rhsFixedValues = rhsFixedValues;
+      }
 
-        newFieldOperation(opNode, objVn, fieldsVn, false, new ReflectedFieldAction() {
-          public void dump(AbstractFieldPointerKey fieldKey, boolean constObj, boolean constProp) {
-            System.err.println(("writing fixed rvals to " + fieldKey + " " + constObj + ", " + constProp));
-            for (int i = 0; i < rhsFixedValues.length; i++) {
-              System.err.println(("writing " + rhsFixedValues[i]));
-            }
+      public void dump(AbstractFieldPointerKey fieldKey, boolean constObj, boolean constProp) {
+        System.err.println(("writing fixed rvals to " + fieldKey + " " + constObj + ", " + constProp));
+        for (int i = 0; i < rhsFixedValues.length; i++) {
+          System.err.println(("writing " + rhsFixedValues[i]));
+        }
+      }
+
+      public void action(AbstractFieldPointerKey fieldKey) {
+        if (!representsNullType(fieldKey.getInstanceKey())) {
+          for (int i = 0; i < rhsFixedValues.length; i++) {
+            system.findOrCreateIndexForInstanceKey(rhsFixedValues[i]);
+            system.newConstraint(fieldKey, rhsFixedValues[i]);
           }
-
-          public void action(AbstractFieldPointerKey fieldKey) {
-            if (!representsNullType(fieldKey.getInstanceKey())) {
-              for (int i = 0; i < rhsFixedValues.length; i++) {
-                system.findOrCreateIndexForInstanceKey(rhsFixedValues[i]);
-                system.newConstraint(fieldKey, rhsFixedValues[i]);
-              }
-            }
-          }
-        });
-
-      } catch (RuntimeException e) {
-        System.err.println("error: " + e);
-        System.err.println(getBuilder().getCFAContextInterpreter().getIR(opNode));
-        throw e;
+        }
       }
     }
+    
+    public void newFieldWrite(CGNode opNode, int objVn, int fieldsVn, final InstanceKey[] rhsFixedValues) {
+      newFieldOperation(opNode, objVn, fieldsVn, false, new ConstantWriter(rhsFixedValues));
+    }
 
+    public void newFieldWrite(CGNode opNode, int objVn, InstanceKey[] fieldKeys, final InstanceKey[] rhsValues) {
+      newFieldOperationFieldConstant(opNode, false, new ConstantWriter(rhsValues), objVn, fieldKeys);
+    }
+
+    private final class NormalWriter implements ReflectedFieldAction {
+      private final PointerKey rhs;
+      
+      private NormalWriter(PointerKey rhs) {
+        this.rhs = rhs;
+      }
+      public void dump(AbstractFieldPointerKey fieldKey, boolean constObj, boolean constProp) {
+        System.err.println(("write " + rhs + " to " + fieldKey + " " + constObj + ", " + constProp));
+      }
+
+      public void action(AbstractFieldPointerKey fieldKey) {
+        if (!representsNullType(fieldKey.getInstanceKey())) {
+          system.newConstraint(fieldKey, assignOperator, rhs);
+        }
+      }
+    };
+    
     public void newFieldWrite(CGNode opNode, int objVn, int fieldsVn, final PointerKey rhs) {
-      newFieldOperation(opNode, objVn, fieldsVn, false, new ReflectedFieldAction() {
-        public void dump(AbstractFieldPointerKey fieldKey, boolean constObj, boolean constProp) {
-          System.err.println(("write " + rhs + " to " + fieldKey + " " + constObj + ", " + constProp));
-        }
+      newFieldOperation(opNode, objVn, fieldsVn, false, new NormalWriter(rhs));
+    }
 
-        public void action(AbstractFieldPointerKey fieldKey) {
-          if (!representsNullType(fieldKey.getInstanceKey())) {
-            system.newConstraint(fieldKey, assignOperator, rhs);
-          }
-        }
-      });
+    public void newFieldWrite(CGNode opNode, int objVn, InstanceKey[] fieldKeys, final PointerKey rhs) {
+      newFieldOperationFieldConstant(opNode, false, new NormalWriter(rhs), objVn, fieldKeys);
     }
 
     protected void newFieldRead(CGNode opNode, int objVn, int fieldsVn, int lhsVn) {

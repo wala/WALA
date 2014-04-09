@@ -281,12 +281,31 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     Util.makeHTMLCG(url);
   }
 
+  private static final Object[][] assertionsForWindowx = new Object[][] {
+    new Object[] { ROOT, new String[] { "windowx.html" } },
+    new Object[] { "windowx.html", new String[] { "windowx.html/__WINDOW_MAIN__" } },
+    new Object[] { "windowx.html/__WINDOW_MAIN__", new String[] { "windowx.html/__WINDOW_MAIN__/_f2", "windowx.html/__WINDOW_MAIN__/_f4" } },
+    new Object[] { "windowx.html/__WINDOW_MAIN__/_f2", new String[] { "windowx.html/__WINDOW_MAIN__/_f1" } },
+    new Object[] { "windowx.html/__WINDOW_MAIN__/_f4", new String[] { "windowx.html/__WINDOW_MAIN__/_f3" } }
+
+  };
+
+  @Test public void testWindowx() throws IOException, IllegalArgumentException, CancelException {
+    URL url = getClass().getClassLoader().getResource("pages/windowx.html");
+    JSCFABuilder builder = Util.makeHTMLCGBuilder(url);
+    CallGraph CG = builder.makeCallGraph(builder.getOptions());
+    Util.dumpCG(builder.getPointerAnalysis(), CG);
+    verifyGraphAssertions(CG, assertionsForWindowx);
+  }
+  
   /*
   @Test public void testJQuery() throws IOException, IllegalArgumentException, CancelException {
     URL url = getClass().getClassLoader().getResource("pages/jquery.html");
     CallGraph CG = Util.makeHTMLCG(url);
   }
+  */
 
+  /*
   @Test public void testDojoTest() throws IllegalArgumentException, IOException, CancelException {
     URL url = getClass().getClassLoader().getResource("pages/dojo/test.html");
     CallGraph CG = Util.makeHTMLCG(url);

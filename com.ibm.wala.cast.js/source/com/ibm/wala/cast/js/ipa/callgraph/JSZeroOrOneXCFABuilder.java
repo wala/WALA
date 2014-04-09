@@ -10,6 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ipa.callgraph;
 
+import com.ibm.wala.cast.ipa.callgraph.LexicalScopingResolverContexts;
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingKeysContextSelector;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -42,6 +43,7 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
     contextSelector = new ScopeMappingKeysContextSelector(contextSelector);
     contextSelector = new JavaScriptConstructorContextSelector(contextSelector);
+    contextSelector = new LexicalScopingResolverContexts(this, contextSelector);
     if (doOneCFA) {
       contextSelector = new nCFAContextSelector(1, contextSelector);
     }

@@ -30,6 +30,7 @@ import com.ibm.wala.ipa.slicer.Statement.Kind;
 import com.ibm.wala.ssa.SSACheckCastInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.HashSetFactory;
 
@@ -47,12 +48,13 @@ public class ReflectionHandler {
 
   /**
    * update the pointer analysis solver based on flow of reflective factory results to checkcasts
+   * @param monitor 
    * 
    * @return true if anything has changed
    * @throws CancelException
    * @throws IllegalArgumentException
    */
-  protected boolean updateForReflection() throws IllegalArgumentException, CancelException {
+  protected boolean updateForReflection(IProgressMonitor monitor) throws IllegalArgumentException, CancelException {
 
     Collection<Statement> returnStatements = computeFactoryReturnStatements();
     Set<CGNode> changedNodes = HashSetFactory.make();
@@ -81,7 +83,7 @@ public class ReflectionHandler {
       changedNodes.addAll(modifyFactoryInterpreter(st, casts, builder.getContextInterpreter(), builder.getClassHierarchy()));
     }
     for (Iterator<CGNode> it = changedNodes.iterator(); it.hasNext();) {
-      builder.addConstraintsFromChangedNode(it.next());
+      builder.addConstraintsFromChangedNode(it.next(), monitor);
     }
     return changedNodes.size() > 0;
 

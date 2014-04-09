@@ -29,7 +29,6 @@ public class PolyglotSyncDuplicatorTest extends SyncDuplicatorTest {
         return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
       }
 
-      @SuppressWarnings("unchecked")
       public IRTranslatorExtension getTranslatorExtension() {
         JavaIRTranslatorExtension ext = new JavaIRTranslatorExtension();
         ext.setCAstRewriterFactory(new CAstRewriterFactory() {

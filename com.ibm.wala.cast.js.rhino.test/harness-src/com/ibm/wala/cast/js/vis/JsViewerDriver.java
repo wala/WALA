@@ -9,6 +9,7 @@ import com.ibm.wala.cast.js.html.DomLessSourceExtractor;
 import com.ibm.wala.cast.js.html.IdentityUrlResolver;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.html.MappedSourceModule;
+import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
 import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
@@ -22,7 +23,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.CancelException;
 
-public class JsViewerDriver {
+public class JsViewerDriver extends Util {
 	public static void main(String args[]) throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException {
 
 		if (args.length != 1){
@@ -39,7 +40,7 @@ public class JsViewerDriver {
 
 		SourceModule[] sources = getSources(domless, url);
 		
-		JSCFABuilder builder = Util.makeCGBuilder(sources, false);
+		JSCFABuilder builder = makeCGBuilder(new WebPageLoaderFactory(translatorFactory), sources, false);
     builder.setBaseURL(url);
 
 		CallGraph cg = builder.makeCallGraph(builder.getOptions());
