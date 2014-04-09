@@ -37,6 +37,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.io.FileProvider;
 
@@ -168,6 +169,13 @@ public class HTMLCGBuilder {
 		if (parsedArgs.containsKey("reachable")) {
 			reachableName = parsedArgs.getProperty("reachable");
 		}
+		
+        String srcNode = null, dstNode = null;
+        if (parsedArgs.containsKey("edgeExists")) {
+          String[] nodes = parsedArgs.getProperty("edgeExists").split(":");
+          srcNode = nodes[0];
+          dstNode = nodes[1];
+        }		
 		// suppress debug output
 		JavaScriptFunctionDotCallTargetSelector.WARN_ABOUT_IMPRECISE_CALLGRAPH = false;
 		CGBuilderResult res = buildHTMLCG(src, timeout, true, AstTranslator.NEW_LEXICAL ? CGBuilderType.ONE_CFA_PRECISE_LEXICAL : CGBuilderType.ZERO_ONE_CFA);
@@ -183,5 +191,16 @@ public class HTMLCGBuilder {
 				}
 			}
 		}
+        if (srcNode != null) {
+          for (CGNode node : res.cg) {
+            if (node.getMethod().getDeclaringClass().getName().toString().endsWith(srcNode)) {
+              for (CGNode callee : Iterator2Iterable.make(res.cg.getSuccNodes(node))) {
+                if (callee.getMethod().getDeclaringClass().getName().toString().endsWith(dstNode)) {
+                  System.out.println("EDGE EXISTS");
+                }
+              }
+            }
+          }
+        }		
 	}
 }
