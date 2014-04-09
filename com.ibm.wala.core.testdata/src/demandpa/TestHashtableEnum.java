@@ -37,23 +37,21 @@
  */
 package demandpa;
 
-import java.util.Hashtable;
 
 public class TestHashtableEnum {
 
   /**
    * @param args
    */
-  @SuppressWarnings("unchecked")
   public static void main(String[] args) {
-    Hashtable h1 = new Hashtable();
-    Hashtable h2 = new Hashtable();
+    DummyHashMap h1 = new DummyHashMap();
+    DummyHashMap h2 = new DummyHashMap();
     Object key1 = new Object();
     Object key2 = new Object();
     h1.put(key1, new Object());
     h2.put(key2, new Object());
-    Object o1 = h1.elements().nextElement();
-    Object o2 = h2.elements().nextElement();
+    Object o1 = h1.elements().next();
+    Object o2 = h2.elements().next();
     TestUtil.makeVarUsed(o1);
     TestUtil.testThisVar(o2);
 

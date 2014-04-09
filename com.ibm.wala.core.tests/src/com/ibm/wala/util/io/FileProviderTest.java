@@ -7,6 +7,8 @@ import java.net.URL;
 
 import org.junit.Test;
 
+import com.ibm.wala.util.PlatformUtil;
+
 public class FileProviderTest {
 
   @Test
@@ -25,7 +27,7 @@ public class FileProviderTest {
   public void testURLWithInvalidURIChars() throws MalformedURLException {
     // setup:
     URL url = new URL("file:///[Eclipse]/File.jar");
-    String expected = "/[Eclipse]/File.jar";
+    String expected = PlatformUtil.onWindows() ? "/C:/[Eclipse]/File.jar" : "/[Eclipse]/File.jar";
     // exercise:
     String actual = FileProvider.filePathFromURL(url);
     // verify:

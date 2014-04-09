@@ -33,8 +33,7 @@ import com.ibm.wala.util.graph.traverse.Topological;
 /**
  * Default implementation of a dataflow graph
  */
-@SuppressWarnings("rawtypes")
-public class DefaultFixedPointSystem<T extends IVariable> implements IFixedPointSystem<T>  {
+public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPointSystem<T>  {
   static final boolean DEBUG = false;
 
   /**
@@ -47,14 +46,14 @@ public class DefaultFixedPointSystem<T extends IVariable> implements IFixedPoint
    * equals() ... the NumberedGraph does not support this. TODO: use a custom
    * NumberedNodeManager to save space
    */
-  final private Set<GeneralStatement> equations = HashSetFactory.make();
+  final private Set<GeneralStatement<?>> equations = HashSetFactory.make();
 
   /**
    * We maintain a hash set of variables in order to check for equality with
    * equals() ... the NumberedGraph does not support this. TODO: use a custom
    * NumberedNodeManager to save space
    */
-  final private Set<IVariable> variables = HashSetFactory.make();
+  final private Set<IVariable<?>> variables = HashSetFactory.make();
 
   /**
    * @param expectedOut number of expected out edges in the "usual" case

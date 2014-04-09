@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.examples.analysis.dataflow;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.Assert;
 
 import org.junit.AfterClass;
@@ -140,11 +143,16 @@ public class DataflowTest extends WalaTestCase {
         if (delegate.getNumber() == 4) {
           IntSet solution = solver.getOut(bb).getValue();
           IntIterator intIterator = solution.intIterator();
+          List<Pair<CGNode, Integer>> applicationDefs = new ArrayList<Pair<CGNode,Integer>>();
           while (intIterator.hasNext()) {
             int next = intIterator.next();
-            System.out.println(reachingDefs.getNodeAndInstrForNumber(next));
+            final Pair<CGNode, Integer> def = reachingDefs.getNodeAndInstrForNumber(next);
+            if (def.fst.getMethod().getDeclaringClass().getClassLoader().getReference().equals(ClassLoaderReference.Application)) {
+              System.out.println(def);
+              applicationDefs.add(def);
+            }
           }
-          Assert.assertEquals(4, solution.size());
+          Assert.assertEquals(2, applicationDefs.size());
         }
       }
     }
@@ -168,11 +176,16 @@ public class DataflowTest extends WalaTestCase {
         if (delegate.getNumber() == 4) {
           IntSet solution = result.getResult(bb);
           IntIterator intIterator = solution.intIterator();
+          List<Pair<CGNode, Integer>> applicationDefs = new ArrayList<Pair<CGNode,Integer>>();
           while (intIterator.hasNext()) {
             int next = intIterator.next();
-            System.out.println(reachingDefs.getDomain().getMappedObject(next));
+            final Pair<CGNode, Integer> def = reachingDefs.getDomain().getMappedObject(next);
+            if (def.fst.getMethod().getDeclaringClass().getClassLoader().getReference().equals(ClassLoaderReference.Application)) {
+              System.out.println(def);
+              applicationDefs.add(def);
+            }
           }
-          Assert.assertEquals(3, solution.size());
+          Assert.assertEquals(1, applicationDefs.size());
         }
       }
     }

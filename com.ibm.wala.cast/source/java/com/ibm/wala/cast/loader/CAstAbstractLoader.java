@@ -92,6 +92,11 @@ public abstract class CAstAbstractLoader implements IClassLoader {
     return errors.get(m);
   }
   
+  
+  public void clearMessages() {
+    errors.clear();
+  }
+  
   public IClass lookupClass(String className, IClassHierarchy cha) {
     assert this.cha == cha;
     return (IClass) types.get(TypeName.string2TypeName(className));

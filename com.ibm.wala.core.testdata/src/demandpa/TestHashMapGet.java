@@ -37,14 +37,12 @@
  */
 package demandpa;
 
-import java.util.HashMap;
 
 public class TestHashMapGet {
 
-  @SuppressWarnings("unchecked")
   public static void main(String[] args) {
-    HashMap s1 = new HashMap();
-    HashMap s2 = new HashMap();
+    DummyHashMap s1 = new DummyHashMap();
+    DummyHashMap s2 = new DummyHashMap();
     Object key1 = new Object();
     Object key2 = new Object();
     s1.put(key1, new Object());

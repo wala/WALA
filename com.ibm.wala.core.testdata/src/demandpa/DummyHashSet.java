@@ -10,21 +10,16 @@
  *******************************************************************************/
 package demandpa;
 
+public class DummyHashSet {
 
-/**
- * @author manu
- *
- */
-public class FlowsToTestHashSet {
-
-  public static void main(String[] args) {
-    DummyHashSet s1 = new DummyHashSet();
-    DummyHashSet s2 = new DummyHashSet();
-    s1.add(new FlowsToType());
-    s2.add(new Object());
-    Object o1 = s1.iterator().next();
-    Object o2 = s2.iterator().next();
-    TestUtil.makeVarUsed(o1);
-    TestUtil.makeVarUsed(o2);
+  private final DummyHashMap hashMap = new DummyHashMap();
+  
+  public void add(Object object) {
+    hashMap.put(object, object);
   }
+
+  public Iter iterator() {
+    return hashMap.keyIter();
+  }
+
 }

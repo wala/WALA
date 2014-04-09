@@ -29,6 +29,8 @@ public class Util {
             }
           }
         }
+        // clear out the errors to free some memory
+        ((CAstAbstractLoader)loader).clearMessages();
       }
     }
     if (message != null) {
@@ -36,5 +38,6 @@ public class Util {
     }
     Assert.assertTrue(String.valueOf(message), message == null);
   }
+  
 
 }
