@@ -26,15 +26,19 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 public class PolyglotSyncDuplicatorTest extends SyncDuplicatorTest {
 
+  @Override
   protected JavaSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {
     JavaSourceAnalysisEngine engine = new PolyglotJavaSourceAnalysisEngine() {
+      @Override
       protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
         return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);
       }
 
+      @Override
       public IRTranslatorExtension getTranslatorExtension() {
         JavaIRTranslatorExtension ext = new JavaIRTranslatorExtension();
         ext.setCAstRewriterFactory(new CAstRewriterFactory() {
+          @Override
           public CAstRewriter createCAstRewriter(CAst ast) {
             return new SynchronizedBlockDuplicator(ast, true, testMethod);
           }

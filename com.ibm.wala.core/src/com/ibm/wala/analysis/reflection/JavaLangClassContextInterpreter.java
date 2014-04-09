@@ -94,6 +94,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getIR(com.ibm.wala.ipa.callgraph.CGNode)
    */
+  @Override
   public IR getIR(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -171,6 +172,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getNumberOfStatements(com.ibm.wala.ipa.callgraph.CGNode)
    */
+  @Override
   public int getNumberOfStatements(CGNode node) {
     assert understands(node);
     return getIR(node).getInstructions().length;
@@ -179,6 +181,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#understands(com.ibm.wala.ipa.callgraph.CGNode)
    */
+  @Override
   public boolean understands(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -192,6 +195,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
         || mRef.equals(GET_DECLARED_METHODS);
   }
 
+  @Override
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -205,6 +209,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     return EmptyIterator.instance();
   }
 
+  @Override
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
     assert understands(node);
     return EmptyIterator.instance();
@@ -427,22 +432,27 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     }
   }
 
+  @Override
   public boolean recordFactoryType(CGNode node, IClass klass) {
     return false;
   }
 
+  @Override
   public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
     return EmptyIterator.instance();
   }
 
+  @Override
   public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
     return EmptyIterator.instance();
   }
 
+  @Override
   public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode N) {
     return getIR(N).getControlFlowGraph();
   }
 
+  @Override
   public DefUse getDU(CGNode node) {
     return new DefUse(getIR(node));
   }

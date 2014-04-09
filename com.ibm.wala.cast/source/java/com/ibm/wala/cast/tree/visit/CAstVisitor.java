@@ -28,6 +28,8 @@ import com.ibm.wala.util.debug.Assertions;
  * TODO: document me.
  */
 public abstract class CAstVisitor<C extends CAstVisitor.Context> {
+  
+  public static boolean DEBUG = true;
 
   private Position currentPosition;
   
@@ -899,15 +901,15 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
     switch (n.getKind()) {
     case CAstNode.ARRAY_REF: {
       if (doVisitArrayRefNode(n, v, a, assign, preOp, context, visitor)) {
-	return true;
+        return true;
       }
 
       break;
     }
 
     case CAstNode.OBJECT_REF: {
-      if (assign ? visitor.visitObjectRefAssign(n, v, a, context, visitor)
-                 : visitor.visitObjectRefAssignOp(n, v, a, preOp, context, visitor))
+      if (assign ? visitor.visitObjectRefAssign(n, v, a, context, visitor) : visitor.visitObjectRefAssignOp(n, v, a, preOp,
+          context, visitor))
         return true;
       visitor.visit(n.getChild(0), context, visitor);
       if (assign)
@@ -918,8 +920,8 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
     }
 
     case CAstNode.BLOCK_EXPR: {
-      if (assign ? visitor.visitBlockExprAssign(n, v, a, context, visitor)
-                 : visitor.visitBlockExprAssignOp(n, v, a, preOp, context, visitor))
+      if (assign ? visitor.visitBlockExprAssign(n, v, a, context, visitor) : visitor.visitBlockExprAssignOp(n, v, a, preOp,
+          context, visitor))
         return true;
       // FIXME: is it correct to ignore all the other children?
       if (visitor.visitAssignNodes(n.getChild(n.getChildCount() - 1), context, v, a, visitor))
@@ -932,8 +934,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
     }
 
     case CAstNode.VAR: {
-      if (assign ? visitor.visitVarAssign(n, v, a, context, visitor)
-                 : visitor.visitVarAssignOp(n, v, a, preOp, context, visitor))
+      if (assign ? visitor.visitVarAssign(n, v, a, context, visitor) : visitor.visitVarAssignOp(n, v, a, preOp, context, visitor))
         return true;
       if (assign)
         visitor.leaveVarAssign(n, v, a, context, visitor);
@@ -944,10 +945,10 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
 
     default: {
       if (!visitor.doVisitAssignNodes(n, context, v, a, visitor)) {
-	System.err.println(("cannot handle assign to kind " + n.getKind()));
-	throw new UnsupportedOperationException(
-	  "cannot handle assignment: " + 
-	  CAstPrinter.print(a, context.getSourceMap()));
+        if (DEBUG) {
+          System.err.println(("cannot handle assign to kind " + n.getKind()));
+        }
+        throw new UnsupportedOperationException("cannot handle assignment: " + CAstPrinter.print(a, context.getSourceMap()));
       }
     }
     }

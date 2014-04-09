@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Eclipse-LazyStart: true
 Bundle-Name: %pluginName
 Bundle-SymbolicName: com.ibm.wala.core
-Bundle-Version: 1.1.3.qualifier
+Bundle-Version: 1.3.4.qualifier
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Require-Bundle: com.ibm.wala.shrike,
@@ -30,6 +30,7 @@ Export-Package: .,
  com.ibm.wala.demandpa.util,
  com.ibm.wala.escape,
  com.ibm.wala.ipa.callgraph,
+ com.ibm.wala.ipa.callgraph.cha,
  com.ibm.wala.ipa.callgraph.impl,
  com.ibm.wala.ipa.callgraph.pruned,
  com.ibm.wala.ipa.callgraph.propagation,
@@ -61,4 +62,5 @@ Export-Package: .,
  com.ibm.wala.util.warnings,
  com.ibm.wala.viz,
  com.ibm.wala.viz.viewer
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Eclipse-BuddyPolicy: registered

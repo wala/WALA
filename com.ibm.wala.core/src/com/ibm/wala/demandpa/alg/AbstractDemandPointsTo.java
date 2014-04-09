@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -85,6 +84,7 @@ public abstract class AbstractDemandPointsTo implements IDemandPointerAnalysis {
     this.options = options;
   }
 
+  @Override
   public HeapModel getHeapModel() {
     return heapModel;
   }
@@ -107,10 +107,12 @@ public abstract class AbstractDemandPointsTo implements IDemandPointerAnalysis {
     return numNodesTraversed;
   }
 
+  @Override
   public CallGraph getBaseCallGraph() {
     return cg;
   }
 
+  @Override
   public IClassHierarchy getClassHierarchy() {
     return cha;
   }

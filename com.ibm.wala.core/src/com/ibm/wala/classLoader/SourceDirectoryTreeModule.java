@@ -48,7 +48,7 @@ public class SourceDirectoryTreeModule extends DirectoryTreeModule {
 
     assert filePath.startsWith(rootPath);
 
-    return new SourceFileModule(file, filePath.substring(rootPath.length()));
+    return new SourceFileModule(file, filePath.substring(rootPath.length()), this);
   }
   
   @Override

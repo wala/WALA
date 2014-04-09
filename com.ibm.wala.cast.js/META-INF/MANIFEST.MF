@@ -2,15 +2,16 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JavaScript Plug-in
 Bundle-SymbolicName: com.ibm.wala.cast.js;singleton:=true
-Bundle-Version: 1.0.0
-Bundle-ClassPath: bin/,
- .,
- lib/js.jar,
- lib/xalan.jar
+Bundle-Version: 1.3.4.qualifier
+Bundle-ClassPath: .,
+ lib/jericho-html-3.2.jar
 Bundle-Activator: com.ibm.wala.cast.js.JavaScriptPlugin
 Bundle-Vendor: IBM
 Export-Package: com.ibm.wala.cast.js,
  com.ibm.wala.cast.js.analysis.typeInference,
+ com.ibm.wala.cast.js.callgraph.fieldbased,
+ com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph,
+ com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices,
  com.ibm.wala.cast.js.cfg,
  com.ibm.wala.cast.js.client,
  com.ibm.wala.cast.js.client.impl,
@@ -34,3 +35,4 @@ Require-Bundle: com.ibm.wala.cast,
  org.eclipse.core.runtime;bundle-version="3.4.0",
  org.apache.commons.logging
 Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

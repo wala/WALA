@@ -147,6 +147,7 @@ public final class SwitchInstruction extends Instruction {
     v.visitSwitch(this);
   }
 
+  @Override
   public boolean isPEI() {
     return false;
   }

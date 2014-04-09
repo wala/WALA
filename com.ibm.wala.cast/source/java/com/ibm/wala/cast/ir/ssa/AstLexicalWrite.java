@@ -36,6 +36,7 @@ public class AstLexicalWrite extends AstLexicalAccess {
     super(iindex, accesses);
   }
 
+  @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (uses == null) {
       return new AstLexicalWrite(iindex, getAccesses());
@@ -50,22 +51,27 @@ public class AstLexicalWrite extends AstLexicalAccess {
     }
   }
 
+  @Override
   public int getNumberOfUses() {
     return getAccessCount();
   }
 
+  @Override
   public int getUse(int i) {
     return getAccess(i).valueNumber;
   }
 
+  @Override
   public int getNumberOfDefs() {
     return 0;
   }
 
+  @Override
   public int getDef(int i) {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public String toString(SymbolTable symbolTable) {
     StringBuffer sb = new StringBuffer();
     for (int i = 0; i < getAccessCount(); i++) {
@@ -83,6 +89,7 @@ public class AstLexicalWrite extends AstLexicalAccess {
     return sb.toString();
   }
 
+  @Override
   public void visit(IVisitor v) {
     assert v instanceof AstInstructionVisitor;
     ((AstInstructionVisitor) v).visitAstLexicalWrite(this);

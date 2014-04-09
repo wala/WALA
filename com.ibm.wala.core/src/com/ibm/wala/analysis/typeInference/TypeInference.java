@@ -505,6 +505,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
     protected AbstractOperator<TypeVariable> result = null;
 
+    @Override
     public AbstractOperator<TypeVariable> get(SSAInstruction instruction) {
       instruction.visit(this);
       AbstractOperator<TypeVariable> temp = result;
@@ -705,15 +706,18 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       }
     }
     
+    @Override
     public void visitAddressOf(SSAAddressOfInstruction instruction) {
       TypeReference type = language.getPointerType(instruction.getType());
       result = getPointerTypeOperator(type);
      }
 
+    @Override
     public void visitLoadIndirect(SSALoadIndirectInstruction instruction) {
       result = getPointerTypeOperator(instruction.getLoadedType());
     }
 
+    @Override
     public void visitStoreIndirect(SSAStoreIndirectInstruction instruction) {
       Assertions.UNREACHABLE();
     }
@@ -721,6 +725,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
   public class TypeVarFactory implements VariableFactory {
 
+    @Override
     public IVariable makeVariable(int valueNumber) {
       SymbolTable st = ir.getSymbolTable();
       if (doPrimitives) {

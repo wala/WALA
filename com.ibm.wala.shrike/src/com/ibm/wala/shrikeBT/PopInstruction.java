@@ -65,6 +65,7 @@ public final class PopInstruction extends Instruction {
     return "Pop(" + size + ")";
   }
 
+  @Override
   public boolean isPEI() {
     return false;
   }

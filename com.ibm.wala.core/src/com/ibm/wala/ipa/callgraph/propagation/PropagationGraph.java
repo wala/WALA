@@ -274,9 +274,11 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     implicitUnaryCount--;
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public Iterator<AbstractStatement> getStatements() {
     Iterator<AbstractStatement> it = new FilterIterator(delegateGraph.iterator(), new Filter() {
+      @Override
       public boolean accepts(Object x) {
         return x instanceof AbstractStatement;
       }
@@ -301,10 +303,12 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       this.defs = defs.intIterator();
     }
 
+    @Override
     public boolean hasNext() {
       return defs.hasNext();
     }
 
+    @Override
     public AbstractStatement next() {
       int l = defs.next();
       PointsToSetVariable lhs = (PointsToSetVariable) delegateGraph.getNode(l);
@@ -316,6 +320,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       return temp;
     }
 
+    @Override
     public void remove() {
       // TODO Auto-generated method stub
       Assertions.UNREACHABLE();
@@ -339,10 +344,12 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       this.uses = uses.intIterator();
     }
 
+    @Override
     public boolean hasNext() {
       return uses.hasNext();
     }
 
+    @Override
     public AbstractStatement next() {
       int r = uses.next();
       PointsToSetVariable rhs = (PointsToSetVariable) delegateGraph.getNode(r);
@@ -353,6 +360,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       return temp;
     }
 
+    @Override
     public void remove() {
       // TODO Auto-generated method stub
       Assertions.UNREACHABLE();
@@ -390,10 +398,12 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       }
     }
 
+    @Override
     public boolean hasNext() {
       return innerDelegate != null;
     }
 
+    @Override
     public AbstractStatement next() {
       IntPair p = (IntPair) innerDelegate.next();
       int lhs = p.getX();
@@ -406,6 +416,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       return result;
     }
 
+    @Override
     public void remove() {
       // TODO Auto-generated method stub
       Assertions.UNREACHABLE();
@@ -413,6 +424,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     }
   }
 
+  @Override
   public void removeStatement(IFixedPointStatement<PointsToSetVariable> eq) throws IllegalArgumentException {
     if (eq == null) {
       throw new IllegalArgumentException("eq == null");
@@ -425,6 +437,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     }
   }
 
+  @Override
   public void reorder() {
     VariableGraphView graph = new VariableGraphView();
 
@@ -508,10 +521,12 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       return new Iterator<PointsToSetVariable>() {
         Iterator<INodeWithNumber> inner;
 
+        @Override
         public boolean hasNext() {
           return eqs.hasNext() || (inner != null);
         }
 
+        @Override
         public PointsToSetVariable next() {
           if (inner != null) {
             PointsToSetVariable result = (PointsToSetVariable)inner.next();
@@ -530,6 +545,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
           }
         }
 
+        @Override
         public void remove() {
           // TODO Auto-generated method stub
           Assertions.UNREACHABLE();
@@ -567,10 +583,12 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
           advance();
         }
 
+        @Override
         public boolean hasNext() {
           return nextResult != null;
         }
 
+        @Override
         public PointsToSetVariable next() {
           PointsToSetVariable result = nextResult;
           advance();
@@ -585,6 +603,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
           }
         }
 
+        @Override
         public void remove() {
           // TODO Auto-generated method stub
           Assertions.UNREACHABLE();
@@ -646,6 +665,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
 
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public Iterator<AbstractStatement> getStatementsThatUse(PointsToSetVariable v) {
     if (v == null) {
@@ -671,6 +691,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     return list.iterator();
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public Iterator<AbstractStatement> getStatementsThatDef(PointsToSetVariable v) {
     if (v == null) {
@@ -704,6 +725,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
    * @throws IllegalArgumentException if v is null
    * 
    */
+  @Override
   public int getNumberOfStatementsThatUse(PointsToSetVariable v) {
     if (v == null) {
       throw new IllegalArgumentException("v is null");
@@ -724,6 +746,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     return result;
   }
 
+  @Override
   public int getNumberOfStatementsThatDef(PointsToSetVariable v) {
     if (v == null) {
       throw new IllegalArgumentException("v is null");
@@ -744,9 +767,11 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     return result;
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public Iterator<PointsToSetVariable> getVariables() {
     Iterator<PointsToSetVariable> it = new FilterIterator(delegateGraph.iterator(), new Filter() {
+      @Override
       public boolean accepts(Object x) {
         return x instanceof IVariable;
       }
@@ -779,6 +804,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     }
   }
 
+  @Override
   public boolean containsStatement(IFixedPointStatement<PointsToSetVariable> eq) throws IllegalArgumentException {
     if (eq == null) {
       throw new IllegalArgumentException("eq == null");
@@ -812,10 +838,12 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     }
   }
 
+  @Override
   public boolean containsVariable(PointsToSetVariable v) {
     return delegateGraph.containsNode(v);
   }
 
+  @Override
   public void addStatement(IFixedPointStatement<PointsToSetVariable> statement) throws IllegalArgumentException, UnimplementedError {
     if (statement == null) {
       throw new IllegalArgumentException("statement == null");
@@ -937,10 +965,12 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
           advance();
         }
 
+        @Override
         public boolean hasNext() {
           return nextResult != null;
         }
 
+        @Override
         public PointsToSetVariable next() {
           PointsToSetVariable result = nextResult;
           advance();
@@ -957,6 +987,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
           }
         }
 
+        @Override
         public void remove() {
           Assertions.UNREACHABLE();
         }
@@ -990,10 +1021,12 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
           advance();
         }
 
+        @Override
         public boolean hasNext() {
           return nextResult != null;
         }
 
+        @Override
         public PointsToSetVariable next() {
           PointsToSetVariable result = nextResult;
           advance();
@@ -1010,6 +1043,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
           }
         }
 
+        @Override
         public void remove() {
           // TODO Auto-generated method stub
           Assertions.UNREACHABLE();

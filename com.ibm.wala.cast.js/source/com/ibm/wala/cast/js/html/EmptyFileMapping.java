@@ -1,6 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package com.ibm.wala.cast.js.html;
-
-import java.io.PrintStream;
 
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 
@@ -9,11 +17,6 @@ public class EmptyFileMapping implements FileMapping {
   @Override
   public IncludedPosition getIncludedPosition(Position line) {
     return null;
-  }
-
-  @Override
-  public void dump(PrintStream ps) {
-    ps.println("empty mapping");
   }
 
 }

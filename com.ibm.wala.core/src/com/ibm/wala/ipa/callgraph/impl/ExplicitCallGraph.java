@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.impl;
 
+import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -23,6 +24,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.BytecodeConstants;
 import com.ibm.wala.ssa.DefUse;
@@ -51,7 +53,7 @@ import com.ibm.wala.util.intset.SparseIntSet;
  * A call graph which explicitly holds the target for each call site in each node.
  */
 @SuppressWarnings("deprecation")
-public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstants {
+public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter> implements BytecodeConstants {
 
   protected final IClassHierarchy cha;
 
@@ -140,6 +142,9 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     protected final SparseVector<Object> targets = new SparseVector<Object>();
 
     private final MutableSharedBitVectorIntSet allTargets = new MutableSharedBitVectorIntSet();
+    
+    private WeakReference<IR> ir = new WeakReference<IR>(null);
+    private WeakReference<DefUse> du = new WeakReference<DefUse>(null);
 
     /**
      * @param method
@@ -184,6 +189,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     protected Iterator<CallSiteReference> getPossibleSites(final CGNode to) {
       final int n = getCallGraph().getNumber(to);
       return new FilterIterator<CallSiteReference>(iterateCallSites(), new Filter() {
+        @Override
         public boolean accepts(Object o) {
           IntSet s = getPossibleTargetNumbers((CallSiteReference) o);
           return s == null ? false : s.contains(n);
@@ -293,22 +299,46 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
       allTargets.clear();
     }
 
+    @Override
     public IR getIR() {
-      return getCallGraph().getInterpreter(this).getIR(this);
+      if (getMethod().isSynthetic()) {
+        // disable local cache in this case, as context interpreters
+        // do weird things like mutate IRs
+        return getCallGraph().getInterpreter(this).getIR(this);
+      }
+      IR ir = this.ir.get();
+      if (ir == null) {
+        ir = getCallGraph().getInterpreter(this).getIR(this);
+        this.ir = new WeakReference<IR>(ir);
+      }
+      return ir;
     }
 
+    @Override
     public DefUse getDU() {
-      return getCallGraph().getInterpreter(this).getDU(this);
+      if (getMethod().isSynthetic()) {
+        // disable local cache in this case, as context interpreters
+        // do weird things like mutate IRs
+        return getCallGraph().getInterpreter(this).getDU(this);
+      }
+      DefUse du = this.du.get();
+      if (du == null) {
+        du = getCallGraph().getInterpreter(this).getDU(this);
+        this.du = new WeakReference<DefUse>(du);
+      }
+      return du;
     }
 
     public ExplicitCallGraph getCallGraph() {
       return ExplicitCallGraph.this;
     }
 
+    @Override
     public Iterator<CallSiteReference> iterateCallSites() {
       return getCallGraph().getInterpreter(this).iterateCallSites(this);
     }
 
+    @Override
     public Iterator<NewSiteReference> iterateNewSites() {
       return getCallGraph().getInterpreter(this).iterateNewSites(this);
     }
@@ -321,6 +351,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
   /*
    * @see com.ibm.wala.ipa.callgraph.CallGraph#getClassHierarchy()
    */
+  @Override
   public IClassHierarchy getClassHierarchy() {
     return cha;
   }
@@ -328,6 +359,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
   protected class ExplicitEdgeManager implements NumberedEdgeManager<CGNode> {
 
     final IntFunction<CGNode> toNode = new IntFunction<CGNode>() {
+      @Override
       public CGNode apply(int i) {
         CGNode result = getNode(i);
         // if (Assertions.verifyAssertions && result == null) {
@@ -343,17 +375,20 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     final IBinaryNaturalRelation predecessors = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
         BasicNaturalRelation.SIMPLE);
 
+    @Override
     public IntSet getSuccNodeNumbers(CGNode node) {
       ExplicitNode n = (ExplicitNode) node;
       return n.getAllTargetNumbers();
     }
 
+    @Override
     public IntSet getPredNodeNumbers(CGNode node) {
       ExplicitNode n = (ExplicitNode) node;
       int y = getNumber(n);
       return predecessors.getRelated(y);
     }
 
+    @Override
     public Iterator<CGNode> getPredNodes(CGNode N) {
       IntSet s = getPredNodeNumbers(N);
       if (s == null) {
@@ -363,22 +398,26 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
       }
     }
 
+    @Override
     public int getPredNodeCount(CGNode N) {
       ExplicitNode n = (ExplicitNode) N;
       int y = getNumber(n);
       return predecessors.getRelatedCount(y);
     }
 
+    @Override
     public Iterator<CGNode> getSuccNodes(CGNode N) {
       ExplicitNode n = (ExplicitNode) N;
       return new IntMapIterator<CGNode>(n.getAllTargetNumbers().intIterator(), toNode);
     }
 
+    @Override
     public int getSuccNodeCount(CGNode N) {
       ExplicitNode n = (ExplicitNode) N;
       return n.getAllTargetNumbers().size();
     }
 
+    @Override
     public void addEdge(CGNode src, CGNode dst) {
       // we assume that this is called from ExplicitNode.addTarget().
       // so we only have to track the inverse edge.
@@ -387,6 +426,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
       predecessors.add(y, x);
     }
 
+    @Override
     public void removeEdge(CGNode src, CGNode dst) {
       int x = getNumber(src);
       int y = getNumber(dst);
@@ -398,20 +438,24 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
       predecessors.add(y, x);
     }
 
+    @Override
     public void removeAllIncidentEdges(CGNode node) {
       Assertions.UNREACHABLE();
     }
 
+    @Override
     public void removeIncomingEdges(CGNode node) {
       Assertions.UNREACHABLE();
 
     }
 
+    @Override
     public void removeOutgoingEdges(CGNode node) {
       Assertions.UNREACHABLE();
 
     }
 
+    @Override
     public boolean hasEdge(CGNode src, CGNode dst) {
       int x = getNumber(src);
       int y = getNumber(dst);
@@ -431,6 +475,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     return new ExplicitEdgeManager();
   }
 
+  @Override
   public int getNumberOfTargets(CGNode node, CallSiteReference site) {
     if (!containsNode(node)) {
       throw new IllegalArgumentException("node not in callgraph " + node);
@@ -440,6 +485,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     return n.getNumberOfTargets(site);
   }
 
+  @Override
   public Iterator<CallSiteReference> getPossibleSites(CGNode src, CGNode target) {
     if (!containsNode(src)) {
       throw new IllegalArgumentException("node not in callgraph " + src);
@@ -452,6 +498,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     return n.getPossibleSites(target);
   }
 
+  @Override
   public Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site) {
     if (!containsNode(node)) {
       throw new IllegalArgumentException("node not in callgraph " + node);

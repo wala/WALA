@@ -121,72 +121,95 @@ public abstract class SSAInstruction {
    * A base visitor implementation that does nothing.
    */
   public static abstract class Visitor implements IVisitor {
+    @Override
     public void visitGoto(SSAGotoInstruction instruction) {
     }
 
+    @Override
     public void visitArrayLoad(SSAArrayLoadInstruction instruction) {
     }
 
+    @Override
     public void visitArrayStore(SSAArrayStoreInstruction instruction) {
     }
 
+    @Override
     public void visitBinaryOp(SSABinaryOpInstruction instruction) {
     }
 
+    @Override
     public void visitUnaryOp(SSAUnaryOpInstruction instruction) {
     }
 
+    @Override
     public void visitConversion(SSAConversionInstruction instruction) {
     }
 
+    @Override
     public void visitComparison(SSAComparisonInstruction instruction) {
     }
 
+    @Override
     public void visitConditionalBranch(SSAConditionalBranchInstruction instruction) {
     }
 
+    @Override
     public void visitSwitch(SSASwitchInstruction instruction) {
     }
 
+    @Override
     public void visitReturn(SSAReturnInstruction instruction) {
     }
 
+    @Override
     public void visitGet(SSAGetInstruction instruction) {
     }
 
+    @Override
     public void visitPut(SSAPutInstruction instruction) {
     }
 
+    @Override
     public void visitInvoke(SSAInvokeInstruction instruction) {
     }
 
+    @Override
     public void visitNew(SSANewInstruction instruction) {
     }
 
+    @Override
     public void visitArrayLength(SSAArrayLengthInstruction instruction) {
     }
 
+    @Override
     public void visitThrow(SSAThrowInstruction instruction) {
     }
 
+    @Override
     public void visitMonitor(SSAMonitorInstruction instruction) {
     }
 
+    @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
     }
 
+    @Override
     public void visitInstanceof(SSAInstanceofInstruction instruction) {
     }
 
+    @Override
     public void visitPhi(SSAPhiInstruction instruction) {
     }
 
+    @Override
     public void visitPi(SSAPiInstruction instruction) {
     }
 
+    @Override
     public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
     }
 
+    @Override
     public void visitLoadMetadata(SSALoadMetadataInstruction instruction) {
     }
   }
@@ -256,6 +279,12 @@ public abstract class SSAInstruction {
 
   /**
    * We assume these instructions are canonical and managed by a governing IR object. Be careful.
+   * 
+   * Depending on the caching policy (see {@link com.ibm.wala.ssa.SSACache}), the governing IR may be deleted
+   * to reclaim memory and recomputed as needed. When an IR is recomputed, it also creates fresh SSAInstruction 
+   * objects that will not equal old ones. Thus, do not  compare for identity SSAInstructions obtained from 
+   * distinct calls that retrieve cached values (e.g. distinct CGNode.getIR() calls).
+   * See <a href="https://github.com/wala/WALA/issues/6"> the github issue </a> for details.
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package com.ibm.wala.cast.java.ssa;
 
 import java.util.Collection;
@@ -26,20 +36,24 @@ public class EnclosingObjectReference extends SSAInstruction {
     this.type = type;
   }
 
+  @Override
   public boolean hasDef() {
     return true;
   }
 
+  @Override
   public int getDef() {
     return lval;
   }
 
+  @Override
   public int getDef(int i) {
     assert i == 0;
 
     return lval;
   }
 
+  @Override
   public int getNumberOfDefs() {
     return 1;
   }
@@ -48,26 +62,32 @@ public class EnclosingObjectReference extends SSAInstruction {
     return type;
   }
 
+  @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((AstJavaInstructionFactory) insts).EnclosingObjectReference(iindex, defs == null ? lval : defs[0], type);
   }
 
+  @Override
   public String toString(SymbolTable symbolTable) {
     return getValueString(symbolTable, lval) + " = enclosing " + type.getName();
   }
 
+  @Override
   public void visit(IVisitor v) {
     ((AstJavaInstructionVisitor) v).visitEnclosingObjectReference(this);
   }
 
+  @Override
   public int hashCode() {
     return lval * type.hashCode();
   }
 
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return Collections.emptySet();
   }
 
+  @Override
   public boolean isFallThrough() {
     return true;
   }

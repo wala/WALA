@@ -31,36 +31,45 @@ public abstract class AstTypeInference extends TypeInference {
   private final TypeAbstraction booleanType;
 
   protected class AstTypeOperatorFactory extends TypeOperatorFactory implements AstInstructionVisitor {
+    @Override
     public void visitAstLexicalRead(AstLexicalRead inst) {
       result = new DeclaredTypeOperator(new ConeType(cha.getRootClass()));
     }
 
+    @Override
     public void visitAstLexicalWrite(AstLexicalWrite inst) {
     }
 
+    @Override
     public void visitAstGlobalRead(AstGlobalRead instruction) {
       result = new DeclaredTypeOperator(new ConeType(cha.getRootClass()));
     }
 
+    @Override
     public void visitAstGlobalWrite(AstGlobalWrite instruction) {
     }
 
+    @Override
     public void visitAssert(AstAssertInstruction instruction) {
     }
 
+    @Override
     public void visitEachElementGet(EachElementGetInstruction inst) {
       result = new DeclaredTypeOperator(new ConeType(cha.getRootClass()));
     }
 
+    @Override
     public void visitEachElementHasNext(EachElementHasNextInstruction inst) {
     }
 
+    @Override
     public void visitIsDefined(AstIsDefinedInstruction inst) {
       if (doPrimitives) {
         result = new DeclaredTypeOperator(booleanType);
       }
     }
 
+    @Override
     public void visitEcho(AstEchoInstruction inst) {
 
     }
@@ -71,6 +80,7 @@ public abstract class AstTypeInference extends TypeInference {
     this.booleanType = booleanType;
   }
 
+  @Override
   protected void initialize() {
     init(ir, new TypeVarFactory(), new AstTypeOperatorFactory());
   }

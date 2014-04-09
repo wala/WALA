@@ -119,6 +119,7 @@ public class BFSIterator<T> implements Iterator<T> {
    * 
    * @return true if there nodes left to enumerate.
    */
+  @Override
   public boolean hasNext() {
     return (Q.size() > index);
   }
@@ -128,6 +129,7 @@ public class BFSIterator<T> implements Iterator<T> {
    * 
    * @return the next graph node in discover time order.
    */
+  @Override
   public T next() throws NoSuchElementException {
     if (index >= Q.size()) {
       throw new NoSuchElementException();
@@ -155,6 +157,7 @@ public class BFSIterator<T> implements Iterator<T> {
   /**
    * @see java.util.Iterator#remove()
    */
+  @Override
   public void remove() throws UnimplementedError {
     throw new UnimplementedError();
   }

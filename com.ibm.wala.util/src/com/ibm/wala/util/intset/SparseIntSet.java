@@ -95,6 +95,7 @@ public class SparseIntSet implements IntSet {
       S.foreach(new IntSetAction() {
         private int index = 0;
 
+        @Override
         public void act(int i) {
           elements[index++] = i;
         }
@@ -107,6 +108,7 @@ public class SparseIntSet implements IntSet {
    * 
    * @see com.ibm.wala.util.intset.IntSet#contains(int)
    */
+  @Override
   public final boolean contains(int x) {
     if (elements == null) {
       return false;
@@ -124,10 +126,12 @@ public class SparseIntSet implements IntSet {
     return IntSetUtil.binarySearch(elements, x, 0, size - 1);
   }
 
+  @Override
   public final int size() {
     return size;
   }
 
+  @Override
   public final boolean isEmpty() {
     return size == 0;
   }
@@ -155,6 +159,7 @@ public class SparseIntSet implements IntSet {
     }
   }
 
+  @Override
   public boolean sameValue(IntSet that) throws IllegalArgumentException, UnimplementedError {
     if (that == null) {
       throw new IllegalArgumentException("that == null");
@@ -343,6 +348,7 @@ public class SparseIntSet implements IntSet {
     }
   }
 
+  @Override
   public IntSet intersection(IntSet that) {
     if (that == null) {
       throw new IllegalArgumentException("that == null");
@@ -377,6 +383,7 @@ public class SparseIntSet implements IntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public IntSet union(IntSet that) {
     MutableSparseIntSet temp = new MutableSparseIntSet();
     temp.addAll(this);
@@ -388,14 +395,17 @@ public class SparseIntSet implements IntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#iterator()
    */
+  @Override
   public IntIterator intIterator() {
     return new IntIterator() {
       int i = 0;
 
+      @Override
       public boolean hasNext() {
         return (i < size);
       }
 
+      @Override
       public int next() throws NoSuchElementException {
         if (elements == null) {
           throw new NoSuchElementException();
@@ -408,6 +418,7 @@ public class SparseIntSet implements IntSet {
   /**
    * @return the largest element in the set
    */
+  @Override
   public final int max() throws IllegalStateException {
     if (elements == null) {
       throw new IllegalStateException("Illegal to ask max() on an empty int set");
@@ -418,6 +429,7 @@ public class SparseIntSet implements IntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction)
    */
+  @Override
   public void foreach(IntSetAction action) {
     if (action == null) {
       throw new IllegalArgumentException("null action");
@@ -429,6 +441,7 @@ public class SparseIntSet implements IntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction)
    */
+  @Override
   public void foreachExcluding(IntSet X, IntSetAction action) {
     if (action == null) {
       throw new IllegalArgumentException("null action");
@@ -476,6 +489,7 @@ public class SparseIntSet implements IntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public boolean isSubset(IntSet that) {
     if (that == null) {
       throw new IllegalArgumentException("null that");
@@ -507,6 +521,7 @@ public class SparseIntSet implements IntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet)
    */
+  @Override
   public boolean containsAny(IntSet set) {
     if (set instanceof SparseIntSet) {
       return containsAny((SparseIntSet) set);

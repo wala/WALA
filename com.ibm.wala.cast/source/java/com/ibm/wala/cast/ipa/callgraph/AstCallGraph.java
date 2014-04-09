@@ -54,6 +54,7 @@ public class AstCallGraph extends ExplicitCallGraph {
       super(rootMethod, cha, options, cache);
     }
 
+    @Override
     public InducedCFG makeControlFlowGraph(SSAInstruction[] statements) {
       return new AstInducedCFG(statements, this, Everywhere.EVERYWHERE);
     }
@@ -82,8 +83,6 @@ public class AstCallGraph extends ExplicitCallGraph {
   public class AstCGNode extends ExplicitNode {
     private Set<Function<Object, Object>> callbacks;
 
-    private boolean lexicalScopingChanges = false;
-    
     private IR cachedIR;
     
     private DefUse cachedDU;
@@ -145,35 +144,11 @@ public class AstCallGraph extends ExplicitCallGraph {
       }
     }
 
-    public void setLexicallyMutatedIR(IR ir) {
-      lexicalScopingChanges = true;
-      cachedIR = ir;
-      cachedDU = null;
-    }
-    
     public void clearMutatedCache(CallSiteReference cs) {
       targets.remove(cs.getProgramCounter());
     }
     
-    public IR getLexicallyMutatedIR() {
-      if (lexicalScopingChanges) {
-        return cachedIR;
-      } else {
-        return null;
-      }
-    }
-    
-    public DefUse getLexicallyMutatedDU() {
-      if (lexicalScopingChanges) {
-        if (cachedDU == null) {
-          cachedDU = new DefUse(cachedIR);
-        }
-        return cachedDU;
-      } else {
-        return null;
-      }
-    }
-
+    @Override
     public boolean addTarget(CallSiteReference site, CGNode node) {
       if (super.addTarget(site, node)) {
         if (((AstCGNode) node).callbacks != null) {
@@ -187,10 +162,12 @@ public class AstCallGraph extends ExplicitCallGraph {
     }
   }
 
+  @Override
   protected ExplicitNode makeNode(IMethod method, Context context) {
     return new AstCGNode(method, context);
   }
 
+  @Override
   protected CGNode makeFakeRootNode() throws CancelException {
     return findOrCreateNode(new AstFakeRoot(FakeRootMethod.rootMethod, cha, options, getAnalysisCache()), Everywhere.EVERYWHERE);
   }

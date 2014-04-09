@@ -54,6 +54,7 @@ public interface MultiMap<K, V> {
 
     public int size();
 
+    @Override
     public String toString();
 
     public boolean putAll(K key, Collection<? extends V> vals);

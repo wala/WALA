@@ -56,6 +56,7 @@ public class AllocationSite implements InstanceKey {
     return method;
   }
 
+  @Override
   public IClass getConcreteType() {
     return concreteType;
   }
@@ -91,17 +92,20 @@ public class AllocationSite implements InstanceKey {
     return true;
   }
 
+  @Override
   public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
     return new MapIterator<CGNode, Pair<CGNode, NewSiteReference>>(
         new FilterIterator<CGNode>(
           CG.getNodes(method.getReference()).iterator(),
           new Filter<CGNode>() {
+            @Override
             public boolean accepts(CGNode o) {
               return o.getMethod().equals(method);
             }
           }
         ), 
         new Function<CGNode, Pair<CGNode, NewSiteReference>>() {
+          @Override
           public Pair<CGNode, NewSiteReference> apply(CGNode object) {
             return Pair.make(object, site);
           }

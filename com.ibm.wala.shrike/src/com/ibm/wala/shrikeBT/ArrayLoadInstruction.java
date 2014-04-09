@@ -90,6 +90,7 @@ final public class ArrayLoadInstruction extends Instruction implements IArrayLoa
     return Util.getWordSize(getType());
   }
 
+  @Override
   public String getType() {
     return Constants.indexedTypes[opcode - OP_iaload];
   }
@@ -99,6 +100,7 @@ final public class ArrayLoadInstruction extends Instruction implements IArrayLoa
     v.visitArrayLoad(this);
   }
 
+  @Override
   public boolean isPEI() {
     return true;
   }
@@ -107,6 +109,7 @@ final public class ArrayLoadInstruction extends Instruction implements IArrayLoa
    * Java bytecode does not permit this. 
    * @see com.ibm.wala.shrikeBT.IMemoryOperation#isAddressOf()
    */
+  @Override
   public boolean isAddressOf() {
     return false;
   }

@@ -35,18 +35,22 @@ public class EachElementHasNextInstruction extends SSAAbstractUnaryInstruction {
     super(iindex, lValue, objectRef);
   }
 
+  @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((AstInstructionFactory)insts).EachElementHasNextInstruction(iindex, (defs == null) ? getDef(0) : defs[0], (uses == null) ? getUse(0) : uses[0]);
   }
 
+  @Override
   public String toString(SymbolTable symbolTable) {
     return getValueString(symbolTable, getDef(0)) + " = has next property: " + getValueString(symbolTable, getUse(0));
   }
 
+  @Override
   public void visit(IVisitor v) {
     ((AstInstructionVisitor) v).visitEachElementHasNext(this);
   }
 
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return Collections.emptySet();
   }

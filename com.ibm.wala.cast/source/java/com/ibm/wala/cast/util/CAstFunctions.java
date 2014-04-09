@@ -42,26 +42,32 @@ public class CAstFunctions {
 
       private final Map<Object, Iterator<? extends CAstNode>> pendingChildren = HashMapFactory.make();
 
+      @Override
       protected Iterator<? extends CAstNode> getPendingChildren(CAstNode n) {
         return pendingChildren.get(n);
       }
 
+      @Override
       protected void setPendingChildren(CAstNode v, Iterator<? extends CAstNode> iterator) {
         pendingChildren.put(v, iterator);
       }
 
+      @Override
       protected Iterator<CAstNode> getConnected(final CAstNode n) {
         return new Iterator<CAstNode>() {
           private int i = 0;
 
+          @Override
           public boolean hasNext() {
             return i < ((CAstNode) n).getChildCount();
           }
 
+          @Override
           public CAstNode next() {
             return ((CAstNode) n).getChild(i++);
           }
 
+          @Override
           public void remove() {
             throw new UnsupportedOperationException();
           }

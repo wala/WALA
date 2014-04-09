@@ -31,10 +31,12 @@ public class NonNullSingletonIterator<T> implements Iterator<T> {
     this.it = o;
   }
 
+  @Override
   public boolean hasNext() {
     return it != null;
   }
 
+  @Override
   public T next() {
     if (it == null) {
       throw new NoSuchElementException();
@@ -45,6 +47,7 @@ public class NonNullSingletonIterator<T> implements Iterator<T> {
     }
   }
 
+  @Override
   public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }

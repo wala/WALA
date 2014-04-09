@@ -21,10 +21,12 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class SliceFunctions implements IPartiallyBalancedFlowFunctions<Statement> {
 
+  @Override
   public IUnaryFlowFunction getCallFlowFunction(Statement src, Statement dest, Statement ret) {
     return ReachabilityFunctions.createReachabilityFunctions().getCallFlowFunction(src, dest, ret);
   }
 
+  @Override
   public IUnaryFlowFunction getCallNoneToReturnFlowFunction(Statement src, Statement dest) {
     if (src == null) {
       throw new IllegalArgumentException("src is null");
@@ -61,14 +63,17 @@ public class SliceFunctions implements IPartiallyBalancedFlowFunctions<Statement
     }
   }
 
+  @Override
   public IUnaryFlowFunction getCallToReturnFlowFunction(Statement src, Statement dest) {
     return ReachabilityFunctions.createReachabilityFunctions().getCallToReturnFlowFunction(src, dest);
   }
 
+  @Override
   public IUnaryFlowFunction getNormalFlowFunction(Statement src, Statement dest) {
     return ReachabilityFunctions.createReachabilityFunctions().getNormalFlowFunction(src, dest);
   }
 
+  @Override
   public IFlowFunction getReturnFlowFunction(Statement call, Statement src, Statement dest) {
     return ReachabilityFunctions.createReachabilityFunctions().getReturnFlowFunction(call, src, dest);
   }
@@ -77,6 +82,7 @@ public class SliceFunctions implements IPartiallyBalancedFlowFunctions<Statement
     return ReachabilityFunctions.createReachabilityFunctions().getReturnFlowFunction(src, dest);
   }
 
+  @Override
   public IFlowFunction getUnbalancedReturnFlowFunction(Statement src, Statement dest) {
     return getReturnFlowFunction(src, dest);
   }

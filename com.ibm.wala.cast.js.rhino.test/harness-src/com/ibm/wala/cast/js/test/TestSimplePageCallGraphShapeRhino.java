@@ -25,6 +25,7 @@ import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.cast.js.util.Util;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.WalaException;
 
 public abstract class TestSimplePageCallGraphShapeRhino extends TestSimplePageCallGraphShape {
 
@@ -33,14 +34,14 @@ public abstract class TestSimplePageCallGraphShapeRhino extends TestSimplePageCa
 		new Object[] { "page3.html", new String[] { "page3.html/__WINDOW_MAIN__" } }
 	};
 
-	@Test public void testPage3() throws IOException, IllegalArgumentException, CancelException {
+	@Test public void testPage3() throws IOException, IllegalArgumentException, CancelException, WalaException {
 		URL url = getClass().getClassLoader().getResource("pages/page3.html");
 		CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
 		verifyGraphAssertions(CG, assertionsForPage3);
 	}
 
-	@Test(expected = AssertionError.class)
-	public void testJSParseError() throws IOException, IllegalArgumentException, CancelException {
+	@Test(expected = WalaException.class)
+	public void testJSParseError() throws IOException, IllegalArgumentException, CancelException, WalaException {
 		URL url = getClass().getClassLoader().getResource("pages/garbage2.html");
 		JSCFABuilder B = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
 		B.makeCallGraph(B.getOptions());
@@ -51,17 +52,20 @@ public abstract class TestSimplePageCallGraphShapeRhino extends TestSimplePageCa
 		justThisTest(TestSimplePageCallGraphShapeRhino.class);
 	}
 
-	 protected abstract IHtmlParser getParser();
+	 @Override
+  protected abstract IHtmlParser getParser();
 	  
-	  @Before
+	  @Override
+    @Before
 	  public void setUp() {
 		    com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
 			WebUtil.setFactory(new IHtmlParserFactory() {
-				public IHtmlParser getParser() {
+				@Override
+        public IHtmlParser getParser() {
 					return TestSimplePageCallGraphShapeRhino.this.getParser();
 				}
 			});
 		    JSSourceExtractor.USE_TEMP_NAME = false;
-		    JSSourceExtractor.DELETE_UPON_EXIT = false;    			
+//		    JSSourceExtractor.DELETE_UPON_EXIT = false;    			
 	  }
 }

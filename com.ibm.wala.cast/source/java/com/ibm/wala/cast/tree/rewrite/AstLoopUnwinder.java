@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package com.ibm.wala.cast.tree.rewrite;
 
 import java.util.Map;
@@ -23,20 +33,24 @@ public class AstLoopUnwinder
       this.iteration = iteration;
     }
 			  
+    @Override
     public int hashCode() {
       return iteration * (rest == null? 1: rest.hashCode());
     }
 		
+    @Override
     public UnwindKey parent() {
       return rest;
     }
 
+    @Override
     public boolean equals(Object o) {
       return (o instanceof UnwindKey) &&
 	((UnwindKey)o).iteration == iteration &&
 	( rest==null? ((UnwindKey)o).rest == null: rest.equals(((UnwindKey)o).rest) );
     }
 
+    @Override
     public String toString() {
       return "#"+iteration+ ((rest==null)?"":rest.toString());
     }
@@ -61,6 +75,7 @@ public class AstLoopUnwinder
 
   private static class RootContext implements RewriteContext<UnwindKey> {
 		  
+    @Override
     public UnwindKey key() {
       return null;
     }
@@ -75,12 +90,14 @@ public class AstLoopUnwinder
       this.parent = parent;
     }
         
+    @Override
     public UnwindKey key() {
       return new UnwindKey(iteration, parent.key());
     }
       
   }
 	  
+  @Override
   protected CAstNode flowOutTo(Map nodeMap, 
 			       CAstNode oldSource,
 			       Object label,
@@ -92,6 +109,7 @@ public class AstLoopUnwinder
     return oldTarget;
   }
 
+  @Override
   protected CAstNode copyNodes(CAstNode n, final CAstControlFlowMap cfg, RewriteContext<UnwindKey> c, Map<Pair<CAstNode,UnwindKey>,CAstNode> nodeMap) {
     if (n instanceof CAstOperator) {
       return n;

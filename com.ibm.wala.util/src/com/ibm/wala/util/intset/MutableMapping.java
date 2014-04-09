@@ -60,6 +60,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
     nextIndex = 0;
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public T getMappedObject(int n) {
     try {
@@ -69,6 +70,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
     }
   }
 
+  @Override
   public int getMappedIndex(T o) {
     Integer I = map.get(o);
     if (I == null) {
@@ -79,6 +81,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
 
   }
 
+  @Override
   public boolean hasMappedIndex(T o) {
     return map.get(o) != null;
   }
@@ -88,6 +91,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
    * 
    * @return the integer to which the object is mapped.
    */
+  @Override
   public int add(T o) {
     Integer I = map.get(o);
     if (I != null) {
@@ -116,6 +120,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
   /*
    * @see com.ibm.wala.util.intset.OrdinalSetMapping#iterator()
    */
+  @Override
   public Iterator<T> iterator() {
     return map.keySet().iterator();
   }
@@ -175,10 +180,12 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
 
   }
 
+  @Override
   public int getMaximumIndex() {
     return nextIndex - 1;
   }
 
+  @Override
   public int getSize() {
     return map.size();
   }

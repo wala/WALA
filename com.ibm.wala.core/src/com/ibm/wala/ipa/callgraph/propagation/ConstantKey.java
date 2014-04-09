@@ -58,6 +58,7 @@ public final class ConstantKey<T> implements InstanceKey {
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKey#getConcreteType()
    */
+  @Override
   public IClass getConcreteType() {
     return valueClass;
   }
@@ -66,6 +67,7 @@ public final class ConstantKey<T> implements InstanceKey {
     return value;
   }
 
+  @Override
   public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
     return EmptyIterator.instance();
   }

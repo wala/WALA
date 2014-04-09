@@ -163,14 +163,17 @@ public class DefUse {
       it = uses.intIterator();
     }
 
+    @Override
     public boolean hasNext() {
       return it.hasNext();
     }
 
+    @Override
     public SSAInstruction next() {
       return allInstructions.get(it.next());
     }
 
+    @Override
     public void remove() {
       Assertions.UNREACHABLE();
     }

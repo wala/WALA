@@ -60,10 +60,12 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
 
   private final Map<Atom, IClassHierarchy> hierarchies;
 
+  @Override
   public ClassLoaderFactory getFactory() {
     return loaderFactory;
   }
 
+  @Override
   public AnalysisScope getScope() {
     return analysisScope;
   }
@@ -96,6 +98,7 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
     return getHierarchy(ref.getDeclaringClass());
   }
 
+  @Override
   public IClassLoader[] getLoaders() {
     Set<IClassLoader> loaders = HashSetFactory.make();
     for (Iterator ldrs = analysisScope.getLoaders().iterator(); ldrs.hasNext();) {
@@ -105,14 +108,17 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
     return (IClassLoader[]) loaders.toArray(new IClassLoader[loaders.size()]);
   }
 
+  @Override
   public IClassLoader getLoader(ClassLoaderReference loaderRef) {
     return getHierarchy(loaderRef).getLoader(loaderRef);
   }
 
+  @Override
   public boolean addClass(IClass klass) {
     return getHierarchy(klass).addClass(klass);
   }
 
+  @Override
   public int getNumberOfClasses() {
     int total = 0;
     for (Iterator ldrs = analysisScope.getLoaders().iterator(); ldrs.hasNext();) {
@@ -122,43 +128,53 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
     return total;
   }
 
+  @Override
   public boolean isRootClass(IClass c) {
     return getHierarchy(c).isRootClass(c);
   }
 
+  @Override
   public IClass getRootClass() {
     Assertions.UNREACHABLE();
     return null;
   }
 
+  @Override
   public int getNumber(IClass c) {
     return getHierarchy(c).getNumber(c);
   }
 
-  public Collection<IMethod> getPossibleTargets(MethodReference ref) {
+  @Override
+  public Set<IMethod> getPossibleTargets(MethodReference ref) {
     return getHierarchy(ref).getPossibleTargets(ref);
   }
 
+  @Override
   public Set<IMethod> getPossibleTargets(IClass receiverClass, MethodReference ref) {
     return getHierarchy(ref).getPossibleTargets(receiverClass, ref);
   }
 
+  @Override
   public IMethod resolveMethod(MethodReference m) {
     return getHierarchy(m).resolveMethod(m);
   }
 
+  @Override
   public IField resolveField(FieldReference f) {
     return getHierarchy(f).resolveField(f);
   }
 
+  @Override
   public IField resolveField(IClass klass, FieldReference f) {
     return getHierarchy(klass).resolveField(klass, f);
   }
 
+  @Override
   public IMethod resolveMethod(IClass receiver, Selector selector) {
     return getHierarchy(receiver).resolveMethod(receiver, selector);
   }
 
+  @Override
   public IClass lookupClass(TypeReference A) {
     return getHierarchy(A).lookupClass(A);
   }
@@ -167,56 +183,70 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
 //    return getHierarchy(c).isSyntheticClass(c);
 //  }
 
+  @Override
   public boolean isInterface(TypeReference type) {
     return getHierarchy(type).isInterface(type);
   }
 
+  @Override
   public IClass getLeastCommonSuperclass(IClass A, IClass B) {
     return getHierarchy(A).getLeastCommonSuperclass(A, B);
   }
 
+  @Override
   public TypeReference getLeastCommonSuperclass(TypeReference A, TypeReference B) {
     return getHierarchy(A).getLeastCommonSuperclass(A, B);
   }
 
+  @Override
   public boolean isSubclassOf(IClass c, IClass T) {
     return getHierarchy(c).isSubclassOf(c, T);
   }
 
+  @Override
   public boolean implementsInterface(IClass c, IClass i) {
     return getHierarchy(c).implementsInterface(c, i);
   }
 
+  @Override
   public Collection<IClass> computeSubClasses(TypeReference type) {
     return getHierarchy(type).computeSubClasses(type);
   }
 
+  @Override
   public Collection<TypeReference> getJavaLangRuntimeExceptionTypes() {
     return getHierarchy(TypeReference.JavaLangRuntimeException).getJavaLangErrorTypes();
   }
 
+  @Override
   public Collection<TypeReference> getJavaLangErrorTypes() {
     return getHierarchy(TypeReference.JavaLangError).getJavaLangErrorTypes();
   }
 
+  @Override
   public Set<IClass> getImplementors(TypeReference type) {
     return getHierarchy(type).getImplementors(type);
   }
 
+  @Override
   public int getNumberOfImmediateSubclasses(IClass klass) {
     return getHierarchy(klass).getNumberOfImmediateSubclasses(klass);
   }
 
+  @Override
   public Collection<IClass> getImmediateSubclasses(IClass klass) {
     return getHierarchy(klass).getImmediateSubclasses(klass);
   }
 
+  @Override
   public boolean isAssignableFrom(IClass c1, IClass c2) {
     return getHierarchy(c1).isAssignableFrom(c1, c2);
   }
 
+  @Override
   public Iterator<IClass> iterator() {
     return new ComposedIterator<ClassLoaderReference, IClass>(analysisScope.getLoaders().iterator()) {
+      @Override
       public Iterator<IClass> makeInner(ClassLoaderReference o) {
         IClassLoader ldr = getLoader(o);
         return ldr.iterateAllClasses();

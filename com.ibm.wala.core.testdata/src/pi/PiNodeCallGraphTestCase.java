@@ -24,14 +24,17 @@ class PiNodeCallGraphTestCase {
 
   static class This implements Whatever {
 
+    @Override
     public void unary1() {
       unary2();
     }
 
+    @Override
     public void unary2() {
 	
     }
 
+    @Override
     public void binary(Whatever arg) {
       this.unary1();
       arg.unary2();
@@ -41,14 +44,17 @@ class PiNodeCallGraphTestCase {
 
   static class That implements Whatever {
 
+    @Override
     public void unary1() {
 
     }
 
+    @Override
     public void unary2() {
       unary1();	
     }
 
+    @Override
     public void binary(Whatever arg) {
       this.unary1();
       arg.unary2();
@@ -67,6 +73,14 @@ class PiNodeCallGraphTestCase {
       x.binary(z);
     else
       y.binary(z);
+    localCast();
+  }
+  
+  private static void localCast() {
+    Whatever y = new That();
+    if (y instanceof This) {
+      y.binary(y);
+    }
   }
 
 }

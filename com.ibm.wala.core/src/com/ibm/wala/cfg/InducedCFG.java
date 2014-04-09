@@ -111,6 +111,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
         && context.equals(((InducedCFG) o).context);
   }
 
+  @Override
   public SSAInstruction[] getInstructions() {
     return instructions;
   }
@@ -363,6 +364,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     }
   }
 
+  @Override
   public BasicBlock getBlockForInstruction(int index) {
     if (i2block[index] == null) {
       Assertions.productionAssertion(false, "unexpected null for " + index);
@@ -479,10 +481,12 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
       }
     }
 
+    @Override
     public int getFirstInstructionIndex() {
       return start;
     }
 
+    @Override
     public int getLastInstructionIndex() {
       int exitNumber = InducedCFG.this.getNumber(exit());
       if (getGraphNodeId() == exitNumber) {
@@ -498,6 +502,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
       }
     }
 
+    @Override
     public boolean isCatchBlock() {
       // TODO: support induced CFG with catch blocks.
       return false;
@@ -519,6 +524,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     /*
      * @see com.ibm.wala.cfg.IBasicBlock#isExitBlock()
      */
+    @Override
     public boolean isExitBlock() {
       return getLastInstructionIndex() == -2;
     }
@@ -526,6 +532,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     /*
      * @see com.ibm.wala.cfg.IBasicBlock#isEntryBlock()
      */
+    @Override
     public boolean isEntryBlock() {
       return getNumber() == 0;
     }
@@ -533,6 +540,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     /*
      * @see com.ibm.wala.cfg.IBasicBlock#getMethod()
      */
+    @Override
     public IMethod getMethod() {
       return InducedCFG.this.getMethod();
     }
@@ -548,10 +556,12 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     /*
      * @see com.ibm.wala.cfg.IBasicBlock#getNumber()
      */
+    @Override
     public int getNumber() {
       return InducedCFG.this.getNumber(this);
     }
 
+    @Override
     public Iterator<SSAInstruction> iterator() {
       return new ArrayIterator<SSAInstruction>(getInstructions(), getFirstInstructionIndex(), getLastInstructionIndex());
     }
@@ -580,6 +590,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
    * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int)
    */
+  @Override
   public int getProgramCounter(int index) {
     if (getInstructions().length <= index) {
       throw new IllegalArgumentException("invalid index " + index + " " + getInstructions().length);

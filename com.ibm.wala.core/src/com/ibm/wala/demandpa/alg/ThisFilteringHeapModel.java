@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package com.ibm.wala.demandpa.alg;
 
 import java.util.Iterator;
@@ -32,46 +42,57 @@ class ThisFilteringHeapModel implements HeapModel {
 
   private final IClassHierarchy cha;
 
+  @Override
   public IClassHierarchy getClassHierarchy() {
     return delegate.getClassHierarchy();
   }
 
+  @Override
   public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, TypeFilter filter) {
     return delegate.getFilteredPointerKeyForLocal(node, valueNumber, filter);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
     return delegate.getInstanceKeyForAllocation(node, allocation);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
     return delegate.getInstanceKeyForClassObject(type);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForConstant(TypeReference type, Object S) {
     return delegate.getInstanceKeyForConstant(type, S);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
     return delegate.getInstanceKeyForMultiNewArray(node, allocation, dim);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type) {
     return delegate.getInstanceKeyForPEI(node, instr, type);
   }
 
+  @Override
   public PointerKey getPointerKeyForArrayContents(InstanceKey I) {
     return delegate.getPointerKeyForArrayContents(I);
   }
 
+  @Override
   public PointerKey getPointerKeyForExceptionalReturnValue(CGNode node) {
     return delegate.getPointerKeyForExceptionalReturnValue(node);
   }
 
+  @Override
   public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField field) {
     return delegate.getPointerKeyForInstanceField(I, field);
   }
 
+  @Override
   public PointerKey getPointerKeyForLocal(CGNode node, int valueNumber) {
     if (!node.getMethod().isStatic() && valueNumber == 1) {
       return delegate.getFilteredPointerKeyForLocal(node, valueNumber, getFilter(node));
@@ -109,14 +130,17 @@ class ThisFilteringHeapModel implements HeapModel {
     return C;
   }
 
+  @Override
   public PointerKey getPointerKeyForReturnValue(CGNode node) {
     return delegate.getPointerKeyForReturnValue(node);
   }
 
+  @Override
   public PointerKey getPointerKeyForStaticField(IField f) {
     return delegate.getPointerKeyForStaticField(f);
   }
 
+  @Override
   public Iterator<PointerKey> iteratePointerKeys() {
     return delegate.iteratePointerKeys();
   }

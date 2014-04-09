@@ -10,6 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.html;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Set;
@@ -25,10 +26,17 @@ import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
  */
 public abstract class JSSourceExtractor {
 
-  public static boolean DELETE_UPON_EXIT = false;
+  public static boolean DELETE_UPON_EXIT = true;
 
-  public static boolean USE_TEMP_NAME = false;
+  public static boolean USE_TEMP_NAME = true;
 
   public abstract Set<MappedSourceModule> extractSources(URL entrypointUrl, IHtmlParser htmlParser, IUrlResolver urlResolver) throws IOException, Error;
+  
+  /**
+   * Returns the temporary file created by a call to
+   * {@link #extractSources(URL, IHtmlParser, IUrlResolver)} which holds all the
+   * discovered JS source. If no such file exists, returns <code>null</code>
+   */
+  public abstract File getTempFile();
   
 }

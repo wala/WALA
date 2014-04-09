@@ -419,7 +419,7 @@ public class ClosureExtractor extends CAstRewriterExt {
     boolean extractingEmpty = false;
 
     String name = EXTRACTED_FUN_BASENAME + (anonymous_counter++);
-
+    
     // Create a new entity for the extracted function.
     ExtractedFunction new_entity = new ExtractedFunction(name, context);
     context.setExtractedEntity(new_entity);
@@ -533,10 +533,15 @@ public class ClosureExtractor extends CAstRewriterExt {
       theChildren.putAll(copyChildren(root.getChild(i), nodes, entity.getAllScopedEntities()));
 
     Rewrite rw = new Rewrite() {
+      @Override
       public CAstNode newRoot() { return newRoot; }
+      @Override
       public CAstControlFlowMap newCfg() { return theCfg; }
+      @Override
       public CAstSourcePositionMap newPos() { return theSource; }
+      @Override
       public CAstNodeTypeMap newTypes() { return theTypes; }
+      @Override
       public Map<CAstNode, Collection<CAstEntity>> newChildren() { return theChildren; }
     };
     new_entity.setRewrite(rw);

@@ -59,6 +59,7 @@ public class AllocationSiteInNodeFactory implements InstanceKeyFactory {
     this.classBased = new ClassBasedInstanceKeys(options, cha);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
     IClass type = options.getClassTargetSelector().getAllocatedTarget(node, allocation);
     if (type == null) {
@@ -94,6 +95,7 @@ public class AllocationSiteInNodeFactory implements InstanceKeyFactory {
     return key;
   }
 
+  @Override
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
     ArrayClass type = (ArrayClass) options.getClassTargetSelector().getAllocatedTarget(node, allocation);
     if (type == null) {
@@ -104,6 +106,7 @@ public class AllocationSiteInNodeFactory implements InstanceKeyFactory {
     return key;
   }
 
+  @Override
   public <T> InstanceKey getInstanceKeyForConstant(TypeReference type, T S) {
     if (options.getUseConstantSpecificKeys()) {
       return new ConstantKey<T>(S, cha.lookupClass(type));
@@ -112,10 +115,12 @@ public class AllocationSiteInNodeFactory implements InstanceKeyFactory {
     }
   }
 
+  @Override
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter pei, TypeReference type) {
     return classBased.getInstanceKeyForPEI(node, pei, type);
   }
 
+  @Override
   public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
     return classBased.getInstanceKeyForClassObject(type);
   }

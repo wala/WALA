@@ -37,30 +37,38 @@ public class JSTypeInference extends AstTypeInference {
     super(ir, cha, new PointType(cha.lookupClass(JavaScriptTypes.Boolean)), true);
   }
 
+  @Override
   protected void initialize() {
     class JSTypeOperatorFactory extends AstTypeOperatorFactory implements com.ibm.wala.cast.js.ssa.JSInstructionVisitor {
+      @Override
       public void visitJavaScriptInvoke(JavaScriptInvoke inst) {
         result = new DeclaredTypeOperator(new ConeType(cha.getRootClass()));
       }
 
+      @Override
       public void visitJavaScriptPropertyRead(JavaScriptPropertyRead inst) {
         result = new DeclaredTypeOperator(new ConeType(cha.getRootClass()));
       }
 
+      @Override
       public void visitTypeOf(JavaScriptTypeOfInstruction inst) {
         result = new DeclaredTypeOperator(new PointType(cha.lookupClass(JavaScriptTypes.String)));
       }
 
+      @Override
       public void visitJavaScriptInstanceOf(JavaScriptInstanceOf inst) {
         result = new DeclaredTypeOperator(new PointType(cha.lookupClass(JavaScriptTypes.Boolean)));
       }
 
+      @Override
       public void visitJavaScriptPropertyWrite(JavaScriptPropertyWrite inst) {
       }
 
+      @Override
       public void visitCheckRef(JavaScriptCheckReference instruction) {
       }
 
+      @Override
       public void visitWithRegion(JavaScriptWithRegion instruction) {
       }
 
@@ -81,6 +89,7 @@ public class JSTypeInference extends AstTypeInference {
         return new PointType(cha.lookupClass(typeRef));
       }
 
+      @Override
       public IVariable makeVariable(int vn) {
         if (ir.getSymbolTable().isStringConstant(vn)) {
           return new TypeVariable(make(JavaScriptTypes.String));
@@ -100,6 +109,7 @@ public class JSTypeInference extends AstTypeInference {
     init(ir, new JSTypeVarFactory(), new JSTypeOperatorFactory());
   }
 
+  @Override
   public TypeAbstraction getConstantType(int valueNumber) {
     SymbolTable st = ir.getSymbolTable();
     if (st.isStringConstant(valueNumber)) {

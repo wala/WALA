@@ -25,10 +25,12 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
 
   private BimodalMutableIntSet succNumbers;
 
+  @Override
   public IntSet getSuccNumbers() {
     return succNumbers;
   }
 
+  @Override
   public IntSet getPredNumbers() {
     return predNumbers;
   }
@@ -39,6 +41,7 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
    * @param eqNumber
    *          the equation number
    */
+  @Override
   public void addSucc(int eqNumber) {
     if (succNumbers == null) {
       succNumbers = new BimodalMutableIntSet();
@@ -54,6 +57,7 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
    * @param eqNumber
    *          the equation number
    */
+  @Override
   public void addPred(int eqNumber) {
     if (predNumbers == null) {
       predNumbers = new BimodalMutableIntSet();
@@ -95,15 +99,18 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
   /*
    * @see com.ibm.wala.util.graph.INodeWithNumberedEdges#removeAllIncidentEdges()
    */
+  @Override
   public void removeAllIncidentEdges() throws UnimplementedError {
     Assertions.UNREACHABLE("Implement me");
   }
 
+  @Override
   public void removeIncomingEdges() throws UnimplementedError {
     Assertions.UNREACHABLE("Implement me");
 
   }
 
+  @Override
   public void removeOutgoingEdges() throws UnimplementedError {
     Assertions.UNREACHABLE("Implement me");
 

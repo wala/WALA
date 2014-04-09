@@ -30,6 +30,7 @@ public class BasicFramework<T, V extends IVariable> implements IKilldallFramewor
   /* 
    * @see com.ibm.wala.dataflow.graph.IKilldallFramework#getFlowGraph()
    */
+  @Override
   public Graph<T> getFlowGraph() {
     return flowGraph;
   }
@@ -37,6 +38,7 @@ public class BasicFramework<T, V extends IVariable> implements IKilldallFramewor
   /*
    * @see com.ibm.wala.dataflow.graph.IKilldallFramework#getTransferFunctionMap()
    */
+  @Override
   public ITransferFunctionProvider<T, V> getTransferFunctionProvider() {
     return transferFunctionProvider;
   }

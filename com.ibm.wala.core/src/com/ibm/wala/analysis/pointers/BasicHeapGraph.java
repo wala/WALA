@@ -76,22 +76,27 @@ public class BasicHeapGraph extends HeapGraph {
 
     final OrdinalSetMapping<PointerKey> pointerKeys = getPointerKeys();
     final NumberedNodeManager<Object> nodeMgr = new NumberedNodeManager<Object>() {
+      @Override
       public Iterator<Object> iterator() {
         return new CompoundIterator<Object>(pointerKeys.iterator(), P.getInstanceKeyMapping().iterator());
       }
 
+      @Override
       public int getNumberOfNodes() {
         return pointerKeys.getSize() + P.getInstanceKeyMapping().getSize();
       }
 
+      @Override
       public void addNode(Object n) {
         Assertions.UNREACHABLE();
       }
 
+      @Override
       public void removeNode(Object n) {
         Assertions.UNREACHABLE();
       }
 
+      @Override
       public int getNumber(Object N) {
         if (N instanceof PointerKey) {
           return pointerKeys.getMappedIndex((PointerKey) N);
@@ -104,6 +109,7 @@ public class BasicHeapGraph extends HeapGraph {
         }
       }
 
+      @Override
       public Object getNode(int number) {
         if (number > pointerKeys.getMaximumIndex()) {
           return P.getInstanceKeyMapping().getMappedObject(number - pointerKeys.getSize());
@@ -112,14 +118,17 @@ public class BasicHeapGraph extends HeapGraph {
         }
       }
 
+      @Override
       public int getMaxNumber() {
         return getNumberOfNodes() - 1;
       }
 
+      @Override
       public boolean containsNode(Object n) {
         return getNumber(n) != -1;
       }
 
+      @Override
       public Iterator<Object> iterateNodes(IntSet s) {
         return new NumberedNodeIterator<Object>(s, this);
       }
@@ -127,6 +136,7 @@ public class BasicHeapGraph extends HeapGraph {
 
     final IBinaryNaturalRelation pred = computePredecessors(nodeMgr);
     final IntFunction<Object> toNode = new IntFunction<Object>() {
+      @Override
       public Object apply(int i) {
         return nodeMgr.getNode(i);
       }
@@ -134,6 +144,7 @@ public class BasicHeapGraph extends HeapGraph {
 
     this.G = new AbstractNumberedGraph<Object>() {
       private final NumberedEdgeManager<Object> edgeMgr = new NumberedEdgeManager<Object>() {
+        @Override
         public Iterator<Object> getPredNodes(Object N) {
           int n = nodeMgr.getNumber(N);
           IntSet p = pred.getRelated(n);
@@ -144,6 +155,7 @@ public class BasicHeapGraph extends HeapGraph {
           }
         }
 
+        @Override
         public IntSet getPredNodeNumbers(Object N) {
           int n = nodeMgr.getNumber(N);
           IntSet p = pred.getRelated(n);
@@ -154,11 +166,13 @@ public class BasicHeapGraph extends HeapGraph {
           }
         }
 
+        @Override
         public int getPredNodeCount(Object N) {
           int n = nodeMgr.getNumber(N);
           return pred.getRelatedCount(n);
         }
 
+        @Override
         public Iterator<Object> getSuccNodes(Object N) {
           int[] succ = computeSuccNodeNumbers(N, nodeMgr);
           if (succ == null) {
@@ -168,6 +182,7 @@ public class BasicHeapGraph extends HeapGraph {
           return new IntMapIterator<Object>(s.intIterator(), toNode);
         }
 
+        @Override
         public IntSet getSuccNodeNumbers(Object N) {
           int[] succ = computeSuccNodeNumbers(N, nodeMgr);
           if (succ == null) {
@@ -177,31 +192,38 @@ public class BasicHeapGraph extends HeapGraph {
           }
         }
         
+        @Override
         public int getSuccNodeCount(Object N) {
           int[] succ = computeSuccNodeNumbers(N, nodeMgr);
           return succ == null ? 0 : succ.length;
         }
 
+        @Override
         public void addEdge(Object src, Object dst) {
           Assertions.UNREACHABLE();
         }
 
+        @Override
         public void removeEdge(Object src, Object dst) {
           Assertions.UNREACHABLE();
         }
 
+        @Override
         public void removeAllIncidentEdges(Object node) {
           Assertions.UNREACHABLE();
         }
 
+        @Override
         public void removeIncomingEdges(Object node) {
           Assertions.UNREACHABLE();
         }
 
+        @Override
         public void removeOutgoingEdges(Object node) {
           Assertions.UNREACHABLE();
         }
 
+        @Override
         public boolean hasEdge(Object src, Object dst) {
           Assertions.UNREACHABLE();
           return false;
@@ -354,6 +376,7 @@ public class BasicHeapGraph extends HeapGraph {
    * sorts local pointers by node, then value number
    */
   private final class LocalPointerComparator implements Comparator<Object> {
+    @Override
     public int compare(Object arg1, Object arg2) {
       LocalPointerKey o1 = (LocalPointerKey) arg1;
       LocalPointerKey o2 = (LocalPointerKey) arg2;
@@ -368,6 +391,7 @@ public class BasicHeapGraph extends HeapGraph {
   /*
    * @see com.ibm.wala.util.graph.NumberedNodeManager#getNumber(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public int getNumber(Object N) {
     return G.getNumber(N);
   }
@@ -375,6 +399,7 @@ public class BasicHeapGraph extends HeapGraph {
   /*
    * @see com.ibm.wala.util.graph.NumberedNodeManager#getNode(int)
    */
+  @Override
   public Object getNode(int number) {
     return G.getNode(number);
   }
@@ -382,6 +407,7 @@ public class BasicHeapGraph extends HeapGraph {
   /*
    * @see com.ibm.wala.util.graph.NumberedNodeManager#getMaxNumber()
    */
+  @Override
   public int getMaxNumber() {
     return G.getMaxNumber();
   }
@@ -389,6 +415,7 @@ public class BasicHeapGraph extends HeapGraph {
   /*
    * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
    */
+  @Override
   public Iterator<Object> iterator() {
     return G.iterator();
   }
@@ -396,6 +423,7 @@ public class BasicHeapGraph extends HeapGraph {
   /*
    * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
    */
+  @Override
   public int getNumberOfNodes() {
     return G.getNumberOfNodes();
   }
@@ -403,6 +431,7 @@ public class BasicHeapGraph extends HeapGraph {
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public Iterator<Object> getPredNodes(Object N) {
     return G.getPredNodes(N);
   }
@@ -410,6 +439,7 @@ public class BasicHeapGraph extends HeapGraph {
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public int getPredNodeCount(Object N) {
     return G.getPredNodeCount(N);
   }
@@ -417,6 +447,7 @@ public class BasicHeapGraph extends HeapGraph {
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public Iterator<Object> getSuccNodes(Object N) {
     return G.getSuccNodes(N);
   }
@@ -424,6 +455,7 @@ public class BasicHeapGraph extends HeapGraph {
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public int getSuccNodeCount(Object N) {
     return G.getSuccNodeCount(N);
   }
@@ -431,6 +463,7 @@ public class BasicHeapGraph extends HeapGraph {
   /*
    * @see com.ibm.wala.util.graph.NodeManager#addNode(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public void addNode(Object n) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
@@ -438,23 +471,28 @@ public class BasicHeapGraph extends HeapGraph {
   /*
    * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public void removeNode(Object n) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
+  @Override
   public void addEdge(Object from, Object to) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
+  @Override
   public void removeEdge(Object from, Object to) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
+  @Override
   public boolean hasEdge(Object from, Object to) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return false;
   }
 
+  @Override
   public void removeAllIncidentEdges(Object node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
@@ -462,6 +500,7 @@ public class BasicHeapGraph extends HeapGraph {
   /*
    * @see com.ibm.wala.util.graph.NodeManager#containsNode(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public boolean containsNode(Object N) {
     return G.containsNode(N);
   }
@@ -492,19 +531,23 @@ public class BasicHeapGraph extends HeapGraph {
     return result.toString();
   }
 
+  @Override
   public void removeIncomingEdges(Object node) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
+  @Override
   public void removeOutgoingEdges(Object node) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
+  @Override
   public IntSet getSuccNodeNumbers(Object node) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
 
+  @Override
   public IntSet getPredNodeNumbers(Object node) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;

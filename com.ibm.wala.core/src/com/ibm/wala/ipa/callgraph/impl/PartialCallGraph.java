@@ -55,6 +55,7 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
    */
   public static PartialCallGraph make(final CallGraph cg, final Collection<CGNode> partialRoots, final Collection<CGNode> nodes) {
     Graph<CGNode> partialGraph = GraphSlicer.prune(cg, new Filter<CGNode>() {
+      @Override
       public boolean accepts(CGNode o) {
         return nodes.contains(o);
       }
@@ -71,6 +72,7 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
   public static PartialCallGraph make(CallGraph cg, Collection<CGNode> partialRoots) {
     final Set<CGNode> nodes = DFS.getReachableNodes(cg, partialRoots);
     Graph<CGNode> partialGraph = GraphSlicer.prune(cg, new Filter<CGNode>() {
+      @Override
       public boolean accepts(CGNode o) {
         return nodes.contains(o);
       }
@@ -79,14 +81,17 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
     return new PartialCallGraph(cg, partialRoots, partialGraph);
   }
 
+  @Override
   public CGNode getFakeRootNode() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public Collection<CGNode> getEntrypointNodes() {
     return partialRoots;
   }
 
+  @Override
   public CGNode getNode(IMethod method, Context C) {
     CGNode x = cg.getNode(method, C);
     if (x == null) {
@@ -95,6 +100,7 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
     return (containsNode(x) ? x : null);
   }
 
+  @Override
   public Set<CGNode> getNodes(MethodReference m) {
     Set<CGNode> result = HashSetFactory.make();
     for (Iterator xs = cg.getNodes(m).iterator(); xs.hasNext();) {
@@ -107,31 +113,38 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
     return result;
   }
 
+  @Override
   public IClassHierarchy getClassHierarchy() {
     return cg.getClassHierarchy();
   }
 
+  @Override
   public Iterator<CGNode> iterateNodes(IntSet nodes) {
     return new FilterIterator<CGNode>(cg.iterateNodes(nodes), new Filter() {
+      @Override
       public boolean accepts(Object o) {
         return containsNode((CGNode) o);
       }
     });
   }
 
+  @Override
   public int getMaxNumber() {
     return cg.getMaxNumber();
   }
 
+  @Override
   public CGNode getNode(int index) {
     CGNode n = cg.getNode(index);
     return (containsNode(n) ? n : null);
   }
 
+  @Override
   public int getNumber(CGNode n) {
     return (containsNode(n) ? cg.getNumber(n) : -1);
   }
 
+  @Override
   public IntSet getSuccNodeNumbers(CGNode node) {
     assert containsNode(node);
     MutableIntSet x = IntSetUtil.make();
@@ -145,6 +158,7 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
     return x;
   }
 
+  @Override
   public IntSet getPredNodeNumbers(CGNode node) {
     assert containsNode(node);
     MutableIntSet x = IntSetUtil.make();
@@ -158,14 +172,17 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
     return x;
   }
 
+  @Override
   public int getNumberOfTargets(CGNode node, CallSiteReference site) {
     return (containsNode(node) ? getPossibleTargets(node, site).size() : -1);
   }
 
+  @Override
   public Iterator<CallSiteReference> getPossibleSites(CGNode src, CGNode target) {
     return ((containsNode(src) && containsNode(target)) ? cg.getPossibleSites(src, target) : null);
   }
 
+  @Override
   public Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site) {
     if (!containsNode(node)) {
       return null;

@@ -31,6 +31,7 @@ public abstract class NullaryStatement<T extends IVariable> extends AbstractStat
    * 
    * @return true if the lhs value changed. false otherwise
    */
+  @Override
   public byte evaluate() {
     NullaryOperator<T> op = getOperator();
     return op.evaluate(lhs);
@@ -41,6 +42,7 @@ public abstract class NullaryStatement<T extends IVariable> extends AbstractStat
    * 
    * @return the lattice cell this equation computes
    */
+  @Override
   public T getLHS() {
     return lhs;
   }
@@ -50,6 +52,7 @@ public abstract class NullaryStatement<T extends IVariable> extends AbstractStat
    * @param cell the cell in question
    * @return true or false
    */
+  @Override
   public boolean hasVariable(T cell) {
     return lhs == cell;
   }
@@ -99,6 +102,7 @@ public abstract class NullaryStatement<T extends IVariable> extends AbstractStat
     return result;
   }
   
+  @Override
   public T[] getRHS() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }

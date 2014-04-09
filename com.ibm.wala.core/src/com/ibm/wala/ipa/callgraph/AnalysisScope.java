@@ -199,7 +199,7 @@ public class AnalysisScope {
    */
   public void addSourceFileToScope(ClassLoaderReference loader, File file, String fileName) throws IllegalArgumentException {
     List<Module> s = MapUtil.findOrCreateList(moduleMap, loader);
-    s.add(new SourceFileModule(file, fileName));
+    s.add(new SourceFileModule(file, fileName, null));
   }
 
   /**
@@ -208,7 +208,7 @@ public class AnalysisScope {
    */
   public void addClassFileToScope(ClassLoaderReference loader, File file) throws IllegalArgumentException, InvalidClassFileException {
     List<Module> s = MapUtil.findOrCreateList(moduleMap, loader);
-    s.add(new ClassFileModule(file));
+    s.add(new ClassFileModule(file, null));
   }
 
   /**

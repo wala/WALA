@@ -59,6 +59,7 @@ public abstract class FixedParametersLexicalInvokeInstruction
 
   protected abstract SSAInstruction copyInstruction(SSAInstructionFactory insts, int result[], int[] params, int exception, Access[] lexicalReads, Access[] lexicalWrites);
 
+  @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     int newParams[] = params;
     Access[] reads = lexicalReads;
@@ -104,6 +105,7 @@ public abstract class FixedParametersLexicalInvokeInstruction
     return copyInstruction(insts, newLvals, newParams, newExp, reads, writes);
   }
 
+  @Override
   public int getNumberOfParameters() {
     if (params == null) {
       return 0;
@@ -115,6 +117,7 @@ public abstract class FixedParametersLexicalInvokeInstruction
   /**
    * @see com.ibm.wala.ssa.Instruction#getUse(int)
    */
+  @Override
   public int getUse(int j) {
     if (j < getNumberOfParameters())
       return params[j];

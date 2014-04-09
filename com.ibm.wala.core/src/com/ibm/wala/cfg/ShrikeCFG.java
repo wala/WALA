@@ -95,6 +95,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
     return (o instanceof ShrikeCFG) && getMethod().equals(((ShrikeCFG) o).getMethod());
   }
 
+  @Override
   public IInstruction[] getInstructions() {
     try {
       return method.getInstructions();
@@ -217,6 +218,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
   /**
    * Return an instruction's basic block in the CFG given the index of the instruction in the CFG's instruction array.
    */
+  @Override
   public BasicBlock getBlockForInstruction(int index) {
     return getNode(instruction2Block[index]);
   }
@@ -232,6 +234,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
       this.startIndex = startIndex;
     }
 
+    @Override
     public boolean isCatchBlock() {
       return ShrikeCFG.this.isCatchBlock(getNumber());
     }
@@ -422,6 +425,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
       addExceptionalEdge(this, b);
     }
 
+    @Override
     public int getLastInstructionIndex() {
       if (this == entry() || this == exit()) {
         // these are the special end blocks
@@ -440,6 +444,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
       }
     }
 
+    @Override
     public int getFirstInstructionIndex() {
       return startIndex;
     }
@@ -452,6 +457,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
     /*
      * @see com.ibm.wala.cfg.BasicBlock#isExitBlock()
      */
+    @Override
     public boolean isExitBlock() {
       return this == ShrikeCFG.this.exit();
     }
@@ -459,6 +465,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
     /*
      * @see com.ibm.wala.cfg.BasicBlock#isEntryBlock()
      */
+    @Override
     public boolean isEntryBlock() {
       return this == ShrikeCFG.this.entry();
     }
@@ -466,6 +473,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
     /*
      * @see com.ibm.wala.cfg.BasicBlock#getMethod()
      */
+    @Override
     public IMethod getMethod() {
       return ShrikeCFG.this.getMethod();
     }
@@ -484,10 +492,12 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
     /*
      * @see com.ibm.wala.cfg.BasicBlock#getNumber()
      */
+    @Override
     public int getNumber() {
       return getGraphNodeId();
     }
 
+    @Override
     public Iterator<IInstruction> iterator() {
       return new ArrayIterator<IInstruction>(getInstructions(), getFirstInstructionIndex(), getLastInstructionIndex());
     }
@@ -518,6 +528,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
   /*
    * @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int)
    */
+  @Override
   public int getProgramCounter(int index) {
     try {
       return method.getBytecodeIndex(index);

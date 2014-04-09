@@ -27,6 +27,7 @@ import com.ibm.wala.cast.util.CAstPrinter;
 public class CAstImpl implements CAst {
   private int nextID = 0;
 
+  @Override
   public String makeUnique() {
     return "id" + (nextID++);
   }
@@ -45,14 +46,17 @@ public class CAstImpl implements CAst {
             + "]";
     }
 
+    @Override
     public int getKind() {
       return kind;
     }
 
+    @Override
     public Object getValue() {
       return null;
     }
 
+    @Override
     public CAstNode getChild(int n) {
       try {
         return cs[n];
@@ -61,14 +65,17 @@ public class CAstImpl implements CAst {
       }
     }
 
+    @Override
     public int getChildCount() {
       return cs.length;
     }
 
+    @Override
     public String toString() {
       return System.identityHashCode(this) + ":" + CAstPrinter.print(this);
     }
 
+    @Override
     public int hashCode() {
       int code = getKind() * (getChildCount() + 13);
       for (int i = 0; i < getChildCount(); i++) {
@@ -79,10 +86,12 @@ public class CAstImpl implements CAst {
     }
   }
 
+  @Override
   public CAstNode makeNode(final int kind, final CAstNode[] cs) {
     return new CAstNodeImpl(kind, cs);
   }
 
+  @Override
   public CAstNode makeNode(int kind, CAstNode c1, CAstNode[] cs) {
     CAstNode[] children = new CAstNode[cs.length + 1];
     children[0] = c1;
@@ -90,30 +99,37 @@ public class CAstImpl implements CAst {
     return makeNode(kind, children);
   }
 
+  @Override
   public CAstNode makeNode(int kind) {
     return makeNode(kind, new CAstNode[0]);
   }
 
+  @Override
   public CAstNode makeNode(int kind, CAstNode c1) {
     return makeNode(kind, new CAstNode[] { c1 });
   }
 
+  @Override
   public CAstNode makeNode(int kind, CAstNode c1, CAstNode c2) {
     return makeNode(kind, new CAstNode[] { c1, c2 });
   }
 
+  @Override
   public CAstNode makeNode(int kind, CAstNode c1, CAstNode c2, CAstNode c3) {
     return makeNode(kind, new CAstNode[] { c1, c2, c3 });
   }
 
+  @Override
   public CAstNode makeNode(int kind, CAstNode c1, CAstNode c2, CAstNode c3, CAstNode c4) {
     return makeNode(kind, new CAstNode[] { c1, c2, c3, c4 });
   }
 
+  @Override
   public CAstNode makeNode(int kind, CAstNode c1, CAstNode c2, CAstNode c3, CAstNode c4, CAstNode c5) {
     return makeNode(kind, new CAstNode[] { c1, c2, c3, c4, c5 });
   }
 
+  @Override
   public CAstNode makeNode(int kind, CAstNode c1, CAstNode c2, CAstNode c3, CAstNode c4, CAstNode c5, CAstNode c6) {
     return makeNode(kind, new CAstNode[] { c1, c2, c3, c4, c5, c6 });
   }
@@ -125,59 +141,73 @@ public class CAstImpl implements CAst {
       this.value = value;
     }
 
+    @Override
     public int getKind() {
       return CAstNode.CONSTANT;
     }
 
+    @Override
     public Object getValue() {
       return value;
     }
 
+    @Override
     public CAstNode getChild(int n) {
       throw new NoSuchElementException();
     }
 
+    @Override
     public int getChildCount() {
       return 0;
     }
 
+    @Override
     public String toString() {
       return "CAstValue: " + value;
     }
 
+    @Override
     public int hashCode() {
       return getKind() * toString().hashCode();
     }
   }
 
+  @Override
   public CAstNode makeConstant(final Object value) {
     return new CAstValueImpl(value);
   }
 
+  @Override
   public CAstNode makeConstant(boolean value) {
     return makeConstant(value ? Boolean.TRUE : Boolean.FALSE);
   }
 
+  @Override
   public CAstNode makeConstant(char value) {
     return makeConstant(new Character(value));
   }
 
+  @Override
   public CAstNode makeConstant(short value) {
     return makeConstant(new Short(value));
   }
 
+  @Override
   public CAstNode makeConstant(int value) {
     return makeConstant(new Integer(value));
   }
 
+  @Override
   public CAstNode makeConstant(long value) {
     return makeConstant(new Long(value));
   }
 
+  @Override
   public CAstNode makeConstant(float value) {
     return makeConstant(new Float(value));
   }
 
+  @Override
   public CAstNode makeConstant(double value) {
     return makeConstant(new Double(value));
   }

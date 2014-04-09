@@ -58,6 +58,7 @@ public class ScopeFileCallGraph {
    */
   public static void main(String[] args) throws IOException, ClassHierarchyException, IllegalArgumentException,
       CallGraphBuilderCancelException {
+    long start = System.currentTimeMillis();
     Properties p = CommandLine.parse(args);
     String scopeFile = p.getProperty("scopeFile");
     String entryClass = p.getProperty("entryClass");
@@ -76,13 +77,17 @@ public class ScopeFileCallGraph {
     Iterable<Entrypoint> entrypoints = entryClass != null ? makePublicEntrypoints(scope, cha, entryClass) : Util.makeMainEntrypoints(scope, cha, mainClass);
     options.setEntrypoints(entrypoints);
     // you can dial down reflection handling if you like
-    // options.setReflectionOptions(ReflectionOptions.NONE);
+//    options.setReflectionOptions(ReflectionOptions.NONE);
     AnalysisCache cache = new AnalysisCache();
     // other builders can be constructed with different Util methods
     CallGraphBuilder builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
+//    CallGraphBuilder builder = Util.makeNCFABuilder(2, options, cache, cha, scope);
+//    CallGraphBuilder builder = Util.makeVanillaNCFABuilder(2, options, cache, cha, scope);
     System.out.println("building call graph...");
     CallGraph cg = builder.makeCallGraph(options, null);
+    long end = System.currentTimeMillis();
     System.out.println("done");
+    System.out.println("took " + (end-start) + "ms");
     System.out.println(CallGraphStats.getStats(cg));
   }
 

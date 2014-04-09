@@ -48,10 +48,12 @@ public class Pair<T,U> {
     return new Iterator<Object>() {
       byte next = 1;
 
+      @Override
       public boolean hasNext() {
         return next > 0;
       }
 
+      @Override
       public Object next() {
         switch (next) {
           case 1 :
@@ -65,6 +67,7 @@ public class Pair<T,U> {
         }
       }
 
+      @Override
       public void remove() {
         Assertions.UNREACHABLE();
       }

@@ -32,10 +32,12 @@ public final class EmptyIntIterator implements IntIterator {
   private EmptyIntIterator() {
   }
 
+  @Override
   public boolean hasNext() {
     return false;
   }
 
+  @Override
   public int next() throws NoSuchElementException {
     throw new NoSuchElementException();
   }

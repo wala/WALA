@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package com.ibm.wala.cast.js.vis;
 
 import java.io.IOException;
@@ -24,9 +34,10 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.WalaException;
 
 public class JsViewerDriver extends JSCallGraphBuilderUtil {
-	public static void main(String args[]) throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, Error {
+	public static void main(String args[]) throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, Error, WalaException {
 
 		if (args.length != 1){
 			System.out.println("Usage: <URL of html page to analyze>");

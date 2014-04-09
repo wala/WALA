@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package com.ibm.wala.cast.js.ipa.callgraph;
 
 import java.util.ArrayList;
@@ -21,6 +31,7 @@ import com.ibm.wala.cast.util.CAstPattern;
 import com.ibm.wala.cast.util.CAstPattern.Segments;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.ControlFlowGraph;
+import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -59,6 +70,7 @@ public class ArgumentSpecialization {
       }
     }
     
+    @Override
     public DefUse getDU(CGNode node) {
       if (node.getMethod() instanceof Retranslatable) {
         return getAnalysisCache().getSSACache().findOrCreateDU(node.getMethod(), node.getContext(), options.getSSAOptions());
@@ -73,15 +85,18 @@ public class ArgumentSpecialization {
     private final int argumentCount;
 
     public static ContextKey ARGUMENT_COUNT = new ContextKey() {
+      @Override
       public String toString() {
         return "argument count key";
       }
     };
     
+    @Override
     public int hashCode() {
       return base.hashCode() + (argumentCount * 4073);
     }
     
+    @Override
     public boolean equals(Object o) {
       return 
         o.getClass() == this.getClass() && 
@@ -94,10 +109,12 @@ public class ArgumentSpecialization {
       this.base = base;
     }
     
+    @Override
     public ContextItem get(ContextKey name) {
       return (name == ARGUMENT_COUNT)? ContextItem.Value.make(argumentCount): base.get(name);
     }
 
+    @Override
     public String toString() {
       return base.toString() + "(nargs:" + argumentCount + ")";
     }
@@ -110,6 +127,7 @@ public class ArgumentSpecialization {
       this.base = base;
     }
 
+    @Override
     public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] actualParameters) {
       Context baseContext = base.getCalleeTarget(caller, site, callee, actualParameters);
       if (caller.getMethod() instanceof Retranslatable) {
@@ -130,6 +148,7 @@ public class ArgumentSpecialization {
       }
     }
 
+    @Override
     public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
       return base.getRelevantParameters(caller, site);
     }
@@ -291,7 +310,7 @@ public class ArgumentSpecialization {
 
             @Override
             protected void defineFunction(CAstEntity N, WalkContext definingContext, AbstractCFG cfg, SymbolTable symtab,
-                boolean hasCatchBlock, TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation LI,
+                boolean hasCatchBlock, Map<IBasicBlock,TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation LI,
                 DebuggingInformation debugInfo) {
               if (N == codeBodyEntity) {
                 specializedCode = myloader.makeCodeBodyCode(cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, LI, debugInfo, method.getDeclaringClass());

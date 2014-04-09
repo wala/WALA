@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package com.ibm.wala.cast.js.ipa.callgraph;
 
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
@@ -42,6 +52,7 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
     this.oneLevel = new OneLevelSiteContextSelector(base);
   }
 
+  @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     // 0 for function (synthetic apply), 1 for this (function being invoked), 2
     // for this arg of function being invoked,
@@ -67,6 +78,7 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
       this.isNonNullArray = ContextItem.Value.make(isNonNullArray);
     }
 
+    @Override
     public ContextItem get(ContextKey name) {
       if (APPLY_NON_NULL_ARGS.equals(name)) {
         return isNonNullArray;
@@ -107,6 +119,7 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
 
   }
 
+  @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     IClass declaringClass = callee.getDeclaringClass();
     IMethod method = declaringClass.getMethod(AstMethodReference.fnSelector);
@@ -121,7 +134,7 @@ public class JavaScriptFunctionApplyContextSelector implements ContextSelector {
             isNonNullArray = true;
           }
         }
-        if (USE_ONE_LEVEL)
+        if (USE_ONE_LEVEL && caller.getContext().get(APPLY_NON_NULL_ARGS) == null)
           baseCtxt = oneLevel.getCalleeTarget(caller, site, callee, receiver);
         return new ApplyContext(baseCtxt, isNonNullArray);
       } else if (USE_ONE_LEVEL && tn.equals(CALL_TYPE_NAME)) {

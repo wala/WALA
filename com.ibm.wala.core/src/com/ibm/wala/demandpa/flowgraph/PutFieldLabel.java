@@ -81,6 +81,7 @@ public class PutFieldLabel implements IFlowLabel {
     return true;
   }
 
+  @Override
   public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException("v == null");
@@ -93,10 +94,12 @@ public class PutFieldLabel implements IFlowLabel {
     return "putfield[" + field + "]";
   }
 
+  @Override
   public PutFieldBarLabel bar() {
     return PutFieldBarLabel.make(field);
   }
 
+  @Override
   public boolean isBarred() {
     return false;
   }

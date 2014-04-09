@@ -29,9 +29,11 @@ class Base {
     }
 }
 class Derived extends Base {
+    
     public void foo() {
 	super.foo();
     }
+    
     public String bar(int x) {
 	return Integer.toHexString(x);
     }

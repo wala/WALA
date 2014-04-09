@@ -46,6 +46,7 @@ public abstract class AbstractTypeInNode implements InstanceKeyWithNode {
   /**
    * @return the concrete type allocated
    */
+  @Override
   public IClass getConcreteType() {
     return type;
   }
@@ -53,6 +54,7 @@ public abstract class AbstractTypeInNode implements InstanceKeyWithNode {
   /**
    * @return the call graph node which contains this allocation
    */
+  @Override
   public CGNode getNode() {
     return node;
   }

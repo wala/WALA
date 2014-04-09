@@ -20,6 +20,7 @@ public class TestAjaxsltCallGraphShapeRhino extends TestAjaxsltCallGraphShape {
     justThisTest(TestAjaxsltCallGraphShapeRhino.class);
   }
 
+  @Override
   @Before
   public void setUp() {
     com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());

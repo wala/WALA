@@ -73,6 +73,9 @@ import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.CancelRuntimeException;
+import com.ibm.wala.util.MonitorUtil;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
@@ -138,6 +141,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     super(cha, options, cache, pointerKeyFactory);
   }
 
+  @Override
   protected boolean isConstantRef(SymbolTable symbolTable, int valueNumber) {
     if (valueNumber == -1) {
       return false;
@@ -151,10 +155,12 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   //
   // ///////////////////////////////////////////////////////////////////////////
 
+  @Override
   protected boolean useObjectCatalog() {
     return true;
   }
 
+  @Override
   protected boolean isUncataloguedField(IClass type, String fieldName) {
     if (!type.getReference().equals(JavaScriptTypes.Object)) {
       return true;
@@ -178,6 +184,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     assert f != null : "couldn't resolve " + varName;
     return getPointerKeyForInstanceField(globalObject, f);
   }
+  @Override
   protected ExplicitCallGraph createEmptyCallGraph(IClassHierarchy cha, AnalysisOptions options) {
     return new JSCallGraph(cha, options, getAnalysisCache());
   }
@@ -201,6 +208,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     return ti;
   }
 
+  @Override
   protected void addAssignmentsForCatchPointerKey(PointerKey exceptionVar, Set catchClasses, PointerKey e) {
     system.newConstraint(exceptionVar, assignOperator, e);
   }
@@ -210,34 +218,42 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       super(vn);
     }
 
+    @Override
     public void visitBinaryOp(final SSABinaryOpInstruction instruction) {
       bingo = true;
     }
 
+    @Override
     public void visitJavaScriptInvoke(JavaScriptInvoke instruction) {
       bingo = true;
     }
 
+    @Override
     public void visitJavaScriptPropertyRead(JavaScriptPropertyRead instruction) {
       bingo = true;
     }
 
+    @Override
     public void visitJavaScriptPropertyWrite(JavaScriptPropertyWrite instruction) {
       bingo = true;
     }
 
+    @Override
     public void visitTypeOf(JavaScriptTypeOfInstruction inst) {
       bingo = true;
     }
 
+    @Override
     public void visitJavaScriptInstanceOf(JavaScriptInstanceOf instruction) {
       bingo = true;
     }
 
+    @Override
     public void visitCheckRef(JavaScriptCheckReference instruction) {
 
     }
 
+    @Override
     public void visitWithRegion(JavaScriptWithRegion instruction) {
 
     }
@@ -253,6 +269,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     }
   }
 
+  @Override
   protected InterestingVisitor makeInterestingVisitor(CGNode node, int vn) {
     return new JSInterestingVisitor(vn);
   }
@@ -277,30 +294,37 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
         super(analysis, lpk);
       }
 
+      @Override
       public void visitJavaScriptInvoke(JavaScriptInvoke instruction) {
 
       }
 
+      @Override
       public void visitTypeOf(JavaScriptTypeOfInstruction instruction) {
 
       }
 
+      @Override
       public void visitJavaScriptPropertyRead(JavaScriptPropertyRead instruction) {
 
       }
 
+      @Override
       public void visitJavaScriptPropertyWrite(JavaScriptPropertyWrite instruction) {
 
       }
 
+      @Override
       public void visitJavaScriptInstanceOf(JavaScriptInstanceOf instruction) {
 
       }
 
+      @Override
       public void visitCheckRef(JavaScriptCheckReference instruction) {
 
       }
 
+      @Override
       public void visitWithRegion(JavaScriptWithRegion instruction) {
 
       }
@@ -335,13 +359,16 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     };
 
+    @Override
     protected ImplicitPointsToSetVisitor makeImplicitPointsToVisitor(LocalPointerKey lpk) {
       return new JSImplicitPointsToSetVisitor(this, lpk);
     }
   };
 
+  @Override
   protected PropagationSystem makeSystem(AnalysisOptions options) {
     return new PropagationSystem(callGraph, pointerKeyFactory, instanceKeyFactory) {
+      @Override
       public PointerAnalysis makePointerAnalysis(PropagationCallGraphBuilder builder) {
         return new JSPointerAnalysisImpl(builder, cg, pointsToMap, instanceKeys, pointerKeyFactory, instanceKeyFactory);
       }
@@ -354,6 +381,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   //
   // ///////////////////////////////////////////////////////////////////////////
 
+  @Override
   protected JSConstraintVisitor makeVisitor(CGNode node) {
     if (AstSSAPropagationCallGraphBuilder.DEBUG_PROPERTIES) {
       final IMethod method = node.getMethod();
@@ -384,10 +412,12 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       super(builder, node);
     }
 
+    @Override
     protected JSSSAPropagationCallGraphBuilder getBuilder() {
       return (JSSSAPropagationCallGraphBuilder) builder;
     }
 
+    @Override
     public void visitUnaryOp(SSAUnaryOpInstruction inst) {
       if (inst.getOpcode() == IUnaryOpInstruction.Operator.NEG) {
         addLvalTypeKeyConstraint(inst, JavaScriptTypes.Boolean);
@@ -408,19 +438,23 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       system.newConstraint(lk, key);
     }
 
+    @Override
     public void visitIsDefined(AstIsDefinedInstruction inst) {
       addLvalTypeKeyConstraint(inst, JavaScriptTypes.Boolean);
 
     }
 
+    @Override
     public void visitJavaScriptInstanceOf(JavaScriptInstanceOf inst) {
       addLvalTypeKeyConstraint(inst, JavaScriptTypes.Boolean);
     }
 
+    @Override
     public void visitEachElementHasNext(EachElementHasNextInstruction inst) {
       addLvalTypeKeyConstraint(inst, JavaScriptTypes.Boolean);
     }
 
+    @Override
     public void visitTypeOf(JavaScriptTypeOfInstruction instruction) {
       addLvalTypeKeyConstraint(instruction, JavaScriptTypes.String);
     }
@@ -473,10 +507,12 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     }
 
+    @Override
     public void visitBinaryOp(final SSABinaryOpInstruction instruction) {
       handleBinaryOp(instruction, node, symbolTable, du);
     }
 
+    @Override
     public void visitJavaScriptPropertyRead(JavaScriptPropertyRead instruction) {
       if (AstSSAPropagationCallGraphBuilder.DEBUG_PROPERTIES) {
         Position instructionPosition = getInstructionPosition(instruction);
@@ -500,6 +536,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       return null;
     }
 
+    @Override
     public void visitJavaScriptPropertyWrite(JavaScriptPropertyWrite instruction) {
       if (AstSSAPropagationCallGraphBuilder.DEBUG_PROPERTIES) {
         Position instructionPosition = getInstructionPosition(instruction);
@@ -510,6 +547,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       newFieldWrite(node, instruction.getUse(0), instruction.getUse(1), instruction.getUse(2));
     }
 
+    @Override
     public void visitJavaScriptInvoke(JavaScriptInvoke instruction) {
       if (instruction.getDeclaredTarget().equals(JavaScriptMethods.dispatchReference)) {
         handleJavascriptDispatch(instruction);
@@ -614,6 +652,11 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
               rhs.getValue().foreach(new IntSetAction() {
                 @Override
                 public void act(int x) {
+                  try {
+                    MonitorUtil.throwExceptionIfCanceled(getBuilder().monitor);
+                  } catch (CancelException e) {
+                    throw new CancelRuntimeException(e);
+                  }
                   InstanceKey ik = system.getInstanceKey(x);
                   handleJavascriptDispatch(instruction, ik);
                 }
@@ -667,14 +710,17 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           return instruction;
         }
 
+        @Override
         public String toString() {
           return "BinOp: " + getInstruction();
         }
 
+        @Override
         public int hashCode() {
           return 17 * getInstruction().getUse(0) * getInstruction().getUse(1);
         }
 
+        @Override
         public boolean equals(Object o) {
           if (o instanceof BinaryOperator) {
             BinaryOperator op = (BinaryOperator) o;
@@ -696,6 +742,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
             } else {
               final Set<InstanceKey> temp = HashSetFactory.make();
               v.getValue().foreach(new IntSetAction() {
+                @Override
                 public void act(int keyIndex) {
                   temp.add(system.getInstanceKey(keyIndex));
                 }
@@ -720,6 +767,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           }
         }
 
+        @Override
         public byte evaluate(PointsToSetVariable lhs, final PointsToSetVariable[] rhs) {
           boolean doDefault = false;
           byte changed = NOT_CHANGED;
@@ -732,6 +780,11 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
               if (isStringConstant(iks1[i])) {
                 for (int j = 0; j < iks2.length; j++) {
                   if (isStringConstant(iks2[j])) {
+                    try {
+                      MonitorUtil.throwExceptionIfCanceled(builder.monitor);
+                    } catch (CancelException e) {
+                      throw new CancelRuntimeException(e);
+                    }
                     String v1 = (String) ((ConstantKey) iks1[i]).getValue();
                     String v2 = (String) ((ConstantKey) iks2[j]).getValue();
                     if (v1.indexOf(v2) == -1 && v2.indexOf(v1) == -1) {
@@ -757,6 +810,11 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           if (doDefault) {
               for (int i = 0; i < iks1.length; i++) {
                 for (int j = 0; j < iks2.length; j++) {
+                  try {
+                    MonitorUtil.throwExceptionIfCanceled(builder.monitor);
+                  } catch (CancelException e) {
+                    throw new CancelRuntimeException(e);
+                  }
                   if (handleBinaryOperatorArgs(iks1[i], iks2[j])) {
                     changed = CHANGED;
                   }
@@ -805,11 +863,13 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       }
     }
 
+    @Override
     public void visitCheckRef(JavaScriptCheckReference instruction) {
       // TODO Auto-generated method stub
 
     }
 
+    @Override
     public void visitWithRegion(JavaScriptWithRegion instruction) {
       // TODO Auto-generated method stub
 
@@ -1018,6 +1078,11 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     } else {
       PointerKey EA = getPointerKeyForLocal(caller, instruction.getDef(1));
       system.newConstraint(EA, assignOperator, EF);
-    }
+    }  
+  }
+
+  @Override
+  protected boolean sameMethod(CGNode opNode, String definingMethod) {
+    return definingMethod.equals(opNode.getMethod().getReference().getDeclaringClass().getName().toString());
   }
 }

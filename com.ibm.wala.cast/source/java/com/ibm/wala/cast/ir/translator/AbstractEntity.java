@@ -21,16 +21,19 @@ public abstract class AbstractEntity implements CAstEntity {
 
   private final Map<CAstNode, Collection<CAstEntity>> scopedEntities = HashMapFactory.make();
 
+  @Override
   public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
     return scopedEntities;
   }
 
+  @Override
   public String getSignature() {
     Assertions.UNREACHABLE();
     return null;
   }
 
   
+  @Override
   public Collection<CAstAnnotation> getAnnotations() {
     return null;
   }
@@ -39,10 +42,12 @@ public abstract class AbstractEntity implements CAstEntity {
     sourcePosition = pos;
   }
 
+  @Override
   public Position getPosition() {
     return sourcePosition;
   }
 
+  @Override
   public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
     if (scopedEntities.containsKey(construct)) {
       return scopedEntities.get(construct).iterator();

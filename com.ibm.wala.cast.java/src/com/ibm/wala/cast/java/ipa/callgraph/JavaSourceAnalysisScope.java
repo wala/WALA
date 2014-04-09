@@ -49,6 +49,7 @@ public class JavaSourceAnalysisScope extends AnalysisScope {
     return SOURCE;
   }
   
+  @Override
   public void addToScope(ClassLoaderReference loader, Module m) {
     if (m instanceof SourceDirectoryTreeModule && loader.equals(ClassLoaderReference.Application)) {
       super.addToScope(SOURCE, m);

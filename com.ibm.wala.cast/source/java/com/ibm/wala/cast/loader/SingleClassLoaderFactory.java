@@ -28,6 +28,7 @@ public abstract class SingleClassLoaderFactory implements ClassLoaderFactory {
    */
   private IClassLoader THE_LOADER = null;
 
+  @Override
   public IClassLoader getLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, AnalysisScope scope) {
     if (THE_LOADER == null) {
       THE_LOADER = makeTheLoader(cha);

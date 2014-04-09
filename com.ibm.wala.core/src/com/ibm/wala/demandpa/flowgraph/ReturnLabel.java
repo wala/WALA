@@ -49,6 +49,7 @@ public class ReturnLabel extends CallLabel {
     return new ReturnLabel(callSite);
   }
 
+  @Override
   public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException("v == null");
@@ -61,10 +62,12 @@ public class ReturnLabel extends CallLabel {
     return "return[" + callSite + "]";
   }
 
+  @Override
   public ReturnBarLabel bar() {
     return ReturnBarLabel.make(callSite);
   }
 
+  @Override
   public boolean isBarred() {
     return false;
   }

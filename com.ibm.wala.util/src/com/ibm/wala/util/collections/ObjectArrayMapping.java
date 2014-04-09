@@ -40,6 +40,7 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
     }
   }
 
+  @Override
   public T getMappedObject(int n) throws NoSuchElementException {
     try {
       return array[n];
@@ -48,6 +49,7 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
     }
   }
 
+  @Override
   public int getMappedIndex(Object o) {
     if (map.get(o) == null) {
       return -1;
@@ -55,23 +57,28 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
     return map.get(o).intValue();
   }
 
+  @Override
   public boolean hasMappedIndex(Object o) {
     return map.get(o) != null;
   }
 
+  @Override
   public Iterator<T> iterator() {
     return map.keySet().iterator();
   }
 
+  @Override
   public int add(Object o) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return 0;
   }
 
+  @Override
   public int getMaximumIndex() {
     return array.length - 1;
   }
 
+  @Override
   public int getSize() {
     return map.size();
   }

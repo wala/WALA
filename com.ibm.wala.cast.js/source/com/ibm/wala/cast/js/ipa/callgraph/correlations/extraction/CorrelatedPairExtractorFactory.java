@@ -23,6 +23,7 @@ import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.rewrite.CAstBasicRewriter.NoKey;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 
 public class CorrelatedPairExtractorFactory implements CAstRewriterFactory<NodePos, NoKey> {
@@ -32,10 +33,15 @@ public class CorrelatedPairExtractorFactory implements CAstRewriterFactory<NodeP
     this(new CorrelationFinder(translatorFactory).findCorrelatedAccesses(entryPoint));
   }
   
+  public CorrelatedPairExtractorFactory(JavaScriptTranslatorFactory translatorFactory, SourceModule[] scripts) throws ClassHierarchyException, IOException {
+    this(new CorrelationFinder(translatorFactory).findCorrelatedAccesses(scripts));
+  }
+  
   public CorrelatedPairExtractorFactory(Map<IMethod, CorrelationSummary> summaries) {
     this.summaries = summaries;
   }
 
+  @Override
   public ClosureExtractor createCAstRewriter(CAst ast) {
     ExtractionPolicyFactory policyFactory = new ExtractionPolicyFactory() {
       @Override

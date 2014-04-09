@@ -54,7 +54,7 @@ public class CAstCallGraphUtil {
 
     assert hackedName.endsWith(scriptName) : scriptName + " does not match file " + script.getFile();
 
-    return new SourceFileModule(scriptFile, scriptName);
+    return new SourceFileModule(scriptFile, scriptName, null);
   }
 
   public static AnalysisScope makeScope(String[] files, SingleClassLoaderFactory loaders, Language language) throws IOException {

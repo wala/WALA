@@ -11,6 +11,7 @@
 package com.ibm.wala.util.io;// 5724-D15
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +30,7 @@ import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.JarStreamModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.NestedJarFileModule;
+import com.ibm.wala.classLoader.ResourceJarFileModule;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -37,7 +39,7 @@ import com.ibm.wala.util.debug.Assertions;
 public class FileProvider {
 
 
-  private final static int DEBUG_LEVEL = 0;
+  private final static int DEBUG_LEVEL = Integer.parseInt(System.getProperty("wala.debug.file", "0"));
   
   /**
    * @param fileName
@@ -113,7 +115,8 @@ public class FileProvider {
   }
 
   /**
-   * @throws FileNotFoundException
+   * First tries to read fileName from the ClassLoader loader.  If unsuccessful, attempts to read file from
+   * the file system.  If that fails, throws a {@link FileNotFoundException}
    */
   public InputStream getInputStreamFromClassLoader(String fileName, ClassLoader loader) throws FileNotFoundException {
     if (loader == null) {
@@ -124,6 +127,12 @@ public class FileProvider {
     }
     InputStream is = loader.getResourceAsStream(fileName);
     if (is == null) {
+      // couldn't load it from the class loader. try again from the
+      // system classloader
+      File f = new File(fileName);
+      if (f.exists()) {
+        return new FileInputStream(f);
+      }
       throw new FileNotFoundException(fileName);
     }
     return is;
@@ -161,6 +170,8 @@ public class FileProvider {
       JarEntry entry = jc.getJarEntry();
       JarFileModule parent = new JarFileModule(f);
       return new NestedJarFileModule(parent, entry);
+    } else if (url.getProtocol().equals("rsrc")) {
+      return new ResourceJarFileModule(url);
 /** BEGIN Custom change: try to load from input stream as fallback */
     } else if (url.getProtocol().equals("file")) {
       String filePath = filePathFromURL(url);

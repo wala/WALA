@@ -66,6 +66,7 @@ public class BypassClassTargetSelector implements ClassTargetSelector {
    * @see com.ibm.wala.ipa.callgraph.ClassTargetSelector#getAllocatedTarget(com.ibm.wala.ipa.callgraph.CGNode,
    * com.ibm.wala.classLoader.NewSiteReference)
    */
+  @Override
   public IClass getAllocatedTarget(CGNode caller, NewSiteReference site) {
 
     if (site == null) {

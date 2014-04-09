@@ -290,6 +290,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * @return true if the add succeeded; false if it failed for some reason
    * @throws IllegalArgumentException if klass is null
    */
+  @Override
   public boolean addClass(IClass klass) {
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");
@@ -389,7 +390,8 @@ public class ClassHierarchy implements IClassHierarchy {
    * @return the set of IMethods that this call can resolve to.
    * @throws IllegalArgumentException if ref is null
    */
-  public Collection<IMethod> getPossibleTargets(MethodReference ref) {
+  @Override
+  public Set<IMethod> getPossibleTargets(MethodReference ref) {
     if (ref == null) {
       throw new IllegalArgumentException("ref is null");
     }
@@ -437,6 +439,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * @param ref method reference
    * @return the set of IMethods that this call can resolve to.
    */
+  @Override
   public Set<IMethod> getPossibleTargets(IClass declaredClass, MethodReference ref) {
 
     if (ref.getName().equals(MethodReference.initAtom)) {
@@ -504,6 +507,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * @return IMethod, or null if no appropriate receiver is found.
    * @throws IllegalArgumentException if m is null
    */
+  @Override
   public IMethod resolveMethod(MethodReference m) {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
@@ -520,6 +524,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * @return the canonical IField that represents a given field , or null if none found
    * @throws IllegalArgumentException if f is null
    */
+  @Override
   public IField resolveField(FieldReference f) {
     if (f == null) {
       throw new IllegalArgumentException("f is null");
@@ -536,6 +541,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * @throws IllegalArgumentException if f is null
    * @throws IllegalArgumentException if klass is null
    */
+  @Override
   public IField resolveField(IClass klass, FieldReference f) {
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");
@@ -554,6 +560,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * @return Method resolved method abstraction
    * @throws IllegalArgumentException if receiverClass is null
    */
+  @Override
   public IMethod resolveMethod(IClass receiverClass, Selector selector) {
     if (receiverClass == null) {
       throw new IllegalArgumentException("receiverClass is null");
@@ -724,6 +731,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
   }
 
+  @Override
   public ClassLoaderFactory getFactory() {
     return factory;
   }
@@ -731,6 +739,7 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * @throws IllegalArgumentException if A is null
    */
+  @Override
   public IClass getLeastCommonSuperclass(IClass a, IClass b) {
     assert (a.getClassLoader().getLanguage().equals(b.getClassLoader().getLanguage()));
     Language lang = a.getClassLoader().getLanguage();
@@ -789,6 +798,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * @see com.ibm.wala.ipa.cha.IClassHierarchy#getLeastCommonSuperclass(com.ibm.wala.types.TypeReference,
    * com.ibm.wala.types.TypeReference)
    */
+  @Override
   public TypeReference getLeastCommonSuperclass(TypeReference a, TypeReference b) {
     if (a == null) {
       throw new IllegalArgumentException("a is null");
@@ -816,6 +826,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * @return the {@link IClass} for a if found; null if can't find the class.
    * @throws IllegalArgumentException if A is null
    */
+  @Override
   public IClass lookupClass(TypeReference a) {
     if (a == null) {
       throw new IllegalArgumentException("a is null");
@@ -882,6 +893,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * 
    * @throws IllegalArgumentException if c is null
    */
+  @Override
   public boolean isSubclassOf(IClass c, IClass t) {
     if (c == null) {
       throw new IllegalArgumentException("c is null");
@@ -947,6 +959,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * 
    * @return true iff i is an interface and c is a class that implements i, or c is an interface that extends i.
    */
+  @Override
   public boolean implementsInterface(IClass c, IClass i) {
     if (i == null) {
       throw new IllegalArgumentException("Cannot ask implementsInterface with i == null");
@@ -974,6 +987,7 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * Return set of all subclasses of type in the Class Hierarchy TODO: Tune this implementation. Consider caching if necessary.
    */
+  @Override
   public Collection<IClass> computeSubClasses(TypeReference type) {
     IClass t = lookupClass(type);
     if (t == null) {
@@ -1000,6 +1014,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * 
    * kind of ugly. a better scheme?
    */
+  @Override
   public Collection<TypeReference> getJavaLangErrorTypes() {
     if (subTypeRefsOfError == null) {
       computeSubClasses(TypeReference.JavaLangError);
@@ -1017,6 +1032,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * 
    * kind of ugly. a better scheme?
    */
+  @Override
   public Collection<TypeReference> getJavaLangRuntimeExceptionTypes() {
     if (runtimeExceptionTypeRefs == null) {
       computeSubClasses(TypeReference.JavaLangRuntimeException);
@@ -1049,6 +1065,7 @@ public class ClassHierarchy implements IClassHierarchy {
     return result;
   }
 
+  @Override
   public boolean isInterface(TypeReference type) {
     IClass T = lookupClass(type);
     assert T != null : "Null lookup for " + type;
@@ -1061,6 +1078,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * @param type an interface
    * @return Set of IClass that represent implementors of the interface
    */
+  @Override
   public Set<IClass> getImplementors(TypeReference type) {
     IClass T = lookupClass(type);
     Set<IClass> result = implementors.get(T);
@@ -1070,8 +1088,10 @@ public class ClassHierarchy implements IClassHierarchy {
     return Collections.unmodifiableSet(result);
   }
 
+  @Override
   public Iterator<IClass> iterator() {
     Function<Node, IClass> toClass = new Function<Node, IClass>() {
+      @Override
       public IClass apply(Node n) {
         return n.klass;
       }
@@ -1082,14 +1102,17 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * @return The number of classes present in the class hierarchy.
    */
+  @Override
   public int getNumberOfClasses() {
     return map.keySet().size();
   }
 
+  @Override
   public IClassLoader[] getLoaders() {
     return loaders;
   }
 
+  @Override
   public IClassLoader getLoader(ClassLoaderReference loaderRef) {
     for (int i = 0; i < loaders.length; i++) {
       if (loaders[i].getReference().equals(loaderRef)) {
@@ -1100,6 +1123,7 @@ public class ClassHierarchy implements IClassHierarchy {
     return null;
   }
 
+  @Override
   public AnalysisScope getScope() {
     return scope;
   }
@@ -1108,6 +1132,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * @return the number of classes that immediately extend klass. if klass is an array class A[][]...[], we return number of
    *         immediate subclasses of A. If A is primitive, we return 0.
    */
+  @Override
   public int getNumberOfImmediateSubclasses(IClass klass) {
     if (klass.isArrayClass()) {
       IClass innermost = getInnermostTypeOfArrayClass(klass);
@@ -1122,11 +1147,13 @@ public class ClassHierarchy implements IClassHierarchy {
    * @return the classes that immediately extend klass. if klass is an array class A[][]...[], we return array classes B[][]...[]
    *         (same dimensionality) where B is an immediate subclass of A. If A is primitive, we return the empty set.
    */
+  @Override
   public Collection<IClass> getImmediateSubclasses(IClass klass) {
     if (klass.isArrayClass()) {
       return getImmediateArraySubclasses((ArrayClass)klass);
     }
     Function<Node, IClass> node2Class = new Function<Node, IClass>() {
+      @Override
       public IClass apply(Node n) {
         return n.klass;
       }
@@ -1223,10 +1250,12 @@ public class ClassHierarchy implements IClassHierarchy {
     return new ClassHierarchy(scope, factory, language, monitor);
   }
 
+  @Override
   public IClass getRootClass() {
     return root.getJavaClass();
   }
 
+  @Override
   public boolean isRootClass(IClass c) throws IllegalArgumentException {
     if (c == null) {
       throw new IllegalArgumentException("c == null");
@@ -1234,6 +1263,7 @@ public class ClassHierarchy implements IClassHierarchy {
     return c.equals(root.getJavaClass());
   }
 
+  @Override
   public int getNumber(IClass c) {
     return map.get(c.getReference()).left;
   }
@@ -1271,6 +1301,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * @throws IllegalArgumentException if c1 is null
    * @throws IllegalArgumentException if c2 is null
    */
+  @Override
   public boolean isAssignableFrom(IClass c1, IClass c2) {
     if (c2 == null) {
       throw new IllegalArgumentException("c2 is null");

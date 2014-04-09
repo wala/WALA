@@ -10,6 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.html;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -19,12 +20,14 @@ import java.util.Set;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
+import com.ibm.wala.util.collections.Pair;
 
 public class WebUtil { 
 
   public static final String preamble = "preamble.js";
 
   private static IHtmlParserFactory factory = new IHtmlParserFactory() {
+    @Override
     public IHtmlParser getParser() {
       return new JerichoHtmlParser();
     }
@@ -34,10 +37,19 @@ public class WebUtil {
     WebUtil.factory = factory;
   }
 
-  public static Set<MappedSourceModule> extractScriptFromHTML(URL url) throws Error {
+  /**
+   * 
+   * @param url
+   * @return a pair (S,F), where S is a set of extracted sources, and F is the
+   *         temp file holding the combined sources (or <code>null</code> if no
+   *         such file exists)
+   * @throws Error
+   */
+  public static Pair<Set<MappedSourceModule>,File> extractScriptFromHTML(URL url) throws Error {
     try {
       JSSourceExtractor extractor = new DefaultSourceExtractor();
-      return extractor.extractSources(url, factory.getParser(), new IdentityUrlResolver());
+      Set<MappedSourceModule> sources = extractor.extractSources(url, factory.getParser(), new IdentityUrlResolver());
+      return Pair.make(sources, extractor.getTempFile());
     } catch (IOException e) {
       throw new RuntimeException("trouble with " + url, e);
     }

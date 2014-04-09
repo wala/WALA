@@ -19,12 +19,9 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 
-import com.ibm.wala.cast.ir.translator.AstTranslator;
-import com.ibm.wala.cast.js.ipa.callgraph.ForInContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptFunctionDotCallTargetSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.RecursionCheckContextSelector;
-import com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction.CorrelatedPairExtractorFactory;
 import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil;
 import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil.CGBuilderType;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
@@ -75,12 +72,10 @@ public class HTMLCGBuilder {
 	 *          the HTML page to analyse, can either be a path to a local file or a URL
 	 * @param timeout
 	 *          analysis timeout in seconds, -1 means no timeout
-	 * @param automated_extraction
-	 * 			whether to automatically extract correlated pairs
 	 * @throws IOException 
 	 * @throws ClassHierarchyException 
 	 */
-	public static CGBuilderResult buildHTMLCG(String src, int timeout, boolean automated_extraction, CGBuilderType builderType) 
+	public static CGBuilderResult buildHTMLCG(String src, int timeout, CGBuilderType builderType) 
 			throws ClassHierarchyException, IOException {
 		CGBuilderResult res = new CGBuilderResult();
 		URL url = null;
@@ -90,20 +85,13 @@ public class HTMLCGBuilder {
 			Assert.fail("Could not find page to analyse: " + src);
 		}
 		com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
-		if(automated_extraction)
-			com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setPreprocessor(new CorrelatedPairExtractorFactory(new CAstRhinoTranslatorFactory(), url));
 		JSCFABuilder builder = null;
 		try {
 			builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url, builderType);
-			builder.setContextSelector(new ForInContextSelector(2, builder.getContextSelector()));
-			builder.setContextSelector(new ForInContextSelector(3, builder.getContextSelector()));
 			// TODO we need to find a better way to do this ContextSelector delegation;
 			// the code below belongs somewhere else!!!
 			// the bound of 4 is what is needed to pass our current framework tests
-			if (AstTranslator.NEW_LEXICAL) {
-//				builder.setContextSelector(new RecursionBoundContextSelector(builder.getContextSelector(), 4));
-				builder.setContextSelector(new RecursionCheckContextSelector(builder.getContextSelector()));
-			}
+			builder.setContextSelector(new RecursionCheckContextSelector(builder.getContextSelector()));
 			ProgressMaster master = ProgressMaster.make(new NullProgressMonitor());
 			if (timeout > 0) {
 				master.setMillisPerWorkItem(timeout * 1000);
@@ -191,7 +179,7 @@ public class HTMLCGBuilder {
 		JavaScriptFunctionDotCallTargetSelector.WARN_ABOUT_IMPRECISE_CALLGRAPH = false;
 		
 		// build call graph
-		CGBuilderResult res = buildHTMLCG(src, timeout, true, AstTranslator.NEW_LEXICAL ? CGBuilderType.ONE_CFA_PRECISE_LEXICAL : CGBuilderType.ZERO_ONE_CFA);
+		CGBuilderResult res = buildHTMLCG(src, timeout, CGBuilderType.ONE_CFA);
 		
 		if(res.construction_time == -1)
 			System.out.println("TIMED OUT");

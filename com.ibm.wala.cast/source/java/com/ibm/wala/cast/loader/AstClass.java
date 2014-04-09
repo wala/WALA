@@ -56,30 +56,37 @@ abstract public class AstClass implements IClass, ClassConstants {
     this.typeReference = TypeReference.findOrCreate(loader.getReference(), typeName);
   }
 
+  @Override
   public boolean isInterface() {
     return (modifiers & ACC_INTERFACE) != 0;
   }
 
+  @Override
   public boolean isAbstract() {
     return (modifiers & ACC_ABSTRACT) != 0;
   }
 
+  @Override
   public boolean isPublic() {
     return (modifiers & ACC_PUBLIC) != 0;
   }
   
+  @Override
   public boolean isPrivate() {
     return (modifiers & ACC_PRIVATE) != 0;
   }
 
+  @Override
   public boolean isReferenceType() {
     return true;
   }
 
+  @Override
   public boolean isArrayClass() {
     return false;
   }
 
+  @Override
   public int getModifiers() {
     return modifiers;
   }
@@ -92,26 +99,32 @@ abstract public class AstClass implements IClass, ClassConstants {
     return sourcePosition.getURL();
   }
 
+  @Override
   public String getSourceFileName() {
     return sourcePosition.getURL().getFile();
   }
 
+  @Override
   public InputStream getSource() {
     return null;
   }
 
+  @Override
   public TypeName getName() {
     return typeName;
   }
 
+  @Override
   public TypeReference getReference() {
     return typeReference;
   }
 
+  @Override
   public IClassLoader getClassLoader() {
     return loader;
   }
 
+  @Override
   public abstract IClass getSuperclass();
 
   private Collection<IClass> gatherInterfaces() {
@@ -123,16 +136,20 @@ abstract public class AstClass implements IClass, ClassConstants {
     return result;
   }
 
+  @Override
   public abstract Collection<IClass> getDirectInterfaces();
 
+  @Override
   public Collection<IClass> getAllImplementedInterfaces() {
     return gatherInterfaces();
   }
 
+  @Override
   public IMethod getClassInitializer() {
     return getMethod(MethodReference.clinitSelector);
   }
 
+  @Override
   public IMethod getMethod(Selector selector) {
     if (declaredMethods.containsKey(selector)) {
       return declaredMethods.get(selector);
@@ -143,6 +160,7 @@ abstract public class AstClass implements IClass, ClassConstants {
     }
   }
 
+  @Override
   public IField getField(Atom name) {
     if (declaredFields.containsKey(name)) {
       return declaredFields.get(name);
@@ -153,14 +171,17 @@ abstract public class AstClass implements IClass, ClassConstants {
     }
   }
 
+  @Override
   public IField getField(Atom name, TypeName type) {
     // assume that for AST classes, you can't have multiple fields with the same name
     return getField(name);
   }
+  @Override
   public Collection<IMethod> getDeclaredMethods() {
     return declaredMethods.values();
   }
 
+  @Override
   public Collection<IField> getDeclaredInstanceFields() {
     Set<IField> result = HashSetFactory.make();
     for (Iterator<IField> FS = declaredFields.values().iterator(); FS.hasNext();) {
@@ -173,6 +194,7 @@ abstract public class AstClass implements IClass, ClassConstants {
     return result;
   }
 
+  @Override
   public Collection<IField> getDeclaredStaticFields() {
     Set<IField> result = HashSetFactory.make();
     for (Iterator<IField> FS = declaredFields.values().iterator(); FS.hasNext();) {
@@ -185,6 +207,7 @@ abstract public class AstClass implements IClass, ClassConstants {
     return result;
   }
 
+  @Override
   public Collection<IField> getAllInstanceFields() {
     Collection<IField> result = HashSetFactory.make();
     result.addAll(getDeclaredInstanceFields());
@@ -195,6 +218,7 @@ abstract public class AstClass implements IClass, ClassConstants {
     return result;
   }
 
+  @Override
   public Collection<IField> getAllStaticFields() {
     Collection<IField> result = HashSetFactory.make();
     result.addAll(getDeclaredStaticFields());
@@ -205,6 +229,7 @@ abstract public class AstClass implements IClass, ClassConstants {
     return result;
   }
 
+  @Override
   public Collection<IField> getAllFields() {
     Collection<IField> result = HashSetFactory.make();
     result.addAll(getAllInstanceFields());
@@ -212,6 +237,7 @@ abstract public class AstClass implements IClass, ClassConstants {
     return result;
   }
 
+  @Override
   public Collection<IMethod> getAllMethods() {
     Collection<IMethod> result = HashSetFactory.make();
     for (Iterator<IMethod> ms = getDeclaredMethods().iterator(); ms.hasNext();) {

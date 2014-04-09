@@ -127,6 +127,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<?>> implement
    * 
    * @return true iff the evaluation of some equation caused a change in the value of some variable.
    */
+  @Override
   @SuppressWarnings("unchecked")
   public boolean solve(IProgressMonitor monitor) throws CancelException {
 
@@ -171,6 +172,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<?>> implement
     return globalChange;
   }
 
+  @Override
   public void performVerboseAction() {
     System.err.println("Evaluated " + nEvaluated);
     System.err.println("Created   " + nCreated);
@@ -212,7 +214,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable<?>> implement
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer("Fixed Point Sytem:\n");
+    StringBuffer result = new StringBuffer("Fixed Point System:\n");
     for (Iterator it = getStatements(); it.hasNext();) {
       result.append(it.next()).append("\n");
     }

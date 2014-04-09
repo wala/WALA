@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.loader;
 
 import java.util.Collection;
+import java.util.Map;
 
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.ir.translator.AstTranslator.AstLexicalInformation;
@@ -19,6 +20,7 @@ import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.ControlFlowGraph;
+import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
@@ -92,12 +94,6 @@ public abstract class AstMethod implements IMethod {
     public boolean isReadOnly(String name);
 
     /**
-     * invoked to indicate that value numbering may have changed; implementation
-     * should discard any cached information and recompute
-     */
-    public void handleAlteration();
-
-    /**
      * get the name of this entity, as it appears in the definer portion of a
      * lexical name
      */
@@ -112,20 +108,20 @@ public abstract class AstMethod implements IMethod {
   private final MethodReference ref;
   private final boolean hasCatchBlock;
   private final boolean hasMonitorOp;
-  private final TypeReference[][] catchTypes;
+  private final Map<IBasicBlock, TypeReference[]> catchTypes;
   private final AstLexicalInformation lexicalInfo;
   private final DebuggingInformation debugInfo;
   private final Collection<Annotation> annotations;
 
   protected AstMethod(IClass cls, Collection qualifiers, AbstractCFG cfg, SymbolTable symtab, MethodReference ref,
-      boolean hasCatchBlock, TypeReference[][] catchTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo,
+      boolean hasCatchBlock, Map<IBasicBlock, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo,
       DebuggingInformation debugInfo, Collection<Annotation> annotations) {
     this.cls = cls;
     this.cfg = cfg;
     this.ref = ref;
     this.symtab = symtab;
     this.qualifiers = qualifiers;
-    this.catchTypes = catchTypes;
+    this.catchTypes = caughtTypes;
     this.hasCatchBlock = hasCatchBlock;
     this.hasMonitorOp = hasMonitorOp;
     this.lexicalInfo = lexicalInfo;
@@ -162,7 +158,7 @@ public abstract class AstMethod implements IMethod {
     return symtab;
   }
 
-  public TypeReference[][] catchTypes() {
+  public Map<IBasicBlock, TypeReference[]> catchTypes() {
     return catchTypes;
   }
 
@@ -178,6 +174,7 @@ public abstract class AstMethod implements IMethod {
     return debugInfo;
   }
 
+  @Override
   public Collection<Annotation> getAnnotations() {
     return annotations;
   }
@@ -191,10 +188,12 @@ public abstract class AstMethod implements IMethod {
 
     public abstract AstMethod getMethod();
 
+    @Override
     public int hashCode() {
       return getName().hashCode() * getMethod().hashCode();
     }
 
+    @Override
     public boolean equals(Object o) {
       return (o instanceof LexicalParent) && getName().equals(((LexicalParent) o).getName())
           && getMethod().equals(((LexicalParent) o).getMethod());
@@ -203,78 +202,97 @@ public abstract class AstMethod implements IMethod {
 
   public abstract LexicalParent[] getParents();
 
+  @Override
   public IClass getDeclaringClass() {
     return cls;
   }
 
+  @Override
   public String getSignature() {
     return ref.getSignature();
   }
 
+  @Override
   public Selector getSelector() {
     return ref.getSelector();
   }
 
+  @Override
   public boolean isClinit() {
     return getSelector().equals(MethodReference.clinitSelector);
   }
 
+  @Override
   public boolean isInit() {
     return getSelector().getName().equals(MethodReference.initAtom);
   }
 
+  @Override
   public Atom getName() {
     return ref.getName();
   }
 
+  @Override
   public Descriptor getDescriptor() {
     return ref.getDescriptor();
   }
 
+  @Override
   public MethodReference getReference() {
     return ref;
   }
 
+  @Override
   public TypeReference getReturnType() {
     return ref.getReturnType();
   }
 
+  @Override
   public boolean isStatic() {
     return qualifiers.contains(CAstQualifier.STATIC);
   }
 
+  @Override
   public boolean isSynchronized() {
     return qualifiers.contains(CAstQualifier.SYNCHRONIZED);
   }
 
+  @Override
   public boolean isNative() {
     return qualifiers.contains(CAstQualifier.NATIVE);
   }
 
+  @Override
   public boolean isSynthetic() {
     return false;
   }
 
+  @Override
   public boolean isAbstract() {
     return qualifiers.contains(CAstQualifier.ABSTRACT);
   }
 
+  @Override
   public boolean isPrivate() {
     return qualifiers.contains(CAstQualifier.PRIVATE);
   }
 
+  @Override
   public boolean isProtected() {
     return qualifiers.contains(CAstQualifier.PROTECTED);
   }
 
+  @Override
   public boolean isPublic() {
     return qualifiers.contains(CAstQualifier.PUBLIC);
   }
 
+  @Override
   public boolean isFinal() {
     return qualifiers.contains(CAstQualifier.FINAL);
   }
 
+  @Override
   public boolean isBridge() {
     return qualifiers.contains(CAstQualifier.VOLATILE);
   }
@@ -283,6 +301,7 @@ public abstract class AstMethod implements IMethod {
     return cfg;
   }
 
+  @Override
   public boolean hasExceptionHandler() {
     return hasCatchBlock;
   }
@@ -291,6 +310,7 @@ public abstract class AstMethod implements IMethod {
     return hasMonitorOp;
   }
 
+  @Override
   public int getNumberOfParameters() {
     return symtab.getParameterValueNumbers().length;
   }
@@ -304,6 +324,7 @@ public abstract class AstMethod implements IMethod {
   }
 /** END Custom change: precise bytecode positions */
 
+  @Override
   public int getLineNumber(int instructionIndex) {
     Position pos = debugInfo.getInstructionPosition(instructionIndex);
     if (pos == null) {

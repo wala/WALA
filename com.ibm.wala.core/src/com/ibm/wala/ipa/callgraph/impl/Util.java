@@ -33,6 +33,7 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXCFABuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXContainerCFABuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.nCFABuilder;
 import com.ibm.wala.ipa.callgraph.propagation.rta.BasicRTABuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.BypassClassTargetSelector;
@@ -166,6 +167,7 @@ public class Util {
       }
     }
     return new Iterable<Entrypoint>() {
+      @Override
       public Iterator<Entrypoint> iterator() {
         return result.iterator();
       }
@@ -216,19 +218,23 @@ public class Util {
     }
 
     return new Iterable<Entrypoint>() {
+      @Override
       public Iterator<Entrypoint> iterator() {
         final Atom mainMethod = Atom.findOrCreateAsciiAtom("main");
         return new Iterator<Entrypoint>() {
           private int index = 0;
 
+          @Override
           public void remove() {
             Assertions.UNREACHABLE();
           }
 
+          @Override
           public boolean hasNext() {
             return index < classNames.length;
           }
 
+          @Override
           public Entrypoint next() {
             TypeReference T = TypeReference.findOrCreate(loaderRef, TypeName.string2TypeName(classNames[index++]));
             MethodReference mainRef = MethodReference.findOrCreate(T, mainMethod, Descriptor
@@ -463,6 +469,50 @@ public class Util {
     return new ZeroXContainerCFABuilder(cha, options, cache, appSelector, appInterpreter, ZeroXInstanceKeys.ALLOCATIONS | ZeroXInstanceKeys.SMUSH_MANY | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS
         | ZeroXInstanceKeys.SMUSH_STRINGS | ZeroXInstanceKeys.SMUSH_THROWABLES);
   }
+  
+  /**
+   * make a {@link CallGraphBuilder} that uses call-string context sensitivity,
+   * with call-string length limited to n, and a context-sensitive
+   * allocation-site-based heap abstraction.
+   */
+  public static SSAPropagationCallGraphBuilder makeNCFABuilder(int n, AnalysisOptions options, AnalysisCache cache,
+      IClassHierarchy cha, AnalysisScope scope) {
+    if (options == null) {
+      throw new IllegalArgumentException("options is null");
+    }
+    addDefaultSelectors(options, cha);
+    addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
+    ContextSelector appSelector = null;
+    SSAContextInterpreter appInterpreter = null;
+    SSAPropagationCallGraphBuilder result = new nCFABuilder(n, cha, options, cache, appSelector, appInterpreter);
+    // nCFABuilder uses type-based heap abstraction by default, but we want allocation sites
+    result.setInstanceKeys(new ZeroXInstanceKeys(options, cha, result.getContextInterpreter(), ZeroXInstanceKeys.ALLOCATIONS
+        | ZeroXInstanceKeys.SMUSH_MANY | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS | ZeroXInstanceKeys.SMUSH_STRINGS
+        | ZeroXInstanceKeys.SMUSH_THROWABLES));
+    return result;
+  }
+
+  /**
+   * make a {@link CallGraphBuilder} that uses call-string context sensitivity,
+   * with call-string length limited to n, and a context-sensitive
+   * allocation-site-based heap abstraction. Standard optimizations in the heap
+   * abstraction like smushing of strings are disabled.
+   */
+  public static SSAPropagationCallGraphBuilder makeVanillaNCFABuilder(int n, AnalysisOptions options, AnalysisCache cache,
+      IClassHierarchy cha, AnalysisScope scope) {
+    if (options == null) {
+      throw new IllegalArgumentException("options is null");
+    }
+    addDefaultSelectors(options, cha);
+    addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
+    ContextSelector appSelector = null;
+    SSAContextInterpreter appInterpreter = null;
+    SSAPropagationCallGraphBuilder result = new nCFABuilder(n, cha, options, cache, appSelector, appInterpreter);
+    // nCFABuilder uses type-based heap abstraction by default, but we want allocation sites
+    result.setInstanceKeys(new ZeroXInstanceKeys(options, cha, result.getContextInterpreter(), ZeroXInstanceKeys.ALLOCATIONS | ZeroXInstanceKeys.CONSTANT_SPECIFIC));
+    return result;
+  }
+
 
   /**
    * @param options options that govern call graph construction

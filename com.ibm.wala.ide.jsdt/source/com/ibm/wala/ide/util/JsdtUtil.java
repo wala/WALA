@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package com.ibm.wala.ide.util;
 
 import java.io.IOException;
@@ -72,17 +82,21 @@ public class JsdtUtil {
   public static CGInfo buildJSDTCallGraph(Set<ModuleEntry> mes) {
     final CGInfo info = new CGInfo();
     HeadlessUtil.parseModules(mes, new EclipseCompiler<IJavaScriptUnit, JavaScriptUnit>() {
+      @Override
       public IJavaScriptUnit getCompilationUnit(IFile file) {
         return JavaScriptCore.createCompilationUnitFrom(file);
       }
+      @Override
       public Parser<IJavaScriptUnit, JavaScriptUnit> getParser() {
         return new Parser<IJavaScriptUnit, JavaScriptUnit>() {
           IJavaScriptProject project;
 
+          @Override
           public void setProject(IProject project) {
             this.project = JavaScriptCore.create(project);
           }
           
+          @Override
           public void processASTs(Map<IJavaScriptUnit, EclipseSourceFileModule> files, Function<Object[], Boolean> errors) {
             final ASTVisitor visitor = new ASTVisitor() {
               private final CallHierarchy ch = CallHierarchy.getDefault();

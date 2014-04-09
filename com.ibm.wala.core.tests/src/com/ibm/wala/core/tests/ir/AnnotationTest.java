@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package com.ibm.wala.core.tests.ir;
 
 import java.io.IOException;
@@ -10,6 +20,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.classLoader.ShrikeClass;
@@ -22,6 +33,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
@@ -29,6 +41,7 @@ import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.io.FileProvider;
+import com.ibm.wala.util.strings.Atom;
 
 public class AnnotationTest extends WalaTestCase {
 
@@ -142,4 +155,60 @@ public class AnnotationTest extends WalaTestCase {
             runtimeInvisibleAnnotations.toString());
 
   }
+  
+  @Test
+  public void testClassAnnotations4() throws Exception {
+
+    TypeReference typeRef = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lannotations/AnnotatedClass4");
+    FieldReference fieldRefUnderTest = FieldReference.findOrCreate(typeRef, Atom.findOrCreateUnicodeAtom("foo"), TypeReference.Int); 
+
+    IField fieldUnderTest = cha.resolveField(fieldRefUnderTest);
+    Assert.assertNotNull(fieldRefUnderTest.toString() + " not found", fieldUnderTest);
+
+    Collection<Annotation> annots = fieldUnderTest.getAnnotations();
+    Assert
+        .assertEquals(
+            "[Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>, Annotation type <Application,Lannotations/RuntimeVisableAnnotation>]",
+            annots.toString());
+
+  }
+  
+  @Test
+  public void testParamAnnotations1() throws Exception {
+
+    TypeReference typeRef = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lannotations/ParameterAnnotations1");
+
+    checkParameterAnnots(typeRef, "foo(Ljava/lang/String;)V",
+        "[Annotation type <Application,Lannotations/RuntimeVisableAnnotation>]");
+    checkParameterAnnots(
+        typeRef,
+        "bar(Ljava/lang/Integer;)V",
+        "[Annotation type <Application,Lannotations/AnnotationWithParams> {enumParam=EnumElementValue [type=Lannotations/AnnotationEnum;, val=VAL1], strArrParam=ArrayElementValue [vals=[biz, boz]], annotParam=AnnotationElementValue [type=Lannotations/AnnotationWithSingleParam;, elementValues={value=sdfevs}], strParam=sdfsevs, intParam=25, klassParam=Ljava/lang/Integer;}]");
+    checkParameterAnnots(typeRef, "foo2(Ljava/lang/String;Ljava/lang/Integer;)V",
+        "[Annotation type <Application,Lannotations/RuntimeVisableAnnotation>]",
+        "[Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>]");
+    checkParameterAnnots(typeRef, "foo3(Ljava/lang/String;Ljava/lang/Integer;)V",
+        "[Annotation type <Application,Lannotations/RuntimeVisableAnnotation>]",
+        "[Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>]");
+    checkParameterAnnots(typeRef, "foo4(Ljava/lang/String;Ljava/lang/Integer;)V",
+        "[Annotation type <Application,Lannotations/RuntimeInvisableAnnotation>, Annotation type <Application,Lannotations/RuntimeVisableAnnotation>]",
+        "[]");
+
+  }
+
+  protected void checkParameterAnnots(TypeReference typeRef, String selector, String... expected) {
+    MethodReference methodRefUnderTest = MethodReference.findOrCreate(typeRef, Selector.make(selector));
+
+    IMethod methodUnderTest = cha.resolveMethod(methodRefUnderTest);
+    Assert.assertNotNull(methodRefUnderTest.toString() + " not found", methodUnderTest);
+    Assert.assertTrue(methodUnderTest instanceof ShrikeCTMethod);
+    ShrikeCTMethod shrikeCTMethodUnderTest = (ShrikeCTMethod) methodUnderTest;
+
+    Collection<Annotation>[] parameterAnnotations = shrikeCTMethodUnderTest.getParameterAnnotations();
+    Assert.assertEquals(expected.length, parameterAnnotations.length);
+    for (int i = 0; i < expected.length; i++) {
+      Assert.assertEquals(expected[i], parameterAnnotations[i].toString());
+    }
+  }
+
 }

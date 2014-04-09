@@ -39,6 +39,7 @@ public class SparseIntVector implements IntVector {
   /*
    * @see com.ibm.wala.util.intset.IntVector#get(int)
    */
+  @Override
   public int get(int x) {
     int index = indices.getIndex(x);
     if (index == -1) {
@@ -53,6 +54,7 @@ public class SparseIntVector implements IntVector {
    * 
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
+  @Override
   public void set(int x, int value) {
     maxIndex = Math.max(maxIndex,x);
     int index = indices.getIndex(x);
@@ -85,6 +87,7 @@ public class SparseIntVector implements IntVector {
   }
   
   
+  @Override
   public int getMaxIndex() {
     return maxIndex;
   }

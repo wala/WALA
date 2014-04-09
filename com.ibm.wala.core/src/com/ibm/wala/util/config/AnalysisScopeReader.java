@@ -57,8 +57,13 @@ public class AnalysisScopeReader {
       FileProvider fp) throws IOException {
     BufferedReader r = null;
     try {
-      File scopeFile = fp.getFile(scopeFileName, javaLoader);
-      assert scopeFile.exists();
+/** BEGIN Custom change: try to load from jar as fallback */
+      // Now reading from jar is included in WALA, but we can't use their version, because they load from
+      // jar by default and use filesystem as fallback. We want it the other way round. E.g. to deliver default
+      // configuration files with the jar, but use userprovided ones if present in the working directory.
+      // InputStream scopeFileInputStream = fp.getInputStreamFromClassLoader(scopeFileName, javaLoader);
+      File scopeFile = new File(scopeFileName);
+/** END Custom change: try to load from jar as fallback */
 
       String line;
       // assume the scope file is UTF-8 encoded; ASCII files will also be handled properly

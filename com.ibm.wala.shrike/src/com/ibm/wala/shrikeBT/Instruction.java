@@ -54,6 +54,7 @@ public abstract class Instruction implements Constants, Cloneable, IInstruction 
   /**
    * @return true if the instruction can "fall through" to the following instruction
    */
+  @Override
   public boolean isFallThrough() {
     return true;
   }
@@ -62,6 +63,7 @@ public abstract class Instruction implements Constants, Cloneable, IInstruction 
    * @return an array containing the labels this instruction can branch to (not including the following instruction if this
    *         instruction 'falls through')
    */
+  @Override
   public int[] getBranchTargets() {
     return noInstructions;
   }
@@ -69,6 +71,7 @@ public abstract class Instruction implements Constants, Cloneable, IInstruction 
   /**
    * @return an Instruction equivalent to this one but with any branch labels updated by looking them up in the targetMap array
    */
+  @Override
   public IInstruction redirectTargets(int[] targetMap) {
     return this;
   }
@@ -76,6 +79,7 @@ public abstract class Instruction implements Constants, Cloneable, IInstruction 
   /**
    * @return the number of values this instruction pops off the working stack
    */
+  @Override
   public int getPoppedCount() {
     return 0;
   }
@@ -93,6 +97,7 @@ public abstract class Instruction implements Constants, Cloneable, IInstruction 
    * @param poppedTypesToCheck the types of the data popped off the stack by this instruction; if poppedTypes is null, then we don't
    *          know the incoming stack types and the result of this method may be less accurate
    */
+  @Override
   public String getPushedType(String[] poppedTypesToCheck) {
     return null;
   }
@@ -101,6 +106,7 @@ public abstract class Instruction implements Constants, Cloneable, IInstruction 
    * @return the JVM word size of the value this instruction pushes onto the stack, or 0 if this instruction doesn't push anything
    *         onto the stack.
    */
+  @Override
   public byte getPushedWordSize() {
     return 0;
   }
@@ -108,6 +114,7 @@ public abstract class Instruction implements Constants, Cloneable, IInstruction 
   /**
    * Apply a Visitor to this instruction. We invoke the appropriate Visitor method according to the type of this instruction.
    */
+  @Override
   public abstract void visit(IInstruction.Visitor v);
 
   /**

@@ -40,6 +40,7 @@ public class AssignInstruction extends SSAUnaryOpInstruction {
   /*
    * @see com.ibm.wala.ssa.SSAInstruction#copyForSSA(int[], int[])
    */
+  @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((AstInstructionFactory) insts)
         .AssignInstruction(iindex, defs == null ? getDef(0) : defs[0], uses == null ? getUse(0) : uses[0]);
@@ -48,6 +49,7 @@ public class AssignInstruction extends SSAUnaryOpInstruction {
   /*
    * @see com.ibm.wala.ssa.SSAInstruction#toString(com.ibm.wala.ssa.SymbolTable, com.ibm.wala.ssa.ValueDecorator)
    */
+  @Override
   public String toString(SymbolTable symbolTable) {
     return getValueString(symbolTable, result) + " := " + getValueString(symbolTable, val);
   }
@@ -55,6 +57,7 @@ public class AssignInstruction extends SSAUnaryOpInstruction {
   /*
    * @see com.ibm.wala.ssa.SSAInstruction#visit(com.ibm.wala.ssa.SSAInstruction.Visitor)
    */
+  @Override
   public void visit(IVisitor v) {
     ((AstPreInstructionVisitor) v).visitAssign(this);
   }

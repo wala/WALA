@@ -92,6 +92,7 @@ public class PointerParamValueNumIterator implements Iterator<Integer> {
   /*
    * @see java.util.Iterator#hasNext()
    */
+  @Override
   public boolean hasNext() {
     return paramInd <= numParams;
   }
@@ -99,6 +100,7 @@ public class PointerParamValueNumIterator implements Iterator<Integer> {
   /*
    * @see java.util.Iterator#next()
    */
+  @Override
   public Integer next() {
     if (!hasNext()) {
       throw new NoSuchElementException();
@@ -111,6 +113,7 @@ public class PointerParamValueNumIterator implements Iterator<Integer> {
   /*
    * @see java.util.Iterator#remove()
    */
+  @Override
   public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }

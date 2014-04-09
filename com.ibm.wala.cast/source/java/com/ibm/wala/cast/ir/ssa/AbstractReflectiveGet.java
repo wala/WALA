@@ -28,6 +28,7 @@ public abstract class AbstractReflectiveGet extends ReflectiveMemberAccess {
     this.result = result;
   }
 
+  @Override
   public String toString(SymbolTable symbolTable) {
     return getValueString(symbolTable, result) + " = " + super.toString(symbolTable);
   }
@@ -35,14 +36,17 @@ public abstract class AbstractReflectiveGet extends ReflectiveMemberAccess {
   /**
    * @see com.ibm.wala.ssa.Instruction#getDef()
    */
+  @Override
   public boolean hasDef() {
     return true;
   }
 
+  @Override
   public int getDef() {
     return result;
   }
 
+  @Override
   public int getDef(int i) {
     return result;
   }
@@ -50,10 +54,12 @@ public abstract class AbstractReflectiveGet extends ReflectiveMemberAccess {
   /**
    * @see com.ibm.wala.ssa.Instruction#getNumberOfUses()
    */
+  @Override
   public int getNumberOfUses() {
     return 2;
   }
 
+  @Override
   public int getNumberOfDefs() {
     return 1;
   }

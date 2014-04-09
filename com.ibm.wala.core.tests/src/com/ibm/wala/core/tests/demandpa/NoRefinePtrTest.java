@@ -44,6 +44,10 @@ import org.junit.Test;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.CancelException;
 
+/**
+ * Note that in this test we still do refinement of the array contents
+ * pseudo-field, to avoid excessive sensitivity to library versions.
+ */
 public class NoRefinePtrTest extends AbstractPtrTest {
 
   public NoRefinePtrTest() {

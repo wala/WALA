@@ -32,20 +32,24 @@ public abstract class JVMClass<T extends IClassLoader> extends BytecodeClass<T> 
    */
   protected int modifiers;
 
+  @Override
   public int getModifiers() {
     return modifiers;
   }
 
+  @Override
   public boolean isPublic() {
     boolean result = ((modifiers & Constants.ACC_PUBLIC) != 0);
     return result;
   }
 
+  @Override
   public boolean isPrivate() {
     boolean result = ((modifiers & Constants.ACC_PRIVATE) != 0);
     return result;
   }
 
+  @Override
   public boolean isInterface() {
     boolean result = ((modifiers & Constants.ACC_INTERFACE) != 0);
     return result;
@@ -55,6 +59,7 @@ public abstract class JVMClass<T extends IClassLoader> extends BytecodeClass<T> 
   /*
    * @see com.ibm.wala.classLoader.IClass#isAbstract()
    */
+  @Override
   public boolean isAbstract() {
     boolean result = ((modifiers & Constants.ACC_ABSTRACT) != 0);
     return result;
@@ -63,14 +68,13 @@ public abstract class JVMClass<T extends IClassLoader> extends BytecodeClass<T> 
   /**
    * @see com.ibm.wala.classLoader.IClass#getClassInitializer()
    */
+  @Override
   public IMethod getClassInitializer() {
-    if (methodMap == null) {
-      try {
-        computeMethodMap();
-      } catch (InvalidClassFileException e) {
-        e.printStackTrace();
-        Assertions.UNREACHABLE();
-      }
+    try {
+      computeMethodMapIfNeeded();
+    } catch (InvalidClassFileException e) {
+      e.printStackTrace();
+      Assertions.UNREACHABLE();
     }
     return methodMap.get(MethodReference.clinitSelector);
   }

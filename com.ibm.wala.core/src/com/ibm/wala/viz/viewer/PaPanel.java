@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package com.ibm.wala.viz.viewer;
 
 import java.awt.BorderLayout;
@@ -92,6 +102,7 @@ public class PaPanel extends JSplitPane {
 
     heapTree.addTreeExpansionListener(new TreeExpansionListener() {
 
+      @Override
       public void treeExpanded(TreeExpansionEvent event) {
         TreePath path = event.getPath();
         if (path == null) {
@@ -101,12 +112,14 @@ public class PaPanel extends JSplitPane {
         expandNodeRec(lastNode, 2);
       }
 
+      @Override
       public void treeCollapsed(TreeExpansionEvent event) {
       }
     });
 
     heapTree.addTreeSelectionListener(new TreeSelectionListener() {
 
+      @Override
       public void valueChanged(TreeSelectionEvent e) {
         TreePath newLeadSelectionPath = e.getNewLeadSelectionPath();
         if (null == newLeadSelectionPath){

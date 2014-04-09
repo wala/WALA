@@ -67,6 +67,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
       this(ref, summary, declaringClass, "");
     }
 
+    @Override
     public String toString() {
       return "<ctor for " + getReference().getDeclaringClass() + toStringExtra + ">";
     }
@@ -552,6 +553,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     }
   }
 
+  @Override
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
     if (site.getDeclaredTarget().equals(JavaScriptMethods.ctorReference)) {
       assert cha.isSubclassOf(receiver, cha.lookupClass(JavaScriptTypes.Root));

@@ -33,9 +33,10 @@ import com.ibm.wala.util.debug.Assertions;
 
 public class AstJavaTypeInference extends AstTypeInference {
 
-  protected final IClass stringClass;
+  protected IClass stringClass;
 
   protected class AstJavaTypeOperatorFactory extends AstTypeOperatorFactory implements AstJavaInstructionVisitor {
+    @Override
     public void visitBinaryOp(SSABinaryOpInstruction instruction) {
       if (doPrimitives) {
         IBinaryOpInstruction.IOperator op = instruction.getOperator();
@@ -48,6 +49,7 @@ public class AstJavaTypeInference extends AstTypeInference {
       }
     }
 
+    @Override
     public void visitEnclosingObjectReference(EnclosingObjectReference inst) {
       TypeReference type = inst.getEnclosingType();
       IClass klass = cha.lookupClass(type);
@@ -58,6 +60,7 @@ public class AstJavaTypeInference extends AstTypeInference {
       }
     }
 
+    @Override
     public void visitJavaInvoke(AstJavaInvokeInstruction instruction) {
       TypeReference type = instruction.getDeclaredResultType();
       if (type.isReferenceType()) {
@@ -81,6 +84,7 @@ public class AstJavaTypeInference extends AstTypeInference {
 
   public class AstJavaTypeVarFactory extends TypeVarFactory {
 
+    @Override
     public IVariable makeVariable(int valueNumber) {
       SymbolTable st = ir.getSymbolTable();
       if (st.isStringConstant(valueNumber)) {
@@ -96,13 +100,21 @@ public class AstJavaTypeInference extends AstTypeInference {
 
   public AstJavaTypeInference(IR ir, IClassHierarchy cha, boolean doPrimitives) {
     super(ir, cha, JavaPrimitiveType.BOOLEAN, doPrimitives);
-    this.stringClass = cha.lookupClass(TypeReference.JavaLangString);
   }
 
+  IClass getStringClass() {
+    if (stringClass == null) {
+      this.stringClass = cha.lookupClass(TypeReference.JavaLangString);
+    }
+    return stringClass;
+  }
+
+  @Override
   protected void initialize() {
     init(ir, new AstJavaTypeVarFactory(), new AstJavaTypeOperatorFactory());
   }
 
+  @Override
   public TypeAbstraction getConstantPrimitiveType(int valueNumber) {
     SymbolTable st = ir.getSymbolTable();
     if (st.isBooleanConstant(valueNumber)) {
@@ -117,6 +129,7 @@ public class AstJavaTypeInference extends AstTypeInference {
     private PrimAndStringOp() {
     }
 
+    @Override
     public byte evaluate(TypeVariable lhs, TypeVariable[] rhs) {
       TypeAbstraction meet = null;
 
@@ -125,12 +138,12 @@ public class AstJavaTypeInference extends AstTypeInference {
           TypeVariable r = (TypeVariable) rhs[i];
           TypeAbstraction ta = r.getType();
           if (ta instanceof PointType) {
-            if (ta.getType().equals(stringClass)) {
+            if (ta.getType().equals(getStringClass())) {
               meet = new PointType(ta.getType());
               break;
             }
           } else if (ta instanceof ConeType) {
-            if (ta.getType().equals(stringClass)) {
+            if (ta.getType().equals(getStringClass())) {
               meet = new PointType(ta.getType());
               break;
             }
@@ -158,6 +171,7 @@ public class AstJavaTypeInference extends AstTypeInference {
      * 
      * @see com.ibm.wala.dataflow.Operator#hashCode()
      */
+    @Override
     public int hashCode() {
       return 71292;
     }
@@ -167,6 +181,7 @@ public class AstJavaTypeInference extends AstTypeInference {
      * 
      * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object o) {
       return o != null && o.getClass().equals(getClass());
     }

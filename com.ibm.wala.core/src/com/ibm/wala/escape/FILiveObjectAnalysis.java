@@ -75,6 +75,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
     this.expensiveIntraproceduralAnalysis = expensiveIntraproceduralAnalysis;
   }
 
+  @Override
   public boolean mayBeLive(CGNode allocMethod, int allocPC, CGNode m, int instructionIndex) throws IllegalArgumentException,
       WalaException {
     if (allocMethod == null) {
@@ -88,6 +89,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
   /**
    * @param instructionIndex index of an SSA instruction
    */
+  @Override
   public boolean mayBeLive(InstanceKey ik, CGNode m, int instructionIndex) {
     if (liveEverywhere.contains(ik)) {
       return true;
@@ -186,6 +188,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
     return DFS.getReachableNodes(callGraph, localRootNodes);
   }
 
+  @Override
   public boolean mayBeLive(InstanceKey ik, CGNode m, IntSet instructionIndices) {
     if (instructionIndices == null) {
       throw new IllegalArgumentException("instructionIndices is null");

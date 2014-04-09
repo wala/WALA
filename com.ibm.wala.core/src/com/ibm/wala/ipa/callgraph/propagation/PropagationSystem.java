@@ -639,6 +639,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       IntSet value = rhs.getValue();
       final int[] topFive = new int[5];
       value.foreach(new IntSetAction() {
+        @Override
         public void act(int x) {
           for (int i = 0; i < 4; i++) {
             topFive[i] = topFive[i + 1];

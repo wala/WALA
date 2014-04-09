@@ -18,6 +18,7 @@ public interface AstConstants  {
   public enum BinaryOp implements IBinaryOpInstruction.IOperator {
     CONCAT, EQ, NE, LT, GE, GT, LE, STRICT_EQ, STRICT_NE;
 
+    @Override
     public String toString() {
       return super.toString().toLowerCase();
     }
@@ -26,6 +27,7 @@ public interface AstConstants  {
   public enum UnaryOp implements IUnaryOpInstruction.IOperator {
     MINUS, BITNOT, PLUS;
 
+    @Override
     public String toString() {
       return super.toString().toLowerCase();
     }

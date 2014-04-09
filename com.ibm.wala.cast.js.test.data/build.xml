@@ -18,9 +18,12 @@
 	on Mac OS X 10.6 (Java version 1.6.0_22).  If you are not using this version of Mac OS X or Java,
 	try changing the value of the property to "${java.home}/../../../Classes" -->
     <condition property="dir_bootclasspath" value="${java.home}/../Classes">
+      <and>
             <os family="mac"/>
+            <equals arg1="${ant.java.version}" arg2="1.6" />
+      </and>
     </condition>
-    <property name="dir_bootclasspath" value="${java.home}/lib"/>
+	<property name="dir_bootclasspath" value="${java.home}/lib"/>
     <path id="path_bootclasspath">
             <fileset dir="${dir_bootclasspath}">
 

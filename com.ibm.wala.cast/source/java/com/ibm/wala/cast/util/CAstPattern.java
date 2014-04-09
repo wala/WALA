@@ -137,6 +137,7 @@ public class CAstPattern {
     this.children = null;
   }
 
+  @Override
   public String toString() {
     StringBuffer sb = new StringBuffer();
 
@@ -392,9 +393,11 @@ public class CAstPattern {
     };
     
     v.visit(e.getAST(), new Context() {
+      @Override
       public CAstEntity top() {
         return e;
       }
+      @Override
       public CAstSourcePositionMap getSourceMap() {
         return e.getSourceMap();
       }

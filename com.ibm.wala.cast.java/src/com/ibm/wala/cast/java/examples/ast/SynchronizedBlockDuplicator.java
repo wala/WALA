@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package com.ibm.wala.cast.java.examples.ast;
 
 import java.util.Map;
@@ -51,19 +61,23 @@ public class SynchronizedBlockDuplicator extends
       this.testDirection = testDirection;
     }
 
+    @Override
     public int hashCode() {
       return (testDirection ? 1 : -1) * System.identityHashCode(syncNode) * (rest == null ? 1 : rest.hashCode());
     }
 
+    @Override
     public UnwindKey parent() {
       return rest;
     }
 
+    @Override
     public boolean equals(Object o) {
       return (o instanceof UnwindKey) && ((UnwindKey) o).testDirection == testDirection && ((UnwindKey) o).syncNode == syncNode
           && (rest == null ? ((UnwindKey) o).rest == null : rest.equals(((UnwindKey) o).rest));
     }
 
+    @Override
     public String toString() {
       return "#" + testDirection + ((rest == null) ? "" : rest.toString());
     }
@@ -91,6 +105,7 @@ public class SynchronizedBlockDuplicator extends
    */
   private static class RootContext implements RewriteContext<UnwindKey> {
 
+    @Override
     public UnwindKey key() {
       return null;
     }
@@ -121,6 +136,7 @@ public class SynchronizedBlockDuplicator extends
       this.parent = parent;
     }
 
+    @Override
     public UnwindKey key() {
       return new UnwindKey(testDirection, syncNode, parent.key());
     }
@@ -140,6 +156,7 @@ public class SynchronizedBlockDuplicator extends
     }
   }
 
+  @Override
   protected CAstNode flowOutTo(Map nodeMap, CAstNode oldSource, Object label, CAstNode oldTarget, CAstControlFlowMap orig,
       CAstSourcePositionMap src) {
     assert oldTarget == CAstControlFlowMap.EXCEPTION_TO_EXIT;
@@ -186,6 +203,7 @@ public class SynchronizedBlockDuplicator extends
     return null;
   }
 
+  @Override
   protected CAstNode copyNodes(CAstNode n, final CAstControlFlowMap cfg, RewriteContext<UnwindKey> c, Map<Pair<CAstNode, UnwindKey>, CAstNode> nodeMap) {
     String varName;
     // don't copy operators or constants (presumably since they are immutable?)

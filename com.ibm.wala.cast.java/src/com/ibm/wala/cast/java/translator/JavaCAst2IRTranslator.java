@@ -15,6 +15,7 @@ package com.ibm.wala.cast.java.translator;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
@@ -30,6 +31,7 @@ import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.CAstType.Method;
 import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cfg.AbstractCFG;
+import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.ModuleEntry;
@@ -62,6 +64,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     return (JavaSourceLoaderImpl) loader;
   }
 
+  @Override
   protected boolean useDefaultInitValues() {
     return true;
   }
@@ -69,39 +72,42 @@ public class JavaCAst2IRTranslator extends AstTranslator {
   // Java does not have standalone global variables, and let's not
   // adopt the nasty JavaScript practice of creating globals without
   // explicit definitions
+  @Override
   protected boolean hasImplicitGlobals() {
     return false;
   }
 
+  @Override
   protected TypeReference defaultCatchType() {
     return TypeReference.JavaLangThrowable;
   }
 
+  @Override
   protected TypeReference makeType(CAstType type) {
     return TypeReference.findOrCreate(loader.getReference(), TypeName.string2TypeName(type.getName()));
   }
 
   // Java globals are disguised as fields (statics), so we should never
   // ask this question when parsing Java code
+  @Override
   protected boolean treatGlobalsAsLexicallyScoped() {
     Assertions.UNREACHABLE();
     return false;
   }
 
-  protected boolean useLocalValuesForLexicalVars() {
-    return true;
-  }
-
+  @Override
   protected void doThrow(WalkContext context, int exception) {
     context.cfg().addInstruction(insts.ThrowInstruction(context.cfg().getCurrentInstruction(), exception));
   }
 
+  @Override
   public void doArrayRead(WalkContext context, int result, int arrayValue, CAstNode arrayRefNode, int[] dimValues) {
     TypeReference arrayTypeRef = (TypeReference) arrayRefNode.getChild(1).getValue();
     context.cfg().addInstruction(insts.ArrayLoadInstruction(context.cfg().getCurrentInstruction(), result, arrayValue, dimValues[0], arrayTypeRef));
     processExceptions(arrayRefNode, context);
   }
 
+  @Override
   public void doArrayWrite(WalkContext context, int arrayValue, CAstNode arrayRefNode, int[] dimValues, int rval) {
     TypeReference arrayTypeRef = arrayRefNode.getKind() == CAstNode.ARRAY_LITERAL ? ((TypeReference) arrayRefNode.getChild(0)
         .getChild(0).getValue()).getArrayElementType() : (TypeReference) arrayRefNode.getChild(1).getValue();
@@ -111,6 +117,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     processExceptions(arrayRefNode, context);
   }
 
+  @Override
   protected void doFieldRead(WalkContext context, int result, int receiver, CAstNode elt, CAstNode parent) {
     // elt is a constant CAstNode whose value is a FieldReference.
     FieldReference fieldRef = (FieldReference) elt.getValue();
@@ -124,6 +131,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     }
   }
 
+  @Override
   protected void doFieldWrite(WalkContext context, int receiver, CAstNode elt, CAstNode parent, int rval) {
     FieldReference fieldRef = (FieldReference) elt.getValue();
 
@@ -136,11 +144,13 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     }
   }
 
+  @Override
   protected void doMaterializeFunction(CAstNode n, WalkContext context, int result, int exception, CAstEntity fn) {
     // Not possible in Java (no free-standing functions)
     Assertions.UNREACHABLE("Real functions in Java??? I don't think so!");
   }
 
+  @Override
   protected void doNewObject(WalkContext context, CAstNode newNode, int result, Object type, int[] arguments) {
     TypeReference typeRef = (TypeReference) type;
 
@@ -171,6 +181,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     }
   }
 
+  @Override
   protected void doCall(WalkContext context, CAstNode call, int result, int exception, CAstNode name, int receiver, int[] arguments) {
     assert name.getKind() == CAstNode.CONSTANT;
     CallSiteReference dummySiteRef = (CallSiteReference) name.getValue();
@@ -195,10 +206,12 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     Assertions.UNREACHABLE("doGlobalRead() called for Java code???");
   }
 
+  @Override
   protected void doGlobalWrite(WalkContext context, String name, int rval) {
     Assertions.UNREACHABLE("doGlobalWrite() called for Java code???");
   }
 
+  @Override
   protected void defineField(CAstEntity topEntity, WalkContext definingContext, CAstEntity n) {
     assert topEntity.getKind() == CAstEntity.TYPE_ENTITY;
     assert n.getKind() == CAstEntity.FIELD_ENTITY;
@@ -216,6 +229,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 
   // handles abstract method declarations, which do not get defineFunction
   // called for them
+  @Override
   protected void declareFunction(CAstEntity N, WalkContext definingContext) {
     CAstType.Method methodType = (Method) N.getType();
     CAstType owningType = methodType.getDeclaringType();
@@ -228,8 +242,9 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     ((JavaSourceLoaderImpl) loader).defineAbstractFunction(N, owner);
   }
 
+  @Override
   protected void defineFunction(CAstEntity N, WalkContext definingContext, AbstractCFG cfg, SymbolTable symtab,
-      boolean hasCatchBlock, TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo,
+      boolean hasCatchBlock, Map<IBasicBlock,TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo,
       DebuggingInformation debugInfo) {
     // N.B.: base class may actually ask to create a synthetic type to wrap
     // code bodies, so we may see other things than TYPE_ENTITY here.
@@ -249,11 +264,13 @@ public class JavaCAst2IRTranslator extends AstTranslator {
         debugInfo);
   }
 
+  @Override
   protected void doPrimitive(int resultVal, WalkContext context, CAstNode primitiveCall) {
     // For now, no-op (no primitives in normal Java code)
     Assertions.UNREACHABLE("doPrimitive() called for Java code???");
   }
 
+  @Override
   protected String composeEntityName(WalkContext parent, CAstEntity f) {
     switch (f.getKind()) {
     case CAstEntity.TYPE_ENTITY: {
@@ -297,6 +314,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     }
   }
 
+  @Override
   protected boolean defineType(CAstEntity type, WalkContext wc) {
     CAstEntity parentType = getEnclosingType(type);
     // ((JavaSourceLoaderImpl)loader).defineType(type,
@@ -304,6 +322,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     return ((JavaSourceLoaderImpl) loader).defineType(type, type.getType().getName(), parentType) != null;
   }
 
+  @Override
   protected void leaveThis(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
     if (n.getChildCount() == 0) {
       super.leaveThis(n, c, visitor);
@@ -314,12 +333,14 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     }
   }
 
+  @Override
   protected boolean visitCast(CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {
     int result = context.currentScope().allocateTempValue();
     context.setValue(n, result);
     return false;
   }
 
+  @Override
   protected void leaveCast(CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {
     int result = context.getValue(n);
     CAstType toType = (CAstType) n.getChild(0).getValue();
@@ -350,12 +371,14 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     }
   }
 
+  @Override
   protected boolean visitInstanceOf(CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {
     int result = context.currentScope().allocateTempValue();
     context.setValue(n, result);
     return false;
   }
   
+  @Override
   protected void leaveInstanceOf(CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {
     int result = context.getValue(n);
     CAstType type = (CAstType) n.getChild(0).getValue();
@@ -369,6 +392,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
         ref));
   }
 
+  @Override
   protected boolean doVisit(CAstNode n, WalkContext wc, CAstVisitor<WalkContext> visitor) {
     if (n.getKind() == CAstNode.MONITOR_ENTER) {
       visitor.visit(n.getChild(0), wc, visitor);

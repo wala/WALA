@@ -46,6 +46,7 @@ public class CompoundPiPolicy implements SSAPiNodePolicy {
   /* 
    * @see com.ibm.wala.ssa.SSAPiNodePolicy#getPi(com.ibm.wala.ssa.SSAConditionalBranchInstruction, com.ibm.wala.ssa.SSAInstruction, com.ibm.wala.ssa.SSAInstruction, com.ibm.wala.ssa.SymbolTable)
    */
+  @Override
   public Pair<Integer, SSAInstruction> getPi(SSAConditionalBranchInstruction cond, SSAInstruction def1, SSAInstruction def2,
       SymbolTable symbolTable) {
     Pair<Integer, SSAInstruction> result = p1.getPi(cond, def1, def2, symbolTable);
@@ -59,6 +60,7 @@ public class CompoundPiPolicy implements SSAPiNodePolicy {
   /* 
    * @see com.ibm.wala.ssa.SSAPiNodePolicy#getPi(com.ibm.wala.ssa.SSAAbstractInvokeInstruction, com.ibm.wala.ssa.SymbolTable)
    */
+  @Override
   public Pair<Integer, SSAInstruction> getPi(SSAAbstractInvokeInstruction call, SymbolTable symbolTable) {
     Pair<Integer, SSAInstruction> result = p1.getPi(call, symbolTable);
     if (result != null) {

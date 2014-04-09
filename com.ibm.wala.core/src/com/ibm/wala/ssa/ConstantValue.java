@@ -44,6 +44,7 @@ public class ConstantValue implements Value {
   /*
    * @see com.ibm.wala.ssa.Value#isStringConstant()
    */
+  @Override
   public boolean isStringConstant() {
     return constant instanceof String;
   }
@@ -73,6 +74,7 @@ public class ConstantValue implements Value {
   /**
    * @return true iff this constant is "null"
    */
+  @Override
   public boolean isNullConstant() {
     return (constant == null);
   }

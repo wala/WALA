@@ -33,6 +33,7 @@ public class JavaPrimitiveTypeMap {
       fShortName = shortName;
     }
 
+    @Override
     public String getName() {
       return fShortName;
     }
@@ -41,6 +42,7 @@ public class JavaPrimitiveTypeMap {
       return fLongName;
     }
 
+    @Override
     public Collection getSupertypes() {
       return Collections.EMPTY_LIST;
     }

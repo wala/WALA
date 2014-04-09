@@ -48,65 +48,81 @@ import com.ibm.wala.demandpa.flowgraph.IFlowLabel.IFlowLabelVisitor;
  */
 public class AbstractFlowLabelVisitor implements IFlowLabelVisitor {
 
+  @Override
   public void visitParam(ParamLabel label, Object dst) {
 
   }
 
+  @Override
   public void visitReturn(ReturnLabel label, Object dst) {
 
   }
 
+  @Override
   public void visitAssign(AssignLabel label, Object dst) {
 
   }
 
+  @Override
   public void visitAssignGlobal(AssignGlobalLabel label, Object dst) {
 
   }
 
+  @Override
   public void visitGetField(GetFieldLabel label, Object dst) {
 
   }
 
+  @Override
   public void visitMatch(MatchLabel label, Object dst) {
 
   }
 
+  @Override
   public void visitNew(NewLabel label, Object dst) {
 
   }
 
+  @Override
   public void visitPutField(PutFieldLabel label, Object dst) {
 
   }
 
+  @Override
   public void visitAssignGlobalBar(AssignGlobalBarLabel label, Object dst) {
 
   }
 
+  @Override
   public void visitAssignBar(AssignBarLabel label, Object dst) {
   }
 
+  @Override
   public void visitGetFieldBar(GetFieldBarLabel label, Object dst) {
 
   }
 
+  @Override
   public void visitMatchBar(MatchBarLabel label, Object dst) {
 
   }
 
+  @Override
   public void visitNewBar(NewBarLabel label, Object dst) {
 
   }
 
+  @Override
   public void visitPutFieldBar(PutFieldBarLabel label, Object dst) {
 
   }
 
+  @Override
   public void visitReturnBar(ReturnBarLabel label, Object dst) {
 
   }
 
+  @Override
   public void visitParamBar(ParamBarLabel label, Object dst) {
 
   }

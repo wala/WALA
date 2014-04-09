@@ -114,6 +114,7 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
         }
       }
 
+      @Override
       public Iterator<T> getPredNodes(T N) {
         if (backwardEdges.containsKey(N))
           return backwardEdges.get(N).iterator();
@@ -121,6 +122,7 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
           return EmptyIterator.instance();
       }
 
+      @Override
       public IntSet getPredNodeNumbers(T node) {
         MutableIntSet x = IntSetUtil.make();
         if (backwardEdges.containsKey(node)) {
@@ -131,6 +133,7 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
         return x;
       }
 
+      @Override
       public int getPredNodeCount(T N) {
         if (backwardEdges.containsKey(N))
           return ((Set) backwardEdges.get(N)).size();
@@ -138,6 +141,7 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
           return 0;
       }
 
+      @Override
       public Iterator<T> getSuccNodes(T N) {
         if (forwardEdges.containsKey(N))
           return forwardEdges.get(N).iterator();
@@ -145,6 +149,7 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
           return EmptyIterator.instance();
       }
 
+      @Override
       public IntSet getSuccNodeNumbers(T node) {
         MutableIntSet x = IntSetUtil.make();
         if (forwardEdges.containsKey(node)) {
@@ -155,6 +160,7 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
         return x;
       }
 
+      @Override
       public int getSuccNodeCount(T N) {
         if (forwardEdges.containsKey(N))
           return ((Set) forwardEdges.get(N)).size();
@@ -162,26 +168,32 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
           return 0;
       }
 
+      @Override
       public boolean hasEdge(T src, T dst) {
         return forwardEdges.containsKey(src) && ((Set) forwardEdges.get(src)).contains(dst);
       }
 
+      @Override
       public void addEdge(T src, T dst) {
         throw new UnsupportedOperationException();
       }
 
+      @Override
       public void removeEdge(T src, T dst) {
         throw new UnsupportedOperationException();
       }
 
+      @Override
       public void removeAllIncidentEdges(T node) {
         throw new UnsupportedOperationException();
       }
 
+      @Override
       public void removeIncomingEdges(T node) {
         throw new UnsupportedOperationException();
       }
 
+      @Override
       public void removeOutgoingEdges(T node) {
         throw new UnsupportedOperationException();
       }

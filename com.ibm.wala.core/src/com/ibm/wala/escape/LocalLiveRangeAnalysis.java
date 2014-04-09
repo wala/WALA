@@ -59,6 +59,7 @@ public class LocalLiveRangeAnalysis {
 
     // a filter which accepts everything but the block which defs v
     Filter notDef = new Filter() {
+      @Override
       public boolean accepts(Object o) {
         return (defBlock == null || !defBlock.equals(o));
       }

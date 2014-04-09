@@ -15,6 +15,7 @@ import java.util.Map;
 
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.debug.Assertions;
 
 /**
  * This class reads Annotations attributes, e.g., RuntimeInvisibleAnnotations.
@@ -74,6 +75,7 @@ public class AnnotationsReader extends AttributeReader {
    * @see AnnotationsReader#readElementValueAndSize(int)
    * 
    */
+  @SuppressWarnings("javadoc")
   public static interface ElementValue {
   }
 
@@ -104,12 +106,12 @@ public class AnnotationsReader extends AttributeReader {
    * Represents enum constant annotation arguments.
    */
   public static class EnumElementValue implements ElementValue {
-    
+
     /**
      * the name of the enum type
      */
     public final String enumType;
-    
+
     /**
      * the enum value
      */
@@ -151,7 +153,7 @@ public class AnnotationsReader extends AttributeReader {
   }
 
   /**
-   * get all the annotations declared in this attribute.  
+   * get all the annotations declared in this attribute.
    * 
    * @throws InvalidClassFileException
    */
@@ -167,6 +169,37 @@ public class AnnotationsReader extends AttributeReader {
     return result;
   }
 
+  /**
+   * <pre>
+   * param_annotations {
+   *   u2 attribute_name_index;
+   *   u4 attribute_length;
+   *   u1 num_parameters;
+   *   {
+   *     u2 num_annotations;
+   *     annotation annotations[num_annotations];
+   *   } parameter_annotations[num_parameters];
+   * </pre>
+   */
+  public AnnotationAttribute[][] getAllParameterAnnotations() throws InvalidClassFileException {
+    int numParamOffset = beginOffset + 6;
+    checkSize(numParamOffset, 1);
+    int paramCount = cr.getByte(numParamOffset);
+    AnnotationAttribute[][] result = new AnnotationAttribute[paramCount][];
+    // skip attribute_name_index, attribute_length, and num_parameters
+    int offset = beginOffset + 7;
+    for (int i = 0; i < result.length; i++) {
+      checkSize(offset, 2);
+      result[i] = new AnnotationAttribute[cr.getUShort(offset)];
+      offset += 2;
+      for (int j = 0; j < result[i].length; j++) {
+        Pair<AnnotationAttribute, Integer> attributeAndSize = getAttributeAndSize(offset);
+        result[i][j] = attributeAndSize.fst;
+        offset += attributeAndSize.snd;        
+      }
+    }
+    return result;
+  }
   /**
    * <pre>
    * annotation { 
@@ -302,7 +335,7 @@ public class AnnotationsReader extends AttributeReader {
       }
       return Pair.<ElementValue, Integer> make(new ArrayElementValue(vals), numArrayBytes);
     case '@': // annotation
-      Pair<AnnotationAttribute,Integer> attributeAndSize = getAttributeAndSize(offset+1);
+      Pair<AnnotationAttribute, Integer> attributeAndSize = getAttributeAndSize(offset + 1);
       // add 1 to size for the tag
       return Pair.<ElementValue, Integer> make(attributeAndSize.fst, attributeAndSize.snd + 1);
     default:
@@ -311,4 +344,35 @@ public class AnnotationsReader extends AttributeReader {
     }
   }
 
+  // //////////////
+  // utility methods for reading well-known annotation types
+  // //////////////
+
+  public static enum AnnotationType {
+    RuntimeVisibleAnnotations, RuntimeInvisibleAnnotations,RuntimeVisibleParameterAnnotations, RuntimeInvisibleParameterAnnotations
+  }
+  
+  public static boolean isKnownAnnotation(String name) {
+    for (AnnotationType t : AnnotationType.values()) {
+      if (t.name().equals(name)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  public static AnnotationsReader getReaderForAnnotation(AnnotationType type, ClassReader.AttrIterator iter) {
+    // search for the desired attribute
+    final String attrName = type.toString();
+    try {
+      for (; iter.isValid(); iter.advance()) {
+        if (iter.getName().equals(attrName)) {
+          return new AnnotationsReader(iter, attrName);
+        }
+      }
+    } catch (InvalidClassFileException e) {
+      Assertions.UNREACHABLE();
+    }
+    return null;
+  }
 }

@@ -222,6 +222,11 @@ public class JarStreamModule implements Module {
       return JarStreamModule.this;
     }
 
+    @Override
+    public Module getContainer() {
+      return JarStreamModule.this;
+    }
+
   }
 
   @Override

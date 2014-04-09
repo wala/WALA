@@ -84,6 +84,7 @@ public abstract class JavaIRTests extends IRTests {
 
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
         final String typeStr = singleInputForTest();
 
@@ -115,6 +116,7 @@ public abstract class JavaIRTests extends IRTests {
      */
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
         final String typeStr = "IFoo";
 
@@ -132,6 +134,7 @@ public abstract class JavaIRTests extends IRTests {
      */
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
         final String typeStr = "FooIT1";
 
@@ -157,6 +160,7 @@ public abstract class JavaIRTests extends IRTests {
      */
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
         final String typeStr = "Derived";
 
@@ -186,6 +190,7 @@ public abstract class JavaIRTests extends IRTests {
      */
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
 
         MethodReference mref = descriptorToMethodRef("Source#Array1#foo#()V", cg.getClassHierarchy());
@@ -215,12 +220,13 @@ public abstract class JavaIRTests extends IRTests {
      */
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
 
         MethodReference mref = descriptorToMethodRef("Source#ArrayLiteral1#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
 
         CGNode node = cg.getNodes(mref).iterator().next();
-        SSAInstruction s = node.getIR().getInstructions()[3];
+        SSAInstruction s = node.getIR().getInstructions()[2];
         Assert.assertTrue("Did not find new array instruction.", s instanceof SSANewInstruction);
         Assert.assertTrue("", ((SSANewInstruction) s).getNewSite().getDeclaredType().isArrayType());
       }
@@ -236,6 +242,7 @@ public abstract class JavaIRTests extends IRTests {
      */
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
 
         MethodReference mref = descriptorToMethodRef("Source#ArrayLiteral2#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
@@ -245,7 +252,7 @@ public abstract class JavaIRTests extends IRTests {
         final SSAInstruction[] instructions = node.getIR().getInstructions();
         // test 1
         {
-          SSAInstruction s1 = instructions[3];
+          SSAInstruction s1 = instructions[2];
           if (s1 instanceof SSANewInstruction) {
             Assert.assertTrue("", ((SSANewInstruction) s1).getNewSite().getDeclaredType().isArrayType());
           } else {
@@ -254,7 +261,7 @@ public abstract class JavaIRTests extends IRTests {
         }
         // test 2
         {
-          SSAInstruction s2 = instructions[4];
+          SSAInstruction s2 = instructions[3];
           if (s2 instanceof SSANewInstruction) {
             Assert.assertTrue("", ((SSANewInstruction) s2).getNewSite().getDeclaredType().isArrayType());
           } else {
@@ -264,7 +271,7 @@ public abstract class JavaIRTests extends IRTests {
         // test 3: the last 4 instructions are of the form y[i] = i+1;
         {
           final SymbolTable symbolTable = node.getIR().getSymbolTable();
-          for (int i = 5; i <= 8; i++) {
+          for (int i = 4; i <= 7; i++) {
             Assert.assertTrue("Expected only array stores.", instructions[i] instanceof SSAArrayStoreInstruction);
 
             SSAArrayStoreInstruction as = (SSAArrayStoreInstruction) instructions[i];
@@ -297,12 +304,13 @@ public abstract class JavaIRTests extends IRTests {
      */
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
 
         MethodReference mref = descriptorToMethodRef("Source#QualifiedStatic#main#([Ljava/lang/String;)V", cg.getClassHierarchy());
 
         CGNode node = cg.getNodes(mref).iterator().next();
-        SSAInstruction s = node.getIR().getInstructions()[5];
+        SSAInstruction s = node.getIR().getInstructions()[4];
 
         Assert.assertTrue("Did not find a getstatic instruction.", s instanceof SSAGetInstruction
             && ((SSAGetInstruction) s).isStatic());
@@ -319,6 +327,7 @@ public abstract class JavaIRTests extends IRTests {
 
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
         final String typeStr = singleInputForTest() + "$WhatsIt";
 
@@ -349,6 +358,7 @@ public abstract class JavaIRTests extends IRTests {
 
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
         final String typeStr = singleInputForTest();
 
@@ -465,6 +475,7 @@ public abstract class JavaIRTests extends IRTests {
        * Classes local to method are enclosed in the class the methods belong
        * to.
        */
+      @Override
       public void check(CallGraph cg) {
         final String typeStr = singleInputForTest();
         final String localClassStr = "Foo";
@@ -501,6 +512,7 @@ public abstract class JavaIRTests extends IRTests {
 
     new IRAssertion() {
 
+      @Override
       public void check(CallGraph cg) {
         final String typeStr = singleInputForTest();
 

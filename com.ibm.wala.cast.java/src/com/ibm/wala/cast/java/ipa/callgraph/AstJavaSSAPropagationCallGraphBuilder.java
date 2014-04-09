@@ -34,6 +34,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSetAction;
 
@@ -50,6 +51,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
   //
   // ///////////////////////////////////////////////////////////////////////////
 
+  @Override
   protected boolean useObjectCatalog() {
     return false;
   }
@@ -68,10 +70,12 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
       this.outer = outer;
     }
 
+    @Override
     public int hashCode() {
       return getInstanceKey().hashCode() * outer.hashCode();
     }
 
+    @Override
     public boolean equals(Object o) {
       return (o instanceof EnclosingObjectReferenceKey) && ((EnclosingObjectReferenceKey) o).outer.equals(outer)
           && ((EnclosingObjectReferenceKey) o).getInstanceKey().equals(getInstanceKey());
@@ -108,15 +112,18 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
       super(vn);
     }
 
+    @Override
     public void visitEnclosingObjectReference(EnclosingObjectReference inst) {
       Assertions.UNREACHABLE();
     }
 
+    @Override
     public void visitJavaInvoke(AstJavaInvokeInstruction instruction) {
       bingo = true;
     }
   }
 
+  @Override
   protected InterestingVisitor makeInterestingVisitor(CGNode node, int vn) {
     return new AstJavaInterestingVisitor(vn);
   }
@@ -165,10 +172,12 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
 
       } else {
         system.newSideEffect(new UnaryOperator<PointsToSetVariable>() {
+          @Override
           public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
             IntSetVariable tv = (IntSetVariable) rhs;
             if (tv.getValue() != null) {
               tv.getValue().foreach(new IntSetAction() {
+                @Override
                 public void act(int ptr) {
                   InstanceKey iKey = system.getInstanceKey(ptr);
                   PointerKey enclosing = new EnclosingObjectReferenceKey(iKey, cls);
@@ -179,14 +188,17 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
             return NOT_CHANGED;
           }
 
+          @Override
           public int hashCode() {
             return System.identityHashCode(this);
           }
 
+          @Override
           public boolean equals(Object o) {
             return o == this;
           }
 
+          @Override
           public String toString() {
             return "enclosing objects of " + objKey;
           }
@@ -194,6 +206,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
       }
     }
 
+    @Override
     public void visitEnclosingObjectReference(EnclosingObjectReference inst) {
       PointerKey lvalKey = getPointerKeyForLocal(inst.getDef());
       PointerKey objKey = getPointerKeyForLocal(1);
@@ -201,6 +214,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
       handleEnclosingObject(lvalKey, cls, objKey);
     }
 
+    @Override
     public void visitNew(SSANewInstruction instruction) {
       super.visitNew(instruction);
       InstanceKey iKey = getInstanceKeyForAllocation(instruction.getNewSite());
@@ -271,12 +285,22 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
       }
     }
 
+    @Override
     public void visitJavaInvoke(AstJavaInvokeInstruction instruction) {
       visitInvokeInternal(instruction, new DefaultInvariantComputer());
     }
   }
 
+  @Override
   protected ConstraintVisitor makeVisitor(CGNode node) {
     return new AstJavaConstraintVisitor(this, node);
+  }
+
+  @Override
+  protected boolean sameMethod(CGNode opNode, String definingMethod) {
+    MethodReference reference = opNode.getMethod().getReference();
+    String selector = reference.getSelector().toString();
+    String containingClass = reference.getDeclaringClass().getName().toString();
+    return definingMethod.equals(containingClass + "/" + selector);
   }
 }

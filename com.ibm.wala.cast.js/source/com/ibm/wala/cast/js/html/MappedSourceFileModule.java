@@ -18,7 +18,7 @@ public class MappedSourceFileModule extends SourceFileModule implements MappedSo
   private final FileMapping fileMapping;
   
   public MappedSourceFileModule(File f, String fileName, FileMapping fileMapping) {
-    super(f, fileName);
+    super(f, fileName, null);
     this.fileMapping = fileMapping;
   }
 
@@ -27,6 +27,7 @@ public class MappedSourceFileModule extends SourceFileModule implements MappedSo
     this.fileMapping = fileMapping;
   }
 
+  @Override
   public FileMapping getMapping() {
     return fileMapping;
   }

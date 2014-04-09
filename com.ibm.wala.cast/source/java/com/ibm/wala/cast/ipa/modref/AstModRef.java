@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package com.ibm.wala.cast.ipa.modref;
 
 import java.util.Collection;
@@ -29,43 +39,53 @@ public class AstModRef extends ModRef {
       super(n, result, pa, h);
     }
 
+    @Override
     public void visitAstLexicalRead(AstLexicalRead instruction) {
 
     }
     
+    @Override
     public void visitAstLexicalWrite(AstLexicalWrite instruction) {
     
     }
     
+    @Override
     public void visitAstGlobalRead(AstGlobalRead instruction) {
 
     }
     
+    @Override
     public void visitAstGlobalWrite(AstGlobalWrite instruction) {
     
     }
     
+    @Override
     public void visitAssert(AstAssertInstruction instruction) {
 
     }    
 
+    @Override
     public void visitEachElementGet(EachElementGetInstruction inst) {
 
     }
 
+    @Override
     public void visitEachElementHasNext(EachElementHasNextInstruction inst) {
     
     }
 
+    @Override
     public void visitIsDefined(AstIsDefinedInstruction inst) {
 
     }
 
+    @Override
     public void visitEcho(AstEchoInstruction inst) {
 
     }
   }
 
+  @Override
   protected RefVisitor makeRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis pa, ExtendedHeapModel h) {
     return new AstRefVisitor(n, result, pa, h);
   }
@@ -79,38 +99,47 @@ public class AstModRef extends ModRef {
       super(n, result, h, pa, true);
     }
 
+    @Override
     public void visitAstLexicalRead(AstLexicalRead instruction) {
 
     }
     
+    @Override
     public void visitAstLexicalWrite(AstLexicalWrite instruction) {
     
     }
     
+    @Override
     public void visitAstGlobalRead(AstGlobalRead instruction) {
 
     }
     
+    @Override
     public void visitAstGlobalWrite(AstGlobalWrite instruction) {
     
     }
     
+    @Override
     public void visitAssert(AstAssertInstruction instruction) {
 
     }    
 
+    @Override
     public void visitEachElementGet(EachElementGetInstruction inst) {
 
     }
 
+    @Override
     public void visitEachElementHasNext(EachElementHasNextInstruction inst) {
     
     }
 
+    @Override
     public void visitIsDefined(AstIsDefinedInstruction inst) {
 
     }
 
+    @Override
     public void visitEcho(AstEchoInstruction inst) {
 
     }

@@ -24,6 +24,7 @@ public class BasicNodeManager<T> implements NodeManager<T> {
 
   final private HashSet<T> nodes = HashSetFactory.make();
 
+  @Override
   public Iterator<T> iterator() {
     return nodes.iterator();
   }
@@ -31,6 +32,7 @@ public class BasicNodeManager<T> implements NodeManager<T> {
   /*
    * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
    */
+  @Override
   public int getNumberOfNodes() {
     return nodes.size();
   }
@@ -38,6 +40,7 @@ public class BasicNodeManager<T> implements NodeManager<T> {
   /*
    * @see com.ibm.wala.util.graph.NodeManager#addNode(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public void addNode(T n) {
     nodes.add(n);
   }
@@ -45,6 +48,7 @@ public class BasicNodeManager<T> implements NodeManager<T> {
   /*
    * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public void removeNode(T n) {
     nodes.remove(n);
   }
@@ -52,6 +56,7 @@ public class BasicNodeManager<T> implements NodeManager<T> {
   /*
    * @see com.ibm.wala.util.graph.NodeManager#containsNode(com.ibm.wala.util.graph.Node)
    */
+  @Override
   public boolean containsNode(T N) {
     return nodes.contains(N);
   }

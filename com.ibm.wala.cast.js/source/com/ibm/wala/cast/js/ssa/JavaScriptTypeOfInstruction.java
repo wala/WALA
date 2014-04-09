@@ -24,18 +24,22 @@ public class JavaScriptTypeOfInstruction extends SSAAbstractUnaryInstruction {
     super(iindex, lval, object);
   }
 
+  @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((JSInstructionFactory)insts).TypeOfInstruction(iindex, (defs != null ? defs[0] : getDef(0)), (uses != null ? uses[0] : getUse(0)));
   }
 
+  @Override
   public String toString(SymbolTable symbolTable) {
     return getValueString(symbolTable, getDef(0)) + " = typeof(" + getValueString(symbolTable, getUse(0)) + ")";
   }
 
+  @Override
   public void visit(IVisitor v) {
     ((JSInstructionVisitor) v).visitTypeOf(this);
   }
 
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return Util.noExceptions();
   }

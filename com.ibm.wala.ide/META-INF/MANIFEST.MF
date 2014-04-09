@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Eclipse-LazyStart: true
 Bundle-Name: %pluginName
 Bundle-SymbolicName: com.ibm.wala.ide
-Bundle-Version: 1.1.3.qualifier
+Bundle-Version: 1.3.4.qualifier
 Bundle-Activator: com.ibm.wala.ide.plugin.CorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
@@ -13,9 +13,10 @@ Require-Bundle: com.ibm.wala.core,
  org.eclipse.jface,
  org.eclipse.ui,
  org.eclipse.core.resources,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.eclipse.jdt.core
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.ibm.wala.ide.classloader,
  com.ibm.wala.ide.client,
  com.ibm.wala.ide.plugin,

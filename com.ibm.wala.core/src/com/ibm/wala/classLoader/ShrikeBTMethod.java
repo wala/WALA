@@ -340,6 +340,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
   }
 
+  @Override
   public MethodReference getReference() {
     if (methodReference == null) {
       methodReference = computeMethodReference();
@@ -347,56 +348,69 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     return methodReference;
   }
 
+  @Override
   public boolean isClinit() {
     return getReference().getSelector().equals(MethodReference.clinitSelector);
   }
 
+  @Override
   public boolean isInit() {
     return getReference().getName().equals(MethodReference.initAtom);
   }
 
   protected abstract int getModifiers();
 
+  @Override
   public boolean isNative() {
     return ((getModifiers() & Constants.ACC_NATIVE) != 0);
   }
 
+  @Override
   public boolean isAbstract() {
     return ((getModifiers() & Constants.ACC_ABSTRACT) != 0);
   }
 
+  @Override
   public boolean isPrivate() {
     return ((getModifiers() & Constants.ACC_PRIVATE) != 0);
   }
 
+  @Override
   public boolean isProtected() {
     return ((getModifiers() & Constants.ACC_PROTECTED) != 0);
   }
 
+  @Override
   public boolean isPublic() {
     return ((getModifiers() & Constants.ACC_PUBLIC) != 0);
   }
 
+  @Override
   public boolean isFinal() {
     return ((getModifiers() & Constants.ACC_FINAL) != 0);
   }
 
+  @Override
   public boolean isBridge() {
     return ((getModifiers() & Constants.ACC_VOLATILE) != 0);
   }
 
+  @Override
   public boolean isSynchronized() {
     return ((getModifiers() & Constants.ACC_SYNCHRONIZED) != 0);
   }
 
+  @Override
   public boolean isStatic() {
     return ((getModifiers() & Constants.ACC_STATIC) != 0);
   }
 
+  @Override
   public boolean isSynthetic() {
     return false;
   }
 
+  @Override
   public IClass getDeclaringClass() {
     return declaringClass;
   }
@@ -544,10 +558,12 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   // TODO: ShrikeBT should have a getMaxStack method on Decoder, I think.
   public abstract int getMaxStackHeight();
 
+  @Override
   public Atom getName() {
     return getReference().getName();
   }
 
+  @Override
   public Descriptor getDescriptor() {
     return getReference().getDescriptor();
   }
@@ -689,6 +705,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   /**
    * By convention, for a non-static method, getParameterType(0) is the this pointer
    */
+  @Override
   public TypeReference getParameterType(int i) {
     if (!isStatic()) {
       if (i == 0) {
@@ -706,6 +723,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
    * 
    * @return int
    */
+  @Override
   public int getNumberOfParameters() {
     if (isStatic() || isClinit()) {
       return getReference().getNumberOfParameters();
@@ -717,6 +735,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   /*
    * @see com.ibm.wala.classLoader.IMethod#hasExceptionHandler()
    */
+  @Override
   public abstract boolean hasExceptionHandler();
 
   /**
@@ -726,6 +745,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
    * 
    * @see com.ibm.wala.classLoader.IMethod#getDeclaredExceptions()
    */
+  @Override
   public TypeReference[] getDeclaredExceptions() throws InvalidClassFileException {
     return (getBCInfo().exceptionTypes == null) ? new TypeReference[0] : getBCInfo().exceptionTypes;
   }
@@ -774,6 +794,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   /*
    * @see com.ibm.wala.classLoader.IMethod#getLineNumber(int)
    */
+  @Override
   public int getLineNumber(int bcIndex) {
     try {
       return (getBCInfo().lineNumberMap == null) ? -1 : getBCInfo().lineNumberMap[bcIndex];
@@ -809,6 +830,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   /*
    * @see com.ibm.wala.classLoader.IMethod#getSignature()
    */
+  @Override
   public String getSignature() {
     return getReference().getSignature();
   }
@@ -816,6 +838,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   /*
    * @see com.ibm.wala.classLoader.IMethod#getSelector()
    */
+  @Override
   public Selector getSelector() {
     return getReference().getSelector();
   }
@@ -823,6 +846,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   /*
    * @see com.ibm.wala.classLoader.IMethod#getLocalVariableName(int, int)
    */
+  @Override
   public abstract String getLocalVariableName(int bcIndex, int localNumber);
 
   /*
@@ -830,6 +854,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
    * 
    * @see com.ibm.wala.classLoader.IMethod#hasLocalVariableTable()
    */
+  @Override
   public abstract boolean hasLocalVariableTable();
 
   /**

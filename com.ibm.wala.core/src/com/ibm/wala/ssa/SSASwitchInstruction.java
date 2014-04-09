@@ -112,10 +112,12 @@ public class SSASwitchInstruction extends SSAInstruction {
     return new IntIterator() {
       private int i = 0;
 
+      @Override
       public boolean hasNext() {
         return i < casesAndLabels.length;
       }
 
+      @Override
       public int next() {
         int v = casesAndLabels[i];
         i += 2;

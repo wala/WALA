@@ -23,7 +23,8 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * nCFA Call graph builder
+ * nCFA Call graph builder. Note that by default, this builder uses a
+ * {@link ClassBasedInstanceKeys} heap model.
  */
 public class nCFABuilder extends SSAPropagationCallGraphBuilder {
 

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package com.ibm.wala.cast.js.test;
 
 import static com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.makeHierarchy;
@@ -150,7 +160,7 @@ public class TestRhinoSourceMap {
 			  sources.put(assertion[0], assertion[1]);
 		  }
 		  
-		  JavaScriptLoaderFactory loaders = makeLoaders();
+		  JavaScriptLoaderFactory loaders = makeLoaders(null);
 		  AnalysisScope scope = makeScriptScope("tests", fileName, loaders);
 		  IClassHierarchy cha = makeHierarchy(scope, loaders);
 		  for(IClass cls : cha) {

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package com.ibm.wala.ipa.cha;
 
 import java.util.Collection;
@@ -56,7 +66,7 @@ public interface IClassHierarchy extends Iterable<IClass> {
    * @return the set of IMethods that this call can resolve to.
    * @throws IllegalArgumentException if ref is null
    */
-  public Collection<IMethod> getPossibleTargets(MethodReference ref);
+  public Set<IMethod> getPossibleTargets(MethodReference ref);
 
   /**
    * Find the possible targets of a call to a method reference where the receiver is of a certain type

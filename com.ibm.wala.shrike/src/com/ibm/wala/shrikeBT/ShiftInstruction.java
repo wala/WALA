@@ -51,6 +51,7 @@ public final class ShiftInstruction extends Instruction implements IShiftInstruc
     }
   }
 
+  @Override
   public Operator getOperator() {
     return Operator.values()[(opcode - OP_ishl) / 2];
   }
@@ -75,6 +76,7 @@ public final class ShiftInstruction extends Instruction implements IShiftInstruc
     return Util.getWordSize(getType());
   }
 
+  @Override
   public String getType() {
     return indexedTypes[(opcode - OP_ishl) & 1];
   }
@@ -89,10 +91,12 @@ public final class ShiftInstruction extends Instruction implements IShiftInstruc
     return "Shift(" + getType() + "," + getOperator() + ")";
   }
 
+  @Override
   public boolean isPEI() {
     return false;
   }
 
+  @Override
   public boolean isUnsigned() {
     return false;
   }

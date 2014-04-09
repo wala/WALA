@@ -343,6 +343,7 @@ public class TabulationSolver<T, P, F> {
       }
       if (D3 != null) {
         D3.foreach(new IntSetAction() {
+          @Override
           public void act(int d3) {
             propagate(edge.entry, edge.d1, m, d3);
           }
@@ -433,6 +434,7 @@ public class TabulationSolver<T, P, F> {
           System.err.println("D5 " + D5);
         }
         IntSetAction action = new IntSetAction() {
+          @Override
           public void act(final int d4) {
             propToReturnSite(c, entries, retSite, d4, D5);
           }
@@ -457,6 +459,7 @@ public class TabulationSolver<T, P, F> {
   private void propagateToReturnSiteWithBinaryFlowFunction(final PathEdge edge, final T c, final IntSet D4, final T[] entries,
       final T retSite, final IFlowFunction retf) {
     D4.foreach(new IntSetAction() {
+      @Override
       public void act(final int d4) {
         final IntSet D5 = computeBinaryFlow(d4, edge.d2, (IBinaryReturnFlowFunction) retf);
         propToReturnSite(c, entries, retSite, d4, D5);
@@ -478,6 +481,7 @@ public class TabulationSolver<T, P, F> {
   private void propToReturnSite(final T c, final T[] entries, final T retSite, final int d4, final IntSet D5) {
     if (D5 != null) {
       D5.foreach(new IntSetAction() {
+        @Override
         public void act(final int d5) {
           // [26 - 28]
           // note that we've modified the algorithm here to account
@@ -498,6 +502,7 @@ public class TabulationSolver<T, P, F> {
             }
             if (D3 != null) {
               D3.foreach(new IntSetAction() {
+                @Override
                 public void act(int d3) {
                   // set curPathEdge to be consistent with its setting in processCall() when applying a summary edge
                   curPathEdge = PathEdge.createPathEdge(s_p, d3, c, d4);
@@ -563,6 +568,7 @@ public class TabulationSolver<T, P, F> {
       }
       if (D3 != null) {
         D3.foreach(new IntSetAction() {
+          @Override
           public void act(int d3) {
             propagate(edge.entry, edge.d1, m, d3);
           }
@@ -588,6 +594,7 @@ public class TabulationSolver<T, P, F> {
       }
       if (reached != null) {
         reached.foreach(new IntSetAction() {
+          @Override
           public void act(int x) {
             assert x >= 0;
             assert edge.d1 >= 0;
@@ -640,6 +647,7 @@ public class TabulationSolver<T, P, F> {
       final int s_p_num = supergraph.getLocalBlockNumber(calleeEntry);
 
       reached.foreach(new IntSetAction() {
+        @Override
         public void act(final int d1) {
           // we get reuse if we _don't_ propagate a new fact to the callee entry
           final boolean gotReuse = !propagate(calleeEntry, d1, calleeEntry, d1);
@@ -669,6 +677,7 @@ public class TabulationSolver<T, P, F> {
                   if (supergraph.hasEdge(exit, returnSite)) {
                     final IFlowFunction retf = flowFunctionMap.getReturnFlowFunction(edge.target, exit, returnSite);
                     reachedBySummary.foreach(new IntSetAction() {
+                      @Override
                       public void act(int d2) {
                         assert curSummaryEdge == null : "curSummaryEdge should be null here";
                         curSummaryEdge = PathEdge.createPathEdge(calleeEntry, d1, exit, d2);
@@ -676,6 +685,7 @@ public class TabulationSolver<T, P, F> {
                           final IntSet D5 = computeBinaryFlow(edge.d2, d2, (IBinaryReturnFlowFunction) retf);
                           if (D5 != null) {
                             D5.foreach(new IntSetAction() {
+                              @Override
                               public void act(int d5) {
                                 propagate(edge.entry, edge.d1, returnSite, d5);
                               }
@@ -685,6 +695,7 @@ public class TabulationSolver<T, P, F> {
                           final IntSet D5 = computeFlow(d2, (IUnaryFlowFunction) retf);
                           if (D5 != null) {
                             D5.foreach(new IntSetAction() {
+                              @Override
                               public void act(int d5) {
                                 propagate(edge.entry, edge.d1, returnSite, d5);
                               }
@@ -907,6 +918,7 @@ public class TabulationSolver<T, P, F> {
      * 
      * @return IntSet representing the bitvector
      */
+    @Override
     public IntSet getResult(T node) {
       return TabulationSolver.this.getResult(node);
     }
@@ -918,6 +930,7 @@ public class TabulationSolver<T, P, F> {
       TreeMap<Object, TreeSet<T>> map = new TreeMap<Object, TreeSet<T>>(ToStringComparator.instance());
 
       Comparator<Object> c = new Comparator<Object>() {
+        @Override
         public int compare(Object o1, Object o2) {
           if (!(o1 instanceof IBasicBlock)) {
             return -1;
@@ -952,6 +965,7 @@ public class TabulationSolver<T, P, F> {
     /*
      * @see com.ibm.wala.dataflow.IFDS.TabulationResult#getProblem()
      */
+    @Override
     public TabulationProblem<T, P, F> getProblem() {
       return problem;
     }
@@ -959,6 +973,7 @@ public class TabulationSolver<T, P, F> {
     /*
      * @see com.ibm.wala.dataflow.IFDS.TabulationResult#getSupergraphNodesReached()
      */
+    @Override
     public Collection<T> getSupergraphNodesReached() {
       Collection<T> result = HashSetFactory.make();
       for (Entry<T, LocalPathEdges> e : pathEdges.entrySet()) {
@@ -979,6 +994,7 @@ public class TabulationSolver<T, P, F> {
      * @param n2
      * @return set of d2 s.t. (n1,d1) -> (n2,d2) is recorded as a summary edge, or null if none found
      */
+    @Override
     public IntSet getSummaryTargets(T n1, int d1, T n2) {
       LocalSummaryEdges summaries = summaryEdges.get(supergraph.getProcOf(n1));
       if (summaries == null) {
@@ -989,6 +1005,7 @@ public class TabulationSolver<T, P, F> {
       return summaries.getSummaryEdges(num1, num2, d1);
     }
 
+    @Override
     public Collection<PathEdge<T>> getSeeds() {
       return TabulationSolver.this.getSeeds();
     }

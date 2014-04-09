@@ -30,23 +30,28 @@ public class AstGlobalWrite extends SSAPutInstruction {
     super(iindex, rhs, global);
   }
 
+  @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((AstInstructionFactory)insts).GlobalWrite(iindex, getDeclaredField(), (uses==null)? getVal(): uses[0]);
   }
 
+  @Override
   public String toString(SymbolTable symbolTable) {
     return "global:" + getGlobalName() + " = " + getValueString(symbolTable,getVal());
   }
 
+  @Override
   public void visit(IVisitor v) {
     if (v instanceof AstInstructionVisitor) 
       ((AstInstructionVisitor)v).visitAstGlobalWrite(this);
   }
 
+  @Override
   public boolean isFallThrough() {
     return true;
   }
 
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return null;
   }

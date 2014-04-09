@@ -16,8 +16,10 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.ipa.callgraph.StandardFunctionTargetSelector;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
@@ -36,6 +38,7 @@ import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.cfg.AbstractCFG;
+import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.SourceURLModule;
@@ -62,11 +65,6 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
   public static JavaScriptTranslatorFactory translatorFactory;
   
   /**
-   * preprocessor to run generated CAst trees through, null if none
-   */
-  public static CAstRewriterFactory preprocessor;
-
-  /**
    * Set up the translator factory. This method should be called before invoking
    * {@link #makeLoaders()}.
    */
@@ -78,10 +76,6 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     return translatorFactory;
   }
   
-  public static void setPreprocessor(CAstRewriterFactory preprocessor) {
-    JSCallGraphUtil.preprocessor = preprocessor;
-  }
-
   public static JSAnalysisOptions makeOptions(AnalysisScope scope, IClassHierarchy cha, Iterable<Entrypoint> roots) {
     final JSAnalysisOptions options = new JSAnalysisOptions(scope, /*
                                                                 * AstIRFactory.
@@ -99,13 +93,26 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
     return options;
   }
 
-  public static JavaScriptLoaderFactory makeLoaders() {
+  /**
+   * @param preprocessor CAst rewriter to use for preprocessing JavaScript source files; may be null
+   * @return
+   */
+  public static JavaScriptLoaderFactory makeLoaders(CAstRewriterFactory preprocessor) {
     if (translatorFactory == null) {
       throw new IllegalStateException("com.ibm.wala.cast.js.ipa.callgraph.Util.setTranslatorFactory() must be invoked before makeLoaders()");
     }
     return new JavaScriptLoaderFactory(translatorFactory, preprocessor);
   }
+  
+  public static JavaScriptLoaderFactory makeLoaders() {
+    return makeLoaders(null);
+  }
 
+  public static IClassHierarchy makeHierarchyForScripts(String... scriptFiles) throws IOException, ClassHierarchyException {
+    JavaScriptLoaderFactory loaders = makeLoaders();
+    AnalysisScope scope = CAstCallGraphUtil.makeScope(scriptFiles, loaders, JavaScriptLoader.JS);
+    return makeHierarchy(scope, loaders);
+  }
   public static IClassHierarchy makeHierarchy(AnalysisScope scope, ClassLoaderFactory loaders) throws ClassHierarchyException {
     return ClassHierarchy.make(scope, loaders, JavaScriptLoader.JS);
   }
@@ -163,7 +170,7 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
       JSAstTranslator toIR = new JSAstTranslator(cl) {
         @Override
         protected void defineFunction(CAstEntity N, WalkContext definingContext, AbstractCFG cfg, SymbolTable symtab,
-            boolean hasCatchBlock, TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation LI,
+            boolean hasCatchBlock, Map<IBasicBlock,TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation LI,
             DebuggingInformation debugInfo) {
           String fnName = "L" + composeEntityName(definingContext, N);
           names.add(fnName);

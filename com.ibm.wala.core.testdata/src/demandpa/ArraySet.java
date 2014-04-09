@@ -57,6 +57,7 @@ class ArraySet {
   }
 
   class ArraySetIter implements Iter {
+    @Override
     public Object next() {
       return elems[0];
     }

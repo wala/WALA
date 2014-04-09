@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="com.ibm.wala.cast.java.test.data" default="getSources" basedir=".">
+<project name="com.ibm.wala.cast.java.test.data" default="jar" basedir=".">
 
   <property name="basews" value="${ws}"/>
   <property name="baseos" value="${os}"/>
@@ -14,12 +14,15 @@
   <property name="compilerArg" value=""/>
   <property name="javacSource" value="1.5"/>
   <property name="javacTarget" value="1.5"/>
-  <!-- This property has been updated to correspond to the paths used by the latest Java update
-       on Mac OS X 10.6 (Java version 1.6.0_22).  If you are not using this version of Mac OS X or Java,
-       try changing the value of the property to "${java.home}/../../../Classes" -->
-  <condition property="dir_bootclasspath" value="${java.home}/../Classes">
-    <os family="mac"/>
-  </condition>
+	<!-- This property has been updated to correspond to the paths used by the latest Java update
+	on Mac OS X 10.6 (Java version 1.6.0_22).  If you are not using this version of Mac OS X or Java,
+	try changing the value of the property to "${java.home}/../../../Classes" -->
+    <condition property="dir_bootclasspath" value="${java.home}/../Classes">
+      <and>
+            <os family="mac"/>
+            <equals arg1="${ant.java.version}" arg2="1.6" />
+      </and>
+    </condition>
   <property name="dir_bootclasspath" value="${java.home}/lib"/>
   <path id="path_bootclasspath">
     <fileset dir="${dir_bootclasspath}">
@@ -49,23 +52,33 @@
   <target name="getSources" depends="fetchJLex" />
 
   <target name="testdatadir" depends="init,testdata.exists" unless="testdatadir.present">
-    <mkdir dir="${basedir}/../com.ibm.wala.cast.java.test/testdata"/>
+    <mkdir dir="${basedir}/../com.ibm.wala.ide.jdt.test/testdata"/>
   </target>
 
   <target name="testdata.exists" depends="init">
-    <available file="${basedir}/../com.ibm.wala.cast.java.test/testdata" 
+    <available file="${basedir}/../com.ibm.wala.ide.jdt.test/testdata" 
 	       type="dir" 
 	       property="testdatadir.present"/>
   </target>
 
-  <target name="compile" depends="getSources">
+  <target name="bin.exists" depends="">
+    <available file="${basedir}/bin" 
+	       type="dir" 
+	       property="bin.present"/>
+  </target>
+
+  <target name="bindir" depends="init,bin.exists" unless="bin.present">
+    <mkdir dir="${basedir}/bin"/>
+  </target>
+
+  <target name="compile" depends="getSources,bindir">
     <javac srcdir="${basedir}/src"
 	   destdir="${basedir}/bin"
 	   excludes="**/Activator.java"/>
   </target>
   
   <target name="jar" depends="compile,testdatadir">
-    <jar destfile="${basedir}/../com.ibm.wala.cast.java.test/testdata/test_project.zip" basedir="${basedir}"/>
+    <jar destfile="${basedir}/../com.ibm.wala.ide.jdt.test/testdata/test_project.zip" basedir="${basedir}"/>
   </target>
   
   <target name="init" depends="properties">

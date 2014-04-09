@@ -30,6 +30,7 @@ public class OrFilter<T> implements Filter<T> {
     this.b = b;
   }
   
+  @Override
   public boolean accepts(T o) {
     return a.accepts(o) || b.accepts(o);
   }

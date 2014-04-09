@@ -36,6 +36,7 @@ public class AstLexicalRead extends AstLexicalAccess {
     this(iindex, new Access(globalName, definer, lhs));
   }
 
+  @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (defs == null) {
       return new AstLexicalRead(iindex, getAccesses());
@@ -50,22 +51,27 @@ public class AstLexicalRead extends AstLexicalAccess {
     }
   }
 
+  @Override
   public int getNumberOfDefs() {
     return getAccessCount();
   }
 
+  @Override
   public int getDef(int i) {
     return getAccess(i).valueNumber;
   }
 
+  @Override
   public int getNumberOfUses() {
     return 0;
   }
 
+  @Override
   public int getUse(int i) {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public String toString(SymbolTable symbolTable) {
     StringBuffer sb = new StringBuffer();
     for (int i = 0; i < getAccessCount(); i++) {
@@ -82,6 +88,7 @@ public class AstLexicalRead extends AstLexicalAccess {
     return sb.toString();
   }
 
+  @Override
   public void visit(IVisitor v) {
     assert v instanceof AstInstructionVisitor;
     ((AstInstructionVisitor) v).visitAstLexicalRead(this);

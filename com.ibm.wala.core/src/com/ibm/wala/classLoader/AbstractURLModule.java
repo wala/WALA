@@ -34,6 +34,7 @@ public abstract class AbstractURLModule implements Module, ModuleEntry {
     return url;
   }
 
+  @Override
   public String getName() {
     try {
       URLConnection con = url.openConnection();
@@ -47,6 +48,7 @@ public abstract class AbstractURLModule implements Module, ModuleEntry {
     }
   }
 
+  @Override
   public InputStream getInputStream() {
     try {
       return url.openConnection().getInputStream();
@@ -56,21 +58,31 @@ public abstract class AbstractURLModule implements Module, ModuleEntry {
     }
   }
 
+  @Override
   public boolean isModuleFile() {
     return false;
   }
 
+  @Override
   public Module asModule() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
 
+  @Override
   public String getClassName() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public Iterator<ModuleEntry> getEntries() {
     return new NonNullSingletonIterator<ModuleEntry>(this);
   }
 
+  @Override
+  public Module getContainer() {
+    // URLs are freestanding, without containers
+    return null;
+  }
+  
 }

@@ -58,6 +58,7 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
     done = true;
   }
 
+  @Override
   public T next() throws NoSuchElementException {
     if (done) {
       throw new java.util.NoSuchElementException();
@@ -67,10 +68,12 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
     return o;
   }
 
+  @Override
   public boolean hasNext() {
     return !done;
   }
 
+  @Override
   public void remove() throws UnsupportedOperationException {
     throw new java.lang.UnsupportedOperationException();
   }

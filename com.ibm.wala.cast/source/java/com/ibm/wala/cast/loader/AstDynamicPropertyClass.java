@@ -37,6 +37,7 @@ public abstract class AstDynamicPropertyClass extends AstClass {
     this.defaultDescriptor = defaultDescriptor;
   }
 
+  @Override
   public IField getField(final Atom name) {
     if (declaredFields.containsKey(name)) {
       return declaredFields.get(name);
@@ -45,54 +46,67 @@ public abstract class AstDynamicPropertyClass extends AstClass {
     } else {
       final boolean isStatic = isStaticField(name);
       declaredFields.put(name, new IField() {
+        @Override
         public String toString() {
           return "<field " + name + ">";
         }
 
+        @Override
         public IClass getDeclaringClass() {
           return AstDynamicPropertyClass.this;
         }
 
+        @Override
         public Atom getName() {
           return name;
         }
 
+        @Override
         public TypeReference getFieldTypeReference() {
           return defaultDescriptor;
         }
 
+        @Override
         public FieldReference getReference() {
           return FieldReference.findOrCreate(AstDynamicPropertyClass.this.getReference(), name, defaultDescriptor);
         }
 
+        @Override
         public boolean isFinal() {
           return false;
         }
 
+        @Override
         public boolean isPrivate() {
           return false;
         }
 
+        @Override
         public boolean isProtected() {
           return false;
         }
 
+        @Override
         public boolean isPublic() {
           return false;
         }
 
+        @Override
         public boolean isVolatile() {
           return false;
         }
 
+        @Override
         public boolean isStatic() {
           return isStatic;
         }
 
+        @Override
         public IClassHierarchy getClassHierarchy() {
           return AstDynamicPropertyClass.this.getClassHierarchy();
         }
         
+        @Override
         public Collection<Annotation> getAnnotations() {
           return Collections.emptySet();
         }

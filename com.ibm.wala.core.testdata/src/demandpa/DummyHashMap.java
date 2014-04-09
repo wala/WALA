@@ -28,6 +28,7 @@ public class DummyHashMap {
   public Iter keyIter() {
     return new Iter() {
 
+      @Override
       public Object next() {
         return keys[0];
       }
@@ -37,6 +38,7 @@ public class DummyHashMap {
   public Iter valuesIter() {
     return new Iter() {
 
+      @Override
       public Object next() {
         return values[0];
       }

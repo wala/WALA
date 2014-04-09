@@ -24,11 +24,13 @@ public class JavaScriptPropertyWrite extends AbstractReflectivePut {
     super(iindex, objectRef, memberRef, value);
   }
 
+  @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((JSInstructionFactory)insts).PropertyWrite(iindex, uses == null ? getObjectRef() : uses[0], uses == null ? getMemberRef() : uses[1],
         uses == null ? getValue() : uses[2]);
   }
 
+  @Override
   public String toString(SymbolTable symbolTable) {
     return super.toString(symbolTable) + " = " + getValueString(symbolTable, getValue());
   }
@@ -36,6 +38,7 @@ public class JavaScriptPropertyWrite extends AbstractReflectivePut {
   /**
    * @see com.ibm.domo.ssa.Instruction#visit(Visitor)
    */
+  @Override
   public void visit(IVisitor v) {
     assert v instanceof JSInstructionVisitor;
     ((JSInstructionVisitor) v).visitJavaScriptPropertyWrite(this);
@@ -45,6 +48,7 @@ public class JavaScriptPropertyWrite extends AbstractReflectivePut {
    * (non-Javadoc)
    * @see com.ibm.domo.ssa.Instruction#isPEI()
    */
+  @Override
   public boolean isPEI() {
     return true;
   }
@@ -53,6 +57,7 @@ public class JavaScriptPropertyWrite extends AbstractReflectivePut {
    * (non-Javadoc)
    * @see com.ibm.domo.ssa.Instruction#getExceptionTypes()
    */
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return Util.typeErrorExceptions();
   }

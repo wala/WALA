@@ -61,10 +61,12 @@ public class GenReach<T, L> extends BitVectorFramework<T, L> {
       this.gen = gen;
     }
 
+    @Override
     public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
       return BitVectorUnion.instance();
     }
 
+    @Override
     public UnaryOperator<BitVectorVariable> getNodeTransferFunction(T node) {
       BitVector v = getGen(node);
       return new BitVectorUnionVector(v);
@@ -83,14 +85,17 @@ public class GenReach<T, L> extends BitVectorFramework<T, L> {
       }
     }
 
+    @Override
     public boolean hasEdgeTransferFunctions() {
       return false;
     }
 
+    @Override
     public boolean hasNodeTransferFunctions() {
       return true;
     }
 
+    @Override
     public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(T src, T dst) {
       Assertions.UNREACHABLE();
       return null;

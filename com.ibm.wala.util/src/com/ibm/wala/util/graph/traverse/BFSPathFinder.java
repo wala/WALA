@@ -84,6 +84,7 @@ public class BFSPathFinder<T> {
       throw new IllegalArgumentException("src is not in graph " + src);
     }
     this.filter = new Filter<T>() {
+      @Override
       public boolean accepts(T o) {
         return target.equals(o);
       }
@@ -108,6 +109,7 @@ public class BFSPathFinder<T> {
     this.roots = new NonNullSingletonIterator<T>(src);
 
     this.filter = new Filter<T>() {
+      @Override
       public boolean accepts(T o) {
         return ts.contains(o);
       }
@@ -129,6 +131,7 @@ public class BFSPathFinder<T> {
     this.G = G;
     this.roots = sources;
     this.filter = new Filter<T>() {
+      @Override
       public boolean accepts(T o) {
         return target.equals(o);
       }

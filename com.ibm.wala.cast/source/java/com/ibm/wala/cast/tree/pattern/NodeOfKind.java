@@ -34,7 +34,8 @@ public class NodeOfKind implements NodePattern {
 	/* (non-Javadoc)
 	 * @see pattern.NodePattern#matches(com.ibm.wala.cast.tree.CAstNode)
 	 */
-	public boolean matches(CAstNode node) {
+	@Override
+  public boolean matches(CAstNode node) {
 		if(node == null || node.getKind() != kind || node.getChildCount() != children.length)
 			return false;
 		for(int i=0;i<children.length;++i)

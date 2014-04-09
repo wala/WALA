@@ -87,19 +87,23 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
     return graph.toString();
   }
 
+  @Override
   public void removeStatement(IFixedPointStatement<T> s) {
     graph.removeNodeAndEdges(s);
   }
 
+  @Override
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public Iterator<AbstractStatement> getStatements() {
     return new FilterIterator(graph.iterator(), new Filter() {
+      @Override
       public boolean accepts(Object x) {
         return x instanceof AbstractStatement;
       }
     });
   }
 
+  @Override
   @SuppressWarnings("rawtypes")
   public void addStatement(IFixedPointStatement statement) throws IllegalArgumentException, UnimplementedError {
     if (statement == null) {
@@ -197,6 +201,7 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
     return (AbstractStatement<?,?>) graph.getNode(number);
   }
 
+  @Override
   public void reorder() {
     if (DEBUG) {
       checkGraph();
@@ -226,10 +231,12 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
     }
   }
 
+  @Override
   public Iterator<?> getStatementsThatUse(T v) {
     return (graph.containsNode(v) ? graph.getSuccNodes(v) : EmptyIterator.instance());
   }
 
+  @Override
   public Iterator<?> getStatementsThatDef(T v) {
     return (graph.containsNode(v) ? graph.getPredNodes(v) : EmptyIterator.instance());
   }
@@ -239,16 +246,20 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
     return (T) graph.getNode(n);
   }
 
+  @Override
   public int getNumberOfStatementsThatUse(T v) {
     return (graph.containsNode(v) ? graph.getSuccNodeCount(v) : 0);
   }
 
+  @Override
   public int getNumberOfStatementsThatDef(T v) {
     return (graph.containsNode(v) ? graph.getPredNodeCount(v) : 0);
   }
 
+  @Override
   public Iterator<T> getVariables() {
     return new FilterIterator<T>(graph.iterator(), new Filter<T>() {
+      @Override
       public boolean accepts(T x) {
         return x instanceof IVariable;
       }
@@ -268,10 +279,12 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
     return graph.getPredNodeCount(n);
   }
 
+  @Override
   public boolean containsStatement(IFixedPointStatement<T> s) {
     return equations.contains(s);
   }
 
+  @Override
   public boolean containsVariable(T v) {
     return variables.contains(v);
   }

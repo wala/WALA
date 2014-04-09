@@ -82,6 +82,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     this.cache = cache;
   }
 
+  @Override
   public IR getIR(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -115,6 +116,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getNumberOfStatements(com.ibm.wala.ipa.callgraph.CGNode)
    */
+  @Override
   public int getNumberOfStatements(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -127,6 +129,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
    * @see com.ibm.wala.ipa.callgraph.rta.RTAContextInterpreter#understands(com.ibm.wala.classLoader.IMethod,
    * com.ibm.wala.ipa.callgraph.Context)
    */
+  @Override
   public boolean understands(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -141,6 +144,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
   }
 
+  @Override
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -162,18 +166,22 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     return m.getInvokeStatements().iterator();
   }
 
+  @Override
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
     final Iterator<SSAInstruction> I = getInvokeStatements(node);
     return new Iterator<CallSiteReference>() {
+      @Override
       public boolean hasNext() {
         return I.hasNext();
       }
 
+      @Override
       public CallSiteReference next() {
         SSAInvokeInstruction s = (SSAInvokeInstruction) I.next();
         return s.getCallSite();
       }
 
+      @Override
       public void remove() {
         Assertions.UNREACHABLE();
       }
@@ -205,6 +213,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
    * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#recordFactoryType(com.ibm.wala.ipa.callgraph.CGNode,
    * com.ibm.wala.classLoader.IClass)
    */
+  @Override
   public boolean recordFactoryType(CGNode node, IClass klass) {
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");
@@ -215,6 +224,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     return recordType(node.getMethod().getClassHierarchy(), node.getContext(), klass.getReference());
   }
 
+  @Override
   public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -229,6 +239,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     }
   }
 
+  @Override
   public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -312,10 +323,12 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getCFG(com.ibm.wala.ipa.callgraph.CGNode)
    */
+  @Override
   public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode N) {
     return getIR(N).getControlFlowGraph();
   }
 
+  @Override
   public DefUse getDU(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");

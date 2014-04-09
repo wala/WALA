@@ -33,10 +33,12 @@ public class JavaScriptSummary extends MethodSummary {
 
   }
 
+  @Override
   public int getNumberOfParameters() {
     return declaredParameters;
   }
 
+  @Override
   public TypeReference getParameterType(int i) {
     return JavaScriptTypes.Root;
   }

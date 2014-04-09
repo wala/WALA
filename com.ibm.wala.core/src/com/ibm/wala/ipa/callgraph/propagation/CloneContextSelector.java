@@ -35,6 +35,7 @@ public class CloneContextSelector implements ContextSelector {
     this.cha = cha;
   }
 
+  @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (receiver == null) {
       return null;
@@ -46,6 +47,7 @@ public class CloneContextSelector implements ContextSelector {
     }
   }
 
+  @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     IMethod declaredTarget = cha.resolveMethod(site.getDeclaredTarget());
     if (declaredTarget != null && declaredTarget.getReference().equals(CloneInterpreter.CLONE)) {

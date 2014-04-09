@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.core.tests.demandpa.AbstractPtrTest;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -27,11 +28,15 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.CallGraphStats;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.AllApplicationEntrypoints;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ipa.cfg.InterproceduralCFG;
@@ -48,6 +53,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
+import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warnings;
 
@@ -112,6 +118,7 @@ public class CallGraphTest extends WalaTestCase {
   }
 
   @Test public void testHello() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    if (analyzingJar()) return;
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.HELLO, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
@@ -180,6 +187,7 @@ public class CallGraphTest extends WalaTestCase {
   }
 
   @Test public void testHelloAllEntrypoints() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
+    if (analyzingJar()) return;    
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.HELLO, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = new AllApplicationEntrypoints(scope, cha);
@@ -211,6 +219,7 @@ public class CallGraphTest extends WalaTestCase {
       }
     }
     return new Iterable<Entrypoint>() {
+      @Override
       public Iterator<Entrypoint> iterator() {
         return result.iterator();
       }
@@ -235,6 +244,23 @@ public class CallGraphTest extends WalaTestCase {
     CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(), cha, scope, false);
   }
 
+  @Test
+  public void testZeroOneContainerCopyOf() throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
+        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(scope, cha, "Ldemandpa/TestArraysCopyOf");
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    AnalysisCache cache = new AnalysisCache();
+    CallGraphBuilder builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
+    CallGraph cg = builder.makeCallGraph(options, null);
+    PointerAnalysis pa = builder.getPointerAnalysis();
+    CGNode mainMethod = AbstractPtrTest.findMainMethod(cg);
+    PointerKey keyToQuery = AbstractPtrTest.getParam(mainMethod, "testThisVar", pa.getHeapModel());
+    OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(keyToQuery);
+    Assert.assertEquals(1, pointsToSet.size());
+    
+  }
   /**
    * make main entrypoints, even in the primordial loader.
    */
@@ -250,6 +276,7 @@ public class CallGraphTest extends WalaTestCase {
       }
     }
     return new Iterable<Entrypoint>() {
+      @Override
       public Iterator<Entrypoint> iterator() {
         return result.iterator();
       }
@@ -433,6 +460,7 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
        */
+      @Override
       public Iterator<MethodReference> iterator() {
         return nodes.iterator();
       }
@@ -440,6 +468,7 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.NodeManager#containsNode(java.lang.Object)
        */
+      @Override
       public boolean containsNode(MethodReference N) {
         return nodes.contains(N);
       }
@@ -447,6 +476,7 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
        */
+      @Override
       public int getNumberOfNodes() {
         return nodes.size();
       }
@@ -454,6 +484,7 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
        */
+      @Override
       public Iterator<MethodReference> getPredNodes(MethodReference N) {
         Set<MethodReference> pred = HashSetFactory.make(10);
         MethodReference methodReference = N;
@@ -467,6 +498,7 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
        */
+      @Override
       public int getPredNodeCount(MethodReference N) {
         int count = 0;
         for (Iterator<? extends MethodReference> ps = getPredNodes(N); ps.hasNext(); count++, ps.next())
@@ -477,6 +509,7 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
        */
+      @Override
       public Iterator<MethodReference> getSuccNodes(MethodReference N) {
         Set<MethodReference> succ = HashSetFactory.make(10);
         MethodReference methodReference = N;
@@ -490,6 +523,7 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
        */
+      @Override
       public int getSuccNodeCount(MethodReference N) {
         int count = 0;
         for (Iterator<MethodReference> ps = getSuccNodes(N); ps.hasNext(); count++, ps.next())
@@ -500,6 +534,7 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
        */
+      @Override
       public void addNode(MethodReference n) {
         Assertions.UNREACHABLE();
       }
@@ -507,6 +542,7 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.NodeManager#removeNode(java.lang.Object)
        */
+      @Override
       public void removeNode(MethodReference n) {
         Assertions.UNREACHABLE();
       }
@@ -514,10 +550,12 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object, java.lang.Object)
        */
+      @Override
       public void addEdge(MethodReference src, MethodReference dst) {
         Assertions.UNREACHABLE();
       }
 
+      @Override
       public void removeEdge(MethodReference src, MethodReference dst) {
         Assertions.UNREACHABLE();
       }
@@ -525,6 +563,7 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.EdgeManager#removeAllIncidentEdges(java.lang.Object)
        */
+      @Override
       public void removeAllIncidentEdges(MethodReference node) {
         Assertions.UNREACHABLE();
       }
@@ -532,22 +571,26 @@ public class CallGraphTest extends WalaTestCase {
       /*
        * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(java.lang.Object)
        */
+      @Override
       public void removeNodeAndEdges(MethodReference N) {
         Assertions.UNREACHABLE();
       }
 
+      @Override
       public void removeIncomingEdges(MethodReference node) {
         // TODO Auto-generated method stubMethodReference
         Assertions.UNREACHABLE();
 
       }
 
+      @Override
       public void removeOutgoingEdges(MethodReference node) {
         // TODO Auto-generated method stub
         Assertions.UNREACHABLE();
 
       }
 
+      @Override
       public boolean hasEdge(MethodReference src, MethodReference dst) {
         for (Iterator<MethodReference> succNodes = getSuccNodes(src); succNodes.hasNext();) {
           if (dst.equals(succNodes.next())) {

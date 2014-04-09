@@ -152,7 +152,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    */
   private final Set<IClass> clinitVisited = HashSetFactory.make();
 
-  private IProgressMonitor monitor;
+  public IProgressMonitor monitor;
 
   protected SSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       PointerKeyFactory pointerKeyFactory) {
@@ -1063,6 +1063,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         final int vns[] = new int[ params.size() ];
         params.foreach(new IntSetAction() {
           private int i = 0;
+          @Override
           public void act(int x) {
             vns[i++] = instruction.getUse(x);
           }
@@ -1081,6 +1082,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
  
           final List<PointerKey> pks = new ArrayList<PointerKey>(params.size());
           params.foreach(new IntSetAction() {
+            @Override
             public void act(int x) {
               if (!contentsAreInvariant(symbolTable, du, instruction.getUse(x))) {
                 pks.add(getBuilder().getPointerKeyForLocal(node, instruction.getUse(x)));
@@ -1264,6 +1266,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         system.recordImplicitPointsToSet(dst);
       } else {
         ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = ir.getControlFlowGraph();
+        int val = instruction.getVal();
         if (com.ibm.wala.cfg.Util.endsWithConditionalBranch(cfg, getBasicBlock()) && cfg.getSuccNodeCount(getBasicBlock()) == 2) {
           SSAConditionalBranchInstruction cond = (SSAConditionalBranchInstruction) com.ibm.wala.cfg.Util.getLastInstruction(cfg,
               getBasicBlock());
@@ -1277,31 +1280,42 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
               IClass cls = getClassHierarchy().lookupClass(type);
               if (cls == null) {
                 PointerKey dst = getPointerKeyForLocal(instruction.getDef());
-                addPiAssignment(dst, instruction.getVal());
+                addPiAssignment(dst, val);
               } else {
                 PointerKey dst = getFilteredPointerKeyForLocal(instruction.getDef(), new FilteredPointerKey.SingleClassFilter(cls));
-                PointerKey src = getPointerKeyForLocal(instruction.getVal());
-                if ((target == com.ibm.wala.cfg.Util.getTakenSuccessor(cfg, getBasicBlock()) && direction == 1)
-                    || (target == com.ibm.wala.cfg.Util.getNotTakenSuccessor(cfg, getBasicBlock()) && direction == -1)) {
-                  system.newConstraint(dst, getBuilder().filterOperator, src);
+                // if true, only allow objects assignable to cls.  otherwise, only allow objects 
+                // *not* assignable to cls
+                boolean useFilter = (target == com.ibm.wala.cfg.Util.getTakenSuccessor(cfg, getBasicBlock()) && direction == 1)
+                    || (target == com.ibm.wala.cfg.Util.getNotTakenSuccessor(cfg, getBasicBlock()) && direction == -1);
+                PointerKey src = getPointerKeyForLocal(val);
+                if (contentsAreInvariant(symbolTable, du, val)) {
+                  system.recordImplicitPointsToSet(src);
+                  InstanceKey[] ik = getInvariantContents(val);
+                  for (int j = 0; j < ik.length; j++) {
+                    boolean assignable = getClassHierarchy().isAssignableFrom(cls, ik[j].getConcreteType());
+                    if ((assignable && useFilter) || (!assignable && !useFilter)) {
+                      system.newConstraint(dst, ik[j]);
+                    }
+                  }
                 } else {
-                  system.newConstraint(dst, getBuilder().inverseFilterOperator, src);
+                  FilterOperator op = useFilter ? getBuilder().filterOperator : getBuilder().inverseFilterOperator;
+                  system.newConstraint(dst, op, src);
                 }
               }
             }
-          } else if ((dir = nullConstantTest(cond, instruction.getVal())) != 0) {
+          } else if ((dir = nullConstantTest(cond, val)) != 0) {
             if ((target == com.ibm.wala.cfg.Util.getTakenSuccessor(cfg, getBasicBlock()) && dir == -1)
                 || (target == com.ibm.wala.cfg.Util.getNotTakenSuccessor(cfg, getBasicBlock()) && dir == 1)) {
               PointerKey dst = getPointerKeyForLocal(instruction.getDef());
-              addPiAssignment(dst, instruction.getVal());
+              addPiAssignment(dst, val);
             }
           } else {
             PointerKey dst = getPointerKeyForLocal(instruction.getDef());
-            addPiAssignment(dst, instruction.getVal());
+            addPiAssignment(dst, val);
           }
         } else {
           PointerKey dst = getPointerKeyForLocal(instruction.getDef());
-          addPiAssignment(dst, instruction.getVal());
+          addPiAssignment(dst, val);
         }
       }
     }
@@ -1347,6 +1361,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      * @return if non-null, then result[i] holds the set of instance keys which may be passed as the ith parameter. (which must be
      *         invariant)
      */
+    @Override
     public InstanceKey[][] computeInvariantParameters(SSAAbstractInvokeInstruction call) {
       InstanceKey[][] constParams = null;
       for (int i = 0; i < call.getNumberOfUses(); i++) {
@@ -1800,6 +1815,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     /*
      * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
      */
+    @Override
     public boolean isComplex() {
       return true;
     }
@@ -1836,6 +1852,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             IntSet s = system.findOrCreatePointsToSet(var).getValue();
             if (s != null && !s.isEmpty()) {
               s.foreach(new IntSetAction() {
+                @Override
                 public void act(int x) {
                   keys[p] = system.getInstanceKey(x);
                   rec(pi + 1);
@@ -1868,6 +1885,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
     final Set<CGNode> targets = HashSetFactory.make();
     VoidFunction<InstanceKey[]> f = new VoidFunction<InstanceKey[]>() {
+      @Override
       public void apply(InstanceKey[] v) {
         IClass recv = null;
         if (site.isDispatch()) {
@@ -2233,6 +2251,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.HeapModel#iteratePointerKeys()
    */
+  @Override
   public Iterator<PointerKey> iteratePointerKeys() {
     return system.iteratePointerKeys();
   }
@@ -2256,6 +2275,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     return types;
   }
 
+  @Override
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type) {
     return getInstanceKeyForPEI(node, instr, type, instanceKeyFactory);
   }

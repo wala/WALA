@@ -1,15 +1,22 @@
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package com.ibm.wala.cast.js.ipa.callgraph;
 
-import com.ibm.wala.cast.ipa.callgraph.LexicalScopingResolverContexts;
-import com.ibm.wala.cast.ipa.callgraph.ScopeMappingKeysContextSelector.ScopeMappingContext;
-import com.ibm.wala.cast.ir.translator.AstTranslator;
+import com.ibm.wala.cast.ir.translator.AstTranslator.AstLexicalInformation;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptConstructTargetSelector.JavaScriptConstructor;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.callgraph.DelegatingContext;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.OneLevelSiteContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.nCFAContextSelector;
@@ -26,26 +33,22 @@ public class JavaScriptConstructorContextSelector implements ContextSelector {
 
   private final OneLevelSiteContextSelector oneLevelCallerSite;
   
-  private final boolean usePreciseLexical;
-  
-  public JavaScriptConstructorContextSelector(ContextSelector base, boolean usePreciseLexical) {
+  public JavaScriptConstructorContextSelector(ContextSelector base) {
     this.base = base;
     this.oneLevelCallStrings = new nCFAContextSelector(1, base);
     this.oneLevelCallerSite = new OneLevelSiteContextSelector(base);
-    this.usePreciseLexical = usePreciseLexical;
   }
 
+  @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     return base.getRelevantParameters(caller, site);
   }
 
+  @Override
   public Context getCalleeTarget(final CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (callee instanceof JavaScriptConstructor) {
       final Context oneLevelCallStringContext = oneLevelCallStrings.getCalleeTarget(caller, site, callee, receiver);
-      final Context callerContext = caller.getContext();
-      if (!AstTranslator.NEW_LEXICAL && callerContext instanceof ScopeMappingContext) {
-        return new DelegatingContext(callerContext, oneLevelCallStringContext);
-      } else if (AstTranslator.NEW_LEXICAL && usePreciseLexical && LexicalScopingResolverContexts.hasExposedUses(caller, site)) {
+      if (AstLexicalInformation.hasExposedUses(caller, site)) {
         // use a caller-site context, to enable lexical scoping lookups (via caller CGNode)
         return oneLevelCallerSite.getCalleeTarget(caller, site, callee, receiver);
       } else {

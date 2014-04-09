@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package com.ibm.wala.cast.java.ipa.slicer;
 
 import java.util.Collection;
@@ -67,6 +77,7 @@ public class AstJavaSlicer extends Slicer {
 
   public static Set<Statement> gatherAssertions(CallGraph CG, Collection<CGNode> partialRoots) {
     return gatherStatements(CG, partialRoots, new Filter<SSAInstruction>() {
+      @Override
       public boolean accepts(SSAInstruction o) {
         return o instanceof AstAssertInstruction;
       }
@@ -75,6 +86,7 @@ public class AstJavaSlicer extends Slicer {
 
   public static Set<Statement> gatherMonitors(CallGraph CG, Collection<CGNode> partialRoots) {
     return gatherStatements(CG, partialRoots, new Filter<SSAInstruction>() {
+      @Override
       public boolean accepts(SSAInstruction o) {
         return o instanceof SSAMonitorInstruction;
       }
@@ -83,6 +95,7 @@ public class AstJavaSlicer extends Slicer {
 
   public static Set<Statement> gatherWrites(CallGraph CG, Collection<CGNode> partialRoots) {
     return gatherStatements(CG, partialRoots, new Filter<SSAInstruction>() {
+      @Override
       public boolean accepts(SSAInstruction o) {
         return (o instanceof SSAPutInstruction) || (o instanceof SSAArrayStoreInstruction);
       }
@@ -91,6 +104,7 @@ public class AstJavaSlicer extends Slicer {
 
   public static Set<Statement> gatherReads(CallGraph CG, Collection<CGNode> partialRoots) {
     return gatherStatements(CG, partialRoots, new Filter<SSAInstruction>() {
+      @Override
       public boolean accepts(SSAInstruction o) {
         return (o instanceof SSAGetInstruction) || (o instanceof SSAArrayLoadInstruction);
       }

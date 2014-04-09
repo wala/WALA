@@ -53,6 +53,7 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
    * @param classLoaderReference
    *          identifier for the desired class loader
    */
+  @Override
   public IClassLoader getLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, AnalysisScope scope)
       throws IOException {
     if (classLoaderReference == null) {

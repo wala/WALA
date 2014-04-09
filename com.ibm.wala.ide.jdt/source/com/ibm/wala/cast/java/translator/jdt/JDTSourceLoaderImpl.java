@@ -53,6 +53,7 @@ public class JDTSourceLoaderImpl extends JavaSourceLoaderImpl {
     super(loaderRef, parent, exclusions, cha);
   }
 
+  @Override
   protected SourceModuleTranslator getTranslator() {
     return new JDTSourceModuleTranslator(cha.getScope(), this);
   }

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package com.ibm.wala.cast.js.translator;
 
 import java.util.Collection;
@@ -45,22 +55,27 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
 
   public static class RootContext<C extends WalkContext<C, T>, T> extends TranslatorToCAst.RootContext<C, T> implements WalkContext<C,T> {
 
+    @Override
     public String script() { return null; }
 
+    @Override
     public T top() { 
       Assertions.UNREACHABLE();
       return null;
     }
 
+    @Override
     public void addNameDecl(CAstNode v) {
       Assertions.UNREACHABLE();
     }
 
+    @Override
     public Collection<CAstNode> getNameDecls() {
       Assertions.UNREACHABLE();
       return null;
     }
 
+    @Override
     public CAstNode getCatchTarget() { 
       Assertions.UNREACHABLE();
       return null;
@@ -89,22 +104,27 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
       super(parent);
     }
 
+    @Override
     public String script() {
       return parent.script();
     }
 
+    @Override
     public T top() {
       return parent.top();
     }
 
+    @Override
     public void addNameDecl(CAstNode n) {
       parent.addNameDecl(n);
     }
 
+    @Override
     public Collection<CAstNode> getNameDecls() {
       return parent.getNameDecls();
     }
 
+    @Override
     public CAstNode getCatchTarget() {
       return parent.getCatchTarget();
     }
@@ -178,6 +198,7 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
       this.script = script;
     }
 
+    @Override
     public String script() { return script; }
   }
 
@@ -189,6 +210,7 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
       this.catchNode = catchNode;
     }
 
+    @Override
     public CAstNode getCatchTarget() { return catchNode; }
   }
  
@@ -255,6 +277,7 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
       this.operationIndex = operationIndex;
     }
 
+    @Override
     public int setOperation(T node) { 
       if (baseFor.contains( node )) {
         foundBase = true;
@@ -264,10 +287,12 @@ public interface JavaScriptTranslatorToCAst extends TranslatorToCAst {
       }
     }
       
+    @Override
     public boolean foundMemberOperation(T node) {
       return foundBase;
     }
 
+    @Override
     public void copyOperation(T from, T to) {
       if (baseFor.contains(from)) baseFor.add(to);
     }

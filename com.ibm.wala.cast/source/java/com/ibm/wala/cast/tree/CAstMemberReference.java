@@ -14,22 +14,27 @@ public interface CAstMemberReference extends CAstReference {
 
   public static final CAstMemberReference FUNCTION = 
     new CAstMemberReference() {
+      @Override
       public String member() {
 	return "the function body";
       }
 
+      @Override
       public CAstType type() {
 	return null;
       }
       
+      @Override
       public String toString() {
 	return "Any::FUNCTION CALL";
       }
 
+      @Override
       public int hashCode() {
         return toString().hashCode(); 
       }
 
+      @Override
       public boolean equals(Object o) {
 	return o == this;
       }

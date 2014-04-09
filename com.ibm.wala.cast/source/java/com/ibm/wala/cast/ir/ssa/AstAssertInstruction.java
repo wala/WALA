@@ -38,35 +38,43 @@ public class AstAssertInstruction extends SSAInstruction {
     this.fromSpecification = fromSpecification;
   }
 
+  @Override
   public int getNumberOfUses() {
     return 1;
   }
 
+  @Override
   public int getUse(int i) {
     assert i == 0;
     return value;
   }
 
+  @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return ((AstInstructionFactory)insts).AssertInstruction(iindex, uses == null ? value : uses[0], fromSpecification);
   }
 
+  @Override
   public String toString(SymbolTable symbolTable) {
     return "assert " + getValueString(symbolTable, value) + " (fromSpec: " + fromSpecification + ")";
   }
 
+  @Override
   public void visit(IVisitor v) {
     ((AstInstructionVisitor) v).visitAssert(this);
   }
 
+  @Override
   public int hashCode() {
     return 2177 * value;
   }
 
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return null;
   }
 
+  @Override
   public boolean isFallThrough() {
     return true;
   }

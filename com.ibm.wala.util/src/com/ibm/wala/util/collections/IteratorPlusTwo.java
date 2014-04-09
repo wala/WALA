@@ -30,10 +30,12 @@ public class IteratorPlusTwo<T> implements Iterator<T> {
     this.xtra2 = xtra2;
   }
   
+  @Override
   public boolean hasNext() {
     return it.hasNext() || (xtra1 != null) || (xtra2 != null);
   }
 
+  @Override
   public T next() {
     if (it.hasNext()) {
       return it.next();
@@ -48,6 +50,7 @@ public class IteratorPlusTwo<T> implements Iterator<T> {
     }
   }
    
+  @Override
   public void remove() throws UnimplementedError {
     throw new UnimplementedError();
   }

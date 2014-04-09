@@ -684,6 +684,7 @@ public class PDG implements NumberedGraph<Statement> {
     // in reaching defs calculation, exclude heap statements that are
     // irrelevant.
     Filter f = new Filter() {
+      @Override
       public boolean accepts(Object o) {
         if (o instanceof HeapStatement) {
           HeapStatement h = (HeapStatement) o;
@@ -776,6 +777,7 @@ public class PDG implements NumberedGraph<Statement> {
    */
   private Collection<NormalStatement> computeReturnStatements(final IR ir) {
     Filter filter = new Filter() {
+      @Override
       public boolean accepts(Object o) {
         if (o instanceof NormalStatement) {
           NormalStatement s = (NormalStatement) o;
@@ -1096,12 +1098,14 @@ public class PDG implements NumberedGraph<Statement> {
     return 103 * node.hashCode();
   }
 
+  @Override
   public int getPredNodeCount(Statement N) throws UnimplementedError {
     populate();
     Assertions.UNREACHABLE();
     return delegate.getPredNodeCount(N);
   }
 
+  @Override
   public Iterator<Statement> getPredNodes(Statement N) {
     populate();
     if (!dOptions.isIgnoreHeap()) {
@@ -1150,12 +1154,14 @@ public class PDG implements NumberedGraph<Statement> {
     }
   }
 
+  @Override
   public int getSuccNodeCount(Statement N) throws UnimplementedError {
     populate();
     Assertions.UNREACHABLE();
     return delegate.getSuccNodeCount(N);
   }
 
+  @Override
   public Iterator<Statement> getSuccNodes(Statement N) {
     populate();
     if (!dOptions.isIgnoreHeap()) {
@@ -1164,83 +1170,101 @@ public class PDG implements NumberedGraph<Statement> {
     return delegate.getSuccNodes(N);
   }
 
+  @Override
   public boolean hasEdge(Statement src, Statement dst) throws UnimplementedError {
     populate();
     return delegate.hasEdge(src, dst);
   }
 
+  @Override
   public void removeNodeAndEdges(Statement N) throws UnsupportedOperationException {
     Assertions.UNREACHABLE();
   }
 
+  @Override
   public void addNode(Statement n) {
     Assertions.UNREACHABLE();
   }
 
+  @Override
   public boolean containsNode(Statement N) {
     populate();
     return delegate.containsNode(N);
   }
 
+  @Override
   public int getNumberOfNodes() {
     populate();
     return delegate.getNumberOfNodes();
   }
 
+  @Override
   public Iterator<Statement> iterator() {
     populate();
     return delegate.iterator();
   }
 
+  @Override
   public void removeNode(Statement n) {
     Assertions.UNREACHABLE();
   }
 
+  @Override
   public void addEdge(Statement src, Statement dst) {
     Assertions.UNREACHABLE();
   }
 
+  @Override
   public void removeAllIncidentEdges(Statement node) throws UnsupportedOperationException {
     Assertions.UNREACHABLE();
   }
 
+  @Override
   public void removeEdge(Statement src, Statement dst) throws UnsupportedOperationException {
     Assertions.UNREACHABLE();
   }
 
+  @Override
   public void removeIncomingEdges(Statement node) throws UnsupportedOperationException {
     Assertions.UNREACHABLE();
   }
 
+  @Override
   public void removeOutgoingEdges(Statement node) throws UnsupportedOperationException {
     Assertions.UNREACHABLE();
   }
 
+  @Override
   public int getMaxNumber() {
     populate();
     return delegate.getMaxNumber();
   }
 
+  @Override
   public Statement getNode(int number) {
     populate();
     return delegate.getNode(number);
   }
 
+  @Override
   public int getNumber(Statement N) {
     populate();
     return delegate.getNumber(N);
   }
 
+  @Override
   public Iterator<Statement> iterateNodes(IntSet s) {
     Assertions.UNREACHABLE();
     return null;
   }
 
+  @Override
   public IntSet getPredNodeNumbers(Statement node) {
     Assertions.UNREACHABLE();
     return null;
   }
 
+  @Override
   public IntSet getSuccNodeNumbers(Statement node) {
     Assertions.UNREACHABLE();
     return null;

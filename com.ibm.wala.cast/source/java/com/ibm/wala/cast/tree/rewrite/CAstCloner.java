@@ -32,6 +32,7 @@ public class CAstCloner extends CAstBasicRewriter {
     this(Ast, false);
   }
 
+  @Override
   protected CAstNode copyNodes(CAstNode root, final CAstControlFlowMap cfg, NonCopyingContext c, Map<Pair<CAstNode,NoKey>, CAstNode> nodeMap) {
     return copyNodesHackForEclipse(root, cfg, c, nodeMap);
   }

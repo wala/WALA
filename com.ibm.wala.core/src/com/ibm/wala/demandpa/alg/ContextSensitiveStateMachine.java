@@ -81,6 +81,7 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
    */
   private final CallStack emptyStack = CallStack.emptyCallStack();
 
+  @Override
   public CallStack getStartState() {
     return emptyStack;
   }
@@ -97,46 +98,57 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
       this.prevStack = prevStack;
     }
 
+    @Override
     public void visitAssign(AssignLabel label, Object dst) {
       nextState = prevStack;
     }
 
+    @Override
     public void visitAssignBar(AssignBarLabel label, Object dst) {
       nextState = prevStack;
     }
 
+    @Override
     public void visitAssignGlobal(AssignGlobalLabel label, Object dst) {
       nextState = emptyStack;
     }
 
+    @Override
     public void visitAssignGlobalBar(AssignGlobalBarLabel label, Object dst) {
       nextState = emptyStack;
     }
 
+    @Override
     public void visitGetField(GetFieldLabel label, Object dst) {
       nextState = prevStack;
     }
 
+    @Override
     public void visitGetFieldBar(GetFieldBarLabel label, Object dst) {
       nextState = prevStack;
     }
 
+    @Override
     public void visitMatch(MatchLabel label, Object dst) {
       nextState = emptyStack;
     }
 
+    @Override
     public void visitMatchBar(MatchBarLabel label, Object dst) {
       nextState = emptyStack;
     }
 
+    @Override
     public void visitNew(NewLabel label, Object dst) {
       nextState = prevStack;
     }
 
+    @Override
     public void visitNewBar(NewBarLabel label, Object dst) {
       nextState = prevStack;
     }
 
+    @Override
     public void visitParam(ParamLabel label, Object dst) {
       handleMethodExit(label.getCallSite());
     }
@@ -153,6 +165,7 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
       }
     }
 
+    @Override
     public void visitParamBar(ParamBarLabel label, Object dst) {
       // method entry
       handleMethodEntry(label.getCallSite());
@@ -188,18 +201,22 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
       }
     }
 
+    @Override
     public void visitPutField(PutFieldLabel label, Object dst) {
       nextState = prevStack;
     }
 
+    @Override
     public void visitPutFieldBar(PutFieldBarLabel label, Object dst) {
       nextState = prevStack;
     }
 
+    @Override
     public void visitReturn(ReturnLabel label, Object dst) {
       handleMethodEntry(label.getCallSite());
     }
 
+    @Override
     public void visitReturnBar(ReturnBarLabel label, Object dst) {
       handleMethodExit(label.getCallSite());
     }
@@ -209,6 +226,7 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
   /* 
    * @see com.ibm.wala.demandpa.alg.statemachine.StateMachine#transition(com.ibm.wala.demandpa.alg.statemachine.StateMachine.State, java.lang.Object)
    */
+  @Override
   public State transition(State prevState, IFlowLabel label) throws IllegalArgumentException, IllegalArgumentException {
     if (prevState == null) {
       throw new IllegalArgumentException("prevState == null");
@@ -252,6 +270,7 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
       this(new BasicRecursionHandler());
     }
     
+    @Override
     public StateMachine<IFlowLabel> make() {
       return new ContextSensitiveStateMachine(prototype.makeNew());
     }
@@ -278,14 +297,17 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
 
     private final HashSet<CallerSiteContext> recursiveCallSites = HashSetFactory.make();
 
+    @Override
     public boolean isRecursive(CallerSiteContext callSite) {
       return recursiveCallSites.contains(callSite);
     }
 
+    @Override
     public void makeRecursive(Collection<CallerSiteContext> callSites) {
       recursiveCallSites.addAll(callSites);
     }
     
+    @Override
     public RecursionHandler makeNew() {
       return new BasicRecursionHandler();
     }

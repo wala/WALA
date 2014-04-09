@@ -49,6 +49,7 @@ public class ParamLabel extends CallLabel {
     return new ParamLabel(callSite);
   }
 
+  @Override
   public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException("v == null");
@@ -61,10 +62,12 @@ public class ParamLabel extends CallLabel {
     return "param[" + callSite + "]";
   }
 
+  @Override
   public ParamBarLabel bar() {
     return ParamBarLabel.make(callSite);
   }
 
+  @Override
   public boolean isBarred() {
     return false;
   }

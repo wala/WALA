@@ -75,6 +75,7 @@ public abstract class SyntheticClass implements IClass {
    * Subclasses may override as necessary.
    * @see com.ibm.wala.classLoader.IClass#getClassLoader()
    */
+  @Override
   public IClassLoader getClassLoader() {
     return cha.getLoader(ClassLoaderReference.Primordial);
   }
@@ -82,6 +83,7 @@ public abstract class SyntheticClass implements IClass {
   /* 
    * @see com.ibm.wala.classLoader.IClass#isInterface()
    */
+  @Override
   public boolean isInterface() {
     return false;
   }
@@ -89,6 +91,7 @@ public abstract class SyntheticClass implements IClass {
   /* 
    * @see com.ibm.wala.classLoader.IClass#isAbstract()
    */
+  @Override
   public boolean isAbstract() {
     return false;
   }
@@ -96,6 +99,7 @@ public abstract class SyntheticClass implements IClass {
   /* 
    * @see com.ibm.wala.classLoader.IClass#getReference()
    */
+  @Override
   public TypeReference getReference() {
     return T;
   }
@@ -103,10 +107,12 @@ public abstract class SyntheticClass implements IClass {
   /* 
    * @see com.ibm.wala.classLoader.IClass#getSourceFileName()
    */
+  @Override
   public String getSourceFileName() {
     return null;
   }
   
+  @Override
   public InputStream getSource() {
     return null;
   }
@@ -114,14 +120,17 @@ public abstract class SyntheticClass implements IClass {
   /* 
    * @see com.ibm.wala.classLoader.IClass#isArrayClass()
    */
+  @Override
   public boolean isArrayClass() {
     return false;
   }
   
+  @Override
   public IClassHierarchy getClassHierarchy() {
     return cha;
   }
   
+  @Override
   public TypeName getName() {
     return getReference().getName();
   }
@@ -129,10 +138,12 @@ public abstract class SyntheticClass implements IClass {
   /**
    * we assume synthetic classes do not need to have multiple fields with the same name.  
    */
+  @Override
   public IField getField(Atom name, TypeName typeName) {
     return getField(name);
   }
 
+  @Override
   public Collection<Annotation> getAnnotations() {
     return Collections.emptySet();
   }

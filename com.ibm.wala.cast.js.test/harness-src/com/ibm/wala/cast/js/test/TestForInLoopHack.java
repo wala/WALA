@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package com.ibm.wala.cast.js.test;
 
 import java.io.IOException;
@@ -8,11 +18,12 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
-import com.ibm.wala.cast.js.ipa.callgraph.ForInContextSelector;
+import com.ibm.wala.cast.js.ipa.callgraph.PropertyNameContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.WalaException;
 
 public abstract class TestForInLoopHack extends TestJSCallGraphShape {
 
@@ -22,14 +33,14 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
     JSSourceExtractor.DELETE_UPON_EXIT = false;
   }
 
-  @Test public void testPage3WithoutHack() throws IOException, IllegalArgumentException, CancelException {
+  @Test public void testPage3WithoutHack() throws IOException, IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/page3.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
     JSCallGraphBuilderUtil.dumpCG(builder.getPointerAnalysis(), CG);
   }
 
-  @Test public void testPage3WithHack() throws IOException, IllegalArgumentException, CancelException {
+  @Test public void testPage3WithHack() throws IOException, IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/page3.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     addHackedForInLoopSensitivity(builder);
@@ -38,7 +49,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
   }
 
   @Ignore("This test now blows up due to proper handling of the || construct, used in extend().  Should handle this eventually.")
-  @Test public void testJQueryWithHack() throws IOException, IllegalArgumentException, CancelException {
+  @Test public void testJQueryWithHack() throws IOException, IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/jquery_hacked.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     addHackedForInLoopSensitivity(builder);
@@ -47,7 +58,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
   }
 
   /*
-  @Test public void testJQueryEx1WithHack() throws IOException, IllegalArgumentException, CancelException {
+  @Test public void testJQueryEx1WithHack() throws IOException, IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/jquery/ex1.html");
     JSCFABuilder builder = Util.makeHTMLCGBuilder(url);
     addHackedForInLoopSensitivity(builder);
@@ -73,7 +84,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
       new String[] { "tests/badforin.js/testForIn2" } }
   };
 
-  @Test public void testBadForInWithoutHack() throws IOException, IllegalArgumentException, CancelException {
+  @Test public void testBadForInWithoutHack() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "badforin.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
     JSCallGraphBuilderUtil.dumpCG(B.getPointerAnalysis(), CG);
@@ -91,7 +102,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
       new String[] { "!tests/badforin.js/testForIn1" } }
   };
 
-  @Test public void testBadForInWithHack() throws IOException, IllegalArgumentException, CancelException {
+  @Test public void testBadForInWithHack() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "badforin.js");
     addHackedForInLoopSensitivity(B);
     CallGraph CG = B.makeCallGraph(B.getOptions());
@@ -117,7 +128,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
       new String[] { "tests/badforin2.js/testForIn2" } }
   };
 
-  @Test public void testbadforin2WithoutHack() throws IOException, IllegalArgumentException, CancelException {
+  @Test public void testbadforin2WithoutHack() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "badforin2.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
     JSCallGraphBuilderUtil.dumpCG(B.getPointerAnalysis(), CG);
@@ -135,7 +146,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
       new String[] { "!tests/badforin2.js/testForIn1" } }
   };
 
-  @Test public void testbadforin2WithHack() throws IOException, IllegalArgumentException, CancelException {
+  @Test public void testbadforin2WithHack() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "badforin2.js");
     addHackedForInLoopSensitivity(B);
     CallGraph CG = B.makeCallGraph(B.getOptions());
@@ -144,7 +155,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForbadforin2HackPrecision);
   }
 
-  @Test public void testForInRecursion() throws IOException, IllegalArgumentException, CancelException {
+  @Test public void testForInRecursion() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCFABuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "badforin3.js");
     addHackedForInLoopSensitivity(B);
     CallGraph CG = B.makeCallGraph(B.getOptions());
@@ -153,7 +164,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
 
 
   /*
-  @Test public void testYahooWithoutHack() throws IOException, IllegalArgumentException, CancelException {
+  @Test public void testYahooWithoutHack() throws IOException, IllegalArgumentException, CancelException, WalaException {
     JSCFABuilder B = Util.makeScriptCGBuilder("frameworks", "yahoo.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
     Util.dumpCG(B.getPointerAnalysis(), CG);
@@ -162,7 +173,7 @@ public abstract class TestForInLoopHack extends TestJSCallGraphShape {
   
   private void addHackedForInLoopSensitivity(JSCFABuilder builder) {
     final ContextSelector orig = builder.getContextSelector();
-    builder.setContextSelector(new ForInContextSelector(orig));
+    builder.setContextSelector(new PropertyNameContextSelector(builder.getAnalysisCache(), orig));
   }
 
 }

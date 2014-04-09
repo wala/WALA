@@ -68,40 +68,48 @@ public class ArrayContents implements IField {
   private ArrayContents() {
   }
 
+  @Override
   public TypeReference getFieldTypeReference() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
 
+  @Override
   public boolean isFinal() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return false;
   }
 
+  @Override
   public boolean isPrivate() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return false;
   }
 
+  @Override
   public boolean isProtected() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return false;
   }
 
+  @Override
   public boolean isPublic() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return false;
   }
 
+  @Override
   public boolean isStatic() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return false;
   }
 
+  @Override
   public IClass getDeclaringClass() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public Atom getName() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
@@ -112,19 +120,23 @@ public class ArrayContents implements IField {
     return "arr";
   }
 
+  @Override
   public boolean isVolatile() {
     return false;
   }
 
+  @Override
   public ClassHierarchy getClassHierarchy() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
 
+  @Override
   public FieldReference getReference() {
     return null;
   }
 
+  @Override
   public Collection<Annotation> getAnnotations() {
     return Collections.emptySet();
   }

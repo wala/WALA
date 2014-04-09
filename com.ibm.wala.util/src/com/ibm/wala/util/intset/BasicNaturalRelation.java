@@ -122,6 +122,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
    * 
    * @return true iff the relation changes as a result of this call.
    */
+  @Override
   public boolean add(int x, int y) throws IllegalArgumentException {
     if (x < 0) {
       throw new IllegalArgumentException("illegal x: " + x);
@@ -173,6 +174,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
     return smallStore[0].get(x) == DELEGATE_CODE;
   }
 
+  @Override
   public Iterator<IntPair> iterator() {
     return new TotalIterator();
   }
@@ -223,10 +225,12 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
       }
     }
 
+    @Override
     public boolean hasNext() {
       return nextX != -1;
     }
 
+    @Override
     public IntPair next() {
       IntPair result = null;
       if (nextIndex == smallStore.length) {
@@ -246,6 +250,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
       return result;
     }
 
+    @Override
     public void remove() {
       Assertions.UNREACHABLE();
     }
@@ -260,6 +265,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
    * @param x
    * @return true iff there exists pair (x,y) for some y
    */
+  @Override
   public boolean anyRelated(int x) {
     return smallStore[0].get(x) != EMPTY_CODE;
   }
@@ -267,6 +273,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
   /*
    * @see com.ibm.wala.util.intset.IBinaryNonNegativeIntRelation#getRelated(int)
    */
+  @Override
   public IntSet getRelated(int x) {
     if (DEBUG) {
       assert x >= 0;
@@ -310,6 +317,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
   /*
    * @see com.ibm.wala.util.intset.IBinaryNonNegativeIntRelation#getRelatedCount(int)
    */
+  @Override
   public int getRelatedCount(int x) throws IllegalArgumentException {
     if (x < 0) {
       throw new IllegalArgumentException("x must be greater than zero");
@@ -332,6 +340,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
     }
   }
 
+  @Override
   public void remove(int x, int y) {
     if (x < 0) {
       throw new IllegalArgumentException("illegal x: " + x);
@@ -365,6 +374,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
     }
   }
 
+  @Override
   public void removeAll(int x) {
     for (int i = 0; i < smallStore.length; i++) {
       smallStore[i].set(x, EMPTY_CODE);
@@ -375,6 +385,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
   /*
    * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
    */
+  @Override
   public void performVerboseAction() {
     if (VERBOSE) {
       System.err.println((getClass() + " stats:"));
@@ -401,6 +412,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
     return result;
   }
 
+  @Override
   public boolean contains(int x, int y) {
     if (x < 0) {
       throw new IllegalArgumentException("invalid x: " + x);
@@ -420,6 +432,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
     }
   }
 
+  @Override
   public int maxKeyValue() {
     return maxX;
   }

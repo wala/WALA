@@ -63,6 +63,7 @@ class AssignOperator extends UnaryOperator<PointsToSetVariable> implements IPoin
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
    */
+  @Override
   public boolean isComplex() {
     return false;
   }

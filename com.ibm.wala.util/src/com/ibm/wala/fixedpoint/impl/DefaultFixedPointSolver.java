@@ -35,6 +35,7 @@ public abstract class DefaultFixedPointSolver<T extends IVariable<?>> extends Ab
     graph = new DefaultFixedPointSystem<T>();
   }
   
+  @Override
   public IFixedPointSystem<T> getFixedPointSystem() {
     return graph;
   }

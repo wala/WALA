@@ -58,6 +58,7 @@ public class LexicalModRef {
     Map<CGNode, Collection<Pair<CGNode, String>>> scan = CallGraphTransitiveClosure.collectNodeResults(cg,
         new Function<CGNode, Collection<Pair<CGNode, String>>>() {
 
+          @Override
           public Collection<Pair<CGNode, String>> apply(CGNode n) {
             return scanNodeForLexReads(n);
           }
@@ -74,6 +75,7 @@ public class LexicalModRef {
     Map<CGNode, Collection<Pair<CGNode, String>>> scan = CallGraphTransitiveClosure.collectNodeResults(cg,
         new Function<CGNode, Collection<Pair<CGNode, String>>>() {
 
+          @Override
           public Collection<Pair<CGNode, String>> apply(CGNode n) {
             return scanNodeForLexWrites(n);
           }

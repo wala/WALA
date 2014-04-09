@@ -13,7 +13,6 @@ package com.ibm.wala.cast.js.loader;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +63,7 @@ import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.cfg.AbstractCFG;
+import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
@@ -72,7 +72,6 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.LanguageImpl;
 import com.ibm.wala.classLoader.Module;
-import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.classLoader.SourceURLModule;
@@ -128,18 +127,22 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       JSPrimitiveType.init();
     }
 
+    @Override
     public Atom getName() {
       return Atom.findOrCreateUnicodeAtom("JavaScript");
     }
 
+    @Override
     public TypeReference getRootType() {
       return JavaScriptTypes.Root;
     }
 
+    @Override
     public TypeReference getThrowableType() {
       return JavaScriptTypes.Root;
     }
 
+    @Override
     public TypeReference getConstantType(Object o) {
       if (o == null) {
         return JavaScriptTypes.Null;
@@ -162,14 +165,17 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       }
     }
 
+    @Override
     public boolean isNullType(TypeReference type) {
       return type.equals(JavaScriptTypes.Undefined) || type.equals(JavaScriptTypes.Null);
     }
 
+    @Override
     public TypeReference[] getArrayInterfaces() {
       return new TypeReference[0];
     }
 
+    @Override
     public TypeName lookupPrimitiveType(String name) {
       if ("Boolean".equals(name)) {
         return JavaScriptTypes.Boolean.getName();
@@ -185,61 +191,75 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       }
     }
 
+    @Override
     public Collection<TypeReference> inferInvokeExceptions(MethodReference target, IClassHierarchy cha)
         throws InvalidClassFileException {
       return Collections.singleton(JavaScriptTypes.Root);
     }
 
+    @Override
     public Object getMetadataToken(Object value) {
       assert false;
       return null;
     }
 
+    @Override
     public TypeReference getPointerType(TypeReference pointee) throws UnsupportedOperationException {
       throw new UnsupportedOperationException("JavaScript does not permit explicit pointers");
     }
 
+    @Override
     public JSInstructionFactory instructionFactory() {
       return new JSInstructionFactory() {
 
+        @Override
         public JavaScriptCheckReference CheckReference(int iindex, int ref) {
           return new JavaScriptCheckReference(iindex, ref);
         }
 
+        @Override
         public SSAGetInstruction GetInstruction(int iindex, int result, int ref, String field) {
-          return GetInstruction(iindex, result, ref, 
+          return GetInstruction(iindex, result, ref,
               FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreateUnicodeAtom(field), JavaScriptTypes.Root));
         }
 
+        @Override
         public JavaScriptInstanceOf InstanceOf(int iindex, int result, int objVal, int typeVal) {
           return new JavaScriptInstanceOf(iindex, result, objVal, typeVal);
         }
 
+        @Override
         public JavaScriptInvoke Invoke(int iindex, int function, int[] results, int[] params, int exception, CallSiteReference site) {
           return new JavaScriptInvoke(iindex, function, results, params, exception, site);
         }
 
+        @Override
         public JavaScriptInvoke Invoke(int iindex, int function, int[] results, int[] params, int exception, CallSiteReference site,
             Access[] lexicalReads, Access[] lexicalWrites) {
           return new JavaScriptInvoke(iindex, function, results, params, exception, site, lexicalReads, lexicalWrites);
         }
 
+        @Override
         public JavaScriptInvoke Invoke(int iindex, int function, int result, int[] params, int exception, CallSiteReference site) {
           return new JavaScriptInvoke(iindex, function, result, params, exception, site);
         }
 
+        @Override
         public JavaScriptInvoke Invoke(int iindex, int function, int[] params, int exception, CallSiteReference site) {
           return new JavaScriptInvoke(iindex, function, params, exception, site);
         }
 
+        @Override
         public JavaScriptPropertyRead PropertyRead(int iindex, int result, int objectRef, int memberRef) {
           return new JavaScriptPropertyRead(iindex, result, objectRef, memberRef);
         }
 
+        @Override
         public JavaScriptPropertyWrite PropertyWrite(int iindex, int objectRef, int memberRef, int value) {
           return new JavaScriptPropertyWrite(iindex, objectRef, memberRef, value);
         }
 
+        @Override
         public SSAPutInstruction PutInstruction(int iindex, int ref, int value, String field) {
           try {
             byte[] utf8 = field.getBytes("UTF-8");
@@ -251,101 +271,126 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
           }
         }
 
+        @Override
         public JavaScriptTypeOfInstruction TypeOfInstruction(int iindex, int lval, int object) {
           return new JavaScriptTypeOfInstruction(iindex, lval, object);
         }
 
+        @Override
         public JavaScriptWithRegion WithRegion(int iindex, int expr, boolean isEnter) {
           return new JavaScriptWithRegion(iindex, expr, isEnter);
         }
 
+        @Override
         public AstAssertInstruction AssertInstruction(int iindex, int value, boolean fromSpecification) {
           return new AstAssertInstruction(iindex, value, fromSpecification);
         }
 
+        @Override
         public com.ibm.wala.cast.ir.ssa.AssignInstruction AssignInstruction(int iindex, int result, int val) {
           return new AssignInstruction(iindex, result, val);
         }
 
+        @Override
         public com.ibm.wala.cast.ir.ssa.EachElementGetInstruction EachElementGetInstruction(int iindex, int value, int objectRef) {
           return new EachElementGetInstruction(iindex, value, objectRef);
         }
 
+        @Override
         public com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction EachElementHasNextInstruction(int iindex, int value, int objectRef) {
           return new EachElementHasNextInstruction(iindex, value, objectRef);
         }
 
+        @Override
         public AstEchoInstruction EchoInstruction(int iindex, int[] rvals) {
           return new AstEchoInstruction(iindex, rvals);
         }
 
+        @Override
         public AstGlobalRead GlobalRead(int iindex, int lhs, FieldReference global) {
           return new AstGlobalRead(iindex, lhs, global);
         }
 
+        @Override
         public AstGlobalWrite GlobalWrite(int iindex, FieldReference global, int rhs) {
           return new AstGlobalWrite(iindex, global, rhs);
         }
 
+        @Override
         public AstIsDefinedInstruction IsDefinedInstruction(int iindex, int lval, int rval, int fieldVal, FieldReference fieldRef) {
           return new AstIsDefinedInstruction(iindex, lval, rval, fieldVal, fieldRef);
         }
 
+        @Override
         public AstIsDefinedInstruction IsDefinedInstruction(int iindex, int lval, int rval, FieldReference fieldRef) {
           return new AstIsDefinedInstruction(iindex, lval, rval, fieldRef);
         }
 
+        @Override
         public AstIsDefinedInstruction IsDefinedInstruction(int iindex, int lval, int rval, int fieldVal) {
           return new AstIsDefinedInstruction(iindex, lval, rval, fieldVal);
         }
 
+        @Override
         public AstIsDefinedInstruction IsDefinedInstruction(int iindex, int lval, int rval) {
           return new AstIsDefinedInstruction(iindex, lval, rval);
         }
 
+        @Override
         public AstLexicalRead LexicalRead(int iindex, Access[] accesses) {
           return new AstLexicalRead(iindex, accesses);
         }
 
+        @Override
         public AstLexicalRead LexicalRead(int iindex, Access access) {
           return new AstLexicalRead(iindex, access);
         }
 
+        @Override
         public AstLexicalRead LexicalRead(int iindex, int lhs, String definer, String globalName) {
           return new AstLexicalRead(iindex, lhs, definer, globalName);
         }
 
+        @Override
         public AstLexicalWrite LexicalWrite(int iindex, Access[] accesses) {
           return new AstLexicalWrite(iindex, accesses);
         }
 
+        @Override
         public AstLexicalWrite LexicalWrite(int iindex, Access access) {
           return new AstLexicalWrite(iindex, access);
         }
 
+        @Override
         public AstLexicalWrite LexicalWrite(int iindex, String definer, String globalName, int rhs) {
           return new AstLexicalWrite(iindex, definer, globalName, rhs);
         }
 
+        @Override
         public SSAArrayLengthInstruction ArrayLengthInstruction(int iindex, int result, int arrayref) {
           throw new UnsupportedOperationException();
         }
 
+        @Override
         public SSAArrayLoadInstruction ArrayLoadInstruction(int iindex, int result, int arrayref, int index, TypeReference declaredType) {
           throw new UnsupportedOperationException();
         }
 
+        @Override
         public SSAArrayStoreInstruction ArrayStoreInstruction(int iindex, int arrayref, int index, int value, TypeReference declaredType) {
           throw new UnsupportedOperationException();
         }
 
+        @Override
         public SSABinaryOpInstruction BinaryOpInstruction(int iindex, IOperator operator, boolean overflow, boolean unsigned, int result,
             int val1, int val2, boolean mayBeInteger) {
           return new SSABinaryOpInstruction(iindex, operator, result, val1, val2, mayBeInteger) {
+            @Override
             public boolean isPEI() {
               return false;
             }
 
+            @Override
             public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
               return insts.BinaryOpInstruction(iindex, getOperator(), false, false, defs == null || defs.length == 0 ? getDef(0) : defs[0],
                   uses == null ? getUse(0) : uses[0], uses == null ? getUse(1) : uses[1], mayBeIntegerOp());
@@ -353,33 +398,40 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
           };
         }
 
+        @Override
         public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, TypeReference[] types, boolean isPEI) {
           throw new UnsupportedOperationException();
         }
 
+        @Override
         public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, int[] typeValues, boolean isPEI) {
           throw new UnsupportedOperationException();
         }
 
+        @Override
         public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, int typeValue, boolean isPEI) {
           assert isPEI;
           return CheckCastInstruction(iindex, result, val, new int[]{ typeValue }, true);
         }
 
+        @Override
         public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, TypeReference type, boolean isPEI) {
           assert isPEI;
           return CheckCastInstruction(iindex, result, val, new TypeReference[]{ type }, true);
         }
 
+        @Override
         public SSAComparisonInstruction ComparisonInstruction(int iindex, Operator operator, int result, int val1, int val2) {
           return new SSAComparisonInstruction(iindex, operator, result, val1, val2);
         }
 
+        @Override
         public SSAConditionalBranchInstruction ConditionalBranchInstruction(int iindex, 
             com.ibm.wala.shrikeBT.IConditionalBranchInstruction.IOperator operator, TypeReference type, int val1, int val2) {
           return new SSAConditionalBranchInstruction(iindex, operator, type, val1, val2);
         }
 
+        @Override
         public SSAConversionInstruction ConversionInstruction(int iindex, int result, int val, TypeReference fromType, TypeReference toType,
             boolean overflow) {
           assert !overflow;
@@ -395,127 +447,158 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
           };
         }
 
+        @Override
         public SSAGetCaughtExceptionInstruction GetCaughtExceptionInstruction(int iindex, int bbNumber, int exceptionValueNumber) {
           return new SSAGetCaughtExceptionInstruction(iindex, bbNumber, exceptionValueNumber);
         }
 
+        @Override
         public SSAGetInstruction GetInstruction(int iindex, int result, FieldReference field) {
           throw new UnsupportedOperationException();
         }
 
+        @Override
         public SSAGetInstruction GetInstruction(int iindex, int result, int ref, FieldReference field) {
           return new SSAGetInstruction(iindex, result, ref, field) {
+            @Override
             public boolean isPEI() {
               return false;
             }
           };
         }
 
+        @Override
         public SSAGotoInstruction GotoInstruction(int iindex) {
           return new SSAGotoInstruction(iindex);
         }
 
+        @Override
         public SSAInstanceofInstruction InstanceofInstruction(int iindex, int result, int ref, TypeReference checkedType) {
           throw new UnsupportedOperationException();
         }
 
+        @Override
         public SSAInvokeInstruction InvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site) {
           throw new UnsupportedOperationException();
         }
 
+        @Override
         public SSAInvokeInstruction InvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site) {
           throw new UnsupportedOperationException();
         }
 
+        @Override
         public SSALoadMetadataInstruction LoadMetadataInstruction(int iindex, int lval, TypeReference entityType, Object token) {
           throw new UnsupportedOperationException();
         }
 
+        @Override
         public SSAMonitorInstruction MonitorInstruction(int iindex, int ref, boolean isEnter) {
           throw new UnsupportedOperationException();
         }
 
+        @Override
         public SSANewInstruction NewInstruction(int iindex, int result, NewSiteReference site) {
           return new SSANewInstruction(iindex, result, site) {
+            @Override
             public boolean isPEI() {
               return true;
             }
 
+            @Override
             public Collection<TypeReference> getExceptionTypes() {
               return Collections.singleton(JavaScriptTypes.TypeError);
             }
           };
         }
 
+        @Override
         public SSANewInstruction NewInstruction(int iindex, int result, NewSiteReference site, int[] params) {
           throw new UnsupportedOperationException();
         }
 
+        @Override
         public SSAPhiInstruction PhiInstruction(int iindex, int result, int[] params) {
           return new SSAPhiInstruction(iindex, result, params);
         }
 
+        @Override
         public SSAPiInstruction PiInstruction(int iindex, int result, int val, int piBlock, int successorBlock, SSAInstruction cause) {
           return new SSAPiInstruction(iindex, result, val, piBlock, successorBlock, cause);
         }
 
+        @Override
         public SSAPutInstruction PutInstruction(int iindex, int ref, int value, FieldReference field) {
           return new SSAPutInstruction(iindex, ref, value, field) {
+            @Override
             public boolean isPEI() {
               return false;
             }
           };
         }
 
+        @Override
         public SSAPutInstruction PutInstruction(int iindex, int value, FieldReference field) {
           throw new UnsupportedOperationException();
         }
 
+        @Override
         public SSAReturnInstruction ReturnInstruction(int iindex) {
           return new SSAReturnInstruction(iindex);
         }
 
+        @Override
         public SSAReturnInstruction ReturnInstruction(int iindex, int result, boolean isPrimitive) {
           return new SSAReturnInstruction(iindex, result, isPrimitive);
         }
 
+        @Override
         public SSASwitchInstruction SwitchInstruction(int iindex, int val, int defaultLabel, int[] casesAndLabels) {
           return new SSASwitchInstruction(iindex, val, defaultLabel, casesAndLabels);
         }
 
+        @Override
         public SSAThrowInstruction ThrowInstruction(int iindex, int exception) {
           return new SSAThrowInstruction(iindex, exception) {
+            @Override
             public boolean isPEI() {
               return true;
             }
 
+            @Override
             public Collection<TypeReference> getExceptionTypes() {
               return Collections.emptySet();
             }
           };
         }
 
+        @Override
         public SSAUnaryOpInstruction UnaryOpInstruction(int iindex, com.ibm.wala.shrikeBT.IUnaryOpInstruction.IOperator operator, int result,
             int val) {
           return new SSAUnaryOpInstruction(iindex, operator, result, val);
         }
 
+        @Override
         public SSAAddressOfInstruction AddressOfInstruction(int iindex, int lval, int local, TypeReference pointeeType) {
           throw new UnsupportedOperationException();
         }
 
+        @Override
         public SSAAddressOfInstruction AddressOfInstruction(int iindex, int lval, int local, int indexVal, TypeReference pointeeType) {
           throw new UnsupportedOperationException();
         }
 
+        @Override
         public SSAAddressOfInstruction AddressOfInstruction(int iindex, int lval, int local, FieldReference field, TypeReference pointeeType) {
           throw new UnsupportedOperationException();
         }
 
+        @Override
         public SSALoadIndirectInstruction LoadIndirectInstruction(int iindex, int lval, TypeReference t, int addressVal) {
           throw new UnsupportedOperationException();
         }
 
+        @Override
         public SSAStoreIndirectInstruction StoreIndirectInstruction(int iindex, int addressVal, int rval, TypeReference t) {
           throw new UnsupportedOperationException();
         }
@@ -533,50 +616,62 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       };
     }
 
+    @Override
     public boolean isDoubleType(TypeReference type) {
       return type == JavaScriptTypes.Number || type == JavaScriptTypes.NumberObject;
     }
 
+    @Override
     public boolean isFloatType(TypeReference type) {
       return false;
     }
 
+    @Override
     public boolean isIntType(TypeReference type) {
       return false;
     }
 
+    @Override
     public boolean isLongType(TypeReference type) {
       return false;
     }
 
+    @Override
     public boolean isMetadataType(TypeReference type) {
       return false;
     }
 
+    @Override
     public boolean isStringType(TypeReference type) {
       return type == JavaScriptTypes.String || type == JavaScriptTypes.StringObject;
     }
 
+    @Override
     public boolean isVoidType(TypeReference type) {
       return false;
     }
 
+    @Override
     public TypeReference getMetadataType() {
       return null;
     }
 
+    @Override
     public TypeReference getStringType() {
       return JavaScriptTypes.String;
     }
 
+    @Override
     public PrimitiveType getPrimitive(TypeReference reference) {
-      return JSPrimitiveType.getPrimitive(reference);
+      return PrimitiveType.getPrimitive(reference);
     }
 
+    @Override
     public boolean isBooleanType(TypeReference type) {
       return JavaScriptTypes.Boolean.equals(type);
     }
 
+    @Override
     public boolean isCharType(TypeReference type) {
       return false;
     }
@@ -611,10 +706,12 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       superClass = superRef == null ? null : loader.lookupClass(superRef.getName());
     }
 
+    @Override
     public IClassHierarchy getClassHierarchy() {
       return cha;
     }
 
+    @Override
     public String toString() {
       return "JS:" + getReference().toString();
     }
@@ -643,18 +740,22 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       types.put(JavaScriptTypes.Root.getName(), this);
     }
 
+    @Override
     public IClassHierarchy getClassHierarchy() {
       return cha;
     }
 
+    @Override
     public String toString() {
       return "JS Root:" + getReference().toString();
     }
 
+    @Override
     public Collection<IClass> getDirectInterfaces() {
       return Collections.emptySet();
     }
 
+    @Override
     public IClass getSuperclass() {
       return null;
     }
@@ -677,6 +778,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       this.entity = entity;
     }
 
+    @Override
     public IClassHierarchy getClassHierarchy() {
       return cha;
     }
@@ -707,7 +809,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     private CAstEntity entity;
 
     JavaScriptMethodObject(IClass cls, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
-        TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
+        Map<IBasicBlock, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
       super(cls, functionQualifiers, cfg, symtab, AstMethodReference.fnReference(cls.getReference()), hasCatchBlock, caughtTypes,
           hasMonitorOp, lexicalInfo, debugInfo, null);
 
@@ -716,27 +818,33 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     }
 
     
+    @Override
     public CAstEntity getEntity() {
       return entity;
     }
 
 
+    @Override
     public void retranslate(AstTranslator xlator) {
       xlator.translate(entity, translationContext);
     }
 
+    @Override
     public IClassHierarchy getClassHierarchy() {
       return cha;
     }
 
+    @Override
     public String toString() {
       return "<Code body of " + cls + ">";
     }
 
+    @Override
     public TypeReference[] getDeclaredExceptions() {
       return null;
     }
 
+    @Override
     public LexicalParent[] getParents() {
       if (lexicalInfo() == null)
         return new LexicalParent[0];
@@ -752,10 +860,12 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         final int hack = i;
         final AstMethod method = (AstMethod) lookupClass(parents[i], cha).getMethod(AstMethodReference.fnSelector);
         result[i] = new LexicalParent() {
+          @Override
           public String getName() {
             return parents[hack];
           }
 
+          @Override
           public AstMethod getMethod() {
             return method;
           }
@@ -769,10 +879,12 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       return result;
     }
 
+    @Override
     public String getLocalVariableName(int bcIndex, int localNumber) {
       return null;
     }
 
+    @Override
     public boolean hasLocalVariableTable() {
       return false;
     }
@@ -787,6 +899,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       return -1;
     }
 
+    @Override
     public TypeReference getParameterType(int i) {
       if (i == 0) {
         return getDeclaringClass().getReference();
@@ -810,14 +923,14 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
   }
 
   public IMethod defineCodeBodyCode(String clsName, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
-      TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
+      Map<IBasicBlock, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
     JavaScriptCodeBody C = (JavaScriptCodeBody) lookupClass(clsName, cha);
     assert C != null : clsName;
     return C.setCodeBody(makeCodeBodyCode(cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo, debugInfo, C));
   }
 
   public JavaScriptMethodObject makeCodeBodyCode(AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
-      TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo,
+      Map<IBasicBlock, TypeReference[]> caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo,
       IClass C) {
     return new JavaScriptMethodObject(C, cfg, symtab, hasCatchBlock, caughtTypes, hasMonitorOp, lexicalInfo,
         debugInfo);
@@ -865,14 +978,17 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
   final JavaScriptClass STRING_OBJECT = new JavaScriptClass(this, JavaScriptTypes.StringObject, JavaScriptTypes.Object, null);
 
+  @Override
   public Language getLanguage() {
     return JS;
   }
 
+  @Override
   public ClassLoaderReference getReference() {
     return JavaScriptTypes.jsLoader;
   }
 
+  @Override
   public SSAInstructionFactory getInstructionFactory() {
     return JS.instructionFactory();
   }
@@ -906,12 +1022,14 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
    * adds the {@link #bootstrapFileNames bootstrap files} to the list of modules
    * and then invokes the superclass method
    */
+  @Override
   public void init(List<Module> modules) {
 
     List<Module> all = new LinkedList<Module>();
 
     for (final String fn : bootstrapFileNames) {
       all.add(new SourceURLModule(getClass().getClassLoader().getResource(fn)) {
+        @Override
         public String getName() {
           return fn;
         }

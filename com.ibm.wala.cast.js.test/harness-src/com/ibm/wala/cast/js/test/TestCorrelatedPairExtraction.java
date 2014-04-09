@@ -89,7 +89,7 @@ public abstract class TestCorrelatedPairExtraction {
 
   protected CAstEntity parseJS(File tmp, CAstImpl ast) throws IOException {
     String moduleName = tmp.getName();
-    SourceFileModule module = new SourceFileModule(tmp, moduleName);
+    SourceFileModule module = new SourceFileModule(tmp, moduleName, null);
     return parseJS(ast, module);
   }
 

@@ -2,6 +2,7 @@
 *.class
 *.out
 *.swp
+*/bin/
 */bin/*
 *~
 .metadata/
@@ -14,10 +15,13 @@ com.ibm.wala.cast.js.rhino.test/2009_swine_flu_outbreak
 com.ibm.wala.cast.js.rhino/lib/
 com.ibm.wala.cast.js.test/examples-src/ajaxslt/
 com.ibm.wala.cast.js/lib/
+com.ibm.wala.core.testdata/*.jar
 com.ibm.wala.core.testdata/@dot/
 com.ibm.wala.core.testdata/lib/
 com.ibm.wala.core.tests/dat/wala.examples.properties
 com.ibm.wala.core/@dot
 com.ibm.wala.core/com.ibm.wala.core*.jar
 com.ibm.wala.core/dat/wala.properties
+com.ibm.wala.ide.jdt.test/testdata/
 edu.kit.wala.smali.test/out/
+target/

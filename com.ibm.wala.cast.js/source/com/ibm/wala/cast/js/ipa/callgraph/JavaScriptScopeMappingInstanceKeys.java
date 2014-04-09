@@ -56,6 +56,7 @@ public class JavaScriptScopeMappingInstanceKeys extends ScopeMappingInstanceKeys
     return function==null? new LexicalParent[0]: function.getParents();
   }
 
+  @Override
   protected boolean needsScopeMappingKey(InstanceKey base) {
     return 
       cha.isSubclassOf(base.getConcreteType(), codeBody)

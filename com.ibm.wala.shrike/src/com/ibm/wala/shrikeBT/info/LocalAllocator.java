@@ -68,6 +68,7 @@ public class LocalAllocator implements MethodData.Results {
   /**
    * This should not be called by clients.
    */
+  @Override
   public boolean notifyUpdate(MethodData info, IInstruction[] newInstructions, ExceptionHandler[][] newHandlers,
       int[] newInstructionMap) {
     return false;

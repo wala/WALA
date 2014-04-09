@@ -443,6 +443,7 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
     /**
      * The calling loop must call this in each iteration!
      */
+    @Override
     public void setBasicBlock(ISSABasicBlock block) {
       basicBlock = block;
     }

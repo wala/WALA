@@ -95,7 +95,7 @@ public class MethodMadness {
 			return 13 + x;
 		}
 		
-		protected int protectedInteger() {
+    protected int protectedInteger() {
 			return 233 + x;
 		}
 		

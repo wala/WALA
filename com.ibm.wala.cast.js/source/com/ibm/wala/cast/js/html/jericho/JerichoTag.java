@@ -103,14 +103,16 @@ public class JerichoTag implements ITag {
 		return result;
 	}
 
-	 public Map<String, Pair<String, Position>> getAllAttributes() {
+	 @Override
+  public Map<String, Pair<String, Position>> getAllAttributes() {
 	   if (allAttributes == null) {
 	     allAttributes = makeAllAttributes();
 	   }
 	   return allAttributes;
 	 }
 	 
-	public Pair<String, Position> getAttributeByName(String name) {
+	@Override
+  public Pair<String, Position> getAttributeByName(String name) {
     if (allAttributes == null) {
       allAttributes = makeAllAttributes();
     }
@@ -128,7 +130,8 @@ public class JerichoTag implements ITag {
 		return sourceFile;
 	}
 
-	public String getName() {
+	@Override
+  public String getName() {
 		return innerElement.getName();
 	}
 
@@ -137,11 +140,13 @@ public class JerichoTag implements ITag {
 		return innerElement.toString();
 	}
 	
-	 public Position getElementPosition() {
+	 @Override
+  public Position getElementPosition() {
 	   return getPosition(innerElement);
 	 }
  
-	 public Position getContentPosition() {
+	 @Override
+  public Position getContentPosition() {
      return getPosition(innerElement.getContent());
    }
 }

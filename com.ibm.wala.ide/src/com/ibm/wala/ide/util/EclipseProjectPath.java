@@ -88,6 +88,7 @@ public abstract class EclipseProjectPath<E, P> {
       this.ref = ref;
     }
 
+    @Override
     public ClassLoaderReference ref() {
       return ref;
     }

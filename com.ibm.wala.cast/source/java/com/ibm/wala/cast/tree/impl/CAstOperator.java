@@ -29,22 +29,27 @@ public class CAstOperator implements CAstNode {
     this.op = op; 
   }    
 
+  @Override
   public String toString() { 
     return "OP:" + op;
   }
 
+  @Override
   public int getKind() { 
     return CAstNode.OPERATOR; 
   }
   
+  @Override
   public Object getValue() { 
     return op;
   }
   
+  @Override
   public CAstNode getChild(int n) {
     throw new NoSuchElementException(); 
   }
     
+  @Override
   public int getChildCount() { 
     return 0; 
   }

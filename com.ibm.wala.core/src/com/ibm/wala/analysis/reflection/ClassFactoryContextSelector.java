@@ -84,6 +84,7 @@ class ClassFactoryContextSelector implements ContextSelector {
    *      com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod,
    *      InstanceKey[])
    */
+  @Override
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
     if (isClassFactory(callee.getReference())) {
       IR ir = caller.getIR();
@@ -110,6 +111,7 @@ class ClassFactoryContextSelector implements ContextSelector {
 
   private static final IntSet firstParameter = IntSetUtil.make(new int[]{1});
 
+  @Override
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
     if (isClassFactory(site.getDeclaredTarget())) {
       SSAAbstractInvokeInstruction[] invokeInstructions = caller.getIR().getCalls(site);

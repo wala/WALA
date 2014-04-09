@@ -31,21 +31,24 @@ public abstract class ComposedIterator<O,I> implements Iterator<I> {
         break;
       }
     }
-    if (!inner.hasNext()) {
+    if (inner != null && !inner.hasNext()) {
       inner = null;
     }
   }
   
   public abstract Iterator<? extends I> makeInner(O outer);
   
+  @Override
   public void remove() throws UnsupportedOperationException{
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public boolean hasNext() {
     return (inner != null);
   }
 
+  @Override
   public I next() {
     I result = inner.next();
     if (!inner.hasNext()) {

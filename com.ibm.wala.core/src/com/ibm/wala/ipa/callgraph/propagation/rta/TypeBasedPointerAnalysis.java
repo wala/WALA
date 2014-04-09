@@ -83,6 +83,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
     return new TypeBasedPointerAnalysis(options, klasses, cg);
   }
 
+  @Override
   public OrdinalSet<InstanceKey> getPointsToSet(PointerKey key) throws IllegalArgumentException {
     if (key == null) {
       throw new IllegalArgumentException("key == null");
@@ -169,18 +170,22 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
     }
   }
 
+  @Override
   public HeapModel getHeapModel() {
     return heapModel;
   }
 
+  @Override
   public Collection<PointerKey> getPointerKeys() {
     return Iterator2Collection.toSet(heapModel.iteratePointerKeys());
   }
 
+  @Override
   public boolean isFiltered(PointerKey pk) {
     return false;
   }
 
+  @Override
   public IClassHierarchy getClassHierarchy() {
     return heapModel.getClassHierarchy();
   }

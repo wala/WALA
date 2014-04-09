@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package com.ibm.wala.cast.js.translator;
 
 import java.util.Map;
@@ -21,8 +31,10 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
 
   static enum ExpanderKey implements CopyKey<ExpanderKey> {
     EVERYWHERE, EXTRA {
+      @Override
       public ExpanderKey parent() { return EVERYWHERE; }
     };
+    @Override
     public ExpanderKey parent() { return null; }
   }
   
@@ -32,6 +44,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
 
   abstract static class RewriteContext implements CAstRewriter.RewriteContext<ExpanderKey> {
 
+    @Override
     public ExpanderKey key() {
       return ExpanderKey.EVERYWHERE;
     }
@@ -62,10 +75,12 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
 
     private CAstNode elementTemp;
 
+    @Override
     public boolean inAssignment() {
       return true;
     }
 
+    @Override
     public boolean inRead() {
       return true;
     }
@@ -75,6 +90,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
      * prototype-chain traversal (receiverTemp) and the desired property
      * (elementTemp)
      */
+    @Override
     public void setAssign(CAstNode receiverTemp, CAstNode elementTemp) {
       this.receiverTemp = receiverTemp;
       this.elementTemp = elementTemp;
@@ -83,28 +99,34 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
   };
 
   private final static RewriteContext READ = new RewriteContext() {
+    @Override
     public boolean inAssignment() {
       return false;
     }
 
+    @Override
     public boolean inRead() {
       return true;
     }
 
+    @Override
     public void setAssign(CAstNode receiverTemp, CAstNode elementTemp) {
       Assertions.UNREACHABLE();
     }
   };
 
   private final static RewriteContext ASSIGN = new RewriteContext() {
+    @Override
     public boolean inAssignment() {
       return true;
     }
 
+    @Override
     public boolean inRead() {
       return false;
     }
 
+    @Override
     public void setAssign(CAstNode receiverTemp, CAstNode elementTemp) {
       Assertions.UNREACHABLE();
     }
@@ -208,6 +230,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
     return result;
   }
 
+  @Override
   protected CAstNode copyNodes(CAstNode root, final CAstControlFlowMap cfg, RewriteContext context, Map<Pair<CAstNode, ExpanderKey>, CAstNode> nodeMap) {
     int kind = root.getKind();
 

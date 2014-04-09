@@ -51,6 +51,7 @@ public class AstJavaInvokeInstruction extends FixedParametersLexicalInvokeInstru
     super(iindex, results, params, exception, site, lexicalReads, lexicalWrites);
   }
 
+  @Override
   protected SSAInstruction copyInstruction(SSAInstructionFactory insts, int results[], int[] params, int exception,
       Access[] lexicalReads, Access[] lexicalWrites) {
     return ((AstJavaInstructionFactory) insts).JavaInvokeInstruction(iindex, results, params, exception, getCallSite(), lexicalReads,
@@ -60,6 +61,7 @@ public class AstJavaInvokeInstruction extends FixedParametersLexicalInvokeInstru
   /**
    * @see com.ibm.domo.ssa.SSAInstruction#visit(IVisitor)
    */
+  @Override
   public void visit(IVisitor v) {
     ((AstJavaInstructionVisitor) v).visitJavaInvoke(this);
   }
@@ -69,6 +71,7 @@ public class AstJavaInvokeInstruction extends FixedParametersLexicalInvokeInstru
    * 
    * @see com.ibm.domo.ssa.Instruction#getExceptionTypes()
    */
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return JavaLanguage.getNullPointerException();
   }
