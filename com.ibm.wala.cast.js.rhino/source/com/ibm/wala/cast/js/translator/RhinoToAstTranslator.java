@@ -89,7 +89,6 @@ import com.ibm.wala.cast.ir.translator.TranslatorToCAst.DoLoopTranslator;
 import com.ibm.wala.cast.js.html.MappedSourceModule;
 import com.ibm.wala.cast.js.ipa.callgraph.JSSSAPropagationCallGraphBuilder;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
-import com.ibm.wala.cast.js.translator.JavaScriptTranslatorToCAst;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
@@ -102,7 +101,6 @@ import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
-import com.ibm.wala.cast.tree.impl.LineNumberPosition;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -503,19 +501,24 @@ public class RhinoToAstTranslator {
     
     return new ScriptOrFnEntity(n, subs, ast, map, pos, name);
   }
-  
+    
   private Position makePosition(AstNode n) {
     URL url = sourceModule.getURL();
     int line = n.getLineno(); 
+    Position pos = new RangePosition(url, line, n.getAbsolutePosition(), n.getAbsolutePosition()+n.getLength());
+
     if (sourceModule instanceof MappedSourceModule) {
-      return ((MappedSourceModule) sourceModule).getMapping().getAssociatedFileAndLine(line);
-    } else {
-    	return new LineNumberPosition(url, url, line);
+      Position np = ((MappedSourceModule) sourceModule).getMapping().getIncludedPosition(pos);
+      if (np != null) {
+        return np;
+      }
     }
+        
+    return pos;
   }
 
   private void pushSourcePosition(WalkContext context, CAstNode n, Position p) {
-	  if (context.pos().getPosition(n) == null) {
+	  if (context.pos().getPosition(n) == null && !(n.getKind()==CAstNode.FUNCTION_EXPR || n.getKind()==CAstNode.FUNCTION_STMT)) {
 	      context.pos().setPosition(n, p);
 	      for(int i = 0; i < n.getChildCount(); i++) {
 	    	  pushSourcePosition(context, n.getChild(i), p);
@@ -922,7 +925,7 @@ public class RhinoToAstTranslator {
 	    String name;
 	    Name x = fn.getFunctionName();
 	    if (x == null || x.getIdentifier() == null || "".equals(x.getIdentifier())) {
-	    	name = scriptName + "_anonymous_" + anonymousCounter++;
+	    	name = scriptName + "@" + fn.getAbsolutePosition();
 	    } else {
 	    	name = fn.getFunctionName().getIdentifier();
 	    }
@@ -2271,8 +2274,6 @@ private CAstNode[] walkChildren(final Node n, WalkContext context) {
   private final SourceModule sourceModule;
 
   final private Reader sourceReader;
-
-  private int anonymousCounter = 0;
 
   private int baseVarNum = 0;
 

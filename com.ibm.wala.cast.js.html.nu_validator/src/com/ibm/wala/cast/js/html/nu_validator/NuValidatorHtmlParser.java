@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.LineNumberReader;
 import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.AbstractMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -32,10 +34,21 @@ import org.xml.sax.SAXException;
 import com.ibm.wala.cast.js.html.IHtmlCallback;
 import com.ibm.wala.cast.js.html.IHtmlParser;
 import com.ibm.wala.cast.js.html.ITag;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
+import com.ibm.wala.cast.tree.impl.LineNumberPosition;
+import com.ibm.wala.util.collections.Pair;
 
 public class NuValidatorHtmlParser implements IHtmlParser {
 
-  public void parse(final InputStream reader, final IHtmlCallback handler, String fileName) {
+  public void parse(final URL url, final InputStream reader, final IHtmlCallback handler, final String fileName) {
+    URL xx = null;
+	try {
+		xx = new URL("file://" + fileName);
+	} catch (MalformedURLException e1) {
+		e1.printStackTrace();
+	}
+    final URL localFileName = xx;
+
     HtmlParser parser = new HtmlParser();
     parser.setXmlPolicy(XmlViolationPolicy.ALLOW);
     parser.setContentHandler(new ContentHandler() {
@@ -57,38 +70,46 @@ public class NuValidatorHtmlParser implements IHtmlParser {
       }
 
       public void startElement(String uri, final String localName, String qName, final Attributes atts) throws SAXException {
-        final int line = locator.getLineNumber();
+        final Position line = new LineNumberPosition(url, localFileName, locator.getLineNumber());
         tags.push(new ITag() {
 
           public String getName() {
              return localName;
           }
 
-          public String getAttributeByName(String name) {
-            return atts.getValue(name);
+          public Pair<String,Position> getAttributeByName(String name) {
+        	  if (atts.getValue(name) != null) {
+        		  return Pair.make(atts.getValue(name), line);
+        	  } else {
+        		  return null;
+        	  }
           }
 
-          public Map<String, String> getAllAttributes() {
-            return new AbstractMap<String,String>() {
-              private Set<Map.Entry<String,String>> es = null;
+          public Map<String, Pair<String,Position>> getAllAttributes() {
+            return new AbstractMap<String,Pair<String,Position>>() {
+              private Set<Map.Entry<String,Pair<String,Position>>> es = null;
              
               @Override
-              public Set<java.util.Map.Entry<String, String>> entrySet() {
+              public Set<java.util.Map.Entry<String, Pair<String,Position>>> entrySet() {
                 if (es == null) {
-                  es = new HashSet<Map.Entry<String,String>>();
+                  es = new HashSet<Map.Entry<String,Pair<String,Position>>>();
                   for(int i = 0; i < atts.getLength(); i++) {
                     final int index = i;
-                    es.add(new Map.Entry<String,String>() {
+                    es.add(new Map.Entry<String,Pair<String,Position>>() {
 
                       public String getKey() {
-                        return atts.getLocalName(index);
+                        return atts.getLocalName(index).toLowerCase();
                       }
 
-                      public String getValue() {
-                        return atts.getValue(index);
+                      public Pair<String,Position> getValue() {
+                    	  if (atts.getValue(index) != null) {
+                    		  return Pair.make(atts.getValue(index), line);
+                    	  } else {
+                    		  return null;
+                    	  }
                       }
 
-                      public String setValue(String value) {
+                      public Pair<String,Position> setValue(Pair<String,Position> value) {
                         throw new UnsupportedOperationException();
                       }
                     });
@@ -99,10 +120,15 @@ public class NuValidatorHtmlParser implements IHtmlParser {
              };
           }
 
-          public int getStartingLineNum() {
+          public Position getElementPosition() {
             return line;
           }
+
+          public Position getContentPosition() {
+              return line;
+            }
         });
+        
         handler.handleStartTag(tags.peek());
       }
 
@@ -111,11 +137,11 @@ public class NuValidatorHtmlParser implements IHtmlParser {
       }
 
       public void characters(char[] ch, int start, int length) throws SAXException {
-        handler.handleText(locator.getLineNumber() - countLines(ch, start, length), new String(ch, start, length));
+        handler.handleText(new LineNumberPosition(url, localFileName, locator.getLineNumber() - countLines(ch, start, length)), new String(ch, start, length));
       }
 
       public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
-        handler.handleText(locator.getLineNumber(), new String(ch, start, length));
+        handler.handleText(new LineNumberPosition(url, localFileName, locator.getLineNumber()), new String(ch, start, length));
       }
 
       public void startDocument() throws SAXException {

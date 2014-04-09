@@ -259,9 +259,9 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
   }
 
   private static final Object[][] sourceAssertionsForList = new Object[][] {
-    new Object[]{ "suffix:update_display", "list.html", 9, 18 },
-    new Object[]{ "suffix:update_with_item", "list.html", 14, 16 },
-    new Object[]{ "suffix:add_item", "list.html", 20, 25 },
+    new Object[]{ "suffix:update_display", "list.html#2", 4, 13 },
+    new Object[]{ "suffix:update_with_item", "list.html#2", 9, 11 },
+    new Object[]{ "suffix:add_item", "list.html#2", 15, 20 },
     new Object[]{ "suffix:collection", "pages/collection.js", 2, 14 },
     new Object[]{ "suffix:collection_add", "pages/collection.js", 7, 13 },
     new Object[]{ "suffix:forall_elt", "pages/collection.js", 9, 12 },
@@ -272,6 +272,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     URL url = getClass().getClassLoader().getResource("pages/list.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
+    JSCallGraphBuilderUtil.AVOID_DUMP = false;
     JSCallGraphBuilderUtil.dumpCG(builder.getPointerAnalysis(), CG);
     verifySourceAssertions(CG, sourceAssertionsForList);
   }

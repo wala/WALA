@@ -135,6 +135,13 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
    * @param context a visitor-specific context
    */
   public final void visitEntities(final CAstEntity n, C context, CAstVisitor<C> visitor) {
+    Position restore = currentPosition;
+    if (n.getPosition() != null) {
+      currentPosition = n.getPosition();
+    } else {
+      currentPosition = null;
+    }
+    
     if (visitor.enterEntity(n, context, visitor))
       return;
     switch (n.getKind()) {
@@ -213,6 +220,8 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
     }
     }
     visitor.postProcessEntity(n, context, visitor);
+    
+    currentPosition = restore;
   }
 
   /**

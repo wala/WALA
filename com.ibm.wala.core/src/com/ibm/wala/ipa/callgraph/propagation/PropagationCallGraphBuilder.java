@@ -926,6 +926,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
         if (!I.getConcreteType().isArrayClass()) {
           continue;
         }
+        if (I instanceof ZeroLengthArrayInNode) {
+          continue;
+        }
         TypeReference C = I.getConcreteType().getReference().getArrayElementType();
         if (C.isPrimitiveType()) {
           continue;
@@ -1304,6 +1307,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
         public void act(int i) {
           InstanceKey I = system.getInstanceKey(i);
           if (!I.getConcreteType().isArrayClass()) {
+            return;
+          }
+          if (I instanceof ZeroLengthArrayInNode) {
             return;
           }
           TypeReference C = I.getConcreteType().getReference().getArrayElementType();

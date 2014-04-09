@@ -12,6 +12,7 @@ package com.ibm.wala.cast.js.html.jericho;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
@@ -19,7 +20,6 @@ import net.htmlparser.jericho.Config;
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.LoggerProvider;
 import net.htmlparser.jericho.Source;
-
 
 import com.ibm.wala.cast.js.html.IHtmlCallback;
 import com.ibm.wala.cast.js.html.IHtmlParser;
@@ -34,7 +34,7 @@ public class JerichoHtmlParser implements IHtmlParser{
       Config.LoggerProvider = LoggerProvider.STDERR;
     }
 
-	public void parse(InputStream reader, IHtmlCallback callback, String fileName) {
+	public void parse(URL url, InputStream reader, IHtmlCallback callback, String fileName) {
 		Parser parser = new Parser(callback, fileName);
 		Source src;
 		try {
@@ -64,7 +64,7 @@ public class JerichoHtmlParser implements IHtmlParser{
 		private void parse(Element root) {
 			JerichoTag tag = new JerichoTag(root, fileName);
 			handler.handleStartTag(tag);
-			handler.handleText(tag.getStartingLineNum(), tag.getBodyText().snd);
+			handler.handleText(tag.getElementPosition(), tag.getBodyText().snd);
 			List<Element> childElements = root.getChildElements();
 			for (Iterator<Element> nodeIterator = childElements.iterator(); nodeIterator.hasNext();) {
 				Element child = nodeIterator.next();

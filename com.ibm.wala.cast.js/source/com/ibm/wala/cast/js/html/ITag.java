@@ -12,6 +12,9 @@ package com.ibm.wala.cast.js.html;
  *****************************************************************************/
 import java.util.Map;
 
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
+import com.ibm.wala.util.collections.Pair;
+
 /**
  * @author danielk
  * Data structure representing an HTML tag, with its attributes and content. Used by the HTML parser when calling the callback.
@@ -28,13 +31,15 @@ public interface ITag {
 	 * @param name
 	 * @return null if there is no such attribute
 	 */
-	public String getAttributeByName(String name);
+	public Pair<String, Position> getAttributeByName(String name);
 
-	public Map<String, String> getAllAttributes();
+	public Map<String, Pair<String, Position>> getAllAttributes();
 
 	/**
 	 * Returns the starting line number of the tag.
 	 * @return null if no known
 	 */
-	public int getStartingLineNum();
+	public Position getElementPosition();
+
+  public Position getContentPosition();
 }

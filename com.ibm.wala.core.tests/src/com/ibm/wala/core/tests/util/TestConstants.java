@@ -40,6 +40,8 @@ public interface TestConstants {
 
   public final static String ARRAY_ALIAS_MAIN = "LarrayAlias/TestArrayAlias";
 
+  public final static String ZERO_LENGTH_ARRAY_MAIN = "LarrayAlias/TestZeroLengthArray";
+
   public final static String REFLECT1_MAIN = "Lreflection/Reflect1";
 
   public final static String REFLECT2_MAIN = "Lreflection/Reflect2";

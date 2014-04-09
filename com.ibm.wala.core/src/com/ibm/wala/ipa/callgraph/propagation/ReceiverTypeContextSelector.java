@@ -17,6 +17,8 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.impl.Everywhere;
+import com.ibm.wala.util.intset.EmptyIntSet;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 
@@ -29,17 +31,25 @@ public class ReceiverTypeContextSelector implements ContextSelector {
   }
 
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey[] receiver) {
-    if (receiver == null) {
-      throw new IllegalArgumentException("receiver is null");
+    if (site.isStatic()) {
+      return Everywhere.EVERYWHERE;
+    } else {
+      if (receiver == null) {
+        throw new IllegalArgumentException("receiver is null");
+      }
+      PointType P = new PointType(receiver[0].getConcreteType());
+      return new JavaTypeContext(P);
     }
-    PointType P = new PointType(receiver[0].getConcreteType());
-    return new JavaTypeContext(P);
   }
 
   private static final IntSet receiver = IntSetUtil.make(new int[]{ 0 });
   
   public IntSet getRelevantParameters(CGNode caller, CallSiteReference site) {
-    return receiver;
+    if (site.isStatic()) {
+      return EmptyIntSet.instance;
+    } else {
+      return receiver;
+    }
   }
 
 }
