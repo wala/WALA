@@ -12,21 +12,24 @@ import com.ibm.wala.util.graph.Graph;
 
 public class WelshPowell<T> {
 
-  public Pair<Map<T,Integer>, Integer>  color(final Graph<T> G) {
-    return color(G, new Comparator<T>() {
+  public static <T> Comparator<T> defaultComparator(final Graph<T> G) {
+    return new Comparator<T>() {
 
       @Override
       public int compare(T o1, T o2) {
-          int o1edges = G.getSuccNodeCount(o1) + G.getPredNodeCount(o1);
-          int o2edges = G.getSuccNodeCount(o2) + G.getPredNodeCount(o2);
-          if (o1edges != o2edges) {
-            return o1edges - o2edges;
-          } else {
-            return o1.toString().compareTo(o2.toString());
-          }
+        int o1edges = G.getSuccNodeCount(o1) + G.getPredNodeCount(o1);
+        int o2edges = G.getSuccNodeCount(o2) + G.getPredNodeCount(o2);
+        if (o1edges != o2edges) {
+          return o1edges - o2edges;
+        } else {
+          return o1.toString().compareTo(o2.toString());
+        }
       }
-      
-    });
+    };
+  }
+  
+  public Pair<Map<T,Integer>, Integer>  color(final Graph<T> G) {
+    return color(G, defaultComparator(G));
   }
   
   public Pair<Map<T,Integer>, Integer>  color(final Graph<T> G, Comparator<T> order) {

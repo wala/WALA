@@ -11,7 +11,7 @@
 package com.ibm.wala.escape;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.util.warnings.WalaException;
+import com.ibm.wala.util.WalaException;
 
 /**
  * Basic interface from which to execute and get the results of escape analysis

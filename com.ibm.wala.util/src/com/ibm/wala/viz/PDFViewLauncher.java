@@ -13,7 +13,7 @@ package com.ibm.wala.viz;
 import java.io.IOException;
 import java.util.Arrays;
 
-import com.ibm.wala.util.warnings.WalaException;
+import com.ibm.wala.util.WalaException;
 
 /**
  * Launch gsview on a postscript file

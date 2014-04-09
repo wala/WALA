@@ -12,8 +12,8 @@ package com.ibm.wala.escape;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * Basic interface for liveness analysis of heap-allocated objects

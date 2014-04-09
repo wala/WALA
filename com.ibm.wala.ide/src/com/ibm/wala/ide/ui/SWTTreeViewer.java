@@ -29,9 +29,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
 import com.ibm.wala.util.PlatformUtil;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
-import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.viz.NodeDecorator;
 
 /**

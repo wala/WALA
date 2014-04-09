@@ -31,6 +31,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.config.AnalysisScopeReader;
@@ -39,7 +40,6 @@ import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.io.FileUtil;
-import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.viz.DotUtil;
 import com.ibm.wala.viz.PDFViewUtil;
 

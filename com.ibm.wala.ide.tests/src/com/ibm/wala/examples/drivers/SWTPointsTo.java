@@ -27,12 +27,12 @@ import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.InferGraphRoots;
 import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.io.FileProvider;
-import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * 

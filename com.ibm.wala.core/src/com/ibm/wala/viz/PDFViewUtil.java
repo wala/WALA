@@ -24,10 +24,10 @@ import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.strings.StringStuff;
-import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * utilities for integrating with ghostview (or another PS/PDF viewer)

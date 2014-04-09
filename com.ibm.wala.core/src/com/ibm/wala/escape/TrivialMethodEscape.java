@@ -23,8 +23,8 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * Trivial method-level escape analysis.

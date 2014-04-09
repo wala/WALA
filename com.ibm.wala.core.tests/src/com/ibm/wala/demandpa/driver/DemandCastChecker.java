@@ -79,9 +79,9 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.ProgressMaster;
 import com.ibm.wala.util.ProgressMonitorDelegate;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * Uses a demand-driven points-to analysis to check the safety of downcasts.
