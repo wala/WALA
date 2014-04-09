@@ -95,7 +95,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   /**
    * set to true to use new handling of lexical scoping
    */
-  public static boolean NEW_LEXICAL = true;
+  public static final boolean NEW_LEXICAL = true;
 
 
   /**

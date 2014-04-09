@@ -30,7 +30,7 @@ import com.ibm.wala.util.collections.Pair;
 
 public class DomLessSourceExtractor extends JSSourceExtractor {
   private static final Pattern LEGAL_JS_IDENTIFIER_REGEXP = Pattern.compile("[a-zA-Z$_][a-zA-Z\\d$_]*");
-  interface IGeneratorCallback extends IHtmlCallback {
+  protected interface IGeneratorCallback extends IHtmlCallback {
     void writeToFinalRegion(SourceRegion finalRegion);
   }
   

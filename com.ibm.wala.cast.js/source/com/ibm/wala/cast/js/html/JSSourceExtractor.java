@@ -23,9 +23,9 @@ import java.util.Set;
  */
 public abstract class JSSourceExtractor {
 
-  public static boolean DELETE_UPON_EXIT = true;
+  public static boolean DELETE_UPON_EXIT = false;
 
-  public static boolean USE_TEMP_NAME = true;
+  public static boolean USE_TEMP_NAME = false;
 
   public abstract Set<MappedSourceModule> extractSources(URL entrypointUrl, IHtmlParser htmlParser, IUrlResolver urlResolver) throws IOException;
   
