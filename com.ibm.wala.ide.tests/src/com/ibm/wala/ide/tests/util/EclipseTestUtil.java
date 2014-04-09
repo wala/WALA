@@ -14,11 +14,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.List;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
-
-import org.osgi.framework.Bundle;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -35,6 +32,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 import org.eclipse.ui.wizards.datatransfer.ZipFileStructureProvider;
+import org.osgi.framework.Bundle;
 
 public class EclipseTestUtil {
 

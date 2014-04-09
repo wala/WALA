@@ -1,3 +1,13 @@
+/******************************************************************************
+ * Copyright (c) 2002 - 2011 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *****************************************************************************/
 package com.ibm.wala.cast.js.html;
 
 import java.io.BufferedReader;
@@ -6,7 +16,8 @@ import java.io.PrintStream;
 import java.io.StringReader;
 import java.util.StringTokenizer;
 
-import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
+import com.ibm.wala.util.functions.Function;
 
 public class SourceRegion {
 
@@ -17,27 +28,28 @@ public class SourceRegion {
   public SourceRegion() {
   }
 
-  public void print(String text, String originalFile, int originalLine){
+  public void print(String text, Function<Integer,IncludedPosition> originalPos){
     source.append(text);
+    int ln = 0;
     int numberOfLineDrops = getNumberOfLineDrops(text);
-    if (originalFile != null){
+    if (originalPos != null){
       for (int i = 0; i < numberOfLineDrops; i++){
-        fileMapping.map(currentLine++, originalFile, originalLine++);
+        fileMapping.map(currentLine++, originalPos.apply(ln++));
       }
       if (! text.endsWith("\n")){ // avoid mapping one line too much
-        fileMapping.map(currentLine, originalFile, originalLine); // required for handling text with no CRs.
+        fileMapping.map(currentLine, originalPos.apply(ln)); // required for handling text with no CRs.
       }
     } else {
       currentLine += numberOfLineDrops;
     }
   }
 
-  public void println(String text, String originalFile, int originalLine){
-    print(text + "\n", originalFile, originalLine);
+  public void println(String text, Function<Integer,IncludedPosition> originalPos){
+    print(text + "\n", originalPos);
   }
   
   public void print(String text){
-    print(text, null, -1);
+    print(text, null);
   }
 
   public void println(String text){
@@ -57,12 +69,12 @@ public class SourceRegion {
       while ((line = br.readLine()) != null){
         lineNum++;
         
-        Pair<String, Integer> fileAndLine = otherRegion.fileMapping.getAssociatedFileAndLine(lineNum);
+        IncludedPosition fileAndLine = otherRegion.fileMapping.getAssociatedFileAndLine(lineNum);
         if (fileAndLine!= null){
-          this.println(line, fileAndLine.fst, fileAndLine.snd);
-        } else {
-          this.println(line);
+          fileMapping.map(currentLine, fileAndLine);
         }
+ 
+        this.println(line);
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -77,9 +89,9 @@ public class SourceRegion {
       String line = (String) st.nextElement();
       lineNum++;
       
-      Pair<String, Integer> fileAndLine = fileMapping.getAssociatedFileAndLine(lineNum);
+      Position fileAndLine = fileMapping.getAssociatedFileAndLine(lineNum);
       if (fileAndLine!= null){
-        ps.print(fileAndLine.snd + "@" + fileAndLine.fst + "\t:");
+        ps.print(fileAndLine + "\t:");
       } else {
         ps.print("N/A \t\t:");
       }

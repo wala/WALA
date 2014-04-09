@@ -316,10 +316,10 @@ public class JavaCAst2IRTranslator extends AstTranslator {
       }
     }
 
-    protected void defineType(CAstEntity type, WalkContext wc) {
+    protected boolean defineType(CAstEntity type, WalkContext wc) {
       CAstEntity parentType = getEnclosingType( type );
       // ((JavaSourceLoaderImpl)loader).defineType(type, composeEntityName(wc,type), parentType);
-      ((JavaSourceLoaderImpl)loader).defineType(type, type.getType().getName(), parentType);
+      return ((JavaSourceLoaderImpl)loader).defineType(type, type.getType().getName(), parentType) != null;
     }
 
     protected void leaveThis(CAstNode n, Context c, CAstVisitor visitor) {

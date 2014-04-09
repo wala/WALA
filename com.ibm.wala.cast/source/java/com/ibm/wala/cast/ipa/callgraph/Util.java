@@ -21,10 +21,13 @@ import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.loader.SingleClassLoaderFactory;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.debug.Assertions;
@@ -54,7 +57,7 @@ public class Util {
     return result;
   }
 
-  public static AnalysisScope makeScope(SourceFileModule[] files, SingleClassLoaderFactory loaders, Language language)
+  public static AnalysisScope makeScope(SourceModule[] files, SingleClassLoaderFactory loaders, Language language)
       throws IOException {
     CAstAnalysisScope result = new CAstAnalysisScope(files, loaders, Collections.singleton(language));
     return result;
@@ -86,7 +89,7 @@ public class Util {
       }
     }
 
-    /*
+    System.err.println("pointer analysis");
     PointerAnalysis PA = builder.getPointerAnalysis();
     for (Iterator x = PA.getPointerKeys().iterator(); x.hasNext();) {
       PointerKey n = (PointerKey) x.next();
@@ -96,7 +99,6 @@ public class Util {
         System.err.println(("error computing set for " + n));
       }
     }
-    */
   }
 
   public static SourceFileModule[] handleFileNames(String[] fileNameArgs) {

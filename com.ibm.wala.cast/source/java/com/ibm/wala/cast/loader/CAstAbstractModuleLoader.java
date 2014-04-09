@@ -34,6 +34,7 @@ import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
@@ -52,16 +53,23 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
     this(cha, null);
   }
 
-  protected abstract TranslatorToCAst getTranslatorToCAst(CAst ast, ModuleEntry M, URL sourceURL, String localFileName);
-
-  protected TranslatorToCAst getTranslatorToCAst(CAst ast, ModuleEntry M, File sourceFile, String localFileName) throws MalformedURLException {
-    return getTranslatorToCAst(ast, M, sourceFile.toURI().toURL(), localFileName);
-  }
+  protected abstract TranslatorToCAst getTranslatorToCAst(CAst ast, SourceModule M) throws IOException;
 
   protected abstract boolean shouldTranslate(CAstEntity entity);
 
   protected abstract TranslatorToIR initTranslator();
 
+  protected File getLocalFile(SourceModule M) throws IOException {
+    if (M instanceof SourceFileModule) {
+      return ((SourceFileModule)M).getFile();
+    } else {
+        File f = File.createTempFile("module", ".txt");
+        f.deleteOnExit();
+        TemporaryFile.streamToFile(f.getAbsolutePath(), M.getInputStream());
+        return f;
+    }
+  }
+  
   protected void finishTranslation() {
 
   }
@@ -79,58 +87,27 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
         try {
           if (moduleEntry.isModuleFile()) {
             init(moduleEntry.asModule());
-          } else if (moduleEntry instanceof SourceFileModule) {
-            File f = ((SourceFileModule) moduleEntry).getFile();
-            String fn = f.toString();
+          } else if (moduleEntry instanceof SourceModule) {
+            TranslatorToCAst xlatorToCAst = getTranslatorToCAst(ast, (SourceModule)moduleEntry);
 
-             TranslatorToCAst xlatorToCAst = getTranslatorToCAst(ast, moduleEntry, f, fn);
+            CAstEntity fileEntity = xlatorToCAst.translateToCAst();
 
-             CAstEntity fileEntity = xlatorToCAst.translateToCAst();
-
-             if (fileEntity != null) {
-               if(DEBUG){
-                 CAstPrinter.printTo(fileEntity, new PrintWriter(System.err));
-               }
-               topLevelEntities.add(Pair.make(fileEntity, fn));
+            if (fileEntity != null) {
+              if(DEBUG){
+                CAstPrinter.printTo(fileEntity, new PrintWriter(System.err));
+              }
+              topLevelEntities.add(Pair.make(fileEntity, moduleEntry.getName()));
              
-             }  else {
-               addMessage(moduleEntry, new Warning(Warning.SEVERE) {
+            }  else {
+              addMessage(moduleEntry, new Warning(Warning.SEVERE) {
                  @Override
                  public String getMsg() {
                     return "parse error";
                  }         
                });
              }
-
-          } else if (moduleEntry instanceof SourceURLModule) {
-            java.net.URL url = ((SourceURLModule) moduleEntry).getURL();
-            String fileName = ((SourceURLModule) moduleEntry).getName();
-            String localFileName = fileName.replace('/', '_');
-
-            File F = TemporaryFile.streamToFile(localFileName, ((SourceURLModule) moduleEntry).getInputStream());
-
-            final TranslatorToCAst xlatorToCAst = getTranslatorToCAst(ast, moduleEntry, url, localFileName);
-
-            CAstEntity fileEntity = xlatorToCAst.translateToCAst();
-
-            if (fileEntity != null) {
-              if(DEBUG){
-                System.err.println(CAstPrinter.print(fileEntity));
-              }
-              topLevelEntities.add(Pair.make(fileEntity, fileName));
-            
-            } else {
-              addMessage(moduleEntry, new Warning(Warning.SEVERE) {
-                @Override
-                public String getMsg() {
-                   return "parse error";
-                }         
-              });
-            }
-
-            F.delete();
           }
-        } catch (final MalformedURLException e) {
+       } catch (final MalformedURLException e) {
           addMessage(moduleEntry, new Warning(Warning.SEVERE) {
             @Override
             public String getMsg() {

@@ -23,8 +23,8 @@ import org.junit.Test;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.util.CAstPattern;
-import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.cast.util.CAstPattern.Segments;
+import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 
 public class TestCAstPattern extends WalaTestCase {

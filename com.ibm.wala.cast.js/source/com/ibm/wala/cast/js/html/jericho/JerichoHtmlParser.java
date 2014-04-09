@@ -1,14 +1,25 @@
+/******************************************************************************
+ * Copyright (c) 2002 - 2011 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *****************************************************************************/
 package com.ibm.wala.cast.js.html.jericho;
 
 import java.io.IOException;
-import java.io.Reader;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 
-import au.id.jericho.lib.html.Config;
-import au.id.jericho.lib.html.Element;
-import au.id.jericho.lib.html.LoggerProvider;
-import au.id.jericho.lib.html.Source;
+import net.htmlparser.jericho.Config;
+import net.htmlparser.jericho.Element;
+import net.htmlparser.jericho.LoggerProvider;
+import net.htmlparser.jericho.Source;
+
 
 import com.ibm.wala.cast.js.html.IHtmlCallback;
 import com.ibm.wala.cast.js.html.IHtmlParser;
@@ -23,8 +34,7 @@ public class JerichoHtmlParser implements IHtmlParser{
       Config.LoggerProvider = LoggerProvider.STDERR;
     }
 
-	@SuppressWarnings("unchecked")
-	public void parse(Reader reader, IHtmlCallback callback, String fileName) {
+	public void parse(InputStream reader, IHtmlCallback callback, String fileName) {
 		Parser parser = new Parser(callback, fileName);
 		Source src;
 		try {
@@ -51,10 +61,10 @@ public class JerichoHtmlParser implements IHtmlParser{
 			this.fileName = fileName;
 		}
 
-		@SuppressWarnings("unchecked")
 		private void parse(Element root) {
 			JerichoTag tag = new JerichoTag(root, fileName);
 			handler.handleStartTag(tag);
+			handler.handleText(tag.getStartingLineNum(), tag.getBodyText().snd);
 			List<Element> childElements = root.getChildElements();
 			for (Iterator<Element> nodeIterator = childElements.iterator(); nodeIterator.hasNext();) {
 				Element child = nodeIterator.next();

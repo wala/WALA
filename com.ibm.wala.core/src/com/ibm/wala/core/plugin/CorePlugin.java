@@ -10,11 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.core.plugin;
 
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
 
 
 /**

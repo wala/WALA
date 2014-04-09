@@ -14,9 +14,11 @@ import java.util.Iterator;
 
 import com.ibm.wala.cast.ipa.callgraph.AstCFAPointerKeys;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -65,8 +67,12 @@ public class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
 
       @Override
       public Iterator<PointerKey> getPointerKeysForReflectedFieldRead(InstanceKey I, InstanceKey F) {
+        IClassHierarchy cha = I.getConcreteType().getClassHierarchy();
+        IClass function = cha.lookupClass(JavaScriptTypes.Function);
         if (isBogusKey(I)) {
           return EmptyIterator.instance();
+        } else if (cha.isSubclassOf(F.getConcreteType(), function)) {
+          return super.getPointerKeysForReflectedFieldRead(I, new ConcreteTypeKey(function));
         } else {
           return super.getPointerKeysForReflectedFieldRead(I, F);
         }
@@ -74,12 +80,17 @@ public class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
 
       @Override
       public Iterator<PointerKey> getPointerKeysForReflectedFieldWrite(InstanceKey I, InstanceKey F) {
+        IClassHierarchy cha = I.getConcreteType().getClassHierarchy();
+        IClass function = cha.lookupClass(JavaScriptTypes.Function);
         if (isBogusKey(I)) {
           return EmptyIterator.instance();
+        } else if (cha.isSubclassOf(F.getConcreteType(), function)) {
+          return super.getPointerKeysForReflectedFieldWrite(I, new ConcreteTypeKey(function));
         } else {
           return super.getPointerKeysForReflectedFieldWrite(I, F);
         }
       }
+      
     });
   }
 

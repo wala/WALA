@@ -50,6 +50,7 @@ import com.ibm.wala.demandpa.flowgraph.AssignLabel;
 import com.ibm.wala.demandpa.flowgraph.GetFieldBarLabel;
 import com.ibm.wala.demandpa.flowgraph.GetFieldLabel;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
+import com.ibm.wala.demandpa.flowgraph.IFlowLabel.IFlowLabelVisitor;
 import com.ibm.wala.demandpa.flowgraph.MatchBarLabel;
 import com.ibm.wala.demandpa.flowgraph.MatchLabel;
 import com.ibm.wala.demandpa.flowgraph.NewBarLabel;
@@ -60,7 +61,6 @@ import com.ibm.wala.demandpa.flowgraph.PutFieldBarLabel;
 import com.ibm.wala.demandpa.flowgraph.PutFieldLabel;
 import com.ibm.wala.demandpa.flowgraph.ReturnBarLabel;
 import com.ibm.wala.demandpa.flowgraph.ReturnLabel;
-import com.ibm.wala.demandpa.flowgraph.IFlowLabel.IFlowLabelVisitor;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 import com.ibm.wala.util.collections.HashSetFactory;
 

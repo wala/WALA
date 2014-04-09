@@ -37,7 +37,6 @@
  */
 package javaonepointfive;
 
-import javaonepointfive.NotSoSimpleEnums.Direction;
 
 public class SimpleEnums {
 	public enum Direction {

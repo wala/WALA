@@ -72,7 +72,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   /**
    * The modules to analyze
    */
-  protected Collection moduleFiles;
+  protected Collection<Module> moduleFiles;
 
   /**
    * A representation of the analysis scope

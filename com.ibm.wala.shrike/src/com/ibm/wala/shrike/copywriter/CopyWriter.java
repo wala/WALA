@@ -17,14 +17,16 @@ import java.util.Iterator;
 import java.util.zip.ZipEntry;
 
 import com.ibm.wala.shrikeBT.Compiler;
-import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.Decoder.InvalidBytecodeException;
+import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.shrikeCT.CTCompiler;
 import com.ibm.wala.shrikeBT.shrikeCT.CTDecoder;
 import com.ibm.wala.shrikeBT.shrikeCT.ClassInstrumenter;
 import com.ibm.wala.shrikeBT.shrikeCT.OfflineInstrumenter;
 import com.ibm.wala.shrikeCT.ClassReader;
+import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
 import com.ibm.wala.shrikeCT.ClassWriter;
+import com.ibm.wala.shrikeCT.ClassWriter.Element;
 import com.ibm.wala.shrikeCT.CodeReader;
 import com.ibm.wala.shrikeCT.CodeWriter;
 import com.ibm.wala.shrikeCT.ConstantPoolParser;
@@ -39,8 +41,6 @@ import com.ibm.wala.shrikeCT.LocalVariableTableReader;
 import com.ibm.wala.shrikeCT.LocalVariableTableWriter;
 import com.ibm.wala.shrikeCT.SourceFileReader;
 import com.ibm.wala.shrikeCT.SourceFileWriter;
-import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
-import com.ibm.wala.shrikeCT.ClassWriter.Element;
 
 public class CopyWriter {
   private static final String USAGE = "IBM CopyWriter Tool\n" + "This tool takes the following command line options:\n"

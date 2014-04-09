@@ -21,13 +21,13 @@ import com.ibm.wala.ssa.DefaultIRFactory;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSACFG;
+import com.ibm.wala.ssa.SSACFG.ExceptionHandlerBasicBlock;
 import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
 import com.ibm.wala.ssa.SSAIndirectionData;
+import com.ibm.wala.ssa.SSAIndirectionData.Name;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.ssa.SSACFG.ExceptionHandlerBasicBlock;
-import com.ibm.wala.ssa.SSAIndirectionData.Name;
 import com.ibm.wala.types.TypeReference;
 
 public class AstIRFactory implements IRFactory {

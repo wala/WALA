@@ -17,8 +17,8 @@ import java.io.PrintWriter;
 import java.lang.reflect.Field;
 
 import com.ibm.wala.shrikeBT.Constants;
-import com.ibm.wala.shrikeBT.Disassembler;
 import com.ibm.wala.shrikeBT.Decoder.InvalidBytecodeException;
+import com.ibm.wala.shrikeBT.Disassembler;
 import com.ibm.wala.shrikeBT.shrikeCT.CTDecoder;
 import com.ibm.wala.shrikeBT.shrikeCT.ClassInstrumenter;
 import com.ibm.wala.shrikeBT.shrikeCT.OfflineInstrumenter;

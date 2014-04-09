@@ -2,20 +2,21 @@ package com.ibm.wala.cast.js.vis;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Map;
+import java.util.Set;
 
 import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.DomLessSourceExtractor;
-import com.ibm.wala.cast.js.html.FileMapping;
-import com.ibm.wala.cast.js.html.IdentityUrlResover;
+import com.ibm.wala.cast.js.html.IdentityUrlResolver;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
+import com.ibm.wala.cast.js.html.MappedSourceModule;
+import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.test.Util;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
-import com.ibm.wala.cast.js.util.Generator;
 import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -34,9 +35,9 @@ public class JsViewerDriver {
 		
 		// computing CG + PA
 		Util.setTranslatorFactory(new CAstRhinoTranslatorFactory());
-		JavaScriptLoader.addBootstrapFile(Generator.preamble);
+		JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
 
-		SourceFileModule[] sources = getSources(domless, url);
+		SourceModule[] sources = getSources(domless, url);
 		
 		JSCFABuilder builder = Util.makeCGBuilder(sources, false);
     builder.setBaseURL(url);
@@ -47,7 +48,7 @@ public class JsViewerDriver {
 		new JsViewer(cg, pa);
 	}
 
-	private static SourceFileModule[] getSources(boolean domless, URL url)
+	private static SourceModule[] getSources(boolean domless, URL url)
 			throws IOException {
 		JSSourceExtractor sourceExtractor;
 		if (domless ){
@@ -56,10 +57,10 @@ public class JsViewerDriver {
 			sourceExtractor = new DefaultSourceExtractor();
 		}
 
-		Map<SourceFileModule, FileMapping> sourcesMap = sourceExtractor.extractSources(url, new JerichoHtmlParser(), new IdentityUrlResover());
-		SourceFileModule[] sources = new SourceFileModule[sourcesMap.size()];
+		Set<MappedSourceModule> sourcesMap = sourceExtractor.extractSources(url, new JerichoHtmlParser(), new IdentityUrlResolver());
+		SourceModule[] sources = new SourceFileModule[sourcesMap.size()];
 		int i = 0;
-		for (SourceFileModule m : sourcesMap.keySet()){
+		for (SourceModule m : sourcesMap){
 			sources[i++] = m;
 		}
 		return sources;

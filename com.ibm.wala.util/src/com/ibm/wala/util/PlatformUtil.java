@@ -19,6 +19,25 @@ public class PlatformUtil {
    * are we running on Mac OS X?
    */
   public static boolean onMacOSX() {
+    // String osname = System.getProperty("os.name");
+    // return osname.toLowerCase().contains("mac");
     return System.getProperty("mrj.version") != null;
   }
+
+  /**
+   * are we running on Linux?
+   */
+  public static boolean onLinux() {
+    String osname = System.getProperty("os.name");
+    return osname.equalsIgnoreCase("linux");
+  }
+
+  /**
+   * are we running on Windows?
+   */
+  public static boolean onWindows() {
+    String osname = System.getProperty("os.name");
+    return osname.toLowerCase().contains("windows");
+  }
+
 }

@@ -70,7 +70,11 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
   public static final boolean DEBUG_TYPE_INFERENCE = false;
 
-  URL scriptBaseURL;
+  private URL scriptBaseURL;
+  
+  public URL getBaseURL() {
+    return scriptBaseURL;
+  }
   
   public void setBaseURL(URL url) {
     this.scriptBaseURL = url;

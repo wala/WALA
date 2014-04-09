@@ -11,7 +11,6 @@
 package com.ibm.wala.ssa;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;

@@ -97,8 +97,9 @@ public class JSAstTranslator extends AstTranslator {
     return readVn;
   }
       
-  protected void defineType(CAstEntity type, WalkContext wc) {
+  protected boolean defineType(CAstEntity type, WalkContext wc) {
       Assertions.UNREACHABLE("JavaScript doesn't have types. I suggest you look elsewhere for your amusement.");
+      return false;
   }
 
   protected void defineField(CAstEntity topEntity, WalkContext wc, CAstEntity n) {
@@ -140,6 +141,7 @@ public class JSAstTranslator extends AstTranslator {
     if (DEBUG)
       System.err.println(cfg);
 
+    symtab.getNullConstant();
     symtab.getConstant("arguments");
     symtab.getConstant("length");
     for(int i = 0; i < 20; i++) {

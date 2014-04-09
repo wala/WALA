@@ -11,13 +11,17 @@
 package com.ibm.wala.classLoader;
 
 import java.io.File;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import com.ibm.wala.util.io.FileSuffixes;
 
 /**
  * A {@link Module} which is a wrapper around a .java file
  */
-public class SourceFileModule extends FileModule implements Module, ModuleEntry {
+public class SourceFileModule extends FileModule implements Module, ModuleEntry, SourceModule {
 
   private final String fileName;
   public SourceFileModule(File f, String fileName) {
@@ -59,5 +63,16 @@ public class SourceFileModule extends FileModule implements Module, ModuleEntry 
   public boolean isSourceFile() {
     return true;
   }
+
+  public Reader getInputReader() {
+    return new InputStreamReader(getInputStream());
+  }
  
+  public URL getURL() {
+    try {
+      return getFile().toURI().toURL();
+    } catch (MalformedURLException e) {
+      throw new Error("error making URL for " + getFile());
+    }
+  }
 }
