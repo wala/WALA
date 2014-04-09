@@ -15,6 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -102,6 +103,23 @@ public abstract class Launcher {
     }
     if (logger != null) {
       logger.info("spawning process " + cmd);
+    }
+    String[] ev = getEnv() == null ? null : buildEnv(getEnv());
+    Process p = Runtime.getRuntime().exec(cmd, ev, getWorkingDir());
+    return p;
+  }
+  
+  /**
+   * Spawn a process to execute the given command
+   * 
+   * @return an object representing the process
+   */
+  protected Process spawnProcess(String[] cmd) throws IllegalArgumentException, IOException {
+    if (cmd == null) {
+      throw new IllegalArgumentException("cmd cannot be null");
+    }
+    if (logger != null) {
+      logger.info("spawning process " + Arrays.toString(cmd));
     }
     String[] ev = getEnv() == null ? null : buildEnv(getEnv());
     Process p = Runtime.getRuntime().exec(cmd, ev, getWorkingDir());

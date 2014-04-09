@@ -1,4 +1,4 @@
-package com.ibm.wala.ide.test;
+package com.ibm.wala.ide.jsdt.tests;
 
 import com.ibm.wala.ide.tests.util.EclipseTestUtil.ZippedProjectData;
 
