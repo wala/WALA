@@ -27,6 +27,14 @@ import com.ibm.wala.util.strings.StringStuff;
  */
 public final class TypeName implements Serializable {
 
+  public static final byte ArrayMask = 0x01;
+  public static final byte PointerMask = 0x02;
+  public static final byte ReferenceMask = 0x03;
+  public static final byte PrimitiveMask = 0x04;
+
+  public static final byte ElementMask = 0x07;
+  public static final byte ElementBits = 3;
+  
   /* Serial version */
   private static final long serialVersionUID = -3256390509887654326L;
 
@@ -54,12 +62,17 @@ public final class TypeName implements Serializable {
     Atom className = Atom.findOrCreate(StringStuff.parseForClass(name, start, length));
     ImmutableByteArray p = StringStuff.parseForPackage(name, start, length);
     Atom packageName = (p == null) ? null : Atom.findOrCreate(p);
-    short dim = StringStuff.parseForArrayDimensionality(name, start, length);
+    int dim = StringStuff.parseForArrayDimensionality(name, start, length);
     boolean innermostPrimitive = StringStuff.classIsPrimitive(name, start, length);
-    if (innermostPrimitive && (dim == 0)) {
-      dim = -1;
+    if (innermostPrimitive) {
+      if (dim == 0) {
+        dim = -1;
+      } else {
+        dim <<= ElementBits;
+        dim |= PrimitiveMask;
+      }
     }
-    TypeNameKey t = new TypeNameKey(packageName, className, dim, innermostPrimitive);
+    TypeNameKey t = new TypeNameKey(packageName, className, dim);
     return findOrCreate(t);
   }
 
@@ -82,12 +95,12 @@ public final class TypeName implements Serializable {
     if (className == null) {
       throw new IllegalArgumentException("null className");
     }
-    TypeNameKey T = new TypeNameKey(packageName, className, (short) 0, false);
+    TypeNameKey T = new TypeNameKey(packageName, className, 0);
     return findOrCreate(T);
   }
 
-  private static TypeName findOrCreate(Atom packageName, Atom className, short dim, boolean innermostPrimitive) {
-    TypeNameKey T = new TypeNameKey(packageName, className, dim, innermostPrimitive);
+  public static TypeName findOrCreate(Atom packageName, Atom className, int dim) {
+    TypeNameKey T = new TypeNameKey(packageName, className, dim);
     return findOrCreate(T);
   }
 
@@ -141,29 +154,52 @@ public final class TypeName implements Serializable {
    * @return the name of the array element type for an array
    */
   public TypeName parseForArrayElementName() {
-    short newDim = (short) (key.dim - 1);
-    if (newDim == 0 && key.innermostPrimitive) {
-      newDim = -1;
+    int newDim;
+    if ((key.dim&ElementMask) == PrimitiveMask) {
+      int tmpDim = key.dim>>(2*ElementBits);
+      if (tmpDim == 0) {
+        newDim = -1;
+      } else {
+        newDim = (tmpDim<<ElementBits) | PrimitiveMask;
+      }
+    } else {
+      newDim = key.dim>>ElementBits;
     }
-    return findOrCreate(key.packageName, key.className, newDim, key.innermostPrimitive);
+  
+    return findOrCreate(key.packageName, key.className, newDim);
   }
 
   /**
    * @return a type name that represents an array of this element type
    */
-  public TypeName getArrayTypeForElementType() {
-    short newDim = (short) (key.dim + 1);
-    if (newDim == 0) {
-      newDim = 1;
+  private TypeName getDerivedTypeForElementType(byte mask) {
+    int newDim;
+    if (key.dim == -1) {
+      newDim = mask<<ElementBits | PrimitiveMask;
+    } else if ((key.dim & ElementMask) == PrimitiveMask) {
+      newDim = (((key.dim & ~ElementMask) | mask)<<ElementBits) | PrimitiveMask;
+    } else {
+      newDim = key.dim<<ElementBits | mask;
     }
-    return findOrCreate(key.packageName, key.className, newDim, key.innermostPrimitive);
+ 
+    return findOrCreate(key.packageName, key.className, newDim);
   }
 
+  public TypeName getArrayTypeForElementType() {
+    return getDerivedTypeForElementType(ArrayMask);
+  }
+  public TypeName getPointerTypeForElementType() {
+    return getDerivedTypeForElementType(PointerMask);
+  }
+  public TypeName getReferenceTypeForElementType() {
+    return getDerivedTypeForElementType(ReferenceMask);
+  }
+  
   /**
-   * @return the dimensionality of the type. By convention, class types have dimensionality 0, primitves -1, and arrays the number
+   * @return the dimensionality of the type. By convention, class types have dimensionality 0, primitives -1, and arrays the number
    *         of [ in their descriptor.
    */
-  public final int getDimensionality() {
+  public final int getDerivedMask() {
     return key.dim;
   }
 
@@ -192,8 +228,8 @@ public final class TypeName implements Serializable {
    * Return the innermost element type reference for an array
    */
   public final TypeName getInnermostElementType() {
-    short newDim = key.innermostPrimitive ? (short) -1 : 0;
-    return findOrCreate(key.packageName, key.className, newDim, key.innermostPrimitive);
+    short newDim = ((key.dim&ElementMask) == PrimitiveMask) ? (short) -1 : 0;
+    return findOrCreate(key.packageName, key.className, newDim);
   }
 
   /**
@@ -211,31 +247,39 @@ public final class TypeName implements Serializable {
     private final Atom className;
 
     /**
-     * Dimensionality: -1 => primitive 0 => class >0 => array
+     * Dimensionality: -1 => primitive 
+     *                  0 => class 
+     *                  >0 => mask of levels of array, reference, pointer
+     *                  
+     *  When the mask is > 0, it represents levels of type qualifiers (in C 
+     *  terminology) for array, reference and pointer types.  There is also a
+     *  special mask for when the innermost type is a primitive.  The mask is
+     *  a bitfield laid out in inverse dimension order. 
+     *  
+     *  For instance, a single-dimension array is simply the value ArrayMask, 
+     *  padded with leading zeros.  A single-dimension array of primitives is
+     *  ArrayMask<<ElementBits | PrimitiveMask.  An array of pointers to objects
+     *  would be (ArrayMask<<ElementBits) | PointerMask; an array of pointers
+     *  to a primitive type would have the primitive mask on the end:
+     *  ((ArrayMask<<ElementBits) | PointerMask)<<ElementBits | PrimitiveMask
+     *  
      */
-    private final short dim;
-
-    /**
-     * Is the innermost element type a primitive? TODO: encode in dim?
-     */
-    private final boolean innermostPrimitive;
+    private final int dim;
 
     /**
      * This should be the only constructor
      */
-    private TypeNameKey(Atom packageName, Atom className, short dim, boolean innermostPrimitive) {
+    private TypeNameKey(Atom packageName, Atom className, int dim) {
       this.packageName = packageName;
       this.className = className;
       this.dim = dim;
-      this.innermostPrimitive = innermostPrimitive;
     }
 
     @Override
     public boolean equals(Object obj) {
       if (obj instanceof TypeNameKey) {
         TypeNameKey other = (TypeNameKey) obj;
-        return className == other.className && packageName == other.packageName && dim == other.dim
-            && innermostPrimitive == other.innermostPrimitive;
+        return className == other.className && packageName == other.packageName && dim == other.dim;
       } else {
         return false;
       }
@@ -246,7 +290,7 @@ public final class TypeName implements Serializable {
      */
     @Override
     public int hashCode() {
-      int result = className.hashCode() * 5009 + dim * 5011 + (innermostPrimitive ? 5021 : 5023);
+      int result = className.hashCode() * 5009 + dim * 5011;
       if (packageName != null) {
         result += packageName.hashCode();
       }
@@ -256,14 +300,7 @@ public final class TypeName implements Serializable {
     @Override
     public String toString() {
       StringBuffer result = new StringBuffer();
-      for (short i = 0; i < dim; i++) {
-        result.append("[");
-      }
-      if (!innermostPrimitive) {
-        result.append("L");
-      } else if (packageName != null && innermostPrimitive) {
-        result.append("P");        
-      }
+      toStringPrefix(result);
       
       if (packageName != null) {
         result.append(packageName.toString());
@@ -274,17 +311,34 @@ public final class TypeName implements Serializable {
       return result.toString();
     }
 
+    private void toStringPrefix(StringBuffer result) {
+      boolean isPrimitive = (dim==-1) || (dim&ElementMask)==PrimitiveMask;
+      if (dim != -1) {
+        for (int d = (dim&ElementMask) == PrimitiveMask? dim>>ElementBits: dim; d != 0; d>>=ElementBits) {
+          switch (d&ElementMask) {
+          case ArrayMask:
+            result.append("[");
+            break;
+          case PointerMask:
+            result.append("*");
+            break;
+          case ReferenceMask:
+            result.append("&");
+            break;
+          }
+        }
+      }
+      if (!isPrimitive) {
+        result.append("L");
+      } else if (packageName != null && isPrimitive) {
+        result.append("P");        
+      }
+    }
+
     public String toUnicodeString() {
       try {
         StringBuffer result = new StringBuffer();
-        for (short i = 0; i < dim; i++) {
-          result.append("[");
-        }
-        if (!innermostPrimitive) {
-          result.append("L");
-        } else if (packageName != null && innermostPrimitive) {
-          result.append("P");        
-        }
+        toStringPrefix(result);
         
         if (packageName != null) {
           result.append(packageName.toUnicodeString());

@@ -20,9 +20,9 @@ import com.ibm.wala.cast.js.ipa.callgraph.correlations.CorrelationSummary;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstEntity;
-import com.ibm.wala.cast.tree.impl.CAstBasicRewriter.NoKey;
-import com.ibm.wala.cast.tree.impl.CAstRewriter;
-import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriter;
+import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
+import com.ibm.wala.cast.tree.rewrite.CAstBasicRewriter.NoKey;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 
@@ -37,7 +37,7 @@ public class CorrelatedPairExtractorFactory implements CAstRewriterFactory<NodeP
     this.summaries = summaries;
   }
 
-  public CAstRewriter<NodePos, NoKey> createCAstRewriter(CAst ast) {
+  public ClosureExtractor createCAstRewriter(CAst ast) {
     ExtractionPolicyFactory policyFactory = new ExtractionPolicyFactory() {
       @Override
       public ExtractionPolicy createPolicy(CAstEntity entity) {

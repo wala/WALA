@@ -10,6 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.analysis.reflection;
 
+import static com.ibm.wala.types.TypeName.ArrayMask;
+import static com.ibm.wala.types.TypeName.ElementMask;
+import static com.ibm.wala.types.TypeName.PrimitiveMask;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -227,8 +231,17 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
 
       if (t.isArrayType()) {
         // for now, just allocate an array of size 1 in each dimension.
-        int dim = t.getDimensionality();
-        int[] extents = new int[dim];
+        int dims = 0;
+        int dim = t.getDerivedMask();
+        if ((dim&ElementMask) == PrimitiveMask) {
+          dim >>= 2;
+        }
+        while ((dim&ElementMask) == ArrayMask) {
+          dims++;
+          dim >>=2;
+        }
+        
+        int[] extents = new int[dims];
         Arrays.fill(extents, 1);
         SSANewInstruction a = insts.NewInstruction(allInstructions.size(), alloc, ref, extents);
         addInstruction(t, a, true);

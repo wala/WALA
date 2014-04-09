@@ -60,7 +60,7 @@
    <target name="fetchBcel" depends="bcelPresent" unless="bcel.present">
      <delete dir="${temp.folder}"/>
      <mkdir dir="${temp.folder}"/>
-     <get src="http://www.apache.org/dist/jakarta/bcel/binaries/bcel-5.2.tar.gz" dest="${temp.folder}/bcel-5.2.tar.gz"/>
+     <get src="http://archive.apache.org/dist/jakarta/bcel/binaries/bcel-5.2.tar.gz" dest="${temp.folder}/bcel-5.2.tar.gz"/>
      <gunzip src="${temp.folder}/bcel-5.2.tar.gz" dest="${temp.folder}/bcel-5.2.tar"/>
      <untar src="${temp.folder}/bcel-5.2.tar" dest="${temp.folder}"/>
      <copy file="${temp.folder}/bcel-5.2/bcel-5.2.jar" tofile="${plugin.destination}/lib/bcel-5.2.jar" />

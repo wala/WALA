@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys;
-import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys.ScopeMappingInstanceKey;
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl.JavaClass;
 import com.ibm.wala.cast.loader.AstMethod;

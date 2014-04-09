@@ -1603,7 +1603,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     @Override
     public byte evaluate(PointsToSetVariable lhs, final PointsToSetVariable[] rhs) {
       assert dispatchIndices.length >= rhs.length : "bad operator at " + call;
-      final MutableBoolean sideEffect = new MutableBoolean();
+      // did evaluating the dispatch operation add a new possible target
+      // to the call site?  
+      final MutableBoolean addedNewTarget = new MutableBoolean();
       
       final MutableIntSet receiverVals;
       if (constParams != null && constParams[0] != null) {
@@ -1638,6 +1640,10 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       // keep separate rhsIndex, since it doesn't advance for constant
       // parameters
       int rhsIndex = (constParams != null && constParams[0] != null)? 0: 1;
+      // this flag is set to true if we ever call handleAllReceivers() in the
+      // loop below. we need to catch the case where we have a new receiver, but
+      // there are no other dispatch indices with new values
+      boolean propagatedReceivers = false;
       // we start at index 1 since we need to handle the receiver specially; see
       // below
       for (int index = 1; index < dispatchIndices.length; index++) {
@@ -1654,7 +1660,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           if (newReceiver || prevAtIndex.isEmpty()) {
             for(int i = 0; i < constParams[paramIndex].length; i++) {
               keys[paramIndex] = constParams[paramIndex][i];
-              handleAllReceivers(receiverVals,keys, sideEffect);
+              handleAllReceivers(receiverVals,keys, addedNewTarget);
+              propagatedReceivers = true;
               int ii = system.instanceKeys.getMappedIndex(constParams[paramIndex][i]);
               prevAtIndex.add(ii);
             }            
@@ -1667,7 +1674,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
               int ptr = ptrs.next();
               if (newReceiver || !prevAtIndex.contains(ptr)) {
                 keys[paramIndex] = system.getInstanceKey(ptr);
-                handleAllReceivers(receiverVals,keys, sideEffect);
+                handleAllReceivers(receiverVals,keys, addedNewTarget);
+                propagatedReceivers = true;
                 prevAtIndex.add(ptr);
               }
             }
@@ -1676,14 +1684,17 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         }
         keys[paramIndex] = null;
       }
-      if (newReceiver && !sideEffect.b) {
-        // we have a new receiver value, and it wasn't propagated at all,
-        // so propagate it now
-        handleAllReceivers(receiverVals, keys, sideEffect);
+      if (newReceiver) {
+        if (!propagatedReceivers) {
+          // we have a new receiver value, and it wasn't propagated at all,
+          // so propagate it now
+          handleAllReceivers(receiverVals, keys, addedNewTarget);
+        }
+        // update receiver cache
         previousPtrs[0].addAll(receiverVals);
       }
 
-      byte sideEffectMask = sideEffect.b ? (byte) SIDE_EFFECT_MASK : 0;
+      byte sideEffectMask = addedNewTarget.b ? (byte) SIDE_EFFECT_MASK : 0;
       return (byte) (NOT_CHANGED | sideEffectMask);
     }
 
@@ -1717,7 +1728,11 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           }
         } else {
           IntSet targets = getCallGraph().getPossibleTargetNumbers(node, call.getCallSite());
-          if (targets != null && targets.contains(target.getGraphNodeId())) {
+          // even if we've seen this target before, if we have constant
+          // parameters, we may need to re-process the call, as the constraints
+          // for the first time we reached this target may not have been fully
+          // general. TODO a more refined check?
+          if (targets != null && targets.contains(target.getGraphNodeId()) && noConstParams()) {
             // do nothing; we've previously discovered and handled this
             // receiver for this call site.
           } else {
@@ -1731,6 +1746,21 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         }
       }
       keys[0] = null;
+    }
+
+    private boolean noConstParams() {
+      if (constParams != null) {
+        for (int i = 0; i < constParams.length; i++) {
+          if (constParams[i] != null) {
+            for (int j = 0; j < constParams[i].length; i++) {
+              if (constParams[i][j] != null) {
+                return false;
+              }
+            }
+          }
+        }
+      }
+      return true;
     }
 
 

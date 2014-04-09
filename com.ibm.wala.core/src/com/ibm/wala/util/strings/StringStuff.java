@@ -10,6 +10,14 @@
  *******************************************************************************/
 package com.ibm.wala.util.strings;
 
+import static com.ibm.wala.types.TypeName.ArrayMask;
+import static com.ibm.wala.types.TypeName.ElementBits;
+import static com.ibm.wala.types.TypeName.PointerMask;
+import static com.ibm.wala.types.TypeName.ReferenceMask;
+import static com.ibm.wala.types.TypeReference.ArrayTypeCode;
+import static com.ibm.wala.types.TypeReference.PointerTypeCode;
+import static com.ibm.wala.types.TypeReference.ReferenceTypeCode;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -263,28 +271,19 @@ public class StringStuff {
 
         continue;
       }
-      case TypeReference.ArrayTypeCode: {
+      case TypeReference.ArrayTypeCode: 
+      case TypeReference.PointerTypeCode: 
+      case TypeReference.ReferenceTypeCode: {
         int off = i - 1;
-        while (b.get(i) == TypeReference.ArrayTypeCode) {
-          ++i;
+        while (StringStuff.isTypeCodeChar(b, i)) {
+           ++i;
         }
         TypeName T = null;
         byte c = b.get(i++);
-        if (c == TypeReference.ClassTypeCode) {
+        if (c == TypeReference.ClassTypeCode || c == TypeReference.OtherPrimitiveTypeCode) {
           while (b.get(i++) != ';')
             ;
           T = TypeName.findOrCreate(b, off, i - off - 1);
-        } else if (c == TypeReference.OtherPrimitiveTypeCode) {
-          int typeOff = i;
-
-          while (b.get(i++) != ';')
-            ;
-
-          T = l.lookupPrimitiveType(new String(b.substring(typeOff, i - typeOff - 1)));
-          while (--typeOff > off) {
-            T = T.getArrayTypeForElementType();
-          }
-
         } else {
           T = TypeName.findOrCreate(b, off, i - off);
         }
@@ -309,6 +308,12 @@ public class StringStuff {
     }
   }
 
+  public static boolean isTypeCodeChar(ImmutableByteArray name, int i) {
+    return name.b[i] == TypeReference.ArrayTypeCode || 
+    name.b[i] == TypeReference.PointerTypeCode || 
+    name.b[i] == TypeReference.ReferenceTypeCode;
+  }
+  
   /**
    * Given that name[start:start+length] is a Type name in JVM format, parse it for the package
    * 
@@ -329,7 +334,10 @@ public class StringStuff {
       if (lastSlash == -1) {
         return null;
       }
-      short dim = parseForArrayDimensionality(name, start, length);
+      short dim = 0;
+      while (isTypeCodeChar(name, start+dim)) {
+        dim++;
+      }
       return new ImmutableByteArray(name.b, start + 1 + dim, lastSlash - start - 1 - dim);
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("invalid name " + name + " start: " + start + " length: " + length);
@@ -366,7 +374,7 @@ public class StringStuff {
     }
     try {
       if (parseForPackage(name, start, length) == null) {
-        while (name.b[start] == '[') {
+        while (isTypeCodeChar(name, start)) {
           start++;
           length--;
         }
@@ -410,22 +418,33 @@ public class StringStuff {
    * @return dimensionality - something like "1" or "2"
    * @throws IllegalArgumentException if b == null
    */
-  public static short parseForArrayDimensionality(ImmutableByteArray b, int start, int length) throws IllegalArgumentException,
+  public static int parseForArrayDimensionality(ImmutableByteArray b, int start, int length) throws IllegalArgumentException,
       IllegalArgumentException {
 
     if (b == null) {
       throw new IllegalArgumentException("b == null");
     }
     try {
+      int code = 0;
       for (int i = start; i < start + length; ++i) {
-        if (b.b[i] != '[') {
-          return (short) (i - start);
+        if (isTypeCodeChar(b, i)) {
+           code <<= ElementBits;
+           switch (b.b[i]) {
+           case ArrayTypeCode: code |= ArrayMask; break;
+           case PointerTypeCode: code |= PointerMask; break;
+           case ReferenceTypeCode: code |= ReferenceMask; break;
+           default:
+             throw new IllegalArgumentException("ill-formed array descriptor " + b);
+           }
+        } else {
+          // type codes must be at the start of the descriptor; if we see something else, stop
+          break;
         }
       }
+      return code;
     } catch (ArrayIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("ill-formed array descriptor " + b);
     }
-    throw new IllegalArgumentException("ill-formed array descriptor " + b);
   }
 
   /**
@@ -443,7 +462,7 @@ public class StringStuff {
     try {
       int i = start;
       for (; i < start + length; ++i) {
-        if (b.b[i] != '[') {
+        if (! isTypeCodeChar(b, i)) {
           break;
         }
       }
@@ -477,7 +496,7 @@ public class StringStuff {
       throw new IllegalArgumentException("name is null");
     }
     try {
-      while (length > 0 && name.b[start] == '[') {
+      while (length > 0 && isTypeCodeChar(name, start)) {
         start++;
         length--;
       }

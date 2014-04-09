@@ -7,6 +7,8 @@ import java.util.LinkedList;
 
 import com.ibm.wala.analysis.reflection.InstanceKeyWithNode;
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys.ScopeMappingInstanceKey;
+import com.ibm.wala.cast.js.types.JavaScriptMethods;
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -16,6 +18,7 @@ import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.SingleInstanceFilter;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.IntSet;
 
@@ -49,6 +52,9 @@ public class RecursionCheckContextSelector implements ContextSelector {
   }
 
   private boolean recursiveContext(Context baseContext, IMethod callee) {
+    if (!recursionPossible(callee)) {
+      return false;
+    }
     LinkedList<Pair<Context,Collection<IMethod>>> worklist = new LinkedList<Pair<Context,Collection<IMethod>>>();
     worklist.push(Pair.make(baseContext, (Collection<IMethod>)Collections.singleton(callee)));
     while (!worklist.isEmpty()) {
@@ -86,6 +92,10 @@ public class RecursionCheckContextSelector implements ContextSelector {
 
   private boolean updateForNode(Context baseContext, Collection<IMethod> curEncountered, LinkedList<Pair<Context, Collection<IMethod>>> worklist, CGNode callerNode) {
     final IMethod method = callerNode.getMethod();
+    if (!recursionPossible(method)) {
+      assert !curEncountered.contains(method);
+      return true;
+    }
     if (curEncountered.contains(method)) {
       System.err.println("recursion in context on method " + method);
       System.err.println("encountered methods: ");
@@ -107,5 +117,19 @@ public class RecursionCheckContextSelector implements ContextSelector {
     return base.getRelevantParameters(caller, site);
   }
 
-
+  /**
+   * is it possible for m to be involved in a recursive cycle?
+   * @param m
+   * @return
+   */
+  private boolean recursionPossible(IMethod m) {
+    // object or array constructors cannot be involved
+    if (m.getReference().getName().equals(JavaScriptMethods.ctorAtom)) {
+      TypeReference declaringClass = m.getReference().getDeclaringClass();
+      if (declaringClass.equals(JavaScriptTypes.Object) || declaringClass.equals(JavaScriptTypes.Array)) {
+        return false;
+      }
+    }
+    return true;
+  }
 }

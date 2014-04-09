@@ -62,8 +62,12 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
     Position ndpos = spmap.getPosition(node);
     if(ndpos != null) {
       // if we are in the wrong file or past the position pos, abort search
-      if(!ndpos.getURL().equals(pos.getURL()) || ndpos.getFirstLine() > pos.getLastLine())
+      if(!ndpos.getURL().equals(pos.getURL()))
         return;
+      
+      if(pos.getLastLine() >= 0 && ndpos.getFirstLine() > pos.getLastLine())
+        return;
+      
       if(node.getKind() == kind && ndpos.getFirstLine() == pos.getFirstLine() && ndpos.getLastLine() == pos.getLastLine())
         res.add(nodep);
     }
@@ -84,6 +88,13 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
   private boolean addCorrelation(CAstEntity entity, Correlation corr, CorrelationSummary correlations) {
     Position startPos = corr.getStartPosition(correlations.getPositions()),
              endPos = corr.getEndPosition(correlations.getPositions());
+    
+    // TODO: enable these assertions; currently we're getting getLastLine() == -1 a lot
+    assert startPos.getFirstLine() != -1;
+    //assert startPos.getLastLine() != -1;
+    assert endPos.getFirstLine() != -1;
+    //assert endPos.getLastLine() != -1;
+    
     Set<ChildPos> startNodes = null,
                   endNodes = null;
     if(!entity.getPosition().getURL().equals(startPos.getURL()))
@@ -103,8 +114,11 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
     } else {
       throw new IllegalArgumentException("Unknown correlation type.");
     }
-    if(startNodes.isEmpty() || endNodes.isEmpty())
+    if(startNodes.isEmpty() || endNodes.isEmpty()) {
+      if(DEBUG)
+        System.err.println("Couldn't find any start/end nodes for correlation " + corr.pp(correlations.getPositions()));
       return true;
+    }
     ChildPos startNode, endNode;
     filterNames(startNodes, corr.getIndexName());
     filterNames(endNodes, corr.getIndexName());

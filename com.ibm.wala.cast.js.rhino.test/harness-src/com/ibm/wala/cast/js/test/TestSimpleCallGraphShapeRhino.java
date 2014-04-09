@@ -65,4 +65,9 @@ public class TestSimpleCallGraphShapeRhino extends TestSimpleCallGraphShape {
   public void testTranslateToCAstCrash3() throws IllegalArgumentException, IOException, CancelException {
     JSCallGraphBuilderUtil.makeScriptCG("tests", "rhino_crash3.js");
   }
+  
+  @Test
+  public void testNonLoopBreakLabel() throws IllegalArgumentException, IOException, CancelException {
+	  JSCallGraphBuilderUtil.makeScriptCG("tests", "non_loop_break.js");
+  }
 }

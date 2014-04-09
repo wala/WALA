@@ -92,14 +92,24 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
       cl = new ClassLoaderImpl(classLoaderReference, scope.getArrayClassLoader(), parent, exclusions, cha);
     } else
       try {
-        // this is fragile.  why are we doing things this way again?
+        // this is fragile. why are we doing things this way again?
         Class<?> impl = Class.forName(implClass);
         Constructor<?> ctor = impl.getDeclaredConstructor(new Class[] { ClassLoaderReference.class, IClassLoader.class,
-            SetOfClasses.class, IClassHierarchy.class});
-        cl = (IClassLoader) ctor.newInstance(new Object[] { classLoaderReference, parent, exclusions, cha});
+            SetOfClasses.class, IClassHierarchy.class });
+        cl = (IClassLoader) ctor.newInstance(new Object[] { classLoaderReference, parent, exclusions, cha });
       } catch (Exception e) {
-        Warnings.add(InvalidClassLoaderImplementation.create(implClass));
-        cl = new ClassLoaderImpl(classLoaderReference, scope.getArrayClassLoader(), parent, exclusions, cha);
+        try {
+          Class<?> impl = Class.forName(implClass);
+          Constructor<?> ctor = impl.getDeclaredConstructor(new Class[] { ClassLoaderReference.class, ArrayClassLoader.class,
+              IClassLoader.class, SetOfClasses.class, IClassHierarchy.class });
+          cl = (IClassLoader) ctor.newInstance(new Object[] { classLoaderReference, scope.getArrayClassLoader(), parent,
+              exclusions, cha });
+        } catch (Exception e2) {
+          System.err.println("failed to load impl class " + implClass);
+          e2.printStackTrace(System.err);
+          Warnings.add(InvalidClassLoaderImplementation.create(implClass));
+          cl = new ClassLoaderImpl(classLoaderReference, scope.getArrayClassLoader(), parent, exclusions, cha);
+        }
       }
     cl.init(scope.getModules(classLoaderReference));
     return cl;

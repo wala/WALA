@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="com.ibm.wala.cast.java.polyglot" default="getJars" basedir=".">
+
+	<property name="basews" value="${ws}"/>
+	<property name="baseos" value="${os}"/>
+	<property name="basearch" value="${arch}"/>
+	<property name="basenl" value="${nl}"/>
+
+	<!-- Compiler settings. -->
+	<property name="javacFailOnError" value="true"/>
+	<property name="javacDebugInfo" value="on"/>
+	<property name="javacVerbose" value="false"/>
+	<property name="logExtension" value=".log"/>
+	<property name="compilerArg" value=""/>
+	<property name="javacSource" value="1.5"/>
+	<property name="javacTarget" value="1.5"/>
+	<!-- This property has been updated to correspond to the paths used by the latest Java update
+	on Mac OS X 10.6 (Java version 1.6.0_22).  If you are not using this version of Mac OS X or Java,
+	try changing the value of the property to "${java.home}/../../../Classes" -->
+    <condition property="dir_bootclasspath" value="${java.home}/../Classes">
+            <os family="mac"/>
+    </condition>
+    <property name="dir_bootclasspath" value="${java.home}/lib"/>
+    <path id="path_bootclasspath">
+            <fileset dir="${dir_bootclasspath}">
+
+                    <include name="*.jar"/>
+            </fileset>
+    </path>	
+	<property name="bootclasspath" refid="path_bootclasspath"/>
+	<property name="bundleJavacSource" value="${javacSource}"/>
+	<property name="bundleJavacTarget" value="${javacTarget}"/>
+	<property name="bundleBootClasspath" value="${bootclasspath}"/>
+
+     <target name="ajaxsltPresent" depends="init">
+        <available file="${plugin.destination}/examples-src/ajaxslt" property="ajaxslt.present"/>
+     </target>
+
+   <target name="fetchAjaxslt" depends="ajaxsltPresent" unless="ajaxslt.present">
+     <delete dir="${temp.folder}"/>
+     <mkdir dir="${temp.folder}"/>
+     <get src="http://ajaxslt.googlecode.com/files/ajaxslt-0-7.tar.gz" dest="${temp.folder}/ajaxslt-0-7.tar.gz" />
+     <untar src="${temp.folder}/ajaxslt-0-7.tar.gz" dest="${temp.folder}" compression="gzip" />
+     <copy todir="${plugin.destination}/examples-src/ajaxslt">
+       <fileset dir="${temp.folder}/ajaxslt" />
+     </copy>
+     <delete dir="${temp.folder}"/>
+   </target>
+	
+	<target name="getJars" depends="fetchAjaxslt" />
+
+
+	<target name="init" depends="properties">
+		<condition property="pluginTemp" value="${buildTempFolder}/plugins">
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="pluginTemp" value="${basedir}"/>
+		<condition property="build.result.folder" value="${pluginTemp}/com.ibm.wala.core.testdata">
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="build.result.folder" value="${basedir}"/>
+		<property name="temp.folder" value="${basedir}/temp.folder"/>
+		<property name="plugin.destination" value="${basedir}"/>
+	</target>
+
+	<target name="properties" if="eclipse.running">
+		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+
+	</target>
+
+</project>

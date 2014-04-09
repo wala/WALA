@@ -90,15 +90,15 @@ Object.prototype = {
 
   valueOf: function valueOf() { return this },
 
-  hasOwnProperty: function hasOwnProperty (V) {
+  hasOwnProperty: function Object_prototype_hasOwnProperty (V) {
     return primitive("ObjectHasOwnProperty", this, V);
   },
 
-  isPrototypeOf: function isPrototypeOf (V) {
+  isPrototypeOf: function Object_prototype_isPrototypeOf (V) {
     return primitive("ObjectIsPrototypeOf", this, V);
   },
-
-  propertyIsEnumerable: function propertyIsEnumerable (V) {
+  
+  propertyIsEnumerable: function Object_prototype_propertyIsEnumerable (V) {
     return primitive("ObjectPropertyIsEnumerable", this, V);
   }
 };
@@ -115,17 +115,22 @@ local_function.prototype = {
 
   __proto__: Object.prototype, 
   
-  toString: function functionToString() {
+  toString: function Function_prototype_toString() {
     return primitive("FunctionToString", this);
   },
 
-  apply: function functionApply (thisArg, argArray) {
+  apply: function Function_prototype_apply (thisArg, argArray) {
     return primitive("FunctionApply", this, thisArg, argArray);
   },
 
-  call: function functionCall (thisArg) {
+  call: function Function_prototype_call (thisArg) {
     arguments.shift();
-    return primitive("FunctionApply", this, thisArg, arguments);
+    return primitive("FunctionCall", this, thisArg, arguments);
+  },
+
+  bind: function Function_prototype_bind (thisArg) {
+    arguments.shift();
+    return primitive("FunctionBind", this, thisArg, arguments);
   }
 };
 
@@ -143,11 +148,11 @@ local_array.prototype = {
 
   constructor: Array,
 
-  toString: function arrayToString () {
+  toString: function Array_prototype_toString () {
     return this.join(",");
   },
 
-  toLocaleString: function arrayToLocalString () {
+  toLocaleString: function Array_prototype_toLocaleString () {
     var result = "";
     var limit = this.length;
     for(var k = 0; k < limit; k++) {
@@ -158,7 +163,7 @@ local_array.prototype = {
     return result;
   },
 
-  concat: function concat () {
+  concat: function Array_prototype_concat () {
     var result = new Array();
     var n = 0;
     
@@ -174,7 +179,7 @@ local_array.prototype = {
     return result;
   },
 
-  join: function join (separator) {
+  join: function Array_prototype_join (separator) {
     var result = "";
     var limit = this.length;
     for(var k = 0; k < limit; k++) {
@@ -185,11 +190,11 @@ local_array.prototype = {
     return result;
   },
 
-  pop: function pop () {
+  pop: function Array_prototype_pop () {
     return this[ --this.length ];
   },
 
-  push: function push () {
+  push: function Array_prototype_push () {
     var n = this.length;
     for(var i = 0; i < arguments.length; i++) {
       this[ n++ ] = arguments[i];
@@ -199,7 +204,7 @@ local_array.prototype = {
     return n;
   },
 
-  reverse: function reverse () {
+  reverse: function Array_prototype_reverse () {
     var n = this.length;
     for (var k = 0; k < (n/2); k++) {
       var tmp = this[k];
@@ -210,7 +215,7 @@ local_array.prototype = {
     return this;
   },
 
-  shift: function shift () {
+  shift: function Array_prototype_shift () {
     var result = this[ 0 ];
     for(var i = 0; i < this.length-1; i++)
       this[i] = this[i+1];
@@ -220,7 +225,17 @@ local_array.prototype = {
     return result;
   },
 
-  slice: function slice (start, end) {
+  unshift: function Array_prototype_unshift () {
+	  var n = arguments.length;
+	  for(var i=this.length+n-1;i>=n;--i)
+		  this[i] = this[i-n];
+	  for(;i>=0;--i)
+		  this[i] = arguments[i];
+	  this.length += n;
+	  return this.length;
+  },
+
+  slice: function Array_prototype_slice (start, end) {
     var j = 0;
     if (start < 0) start = this.length + start;
     if (end < 0) end = this.length + end;
@@ -233,7 +248,7 @@ local_array.prototype = {
     return result;
   },
 
-  sort: function sort (fn) {
+  sort: function Array_prototype_sort (fn) {
     for(var l = 0; i < this.length; l++) {
       var mindex = l;
       for(var i = l; i < this.length; i++) {
@@ -248,7 +263,57 @@ local_array.prototype = {
         this[mindex] = this[l];
       }
     }
+  },
+  
+  splice: function Array_prototype_splice(start, delete_count) {
+	  var old_len = arguments.length,
+	      new_count = arguments.length - 2;
+          new_len = old_len - deleteCount + new_count;
+          
+	  var deleted = this.slice(start, start + delete_count),
+	  	  remainder = this.slice(start + delete_count, old_len);
+
+	  for(var i=start;i<start+new_count;++i)
+		  this[i] = arguments[2+start-i];
+	  
+	  for(var k=0;k<remainder.length;++k,++i)
+		  this[i] = remainder[k];
+	  
+	  for(;i<old_len;++i)
+		  delete this[i];
+	  
+	  this.length = new_len;
+	  
+	  return deleted;
+  },
+  
+  indexOf: function Array_prototype_indexOf(elt, start) {
+	  if(arguments.length < 2)
+		  start = 0;
+	  if(start < 0) start += this.length;
+	  if(start < 0) start = 0;
+	  for(var i=start;i<this.length;++i)
+		  if(this[i] === elt)
+			  return i;
+	  return -1;
+  },
+  
+  forEach: function Array_prototype_forEach(callback, thisArg) {
+	  for(var i=0;i<this.length;++i)
+		  callback.call(thisArg, this[i], i, this);
+  },
+  
+  map: function Array_prototype_map(callback, thisArg) {
+	  var res = [];
+	  for(var i=0;i<this.length;++i)
+		  res[i] = callback.call(thisArg, this[i], i, this);
+	  res.length = this.length;
+	  return res;
   }
+};
+
+Array.isArray = function Array_isArray(a) {
+	return true || false;
 };
 
 
@@ -266,7 +331,7 @@ local_string.prototype = {
 
   $value: "",
 
-  toString: function stringToString() {
+  toString: function String_prototype_toString() {
     return this.$value;
   },
 
@@ -274,35 +339,35 @@ local_string.prototype = {
     return this.$value;
   },
 
-  charAt: function stringCharAt(pos) {
+  charAt: function String_prototype_charAt(pos) {
     return new String(primitive("StringCharAt", pos));
   },
 
-  charCodeAt: function stringCharCodeAt(pos) {
+  charCodeAt: function String_prototype_charCodeAt(pos) {
     return new Number(primitive("StringCharCodeAt", pos));
   },
 
-  toUpperCase: function toUpperCase() {
+  toUpperCase: function String_prototype_toUpperCase() {
     return new String(primitive("StringToUpperCase", this));
   },
 
-  toLocaleUpperCase: function toLocaleUpperCase() {
+  toLocaleUpperCase: function String_prototype_toLocaleUpperCase() {
     return new String(primitive("StringToLocaleUpperCase", this));
   },
 
-  toLowerCase: function toLowerCase() {
+  toLowerCase: function String_prototype_toLowerCase() {
     return new String(primitive("StringToLowerCase", this));
   },
 
-  toLocaleLowerCase: function toLocaleLowerCase() {
+  toLocaleLowerCase: function String_prototype_toLocaleLowerCase() {
     return new String(primitive("StringToLocaleLowerCase", this));
   },
 
-  indexOf: function indexOf(str) {
+  indexOf: function String_prototype_indexOf(str) {
     return new Number(primitive("StringIndexOf", this, str));
   },
 
-  split: function stringSplit(separator, limit) {
+  split: function String_prototype_split(separator, limit) {
     var y = primitive("splitCount", this, separator, limit);
     var x = new Array(y);
     for(var i = 0; i < y; i++) {
@@ -311,16 +376,30 @@ local_string.prototype = {
     return x;
   },
 
-  substring: function substring(from, to) {
+  substring: function String_prototype_substring(from, to) {
 	return new String(primitive("StringSubString", this, from, to)); 
   },
+  
+  slice: function String_prototype_slice(from, to) {
+	  if(from < 0) from += this.length;
+	  if(to < 0) to += this.length;
+	  return this.substring(from, to);
+  },
 	  
-  substr: function substr(from, to) {
+  substr: function String_prototype_substr(from, to) {
 	return new String(primitive("StringSubStr", this, from, to));
   },
 
-  replace: function replace(regex, withStr) {
+  replace: function String_prototype_replace(regex, withStr) {
     return new String(primitive("StringReplace", this, regex, withStr));
+  },
+  
+  match: function String_prototype_match(regexp) {
+	  return new Array(primitive("StringMatch", this, regexp));
+  },
+  
+  trim: function String_prototype_trim() {
+	  return new String(primitive("StringTrim", this));
   },
   
   loadFile: function loadFile() {
@@ -342,7 +421,11 @@ local_number.prototype = {
 
   constructor: Number,
 
-  $value: 0
+  $value: 0,
+  
+  toString: function Number_prototype_toString() {
+	  return primitive("NumberToString", this);
+  }
 
 };
 
@@ -368,27 +451,27 @@ Math = {
 
  SQRT2: primitive("MathSQRT2"),
 
- abs: function abs (x) { return (x<0)? -x: x; },
+ abs: function Math_abs (x) { return (x<0)? -x: x; },
 
- acos: function acos (x) { return primitive("MathACos", x); },
+ acos: function Math_acos (x) { return primitive("MathACos", x); },
 
- asin: function asin (x) { return primitive("MathASin", x); },
+ asin: function Math_asin (x) { return primitive("MathASin", x); },
 
- atan: function atan (x) { return primitive("MathATan", x); },
+ atan: function Math_atan (x) { return primitive("MathATan", x); },
 
- atan2: function atan2 (y, x) { return primitive("MathATan2", y, x); },
+ atan2: function Math_atan2 (y, x) { return primitive("MathATan2", y, x); },
 
- ceil: function ceil (x) { return primitive("MathCeil", x); },
+ ceil: function Math_ceil (x) { return primitive("MathCeil", x); },
 
- cos: function cos (x) { return primitive("MathCos", x); },
+ cos: function Math_cos (x) { return primitive("MathCos", x); },
 
- exp: function exp (x) { return primitive("MathExp", x); },
+ exp: function Math_exp (x) { return primitive("MathExp", x); },
 
- floor: function floor (x) { return primitive("MathFloor", x); },
+ floor: function Math_floor (x) { return primitive("MathFloor", x); },
 
- log: function log (x) { return primitive("MathLog", x); },
+ log: function Math_log (x) { return primitive("MathLog", x); },
 
- max: function max () {
+ max: function Math_max () {
    var i = -Infinity;
    for(var j = 0; j < arguments.length; j++)
      if (arguments[j] > i)
@@ -397,7 +480,7 @@ Math = {
    return i;
  },
 
- min: function min () {
+ min: function Math_min () {
    var i = Infinity;
    for(var j = 0; j < arguments.length; j++)
      if (arguments[j] < i)
@@ -406,17 +489,17 @@ Math = {
    return i;
  },
 
- pow: function pow (x, y) { return primitive("MathPow", x, y); },
+ pow: function Math_pow (x, y) { return primitive("MathPow", x, y); },
 
- random: function random() { return primitive("MathRandom"); },
+ random: function Math_random() { return primitive("MathRandom"); },
 
- round: function round (x) { return primitive("MathRound", x); },
+ round: function Math_round (x) { return primitive("MathRound", x); },
 
- sin: function sin (x) { return primitive("MathSin", x); },
+ sin: function Math_sin (x) { return primitive("MathSin", x); },
 
- sqrt: function sqrt (x) { return primitive("MathSqrt", x);},
+ sqrt: function Math_sqrt (x) { return primitive("MathSqrt", x);},
 
- tan: function tan (x) { return primitive("MathTan", x); }
+ tan: function Math_tan (x) { return primitive("MathTan", x); }
 };
 
 
@@ -430,8 +513,98 @@ local_regexp.prototype = {
 
   __proto__: Object.prototype,
 
-  constructor: RegExp
+  constructor: RegExp,
+  
+  exec: function RegExp_prototype_exec(string) {
+	  return new Array(primitive("RegexpExec", this, string));
+  },
+  
+  test: function RegExp_prototype_test(string) {
+	  return true || false;
+  }
 
 };
 
+
+/************************************************************************/
+/* Date properties, see spec 15.9					*/
+/************************************************************************/
+
+Date = function Date() {};
+
+Date.prototype = {
+
+  __proto__: Object.prototype,
+
+  constructor: Date,
+  
+  getTime: function Date_prototype_getTime() {
+	  return primitive("DateGetTime", this); 
+  },
+  
+  getDate: function Date_prototype_getDate() {
+	  // TODO: model me
+  },
+  
+  setDate: function Date_prototype_setDate() {
+	  // TODO: model me
+  },
+  
+  getDay: function Date_prototype_getDay() {
+	  // TODO: model me
+  },
+  
+  setDay: function Date_prototype_setDay() {
+	  // TODO: model me
+  },
+  
+  getMonth: function Date_prototype_getMonth() {
+	  // TODO: model me
+  },
+  
+  setMonth: function Date_prototype_setMonth() {
+	  // TODO: model me
+  },
+  
+  getHours: function Date_prototype_getHours() {
+	  // TODO: model me
+  },
+  
+  setHours: function Date_prototype_setHours() {
+	  // TODO: model me
+  },
+  
+  getMinutes: function Date_prototype_getMinutes() {
+	  // TODO: model me
+  },
+  
+  setMinutes: function Date_prototype_setMinutes() {
+	  // TODO: model me
+  },
+  
+  getSeconds: function Date_prototype_getSeconds() {
+	  // TODO: model me
+  },
+  
+  setSeconds: function Date_prototype_setSeconds() {
+	  // TODO: model me
+  },
+  
+  getMilliseconds: function Date_prototype_getMilliseconds() {
+	  // TODO: model me
+  },
+  
+  setMilliseconds: function Date_prototype_setMilliseconds() {
+	  // TODO: model me
+  },
+  
+  getFullYear: function Date_prototype_getFullYear() {
+	  // TODO: model me
+  }
+
+};
+
+Date.now = function Date_now() {
+	return new Date().valueOf();
+};
 

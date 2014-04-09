@@ -120,7 +120,6 @@ import polyglot.util.Position;
 import com.ibm.wala.cast.ir.translator.AstTranslator.InternalCAstSymbol;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.DoLoopTranslator;
-import com.ibm.wala.cast.ir.translator.TranslatorToCAst.WalkContext;
 import com.ibm.wala.cast.java.loader.Util;
 import com.ibm.wala.cast.java.translator.JavaProcedureEntity;
 import com.ibm.wala.cast.java.types.JavaType;

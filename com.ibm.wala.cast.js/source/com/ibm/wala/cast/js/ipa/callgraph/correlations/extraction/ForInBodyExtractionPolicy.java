@@ -15,6 +15,7 @@ import static com.ibm.wala.cast.tree.CAstNode.ASSIGN;
 import static com.ibm.wala.cast.tree.CAstNode.BLOCK_STMT;
 import static com.ibm.wala.cast.tree.CAstNode.DECL_STMT;
 import static com.ibm.wala.cast.tree.CAstNode.EACH_ELEMENT_GET;
+import static com.ibm.wala.cast.tree.CAstNode.EMPTY;
 import static com.ibm.wala.cast.tree.CAstNode.LABEL_STMT;
 import static com.ibm.wala.cast.tree.CAstNode.LOCAL_SCOPE;
 import static com.ibm.wala.cast.tree.CAstNode.VAR;
@@ -70,7 +71,9 @@ public class ForInBodyExtractionPolicy extends ExtractionPolicy {
                                new NodeOfKind(VAR, loopVar),
                                new SubtreeOfKind(EACH_ELEMENT_GET))),
         new AnyNode(),
-        new SubtreeOfKind(LABEL_STMT)).matches(node)) {
+        new NodeOfKind(BLOCK_STMT,
+          new SubtreeOfKind(LABEL_STMT),
+          new SubtreeOfKind(EMPTY))).matches(node)) {
       List<String> parms = Collections.singletonList((String)loopVar.getLastMatch());
       if(node.getChild(1).getKind() == LOCAL_SCOPE) {
         return Collections.<ExtractionRegion>singletonList(new TwoLevelExtractionRegion(1, 2, 0, -1, parms, Collections.<String>emptyList()));

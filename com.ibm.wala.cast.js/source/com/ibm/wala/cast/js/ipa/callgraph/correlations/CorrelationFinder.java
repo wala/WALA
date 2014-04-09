@@ -77,7 +77,7 @@ public class CorrelationFinder {
   private final JavaScriptTranslatorFactory translatorFactory;
 
   @SuppressWarnings("unused")
-  private CorrelationSummary findCorrelatedAccesses(IMethod method, IR ir) {
+  public static CorrelationSummary findCorrelatedAccesses(IMethod method, IR ir) {
     AstMethod astMethod = (AstMethod)method;
     DefUse du = new DefUse(ir);
     OrdinalSetMapping<SSAInstruction> instrIndices = new ObjectArrayMapping<SSAInstruction>(ir.getInstructions());
@@ -160,9 +160,14 @@ public class CorrelationFinder {
 
   // tries to determine which source level variable an SSA variable corresponds to
   // if it does not correspond to any variable, or to more than one, null is returned
-  private String getSourceLevelName(AstMethod astMethod, int v) {
+  private static String getSourceLevelName(AstMethod astMethod, int v) {
     String indexName = null;
-    for(String candidateName : astMethod.debugInfo().getSourceNamesForValues()[v]) {
+    String[][] sourceNamesForValues = astMethod.debugInfo().getSourceNamesForValues();
+    
+    if(v >= sourceNamesForValues.length)
+      return null;
+    
+    for(String candidateName : sourceNamesForValues[v]) {
       if(indexName != null) {
         indexName = null;
         break;
@@ -173,7 +178,7 @@ public class CorrelationFinder {
     return indexName;
   }
   
-  private Set<String> getSourceLevelNames(AstMethod astMethod, IntSet vs) {
+  private static Set<String> getSourceLevelNames(AstMethod astMethod, IntSet vs) {
     Set<String> res = new HashSet<String>();
     for(IntIterator iter=vs.intIterator();iter.hasNext();) {
       String name = getSourceLevelName(astMethod, iter.next());
@@ -184,7 +189,7 @@ public class CorrelationFinder {
   }
 
   // checks whether the given SSA variable must always be assigned a numeric value
-  private boolean mustBeNumeric(IR ir, DefUse du, int v) {
+  private static boolean mustBeNumeric(IR ir, DefUse du, int v) {
     LinkedList<Integer> worklist = new LinkedList<Integer>();
     MutableIntSet done = new BitVectorIntSet();
     worklist.add(v);

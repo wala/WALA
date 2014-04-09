@@ -54,9 +54,9 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory;
 import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
@@ -139,7 +139,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
             result.add(domoType);
         }
         if (domoType == null && !getClassHierarchy().getScope().getExclusions().contains(name.toString().substring(1))){
-          assert false : "Failed to find all non-excluded interfaces.";
+          assert false : "Failed to find non-excluded interface: " + name;
         }
       }
 

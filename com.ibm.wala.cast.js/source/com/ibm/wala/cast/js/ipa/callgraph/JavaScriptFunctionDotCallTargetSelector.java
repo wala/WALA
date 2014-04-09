@@ -48,7 +48,7 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
   
   public static final boolean DEBUG_SYNTHETIC_CALL_METHODS = false;
 
-  private static final TypeName CALL_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/functionCall");
+  private static final TypeName CALL_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/Function_prototype_call");
   private final MethodTargetSelector base;
 
   public JavaScriptFunctionDotCallTargetSelector(MethodTargetSelector base) {

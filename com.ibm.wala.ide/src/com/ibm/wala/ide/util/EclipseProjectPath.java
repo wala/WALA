@@ -11,7 +11,6 @@
 package com.ibm.wala.ide.util;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,11 +29,6 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jdt.core.IClasspathContainer;
-import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.osgi.service.resolver.BundleDescription;
 import org.eclipse.pde.core.plugin.IPluginModelBase;
 import org.eclipse.pde.internal.core.ClasspathUtilCore;
@@ -66,12 +60,25 @@ import com.ibm.wala.util.debug.Assertions;
  * </ul>
  */
 @SuppressWarnings("restriction")
-public class EclipseProjectPath {
+public abstract class EclipseProjectPath<E, P> {
 
+  protected abstract P makeProject(IProject p);
+  
+  protected abstract E resolve(E entry);
+  
+  protected abstract void resolveClasspathEntry(P project, E entry, ILoader loader, boolean includeSource, boolean cpeFromMainProject);
+
+  protected abstract void resolveProjectClasspathEntries(P project, boolean includeSource);
+
+
+  public interface ILoader {
+    ClassLoaderReference ref();
+  };
+  
   /**
-   * Eclipse projects are modelled with 3 loaders, as described above.
+   * Eclipse projects are modeled with 3 loaders, as described above.
    */
-  public enum Loader {
+  public enum Loader implements ILoader {
     APPLICATION(ClassLoaderReference.Application), EXTENSION(ClassLoaderReference.Extension), PRIMORDIAL(
         ClassLoaderReference.Primordial);
 
@@ -80,16 +87,15 @@ public class EclipseProjectPath {
     Loader(ClassLoaderReference ref) {
       this.ref = ref;
     }
+
+    public ClassLoaderReference ref() {
+      return ref;
+    }
   };
 
   public enum AnalysisScopeType {
     NO_SOURCE, SOURCE_FOR_PROJ, SOURCE_FOR_PROJ_AND_LINKED_PROJS
   }
-
-  /**
-   * The project whose path this object represents
-   */
-  private final IJavaProject project;
 
   /**
    * names of OSGi bundles already processed.
@@ -98,112 +104,89 @@ public class EclipseProjectPath {
 
   // SJF: Intentionally do not use HashMapFactory, since the Loader keys in the following must use
   // identityHashCode. TODO: fix this source of non-determinism?
-  private final Map<Loader, List<Module>> modules = new HashMap<Loader, List<Module>>();
+  protected final Map<ILoader, List<Module>> modules = new HashMap<ILoader, List<Module>>();
 
   /**
    * Classpath entries that have already been resolved and added to the scope.
    */
-  private final Collection<IClasspathEntry> alreadyResolved = HashSetFactory.make();
+  protected final Collection<E> alreadyResolved = HashSetFactory.make();
 
   /**
    * Which source files, if any, should be included in the analysis scope.
    */
   private final AnalysisScopeType scopeType;
 
-  protected EclipseProjectPath(IJavaProject project, AnalysisScopeType scopeType) throws IOException, CoreException {
+  protected EclipseProjectPath(AnalysisScopeType scopeType) throws IOException, CoreException {
+    this.scopeType = scopeType;
+    for (ILoader loader : Loader.values()) {
+      MapUtil.findOrCreateList(modules, loader);
+    }
+  }
+  
+  protected EclipseProjectPath(IProject project, AnalysisScopeType scopeType) throws IOException, CoreException {
+    this(scopeType);
+
+    assert project != null;
     if (project == null) {
       throw new IllegalArgumentException("null project");
     }
-    this.scopeType = scopeType;
-    this.project = project;
-    assert project != null;
-    for (Loader loader : Loader.values()) {
-      MapUtil.findOrCreateList(modules, loader);
-    }
+    
     boolean includeSource = (scopeType != AnalysisScopeType.NO_SOURCE);
-    resolveProjectClasspathEntries(includeSource);
+    resolveProjectClasspathEntries(makeProject(project), includeSource);
     if (isPluginProject(project)) {
-      resolvePluginClassPath(project.getProject(), includeSource);
+      resolvePluginClassPath(project, includeSource);
     }
   }
 
-  public static EclipseProjectPath make(IJavaProject project) throws IOException, CoreException {
-    return make(project, AnalysisScopeType.NO_SOURCE);
-  }
 
-  public static EclipseProjectPath make(IJavaProject project, AnalysisScopeType scopeType) throws IOException, CoreException {
-    return new EclipseProjectPath(project, scopeType);
-  }
-
-  /**
-   * Figure out what a classpath entry means and add it to the appropriate set of modules
-   */
-  private void resolveClasspathEntry(IClasspathEntry entry, Loader loader, boolean includeSource, boolean cpeFromMainProject)
-      throws JavaModelException, IOException {
-    IClasspathEntry e = JavaCore.getResolvedClasspathEntry(entry);
-    if (alreadyResolved.contains(e)) {
+  protected void resolveLibraryPathEntry(ILoader loader, IPath p) {
+    File file = makeAbsolute(p).toFile();
+    JarFile j;
+    try {
+      j = new JarFile(file);
+    } catch (ZipException z) {
+      // a corrupted file. ignore it.
       return;
-    } else {
-      alreadyResolved.add(e);
+    } catch (IOException z) {
+      // should ignore directories as well..
+      return;
     }
+    if (isPrimordialJarFile(j)) {
+      List<Module> s = MapUtil.findOrCreateList(modules, loader);
+      s.add(file.isDirectory() ? (Module) new BinaryDirectoryTreeModule(file) : (Module) new JarFileModule(j));
+    }
+  }
 
-    if (e.getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
-      IClasspathContainer cont = JavaCore.getClasspathContainer(entry.getPath(), project);
-      IClasspathEntry[] entries = cont.getClasspathEntries();
-      resolveClasspathEntries(entries, cont.getKind() == IClasspathContainer.K_APPLICATION ? loader : Loader.PRIMORDIAL,
-          includeSource, false);
-    } else if (e.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
-      File file = makeAbsolute(e.getPath()).toFile();
-      JarFile j;
-      try {
-        j = new JarFile(file);
-      } catch (ZipException z) {
-        // a corrupted file. ignore it.
-        return;
-      } catch (FileNotFoundException z) {
-        // should ignore directories as well..
-        return;
-      }
-      if (isPrimordialJarFile(j)) {
-        List<Module> s = MapUtil.findOrCreateList(modules, loader);
-        s.add(file.isDirectory() ? (Module) new BinaryDirectoryTreeModule(file) : (Module) new JarFileModule(j));
-      }
-    } else if (e.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
-      if (includeSource) {
-        List<Module> s = MapUtil.findOrCreateList(modules, Loader.APPLICATION);
-        s.add(new EclipseSourceDirectoryTreeModule(e.getPath()));
-      } else if (e.getOutputLocation() != null) {
-        File output = makeAbsolute(e.getOutputLocation()).toFile();
-        List<Module> s = MapUtil.findOrCreateList(modules, cpeFromMainProject ? Loader.APPLICATION : loader);
-        s.add(new BinaryDirectoryTreeModule(output));
-      }
-    } else if (e.getEntryKind() == IClasspathEntry.CPE_PROJECT) {
-      IPath projectPath = makeAbsolute(e.getPath());
-      IWorkspace ws = ResourcesPlugin.getWorkspace();
-      IWorkspaceRoot root = ws.getRoot();
-      IProject project = (IProject) root.getContainerForLocation(projectPath);
-      try {
-        if (project.hasNature(JavaCore.NATURE_ID)) {
-          IJavaProject javaProject = JavaCore.create(project);
-          if (isPluginProject(javaProject)) {
-            resolvePluginClassPath(javaProject.getProject(), includeSource);
-          }
-          resolveClasspathEntries(javaProject.getRawClasspath(), loader,
-              scopeType == AnalysisScopeType.SOURCE_FOR_PROJ_AND_LINKED_PROJS ? includeSource : false, false);
-          File output = makeAbsolute(javaProject.getOutputLocation()).toFile();
-          List<Module> s = MapUtil.findOrCreateList(modules, loader);
-          if (!includeSource) {
-            if (output.exists()) {
-              s.add(new BinaryDirectoryTreeModule(output));
-            }
-          }
+  protected void resolveSourcePathEntry(ILoader loader, boolean includeSource, boolean cpeFromMainProject, IPath p, IPath o, String fileExtension) {
+    if (includeSource) {
+      List<Module> s = MapUtil.findOrCreateList(modules, loader);
+      s.add(new EclipseSourceDirectoryTreeModule(p, fileExtension));
+    } else if (o != null) {
+      File output = makeAbsolute(o).toFile();
+      List<Module> s = MapUtil.findOrCreateList(modules, cpeFromMainProject ? Loader.APPLICATION : loader);
+      s.add(new BinaryDirectoryTreeModule(output));
+    }
+  }
+
+  protected void resolveProjectPathEntry(ILoader loader, boolean includeSource, IPath p) {
+    IPath projectPath = makeAbsolute(p);
+    IWorkspace ws = ResourcesPlugin.getWorkspace();
+    IWorkspaceRoot root = ws.getRoot();
+    IProject project = (IProject) root.getContainerForLocation(projectPath);
+    try {
+      P javaProject = makeProject(project);
+      if (javaProject != null) {
+        if (isPluginProject(project)) {
+          resolvePluginClassPath(project, includeSource);
         }
-      } catch (CoreException e1) {
-        e1.printStackTrace();
-        Assertions.UNREACHABLE();
+        resolveProjectClasspathEntries(javaProject, scopeType == AnalysisScopeType.SOURCE_FOR_PROJ_AND_LINKED_PROJS ? includeSource : false);
       }
-    } else {
-      throw new RuntimeException("unexpected entry " + e);
+    } catch (CoreException e1) {
+      e1.printStackTrace();
+      Assertions.UNREACHABLE();
+    } catch (IOException e) {
+      e.printStackTrace();
+      Assertions.UNREACHABLE();
     }
   }
 
@@ -239,14 +222,13 @@ public class EclipseProjectPath {
     if (bd == null) {
       throw new IllegalStateException("bundle description was null for " + p);
     }
-    resolveBundleDescriptionClassPath(bd, Loader.APPLICATION, includeSource);
+    resolveBundleDescriptionClassPath(makeProject(p), bd, Loader.APPLICATION, includeSource);
   }
 
   /**
    * traverse a bundle description and populate the analysis scope accordingly
    */
-  @SuppressWarnings("unchecked")
-  private void resolveBundleDescriptionClassPath(BundleDescription bd, Loader loader, boolean includeSource) throws CoreException,
+  private void resolveBundleDescriptionClassPath(P project, BundleDescription bd, Loader loader, boolean includeSource) throws CoreException,
       IOException {
     assert bd != null;
     if (alreadyProcessed(bd)) {
@@ -257,23 +239,17 @@ public class EclipseProjectPath {
     // handle the classpath entries for bd
     ArrayList l = new ArrayList();
     ClasspathUtilCore.addLibraries(findModel(bd), l);
-    IClasspathEntry[] entries = new IClasspathEntry[l.size()];
-    int i = 0;
-    for (Object o : l) {
-      IClasspathEntry e = (IClasspathEntry) o;
-      entries[i++] = e;
-    }
-    resolveClasspathEntries(entries, loader, includeSource, false);
+    resolveClasspathEntries(project, l, loader, includeSource, false);
 
     // recurse to handle dependencies. put these in the Extension loader
     for (BundleDescription b : PDEStateHelper.getImportedBundles(bd)) {
-      resolveBundleDescriptionClassPath(b, Loader.EXTENSION, includeSource);
+      resolveBundleDescriptionClassPath(project, b, Loader.EXTENSION, includeSource);
     }
     for (BundleDescription b : bd.getResolvedRequires()) {
-      resolveBundleDescriptionClassPath(b, Loader.EXTENSION, includeSource);
+      resolveBundleDescriptionClassPath(project, b, Loader.EXTENSION, includeSource);
     }
     for (BundleDescription b : bd.getFragments()) {
-      resolveBundleDescriptionClassPath(b, Loader.EXTENSION, includeSource);
+      resolveBundleDescriptionClassPath(project, b, Loader.EXTENSION, includeSource);
     }
   }
 
@@ -287,8 +263,8 @@ public class EclipseProjectPath {
   /**
    * Is javaProject a plugin project?
    */
-  private boolean isPluginProject(IJavaProject javaProject) {
-    IPluginModelBase model = findModel(javaProject.getProject());
+  private boolean isPluginProject(IProject project) {
+    IPluginModelBase model = findModel(project);
     if (model == null) {
       return false;
     }
@@ -306,10 +282,9 @@ public class EclipseProjectPath {
     return true;
   }
 
-  protected void resolveClasspathEntries(IClasspathEntry[] entries, Loader loader, boolean includeSource,
-      boolean entriesFromTopLevelProject) throws JavaModelException, IOException {
-    for (int i = 0; i < entries.length; i++) {
-      resolveClasspathEntry(entries[i], loader, includeSource, entriesFromTopLevelProject);
+  protected void resolveClasspathEntries(P project, List l, ILoader loader, boolean includeSource, boolean entriesFromTopLevelProject) {
+    for (int i = 0; i < l.size(); i++) {
+      resolveClasspathEntry(project, resolve((E)l.get(i)), loader, includeSource, entriesFromTopLevelProject);
     }
   }
 
@@ -325,22 +300,7 @@ public class EclipseProjectPath {
     }
     return absolutePath;
   }
-
-  private void resolveProjectClasspathEntries(boolean includeSource) throws JavaModelException, IOException {
-
-    resolveClasspathEntries(project.getRawClasspath(), Loader.EXTENSION, includeSource, true);
-
-    if (!includeSource) {
-      File dir = makeAbsolute(project.getOutputLocation()).toFile();
-      if (!dir.isDirectory()) {
-        System.err.println("PANIC: project output location is not a directory: " + dir);
-      } else {
-        MapUtil.findOrCreateList(modules, Loader.APPLICATION).add(new BinaryDirectoryTreeModule(dir));
-      }
-    }
-
-  }
-
+  
   /**
    * Convert this path to a WALA analysis scope
    * 
@@ -354,9 +314,9 @@ public class EclipseProjectPath {
 
   public AnalysisScope toAnalysisScope(AnalysisScope scope) {
 
-    for (Loader loader : Loader.values()) {
+    for (ILoader loader : modules.keySet()) {
       for (Module m : modules.get(loader)) {
-        scope.addToScope(loader.ref, m);
+        scope.addToScope(loader.ref(), m);
       }
     }
     return scope;

@@ -19,6 +19,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.ibm.wala.cast.js.ipa.callgraph.ForInContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -66,7 +67,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
       new Object[] { "tests/simple.js/rubbish",
           new String[] { "tests/simple.js/weirder", "tests/simple.js/stranger", "tests/simple.js/rubbish" } },
       new Object[] { "tests/simple.js/fib", new String[] { "tests/simple.js/fib" } },
-      new Object[] { "tests/simple.js/weirder", new String[] { "prologue.js/abs" } } };
+      new Object[] { "tests/simple.js/weirder", new String[] { "prologue.js/Math_abs" } } };
 
   @Test
   public void testSimple() throws IOException, IllegalArgumentException, CancelException {
@@ -240,7 +241,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 
   private static final Object[][] assertionsForStringPrims = new Object[][] {
       new Object[] { ROOT, new String[] { "tests/string-prims.js" } },
-      new Object[] { "tests/string-prims.js", new String[] { "prologue.js/stringSplit", "prologue.js/toUpperCase" } } };
+      new Object[] { "tests/string-prims.js", new String[] { "prologue.js/String_prototype_split", "prologue.js/String_prototype_toUpperCase" } } };
 
   @Test
   public void testStringPrims() throws IOException, IllegalArgumentException, CancelException {
@@ -485,7 +486,7 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   
   private static final Object[][] assertionsForFunctionIsAFunction = new Object[][] {
     new Object[] { ROOT, new String[] { "tests/Function_is_a_function.js" } },
-    new Object[] { "suffix:Function_is_a_function.js", new String[] { "suffix:functionCall" } } }; 
+    new Object[] { "suffix:Function_is_a_function.js", new String[] { "suffix:Function_prototype_call" } } }; 
 
   @Test
   public void testFunctionIsAFunction() throws IOException, IllegalArgumentException, CancelException {
@@ -546,6 +547,65 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 //    JSCallGraphUtil.AVOID_DUMP = false;
     JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForDispatch);
+  }
+
+  private static final Object[][] assertionsForDispatchSameTarget = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/dispatch_same_target.js" } },
+    new Object[] { "tests/dispatch_same_target.js/f3", new String[] { "tests/dispatch_same_target.js/f4" } } 
+  };
+
+
+  @Test
+  public void testDispatchSameTarget() throws IOException, IllegalArgumentException, CancelException {
+    PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "dispatch_same_target.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+//    JSCallGraphUtil.AVOID_DUMP = false;
+//    JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
+    verifyGraphAssertions(CG, assertionsForDispatchSameTarget);
+  }
+  
+  
+  private static final Object[][] assertionsForForInPrototype = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/for_in_prototype.js" } },
+    new Object[] { "tests/for_in_prototype.js", new String[] { "suffix:A",
+                                                               "suffix:reachable",
+                                                               "suffix:also_reachable" } }
+  };
+  
+  @Test
+  public void testForInPrototype() throws IllegalArgumentException, IOException, CancelException {
+    CallGraph cg = JSCallGraphBuilderUtil.makeScriptCG("tests", "for_in_prototype.js");
+    verifyGraphAssertions(cg, assertionsForForInPrototype);
+  }
+  
+  private static final Object[][] assertionsForArrayIndexConv = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/array_index_conv.js" } },
+    new Object[] { "tests/array_index_conv.js", new String[] { "suffix:reachable",
+                                                               "suffix:also_reachable",
+                                                               "suffix:reachable_too" } }
+  };
+  
+  @Test
+  public void testArrayIndexConv() throws IllegalArgumentException, IOException, CancelException {
+    PropagationCallGraphBuilder b = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "array_index_conv.js");
+    CallGraph cg = b.makeCallGraph(b.getOptions());
+    verifyGraphAssertions(cg, assertionsForArrayIndexConv);
+  }
+
+  private static final Object[][] assertionsForArrayIndexConv2 = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/array_index_conv2.js" } },
+    new Object[] { "tests/array_index_conv2.js", new String[] { "suffix:invokeOnA" } },
+    new Object[] { "suffix:invokeOnA", new String[] { "suffix:reachable",
+                                                      "suffix:also_reachable",
+                                                      "suffix:reachable_too" } }
+  };
+  
+  @Test
+  public void testArrayIndexConv2() throws IllegalArgumentException, IOException, CancelException {
+    PropagationCallGraphBuilder b = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "array_index_conv2.js");
+    b.setContextSelector(new ForInContextSelector(b.getContextSelector()));
+    CallGraph cg = b.makeCallGraph(b.getOptions());
+    verifyGraphAssertions(cg, assertionsForArrayIndexConv2);
   }
 
   protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {

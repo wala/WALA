@@ -101,7 +101,7 @@ public abstract class Launcher {
       throw new IllegalArgumentException("cmd cannot be null");
     }
     if (logger != null) {
-      logger.fine("spawning process " + cmd);
+      logger.info("spawning process " + cmd);
     }
     String[] ev = getEnv() == null ? null : buildEnv(getEnv());
     Process p = Runtime.getRuntime().exec(cmd, ev, getWorkingDir());
@@ -125,6 +125,10 @@ public abstract class Launcher {
       void drain() throws IOException {
         drainAndPrint(out, System.out);
       }
+      @Override
+      void blockingDrain() throws IOException {
+        blockingDrainAndPrint(out, System.out);
+      }
     };
     result.start();
     return result;
@@ -137,6 +141,11 @@ public abstract class Launcher {
       @Override
       void drain() throws IOException {
         drainAndCatch(out, b);
+      }
+
+      @Override
+      void blockingDrain() throws IOException {
+        blockingDrainAndCatch(out, b);
       }
     };
     result.setCapture(b);
@@ -151,6 +160,10 @@ public abstract class Launcher {
       void drain() throws IOException {
         drainAndPrint(err, System.err);
       }
+      @Override
+      void blockingDrain() throws IOException {
+        blockingDrainAndPrint(err, System.err);
+      }
     };
     result.start();
     return result;
@@ -163,6 +176,10 @@ public abstract class Launcher {
       @Override
       void drain() throws IOException {
         drainAndCatch(out, b);
+      }
+      @Override
+      void blockingDrain() throws IOException {
+        blockingDrainAndCatch(out, b);
       }
     };
     result.setCapture(b);
@@ -182,7 +199,15 @@ public abstract class Launcher {
 
     private ByteArrayOutputStream capture;
 
+    /**
+     * Drain data from the stream, but don't block.
+     */
     abstract void drain() throws IOException;
+    
+    /**
+     * Drain data from the stream until it is finished.  Block if necessary.
+     */
+    abstract void blockingDrain() throws IOException;
 
     Drainer(Process p) {
       this.p = p;
@@ -204,7 +229,7 @@ public abstract class Launcher {
             p.exitValue();
             // if we get here, the process has terminated
             repeat = false;
-            drain();
+            blockingDrain();
             if (logger != null) {
               logger.fine("process terminated with exit code " + p.exitValue());
             }
@@ -227,6 +252,9 @@ public abstract class Launcher {
     }
   }
 
+  /**
+   * Drain some data from the input stream, and print said data to p.  Do not block.
+   */
   private void drainAndPrint(BufferedInputStream s, PrintStream p) throws IOException {
     try {
       while (s.available() > 0) {
@@ -239,13 +267,53 @@ public abstract class Launcher {
       // so, just exit
     }
   }
+  
+  /**
+   * Drain all data from the input stream, and print said data to p.  Block if necessary.
+   */
+  private void blockingDrainAndPrint(BufferedInputStream s, PrintStream p) throws IOException {
+    ByteArrayOutputStream b = new ByteArrayOutputStream();
+    try {
+      // gather all the data from the stream.
+      int next = s.read();
+      while (next != -1) {
+        b.write(next);
+        next = s.read();
+      }
+    } catch (IOException e) {
+      // assume the stream has been closed (e.g. the process died)
+      // so, just print the data and then leave
+    }
+    
+    // print the data.
+    p.print(b.toString());
+  }
 
+  /**
+   * Drain some data from the input stream, and append said data to b.  Do not block.
+   */
   private void drainAndCatch(BufferedInputStream s, ByteArrayOutputStream b) throws IOException {
     try {
       while (s.available() > 0) {
         byte[] data = new byte[s.available()];
         int nRead = s.read(data);
         b.write(data, 0, nRead);
+      }
+    } catch (IOException e) {
+      // assume the stream has been closed (e.g. the process died)
+      // so, just exit
+    }
+  }
+  
+  /**
+   * Drain all data from the input stream, and append said data to p.  Block if necessary.
+   */
+  private void blockingDrainAndCatch(BufferedInputStream s, ByteArrayOutputStream b) throws IOException {
+    try {
+      int next = s.read();
+      while (next != -1) {
+        b.write(next);
+        next = s.read();
       }
     } catch (IOException e) {
       // assume the stream has been closed (e.g. the process died)

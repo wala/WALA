@@ -34,7 +34,7 @@ public class JSAnalysisOptions extends AnalysisOptions {
   public JSAnalysisOptions(AnalysisScope scope, Iterable<? extends Entrypoint> e) {
     super(scope, e);
   }
-
+  
   /**
    * should the analysis model the semantics of Function.prototype.call / apply?
    */

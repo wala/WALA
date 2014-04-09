@@ -131,14 +131,27 @@ public class Annotation {
     return true;
   }
 
+  /**
+   * Get the unnamed arguments to the annotation (e.g., constructor arguments
+   * for C# attributes), represented as an array of pairs (T,V), where T is the
+   * argument type and V is the value. The array preserves the order in which
+   * the arguments were passed. If null, there are no unnamed arguments.
+   */
   public Pair<TypeReference, Object>[] getUnnamedArguments() {
     return unnamedArguments;
   }
-  
+ 
+  /**
+   * Get the named arguments to the annotation, represented as a mapping from
+   * name to value
+   */
   public Map<String,ElementValue> getNamedArguments() {
     return namedArguments;
   }
 
+  /**
+   * Get the type of the annotation
+   */
   public TypeReference getType() {
     return type;
   }

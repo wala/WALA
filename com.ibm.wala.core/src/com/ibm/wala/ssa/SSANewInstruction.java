@@ -38,8 +38,6 @@ public abstract class SSANewInstruction extends SSAInstruction {
     if (site == null) {
       throw new IllegalArgumentException("site cannot be null");
     }
-    assert !site.getDeclaredType().isArrayType()
-        || site.getDeclaredType().getClassLoader().getLanguage() != ClassLoaderReference.Java;
     this.result = result;
     this.site = site;
     this.params = null;

@@ -18,6 +18,7 @@ import org.junit.Test;
 
 import com.ibm.wala.cast.js.html.IHtmlParser;
 import com.ibm.wala.cast.js.html.IHtmlParserFactory;
+import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -50,5 +51,7 @@ public abstract class TestSimplePageCallGraphShapeRhino extends TestSimplePageCa
 					return TestSimplePageCallGraphShapeRhino.this.getParser();
 				}
 			});
+		    JSSourceExtractor.USE_TEMP_NAME = false;
+		    JSSourceExtractor.DELETE_UPON_EXIT = false;    			
 	  }
 }

@@ -10,6 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
+import static com.ibm.wala.types.TypeName.ArrayMask;
+import static com.ibm.wala.types.TypeName.ElementBits;
+import static com.ibm.wala.types.TypeName.PrimitiveMask;
+
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
@@ -238,7 +242,17 @@ public class ArrayClass implements IClass, Constants {
   }
 
   public int getDimensionality() {
-    return getReference().getDimensionality();
+    int mask = getReference().getDerivedMask();
+    if ((mask&PrimitiveMask) == PrimitiveMask) {
+      mask >>= ElementBits;
+    }
+    int dims = 0;
+    while ((mask&ArrayMask) == ArrayMask) {
+      mask >>= ElementBits;
+      dims++;
+    }
+    assert dims>0;
+    return dims;
   }
 
   /**

@@ -52,6 +52,10 @@ public final class CorrelationSummary {
   public Set<Correlation> getCorrelations() {
     return correlations;
   }
+  
+  public boolean isEmpty() {
+    return correlations.isEmpty();
+  }
 
   public SSASourcePositionMap getPositions() {
     return positions;

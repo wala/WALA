@@ -1046,7 +1046,14 @@ public class RhinoToAstTranslator {
 
 	@Override
 	public CAstNode visitLabeledStatement(LabeledStatement node, WalkContext arg) {
-		CAstNode result = visit(node.getStatement(), arg);
+    ExpressionStatement ex = new ExpressionStatement();
+    ex.setExpression(new EmptyExpression());
+    CAstNode exNode = visit(ex, arg);
+    arg.cfg().map(ex, exNode);
+    
+    WalkContext labelBodyContext = makeBreakContext(node, arg, ex);
+
+	  CAstNode result = visit(node.getStatement(), labelBodyContext);
 
 		AstNode prev = node;
 		for(Label label : node.getLabels()) {
@@ -1055,7 +1062,7 @@ public class RhinoToAstTranslator {
 			prev = label;
 		}
 		
-		return result;
+		return Ast.makeNode(CAstNode.BLOCK_STMT, result, exNode);
 	}
 
 	@Override

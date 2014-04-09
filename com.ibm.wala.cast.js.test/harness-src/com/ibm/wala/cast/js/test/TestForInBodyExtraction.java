@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -31,6 +32,22 @@ public abstract class TestForInBodyExtraction {
 		testRewriter(null, in, out);
 	}
 	
+	/* The translation to CAst introduces temporary names based on certain characteristics of the translation
+	 * process. This sometimes makes it impossible to precisely match up the results of first translating to
+	 * CAst and then transforming, and first transforming the JavaScript and then translating to CAst.
+	 * 
+	 * As a heuristic, we replace some generated names with placeholders, which will be the same in both
+	 * versions. This could in principle mask genuine errors.
+	 */
+	public static String eraseGeneratedNames(String str) {
+	  Pattern generatedNamePattern = Pattern.compile("\\$\\$destructure\\$(rcvr|elt)\\d+");
+	  str = generatedNamePattern.matcher(str).replaceAll("\\$\\$destructure\\$$1xxx");
+	  
+	  Pattern generatedFunNamePattern = Pattern.compile("\\.js(@\\d+)+");
+	  str = generatedFunNamePattern.matcher(str).replaceAll(".js@xxx");
+	  return str;
+	}
+	
 	public void testRewriter(String testName, String in, String out) {
 		File tmp = null;
 		try {
@@ -38,9 +55,11 @@ public abstract class TestForInBodyExtraction {
 			FileUtil.writeFile(tmp, in);
 			CAstImpl ast = new CAstImpl();
 			String actual = new CAstDumper().dump(new ClosureExtractor(ast, ForInBodyExtractionPolicy.FACTORY).rewrite(parseJS(tmp, ast)));
+			actual = eraseGeneratedNames(actual);
 			
 			FileUtil.writeFile(tmp, out);
 			String expected = new CAstDumper().dump(parseJS(tmp, ast));
+			expected = eraseGeneratedNames(expected);
 			
 			Assert.assertEquals(testName, expected, actual);
 		} catch (IOException e) {
@@ -209,7 +228,7 @@ public abstract class TestForInBodyExtraction {
 	public void test9() {
 		testRewriter("function defglobals(globals) {" +
 				     "  for(var p in globals) {" +
-				     "    (function() {" +
+				     "    (function inner() {" +
 				     "      this[p] = globals[p];" +
 				     "    })();" +
 				     "  }" +
@@ -217,7 +236,7 @@ public abstract class TestForInBodyExtraction {
 				     "function defglobals(globals) {" +
 				     "  for(var p in globals) {" +
 				     "    (function _forin_body_0(p) {" +
-				     "      (function() {" +
+				     "      (function inner() {" +
 				     "        this[p] = globals[p];" +
 				     "      })()" +
 				     "    })(p);" +
@@ -364,7 +383,7 @@ public abstract class TestForInBodyExtraction {
 				     "function foo() {" +
 				     "  x = 42;" +
 				     "  for(var p in {toString : 23}) {" +
-				     "    (function() {" +
+				     "    (function inner() {" +
 				     "      var x = 56;" +
 				     "      alert(x);" +
 				     "    })();" +
@@ -378,7 +397,7 @@ public abstract class TestForInBodyExtraction {
 				     "  x = 42;" +
 				     "  for(var p in {toString : 23}) {" +
 				     "    (function _forin_body_0(p) {" +
-				     "      (function() {" +
+				     "      (function inner() {" +
 				     "        var x = 56;" +
 				     "        alert(x);" +
 				     "      })();" +
@@ -499,6 +518,7 @@ public abstract class TestForInBodyExtraction {
 	}
 	
 	// example with nested for-in loops and this (adapted from MooTools)
+  // currently fails because generated names look different
   @Test
 	public void test21() {
 		testRewriter("function foo() {" +
@@ -586,7 +606,7 @@ public abstract class TestForInBodyExtraction {
 				     "}");
 	}
 	
-	// this test fails since the rewritten CAst contains one more level of blocks
+	// currently fails because generated names look different
   @Test
 	public void test24() {
 		testRewriter("var addSlickPseudos = function() {" +

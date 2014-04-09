@@ -178,7 +178,12 @@ public class ExtractionPos extends NodePos {
 			public ExtractionPos caseForInLoopBodyPos(ExtractionPos pos) {
 				ExtractionPos outer = getEnclosingExtractionPos(pos.getParentPos());
 				return outer == null ? pos : outer; 
-			}			
+			}
+
+      @Override
+      public ExtractionPos caseLabelPos(LabelPos pos) {
+        return getOutermostEnclosingExtractionPos(pos.getParentPos());
+      }			
 		});
 	}
 
@@ -201,7 +206,12 @@ public class ExtractionPos extends NodePos {
 			@Override 
 			public ExtractionPos caseForInLoopBodyPos(ExtractionPos pos) { 
 				return pos; 
-			}			
+			}
+
+      @Override
+      public ExtractionPos caseLabelPos(LabelPos pos) {
+        return getEnclosingExtractionPos(pos.getParentPos());
+      }			
 		});
 	}
 

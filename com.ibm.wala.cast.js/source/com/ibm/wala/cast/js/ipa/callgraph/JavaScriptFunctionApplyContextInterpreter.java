@@ -26,7 +26,7 @@ import com.ibm.wala.types.TypeName;
  */
 public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensitiveSSAContextInterpreter {
 
-  private static final TypeName APPLY_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/functionApply");
+  private static final TypeName APPLY_TYPE_NAME = TypeName.findOrCreate("Lprologue.js/Function_prototype_apply");
 
   public JavaScriptFunctionApplyContextInterpreter(AnalysisOptions options, AnalysisCache cache) {
     super(options, cache);

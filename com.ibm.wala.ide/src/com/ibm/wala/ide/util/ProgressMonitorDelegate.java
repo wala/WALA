@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.ide.util;
 
-import com.ibm.wala.util.MonitorUtil;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
 /**

@@ -9,6 +9,10 @@ import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 
+/**
+ * Checks if a reference is null or undefined, and if so, throws a
+ * ReferenceError. Otherwise, it's a no-op.
+ */
 public class JavaScriptCheckReference extends SSAInstruction {
   private final int ref;
   

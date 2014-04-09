@@ -7,18 +7,18 @@ Bundle-Version: 1.1.3.qualifier
 Bundle-Activator: com.ibm.wala.ide.plugin.CorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Require-Bundle: com.ibm.wala.shrike,
- com.ibm.wala.core,
- org.eclipse.core.runtime,
- org.eclipse.core.resources,
- org.eclipse.jdt.core,
+Require-Bundle: com.ibm.wala.core,
+ com.ibm.wala.shrike,
  org.eclipse.pde.core,
  org.eclipse.jface,
- org.eclipse.ui
+ org.eclipse.ui,
+ org.eclipse.core.resources,
+ org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: com.ibm.wala.ide,
- com.ibm.wala.ide.classloader,
+Export-Package: com.ibm.wala.ide.classloader,
+ com.ibm.wala.ide.client,
  com.ibm.wala.ide.plugin,
  com.ibm.wala.ide.ui,
  com.ibm.wala.ide.util
+Import-Package: com.ibm.wala.cast.java.ipa.callgraph

@@ -16,7 +16,8 @@ import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jdt.core.IJavaProject;
 
-import com.ibm.wala.ide.util.EclipseProjectPath;
+import com.ibm.wala.ide.util.EclipseProjectPath.AnalysisScopeType;
+import com.ibm.wala.ide.util.JavaEclipseProjectPath;
 import com.ibm.wala.ide.util.JdtUtil;
 
 /**
@@ -33,7 +34,7 @@ public class Main implements IApplication  {
     Collection<IJavaProject> jp = JdtUtil.getWorkspaceJavaProjects();
     for (IJavaProject p : jp) {
       System.out.println(p);
-      EclipseProjectPath path = EclipseProjectPath.make(p);
+      JavaEclipseProjectPath path = JavaEclipseProjectPath.make(p, AnalysisScopeType.SOURCE_FOR_PROJ_AND_LINKED_PROJS);
       System.out.println("Path: " + path);
     }
     return null;

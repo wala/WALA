@@ -10,13 +10,17 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ipa.callgraph;
 
+import java.util.Set;
+
 import com.ibm.wala.cast.ipa.callgraph.AstCallGraph;
 import com.ibm.wala.cast.js.cfg.JSInducedCFG;
 import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
+import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -29,6 +33,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashSetFactory;
 
 public class JSCallGraph extends AstCallGraph {
 
@@ -79,4 +84,23 @@ public class JSCallGraph extends AstCallGraph {
   protected CGNode makeFakeRootNode() throws com.ibm.wala.util.CancelException  {
     return findOrCreateNode(new JSFakeRoot(cha, options, getAnalysisCache()), Everywhere.EVERYWHERE);
   }
+
+  @Override
+  public Set<CGNode> getNodes(MethodReference m) {
+    if (m.getName().equals(JavaScriptMethods.ctorAtom)) {
+      // TODO cache this?
+      Set<CGNode> result = HashSetFactory.make(1);
+      for (CGNode n : this) {
+        IMethod method = n.getMethod();
+        if (method.getName().equals(JavaScriptMethods.ctorAtom) && method.getDeclaringClass().getReference().equals(m.getDeclaringClass())) {
+          result.add(n);
+        }
+      }
+      return result;      
+    } else {
+      return super.getNodes(m);
+    }
+  }
+  
+  
 }

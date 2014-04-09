@@ -10,6 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.summaries;
 
+import static com.ibm.wala.types.TypeName.ArrayMask;
+import static com.ibm.wala.types.TypeName.ElementBits;
+import static com.ibm.wala.types.TypeName.PrimitiveMask;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -515,7 +519,11 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         Assertions.productionAssertion(size != null);
         Integer sNumber = symbolTable.get(size);
         Assertions.productionAssertion(sNumber != null);
-        Assertions.productionAssertion(type.getDimensionality() == 1);
+        Assertions.productionAssertion(
+            // array of objects
+            type.getDerivedMask()==ArrayMask || 
+            // array of primitives
+            type.getDerivedMask()==((ArrayMask<<ElementBits)|PrimitiveMask));  
         a = insts.NewInstruction(governingMethod.getNumberOfStatements(), defNum, ref, new int[] { sNumber.intValue() });
       } else {
         a = insts.NewInstruction(governingMethod.getNumberOfStatements(), defNum, ref);

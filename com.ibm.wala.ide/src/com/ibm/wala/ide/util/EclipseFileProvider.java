@@ -195,8 +195,15 @@ public class EclipseFileProvider extends FileProvider {
   @Override
   public File getFile(String fileName, ClassLoader loader) throws IOException {
     Plugin p = plugIn == null ? CorePlugin.getDefault() : plugIn;
-    return (p == null) ? getFileFromClassLoader(fileName, loader) : getFileFromPlugin(
-        p, fileName);
+    if (p == null) {
+      return getFileFromClassLoader(fileName, loader); 
+    } else {
+       File f = getFileFromPlugin(p, fileName);
+       if (f == null) {
+         f = getFileFromClassLoader(fileName, loader); 
+       }
+       return f;
+    }
   }
   
   /**
