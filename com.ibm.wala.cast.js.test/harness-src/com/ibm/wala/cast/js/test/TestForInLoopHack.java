@@ -13,7 +13,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.util.CancelException;
 
-public class TestForInLoopHack extends TestJSCallGraphShape {
+public abstract class TestForInLoopHack extends TestJSCallGraphShape {
 
   @Before
   public void config() {

@@ -47,8 +47,6 @@ public class DefUse {
   private final IR ir;
 
   /**
-   * keep this package private: all calls should be through SSACache
-   * 
    * @param ir an IR in SSA form.
    * @throws IllegalArgumentException if ir is null
    */
