@@ -291,9 +291,9 @@ public abstract class IRTests {
         Assert.assertFalse("cannot find " + at + " in " + cls, false);
       }
     
-      for(MethodAnnotation ma : methodAnnotations) {
+      annot: for(MethodAnnotation ma : methodAnnotations) {
         IClass at = cg.getClassHierarchy().lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Application, ma.annotationTypeName));
-        annot: for(CGNode n : cg) {
+        for(CGNode n : cg) {
           if (n.getMethod().getSignature().equals(ma.methodSig)) {
             for(Annotation a : n.getMethod().getAnnotations()) {
               if (a.getType().equals(at.getReference())) {

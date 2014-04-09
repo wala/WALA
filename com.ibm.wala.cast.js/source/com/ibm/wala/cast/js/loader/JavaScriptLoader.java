@@ -941,14 +941,4 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
   protected boolean shouldTranslate(CAstEntity entity) {
     return true;
   }
-
-  @Override
-  protected void finishTranslation() {
-    Iterator<ModuleEntry> ms = getModulesWithParseErrors();
-    while (ms.hasNext()) {
-      ModuleEntry m = ms.next();
-      System.err.println(m);
-      System.err.println(getMessages(m));
-    }
-  }
 }

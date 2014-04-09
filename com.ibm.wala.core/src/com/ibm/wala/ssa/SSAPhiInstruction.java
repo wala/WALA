@@ -10,18 +10,30 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
+import java.util.Iterator;
+
 import com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine;
+import com.ibm.wala.cfg.ControlFlowGraph;
 
 /**
  * A phi instruction in SSA form.
  * 
- * See any modern compiler textbook for the definition of phi and the nature of SSA.
+ * See any modern compiler textbook for the definition of phi and the nature of
+ * SSA.
  * 
- * Note: In SSA {@link IR}s, these instructions do <em>not</em> appear in the normal instruction array returned by IR.getInstructions();
- * instead these instructions live in {@link ISSABasicBlock}.
+ * Note: In SSA {@link IR}s, these instructions do <em>not</em> appear in the
+ * normal instruction array returned by IR.getInstructions(); instead these
+ * instructions live in {@link ISSABasicBlock}.
  * 
- * Note: if getUse(i) returns {@link AbstractIntStackMachine}.TOP (that is, -1), then that use represents an edge in the CFG which
- * is infeasible in verifiable bytecode.
+ * <code>getUse(i)</code> corresponds to the value number from the
+ * i<sup>th</sup> predecessor of the corresponding {@link ISSABasicBlock}
+ * <code>b</code> in {@link ControlFlowGraph} <code>g</code>, where predecessor
+ * order is the order of nodes returned by the {@link Iterator}
+ * <code>g.getPredNodes(b)</code>.
+ * 
+ * Note: if getUse(i) returns {@link AbstractIntStackMachine}.TOP (that is, -1),
+ * then that use represents an edge in the CFG which is infeasible in verifiable
+ * bytecode.
  */
 public class SSAPhiInstruction extends SSAInstruction {
   private final int result;

@@ -19,6 +19,7 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.html.MappedSourceModule;
 import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
 import com.ibm.wala.cast.js.html.WebUtil;
@@ -27,8 +28,10 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSZeroOrOneXCFABuilder;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
+import com.ibm.wala.cast.loader.CAstAbstractLoader;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.classLoader.SourceModule;
+import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -129,8 +132,18 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
 
   public static JSCFABuilder makeHTMLCGBuilder(URL url, CGBuilderType builderType) throws IOException {
     JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
-    Set<MappedSourceModule> script = WebUtil.extractScriptFromHTML(url);
-    JSCFABuilder builder = makeCGBuilder(new WebPageLoaderFactory(translatorFactory, preprocessor), script.toArray(new SourceModule[script.size()]), builderType, AstIRFactory.makeDefaultFactory());
+    SourceModule[] scripts;
+    IRFactory irFactory = AstIRFactory.makeDefaultFactory();
+    JavaScriptLoaderFactory loaders = new WebPageLoaderFactory(translatorFactory, preprocessor);
+    try {
+      Set<MappedSourceModule> script = WebUtil.extractScriptFromHTML(url);
+      scripts = script.toArray(new SourceModule[script.size()]);
+    } catch (Error e) {
+      SourceModule dummy = new SourceURLModule(url);
+      scripts = new SourceModule[]{ dummy };
+      ((CAstAbstractLoader)loaders.getTheLoader()).addMessage(dummy, e.warning);
+    }
+    JSCFABuilder builder = makeCGBuilder(loaders, scripts, builderType, irFactory);
     builder.setBaseURL(url);
     return builder;
   }

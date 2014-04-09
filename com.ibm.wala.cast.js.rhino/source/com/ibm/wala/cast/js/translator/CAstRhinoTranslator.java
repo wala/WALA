@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst;
+import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
@@ -40,7 +41,7 @@ public class CAstRhinoTranslator implements TranslatorToCAst {
       rewriters.add(factory);
   }  
 
-  public CAstEntity translateToCAst() throws IOException {
+  public CAstEntity translateToCAst() throws IOException, Error {
     String N;
     if (M instanceof SourceFileModule) {
       N = ((SourceFileModule) M).getClassName();
