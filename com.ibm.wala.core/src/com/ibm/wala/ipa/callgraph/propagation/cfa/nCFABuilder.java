@@ -38,13 +38,13 @@ public class nCFABuilder extends SSAPropagationCallGraphBuilder {
     setInstanceKeys(new ClassBasedInstanceKeys(options, cha));
 
     ContextSelector def = new DefaultContextSelector(options, cha);
-    ContextSelector contextSelector = new DelegatingContextSelector(appContextSelector, def);
+    ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
     contextSelector = new nCFAContextSelector(n, contextSelector);
     setContextSelector(contextSelector);
 
     SSAContextInterpreter defI = new DefaultSSAInterpreter(options, cache);
     defI = new DelegatingSSAContextInterpreter(ReflectionContextInterpreter.createReflectionContextInterpreter(cha, options, getAnalysisCache()), defI);
-    SSAContextInterpreter contextInterpreter = new DelegatingSSAContextInterpreter(appContextInterpreter, defI);
+    SSAContextInterpreter contextInterpreter = appContextInterpreter == null ? defI : new DelegatingSSAContextInterpreter(appContextInterpreter, defI);
     setContextInterpreter(contextInterpreter);
   }
 

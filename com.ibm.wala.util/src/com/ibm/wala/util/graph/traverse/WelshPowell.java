@@ -46,7 +46,6 @@ public class WelshPowell<T> {
     while(colors.size() < G.getNumberOfNodes()) {
       for(T n : vertices) {
         if (! colors.containsKey(n)) {
-          currentColor++;
           colors.put(n, currentColor);
           
           for(T m : vertices) {
@@ -70,6 +69,8 @@ public class WelshPowell<T> {
               }
             }
           }
+          
+          currentColor++;
         }
       }
     }
