@@ -12,6 +12,7 @@ package com.ibm.wala.ipa.summaries;
 
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 
 import com.ibm.wala.classLoader.IClass;
@@ -23,6 +24,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
@@ -242,6 +244,10 @@ public class BypassSyntheticClass extends SyntheticClass {
   @Override
   public InputStream getSource() {
     return null;
+  }
+
+  public Collection<Annotation> getAnnotations() {
+    return Collections.emptySet();
   }
 
 }

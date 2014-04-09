@@ -10,8 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.translator;
 
-import java.io.UTFDataFormatException;
-
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
@@ -29,7 +27,6 @@ import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
@@ -239,6 +236,10 @@ public class JSAstTranslator extends AstTranslator {
       String field = (String) elt.getValue();
       if (isPrologueScript(context) && "__proto__".equals(field)) {
         context.cfg().addInstruction(((JSInstructionFactory) insts).SetPrototype(context.cfg().getCurrentInstruction(), receiver, rval));
+        return;
+      }
+    }
+    /*
       } else {
         context.currentScope().getConstantValue(field);
         SSAPutInstruction put = ((JSInstructionFactory) insts).PutInstruction(context.cfg().getCurrentInstruction(), receiver, rval, field);
@@ -250,8 +251,9 @@ public class JSAstTranslator extends AstTranslator {
         context.cfg().addInstruction(put);
       }
     } else {
+    */
       context.cfg().addInstruction(((JSInstructionFactory) insts).PropertyWrite(context.cfg().getCurrentInstruction(), receiver, context.getValue(elt), rval));
-    }
+   // }
   }
 
   private void doPrimitiveNew(WalkContext context, int resultVal, String typeName) {

@@ -33,6 +33,7 @@ import com.ibm.wala.shrikeCT.SourcePositionTableReader.Position;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.types.generics.MethodTypeSignature;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -460,6 +461,16 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     return Annotation.getAnnotationsFromReader(r, getDeclaringClass().getClassLoader().getReference());
   }
 
+  public Collection<Annotation> getAnnotations() {
+    Collection<Annotation> result = HashSetFactory.make();
+    try {
+      result.addAll(getAnnotations(true));
+      result.addAll(getAnnotations(false));
+    } catch (InvalidClassFileException e) {
+      
+    }
+    return result;
+  }
 
   private static final IndirectionData NO_INDIRECTIONS = new IndirectionData() {
 

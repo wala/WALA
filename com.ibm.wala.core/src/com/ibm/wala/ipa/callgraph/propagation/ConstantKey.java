@@ -10,7 +10,14 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import java.util.Iterator;
+
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.collections.Pair;
 
 /**
  * An instance key which represents a unique, constant object
@@ -57,5 +64,9 @@ public final class ConstantKey<T> implements InstanceKey {
 
   public T getValue() {
     return value;
+  }
+
+  public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
+    return EmptyIterator.instance();
   }
 }

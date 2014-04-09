@@ -171,6 +171,13 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
   private final GlobalObjectKey globalObject = new GlobalObjectKey(cha.lookupClass(JavaScriptTypes.Object));
 
+  public PointerKey getPointerKeyForGlobalVar(String varName) {
+    FieldReference fieldRef = FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreateUnicodeAtom(varName),
+        JavaScriptTypes.Root);
+    IField f = cha.resolveField(fieldRef);
+    assert f != null : "couldn't resolve " + varName;
+    return getPointerKeyForInstanceField(globalObject, f);
+  }
   protected ExplicitCallGraph createEmptyCallGraph(IClassHierarchy cha, AnalysisOptions options) {
     return new JSCallGraph(cha, options, getAnalysisCache());
   }
@@ -521,6 +528,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
               private JavaScriptInvoke getInstruction() { return instruction; }
               private InstanceKey getReceiver() { return receiverType; }
               private AbstractFieldPointerKey getProperty() { return fieldKey; }
+              private CGNode getNode() { return node; }
               
               @Override
               public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable ptrs) {
@@ -553,6 +561,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
               @Override
               public boolean equals(Object o) {
                 return o instanceof FieldValueDispatch &&
+                ((FieldValueDispatch)o).getNode().equals(node) &&
                 ((FieldValueDispatch)o).getInstruction() == instruction &&
                 ((FieldValueDispatch)o).getProperty().equals(fieldKey) &&
                 ((FieldValueDispatch)o).getReceiver().equals(receiverType);
@@ -767,7 +776,11 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           if (l.isStringType(left.getConcreteType().getReference()) || l.isStringType(right.getConcreteType().getReference())) {
             return addKey(new ConcreteTypeKey(node.getClassHierarchy().lookupClass(l.getStringType())));
           } else if (isNumberType(l, left.getConcreteType().getReference()) && isNumberType(l, right.getConcreteType().getReference())) {
-            return addKey(left) || addKey(right);
+            if (left instanceof ConstantKey && right instanceof ConstantKey) {
+              return addKey(new ConcreteTypeKey(node.getClassHierarchy().lookupClass(JavaScriptTypes.Number)));
+            } else {
+              return addKey(left) || addKey(right);
+            }
           } else {
             return false;
           }
@@ -934,7 +947,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     // pass actual arguments to formals in the normal way
     for (int i = 0; i < Math.min(paramCount, argCount); i++) {
-      InstanceKey[] fn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.Number, i-num_pseudoargs) };
+      InstanceKey[] fn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.String, ""+(i-num_pseudoargs)) };
       PointerKey F = getTargetPointerKey(target, i);
 
       if (constParams != null && constParams[i] != null) {
@@ -960,7 +973,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     if (paramCount < argCount) {
       if (av != -1) {
         for (int i = paramCount; i < argCount; i++) {
-          InstanceKey[] fn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.Number, i-num_pseudoargs) };
+          InstanceKey[] fn = new InstanceKey[] { getInstanceKeyForConstant(JavaScriptTypes.String, ""+(i-num_pseudoargs)) };
           if (constParams != null && constParams[i] != null && i >= num_pseudoargs) {
               targetVisitor.newFieldWrite(target, av, fn, constParams[i]);
           } else if(i >= num_pseudoargs) {

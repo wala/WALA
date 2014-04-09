@@ -19,6 +19,7 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.strings.Atom;
 
 public class AstField implements IField {
@@ -26,16 +27,24 @@ public class AstField implements IField {
   private final FieldReference ref;
   private final IClass declaringClass;
   private final IClassHierarchy cha;
+  private final Collection<Annotation> annotations;
 
   public AstField(FieldReference ref,
 		  Collection qualifiers,
 		  IClass declaringClass,
-		  IClassHierarchy cha)
+		  IClassHierarchy cha,
+		  Collection<Annotation> annotations)
   {
     this.declaringClass = declaringClass;
     this.qualifiers = qualifiers;
     this.ref = ref;
     this.cha = cha;
+    this.annotations = annotations;
+  }
+
+  
+  public Collection<Annotation> getAnnotations() {
+    return annotations;
   }
 
   public IClass getDeclaringClass() {

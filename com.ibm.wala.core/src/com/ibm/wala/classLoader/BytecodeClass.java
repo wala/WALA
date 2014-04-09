@@ -223,16 +223,21 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
 
   
   public IField getField(Atom name, TypeName type) {
+    boolean unresolved = false;
     try {
       // typically, there will be at most one field with the name
       IField field = getField(name);
       if (field != null && field.getFieldTypeReference().getName().equals(type)) {
         return field;
       } else {
-        return null;
+        unresolved = true;
       }
     } catch (IllegalStateException e) {
       assert e.getMessage().startsWith("multiple fields with");
+      unresolved = true;
+    }
+    
+    if(unresolved){
       // multiple fields.  look through all of them and see if any have the appropriate type
       List<IField> fields = findDeclaredField(name);
       for (IField f : fields) {

@@ -14,11 +14,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceFieldKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory;
@@ -64,32 +66,53 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
     return base.getPointerKeyForArrayContents(I);
   }
 
-  public Iterator<PointerKey> getPointerKeysForReflectedFieldRead(InstanceKey I, InstanceKey F) {
+  public Iterator<PointerKey> getPointerKeysForReflectedFieldWrite(InstanceKey I, InstanceKey F) {
     List<PointerKey> result = new LinkedList<PointerKey>();
 
     if (F instanceof ConstantKey) {
-      Object v = ((ConstantKey) F).getValue();
-      if (v instanceof String) {
-        IField f = I.getConcreteType().getField(Atom.findOrCreateUnicodeAtom((String) v));
-        result.add(getPointerKeyForInstanceField(I, f));
+      PointerKey ifk = getInstanceFieldPointerKeyForConstant(I, (ConstantKey) F);
+      if (ifk != null) {
+        result.add(ifk);
       }
     }
 
-    result.add(ReflectedFieldPointerKey.mapped(new ConcreteTypeKey(F.getConcreteType()), I));
+    result.add(ReflectedFieldPointerKey.mapped(new ConcreteTypeKey(getFieldNameType(F)), I));
 
     return result.iterator();
   }
 
-  public Iterator<PointerKey> getPointerKeysForReflectedFieldWrite(InstanceKey I, InstanceKey F) {
+  /**
+   * get type for F appropriate for use in a field name.
+   * 
+   * @param F
+   * @return
+   */
+  protected IClass getFieldNameType(InstanceKey F) {
+    return F.getConcreteType();
+  }
+
+  /**
+   * if F is a supported constant representing a field, return the corresponding {@link InstanceFieldKey} for I.  Otherwise, return <code>null</code>.
+   * @param F
+   * @return
+   */
+  protected PointerKey getInstanceFieldPointerKeyForConstant(InstanceKey I, ConstantKey F) {
+    Object v = F.getValue();
     // FIXME: current only constant string are handled
+    if (v instanceof String) {
+      IField f = I.getConcreteType().getField(Atom.findOrCreateUnicodeAtom((String) v));
+      return getPointerKeyForInstanceField(I, f);
+    }
+    return null;
+  }
+  
+  public Iterator<PointerKey> getPointerKeysForReflectedFieldRead(InstanceKey I, InstanceKey F) {
     if (F instanceof ConstantKey) {
-      Object v = ((ConstantKey) F).getValue();
-      if (v instanceof String) {
-        IField f = I.getConcreteType().getField(Atom.findOrCreateUnicodeAtom((String) v));
-        return new NonNullSingletonIterator<PointerKey>(getPointerKeyForInstanceField(I, f));
+      PointerKey ifk = getInstanceFieldPointerKeyForConstant(I, (ConstantKey) F);
+      if (ifk != null) {
+        return new NonNullSingletonIterator<PointerKey>(ifk);
       }
     }
-
-    return new NonNullSingletonIterator<PointerKey>(ReflectedFieldPointerKey.mapped(new ConcreteTypeKey(F.getConcreteType()), I));
+    return new NonNullSingletonIterator<PointerKey>(ReflectedFieldPointerKey.mapped(new ConcreteTypeKey(getFieldNameType(F)), I));
   }
 }

@@ -19,6 +19,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.ForInContextSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
@@ -580,9 +581,10 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   
   private static final Object[][] assertionsForArrayIndexConv = new Object[][] {
     new Object[] { ROOT, new String[] { "tests/array_index_conv.js" } },
-    new Object[] { "tests/array_index_conv.js", new String[] { "suffix:reachable",
-                                                               "suffix:also_reachable",
-                                                               "suffix:reachable_too" } }
+    new Object[] { "tests/array_index_conv.js", new String[] { "suffix:reachable1",
+                                                               "suffix:reachable2",
+                                                               "suffix:reachable3",
+                                                               "suffix:reachable4" } }
   };
   
   @Test
@@ -605,7 +607,23 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     PropagationCallGraphBuilder b = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "array_index_conv2.js");
     b.setContextSelector(new ForInContextSelector(b.getContextSelector()));
     CallGraph cg = b.makeCallGraph(b.getOptions());
+    //JSCallGraphUtil.AVOID_DUMP = false;
+    //JSCallGraphUtil.dumpCG(b.getPointerAnalysis(), cg);
     verifyGraphAssertions(cg, assertionsForArrayIndexConv2);
+  }
+
+  private static final Object[][] assertionsForDateProperty = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/date-property.js" } },
+    new Object[] { "tests/date-property.js", new String[] { "suffix:_fun" } }
+  };
+
+    @Test
+  public void testDateAsProperty() throws IllegalArgumentException, IOException, CancelException {
+    PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "date-property.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    //JSCallGraphUtil.AVOID_DUMP = false;
+    //JSCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
+    verifyGraphAssertions(CG, assertionsForDateProperty);
   }
 
   protected IVector<Set<Pair<CGNode, Integer>>> computeIkIdToVns(PointerAnalysis pa) {

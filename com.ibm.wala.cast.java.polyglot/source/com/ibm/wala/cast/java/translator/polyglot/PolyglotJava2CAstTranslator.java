@@ -124,6 +124,7 @@ import com.ibm.wala.cast.java.loader.Util;
 import com.ibm.wala.cast.java.translator.JavaProcedureEntity;
 import com.ibm.wala.cast.java.types.JavaType;
 import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstAnnotation;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
@@ -1399,6 +1400,11 @@ public class PolyglotJava2CAstTranslator {
       return null;
     }
 
+    @Override
+    public Collection<CAstAnnotation> getAnnotations() {
+        return null;
+    }
+
     public CAstControlFlowMap getControlFlow() {
       Assertions.UNREACHABLE("CompilationUnitEntity.getControlFlow()");
       return null;
@@ -1576,6 +1582,11 @@ public class PolyglotJava2CAstTranslator {
     public CAstNode getAST() {
       // This entity has no AST nodes, really.
       return null;
+    }
+
+    @Override
+    public Collection<CAstAnnotation> getAnnotations() {
+        return null;
     }
 
     public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
@@ -1805,6 +1816,11 @@ public class PolyglotJava2CAstTranslator {
         }
       };
     }
+    
+    @Override
+    public Collection<CAstAnnotation> getAnnotations() {
+        return null;
+    }
   }
 
   protected final class FieldEntity implements CAstEntity {
@@ -1854,6 +1870,11 @@ public class PolyglotJava2CAstTranslator {
       // No AST for a field decl; initializers folded into
       // constructor processing...
       return null;
+    }
+
+    @Override
+    public Collection<CAstAnnotation> getAnnotations() {
+        return null;
     }
 
     public CAstControlFlowMap getControlFlow() {

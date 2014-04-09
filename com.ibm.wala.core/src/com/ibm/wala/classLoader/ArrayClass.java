@@ -24,6 +24,7 @@ import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
@@ -330,6 +331,10 @@ public class ArrayClass implements IClass, Constants {
 
   public InputStream getSource() {
     return null;
+  }
+
+  public Collection<Annotation> getAnnotations() {
+    return Collections.emptySet();
   }
 
 }

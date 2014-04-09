@@ -12,11 +12,14 @@
 package com.ibm.wala.classLoader;
 
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.Collections;
 
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -129,4 +132,10 @@ public abstract class SyntheticClass implements IClass {
   public IField getField(Atom name, TypeName typeName) {
     return getField(name);
   }
+
+  public Collection<Annotation> getAnnotations() {
+    return Collections.emptySet();
+  }
+  
+  
 }

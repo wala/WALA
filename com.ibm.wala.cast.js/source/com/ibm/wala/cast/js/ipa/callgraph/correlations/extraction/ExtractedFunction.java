@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.ibm.wala.cast.tree.CAstAnnotation;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
@@ -162,6 +163,11 @@ class ExtractedFunction implements CAstEntity {
 	}
 
 	@Override
+  public Collection<CAstAnnotation> getAnnotations() {
+   return null;
+  }
+
+  @Override
 	public String toString() {
 		return "<JS function " + name + ">";
 	}

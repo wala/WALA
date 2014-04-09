@@ -10,8 +10,15 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import java.util.Iterator;
+
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.collections.Pair;
 
 /**
  * An {@link InstanceKey} which represents the constant char[] contents
@@ -64,5 +71,9 @@ public class StringConstantCharArray implements InstanceKey {
   @Override
   public String toString() {
     return "StringConstantCharArray:" + constant;
+  }
+
+  public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
+    return EmptyIterator.instance();
   }
 }

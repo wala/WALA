@@ -10,9 +10,14 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import java.util.Iterator;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.util.collections.NonNullSingletonIterator;
+import com.ibm.wala.util.collections.Pair;
 
 /**
  * An {@link InstanceKey} which represents a {@link NewSiteReference} in some {@link CGNode}.
@@ -42,4 +47,9 @@ public abstract class AllocationSiteInNode extends AbstractTypeInNode {
   public NewSiteReference getSite() {
     return site;
   }
+
+  public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
+    return new NonNullSingletonIterator<Pair<CGNode, NewSiteReference>>(Pair.make(getNode(), getSite()));
+  }
+   
 }

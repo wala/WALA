@@ -177,4 +177,10 @@ public interface CAstEntity {
    * The CAst type of this entity.
    */
   CAstType getType();
+  
+  /**
+   * Returns the set of any annotations this entity may have
+   */
+  Collection<CAstAnnotation> getAnnotations();
+  
 }

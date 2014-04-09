@@ -115,6 +115,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
@@ -627,6 +628,11 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     public IClass getSuperclass() {
       return superClass;
     }
+
+    @Override
+    public Collection<Annotation> getAnnotations() {
+      return Collections.emptySet();
+    }
   }
 
   class JavaScriptRootClass extends AstDynamicPropertyClass {
@@ -652,6 +658,11 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     public IClass getSuperclass() {
       return null;
     }
+    
+    @Override
+    public Collection<Annotation> getAnnotations() {
+      return Collections.emptySet();
+    }
   }
 
   class JavaScriptCodeBody extends AstFunctionClass {
@@ -676,6 +687,11 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       codeBody.translationContext = translationContext;
       return codeBody;
     }
+    
+    @Override
+    public Collection<Annotation> getAnnotations() {
+      return Collections.emptySet();
+    }
   }
 
   private static final Set<CAstQualifier> functionQualifiers;
@@ -693,7 +709,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     JavaScriptMethodObject(IClass cls, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
         TypeReference[][] caughtTypes, boolean hasMonitorOp, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
       super(cls, functionQualifiers, cfg, symtab, AstMethodReference.fnReference(cls.getReference()), hasCatchBlock, caughtTypes,
-          hasMonitorOp, lexicalInfo, debugInfo);
+          hasMonitorOp, lexicalInfo, debugInfo, null);
 
       // force creation of these constants by calling the getter methods
       symtab.getNullConstant();

@@ -91,6 +91,7 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSSSAPropagationCallGraphBuilder;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstAnnotation;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
@@ -466,6 +467,10 @@ public class RhinoToAstTranslator {
       return null;
     }
 
+    public Collection<CAstAnnotation> getAnnotations() {
+      return null;
+    }
+
     public Collection<CAstQualifier> getQualifiers() {
       Assertions.UNREACHABLE("JuliansUnnamedCAstEntity$2.getQualifiers()");
       return null;
@@ -623,7 +628,7 @@ public class RhinoToAstTranslator {
 			if (elt instanceof EmptyExpression) {
 				index++;
 			} else {
-				eltNodes.add(Ast.makeConstant(index++));
+				eltNodes.add(Ast.makeConstant("" + (index++)));
 				eltNodes.add(visit(elt, arg));
 			}
 		}
