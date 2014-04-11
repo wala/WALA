@@ -93,6 +93,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
     }
 
     private String makeRef(String object, String property) {
+      assert object != null && property != null;
       return object + "[\"" + property + "\"]";
     }
     
@@ -135,6 +136,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
         }
       }
 
+      assert varName != null && !"".equals(varName);
       printlnIndented(varName + " = this;", tag);
       printlnIndented("document." + varName + " = this;", tag);
       printlnIndented("parent.appendChild(this);", tag);
@@ -151,16 +153,16 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
         printlnIndented(varName + "." + attr + " = function " + tag.getName().toLowerCase() + "_" + attr + "(event) {" + value + "};", tag);
         entrypointRegion.println(varName2 + "." + attr + "(null);", tag.getElementPosition(), entrypointUrl, false);
       } else if (value != null) {
-        if (value.indexOf('\'') > 0) {
-          value = value.replaceAll("\\'", "\\\\'");
-        }
-        if (value.indexOf('\n') > 0) {
-          value = value.replaceAll("\\n", "\\\\n");
-        }
+        
+        Pair<String, Character> x = quotify(value);
+        value = x.fst;
+        char quote = x.snd;
+        
         if (attr.equals(attr.toUpperCase())) {
           attr = attr.toLowerCase();
         }
-        printlnIndented(varName + "['" + attr + "'] = '" + value + "';", tag);
+        
+        printlnIndented(varName + "['" + attr + "'] = " + quote + value + quote + ";", tag);
       }
     }
 
