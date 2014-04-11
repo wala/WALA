@@ -118,7 +118,7 @@ public class FlowGraphBuilder {
   }
 	
 	// primitive functions that are treated specially
-	private static String[] primitiveFunctions = { "Object", "Function", "Array", "String", "Number", "RegExp" };
+	private static String[] primitiveFunctions = { "Object", "Function", "Array", "StringObject", "NumberObject", "BooleanObject", "RegExp" };
 	
 	/**
 	 * Add flows from the special primitive functions to the corresponding global variables.
@@ -130,7 +130,8 @@ public class FlowGraphBuilder {
 		for(String pf : primitiveFunctions) {
 			TypeReference typeref = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, "L" + pf);
 			IClass klass = cha.lookupClass(typeref);
-			flowgraph.addEdge(factory.makeFuncVertex(klass), factory.makePropVertex(pf));
+			String prop = pf.endsWith("Object")? pf.substring(0, pf.length() - 6): pf;
+			flowgraph.addEdge(factory.makeFuncVertex(klass), factory.makePropVertex(prop));
 		}
 	}
 	
