@@ -130,13 +130,9 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
    * funName exactly.
    */
   public static Collection<CGNode> getNodes(CallGraph CG, String funName) {
-    boolean ctor = funName.startsWith("ctor:");
     boolean suffix = funName.startsWith("suffix:");
-    if (ctor) {
-      TypeReference TR = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName("L" + funName.substring(5)));
-      MethodReference MR = JavaScriptMethods.makeCtorReference(TR);
-      return CG.getNodes(MR);
-    } else if (suffix) {
+    
+    if (suffix) {
       Set<CGNode> nodes = new HashSet<CGNode>();
       String tail = funName.substring(7);
       for (CGNode n : CG) {
@@ -145,11 +141,24 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
         }
       }
       return nodes;
+    }
+    
+    MethodReference MR = getMethodReference(funName);
+
+    return CG.getNodes(MR);
+  }
+
+  public static MethodReference getMethodReference(String funName) {
+    boolean ctor = funName.startsWith("ctor:");
+    MethodReference MR;
+    if (ctor) {
+      TypeReference TR = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName("L" + funName.substring(5)));
+      MR = JavaScriptMethods.makeCtorReference(TR);
     } else {
       TypeReference TR = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName("L" + funName));
-      MethodReference MR = AstMethodReference.fnReference(TR);
-      return CG.getNodes(MR);
+      MR = AstMethodReference.fnReference(TR);
     }
+    return MR;
   }
 
   /**

@@ -157,6 +157,8 @@ public abstract class FieldBasedCallGraphBuilder {
         CGNode caller = cg.findOrCreateNode(kaller.getMethod(AstMethodReference.fnSelector), Everywhere.EVERYWHERE);		    
 		    CallSiteReference site = callVertex.getSite();
 		    IMethod target = targetSelector.getCalleeTarget(caller, site, targetVertex.getConcreteType());
+		    if (caller.toString().contains("string_ctor"))
+		      System.err.println(caller + " " + site + " " +  target);
 		    boolean isFunctionPrototypeCall = target != null
 		        && target.getName().toString().startsWith(JavaScriptFunctionDotCallTargetSelector.SYNTHETIC_CALL_METHOD_PREFIX);
 		    if (isFunctionPrototypeCall) {
@@ -237,6 +239,11 @@ public abstract class FieldBasedCallGraphBuilder {
 		
 		// find all pairs <call, func> such that call is reachable from func in the flow graph
 		for(final CallVertex callVertex : factory.getCallVertices()) {
+		  if (callVertex.getCaller().getFullName().contains("string_ctor")) {
+		    System.err.println(callVertex.getCaller().getFullName());
+		    System.err.println(callVertex.getInstruction());
+		    System.err.println(flowgraph.getReachingSet(callVertex, monitor));
+		  }
 			for(FuncVertex funcVertex : flowgraph.getReachingSet(callVertex, monitor)) {
 			  result.add(Pair.make(callVertex, funcVertex));
 			}

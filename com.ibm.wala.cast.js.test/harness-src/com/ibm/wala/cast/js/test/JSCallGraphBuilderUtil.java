@@ -183,7 +183,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
     scripts.add(getPrologueFile("preamble.js"));
 
     try {
-      scripts.addAll(WebUtil.extractScriptFromHTML(url).fst);
+      scripts.addAll(WebUtil.extractScriptFromHTML(url, true).fst);
     } catch (Error e) {
       SourceModule dummy = new SourceURLModule(url);
       scripts.add(dummy);

@@ -12,7 +12,7 @@ package com.ibm.wala.cast.js.html;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.io.StringBufferInputStream;
 import java.net.URL;
 
@@ -77,8 +77,9 @@ public class SourceRegion {
     print(text + "\n");
   }
   
-  public FileMapping writeToFile(PrintStream ps){
+  public FileMapping writeToFile(PrintWriter ps){
     ps.print(source.toString());
+    ps.flush();
     return fileMapping;
   }
   
@@ -102,7 +103,7 @@ public class SourceRegion {
     currentLine += numberOfLineDrops;
   }
   
-  public void dump(PrintStream ps){
+  public void dump(PrintWriter ps){
     ps.println(source.toString());
   }
   

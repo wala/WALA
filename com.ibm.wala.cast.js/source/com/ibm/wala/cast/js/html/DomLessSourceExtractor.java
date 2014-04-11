@@ -12,9 +12,10 @@ package com.ibm.wala.cast.js.html;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
@@ -33,7 +34,10 @@ import com.ibm.wala.util.collections.Pair;
  * DOM data structure
  */
 public class DomLessSourceExtractor extends JSSourceExtractor {
-  private static final Pattern LEGAL_JS_IDENTIFIER_REGEXP = Pattern.compile("[a-zA-Z$_][a-zA-Z\\d$_]*");
+  private static final Pattern LEGAL_JS_IDENTIFIER_REGEXP = Pattern.compile("^[a-zA-Z$_][a-zA-Z\\d$_]*$");
+  private static final Pattern LEGAL_JS_KEYWORD_REGEXP = Pattern.compile("^((break)|(case)|(catch)|(continue)|(debugger)|(default)|(delete)|(do)|(else)|(finally)|(for)|(function)|(if)|(in)|(instanceof)|(new)|(return)|(switch)|(this)|(throw)|(try)|(typeof)|(var)|(void)|(while)|(with))$");
+
+
   protected interface IGeneratorCallback extends IHtmlCallback {
     void writeToFinalRegion(SourceRegion finalRegion);
   }
@@ -115,6 +119,12 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       handleDOM(tag);
     }
 
+    private boolean isUsableIdentifier(String x) {
+      return x != null &&
+          LEGAL_JS_IDENTIFIER_REGEXP.matcher(x).matches() &&
+          !LEGAL_JS_KEYWORD_REGEXP.matcher(x).matches();
+    }
+    
     /**
      * Model the HTML DOM
      * 
@@ -126,7 +136,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       // running counter
       Pair<String,Position> idAttribute = tag.getAttributeByName("id");
       String funcName;
-      if (idAttribute != null && LEGAL_JS_IDENTIFIER_REGEXP.matcher(idAttribute.fst).matches()) {
+      if (idAttribute != null &&  isUsableIdentifier(idAttribute.fst)) {
         funcName = idAttribute.fst;
       } else {
         funcName = "node" + (nodeCounter++);
@@ -164,10 +174,29 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       }
     }
 
+    protected static Pair<String,Character> quotify(String value) { 
+      char quote;
+      if (value.indexOf('"') < 0) {
+        quote= '"';
+      } else if (value.indexOf("'") < 0) {
+        quote= '"';
+      } else {
+        quote= '"';
+        value = value.replaceAll("\"", "\\\"");          
+      }
+
+      if (value.indexOf('\n') >= 0) {
+        value = value.replaceAll("\n", "\\n");
+      }
+
+      return Pair.make(value, quote);
+    }
+    
     private String extructJS(String attValue) {
       if (attValue == null){
         return "";
       }
+      
       String content;
       if (attValue.toLowerCase().equals("javascript:")) {
         content = attValue.substring("javascript:".length());
@@ -180,12 +209,12 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
 
     protected void handleScript(ITag tag) {
 
-      Pair<String,Position> value = tag.getAttributeByName("src");
+      Pair<String,Position> content = tag.getAttributeByName("src");
 
       try {
-        if (value != null) {
+        if (content != null) {
           // script is out-of-line
-          getScriptFromUrl(value.fst, tag);
+          getScriptFromUrl(content.fst, tag);
         }
 
       } catch (IOException e) {
@@ -280,7 +309,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     // writing the final region into one SourceFileModule.
     File outputFile = createOutputFile(entrypointUrl, DELETE_UPON_EXIT, USE_TEMP_NAME);
     tempFile = outputFile;
-    FileMapping fileMapping = finalRegion.writeToFile(new PrintStream(outputFile));
+    FileMapping fileMapping = finalRegion.writeToFile(new PrintWriter(new FileWriter(outputFile)));
     if (fileMapping == null) {
       fileMapping = new EmptyFileMapping();
     }
