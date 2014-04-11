@@ -12,6 +12,8 @@ package com.ibm.wala.util.graph;
 
 import java.util.Iterator;
 
+import javax.naming.OperationNotSupportedException;
+
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntIterator;
@@ -49,39 +51,78 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
 
   private final class Edges implements NumberedEdgeManager<T> {
 
-    @Override
-    public void addEdge(T src, T dst) {
-      Assertions.UNREACHABLE();
-    }
+    private final class NodeIterator implements Iterator<T> {
+      private final IntIterator nodeNumbers;
+      
+      private NodeIterator(IntSet nodeNumbers) {
+        this.nodeNumbers = nodeNumbers.intIterator();
+      }
 
+      @Override
+      public boolean hasNext() {
+        return nodeNumbers.hasNext();
+      }
+
+      @Override
+      public T next() {
+        return getNode(nodeNumbers.next());
+      }
+
+      @Override
+      public void remove() {
+        throw new UnsupportedOperationException();
+      }
+    }
+    
     @Override
     public int getPredNodeCount(T N) {
-      Assertions.UNREACHABLE();
-      return 0;
+      return getPredNodeNumbers(N).size();
     }
 
     @Override
     public Iterator<T> getPredNodes(T N) {
-      Assertions.UNREACHABLE();
-      return null;
+      return new NodeIterator(getPredNodeNumbers(N));
     }
 
     @Override
     public int getSuccNodeCount(T N) {
-      Assertions.UNREACHABLE();
-      return 0;
+      return getSuccNodeNumbers(N).size();
     }
 
     @Override
     public Iterator<T> getSuccNodes(T N) {
-      Assertions.UNREACHABLE();
-      return null;
+      return new NodeIterator(getSuccNodeNumbers(N));
     }
 
     @Override
     public boolean hasEdge(T src, T dst) {
+      return delegate.hasEdge(src, dst) && !ignoreEdges.contains(getNumber(src), getNumber(dst));
+    }
+
+    @Override
+    public IntSet getPredNodeNumbers(T node) {
+      return getFilteredNodeNumbers(node, delegate.getPredNodeNumbers(node));
+    }
+
+    private IntSet getFilteredNodeNumbers(T node, IntSet s) {
+      MutableIntSet result = MutableSparseIntSet.makeEmpty();
+      for (IntIterator it = s.intIterator(); it.hasNext();) {
+        int y = it.next();
+        if (!ignoreEdges.contains(y, getNumber(node))) {
+          result.add(y);
+        }
+      }
+      return result;
+    }
+
+    @Override
+    public IntSet getSuccNodeNumbers(T node) {
+      return getFilteredNodeNumbers(node, delegate.getSuccNodeNumbers(node));
+    }
+
+    @Override
+    public void addEdge(T src, T dst) {
       Assertions.UNREACHABLE();
-      return false;
     }
 
     @Override
@@ -103,26 +144,6 @@ public class EdgeFilteredNumberedGraph<T> extends AbstractNumberedGraph<T> {
     public void removeOutgoingEdges(T node) throws UnsupportedOperationException {
       Assertions.UNREACHABLE();
     }
-
-    @Override
-    public IntSet getPredNodeNumbers(T node) {
-      IntSet s = delegate.getPredNodeNumbers(node);
-      MutableIntSet result = MutableSparseIntSet.makeEmpty();
-      for (IntIterator it = s.intIterator(); it.hasNext();) {
-        int y = it.next();
-        if (!ignoreEdges.contains(y, getNumber(node))) {
-          result.add(y);
-        }
-      }
-      return result;
-    }
-
-    @Override
-    public IntSet getSuccNodeNumbers(T node) {
-      Assertions.UNREACHABLE();
-      return null;
-    }
-
   }
 
   @Override
