@@ -14,8 +14,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
-import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.util.config.SetOfClasses;
 
 /**
  * A serializable version of {@link AnalysisScope}. Note: any information about the array class loader is lost using this

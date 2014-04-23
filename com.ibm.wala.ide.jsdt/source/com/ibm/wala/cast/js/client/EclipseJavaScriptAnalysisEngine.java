@@ -29,6 +29,7 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FlowGraphBuilder;
 import com.ibm.wala.cast.js.client.impl.ZeroCFABuilderFactory;
 import com.ibm.wala.cast.js.html.IncludedPosition;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
+import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
@@ -46,13 +47,14 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.functions.Function;
 
 public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysisEngine<IJavaScriptProject> {
@@ -114,11 +116,11 @@ public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysi
 	    return new ZeroCFABuilderFactory().make((JSAnalysisOptions)options, cache, cha, scope, false);
   }
 
-  public CallGraph getFieldBasedCallGraph() throws CancelException {
+  public Pair<JSCallGraph, PointerAnalysis> getFieldBasedCallGraph() throws CancelException {
     return getFieldBasedCallGraph(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()));
   }
 
-  public CallGraph getFieldBasedCallGraph(String scriptName) throws CancelException {
+  public Pair<JSCallGraph, PointerAnalysis> getFieldBasedCallGraph(String scriptName) throws CancelException {
     Set<Entrypoint> eps= HashSetFactory.make();
     eps.add(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make(scriptName));
     eps.add(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make("Lprologue.js"));
@@ -137,7 +139,7 @@ public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysi
     return fileName.substring(fileName.lastIndexOf('/') + 1);    
   }
   
-  protected CallGraph getFieldBasedCallGraph(Iterable<Entrypoint> roots) throws CancelException {
+  protected Pair<JSCallGraph, PointerAnalysis> getFieldBasedCallGraph(Iterable<Entrypoint> roots) throws CancelException {
     final Set<String> scripts = HashSetFactory.make();
     for(Entrypoint e : roots) {
       String scriptName = getScriptName(((AstMethod)e.getMethod()));

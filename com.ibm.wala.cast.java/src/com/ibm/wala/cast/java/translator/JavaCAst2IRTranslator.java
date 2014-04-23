@@ -14,6 +14,7 @@
 package com.ibm.wala.cast.java.translator;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -207,7 +208,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
   }
 
   @Override
-  protected void doGlobalWrite(WalkContext context, String name, int rval) {
+  protected void doGlobalWrite(WalkContext context, String name, TypeReference type, int rval) {
     Assertions.UNREACHABLE("doGlobalWrite() called for Java code???");
   }
 
@@ -406,6 +407,40 @@ processExceptions(n, context);
     } else {
       return super.doVisit(n, wc, visitor);
     }
+  }
+
+  private CAstType getType(final String name) {
+    return new CAstType.Class() {
+      
+      @Override
+      public Collection getSupertypes() {
+        return Collections.emptySet();
+      }
+      
+      @Override
+      public String getName() {
+        return name;
+      }
+      
+      @Override
+      public boolean isInterface() {
+        return false;
+      }
+      
+      @Override
+      public Collection<CAstQualifier> getQualifiers() {
+        return Collections.emptySet();
+      }
+    };
+  }
+  @Override
+  protected CAstType topType() {
+    return getType("java.lang.Object");
+  }
+
+  @Override
+  protected CAstType exceptionType() {
+    return getType("java.lang.Exception");
   }
 
 

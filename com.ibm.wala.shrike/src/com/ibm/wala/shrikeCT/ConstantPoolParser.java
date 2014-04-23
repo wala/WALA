@@ -119,6 +119,29 @@ public final class ConstantPoolParser implements ClassConstants {
   }
 
   /**
+   * @return the name of the method at constant pool item i, in JVM format (e.g., java/lang/Object)
+   */
+  public String getCPMethodType(int i) throws InvalidClassFileException, IllegalArgumentException {
+    if (i < 1 || i >= cpItems.length) {
+      throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
+    }
+    int offset = cpOffsets[i];
+    if (offset == 0 || getByte(offset) != CONSTANT_MethodType) {
+      throw new IllegalArgumentException("Constant pool item #" + i + " is not a MethodType");
+    }
+    String s = cpItems[i];
+    if (s == null) {
+      try {
+        s = getCPUtf8(getUShort(offset + 1));
+      } catch (IllegalArgumentException ex) {
+        throw new InvalidClassFileException(offset, "Invalid method type at constant pool item #" + i + ": " + ex.getMessage());
+      }
+      cpItems[i] = s;
+    }
+    return s;
+  }
+
+  /**
    * @return the String at constant pool item i
    */
   public String getCPString(int i) throws InvalidClassFileException, IllegalArgumentException {
@@ -242,6 +265,78 @@ public final class ConstantPoolParser implements ClassConstants {
     }
     try {
       return getCPUtf8(getUShort(offset + 3));
+    } catch (IllegalArgumentException ex) {
+      throw new InvalidClassFileException(offset, "Invalid NameAndType type at constant pool item #" + i + ": " + ex.getMessage());
+    }
+  }
+
+  /**
+   * @return the name part of the MethodHandle at constant pool item i, in JVM format (e.g., I, Z, or Ljava/lang/Object;)
+   */
+  public String getCPHandleName(int i) throws InvalidClassFileException, IllegalArgumentException {
+    if (i < 1 || i >= cpItems.length) {
+      throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
+    }
+    int offset = cpOffsets[i];
+    if (offset == 0 || getByte(offset) != CONSTANT_MethodHandle) {
+      throw new IllegalArgumentException("Constant pool item #" + i + " is not a MethodHandle");
+    }
+    try {
+      return getCPRefName(getUShort(offset + 2));
+    } catch (IllegalArgumentException ex) {
+      throw new InvalidClassFileException(offset, "Invalid NameAndType type at constant pool item #" + i + ": " + ex.getMessage());
+    }
+  }
+
+  /**
+   * @return the name part of the MethodHandle at constant pool item i, in JVM format (e.g., I, Z, or Ljava/lang/Object;)
+   */
+  public String getCPHandleType(int i) throws InvalidClassFileException, IllegalArgumentException {
+    if (i < 1 || i >= cpItems.length) {
+      throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
+    }
+    int offset = cpOffsets[i];
+    if (offset == 0 || getByte(offset) != CONSTANT_MethodHandle) {
+      throw new IllegalArgumentException("Constant pool item #" + i + " is not a MethodHandle");
+    }
+    try {
+      return getCPRefType(getUShort(offset + 2));
+    } catch (IllegalArgumentException ex) {
+      throw new InvalidClassFileException(offset, "Invalid NameAndType type at constant pool item #" + i + ": " + ex.getMessage());
+    }
+  }
+
+  /**
+   * @return the name part of the MethodHandle at constant pool item i, in JVM format (e.g., I, Z, or Ljava/lang/Object;)
+   */
+  public String getCPHandleClass(int i) throws InvalidClassFileException, IllegalArgumentException {
+    if (i < 1 || i >= cpItems.length) {
+      throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
+    }
+    int offset = cpOffsets[i];
+    if (offset == 0 || getByte(offset) != CONSTANT_MethodHandle) {
+      throw new IllegalArgumentException("Constant pool item #" + i + " is not a MethodHandle");
+    }
+    try {
+      return getCPRefClass(getUShort(offset + 2));
+    } catch (IllegalArgumentException ex) {
+      throw new InvalidClassFileException(offset, "Invalid NameAndType type at constant pool item #" + i + ": " + ex.getMessage());
+    }
+  }
+
+  /**
+   * @return the type of the MethodHandle at constant pool item i, in JVM format (e.g., I, Z, or Ljava/lang/Object;)
+   */
+  public byte getCPHandleKind(int i) throws InvalidClassFileException, IllegalArgumentException {
+    if (i < 1 || i >= cpItems.length) {
+      throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
+    }
+    int offset = cpOffsets[i];
+    if (offset == 0 || getByte(offset) != CONSTANT_MethodHandle) {
+      throw new IllegalArgumentException("Constant pool item #" + i + " is not a MethodHandle");
+    }
+    try {
+      return getByte(offset + 1);
     } catch (IllegalArgumentException ex) {
       throw new InvalidClassFileException(offset, "Invalid NameAndType type at constant pool item #" + i + ": " + ex.getMessage());
     }
@@ -392,6 +487,12 @@ public final class ConstantPoolParser implements ClassConstants {
         break;
       case CONSTANT_Utf8:
         itemLen = 2 + getUShort(offset + 1);
+        break;
+      case CONSTANT_MethodHandle:
+        itemLen = 3;
+        break;
+      case CONSTANT_MethodType:
+        itemLen = 2;
         break;
       default:
         throw new InvalidClassFileException(offset, "unknown constant pool entry type" + tag);

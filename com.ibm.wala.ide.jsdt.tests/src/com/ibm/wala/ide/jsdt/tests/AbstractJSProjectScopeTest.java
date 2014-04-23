@@ -15,8 +15,10 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
@@ -33,9 +35,9 @@ import com.ibm.wala.ide.util.JavaScriptHeadlessUtil;
 import com.ibm.wala.ide.util.JsdtUtil;
 import com.ibm.wala.ide.util.JsdtUtil.CGInfo;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.collections.Pair;
 
 public abstract class AbstractJSProjectScopeTest {
 
@@ -63,9 +65,10 @@ public abstract class AbstractJSProjectScopeTest {
   }
 
   protected JavaScriptEclipseProjectPath makeProjectPath(IJavaScriptProject p) throws IOException, CoreException {
-    return JavaScriptEclipseProjectPath.make(p, Collections.EMPTY_SET);
+    return JavaScriptEclipseProjectPath.make(p, Collections.<Pair<String,Plugin>>emptySet());
   }
 
+  @Ignore
   @Test
   public void testParsing() throws IOException, CoreException {
     Set<ModuleEntry> mes = JsdtUtil.getJavaScriptCodeFromProject(project.projectName);
@@ -86,7 +89,7 @@ public abstract class AbstractJSProjectScopeTest {
     JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
     e.buildAnalysisScope();
     IClassHierarchy cha = e.getClassHierarchy();
-    System.err.println(cha);
+    //System.err.println(cha);
     Assert.assertTrue(cha != null);
   }
 

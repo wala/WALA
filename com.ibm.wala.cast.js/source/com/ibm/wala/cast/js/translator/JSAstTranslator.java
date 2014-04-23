@@ -10,13 +10,18 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.translator;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.ssa.JSInstructionFactory;
 import com.ibm.wala.cast.js.ssa.JavaScriptInstanceOf;
+import com.ibm.wala.cast.js.ssa.PrototypeLookup;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
@@ -30,6 +35,8 @@ import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
@@ -75,8 +82,8 @@ public class JSAstTranslator extends AstTranslator {
 
   @Override
   protected TypeReference makeType(CAstType type) {
-    Assertions.UNREACHABLE("JavaScript does not use CAstType");
-    return null;
+    assert "Any".equals(type.getName());
+    return JavaScriptTypes.Root;
   }
 
   
@@ -85,6 +92,19 @@ public class JSAstTranslator extends AstTranslator {
     return super.ignoreName(name) || name.endsWith(" temp");
   }
 
+  @Override
+  protected String[] makeNameMap(CAstEntity n, Set<Scope> scopes, SSAInstruction[] insts) {
+    String[] names = super.makeNameMap(n, scopes, insts);
+    for(SSAInstruction inst : insts) {
+      if (inst instanceof PrototypeLookup) {
+        if (names[ inst.getUse(0)] != null) {
+          names[ inst.getDef() ] = names[ inst.getUse(0) ];
+        }
+      }
+    }
+    return names;
+  }
+  
   /**
    * generate an instruction that checks if readVn is undefined and throws an exception if it isn't
    */
@@ -102,16 +122,16 @@ public class JSAstTranslator extends AstTranslator {
   }
 
   @Override
-  protected int doLexicallyScopedRead(CAstNode n, WalkContext context, String name) {
-    int readVn = super.doLexicallyScopedRead(n, context, name);
+  protected int doLexicallyScopedRead(CAstNode n, WalkContext context, String name, TypeReference type) {
+    int readVn = super.doLexicallyScopedRead(n, context, name, type);
     // should get an exception if name is undefined
     addDefinedCheck(n, context, readVn);
     return readVn;
   }
 
   @Override
-  protected int doGlobalRead(CAstNode n, WalkContext context, String name) {
-    int readVn = super.doGlobalRead(n, context, name);
+  protected int doGlobalRead(CAstNode n, WalkContext context, String name, TypeReference type) {
+    int readVn = super.doGlobalRead(n, context, name, type);
     // add a check if name is undefined, unless we're reading the value 'undefined'
     if (!("undefined".equals(name) || "$$undefined".equals(name))) {
       addDefinedCheck(n, context, readVn);
@@ -206,7 +226,7 @@ public class JSAstTranslator extends AstTranslator {
   protected void doMaterializeFunction(CAstNode n, WalkContext context, int result, int exception, CAstEntity fn) {
     int nm = context.currentScope().getConstantValue("L" + composeEntityName(context, fn));
     // "Function" is the name we use to model the constructor of function values
-    int tmp = super.doGlobalRead(n, context, "Function");
+    int tmp = super.doGlobalRead(n, context, "Function", JavaScriptTypes.Function);
     context.cfg().addInstruction(
         ((JSInstructionFactory) insts).Invoke(tmp, result, new int[] { nm }, exception, new JSCallSiteReference(
             JavaScriptMethods.ctorReference, context.cfg().getCurrentInstruction())));
@@ -398,14 +418,13 @@ public class JSAstTranslator extends AstTranslator {
     
     int tempVal = context.currentScope().allocateTempValue();
     doNewObject(context, null, tempVal, "Array", null);
-    CAstSymbol args = new CAstSymbolImpl("arguments");
+    CAstSymbol args = new CAstSymbolImpl("arguments", Any);
     context.currentScope().declare(args, tempVal);
     //context.cfg().addInstruction(((JSInstructionFactory) insts).PutInstruction(1, tempVal, "arguments"));
   }
 
   @Override
-  protected boolean doVisit(CAstNode n, WalkContext cntxt, CAstVisitor<WalkContext> visitor) {
-    WalkContext context = (WalkContext) cntxt;
+  protected boolean doVisit(CAstNode n, WalkContext context, CAstVisitor<WalkContext> visitor) {
     switch (n.getKind()) {
     case CAstNode.TYPE_OF: {
       int result = context.currentScope().allocateTempValue();
@@ -433,6 +452,29 @@ public class JSAstTranslator extends AstTranslator {
       return false;
     }
     }
+  }
+
+  public static final CAstType Any = new CAstType() {
+
+    @Override
+    public String getName() {
+      return "Any";
+    }
+
+    @Override
+    public Collection getSupertypes() {
+      return Collections.EMPTY_SET;
+    }
+  };
+  
+  @Override
+  protected CAstType topType() {
+    return Any;
+  }
+
+  @Override
+  protected CAstType exceptionType() {
+    return Any;
   }
 
 }

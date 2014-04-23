@@ -55,7 +55,7 @@ public class OffsetOrdinalSetMapping<T> implements OrdinalSetMapping<T> {
   }
 
   @Override
-  public int getMappedIndex(T o) {
+  public int getMappedIndex(Object o) {
     if (delegate.getMappedIndex(o) == -1) {
       return -1;
     }

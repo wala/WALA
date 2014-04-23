@@ -36,7 +36,7 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
 /**
  * A dataflow system that computes, for each graph node, the set of "interesting" nodes that are reachable
  */
-public class GraphReachability<T> {
+public class GraphReachability<T, S extends T> {
 
   /**
    * Governing graph
@@ -51,7 +51,7 @@ public class GraphReachability<T> {
   /**
    * set of "interesting" CGNodes
    */
-  final OrdinalSetMapping<T> domain;
+  final OrdinalSetMapping<S> domain;
 
   /**
    * @param g call graph to analyze
@@ -63,15 +63,15 @@ public class GraphReachability<T> {
       throw new IllegalArgumentException("g is null");
     }
     this.g = g;
-    Iterator<T> i = new FilterIterator<T>(g.iterator(), filter);
-    domain = new MutableMapping<T>((Iterator2Collection.toSet(i)).toArray());
+    Iterator<S> i = new FilterIterator<S>(g.iterator(), filter);
+    domain = new MutableMapping<S>((Iterator2Collection.toSet(i)).toArray());
   }
 
   /**
    * @param n
    * @return the set of interesting nodes reachable from n
    */
-  public OrdinalSet<T> getReachableSet(Object n) throws IllegalStateException {
+  public OrdinalSet<S> getReachableSet(Object n) throws IllegalStateException {
     if (solver == null) {
       throw new IllegalStateException("must call solve() before calling getReachableSet()");
     }
@@ -80,7 +80,7 @@ public class GraphReachability<T> {
     if (v.getValue() == null) {
       return OrdinalSet.empty();
     } else {
-      return new OrdinalSet<T>(v.getValue(), domain);
+      return new OrdinalSet<S>(v.getValue(), domain);
     }
   }
 
@@ -138,7 +138,7 @@ public class GraphReachability<T> {
       }
     };
 
-    BitVectorFramework<T, T> f = new BitVectorFramework<T, T>(GraphInverter.invert(g), functions, domain);
+    BitVectorFramework<T, S> f = new BitVectorFramework<T, S>(GraphInverter.invert(g), functions, domain);
     solver = new BitVectorSolver<T>(f);
     return solver.solve(monitor);
   }

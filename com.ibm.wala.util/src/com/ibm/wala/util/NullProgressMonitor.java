@@ -38,4 +38,10 @@ public class NullProgressMonitor implements IProgressMonitor {
     // do nothing
   }
 
+  @Override
+  public String getCancelMessage() {
+    assert false;
+    return "never cqncels";
+  }
+
 }

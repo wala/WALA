@@ -11,7 +11,9 @@
 package com.ibm.wala.ide.client;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -25,6 +27,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.config.FileOfClasses;
+import com.ibm.wala.util.io.FileProvider;
 
 abstract public class EclipseProjectAnalysisEngine<P> extends AbstractAnalysisEngine {
 
@@ -55,7 +58,8 @@ abstract public class EclipseProjectAnalysisEngine<P> extends AbstractAnalysisEn
       ePath = createProjectPath(project);
       super.scope = ePath.toAnalysisScope(makeAnalysisScope());
       if (getExclusionsFile() != null) {
-        scope.setExclusions(FileOfClasses.createFileOfClasses(new File(getExclusionsFile())));
+        InputStream is = new File(getExclusionsFile()).exists()? new FileInputStream(getExclusionsFile()): FileProvider.class.getClassLoader().getResourceAsStream(getExclusionsFile());
+        scope.setExclusions(new FileOfClasses(is));
       }
     } catch (CoreException e) {
       assert false : e.getMessage();

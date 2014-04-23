@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.ibm.wala.cast.js.translator.JSAstTranslator;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
@@ -508,7 +509,7 @@ public class ClosureExtractor extends CAstRewriterExt {
       }
       
       // prepend declaration "var <theLocal>;"
-      CAstNode theLocalDecl = Ast.makeNode(DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(theLocal)),
+      CAstNode theLocalDecl = Ast.makeNode(DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(theLocal, JSAstTranslator.Any)),
                                            addExnFlow(makeVarRef("$$undefined"), JavaScriptTypes.ReferenceError, entity, context));
       if(fun_body_stmts.size() > 1) {
         CAstNode newBlock = Ast.makeNode(BLOCK_STMT, fun_body_stmts.toArray(new CAstNode[0]));

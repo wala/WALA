@@ -42,6 +42,7 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.WalaException;
 
@@ -60,7 +61,11 @@ public class CGUtil {
 		this.translatorFactory = translatorFactory;
 	}
 
-	public JSCallGraph buildCG(URL url, BuilderType builderType) throws IOException, WalaException  {
+  public JSCallGraph buildCG(URL url, BuilderType builderType) throws IOException, WalaException, CancelException  {
+    return buildCG(url, builderType, new NullProgressMonitor());
+  }
+  
+	public JSCallGraph buildCG(URL url, BuilderType builderType, IProgressMonitor monitor) throws IOException, WalaException, CancelException  {
     JavaScriptLoaderFactory loaders = makeLoaderFactory(url);
     SourceModule[] scripts;
     if (url.getFile().endsWith(".js")) {
@@ -91,18 +96,14 @@ public class CGUtil {
 		  break;
 		}
 		
-		try {
-			return builder.buildCallGraph(roots, new NullProgressMonitor());
-		} catch (CancelException e) {
-			return null;
-		}
+		return builder.buildCallGraph(roots, monitor).fst;
 	}
 
 	private JavaScriptLoaderFactory makeLoaderFactory(URL url) {
 		return url.getFile().endsWith(".js") ? new JavaScriptLoaderFactory(translatorFactory) : new WebPageLoaderFactory(translatorFactory);
 	}
 
-	public static void main(String[] args) throws IOException, WalaException, Error {
+	public static void main(String[] args) throws IOException, WalaException, Error, CancelException {
 	  JSSourceExtractor.DELETE_UPON_EXIT = true;
 		URL url = new File(args[0]).toURI().toURL();
 		System.err.println("Analysing " + url);

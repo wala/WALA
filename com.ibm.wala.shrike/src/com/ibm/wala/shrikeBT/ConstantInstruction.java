@@ -53,6 +53,56 @@ public abstract class ConstantInstruction extends Instruction {
 
   }
 
+  public static class ReferenceToken {
+    private final String className;
+    private final String elementName;
+    private final String descriptor;
+    
+    public ReferenceToken(String className, String elementName, String descriptor) {
+      super();
+      this.className = className;
+      this.elementName = elementName;
+      this.descriptor = descriptor;
+    }
+
+    @Override
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((className == null) ? 0 : className.hashCode());
+      result = prime * result + ((descriptor == null) ? 0 : descriptor.hashCode());
+      result = prime * result + ((elementName == null) ? 0 : elementName.hashCode());
+      return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      ReferenceToken other = (ReferenceToken) obj;
+      if (className == null) {
+        if (other.className != null)
+          return false;
+      } else if (!className.equals(other.className))
+        return false;
+      if (descriptor == null) {
+        if (other.descriptor != null)
+          return false;
+      } else if (!descriptor.equals(other.descriptor))
+        return false;
+      if (elementName == null) {
+        if (other.elementName != null)
+          return false;
+      } else if (!elementName.equals(other.elementName))
+        return false;
+      return true;
+    }
+  }
+  
   public ConstantInstruction(short opcode) {
     super(opcode);
   }
@@ -495,6 +545,108 @@ public abstract class ConstantInstruction extends Instruction {
     }
   }
 
+  static class ConstMethodType extends ConstantInstruction {
+    protected String descriptor;
+    
+    ConstMethodType(short opcode, String descriptor) {
+      super(opcode);
+      this.descriptor = descriptor;
+    }
+
+    @Override
+    public Object getValue() {
+      return descriptor;
+    }
+
+    @Override
+    public String getType() {
+      return TYPE_String;
+    }
+  }
+  
+  static class LazyMethodType extends ConstMethodType {
+    final private ConstantPoolReader cp;
+
+    final private int index;
+
+    LazyMethodType(short opcode, ConstantPoolReader cp, int index) {
+      super(opcode, null);
+      this.cp = cp;
+      this.index = index;
+    }
+    
+    @Override
+    public Object getValue() {
+      if (descriptor == null) {
+        descriptor = cp.getConstantPoolMethodType(index);
+      }
+      return descriptor;
+    }
+
+    @Override
+    public ConstantPoolReader getLazyConstantPool() {
+      return cp;
+    }
+
+    @Override
+    public int getCPIndex() {
+      return index;
+    }
+  }
+  
+  static class ConstMethodHandle extends ConstantInstruction {
+    protected Object value;
+    
+    public ConstMethodHandle(short opcode, Object value) {
+      super(opcode);
+      this.value = value;
+    }
+
+    @Override
+    public Object getValue() {
+      return value;
+    }
+
+    @Override
+    public String getType() {
+      return TYPE_MethodHandle;
+    }
+    
+  }
+  
+  static class LazyMethodHandle extends ConstMethodHandle {
+    final private ConstantPoolReader cp;
+
+    final private int index;
+
+    LazyMethodHandle(short opcode, ConstantPoolReader cp, int index) {
+      super(opcode, null);
+      this.cp = cp;
+      this.index = index;
+    }
+    
+    @Override
+    public Object getValue() {
+      if (value == null) {
+        String className = cp.getConstantPoolHandleClassType(getCPIndex());
+        String eltName = cp.getConstantPoolHandleName(getCPIndex());
+        String eltDesc = cp.getConstantPoolHandleType(getCPIndex());
+        value = new ReferenceToken(className, eltName, eltDesc);
+      }
+      return value;
+    }
+
+    @Override
+    public ConstantPoolReader getLazyConstantPool() {
+      return cp;
+    }
+
+    @Override
+    public int getCPIndex() {
+      return index;
+    }
+  }
+  
   /**
    * @return the constant value pushed: an Integer, a Long, a Float, a Double, a String, or null
    */
@@ -573,6 +725,10 @@ public abstract class ConstantInstruction extends Instruction {
       return new LazyString(OP_ldc_w, cp, index);
     case CONSTANT_Class:
       return new LazyClass(OP_ldc_w, cp, index);
+    case CONSTANT_MethodHandle:
+      return new LazyMethodHandle(OP_ldc_w, cp, index);
+    case CONSTANT_MethodType:
+      return new LazyMethodType(OP_ldc_w, cp, index);
     default:
       return null;
     }

@@ -13,11 +13,9 @@ package com.ibm.wala.cast.js.callgraph.fieldbased;
 import java.util.Set;
 
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FlowGraph;
-import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FlowGraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.CallVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.FuncVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VarVertex;
-import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.Vertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VertexFactory;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
@@ -30,7 +28,6 @@ import com.ibm.wala.util.MonitorUtil;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.collections.Util;
 import com.ibm.wala.util.intset.OrdinalSet;
 
 /**
@@ -98,11 +95,13 @@ public class OptimisticCallgraphBuilder extends FieldBasedCallGraphBuilder {
 	  JavaScriptInvoke invk = c.getInstruction();
 	  FuncVertex caller = c.getCaller();
 	  
-    for(int i=1;i<invk.getNumberOfParameters();++i)
+    for(int i=1;i<invk.getNumberOfParameters();++i) {
 	    // only flow receiver into 'this' if invk is, in fact, a method call
+      flowgraph.addEdge(factory.makeVarVertex(caller, invk.getUse(i)), factory.makeArgVertex(callee));
 	    if(i > 1 || invk.getDeclaredTarget().equals(JavaScriptMethods.dispatchReference))
 	      flowgraph.addEdge(factory.makeVarVertex(caller, invk.getUse(i)), factory.makeParamVertex(callee, i-1));
-
+    }
+    
 	  // flow from return vertex to result vertex
 	  flowgraph.addEdge(factory.makeRetVertex(callee), factory.makeVarVertex(caller, invk.getDef()));			
 	}
@@ -115,8 +114,7 @@ public class OptimisticCallgraphBuilder extends FieldBasedCallGraphBuilder {
 	  JavaScriptInvoke invk = c.getInstruction();
 
 	  VarVertex receiverVertex = factory.makeVarVertex(caller, invk.getUse(1));
-	  OrdinalSet<Vertex> reachingSet = flowgraph.getReachingSet(receiverVertex, monitor);
-	  Set<FuncVertex> realCallees = Util.filterByType(reachingSet, FuncVertex.class);
+	  OrdinalSet<FuncVertex> realCallees = flowgraph.getReachingSet(receiverVertex, monitor);
 	  for(FuncVertex realCallee: realCallees) {
 	    // flow from arguments to parameters
 	    for(int i=2;i<invk.getNumberOfParameters();++i)

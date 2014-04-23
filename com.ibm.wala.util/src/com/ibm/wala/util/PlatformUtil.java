@@ -22,9 +22,9 @@ public class PlatformUtil {
    * are we running on Mac OS X?
    */
   public static boolean onMacOSX() {
-    // String osname = System.getProperty("os.name");
-    // return osname.toLowerCase().contains("mac");
-    return System.getProperty("mrj.version") != null;
+    String osname = System.getProperty("os.name");
+    return osname.toLowerCase().contains("mac");
+    // return System.getProperty("mrj.version") != null;
   }
 
   /**
@@ -44,17 +44,17 @@ public class PlatformUtil {
   }
 
   /**
-   * are we running on IKVM?  see http://www.ikvm.net
+   * are we running on IKVM? see http://www.ikvm.net
    */
   public static boolean onIKVM() {
     return "IKVM.NET".equals(System.getProperty("java.runtime.name"));
   }
 
   /**
-   * get the jars in the boot classpath.
-   * TODO test on more JVMs
+   * get the jars in the boot classpath. TODO test on more JVMs
    * 
-   * @throws IllegalStateException if boot classpath cannot be found
+   * @throws IllegalStateException
+   *           if boot classpath cannot be found
    */
   public static String[] getBootClassPathJars() {
     String classpath = System.getProperty("sun.boot.class.path");

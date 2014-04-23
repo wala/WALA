@@ -11,7 +11,9 @@
 package com.ibm.wala.cast.java.client;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Set;
 
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
@@ -25,7 +27,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -35,6 +36,8 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.config.FileOfClasses;
+import com.ibm.wala.util.config.SetOfClasses;
+import com.ibm.wala.util.io.FileProvider;
 
 /**
  */
@@ -105,7 +108,8 @@ public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
     scope = makeSourceAnalysisScope();
 
     if (getExclusionsFile() != null) {
-      scope.setExclusions(FileOfClasses.createFileOfClasses(new File(getExclusionsFile())));
+      InputStream is = new File(getExclusionsFile()).exists()? new FileInputStream(getExclusionsFile()): FileProvider.class.getClassLoader().getResourceAsStream(getExclusionsFile());
+      scope.setExclusions(new FileOfClasses(is));
     }
 
     for (Module M : this.systemEntries) {

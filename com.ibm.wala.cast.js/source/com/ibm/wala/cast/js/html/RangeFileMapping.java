@@ -12,14 +12,16 @@ package com.ibm.wala.cast.js.html;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
 
 public class RangeFileMapping implements FileMapping {
 
-  public static class Range {
+  public final static class Range {
     private final int rangeStart;
     private final int rangeEnd;
     private final int rangeStartingLine;
@@ -132,8 +134,18 @@ public class RangeFileMapping implements FileMapping {
     }
   }
 
+  private URLConnection includedURLConnection = null;
+  
   public InputStream getInputStream() throws IOException {
-    return includedURL.openConnection().getInputStream();
+    if (includedURLConnection == null) {
+      includedURLConnection = includedURL.openConnection();
+      if (includedURLConnection instanceof HttpURLConnection) {
+        includedURLConnection.setConnectTimeout(10);
+        includedURLConnection.setReadTimeout(25);
+      }
+    }
+    
+    return includedURLConnection.getInputStream();
   }
 
 }

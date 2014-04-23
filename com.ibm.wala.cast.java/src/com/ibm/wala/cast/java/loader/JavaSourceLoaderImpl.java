@@ -61,7 +61,6 @@ import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.AnnotationsReader.ConstantElementValue;
 import com.ibm.wala.shrikeCT.AnnotationsReader.ElementValue;
@@ -78,6 +77,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
@@ -622,8 +622,8 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     }
 
     @Override
-    public AstLexicalRead LexicalRead(int lhs, String definer, String globalName) {
-      return new AstLexicalRead(lhs, definer, globalName);
+    public AstLexicalRead LexicalRead(int lhs, String definer, String globalName, TypeReference type) {
+      return new AstLexicalRead(lhs, definer, globalName, type);
     }
 
     @Override
@@ -637,8 +637,8 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     }
 
     @Override
-    public AstLexicalWrite LexicalWrite(String definer, String globalName, int rhs) {
-       return new AstLexicalWrite(definer, globalName, rhs);
+    public AstLexicalWrite LexicalWrite(String definer, String globalName, TypeReference type, int rhs) {
+       return new AstLexicalWrite(definer, globalName, type, rhs);
     }
 
     public SSAThrowInstruction NonExceptingThrowInstruction(int exception) {

@@ -31,6 +31,7 @@ public class VertexFactory {
 	private final Map<Pair<FuncVertex, Integer>, ParamVertex> paramVertexCache = HashMapFactory.make();
 	private final Map<String, PropVertex> propVertexCache = HashMapFactory.make();
 	private final Map<FuncVertex, RetVertex> retVertexCache = HashMapFactory.make();
+  private final Map<FuncVertex, ArgVertex> argVertexCache = HashMapFactory.make();
 	private final Map<Pair<FuncVertex, Integer>, VarVertex> varVertexCache = HashMapFactory.make();
 	private final Map<Pair<String, String>, LexicalVarVertex> lexicalAccessVertexCache = HashMapFactory.make();
 
@@ -83,6 +84,13 @@ public class VertexFactory {
 			retVertexCache.put(func, value = new RetVertex(func));
 		return value;
 	}
+
+	public ArgVertex makeArgVertex(FuncVertex func) {
+    ArgVertex value = argVertexCache.get(func);
+    if(value == null)
+      argVertexCache.put(func, value = new ArgVertex(func));
+    return value;
+  }
 
 	public UnknownVertex makeUnknownVertex() {
 		return UnknownVertex.INSTANCE;

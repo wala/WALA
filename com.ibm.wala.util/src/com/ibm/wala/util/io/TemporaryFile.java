@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *****************************************************************************/
-package com.ibm.wala.cast.util;
+package com.ibm.wala.util.io;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,21 +32,27 @@ public class TemporaryFile {
   }
 
   public static File urlToFile(String fileName, URL input) throws IOException {
-    return streamToFile( fileName, input.openStream() );
+    File F = new File(outputDir + File.separator + fileName);
+    return urlToFile(F , input);
   }
 
-  public static File streamToFile(String fileName, InputStream input) throws IOException {
-    File F = new File(outputDir + File.separator + fileName);
+  public static File urlToFile(File F, URL input) throws IOException {
+    return streamToFile(F, input.openStream());
+  }
+  
+  public static File streamToFile(File F, InputStream... inputs) throws IOException {
     FileOutputStream output = new FileOutputStream(F);
+    
     int read;
     byte[] buffer = new byte[ 1024 ];
-    while ( (read = input.read(buffer)) != -1 ) {
-      output.write(buffer, 0, read);
+    for(InputStream input : inputs) {
+      while ( (read = input.read(buffer)) != -1 ) {
+        output.write(buffer, 0, read);
+      }
+      input.close();
     }
     
     output.close();
-    input.close();
-    
     return F;
   }
 }

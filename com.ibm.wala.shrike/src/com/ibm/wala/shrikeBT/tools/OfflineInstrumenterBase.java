@@ -90,6 +90,11 @@ public abstract class OfflineInstrumenterBase {
     }
 
     /**
+     * get name of resource used for input
+     */
+    public abstract String getInputName();
+    
+    /**
      * Open the resource for reading as a stream.
      */
     public abstract InputStream open() throws IOException;
@@ -135,6 +140,11 @@ public abstract class OfflineInstrumenterBase {
       return name.endsWith(".class");
     }
 
+    @Override
+    public String getInputName() {
+      return name;
+    }
+
     /**
      * Get the underlying ZipEntry corresponding to this resource.
      */
@@ -167,9 +177,11 @@ public abstract class OfflineInstrumenterBase {
    */
   final class ClassInput extends Input {
     final private File file;
+    final private File baseDirectory;
 
-    public ClassInput(File f) {
+    public ClassInput(File baseDirectory, File f) {
       file = f;
+      this.baseDirectory = baseDirectory;
     }
 
     @Override
@@ -181,6 +193,12 @@ public abstract class OfflineInstrumenterBase {
     public String toString() {
       return file.getPath();
     }
+
+    @Override
+    public String getInputName() {
+      int base = baseDirectory.getPath().length() + 1;
+      return file.getPath().substring(base);
+    }    
   }
 
   protected OfflineInstrumenterBase() {
@@ -207,10 +225,8 @@ public abstract class OfflineInstrumenterBase {
     JarFile jf = new JarFile(f);
     for (Enumeration<JarEntry> e = jf.entries(); e.hasMoreElements();) {
       JarEntry entry = e.nextElement();
-      if (!entry.isDirectory()) {
-        String name = entry.getName();
-        inputs.add(new JarInput(f, name));
-      }
+      String name = entry.getName();
+      inputs.add(new JarInput(f, name));
     }
     jf.close();
   }
@@ -225,8 +241,8 @@ public abstract class OfflineInstrumenterBase {
   /**
    * Add a class file containing a source class to instrument.
    */
-  final public void addInputClass(File f) {
-    inputs.add(new ClassInput(f));
+  final public void addInputClass(File baseDirectory, File f) {
+    inputs.add(new ClassInput(baseDirectory, f));
   }
 
   /**
@@ -234,7 +250,7 @@ public abstract class OfflineInstrumenterBase {
    * 
    * @throws IllegalArgumentException if d is null
    */
-  final public void addInputDirectory(File d) throws IOException, IllegalArgumentException {
+  final public void addInputDirectory(File baseDirectory, File d) throws IOException, IllegalArgumentException {
     if (d == null) {
       throw new IllegalArgumentException("d is null");
     }
@@ -250,9 +266,9 @@ public abstract class OfflineInstrumenterBase {
     for (int i = 0; i < fs.length; i++) {
       File f = fs[i];
       if (f.isDirectory()) {
-        addInputDirectory(f);
+        addInputDirectory(baseDirectory, f);
       } else {
-        addInputClass(f);
+        addInputClass(baseDirectory, f);
       }
     }
   }
@@ -263,7 +279,7 @@ public abstract class OfflineInstrumenterBase {
    * 
    * @throws IllegalArgumentException if a is null
    */
-  final public boolean addInputElement(String a) throws IOException {
+  final public boolean addInputElement(File baseDirectory, String a) throws IOException {
     if (a == null) {
       throw new IllegalArgumentException("a is null");
     }
@@ -275,11 +291,11 @@ public abstract class OfflineInstrumenterBase {
       }
       File f = new File(a);
       if (f.isDirectory()) {
-        addInputDirectory(f);
+        addInputDirectory(baseDirectory, f);
         return true;
       } else if (f.exists()) {
         if (a.endsWith(".class")) {
-          addInputClass(f);
+          addInputClass(baseDirectory, f);
           return true;
         } else if (a.endsWith(".jar") || a.endsWith(".zip")) {
           addInputJar(new File(a));
@@ -317,7 +333,7 @@ public abstract class OfflineInstrumenterBase {
         i++;
         continue;
       } else if (!a.startsWith("-")) {
-        if (addInputElement(a)) {
+        if (addInputElement(new File(a), a)) {
           continue;
         }
       } else if (a.startsWith("--")) {
@@ -342,27 +358,13 @@ public abstract class OfflineInstrumenterBase {
   }
 
   /**
-   * Read a list of class file names from a stream and add them to the list of things to instrument.
-   */
-  final public void readInputClasses(InputStream s) throws IOException, IllegalArgumentException {
-    if (s == null) {
-      throw new IllegalArgumentException("illegal null inputStream");
-    }
-    String str;
-    BufferedReader r = new BufferedReader(new InputStreamReader(s));
-    while ((str = r.readLine()) != null) {
-      addInputElement(str);
-    }
-  }
-
-  /**
    * Start traversing the source class list from the beginning.
    */
   final public void beginTraversal() {
     inputIndex = 0;
   }
 
-  protected abstract Object makeClassFromStream(BufferedInputStream s) throws IOException;
+  protected abstract Object makeClassFromStream(String inputName, BufferedInputStream s) throws IOException;
 
   protected abstract String getClassName(Object cl);
 
@@ -380,7 +382,7 @@ public abstract class OfflineInstrumenterBase {
         }
         BufferedInputStream s = new BufferedInputStream(in.open());
         try {
-          Object r = makeClassFromStream(s);
+          Object r = makeClassFromStream(in.getInputName(), s);
           String name = getClassName(r);
           in.setClassName(name);
           return r;
@@ -417,9 +419,8 @@ public abstract class OfflineInstrumenterBase {
     return outputFile;
   }
 
-  final protected boolean internalOutputModifiedClass(Object cf, Object mods) throws IOException {
+  final protected boolean internalOutputModifiedClass(Object cf, String name, Object mods) throws IOException {
     makeOutputJar();
-    String name = toEntryName(getClassName(cf));
     if (entryNames.contains(name)) {
       return false;
     } else {
@@ -551,7 +552,7 @@ public abstract class OfflineInstrumenterBase {
         if (name == null) {
           BufferedInputStream s = new BufferedInputStream(in.open(), 65536);
           try {
-            Object cl = makeClassFromStream(s);
+            Object cl = makeClassFromStream(in.getInputName(), s);
             String entryName = toEntryName(getClassName(cl));
             if (!entryNames.contains(entryName)) {
               putNextEntry(new ZipEntry(entryName));

@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.ide.util;
 
-import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
@@ -27,7 +27,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import com.ibm.wala.cast.js.JavaScriptPlugin;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.Module;
-import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
@@ -71,8 +71,14 @@ public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePat
   
     Collection<Module> s = modules.get(JSLoader.JAVASCRIPT);
     for(Pair<String,Plugin> model : models) {
-      File modelFile = JsdtUtil.getProlgueFile(model.fst, model.snd);
-      s.add(new SourceFileModule(modelFile, model.fst, null));
+      URL modelFile = JsdtUtil.getProlgueFile(model.fst, model.snd);
+      assert modelFile != null : "cannot find file for " + model;
+      s.add(new SourceURLModule(modelFile) {
+        @Override
+        public String getName() {
+          return super.getName().substring(1);
+        }
+      });
     }
 
     return path;

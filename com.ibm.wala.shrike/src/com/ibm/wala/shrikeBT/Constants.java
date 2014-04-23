@@ -485,6 +485,10 @@ public interface Constants {
   public static final byte CONSTANT_InterfaceMethodRef = 11;
 
   public static final byte CONSTANT_NameAndType = 12;
+  
+  public static final byte CONSTANT_MethodHandle = 15;
+  
+  public static final byte CONSTANT_MethodType = 16;
 
   public static final byte T_BOOLEAN = 4;
 
@@ -521,6 +525,8 @@ public interface Constants {
   public static final String TYPE_void = "V";
 
   public static final String TYPE_String = "Ljava/lang/String;";
+
+  public static final String TYPE_MethodHandle = "Ljava/lang/invoke/MethodHandle;";
 
   public static final String TYPE_Object = "Ljava/lang/Object;";
 

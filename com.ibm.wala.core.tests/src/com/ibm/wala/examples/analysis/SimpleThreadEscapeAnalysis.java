@@ -256,8 +256,8 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
     //
     for (Iterator<PointerKey> rts = escapeAnalysisRoots.iterator(); rts.hasNext();) {
       PointerKey root = rts.next();
-      OrdinalSet<InstanceKey> objects = pa.getPointsToSet(root);
-      for (Iterator<InstanceKey> objs = objects.iterator(); objs.hasNext();) {
+      OrdinalSet<? extends InstanceKey> objects = pa.getPointsToSet(root);
+      for (Iterator<? extends InstanceKey> objs = objects.iterator(); objs.hasNext();) {
         InstanceKey obj = (InstanceKey) objs.next();
         escapingInstanceKeys.add(obj);
       }
@@ -276,8 +276,8 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
           if (type.isArrayClass()) {
             if (((ArrayClass) type).getElementClass() != null) {
               PointerKey fk = heapModel.getPointerKeyForArrayContents(key);
-              OrdinalSet<InstanceKey> fobjects = pa.getPointsToSet(fk);
-              for (Iterator<InstanceKey> fobjs = fobjects.iterator(); fobjs.hasNext();) {
+              OrdinalSet<? extends InstanceKey> fobjects = pa.getPointsToSet(fk);
+              for (Iterator<? extends InstanceKey> fobjs = fobjects.iterator(); fobjs.hasNext();) {
                 InstanceKey fobj = (InstanceKey) fobjs.next();
                 if (!escapingInstanceKeys.contains(fobj)) {
                   newKeys.add(fobj);
@@ -290,8 +290,8 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
               IField f = (IField) fs.next();
               if (f.getFieldTypeReference().isReferenceType()) {
                 PointerKey fk = heapModel.getPointerKeyForInstanceField(key, f);
-                OrdinalSet<InstanceKey> fobjects = pa.getPointsToSet(fk);
-                for (Iterator<InstanceKey> fobjs = fobjects.iterator(); fobjs.hasNext();) {
+                OrdinalSet<? extends InstanceKey> fobjects = pa.getPointsToSet(fk);
+                for (Iterator<? extends InstanceKey> fobjs = fobjects.iterator(); fobjs.hasNext();) {
                   InstanceKey fobj = (InstanceKey) fobjs.next();
                   if (!escapingInstanceKeys.contains(fobj)) {
                     newKeys.add(fobj);

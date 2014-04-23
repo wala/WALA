@@ -42,7 +42,7 @@ public class EclipseWebProjectPath extends JavaScriptEclipseProjectPath {
         Set<MappedSourceModule> scripts;
         String urlString = "file://" + htmlPage.getAbsolutePath();
         try {
-          scripts = WebUtil.extractScriptFromHTML(new URL(urlString)).fst;
+          scripts = WebUtil.extractScriptFromHTML(new URL(urlString), true).fst;
           s.addAll(scripts);
         } catch (MalformedURLException e1) {
           assert false : "internal error constructing URL " + urlString;

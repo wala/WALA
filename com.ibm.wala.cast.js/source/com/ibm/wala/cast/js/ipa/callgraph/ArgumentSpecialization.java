@@ -184,7 +184,7 @@ public class ArgumentSpecialization {
                     
           class FixedArgumentsRewriter extends CAstBasicRewriter {
             private final CAstEntity e;
-            Map<String, CAstNode> argRefs = HashMapFactory.make();
+            private final Map<String, CAstNode> argRefs = HashMapFactory.make();
  
             public FixedArgumentsRewriter(CAst Ast) {
               super(Ast, false);

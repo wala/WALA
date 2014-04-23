@@ -13,7 +13,6 @@ package com.ibm.wala.cast.js.callgraph.fieldbased;
 import java.util.Iterator;
 
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FlowGraph;
-import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FlowGraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.FuncVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VertexFactory;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;

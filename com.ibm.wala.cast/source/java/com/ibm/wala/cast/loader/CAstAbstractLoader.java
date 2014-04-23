@@ -65,6 +65,14 @@ public abstract class CAstAbstractLoader implements IClassLoader {
     this(cha, null);
   }
 
+  public void addMessage(ModuleEntry module, Set<Warning> message) {
+    if (! errors.containsKey(module)) {
+      errors.put(module, new HashSet<Warning>());
+    }
+    
+    errors.get(module).addAll(message);
+  }
+
   public void addMessage(ModuleEntry module, Warning message) {
     if (! errors.containsKey(module)) {
       errors.put(module, new HashSet<Warning>());
@@ -72,7 +80,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
     
     errors.get(module).add(message);
   }
-  
+
   private Iterator<ModuleEntry> getMessages(final byte severity) {
     return new MapIterator<Map.Entry<ModuleEntry,Set<Warning>>, ModuleEntry>(new FilterIterator<Map.Entry<ModuleEntry,Set<Warning>>>(errors.entrySet().iterator(), new Filter<Map.Entry<ModuleEntry,Set<Warning>>>()  {
       @Override

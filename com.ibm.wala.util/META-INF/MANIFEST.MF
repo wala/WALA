@@ -8,6 +8,7 @@ Export-Package: com.ibm.wala.dataflow.graph,
  com.ibm.wala.fixpoint,
  com.ibm.wala.util,
  com.ibm.wala.util.collections,
+ com.ibm.wala.util.config,
  com.ibm.wala.util.debug,
  com.ibm.wala.util.functions,
  com.ibm.wala.util.graph,
@@ -23,6 +24,6 @@ Export-Package: com.ibm.wala.dataflow.graph,
  com.ibm.wala.util.processes,
  com.ibm.wala.util.tables,
  com.ibm.wala.viz
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: walaUtil.jar
 Bundle-Vendor: IBM
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
