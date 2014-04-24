@@ -31,7 +31,7 @@ public class Warnings {
     warnings.clear();
   }
 
-  public static String asString() {
+  public static synchronized String asString() {
     TreeSet<Warning> T = new TreeSet<Warning>();
     T.addAll(warnings);
     Iterator<Warning> it = T.iterator();
@@ -44,7 +44,7 @@ public class Warnings {
     return result.toString();
   }
 
-  public static Iterator<Warning> iterator() {
+  public static synchronized Iterator<Warning> iterator() {
     return warnings.iterator();
   }
 }
