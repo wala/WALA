@@ -14,7 +14,8 @@
 package com.ibm.wala.cast.java.translator.polyglot;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -2515,8 +2516,8 @@ public class PolyglotJava2CAstTranslator {
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
-      return getURL().openConnection().getInputStream();
+    public Reader getReader() throws IOException {
+      return new InputStreamReader(getURL().openConnection().getInputStream());
     }
   }
 

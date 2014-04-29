@@ -10,7 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.html;
 
-import java.io.InputStream;
+import java.io.Reader;
 import java.net.URL;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
@@ -29,6 +29,6 @@ public interface IHtmlParser {
      * @param fileName
      * @throws Error 
      */
-    public void parse(URL url, InputStream reader, IHtmlCallback callback, String fileName) throws Error;
+    public void parse(URL url, Reader reader, IHtmlCallback callback, String fileName) throws Error;
 
 }

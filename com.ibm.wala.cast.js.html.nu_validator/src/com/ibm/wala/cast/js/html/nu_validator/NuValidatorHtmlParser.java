@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.html.nu_validator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.LineNumberReader;
+import java.io.Reader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -41,7 +42,7 @@ import com.ibm.wala.util.collections.Pair;
 public class NuValidatorHtmlParser implements IHtmlParser {
 
   @Override
-  public void parse(final URL url, final InputStream reader, final IHtmlCallback handler, final String fileName) {
+  public void parse(final URL url, final Reader reader, final IHtmlCallback handler, final String fileName) {
     URL xx = null;
 	try {
 		xx = new URL("file://" + fileName);

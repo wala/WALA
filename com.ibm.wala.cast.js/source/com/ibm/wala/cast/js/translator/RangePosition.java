@@ -11,7 +11,8 @@
 package com.ibm.wala.cast.js.translator;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
 
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
@@ -78,7 +79,7 @@ public class RangePosition extends AbstractSourcePosition implements Position {
   }
 
   @Override
-  public InputStream getInputStream() throws IOException {
-    return url.openStream();
+  public Reader getReader() throws IOException {
+    return new InputStreamReader(url.openStream());
   }
 }

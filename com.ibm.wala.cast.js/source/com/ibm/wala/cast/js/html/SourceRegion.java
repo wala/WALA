@@ -11,9 +11,9 @@
 package com.ibm.wala.cast.js.html;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
-import java.io.StringBufferInputStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.net.URL;
 
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
@@ -38,7 +38,7 @@ public class SourceRegion {
 
   public void print(final String text, Position originalPos, URL url, boolean bogusURL){
     int startOffset = source.length();
-    source.append(text);
+    source.append(text);      
     int endOffset = source.length();
 
     int numberOfLineDrops = getNumberOfLineDrops(text);
@@ -48,8 +48,8 @@ public class SourceRegion {
       if (bogusURL) {
         map = new RangeFileMapping(startOffset, endOffset, currentLine, currentLine+numberOfLineDrops, originalPos, url) {
           @Override
-          public InputStream getInputStream() throws IOException {
-            return new StringBufferInputStream(text);
+          public Reader getInputStream() throws IOException {
+            return new StringReader(text);
           }
         }; 
       } else {

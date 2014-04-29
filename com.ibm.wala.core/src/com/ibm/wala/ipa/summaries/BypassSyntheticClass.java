@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.summaries;
 
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -259,7 +259,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   }
 
   @Override
-  public InputStream getSource() {
+  public Reader getSource() {
     return null;
   }
 

@@ -11,7 +11,7 @@
 package com.ibm.wala.cast.loader;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -175,18 +175,18 @@ public abstract class CAstAbstractLoader implements IClassLoader {
   }
   
   @Override
-  public InputStream getSource(IClass klass) {
+  public Reader getSource(IClass klass) {
     try {
-      return ((AstClass)klass).getSourcePosition().getInputStream();
+      return ((AstClass)klass).getSourcePosition().getReader();
     } catch (IOException e) {
       return null;
     }
   }
 
   @Override
-  public InputStream getSource(IMethod method, int bcOffset) {
+  public Reader getSource(IMethod method, int bcOffset) {
     try {
-      return ((AstMethod)method).getSourcePosition(bcOffset).getInputStream();
+      return ((AstMethod)method).getSourcePosition(bcOffset).getReader();
     } catch (IOException e) {
       return null;
     }
