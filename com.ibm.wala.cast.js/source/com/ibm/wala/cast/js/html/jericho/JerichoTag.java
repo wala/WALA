@@ -10,9 +10,9 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.html.jericho;
 
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
@@ -57,12 +57,14 @@ public class JerichoTag implements ITag {
 
 	      @Override
 	      public int getFirstCol() {
-	        return e.getSource().getRowColumnVector(e.getBegin()).getColumn();
+	        return -1;
+	        // return e.getSource().getRowColumnVector(e.getBegin()).getColumn();
 	      }
 
 	      @Override
 	      public int getLastCol() {
-	        return e.getSource().getRowColumnVector(e.getEnd()).getColumn();
+	        return -1;
+	        //return e.getSource().getRowColumnVector(e.getEnd()).getColumn();
 	      }
 
 	      @Override
@@ -85,8 +87,8 @@ public class JerichoTag implements ITag {
 	      }
 
 	      @Override
-	      public InputStream getInputStream() throws IOException {
-	        return new FileInputStream(sourceFile);
+	      public Reader getReader() throws IOException {
+	        return new FileReader(sourceFile);
 	      }
 	    };
 	  }
@@ -122,7 +124,7 @@ public class JerichoTag implements ITag {
 	public Pair<Integer, String> getBodyText() {
 		Segment content = innerElement.getContent();
 		Integer lineNum = innerElement.getSource().getRow(content.getBegin());
-		String body = content.toString();
+		String body = content.toString().replace(content.getSource().getNewLine(), "\n");
 		return Pair.make(lineNum, body);
 	}
 
