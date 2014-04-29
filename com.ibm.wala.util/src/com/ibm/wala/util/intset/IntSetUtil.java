@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
+import java.util.Iterator;
+import java.util.Set;
+
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
@@ -45,7 +48,16 @@ public class IntSetUtil {
 
   public static MutableIntSet make(int[] initial) {
 	    return defaultIntSetFactory.make(initial);
-	  }
+  }
+
+  public static IntSet make(Set<Integer> x) {
+    int[] vals = new int[ x.size() ];
+    Iterator<Integer> vs = x.iterator();
+    for(int i = 0; i < vals.length; i++) {
+      vals[i] = vs.next();
+    }
+    return make(vals);
+  }
 
   private final static boolean DEBUG = false;
 
@@ -250,4 +262,5 @@ public class IntSetUtil {
     assert ! x.hasNext();
     return result;
   }
+
 }
