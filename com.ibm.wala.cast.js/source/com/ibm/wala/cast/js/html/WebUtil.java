@@ -12,7 +12,8 @@ package com.ibm.wala.cast.js.html;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -59,12 +60,12 @@ public class WebUtil {
     System.err.println(extractScriptFromHTML(new URL(args[0]), Boolean.parseBoolean(args[1])));
   }
 
-  public static InputStream getStream(URL url) throws IOException {
+  public static Reader getStream(URL url) throws IOException {
     URLConnection conn = url.openConnection();
     conn.setDefaultUseCaches(false);
     conn.setUseCaches(false);
   
-    return conn.getInputStream();
+    return new InputStreamReader(conn.getInputStream());
   }
 }
 	

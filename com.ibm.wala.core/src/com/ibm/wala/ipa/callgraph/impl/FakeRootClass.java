@@ -11,6 +11,7 @@
 package com.ibm.wala.ipa.callgraph.impl;
 
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -276,7 +277,7 @@ public class FakeRootClass extends SyntheticClass {
   }
 
   @Override
-  public InputStream getSource() {
+  public Reader getSource() {
     return null;
   }
 }

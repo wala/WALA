@@ -15,6 +15,7 @@ import static com.ibm.wala.types.TypeName.ElementBits;
 import static com.ibm.wala.types.TypeName.PrimitiveMask;
 
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -365,7 +366,7 @@ public class ArrayClass implements IClass, Constants {
   }
 
   @Override
-  public InputStream getSource() {
+  public Reader getSource() {
     return null;
   }
 

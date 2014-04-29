@@ -11,7 +11,8 @@
 package com.ibm.wala.cast.tree.impl;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -76,8 +77,8 @@ public class CAstSourcePositionRecorder implements CAstSourcePositionMap {
 	@Override
   public URL getURL() { return url; }
 	@Override
-  public InputStream getInputStream() throws IOException { 
-	  return file.openConnection().getInputStream();
+  public Reader getReader() throws IOException { 
+	  return new InputStreamReader(file.openConnection().getInputStream());
 	}
 	@Override
   public String toString() {

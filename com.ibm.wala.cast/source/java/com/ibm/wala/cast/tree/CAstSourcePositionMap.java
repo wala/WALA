@@ -11,7 +11,7 @@
 package com.ibm.wala.cast.tree;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 import java.net.URL;
 import java.util.Iterator;
 
@@ -43,7 +43,7 @@ public interface CAstSourcePositionMap {
     int getFirstOffset();
     int getLastOffset(); 
     URL getURL();
-    InputStream getInputStream() throws IOException;
+    Reader getReader() throws IOException;
   }
 
   /** 

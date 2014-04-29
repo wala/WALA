@@ -13,6 +13,7 @@ package com.ibm.wala.classLoader;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -81,7 +82,7 @@ public interface IClassLoader {
    * @return input stream representing the source file for a given bytecode index of a given method,
    * or null if not available
    */
-  public abstract InputStream getSource(IMethod method, int offset);
+  public abstract Reader getSource(IMethod method, int offset);
   
   /**
    * @param klass the class for which information is desired.
@@ -104,7 +105,7 @@ public interface IClassLoader {
    * will be recorded.
    * SJF .. we should think about this deprecation.  postponing deprecation for now.  
    */
-  public abstract InputStream getSource(IClass klass) throws NoSuchElementException;
+  public abstract Reader getSource(IClass klass) throws NoSuchElementException;
 
   /**
    * @return the parent IClassLoader, if any, or null

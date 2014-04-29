@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -164,7 +164,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   }
 
   @Override
-  public InputStream getSource() {
+  public Reader getSource() {
     return loader.getSource(this);
   }
 
