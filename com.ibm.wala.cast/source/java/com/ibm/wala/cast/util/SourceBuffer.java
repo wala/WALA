@@ -12,8 +12,8 @@ package com.ibm.wala.cast.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class SourceBuffer {
   public SourceBuffer(Position p) throws IOException {
     this.p = p;
 
-    BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+    BufferedReader reader = new BufferedReader(p.getReader());
     
     String currentLine = null;
     List<String> lines = new ArrayList<String>();
@@ -48,7 +48,13 @@ public class SourceBuffer {
       if (p.getFirstOffset() == offset) {
         lines.add("\n");
       } else {
-        lines.add(currentLine.substring(p.getFirstOffset() - (offset-currentLine.length()-1)));
+        int startOffset = p.getFirstOffset() - (offset-currentLine.length()-1);
+        if (offset > p.getLastOffset()) {
+          int endOffset = p.getLastOffset() - (offset-currentLine.length()-1);
+          lines.add(currentLine.substring(startOffset, endOffset));
+        } else {
+          lines.add(currentLine.substring(startOffset));
+        }
       }
     } else {
       lines.add(currentLine.substring(p.getFirstCol()));
@@ -136,8 +142,8 @@ public class SourceBuffer {
 	@Override
   public URL getURL() { return hack.getURL(); }
 	@Override
-  public InputStream getInputStream() throws IOException { 
-	  return hack.getInputStream();
+  public Reader getReader() throws IOException { 
+	  return hack.getReader();
 	}
       };
     }
