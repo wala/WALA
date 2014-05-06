@@ -68,13 +68,15 @@ public final class NullPointerAnalysis {
   public static InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock>
   computeInterprocAnalysis(final CallGraph cg, final IProgressMonitor progress)
       throws WalaException, UnsoundGraphException, CancelException {
-    return computeInterprocAnalysis(DEFAULT_IGNORE_EXCEPTIONS, cg, progress);
+    return computeInterprocAnalysis(DEFAULT_IGNORE_EXCEPTIONS, cg, null, progress);
   }
   
   public static InterprocAnalysisResult<SSAInstruction, IExplodedBasicBlock>
-  computeInterprocAnalysis(final TypeReference[] ignoredExceptions, final CallGraph cg, final IProgressMonitor progress)
+  computeInterprocAnalysis(final TypeReference[] ignoredExceptions, final CallGraph cg,
+      final MethodState defaultExceptionMethodState, final IProgressMonitor progress)
       throws WalaException, UnsoundGraphException, CancelException {
-    final InterprocNullPointerAnalysis inpa = InterprocNullPointerAnalysis.compute(ignoredExceptions, cg, progress);
+    final InterprocNullPointerAnalysis inpa = InterprocNullPointerAnalysis.compute(ignoredExceptions, cg,
+        defaultExceptionMethodState, progress);
 
     return inpa.getResult();
   }

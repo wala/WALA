@@ -51,18 +51,21 @@ public final class InterprocNullPointerAnalysis {
 
   private CallGraph cgFiltered = null;
   private final TypeReference[] ignoredExceptions;
+  private final MethodState defaultMethodState;
   private final Map<CGNode, IntraprocAnalysisState> states;
 
   public static InterprocNullPointerAnalysis compute(final TypeReference[] ignoredExceptions, final CallGraph cg,
-      final IProgressMonitor progress) throws WalaException, UnsoundGraphException, CancelException {
-    final InterprocNullPointerAnalysis inpa = new InterprocNullPointerAnalysis(ignoredExceptions);
+      final MethodState defaultMethodState, final IProgressMonitor progress)
+          throws WalaException, UnsoundGraphException, CancelException {
+    final InterprocNullPointerAnalysis inpa = new InterprocNullPointerAnalysis(ignoredExceptions, defaultMethodState);
     inpa.run(cg, progress);
     
     return inpa;
   }
   
-  private InterprocNullPointerAnalysis(final TypeReference[] ignoredExceptions) {
+  private InterprocNullPointerAnalysis(final TypeReference[] ignoredExceptions, final MethodState defaultMethodState) {
     this.ignoredExceptions = ignoredExceptions;
+    this.defaultMethodState = defaultMethodState;
     this.states = new HashMap<CGNode, IntraprocAnalysisState>();
   }
 
@@ -127,7 +130,9 @@ public final class InterprocNullPointerAnalysis {
       final IProgressMonitor progress) throws UnsoundGraphException, CancelException {
     final IR ir = startNode.getIR();
     if (!AnalysisUtil.isFakeRoot(startNode) && !(ir == null || ir.isEmptyIR())) {
-      final MethodState mState = new InterprocMethodState(startNode, cgFiltered, states);
+      final MethodState ims =  new InterprocMethodState(startNode, cgFiltered, states);
+      final MethodState mState = (defaultMethodState != null
+          ? new DelegatingMethodState(defaultMethodState, ims) : ims);
 
       // run intraprocedural part again with invoke exception info
       final ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intra2 = 
@@ -158,7 +163,7 @@ public final class InterprocNullPointerAnalysis {
       states.put(startNode, new IntraprocAnalysisState());
     } else {
       final ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> intra = 
-          NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ignoredExceptions, ir, paramState, null);
+          NullPointerAnalysis.createIntraproceduralExplodedCFGAnalysis(ignoredExceptions, ir, paramState, defaultMethodState);
       final int deletedEdges = intra.compute(progress);
       // Analyze the method with intraprocedural scope
       final ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> cfg = intra.getCFG();
