@@ -93,6 +93,7 @@ public class ParameterState extends AbstractVariable<ParameterState> {
     return (state == null ? State.UNKNOWN : state);
   }
 
+  @Override
   public void copyState(ParameterState v) {
     throw new UnsupportedOperationException();
   }

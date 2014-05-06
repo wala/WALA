@@ -102,10 +102,12 @@ final class IntraprocAnalysisState implements ExceptionPruningAnalysis<SSAInstru
     }
   }
 
+  @Override
   public int compute(IProgressMonitor progress) throws UnsoundGraphException, CancelException {
     return deletedEdges;
   }
   
+  @Override
   public NullPointerState getState(final IExplodedBasicBlock block) {
     if (noAnalysisPossible) {
       throw new IllegalStateException();
@@ -139,6 +141,7 @@ final class IntraprocAnalysisState implements ExceptionPruningAnalysis<SSAInstru
    * 
    * @return the CFG or null if there is no CFG for the CGNode.
    */
+  @Override
   public ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> getCFG() {
     return (noAnalysisPossible ? null : this.cfg);
   }
@@ -151,6 +154,7 @@ final class IntraprocAnalysisState implements ExceptionPruningAnalysis<SSAInstru
     this.throwsException = throwsException;
   }
 
+  @Override
   public boolean hasExceptions() {
     return throwsException;
   }

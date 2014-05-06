@@ -47,6 +47,7 @@ class NullPointerFrameWork<T extends ISSABasicBlock> implements IKilldallFramewo
   /* (non-Javadoc)
    * @see com.ibm.wala.dataflow.graph.IKilldallFramework#getFlowGraph()
    */
+  @Override
   public Graph<T> getFlowGraph() {
     return flow;
   }
@@ -54,6 +55,7 @@ class NullPointerFrameWork<T extends ISSABasicBlock> implements IKilldallFramewo
   /* (non-Javadoc)
    * @see com.ibm.wala.dataflow.graph.IKilldallFramework#getTransferFunctionProvider()
    */
+  @Override
   public NullPointerTransferFunctionProvider<T> getTransferFunctionProvider() {
     return transferFunct;
   }

@@ -99,6 +99,7 @@ public class NullPointerState extends AbstractVariable<NullPointerState> {
   /* (non-Javadoc)
    * @see com.ibm.wala.fixpoint.IVariable#copyState(com.ibm.wala.fixpoint.IVariable)
    */
+  @Override
   public void copyState(NullPointerState v) {
     assert v.vars.length == vars.length;
     

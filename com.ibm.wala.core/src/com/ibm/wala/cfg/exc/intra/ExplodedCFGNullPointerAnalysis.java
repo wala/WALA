@@ -37,6 +37,7 @@ public class ExplodedCFGNullPointerAnalysis implements ExceptionPruningAnalysis<
   /*
    * @see com.ibm.wala.cfg.exc.ExceptionPrunedCFGAnalysis#compute(com.ibm.wala.util.MonitorUtil.IProgressMonitor)
    */
+  @Override
   public int compute(IProgressMonitor progress) throws UnsoundGraphException, CancelException {
     ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> orig = ExplodedControlFlowGraph.make(ir);
 
@@ -49,6 +50,7 @@ public class ExplodedCFGNullPointerAnalysis implements ExceptionPruningAnalysis<
   /* (non-Javadoc)
    * @see jsdg.exceptions.ExceptionPrunedCFGAnalysis#getCFG()
    */
+  @Override
   public ControlFlowGraph<SSAInstruction, IExplodedBasicBlock> getCFG() {
     if (intra == null) {
       throw new IllegalStateException("Run compute(IProgressMonitor) first.");
@@ -60,6 +62,7 @@ public class ExplodedCFGNullPointerAnalysis implements ExceptionPruningAnalysis<
   /* (non-Javadoc)
    * @see edu.kit.ipd.wala.ExceptionPrunedCFGAnalysis#hasExceptions()
    */
+  @Override
   public boolean hasExceptions() {
     if (intra == null) {
       throw new IllegalStateException("Run compute(IProgressMonitor) first.");
@@ -80,6 +83,7 @@ public class ExplodedCFGNullPointerAnalysis implements ExceptionPruningAnalysis<
     return hasException;
   }
 
+  @Override
   public NullPointerState getState(IExplodedBasicBlock bb) {
     if (intra == null) {
       throw new IllegalStateException("Run compute(IProgressMonitor) first.");

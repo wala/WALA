@@ -22,6 +22,7 @@ public class NegativeGraphFilter<T extends IBasicBlock<?>> implements EdgeFilter
   /* (non-Javadoc)
    * @see com.ibm.wala.ipa.cfg.EdgeFilter#hasExceptionalEdge(com.ibm.wala.cfg.IBasicBlock, com.ibm.wala.cfg.IBasicBlock)
    */
+  @Override
   public boolean hasExceptionalEdge(T src, T dst) {
     return !deleted.hasEdge(src, dst);
   }
@@ -29,6 +30,7 @@ public class NegativeGraphFilter<T extends IBasicBlock<?>> implements EdgeFilter
   /* (non-Javadoc)
    * @see com.ibm.wala.ipa.cfg.EdgeFilter#hasNormalEdge(com.ibm.wala.cfg.IBasicBlock, com.ibm.wala.cfg.IBasicBlock)
    */
+  @Override
   public boolean hasNormalEdge(T src, T dst) {
     return !deleted.hasEdge(src, dst);
   }

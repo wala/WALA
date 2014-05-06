@@ -27,6 +27,7 @@ class InterprocAnalysisResultWrapper implements InterprocAnalysisResult<SSAInstr
     this.map = map;
   }
   
+  @Override
   public ExceptionPruningAnalysis<SSAInstruction, IExplodedBasicBlock> getResult(final CGNode n) {
     if (!containsResult(n)) {
       return null;
@@ -35,6 +36,7 @@ class InterprocAnalysisResultWrapper implements InterprocAnalysisResult<SSAInstr
     return map.get(n);
   }
 
+  @Override
   public boolean containsResult(final CGNode n) {
     return map.containsKey(n) && map.get(n).canBeAnalyzed();
   }

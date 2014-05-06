@@ -46,15 +46,18 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
     return mutable;
   }
 
+  @Override
   public T entry() {
     return orig.entry();
   }
 
+  @Override
   public T exit() {
     return orig.exit();
   }
 
   // slow
+  @Override
   public BitVector getCatchBlocks() {
     final BitVector bvOrig = orig.getCatchBlocks();
     final BitVector bvThis = new BitVector();
@@ -68,24 +71,29 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
     return bvThis;
   }
 
+  @Override
   public T getBlockForInstruction(int index) {
     final T block =  orig.getBlockForInstruction(index);
     
     return (containsNode(block) ? block : null);
   }
 
+  @Override
   public X[] getInstructions() {
     return orig.getInstructions();
   }
 
+  @Override
   public int getProgramCounter(int index) {
     return orig.getProgramCounter(index);
   }
 
+  @Override
   public IMethod getMethod() {
     return orig.getMethod();
   }
 
+  @Override
   public List<T> getExceptionalSuccessors(T b) {
     final List<T> origSucc = orig.getExceptionalSuccessors(b);
     final IntSet allSuccs = this.getSuccNodeNumbers(b);
@@ -100,6 +108,7 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
     return thisSuccs;
   }
 
+  @Override
   public Collection<T> getNormalSuccessors(T b) {
     final List<T> excSuccs = getExceptionalSuccessors(b);
     final List<T> thisSuccs = new LinkedList<T>();
@@ -115,6 +124,7 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
     return thisSuccs;
   }
 
+  @Override
   public Collection<T> getExceptionalPredecessors(T b) {
     final Collection<T> origPreds = orig.getExceptionalPredecessors(b);
     final IntSet allPreds = this.getPredNodeNumbers(b);
@@ -129,6 +139,7 @@ public class MutableCFG<X, T extends IBasicBlock<X>> extends SparseNumberedGraph
     return thisPreds;
   }
 
+  @Override
   public Collection<T> getNormalPredecessors(T b) {
     final Collection<T> excPreds = getExceptionalPredecessors(b);
     final List<T> thisPreds = new LinkedList<T>();
