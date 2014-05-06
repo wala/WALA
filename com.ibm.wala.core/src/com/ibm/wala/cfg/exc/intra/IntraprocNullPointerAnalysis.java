@@ -124,45 +124,29 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
         pruned = cfg;
       } else {
         final List<T> catched = searchNodesWithPathToCatchAll(cfg);
-        NullPointerFrameWork<T> problem = new NullPointerFrameWork<T>(cfg, ir);
-        int[] paramValNum = ir.getParameterValueNumbers();
+        final NullPointerFrameWork<T> problem = new NullPointerFrameWork<T>(cfg, ir);
+        final int[] paramValNum = ir.getParameterValueNumbers();
       
         solver = new NullPointerSolver<T>(problem, maxVarNum, paramValNum, initialState);
         
-        if (solver.solve(progress)) {
-          // we were able to remove some exceptions
-          Graph<T> deleted = createDeletedGraph(solver);
-          
-          for (final T ch : catched) {
-            deleted.addNode(ch);
-            deleted.addNode(cfg.exit());
-            deleted.addEdge(ch, cfg.exit());
-          }
-          
-          for (T node : deleted) {
-            deletedEdges += deleted.getSuccNodeCount(node);
-          }
-          NegativeGraphFilter<T> filter = new NegativeGraphFilter<T>(deleted);
-          
-          pruned = PrunedCFG.make(cfg, filter);
-        } else if (!catched.isEmpty()) {
-          Graph<T> deleted = new SparseNumberedGraph<T>();
-
-          for (final T ch : catched) {
-            deleted.addNode(ch);
-            deleted.addNode(cfg.exit());
-            deleted.addEdge(ch, cfg.exit());
-          }
-          
-          for (T node : deleted) {
-            deletedEdges += deleted.getSuccNodeCount(node);
-          }
-          NegativeGraphFilter<T> filter = new NegativeGraphFilter<T>(deleted);
-          
-          pruned = PrunedCFG.make(cfg, filter);
-        } else {
-          pruned = cfg;
+        solver.solve(progress);
+        
+        final Graph<T> deleted = createDeletedGraph(solver);
+        
+        for (final T ch : catched) {
+          deleted.addNode(ch);
+          deleted.addNode(cfg.exit());
+          deleted.addEdge(ch, cfg.exit());
         }
+        
+        for (T node : deleted) {
+          deletedEdges += deleted.getSuccNodeCount(node);
+        }
+        final NegativeGraphFilter<T> filter = new NegativeGraphFilter<T>(deleted);
+        
+        final PrunedCFG<SSAInstruction, T> newCfg = PrunedCFG.make(cfg, filter);
+
+        pruned = newCfg;
       }
     }
   }
