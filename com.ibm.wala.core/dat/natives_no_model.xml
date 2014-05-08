@@ -64,6 +64,8 @@
 				<method name="readBytes" descriptor="([BII)I">
 					<constant name="yes" type="int" value="1" />
 					<constant name="no" type="int" value="0" />
+					<constant name="the-answer" type="int" value="42"/>
+					<aastore ref="arg1" index="no" value="the-answer"/>
 					<return value="yes" />
 					<return value="no" />
 					<new def="x" class="Ljava/io/IOException" />
