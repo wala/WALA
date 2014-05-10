@@ -12,6 +12,7 @@
 package com.ibm.wala.classLoader;
 
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 
@@ -120,7 +121,7 @@ public interface IClass extends IClassHierarchyDweller {
    * specific, and will change in the future.   In place of this API, use the APIs in IClassLoader.  
    * SJF .. we should think about this deprecation.  postponing deprecation for now.    
    */
-  InputStream getSource() throws NoSuchElementException;
+  Reader getSource() throws NoSuchElementException;
 
   /**
    * @return the method that is this class's initializer, or null if none

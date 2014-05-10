@@ -12,6 +12,7 @@ package com.ibm.wala.ipa.summaries;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -195,7 +196,7 @@ public class BypassSyntheticClassLoader implements IClassLoader {
   }
 
   @Override
-  public InputStream getSource(IClass klass) {
+  public Reader getSource(IClass klass) {
     return null;
   }
 
@@ -205,7 +206,7 @@ public class BypassSyntheticClassLoader implements IClassLoader {
   }
 
   @Override
-  public InputStream getSource(IMethod method, int offset) {
+  public Reader getSource(IMethod method, int offset) {
     return null;
   }
 

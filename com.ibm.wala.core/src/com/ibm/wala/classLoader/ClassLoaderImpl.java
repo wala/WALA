@@ -17,6 +17,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -676,7 +678,7 @@ public class ClassLoaderImpl implements IClassLoader {
   }
 
   @Override
-  public InputStream getSource(IMethod method, int offset) {
+  public Reader getSource(IMethod method, int offset) {
     return getSource(method.getDeclaringClass());
   }
 
@@ -686,12 +688,12 @@ public class ClassLoaderImpl implements IClassLoader {
   }
 
   @Override
-  public InputStream getSource(IClass klass) {
+  public Reader getSource(IClass klass) {
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");
     }
     ModuleEntry e = sourceMap.get(klass.getName());
-    return e == null ? null : e.getInputStream();
+    return e == null ? null : new InputStreamReader(e.getInputStream());
   }
 
   /*

@@ -14,8 +14,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
@@ -232,9 +233,9 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
         return;
       }
 
-      InputStream scriptInputStream;
+      Reader scriptInputStream;
       try {
-         scriptInputStream = scriptSrc.openConnection().getInputStream();
+         scriptInputStream = new InputStreamReader(scriptSrc.openConnection().getInputStream());
       } catch (Exception e) {
         //it looks like this happens when we can't resolve the url?
         if (DEBUG) {
@@ -248,7 +249,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       BufferedReader scriptReader = null;
       try {
         String line;
-        scriptReader = new BufferedReader(new UnicodeReader(scriptInputStream, "UTF8"));
+        scriptReader = new BufferedReader(scriptInputStream);
         StringBuffer x = new StringBuffer();
         while ((line = scriptReader.readLine()) != null) {
           x.append(line).append("\n");
@@ -299,7 +300,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
   public Set<MappedSourceModule> extractSources(URL entrypointUrl, IHtmlParser htmlParser, IUrlResolver urlResolver)
   throws IOException, Error {
 
-    InputStream inputStreamReader = WebUtil.getStream(entrypointUrl);
+    Reader inputStreamReader = WebUtil.getStream(entrypointUrl);
     IGeneratorCallback htmlCallback = createHtmlCallback(entrypointUrl, urlResolver); 
     htmlParser.parse(entrypointUrl, inputStreamReader, htmlCallback, entrypointUrl.getFile());
 

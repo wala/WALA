@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.loader;
 
 import java.io.InputStream;
+import java.io.Reader;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
@@ -105,7 +106,7 @@ abstract public class AstClass implements IClass, ClassConstants {
   }
 
   @Override
-  public InputStream getSource() {
+  public Reader getSource() {
     return null;
   }
 
