@@ -98,7 +98,12 @@
 					descriptor="(Ljava/lang/String;)V">
 				</method>
 				<method name="write" descriptor="(I)V"></method>
-				<method name="writeBytes" descriptor="([BII)V"></method>
+				<method name="writeBytes" descriptor="([BIIZ)V">
+					<constant name="the-answer" type="byte" value="42"/>
+					<aastore ref="arg1" index="arg2" value="the-answer"/>
+					<new def="x" class="Ljava/io/IOException" />
+					<throw value="x" />
+				</method>
 			</class>
 			<class name="ObjectOutputStream">
 				<method name="doublesToBytes" descriptor="([DI[BII)V"
