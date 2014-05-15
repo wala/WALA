@@ -36,6 +36,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.shrikeBT.BytecodeConstants;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.ConstantValue;
+import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -116,6 +117,10 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
   private final static int E_CONSTANT = 14;
 
+  /** BEGIN Custom change: Support also array-load instructions */
+  private final static int E_AALOAD = 15;
+  /** END Custom change: Support also array-load instructions */
+
   private final static Map<String, Integer> elementMap = HashMapFactory.make(14);
   static {
     elementMap.put("classloader", new Integer(E_CLASSLOADER));
@@ -133,6 +138,9 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     elementMap.put("getfield", new Integer(E_GETFIELD));
     elementMap.put("throw", new Integer(E_ATHROW));
     elementMap.put("constant", new Integer(E_CONSTANT));
+    /** BEGIN Custom change: Support also array-load instructions */
+    elementMap.put("aaload", new Integer(E_AALOAD));
+    /** END Custom change: Support also array-load instructions */
   }
 
   //
@@ -328,6 +336,11 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       case E_AASTORE:
         processAastore(atts);
         break;
+      /** BEGIN Custom change: Support also array-load instructions */
+      case E_AALOAD:
+        processAaload(atts);
+        break;
+      /** END Custom change: Support also array-load instructions */
       case E_RETURN:
         processReturn(atts);
         break;
@@ -387,6 +400,9 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       case E_POISON:
       case E_PUTSTATIC:
       case E_PUTFIELD:
+        /** BEGIN Custom change: Support also array-load instructions */
+      case E_AALOAD:
+        /** END Custom change: Support also array-load instructions */
       case E_AASTORE:
       case E_ATHROW:
       case E_SUMMARY_SPEC:
@@ -713,7 +729,46 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
           TypeReference.JavaLangObject);
       governingMethod.addStatement(S);
     }
+    /** BEGIN Custom change: Support also array-load instructions */
+    /**
+     * Process an element indicating an Aaload
+     * 
+     * @param atts
+     */
+    private void processAaload(Attributes atts) {
+      //<aaload def="foo" ref="arg1" index="the-answer" />
+      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      SSAInstructionFactory insts = lang.instructionFactory();
 
+      String R = atts.getValue(A_REF);
+      if (R == null) {
+        Assertions.UNREACHABLE("Must specify ref for aaload " + governingMethod);
+      }
+      Integer refNumber = symbolTable.get(R);
+      if (refNumber == null) {
+        Assertions.UNREACHABLE("Cannot lookup value: " + R);
+      }
+      // N.B: we currently ignore the index
+      String I = atts.getValue(A_INDEX);
+      if (I == null) {
+        Assertions.UNREACHABLE("Must specify index for aaload " + governingMethod);
+      }
+      
+   // get the value def'fed
+      String defVar = atts.getValue(A_DEF);
+      if (symbolTable.keySet().contains(defVar)) {
+        Assertions.UNREACHABLE("Cannot def variable twice: " + defVar + " in " + governingMethod);
+      }
+      if (defVar == null) {
+        Assertions.UNREACHABLE("Must specify def for getfield " + governingMethod);
+      }
+      int defNum = nextLocal;
+      symbolTable.put(defVar, new Integer(nextLocal++));
+      SSAArrayLoadInstruction S = insts.ArrayLoadInstruction(governingMethod.getNumberOfStatements(), defNum, refNumber.intValue(), 0,
+          TypeReference.JavaLangObject);
+      governingMethod.addStatement(S);
+    }
+    /** END Custom change: Support also array-load instructions */
     /**
      * Process an element indicating a return statement.
      * 
