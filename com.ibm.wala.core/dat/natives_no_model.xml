@@ -100,7 +100,9 @@
 				<method name="write" descriptor="(I)V"></method>
 				<method name="writeBytes" descriptor="([BIIZ)V">
 					<constant name="the-answer" type="byte" value="42"/>
-					<aastore ref="arg1" index="arg2" value="the-answer"/>
+					<aaload def="foo" ref="arg1" index="the-answer" />
+					<putfield class="Ljava/io/FileOutputStream" field="realWorld"
+						fieldType="I" value="foo" ref="arg0" />
 					<new def="x" class="Ljava/io/IOException" />
 					<throw value="x" />
 				</method>
