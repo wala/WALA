@@ -664,7 +664,16 @@
 			<class name="SocketInputStream">
 				<method name="init" descriptor="()V" static="true" />
 				<method name="socketRead0"
-					descriptor="(Ljava/io/FileDescriptor;[BIII)I" />
+					descriptor="(Ljava/io/FileDescriptor;[BIII)I">
+					<constant name="yes" type="int" value="1" />
+					<constant name="no" type="int" value="0" />
+					<constant name="the-answer" type="byte" value="42"/>
+					<aastore ref="arg2" index="no" value="the-answer"/>
+					<return value="yes" />
+					<return value="no" />
+					<new def="x" class="Ljava/io/IOException" />
+					<throw value="x" />
+				</method>
 			</class>
 			<class name="SocketOutputStream">
 				<method name="init" descriptor="()V" static="true" />
