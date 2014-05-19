@@ -1,6 +1,6 @@
 # About WALA
 
-This is a fork of the program analysis framework WALA. The original framework can be found at <a href="http://wala.sourceforge.net">wala.sourceforge.net</a> and <a href="https://github.com/msridhar/WALA">github.com/msridhar/WALA</a>.
+This is a fork of the program analysis framework WALA. The original framework can be found at <a href="http://wala.sourceforge.net">wala.sourceforge.net</a> and <a href="https://github.com/wala/WALA">github.com/wala/WALA</a>.
 
 This version is tailored for the information flow control framework JOANA. See <a href="http://joana.ipd.kit.edu">joana.ipd.kit.edu</a> and <a href="https://github.com/jgf/joana">github.com/jgf/joana</a> for details.
 
