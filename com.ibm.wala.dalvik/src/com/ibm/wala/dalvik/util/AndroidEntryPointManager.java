@@ -31,46 +31,36 @@
  */
 package com.ibm.wala.dalvik.util;
 
-import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior;
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.DefaultInstantiationBehavior;
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.AbstractAndroidModel;
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.LoopAndroidModel;
-
-import com.ibm.wala.ipa.cha.IClassHierarchy;
-
-import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.types.TypeName;
-
-import com.ibm.wala.util.ssa.SSAValueManager;
-
-import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
-import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
-
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent;
-import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.types.TypeReference;
-
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.strings.StringStuff;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
-import com.ibm.wala.util.collections.HashMapFactory;
-
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
-import java.lang.Class;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.DefaultInstantiationBehavior;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.AbstractAndroidModel;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.LoopAndroidModel;
+import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
+import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent;
+import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.ssa.SSAValueManager;
+import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
+import com.ibm.wala.util.strings.StringStuff;
 
 /**
  *  Model configuration and Global list of entrypoints.

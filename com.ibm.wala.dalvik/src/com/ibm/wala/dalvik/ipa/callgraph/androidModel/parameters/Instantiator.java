@@ -43,13 +43,13 @@ import com.ibm.wala.types.MethodReference;
 
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
+import com.ibm.wala.util.ssa.ParameterAccessor;
 import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
 import com.ibm.wala.util.ssa.SSAValueManager;
 import com.ibm.wala.util.ssa.SSAValue;
 import com.ibm.wala.util.ssa.SSAValue.VariableKey;
 import com.ibm.wala.util.ssa.SSAValue.TypeKey;
 import com.ibm.wala.util.ssa.SSAValue.UniqueKey;
-import com.ibm.wala.util.ssa.ParameterAccessor;
 import com.ibm.wala.ssa.ConstantValue;
 
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;

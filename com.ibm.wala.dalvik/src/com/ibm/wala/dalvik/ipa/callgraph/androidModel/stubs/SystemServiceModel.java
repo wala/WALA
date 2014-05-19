@@ -60,11 +60,11 @@ import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.Instantiator;
+import com.ibm.wala.util.ssa.ParameterAccessor;
 import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
-import com.ibm.wala.util.ssa.ParameterAccessor.Parameter;
 import com.ibm.wala.util.ssa.SSAValue;
 import com.ibm.wala.util.ssa.SSAValueManager;
-import com.ibm.wala.util.ssa.ParameterAccessor;
+import com.ibm.wala.util.ssa.ParameterAccessor.Parameter;
 
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;

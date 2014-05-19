@@ -37,6 +37,11 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.types.Selector;
+import com.ibm.wala.util.PrimitiveAssignability;
+import com.ibm.wala.util.ssa.ClassLookupException;
+import com.ibm.wala.util.ssa.IInstantiator;
+import com.ibm.wala.util.ssa.SSAValue;
+import com.ibm.wala.util.ssa.SSAValue.NamedKey;
 import com.ibm.wala.util.ssa.SSAValue.VariableKey;
 import com.ibm.wala.util.ssa.SSAValue.WeaklyNamedKey;
 
@@ -51,7 +56,6 @@ import java.util.Set;
 import java.util.HashSet;
 
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.PrimitiveAssignability;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

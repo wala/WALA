@@ -34,10 +34,6 @@ package com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModel;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior.InstanceBehavior;
-import com.ibm.wala.util.ssa.ParameterAccessor;
-import com.ibm.wala.util.ssa.ParameterAccessor.Parameter;
-import com.ibm.wala.util.ssa.ParameterAccessor.ParamerterDisposition;
-import com.ibm.wala.util.ssa.ParameterAccessor.BasedOn;
 
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.types.TypeName;
@@ -58,6 +54,11 @@ import java.util.SortedSet;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import com.ibm.wala.util.ssa.ParameterAccessor;
+import com.ibm.wala.util.ssa.ParameterAccessor.BasedOn;
+import com.ibm.wala.util.ssa.ParameterAccessor.ParamerterDisposition;
+import com.ibm.wala.util.ssa.ParameterAccessor.Parameter;
 import com.ibm.wala.util.strings.Atom;
 
 import org.slf4j.Logger;

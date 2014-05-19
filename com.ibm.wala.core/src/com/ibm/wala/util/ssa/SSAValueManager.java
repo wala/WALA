@@ -31,24 +31,21 @@
  */
 package com.ibm.wala.util.ssa;
 
-import com.ibm.wala.util.ssa.SSAValue;
-import com.ibm.wala.util.ssa.SSAValue.VariableKey;
-import com.ibm.wala.util.ssa.SSAValue.NamedKey;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.ssa.SSAValue.NamedKey;
+import com.ibm.wala.util.ssa.SSAValue.VariableKey;
 import com.ibm.wala.util.strings.Atom;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.helpers.NOPLogger;
 /**
  *  Manage SSA-Variables in synthetic methods.
  *

@@ -44,7 +44,7 @@ import com.ibm.wala.types.MethodReference;
  *  Use ParameterAccessor to get the parameters of a function as SSAValues.
  *
  *  @see    com.ibm.wala.util.ssa.TypeSafeInstructionFactory
- *  @see    com.ibm.wala.util.ssa.ParameterAccessor
+ *  @see    com.ibm.wala.util.ParameterAccessor
  *
  *  @author Tobias Blaschke <code@tobiasblaschke.de>
  *  @since  2013-10-20

@@ -46,6 +46,7 @@ import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModelClass;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.MiniModel;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StarterFlags;
 
+import com.ibm.wala.util.ssa.ParameterAccessor;
 import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.Instantiator;
 import com.ibm.wala.util.ssa.SSAValueManager;
@@ -81,9 +82,8 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ssa.SSAOptions;
 
-import com.ibm.wala.util.ssa.ParameterAccessor;
-import com.ibm.wala.util.ssa.ParameterAccessor.Parameter;
 import com.ibm.wala.util.ssa.SSAValue;
+import com.ibm.wala.util.ssa.ParameterAccessor.Parameter;
 
 import java.util.Collection;
 import java.util.Collections;
