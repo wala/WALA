@@ -43,7 +43,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.jar.JarFile;
+import java.io.FileInputStream;
 
+import com.ibm.wala.util.io.FileSuffixes;
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.dalvik.classLoader.DexFileModule;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -63,20 +65,21 @@ public class DexAnalysisScopeReader extends AnalysisScopeReader {
 	private static final ClassLoader WALA_CLASSLOADER = AnalysisScopeReader.class
 			.getClassLoader();
 
-	private static final String BASIC_FILE = /**"conf" + File.separator
-			+ */"primordial.txt";
+/** BEGIN Custom change: Fixes in AndroidAnalysisScope */
+	//private static final String BASIC_FILE = "conf" + File.separator+ "primordial.txt";
+	private static final String BASIC_FILE = "./primordial.txt"; // Path inside jar
+/** END Custom change: Fixes in AndroidAnalysisScope */
 
-	
-	
 	public static AnalysisScope makeAndroidBinaryAnalysisScope(String classPath, String exclusions) throws IOException {
 		if (classPath == null) {
 			throw new IllegalArgumentException("classPath null");
 		}
-		
+/** BEGIN Custom change: Fixes in AndroidAnalysisScope */		
 		AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
 		//AnalysisScope scope = AnalysisScopeReader.makePrimordialScope(null);
 		scope.setExclusions(new FileOfClasses(new ByteArrayInputStream(exclusions.getBytes())));
 		ClassLoaderReference loader = scope.getLoader(AnalysisScope.APPLICATION);
+/** END Custom change: Fixes in AndroidAnalysisScope */        
 		addClassPathToScope(classPath, scope, loader);
 		return scope;
 	}
@@ -94,10 +97,11 @@ public class DexAnalysisScopeReader extends AnalysisScopeReader {
 		if (classPath == null) {
 			throw new IllegalArgumentException("classPath null");
 		}
-		AnalysisScope scope = AnalysisScopeReader.readJavaScope(BASIC_FILE,
-				exclusionsFile, WALA_CLASSLOADER);
-		ClassLoaderReference loader = scope
-				.getLoader(AnalysisScope.APPLICATION);
+/** BEGIN Custom change: Fixes in AndroidAnalysisScope */        
+        AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
+        scope.setExclusions(new FileOfClasses(new FileInputStream(exclusionsFile)));
+		ClassLoaderReference loader = scope.getLoader(AnalysisScope.APPLICATION);
+/** END Custom change: Fixes in AndroidAnalysisScope */        
 		addClassPathToScope(classPath, scope, loader);
 		return scope;
 	}
@@ -120,10 +124,9 @@ public class DexAnalysisScopeReader extends AnalysisScopeReader {
 		if (classPath == null) {
 			throw new IllegalArgumentException("classPath null");
 		}
-		AnalysisScope scope = AnalysisScopeReader.readJavaScope(BASIC_FILE,
-				exclusionsFile, WALA_CLASSLOADER);
-		ClassLoaderReference loader = scope
-				.getLoader(AnalysisScope.APPLICATION);
+		AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
+        scope.setExclusions(new FileOfClasses(new FileInputStream(exclusionsFile)));
+		ClassLoaderReference loader = scope.getLoader(AnalysisScope.APPLICATION);
 
 		final String path = classPath.getPath();
 		if (path.endsWith(".jar")) {

@@ -114,7 +114,8 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
 
   @Override
   public int getReturnValue(int i) {
-    assert i == 0 && result != -1;
+    assert i == 0 : "i != 0";
+    assert (result != -1) : "SSA-Result is -1";
     return result;
   }
 
@@ -126,8 +127,11 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
     if (params == null) {
       assert false : "Invalid getUse: " + j + " , null params " + this;
     }
-    if (params.length <= j) {
-      assert params.length > j : "Invalid getUse: " + this + ", index " + j + ", params.length " + params.length;
+    if (j >= params.length) {
+        throw new ArrayIndexOutOfBoundsException("Invalid getUse: " + this + ", index " + j + ", params.length " + params.length);
+    }
+    if (j < 0) {
+        throw new ArrayIndexOutOfBoundsException("j may not be negative! In getUse "  + this + ", index " + j + ", params.length " + params.length);
     }
     return params[j];
   }

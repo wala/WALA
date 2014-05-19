@@ -40,6 +40,10 @@ package activity.model;
 import android.app.Activity;
 import android.os.Bundle;
 
+/**
+ *  @deprecated building the Android-Livecycle is done in the class AndroidModel now
+ */
+@Deprecated
 public class ActivityModelActivity extends Activity {
         /*   |, /, \ flow down
      *   ^ flow up , <= flow left, => flow right

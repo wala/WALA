@@ -237,8 +237,10 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     if (key instanceof LocalPointerKey) {
       LocalPointerKey lpk = (LocalPointerKey) key;
       if (lpk.isParameter()) {
-        System.err.println(lpk);
+        System.err.println("------------------ ERROR:");
+        System.err.println("LocalPointerKey: " + lpk);
         System.err.println("Constant? " + lpk.getNode().getIR().getSymbolTable().isConstant(lpk.getValueNumber()));
+        System.err.println("   -- IR:");
         System.err.println(lpk.getNode().getIR());
         Assertions.UNREACHABLE("How can parameter be implicit?");
       }

@@ -45,20 +45,36 @@ import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.ipa.cha.IClassHierarchyDweller;
 
-
-public class DexEntryPoint extends DefaultEntrypoint {
+public class DexEntryPoint extends DefaultEntrypoint implements IClassHierarchyDweller {
 	private static final Logger logger = LoggerFactory.getLogger(DexEntryPoint.class);
+/** BEGIN Custom change */    
+    private IClassHierarchy cha;
+/** END Custom change */
 
 	public DexEntryPoint(IMethod method, IClassHierarchy cha) {
 		super(method, cha);
+/** BEGIN Custom change */        
+        this.cha = cha;
+/** END Custom change */        
 		// TODO Auto-generated constructor stub
 	}
 
 	public DexEntryPoint(MethodReference method, IClassHierarchy cha) {
 		super(method, cha);
+/** BEGIN Custom change */        
+        this.cha = cha;
+/** END Custom change */        
 		// TODO Auto-generated constructor stub
 	}
+
+/** BEGIN Custom change */    
+    @Override
+    public IClassHierarchy getClassHierarchy() {
+        return cha;
+    }
+/** END Custom change */    
 
 	@Override
 	protected TypeReference[] makeParameterTypes(IMethod method, int i) {

@@ -274,8 +274,8 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     }
 
     if (localNumber > getMaxLocals()) {
-      throw new IllegalArgumentException("illegal local number: " + localNumber + ", method " + getName() + " uses at most "
-          + getMaxLocals());
+      throw new IllegalArgumentException("illegal local number: " + localNumber + ", method " + getDeclaringClass().getName() + 
+              "." + getName() + " uses at most " + getMaxLocals());
     }
 
     if (map == null) {

@@ -603,10 +603,15 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                 workingState.setLocal(dest, result);
 //              workingState.push(result);
 //              boolean isFloat = instruction.getType().equals(TYPE_double) || instruction.getType().equals(TYPE_float);
-                if (instruction.isSub())
-                    emitInstruction(insts.BinaryOpInstruction(getCurrentInstructionIndex(), instruction.getOperator(), false, instruction.isUnsigned(), result, val2, val1, !instruction.isFloat()));
-                else
-                    emitInstruction(insts.BinaryOpInstruction(getCurrentInstructionIndex(), instruction.getOperator(), false, instruction.isUnsigned(), result, val1, val2, !instruction.isFloat()));
+                try {
+                    if (instruction.isSub())
+                        emitInstruction(insts.BinaryOpInstruction(getCurrentInstructionIndex(), instruction.getOperator(), false, instruction.isUnsigned(), result, val2, val1, !instruction.isFloat()));
+                    else
+                        emitInstruction(insts.BinaryOpInstruction(getCurrentInstructionIndex(), instruction.getOperator(), false, instruction.isUnsigned(), result, val1, val2, !instruction.isFloat()));
+                } catch (AssertionError e) {
+                    System.err.println("When visiting Instuction " + instruction);
+                    throw e;
+                }
             }
 
             /**
@@ -1378,9 +1383,15 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
      * Build the IR
      */
     public void build() {
-        solve();
-        if (localMap != null) {
-            localMap.finishLocalMap(this);
+        try {
+            solve();
+            if (localMap != null) {
+                localMap.finishLocalMap(this);
+            }
+        } catch (AssertionError e) {
+            System.err.println("When handling method " + method.getReference());
+            e.printStackTrace();
+            //throw e;
         }
     }
 

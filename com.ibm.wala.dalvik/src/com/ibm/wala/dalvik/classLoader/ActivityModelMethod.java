@@ -52,6 +52,10 @@ import org.slf4j.LoggerFactory;
 import com.ibm.wala.dalvik.dex.instructions.Invoke;
 import com.ibm.wala.util.io.FileProvider;
 
+/**
+ *  @deprecated building the Android-Livecycle is done in the class AndroidModel now
+ */
+@Deprecated
 public class ActivityModelMethod extends DexIMethod {
 	private static final Logger logger = LoggerFactory
 			.getLogger(ActivityModelMethod.class);

@@ -66,6 +66,10 @@ import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
+/**
+ *  @deprecated building the Android-model uses a "normal" fake-root now
+ */
+@Deprecated
 public class DexFakeRootMethod extends AbstractRootMethod {
 
 	public static final Atom name = Atom.findOrCreateAsciiAtom("DexFakeRootMethod");

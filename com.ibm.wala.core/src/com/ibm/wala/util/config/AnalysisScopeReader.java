@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 import java.util.jar.JarFile;
+import java.net.URI;
 
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.classLoader.Module;
@@ -74,6 +75,12 @@ public class AnalysisScopeReader {
       } else {
         // try to read from jar
         InputStream inFromJar = scope.getClass().getClassLoader().getResourceAsStream(scopeFileName);
+/** BEGIN Custom change: Fixes in AndroidAnalysisScope */        
+        if (inFromJar == null) {
+            throw new IllegalArgumentException("Unable to retreive " + scopeFileName + " from the jar using the loader of " + 
+                    scope.getClass());
+        }
+/** END Custom change: Fixes in AndroidAnalysisScope */        
         r = new BufferedReader(new InputStreamReader(inFromJar));
       }
 /** END Custom change: try to load from jar as fallback */
@@ -97,6 +104,40 @@ public class AnalysisScopeReader {
 
     return scope;
   }
+
+/** BEGIN Custom change: Fixes in AndroidAnalysisScope */  
+  protected static AnalysisScope read(AnalysisScope scope, final URI scopeFileURI, final File exclusionsFile, ClassLoader javaLoader,
+      FileProvider fp) throws IOException {
+    BufferedReader r = null;
+    try {
+        String line;
+        final InputStream inStream = scopeFileURI.toURL().openStream();
+        if (inStream == null) {
+            throw new IllegalArgumentException("Unable to retrieve URI " + scopeFileURI.toString());
+        }
+        r = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
+
+        while ((line = r.readLine()) != null) {
+            processScopeDefLine(scope, javaLoader, line);
+        }
+
+        if (exclusionsFile != null) {
+            scope.setExclusions(FileOfClasses.createFileOfClasses(exclusionsFile));
+        }
+
+    } finally {
+        if (r != null) {
+            try {
+                r.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    return scope;
+  }
+/** END Custom change: Fixes in AndroidAnalysisScope */
 
   public static void processScopeDefLine(AnalysisScope scope, ClassLoader javaLoader, String line) throws IOException {
     if (line == null) {

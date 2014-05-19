@@ -48,6 +48,10 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultPointerKeyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
+/**
+ *  @deprecated Building the AndroidLivecycle works with a "normal" CGB
+ */
+@Deprecated
 public class DexSSAPropagationCallGraphBuilder extends
 	SSAPropagationCallGraphBuilder {
 	

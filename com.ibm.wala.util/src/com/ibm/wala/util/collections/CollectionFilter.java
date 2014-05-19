@@ -28,7 +28,7 @@ public class CollectionFilter<T> implements Filter<T> {
     this.S = S;
   }
 
-  /*
+  /**
    * @see com.ibm.wala.util.Filter#accepts(java.lang.Object)
    */
   @Override
