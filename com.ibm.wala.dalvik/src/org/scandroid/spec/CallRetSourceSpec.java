@@ -53,6 +53,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -74,11 +75,10 @@ public class CallRetSourceSpec extends SourceSpec {
 	}
 
 	@Override
-	public<E extends ISSABasicBlock> void addDomainElements(
-			CGAnalysisContext<E> ctx,
-			Map<BasicBlockInContext<E>, Map<FlowType<E>, Set<CodeElement>>> taintMap,
-			IMethod im, BasicBlockInContext<E> block, SSAInvokeInstruction invInst,
-			int[] newArgNums, ISupergraph<BasicBlockInContext<E>, CGNode> graph, PointerAnalysis pa, CallGraph cg) {
+	public<E extends ISSABasicBlock> void addDomainElements(CGAnalysisContext<E> ctx,
+			Map<BasicBlockInContext<E>, Map<FlowType<E>, Set<CodeElement>>> taintMap, IMethod im,
+			BasicBlockInContext<E> block, SSAInvokeInstruction invInst, int[] newArgNums,
+			ISupergraph<BasicBlockInContext<E>, CGNode> graph, PointerAnalysis<InstanceKey> pa, CallGraph cg) {
 
 		for (FlowType<E> ft:getFlowType(block, invInst,block.getNode(), im, pa)) {
 			InflowAnalysis.addDomainElements(taintMap, block, ft, 
@@ -89,7 +89,7 @@ public class CallRetSourceSpec extends SourceSpec {
 	private<E extends ISSABasicBlock> Collection<FlowType<E>> getFlowType(
 	        BasicBlockInContext<E> block,
 	        SSAInvokeInstruction invInst,
-			CGNode node, IMethod im, PointerAnalysis pa) {
+			CGNode node, IMethod im, PointerAnalysis<InstanceKey> pa) {
 
 		HashSet<FlowType<E>> flowSet = new HashSet<FlowType<E>>();
 		flowSet.clear();

@@ -80,7 +80,7 @@ public class PrefixTransferGraph implements Graph<InstanceKeySite> {
     private final Map<InstanceKeySite,Set<InstanceKeySite>> predecessors = new HashMap<InstanceKeySite, Set<InstanceKeySite>>();
     public final Map<InstanceKey, StringBuilderUseAnalysis> sbuaMap = new HashMap<InstanceKey, StringBuilderUseAnalysis>();
 
-    public PrefixTransferGraph(PointerAnalysis pa)
+    public PrefixTransferGraph(PointerAnalysis<InstanceKey> pa)
     {
         Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies = new HashMap<InstanceKeySite, Set<InstanceKey>>();
         ArrayList<InstanceKey> instanceKeys = new ArrayList<InstanceKey>();

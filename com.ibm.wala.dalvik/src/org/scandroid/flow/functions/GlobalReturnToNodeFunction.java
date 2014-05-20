@@ -79,7 +79,7 @@ public class GlobalReturnToNodeFunction<E extends ISSABasicBlock> implements
 	private final Map<InstanceKey, Set<CodeElement>> ikMap;
 
 	public GlobalReturnToNodeFunction(IFDSTaintDomain<E> domain,
-			PointerAnalysis pa, CGNode node) {
+			PointerAnalysis<InstanceKey> pa, CGNode node) {
 		this.domain = domain;
 		this.ikMap = Maps.newHashMap();
 		for (PointerKey pk : pa.getPointerKeys()) {

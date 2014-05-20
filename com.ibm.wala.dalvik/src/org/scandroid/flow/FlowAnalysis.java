@@ -67,6 +67,7 @@ import com.ibm.wala.dataflow.IFDS.TabulationResult;
 import com.ibm.wala.dataflow.IFDS.TabulationSolver;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -106,7 +107,7 @@ public class FlowAnalysis {
 	  analyze(final ISupergraph<BasicBlockInContext<E>, 
 			  CGNode> graph,
 	          CallGraph cg,
-	          PointerAnalysis pa,
+	          PointerAnalysis<InstanceKey> pa,
 	          Map<BasicBlockInContext<E>, Map<FlowType<E>,Set<CodeElement>>> initialTaints,
 	          IFDSTaintDomain<E> d,
 	          IProgressMonitor progressMonitor
@@ -127,7 +128,7 @@ public class FlowAnalysis {
       analyze(final ISupergraph<BasicBlockInContext<E>, 
     		  CGNode> graph,
               CallGraph cg,
-              PointerAnalysis pa,
+              PointerAnalysis<InstanceKey> pa,
               Map<BasicBlockInContext<E>, Map<FlowType<E>,Set<CodeElement>>> initialTaints,
               IFDSTaintDomain<E> d,
               IProgressMonitor progressMonitor, 

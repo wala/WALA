@@ -91,7 +91,7 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
     private final Map<InstanceKeySite,Set<InstanceKeySite>> predecessors =
     	new HashMap<InstanceKeySite, Set<InstanceKeySite>>();
 
-    public UriPrefixTransferGraph(final PointerAnalysis pa) {
+    public UriPrefixTransferGraph(final PointerAnalysis<InstanceKey> pa) {
         final Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies =
         	new HashMap<InstanceKeySite, Set<InstanceKey>>();
         final OrdinalSetMapping<InstanceKey> mapping = pa.getInstanceKeyMapping();
@@ -130,7 +130,7 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
         }
     }
     
-    private void handleString(final InstanceKey ik, final PointerAnalysis pa,
+    private void handleString(final InstanceKey ik, final PointerAnalysis<InstanceKey> pa,
     		final OrdinalSetMapping<InstanceKey> mapping,
     		final Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies) {
         if (isOfType(ik, "Ljava/lang/String")) {
@@ -146,7 +146,7 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
         }
     }
     
-    private void handleStringBuilder(final InstanceKey ik, final PointerAnalysis pa,
+    private void handleStringBuilder(final InstanceKey ik, final PointerAnalysis<InstanceKey> pa,
     		final OrdinalSetMapping<InstanceKey> mapping,
     		final Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies) {
     	
@@ -171,7 +171,7 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
         }
     }
     
-    private void handleStringBuilderToString(final NormalAllocationInNode nain, final PointerAnalysis pa,
+    private void handleStringBuilderToString(final NormalAllocationInNode nain, final PointerAnalysis<InstanceKey> pa,
     		final OrdinalSetMapping<InstanceKey> mapping,
     		final Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies) {
         if (hasSignature(nain, "java.lang.StringBuilder.toString()Ljava/lang/String;")) {
@@ -212,7 +212,7 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
         }
     }
 
-    private void handleUriWitAppendPath(final LocalPointerKey lpk, final PointerAnalysis pa,
+    private void handleUriWitAppendPath(final LocalPointerKey lpk, final PointerAnalysis<InstanceKey> pa,
     		final OrdinalSetMapping<InstanceKey> mapping,
     		final Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies) {
 		final Context context = lpk.getNode().getContext();
@@ -263,7 +263,7 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
 		}
     }
     
-    private void handleUriWitAppendPath(final NormalAllocationInNode ik, final PointerAnalysis pa,
+    private void handleUriWitAppendPath(final NormalAllocationInNode ik, final PointerAnalysis<InstanceKey> pa,
     		final OrdinalSetMapping<InstanceKey> mapping,
     		final Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies) {
     	final CGNode allocNode = ik.getNode();
@@ -303,7 +303,7 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
         }
     }
     
-    private void handleUriParse(final NormalAllocationInNode ik, final PointerAnalysis pa,
+    private void handleUriParse(final NormalAllocationInNode ik, final PointerAnalysis<InstanceKey> pa,
     		final OrdinalSetMapping<InstanceKey> mapping,
     		final Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies) {
     	final CGNode allocNode = ik.getNode();

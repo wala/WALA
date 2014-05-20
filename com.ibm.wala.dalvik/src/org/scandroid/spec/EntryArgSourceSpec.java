@@ -86,7 +86,7 @@ public class EntryArgSourceSpec extends SourceSpec {
 			Map<BasicBlockInContext<E>, Map<FlowType<E>, Set<CodeElement>>> taintMap,
 			IMethod im, BasicBlockInContext<E> block, SSAInvokeInstruction invInst,
 			int[] newArgNums, 
-			ISupergraph<BasicBlockInContext<E>, CGNode> graph, PointerAnalysis pa, CallGraph cg) {
+			ISupergraph<BasicBlockInContext<E>, CGNode> graph, PointerAnalysis<InstanceKey> pa, CallGraph cg) {
 
 		for(CGNode node: cg.getNodes(im.getReference())) {
 		    for(int i: newArgNums) {

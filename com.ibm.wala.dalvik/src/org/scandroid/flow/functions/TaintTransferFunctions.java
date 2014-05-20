@@ -109,7 +109,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 	}
 
 	private final IFDSTaintDomain<E> domain;
-	private final PointerAnalysis pa;
+	private final PointerAnalysis<InstanceKey> pa;
 	private final boolean taintStaticFields;
 	private final IUnaryFlowFunction globalId;
 	private final IUnaryFlowFunction callToReturn;
@@ -123,13 +123,13 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 
 	public TaintTransferFunctions(IFDSTaintDomain<E> domain,
 			ISupergraph<BasicBlockInContext<E>, CGNode> graph,
-			PointerAnalysis pa) {
+			PointerAnalysis<InstanceKey> pa) {
 		this(domain, graph, pa, false);
 	}
 
 	public TaintTransferFunctions(IFDSTaintDomain<E> domain,
 			ISupergraph<BasicBlockInContext<E>, CGNode> graph,
-			PointerAnalysis pa, boolean taintStaticFields) {
+			PointerAnalysis<InstanceKey> pa, boolean taintStaticFields) {
 		this.domain = domain;
 		this.pa = pa;
 		this.globalId = new GlobalIdentityFunction<E>(domain);

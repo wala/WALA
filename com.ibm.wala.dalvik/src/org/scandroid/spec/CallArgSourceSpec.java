@@ -86,7 +86,7 @@ public class CallArgSourceSpec extends SourceSpec {
 			IMethod target, BasicBlockInContext<E> block,
 			SSAInvokeInstruction invInst, int[] newArgNums,
 			ISupergraph<BasicBlockInContext<E>, CGNode> graph,
-			PointerAnalysis pa, CallGraph cg) {
+			PointerAnalysis<InstanceKey> pa, CallGraph cg) {
 
 		for (int j = 0; j < newArgNums.length; j++) {
 			for (FlowType<E> ft : getFlowType(block)) {

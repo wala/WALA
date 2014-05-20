@@ -97,7 +97,7 @@ public class StaticFieldSourceSpec extends SourceSpec {
 			SSAInvokeInstruction invInst, 
 			int[] newArgNums,
 			ISupergraph<BasicBlockInContext<E>, CGNode> graph,
-			PointerAnalysis pa, 
+			PointerAnalysis<InstanceKey> pa, 
 			CallGraph cg) {
 
 		Set<CodeElement> valueElements = Sets.newHashSet();

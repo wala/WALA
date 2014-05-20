@@ -110,7 +110,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 
 	private List<Entrypoint> entrypoints;
 	public CallGraph cg;
-	public PointerAnalysis pa;
+	public PointerAnalysis<InstanceKey> pa;
 	public ISupergraph<BasicBlockInContext<E>, CGNode> graph;
 
 	public Graph<CGNode> oneLevelGraph;

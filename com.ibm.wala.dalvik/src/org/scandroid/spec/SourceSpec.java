@@ -51,6 +51,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -85,7 +86,7 @@ public abstract class SourceSpec implements ISourceSpec {
 			Map<BasicBlockInContext<E>, Map<FlowType<E>,Set<CodeElement>>> taintMap, 
 			IMethod im, BasicBlockInContext<E> block, SSAInvokeInstruction invInst,
 			int[] newArgNums, ISupergraph<BasicBlockInContext<E>, CGNode> graph, 
-			PointerAnalysis pa, CallGraph cg);
+			PointerAnalysis<InstanceKey> pa, CallGraph cg);
 
 	
 }

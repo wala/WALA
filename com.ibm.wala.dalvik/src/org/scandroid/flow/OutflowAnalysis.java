@@ -103,7 +103,7 @@ public class OutflowAnalysis {
 	private final CGAnalysisContext<IExplodedBasicBlock> ctx;
 	private final CallGraph cg;
 	private final ClassHierarchy cha;
-	private final PointerAnalysis pa;
+	private final PointerAnalysis<InstanceKey> pa;
 	private final ICFGSupergraph graph;
 	private final ISpecs specs;
 
@@ -428,7 +428,7 @@ public class OutflowAnalysis {
 			CallGraph cg,
 			ClassHierarchy cha,
 			ISupergraph<BasicBlockInContext<IExplodedBasicBlock>, CGNode> graph,
-			PointerAnalysis pa,
+			PointerAnalysis<InstanceKey> pa,
 			TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, DomainElement> flowResult,
 			IFDSTaintDomain<IExplodedBasicBlock> domain, ISpecs s) {
 

@@ -49,6 +49,7 @@ import com.ibm.wala.dataflow.IFDS.ISupergraph;
 import com.ibm.wala.dataflow.IFDS.IUnaryFlowFunction;
 import com.ibm.wala.dataflow.IFDS.IdentityFlowFunction;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -69,7 +70,7 @@ public class IDTransferFunctions <E extends ISSABasicBlock> implements
     
     public IDTransferFunctions(IFDSTaintDomain<E> domain,
             ISupergraph<BasicBlockInContext<E>, CGNode> graph, 
-            PointerAnalysis pa) {
+            PointerAnalysis<InstanceKey> pa) {
     }
 
 	@Override

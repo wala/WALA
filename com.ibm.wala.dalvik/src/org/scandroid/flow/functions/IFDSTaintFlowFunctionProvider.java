@@ -98,11 +98,11 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 
 	private final IFDSTaintDomain<E> domain;
 	private final ISupergraph<BasicBlockInContext<E>,CGNode> graph;
-	private final PointerAnalysis pa;
+	private final PointerAnalysis<InstanceKey> pa;
 
 	public IFDSTaintFlowFunctionProvider(IFDSTaintDomain<E> domain,
 			ISupergraph<BasicBlockInContext<E>, CGNode> graph, 
-			PointerAnalysis pa)
+			PointerAnalysis<InstanceKey> pa)
 	{
 		this.domain = domain;
 		this.graph = graph;

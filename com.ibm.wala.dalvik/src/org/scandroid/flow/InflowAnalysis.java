@@ -126,7 +126,7 @@ public class InflowAnalysis <E extends ISSABasicBlock> {
                             CallGraph cg, 
                             ISupergraph<BasicBlockInContext<E>, CGNode> graph,
                             ClassHierarchy cha,
-                            PointerAnalysis pa) {
+                            PointerAnalysis<InstanceKey> pa) {
     	int[] newArgNums;
     	for (IMethod im:ss.getNamePattern().getPossibleTargets(cha)) {
             newArgNums = (ss.getArgNums() == null) ? SourceSpec.getNewArgNums((im.isStatic())?im.getNumberOfParameters():im.getNumberOfParameters()-1) : ss.getArgNums();
@@ -151,7 +151,7 @@ public class InflowAnalysis <E extends ISSABasicBlock> {
                             CallGraph cg, 
                             ISupergraph<BasicBlockInContext<E>, CGNode> graph,
                             ClassHierarchy cha,
-                            PointerAnalysis pa) {
+                            PointerAnalysis<InstanceKey> pa) {
     	// get the first block:
     	BasicBlockInContext<E> bb = null;
     	for (CGNode n : cg.getEntrypointNodes() ){
@@ -170,7 +170,7 @@ public class InflowAnalysis <E extends ISSABasicBlock> {
     						  Map<BasicBlockInContext<E>,
                               Map<FlowType<E>,Set<CodeElement>>> taintMap, 
                               ArrayList<SourceSpec> ssAL, ISupergraph<BasicBlockInContext<E>, CGNode> graph, 
-                              PointerAnalysis pa, 
+                              PointerAnalysis<InstanceKey> pa, 
                               ClassHierarchy cha, CallGraph cg) {
     	Collection<IMethod> targets = new HashSet<IMethod>();
     	ArrayList<Collection<IMethod>> targetList = new ArrayList<Collection<IMethod>>();
@@ -225,7 +225,7 @@ public class InflowAnalysis <E extends ISSABasicBlock> {
     	  CallGraph cg, 
           ClassHierarchy cha, 
           ISupergraph<BasicBlockInContext<E>, CGNode> graph,
-          PointerAnalysis pa, 
+          PointerAnalysis<InstanceKey> pa, 
           Map<InstanceKey, String> prefixes,
           ISpecs s) {
 
