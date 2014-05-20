@@ -50,4 +50,10 @@ public class NullProgressMonitor implements IProgressMonitor {
   }
 
 /** END Custom change: subtasks and canceling */
+  @Override
+  public String getCancelMessage() {
+    assert false;
+    return "never cqncels";
+  }
+
 }

@@ -52,4 +52,9 @@ public final class EmptyProgressMonitor implements IProgressMonitor {
 	@Override
 	public void cancel() {
 	}
+	
+	@Override
+	public String getCancelMessage() {
+		return "EmptyProgressMonitor canceled.";
+	}
 }

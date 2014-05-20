@@ -11,17 +11,26 @@
 package com.ibm.wala.ide.util;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 
+import com.ibm.wala.cast.js.JavaScriptPlugin;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Pair;
 
 public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePathEntry, IJavaScriptProject> {
 
@@ -40,16 +49,42 @@ public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePat
 		}
 	}
 	
-	protected JavaScriptEclipseProjectPath(IJavaScriptProject p) throws IOException,
+  private final Set<Pair<String, Plugin>> models = HashSetFactory.make();
+
+	protected JavaScriptEclipseProjectPath(Set<Pair<String, Plugin>> models) throws IOException,
 			CoreException {
-		super(p.getProject(), AnalysisScopeType.SOURCE_FOR_PROJ_AND_LINKED_PROJS);
+		super(AnalysisScopeType.SOURCE_FOR_PROJ_AND_LINKED_PROJS);
+		this.models.addAll(models);
+		this.models.add(Pair.make("prologue.js", (Plugin)JavaScriptPlugin.getDefault()));
 	}
 
-	public static JavaScriptEclipseProjectPath make(IJavaScriptProject p) throws IOException, CoreException {
-		return new JavaScriptEclipseProjectPath(p);
+	public static JavaScriptEclipseProjectPath make(IJavaScriptProject p, Set<Pair<String, Plugin>> models) throws IOException, CoreException {
+	  JavaScriptEclipseProjectPath path = new JavaScriptEclipseProjectPath(models);
+	  path.create(p.getProject());  
+	  return path;
 	}
 
+	
 	@Override
+  public EclipseProjectPath create(IProject project) throws CoreException, IOException {
+    EclipseProjectPath path = super.create(project);
+  
+    Collection<Module> s = modules.get(JSLoader.JAVASCRIPT);
+    for(Pair<String,Plugin> model : models) {
+      URL modelFile = JsdtUtil.getProlgueFile(model.fst, model.snd);
+      assert modelFile != null : "cannot find file for " + model;
+      s.add(new SourceURLModule(modelFile) {
+        @Override
+        public String getName() {
+          return super.getName().substring(1);
+        }
+      });
+    }
+
+    return path;
+}
+
+  @Override
 	protected IJavaScriptProject makeProject(IProject p) {
 		try {
 			if (p.hasNature(JavaScriptCore.NATURE_ID)) {
@@ -75,14 +110,13 @@ public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePat
 		IIncludePathEntry e = JavaScriptCore.getResolvedIncludepathEntry(entry);
 		switch (e.getEntryKind()) {
 		case IIncludePathEntry.CPE_SOURCE:
-			resolveSourcePathEntry(JSLoader.JAVASCRIPT, true, cpeFromMainProject, e.getPath(), null, "js");
+			resolveSourcePathEntry(JSLoader.JAVASCRIPT, true, cpeFromMainProject, e.getPath(), null, e.getExclusionPatterns(), "js");
 		}
 	}
 
 	@Override
-	protected void resolveProjectClasspathEntries(IJavaScriptProject project,
-			boolean includeSource) {
-	    try {
+	protected void resolveProjectClasspathEntries(IJavaScriptProject project, boolean includeSource) {
+	  try {
 			resolveClasspathEntries(project, Arrays.asList(project.getRawIncludepath()), Loader.EXTENSION, includeSource, true);
 		} catch (JavaScriptModelException e) {
 			// TODO Auto-generated catch block

@@ -114,7 +114,7 @@ public class StaticFieldSourceSpec extends SourceSpec {
 		// else, handle reference types:
 		
 		PointerKey pk = pa.getHeapModel().getPointerKeyForStaticField(field);
-		OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(pk);
+		OrdinalSet<? extends InstanceKey> pointsToSet = pa.getPointsToSet(pk);
 		
 		if (pointsToSet.isEmpty()) {
 			IClassHierarchy cha = im.getClassHierarchy();

@@ -11,7 +11,7 @@
 package com.ibm.wala.ide.util;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -51,7 +51,7 @@ public final class JdtPosition implements Position {
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
+    public Reader getReader() throws IOException {
       return null;
     }
 

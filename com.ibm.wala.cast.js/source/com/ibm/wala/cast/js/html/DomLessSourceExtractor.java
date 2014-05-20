@@ -12,9 +12,11 @@ package com.ibm.wala.cast.js.html;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
@@ -28,9 +30,15 @@ import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.util.collections.Pair;
 
-
+/**
+ * extracts JavaScript source code from HTML, with no model of the actual
+ * DOM data structure
+ */
 public class DomLessSourceExtractor extends JSSourceExtractor {
-  private static final Pattern LEGAL_JS_IDENTIFIER_REGEXP = Pattern.compile("[a-zA-Z$_][a-zA-Z\\d$_]*");
+  private static final Pattern LEGAL_JS_IDENTIFIER_REGEXP = Pattern.compile("^[a-zA-Z$_][a-zA-Z\\d$_]*$");
+  private static final Pattern LEGAL_JS_KEYWORD_REGEXP = Pattern.compile("^((break)|(case)|(catch)|(continue)|(debugger)|(default)|(delete)|(do)|(else)|(finally)|(for)|(function)|(if)|(in)|(instanceof)|(new)|(return)|(switch)|(this)|(throw)|(try)|(typeof)|(var)|(void)|(while)|(with))$");
+
+
   protected interface IGeneratorCallback extends IHtmlCallback {
     void writeToFinalRegion(SourceRegion finalRegion);
   }
@@ -57,8 +65,14 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       this.scriptRegion = new SourceRegion();
       this.domRegion = new SourceRegion();
       this.entrypointRegion = new SourceRegion();
+      addDefaultHandlerInvocations();
     }
  
+    private void addDefaultHandlerInvocations() {
+      // always invoke window.onload
+      entrypointRegion.println("window.onload();");
+    }
+
     protected Position makePos(int lineNumber, ITag governingTag) {
       return makePos(entrypointUrl, lineNumber, governingTag);
     }
@@ -91,7 +105,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
           e.printStackTrace();
         }
 
-        scriptRegion.println(text, currentScriptTag.getContentPosition(), url);
+        scriptRegion.println(text, currentScriptTag.getContentPosition(), url, true);
       }
     }
 
@@ -106,6 +120,12 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       handleDOM(tag);
     }
 
+    private boolean isUsableIdentifier(String x) {
+      return x != null &&
+          LEGAL_JS_IDENTIFIER_REGEXP.matcher(x).matches() &&
+          !LEGAL_JS_KEYWORD_REGEXP.matcher(x).matches();
+    }
+    
     /**
      * Model the HTML DOM
      * 
@@ -117,7 +137,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       // running counter
       Pair<String,Position> idAttribute = tag.getAttributeByName("id");
       String funcName;
-      if (idAttribute != null && LEGAL_JS_IDENTIFIER_REGEXP.matcher(idAttribute.fst).matches()) {
+      if (idAttribute != null &&  isUsableIdentifier(idAttribute.fst)) {
         funcName = idAttribute.fst;
       } else {
         funcName = "node" + (nodeCounter++);
@@ -149,16 +169,35 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
         String fName = tag.getName().toLowerCase() + "_" + attName + "_" + funcName;
         String signatureLine = "function " + fName + "(event) {";
         // Defines the function  
-        domRegion.println(signatureLine + "\n" + extructJS(attValue) + "\n}", pos, url);
+        domRegion.println(signatureLine + "\n" + extructJS(attValue) + "\n}", pos, url, true);
         // Run it
-        entrypointRegion.println("\t" + fName + "(null);", pos, url);
+        entrypointRegion.println("\t" + fName + "(null);", pos, url, true);
       }
     }
 
+    protected static Pair<String,Character> quotify(String value) { 
+      char quote;
+      if (value.indexOf('"') < 0) {
+        quote= '"';
+      } else if (value.indexOf("'") < 0) {
+        quote= '"';
+      } else {
+        quote= '"';
+        value = value.replaceAll("\"", "\\\"");          
+      }
+
+      if (value.indexOf('\n') >= 0) {
+        value = value.replaceAll("\n", "\\n");
+      }
+
+      return Pair.make(value, quote);
+    }
+    
     private String extructJS(String attValue) {
       if (attValue == null){
         return "";
       }
+      
       String content;
       if (attValue.toLowerCase().equals("javascript:")) {
         content = attValue.substring("javascript:".length());
@@ -171,12 +210,12 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
 
     protected void handleScript(ITag tag) {
 
-      Pair<String,Position> value = tag.getAttributeByName("src");
+      Pair<String,Position> content = tag.getAttributeByName("src");
 
       try {
-        if (value != null) {
+        if (content != null) {
           // script is out-of-line
-          getScriptFromUrl(value.fst, tag);
+          getScriptFromUrl(content.fst, tag);
         }
 
       } catch (IOException e) {
@@ -187,15 +226,16 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     }
 
     private void getScriptFromUrl(String urlAsString, ITag scriptTag) throws IOException, MalformedURLException {
-      URL absoluteUrl = UrlManipulator.relativeToAbsoluteUrl(urlAsString, this.entrypointUrl);
-      URL scriptSrc = urlResolver.resolve(absoluteUrl);
+//      URL absoluteUrl = UrlManipulator.relativeToAbsoluteUrl(urlAsString, this.entrypointUrl);
+//      URL scriptSrc = urlResolver.resolve(absoluteUrl);
+      URL scriptSrc = new URL(entrypointUrl, urlAsString);
       if (scriptSrc == null) { //Error resolving URL
         return;
       }
 
-      InputStream scriptInputStream;
+      Reader scriptInputStream;
       try {
-         scriptInputStream = scriptSrc.openConnection().getInputStream();
+         scriptInputStream = new InputStreamReader(scriptSrc.openConnection().getInputStream());
       } catch (Exception e) {
         //it looks like this happens when we can't resolve the url?
         if (DEBUG) {
@@ -209,13 +249,13 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       BufferedReader scriptReader = null;
       try {
         String line;
-        scriptReader = new BufferedReader(new UnicodeReader(scriptInputStream, "UTF8"));
+        scriptReader = new BufferedReader(scriptInputStream);
         StringBuffer x = new StringBuffer();
         while ((line = scriptReader.readLine()) != null) {
           x.append(line).append("\n");
         }
 
-        scriptRegion.println(x.toString(), scriptTag.getElementPosition(), scriptSrc);
+        scriptRegion.println(x.toString(), scriptTag.getElementPosition(), scriptSrc, false);
 
       } finally {
         if (scriptReader != null) {
@@ -260,7 +300,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
   public Set<MappedSourceModule> extractSources(URL entrypointUrl, IHtmlParser htmlParser, IUrlResolver urlResolver)
   throws IOException, Error {
 
-    InputStream inputStreamReader = WebUtil.getStream(entrypointUrl);
+    Reader inputStreamReader = WebUtil.getStream(entrypointUrl);
     IGeneratorCallback htmlCallback = createHtmlCallback(entrypointUrl, urlResolver); 
     htmlParser.parse(entrypointUrl, inputStreamReader, htmlCallback, entrypointUrl.getFile());
 
@@ -270,7 +310,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     // writing the final region into one SourceFileModule.
     File outputFile = createOutputFile(entrypointUrl, DELETE_UPON_EXIT, USE_TEMP_NAME);
     tempFile = outputFile;
-    FileMapping fileMapping = finalRegion.writeToFile(new PrintStream(outputFile));
+    FileMapping fileMapping = finalRegion.writeToFile(new PrintWriter(new FileWriter(outputFile)));
     if (fileMapping == null) {
       fileMapping = new EmptyFileMapping();
     }
@@ -284,10 +324,14 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
 
   private File createOutputFile(URL url, boolean delete, boolean useTempName) throws IOException {
     File outputFile;
+    String fileName = new File(url.getFile()).getName();
+    if (fileName.length() < 5) {
+      fileName = "xxxx" + fileName; 
+    }
     if (useTempName) {
-      outputFile = File.createTempFile(new File(url.getFile()).getName(), ".js");
+      outputFile = File.createTempFile(fileName, ".js");
     } else {
-      outputFile = new File(new File(url.getFile()).getName());
+      outputFile = new File(fileName);
     }
     if (outputFile.exists()){
       outputFile.delete();

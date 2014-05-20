@@ -26,11 +26,11 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.PessimisticCallGraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.WorklistBasedOptimisticCallgraphBuilder;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
-import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
+import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.js.util.CallGraph2JSON;
@@ -42,6 +42,7 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.WalaException;
 
@@ -60,10 +61,22 @@ public class CGUtil {
 		this.translatorFactory = translatorFactory;
 	}
 
-	public JSCallGraph buildCG(URL url, BuilderType builderType) throws IOException, WalaException, Error {
-		JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
-		SourceModule[] scripts = extractScript(url).toArray(new SourceModule[]{});
-		JavaScriptLoaderFactory loaders = makeLoaderFactory(url);
+  public JSCallGraph buildCG(URL url, BuilderType builderType) throws IOException, WalaException, CancelException  {
+    return buildCG(url, builderType, new NullProgressMonitor());
+  }
+  
+	public JSCallGraph buildCG(URL url, BuilderType builderType, IProgressMonitor monitor) throws IOException, WalaException, CancelException  {
+    JavaScriptLoaderFactory loaders = makeLoaderFactory(url);
+    SourceModule[] scripts;
+    if (url.getFile().endsWith(".js")) {
+		  scripts = new SourceModule[]{
+		     new SourceURLModule(url),
+		     JSCallGraphBuilderUtil.getPrologueFile("prologue.js")
+		  };
+		} else {
+		  scripts = JSCallGraphBuilderUtil.makeHtmlScope(url, loaders);
+		}
+		
 		CAstAnalysisScope scope = new CAstAnalysisScope(scripts, loaders, Collections.singleton(JavaScriptLoader.JS));
 		IClassHierarchy cha = ClassHierarchy.make(scope, loaders, JavaScriptLoader.JS);
 		Util.checkForFrontEndErrors(cha);
@@ -83,26 +96,14 @@ public class CGUtil {
 		  break;
 		}
 		
-		try {
-			return builder.buildCallGraph(new NullProgressMonitor());
-		} catch (CancelException e) {
-			return null;
-		}
+		return builder.buildCallGraph(roots, monitor).fst;
 	}
 
 	private JavaScriptLoaderFactory makeLoaderFactory(URL url) {
 		return url.getFile().endsWith(".js") ? new JavaScriptLoaderFactory(translatorFactory) : new WebPageLoaderFactory(translatorFactory);
 	}
 
-	private Set<? extends SourceModule> extractScript(URL url) throws Error {
-		if(url.getFile().endsWith(".js")) {
-			return Collections.singleton(new SourceURLModule(url));
-		} else {
-			return WebUtil.extractScriptFromHTML(url).fst;
-		}
-	}
-
-	public static void main(String[] args) throws IOException, WalaException, Error {
+	public static void main(String[] args) throws IOException, WalaException, Error, CancelException {
 	  JSSourceExtractor.DELETE_UPON_EXIT = true;
 		URL url = new File(args[0]).toURI().toURL();
 		System.err.println("Analysing " + url);

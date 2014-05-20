@@ -364,11 +364,5 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
         return getReference().isReferenceType();
     }
 
-
-    @Override
-    public InputStream getSource() {
-        return null;
-    }
-
 }
 

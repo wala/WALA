@@ -18,7 +18,11 @@ import com.ibm.wala.util.graph.NumberedGraph;
  */
 public class GraphInverter {
 
-  /**
+  public static <T> Graph<T> invert(final NumberedGraph<T> G) {
+    return new InvertedNumberedGraph<T>(G);
+  }
+  
+      /**
    * @param G
    * @return A graph view that reverses the edges in G
    */

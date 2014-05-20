@@ -14,12 +14,12 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.callgraph.propagation.AbstractFieldPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -53,7 +53,7 @@ public class HeapExclusions {
       if (p instanceof AbstractFieldPointerKey) {
         AbstractFieldPointerKey f = (AbstractFieldPointerKey) p;
         if (f.getInstanceKey().getConcreteType() != null) {
-          if (!set.contains(f.getInstanceKey().getConcreteType().getReference())) {
+          if (!set.contains(f.getInstanceKey().getConcreteType().getReference().getName().toString().substring(1))) {
             result.add(p);
             if (VERBOSE) {
               verboseAction(p);
@@ -64,7 +64,7 @@ public class HeapExclusions {
         }
       } else if (p instanceof StaticFieldKey) {
         StaticFieldKey sf = (StaticFieldKey) p;
-        if (!set.contains(sf.getField().getDeclaringClass().getReference())) {
+        if (!set.contains(sf.getField().getDeclaringClass().getReference().getName().toString().substring(1))) {
           result.add(p);
           if (VERBOSE) {
             verboseAction(p);
@@ -102,7 +102,7 @@ public class HeapExclusions {
 
   public boolean excludes(PointerKey pk) {
     TypeReference t = getType(pk);
-    return (t == null) ? false : set.contains(t);
+    return (t == null) ? false : set.contains(t.getName().toString().substring(1));
   }
 
   public static TypeReference getType(PointerKey pk) {

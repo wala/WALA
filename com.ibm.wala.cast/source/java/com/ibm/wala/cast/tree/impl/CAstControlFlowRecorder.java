@@ -99,7 +99,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
     if (table.containsKey(key)) {
       Object target = table.get(key);
       assert nodeToCAst.containsKey(target);
-      return (CAstNode) nodeToCAst.get(target);
+      return nodeToCAst.get(target);
     } else
       return null;
   }
@@ -116,7 +116,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
   @Override
   public Collection getSourceNodes(CAstNode to) {
     if (sourceMap.containsKey(CAstToNode.get(to))) {
-      return (Set) sourceMap.get(CAstToNode.get(to));
+      return sourceMap.get(CAstToNode.get(to));
     } else {
       return Collections.EMPTY_SET;
     }
@@ -129,8 +129,8 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
       nodes = new LinkedHashSet<CAstNode>();
       for (Iterator<Key> keys = table.keySet().iterator(); keys.hasNext();) {
         Key key = keys.next();
-        nodes.add((CAstNode) nodeToCAst.get(key.from));
-        nodes.add((CAstNode) nodeToCAst.get(table.get(key)));
+        nodes.add(nodeToCAst.get(key.from));
+        nodes.add(nodeToCAst.get(table.get(key)));
       }
       cachedMappedNodes = nodes;
     }

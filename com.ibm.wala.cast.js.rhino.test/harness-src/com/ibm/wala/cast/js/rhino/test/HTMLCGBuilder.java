@@ -92,9 +92,8 @@ public class HTMLCGBuilder {
 			// the code below belongs somewhere else!!!
 			// the bound of 4 is what is needed to pass our current framework tests
 			builder.setContextSelector(new RecursionCheckContextSelector(builder.getContextSelector()));
-			ProgressMaster master = ProgressMaster.make(new NullProgressMonitor());
+			ProgressMaster master = ProgressMaster.make(new NullProgressMonitor(), timeout * 1000, false);
 			if (timeout > 0) {
-				master.setMillisPerWorkItem(timeout * 1000);
 				master.beginTask("runSolver", 1);
 			}
 			long start = System.currentTimeMillis();

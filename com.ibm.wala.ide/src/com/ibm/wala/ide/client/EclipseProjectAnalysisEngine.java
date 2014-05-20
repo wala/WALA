@@ -11,7 +11,9 @@
 package com.ibm.wala.ide.client;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -25,6 +27,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.config.FileOfClasses;
+import com.ibm.wala.util.io.FileProvider;
 
 abstract public class EclipseProjectAnalysisEngine<P> extends AbstractAnalysisEngine {
 
@@ -32,7 +35,7 @@ abstract public class EclipseProjectAnalysisEngine<P> extends AbstractAnalysisEn
   
   protected final IPath workspaceRootPath;
 
-  protected final EclipseProjectPath<?,P> ePath;
+  protected EclipseProjectPath<?,P> ePath;
 
   public EclipseProjectAnalysisEngine(P project) throws IOException, CoreException {
     super();
@@ -40,7 +43,6 @@ abstract public class EclipseProjectAnalysisEngine<P> extends AbstractAnalysisEn
     this.workspaceRootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
     assert project != null;
     assert workspaceRootPath != null;
-    this.ePath = createProjectPath(project);
   }
 
   abstract protected EclipseProjectPath<?,P> createProjectPath(P project) throws IOException, CoreException;
@@ -52,14 +54,29 @@ abstract public class EclipseProjectAnalysisEngine<P> extends AbstractAnalysisEn
   
   @Override
   public void buildAnalysisScope() throws IOException {
-    super.scope = ePath.toAnalysisScope(makeAnalysisScope());
-    if (getExclusionsFile() != null) {
-      scope.setExclusions(FileOfClasses.createFileOfClasses(new File(getExclusionsFile())));
+    try {
+      ePath = createProjectPath(project);
+      super.scope = ePath.toAnalysisScope(makeAnalysisScope());
+      if (getExclusionsFile() != null) {
+        InputStream is = new File(getExclusionsFile()).exists()? new FileInputStream(getExclusionsFile()): FileProvider.class.getClassLoader().getResourceAsStream(getExclusionsFile());
+        scope.setExclusions(new FileOfClasses(is));
+      }
+    } catch (CoreException e) {
+      assert false : e.getMessage();
     }
   }
 
   public EclipseProjectPath<?,P> getEclipseProjectPath() {
     return ePath;
+  }
+
+  @Override
+  public IClassHierarchy getClassHierarchy() {
+    if (super.getClassHierarchy() == null) {
+      setClassHierarchy( buildClassHierarchy() );
+    }
+
+    return super.getClassHierarchy();
   }
 
 }

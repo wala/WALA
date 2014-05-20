@@ -95,7 +95,7 @@ public class PrintIRs {
     // add model for DOM APIs
     JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
     URL url = (new File(filename)).toURI().toURL();
-    Pair<Set<MappedSourceModule>, File> p = WebUtil.extractScriptFromHTML(url);
+    Pair<Set<MappedSourceModule>, File> p = WebUtil.extractScriptFromHTML(url, true);
     SourceModule[] scripts = p.fst.toArray(new SourceModule[] {});
     JavaScriptLoaderFactory loaders = new WebPageLoaderFactory(JSCallGraphUtil.getTranslatorFactory());
     CAstAnalysisScope scope = new CAstAnalysisScope(scripts, loaders, Collections.singleton(JavaScriptLoader.JS));

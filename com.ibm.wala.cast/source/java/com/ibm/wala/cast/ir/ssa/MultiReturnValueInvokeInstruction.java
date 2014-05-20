@@ -13,7 +13,7 @@ package com.ibm.wala.cast.ir.ssa;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 
-abstract class MultiReturnValueInvokeInstruction
+public abstract class MultiReturnValueInvokeInstruction
     extends SSAAbstractInvokeInstruction
 {
   protected final int results[];

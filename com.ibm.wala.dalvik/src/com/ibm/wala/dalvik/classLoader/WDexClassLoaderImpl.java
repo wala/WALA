@@ -54,13 +54,13 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
-import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.HashCodeComparator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
@@ -71,7 +71,6 @@ import com.ibm.wala.util.warnings.Warnings;
 public class WDexClassLoaderImpl extends ClassLoaderImpl {
 	private static final Logger logger = LoggerFactory.getLogger(WDexClassLoaderImpl.class);
 	
-//    private SetOfClasses lExclusions;
     private IClassLoader lParent;
 
     

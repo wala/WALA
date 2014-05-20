@@ -11,7 +11,7 @@
 package com.ibm.wala.cast.js.html.jericho;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
@@ -102,7 +102,7 @@ public class JerichoHtmlParser implements IHtmlParser{
     }
 
 	@Override
-  public void parse(URL url, InputStream reader, IHtmlCallback callback, String fileName) throws TranslatorToCAst.Error {
+  public void parse(URL url, Reader reader, IHtmlCallback callback, String fileName) throws TranslatorToCAst.Error {
 	  warnings.clear();
 		Parser parser = new Parser(callback, fileName);
 		Source src;
@@ -115,7 +115,7 @@ public class JerichoHtmlParser implements IHtmlParser{
 				parser.parse(e);
 			}
 			if (! warnings.isEmpty()) {
-			  throw new TranslatorToCAst.Error(warnings.iterator().next());
+			  throw new TranslatorToCAst.Error(warnings);
 			}
 		} catch (IOException e) {
 			System.err.println("Error parsing file: " + e.getMessage());

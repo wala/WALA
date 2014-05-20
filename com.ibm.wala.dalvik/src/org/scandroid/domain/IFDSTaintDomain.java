@@ -92,12 +92,15 @@ public class IFDSTaintDomain <E extends ISSABasicBlock>
     }
 
 
-    public synchronized int getMappedIndex(DomainElement o)
-    {
-        Integer i = table.get(o);
-        if(i == null)
-            return add(o);
-        return i;
+    public synchronized int getMappedIndex(final Object o) {
+    	if (!(o instanceof DomainElement)) {
+    		throw new IllegalArgumentException(o.getClass().getCanonicalName());
+    	}
+    	
+    	final DomainElement de = (DomainElement) o;
+        final Integer i = table.get(de);
+        
+        return (i == null ? add(de) : i);
     }
 
     public boolean hasPriorityOver(
@@ -131,4 +134,5 @@ public class IFDSTaintDomain <E extends ISSABasicBlock>
     public Set<CodeElement> codeElements () {
     	return elementIndex.keySet();
     }
+
 }

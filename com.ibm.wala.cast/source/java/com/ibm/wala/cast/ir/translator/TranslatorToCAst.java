@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstEntity;
@@ -26,16 +27,17 @@ import com.ibm.wala.cast.tree.rewrite.CAstRewriter;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriter.CopyKey;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriter.RewriteContext;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriterFactory;
+import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.warnings.Warning;
 
 public interface TranslatorToCAst {
   public <C extends RewriteContext<K>, K extends CopyKey<K>> void addRewriter(CAstRewriterFactory<C, K> factory, boolean prepend);
 
-  public class Error extends Exception {
-    public final Warning warning;
+  public class Error extends WalaException {
+    public final Set<Warning> warning;
     
-    public Error(Warning message) {
-      super(message.getMsg());
+    public Error(Set<Warning> message) {
+      super(message.iterator().next().getMsg());
       warning = message;
     }
     

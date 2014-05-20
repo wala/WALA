@@ -7,7 +7,8 @@ Bundle-ClassPath: .,
  lib/jericho-html-3.2.jar
 Bundle-Activator: com.ibm.wala.cast.js.JavaScriptPlugin
 Bundle-Vendor: IBM
-Export-Package: com.ibm.wala.cast.js,
+Export-Package: .,
+ com.ibm.wala.cast.js,
  com.ibm.wala.cast.js.analysis.typeInference,
  com.ibm.wala.cast.js.callgraph.fieldbased,
  com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph,

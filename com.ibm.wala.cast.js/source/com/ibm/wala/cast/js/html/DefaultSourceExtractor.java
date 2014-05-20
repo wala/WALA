@@ -53,9 +53,9 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
         String v = e.getValue().fst;
         if (v != null && v.startsWith("javascript:")) {
           try {
-            entrypointRegion.println("           " + v.substring(11), e.getValue().snd, new URL(tag.getElementPosition().getURL().toString() + "#" + a));
+            entrypointRegion.println("           " + v.substring(11), e.getValue().snd, new URL(tag.getElementPosition().getURL().toString() + "#" + a), true);
           } catch (MalformedURLException ex) {
-            entrypointRegion.println(v.substring(11), e.getValue().snd, entrypointUrl);
+            entrypointRegion.println(v.substring(11), e.getValue().snd, entrypointUrl, false);
           }
         }
       }
@@ -84,7 +84,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
       if (pos == null){
         domRegion.println(indentedLine.toString());
       } else {
-        domRegion.println(indentedLine.toString(), pos, entrypointUrl);
+        domRegion.println(indentedLine.toString(), pos, entrypointUrl, false);
       }
     }
 
@@ -93,6 +93,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
     }
 
     private String makeRef(String object, String property) {
+      assert object != null && property != null;
       return object + "[\"" + property + "\"]";
     }
     
@@ -135,6 +136,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
         }
       }
 
+      assert varName != null && !"".equals(varName);
       printlnIndented(varName + " = this;", tag);
       printlnIndented("document." + varName + " = this;", tag);
       printlnIndented("parent.appendChild(this);", tag);
@@ -149,18 +151,18 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
       //There should probably be more checking to see what the attributes are since we allow things like: ; to be used as attributes now.
       if(attr.length() >= 2 && attr.substring(0,2).equals("on")) {
         printlnIndented(varName + "." + attr + " = function " + tag.getName().toLowerCase() + "_" + attr + "(event) {" + value + "};", tag);
-        entrypointRegion.println(varName2 + "." + attr + "(null);", tag.getElementPosition(), entrypointUrl);
+        entrypointRegion.println(varName2 + "." + attr + "(null);", tag.getElementPosition(), entrypointUrl, false);
       } else if (value != null) {
-        if (value.indexOf('\'') > 0) {
-          value = value.replaceAll("\\'", "\\\\'");
-        }
-        if (value.indexOf('\n') > 0) {
-          value = value.replaceAll("\\n", "\\\\n");
-        }
+        
+        Pair<String, Character> x = quotify(value);
+        value = x.fst;
+        char quote = x.snd;
+        
         if (attr.equals(attr.toUpperCase())) {
           attr = attr.toLowerCase();
         }
-        printlnIndented(varName + "['" + attr + "'] = '" + value + "';", tag);
+        
+        printlnIndented(varName + "['" + attr + "'] = " + quote + value + quote + ";", tag);
       }
     }
 

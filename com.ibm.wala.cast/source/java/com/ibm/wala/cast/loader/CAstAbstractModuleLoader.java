@@ -27,7 +27,6 @@ import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.util.CAstPrinter;
-import com.ibm.wala.cast.util.TemporaryFile;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.Module;
@@ -37,6 +36,7 @@ import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.io.TemporaryFile;
 import com.ibm.wala.util.warnings.Warning;
 
 /**
@@ -78,7 +78,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
     } else {
       File f = File.createTempFile("module", ".txt");
       f.deleteOnExit();
-      TemporaryFile.streamToFile(f.getAbsolutePath(), M.getInputStream());
+      TemporaryFile.streamToFile(f, M.getInputStream());
       return f;
     }
   }
@@ -116,7 +116,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
       for (Iterator ts = types.keySet().iterator(); ts.hasNext();) {
         TypeName tn = (TypeName) ts.next();
         try {
-          System.err.println(("found type " + tn + " : " + types.get(tn) + " < " + ((IClass) types.get(tn)).getSuperclass()));
+          System.err.println(("found type " + tn + " : " + types.get(tn) + " < " + types.get(tn).getSuperclass()));
         } catch (Exception e) {
           System.err.println(e);
         }
@@ -185,7 +185,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
    * in topLevelEntities
    */
   private void translateModuleToCAst(Module module, CAst ast, Set<Pair<CAstEntity, ModuleEntry>> topLevelEntities) {
-    for (Iterator<ModuleEntry> mes = module.getEntries(); mes.hasNext();) {
+    for (Iterator<? extends ModuleEntry> mes = module.getEntries(); mes.hasNext();) {
       translateModuleEntryToCAst(mes.next(), ast, topLevelEntities);
     }
   }

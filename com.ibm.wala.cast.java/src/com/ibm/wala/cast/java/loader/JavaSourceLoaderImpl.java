@@ -61,10 +61,9 @@ import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeCT.AnnotationsReader.ElementValue;
 import com.ibm.wala.shrikeCT.AnnotationsReader.ConstantElementValue;
+import com.ibm.wala.shrikeCT.AnnotationsReader.ElementValue;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.ssa.SymbolTable;
@@ -78,6 +77,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
@@ -574,19 +574,9 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     }
 
     @Override
-    public AstJavaInvokeInstruction JavaInvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site) {
-      return new AstJavaInvokeInstruction(iindex, result, params, exception, site);
-    }
-
-    @Override
-    public AstJavaInvokeInstruction JavaInvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site) {
-      return new AstJavaInvokeInstruction(iindex, params, exception, site);
-    }
-
-    @Override
-    public AstJavaInvokeInstruction JavaInvokeInstruction(int iindex, int[] results, int[] params, int exception, CallSiteReference site,
-        Access[] lexicalReads, Access[] lexicalWrites) {
-      return new AstJavaInvokeInstruction(iindex, results, params, exception, site, lexicalReads, lexicalWrites);
+    public AstJavaInvokeInstruction JavaInvokeInstruction(final int iindex, int result[], int[] params, int exception, CallSiteReference site) {
+      return result == null ? new AstJavaInvokeInstruction(iindex, params, exception, site) : new AstJavaInvokeInstruction(iindex, result[0],
+          params, exception, site);
     }
 
     @Override
@@ -655,8 +645,8 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     }
 
     @Override
-    public AstLexicalRead LexicalRead(int iindex, int lhs, String definer, String globalName) {
-      return new AstLexicalRead(iindex, lhs, definer, globalName);
+    public AstLexicalRead LexicalRead(int iindex, int lhs, String definer, String globalName, TypeReference type) {
+      return new AstLexicalRead(iindex, lhs, definer, globalName, type);
     }
 
     @Override
@@ -670,8 +660,8 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     }
 
     @Override
-    public AstLexicalWrite LexicalWrite(int iindex, String definer, String globalName, int rhs) {
-       return new AstLexicalWrite(iindex, definer, globalName, rhs);
+    public AstLexicalWrite LexicalWrite(int iindex, String definer, String globalName, TypeReference type, int rhs) {
+       return new AstLexicalWrite(iindex, definer, globalName, type, rhs);
     }
 
     public SSAThrowInstruction NonExceptingThrowInstruction(int iindex, int exception) {

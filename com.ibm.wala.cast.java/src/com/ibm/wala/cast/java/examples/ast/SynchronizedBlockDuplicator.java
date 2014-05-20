@@ -12,11 +12,13 @@ package com.ibm.wala.cast.java.examples.ast;
 
 import java.util.Map;
 
+import com.ibm.wala.cast.java.types.JavaPrimitiveTypeMap;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.rewrite.CAstRewriter;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -219,7 +221,7 @@ public class SynchronizedBlockDuplicator extends
 
       // the conditional test
       CAstNode test = Ast.makeNode(CAstNode.CALL, Ast.makeNode(CAstNode.VOID), Ast.makeConstant(f),
-          Ast.makeNode(CAstNode.VAR, Ast.makeConstant(varName)));
+          Ast.makeNode(CAstNode.VAR, Ast.makeConstant(varName), Ast.makeConstant(JavaPrimitiveTypeMap.lookupType("boolean"))));
 
       // the new if conditional
       return Ast.makeNode(CAstNode.IF_STMT, test, copyNodes(n, cfg, new SyncContext(true, n, c), nodeMap),

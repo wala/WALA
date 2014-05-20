@@ -23,5 +23,5 @@ public interface Module {
   /**
    * @return an Iterator of the ModuleEntries in this Module.
    */
-  Iterator<ModuleEntry> getEntries();
+  Iterator<? extends ModuleEntry> getEntries();
 }

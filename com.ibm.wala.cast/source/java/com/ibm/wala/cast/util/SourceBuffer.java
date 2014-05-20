@@ -12,9 +12,11 @@ package com.ibm.wala.cast.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
@@ -26,45 +28,75 @@ public class SourceBuffer {
   public SourceBuffer(Position p) throws IOException {
     this.p = p;
 
-    InputStreamReader reader = new InputStreamReader(p.getInputStream());
-    if (p.getFirstOffset() >= 0 && p.getLastOffset() >= 0) {
-      int skip = 0;
-      while((skip += reader.skip(p.getFirstOffset())) < p.getFirstOffset());
-      
-      int size = p.getLastOffset() - p.getFirstOffset();
-      char[] buf = new char[size];
-      int read = 0;
-      while ((read += reader.read(buf, read, size)) < size);
-      
-      this.lines = new String(buf).split("\\n");
-    } else {
-      this.lines = new String[ p.getLastLine() - p.getFirstLine() + 1];
-      BufferedReader r =
-        new BufferedReader(reader);
-      int line = 1;
-      while (line <= p.getLastLine()) {
-        String theLine = r.readLine();
-        if (line >= p.getFirstLine()) {
-          lines[line-p.getFirstLine()] = 
-            line == p.getLastLine()?
-                theLine.substring(0, Math.min(theLine.length(), p.getLastCol()+1)):
-                  theLine;
+    BufferedReader reader = new BufferedReader(p.getReader());
+    
+    String currentLine = null;
+    List<String> lines = new ArrayList<String>();
+    int offset = 0, line = 0;
+    do { 
+      currentLine = reader.readLine();
+      if (currentLine == null) {
+        this.lines = new String[0];
+        return;
+      }
+      offset += (currentLine.length() + 1);
+      line++;
+    } while (p.getLastOffset()>=0? p.getFirstOffset() > offset: p.getFirstLine() > line);
+    
+    // partial first line
+    if (p.getLastOffset() >= 0) {
+      if (p.getFirstOffset() == offset) {
+        lines.add("\n");
+      } else {
+        int startOffset = p.getFirstOffset() - (offset-currentLine.length()-1);
+        if (offset > p.getLastOffset()) {
+          int endOffset = p.getLastOffset() - (offset-currentLine.length()-1);
+          lines.add(currentLine.substring(startOffset, endOffset));
+        } else {
+          lines.add(currentLine.substring(startOffset));
         }
-        line++;
+      }
+    } else {
+      lines.add(currentLine.substring(p.getFirstCol()));
+    }
+    
+    while (p.getLastOffset()>=0? p.getLastOffset() >= offset: p.getLastLine() >= line) {
+      currentLine = reader.readLine();
+      
+      if (currentLine == null) {
+        offset = p.getLastOffset();
+        break;
+      } else {
+        offset += currentLine.length() + 1;
+      }
+      line++;
+      if (p.getLastOffset() >= 0) {
+        if (offset > p.getLastOffset()) {
+          lines.add(currentLine.substring(0, currentLine.length() - (offset - p.getLastOffset()) + 1));
+        } else {
+          lines.add(currentLine);
+        }
+      } else {
+        if (p.getLastLine() == line) {
+          lines.add(currentLine.substring(0, p.getLastCol()));
+        } else {
+          lines.add(currentLine);
+        }
       }
     }
+
+    this.lines = lines.toArray(new String[ lines.size() ]);
   }
-    
+  
+     
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer();
     for(int i = 0; i < lines.length; i++) {
-      if (i == 0 && p.getFirstOffset() == -1) {
-        result.append(lines[i].substring(p.getFirstCol())).append("\n");
-      } else if (i == lines.length - 1) {
-	result.append(lines[i]);
+      if (i == lines.length - 1) {
+        result.append(lines[i]);
       } else {
-	result.append(lines[i]).append("\n");
+        result.append(lines[i]).append("\n");
       }
     }
     
@@ -110,8 +142,8 @@ public class SourceBuffer {
 	@Override
   public URL getURL() { return hack.getURL(); }
 	@Override
-  public InputStream getInputStream() throws IOException { 
-	  return hack.getInputStream();
+  public Reader getReader() throws IOException { 
+	  return hack.getReader();
 	}
       };
     }

@@ -104,8 +104,7 @@ import com.ibm.wala.util.warnings.Warnings;
  *         a particular classpath
  */
 public class CGAnalysisContext<E extends ISSABasicBlock> {
-	private static final Logger logger = LoggerFactory
-			.getLogger(CGAnalysisContext.class);
+	private static final Logger logger = LoggerFactory.getLogger(CGAnalysisContext.class);
 
 	public final AndroidAnalysisContext analysisContext;
 
@@ -118,14 +117,13 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 	public Graph<CGNode> systemToApkGraph;
 	public Graph<CGNode> partialGraph;
 
-	public CGAnalysisContext(AndroidAnalysisContext analysisContext,
-			IEntryPointSpecifier specifier) throws IOException {
+	public CGAnalysisContext(AndroidAnalysisContext analysisContext, IEntryPointSpecifier specifier)
+			throws IOException {
 		this(analysisContext, specifier, new ArrayList<InputStream>());
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public CGAnalysisContext(AndroidAnalysisContext analysisContext,
-			IEntryPointSpecifier specifier,
+	public CGAnalysisContext(AndroidAnalysisContext analysisContext, IEntryPointSpecifier specifier,
 			Collection<InputStream> extraSummaries) throws IOException {
 
 		this.analysisContext = analysisContext;
@@ -134,26 +132,22 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 		final ISCanDroidOptions options = analysisContext.getOptions();
 
 		entrypoints = specifier.specify(analysisContext);
-		AnalysisOptions analysisOptions = new AnalysisOptions(scope,
-				entrypoints);
+		AnalysisOptions analysisOptions = new AnalysisOptions(scope, entrypoints);
 		for (Entrypoint e : entrypoints) {
 			logger.debug("Entrypoint: " + e);
 		}
 		analysisOptions.setReflectionOptions(options.getReflectionOptions());
 
-		AnalysisCache cache = new AnalysisCache(
-				(IRFactory<IMethod>) new DexIRFactory());
+		AnalysisCache cache = new AnalysisCache((IRFactory<IMethod>) new DexIRFactory());
 
 		SSAPropagationCallGraphBuilder cgb;
 
 		if (null != options.getSummariesURI()) {
-			extraSummaries.add(new FileInputStream(new File(options
-					.getSummariesURI())));
+			extraSummaries.add(new FileInputStream(new File(options.getSummariesURI())));
 		}
 
-		cgb = AndroidAnalysisContext.makeZeroCFABuilder(analysisOptions, cache,
-				cha, scope, new DefaultContextSelector(analysisOptions, cha),
-				null, extraSummaries, null);
+		cgb = AndroidAnalysisContext.makeZeroCFABuilder(analysisOptions, cache,	cha, scope,
+				new DefaultContextSelector(analysisOptions, cha), null, extraSummaries, null);
 
 		if (analysisContext.getOptions().cgBuilderWarnings()) {
 			// CallGraphBuilder construction warnings
@@ -198,9 +192,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 			@Override
 			// CallGraph composed of APK nodes
 			public boolean test(CGNode node) {
-				return LoaderUtils.fromLoader(node,
-						ClassLoaderReference.Application)
-						|| node.getMethod().isSynthetic();
+				return LoaderUtils.fromLoader(node, ClassLoaderReference.Application) || node.getMethod().isSynthetic();
 			}
 		});
 		if (options.includeLibrary()) {
@@ -208,12 +200,10 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 		} else {
 
 			Collection<CGNode> nodes = Sets.newHashSet();
-			for (Iterator<CGNode> nIter = partialGraph.iterator(); nIter
-					.hasNext();) {
+			for (Iterator<CGNode> nIter = partialGraph.iterator(); nIter.hasNext();) {
 				nodes.add(nIter.next());
 			}
-			CallGraph pcg = PartialCallGraph.make(cg, cg.getEntrypointNodes(),
-					nodes);
+			CallGraph pcg = PartialCallGraph.make(cg, cg.getEntrypointNodes(), nodes);
 			graph = (ISupergraph) ICFGSupergraph.make(pcg, cache);
 		}
 
@@ -221,22 +211,19 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 			@Override
 			public boolean test(CGNode node) {
 				// Node in APK
-				if (LoaderUtils.fromLoader(node,
-						ClassLoaderReference.Application)) {
+				if (LoaderUtils.fromLoader(node, ClassLoaderReference.Application)) {
 					return true;
 				} else {
 					Iterator<CGNode> n = cg.getPredNodes(node);
 					while (n.hasNext()) {
 						// Primordial node has a successor in APK
-						if (LoaderUtils.fromLoader(n.next(),
-								ClassLoaderReference.Application))
+						if (LoaderUtils.fromLoader(n.next(), ClassLoaderReference.Application))
 							return true;
 					}
 					n = cg.getSuccNodes(node);
 					while (n.hasNext()) {
 						// Primordial node has a predecessor in APK
-						if (LoaderUtils.fromLoader(n.next(),
-								ClassLoaderReference.Application))
+						if (LoaderUtils.fromLoader(n.next(), ClassLoaderReference.Application))
 							return true;
 					}
 					// Primordial node with no direct successors or predecessors
@@ -250,29 +237,25 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 			@Override
 			public boolean test(CGNode node) {
 
-				if (LoaderUtils.fromLoader(node,
-						ClassLoaderReference.Primordial)) {
+				if (LoaderUtils.fromLoader(node, ClassLoaderReference.Primordial)) {
 					Iterator<CGNode> succs = cg.getSuccNodes(node);
 					while (succs.hasNext()) {
 						CGNode n = succs.next();
 
-						if (LoaderUtils.fromLoader(n,
-								ClassLoaderReference.Application)) {
+						if (LoaderUtils.fromLoader(n, ClassLoaderReference.Application)) {
 							return true;
 						}
 					}
 					// Primordial method, with no link to APK code:
 					return false;
-				} else if (LoaderUtils.fromLoader(node,
-						ClassLoaderReference.Application)) {
+				} else if (LoaderUtils.fromLoader(node, ClassLoaderReference.Application)) {
 					// see if this is an APK method that was
 					// invoked by a Primordial method:
 					Iterator<CGNode> preds = cg.getPredNodes(node);
 					while (preds.hasNext()) {
 						CGNode n = preds.next();
 
-						if (LoaderUtils.fromLoader(n,
-								ClassLoaderReference.Primordial)) {
+						if (LoaderUtils.fromLoader(n, ClassLoaderReference.Primordial)) {
 							return true;
 						}
 					}
@@ -290,21 +273,17 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 				CGNode node = nodeI.next();
 
 				logger.debug("CGNode: " + node);
-				for (Iterator<CGNode> succI = cg.getSuccNodes(node); succI
-						.hasNext();) {
+				for (Iterator<CGNode> succI = cg.getSuccNodes(node); succI.hasNext();) {
 
-					logger.debug("\tSuccCGNode: "
-							+ succI.next().getMethod().getSignature());
+					logger.debug("\tSuccCGNode: " + succI.next().getMethod().getSignature());
 				}
 			}
 		}
 		for (Iterator<CGNode> nodeI = cg.iterator(); nodeI.hasNext();) {
 			CGNode node = nodeI.next();
 			if (node.getMethod().isSynthetic()) {
-				logger.trace("Synthetic Method: {}", node.getMethod()
-						.getSignature());
-				logger.trace("{}", node.getIR().getControlFlowGraph()
-						.toString());
+				logger.trace("Synthetic Method: {}", node.getMethod().getSignature());
+				logger.trace("{}", node.getIR().getControlFlowGraph().toString());
 				SSACFG ssaCFG = node.getIR().getControlFlowGraph();
 				int totalBlocks = ssaCFG.getNumberOfNodes();
 				for (int i = 0; i < totalBlocks; i++) {
@@ -341,28 +320,23 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 					// don't do anything for primitive contents
 					continue;
 				}
-				OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(pa
-						.getHeapModel().getPointerKeyForArrayContents(ik));
+				OrdinalSet<? extends InstanceKey> pointsToSet =
+					pa.getPointsToSet(pa.getHeapModel().getPointerKeyForArrayContents(ik));
 				if (pointsToSet.isEmpty()) {
 					logger.debug("pointsToSet empty for array contents, creating InstanceKey manually");
-					final IClass contentsClass = pa.getClassHierarchy()
-							.lookupClass(typeRef.getArrayElementType());
+					final IClass contentsClass = pa.getClassHierarchy().lookupClass(typeRef.getArrayElementType());
 					if (contentsClass.isInterface()) {
 						for (IClass implementor : analysisContext.concreteClassesForInterface(contentsClass)) {
-							final InstanceKey contentsIK = new ConcreteTypeKey(
-									implementor);
-							final InstanceKeyElement elt = new InstanceKeyElement(
-									contentsIK);
+							final InstanceKey contentsIK = new ConcreteTypeKey(implementor);
+							final InstanceKeyElement elt = new InstanceKeyElement(contentsIK);
 							if (!elts.contains(elt)) {
 								elts.add(elt);
 								iks.push(contentsIK);
 							}
 						}
 					} else {
-						InstanceKey contentsIK = new ConcreteTypeKey(
-								contentsClass);
-						final InstanceKeyElement elt = new InstanceKeyElement(
-								contentsIK);
+						InstanceKey contentsIK = new ConcreteTypeKey(contentsClass);
+						final InstanceKeyElement elt = new InstanceKeyElement(contentsIK);
 						if (!elts.contains(elt)) {
 							elts.add(elt);
 							iks.push(contentsIK);
@@ -370,8 +344,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 					}
 				} else {
 					for (InstanceKey contentsIK : pointsToSet) {
-						final InstanceKeyElement elt = new InstanceKeyElement(
-								contentsIK);
+						final InstanceKeyElement elt = new InstanceKeyElement(contentsIK);
 						if (!elts.contains(elt)) {
 							elts.add(elt);
 							iks.push(contentsIK);
@@ -382,32 +355,25 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 			}
 			for (IField field : clazz.getAllInstanceFields()) {
 				logger.debug("adding elements for field {}", field);
-				final TypeReference fieldTypeRef = field
-						.getFieldTypeReference();
+				final TypeReference fieldTypeRef = field.getFieldTypeReference();
 				elts.add(new FieldElement(ik, field.getReference()));
-				final IClass fieldClass = analysisContext.getClassHierarchy()
-						.lookupClass(fieldTypeRef);
+				final IClass fieldClass = analysisContext.getClassHierarchy().lookupClass(fieldTypeRef);
 				if (fieldTypeRef.isPrimitiveType() || fieldClass == null) {
 					continue;
 				} else if (fieldTypeRef.isArrayType()) {
-					PointerKey pk = pa.getHeapModel()
-							.getPointerKeyForInstanceField(ik, field);
-					final OrdinalSet<InstanceKey> pointsToSet = pa
-							.getPointsToSet(pk);
+					PointerKey pk = pa.getHeapModel().getPointerKeyForInstanceField(ik, field);
+					final OrdinalSet<? extends InstanceKey> pointsToSet = pa.getPointsToSet(pk);
 					if (pointsToSet.isEmpty()) {
 						logger.debug("pointsToSet empty for array field, creating InstanceKey manually");
-						InstanceKey fieldIK = new ConcreteTypeKey(pa
-								.getClassHierarchy().lookupClass(fieldTypeRef));
-						final InstanceKeyElement elt = new InstanceKeyElement(
-								fieldIK);
+						InstanceKey fieldIK = new ConcreteTypeKey(pa.getClassHierarchy().lookupClass(fieldTypeRef));
+						final InstanceKeyElement elt = new InstanceKeyElement(fieldIK);
 						if (!elts.contains(elt)) {
 							elts.add(elt);
 							iks.push(fieldIK);
 						}
 					} else {
 						for (InstanceKey fieldIK : pointsToSet) {
-							final InstanceKeyElement elt = new InstanceKeyElement(
-									fieldIK);
+							final InstanceKeyElement elt = new InstanceKeyElement(fieldIK);
 							if (!elts.contains(elt)) {
 								elts.add(elt);
 								iks.push(fieldIK);
@@ -415,26 +381,19 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 						}
 					}
 				} else if (fieldTypeRef.isReferenceType()) {
-					PointerKey pk = pa.getHeapModel()
-							.getPointerKeyForInstanceField(ik, field);
-					final OrdinalSet<InstanceKey> pointsToSet = pa
-							.getPointsToSet(pk);
-					if (pointsToSet.isEmpty()
-							&& !analysisContext.getClassHierarchy()
-									.isInterface(fieldTypeRef)) {
+					PointerKey pk = pa.getHeapModel().getPointerKeyForInstanceField(ik, field);
+					final OrdinalSet<? extends InstanceKey> pointsToSet = pa.getPointsToSet(pk);
+					if (pointsToSet.isEmpty() && !analysisContext.getClassHierarchy().isInterface(fieldTypeRef)) {
 						logger.debug("pointsToSet empty for reference field, creating InstanceKey manually");
-						InstanceKey fieldIK = new ConcreteTypeKey(
-								fieldClass);
-						final InstanceKeyElement elt = new InstanceKeyElement(
-								fieldIK);
+						InstanceKey fieldIK = new ConcreteTypeKey(fieldClass);
+						final InstanceKeyElement elt = new InstanceKeyElement(fieldIK);
 						if (!elts.contains(elt)) {
 							elts.add(elt);
 							iks.push(fieldIK);
 						}
 					} else {
 						for (InstanceKey fieldIK : pointsToSet) {
-							final InstanceKeyElement elt = new InstanceKeyElement(
-									fieldIK);
+							final InstanceKeyElement elt = new InstanceKeyElement(fieldIK);
 							if (!elts.contains(elt)) {
 								elts.add(elt);
 								iks.push(fieldIK);

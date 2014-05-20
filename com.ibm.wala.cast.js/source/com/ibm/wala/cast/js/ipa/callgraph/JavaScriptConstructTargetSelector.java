@@ -55,21 +55,27 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
 
   private final Map<Object, IMethod> constructors = HashMapFactory.make();
 
-  class JavaScriptConstructor extends JavaScriptSummarizedFunction {
+  public static class JavaScriptConstructor extends JavaScriptSummarizedFunction {
     private final String toStringExtra;
-
-    private JavaScriptConstructor(MethodReference ref, MethodSummary summary, IClass declaringClass, String toStringExtra) {
+    private final IClass constructorForType;
+    
+    private JavaScriptConstructor(MethodReference ref, MethodSummary summary, IClass declaringClass, IClass constructorForType, String toStringExtra) {
       super(ref, summary, declaringClass);
       this.toStringExtra = toStringExtra;
+      this.constructorForType = constructorForType;
     }
 
-    private JavaScriptConstructor(MethodReference ref, MethodSummary summary, IClass declaringClass) {
-      this(ref, summary, declaringClass, "");
+    private JavaScriptConstructor(MethodReference ref, MethodSummary summary, IClass declaringClass, IClass constructorForType) {
+      this(ref, summary, declaringClass, constructorForType, "");
     }
 
     @Override
     public String toString() {
       return "<ctor for " + getReference().getDeclaringClass() + toStringExtra + ">";
+    }
+    
+    public IClass constructedType() {
+      return constructorForType;
     }
   }
 
@@ -106,7 +112,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     
     //S.addConstant(9, new ConstantValue("__proto__"));
     
-    return new JavaScriptConstructor(ref, S, cls);
+    return new JavaScriptConstructor(ref, S, cls, cls);
   }
 
   private IMethod makeUnaryValueConstructor(IClass cls) {
@@ -131,7 +137,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
  
     //S.addConstant(7, new ConstantValue("__proto__"));
 
-    return new JavaScriptConstructor(ref, S, cls);
+    return new JavaScriptConstructor(ref, S, cls, cls);
   }
 
   private IMethod makeValueConstructor(IClass cls, int nargs, Object value) {
@@ -171,7 +177,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     
     //S.addConstant(6, new ConstantValue("__proto__"));
 
-    return new JavaScriptConstructor(ref, S, cls);
+    return new JavaScriptConstructor(ref, S, cls, cha.lookupClass(JavaScriptTypes.Object));
   }
 
   private IMethod makeUnaryObjectConstructor(IClass cls) {
@@ -182,7 +188,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 2, false));
     S.getNextProgramCounter();
     
-    return new JavaScriptConstructor(ref, S, cls);
+    return new JavaScriptConstructor(ref, S, cls, cha.lookupClass(JavaScriptTypes.Object));
   }
 
   private IMethod makeObjectConstructor(IClass cls, int nargs) {
@@ -234,7 +240,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   
     //S.addConstant(7, new ConstantValue("__proto__"));
 
-    return new JavaScriptConstructor(ref, S, cls);
+    return new JavaScriptConstructor(ref, S, cls, cha.lookupClass(JavaScriptTypes.Array));
   }
 
   private IMethod makeArrayContentsConstructor(IClass cls, int nargs) {
@@ -270,7 +276,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     
     //S.addConstant(vn, new ConstantValue("__proto__"));
 
-    return new JavaScriptConstructor(ref, S, cls);
+    return new JavaScriptConstructor(ref, S, cls, cha.lookupClass(JavaScriptTypes.Array));
   }
 
   private IMethod makeArrayConstructor(IClass cls, int nargs) {
@@ -291,7 +297,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 2, false));
     S.getNextProgramCounter();
     
-    return new JavaScriptConstructor(ref, S, cls);
+    return new JavaScriptConstructor(ref, S, cls, cha.lookupClass(JavaScriptTypes.String));
   }
 
   private IMethod makeUnaryStringCall(IClass cls) {
@@ -308,7 +314,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 5, false));
     S.getNextProgramCounter();
     
-    return new JavaScriptConstructor(ref, S, cls);
+    return new JavaScriptConstructor(ref, S, cls, cha.lookupClass(JavaScriptTypes.String));
   }
 
   private IMethod makeStringCall(IClass cls, int nargs) {
@@ -331,7 +337,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 2, false));
     S.getNextProgramCounter();
     
-    return new JavaScriptConstructor(ref, S, cls);
+    return new JavaScriptConstructor(ref, S, cls, cha.lookupClass(JavaScriptTypes.Number));
   }
 
   private IMethod makeUnaryNumberCall(IClass cls) {
@@ -348,7 +354,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 5, false));
     S.getNextProgramCounter();
     
-    return new JavaScriptConstructor(ref, S, cls);
+    return new JavaScriptConstructor(ref, S, cls, cha.lookupClass(JavaScriptTypes.Number));
   }
 
   private IMethod makeNumberCall(IClass cls, int nargs) {
@@ -395,9 +401,9 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     //S.addConstant(8, new ConstantValue("__proto__"));
 
     if (receiver != cls)
-      return record(tableKey, new JavaScriptConstructor(ref, S, receiver, "(" + cls.getReference().getName() + ")"));
+      return record(tableKey, new JavaScriptConstructor(ref, S, receiver, cls, "(" + cls.getReference().getName() + ")"));
     else
-      return record(tableKey, new JavaScriptConstructor(ref, S, receiver));
+      return record(tableKey, new JavaScriptConstructor(ref, S, receiver, cls));
   }
 
   private int ctorCount = 0;
@@ -409,11 +415,11 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
       return makeFunctionConstructor(cls, cls);
     } else if (nargs == 1) {
       if (ST.isStringConstant(callStmt.getUse(1))) {
-        TypeReference ref = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName((String) ST
+        TypeReference ref = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName(ST
             .getStringValue(callStmt.getUse(1))));
 
         if (DEBUG) {
-          System.err.println(("ctor type name is " + (String) ST.getStringValue(callStmt.getUse(1))));
+          System.err.println(("ctor type name is " + ST.getStringValue(callStmt.getUse(1))));
         }
 
         IClass cls2 = cha.lookupClass(ref);
@@ -511,7 +517,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     
     //S.addConstant(nargs + 9, new ConstantValue("__proto__"));
 
-    return record(key, new JavaScriptConstructor(ref, S, cls));
+    return record(key, new JavaScriptConstructor(ref, S, cls, cls));
   }
 
   private IMethod findOrCreateConstructorMethod(IR callerIR, SSAAbstractInvokeInstruction callStmt, IClass receiver, int nargs) {

@@ -164,7 +164,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
       CAstNode oldSource = N.fst;
       K key = N.snd;
 
-      CAstNode newSource = (CAstNode) entry.getValue();
+      CAstNode newSource = entry.getValue();
       assert newSource != null;
 
       newMap.map(newSource, newSource);
@@ -213,7 +213,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
 
           CAstNode newTarget;
           if (nodeMap.containsKey(targetKey)) {
-            newTarget = (CAstNode) nodeMap.get(targetKey);
+            newTarget = nodeMap.get(targetKey);
             newMap.add(newSource, newTarget, newLabel);
             allNewTargetNodes.add(newTarget);
 

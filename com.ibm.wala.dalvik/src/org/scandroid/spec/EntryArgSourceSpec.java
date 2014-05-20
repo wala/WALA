@@ -95,7 +95,7 @@ public class EntryArgSourceSpec extends SourceSpec {
 				final Set<CodeElement> valueElements = CodeElement.valueElements(pa, node, ssaVal);
 				
 				PointerKey pk = pa.getHeapModel().getPointerKeyForLocal(node, ssaVal);
-				final OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(pk);
+				final OrdinalSet<? extends InstanceKey> pointsToSet = pa.getPointsToSet(pk);
 				
 				if (pointsToSet.isEmpty()) {
 					TypeReference typeRef = node.getMethod().getParameterType(i);

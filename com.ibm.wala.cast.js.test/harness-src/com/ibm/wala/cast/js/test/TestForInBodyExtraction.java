@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 import org.junit.Assert;
+import org.junit.ComparisonFailure;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -50,20 +51,27 @@ public abstract class TestForInBodyExtraction {
 	
 	public void testRewriter(String testName, String in, String out) {
 		File tmp = null;
+		String expected = null;
+		String actual = null;
 		try {
 			tmp = File.createTempFile("test", ".js");
 			FileUtil.writeFile(tmp, in);
 			CAstImpl ast = new CAstImpl();
-			String actual = new CAstDumper().dump(new ClosureExtractor(ast, ForInBodyExtractionPolicy.FACTORY).rewrite(parseJS(tmp, ast)));
+			actual = new CAstDumper().dump(new ClosureExtractor(ast, ForInBodyExtractionPolicy.FACTORY).rewrite(parseJS(tmp, ast)));
 			actual = eraseGeneratedNames(actual);
 			
 			FileUtil.writeFile(tmp, out);
-			String expected = new CAstDumper().dump(parseJS(tmp, ast));
+			expected = new CAstDumper().dump(parseJS(tmp, ast));
 			expected = eraseGeneratedNames(expected);
 			
 			Assert.assertEquals(testName, expected, actual);
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (ComparisonFailure e) { 
+		  System.err.println("Comparison Failure in " + testName + "!");
+		  System.err.println(expected);
+		  System.err.println(actual);
+		  throw e;
 		} finally {
 			if(tmp != null && tmp.exists())
 				tmp.delete();

@@ -11,53 +11,16 @@
 package com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.Map;
-import java.util.Set;
 
-import junit.framework.AssertionFailedError;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
-import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test.CGUtil.BuilderType;
-import com.ibm.wala.cast.js.test.TestJSCallGraphShape;
-import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
-import com.ibm.wala.cast.js.util.CallGraph2JSON;
+import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 
-public class TestFieldBasedCG extends TestJSCallGraphShape {
-	protected CGUtil util;
-
-	@Override
-	@Before
-	public void setUp() throws Exception {
-		util = new CGUtil(new CAstRhinoTranslatorFactory());
-	}
-	
-	private void runTest(String script, Object[][] assertions, BuilderType... builderTypes) throws IOException, WalaException, Error {
-	  for(BuilderType builderType : builderTypes) {
-	    URL url = TestFieldBasedCG.class.getClassLoader().getResource(script);
-	    JSCallGraph cg = util.buildCG(url, builderType);
-	    try {
-	      verifyGraphAssertions(cg, assertions);
-	    } catch(AssertionFailedError afe) {
-	      throw new AssertionFailedError(builderType + ": " + afe.getMessage());
-	    }
-	  }
-	}
-	
-	@SuppressWarnings("unused")
-	private void dumpCG(JSCallGraph cg) {
-		CallGraph2JSON.IGNORE_HARNESS = false;
-		Map<String, Set<String>> edges = CallGraph2JSON.extractEdges(cg);
-		for(String callsite : edges.keySet())
-			for(String callee : edges.get(callsite))
-				System.out.println(callsite + " -> " + callee);
-	}
-
+public class TestFieldBasedCG extends AbstractFieldBasedTest {
 	private static final Object[][] assertionsForSimpleJS = new Object[][] {
 		new Object[] { ROOT, new String[] { "suffix:simple.js" } },
 		new Object[] { "suffix:simple.js", new String[] { "suffix:foo", "suffix:bar", "suffix:A", "suffix:Function" } },
@@ -66,7 +29,7 @@ public class TestFieldBasedCG extends TestJSCallGraphShape {
 	};
 	
 	@Test
-	public void testSimpleJS() throws IOException, WalaException, Error {
+	public void testSimpleJS() throws IOException, WalaException, Error, CancelException {
 		runTest("tests/fieldbased/simple.js", assertionsForSimpleJS, BuilderType.PESSIMISTIC, BuilderType.OPTIMISTIC, BuilderType.OPTIMISTIC_WORKLIST);
 	}
 
@@ -77,7 +40,7 @@ public class TestFieldBasedCG extends TestJSCallGraphShape {
 	};
 	
 	@Test
-	public void testOneshot() throws IOException, WalaException, Error {
+	public void testOneshot() throws IOException, WalaException, Error, CancelException {
 		runTest("tests/fieldbased/oneshot.js", assertionsForOneShot, BuilderType.PESSIMISTIC, BuilderType.OPTIMISTIC, BuilderType.OPTIMISTIC_WORKLIST);
 	}
 	
@@ -89,7 +52,7 @@ public class TestFieldBasedCG extends TestJSCallGraphShape {
 	};
 	
 	@Test
-	public void testCallbacks() throws IOException, WalaException, Error {
+	public void testCallbacks() throws IOException, WalaException, Error, CancelException {
 		runTest("tests/fieldbased/callbacks.js", assertionsForCallbacks, BuilderType.OPTIMISTIC, BuilderType.OPTIMISTIC_WORKLIST);
 	}
 	
@@ -98,7 +61,7 @@ public class TestFieldBasedCG extends TestJSCallGraphShape {
 	};
 	
 	@Test
-	public void testLexical() throws IOException, WalaException, Error {
+	public void testLexical() throws IOException, WalaException, Error, CancelException {
 		runTest("tests/fieldbased/lexical.js", assertionsForLexical, BuilderType.PESSIMISTIC, BuilderType.OPTIMISTIC, BuilderType.OPTIMISTIC_WORKLIST);
 	}
 	
@@ -108,7 +71,7 @@ public class TestFieldBasedCG extends TestJSCallGraphShape {
 	};
 	
 	@Test
-	public void testReflectiveCall() throws IOException, WalaException, Error {
+	public void testReflectiveCall() throws IOException, WalaException, Error, CancelException {
 		runTest("tests/fieldbased/reflective_calls.js", assertionsForReflectiveCall, BuilderType.OPTIMISTIC, BuilderType.OPTIMISTIC_WORKLIST);
 	}
 	
@@ -118,7 +81,7 @@ public class TestFieldBasedCG extends TestJSCallGraphShape {
 	};
 	
 	@Test
-	public void testNew() throws IOException, WalaException, Error {
+	public void testNew() throws IOException, WalaException, Error, CancelException {
 	  runTest("tests/fieldbased/new.js", assertionsForNew, BuilderType.OPTIMISTIC, BuilderType.OPTIMISTIC_WORKLIST);
 	}
   
@@ -128,7 +91,13 @@ public class TestFieldBasedCG extends TestJSCallGraphShape {
   };
   
   @Test
-  public void testCallbacks2() throws IOException, WalaException, Error {
+  public void testCallbacks2() throws IOException, WalaException, Error, CancelException {
     runTest("tests/fieldbased/callbacks2.js", assertionsForCallbacks2, BuilderType.OPTIMISTIC, BuilderType.OPTIMISTIC_WORKLIST);
   }
+  
+  // @Test
+  public void testBug2979() throws IOException, WalaException, Error, CancelException {
+    System.err.println(runTest("pages/2979.html", new Object[][]{}, BuilderType.PESSIMISTIC, BuilderType.OPTIMISTIC, BuilderType.OPTIMISTIC_WORKLIST));
+  }
+
 }

@@ -80,11 +80,11 @@ Object.prototype = {
   
   constructor: Object,
 
-  toString: function toString() {
+  toString: function Object_prototype_toString() {
     return primitive("ObjectToString", this);
   },
 
-  toLocaleString: function toLocaleString() {
+  toLocaleString: function Object_prototype_toLocaleString() {
     return primitive("ObjectToLocaleString", this);
   },
 
@@ -196,6 +196,13 @@ local_array.prototype = {
 
   push: function Array_prototype_push () {
     var n = this.length;
+    
+    // nasty hack for field-sensitive builders
+    // TODO: fix this somehow
+    if (n == 0) {
+      this[0] = arguments[0]; 
+    }
+
     for(var i = 0; i < arguments.length; i++) {
       this[ n++ ] = arguments[i];
     }

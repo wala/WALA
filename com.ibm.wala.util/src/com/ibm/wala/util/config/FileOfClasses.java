@@ -11,19 +11,12 @@
 package com.ibm.wala.util.config;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.io.FileProvider;
 
 /**
  * An object which represents a set of classes read from a text file.
@@ -35,24 +28,11 @@ public class FileOfClasses extends SetOfClasses implements Serializable {
 
   private static final boolean DEBUG = false;
 
-
-
   private Pattern pattern = null;
 
   private String regex = null;
 
   private boolean needsCompile = false;
-
-  private FileOfClasses(File textFile) throws IOException {
-    this(textFile.exists()? new FileInputStream(textFile): FileProvider.class.getClassLoader().getResourceAsStream(textFile.getName()));
-  }
-  
-  public static FileOfClasses createFileOfClasses(File textFile) throws IOException {
-    if (textFile == null) {
-      throw new IllegalArgumentException("null textFile");
-    }
-    return new FileOfClasses(textFile);
-  }
   
   public FileOfClasses(InputStream input) throws IOException {
     if (input == null) {
@@ -83,20 +63,6 @@ public class FileOfClasses extends SetOfClasses implements Serializable {
     needsCompile = false;
   }
 
-  @Override
-  public boolean contains(TypeReference klass) {
-    if (klass == null) {
-      throw new IllegalArgumentException("klass is null");
-    }
-    if (klass.isPrimitiveType()) {
-      // can't exclude primitives
-      return false;
-    }
-    // get rid of the initial 'L' 
-    final String klassName = klass.getName().toString().substring(1);
-    return contains(klassName);
-  }
-
   /*
    * @see com.ibm.wala.ipa.callgraph.impl.SetOfClasses#contains(java.lang.String)
    */
@@ -123,14 +89,14 @@ public class FileOfClasses extends SetOfClasses implements Serializable {
    * @see com.ibm.wala.ipa.callgraph.impl.SetOfClasses#add(com.ibm.wala.classLoader.IClass)
    */
   @Override
-  public void add(IClass klass) {
+  public void add(String klass) {
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");
     }
     if (regex == null) {
-      regex = klass.getReference().getName().toString();
+      regex = klass;
     } else {
-      regex = regex + '|' + klass.getReference().getName().toString();
+      regex = regex + '|' + klass;
     }
     needsCompile = true;
   }

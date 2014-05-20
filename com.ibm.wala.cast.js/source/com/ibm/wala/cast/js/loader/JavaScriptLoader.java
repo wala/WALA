@@ -234,12 +234,6 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         @Override
-        public JavaScriptInvoke Invoke(int iindex, int function, int[] results, int[] params, int exception, CallSiteReference site,
-            Access[] lexicalReads, Access[] lexicalWrites) {
-          return new JavaScriptInvoke(iindex, function, results, params, exception, site, lexicalReads, lexicalWrites);
-        }
-
-        @Override
         public JavaScriptInvoke Invoke(int iindex, int function, int result, int[] params, int exception, CallSiteReference site) {
           return new JavaScriptInvoke(iindex, function, result, params, exception, site);
         }
@@ -347,8 +341,8 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         @Override
-        public AstLexicalRead LexicalRead(int iindex, int lhs, String definer, String globalName) {
-          return new AstLexicalRead(iindex, lhs, definer, globalName);
+        public AstLexicalRead LexicalRead(int iindex, int lhs, String definer, String globalName, TypeReference type) {
+          return new AstLexicalRead(iindex, lhs, definer, globalName, type);
         }
 
         @Override
@@ -362,8 +356,8 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         @Override
-        public AstLexicalWrite LexicalWrite(int iindex, String definer, String globalName, int rhs) {
-          return new AstLexicalWrite(iindex, definer, globalName, rhs);
+        public AstLexicalWrite LexicalWrite(int iindex, String definer, String globalName, TypeReference type, int rhs) {
+          return new AstLexicalWrite(iindex, definer, globalName, type, rhs);
         }
 
         @Override
@@ -1016,29 +1010,6 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
   static {
     bootstrapFileNames = HashSetFactory.make();
     bootstrapFileNames.add(prologueFileName);
-  }
-
-  /**
-   * adds the {@link #bootstrapFileNames bootstrap files} to the list of modules
-   * and then invokes the superclass method
-   */
-  @Override
-  public void init(List<Module> modules) {
-
-    List<Module> all = new LinkedList<Module>();
-
-    for (final String fn : bootstrapFileNames) {
-      all.add(new SourceURLModule(getClass().getClassLoader().getResource(fn)) {
-        @Override
-        public String getName() {
-          return fn;
-        }
-      });
-    }
-
-    all.addAll(modules);
-
-    super.init(all);
   }
 
   @SuppressWarnings("unchecked")

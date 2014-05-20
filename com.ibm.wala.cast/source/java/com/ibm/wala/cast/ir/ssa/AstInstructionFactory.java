@@ -13,6 +13,7 @@ package com.ibm.wala.cast.ir.ssa;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.TypeReference;
 
 public interface AstInstructionFactory extends SSAInstructionFactory {
 
@@ -38,13 +39,13 @@ public interface AstInstructionFactory extends SSAInstructionFactory {
   
   AstLexicalRead LexicalRead(int iindex, Access access);
   
-  AstLexicalRead LexicalRead(int iindex, int lhs, String definer, String globalName);
+  AstLexicalRead LexicalRead(int iindex, int lhs, String definer, String globalName, TypeReference type);
   
   AstLexicalWrite LexicalWrite(int iindex, Access[] accesses);
   
   AstLexicalWrite LexicalWrite(int iindex, Access access);
   
-  AstLexicalWrite LexicalWrite(int iindex, String definer, String globalName, int rhs);
+  AstLexicalWrite LexicalWrite(int iindex, String definer, String globalName, TypeReference type, int rhs);
   
   EachElementGetInstruction EachElementGetInstruction(int iindex, int lValue, int objectRef);
   

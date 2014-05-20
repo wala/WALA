@@ -172,7 +172,7 @@ public class OrdinalSet<T> implements Iterable<T> {
   /**
    * @return true iff this set contains object
    */
-  public boolean contains(T object) {
+  public boolean contains(Object object) {
     if (this == EMPTY || S == null || object == null) {
       return false;
     }

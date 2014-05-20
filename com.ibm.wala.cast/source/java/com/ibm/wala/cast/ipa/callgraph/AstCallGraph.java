@@ -60,7 +60,7 @@ public class AstCallGraph extends ExplicitCallGraph {
     }
 
     public AstLexicalRead addGlobalRead(TypeReference type, String name) {
-      AstLexicalRead s = new AstLexicalRead(statements.size(), nextLocal++, null, name);
+      AstLexicalRead s = new AstLexicalRead(statements.size(), nextLocal++, null, name, type);
       statements.add(s);
       return s;
     }

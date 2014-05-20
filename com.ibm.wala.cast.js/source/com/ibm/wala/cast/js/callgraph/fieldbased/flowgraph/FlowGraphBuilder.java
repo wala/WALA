@@ -28,6 +28,7 @@ import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
 import com.ibm.wala.cast.js.ssa.PrototypeLookup;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.js.util.Util;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
 import com.ibm.wala.cast.types.AstMethodReference;
@@ -79,36 +80,45 @@ public class FlowGraphBuilder {
 		
 		addPrimitives(flowgraph);
 		
-		for(IClass klass : cha) {
-			for(IMethod method : klass.getDeclaredMethods()) {
-				if(method.getDescriptor().equals(AstMethodReference.fnDesc)) {
-					IR ir = cache.getIR(method);
-					FlowGraphSSAVisitor visitor = new FlowGraphSSAVisitor(ir, flowgraph);
-
-					// first visit normal instructions
-					SSAInstruction[] normalInstructions = ir.getInstructions();
-					for(int i=0;i<normalInstructions.length;++i)
-						if(normalInstructions[i] != null) {
-							visitor.instructionIndex  = i;
-							normalInstructions[i].visit(visitor);
-						}
-					
-					// now visit phis and catches
-					visitor.instructionIndex = -1;
-					for(Iterator<? extends SSAInstruction> iter=ir.iteratePhis();iter.hasNext();)
-						iter.next().visit(visitor);
-					
-					for(Iterator<SSAInstruction> iter=ir.iterateCatchInstructions();iter.hasNext();)
-						iter.next().visit(visitor);
-				}
-			}
-		}
+		visitProgram(flowgraph);
 					
 		return flowgraph;
 	}
+
+  protected void visitProgram(FlowGraph flowgraph) {
+    for(IClass klass : cha) {
+			for(IMethod method : klass.getDeclaredMethods()) {
+				if(method.getDescriptor().equals(AstMethodReference.fnDesc))
+          visitFunction(flowgraph, method);
+			}
+		}
+  }
+
+  protected void visitFunction(FlowGraph flowgraph, IMethod method) {
+    {
+    	IR ir = cache.getIR(method);
+    	FlowGraphSSAVisitor visitor = new FlowGraphSSAVisitor(ir, flowgraph);
+
+    	// first visit normal instructions
+    	SSAInstruction[] normalInstructions = ir.getInstructions();
+    	for(int i=0;i<normalInstructions.length;++i)
+    		if(normalInstructions[i] != null) {
+    			visitor.instructionIndex  = i;
+    			normalInstructions[i].visit(visitor);
+    		}
+    	
+    	// now visit phis and catches
+    	visitor.instructionIndex = -1;
+    	for(Iterator<? extends SSAInstruction> iter=ir.iteratePhis();iter.hasNext();)
+    		iter.next().visit(visitor);
+    	
+    	for(Iterator<SSAInstruction> iter=ir.iterateCatchInstructions();iter.hasNext();)
+    		iter.next().visit(visitor);
+    }
+  }
 	
 	// primitive functions that are treated specially
-	private static String[] primitiveFunctions = { "Object", "Function", "Array", "String", "Number", "RegExp" };
+	private static String[] primitiveFunctions = { "Object", "Function", "Array", "StringObject", "NumberObject", "BooleanObject", "RegExp" };
 	
 	/**
 	 * Add flows from the special primitive functions to the corresponding global variables.
@@ -120,7 +130,8 @@ public class FlowGraphBuilder {
 		for(String pf : primitiveFunctions) {
 			TypeReference typeref = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, "L" + pf);
 			IClass klass = cha.lookupClass(typeref);
-			flowgraph.addEdge(factory.makeFuncVertex(klass), factory.makePropVertex(pf));
+			String prop = pf.endsWith("Object")? pf.substring(0, pf.length() - 6): pf;
+			flowgraph.addEdge(factory.makeFuncVertex(klass), factory.makePropVertex(prop));
 		}
 	}
 	
@@ -278,6 +289,14 @@ public class FlowGraphBuilder {
 					   w = factory.makeVarVertex(func, pr.getDef());
 				flowgraph.addEdge(v, w);
 			}
+			
+			IntSet argVns = Util.getArgumentsArrayVns(ir, du);
+			if (argVns.contains(pr.getObjectRef())) {
+			  Vertex v = factory.makeArgVertex(func),
+            w = factory.makeVarVertex(func, pr.getDef());
+       flowgraph.addEdge(v, w);
+			}
+			
 			handleLexicalDef(pr.getDef());
 		}
 		
@@ -324,6 +343,10 @@ public class FlowGraphBuilder {
 				
 				// find the function being defined here
 				IClass klass = cha.lookupClass(TypeReference.findOrCreate(JavaScriptTypes.jsLoader, fn_name));
+				if (klass == null) {
+				  System.err.println("cannot find " + fn_name + " at " +  ((AstMethod)ir.getMethod()).getSourcePosition(ir.getCallInstructionIndices(invk.getCallSite()).intIterator().next()));
+				  return;
+				}
 				IMethod fn = klass.getMethod(AstMethodReference.fnSelector);
 				FuncVertex fnVertex = factory.makeFuncVertex(klass);
 				

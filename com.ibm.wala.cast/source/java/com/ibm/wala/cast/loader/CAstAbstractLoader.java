@@ -11,7 +11,7 @@
 package com.ibm.wala.cast.loader;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -66,6 +66,14 @@ public abstract class CAstAbstractLoader implements IClassLoader {
     this(cha, null);
   }
 
+  public void addMessage(ModuleEntry module, Set<Warning> message) {
+    if (! errors.containsKey(module)) {
+      errors.put(module, new HashSet<Warning>());
+    }
+    
+    errors.get(module).addAll(message);
+  }
+
   public void addMessage(ModuleEntry module, Warning message) {
     if (! errors.containsKey(module)) {
       errors.put(module, new HashSet<Warning>());
@@ -73,7 +81,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
     
     errors.get(module).add(message);
   }
-  
+
   private Iterator<ModuleEntry> getMessages(final byte severity) {
     return new MapIterator<Map.Entry<ModuleEntry,Set<Warning>>, ModuleEntry>(new FilterIterator<Map.Entry<ModuleEntry,Set<Warning>>>(errors.entrySet().iterator(), new Filter<Map.Entry<ModuleEntry,Set<Warning>>>()  {
       @Override
@@ -112,12 +120,12 @@ public abstract class CAstAbstractLoader implements IClassLoader {
   
   public IClass lookupClass(String className, IClassHierarchy cha) {
     assert this.cha == cha;
-    return (IClass) types.get(TypeName.string2TypeName(className));
+    return types.get(TypeName.string2TypeName(className));
   }
 
   @Override
   public IClass lookupClass(TypeName className) {
-    return (IClass) types.get(className);
+    return types.get(className);
   }
 
   @Override
@@ -168,18 +176,18 @@ public abstract class CAstAbstractLoader implements IClassLoader {
   }
   
   @Override
-  public InputStream getSource(IClass klass) {
+  public Reader getSource(IClass klass) {
     try {
-      return ((AstClass)klass).getSourcePosition().getInputStream();
+      return ((AstClass)klass).getSourcePosition().getReader();
     } catch (IOException e) {
       return null;
     }
   }
 
   @Override
-  public InputStream getSource(IMethod method, int bcOffset) {
+  public Reader getSource(IMethod method, int bcOffset) {
     try {
-      return ((AstMethod)method).getSourcePosition(bcOffset).getInputStream();
+      return ((AstMethod)method).getSourcePosition(bcOffset).getReader();
     } catch (IOException e) {
       return null;
     }

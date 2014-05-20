@@ -7,12 +7,11 @@
 	<artifactId>WALA</artifactId>
 	<version>1.3.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
-
 	<properties>
 		<project-version>1.3.4-SNAPSHOT</project-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<build-alias>b000</build-alias>
-		<tycho-version>0.17.0</tycho-version>
+		<tycho-version>0.19.0</tycho-version>
 		<tycho.scmUrl>scm:git:ssh://github.com:wala/WALA.git</tycho.scmUrl>
 	</properties>
 
@@ -44,9 +43,11 @@
 
 		<module>com.ibm.wala.ide-feature</module>
 		<module>com.ibm.wala.ide</module>
-		<module>com.ibm.wala.ide.jdt</module>
+		<module>com.ibm.wala.ide.tests</module>
 		<module>com.ibm.wala.ide.jsdt</module>
-
+		<module>com.ibm.wala.ide.jsdt.tests</module>
+		<module>com.ibm.wala.ide.jdt</module>
+		<module>com.ibm.wala.ide.jdt.test</module>
 		<module>com.ibm.wala-repository</module>
 	</modules>
 	<build>
@@ -76,8 +77,9 @@
 				<artifactId>tycho-compiler-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.7</source>
+					<target>1.7</target>
+                                        <compilerArgument>-err:-forbidden</compilerArgument>
                                         <compilerArguments>                 
                                           <properties>${project.basedir}/.settings/org.eclipse.jdt.core.prefs</properties>
                                         </compilerArguments>
@@ -121,14 +123,53 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
+				  <useuiharness>false</useuiharness>
+				  <useuithread>false</useuithread>
 					<providerHint>junit47</providerHint>
 					<argLine>${tycho.test.jvmArgs}</argLine>
+                                        <includes>
+					  <include>**/Test*.java</include>
+					  <include>**/*Test.java</include>
+					  <include>**/*TestCase.java</include>
+					  <include>**/*Tests.java</include>
+					</includes>
 				</configuration>
+			</plugin>
+			<!-- The tycho-source-feature-plugin needs to be place before the tycho-p2-plugin, as both plugins' goals bind to the same phase -->
+			<plugin>
+				<groupId>org.eclipse.tycho.extras</groupId>
+				<artifactId>tycho-source-feature-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>generate-source-feature</id>
+						<goals>
+							<goal>source-feature</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-plugin</artifactId>
 				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<!-- Don't attach (default) metadata before the "generate-source-feature" execution. -->
+						<id>default-p2-metadata-default</id>
+						<configuration>
+							<attachP2Metadata>false</attachP2Metadata>
+						</configuration>
+					</execution>
+					<execution>
+						<!-- Do attach metadata after the "generate-source-feature" execution. -->
+						<id>attach-p2-metadata</id>
+						<phase>package</phase>
+						<goals>
+							<goal>p2-metadata</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
@@ -142,11 +183,6 @@
 				<configuration>
 					<includeAllDependencies>false</includeAllDependencies>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho.extras</groupId>
-				<artifactId>tycho-source-feature-plugin</artifactId>
-				<version>${tycho-version}</version>
 			</plugin>
 			<plugin>
 				<groupId>com.googlecode.maven-download-plugin</groupId>

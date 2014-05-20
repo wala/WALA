@@ -183,8 +183,7 @@ public class DemandCastChecker {
       builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
       heapModel = (HeapModel) builder;
     }
-    ProgressMaster master = ProgressMaster.make(new NullProgressMonitor());
-    master.setMillisPerWorkItem(360000);
+    ProgressMaster master = ProgressMaster.make(new NullProgressMonitor(), 360000, false);
     master.beginTask("runSolver", 1);
     try {
       retCG = builder.makeCallGraph(options, master);

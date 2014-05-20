@@ -40,6 +40,7 @@
 package org.scandroid.prefixtransfer;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -55,7 +56,7 @@ import org.scandroid.prefixtransfer.modeledAllocations.UriParseString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+import com.ibm.wala.analysis.reflection.InstanceKeyWithNode;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -70,316 +71,281 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.intset.OrdinalSet;
+import com.ibm.wala.util.intset.OrdinalSetMapping;
 
 public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
+	
 	private static final Logger logger = LoggerFactory.getLogger(UriPrefixTransferGraph.class);
 
     public final Map<InstanceKey, InstanceKeySite> nodeMap = new HashMap<InstanceKey, InstanceKeySite>();
+    public final Map<InstanceKey, StringBuilderUseAnalysis> sbuaMap =
+    	new HashMap<InstanceKey, StringBuilderUseAnalysis>();
+
     private final List<InstanceKeySite> nodes = new ArrayList<InstanceKeySite>();
-    private final Map<InstanceKeySite,Set<InstanceKeySite>> successors = new HashMap<InstanceKeySite, Set<InstanceKeySite>>();
-    private final Map<InstanceKeySite,Set<InstanceKeySite>> predecessors = new HashMap<InstanceKeySite, Set<InstanceKeySite>>();
-    public final Map<InstanceKey, StringBuilderUseAnalysis> sbuaMap = new HashMap<InstanceKey, StringBuilderUseAnalysis>();
+    private final Map<InstanceKeySite,Set<InstanceKeySite>> successors =
+    	new HashMap<InstanceKeySite, Set<InstanceKeySite>>();
+    private final Map<InstanceKeySite,Set<InstanceKeySite>> predecessors =
+    	new HashMap<InstanceKeySite, Set<InstanceKeySite>>();
 
-    public UriPrefixTransferGraph(PointerAnalysis pa)
-    {
-        Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies = new HashMap<InstanceKeySite, Set<InstanceKey>>();
-        ArrayList<InstanceKey> instanceKeys = new ArrayList<InstanceKey>();
-        instanceKeys.addAll(pa.getInstanceKeys());
-        for(InstanceKey k:instanceKeys)
-        {
-            if(k.getConcreteType().getName().toString().equals("Ljava/lang/StringBuilder"))
-            {
-                if(k instanceof AllocationSiteInNode)
-                {
-                    AllocationSiteInNode as = (AllocationSiteInNode)k;
-                    if(as.getSite().getDeclaredType().getClassLoader().equals(ClassLoaderReference.Application))
-                    {
-                        StringBuilderUseAnalysis sbua;
-                        try
-                        {
-                            sbua = new StringBuilderUseAnalysis(k,pa);
-                        }
-                        catch(Exception e)
-                        {
-                            logger.warn("SBUA failed", e);
-                            continue;
-                        }
-//                      for(Entry<ISSABasicBlock, ISSABasicBlock> e : sbua.blockOrdering.entrySet())
-//                      {
-//                          logger.debug(e.getKey().toString()+" --> "+e.getValue().toString());
-//                          SSAInstruction inst = e.getKey().getLastInstruction();
-//                          if (inst instanceof SSAInvokeInstruction) {
-//                              logger.debug("Call Site \t" + ((SSAInvokeInstruction) inst).getCallSite());
-//                          }
-//                      }
-                        sbuaMap.put(k, sbua); // map k to sbua in some global map
-                    }
-                    continue;
-                }
-                logger.warn("Skipping StringBuilder InstanceKey: "+k);
-                logger.warn("\tClass loader reference: "+k.getConcreteType().getClassLoader().getReference());
-            }
+    public UriPrefixTransferGraph(final PointerAnalysis pa) {
+        final Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies =
+        	new HashMap<InstanceKeySite, Set<InstanceKey>>();
+        final OrdinalSetMapping<InstanceKey> mapping = pa.getInstanceKeyMapping();
+        final Collection<InstanceKey> instanceKeys = pa.getInstanceKeys();
+        
+        for (final InstanceKey k : instanceKeys) {
+        	handleStringBuilder(k, pa, mapping, unresolvedDependencies);
         }
-        InstanceKeySite node = null;
-        for (InstanceKey k:instanceKeys)
-        {
-            //logger.debug("checking type: " + k.getConcreteType().getName());
-
-            // create a node for each InstanceKey of type string
-
-            if(k.getConcreteType().getName().toString().equals("Ljava/lang/String"))
-            {
-                if(k instanceof ConstantKey)
-                {
-                    node = new ConstantString(pa.getInstanceKeyMapping().getMappedIndex(k), (String)((ConstantKey<?>)k).getValue());
-                    addNode(node);
-//                	logger.debug(node);
-                    nodeMap.put(k, node);
-                }
-                else if(k instanceof NormalAllocationInNode)
-                {
-//                  logger.debug("NormalAllocationInNode: "+k);
-                    IMethod m = ((NormalAllocationInNode) k).getNode().getMethod();
-                    if (m.getSignature().equals("java.lang.StringBuilder.toString()Ljava/lang/String;")) {
-                        Context context = ((NormalAllocationInNode) k).getNode().getContext();
-                        CGNode caller = (CGNode) context.get(ContextKey.CALLER);
-                        CallSiteReference csr = (CallSiteReference) context.get(ContextKey.CALLSITE);
-                        InstanceKey receiver = (InstanceKey) context.get(ContextKey.RECEIVER);
-//                        logger.debug("StringBuilder.toString() caller: " + caller +"\n\tcsr: "+csr+"\n\treceiver: "+receiver);
-                        if (caller != null && caller.getMethod().getReference().getDeclaringClass().getClassLoader().equals(ClassLoaderReference.Application))
-                        {
-//                        	logger.debug("Found StringBuilder receiver for toString call");
-                            if (sbuaMap.get(receiver) != null) {
-                                node = sbuaMap.get(receiver).getNode(csr,k);
-                                if(node == null)
-                                {
-                                    continue;
-                                }
-                                addNode(node);
-                                nodeMap.put(k, node);
-                                HashSet<InstanceKey> iks = new HashSet<InstanceKey>();
-                                for (Integer i: ((StringBuilderToStringInstanceKeySite) node).concatenatedInstanceKeys) {
-                                    iks.add(pa.getInstanceKeyMapping().getMappedObject(i));
-                                }
-                                logger.debug("adding to UnresolvedDependencies => node: " + node + " => iks: " + iks);
-                                unresolvedDependencies.put(node, iks);
-                                // TODO: if this string is created inside the toString function of a string builder, find the StringBuilderUseAnalysis for that string builder and call getNode(k) to get the node for this instance key
-                                // - this may have to be done in another phase
-                                //                          NormalAllocationInNode ak = (NormalAllocationInNode)k;
-                                //                          SSAInstruction inst = ak.getNode().getIR().getPEI(ak.getSite());
-                                //                          logger.debug("NormalAllocationInNode inst: "+inst);
-                                //                          logger.debug("NormalAllocationInNode uses:");
-                                //                          for(int i = 0; i < inst.getNumberOfUses(); i++)
-                                //                          {
-                                //                              int use = inst.getUse(i);
-                                //                              OrdinalSet<InstanceKey> useKeys = pa.getPointsToSet(new LocalPointerKey(ak.getNode(), use));
-                                //                              logger.debug("\tUse "+use+": "+useKeys);
-                                //                          }
-                                //                          logger.debug("NormalAllocationInNode defs:");
-                                //                          for(int i = 0; i < inst.getNumberOfDefs(); i++)
-                                //                          {
-                                //                              int def = inst.getDef(i);
-                                //                              OrdinalSet<InstanceKey> useKeys = pa.getPointsToSet(new LocalPointerKey(ak.getNode(), def));
-                                //                              logger.debug("\tDef "+def+": "+useKeys);
-                                //                          }
-                            }
-                            else {
-                                logger.warn("Receiver instancekey is null in UriPrefixTransferGraph, Method: " + ((NormalAllocationInNode) receiver).getNode().getMethod().getSignature());
-                            }
-                        }
-                    }
-                }
-//              else if(k instanceof AllocationSite)
-//              {
-//                  logger.debug("AllocationSite: "+k);
-//              }
-//              else
-//              {
-//                  logger.debug("Unknown type: "+k.toString());
-//              }
-                // create an edge for dependencies used in the creation of each instance key
-            }
-//          else
-//          {
-//              logger.debug("Got IK of other type "+k);
-//          }
+        
+        for (final InstanceKey k : instanceKeys) {
+        	handleString(k, pa, mapping, unresolvedDependencies);
         }
 
-        for (Iterator<PointerKey> Ipk = pa.getPointerKeys().iterator(); Ipk.hasNext();) {
-        	PointerKey pk = Ipk.next();
+        for (final PointerKey pk : pa.getPointerKeys()) {
         	if (pk instanceof LocalPointerKey) {
-        		LocalPointerKey lpk = (LocalPointerKey)pk;
-        		IMethod m = lpk.getNode().getMethod();
-        		Context context = lpk.getNode().getContext();
-        		CGNode caller = (CGNode) context.get(ContextKey.CALLER);
-        		CallSiteReference csr = (CallSiteReference) context.get(ContextKey.CALLSITE);
-        		if (caller != null && caller.getMethod().getReference().getDeclaringClass().getClassLoader().equals(ClassLoaderReference.Application)) {
-        			if (m.getSignature().equals("android.net.Uri.withAppendedPath(Landroid/net/Uri;Ljava/lang/String;)Landroid/net/Uri;")) {
-        				SSAInvokeInstruction invoke = (SSAInvokeInstruction) caller.getIR().getBasicBlocksForCall(csr)[0].getLastInstruction();
-        				LocalPointerKey lkey = new LocalPointerKey(caller, invoke.getUse(0));
-        				if (pa.getPointsToSet(lkey).iterator().hasNext()) {
-        					InstanceKey uriKey = pa.getPointsToSet(lkey).iterator().next();
-        					OrdinalSet<InstanceKey> points = pa.getPointsToSet(new LocalPointerKey(caller, invoke.getUse(1)));
-        					if(!points.isEmpty()) {
-        						InstanceKey stringKey = points.iterator().next();
-
-        						OrdinalSet<InstanceKey> returnSet = pa.getPointsToSet(new LocalPointerKey(caller, invoke.getReturnValue(0)));
-        						logger.debug("Sizeof returnset: " + returnSet.size() +"--"+pk);
-        						for (Iterator<InstanceKey> rIK=returnSet.iterator(); rIK.hasNext(); ) {
-        							InstanceKey returnIK = rIK.next();
-        							node = new UriAppendString(pa.getInstanceKeyMapping().getMappedIndex(returnIK), pa.getInstanceKeyMapping().getMappedIndex(uriKey), pa.getInstanceKeyMapping().getMappedIndex(stringKey));
-        							logger.debug("\t Uri.withAppendedPath(): "+ invoke + ", returnIK: " +returnIK+ ", uriKey: " + uriKey + ", stringKey: " + stringKey);
-        							logger.debug("\t returnIK_Index:"+pa.getInstanceKeyMapping().getMappedIndex(returnIK)+ ", uriKey_Index: " + pa.getInstanceKeyMapping().getMappedIndex(uriKey) + ", stringKey_Index: " + pa.getInstanceKeyMapping().getMappedIndex(stringKey));
-        							
-        							if (!nodeMap.containsKey(returnIK)) {
-        								addNode(node);
-        								nodeMap.put(returnIK, node);
-        								HashSet<InstanceKey> iks = new HashSet<InstanceKey>();
-        								iks.add(uriKey);
-        								iks.add(stringKey);
-        								unresolvedDependencies.put(node, iks);
-        							}
-        						}
-        					}
-        				}
-        			}
-        		}
+        		final LocalPointerKey lpk = (LocalPointerKey) pk;
+        		handleUriWitAppendPath(lpk, pa, mapping, unresolvedDependencies);
         	}
         }
         
-        for (InstanceKey ik: pa.getInstanceKeys()) {
+        for (final InstanceKey ik: instanceKeys) {
             if (ik instanceof NormalAllocationInNode) {
-                IMethod m = ((NormalAllocationInNode) ik).getNode().getMethod();
-//                logger.debug("method sig: " + m.getSignature()+", ik " + ik);
-                Context context = ((NormalAllocationInNode) ik).getNode().getContext();
-                CGNode caller = (CGNode) context.get(ContextKey.CALLER);
-                CallSiteReference csr = (CallSiteReference) context.get(ContextKey.CALLSITE);
+            	final NormalAllocationInNode naik = (NormalAllocationInNode) ik;
+            	handleUriParse(naik, pa, mapping, unresolvedDependencies);
+            	handleUriWitAppendPath(naik, pa, mapping, unresolvedDependencies);
+            }
+        }
 
-                if (caller != null && caller.getMethod().getReference().getDeclaringClass().getClassLoader().equals(ClassLoaderReference.Application)) {                	
-                    if (m.getSignature().equals("android.net.Uri.parse(Ljava/lang/String;)Landroid/net/Uri;")) {
-                        SSAInvokeInstruction invoke = (SSAInvokeInstruction) caller.getIR().getBasicBlocksForCall(csr)[0].getLastInstruction();
-                        logger.debug("invoke inst: " + invoke + " getuse: " + invoke.getUse(0));
-                        logger.debug("in node: " + caller);
-                        OrdinalSet<InstanceKey> points = pa.getPointsToSet(new LocalPointerKey(caller, invoke.getUse(0)));
-//                        logger.debug("Size of pointsParse: " + points.size());
-                        if(!points.isEmpty()) {
-                            InstanceKey stringKey = points.iterator().next();
-                            node = new UriParseString(pa.getInstanceKeyMapping().getMappedIndex(ik), pa.getInstanceKeyMapping().getMappedIndex(stringKey));
-                            logger.debug("\t Uri.parse(): "+ invoke + "..." + stringKey);
-                            addNode(node);
-                            nodeMap.put(ik, node);
-                            HashSet<InstanceKey> iks = new HashSet<InstanceKey>();
-                            iks.add(stringKey);
-                            unresolvedDependencies.put(node, iks);
-                        }
-                    }
-                    //Doesn't seem to be entering this else with the current android jar -- reimplemented above using LocalPointerKey
-                    else if (m.getSignature().equals("android.net.Uri.withAppendedPath(Landroid/net/Uri;Ljava/lang/String;)Landroid/net/Uri;")) {
-                        logger.debug("android.net.Uri.withAppendedPath(Landroid/net/Uri;Ljava/lang/String;)Landroid/net/Uri call: " + caller);
-                        SSAInvokeInstruction invoke = (SSAInvokeInstruction) caller.getIR().getBasicBlocksForCall(csr)[0].getLastInstruction();
-                        LocalPointerKey lkey = new LocalPointerKey(caller, invoke.getUse(0));
-                        if (pa.getPointsToSet(lkey).iterator().hasNext()) {
-                            InstanceKey uriKey = pa.getPointsToSet(lkey).iterator().next();
-                            OrdinalSet<InstanceKey> points = pa.getPointsToSet(new LocalPointerKey(caller, invoke.getUse(1)));
-                            if(!points.isEmpty()) {
-                                InstanceKey stringKey = points.iterator().next();
-                                node = new UriAppendString(pa.getInstanceKeyMapping().getMappedIndex(ik), pa.getInstanceKeyMapping().getMappedIndex(uriKey), pa.getInstanceKeyMapping().getMappedIndex(stringKey));
-                                logger.debug("\t Uri.withAppendedPath(): "+ invoke + "..." + uriKey + "..." + stringKey);
-                                addNode(node);
-                                nodeMap.put(ik, node);
-                                HashSet<InstanceKey> iks = new HashSet<InstanceKey>();
-                                iks.add(uriKey);
-                                iks.add(stringKey);
-                                unresolvedDependencies.put(node, iks);
-                            }
-                        }
-                    }
+        for (final Entry<InstanceKeySite, Set<InstanceKey>> deps : unresolvedDependencies.entrySet()) {
+            for (final InstanceKey dep : deps.getValue()) {
+                final InstanceKeySite depSite = nodeMap.get(dep);
+                if (depSite != null) {
+                    addEdge(depSite, deps.getKey());
                 }
             }
         }
+    }
+    
+    private void handleString(final InstanceKey ik, final PointerAnalysis pa,
+    		final OrdinalSetMapping<InstanceKey> mapping,
+    		final Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies) {
+        if (isOfType(ik, "Ljava/lang/String")) {
+            if (ik instanceof ConstantKey) {
+            	final String value = (String) ((ConstantKey<?>) ik).getValue(); 
+                final InstanceKeySite node = new ConstantString(mapping.getMappedIndex(ik), value);
+                addNode(node);
+                nodeMap.put(ik, node);
+            } else if (ik instanceof NormalAllocationInNode) {
+            	final NormalAllocationInNode nain = (NormalAllocationInNode) ik;
+            	handleStringBuilderToString(nain, pa, mapping, unresolvedDependencies);
+            }
+        }
+    }
+    
+    private void handleStringBuilder(final InstanceKey ik, final PointerAnalysis pa,
+    		final OrdinalSetMapping<InstanceKey> mapping,
+    		final Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies) {
+    	
+        if (isOfType(ik, "Ljava/lang/StringBuilder")) {
+            if (ik instanceof AllocationSiteInNode) {
+                final AllocationSiteInNode as = (AllocationSiteInNode) ik;
+                if (isApplicationCode(as.getSite().getDeclaredType())) {
+                    final StringBuilderUseAnalysis sbua;
+                    try {
+                        sbua = new StringBuilderUseAnalysis(ik, pa);
+                    } catch(Exception e) {
+                        logger.warn("SBUA failed", e);
+                        return;
+                    }
 
+                    sbuaMap.put(ik, sbua); // map ik to sbua in some global map
+                }
+            } else {
+                logger.warn("Skipping StringBuilder InstanceKey: " + ik);
+                logger.warn("\tClass loader reference: " + ik.getConcreteType().getClassLoader().getReference());
+            }
+        }
+    }
+    
+    private void handleStringBuilderToString(final NormalAllocationInNode nain, final PointerAnalysis pa,
+    		final OrdinalSetMapping<InstanceKey> mapping,
+    		final Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies) {
+        if (hasSignature(nain, "java.lang.StringBuilder.toString()Ljava/lang/String;")) {
+            final Context context = nain.getNode().getContext();
+            final CGNode caller = (CGNode) context.get(ContextKey.CALLER);
 
-//      int maxInstanceID = pa.getInstanceKeyMapping().getMaximumIndex();
-//      HashMap<Integer, InstanceKeySite> uriNodeMap = new HashMap<Integer, InstanceKeySite>();
-//
-//      for (Entry<Integer,String> s : stringConstants.entrySet()) {
-//          logger.debug("Constant: "+ s.getValue());
-//          node = new ConstantString(maxInstanceID + s.getKey(), s.getValue());
-//          addNode(node);
-//          uriNodeMap.put(maxInstanceID + s.getKey(), node);
-//      }
-//
-//      for (Entry<Integer,LocalPointerKey> p : parseMap.entrySet()) {
-//          logger.debug("Parse: "+ p.getValue());
-//          OrdinalSet<InstanceKey> ikeys = pa.getPointsToSet(p.getValue());
-//          if (ikeys.isEmpty()) {
-//              node = new UriParseString(maxInstanceID + p.getKey(), maxInstanceID + p.getValue().getValueNumber());
-//              //addNode(node);
-//              uriNodeMap.put(maxInstanceID + p.getKey(), node);
-//              //addEdge(uriNodeMap.get(maxInstanceID + p.getValue().getValueNumber()), node);
-//          }
-//          else {
-//              InstanceKey ikey = ikeys.iterator().next();
-//              node = new UriParseString(maxInstanceID + p.getKey(), pa.getInstanceKeyMapping().getMappedIndex(ikey));
-//              //addNode(node);
-//              uriNodeMap.put(maxInstanceID + p.getKey(), node);
-//              //addEdge(nodeMap.get(ikey), node);
-//          }
-//      }
-//
-//      for (Entry<Integer,LocalPointerKey> p : appendUriMap.entrySet()) {
-//          LocalPointerKey stringLPK = appendStringMap.get(p.getKey());
-//          logger.debug("Append: " + p.getValue() + " + " + stringLPK);
-//          OrdinalSet<InstanceKey> ikeys = pa.getPointsToSet(stringLPK);
-//          if (ikeys.isEmpty()) {
-//              node = new UriAppendString(maxInstanceID + p.getKey(), maxInstanceID + p.getValue().getValueNumber(), maxInstanceID + stringLPK.getValueNumber());
-//              //addNode(node);
-//              uriNodeMap.put(maxInstanceID + p.getKey(), node);
-//              //addEdge(uriNodeMap.get(maxInstanceID + p.getValue().getValueNumber()), node);
-//              //addEdge(uriNodeMap.get(maxInstanceID + stringLPK.getValueNumber()), node);
-//          }
-//          else {
-//              InstanceKey ikey = ikeys.iterator().next();
-//              node = new UriAppendString(maxInstanceID + p.getKey(), maxInstanceID + p.getValue().getValueNumber(), pa.getInstanceKeyMapping().getMappedIndex(ikey));
-//              //addNode(node);
-//              uriNodeMap.put(maxInstanceID + p.getKey(), node);
-//              //addEdge(uriNodeMap.get(maxInstanceID + p.getValue().getValueNumber()), node);
-//              //addEdge(nodeMap.get(ikey), node);
-//          }
-//      }
+            if (caller != null && isApplicationCode(caller.getMethod())) {
+                final InstanceKey receiver = (InstanceKey) context.get(ContextKey.RECEIVER);
 
+                if (sbuaMap.get(receiver) != null) {
+                    final CallSiteReference csr = (CallSiteReference) context.get(ContextKey.CALLSITE);
+                	final InstanceKeySite node = sbuaMap.get(receiver).getNode(csr, nain);
 
-        for(Entry<InstanceKeySite, Set<InstanceKey>> deps:unresolvedDependencies.entrySet())
-        {
-            for(InstanceKey dep:deps.getValue())
-            {
-                //logger.debug("Trying to match dependency: " + dep);
-                InstanceKeySite depSite = nodeMap.get(dep);
-//              if(depSite == null)
-//              {
-//                  throw new IllegalStateException("cannot resolve dependency of "+deps.getKey()+" on "+dep);
-//              }
-//              addEdge(depSite, deps.getKey());
-                if (depSite != null)
-                    addEdge(depSite, deps.getKey());
+                	if (node != null) {
+                        addNode(node);
+                        nodeMap.put(nain, node);
+                        
+                        final StringBuilderToStringInstanceKeySite s2si =
+                        		(StringBuilderToStringInstanceKeySite) node;
+                        final HashSet<InstanceKey> iks = new HashSet<InstanceKey>();
+                        
+                        for (final Integer i: s2si.concatenatedInstanceKeys) {
+                            iks.add(mapping.getMappedObject(i));
+                        }
+                        
+                        logger.debug("adding to UnresolvedDependencies => node: " + node + " => iks: " + iks);
+                        unresolvedDependencies.put(node, iks);
+                        // TODO: if this string is created inside the toString function of a string builder,
+                        // find the StringBuilderUseAnalysis for that string builder and call getNode(k) to
+                        // get the node for this instance key
+                        // - this may have to be done in another phase
+                    }
+                } else {
+                    logger.warn("Receiver instancekey is null in UriPrefixTransferGraph, Method: "
+                    	+ ((NormalAllocationInNode) receiver).getNode().getMethod().getSignature());
+                }
             }
         }
     }
 
-    public void removeNodeAndEdges(InstanceKeySite n)
-            throws UnsupportedOperationException {
+    private void handleUriWitAppendPath(final LocalPointerKey lpk, final PointerAnalysis pa,
+    		final OrdinalSetMapping<InstanceKey> mapping,
+    		final Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies) {
+		final Context context = lpk.getNode().getContext();
+		final CGNode caller = (CGNode) context.get(ContextKey.CALLER);
+		
+		if (caller != null && isApplicationCode(caller.getMethod())
+				&& hasSignature(lpk, "android.net.Uri.withAppendedPath(Landroid/net/Uri;Ljava/lang/String;)Landroid/net/Uri;")) {
+    		final CallSiteReference csr = (CallSiteReference) context.get(ContextKey.CALLSITE);
+			final SSAInvokeInstruction invoke =
+				(SSAInvokeInstruction) caller.getIR().getBasicBlocksForCall(csr)[0].getLastInstruction();
+			final OrdinalSet<? extends InstanceKey> ptsUri =
+				pa.getPointsToSet(new LocalPointerKey(caller, invoke.getUse(0)));
+			
+			if (!ptsUri.isEmpty()) {
+				final InstanceKey uriKey = ptsUri.iterator().next();
+				final OrdinalSet<? extends InstanceKey> points =
+						pa.getPointsToSet(new LocalPointerKey(caller, invoke.getUse(1)));
+				
+				if (!points.isEmpty()) {
+					final InstanceKey stringKey = points.iterator().next();
+
+					final OrdinalSet<? extends InstanceKey> returnSet =
+							pa.getPointsToSet(new LocalPointerKey(caller, invoke.getReturnValue(0)));
+					logger.debug("Sizeof returnset: " + returnSet.size() + "--" + lpk);
+					
+					for (final Iterator<? extends InstanceKey> rIK = returnSet.iterator(); rIK.hasNext(); ) {
+						final InstanceKey returnIK = rIK.next();
+						final UriAppendString node = new UriAppendString(mapping.getMappedIndex(returnIK),
+							mapping.getMappedIndex(uriKey), mapping.getMappedIndex(stringKey));
+						
+						logger.debug("\t Uri.withAppendedPath(): "+ invoke + ", returnIK: " + returnIK
+							+ ", uriKey: " + uriKey + ", stringKey: " + stringKey);
+						logger.debug("\t returnIK_Index: " + mapping.getMappedIndex(returnIK)
+							+ ", uriKey_Index: " + mapping.getMappedIndex(uriKey) + ", stringKey_Index: "
+							+ mapping.getMappedIndex(stringKey));
+						
+						if (!nodeMap.containsKey(returnIK)) {
+							addNode(node);
+							nodeMap.put(returnIK, node);
+							final HashSet<InstanceKey> iks = new HashSet<InstanceKey>();
+							iks.add(uriKey);
+							iks.add(stringKey);
+							unresolvedDependencies.put(node, iks);
+						}
+					}
+				}
+			}
+		}
+    }
+    
+    private void handleUriWitAppendPath(final NormalAllocationInNode ik, final PointerAnalysis pa,
+    		final OrdinalSetMapping<InstanceKey> mapping,
+    		final Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies) {
+    	final CGNode allocNode = ik.getNode();
+        final Context context = allocNode.getContext();
+        final CGNode caller = (CGNode) context.get(ContextKey.CALLER);
+        
+        if (hasSignature(allocNode, "android.net.Uri.withAppendedPath(Landroid/net/Uri;Ljava/lang/String;)Landroid/net/Uri;")) {
+            //Doesn't seem to be entering this else with the current android jar -- reimplemented above using LocalPointerKey
+            logger.debug("android.net.Uri.withAppendedPath(Landroid/net/Uri;Ljava/lang/String;)Landroid/net/Uri call: " + caller);
+            final CallSiteReference csr = (CallSiteReference) context.get(ContextKey.CALLSITE);
+            final SSAInvokeInstruction invoke =
+            		(SSAInvokeInstruction) caller.getIR().getBasicBlocksForCall(csr)[0].getLastInstruction();
+            final OrdinalSet<? extends InstanceKey> ptsUri =
+            	pa.getPointsToSet(new LocalPointerKey(caller, invoke.getUse(0)));
+
+            if (!ptsUri.isEmpty()) {
+                final InstanceKey uriKey = ptsUri.iterator().next();
+                final OrdinalSet<? extends InstanceKey> points =
+                	pa.getPointsToSet(new LocalPointerKey(caller, invoke.getUse(1)));
+
+                if (!points.isEmpty()) {
+                    final InstanceKey stringKey = points.iterator().next();
+                    final UriAppendString node =
+                    	new UriAppendString(mapping.getMappedIndex(ik),
+                    			mapping.getMappedIndex(uriKey),
+                    			mapping.getMappedIndex(stringKey));
+                    
+                    logger.debug("\t Uri.withAppendedPath(): "+ invoke + "..." + uriKey + "..." + stringKey);
+                    addNode(node);
+                    nodeMap.put(ik, node);
+                    final HashSet<InstanceKey> iks = new HashSet<InstanceKey>();
+                    iks.add(uriKey);
+                    iks.add(stringKey);
+                    unresolvedDependencies.put(node, iks);
+                }
+            }
+        }
+    }
+    
+    private void handleUriParse(final NormalAllocationInNode ik, final PointerAnalysis pa,
+    		final OrdinalSetMapping<InstanceKey> mapping,
+    		final Map<InstanceKeySite, Set<InstanceKey>> unresolvedDependencies) {
+    	final CGNode allocNode = ik.getNode();
+        final Context context = allocNode.getContext();
+        final CGNode caller = (CGNode) context.get(ContextKey.CALLER);
+    	
+    	if (hasSignature(allocNode, "android.net.Uri.parse(Ljava/lang/String;)Landroid/net/Uri;")) {
+            final CallSiteReference csr = (CallSiteReference) context.get(ContextKey.CALLSITE);
+            final SSAInvokeInstruction invoke =
+            		(SSAInvokeInstruction) caller.getIR().getBasicBlocksForCall(csr)[0].getLastInstruction();
+            logger.debug("invoke inst: " + invoke + " getuse: " + invoke.getUse(0));
+            logger.debug("in node: " + caller);
+            final OrdinalSet<? extends InstanceKey> points =
+            	pa.getPointsToSet(new LocalPointerKey(caller, invoke.getUse(0)));
+
+            if (!points.isEmpty()) {
+                final InstanceKey stringKey = points.iterator().next();
+                final UriParseString node = new UriParseString(
+                	mapping.getMappedIndex(ik),
+                	mapping.getMappedIndex(stringKey));
+                
+                logger.debug("\t Uri.parse(): "+ invoke + "..." + stringKey);
+                addNode(node);
+                nodeMap.put(ik, node);
+                final HashSet<InstanceKey> iks = new HashSet<InstanceKey>();
+                iks.add(stringKey);
+                unresolvedDependencies.put(node, iks);
+            }
+    	}
+    }
+
+    public void removeNodeAndEdges(InstanceKeySite n) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
-    public void addNode(InstanceKeySite n) {
-        predecessors.put(n,new HashSet<InstanceKeySite>());
-        successors.put(n,new HashSet<InstanceKeySite>());
+    public void addNode(final InstanceKeySite n) {
+        predecessors.put(n, new HashSet<InstanceKeySite>());
+        successors.put(n, new HashSet<InstanceKeySite>());
         nodes.add(n);
     }
 
-    public boolean containsNode(InstanceKeySite n) {
+    public boolean containsNode(final InstanceKeySite n) {
         return nodes.contains(n);
     }
 
@@ -391,28 +357,27 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
         return nodes.iterator();
     }
 
-    public void removeNode(InstanceKeySite n) {
+    public void removeNode(final InstanceKeySite n) {
         throw new UnsupportedOperationException();
     }
 
-    public void addEdge(InstanceKeySite src, InstanceKeySite dst) {
+    public void addEdge(final InstanceKeySite src, final InstanceKeySite dst) {
         Set<InstanceKeySite> predSet = predecessors.get(dst);
-        if(predSet == null)
-        {
+        if (predSet == null) {
             predSet = new HashSet<InstanceKeySite>();
-            predecessors.put(dst,predSet);
+            predecessors.put(dst, predSet);
         }
         predSet.add(src);
+
         Set<InstanceKeySite> succSet = successors.get(src);
-        if(succSet == null)
-        {
+        if (succSet == null) {
             succSet = new HashSet<InstanceKeySite>();
-            successors.put(src,succSet);
+            successors.put(src, succSet);
         }
         succSet.add(dst);
     }
 
-    public int getPredNodeCount(InstanceKeySite n) {
+    public int getPredNodeCount(final InstanceKeySite n) {
         return predecessors.get(n).size();
     }
 
@@ -452,4 +417,35 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
         throw new UnsupportedOperationException();
     }
 
+    private static boolean isApplicationCode(final IMethod im) {
+    	return isApplicationCode(im.getReference());
+    }
+    
+    private static boolean isApplicationCode(final MethodReference mref) {
+    	return isApplicationCode(mref.getDeclaringClass());
+    }
+    
+    private static boolean isApplicationCode(final TypeReference tref) {
+    	return tref.getClassLoader().equals(ClassLoaderReference.Application);
+    }
+    
+    private static boolean isOfType(final InstanceKey ik, final String typeName) {
+    	return typeName.equals(ik.getConcreteType().getName().toString());
+    }
+    
+    private static boolean hasSignature(final CGNode n, final String signature) {
+    	return hasSignature(n.getMethod(), signature);
+    }
+    
+    private static boolean hasSignature(final IMethod im, final String signature) {
+    	return signature.equals(im.getSignature());
+    }
+    
+    private static boolean hasSignature(final LocalPointerKey pk, final String signature) {
+    	return hasSignature(pk.getNode(), signature);
+    }
+    
+    private static boolean hasSignature(final InstanceKeyWithNode ik, final String signature) {
+    	return hasSignature(ik.getNode(), signature);
+    }
 }

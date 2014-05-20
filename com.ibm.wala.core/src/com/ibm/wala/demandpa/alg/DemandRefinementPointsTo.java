@@ -2460,7 +2460,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
   private boolean predHoldsForPk(PointerKey curPk, Predicate<InstanceKey> pred, PointerAnalysis pa) {
     PointerKey curPkForPAHeapModel = convertToHeapModel(curPk, pa.getHeapModel());
-    OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(curPkForPAHeapModel);
+    OrdinalSet<? extends InstanceKey> pointsToSet = pa.getPointsToSet(curPkForPAHeapModel);
     for (InstanceKey ik : pointsToSet) {
       if (!pred.test(ik)) {
         return false;

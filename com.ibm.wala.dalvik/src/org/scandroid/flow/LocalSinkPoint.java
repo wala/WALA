@@ -86,7 +86,7 @@ public class LocalSinkPoint implements ISinkPoint {
 		final CGNode node = block.getNode();
 		PointerKey pk = ctx.pa.getHeapModel().getPointerKeyForLocal(node,
 				ssaVal);
-		OrdinalSet<InstanceKey> iks = ctx.pa.getPointsToSet(pk);
+		OrdinalSet<? extends InstanceKey> iks = ctx.pa.getPointsToSet(pk);
 		if (null == iks) {
 			logger.warn("no instance keys found for SinkPoint {}", this);
 		}

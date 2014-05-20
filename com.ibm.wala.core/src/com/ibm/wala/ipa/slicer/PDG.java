@@ -25,7 +25,6 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cfg.ExceptionPrunedCFG;
@@ -60,6 +59,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapUtil;
+import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.NumberedGraph;
@@ -604,19 +604,13 @@ public class PDG implements NumberedGraph<Statement> {
     }
 
     @Override
-    public void add(IClass klass) {
+    public void add(String klass) {
       Assertions.UNREACHABLE();
     }
 
     @Override
     public boolean contains(String klassName) {
-      Assertions.UNREACHABLE();
-      return false;
-    }
-
-    @Override
-    public boolean contains(TypeReference klass) {
-      return t.equals(klass);
+      return t.getName().toString().substring(1).equals(klassName);
     }
   }
 
@@ -636,19 +630,13 @@ public class PDG implements NumberedGraph<Statement> {
     }
 
     @Override
-    public void add(IClass klass) {
+    public void add(String klass) {
       Assertions.UNREACHABLE();
     }
 
     @Override
     public boolean contains(String klassName) {
-      Assertions.UNREACHABLE();
-      return false;
-    }
-
-    @Override
-    public boolean contains(TypeReference klass) {
-      return !set.contains(klass);
+      return !set.contains(klassName);
     }
   }
 

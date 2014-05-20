@@ -12,7 +12,7 @@ package com.ibm.wala.cast.java.translator.polyglot;
 
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
-import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
+import com.ibm.wala.util.config.SetOfClasses;
 
 public class PolyglotJavaSourceAnalysisEngine extends JavaSourceAnalysisEngine {
 

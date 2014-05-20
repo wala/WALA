@@ -483,7 +483,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 		PointerKey pk = pa.getHeapModel().getPointerKeyForLocal(node,
 				inst.getRef());
 
-		final OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(pk);
+		final OrdinalSet<? extends InstanceKey> pointsToSet = pa.getPointsToSet(pk);
 		if (pointsToSet.isEmpty()) {
 			logger.debug(
 					"pointsToSet empty for ref of {}, creating InstanceKey manually",
@@ -519,7 +519,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 		Set<CodeElement> elts = Sets.newHashSet();
 		final PointerKey pk = pa.getHeapModel().getPointerKeyForLocal(node,
 				inst.getArrayRef());
-		final OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(pk);
+		final OrdinalSet<? extends InstanceKey> pointsToSet = pa.getPointsToSet(pk);
 		if (pointsToSet.isEmpty()) {
 			logger.debug(
 					"pointsToSet empty for ref of {}, creating InstanceKey manually",

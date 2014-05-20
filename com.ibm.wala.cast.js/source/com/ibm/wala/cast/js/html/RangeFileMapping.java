@@ -11,7 +11,8 @@
 package com.ibm.wala.cast.js.html;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
 
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
@@ -19,7 +20,7 @@ import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
 
 public class RangeFileMapping implements FileMapping {
 
-  public static class Range {
+  public final static class Range {
     private final int rangeStart;
     private final int rangeEnd;
     private final int rangeStartingLine;
@@ -113,9 +114,9 @@ public class RangeFileMapping implements FileMapping {
           return includedURL;
         }
         @Override
-        public InputStream getInputStream() throws IOException {
-          return includedURL.openConnection().getInputStream();
-        }
+        public Reader getReader() throws IOException {
+          return RangeFileMapping.this.getInputStream();
+         }
         @Override
         public Position getIncludePosition() {
           return includePosition;
@@ -132,5 +133,8 @@ public class RangeFileMapping implements FileMapping {
     }
   }
 
+   public Reader getInputStream() throws IOException {
+     return new InputStreamReader(includedURL.openStream());
+  }
 
 }

@@ -153,6 +153,7 @@ public class ContextSensitiveTest extends AbstractPtrTest {
     doPointsToSizeTest(TestInfo.TEST_ARRAY_SET_ITER, 1);
   }
 
+  @Ignore
   @Test
   public void testArrayList() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.TEST_ARRAY_LIST, 1);

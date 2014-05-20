@@ -62,7 +62,7 @@ import com.ibm.wala.util.warnings.Warnings;
 /**
  * Logic to interpret "factory" methods in context.
  */
-class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
+public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
   /**
    * A Map from CallerSiteContext -> Set <TypeReference>represents the types a factory method might create in a particular context

@@ -262,7 +262,7 @@ public class CorrelationFinder {
     } else {
       JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
       try {
-        scripts = WebUtil.extractScriptFromHTML(url).fst;
+        scripts = WebUtil.extractScriptFromHTML(url, true).fst;
       } catch (Error e) {
         e.printStackTrace();
         assert false : e.warning;

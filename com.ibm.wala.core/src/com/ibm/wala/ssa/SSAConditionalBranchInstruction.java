@@ -92,7 +92,7 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
   }
 
   public boolean isObjectComparison() {
-    return type == TypeReference.JavaLangObject;
+    return type.isReferenceType();
   }
 
   public boolean isIntegerComparison() {

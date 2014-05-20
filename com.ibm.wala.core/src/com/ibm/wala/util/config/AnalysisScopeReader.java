@@ -89,7 +89,8 @@ public class AnalysisScopeReader {
       }
 
       if (exclusionsFile != null) {
-        scope.setExclusions(FileOfClasses.createFileOfClasses(exclusionsFile));
+        InputStream fs = exclusionsFile.exists()? new FileInputStream(exclusionsFile): FileProvider.class.getClassLoader().getResourceAsStream(exclusionsFile.getName());
+        scope.setExclusions(new FileOfClasses(fs));
       }
 
     } finally {
@@ -110,29 +111,33 @@ public class AnalysisScopeReader {
       FileProvider fp) throws IOException {
     BufferedReader r = null;
     try {
-        String line;
-        final InputStream inStream = scopeFileURI.toURL().openStream();
-        if (inStream == null) {
-            throw new IllegalArgumentException("Unable to retrieve URI " + scopeFileURI.toString());
-        }
-        r = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
+      String line;
+      final InputStream inStream = scopeFileURI.toURL().openStream();
+      if (inStream == null) {
+        throw new IllegalArgumentException("Unable to retrieve URI " + scopeFileURI.toString());
+      }
+      r = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
 
-        while ((line = r.readLine()) != null) {
-            processScopeDefLine(scope, javaLoader, line);
-        }
+      while ((line = r.readLine()) != null) {
+        processScopeDefLine(scope, javaLoader, line);
+      }
 
-        if (exclusionsFile != null) {
-            scope.setExclusions(FileOfClasses.createFileOfClasses(exclusionsFile));
-        }
+      if (exclusionsFile != null) {
+        final InputStream fs = exclusionsFile.exists()
+            ? new FileInputStream(exclusionsFile)
+            : FileProvider.class.getClassLoader().getResourceAsStream(exclusionsFile.getName());
+
+        scope.setExclusions(new FileOfClasses(fs));
+      }
 
     } finally {
-        if (r != null) {
-            try {
-                r.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+      if (r != null) {
+        try {
+          r.close();
+        } catch (IOException e) {
+          e.printStackTrace();
         }
+      }
     }
 
     return scope;
@@ -226,7 +231,20 @@ public class AnalysisScopeReader {
       while (paths.hasMoreTokens()) {
         String path = paths.nextToken();
         if (path.endsWith(".jar")) {
-          scope.addToScope(loader, new JarFile(path));
+          JarFile jar = new JarFile(path);
+          scope.addToScope(loader, jar);
+          try {
+            if (jar.getManifest() != null) {
+              String cp = jar.getManifest().getMainAttributes().getValue("Class-Path");
+              if (cp != null) {
+                for(String cpEntry : cp.split(" ")) { 
+                  addClassPathToScope(new File(path).getParent() + File.separator + cpEntry, scope, loader);
+                }
+              }
+            }
+          } catch (RuntimeException e) {
+            System.err.println("warning: trouble processing class path of " + path);
+          }
         } else {
           File f = new File(path);
           if (f.isDirectory()) {

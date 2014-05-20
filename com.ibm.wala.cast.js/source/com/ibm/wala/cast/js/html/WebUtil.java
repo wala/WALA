@@ -12,7 +12,8 @@ package com.ibm.wala.cast.js.html;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -45,9 +46,9 @@ public class WebUtil {
    *         such file exists)
    * @throws Error
    */
-  public static Pair<Set<MappedSourceModule>,File> extractScriptFromHTML(URL url) throws Error {
+  public static Pair<Set<MappedSourceModule>,File> extractScriptFromHTML(URL url, boolean useDOMModel) throws Error {
     try {
-      JSSourceExtractor extractor = new DefaultSourceExtractor();
+      JSSourceExtractor extractor = useDOMModel? new DefaultSourceExtractor(): new DomLessSourceExtractor();
       Set<MappedSourceModule> sources = extractor.extractSources(url, factory.getParser(), new IdentityUrlResolver());
       return Pair.make(sources, extractor.getTempFile());
     } catch (IOException e) {
@@ -56,15 +57,15 @@ public class WebUtil {
   }
   
   public static void main(String[] args) throws MalformedURLException, Error {
-    System.err.println(extractScriptFromHTML(new URL(args[0])));
+    System.err.println(extractScriptFromHTML(new URL(args[0]), Boolean.parseBoolean(args[1])));
   }
 
-  public static InputStream getStream(URL url) throws IOException {
+  public static Reader getStream(URL url) throws IOException {
     URLConnection conn = url.openConnection();
     conn.setDefaultUseCaches(false);
     conn.setUseCaches(false);
   
-    return conn.getInputStream();
+    return new InputStreamReader(conn.getInputStream());
   }
 }
 	

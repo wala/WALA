@@ -10,7 +10,10 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.html;
 
-import java.io.PrintStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.StringReader;
 import java.net.URL;
 
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
@@ -33,15 +36,25 @@ public class SourceRegion {
   public SourceRegion() {
   }
 
-  public void print(String text, Position originalPos, URL url){
+  public void print(final String text, Position originalPos, URL url, boolean bogusURL){
     int startOffset = source.length();
-    source.append(text);
+    source.append(text);      
     int endOffset = source.length();
 
     int numberOfLineDrops = getNumberOfLineDrops(text);
 
     if (originalPos != null) {
-      RangeFileMapping map = new RangeFileMapping(startOffset, endOffset, currentLine, currentLine+numberOfLineDrops, originalPos, url);
+      RangeFileMapping map;
+      if (bogusURL) {
+        map = new RangeFileMapping(startOffset, endOffset, currentLine, currentLine+numberOfLineDrops, originalPos, url) {
+          @Override
+          public Reader getInputStream() throws IOException {
+            return new StringReader(text);
+          }
+        }; 
+      } else {
+        map = new RangeFileMapping(startOffset, endOffset, currentLine, currentLine+numberOfLineDrops, originalPos, url);
+      }
       if (fileMapping == null) {
         fileMapping = map;
       } else {
@@ -52,20 +65,21 @@ public class SourceRegion {
     currentLine += numberOfLineDrops;
   }
 
-  public void println(String text, Position originalPos, URL url){
-    print(text + "\n", originalPos, url);
+  public void println(String text, Position originalPos, URL url, boolean bogusURL){
+    print(text + "\n", originalPos, url, bogusURL);
   }
   
   public void print(String text){
-    print(text, null, null);
+    print(text, null, null, true);
   }
 
   public void println(String text){
     print(text + "\n");
   }
   
-  public FileMapping writeToFile(PrintStream ps){
+  public FileMapping writeToFile(PrintWriter ps){
     ps.print(source.toString());
+    ps.flush();
     return fileMapping;
   }
   
@@ -89,7 +103,7 @@ public class SourceRegion {
     currentLine += numberOfLineDrops;
   }
   
-  public void dump(PrintStream ps){
+  public void dump(PrintWriter ps){
     ps.println(source.toString());
   }
   

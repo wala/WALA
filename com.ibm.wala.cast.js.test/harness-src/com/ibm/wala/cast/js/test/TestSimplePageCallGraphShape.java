@@ -16,6 +16,7 @@ import java.net.URL;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
 import com.ibm.wala.cast.js.html.IHtmlParser;
 import com.ibm.wala.cast.js.html.IHtmlParserFactory;
 import com.ibm.wala.cast.js.html.WebUtil;
@@ -269,7 +270,7 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
 //    JSCallGraphBuilderUtil.AVOID_DUMP = false;
-    JSCallGraphBuilderUtil.dumpCG(builder.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
     verifySourceAssertions(CG, sourceAssertionsForList);
   }
 
@@ -291,8 +292,22 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     URL url = getClass().getClassLoader().getResource("pages/windowx.html");
     JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
     CallGraph CG = builder.makeCallGraph(builder.getOptions());
-    JSCallGraphBuilderUtil.dumpCG(builder.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForWindowx);
+  }
+
+  private static final Object[][] assertionsForWindowOnload = new Object[][] {
+    new Object[] { ROOT, new String[] { "windowonload.html" } },
+    new Object[] { "windowonload.html", new String[] { "windowonload.html/__WINDOW_MAIN__" } },
+    new Object[] { "windowonload.html/__WINDOW_MAIN__", new String[] { "windowonload.html/__WINDOW_MAIN__/onload_handler" } },
+  };
+
+  @Test public void testWindowOnload() throws IOException, IllegalArgumentException, CancelException, WalaException {
+    URL url = getClass().getClassLoader().getResource("pages/windowonload.html");
+    JSCFABuilder builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
+    CallGraph CG = builder.makeCallGraph(builder.getOptions());
+    CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
+    verifyGraphAssertions(CG, assertionsForWindowOnload);
   }
   
   /*

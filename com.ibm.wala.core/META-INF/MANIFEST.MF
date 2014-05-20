@@ -64,5 +64,5 @@ Export-Package: .,
  com.ibm.wala.util.warnings,
  com.ibm.wala.viz,
  com.ibm.wala.viz.viewer
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Eclipse-BuddyPolicy: registered

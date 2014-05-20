@@ -78,8 +78,8 @@ public class TypeBasedArrayAliasTest extends WalaTestCase {
   }
 
   private static boolean mayAliased(PointerKey pk1, PointerKey pk2, PointerAnalysis pa) {
-    OrdinalSet<InstanceKey> ptsTo1 = pa.getPointsToSet(pk1);
-    OrdinalSet<InstanceKey> ptsTo2 = pa.getPointsToSet(pk2);
+    OrdinalSet<? extends InstanceKey> ptsTo1 = pa.getPointsToSet(pk1);
+    OrdinalSet<? extends InstanceKey> ptsTo2 = pa.getPointsToSet(pk2);
     boolean foundIntersection = false;
     outer: for (InstanceKey i : ptsTo1) {
       for (InstanceKey j : ptsTo2) {

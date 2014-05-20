@@ -11,6 +11,7 @@
 package com.ibm.wala.ide.util;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
@@ -40,6 +42,7 @@ import org.eclipse.wst.jsdt.internal.corext.callhierarchy.CallHierarchy;
 import org.eclipse.wst.jsdt.internal.corext.callhierarchy.MethodWrapper;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
+import com.ibm.wala.cast.js.JavaScriptPlugin;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
@@ -57,6 +60,12 @@ import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 
 public class JsdtUtil {
 
+  public static URL getProlgueFile(String file, Plugin plugin) {
+    plugin = plugin!= null? plugin: JavaScriptPlugin.getDefault();
+    JavaScriptLoader.addBootstrapFile(file);
+    return plugin.getClass().getClassLoader().getResource(file);
+  }
+
   private static final boolean useCreateASTs = false;
   
   public static class CGInfo {
@@ -67,12 +76,12 @@ public class JsdtUtil {
   public static Set<ModuleEntry> getJavaScriptCodeFromProject(String project) throws IOException, CoreException {
     IJavaScriptProject p = JavaScriptHeadlessUtil.getJavaScriptProjectFromWorkspace(project);
     JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
-    AnalysisScope s = JavaScriptEclipseProjectPath.make(p).toAnalysisScope(new CAstAnalysisScope(JSCallGraphUtil.makeLoaders(), Collections.singleton(JavaScriptLoader.JS)));
+    AnalysisScope s = JavaScriptEclipseProjectPath.make(p, Collections.EMPTY_SET).toAnalysisScope(new CAstAnalysisScope(JSCallGraphUtil.makeLoaders(), Collections.singleton(JavaScriptLoader.JS)));
 
     List<Module> modules = s.getModules(JavaScriptTypes.jsLoader);
     Set<ModuleEntry> mes = HashSetFactory.make();
     for(Module m : modules) {
-      for(Iterator<ModuleEntry> mm = m.getEntries(); mm.hasNext(); ) {
+      for(Iterator<? extends ModuleEntry> mm = m.getEntries(); mm.hasNext(); ) {
         mes.add(mm.next());
       }
     }

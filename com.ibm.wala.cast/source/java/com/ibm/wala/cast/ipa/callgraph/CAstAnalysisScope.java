@@ -11,7 +11,6 @@ package com.ibm.wala.cast.ipa.callgraph;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -19,7 +18,6 @@ import com.ibm.wala.cast.loader.SingleClassLoaderFactory;
 import com.ibm.wala.classLoader.ArrayClassLoader;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.SourceModule;
-import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.debug.Assertions;
@@ -39,13 +37,6 @@ public class CAstAnalysisScope extends AnalysisScope {
     for (int i = 0; i < sourceFileNames.length; i++) {
       File F = new File(sourceFileNames[i]);
       addSourceFileToScope(theLoader, F, F.getPath());
-    }
-  }
-
-  public CAstAnalysisScope(URL[] sources, SingleClassLoaderFactory loaders, Collection<Language> languages) throws IOException {
-    this(loaders, languages);
-    for (int i = 0; i < sources.length; i++) {
-      addToScope(theLoader, new SourceURLModule(sources[i]));
     }
   }
 

@@ -32,6 +32,6 @@ public class ExclusionsTest {
         ExclusionsTest.class.getClassLoader());
     TypeReference buttonRef = TypeReference.findOrCreate(ClassLoaderReference.Application,
         StringStuff.deployment2CanonicalTypeString("java.awt.Button"));
-    Assert.assertTrue(scope.getExclusions().contains(buttonRef));
+    Assert.assertTrue(scope.getExclusions().contains(buttonRef.getName().toString().substring(1)));
   }
 }

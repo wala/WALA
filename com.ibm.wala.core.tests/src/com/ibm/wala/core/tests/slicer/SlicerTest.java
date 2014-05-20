@@ -142,7 +142,7 @@ public class SlicerTest {
     Collection<Statement> slice = computeBackwardSlice;
     dumpSlice(slice);
 
-    Assert.assertEquals(9, countNormals(slice));
+    Assert.assertEquals(slice.toString(), 9, countNormals(slice));
   }
 
   @Test
@@ -164,7 +164,7 @@ public class SlicerTest {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    Assert.assertEquals(1, countAllocations(slice));
+    Assert.assertEquals(slice.toString(), 1, countAllocations(slice));
   }
 
   @Test
@@ -187,7 +187,7 @@ public class SlicerTest {
     Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    Assert.assertEquals(4, slice.size());
+    Assert.assertEquals(slice.toString(), 4, slice.size());
   }
 
   @Test
@@ -210,7 +210,7 @@ public class SlicerTest {
     Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    Assert.assertEquals(7, slice.size());
+    Assert.assertEquals(slice.toString(), 7, slice.size());
   }
 
   /**
@@ -271,7 +271,7 @@ public class SlicerTest {
     // should only get 4 statements total when ignoring control dependences completely
     slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
-    Assert.assertEquals(4, slice.size());
+    Assert.assertEquals(slice.toString(), 4, slice.size());
   }
 
   @Test
@@ -294,7 +294,7 @@ public class SlicerTest {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.NONE,
         ControlDependenceOptions.FULL);
     dumpSlice(slice);
-    Assert.assertEquals(2, countConditionals(slice));
+    Assert.assertEquals(slice.toString(), 2, countConditionals(slice));
   }
 
   @Test
@@ -317,7 +317,7 @@ public class SlicerTest {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.NONE,
         ControlDependenceOptions.FULL);
     dumpSlice(slice);
-    Assert.assertEquals(1, countConditionals(slice));
+    Assert.assertEquals(slice.toString(), 1, countConditionals(slice));
   }
 
   @Test
@@ -340,7 +340,7 @@ public class SlicerTest {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.NONE,
         ControlDependenceOptions.FULL);
     dumpSlice(slice);
-    Assert.assertEquals(0, countConditionals(slice));
+    Assert.assertEquals(slice.toString(), 0, countConditionals(slice));
   }
 
   @Test
@@ -370,7 +370,7 @@ public class SlicerTest {
     slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.FULL);
     dumpSlice(slice);
-    Assert.assertEquals(1, countConditionals(slice));
+    Assert.assertEquals(slice.toString(), 1, countConditionals(slice));
   }
   
   @Test
@@ -394,7 +394,7 @@ public class SlicerTest {
     Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.NONE,
         ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     dumpSlice(slice);
-    Assert.assertTrue(slice.size() > 1);
+    Assert.assertTrue(slice.toString(), slice.size() > 1);
   }
 
   @Test
@@ -418,7 +418,7 @@ public class SlicerTest {
     Collection<Statement> slice = Slicer.computeForwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.NONE,
         ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     dumpSlice(slice);
-    Assert.assertEquals(2, countInvokes(slice));
+    Assert.assertEquals(slice.toString(), 2, countInvokes(slice));
   }
 
   @Test
@@ -441,7 +441,7 @@ public class SlicerTest {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    Assert.assertEquals(1, countAllocations(slice));
+    Assert.assertEquals(slice.toString(), 1, countAllocations(slice));
   }
 
   @Test
@@ -464,8 +464,8 @@ public class SlicerTest {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    Assert.assertEquals(2, countAllocations(slice));
-    Assert.assertEquals(1, countAloads(slice));
+    Assert.assertEquals(slice.toString(), 2, countAllocations(slice));
+    Assert.assertEquals(slice.toString(), 1, countAloads(slice));
   }
 
   @Test
@@ -488,8 +488,8 @@ public class SlicerTest {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    Assert.assertEquals(2, countAllocations(slice));
-    Assert.assertEquals(1, countPutfields(slice));
+    Assert.assertEquals(slice.toString(), 2, countAllocations(slice));
+    Assert.assertEquals(slice.toString(), 1, countPutfields(slice));
   }
 
   @Test
@@ -522,8 +522,8 @@ public class SlicerTest {
         DataDependenceOptions.NO_BASE_PTRS, ControlDependenceOptions.NONE);
     slice = computeBackwardSlice;
     dumpSlice(slice);
-    Assert.assertEquals(2, countAllocations(slice));
-    Assert.assertEquals(1, countPutfields(slice));
+    Assert.assertEquals(slice.toString(), 2, countAllocations(slice));
+    Assert.assertEquals(slice.toString(), 1, countPutfields(slice));
   }
 
   @Test
@@ -546,9 +546,9 @@ public class SlicerTest {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    Assert.assertEquals(1, countAllocations(slice));
-    Assert.assertEquals(2, countPutstatics(slice));
-    Assert.assertEquals(2, countGetstatics(slice));
+    Assert.assertEquals(slice.toString(), 1, countAllocations(slice));
+    Assert.assertEquals(slice.toString(), 2, countPutstatics(slice));
+    Assert.assertEquals(slice.toString(), 2, countGetstatics(slice));
   }
 
   @Test
@@ -571,7 +571,7 @@ public class SlicerTest {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    Assert.assertEquals(2, countAllocations(slice));
+    Assert.assertEquals(slice.toString(), 2, countAllocations(slice));
   }
 
   @Test
@@ -595,8 +595,8 @@ public class SlicerTest {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    Assert.assertEquals(3, countAllocations(slice));
-    Assert.assertEquals(2, countPutfields(slice));
+    Assert.assertEquals(slice.toString(), 3, countAllocations(slice));
+    Assert.assertEquals(slice.toString(), 2, countPutfields(slice));
   }
 
   @Test
@@ -622,8 +622,8 @@ public class SlicerTest {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, pcg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.FULL);
     dumpSlice(slice);
-    Assert.assertEquals(0, countAllocations(slice));
-    Assert.assertEquals(1, countPutfields(slice));
+    Assert.assertEquals(slice.toString(), 0, countAllocations(slice));
+    Assert.assertEquals(slice.toString(), 1, countPutfields(slice));
   }
 
   @Test
@@ -646,9 +646,9 @@ public class SlicerTest {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    Assert.assertEquals(1, countApplicationAllocations(slice));
-    Assert.assertEquals(1, countThrows(slice));
-    Assert.assertEquals(1, countGetfields(slice));
+    Assert.assertEquals(slice.toString(), 1, countApplicationAllocations(slice));
+    Assert.assertEquals(slice.toString(), 1, countThrows(slice));
+    Assert.assertEquals(slice.toString(), 1, countGetfields(slice));
   }
 
   @Test

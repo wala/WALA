@@ -31,56 +31,37 @@
  */
 package com.ibm.wala.dalvik.util;
 
-import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
-import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
-import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.ExecutionOrder;
-
-import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.classLoader.IClassLoader;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.classLoader.Language;
-import com.ibm.wala.ssa.SSAInstructionFactory;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
-import com.ibm.wala.ipa.summaries.MethodSummary;
-import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.ssa.SSAGotoInstruction;
-import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
-import com.ibm.wala.cast.ir.ssa.FixedParametersLexicalInvokeInstruction;
-import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.ipa.callgraph.impl.FakeRootClass;
-import com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader;
-import com.ibm.wala.dalvik.ipa.callgraph.impl.DexEntryPoint;
-
-import com.ibm.wala.dalvik.util.androidEntryPoints.ApplicationEP;
-import com.ibm.wala.dalvik.util.androidEntryPoints.ActivityEP;
-import com.ibm.wala.dalvik.util.androidEntryPoints.ServiceEP;
-import com.ibm.wala.dalvik.util.androidEntryPoints.ProviderEP;
-import com.ibm.wala.dalvik.util.androidEntryPoints.LocationEP;
-import com.ibm.wala.dalvik.util.androidEntryPoints.LoaderCB;
-
-import com.ibm.wala.types.TypeName;
-import com.ibm.wala.types.TypeReference;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.EnumSet;
-import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
+import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.ExecutionOrder;
+import com.ibm.wala.dalvik.util.androidEntryPoints.ActivityEP;
+import com.ibm.wala.dalvik.util.androidEntryPoints.ApplicationEP;
+import com.ibm.wala.dalvik.util.androidEntryPoints.LoaderCB;
+import com.ibm.wala.dalvik.util.androidEntryPoints.LocationEP;
+import com.ibm.wala.dalvik.util.androidEntryPoints.ProviderEP;
+import com.ibm.wala.dalvik.util.androidEntryPoints.ServiceEP;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
+import com.ibm.wala.util.config.SetOfClasses;
 
 /**
  *  Searches an Android application for its EntryPoints.
@@ -420,7 +401,10 @@ nextMethod:
     }
 
     private boolean isExcluded(final IClass cls) {
-        return (cls.getClassHierarchy().getScope().getExclusions().contains(cls.getReference()));
+    	final SetOfClasses set = cls.getClassHierarchy().getScope().getExclusions();
+    	final String clsName = cls.getReference().getName().toString().substring(1);
+    	
+        return set.contains(clsName);
     }
 
     /**

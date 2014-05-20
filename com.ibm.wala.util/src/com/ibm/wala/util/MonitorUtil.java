@@ -39,6 +39,8 @@ public class MonitorUtil {
     void done();
 
     void worked(int units);
+    
+    String getCancelMessage();
   }
 
   public static void beginTask(IProgressMonitor monitor, String task, int totalWork) throws CancelException {

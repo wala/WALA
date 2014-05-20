@@ -40,13 +40,18 @@ public abstract class AstLexicalAccess extends SSAInstruction {
      */
     public final String variableDefiner; 
     /**
+     * type of the lexical value
+     */
+    public final TypeReference type;
+    /**
      * value number used for name where access is being performed (not in the declaring entity)
      */
     public final int valueNumber;
 
-    public Access(String name, String definer, int vn) {
+    public Access(String name, String definer, TypeReference type, int vn) {
       variableName = name;
       variableDefiner = definer;
+      this.type = type;
       valueNumber = vn;
     }
 

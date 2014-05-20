@@ -17,6 +17,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,7 +29,6 @@ import java.util.TreeSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
-import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
@@ -39,6 +40,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Iterator2Iterable;
+import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.io.FileSuffixes;
 import com.ibm.wala.util.shrike.ShrikeClassReaderHandle;
@@ -419,10 +421,59 @@ public class ClassLoaderImpl implements IClassLoader {
       className = className.replace(File.separatorChar, '/');
       className = "L" + ((className.startsWith("/")) ? className.substring(1) : className);
       TypeName T = TypeName.string2TypeName(className);
-      if (DEBUG_LEVEL > 0) {
-        System.err.println("adding to source map: " + T + " -> " + entry.getName());
+
+      // Note: entry.getClassName() may not return the correct class name, for example, 
+      // com.ibm.wala.classLoader.SourceFileModule.getClassName()
+      // {
+      //  return FileSuffixes.stripSuffix(fileName).replace(File.separator.charAt(0), '/');
+      // }
+      // If fileName includes the full path, such as 
+      // C:\TestApps\HelloWorld\src\main\java\com\ibm\helloworld\MyClass.java
+      // Then above method would return the class name as:
+      // C:/TestApps/HelloWorld/src/main/java/com/ibm/helloworld/MyClass
+      // However, in WALA, we represent class name as:
+      // PackageName.className, such as com.ibm.helloworld.MyClass
+      //
+      // In method "void init(List<Module> modules)", We loadAllClasses firstly, then 
+      // loadAllSources. Therefore, all the classes should be in the map loadedClasses
+      // when this method loadAllSources is called. To ensure we add the correct class 
+      // name to the sourceMap, here we look up the class name from the map "loadedClasses"
+      // before adding the source info to the sourceMap. If we could not find the class, 
+      // we edit the className and try again.
+      
+      boolean success = false;
+      if(loadedClasses.get(T) != null){
+        if (DEBUG_LEVEL > 0) {
+          System.err.println("adding to source map: " + T + " -> " + entry.getName());
+        }
+        sourceMap.put(T, entry);
+        success = true;
       }
-      sourceMap.put(T, entry);
+      //Class does not exist
+      else{
+        // look at substrings starting after '/' characters, in the hope
+        // that we find a known class name
+        while (className.indexOf('/') > 0) {
+          className = "L" + className.substring(className.indexOf('/') + 1, className.length());
+          TypeName T2 = TypeName.string2TypeName(className);
+          if (loadedClasses.get(T2) != null) {
+            if (DEBUG_LEVEL > 0) {
+              System.err.println("adding to source map: " + T2 + " -> " + entry.getName());
+            }
+            sourceMap.put(T2, entry);
+            success = true;
+            break;
+          }
+        }
+      }
+      if(success == false){
+        //Add the T and entry to the sourceMap anyway, just in case in some special
+        //cases, we add new classes later.
+        if (DEBUG_LEVEL > 0) {
+          System.err.println("adding to source map: " + T + " -> " + entry.getName());
+        }
+        sourceMap.put(T, entry);
+      }
     }
   }
 
@@ -626,7 +677,7 @@ public class ClassLoaderImpl implements IClassLoader {
   }
 
   @Override
-  public InputStream getSource(IMethod method, int offset) {
+  public Reader getSource(IMethod method, int offset) {
     return getSource(method.getDeclaringClass());
   }
 
@@ -636,12 +687,12 @@ public class ClassLoaderImpl implements IClassLoader {
   }
 
   @Override
-  public InputStream getSource(IClass klass) {
+  public Reader getSource(IClass klass) {
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");
     }
     ModuleEntry e = sourceMap.get(klass.getName());
-    return e == null ? null : e.getInputStream();
+    return e == null ? null : new InputStreamReader(e.getInputStream());
   }
 
   /*
