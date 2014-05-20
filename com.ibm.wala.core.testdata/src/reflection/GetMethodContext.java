@@ -21,9 +21,9 @@ import java.lang.reflect.Method;
 public class GetMethodContext {
 
   public static class A {
-    public void bar() {
-    }
     public void foo() {
+    }
+    public void bar() {
     }
     public void baz() {
     }
@@ -31,10 +31,10 @@ public class GetMethodContext {
 
   public static class B extends A {
     @Override
-    public void bar() {
+    public void foo() {
     }
     @Override
-    public void foo() {
+    public void bar() {
     }
     @Override
     public void baz() {
@@ -46,30 +46,48 @@ public class GetMethodContext {
     public void foo() {
     }
     @Override
-    public void baz() {
+    public void bar() {
     }
   };
 
   public static void main(String[] args) throws IllegalAccessException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException {
     Method m;
     A a;
+    
     a = new B();
-    // Wala should return only GetMethodContext$A#foo() and GetMethodContext$B#foo().
-    // TODO
-    // Wala should return only GetMethodContext$B#foo().
+    // As a points to an instance of GetMethodContext$B:
+    // Without GetMethodContext, Wala should return GetMethodContext$A#foo() and GetMethodContext$B#foo().
+    // With GetMethodContext, Wala should return only GetMethodContext$B#foo().
     m = a.getClass().getMethod("foo");
-    m.invoke(new Object[]{});
-    // Wala should return only GetMethodContext$B#bar().
-    m = a.getClass().getDeclaredMethod("bar");
-    m.invoke(new Object[]{});
+    m.invoke(a,new Object[]{});
+
     a = new C();
-    // Wala should return only GetMethodContext$C#baz().
-    m = a.getClass().getDeclaredMethod("baz");
-    m.invoke(new Object[]{});
+    // As a points to an instance of GetMethodContext$C:
+    // Without GetMethodContext, Wala should return GetMethodContext$C#bar(), GetMethodContext$B#bar() and GetMethodContext$A#bar().
+    // With GetMethodContext, Wala should return only GetMethodContext$C#bar().
+    m = a.getClass().getDeclaredMethod("bar");
+    m.invoke(a,new Object[]{});
     // To summarize:
-    // 1 x GetMethodContext$A#foo()
-    // 1 x GetMethodContext$B#foo()
-    // 1 x GetMethodContext$B#bar()
-    // 1 x GetMethodContext$C#baz()
+    //
+    // Without GetMethodContext, the call graph must contain
+    //  GetMethodContext$B#foo(),
+    //  GetMethodContext$A#foo(),
+    //  GetMethodContext$C#bar(),
+    //  GetMethodContext$B#bar(), and
+    //  GetMethodContext$A#bar().
+    //
+    // With GetMethodContext, the call graph must contain
+    //  GetMethodContext$B#foo() and
+    //  GetMethodContext$C#bar()
+    // and must not contain
+    //  GetMethodContext$A#foo(),
+    //  GetMethodContext$B#bar(), or
+    //  GetMethodContext$A#bar().
+    //
+    // In either case it must not contain:
+    //  GetMethodContext$C#baz(),
+    //  GetMethodContext$C#baz(),
+    //  GetMethodContext$B#baz(), or
+    //  GetMethodContext$A#baz().
   }
 }
