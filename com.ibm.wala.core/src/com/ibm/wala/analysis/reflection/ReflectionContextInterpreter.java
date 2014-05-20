@@ -115,6 +115,10 @@ public class ReflectionContextInterpreter {
       result = new DelegatingSSAContextInterpreter(new ReflectiveInvocationInterpreter(), new DelegatingSSAContextInterpreter(
           new JavaLangClassContextInterpreter(), result));
     }
+    // if NEITHER string constants NOR method invocations are ignored
+    if (!options.getReflectionOptions().isIgnoreStringConstants() && !options.getReflectionOptions().isIgnoreMethodInvoke()) {
+      result = new DelegatingSSAContextInterpreter(new GetMethodContextInterpreter(),result);
+    }
     return result;
   }
 
