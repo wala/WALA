@@ -22,9 +22,9 @@ import com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.cdg.ControlDependenceGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cfg.ExceptionPrunedCFG;
@@ -105,7 +105,7 @@ public class PDG implements NumberedGraph<Statement> {
 
   private final Collection<PointerKey> locationsHandled = HashSetFactory.make();
 
-  private final PointerAnalysis pa;
+  private final PointerAnalysis<InstanceKey> pa;
 
   private final ExtendedHeapModel heapModel;
 
@@ -131,7 +131,7 @@ public class PDG implements NumberedGraph<Statement> {
    * @param ref the set of heap locations which may be read (transitively) by this node. These are logically parameters in the SDG.
    * @throws IllegalArgumentException if node is null
    */
-  public PDG(final CGNode node, PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
+  public PDG(final CGNode node, PointerAnalysis<InstanceKey> pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
       Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
       HeapExclusions exclusions, CallGraph cg, ModRef modRef) {
     this(node, pa, mod, ref, dOptions, cOptions, exclusions, cg, modRef, false);
@@ -143,7 +143,7 @@ public class PDG implements NumberedGraph<Statement> {
    * @param ref the set of heap locations which may be read (transitively) by this node. These are logically parameters in the SDG.
    * @throws IllegalArgumentException if node is null
    */
-  public PDG(final CGNode node, PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
+  public PDG(final CGNode node, PointerAnalysis<InstanceKey> pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
       Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
       HeapExclusions exclusions, CallGraph cg, ModRef modRef, boolean ignoreAllocHeapDefs) {
 

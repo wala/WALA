@@ -36,15 +36,15 @@ import com.ibm.wala.util.intset.OrdinalSet;
  */
 public class LexicalModRef {
 
-  public static LexicalModRef make(CallGraph cg, PointerAnalysis pa) {
+  public static LexicalModRef make(CallGraph cg, PointerAnalysis<InstanceKey> pa) {
     return new LexicalModRef(cg, pa);
   }
 
   private final CallGraph cg;
 
-  private final PointerAnalysis pa;
+  private final PointerAnalysis<InstanceKey> pa;
 
-  protected LexicalModRef(CallGraph cg, PointerAnalysis pa) {
+  protected LexicalModRef(CallGraph cg, PointerAnalysis<InstanceKey> pa) {
     this.cg = cg;
     this.pa = pa;
   }

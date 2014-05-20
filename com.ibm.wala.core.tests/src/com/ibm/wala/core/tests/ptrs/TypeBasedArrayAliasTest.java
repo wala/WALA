@@ -48,7 +48,7 @@ public class TypeBasedArrayAliasTest extends WalaTestCase {
     // RTA yields a TypeBasedPointerAnalysis
     CallGraphBuilder builder = Util.makeRTABuilder(options, new AnalysisCache(),cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
-    PointerAnalysis pa = builder.getPointerAnalysis();
+    PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
     
     CGNode node = findNode(cg, "testMayAlias1");
     PointerKey pk1 = pa.getHeapModel().getPointerKeyForLocal(node, 1);
@@ -77,7 +77,7 @@ public class TypeBasedArrayAliasTest extends WalaTestCase {
     return null;
   }
 
-  private static boolean mayAliased(PointerKey pk1, PointerKey pk2, PointerAnalysis pa) {
+  private static boolean mayAliased(PointerKey pk1, PointerKey pk2, PointerAnalysis<InstanceKey> pa) {
     OrdinalSet<InstanceKey> ptsTo1 = pa.getPointsToSet(pk1);
     OrdinalSet<InstanceKey> ptsTo2 = pa.getPointsToSet(pk2);
     boolean foundIntersection = false;

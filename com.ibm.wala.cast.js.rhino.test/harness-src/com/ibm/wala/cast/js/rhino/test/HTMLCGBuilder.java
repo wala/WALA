@@ -28,6 +28,7 @@ import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.NullProgressMonitor;
@@ -59,7 +60,7 @@ public class HTMLCGBuilder {
 		public JSCFABuilder builder;
 		
 		/** pointer analysis results; partial if {@link #construction_time} is {@code -1} */
-		public PointerAnalysis pa;
+		public PointerAnalysis<InstanceKey> pa;
 		
 		/** call graph; partial if {@link #construction_time} is {@code -1} */
 		public CallGraph cg;

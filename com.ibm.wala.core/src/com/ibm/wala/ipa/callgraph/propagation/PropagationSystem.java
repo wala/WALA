@@ -89,7 +89,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   /**
    * An abstraction of the pointer analysis result
    */
-  private PointerAnalysis pointerAnalysis;
+  private PointerAnalysis<InstanceKey> pointerAnalysis;
 
   /**
    * Meta-data regarding how pointers are modelled.
@@ -134,7 +134,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   /**
    * @return an object which encapsulates the pointer analysis result
    */
-  public PointerAnalysis makePointerAnalysis(PropagationCallGraphBuilder builder) {
+  public PointerAnalysis<InstanceKey> makePointerAnalysis(PropagationCallGraphBuilder builder) {
     return new PointerAnalysisImpl(builder, cg, pointsToMap, instanceKeys, pointerKeyFactory, instanceKeyFactory);
   }
 
@@ -601,7 +601,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   /**
    * @return an object that encapsulates the pointer analysis results
    */
-  public PointerAnalysis extractPointerAnalysis(PropagationCallGraphBuilder builder) {
+  public PointerAnalysis<InstanceKey> extractPointerAnalysis(PropagationCallGraphBuilder builder) {
     if (pointerAnalysis == null) {
       pointerAnalysis = makePointerAnalysis(builder);
     }

@@ -204,7 +204,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
     // extract data for analysis
     //
     CallGraph cg = getCallGraph();
-    PointerAnalysis pa = getPointerAnalysis();
+    PointerAnalysis<InstanceKey> pa = getPointerAnalysis();
 
     //
     // collect all places where objects can escape their creating thread:

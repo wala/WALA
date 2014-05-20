@@ -141,7 +141,7 @@ public class CompareToZeroOneCFADriver {
   private static void doTests(AnalysisScope scope, final ClassHierarchy cha, AnalysisOptions options) throws IllegalArgumentException, CancelException {
     final SSAPropagationCallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
     final CallGraph oldCG = builder.makeCallGraph(options,null);
-    final PointerAnalysis pa = builder.getPointerAnalysis();
+    final PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
 
     // now, run our analysis
     // build an RTA call graph

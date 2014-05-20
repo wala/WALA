@@ -418,7 +418,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
    * @see com.ibm.wala.ipa.callgraph.CallGraphBuilder#getPointerAnalysis()
    */
   @Override
-  public PointerAnalysis getPointerAnalysis() {
+  public PointerAnalysis<InstanceKey> getPointerAnalysis() {
     return TypeBasedPointerAnalysis.make(getOptions(), allocatedClasses, getCallGraph());
   }
 }

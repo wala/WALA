@@ -379,13 +379,13 @@ public abstract class JavaIRTests extends IRTests {
   }
 
   @Test public void testInnerClassA() {
-    Pair x = runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true);
+    Pair<CallGraph, PointerAnalysis<InstanceKey>> x =
+        runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true);
     
     // can't do an IRAssertion() -- we need the pointer analysis
     
-    CallGraph cg = (CallGraph) x.fst;
-    @SuppressWarnings("unchecked")
-    PointerAnalysis<? extends InstanceKey> pa = (PointerAnalysis<? extends InstanceKey>) x.snd;
+    CallGraph cg = x.fst;
+    PointerAnalysis<InstanceKey> pa = x.snd;
 
     Iterator<CGNode> iter = cg.iterator();
     while ( iter.hasNext() ) {
@@ -438,13 +438,13 @@ public abstract class JavaIRTests extends IRTests {
   }
 
   @Test public void testInnerClassSuper() {
-    Pair x = runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true);
+    Pair<CallGraph, PointerAnalysis<InstanceKey>> x =
+        runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true);
     
     // can't do an IRAssertion() -- we need the pointer analysis
     
-    CallGraph cg = (CallGraph) x.fst;
-    @SuppressWarnings("unchecked")
-    PointerAnalysis<? extends InstanceKey> pa = (PointerAnalysis<? extends InstanceKey>) x.snd;
+    CallGraph cg = x.fst;
+    PointerAnalysis<InstanceKey> pa = x.snd;
 
     Iterator<CGNode> iter = cg.iterator();
     while ( iter.hasNext() ) {
@@ -596,10 +596,10 @@ public abstract class JavaIRTests extends IRTests {
   }
 
   @Test public void testMiniaturSliceBug() throws IllegalArgumentException, CancelException {
-    Pair<?, ?> x = runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
+    Pair<CallGraph, PointerAnalysis<InstanceKey>> x = runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
 
-    PointerAnalysis pa = (PointerAnalysis) x.snd;
-    CallGraph cg = (CallGraph) x.fst;
+    PointerAnalysis<InstanceKey> pa = x.snd;
+    CallGraph cg = x.fst;
 
     // test partial slice
     MethodReference sliceRootRef = getSliceRootReference("MiniaturSliceBug", "validNonDispatchedCall", "(LIntWrapper;)V");

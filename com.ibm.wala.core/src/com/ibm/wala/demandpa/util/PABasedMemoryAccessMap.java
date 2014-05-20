@@ -43,7 +43,7 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
 
   private static final boolean DEBUG = false;
 
-  private final PointerAnalysis<? extends InstanceKey> pa;
+  private final PointerAnalysis<InstanceKey> pa;
 
   private final HeapModel heapModel;
 
@@ -51,15 +51,15 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
 
   private final Map<PointerKey, Set<Statement>> invRef;
 
-  public PABasedMemoryAccessMap(CallGraph cg, PointerAnalysis<? extends InstanceKey> pa) {
+  public PABasedMemoryAccessMap(CallGraph cg, PointerAnalysis<InstanceKey> pa) {
     this(cg, pa, new SDG(cg, pa, DataDependenceOptions.NO_BASE_NO_HEAP_NO_EXCEPTIONS, ControlDependenceOptions.NONE));
   }
 
-  public PABasedMemoryAccessMap(CallGraph cg, PointerAnalysis<? extends InstanceKey> pa, SDG sdg) {
+  public PABasedMemoryAccessMap(CallGraph cg, PointerAnalysis<InstanceKey> pa, SDG sdg) {
     this(cg, pa, CISlicer.scanForMod(sdg, pa, true, ModRef.make()), CISlicer.scanForRef(sdg, pa));
   }
   
-  public PABasedMemoryAccessMap(CallGraph cg, PointerAnalysis<? extends InstanceKey> pa, Map<Statement, Set<PointerKey>> mod,
+  public PABasedMemoryAccessMap(CallGraph cg, PointerAnalysis<InstanceKey> pa, Map<Statement, Set<PointerKey>> mod,
       Map<Statement, Set<PointerKey>> ref) {
     if (pa == null) {
       throw new IllegalArgumentException("null pa");

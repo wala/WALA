@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.js.vis;
 
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.viz.viewer.PaPanel;
 import com.ibm.wala.viz.viewer.WalaViewer;
@@ -19,12 +20,12 @@ public class JsViewer extends WalaViewer{
 
 	private static final long serialVersionUID = 1L;
 
-	public JsViewer(CallGraph cg, PointerAnalysis pa) {
+	public JsViewer(CallGraph cg, PointerAnalysis<InstanceKey> pa) {
 		super(cg, pa);
 	}
 	
 	@Override
-	protected PaPanel createPaPanel(CallGraph cg, PointerAnalysis pa) {
+	protected PaPanel createPaPanel(CallGraph cg, PointerAnalysis<InstanceKey> pa) {
 		return new JsPaPanel(cg, pa);
 	}
 }
