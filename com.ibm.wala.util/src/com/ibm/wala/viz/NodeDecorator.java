@@ -13,19 +13,14 @@ package com.ibm.wala.viz;
 import com.ibm.wala.util.WalaException;
 
 /**
+ * @param <T> the node type
  */
-public interface NodeDecorator {
-  
-  public static final NodeDecorator DEFAULT = new NodeDecorator() {
-    @Override
-    public String getLabel(Object o) {
-      return o.toString();
-    } };
+public interface NodeDecorator<T> {
   
   /**
-   * @param o
-   * @return the String label for node o
+   * @param n
+   * @return the String label for node n
    */
-  String getLabel(Object o) throws WalaException;
+  String getLabel(T n) throws WalaException;
   
 }

@@ -18,6 +18,7 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter;
 import com.ibm.wala.util.intset.EmptyIntSet;
 import com.ibm.wala.util.intset.IntSet;
 
@@ -53,6 +54,10 @@ public class ReflectionContextSelector {
     if (!options.getReflectionOptions().isIgnoreMethodInvoke()) {
       result = new DelegatingContextSelector(new ReflectiveInvocationSelector(), new DelegatingContextSelector(
           new JavaLangClassContextSelector(), result));
+    }
+    // if NEITHER string constants NOR method invocations are ignored
+    if (!options.getReflectionOptions().isIgnoreStringConstants() && !options.getReflectionOptions().isIgnoreMethodInvoke()) {
+      result = new DelegatingContextSelector(new GetMethodContextSelector(),result);
     }
     return result;
   }
