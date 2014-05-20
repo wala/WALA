@@ -51,38 +51,38 @@ public class PDFViewUtil {
    * @throws IllegalArgumentException if ir is null
    */
   public static Process ghostviewIR(IClassHierarchy cha, IR ir, String pdfFile, String dotFile, String dotExe, String pdfViewExe,
-      NodeDecorator annotations) throws WalaException {
+      NodeDecorator<ISSABasicBlock> annotations) throws WalaException {
 
     if (ir == null) {
       throw new IllegalArgumentException("ir is null");
     }
-    Graph<? extends ISSABasicBlock> g = ir.getControlFlowGraph();
+    Graph<ISSABasicBlock> g = ir.getControlFlowGraph();
 
-    NodeDecorator labels = makeIRDecorator(ir);
+    NodeDecorator<ISSABasicBlock> labels = makeIRDecorator(ir);
     if (annotations != null) {
-      labels = new ConcatenatingNodeDecorator(annotations, labels);
+      labels = new ConcatenatingNodeDecorator<ISSABasicBlock>(annotations, labels);
     }
 
     g = CFGSanitizer.sanitize(ir, cha);
 
-    DotUtil.dotify(g, labels, dotFile, pdfFile, dotExe);
+    DotUtil.<ISSABasicBlock>dotify(g,labels,dotFile,pdfFile,dotExe);
 
     return launchPDFView(pdfFile, pdfViewExe);
   }
 
-  public static NodeDecorator makeIRDecorator(IR ir) {
+  public static NodeDecorator<ISSABasicBlock> makeIRDecorator(IR ir) {
     if (ir == null) {
       throw new IllegalArgumentException("ir is null");
     }
-    final HashMap<BasicBlock, String> labelMap = HashMapFactory.make();
+    final HashMap<ISSABasicBlock,String> labelMap = HashMapFactory.make();
     for (Iterator it = ir.getControlFlowGraph().iterator(); it.hasNext();) {
       SSACFG.BasicBlock bb = (SSACFG.BasicBlock) it.next();
       labelMap.put(bb, getNodeLabel(ir, bb));
     }
-    NodeDecorator labels = new NodeDecorator() {
+    NodeDecorator<ISSABasicBlock> labels = new NodeDecorator<ISSABasicBlock>() {
       @Override
-      public String getLabel(Object o) {
-        return labelMap.get(o);
+      public String getLabel(ISSABasicBlock bb) {
+        return labelMap.get(bb);
       }
     };
     return labels;
@@ -90,21 +90,22 @@ public class PDFViewUtil {
 
   /**
    * A node decorator which concatenates the labels from two other node decorators
+   * @param <T> the type of the node
    */
-  private final static class ConcatenatingNodeDecorator implements NodeDecorator {
+  private final static class ConcatenatingNodeDecorator<T> implements NodeDecorator<T> {
 
-    private final NodeDecorator A;
+    private final NodeDecorator<T> A;
 
-    private final NodeDecorator B;
+    private final NodeDecorator<T> B;
 
-    ConcatenatingNodeDecorator(NodeDecorator A, NodeDecorator B) {
+    ConcatenatingNodeDecorator(NodeDecorator<T> A, NodeDecorator<T> B) {
       this.A = A;
       this.B = B;
     }
 
     @Override
-    public String getLabel(Object o) throws WalaException {
-      return A.getLabel(o) + B.getLabel(o);
+    public String getLabel(T n) throws WalaException {
+      return A.getLabel(n) + B.getLabel(n);
     }
 
   }
