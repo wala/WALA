@@ -177,11 +177,10 @@ public class PDFSDG {
     return GraphSlicer.prune(sdg, f);
   }
 
-  private static NodeDecorator makeNodeDecorator() {
-    return new NodeDecorator() {
+  private static NodeDecorator<Statement> makeNodeDecorator() {
+    return new NodeDecorator<Statement>() {
       @Override
-      public String getLabel(Object o) throws WalaException {
-        Statement s = (Statement) o;
+      public String getLabel(Statement s) throws WalaException {
         switch (s.getKind()) {
         case HEAP_PARAM_CALLEE:
         case HEAP_PARAM_CALLER:
