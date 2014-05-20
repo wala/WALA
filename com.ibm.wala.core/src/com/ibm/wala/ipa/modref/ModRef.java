@@ -175,11 +175,11 @@ public class ModRef {
 
     private final Collection<PointerKey> result;
 
-    private final PointerAnalysis pa;
+    private final PointerAnalysis<? extends InstanceKey> pa;
 
     private final ExtendedHeapModel h;
 
-    protected RefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis pa, ExtendedHeapModel h) {
+    protected RefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<? extends InstanceKey> pa, ExtendedHeapModel h) {
       this.n = n;
       this.result = result;
       this.pa = pa;
@@ -225,12 +225,12 @@ public class ModRef {
 
     private final ExtendedHeapModel h;
 
-    private final PointerAnalysis pa;
+    private final PointerAnalysis<? extends InstanceKey> pa;
 
     private final boolean ignoreAllocHeapDefs;
 
-    protected ModVisitor(CGNode n, Collection<PointerKey> result, ExtendedHeapModel h, PointerAnalysis pa,
-        boolean ignoreAllocHeapDefs) {
+    protected ModVisitor(CGNode n, Collection<PointerKey> result, ExtendedHeapModel h,
+        PointerAnalysis<? extends InstanceKey> pa, boolean ignoreAllocHeapDefs) {
       this.n = n;
       this.result = result;
       this.h = h;

@@ -12,6 +12,7 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.js.JavaScriptPlugin;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FlowGraph;
+import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.FuncVertex;
 import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
@@ -56,7 +57,7 @@ public class EclipseWebAnalysisEngine extends EclipseJavaScriptAnalysisEngine {
   }
 
   @Override
-  public Pair<JSCallGraph, PointerAnalysis> getFieldBasedCallGraph(String scriptName) throws CancelException {
+  public Pair<JSCallGraph, PointerAnalysis<FuncVertex>> getFieldBasedCallGraph(String scriptName) throws CancelException {
     Set<Entrypoint> eps= HashSetFactory.make();
     eps.add(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make(scriptName));
     eps.add(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make("Lprologue.js"));

@@ -11,6 +11,7 @@
 package com.ibm.wala.ipa.callgraph;
 
 
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
@@ -30,7 +31,7 @@ public interface CallGraphBuilder {
   /**
    * @return the Pointer Analysis information computed as a side-effect of call graph construction.
    */
-  public PointerAnalysis getPointerAnalysis();
+  public PointerAnalysis<InstanceKey> getPointerAnalysis();
 
   /**
    * @return A cache of various analysis artifacts used during call graph construction.

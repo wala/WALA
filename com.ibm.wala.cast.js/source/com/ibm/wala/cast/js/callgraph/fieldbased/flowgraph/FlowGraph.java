@@ -141,11 +141,11 @@ public class FlowGraph implements Iterable<Vertex> {
     return graph.iterator();
   }
   
-  public PointerAnalysis getPointerAnalysis(final IProgressMonitor monitor) {
-    return new PointerAnalysis() {
+  public PointerAnalysis<FuncVertex> getPointerAnalysis(final IProgressMonitor monitor) {
+    return new PointerAnalysis<FuncVertex>() {
 
       @Override
-      public OrdinalSet<? extends InstanceKey> getPointsToSet(PointerKey key) {
+      public OrdinalSet<FuncVertex> getPointsToSet(PointerKey key) {
         if (key instanceof LocalPointerKey) {
           CGNode node = ((LocalPointerKey)key).getNode();
           FuncVertex fn = factory.makeFuncVertex(node.getMethod().getDeclaringClass());

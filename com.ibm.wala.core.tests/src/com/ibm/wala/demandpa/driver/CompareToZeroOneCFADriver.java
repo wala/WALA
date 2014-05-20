@@ -174,7 +174,7 @@ public class CompareToZeroOneCFADriver {
             LocalPointerKey pk = (LocalPointerKey) heapModel.getPointerKeyForLocal(node, i);
             LocalPointerKey oldPk = (LocalPointerKey) CallGraphMapUtil.mapPointerKey(pk, cg, oldCG, heapModel);
             Collection<InstanceKey> p2set = dmp.getPointsTo(pk);
-            OrdinalSet<? extends InstanceKey> otherP2Set = pa.getPointsToSet(oldPk);
+            OrdinalSet<InstanceKey> otherP2Set = pa.getPointsToSet(oldPk);
             System.err.println(("OLD POINTS-TO " + otherP2Set));
             for (InstanceKey key : otherP2Set) {
               if (knownBug(key)) {

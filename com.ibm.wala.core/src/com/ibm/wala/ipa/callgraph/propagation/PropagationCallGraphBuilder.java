@@ -683,7 +683,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @see com.ibm.detox.ipa.callgraph.CallGraphBuilder#getPointerAnalysis()
    */
   @Override
-  public PointerAnalysis getPointerAnalysis() {
+  public PointerAnalysis<InstanceKey> getPointerAnalysis() {
     return system.extractPointerAnalysis(this);
   }
 

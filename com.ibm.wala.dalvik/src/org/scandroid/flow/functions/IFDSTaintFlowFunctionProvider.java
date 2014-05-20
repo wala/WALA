@@ -307,7 +307,7 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 			// now add the field keys to the defs list so that they
 			// are also tainted:
 			if (pk!=null) {
-				OrdinalSet<? extends InstanceKey> m = pa.getPointsToSet(pk);
+				OrdinalSet<InstanceKey> m = pa.getPointsToSet(pk);
 				if (m != null) {
 					for (InstanceKey instanceKey : m) {
 						elements.add(new FieldElement(instanceKey, pi.getDeclaredField()));
@@ -346,7 +346,7 @@ implements IFlowFunctionMap<BasicBlockInContext<E>> {
 			
 			if (pk!=null) {
 				Set<CodeElement> elements = Sets.newHashSet();
-				OrdinalSet<? extends InstanceKey> m = pa.getPointsToSet(pk);
+				OrdinalSet<InstanceKey> m = pa.getPointsToSet(pk);
 				if(m != null) {
 					for (InstanceKey instanceKey : m) {
 						elements.add(new FieldElement(instanceKey, declaredField));

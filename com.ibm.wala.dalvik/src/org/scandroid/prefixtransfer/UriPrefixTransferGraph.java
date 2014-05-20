@@ -223,22 +223,22 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
     		final CallSiteReference csr = (CallSiteReference) context.get(ContextKey.CALLSITE);
 			final SSAInvokeInstruction invoke =
 				(SSAInvokeInstruction) caller.getIR().getBasicBlocksForCall(csr)[0].getLastInstruction();
-			final OrdinalSet<? extends InstanceKey> ptsUri =
+			final OrdinalSet<InstanceKey> ptsUri =
 				pa.getPointsToSet(new LocalPointerKey(caller, invoke.getUse(0)));
 			
 			if (!ptsUri.isEmpty()) {
 				final InstanceKey uriKey = ptsUri.iterator().next();
-				final OrdinalSet<? extends InstanceKey> points =
+				final OrdinalSet<InstanceKey> points =
 						pa.getPointsToSet(new LocalPointerKey(caller, invoke.getUse(1)));
 				
 				if (!points.isEmpty()) {
 					final InstanceKey stringKey = points.iterator().next();
 
-					final OrdinalSet<? extends InstanceKey> returnSet =
+					final OrdinalSet<InstanceKey> returnSet =
 							pa.getPointsToSet(new LocalPointerKey(caller, invoke.getReturnValue(0)));
 					logger.debug("Sizeof returnset: " + returnSet.size() + "--" + lpk);
 					
-					for (final Iterator<? extends InstanceKey> rIK = returnSet.iterator(); rIK.hasNext(); ) {
+					for (final Iterator<InstanceKey> rIK = returnSet.iterator(); rIK.hasNext(); ) {
 						final InstanceKey returnIK = rIK.next();
 						final UriAppendString node = new UriAppendString(mapping.getMappedIndex(returnIK),
 							mapping.getMappedIndex(uriKey), mapping.getMappedIndex(stringKey));
@@ -276,12 +276,12 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
             final CallSiteReference csr = (CallSiteReference) context.get(ContextKey.CALLSITE);
             final SSAInvokeInstruction invoke =
             		(SSAInvokeInstruction) caller.getIR().getBasicBlocksForCall(csr)[0].getLastInstruction();
-            final OrdinalSet<? extends InstanceKey> ptsUri =
+            final OrdinalSet<InstanceKey> ptsUri =
             	pa.getPointsToSet(new LocalPointerKey(caller, invoke.getUse(0)));
 
             if (!ptsUri.isEmpty()) {
                 final InstanceKey uriKey = ptsUri.iterator().next();
-                final OrdinalSet<? extends InstanceKey> points =
+                final OrdinalSet<InstanceKey> points =
                 	pa.getPointsToSet(new LocalPointerKey(caller, invoke.getUse(1)));
 
                 if (!points.isEmpty()) {
@@ -316,7 +316,7 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
             		(SSAInvokeInstruction) caller.getIR().getBasicBlocksForCall(csr)[0].getLastInstruction();
             logger.debug("invoke inst: " + invoke + " getuse: " + invoke.getUse(0));
             logger.debug("in node: " + caller);
-            final OrdinalSet<? extends InstanceKey> points =
+            final OrdinalSet<InstanceKey> points =
             	pa.getPointsToSet(new LocalPointerKey(caller, invoke.getUse(0)));
 
             if (!points.isEmpty()) {

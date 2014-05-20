@@ -54,7 +54,7 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
  */
 public class PaPanel extends JSplitPane {
 
-  protected final PointerAnalysis pa;
+  protected final PointerAnalysis<? extends InstanceKey> pa;
   protected final CallGraph cg;
 
   private JTextField fullName;
@@ -66,7 +66,7 @@ public class PaPanel extends JSplitPane {
   private MutableMapping<List<InstanceFieldPointerKey>> instanceKeyIdToInstanceFieldPointers = MutableMapping.<List<InstanceFieldPointerKey>> make();
 
 
-  public PaPanel(CallGraph cg, PointerAnalysis pa) {
+  public PaPanel(CallGraph cg, PointerAnalysis<? extends InstanceKey> pa) {
     super(JSplitPane.HORIZONTAL_SPLIT);
 
     this.pa = pa;

@@ -384,7 +384,8 @@ public abstract class JavaIRTests extends IRTests {
     // can't do an IRAssertion() -- we need the pointer analysis
     
     CallGraph cg = (CallGraph) x.fst;
-    PointerAnalysis pa = (PointerAnalysis) x.snd;
+    @SuppressWarnings("unchecked")
+    PointerAnalysis<? extends InstanceKey> pa = (PointerAnalysis<? extends InstanceKey>) x.snd;
 
     Iterator<CGNode> iter = cg.iterator();
     while ( iter.hasNext() ) {
@@ -442,7 +443,8 @@ public abstract class JavaIRTests extends IRTests {
     // can't do an IRAssertion() -- we need the pointer analysis
     
     CallGraph cg = (CallGraph) x.fst;
-    PointerAnalysis pa = (PointerAnalysis) x.snd;
+    @SuppressWarnings("unchecked")
+    PointerAnalysis<? extends InstanceKey> pa = (PointerAnalysis<? extends InstanceKey>) x.snd;
 
     Iterator<CGNode> iter = cg.iterator();
     while ( iter.hasNext() ) {

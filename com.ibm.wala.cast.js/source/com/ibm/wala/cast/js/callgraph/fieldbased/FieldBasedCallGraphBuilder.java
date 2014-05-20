@@ -98,7 +98,7 @@ public abstract class FieldBasedCallGraphBuilder {
 	/**
 	 * Main entry point: builds a flow graph, then extracts a call graph and returns it.
 	 */
-	public Pair<JSCallGraph,PointerAnalysis> buildCallGraph(Iterable<Entrypoint> eps, IProgressMonitor monitor) throws CancelException {
+	public Pair<JSCallGraph,PointerAnalysis<FuncVertex>> buildCallGraph(Iterable<Entrypoint> eps, IProgressMonitor monitor) throws CancelException {
 		long fgBegin, fgEnd, cgBegin, cgEnd;
 	
 		if(LOG_TIMINGS) fgBegin = System.currentTimeMillis();

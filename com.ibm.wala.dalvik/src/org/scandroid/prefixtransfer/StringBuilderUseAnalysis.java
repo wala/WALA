@@ -128,7 +128,7 @@ public class StringBuilderUseAnalysis {
 				}
 			} else if (!(pk instanceof ReturnValueKey)) {
 				// if this pointer key points to our instance key then we have to give up -- we can only analyze local pointer keys
-				final OrdinalSet<? extends InstanceKey> pts = pa.getPointsToSet(pk);
+				final OrdinalSet<InstanceKey> pts = pa.getPointsToSet(pk);
 				if (pts.contains(ik)) {
 					logger.warn("Found non LocalPointerKey refering to our ik: " + pk);
 					return null;

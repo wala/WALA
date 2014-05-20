@@ -20,14 +20,14 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
 /**
  * Abstract definition of pointer analysis
  */
-public interface PointerAnalysis {
+public interface PointerAnalysis<T extends InstanceKey> {
   
   /**
    * @param key representative of an equivalence class of pointers
    * @return Set of InstanceKey, representing the instance abstractions that define
    * the points-to set computed for the pointer key
    */
-  OrdinalSet<? extends InstanceKey> getPointsToSet(PointerKey key);
+  OrdinalSet<T> getPointsToSet(PointerKey key);
 
   /**
    * @return an Object that determines how to model abstract locations in the heap.
