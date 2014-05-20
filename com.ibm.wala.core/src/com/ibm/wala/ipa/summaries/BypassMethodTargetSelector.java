@@ -125,7 +125,8 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
         // we want to generate a NoOpSummary for this method.
         return findOrCreateSyntheticMethod(site.getDeclaredTarget(), site.isStatic());
       }
-      if (parent instanceof ClassHierarchyMethodTargetSelector) {
+
+      if (parent.getClass() == ClassHierarchyMethodTargetSelector.class) {
         // already checked this case and decided not to bypass
         return chaTarget;
       }
