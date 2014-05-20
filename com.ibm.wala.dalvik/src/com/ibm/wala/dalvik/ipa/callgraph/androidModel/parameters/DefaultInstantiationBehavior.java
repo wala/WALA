@@ -31,28 +31,22 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters;
 
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior;
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior.InstanceBehavior;
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior.Exactness;
-
-import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.classLoader.IClassLoader;
-
-import com.ibm.wala.types.TypeName;
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.dalvik.util.AndroidTypes;
-import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.classLoader.IClass;
-
-import com.ibm.wala.util.strings.Atom;
-import java.util.Map;
-import java.util.HashMap;
-import java.io.Serializable;
-
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.dalvik.util.AndroidTypes;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  *  Contains some predefined behaviors.
@@ -64,7 +58,7 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior impleme
     private static Logger logger = LoggerFactory.getLogger(DefaultInstantiationBehavior.class);
 
     /* package-private */ static final class BehviourValue implements Serializable {
-        public final InstanceBehavior behaviour;
+		public final InstanceBehavior behaviour;
         public final Exactness exactness;
         public final BehviourValue cacheFrom;
         public BehviourValue(final InstanceBehavior behaviour, final Exactness exactness, final BehviourValue cacheFrom) {

@@ -31,36 +31,29 @@
  */
 package com.ibm.wala.dalvik.util;
 
-import com.ibm.wala.dalvik.util.AndroidSettingFactory;
-import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.Set;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.EnumMap;
-import java.util.Stack;
-import java.lang.Class;
-import java.lang.reflect.Constructor;
-
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent;
-
-import java.io.File;
-import java.io.IOException;
-import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.SAXException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *  Read in an extracted AndroidManifest.xml.

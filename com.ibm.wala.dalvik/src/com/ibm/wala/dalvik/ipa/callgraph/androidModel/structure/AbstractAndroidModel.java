@@ -31,24 +31,20 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure;
 
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.AndroidModelParameterManager;
-import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
-import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.IExecutionOrder;
-import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.ExecutionOrder;
-import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.summaries.VolatileMethodSummary; 
-import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
-
-import com.ibm.wala.types.TypeReference;
-
-import com.ibm.wala.util.ssa.SSAValueManager;
-
-import java.lang.Iterable;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
+import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.ExecutionOrder;
+import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.IExecutionOrder;
+import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.ssa.SSAValueManager;
+import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
 
 /**
  *  Aids in handling code to be inserted at given points into the model.

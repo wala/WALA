@@ -31,26 +31,19 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters;
 
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.ssa.SSAInstruction;
-
-import com.ibm.wala.util.ssa.ParameterAccessor;
-import com.ibm.wala.util.ssa.SSAValue;
-import com.ibm.wala.util.ssa.ParameterAccessor.Parameter;
-
-
-import java.util.Set;
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
-
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.types.Descriptor;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.ssa.ParameterAccessor;
+import com.ibm.wala.util.ssa.SSAValue;
 
 /**
  *  Manages SSA-Numbers for the arguments to Entrypoints.
@@ -95,7 +88,7 @@ public class AndroidModelParameterManager {
     private IInstantiationBehavior behaviour = null;
     /** Description only used for toString() */
     private String description;
-    private MethodReference forMethod;
+//    private MethodReference forMethod;
 
     /**
      *  Representing a ssa-number - thus a version of an instance to a type.
@@ -104,7 +97,7 @@ public class AndroidModelParameterManager {
         public ValueStatus status = ValueStatus.UNUSED;
         public TypeReference type = null;
         public int ssa = -1;
-        public SSAInstruction setBy = null;
+//        public SSAInstruction setBy = null;
         public int setInScope = -1;
     }
 
@@ -119,13 +112,13 @@ public class AndroidModelParameterManager {
     public AndroidModelParameterManager(IInstantiationBehavior behaviour) {
         this.behaviour = behaviour;
         this.description = " based on behaviours of " + behaviour;
-        this.forMethod = null; // XXX
+//        this.forMethod = null; // XXX
     }
 
     public AndroidModelParameterManager(MethodReference mRef, boolean isStatic) {
         this(new ParameterAccessor(mRef, isStatic));
         this.description = " based on MethodReference " + mRef;
-        this.forMethod = mRef;
+//        this.forMethod = mRef;
     }
 
     public AndroidModelParameterManager(ParameterAccessor acc) {
@@ -138,7 +131,7 @@ public class AndroidModelParameterManager {
         }*/
 
         this.description = " based on ParameterAccessor " + acc;
-        this.forMethod = acc.forMethod();
+//        this.forMethod = acc.forMethod();
     }
 
     //public AndroidModelParameterManager() {
@@ -188,7 +181,7 @@ public class AndroidModelParameterManager {
                     param.status = ValueStatus.ALLOCATED;
                     param.ssa = ssaValue;
                     param.setInScope = currentScope;
-                    param.setBy = setBy;
+//                    param.setBy = setBy;
                     
                     return;
                 } else {
@@ -266,7 +259,7 @@ public class AndroidModelParameterManager {
                         param.status = ValueStatus.CLOSED;
                     }
                     param.setInScope = currentScope;
-                    param.setBy = setBy;
+//                    param.setBy = setBy;
 
                     logger.info("Setting SSA {} to phi {} now {}", ssaValue, type.getName(), param.status);
                     didPhi = true;

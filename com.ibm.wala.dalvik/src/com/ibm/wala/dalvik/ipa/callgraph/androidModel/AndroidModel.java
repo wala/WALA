@@ -31,100 +31,71 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel;
 
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.SystemServiceModel;
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.ExternalModel;
-
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.ReuseParameters;
-import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
-import com.ibm.wala.util.ssa.SSAValue;
-import com.ibm.wala.util.ssa.ParameterAccessor.Parameter;
-import com.ibm.wala.util.ssa.SSAValue.VariableKey;
-import com.ibm.wala.util.ssa.SSAValue.WeaklyNamedKey;
-import com.ibm.wala.util.ssa.SSAValue.TypeKey;
-import com.ibm.wala.util.ssa.ParameterAccessor;
-import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
-import com.ibm.wala.util.ssa.SSAValueManager;
-import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.Instantiator;
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.FlatInstantiator;
-
-import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.types.FieldReference;
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
-import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.types.Descriptor;
-import com.ibm.wala.types.TypeName;
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.summaries.MethodSummary;
-import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
-import com.ibm.wala.shrikeBT.IInvokeInstruction.Dispatch;
-import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAPhiInstruction;
-import com.ibm.wala.ssa.SSANewInstruction;
-import com.ibm.wala.ipa.summaries.SummarizedMethod;
-import com.ibm.wala.ipa.summaries.SummarizedMethodWithNames;
-import com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
-import com.ibm.wala.types.Selector;
-import com.ibm.wala.ssa.ConstantValue;
-
-import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.Context;
-
-import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
-
-import com.ibm.wala.ipa.cha.IClassHierarchyDweller;
-import com.ibm.wala.util.ssa.IInstantiator;
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior;
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior.InstanceBehavior;
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.AbstractAndroidModel;
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.AndroidBoot;
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.AndroidStartComponentTool;
-
-import com.ibm.wala.classLoader.IField;
-
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.dalvik.util.AndroidTypes;
-import com.ibm.wala.dalvik.util.AndroidComponent;
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters;
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StarterFlags;
-
-import com.ibm.wala.util.strings.StringStuff;
-import com.ibm.wala.types.ClassLoaderReference;
-
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.HashMap;
-import com.ibm.wala.util.collections.HashMapFactory;
-import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ArrayList;
-
-import com.ibm.wala.util.MonitorUtil;
-import com.ibm.wala.util.CancelException;
-
-import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.Iterable;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.FlatInstantiator;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior.InstanceBehavior;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.Instantiator;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.ReuseParameters;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure.AbstractAndroidModel;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.AndroidBoot;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.AndroidStartComponentTool;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.ExternalModel;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.SystemServiceModel;
+import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
+import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters;
+import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StarterFlags;
+import com.ibm.wala.dalvik.util.AndroidComponent;
+import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
+import com.ibm.wala.dalvik.util.AndroidTypes;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchyDweller;
+import com.ibm.wala.ipa.summaries.MethodSummary;
+import com.ibm.wala.ipa.summaries.SummarizedMethod;
+import com.ibm.wala.ipa.summaries.SummarizedMethodWithNames;
+import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
+import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.ssa.ConstantValue;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAPhiInstruction;
+import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.Selector;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.MonitorUtil;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
+import com.ibm.wala.util.ssa.ParameterAccessor;
+import com.ibm.wala.util.ssa.ParameterAccessor.Parameter;
+import com.ibm.wala.util.ssa.SSAValue;
+import com.ibm.wala.util.ssa.SSAValue.TypeKey;
+import com.ibm.wala.util.ssa.SSAValue.VariableKey;
+import com.ibm.wala.util.ssa.SSAValue.WeaklyNamedKey;
+import com.ibm.wala.util.ssa.SSAValueManager;
+import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
+import com.ibm.wala.util.strings.Atom;
 // For debug:
-import com.ibm.wala.ipa.callgraph.impl.Everywhere;
-import com.ibm.wala.ssa.IR;
 /**
  *  The model to be executed at application start.
  *
@@ -164,7 +135,7 @@ public class AndroidModel /* makes SummarizedMethod */
     protected final AnalysisScope scope;
 
     protected VolatileMethodSummary body;
-    private JavaInstructionFactory instructionFactory;
+//    private JavaInstructionFactory instructionFactory;
 
     private IProgressMonitor monitor;
     private int maxProgress;
@@ -251,7 +222,7 @@ public class AndroidModel /* makes SummarizedMethod */
         }
 
         this.reuseParameters = new ReuseParameters(this.instanceBehavior, this);
-        this.instructionFactory = new JavaInstructionFactory(); // TODO: TSIF
+//        this.instructionFactory = new JavaInstructionFactory(); // TODO: TSIF
        
         // Complete the signature of the method
         reuseParameters.collectParameters(entrypoints);
@@ -276,7 +247,7 @@ public class AndroidModel /* makes SummarizedMethod */
         this.monitor = AndroidEntryPointManager.MANAGER.getProgressMonitor();
         this.maxProgress = entrypoints.size();
 
-        this.doBoot &= AndroidEntryPointManager.MANAGER.getDoBootSequence();
+        AndroidModel.doBoot &= AndroidEntryPointManager.MANAGER.getDoBootSequence();
 
         // BUILD
         this.monitor.beginTask("Building " + name, this.maxProgress);
@@ -374,12 +345,12 @@ public class AndroidModel /* makes SummarizedMethod */
         //
         //  Add preparing code to the model
         //
-        if (this.doBoot) {
-            final Set<Parameter> allActivities = new HashSet(modelAcc.allExtend(AndroidTypes.ActivityName, getClassHierarchy()));
+        if (AndroidModel.doBoot) {
+//            final Set<Parameter> allActivities = new HashSet<Parameter>(modelAcc.allExtend(AndroidTypes.ActivityName, getClassHierarchy()));
             //assert(allActivities.size() > 0) : "There are no Activities in the Model"; // XXX
-            final IntentStarters.StartInfo toolInfo = IntentStarters.StartInfo.makeContextFree(null);
-            final AndroidStartComponentTool tool = new AndroidStartComponentTool(this.cha, this.mRef, toolInfo.getFlags(),
-                    /* caller */ null, tsif, modelAcc, this.paramManager, this.body, /* self */ null, toolInfo, /* callerNd */ null);
+//            final IntentStarters.StartInfo toolInfo = IntentStarters.StartInfo.makeContextFree(null);
+//            final AndroidStartComponentTool tool = new AndroidStartComponentTool(this.cha, this.mRef, toolInfo.getFlags(),
+//                    /* caller */ null, tsif, modelAcc, this.paramManager, this.body, /* self */ null, toolInfo, /* callerNd */ null);
             final SSAValue application;
             {
                 final SSAValue tmpApp = modelAcc.firstExtends(AndroidTypes.ApplicationName, this.cha);
@@ -619,7 +590,7 @@ public class AndroidModel /* makes SummarizedMethod */
             throw new IllegalArgumentException("asMethod may not be null");
         }
         if (flags == null) {
-            flags = Collections.EMPTY_SET;
+            flags = Collections.emptySet();
         }
 
         final TypeSafeInstructionFactory instructionFactory = new TypeSafeInstructionFactory(getClassHierarchy());

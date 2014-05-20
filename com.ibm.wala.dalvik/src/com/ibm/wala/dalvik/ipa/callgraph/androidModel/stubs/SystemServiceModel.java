@@ -31,78 +31,39 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs;
 
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.types.Descriptor;
-import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.types.TypeName;
-import com.ibm.wala.dalvik.util.AndroidComponent;
-import com.ibm.wala.dalvik.util.AndroidTypes;
-import com.ibm.wala.types.Selector;
-import com.ibm.wala.ipa.callgraph.impl.FakeRootClass;
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModel;
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModelClass;
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.AndroidModelParameterManager;
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters;
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StarterFlags;
-
-import com.ibm.wala.ipa.summaries.SummarizedMethod;
-import com.ibm.wala.ipa.summaries.MethodSummary;
-import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
-import com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory;
-import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
-import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.ssa.SSANewInstruction;
-import com.ibm.wala.ssa.SSAPhiInstruction;
-import com.ibm.wala.ssa.ConstantValue;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
-
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.Instantiator;
-import com.ibm.wala.util.ssa.ParameterAccessor;
-import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
-import com.ibm.wala.util.ssa.SSAValue;
-import com.ibm.wala.util.ssa.SSAValueManager;
-import com.ibm.wala.util.ssa.ParameterAccessor.Parameter;
-
-import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
-import com.ibm.wala.classLoader.IClass;
-
-import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
-import com.ibm.wala.ipa.summaries.BypassMethodTargetSelector;
-import com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader;
-import com.ibm.wala.types.ClassLoaderReference;
-
-import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ssa.SSAOptions;
-
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-
-import com.ibm.wala.util.CancelException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModel;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModelClass;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.Instantiator;
+import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
+import com.ibm.wala.dalvik.util.AndroidTypes;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.summaries.MethodSummary;
+import com.ibm.wala.ipa.summaries.SummarizedMethod;
+import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
 import com.ibm.wala.ssa.ConstantValue;
-import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.callgraph.ContextKey;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.Selector;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.ssa.ParameterAccessor;
+import com.ibm.wala.util.ssa.ParameterAccessor.Parameter;
+import com.ibm.wala.util.ssa.SSAValue;
+import com.ibm.wala.util.ssa.SSAValueManager;
+import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  *  This is generates a dummy for the call to an external Activity.

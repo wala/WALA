@@ -97,7 +97,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
     private AndroidEntryPointManager() {} 
 
     public Set<TypeReference> getComponents() {
-        if (this.ENTRIES.isEmpty()) {
+        if (ENTRIES.isEmpty()) {
             throw new IllegalStateException("No entrypoints loaded yet.");
         }
         

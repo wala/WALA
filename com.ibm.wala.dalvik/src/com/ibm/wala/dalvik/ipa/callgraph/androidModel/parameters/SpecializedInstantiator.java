@@ -31,60 +31,34 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters;
 
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IMethod;
-
-import com.ibm.wala.util.ssa.IInstantiator;
-
-import com.ibm.wala.classLoader.ArrayClass;
-import com.ibm.wala.types.TypeName;
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.types.MethodReference;
-
-import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
-import com.ibm.wala.util.ssa.ParameterAccessor;
-import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
-import com.ibm.wala.util.ssa.SSAValueManager;
-import com.ibm.wala.util.ssa.SSAValue;
-import com.ibm.wala.util.ssa.SSAValue.VariableKey;
-import com.ibm.wala.util.ssa.SSAValue.TypeKey;
-import com.ibm.wala.util.ssa.SSAValue.UniqueKey;
-import com.ibm.wala.ssa.ConstantValue;
-
-import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
-import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSANewInstruction;
-import com.ibm.wala.classLoader.NewSiteReference;
-
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
-
-import java.util.Collections;
-import java.util.Collection;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.HashMap;
-
-import com.ibm.wala.analysis.typeInference.TypeAbstraction;
-import com.ibm.wala.analysis.typeInference.ConeType;
-import com.ibm.wala.analysis.typeInference.PrimitiveType;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
-
-import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.dalvik.util.AndroidTypes;
-
-import com.ibm.wala.classLoader.IField;
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModelClass;
-
-import com.ibm.wala.types.Descriptor;
-
-import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
+import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModelClass;
+import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
+import com.ibm.wala.dalvik.util.AndroidTypes;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
+import com.ibm.wala.ssa.ConstantValue;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.ssa.IInstantiator;
+import com.ibm.wala.util.ssa.ParameterAccessor;
+import com.ibm.wala.util.ssa.SSAValue;
+import com.ibm.wala.util.ssa.SSAValue.UniqueKey;
+import com.ibm.wala.util.ssa.SSAValue.VariableKey;
+import com.ibm.wala.util.ssa.SSAValueManager;
+import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
 
 /**
  *  Instantiates certain android-types differently.
@@ -135,7 +109,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
             return instance;
         }
 
-        final IClass klass = this.cha.lookupClass(T);
+//        final IClass klass = this.cha.lookupClass(T);
         { // fetch new value
             if (asManaged) {
                 if (key == null) {

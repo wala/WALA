@@ -251,9 +251,9 @@ nextMethod:
         }
     }
 
-    private boolean isInnerClass(final TypeReference test) {
-        return test.getName().toString().contains("$"); // PRETTY!
-    }
+//    private boolean isInnerClass(final TypeReference test) {
+//        return test.getName().toString().contains("$"); // PRETTY!
+//    }
 
     private AndroidEntryPoint makeEntryPointForHeuristic(final IMethod method, final IClassHierarchy cha) {
         AndroidComponent compo;
@@ -427,18 +427,18 @@ nextMethod:
      *  To extend the set of known definitions have a look at the classes ActivityEP, ServiceEP, ...
      */
     public static class AndroidPossibleEntryPoint implements AndroidEntryPoint.IExecutionOrder  {
-        private final AndroidComponent cls;
+//        private final AndroidComponent cls;
         private final String name;
         public final AndroidEntryPoint.ExecutionOrder order;
 
         public AndroidPossibleEntryPoint(AndroidComponent c, String n, ExecutionOrder o) { 
-            cls = c; 
+//            cls = c; 
             name = n; 
             order = o; 
         }
  
         public AndroidPossibleEntryPoint(AndroidComponent c, String n, AndroidPossibleEntryPoint o) { 
-            cls = c; 
+//            cls = c; 
             name = n; 
             order = o.order; 
         }

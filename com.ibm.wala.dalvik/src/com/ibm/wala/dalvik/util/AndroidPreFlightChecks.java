@@ -31,24 +31,20 @@
  */
 package com.ibm.wala.dalvik.util;
 
-import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
-
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior;
-import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
-
-import com.ibm.wala.types.TypeName;
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.types.Selector;
-import com.ibm.wala.dalvik.util.AndroidTypes;
-
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
-import java.util.EnumSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior;
+import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.Selector;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
 
 /**
  *  Does optional checks before building the CallGraph.
@@ -65,12 +61,12 @@ public class AndroidPreFlightChecks {
     private final Logger logger = LoggerFactory.getLogger(AndroidPreFlightChecks.class);
 
     private final AndroidEntryPointManager manager;
-    private final AnalysisOptions options;
+//    private final AnalysisOptions options;
     private final IClassHierarchy cha;
 
     public AndroidPreFlightChecks(AndroidEntryPointManager manager, AnalysisOptions options, IClassHierarchy cha) {
         this.manager = manager;
-        this.options = options;
+//        this.options = options;
         this.cha = cha;
     }
 
@@ -202,7 +198,7 @@ public class AndroidPreFlightChecks {
     public boolean checkIntentSpecs() {
         boolean pass = true;
 
-        final List <AndroidEntryPoint> entrypoits = this.manager.ENTRIES;
+        final List <AndroidEntryPoint> entrypoits = AndroidEntryPointManager.ENTRIES;
 
         for (AndroidEntryPoint ep : entrypoits) {
             final TypeName test = ep.getMethod().getDeclaringClass().getName();
@@ -232,7 +228,7 @@ public class AndroidPreFlightChecks {
         boolean pass = true;
 
         final IInstantiationBehavior behaviour = this.manager.getInstantiationBehavior(null); // XXX: This generates false positives without cha!
-        final List <AndroidEntryPoint> entrypoits = this.manager.ENTRIES;
+        final List <AndroidEntryPoint> entrypoits = AndroidEntryPointManager.ENTRIES;
 
         for (AndroidEntryPoint ep : entrypoits) {
             final TypeName test = ep.getMethod().getDeclaringClass().getName();
@@ -259,7 +255,7 @@ public class AndroidPreFlightChecks {
     public boolean checkNoObjectInEntryPoints() {
         boolean pass = true;
 
-        final List <AndroidEntryPoint> entrypoits = this.manager.ENTRIES;
+        final List <AndroidEntryPoint> entrypoits = AndroidEntryPointManager.ENTRIES;
         for (AndroidEntryPoint ep : entrypoits) {
             final TypeName[] params =  ep.getMethod().getDescriptor().getParameters();
             if (params == null) continue;

@@ -31,52 +31,40 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters;
 
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IMethod;
-
-import com.ibm.wala.util.ssa.IInstantiator;
-
-import com.ibm.wala.classLoader.ArrayClass;
-import com.ibm.wala.types.TypeName;
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.types.MethodReference;
-
-import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
-import com.ibm.wala.util.ssa.ParameterAccessor;
-import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
-import com.ibm.wala.util.ssa.SSAValueManager;
-import com.ibm.wala.util.ssa.SSAValue;
-import com.ibm.wala.util.ssa.SSAValue.VariableKey;
-import com.ibm.wala.util.ssa.SSAValue.TypeKey;
-import com.ibm.wala.util.ssa.SSAValue.UniqueKey;
-import com.ibm.wala.ssa.ConstantValue;
-
-import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
-import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSANewInstruction;
-import com.ibm.wala.classLoader.NewSiteReference;
-
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
-
-import java.util.Collections;
-import java.util.Collection;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.HashMap;
-
-import com.ibm.wala.analysis.typeInference.TypeAbstraction;
-import com.ibm.wala.analysis.typeInference.ConeType;
-import com.ibm.wala.analysis.typeInference.PrimitiveType;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
-
-import com.ibm.wala.classLoader.CallSiteReference;
+import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.ibm.wala.analysis.typeInference.ConeType;
+import com.ibm.wala.analysis.typeInference.PrimitiveType;
+import com.ibm.wala.analysis.typeInference.TypeAbstraction;
+import com.ibm.wala.classLoader.ArrayClass;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
+import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.ssa.ConstantValue;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSANewInstruction;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.ssa.IInstantiator;
+import com.ibm.wala.util.ssa.ParameterAccessor;
+import com.ibm.wala.util.ssa.SSAValue;
+import com.ibm.wala.util.ssa.SSAValue.UniqueKey;
+import com.ibm.wala.util.ssa.SSAValue.VariableKey;
+import com.ibm.wala.util.ssa.SSAValueManager;
+import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
 
 /**
  *  Add code to create an instance of a type in a synthetic method.
@@ -538,24 +526,24 @@ public class FlatInstantiator implements IInstantiator {
     /**
      *  Path back to Object (including T itself).
      */
-    private List<TypeReference> getAllSuper(final TypeReference T) {
-        if (T.isPrimitiveType()) {
-            throw new IllegalArgumentException("Not you that call primitive type on :P");
-        }
-        final List<TypeReference> ret = new ArrayList<TypeReference>();
-
-        IClass cls = this.cha.lookupClass(T);
-        if (cls == null) {
-            throw new IllegalArgumentException("The type " + T + " is not in the ClassHierarchy");
-        }
-
-        while (cls != null) {
-            ret.add(cls.getReference());
-            cls = cls.getSuperclass();
-        }
-
-        return ret;
-    }
+//    private List<TypeReference> getAllSuper(final TypeReference T) {
+//        if (T.isPrimitiveType()) {
+//            throw new IllegalArgumentException("Not you that call primitive type on :P");
+//        }
+//        final List<TypeReference> ret = new ArrayList<TypeReference>();
+//
+//        IClass cls = this.cha.lookupClass(T);
+//        if (cls == null) {
+//            throw new IllegalArgumentException("The type " + T + " is not in the ClassHierarchy");
+//        }
+//
+//        while (cls != null) {
+//            ret.add(cls.getReference());
+//            cls = cls.getSuperclass();
+//        }
+//
+//        return ret;
+//    }
 
     /**
      *  The Constructor starts with 'this()' or 'super()'.

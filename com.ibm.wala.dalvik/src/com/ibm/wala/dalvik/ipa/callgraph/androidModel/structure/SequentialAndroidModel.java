@@ -31,17 +31,10 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure;
 
-import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.IExecutionOrder;
-import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.ExecutionOrder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.summaries.VolatileMethodSummary; 
-import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
+import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
 import com.ibm.wala.util.ssa.SSAValueManager;
-
-import java.lang.Iterable;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
 
 /**
  *  Functions get called once in sequential order.
@@ -57,7 +50,7 @@ import org.slf4j.LoggerFactory;
  *  @since      2013-09-18
  */
 public final class SequentialAndroidModel extends AbstractAndroidModel {
-    private static final Logger logger = LoggerFactory.getLogger(SequentialAndroidModel.class);
+//    private static final Logger logger = LoggerFactory.getLogger(SequentialAndroidModel.class);
     
     //protected VolatileMethodSummary body;
     //protected JavaInstructionFactory insts;

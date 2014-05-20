@@ -31,18 +31,13 @@
  */
 package com.ibm.wala.dalvik.util;
 
+import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.types.ClassLoaderReference;
-
 import com.ibm.wala.util.strings.StringStuff;
-import com.ibm.wala.util.strings.Atom;
-
-import java.util.Comparator;
 /**
  *  Android Components like Activity, Service, ...
  *

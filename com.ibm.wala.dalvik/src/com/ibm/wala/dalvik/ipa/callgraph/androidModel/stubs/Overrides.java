@@ -31,51 +31,35 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs; 
 
-import com.ibm.wala.dalvik.util.AndroidComponent;
-import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent.IntentType;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModel;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters;
-
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.dalvik.util.AndroidComponent;
+import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
-
-
-import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.types.Descriptor;
-import com.ibm.wala.types.Selector;
-import com.ibm.wala.types.TypeName;
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.dalvik.util.AndroidTypes;
-import com.ibm.wala.ipa.summaries.SummarizedMethod;
-
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextKey;
-
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
-import com.ibm.wala.ipa.summaries.BypassMethodTargetSelector;
-import com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader;
-import com.ibm.wala.types.ClassLoaderReference;
-
-import java.util.Collections;
-import java.util.Map;
-import java.util.EnumMap;
-import java.util.HashMap;
-import com.ibm.wala.util.collections.HashMapFactory;
-import java.util.Set;
-import java.util.List;
-import com.ibm.wala.util.strings.Atom;
-
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.summaries.SummarizedMethod;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.Selector;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
-
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.ibm.wala.util.collections.HashMapFactory;
 
 /**
  *  Context Free overrides for the startComponent-Methods.
@@ -89,7 +73,7 @@ import org.slf4j.LoggerFactory;
  *  @since  2013-10-28
  */
 public class Overrides {
-    private static Logger logger = LoggerFactory.getLogger(Overrides.class);
+//    private static Logger logger = LoggerFactory.getLogger(Overrides.class);
 
     private final AndroidModel caller;
     private final IClassHierarchy cha;
@@ -147,7 +131,7 @@ public class Overrides {
             if (this.child != null) {
                 throw new IllegalStateException("Child may only be set once");
             }
-            this.parent = parent;
+            this.child = child;
         }
 
        /**

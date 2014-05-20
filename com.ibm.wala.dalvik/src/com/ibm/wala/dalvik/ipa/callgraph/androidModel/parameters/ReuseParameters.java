@@ -31,38 +31,25 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters;
 
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModel;
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior;
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior.InstanceBehavior;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModel;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior.InstanceBehavior;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.types.Descriptor;
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.types.ClassLoaderReference;
-
-import java.util.Collection;
-import java.lang.Iterable;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.SortedSet;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import com.ibm.wala.util.ssa.ParameterAccessor;
 import com.ibm.wala.util.ssa.ParameterAccessor.BasedOn;
 import com.ibm.wala.util.ssa.ParameterAccessor.ParamerterDisposition;
 import com.ibm.wala.util.ssa.ParameterAccessor.Parameter;
 import com.ibm.wala.util.strings.Atom;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *  Helper for building the Descriptor of a model.
@@ -109,9 +96,9 @@ public class ReuseParameters {
         this.forModel = forModel;
     }
 
-    private int firstParamSSA() {
-        return 1;   // TODO
-    }
+//    private int firstParamSSA() {
+//        return 1;   // TODO
+//    }
 
     /**
      *  Searches the given entrypoints for those parameters.
@@ -122,7 +109,7 @@ public class ReuseParameters {
      *  @param  entrypoints The entrypoints to consider in the search.
      */
     public void collectParameters(final Iterable<? extends Entrypoint> entrypoints) {
-        int paramsToModel = firstParamSSA();
+//        int paramsToModel = firstParamSSA();
         this.reuseParameters = new ArrayList<TypeName>();
 
         for (final Entrypoint ep : entrypoints) {

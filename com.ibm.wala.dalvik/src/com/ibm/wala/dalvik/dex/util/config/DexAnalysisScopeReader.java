@@ -40,12 +40,11 @@ package com.ibm.wala.dalvik.dex.util.config;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.jar.JarFile;
-import java.io.FileInputStream;
 
-import com.ibm.wala.util.io.FileSuffixes;
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.dalvik.classLoader.DexFileModule;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;

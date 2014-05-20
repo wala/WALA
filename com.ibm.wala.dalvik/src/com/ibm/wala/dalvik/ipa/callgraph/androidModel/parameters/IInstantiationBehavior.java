@@ -31,16 +31,11 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters;
 
-import com.ibm.wala.types.TypeName;
-import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.classLoader.IMethod;
-
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.types.TypeName;
-import com.ibm.wala.types.TypeReference;
-import java.util.Map;
-
 import java.io.Serializable;
+
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeName;
 
 /**
  *

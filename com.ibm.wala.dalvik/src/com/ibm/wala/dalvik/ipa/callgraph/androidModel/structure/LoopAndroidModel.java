@@ -31,29 +31,24 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure;
 
-import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.IExecutionOrder;
-import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.ExecutionOrder;
-import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.summaries.VolatileMethodSummary; 
-import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
-
-import com.ibm.wala.util.ssa.SSAValueManager;
-import com.ibm.wala.util.ssa.SSAValue;
-import com.ibm.wala.util.ssa.SSAValue.TypeKey;
-import com.ibm.wala.util.ssa.SSAValue.VariableKey;
-
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAPhiInstruction;
-
-import java.lang.Iterable;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.ExecutionOrder;
+import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
+import com.ibm.wala.ssa.SSAPhiInstruction;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.ssa.SSAValue;
+import com.ibm.wala.util.ssa.SSAValue.TypeKey;
+import com.ibm.wala.util.ssa.SSAValue.VariableKey;
+import com.ibm.wala.util.ssa.SSAValueManager;
+import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
 
 /**
  *  Builds an Android Model incorporating two loops.

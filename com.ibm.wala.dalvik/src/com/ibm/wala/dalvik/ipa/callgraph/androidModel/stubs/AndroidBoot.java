@@ -31,34 +31,28 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs;
 
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.types.Descriptor;
-import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.types.TypeName;
-import com.ibm.wala.types.Selector;
-import com.ibm.wala.dalvik.util.AndroidTypes;
-import com.ibm.wala.types.FieldReference;
-import com.ibm.wala.ipa.summaries.MethodSummary;
-import com.ibm.wala.ssa.SSAInstruction;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.ssa.ConstantValue;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
-
-import com.ibm.wala.util.ssa.ParameterAccessor;
-import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
-import com.ibm.wala.util.ssa.SSAValue;
+import com.ibm.wala.dalvik.util.AndroidTypes;
 import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
+import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.ssa.ConstantValue;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.Selector;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.ssa.ParameterAccessor;
+import com.ibm.wala.util.ssa.SSAValue;
 import com.ibm.wala.util.ssa.SSAValueManager;
-
-import java.util.Set;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.ArrayList;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  *  Create some Android-Environment.
@@ -73,7 +67,7 @@ import org.slf4j.LoggerFactory;
  *  @since  2013-10-23
  */
 public class AndroidBoot {
-    private static Logger logger = LoggerFactory.getLogger(AndroidBoot.class);
+//    private static Logger logger = LoggerFactory.getLogger(AndroidBoot.class);
 
     public static enum BootAction {
         /**
@@ -87,15 +81,15 @@ public class AndroidBoot {
     }
     //public static Set<BootAction> BOOT_ALL = EnumSet.allOf(BootAction); 
 
-    private final  MethodReference scope;
+//    private final  MethodReference scope;
     private TypeSafeInstructionFactory instructionFactory;
-    private ParameterAccessor acc;
+//    private ParameterAccessor acc;
     private SSAValueManager pm;
     private VolatileMethodSummary body;
 
 
     public AndroidBoot(Set<BootAction> whatToDo) {
-        this.scope = null;  // Place something here?
+//        this.scope = null;  // Place something here?
     }
 
     private SSAValue mainThread = null;
@@ -105,7 +99,7 @@ public class AndroidBoot {
     public void addBootCode(final TypeSafeInstructionFactory instructionFactory, final ParameterAccessor acc,
             final SSAValueManager pm, final VolatileMethodSummary body) {
         this.instructionFactory = instructionFactory;
-        this.acc = acc;
+//        this.acc = acc;
         this.pm = pm;
         this.body = body;
 
@@ -342,9 +336,9 @@ public class AndroidBoot {
         return packageContext;
     }
 
-    private SSAValue createApplicationContext(final SSAValue mainThread, final SSAValue systemContext) {
-        return null; // TODO
-    }
+//    private SSAValue createApplicationContext(final SSAValue mainThread, final SSAValue systemContext) {
+//        return null; // TODO
+//    }
 }
 
 

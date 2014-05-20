@@ -2,20 +2,18 @@ package com.ibm.wala.dalvik.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.jar.JarFile;
-import java.io.InputStream;
-import java.net.URLConnection;
 import java.util.jar.JarInputStream;
 
-import com.ibm.wala.util.io.FileSuffixes;
-import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.JarStreamModule;
+import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.dalvik.classLoader.DexFileModule;
 import com.ibm.wala.dalvik.dex.util.config.DexAnalysisScopeReader;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.util.io.FileSuffixes;
 
 public class AndroidAnalysisScope {
 	

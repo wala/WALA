@@ -31,56 +31,44 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel;
 
-import com.ibm.wala.shrikeCT.ClassConstants;
-
-import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IField;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.SyntheticClass;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.types.FieldReference;
-import com.ibm.wala.types.Selector;
-import com.ibm.wala.types.TypeName;
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.types.annotations.Annotation;
-import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.UnimplementedError;
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.classLoader.FieldImpl;
-
-import com.ibm.wala.shrikeCT.ClassConstants;
-
-import com.ibm.wala.ipa.summaries.SummarizedMethod;
-import com.ibm.wala.ipa.summaries.SummarizedMethodWithNames;
-import com.ibm.wala.ipa.summaries.MethodSummary;
-import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
-import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
-import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
-import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
-import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.util.ssa.SSAValue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.HashMap;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.FieldImpl;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.classLoader.SyntheticClass;
+import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.summaries.MethodSummary;
+import com.ibm.wala.ipa.summaries.SummarizedMethod;
+import com.ibm.wala.ipa.summaries.SummarizedMethodWithNames;
+import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
+import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrikeCT.ClassConstants;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.Selector;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.ssa.SSAValue;
+import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  *  Encapsulates synthetic methods for modeling Androids lifecycle.
@@ -181,7 +169,7 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
     //  Contents of the class: Methods
     //
     private IMethod macroModel = null;
-    private IMethod allActivitiesModel = null;
+//    private IMethod allActivitiesModel = null;
     private Map<Selector, IMethod> methods = HashMapFactory.make(); // does not contain macroModel
 
     public boolean containsMethod(Selector selector) {

@@ -31,48 +31,37 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs;
 
-import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.types.FieldReference;
-import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.types.TypeName;
-import com.ibm.wala.types.Selector;
-import com.ibm.wala.types.Descriptor;
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.dalvik.util.AndroidComponent;
-import com.ibm.wala.dalvik.util.AndroidTypes;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
-import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.Context;
-
-import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.ConstantValue;
-import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
-
-import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
-import com.ibm.wala.util.ssa.ParameterAccessor;
-import com.ibm.wala.util.ssa.SSAValue;
-import com.ibm.wala.util.ssa.SSAValueManager;
-import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
-import com.ibm.wala.util.ssa.ParameterAccessor.Parameter;
-
-import com.ibm.wala.util.strings.Atom;
-
-import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModelClass;
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StarterFlags;
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StartInfo;
-
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
-
-import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModelClass;
+import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StartInfo;
+import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StarterFlags;
+import com.ibm.wala.dalvik.util.AndroidTypes;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
+import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.ssa.ConstantValue;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.Selector;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.ssa.ParameterAccessor;
+import com.ibm.wala.util.ssa.ParameterAccessor.Parameter;
+import com.ibm.wala.util.ssa.SSAValue;
+import com.ibm.wala.util.ssa.SSAValueManager;
+import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  *  Grab and set data of AndroidClasses.
@@ -86,7 +75,7 @@ public class AndroidStartComponentTool {
     private static Logger logger = LoggerFactory.getLogger(AndroidStartComponentTool.class);
     
     private final IClassHierarchy cha;
-    private final MethodReference asMethod;
+//    private final MethodReference asMethod;
     private final Set<StarterFlags> flags;
     private final TypeReference caller;
     private final TypeSafeInstructionFactory instructionFactory;
@@ -94,8 +83,8 @@ public class AndroidStartComponentTool {
     private final SSAValueManager pm;
     private final VolatileMethodSummary redirect;
     private final Parameter self;
-    private final StartInfo info;
-    private final CGNode callerNd;
+//    private final StartInfo info;
+//    private final CGNode callerNd;
     private AndroidTypes.AndroidContextType callerContext;
 
     public AndroidStartComponentTool(final IClassHierarchy cha, final MethodReference asMethod, final Set<StarterFlags> flags,
@@ -137,7 +126,7 @@ public class AndroidStartComponentTool {
 
         logger.debug("Starting Component {} from {} ", info, callerNd);
         this.cha = cha;
-        this.asMethod = asMethod;
+//        this.asMethod = asMethod;
         this.flags = flags;
         this.caller = caller;
         this.instructionFactory = instructionFactory;
@@ -145,8 +134,8 @@ public class AndroidStartComponentTool {
         this.pm = pm;
         this.redirect = redirect;
         this.self = self;
-        this.info = info;
-        this.callerNd = callerNd;
+//        this.info = info;
+//        this.callerNd = callerNd;
     }
 
     public void attachActivities(Set<? extends SSAValue> activities, SSAValue application, SSAValue thread, SSAValue context,
