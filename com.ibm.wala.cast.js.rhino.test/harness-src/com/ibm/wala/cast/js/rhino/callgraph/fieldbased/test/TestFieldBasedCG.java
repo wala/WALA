@@ -23,14 +23,24 @@ import com.ibm.wala.util.WalaException;
 public class TestFieldBasedCG extends AbstractFieldBasedTest {
 	private static final Object[][] assertionsForSimpleJS = new Object[][] {
 		new Object[] { ROOT, new String[] { "suffix:simple.js" } },
-		new Object[] { "suffix:simple.js", new String[] { "suffix:foo", "suffix:bar", "suffix:A", "suffix:Function" } },
+		new Object[] { "suffix:simple.js", new String[] { "suffix:foo", "suffix:bar", "suffix:A" } },
 		new Object[] { "suffix:foo", new String[] { "suffix:bar" } },
 	    new Object[] { "suffix:aluis", new String[] { "suffix:aluis" } }
 	};
 	
 	@Test
-	public void testSimpleJS() throws IOException, WalaException, Error, CancelException {
-		runTest("tests/fieldbased/simple.js", assertionsForSimpleJS, BuilderType.PESSIMISTIC, BuilderType.OPTIMISTIC, BuilderType.OPTIMISTIC_WORKLIST);
+	public void testSimpleJSPessimistic() throws IOException, WalaException, Error, CancelException {
+		runTest("tests/fieldbased/simple.js", assertionsForSimpleJS, BuilderType.PESSIMISTIC);
+	}
+
+	@Test
+	public void testSimpleJSOptimistic() throws IOException, WalaException, Error, CancelException {
+	  runTest("tests/fieldbased/simple.js", assertionsForSimpleJS, BuilderType.OPTIMISTIC);
+	}
+	
+	@Test
+	public void testSimpleJSWorklist() throws IOException, WalaException, Error, CancelException {
+	  runTest("tests/fieldbased/simple.js", assertionsForSimpleJS, BuilderType.OPTIMISTIC_WORKLIST);
 	}
 
 	private static final Object[][] assertionsForOneShot = new Object[][] {
@@ -40,11 +50,21 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
 	};
 	
 	@Test
-	public void testOneshot() throws IOException, WalaException, Error, CancelException {
-		runTest("tests/fieldbased/oneshot.js", assertionsForOneShot, BuilderType.PESSIMISTIC, BuilderType.OPTIMISTIC, BuilderType.OPTIMISTIC_WORKLIST);
+	public void testOneshotPessimistic() throws IOException, WalaException, Error, CancelException {
+		runTest("tests/fieldbased/oneshot.js", assertionsForOneShot, BuilderType.PESSIMISTIC);
 	}
 	
-	private static final Object[][] assertionsForCallbacks = new Object[][] {
+  @Test
+  public void testOneshotOptimistic() throws IOException, WalaException, Error, CancelException {
+    runTest("tests/fieldbased/oneshot.js", assertionsForOneShot, BuilderType.OPTIMISTIC);
+  }
+
+  @Test
+  public void testOneshotWorklist() throws IOException, WalaException, Error, CancelException {
+    runTest("tests/fieldbased/oneshot.js", assertionsForOneShot, BuilderType.OPTIMISTIC_WORKLIST);
+  }
+
+  private static final Object[][] assertionsForCallbacks = new Object[][] {
 		new Object[] { ROOT, new String[] { "suffix:callbacks.js" } },
 		new Object[] { "suffix:callbacks.js", new String[] { "suffix:f" } },
 		new Object[] { "suffix:f", new String[] { "suffix:k", "suffix:n" } },
@@ -52,49 +72,79 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
 	};
 	
 	@Test
-	public void testCallbacks() throws IOException, WalaException, Error, CancelException {
-		runTest("tests/fieldbased/callbacks.js", assertionsForCallbacks, BuilderType.OPTIMISTIC, BuilderType.OPTIMISTIC_WORKLIST);
+	public void testCallbacksOptimistic() throws IOException, WalaException, Error, CancelException {
+		runTest("tests/fieldbased/callbacks.js", assertionsForCallbacks, BuilderType.OPTIMISTIC_WORKLIST);
 	}
 	
-	private static final Object[][] assertionsForLexical = new Object[][] {
+  @Test
+  public void testCallbacksWorklist() throws IOException, WalaException, Error, CancelException {
+    runTest("tests/fieldbased/callbacks.js", assertionsForCallbacks, BuilderType.OPTIMISTIC_WORKLIST);
+  }
+
+  private static final Object[][] assertionsForLexical = new Object[][] {
 		new Object[] { "suffix:h", new String[] { "suffix:g" } }
 	};
 	
 	@Test
-	public void testLexical() throws IOException, WalaException, Error, CancelException {
-		runTest("tests/fieldbased/lexical.js", assertionsForLexical, BuilderType.PESSIMISTIC, BuilderType.OPTIMISTIC, BuilderType.OPTIMISTIC_WORKLIST);
+	public void testLexicalPessimistic() throws IOException, WalaException, Error, CancelException {
+		runTest("tests/fieldbased/lexical.js", assertionsForLexical, BuilderType.PESSIMISTIC);
 	}
 	
-	private static final Object[][] assertionsForReflectiveCall = new Object[][] {
+  @Test
+  public void testLexicalOptimistic() throws IOException, WalaException, Error, CancelException {
+    runTest("tests/fieldbased/lexical.js", assertionsForLexical, BuilderType.OPTIMISTIC);
+  }
+
+  @Test
+  public void testLexicalWorklist() throws IOException, WalaException, Error, CancelException {
+    runTest("tests/fieldbased/lexical.js", assertionsForLexical, BuilderType.OPTIMISTIC_WORKLIST);
+  }
+
+  private static final Object[][] assertionsForReflectiveCall = new Object[][] {
 		new Object[] { "suffix:h", new String[] { "suffix:Function_prototype_call" } },
 		new Object[] { "suffix:f", new String[] { "suffix:k" } }
 	};
 	
 	@Test
-	public void testReflectiveCall() throws IOException, WalaException, Error, CancelException {
-		runTest("tests/fieldbased/reflective_calls.js", assertionsForReflectiveCall, BuilderType.OPTIMISTIC, BuilderType.OPTIMISTIC_WORKLIST);
+	public void testReflectiveCallOptimistic() throws IOException, WalaException, Error, CancelException {
+		runTest("tests/fieldbased/reflective_calls.js", assertionsForReflectiveCall, BuilderType.OPTIMISTIC);
 	}
 	
-	private static final Object[][] assertionsForNew = new Object[][] {
+  @Test
+  public void testReflectiveCallWorklist() throws IOException, WalaException, Error, CancelException {
+    runTest("tests/fieldbased/reflective_calls.js", assertionsForReflectiveCall, BuilderType.OPTIMISTIC_WORKLIST);
+  }
+
+  private static final Object[][] assertionsForNew = new Object[][] {
 	  new Object[] { "suffix:new.js", new String[] { "suffix:g", "suffix:f" } },
 	  new Object[] { "suffix:g", new String[] { "!suffix:k" } }
 	};
 	
 	@Test
-	public void testNew() throws IOException, WalaException, Error, CancelException {
-	  runTest("tests/fieldbased/new.js", assertionsForNew, BuilderType.OPTIMISTIC, BuilderType.OPTIMISTIC_WORKLIST);
+	public void testNewOptimistic() throws IOException, WalaException, Error, CancelException {
+	  runTest("tests/fieldbased/new.js", assertionsForNew, BuilderType.OPTIMISTIC);
 	}
   
+  @Test
+  public void testNewWorklist() throws IOException, WalaException, Error, CancelException {
+    runTest("tests/fieldbased/new.js", assertionsForNew, BuilderType.OPTIMISTIC_WORKLIST);
+  }
+
   private static final Object[][] assertionsForCallbacks2 = new Object[][] {
     new Object[] { "suffix:callbacks2.js", new String[] { "suffix:g" } },
     new Object[] { "suffix:g", new String[] { "suffix:k", "!suffix:l" } }
   };
   
   @Test
-  public void testCallbacks2() throws IOException, WalaException, Error, CancelException {
-    runTest("tests/fieldbased/callbacks2.js", assertionsForCallbacks2, BuilderType.OPTIMISTIC, BuilderType.OPTIMISTIC_WORKLIST);
+  public void testCallbacks2Optimistic() throws IOException, WalaException, Error, CancelException {
+    runTest("tests/fieldbased/callbacks2.js", assertionsForCallbacks2, BuilderType.OPTIMISTIC);
   }
-  
+
+  @Test
+  public void testCallbacks2Worklist() throws IOException, WalaException, Error, CancelException {
+    runTest("tests/fieldbased/callbacks2.js", assertionsForCallbacks2, BuilderType.OPTIMISTIC_WORKLIST);
+  }
+
   // @Test
   public void testBug2979() throws IOException, WalaException, Error, CancelException {
     System.err.println(runTest("pages/2979.html", new Object[][]{}, BuilderType.PESSIMISTIC, BuilderType.OPTIMISTIC, BuilderType.OPTIMISTIC_WORKLIST));
