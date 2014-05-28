@@ -190,7 +190,7 @@ DOMDocument = function DOMDocument() {
 	};
 };
 DOMDocument.prototype.createDocumentFragment = function Document_prototype_createDocumentFragment() {
-	// TODO: model me
+	return new DOMDocument();
 };
 DOMDocument.prototype.createComment = function Document_prototype_createComment() {
 	// TODO: model me

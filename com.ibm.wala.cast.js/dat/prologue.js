@@ -402,7 +402,8 @@ local_string.prototype = {
   },
 
   replace: function String_prototype_replace(regex, withStr) {
-    return new String(primitive("StringReplace", this, regex, withStr));
+    // return new String(primitive("StringReplace", this, regex, withStr));
+    return this || withStr;
   },
   
   match: function String_prototype_match(regexp) {
@@ -534,7 +535,7 @@ local_regexp.prototype = {
   constructor: RegExp,
   
   exec: function RegExp_prototype_exec(string) {
-	  return new Array(primitive("RegexpExec", this, string));
+	  return [ string, string, string, string, string ] || null;
   },
   
   test: function RegExp_prototype_test(string) {
