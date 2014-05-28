@@ -1,0 +1,26 @@
+<HTML>
+
+<TITLE>Tests of random constructs</TITLE>
+
+Hi
+
+<SCRIPT>
+
+$ = function dollar(x) {
+  if ((typeof x) === "function") {
+    x();
+  } else {
+    document.write(x);
+  }
+};
+
+$(function bad_guy(){
+  try { $(location.hash) } catch(e) {}
+});
+
+</SCRIPT>
+
+<BR>
+Welcome to our system
+
+</HTML>

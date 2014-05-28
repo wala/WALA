@@ -1,0 +1,55 @@
+<HTML>
+
+<TITLE>Tests of random constructs</TITLE>
+
+Hi
+
+<SCRIPT>
+
+var x = function dollar(selector) {
+  return new x.fn.init(selector);
+}
+
+x.fn = { };
+x.fn.init = function dollar_init(selector) {
+  var quickExpr = /^(?:[^<]*(<[\w\W]+>)[^>]*$|#([\w\-]*)$)/;
+    
+  var rsingleTag = /^<(\w+)\s*\/?>(?:<\/\1>)?$/;
+
+  if ((typeof selector) === "function") {
+    selector();
+  
+  } else if ((typeof selector) === "string") {
+      var match;
+      if ( selector.charAt(0) === "<" && 
+	   selector.charAt( selector.length - 1 ) === ">" &&
+	   selector.length >= 3 )
+      {
+	  match = [ null, selector, null ];
+      } else {
+	  match = quickExpr.exec( selector );
+      }
+      
+      if ( match && (match[1] || !context) ) {
+	  if ( match[1] ) {
+	      ret = rsingleTag.exec( selector );
+	      if ( ret ) {
+		  document.createElement( "xx" ).innerHTML = ret[1]; 
+	      }
+	  }
+      }
+  }
+};
+
+window.$ = x;
+
+$(function bad_guy(){
+  try { $(location.hash) } catch(e) {}
+});
+
+</SCRIPT>
+
+<BR>
+Welcome to our system
+
+</HTML>
