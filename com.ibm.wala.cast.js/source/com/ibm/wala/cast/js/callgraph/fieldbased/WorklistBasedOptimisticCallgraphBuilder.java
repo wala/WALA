@@ -21,11 +21,15 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VarVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.Vertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VertexFactory;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
+import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
+import com.ibm.wala.cast.types.AstMethodReference;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
@@ -51,14 +55,17 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
 	
 	private final boolean handleCallApply;
 	
+	private FlowGraphBuilder builder;
+	
 	public WorklistBasedOptimisticCallgraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
 		super(cha, options, cache);
 		handleCallApply = options instanceof JSAnalysisOptions && ((JSAnalysisOptions)options).handleCallApply();
 	}
 
 	@Override
-	public FlowGraph buildFlowGraph(IProgressMonitor monitor) throws CancelException {
-	   return new FlowGraphBuilder(cha, cache).buildFlowGraph();
+	public FlowGraph buildFlowGraph(IProgressMonitor monitor, JavaScriptConstructorFunctions selector) throws CancelException {
+	  builder = new FlowGraphBuilder(cha, cache, selector);
+	  return builder.buildFlowGraph();
 	}
 
 	@Override
@@ -133,12 +140,17 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
 		VertexFactory factory = flowgraph.getVertexFactory();
 		FuncVertex caller = c.getCaller();
 		JavaScriptInvoke invk = c.getInstruction();
-		
-		for(int i=1;i<invk.getNumberOfParameters();++i) {
+	
+		int offset = 0;
+    if (invk.getDeclaredTarget().getSelector().equals(JavaScriptMethods.ctorReference.getSelector())) {
+      offset = 1;
+    }
+    
+		for(int i=0;i<invk.getNumberOfParameters();++i) {
 		  // only flow receiver into 'this' if invk is, in fact, a method call
       flowgraph.addEdge(factory.makeVarVertex(caller, invk.getUse(i)), factory.makeArgVertex(callee));
-		  if(i > 1 || invk.getDeclaredTarget().equals(JavaScriptMethods.dispatchReference))
-		    addFlowEdge(flowgraph, factory.makeVarVertex(caller, invk.getUse(i)), factory.makeParamVertex(callee, i-1), worklist);
+		  if(i != 1 || !invk.getDeclaredTarget().getSelector().equals(AstMethodReference.fnSelector))
+		    addFlowEdge(flowgraph, factory.makeVarVertex(caller, invk.getUse(i)), factory.makeParamVertex(callee, i+offset), worklist);
 		}
 
 		// flow from return vertex to result vertex
@@ -158,7 +170,7 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
 
     // flow from arguments to parameters
     for(int i=2;i<invk.getNumberOfParameters();++i) {
-      addFlowEdge(flowgraph, factory.makeVarVertex(caller, invk.getUse(i)), factory.makeParamVertex(realCallee, i-2), worklist);
+      addFlowEdge(flowgraph, factory.makeVarVertex(caller, invk.getUse(i)), factory.makeParamVertex(realCallee, i-1), worklist);
 
       // flow from return vertex to result vertex
       addFlowEdge(flowgraph, factory.makeRetVertex(realCallee), factory.makeVarVertex(caller, invk.getDef()), worklist);
