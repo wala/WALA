@@ -4,7 +4,7 @@ Bundle-Name: JavaScript Plug-in
 Bundle-SymbolicName: com.ibm.wala.cast.js;singleton:=true
 Bundle-Version: 1.3.4.qualifier
 Bundle-ClassPath: .,
- lib/jericho-html-3.2.jar
+ lib/jericho-html-3.2.jar,
  lib/commons-io-2.4.jar
 Bundle-Activator: com.ibm.wala.cast.js.JavaScriptPlugin
 Bundle-Vendor: IBM
