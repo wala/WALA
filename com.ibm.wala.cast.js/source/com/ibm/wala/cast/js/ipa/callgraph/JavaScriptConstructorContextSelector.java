@@ -11,7 +11,7 @@
 package com.ibm.wala.cast.js.ipa.callgraph;
 
 import com.ibm.wala.cast.ir.translator.AstTranslator.AstLexicalInformation;
-import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptConstructTargetSelector.JavaScriptConstructor;
+import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions.JavaScriptConstructor;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
