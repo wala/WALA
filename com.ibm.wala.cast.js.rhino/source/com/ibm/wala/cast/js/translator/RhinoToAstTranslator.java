@@ -955,6 +955,19 @@ public class RhinoToAstTranslator {
 		}
 	}
 
+	private String getParentName(AstNode fn) {
+	  for(int i = 5; fn != null && i > 0; i--, fn = fn.getParent()) {
+	    if (fn instanceof ObjectProperty) {
+	      ObjectProperty prop = (ObjectProperty) fn;
+	      AstNode label = prop.getLeft();
+	      if (label instanceof Name) {
+	        return (((Name)label).getString());
+	      }
+	    }
+	  }
+	  return null;
+	}
+	
 	@Override
 	public CAstNode visitFunctionNode(FunctionNode fn, WalkContext context) {
 		WalkContext child = new FunctionContext(context, fn);
@@ -965,6 +978,10 @@ public class RhinoToAstTranslator {
 	    Name x = fn.getFunctionName();
 	    if (x == null || x.getIdentifier() == null || "".equals(x.getIdentifier())) {
 	    	name = scriptName + "@" + fn.getAbsolutePosition();
+	    	String label = getParentName(fn);
+	    	if (label != null) {
+	    	  name = name + ":" + label;
+	    	}
 	    } else {
 	    	name = fn.getFunctionName().getIdentifier();
 	    }
