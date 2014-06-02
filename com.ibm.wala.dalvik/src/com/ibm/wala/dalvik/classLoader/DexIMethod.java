@@ -1012,7 +1012,7 @@ public class DexIMethod implements IBytecodeMethod {
 				break;
 			case CONST_HIGH16:
 				instructions.add(new Constant.IntConstant(instLoc,
-						(int)((Instruction21h)inst).getLiteral(), ((Instruction21h)inst).getRegisterA(), inst.opcode, this));
+						(int)((Instruction21h)inst).getLiteral() << 16, ((Instruction21h)inst).getRegisterA(), inst.opcode, this));
 				break;
 			case CONST_WIDE_16:
 				instructions.add(new Constant.LongConstant(instLoc,
@@ -1030,7 +1030,7 @@ public class DexIMethod implements IBytecodeMethod {
 				break;
 			case CONST_WIDE_HIGH16:
 				instructions.add(new Constant.LongConstant(instLoc,
-						((Instruction21h)inst).getLiteral(), ((Instruction21h)inst).getRegisterA(), inst.opcode, this));
+						((Instruction21h)inst).getLiteral() << 16, ((Instruction21h)inst).getRegisterA(), inst.opcode, this));
 				logger.debug("\tRegister: " + ((Instruction21h)inst).getRegisterA() + ", Value: " + ((Instruction21h)inst).getLiteral());
 				break;
 			case CONST_STRING:
