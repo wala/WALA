@@ -404,7 +404,7 @@ public class SSAConversion extends AbstractSSAConversion {
       for (int j = 0; j < lexicalUses.length; j++) {
         int lexicalUse = lexicalUses[j];
         if (lexicalUse != -1 && !skip(lexicalUse)) {
-          if (S[lexicalUse].isEmpty()) {
+          if (S.length <= lexicalUse ||  S[lexicalUse].isEmpty()) {
             lexicalUses[j] = -1;
           } else {
             int newUse = top(lexicalUse);
