@@ -16,7 +16,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * Abstract base class for {@link InstanceKey} which represents at least some {@link IClass} in some {@link CGNode}
+ * Abstract base class for {@link InstanceKey} which represents at least some {@link IClass} in some {@link CGNode}.
  */
 public abstract class AbstractTypeInNode implements InstanceKeyWithNode {
   private final IClass type;

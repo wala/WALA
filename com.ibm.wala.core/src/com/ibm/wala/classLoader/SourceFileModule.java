@@ -30,11 +30,7 @@ public class SourceFileModule extends FileModule implements Module, ModuleEntry,
   }
 
   public SourceFileModule(File f, SourceFileModule clonedFrom) {
-
     super(f, clonedFrom.getContainer());
-    if (clonedFrom == null) {
-      throw new IllegalArgumentException("clonedFrom is null");
-    }
     this.fileName = clonedFrom.fileName;
   }
 

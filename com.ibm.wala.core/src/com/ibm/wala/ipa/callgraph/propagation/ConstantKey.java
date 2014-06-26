@@ -20,7 +20,7 @@ import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Pair;
 
 /**
- * An instance key which represents a unique, constant object
+ * An instance key which represents a unique, constant object.
  */
 public final class ConstantKey<T> implements InstanceKey {
   private final T value;

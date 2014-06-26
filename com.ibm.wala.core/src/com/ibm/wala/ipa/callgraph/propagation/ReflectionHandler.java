@@ -35,7 +35,7 @@ import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
- * a helper class which can modify a {@link PropagationCallGraphBuilder} to deal with reflective factory methods.
+ * A helper class which can modify a {@link PropagationCallGraphBuilder} to deal with reflective factory methods.
  */
 public class ReflectionHandler {
   private final static boolean VERBOSE = false;

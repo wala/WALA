@@ -13,7 +13,7 @@ package com.ibm.wala.ipa.callgraph.propagation;
 import com.ibm.wala.classLoader.IField;
 
 /**
- * An pointer key which represents a unique set for each static field
+ * An pointer key which represents a unique set for each static field.
  */
 public final class StaticFieldKey extends AbstractPointerKey {
   private final IField field;

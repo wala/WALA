@@ -30,7 +30,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.functions.Function;
 
 /**
- * An instance key which represents a unique set for each concrete type
+ * An instance key which represents a unique set for each concrete type.
  */
 public final class ConcreteTypeKey implements InstanceKey {
   private final IClass type;

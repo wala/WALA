@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.loader;
 
-import java.io.InputStream;
 import java.io.Reader;
 import java.net.URL;
 import java.util.Collection;

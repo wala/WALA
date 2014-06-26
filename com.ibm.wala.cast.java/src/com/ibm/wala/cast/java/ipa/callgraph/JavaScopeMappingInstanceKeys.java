@@ -57,7 +57,7 @@ public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
         if (AstTranslator.DEBUG_LEXICAL)
           System.err.println((base + " has parents: " + result));
 
-        return (LexicalParent[]) result.toArray(new LexicalParent[result.size()]);
+        return result.toArray(new LexicalParent[result.size()]);
       }
 
     }

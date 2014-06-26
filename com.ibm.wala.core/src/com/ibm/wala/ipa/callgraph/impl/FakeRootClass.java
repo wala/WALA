@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.impl;
 
-import java.io.InputStream;
 import java.io.Reader;
 import java.util.Collection;
 import java.util.Collections;
@@ -35,7 +34,7 @@ import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * A synthetic class for the fake root method
+ * A synthetic class for the fake root method.
  */
 public class FakeRootClass extends SyntheticClass {
   public static final TypeReference FAKE_ROOT_CLASS = TypeReference.findOrCreate(ClassLoaderReference.Primordial, TypeName

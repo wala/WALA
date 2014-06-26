@@ -49,11 +49,11 @@ public class JavaPrimitiveTypeMap {
   }
 
   public static String getShortName(String longName) {
-    return ((JavaPrimitiveType) primNameMap.get(longName)).getName();
+    return primNameMap.get(longName).getName();
   }
 
   public static JavaPrimitiveType lookupType(String longName) {
-    return (JavaPrimitiveType) primNameMap.get(longName);
+    return primNameMap.get(longName);
   }
 
   public static final JavaPrimitiveType VoidType = new JavaPrimitiveType("void", "V");

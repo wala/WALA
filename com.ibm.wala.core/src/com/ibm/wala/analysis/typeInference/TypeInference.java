@@ -309,8 +309,8 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       TypeAbstraction lhsType = lhs.getType();
       TypeAbstraction meet = TypeAbstraction.TOP;
       for (int i = 0; i < rhs.length; i++) {
-        if (rhs[i] != null && ((TypeVariable)rhs[i]).getType() != null) {
-          TypeVariable r = (TypeVariable) rhs[i];
+        if (rhs[i] != null && rhs[i].getType() != null) {
+          TypeVariable r = rhs[i];
           meet = meet.meet(r.getType());
         }
       }
@@ -350,7 +350,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     public byte evaluate(TypeVariable lhs, TypeVariable[] rhsOperands) {
       TypeAbstraction lhsType = lhs.getType();
 
-      TypeVariable rhs = (TypeVariable) rhsOperands[0];
+      TypeVariable rhs = rhsOperands[0];
       TypeAbstraction rhsType = rhs.getType();
 
       if (lhsType.equals(rhsType)) {

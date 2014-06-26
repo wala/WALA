@@ -16,7 +16,7 @@ import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.intset.IntSet;
 
 /**
- * Basic interface for liveness analysis of heap-allocated objects
+ * Basic interface for liveness analysis of heap-allocated objects.
  */
 public interface ILiveObjectAnalysis {
 

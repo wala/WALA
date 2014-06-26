@@ -953,7 +953,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
       if (sharedPart == null) {
         return MutableSparseIntSet.makeEmpty();
       } else {
-        return (MutableSparseIntSet) new MutableSparseIntSetFactory().makeCopy(sharedPart);
+        return new MutableSparseIntSetFactory().makeCopy(sharedPart);
       }
     } else {
       if (sharedPart == null) {

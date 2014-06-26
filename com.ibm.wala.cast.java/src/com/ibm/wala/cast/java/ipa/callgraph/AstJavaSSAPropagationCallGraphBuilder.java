@@ -174,7 +174,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
         system.newSideEffect(new UnaryOperator<PointsToSetVariable>() {
           @Override
           public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
-            IntSetVariable tv = (IntSetVariable) rhs;
+            IntSetVariable tv = rhs;
             if (tv.getValue() != null) {
               tv.getValue().foreach(new IntSetAction() {
                 @Override
