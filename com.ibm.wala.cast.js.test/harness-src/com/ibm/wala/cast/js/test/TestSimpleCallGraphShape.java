@@ -641,6 +641,20 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
       verifyGraphAssertions(CG, assertionsForDeadCode);
     }
     
+    private static final Object[][] assertionsForShadow = new Object[][] {
+      new Object[] { ROOT, new String[] { "tests/shadow_test.js" } },
+      new Object[] { "tests/shadow_test.js", new String[] { "tests/shadow_test.js/test" } },
+      new Object[] { "tests/shadow_test.js/test", new String[] { "tests/shadow_test.js/bad" } },
+      new Object[] { "tests/shadow_test.js/test", new String[] { "tests/shadow_test.js/global_bad" } }
+    };
+    
+    @Test
+    public void testShadow() throws IOException, WalaException, IllegalArgumentException, CancelException {
+      JSCFABuilder builder = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "shadow_test.js");
+      CallGraph cg = builder.makeCallGraph(builder.getOptions());
+      verifyGraphAssertions(cg, assertionsForShadow);
+    }
+
     private static final Object[][] assertionsForExtend = new Object[][] {
       new Object[] { ROOT, new String[] { "tests/extend.js" } },
       new Object[] { "tests/extend.js", new String[] { "suffix:bar", "!suffix:foo" } }
