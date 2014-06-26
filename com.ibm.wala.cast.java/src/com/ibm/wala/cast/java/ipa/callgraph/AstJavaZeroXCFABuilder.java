@@ -21,7 +21,7 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * 0-1-CFA Call graph builder, optimized to not disambiguate instances of "uninteresting" types
+ * 0-1-CFA Call graph builder, optimized to not disambiguate instances of "uninteresting" types.
  */
 public class AstJavaZeroXCFABuilder extends AstJavaCFABuilder {
 
@@ -47,7 +47,6 @@ public class AstJavaZeroXCFABuilder extends AstJavaCFABuilder {
    * @param cl classloader that can find DOMO resources
    * @param scope representation of the analysis scope
    * @param xmlFiles set of Strings that are names of XML files holding bypass logic specifications.
-   * @param dmd deployment descriptor abstraction
    * @return a 0-1-Opt-CFA Call Graph Builder.
    */
   public static AstJavaCFABuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, ClassLoader cl,

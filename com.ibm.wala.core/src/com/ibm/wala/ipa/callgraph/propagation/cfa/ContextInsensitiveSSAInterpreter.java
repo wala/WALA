@@ -24,8 +24,7 @@ import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 
 /**
- * Default implementation of SSAContextInterpreter for context-insensitive
- * analysis
+ * Default implementation of SSAContextInterpreter for context-insensitive analysis.
  */
 public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInterpreter implements SSAContextInterpreter {
 

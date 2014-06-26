@@ -271,7 +271,7 @@ public class JavaLauncher extends Launcher {
     } else {
       for (Iterator<String> it = getXtraClassPath().iterator(); it.hasNext();) {
         cp += File.pathSeparatorChar;
-        cp += (String) it.next();
+        cp += it.next();
       }
       return cp.trim();
     }

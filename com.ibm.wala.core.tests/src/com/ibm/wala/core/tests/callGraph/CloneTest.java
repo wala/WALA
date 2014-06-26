@@ -51,12 +51,12 @@ public class CloneTest extends WalaTestCase {
     // Find node corresponding to java.text.MessageFormat.clone()
     TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/text/MessageFormat");
     MethodReference m = MethodReference.findOrCreate(t, "clone", "()Ljava/lang/Object;");
-    CGNode node = (CGNode) cg.getNodes(m).iterator().next();
+    CGNode node = cg.getNodes(m).iterator().next();
 
     // Check there's exactly one target for each super call in
     // MessageFormat.clone()
     for (Iterator<CallSiteReference> i = node.iterateCallSites(); i.hasNext();) {
-      CallSiteReference site = (CallSiteReference) i.next();
+      CallSiteReference site = i.next();
       if (site.isSpecial()) {
         if (site.getDeclaredTarget().getDeclaringClass().equals(TypeReference.JavaLangObject)) {
           Set<CGNode> targets = cg.getPossibleTargets(node, site);

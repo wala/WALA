@@ -33,7 +33,7 @@ import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 
 /**
- * Simple Regression test for a graph-based dataflow problem
+ * Simple Regression test for a graph-based dataflow problem.
  */
 public class GraphDataflowTest extends WalaTestCase {
 
@@ -211,7 +211,7 @@ public class GraphDataflowTest extends WalaTestCase {
     StringBuffer result = new StringBuffer("------\n");
     for (int i = 0; i < nodes.length; i++) {
       String n = nodes[i];
-      BitVectorVariable varI = (BitVectorVariable) solver.getOut(n);
+      BitVectorVariable varI = solver.getOut(n);
       String s = varI.toString();
       result.append("Node " + n + "(" + i + ") = " + s + "\n");
     }

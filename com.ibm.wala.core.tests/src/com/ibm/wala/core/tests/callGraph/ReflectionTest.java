@@ -95,7 +95,7 @@ public class ReflectionTest extends WalaTestCase {
     Warnings.clear();
     CallGraphTest.doCallGraphs(options, new AnalysisCache(), cha, scope);
     for (Iterator<Warning> it = Warnings.iterator(); it.hasNext();) {
-      Warning w = (Warning) it.next();
+      Warning w = it.next();
       if (w.toString().indexOf("com/ibm/jvm") > 0) {
         continue;
       }
@@ -282,7 +282,7 @@ public class ReflectionTest extends WalaTestCase {
       if (context instanceof ReceiverInstanceContext && node.getMethod().getReference().equals(newInstanceMr)) {
         ReceiverInstanceContext r = (ReceiverInstanceContext) context;
         ConstantKey<IMethod> c = (ConstantKey<IMethod>) r.getReceiver();
-        IMethod ctor = (IMethod) c.getValue();
+        IMethod ctor = c.getValue();
         if (ctor.getSignature().equals(fpInitSig)) {
           filePermConstrNewInstanceNode = node;
           break;

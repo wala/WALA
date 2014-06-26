@@ -135,7 +135,7 @@ public class AstJavaTypeInference extends AstTypeInference {
 
       for (int i = 0; i < rhs.length; i++) {
         if (rhs[i] != null) {
-          TypeVariable r = (TypeVariable) rhs[i];
+          TypeVariable r = rhs[i];
           TypeAbstraction ta = r.getType();
           if (ta instanceof PointType) {
             if (ta.getType().equals(getStringClass())) {
@@ -154,7 +154,7 @@ public class AstJavaTypeInference extends AstTypeInference {
       if (meet == null) {
         return super.evaluate(lhs, rhs);
       } else {
-        TypeVariable L = (TypeVariable) lhs;
+        TypeVariable L = lhs;
         TypeAbstraction lhsType = L.getType();
 
         if (lhsType.equals(meet)) {

@@ -31,11 +31,9 @@ public class AstJavaZeroOneContainerCFABuilder extends AstJavaCFABuilder {
 
   /**
    * @param cha governing class hierarchy
-   * @param warnings object to track analysis warnings
    * @param options call graph construction options
    * @param appContextSelector application-specific logic to choose contexts
    * @param appContextInterpreter application-specific logic to interpret a method in context
-   * @param reflect reflection specification
    */
   public AstJavaZeroOneContainerCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter) {

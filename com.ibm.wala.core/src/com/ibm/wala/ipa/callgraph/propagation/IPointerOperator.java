@@ -11,7 +11,7 @@
 package com.ibm.wala.ipa.callgraph.propagation;
 
 /**
- * An operator in pointer analysis constraints
+ * An operator in pointer analysis constraints.
  */
 public interface IPointerOperator {
 

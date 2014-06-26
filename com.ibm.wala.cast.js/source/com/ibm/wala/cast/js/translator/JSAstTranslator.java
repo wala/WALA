@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.translator;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -36,7 +35,6 @@ import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
@@ -379,7 +377,7 @@ public class JSAstTranslator extends AstTranslator {
     if (f.getKind() == CAstNode.CONSTANT && f.getValue() instanceof String) {
       String field = (String) f.getValue();
 
-      FieldReference fieldRef = FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreateUnicodeAtom((String) field),
+      FieldReference fieldRef = FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreateUnicodeAtom(field),
           JavaScriptTypes.Root);
 
       context.cfg().addInstruction(((JSInstructionFactory) insts).IsDefinedInstruction(result, ref, fieldRef));
@@ -392,7 +390,7 @@ public class JSAstTranslator extends AstTranslator {
 
   @Override
   protected boolean visitInstanceOf(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
-    WalkContext context = (WalkContext) c;
+    WalkContext context = c;
     int result = context.currentScope().allocateTempValue();
     context.setValue(n, result);
     return false;
@@ -400,7 +398,7 @@ public class JSAstTranslator extends AstTranslator {
 
   @Override
   protected void leaveInstanceOf(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
-    WalkContext context = (WalkContext) c;
+    WalkContext context = c;
     int result = context.getValue(n);
 
     visit(n.getChild(0), context, visitor);

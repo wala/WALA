@@ -90,7 +90,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
       List<Module> modules = scope.getModules(cl);
 
       for (Iterator<Module> iter = modules.iterator(); iter.hasNext();) {
-        Module m = (Module) iter.next();
+        Module m = iter.next();
 
         if (buf.length() > 0)
           buf.append(File.pathSeparator);

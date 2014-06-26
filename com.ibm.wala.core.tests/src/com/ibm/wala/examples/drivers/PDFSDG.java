@@ -163,8 +163,7 @@ public class PDFSDG {
   private static Graph<Statement> pruneSDG(final SDG sdg) {
     Filter<Statement> f = new Filter<Statement>() {
       @Override
-      public boolean accepts(Statement o) {
-        Statement s = (Statement) o;
+      public boolean accepts(Statement s) {
         if (s.getNode().equals(sdg.getCallGraph().getFakeRootNode())) {
           return false;
         } else if (s instanceof MethodExitStatement || s instanceof MethodEntryStatement) {

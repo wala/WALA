@@ -14,7 +14,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 
 /**
- * A key which represents the return value for a node
+ * A key which represents the return value for a node.
  */
 public final class ExceptionReturnValueKey extends ReturnValueKey {
   ExceptionReturnValueKey(CGNode node) {

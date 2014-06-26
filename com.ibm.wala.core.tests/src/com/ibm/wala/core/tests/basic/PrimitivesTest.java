@@ -608,16 +608,16 @@ public class PrimitivesTest extends WalaTestCase {
     M.put(I2, I2);
     M.put(I3, I3);
 
-    Integer I = (Integer) M.get(new Integer(2));
+    Integer I = M.get(new Integer(2));
     Assert.assertTrue(I != null);
     Assert.assertTrue(I.equals(I2));
 
-    I = (Integer) M.get(new Integer(4));
+    I = M.get(new Integer(4));
     Assert.assertTrue(I == null);
 
-    I = (Integer) M.put(new Integer(2), new Integer(3));
+    I = M.put(new Integer(2), new Integer(3));
     Assert.assertTrue(I.equals(I2));
-    I = (Integer) M.get(I2);
+    I = M.get(I2);
     Assert.assertTrue(I.equals(I3));
   }
 
