@@ -13,7 +13,6 @@ package com.ibm.wala.cast.js.ipa.callgraph.correlations.extraction;
 
 import static com.ibm.wala.cast.tree.CAstNode.ASSIGN;
 import static com.ibm.wala.cast.tree.CAstNode.BINARY_EXPR;
-import static com.ibm.wala.cast.tree.CAstNode.BLOCK_EXPR;
 import static com.ibm.wala.cast.tree.CAstNode.BLOCK_STMT;
 import static com.ibm.wala.cast.tree.CAstNode.CALL;
 import static com.ibm.wala.cast.tree.CAstNode.CONSTANT;
@@ -454,14 +453,18 @@ public class ClosureExtractor extends CAstRewriterExt {
           CAstNode[] before = new CAstNode[tler.getStartInner()];
           for(i=0;i<tler.getStartInner();++i)
             before[i] = copyNodes(start.getChild(i), cfg, context, nodeMap);
-          prologue.add(Ast.makeNode(BLOCK_STMT, before));
+          for(int x = 0; x < before.length; x++) {
+            prologue.add(before[x]);
+          }
           if(i+1 == start.getChildCount()) {
             fun_body_stmts.add(addSpuriousExnFlow(start.getChild(i), cfg));            
           } else {
             CAstNode[] after = new CAstNode[start.getChildCount()-i];
             for(int j=0;j+i<start.getChildCount();++j)
               after[j] = addSpuriousExnFlow(start.getChild(j+i), cfg);
-            fun_body_stmts.add(Ast.makeNode(BLOCK_EXPR, after));
+            for(int x = 0; x < after.length; x++) {
+              fun_body_stmts.add(after[x]);
+            }
           }
           for(i=context.getStart()+1;i<context.getEnd();++i)
             fun_body_stmts.add(root.getChild(i));
@@ -511,12 +514,16 @@ public class ClosureExtractor extends CAstRewriterExt {
       // prepend declaration "var <theLocal>;"
       CAstNode theLocalDecl = Ast.makeNode(DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(theLocal, JSAstTranslator.Any)),
                                            addExnFlow(makeVarRef("$$undefined"), JavaScriptTypes.ReferenceError, entity, context));
+      
       if(fun_body_stmts.size() > 1) {
         CAstNode newBlock = Ast.makeNode(BLOCK_STMT, fun_body_stmts.toArray(new CAstNode[0]));
         fun_body_stmts.clear();
         fun_body_stmts.add(newBlock);
       }
-      fun_body_stmts.add(0, Ast.makeNode(BLOCK_STMT, theLocalDecl));
+      
+      
+      // fun_body_stmts.add(0, Ast.makeNode(BLOCK_STMT, theLocalDecl));
+      fun_body_stmts.add(0, theLocalDecl);
     }
 
     CAstNode fun_body = Ast.makeNode(BLOCK_STMT, fun_body_stmts.toArray(new CAstNode[0]));
@@ -621,10 +628,13 @@ public class ClosureExtractor extends CAstRewriterExt {
           addExnFlow(makeVarRef("re$"), JavaScriptTypes.ReferenceError, entity, context),
           Ast.makeNode(LOCAL_SCOPE, wrapIn(BLOCK_STMT, fixup == null ? Ast.makeNode(EMPTY) : fixup)));
 
-      stmts.add(Ast.makeNode(BLOCK_STMT, decl, fixup));
+      stmts.add(decl);
+      stmts.add(fixup);
     } else if(theLocal != null) {
       // assign final value of the localised variable back
-      stmts.add(Ast.makeNode(CAstNode.ASSIGN, addExnFlow(makeVarRef(theLocal), JavaScriptTypes.ReferenceError, entity, context), call));
+      stmts.add(Ast.makeNode(CAstNode.ASSIGN, 
+          addExnFlow(makeVarRef(theLocal), JavaScriptTypes.ReferenceError, entity, context), 
+          call));
     } else {
       stmts.add(call);
     }

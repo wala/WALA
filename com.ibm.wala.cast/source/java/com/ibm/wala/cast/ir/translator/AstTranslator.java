@@ -1755,6 +1755,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
       private final SymbolTable functionSymtab = new SymbolTable(getArgumentCount(f));
 
+      @Override
+      public String toString() {
+        return "scope for " + f.getName();
+      }
+      
       // ctor for scope object
       {
         for (int i = 0; i < getArgumentCount(f); i++) {
@@ -1968,6 +1973,12 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     final Map<String, AbstractSymbol> globalSymbols = new LinkedHashMap<String, AbstractSymbol>();
     final Map<String, String> caseInsensitiveNames = new LinkedHashMap<String, String>();
     return new Scope() {
+      
+      @Override
+      public String toString() {
+        return "global scope";
+      }
+      
       private final String mapName(String nm) {
         String mappedName = caseInsensitiveNames.get(nm.toLowerCase());
         return (mappedName == null) ? nm : mappedName;
@@ -3272,6 +3283,73 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     return new LocalContext(context, makeLocalScope(n, context.currentScope()));
   }
 
+  
+  @Override
+  protected WalkContext makeSpecialParentContext(final WalkContext context, CAstNode n) {
+    final String specialName = (String) n.getChild(0).getValue();
+    
+    return new LocalContext(context, new AbstractScope(context.currentScope()) {
+      private Scope parent = null;
+      
+      private Scope parent() {
+        if (parent == null) {
+            parent = ((AbstractScope)context.currentScope()).getEntityScope().getParent();
+        }
+        return parent;
+      }
+      
+      @Override
+      public ScopeType type() {
+        return ScopeType.LOCAL;
+      }
+
+      private Scope scopeFor(String name) {
+        if (name.equals(specialName)) {
+          return parent();
+        } else {
+          return context.currentScope();
+        }       
+      }
+      
+      @Override
+      public boolean contains(String name) {
+        return scopeFor(name).contains(name);
+      }
+
+      @Override
+      public Symbol lookup(String name) {
+        return scopeFor(name).lookup(name);
+      }
+
+      @Override
+      protected SymbolTable getUnderlyingSymtab() {
+        return ((AbstractScope)context.currentScope()).getUnderlyingSymtab();
+      }
+
+      @Override
+      protected Symbol makeSymbol(String nm, CAstType type, boolean isFinal, boolean isInternalName, Object defaultInitValue,
+          int vn, Scope parent) {
+          return ((AbstractScope)context.currentScope()).makeSymbol(nm, type, isFinal, isInternalName, defaultInitValue, vn, parent);
+      }
+
+      @Override
+      protected AbstractScope getEntityScope() {
+        return ((AbstractScope)context.currentScope()).getEntityScope();
+      }
+
+      @Override
+      public boolean isLexicallyScoped(Symbol s) {
+        return context.currentScope().isLexicallyScoped(s);
+      }
+
+      @Override
+      public CAstEntity getEntity() {
+        return context.top();
+      }
+      
+    });
+  }
+
   @Override
   protected WalkContext makeUnwindContext(WalkContext context, CAstNode n, CAstVisitor<WalkContext> visitor) {
     // here, n represents the "finally" block of the unwind
@@ -3328,8 +3406,18 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
   }
 
   @Override
+  protected boolean visitSpecialParentScope(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) { /* empty */
+    return false;
+  }
+
+  @Override
   protected void leaveLocalScope(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
     c.setValue(n, c.getValue(n.getChild(0)));
+  }
+
+  @Override
+  protected void leaveSpecialParentScope(CAstNode n, WalkContext c, CAstVisitor<WalkContext> visitor) {
+    c.setValue(n, c.getValue(n.getChild(1)));
   }
 
   @Override

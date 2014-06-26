@@ -49,6 +49,10 @@ public class PointType extends TypeAbstraction {
         }
       } else if (rhs instanceof ConeType) {
         ConeType other = (ConeType) rhs;
+        if (type.equals(other.getType())) {
+          // "this" and the cone type have the same underlying type, return the cone type
+          return other;
+        }
         TypeReference T = other.getType().getReference();
         if (type.isArrayClass() || T.isArrayType()) {
           // give up on arrays. We don't care anyway.

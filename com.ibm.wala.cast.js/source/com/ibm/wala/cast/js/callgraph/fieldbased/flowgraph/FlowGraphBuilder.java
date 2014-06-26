@@ -22,6 +22,7 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.FuncVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VarVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.Vertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VertexFactory;
+import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
@@ -56,10 +57,12 @@ import com.ibm.wala.util.intset.IntSet;
 public class FlowGraphBuilder {
 	private final IClassHierarchy cha;
 	private final AnalysisCache cache;
+	private final JavaScriptConstructorFunctions selector;
 	
-	public FlowGraphBuilder(IClassHierarchy cha, AnalysisCache cache) {
+	public FlowGraphBuilder(IClassHierarchy cha, AnalysisCache cache, JavaScriptConstructorFunctions selector) {
 		this.cha = cha;
 		this.cache = cache;
+		this.selector = selector;
 	}
 	
 	/**
@@ -85,17 +88,21 @@ public class FlowGraphBuilder {
 		return flowgraph;
 	}
 
-  protected void visitProgram(FlowGraph flowgraph) {
+  public void visitProgram(FlowGraph flowgraph) {
     for(IClass klass : cha) {
 			for(IMethod method : klass.getDeclaredMethods()) {
-				if(method.getDescriptor().equals(AstMethodReference.fnDesc))
-          visitFunction(flowgraph, method);
+				if(method.getDescriptor().equals(AstMethodReference.fnDesc)) {
+		      visitFunction(flowgraph, method);
+				}
 			}
 		}
   }
 
-  protected void visitFunction(FlowGraph flowgraph, IMethod method) {
+  public void visitFunction(FlowGraph flowgraph, IMethod method) {
     {
+      if (method.toString().contains("ctor") && method.toString().contains("dollar_init")) {
+        System.err.println("found it");
+      }
     	IR ir = cache.getIR(method);
     	FlowGraphSSAVisitor visitor = new FlowGraphSSAVisitor(ir, flowgraph);
 
@@ -354,8 +361,8 @@ public class FlowGraphBuilder {
 				flowgraph.addEdge(fnVertex, factory.makeVarVertex(fnVertex, 1));
 				
 				// flow parameters into local variables
-				for(int i=0;i<fn.getNumberOfParameters()-1;++i)
-					flowgraph.addEdge(factory.makeParamVertex(fnVertex, i), factory.makeVarVertex(fnVertex, i+2));
+				for(int i=0;i<fn.getNumberOfParameters();++i)
+					flowgraph.addEdge(factory.makeParamVertex(fnVertex, i), factory.makeVarVertex(fnVertex, i+1));
 				
 				// flow function into result variable
 				flowgraph.addEdge(fnVertex, factory.makeVarVertex(func, invk.getDef()));

@@ -31,6 +31,7 @@ import com.ibm.wala.cast.js.html.IncludedPosition;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
+import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
@@ -46,6 +47,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -165,8 +167,8 @@ public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysi
         builderType.equals(BuilderType.PESSIMISTIC)? 
             new PessimisticCallGraphBuilder(getClassHierarchy(), options, makeDefaultCache()) {
               @Override
-              protected FlowGraph flowGraphFactory() {
-                FlowGraphBuilder b = new FilteredFlowGraphBuilder(cha, cache, filter);
+              protected FlowGraph flowGraphFactory(JavaScriptConstructorFunctions selector) {
+                FlowGraphBuilder b = new FilteredFlowGraphBuilder(cha, cache, selector, filter);
                 return b.buildFlowGraph();
               }
               @Override
@@ -176,8 +178,8 @@ public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysi
             }      
             : new OptimisticCallgraphBuilder(getClassHierarchy(), options, makeDefaultCache()) {
               @Override
-              protected FlowGraph flowGraphFactory() {
-                FlowGraphBuilder b = new FilteredFlowGraphBuilder(cha, cache, filter);
+              protected FlowGraph flowGraphFactory(JavaScriptConstructorFunctions selector) {
+                FlowGraphBuilder b = new FilteredFlowGraphBuilder(cha, cache, selector, filter);
                 return b.buildFlowGraph();
               }  
             };

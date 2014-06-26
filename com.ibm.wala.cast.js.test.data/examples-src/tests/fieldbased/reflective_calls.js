@@ -7,3 +7,5 @@ function h() {
 }
 
 function k() {}
+
+h();

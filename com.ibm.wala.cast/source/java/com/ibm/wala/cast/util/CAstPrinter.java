@@ -94,7 +94,8 @@ public class CAstPrinter {
 
     // explicit lexical scopes
     case CAstNode.LOCAL_SCOPE: return "SCOPE";
-	
+    case CAstNode.SPECIAL_PARENT_SCOPE: return "SPECIAL PARENT SCOPE";
+    
     // literal expression kinds
     case CAstNode.CONSTANT: return "CONSTANT";
     case CAstNode.OPERATOR: return "OPERATOR";
