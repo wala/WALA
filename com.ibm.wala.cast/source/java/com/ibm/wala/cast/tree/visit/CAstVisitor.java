@@ -416,7 +416,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
    */
   public final void visit(final CAstNode n, C context, CAstVisitor<C> visitor) {
     Position restore = currentPosition;
-    if (context.getSourceMap() != null) {
+    if (context != null && context.getSourceMap() != null) {
       Position p = context.getSourceMap().getPosition(n);
       if (p != null) {
         currentPosition = p;
@@ -448,6 +448,15 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       C localContext = visitor.makeLocalContext(context, n);
       visitor.visit(n.getChild(0), localContext, visitor);
       visitor.leaveLocalScope(n, context, visitor);
+      break;
+    }
+
+    case CAstNode.SPECIAL_PARENT_SCOPE: {
+      if (visitor.visitSpecialParentScope(n, context, visitor))
+        break;
+      C localContext = visitor.makeSpecialParentContext(context, n);
+      visitor.visit(n.getChild(1), localContext, visitor);
+      visitor.leaveSpecialParentScope(n, context, visitor);
       break;
     }
 
@@ -818,7 +827,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       visitor.leaveTypeLiteralExpr(n, context, visitor);
       break;
     }
-
+    
     case CAstNode.IS_DEFINED_EXPR: {
       if (visitor.visitIsDefinedExpr(n, context, visitor)) {
 	break;
@@ -873,6 +882,18 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
     visitor.postProcessNode(n, context, visitor);
     
     currentPosition = restore;
+  }
+
+  protected void leaveSpecialParentScope(CAstNode n, C context, CAstVisitor<C> visitor) {
+    visitor.leaveNode(n, context, visitor);
+  }
+
+  protected C makeSpecialParentContext(C context, CAstNode n) {
+    return context;
+  }
+
+  protected boolean visitSpecialParentScope(CAstNode n, C context, CAstVisitor<C> visitor) {
+    return visitor.visitNode(n, context, visitor);
   }
 
   /**

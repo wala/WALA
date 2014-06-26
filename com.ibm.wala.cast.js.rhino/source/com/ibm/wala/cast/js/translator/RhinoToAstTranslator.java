@@ -106,6 +106,9 @@ import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
+import com.ibm.wala.cast.tree.visit.CAstVisitor;
+import com.ibm.wala.cast.tree.visit.CAstVisitor.Context;
+import com.ibm.wala.cast.util.CAstPattern;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -511,8 +514,11 @@ public class RhinoToAstTranslator {
       // new first statement will be a block declaring all names.
       CAstNode[] newStmts = new CAstNode[stmts.length + 1];
 
-      newStmts[0] = Ast.makeNode(CAstNode.BLOCK_STMT, child.getNameDecls().toArray(new CAstNode[child.getNameDecls().size()]));
-
+      if (child.getNameDecls().size() == 1) {
+        newStmts[0] = child.getNameDecls().iterator().next();
+      } else {
+        newStmts[0] = Ast.makeNode(CAstNode.BLOCK_STMT, child.getNameDecls().toArray(new CAstNode[child.getNameDecls().size()]));
+      }
       System.arraycopy(stmts, 0, newStmts, 1, stmts.length);
 
       stmts = newStmts;
@@ -1385,14 +1391,37 @@ public class RhinoToAstTranslator {
 			if (init.getInitializer() == null) {
 			  children[i++] = Ast.makeNode(CAstNode.EMPTY);
 			} else {
+			  CAstNode initCode = visit(init, arg);
+			  
+			  CAstPattern nameVarPattern = CAstPattern.parse("VAR(\"" + init.getTarget().getString() + "\")");
+			  if (! nameVarPattern.new Matcher() {
+          @Override
+          protected boolean enterEntity(CAstEntity n, Context context, CAstVisitor<Context> visitor) {
+            return true;
+          }
+
+          @Override
+          protected boolean doVisit(CAstNode n, Context context, CAstVisitor<Context> visitor) {
+            return true;
+          }     
+			  }.findAll(null, initCode).isEmpty()) {
+			    initCode = 
+			        Ast.makeNode(CAstNode.SPECIAL_PARENT_SCOPE,
+			            Ast.makeConstant(init.getTarget().getString()),
+			            initCode);
+
+			  }
+			  
 			  children[i++] = 
-			    Ast.makeNode(CAstNode.ASSIGN, 
-			      Ast.makeNode(CAstNode.VAR, Ast.makeConstant(init.getTarget().getString())),
-			      visit(init, arg));
+			    Ast.makeNode(CAstNode.ASSIGN, readName(arg, null, init.getTarget().getString()),initCode);
 			}
 		}
 		
-		return Ast.makeNode(CAstNode.BLOCK_STMT, children);
+		if (i == 1) {
+		  return children[0];
+		} else {
+		  return Ast.makeNode(CAstNode.BLOCK_STMT, children);
+		}
 	}
 
 	@Override
