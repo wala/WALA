@@ -53,6 +53,17 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
     return cg;
   }
 
+  /**
+   * for long-running tests that tend to time out on Travis
+   */
+  protected JSCallGraph runTestExceptOnTravis(URL url, Object[][] assertions, BuilderType... builderTypes) throws IOException, WalaException, Error, CancelException {
+    if (System.getenv("TRAVIS") == null) {
+      return runTest(url, assertions, builderTypes);
+    } else {
+      return null;
+    }
+  }
+
   @SuppressWarnings("unused")
   private void dumpCG(JSCallGraph cg) {
   	CallGraph2JSON.IGNORE_HARNESS = false;
