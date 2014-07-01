@@ -15,7 +15,6 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.junit.Test;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
@@ -694,12 +693,24 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
       CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     }
 
-    @Test
+  @Test
   public void testTutorialExample() throws IllegalArgumentException, IOException, CancelException, WalaException {
     PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "tutorial-example.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
     CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     // verifyGraphAssertions(CG, assertionsForDateProperty);
+  }
+
+  Object[][] renamingAssertions =  { 
+      { "tests/rename-example.js/f", new Name[]{ new Name(9, 7, "x"), new Name(9, 7, "y") } },
+      { "tests/rename-example.js/ff", new Name[]{ new Name(11, 10, "x"), new Name(11, 10, "y"), new Name(11, 10, "z") } }
+  };
+  
+  @Test
+  public void testRenaming() throws IOException, WalaException, IllegalArgumentException, CancelException {
+    PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "rename-example.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    verifyNameAssertions(CG, renamingAssertions);
   }
 
 }

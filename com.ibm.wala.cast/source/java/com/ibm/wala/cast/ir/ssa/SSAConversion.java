@@ -10,6 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.ssa;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -29,6 +30,7 @@ import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;
@@ -63,6 +65,8 @@ public class SSAConversion extends AbstractSSAConversion {
 
   private SSA2LocalMap computedLocalMap;
 
+  private Map<Integer,Integer> assignments = HashMapFactory.make();
+  
   //
   // Copy propagation history
   //
@@ -81,6 +85,11 @@ public class SSAConversion extends AbstractSSAConversion {
       this.instructionIndex = instructionIndex;
     }
 
+    @Override
+    public String toString() {
+      return "[use " + useNumber + " of " + instructionIndex + "]";
+    }
+    
     @Override
     public int hashCode() {
       return useNumber * instructionIndex;
@@ -107,6 +116,11 @@ public class SSAConversion extends AbstractSSAConversion {
     }
 
     @Override
+    public String toString() {
+      return "[use " + useNumber + " of " + phiNumber + " of block " + BBnumber + "]";
+    }
+    
+    @Override
     public int hashCode() {
       return phiNumber * BBnumber * useNumber;
     }
@@ -121,12 +135,24 @@ public class SSAConversion extends AbstractSSAConversion {
   private class CopyPropagationRecord {
     final int rhs;
 
+    final int lhs;
+    
     final int instructionIndex;
 
     final Set<Object> renamedUses = HashSetFactory.make(2);
 
     private final Set<CopyPropagationRecord> childRecords = HashSetFactory.make(1);
 
+    @Override
+    public String toString() {
+      StringBuffer sb = new StringBuffer("<vn " + rhs + " at " + instructionIndex);
+      for (CopyPropagationRecord c : childRecords) {
+        sb.append("\n " + c.toString());
+      }
+      sb.append(">");
+      return sb.toString();
+    }
+    
     @Override
     public int hashCode() {
       return instructionIndex;
@@ -141,6 +167,7 @@ public class SSAConversion extends AbstractSSAConversion {
       if (DEBUG_UNDO)
         System.err.println(("new copy record for instruction #" + instructionIndex + ", rhs value is " + rhs));
       this.rhs = rhs;
+      this.lhs = lhs;
       this.instructionIndex = instructionIndex;
     }
 
@@ -242,10 +269,17 @@ public class SSAConversion extends AbstractSSAConversion {
     public String[] getLocalNames(int pc, int vn) {
       int v = skip(vn) || vn >= valueMap.length ? vn : valueMap[vn];
       String[][] namesData = debugInfo.getSourceNamesForValues();
-      if (namesData == null || namesData.length <= v)
-        return new String[0];
-      else
-        return namesData[v];
+      String[] vNames = namesData[v];
+      Set<String> x = HashSetFactory.make();
+      x.addAll(Arrays.asList(vNames));
+ 
+      while (assignments.containsKey(v)) {
+        v = assignments.get(v);
+        vNames = namesData[v];
+        x.addAll(Arrays.asList(vNames));        
+      }
+
+      return x.toArray(new String[x.size()]);
     }
 
     private void undoCopyPropagation(int instructionIndex, int useNumber) {
@@ -268,6 +302,17 @@ public class SSAConversion extends AbstractSSAConversion {
 
     private Map<Object, CopyPropagationRecord> getCopyHistory() {
       return copyPropagationMap;
+    }
+    
+    @Override
+    public String toString() {
+      StringBuffer sb = new StringBuffer( super.toString() );
+      
+      for(Map.Entry<Object, CopyPropagationRecord> x : copyPropagationMap.entrySet()) {
+        sb.append(x.getKey().toString() + " --> " + x.getValue().toString() + "\n");
+      }
+      
+      return sb.toString();
     }
   }
 
@@ -382,8 +427,8 @@ public class SSAConversion extends AbstractSSAConversion {
     int lhs = getDef(inst, 0);
     int rhs = getUse(inst, 0);
 
-    copyNames(rhs, lhs);
-
+    assignments.put(rhs, lhs);
+    
     CopyPropagationRecord rec = new CopyPropagationRecord(index, lhs, newRhs);
     R[lhs].push(rec);
     if (topR(rhs) != null) {
@@ -508,22 +553,6 @@ public class SSAConversion extends AbstractSSAConversion {
     symtab.ensureSymbol(nextSSAValue);
     int v = nextSSAValue++;
     return v;
-  }
-
-  private void copyNames(int to, int from) {
-    String[][] namesData = debugInfo.getSourceNamesForValues();
-    if (namesData != null && namesData.length > from && namesData[from] != null) {
-      if (namesData[to] == null) {
-        namesData[to] = namesData[from];
-      } else {
-        Set<String> newNames = HashSetFactory.make();
-        for(String fromName : namesData[from])
-          newNames.add(fromName);
-        for(String toName : namesData[to])
-          newNames.add(toName);
-        namesData[to] = newNames.toArray(new String[newNames.size()]);
-      }
-    }
   }
 
   @Override
