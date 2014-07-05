@@ -18,7 +18,6 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 /**
  * Solves a set of constraints
  */
-@SuppressWarnings("rawtypes")
 public interface IFixedPointSolver<T extends IVariable>  {
 
   /**
