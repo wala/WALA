@@ -664,7 +664,9 @@ public class RhinoToAstTranslator {
 			}
 		}
 		
-		return Ast.makeNode(CAstNode.OBJECT_LITERAL, eltNodes.toArray(new CAstNode[eltNodes.size()]));
+		CAstNode lit = Ast.makeNode(CAstNode.OBJECT_LITERAL, eltNodes.toArray(new CAstNode[eltNodes.size()]));
+		arg.cfg().map(node, lit);
+		return lit;
 	}
 
 	@Override
@@ -787,9 +789,12 @@ public class RhinoToAstTranslator {
       result = get = Ast.makeNode(CAstNode.OBJECT_REF, obj, elt);
     }
 
-		if (get != null && context.getCatchTarget() != null) {
+		if (get != null) {
 		  context.cfg().map(get, get);
-		  context.cfg().add(get, context.getCatchTarget(), JavaScriptTypes.TypeError);
+		  context.cfg().add(
+		      get, 
+		      context.getCatchTarget() != null? context.getCatchTarget(): CAstControlFlowMap.EXCEPTION_TO_EXIT,
+		      JavaScriptTypes.TypeError);
 		}
 
 		return result;		
@@ -1178,7 +1183,10 @@ public class RhinoToAstTranslator {
     			visit(label, context);
     		args[i++] = visit(prop, context);
     	}
-        return Ast.makeNode(CAstNode.OBJECT_LITERAL, args);
+    	
+    	CAstNode lit =  Ast.makeNode(CAstNode.OBJECT_LITERAL, args);
+    	context.cfg().map(n, lit);
+    	return lit;
 	}
 
 	@Override

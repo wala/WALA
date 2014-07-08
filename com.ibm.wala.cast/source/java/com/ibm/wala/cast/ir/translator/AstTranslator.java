@@ -68,6 +68,7 @@ import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.ShiftInstruction;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAConditionalBranchInstruction;
 import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
 import com.ibm.wala.ssa.SSAGotoInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -698,6 +699,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
    * holds the control-flow graph as it is being constructed. When construction
    * is complete, information is stored in an {@link AstCFG}
    */
+  @SuppressWarnings("javadoc")
   public final class IncipientCFG extends SparseNumberedGraph<PreBasicBlock> {
 
     protected class Unwind {
@@ -751,7 +753,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
           int e = -1;
           PreBasicBlock currentBlock = getCurrentBlock();
           if (!isDeadBlock(currentBlock)) {
-            addInstruction(insts.GotoInstruction());
+            addInstruction(insts.GotoInstruction(-1));
             newBlock(false);
           }
           PreBasicBlock startBlock = getCurrentBlock();
@@ -795,7 +797,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
             addPreNode(dummy);
             doThrow(astContext, e);
           } else {
-            addInstruction(insts.GotoInstruction());
+            addInstruction(insts.GotoInstruction(-1));
           }
           newBlock(false);
 
@@ -1277,7 +1279,35 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
               if (ci.getBasicBlockNumber() != blocks.get(i).getNumber()) {
                 inst = insts.GetCaughtExceptionInstruction(blocks.get(i).getNumber(), ci.getException());
               }
+            } else if (inst instanceof SSAGotoInstruction) {
+              Iterator<PreBasicBlock> succs = this.getNormalSuccessors(blocks.get(i)).iterator();
+              if (succs.hasNext()) {
+                PreBasicBlock target = succs.next();
+                assert !succs.hasNext() : "unexpected successors for block " + blocks.get(i) + ": " + target + " and " + succs.next();
+                inst = insts.GotoInstruction(target.firstIndex);
+              } else {
+                // goto to the end of the method, so the instruction is unnecessary
+                inst = null;
+              }
+            } else if (inst instanceof SSAConditionalBranchInstruction) {
+              Iterator<PreBasicBlock> succs = this.getNormalSuccessors(blocks.get(i)).iterator();
+              assert succs.hasNext();
+              int target;
+              int t1 = succs.next().firstIndex;
+              if (succs.hasNext()) {
+                int t2 = succs.next().firstIndex;
+                if (t1 == x+1) {
+                  target = t2;
+                } else {
+                  target = t1;
+                }
+              } else {
+                target = t1;
+              }
+              SSAConditionalBranchInstruction branch = (SSAConditionalBranchInstruction) inst;
+              inst = insts.ConditionalBranchInstruction(branch.getOperator(), branch.getType(), branch.getUse(0), branch.getUse(1), target);
             }
+            
             instructions[x++] = inst;
           }
         }
@@ -3451,14 +3481,14 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
         + " of loop " + CAstPrinter.print(n, context.top().getSourceMap());
     context.cfg().addInstruction(
         insts.ConditionalBranchInstruction(translateConditionOpcode(CAstOperator.OP_EQ), null, c.getValue(n.getChild(0)), context
-            .currentScope().getConstantValue(new Integer(0))));
+            .currentScope().getConstantValue(new Integer(0)), -1));
     PreBasicBlock branchB = context.cfg().getCurrentBlock();
 
     // loop body
     context.cfg().newBlock(true);
     visitor.visit(n.getChild(1), context, visitor);
     if (!context.cfg().isDeadBlock(context.cfg().getCurrentBlock())) {
-      context.cfg().addInstruction(insts.GotoInstruction());
+      context.cfg().addInstruction(insts.GotoInstruction(-1));
       PreBasicBlock bodyB = context.cfg().getCurrentBlock();
       context.cfg().addEdge(bodyB, headerB);
 
@@ -3727,11 +3757,11 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     if (n.getChildCount() == 1) {
       context.cfg().addInstruction(
           insts.ConditionalBranchInstruction(translateConditionOpcode(CAstOperator.OP_NE), null, c.getValue(n.getChild(0)), context
-              .currentScope().getConstantValue(new Integer(0))));
+              .currentScope().getConstantValue(new Integer(0)), -1));
     } else if (n.getChildCount() == 3) {
       context.cfg().addInstruction(
           insts.ConditionalBranchInstruction(translateConditionOpcode(n.getChild(0)), null, c.getValue(n.getChild(1)),
-              c.getValue(n.getChild(2))));
+              c.getValue(n.getChild(2)), -1));
     } else {
       Assertions.UNREACHABLE();
     }
@@ -3752,7 +3782,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     if (!context.cfg().isDeadBlock(context.cfg().getCurrentBlock())) {
       context.cfg().addPreNode(n, context.getUnwindState());
            context.cfg().addPreEdge(n, context.getControlFlow().getTarget(n, null), false);
-      context.cfg().addInstruction(insts.GotoInstruction());            
+      context.cfg().addInstruction(insts.GotoInstruction(-1));            
       if (context.getControlFlow().getTarget(n, null) == null) {
         assert context.getControlFlow().getTarget(n, null) != null : context.getControlFlow() + " does not map " + n + " ("
             + context.getSourceMap().getPosition(n) + ")";
@@ -3783,7 +3813,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     visitor.visit(l, context, visitor);
     context.cfg().addInstruction(
         insts.ConditionalBranchInstruction(translateConditionOpcode(CAstOperator.OP_EQ), null, c.getValue(l), context.currentScope()
-            .getConstantValue(new Integer(0))));
+            .getConstantValue(new Integer(0)), -1));
     PreBasicBlock srcB = context.cfg().getCurrentBlock();
     // true clause
     context.cfg().newBlock(true);
@@ -3793,7 +3823,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       context.cfg().addInstruction(new AssignInstruction(c.getValue(n), c.getValue(r)));
     if (n.getChildCount() == 3) {
       if (!context.cfg().isDeadBlock(context.cfg().getCurrentBlock())) {
-        context.cfg().addInstruction(insts.GotoInstruction());
+        context.cfg().addInstruction(insts.GotoInstruction(-1));
         trueB = context.cfg().getCurrentBlock();
 
         // false clause
@@ -4184,7 +4214,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     // PreBasicBlock switchB = context.cfg().getCurrentBlock();
     context.cfg().newBlock(true);
 
-    context.cfg().addInstruction(insts.GotoInstruction());
+    context.cfg().addInstruction(insts.GotoInstruction(-1));
     defaultHackBlock = context.cfg().getCurrentBlock();
     context.cfg().newBlock(false);
 
@@ -4228,14 +4258,14 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       if (x != CAstControlFlowMap.SWITCH_DEFAULT) {
         visitor.visit((CAstNode) x, context, visitor);
         context.cfg().addInstruction(
-            insts.ConditionalBranchInstruction(translateConditionOpcode(CAstOperator.OP_EQ), null, v, context.getValue((CAstNode) x)));
+            insts.ConditionalBranchInstruction(translateConditionOpcode(CAstOperator.OP_EQ), null, v, context.getValue((CAstNode) x), -1));
         labelToBlock.put(x, context.cfg().getCurrentBlock());
         context.cfg().newBlock(true);
       }
     }
 
     PreBasicBlock defaultGotoBlock = context.cfg().getCurrentBlock();
-    context.cfg().addInstruction(insts.GotoInstruction());
+    context.cfg().addInstruction(insts.GotoInstruction(-1));
     context.cfg().newBlock(false);
 
     CAstNode switchBody = n.getChild(1);
@@ -4381,7 +4411,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
     if (!context.cfg().isDeadBlock(context.cfg().getCurrentBlock())) {
       addSkipCatchGoto = true;
-      context.cfg().addInstruction(insts.GotoInstruction());
+      context.cfg().addInstruction(insts.GotoInstruction(-1));
       context.cfg().newBlock(false);
     }
 

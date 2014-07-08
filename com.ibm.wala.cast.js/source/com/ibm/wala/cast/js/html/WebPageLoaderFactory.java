@@ -69,13 +69,15 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
                       translateConditionOpcode(CAstOperator.OP_NE), 
                       null, 
                       isDefined, 
-                      context.currentScope().getConstantValue(new Integer(0))));
+                      context.currentScope().getConstantValue(new Integer(0)),
+                      -1));
               PreBasicBlock srcB = context.cfg().getCurrentBlock();       
               
               // field lookup of value
               context.cfg().newBlock(true);
               context.cfg().addInstruction(((JSInstructionFactory) insts).GetInstruction(result, windowVal, name));
-              context.cfg().addInstruction(insts.GotoInstruction());
+              context.cfg().newBlock(true);
+              context.cfg().addInstruction(insts.GotoInstruction(-1));
               PreBasicBlock trueB = context.cfg().getCurrentBlock();
 
               // read global

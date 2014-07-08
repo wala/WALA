@@ -480,7 +480,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         int val1 = workingState.pop();
 
         TypeReference t = ShrikeUtil.makeTypeReference(loader, instruction.getType());
-        emitInstruction(insts.ConditionalBranchInstruction(instruction.getOperator(), t, val1, val2));
+        emitInstruction(insts.ConditionalBranchInstruction(instruction.getOperator(), t, val1, val2, instruction.getTarget()));
       }
 
       /**
@@ -560,7 +560,7 @@ public class SSABuilder extends AbstractIntStackMachine {
        */
       @Override
       public void visitGoto(com.ibm.wala.shrikeBT.GotoInstruction instruction) {
-        emitInstruction(insts.GotoInstruction());
+        emitInstruction(insts.GotoInstruction(instruction.getLabel()));
       }
 
       /**

@@ -258,17 +258,15 @@ public class JSAstTranslator extends AstTranslator {
       context.cfg().addInstruction(((JSInstructionFactory) insts).PropertyRead(result, x, context.getValue(elt)));
     }
 
-    // generate code to handle read of non-existent property
-    if (context.getControlFlow().getMappedNodes().contains(readNode)) {
-      context.cfg().addPreNode(readNode, context.getUnwindState());
+    // generate code to handle read of property from null or undefined
+    context.cfg().addPreNode(readNode, context.getUnwindState());
 
-      context.cfg().newBlock(true);
+    context.cfg().newBlock(true);
 
-      if (context.getControlFlow().getTarget(readNode, JavaScriptTypes.TypeError) != null)
-        context.cfg().addPreEdge(readNode, context.getControlFlow().getTarget(readNode, JavaScriptTypes.TypeError), true);
-      else
-        context.cfg().addPreEdgeToExit(readNode, true);
-    }
+    if (context.getControlFlow().getTarget(readNode, JavaScriptTypes.TypeError) != null)
+      context.cfg().addPreEdge(readNode, context.getControlFlow().getTarget(readNode, JavaScriptTypes.TypeError), true);
+    else
+      context.cfg().addPreEdgeToExit(readNode, true);
   }
 
   @Override
@@ -293,9 +291,18 @@ public class JSAstTranslator extends AstTranslator {
         context.cfg().addInstruction(put);
       }
     } else {
-    */
+    */     
       context.cfg().addInstruction(((JSInstructionFactory) insts).PropertyWrite(receiver, context.getValue(elt), rval));
-   // }
+      context.cfg().addPreNode(parent, context.getUnwindState());
+
+      // generate code to handle read of property from null or undefined
+      context.cfg().newBlock(true);
+
+      if (context.getControlFlow().getTarget(parent, JavaScriptTypes.TypeError) != null)
+        context.cfg().addPreEdge(parent, context.getControlFlow().getTarget(parent, JavaScriptTypes.TypeError), true);
+      else
+        context.cfg().addPreEdgeToExit(parent, true);   
+     // }
   }
 
   private void doPrimitiveNew(WalkContext context, int resultVal, String typeName) {

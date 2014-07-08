@@ -22,6 +22,7 @@ import com.ibm.wala.cast.ir.ssa.analysis.LiveAnalysis;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
+import com.ibm.wala.cast.tree.CAstType.Array;
 import com.ibm.wala.ssa.IR.SSA2LocalMap;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -34,6 +35,7 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 
 /**
@@ -264,22 +266,30 @@ public class SSAConversion extends AbstractSSAConversion {
   // SSA2LocalMap implementation for SSAConversion
   //
   private class SSAInformation implements com.ibm.wala.ssa.IR.SSA2LocalMap {
-
+    private final String[][] computedNames = new String[valueMap.length][]; 
+    
     @Override
     public String[] getLocalNames(int pc, int vn) {
+      
+      if (computedNames[vn] != null) {
+        return computedNames[vn];
+      }
+      
       int v = skip(vn) || vn >= valueMap.length ? vn : valueMap[vn];
       String[][] namesData = debugInfo.getSourceNamesForValues();
       String[] vNames = namesData[v];
       Set<String> x = HashSetFactory.make();
       x.addAll(Arrays.asList(vNames));
  
-      while (assignments.containsKey(v)) {
+      MutableIntSet vals = IntSetUtil.make();
+      while (assignments.containsKey(v) && !vals.contains(v)) {
+        vals.add(v);
         v = assignments.get(v);
         vNames = namesData[v];
         x.addAll(Arrays.asList(vNames));        
       }
 
-      return x.toArray(new String[x.size()]);
+      return computedNames[vn] = x.toArray(new String[x.size()]);
     }
 
     private void undoCopyPropagation(int instructionIndex, int useNumber) {

@@ -234,24 +234,21 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
 
     @Override
     public void visitGoto(SSAGotoInstruction instruction) {
-      Assertions.UNREACHABLE("haven't implemented logic for goto yet.");
       breakBasicBlock(index);
     }
 
     @Override
     public void visitConditionalBranch(SSAConditionalBranchInstruction instruction) {
-      Assertions.UNREACHABLE("haven't implemented logic for cbranch yet.");
       breakBasicBlock(index);
     }
 
     @Override
     public void visitSwitch(SSASwitchInstruction instruction) {
-      Assertions.UNREACHABLE("haven't implemented logic for switch yet.");
-      // breakBasicBlock();
-      // int[] targets = instruction.getTargets();
-      // for (int i = 0; i < targets.length; i++) {
-      // r[targets[i]] = true;
-      // }
+      breakBasicBlock(index);
+      int[] targets = instruction.getCasesAndLabels();
+      for (int i = 1; i < targets.length; i+=2) {
+        r[targets[i]] = true;
+      }
     }
 
     @Override
@@ -448,20 +445,30 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
 
       SSAInstruction last = getInstructions()[getLastInstructionIndex()];
       addExceptionalEdges(last);
-      // this CFG is odd in that we assume fallthru might always
-      // happen .. this is because I'm too lazy to code control
-      // flow in all method summaries yet.
+      
       int normalSuccNodeNumber = getGraphNodeId() + 1;
-      if (true) {
-        // if (last.isFallThrough()) {
+      if (last.isFallThrough()) {
         if (DEBUG) {
           System.err.println(("Add fallthru to " + getNode(getGraphNodeId() + 1)));
         }
         addNormalEdgeTo(getNode(normalSuccNodeNumber));
       }
+      
+      if (last instanceof SSAGotoInstruction) {
+        addNormalEdgeTo(getBlockForInstruction(((SSAGotoInstruction)last).getTarget()));
+      } else if (last instanceof SSAConditionalBranchInstruction) {
+        addNormalEdgeTo(getBlockForInstruction(((SSAConditionalBranchInstruction)last).getTarget()));
+      } else if (last instanceof SSASwitchInstruction) {
+        int[] targets = ((SSASwitchInstruction) last).getCasesAndLabels();
+        for (int i = 1; i < targets.length; i+=2) {
+          addNormalEdgeTo(getBlockForInstruction(targets[i]));
+        }
+      }
+      
       if (pis != null) {
         updatePiInstrs(normalSuccNodeNumber);
       }
+      
       if (last instanceof SSAReturnInstruction) {
         // link each return instrution to the exit block.
         BasicBlock exit = exit();

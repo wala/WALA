@@ -295,16 +295,16 @@ public class ClosureExtractor extends CAstRewriterExt {
       epos.addGotoTarget(root.getChildCount() > 0 ? (String)root.getChild(0).getValue(): null, target);
       int label = labeller.addNode(target);
       // return { type: 'goto', target: <label> }
-      CAstNode newNode = 
-          Ast.makeNode(RETURN,
-              Ast.makeNode(OBJECT_LITERAL,
-                  addExnFlow(Ast.makeNode(CALL,
-                      addExnFlow(makeVarRef("Object"), JavaScriptTypes.ReferenceError, getCurrentEntity(), context),
-                      Ast.makeConstant("ctor")), null, getCurrentEntity(), context),
-                      Ast.makeConstant("type"),
-                      Ast.makeConstant("goto"),
-                      Ast.makeConstant("target"),
-                      Ast.makeConstant(((double)label)+"")));
+      CAstNode returnLit = Ast.makeNode(OBJECT_LITERAL,
+          addExnFlow(Ast.makeNode(CALL,
+              addExnFlow(makeVarRef("Object"), JavaScriptTypes.ReferenceError, getCurrentEntity(), context),
+              Ast.makeConstant("ctor")), null, getCurrentEntity(), context),
+              Ast.makeConstant("type"),
+              Ast.makeConstant("goto"),
+              Ast.makeConstant("target"),
+              Ast.makeConstant(((double)label)+""));
+      addNode(returnLit, getCurrentEntity().getControlFlow());
+      CAstNode newNode = Ast.makeNode(RETURN, returnLit);
       // remove outgoing cfg edges of the old node
       deleteFlow(root, getCurrentEntity());
       nodeMap.put(Pair.make(root, context.key()), newNode);

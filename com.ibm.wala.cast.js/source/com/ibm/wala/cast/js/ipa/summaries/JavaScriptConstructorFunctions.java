@@ -19,6 +19,8 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.MethodSummary;
+import com.ibm.wala.shrikeBT.IConditionalBranchInstruction.IOperator;
+import com.ibm.wala.shrikeBT.IConditionalBranchInstruction.Operator;
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
@@ -459,8 +461,6 @@ public class JavaScriptConstructorFunctions {
    Object key = Pair.make(cls, new Integer(nargs));
     if (constructors.containsKey(key))
       return constructors.get(key);
-
-    System.err.println(cls);
     
     MethodReference ref = JavaScriptMethods.makeCtorReference(cls.getReference());
     JavaScriptSummary S = new JavaScriptSummary(ref, nargs + 1);
@@ -473,7 +473,6 @@ public class JavaScriptConstructorFunctions {
                                      JavaScriptTypes.Object)));
 
     S.addStatement(insts.SetPrototype(nargs + 5, nargs + 4));
-    //S.addStatement(insts.PutInstruction(nargs + 5, nargs + 4, "__proto__"));
     S.getNextProgramCounter();
     
     CallSiteReference cs = new JSCallSiteReference(S.getNextProgramCounter());
@@ -482,15 +481,18 @@ public class JavaScriptConstructorFunctions {
     for (int i = 0; i < nargs; i++)
       args[i + 1] = i + 2;
     S.addStatement(insts.Invoke(1, nargs + 7, args, nargs + 8, cs));
+    int pc = S.getNextProgramCounter();
 
+    S.addConstant(nargs + 9, null);
+    S.addStatement(insts.ConditionalBranchInstruction(Operator.EQ, JavaScriptTypes.Root, nargs + 7, nargs + 9, pc+2));
+    S.getNextProgramCounter();
+    
     S.addStatement(insts.ReturnInstruction(nargs + 7, false));
     S.getNextProgramCounter();
     
     S.addStatement(insts.ReturnInstruction(nargs + 5, false));
     S.getNextProgramCounter();
     
-    //S.addConstant(nargs + 9, new ConstantValue("__proto__"));
-
     return record(key, new JavaScriptConstructor(ref, S, cls, cls));
   }
 

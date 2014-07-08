@@ -1,4 +1,10 @@
+function dead_code() {
+
+}
+
 function f() {
-	lbl:
-		break lbl;
+ lbl: {
+   break lbl;
+   dead_code();
+ }
 }

@@ -51,7 +51,7 @@ public interface SSAInstructionFactory {
   SSAComparisonInstruction ComparisonInstruction(IComparisonInstruction.Operator operator, int result, int val1, int val2);
 
   SSAConditionalBranchInstruction ConditionalBranchInstruction(IConditionalBranchInstruction.IOperator operator,
-      TypeReference type, int val1, int val2);
+      TypeReference type, int val1, int val2, int target);
 
   SSAConversionInstruction ConversionInstruction(int result, int val, TypeReference fromType, TypeReference toType, boolean overflow);
 
@@ -61,7 +61,7 @@ public interface SSAInstructionFactory {
 
   SSAGetInstruction GetInstruction(int result, int ref, FieldReference field);
 
-  SSAGotoInstruction GotoInstruction();
+  SSAGotoInstruction GotoInstruction(int target);
 
   SSAInstanceofInstruction InstanceofInstruction(int result, int ref, TypeReference checkedType);
 

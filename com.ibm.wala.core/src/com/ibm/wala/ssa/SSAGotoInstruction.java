@@ -14,14 +14,18 @@ package com.ibm.wala.ssa;
  * Unconditional branch instruction for SSA form.
  */
 public class SSAGotoInstruction extends SSAInstruction {
+  private final int target;
+  public SSAGotoInstruction(int target) {
+    this.target = target;
+  }
 
-  public SSAGotoInstruction() {
-    super();
+  public int getTarget() {
+    return target;
   }
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return insts.GotoInstruction();
+    return insts.GotoInstruction(target);
   }
 
   @Override
