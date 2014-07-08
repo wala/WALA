@@ -358,6 +358,15 @@ local_string.prototype = {
     return new Number(primitive("StringCharCodeAt", pos));
   },
 
+  concat: function String_prototype_concat () {
+    var result = this;
+    
+    for(i = 0; i < arguments.length; i++)
+      result = result + arguments[i];
+
+    return result;
+  },
+
   toUpperCase: function String_prototype_toUpperCase() {
     return new String(primitive("StringToUpperCase", this));
   },
