@@ -108,7 +108,7 @@ public class OrdinalSet<T> implements Iterable<T> {
    * @return true if the contents of two sets are equal
    */
   public static <T> boolean equals(OrdinalSet<T> a, OrdinalSet<T> b) {
-    if (a == null && b == null) {
+    if ((a == null && b == null) || a == b || (a.mapping == b.mapping && a.S == b.S)) {
       return true;
     }
     
