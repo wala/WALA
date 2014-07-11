@@ -35,7 +35,7 @@ import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.intset.IntSetAction;
 
-public class TestJavaScriptSlicer extends TestJSCallGraphShape {
+public abstract class TestJavaScriptSlicer extends TestJSCallGraphShape {
 
   @Test
   public void testSimpleData() throws IOException, WalaException, IllegalArgumentException, CancelException {
