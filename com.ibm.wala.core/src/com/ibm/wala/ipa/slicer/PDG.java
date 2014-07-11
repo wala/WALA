@@ -147,7 +147,7 @@ public class PDG implements NumberedGraph<Statement> {
     }
     this.cg = cg;
     this.node = node;
-    this.heapModel = pa == null ? null : new DelegatingExtendedHeapModel(pa.getHeapModel());
+    this.heapModel = pa != null? modRef.makeHeapModel(pa): null;
     this.pa = pa;
     this.dOptions = dOptions;
     this.cOptions = cOptions;
@@ -661,7 +661,7 @@ public class PDG implements NumberedGraph<Statement> {
     };
     Collection<Statement> relevantStatements = Iterator2Collection.toSet(new FilterIterator<Statement>(iterator(), f));
 
-    Map<Statement, OrdinalSet<Statement>> heapReachingDefs = new HeapReachingDefs(modRef).computeReachingDefs(node, ir, pa, mod,
+    Map<Statement, OrdinalSet<Statement>> heapReachingDefs = new HeapReachingDefs(modRef, heapModel).computeReachingDefs(node, ir, pa, mod,
         relevantStatements, new HeapExclusions(SetComplement.complement(new SingletonSet(t))), cg);
 
     for (Statement st : heapReachingDefs.keySet()) {

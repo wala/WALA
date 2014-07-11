@@ -64,7 +64,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   /**
    * An object that abstracts how to model pointers in the heap.
    */
-  private final PointerKeyFactory pointerKeys;
+  protected final PointerKeyFactory pointerKeys;
 
   /**
    * An object that abstracts how to model instances in the heap.
@@ -100,7 +100,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     return result.toString();
   }
 
-  private HeapModel makeHeapModel() {
+  protected HeapModel makeHeapModel() {
     return new HModel();
   }
 
@@ -454,7 +454,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     return H;
   }
 
-  private class HModel implements HeapModel {
+  protected class HModel implements HeapModel {
 
     @Override
     public Iterator<PointerKey> iteratePointerKeys() {

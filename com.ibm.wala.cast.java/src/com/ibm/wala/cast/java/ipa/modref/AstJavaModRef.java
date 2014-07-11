@@ -12,6 +12,7 @@ package com.ibm.wala.cast.java.ipa.modref;
 
 import java.util.Collection;
 
+import com.ibm.wala.cast.ipa.callgraph.AstHeapModel;
 import com.ibm.wala.cast.ipa.modref.AstModRef;
 import com.ibm.wala.cast.java.ssa.AstJavaInstructionVisitor;
 import com.ibm.wala.cast.java.ssa.AstJavaInvokeInstruction;
@@ -29,7 +30,7 @@ public class AstJavaModRef extends AstModRef {
   {
       
     protected AstJavaRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis pa, ExtendedHeapModel h) {
-      super(n, result, pa, h);
+      super(n, result, pa, (AstHeapModel)h);
     }
 
     @Override
@@ -55,7 +56,7 @@ public class AstJavaModRef extends AstModRef {
   {
       
     protected AstJavaModVisitor(CGNode n, Collection<PointerKey> result, ExtendedHeapModel h, PointerAnalysis pa) {
-      super(n, result, h, pa);
+      super(n, result, (AstHeapModel)h, pa);
     }
 
 

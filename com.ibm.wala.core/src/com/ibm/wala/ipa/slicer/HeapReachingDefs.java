@@ -73,8 +73,11 @@ public class HeapReachingDefs {
 
   private final ModRef modRef;
 
-  public HeapReachingDefs(ModRef modRef) {
+  private final ExtendedHeapModel heapModel;
+  
+  public HeapReachingDefs(ModRef modRef, ExtendedHeapModel heapModel) {
     this.modRef = modRef;
+    this.heapModel = heapModel;
   }
 
   /**
@@ -134,7 +137,7 @@ public class HeapReachingDefs {
     if (VERBOSE) {
       System.err.println("Solved. ");
     }
-    return makeResult(solver, domain, node, new DelegatingExtendedHeapModel(pa.getHeapModel()), pa, mod, cfg,
+    return makeResult(solver, domain, node, heapModel, pa, mod, cfg,
         ssaInstructionIndex2Statement, exclusions, cg);
   }
 
@@ -478,8 +481,6 @@ public class HeapReachingDefs {
 
     private final PointerAnalysis pa;
 
-    private final ExtendedHeapModel h;
-
     private final Map<Integer, NormalStatement> ssaInstructionIndex2Statement;
 
     private final HeapExclusions exclusions;
@@ -496,7 +497,6 @@ public class HeapReachingDefs {
       this.cfg = cfg;
       this.domain = domain;
       this.pa = pa;
-      this.h = new DelegatingExtendedHeapModel(pa.getHeapModel());
       this.ssaInstructionIndex2Statement = ssaInstructionIndex2Statement;
       this.exclusions = exclusions;
       initHeapReturnCaller();
@@ -606,7 +606,7 @@ public class HeapReachingDefs {
           }
           return heapReturnCaller.getRelated(domainIndex);
         } else {
-          Collection<PointerKey> gen = modRef.getMod(node, h, pa, s, exclusions);
+          Collection<PointerKey> gen = modRef.getMod(node, heapModel, pa, s, exclusions);
           if (gen.isEmpty()) {
             return null;
           } else {
@@ -638,7 +638,7 @@ public class HeapReachingDefs {
       if (s == null) {
         return null;
       } else {
-        Collection<PointerKey> mod = modRef.getMod(node, h, pa, s, exclusions);
+        Collection<PointerKey> mod = modRef.getMod(node, heapModel, pa, s, exclusions);
         if (mod.isEmpty()) {
           return null;
         } else {
@@ -659,7 +659,7 @@ public class HeapReachingDefs {
               @Override
               public boolean accepts(Object o) {
                 Statement s = (Statement) o;
-                Collection m = getMod(s, node, h, pa, exclusions);
+                Collection m = getMod(s, node, heapModel, pa, exclusions);
                 for (PointerKey k : kill) {
                   if (m.contains(k)) {
                     return true;
