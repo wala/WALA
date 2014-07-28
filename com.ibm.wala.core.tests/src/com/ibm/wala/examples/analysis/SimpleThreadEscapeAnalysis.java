@@ -218,7 +218,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
     for (IClass cls : cha) {
       Collection<IField> staticFields = cls.getDeclaredStaticFields();
       for (Iterator<IField> sfs = staticFields.iterator(); sfs.hasNext();) {
-        IField sf = (IField) sfs.next();
+        IField sf = sfs.next();
         if (sf.getFieldTypeReference().isReferenceType()) {
           escapeAnalysisRoots.add(heapModel.getPointerKeyForStaticField(sf));
         }
@@ -232,13 +232,13 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
     // Thread objects must be constructed somewhere)
     Collection<IClass> threads = cha.computeSubClasses(TypeReference.JavaLangThread);
     for (Iterator<IClass> clss = threads.iterator(); clss.hasNext();) {
-      IClass cls = (IClass) clss.next();
+      IClass cls = clss.next();
       for (Iterator<IMethod> ms = cls.getDeclaredMethods().iterator(); ms.hasNext();) {
-        IMethod m = (IMethod) ms.next();
+        IMethod m = ms.next();
         if (m.isInit()) {
           Set<CGNode> nodes = cg.getNodes(m.getReference());
           for (Iterator<CGNode> ns = nodes.iterator(); ns.hasNext();) {
-            CGNode n = (CGNode) ns.next();
+            CGNode n = ns.next();
             escapeAnalysisRoots.add(heapModel.getPointerKeyForLocal(n, 1));
           }
         }
@@ -258,7 +258,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
       PointerKey root = rts.next();
       OrdinalSet<InstanceKey> objects = pa.getPointsToSet(root);
       for (Iterator<InstanceKey> objs = objects.iterator(); objs.hasNext();) {
-        InstanceKey obj = (InstanceKey) objs.next();
+        InstanceKey obj = objs.next();
         escapingInstanceKeys.add(obj);
       }
     }
@@ -278,7 +278,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
               PointerKey fk = heapModel.getPointerKeyForArrayContents(key);
               OrdinalSet<InstanceKey> fobjects = pa.getPointsToSet(fk);
               for (Iterator<InstanceKey> fobjs = fobjects.iterator(); fobjs.hasNext();) {
-                InstanceKey fobj = (InstanceKey) fobjs.next();
+                InstanceKey fobj = fobjs.next();
                 if (!escapingInstanceKeys.contains(fobj)) {
                   newKeys.add(fobj);
                 }
@@ -287,12 +287,12 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
           } else {
             Collection<IField> fields = type.getAllInstanceFields();
             for (Iterator<IField> fs = fields.iterator(); fs.hasNext();) {
-              IField f = (IField) fs.next();
+              IField f = fs.next();
               if (f.getFieldTypeReference().isReferenceType()) {
                 PointerKey fk = heapModel.getPointerKeyForInstanceField(key, f);
                 OrdinalSet<InstanceKey> fobjects = pa.getPointsToSet(fk);
                 for (Iterator<InstanceKey> fobjs = fobjects.iterator(); fobjs.hasNext();) {
-                  InstanceKey fobj = (InstanceKey) fobjs.next();
+                  InstanceKey fobj = fobjs.next();
                   if (!escapingInstanceKeys.contains(fobj)) {
                     newKeys.add(fobj);
                   }
@@ -339,7 +339,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
       IClass cls = types.next();
       if (!cls.isArrayClass()) {
         for (Iterator<IField> fs = cls.getAllFields().iterator(); fs.hasNext();) {
-          IField f = (IField) fs.next();
+          IField f = fs.next();
           if (!f.isVolatile() && !f.isFinal()) {
             System.err.println(f.getReference());
           }

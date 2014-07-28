@@ -1314,4 +1314,25 @@ public abstract class DelegatingCAstVisitor<C extends CAstVisitor.Context> exten
   protected void leaveInstanceOf(CAstNode n, C c, CAstVisitor<C> visitor) {
     delegate.leaveInstanceOf(n, c, visitor);
   }
+  
+  /**
+   * Visit a LocalScope node.
+   * @param n the node to process
+   * @param c a visitor-specific context
+   * @return true if no further processing is needed
+   */
+  @Override
+  protected boolean visitSpecialParentScope(CAstNode n, C c, CAstVisitor<C> visitor) {
+    return delegate.visitSpecialParentScope(n, c, visitor);
+  }
+  /**
+   * Leave a LocalScope node.
+   * @param n the node to process
+   * @param c a visitor-specific context
+   */
+  @Override
+  protected void leaveSpecialParentScope(CAstNode n, C c, CAstVisitor<C> visitor) {
+    delegate.leaveSpecialParentScope(n, c, visitor);
+  }
+
 }

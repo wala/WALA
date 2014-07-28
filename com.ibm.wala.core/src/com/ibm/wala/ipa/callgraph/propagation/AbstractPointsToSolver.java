@@ -16,7 +16,7 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
 
 /**
- * abstract base class for solver for pointer analysis
+ * Abstract base class for solver for pointer analysis.
  */
 public abstract class AbstractPointsToSolver implements IPointsToSolver {
 

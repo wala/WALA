@@ -18,10 +18,13 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.FuncVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VarVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VertexFactory;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
+import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
+import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil;
@@ -49,8 +52,8 @@ public class OptimisticCallgraphBuilder extends FieldBasedCallGraphBuilder {
 	}
 
 	@Override
-	public FlowGraph buildFlowGraph(IProgressMonitor monitor) throws CancelException {
-	   FlowGraph flowgraph = flowGraphFactory();
+	public FlowGraph buildFlowGraph(IProgressMonitor monitor, JavaScriptConstructorFunctions selector) throws CancelException {
+	   FlowGraph flowgraph = flowGraphFactory(selector);
 		
 		// keep track of which call edges we already know about
 		Set<Pair<CallVertex, FuncVertex>> knownEdges = HashSetFactory.make();
@@ -94,14 +97,19 @@ public class OptimisticCallgraphBuilder extends FieldBasedCallGraphBuilder {
 	  VertexFactory factory = flowgraph.getVertexFactory();
 	  JavaScriptInvoke invk = c.getInstruction();
 	  FuncVertex caller = c.getCaller();
-	  
-    for(int i=1;i<invk.getNumberOfParameters();++i) {
-	    // only flow receiver into 'this' if invk is, in fact, a method call
-      flowgraph.addEdge(factory.makeVarVertex(caller, invk.getUse(i)), factory.makeArgVertex(callee));
-	    if(i > 1 || invk.getDeclaredTarget().equals(JavaScriptMethods.dispatchReference))
-	      flowgraph.addEdge(factory.makeVarVertex(caller, invk.getUse(i)), factory.makeParamVertex(callee, i-1));
+
+	  int offset = 0;
+    if (invk.getDeclaredTarget().getSelector().equals(JavaScriptMethods.ctorReference.getSelector())) {
+      offset = 1;
     }
     
+    for(int i=0;i<invk.getNumberOfParameters();++i) {
+      // only flow receiver into 'this' if invk is, in fact, a method call
+      flowgraph.addEdge(factory.makeVarVertex(caller, invk.getUse(i)), factory.makeArgVertex(callee));
+      if(i != 1 || !invk.getDeclaredTarget().getSelector().equals(AstMethodReference.fnSelector))
+        flowgraph.addEdge(factory.makeVarVertex(caller, invk.getUse(i)), factory.makeParamVertex(callee, i+offset));
+    }
+
 	  // flow from return vertex to result vertex
 	  flowgraph.addEdge(factory.makeRetVertex(callee), factory.makeVarVertex(caller, invk.getDef()));			
 	}
@@ -115,10 +123,11 @@ public class OptimisticCallgraphBuilder extends FieldBasedCallGraphBuilder {
 
 	  VarVertex receiverVertex = factory.makeVarVertex(caller, invk.getUse(1));
 	  OrdinalSet<FuncVertex> realCallees = flowgraph.getReachingSet(receiverVertex, monitor);
+	  System.err.println("callees " + realCallees + " for " + caller);
 	  for(FuncVertex realCallee: realCallees) {
 	    // flow from arguments to parameters
 	    for(int i=2;i<invk.getNumberOfParameters();++i)
-	      flowgraph.addEdge(factory.makeVarVertex(caller, invk.getUse(i)), factory.makeParamVertex(realCallee, i-2));
+	      flowgraph.addEdge(factory.makeVarVertex(caller, invk.getUse(i)), factory.makeParamVertex(realCallee, i-1));
 
 	    // flow from return vertex to result vertex
 	    flowgraph.addEdge(factory.makeRetVertex(realCallee), factory.makeVarVertex(caller, invk.getDef()));

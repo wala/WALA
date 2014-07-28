@@ -71,12 +71,13 @@ public abstract class TestCorrelatedPairExtraction {
 			String expected = new CAstDumper().dump(parseJS(tmp, ast));
 			expected = TestForInBodyExtraction.eraseGeneratedNames(expected);
 
-			if(ASSERT_EQUALS) {
+      FileUtil.writeFile(new File("expected.dump"), expected);
+      FileUtil.writeFile(new File("actual.dump"), actual);
+
+      if(ASSERT_EQUALS) {
 	      Assert.assertEquals(testName, expected, actual);			  
-			} else {
-			  FileUtil.writeFile(new File("expected.dump"), expected);
-			  FileUtil.writeFile(new File("actual.dump"), actual);
-			}
+			} 
+      
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassHierarchyException e) {
@@ -429,7 +430,7 @@ public abstract class TestCorrelatedPairExtraction {
             	   "function addMethods(source) {\n" +
                  "  var properties = Object.keys(source);\n" +
                  "  for (var i = 0, length = properties.length; i < length; i++) {\n" +
-                 "    var property = properties[i], value; value = (function _forin_body_0(property, thi$) { var value; value = source[property];\n" +
+                 "    var property, value; property = properties[i]; value = (function _forin_body_0(property, thi$) { var value = source[property]; \n" +
                  "    thi$.prototype[property] = value; return value; })(property, this);\n" +
                  "  }\n" +
                  "  return this;\n" +
@@ -450,7 +451,7 @@ public abstract class TestCorrelatedPairExtraction {
                  "function addMethods(source) {\n" +
                  "  var properties = Object.keys(source);\n" +
                  "  for (var i = 0, length = properties.length; i < length; i++) {\n" +
-                 "    var property = properties[i], foo = 23, value; value = (function _forin_body_0(property, thi$) { var value; value = source[property];\n" +
+                 "    var property, foo, value; property = properties[i]; foo = 23; value = (function _forin_body_0(property, thi$) { var value = source[property];\n" +
                  "    thi$.prototype[property] = value; return value; })(property, this);\n" +
                  "  }\n" +
                  "  return this;\n" +
@@ -471,8 +472,8 @@ public abstract class TestCorrelatedPairExtraction {
                  "function addMethods(source) {\n" +
                  "  var properties = Object.keys(source);\n" +
                  "  for (var i = 0, length = properties.length; i < length; i++) {\n" +
-                 "    var property = properties[i], foo = 23, value, bar; value = (function _forin_body_0(property, thi$) { var value; value = source[property], bar = 42;\n" +
-                 "    thi$.prototype[property] = value; return value; })(property, this);\n" +
+                 "    var property, foo, value, bar; property = properties[i]; foo = 23; value = function _forin_body_0(property, thi$) { var value = source[property]; bar = 42;\n" +
+                 "    thi$.prototype[property] = value; return value; }(property, this);\n" +
                  "  }\n" +
                  "  return this;\n" +
                  "}");
@@ -586,5 +587,34 @@ public abstract class TestCorrelatedPairExtraction {
              "    arguments[0][p] = src[p];" +
              "  }" +
              "}");
+  }
+  
+  @Test 
+  public void test25() {
+    testRewriter(
+    "function eachProp(obj, func) {" +
+    "   var prop;" +
+    "   for (prop in obj) {" +
+    "     if (hasProp(obj, prop)) {" +
+    "       if (func(obj[prop], prop)) {" +
+    "         break;" +
+    "       }" +
+    "      }" +
+    "  }" +
+    "}",
+    "function eachProp(obj, func) {" +
+        "   var prop;" +
+        "   for (prop in obj) {" +
+        "     if (hasProp(obj, prop)) {" +
+        "       re$ = (function _forin_body_0 (prop) { if (func(obj[prop], prop)) { return { type: \"goto\", target: 0 }; } })(prop);" +
+        "       if (re$) {" +
+        "         if (re$.type == \"goto\") {" +
+        "           if (re$.target == 0)" +
+        "             break;" +
+        "         }" +
+        "       }" +
+        "      }" +
+        "  }" +
+        "}");
   }
 }

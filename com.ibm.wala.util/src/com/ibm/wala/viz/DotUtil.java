@@ -73,13 +73,17 @@ public class DotUtil {
 
 
   /**
+   * @param <T> the type of a graph node
    */
-  public static <T> void dotify(Graph<T> g, NodeDecorator labels, String dotFile, String outputFile, String dotExe)
+  public static <T> void dotify(Graph<T> g, NodeDecorator<T> labels, String dotFile, String outputFile, String dotExe)
     throws WalaException {
     dotify(g, labels, null, dotFile, outputFile, dotExe);
   }
 
-  public static <T> void dotify(Graph<T> g, NodeDecorator labels, String title, String dotFile, String outputFile, String dotExe)
+  /**
+   * @param <T> the type of a graph node
+   */
+  public static <T> void dotify(Graph<T> g, NodeDecorator<T> labels, String title, String dotFile, String outputFile, String dotExe)
       throws WalaException {
     if (g == null) {
       throw new IllegalArgumentException("g is null");
@@ -153,7 +157,7 @@ public class DotUtil {
     }
   }
 
-  public static <T> File writeDotFile(Graph<T> g, NodeDecorator labels, String title, String dotfile) throws WalaException {
+  public static <T> File writeDotFile(Graph<T> g, NodeDecorator<T> labels, String title, String dotfile) throws WalaException {
 
     if (g == null) {
       throw new IllegalArgumentException("g is null");
@@ -180,7 +184,7 @@ public class DotUtil {
    * @return StringBuffer holding dot output representing G
    * @throws WalaException
    */
-  private static <T> StringBuffer dotOutput(Graph<T> g, NodeDecorator labels, String title) throws WalaException {
+  private static <T> StringBuffer dotOutput(Graph<T> g, NodeDecorator<T> labels, String title) throws WalaException {
     StringBuffer result = new StringBuffer("digraph \"DirectedGraph\" {\n");
 
     if (title != null) {
@@ -209,7 +213,7 @@ public class DotUtil {
     result.append(fontnameStr);
     result.append("]; \n");
 
-    Collection<?> dotNodes = computeDotNodes(g);
+    Collection<T> dotNodes = computeDotNodes(g);
 
     outputNodes(labels, result, dotNodes);
 
@@ -229,13 +233,13 @@ public class DotUtil {
     return result;
   }
 
-  private static void outputNodes(NodeDecorator labels, StringBuffer result, Collection<?> dotNodes) throws WalaException {
-    for (Iterator<?> it = dotNodes.iterator(); it.hasNext();) {
+  private static <T> void outputNodes(NodeDecorator<T> labels, StringBuffer result, Collection<T> dotNodes) throws WalaException {
+    for (Iterator<T> it = dotNodes.iterator(); it.hasNext();) {
       outputNode(labels, result, it.next());
     }
   }
 
-  private static void outputNode(NodeDecorator labels, StringBuffer result, Object n) throws WalaException {
+  private static <T> void outputNode(NodeDecorator<T> labels, StringBuffer result, T n) throws WalaException {
     result.append("   ");
     result.append("\"");
     result.append(getLabel(n, labels));
@@ -258,19 +262,19 @@ public class DotUtil {
    * @param n node to decorate
    * @param d decorating master
    */
-  private static String decorateNode(Object n, NodeDecorator d) throws WalaException {
+  private static <T> String decorateNode(T n, NodeDecorator<T> d) throws WalaException {
     StringBuffer result = new StringBuffer();
     result.append(" [ ]\n");
     return result.toString();
   }
 
-  private static String getLabel(Object o, NodeDecorator d) throws WalaException {
+  private static <T> String getLabel(T n, NodeDecorator<T> d) throws WalaException {
     String result = null;
     if (d == null) {
-      result = o.toString();
+      result = n.toString();
     } else {
-      result = d.getLabel(o);
-      result = result == null ? o.toString() : result;
+      result = d.getLabel(n);
+      result = result == null ? n.toString() : result;
     }
     if (result.length() >= MAX_LABEL_LENGTH) {
       result = result.substring(0, MAX_LABEL_LENGTH - 3) + "...";
@@ -278,8 +282,8 @@ public class DotUtil {
     return result;
   }
 
-  private static String getPort(Object o, NodeDecorator d) throws WalaException {
-    return "\"" + getLabel(o, d) + "\"";
+  private static <T> String getPort(T n, NodeDecorator<T> d) throws WalaException {
+    return "\"" + getLabel(n, d) + "\"";
 
   }
 

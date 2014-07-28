@@ -2430,7 +2430,7 @@ public class JDTJava2CAstTranslator {
   }
 
   private CAstNode visit(DoStatement n, WalkContext context) {
-    String loopLabel = (String) context.getLabelMap().get(n); // set by visit(LabeledStatement)
+    String loopLabel = context.getLabelMap().get(n); // set by visit(LabeledStatement)
     String token = loopLabel==null? "at_" + n.getStartPosition(): loopLabel;
     
     ASTNode breakTarget = makeBreakOrContinueTarget(n, "breakLabel_" + token);

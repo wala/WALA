@@ -45,8 +45,9 @@ public abstract class FixedParametersInvokeInstruction
 
   /**
    * Constructor InvokeInstruction. This case for void return values
-   * @param i
    * @param params
+   * @param exception
+   * @param site
    */
   public FixedParametersInvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site) {
     this(iindex, null, params, exception, site);

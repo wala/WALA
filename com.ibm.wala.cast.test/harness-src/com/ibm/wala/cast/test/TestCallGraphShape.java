@@ -22,11 +22,29 @@ import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 
 public abstract class TestCallGraphShape extends WalaTestCase {
 
+  protected void verifyCFGAssertions(CallGraph CG, Object[][] assertionData) {
+    for(Object[] dat : assertionData) {
+      String function = (String) dat[0];
+      for(CGNode N : getNodes(CG, function)) {
+        int[][] edges = (int[][]) dat[1];
+        SSACFG cfg = N.getIR().getControlFlowGraph();
+        for (int i = 0; i < edges.length; i++) {
+          SSACFG.BasicBlock bb = cfg.getNode(i);
+          Assert.assertEquals("basic block " + i, edges[i].length, cfg.getSuccNodeCount(bb));
+          for (int j = 0; j < edges[i].length; j++) {
+            Assert.assertTrue(cfg.hasEdge(bb, cfg.getNode(edges[i][j])));
+          }
+        }
+      }
+    }
+  }
+  
   protected void verifySourceAssertions(CallGraph CG, Object[][] assertionData) {
     for(Object[] dat : assertionData) {
       String function = (String) dat[0];

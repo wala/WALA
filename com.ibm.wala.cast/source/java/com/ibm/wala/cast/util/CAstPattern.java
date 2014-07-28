@@ -379,20 +379,7 @@ public class CAstPattern {
   }
 
   public static Collection<Segments> findAll(final CAstPattern p, final CAstEntity e) {
-    final Collection<Segments> result = HashSetFactory.make();
-    CAstVisitor<Context> v = new CAstVisitor<Context>() {
-
-      @Override
-      public void leaveNode(CAstNode n, Context c, CAstVisitor visitor) {
-        Segments s = match(p, n);
-        if (s != null) {
-          result.add(s);
-        }
-      }
-      
-    };
-    
-    v.visit(e.getAST(), new Context() {
+    return p.new Matcher().findAll(new Context() {
       @Override
       public CAstEntity top() {
         return e;
@@ -401,11 +388,26 @@ public class CAstPattern {
       public CAstSourcePositionMap getSourceMap() {
         return e.getSourceMap();
       }
-    }, v);
-  
-    return result;
+    }, e.getAST());
   }
   
+  public class Matcher extends CAstVisitor<Context> {
+    private final Collection<Segments> result = HashSetFactory.make();
+    
+    @Override
+    public void leaveNode(CAstNode n, Context c, CAstVisitor visitor) {
+      Segments s = match(CAstPattern.this, n);
+      if (s != null) {
+        result.add(s);
+      }
+    }
+
+    public Collection<Segments> findAll(final Context c, final CAstNode top) {
+      visit(top, c, this);   
+      return result;
+    }
+  }
+    
   private static class Parser {
     private final Map<String, CAstPattern> namedPatterns = HashMapFactory.make();
 

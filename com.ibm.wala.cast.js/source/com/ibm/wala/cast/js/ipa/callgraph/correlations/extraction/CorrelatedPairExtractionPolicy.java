@@ -50,7 +50,7 @@ import com.ibm.wala.util.collections.Pair;
  *
  */
 public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
-  private static final boolean DEBUG = false;
+  private static final boolean DEBUG = true;
   private final Map<CAstNode, List<ExtractionRegion>> region_map = HashMapFactory.make();
   
   private CorrelatedPairExtractionPolicy() {}
@@ -68,7 +68,8 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
       if(pos.getLastLine() >= 0 && ndpos.getFirstLine() > pos.getLastLine())
         return;
       
-      if(node.getKind() == kind && ndpos.getFirstLine() == pos.getFirstLine() && ndpos.getLastLine() == pos.getLastLine())
+      //if(node.getKind() == kind && ndpos.getFirstLine() == pos.getFirstLine() && ndpos.getLastLine() == pos.getLastLine())
+      if(node.getKind() == kind && ndpos.getFirstOffset() == pos.getFirstOffset() && ndpos.getLastOffset() == pos.getLastOffset())
         res.add(nodep);
     }
     for(int i=0;i<node.getChildCount();++i)
@@ -101,7 +102,7 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
       return true;
     startNodes = findNodesAtPos(CAstNode.OBJECT_REF, startPos, entity);
     if(corr instanceof ReadWriteCorrelation) {
-      endNodes = findNodesAtPos(CAstNode.OBJECT_REF, endPos, entity);
+      endNodes = findNodesAtPos(CAstNode.ASSIGN, endPos, entity);
     } else if(corr instanceof EscapeCorrelation) {
       int arity = ((EscapeCorrelation)corr).getNumberOfArguments();
       endNodes = findNodesAtPos(CAstNode.CALL, endPos, entity);
@@ -116,7 +117,7 @@ public class CorrelatedPairExtractionPolicy extends ExtractionPolicy {
     }
     if(startNodes.isEmpty() || endNodes.isEmpty()) {
       if(DEBUG)
-        System.err.println("Couldn't find any start/end nodes for correlation " + corr.pp(correlations.getPositions()));
+        System.err.println("Couldn't find any " + (startNodes.isEmpty()? endNodes.isEmpty()? "boundary": "start": "end") + " nodes for correlation " + corr.pp(correlations.getPositions()));
       return true;
     }
     ChildPos startNode, endNode;

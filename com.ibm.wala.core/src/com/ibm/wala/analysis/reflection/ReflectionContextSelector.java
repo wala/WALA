@@ -54,6 +54,10 @@ public class ReflectionContextSelector {
       result = new DelegatingContextSelector(new ReflectiveInvocationSelector(), new DelegatingContextSelector(
           new JavaLangClassContextSelector(), result));
     }
+    // if NEITHER string constants NOR method invocations are ignored
+    if (!options.getReflectionOptions().isIgnoreStringConstants() && !options.getReflectionOptions().isIgnoreMethodInvoke()) {
+      result = new DelegatingContextSelector(new GetMethodContextSelector(),result);
+    }
     return result;
   }
 }

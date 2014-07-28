@@ -1122,7 +1122,7 @@ public class PolyglotJava2CAstTranslator {
 
       Node stmt = l.statement();
       while (stmt instanceof Block) {
-        stmt = (Node) ((Block) stmt).statements().iterator().next();
+        stmt = ((Block) stmt).statements().iterator().next();
       }
 
       wc.getLabelMap().put(stmt, l.labelNode().id().toString());
@@ -1176,7 +1176,7 @@ public class PolyglotJava2CAstTranslator {
       Node breakTarget = makeBreakTarget(d);
       Node continueTarget = makeContinueTarget(d);
 
-      String loopLabel = (String) wc.getLabelMap().get(d);
+      String loopLabel = wc.getLabelMap().get(d);
 
       CAstNode continueNode = walkNodes(continueTarget, wc);
       CAstNode breakNode = walkNodes(breakTarget, wc);
@@ -1194,17 +1194,17 @@ public class PolyglotJava2CAstTranslator {
     public CAstNode visit(For f, WalkContext wc) {
       Node breakTarget = makeBreakTarget(f);
       Node continueTarget = makeContinueTarget(f);
-      String loopLabel = (String) wc.getLabelMap().get(f);
+      String loopLabel = wc.getLabelMap().get(f);
       WalkContext lc = new LoopContext(wc, loopLabel, breakTarget, continueTarget);
 
       CAstNode[] inits = new CAstNode[f.inits().size()];
       for (int i = 0; i < inits.length; i++) {
-        inits[i] = walkNodes((Node) f.inits().get(i), wc);
+        inits[i] = walkNodes(f.inits().get(i), wc);
       }
 
       CAstNode[] iters = new CAstNode[f.iters().size()];
       for (int i = 0; i < iters.length; i++) {
-        iters[i] = walkNodes((Node) f.iters().get(i), wc);
+        iters[i] = walkNodes(f.iters().get(i), wc);
       }
 
       CAstNode initsBlock = makeNode(wc, fFactory, f, CAstNode.BLOCK_STMT, inits);
@@ -1223,7 +1223,7 @@ public class PolyglotJava2CAstTranslator {
 
       Node breakTarget = makeBreakTarget(w);
       Node continueTarget = makeContinueTarget(w);
-      String loopLabel = (String) wc.getLabelMap().get(w);
+      String loopLabel = wc.getLabelMap().get(w);
       LoopContext lc = new LoopContext(wc, loopLabel, breakTarget, continueTarget);
 
       /*
@@ -1239,7 +1239,7 @@ public class PolyglotJava2CAstTranslator {
 	        fNodeFactory.Id(s.position(), "switchBreakLabel" + s.position().toString().replace('.', '_')),
 	        fNodeFactory.Empty(s.position()));
       CAstNode breakAst = walkNodes(breakLabel, wc);
-      String loopLabel = (String) wc.getLabelMap().get(s);
+      String loopLabel = wc.getLabelMap().get(s);
       WalkContext child = new BreakContext(wc, loopLabel, breakLabel);
       Expr cond = s.expr();
       List cases = s.elements();
@@ -1455,7 +1455,7 @@ public class PolyglotJava2CAstTranslator {
     }
 
     @Override
-    public Iterator getScopedEntities(CAstNode construct) {
+    public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
       Assertions.UNREACHABLE("CompilationUnitEntity asked for AST-related entities, but it has no AST.");
       return null;
     }
@@ -1494,8 +1494,8 @@ public class PolyglotJava2CAstTranslator {
     }
 
     @Override
-    public Collection getQualifiers() {
-      return Collections.EMPTY_LIST;
+    public Collection<CAstQualifier> getQualifiers() {
+      return Collections.emptyList();
     }
 
     @Override
@@ -1595,7 +1595,7 @@ public class PolyglotJava2CAstTranslator {
     }
 
     @Override
-    public Iterator getScopedEntities(CAstNode construct) {
+    public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
       if (fEntities.containsKey(construct)) {
         return (fEntities.get(construct)).iterator();
       } else {
@@ -1680,7 +1680,7 @@ public class PolyglotJava2CAstTranslator {
     }
 
     @Override
-    public Iterator getScopedEntities(CAstNode construct) {
+    public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
       Assertions.UNREACHABLE("Non-AST-bearing entity (ClassEntity) asked for scoped entities related to a given AST node");
       return null;
     }
@@ -1719,7 +1719,7 @@ public class PolyglotJava2CAstTranslator {
     }
 
     @Override
-    public Collection getQualifiers() {
+    public Collection<CAstQualifier> getQualifiers() {
       if (fCT == fTypeSystem.Object()) { // pretend the root of the hierarchy is always a class
         return mapFlagsToQualifiers(fCT.flags().clear(Flags.INTERFACE));
       }
@@ -1858,7 +1858,7 @@ public class PolyglotJava2CAstTranslator {
     }
 
     @Override
-    public Collection getQualifiers() {
+    public Collection<CAstQualifier> getQualifiers() {
       return mapFlagsToQualifiers(getFlags());
     }
 
@@ -1882,7 +1882,7 @@ public class PolyglotJava2CAstTranslator {
             fParameterTypes = new ArrayList<CAstType>(formalTypes.size());
 
             for (Iterator iter = formalTypes.iterator(); iter.hasNext();) {
-              fParameterTypes.add(fMc.getTypeDictionary().getCAstTypeFor((Type) iter.next()));
+              fParameterTypes.add(fMc.getTypeDictionary().getCAstTypeFor(iter.next()));
             }
           }
           return fParameterTypes;
@@ -1980,7 +1980,7 @@ public class PolyglotJava2CAstTranslator {
     }
 
     @Override
-    public Iterator getScopedEntities(CAstNode construct) {
+    public Iterator<CAstEntity> getScopedEntities(CAstNode construct) {
       return EmptyIterator.instance();
     }
 
@@ -2028,7 +2028,7 @@ public class PolyglotJava2CAstTranslator {
     }
 
     @Override
-    public Collection getQualifiers() {
+    public Collection<CAstQualifier> getQualifiers() {
       return mapFlagsToQualifiers(fFI.flags());
     }
 
@@ -2641,9 +2641,9 @@ public class PolyglotJava2CAstTranslator {
    * Maps front-end-specific representations into WALA references of the appropriate kind.
    * @author rfuhrer
    *
-   * @param <T> The front-end-specific representation of a type (e.g., for Polyglot, a Type)
-   * @param <M> The front-end-specific representation of a procedure/method (e.g., for Polyglot, a CodeInstance)
-   * @param <F> The front-end-specific representation of a field (e.g., for Polyglot, a FieldInstance)
+   * @param <TypeRep> The front-end-specific representation of a type (e.g., for Polyglot, a Type)
+   * @param <MethodRep> The front-end-specific representation of a procedure/method (e.g., for Polyglot, a CodeInstance)
+   * @param <FieldRep> The front-end-specific representation of a field (e.g., for Polyglot, a FieldInstance)
    */
   public interface IdentityMapper<TypeRep, MethodRep, FieldRep> {
     MemberReference getMethodRef(MethodRep method);
@@ -2783,7 +2783,6 @@ public class PolyglotJava2CAstTranslator {
     return ct.fullName() + "$" + pos.line() + "$" + pos.column();
   }
 
-  @SuppressWarnings("unchecked")
   protected CAstEntity walkEntity(Node rootNode, final WalkContext context) {
     if (rootNode instanceof SourceFile) {
       SourceFile file = (SourceFile) rootNode;
@@ -2806,7 +2805,7 @@ public class PolyglotJava2CAstTranslator {
     } else if (rootNode instanceof New) {
       final New n = (New) rootNode;
       final List<CAstEntity> memberEntities = new ArrayList<CAstEntity>();
-      ClassType anonType = (ClassType) n.anonType().asType();
+      ClassType anonType = n.anonType().asType();
       String anonTypeName = anonTypeName(anonType);
       final ClassContext classContext = new ClassContext(anonType, memberEntities, context);
 
@@ -2865,7 +2864,7 @@ public class PolyglotJava2CAstTranslator {
     if (body.statements().size() <= 0)
       return false;
 
-    Stmt maybeSuper = (Stmt) body.statements().get(0);
+    Stmt maybeSuper = body.statements().get(0);
 
     return isSpecialCallStmt(maybeSuper, kind);
   }

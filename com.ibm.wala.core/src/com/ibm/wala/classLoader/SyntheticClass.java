@@ -11,7 +11,6 @@
 
 package com.ibm.wala.classLoader;
 
-import java.io.InputStream;
 import java.io.Reader;
 import java.util.Collection;
 import java.util.Collections;

@@ -29,7 +29,6 @@ import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.intset.OrdinalSet;
 
 /**
  * An {@link InstanceKeyFactory} that returns {@link ScopeMappingInstanceKey}s

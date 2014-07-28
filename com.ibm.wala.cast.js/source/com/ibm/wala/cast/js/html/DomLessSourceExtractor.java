@@ -25,6 +25,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.ByteOrderMark;
+import org.apache.commons.io.input.BOMInputStream;
+
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
@@ -55,6 +58,7 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     protected final SourceRegion entrypointRegion;
     
     private ITag currentScriptTag;
+    private ITag currentCommentTag;
     
     private int nodeCounter = 0;
     private int scriptNodeCounter = 0;
@@ -86,12 +90,15 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
       if (tag.getName().equalsIgnoreCase("script")) {
         assert currentScriptTag != null;
         currentScriptTag = null;
+      } else if (currentScriptTag != null && tag.getName().equals("!--")) {
+        assert currentCommentTag != null;
+        currentCommentTag = null;
       }
     }
 
     @Override
     public void handleText(Position p, String text) {
-      if (currentScriptTag != null) {
+      if (currentScriptTag != null && currentCommentTag == null) {
         if (text.startsWith("<![CDATA[")) {
          assert text.endsWith("]]>");
          text = text.substring(9, text.length()-11);
@@ -116,6 +123,8 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
         assert currentScriptTag == null;
         currentScriptTag = tag;
         scriptNodeCounter++;
+      } else if (currentScriptTag != null && tag.getName().equals("!--")){
+        currentCommentTag = tag;
       }
       handleDOM(tag);
     }
@@ -226,16 +235,17 @@ public class DomLessSourceExtractor extends JSSourceExtractor {
     }
 
     private void getScriptFromUrl(String urlAsString, ITag scriptTag) throws IOException, MalformedURLException {
-//      URL absoluteUrl = UrlManipulator.relativeToAbsoluteUrl(urlAsString, this.entrypointUrl);
-//      URL scriptSrc = urlResolver.resolve(absoluteUrl);
       URL scriptSrc = new URL(entrypointUrl, urlAsString);
-      if (scriptSrc == null) { //Error resolving URL
-        return;
-      }
-
       Reader scriptInputStream;
       try {
-         scriptInputStream = new InputStreamReader(scriptSrc.openConnection().getInputStream());
+        BOMInputStream bs = new BOMInputStream(scriptSrc.openConnection().getInputStream(), false, 
+            ByteOrderMark.UTF_8, 
+            ByteOrderMark.UTF_16LE, ByteOrderMark.UTF_16BE,
+            ByteOrderMark.UTF_32LE, ByteOrderMark.UTF_32BE);
+        if (bs.hasBOM()) {
+          System.err.println("removing BOM " + bs.getBOM());
+        }
+        scriptInputStream = new InputStreamReader(bs);
       } catch (Exception e) {
         //it looks like this happens when we can't resolve the url?
         if (DEBUG) {

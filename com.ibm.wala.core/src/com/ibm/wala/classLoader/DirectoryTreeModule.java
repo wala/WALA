@@ -31,6 +31,9 @@ public abstract class DirectoryTreeModule implements Module {
     if (root == null) {
       throw new IllegalArgumentException("null root");
     }
+    if (!root.exists()) {
+      throw new IllegalArgumentException("root does not exist " + root);
+    }
     if (!root.isDirectory()) {
       throw new IllegalArgumentException("root is not a directory " + root);
     }

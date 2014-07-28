@@ -36,6 +36,10 @@
     <available file="${plugin.destination}/lib/jericho-html-3.2.jar" property="jericho.present"/>
   </target>
   
+  <target name="CommonsIoPresent" depends="init">
+    <available file="${plugin.destination}/lib/commons-io-2.4.jar" property="commons.io.present"/>
+  </target>
+  
   <target name="fetchJericho" depends="JerichoPresent" unless="jericho.present">
     <delete dir="${temp.folder}"/>
     <mkdir dir="${temp.folder}"/>
@@ -45,8 +49,17 @@
     <delete dir="${temp.folder}"/>
   </target>
   
+  <target name="fetchCommonsIo" depends="CommonsIoPresent" unless="commons.io.present">
+    <delete dir="${temp.folder}"/>
+    <mkdir dir="${temp.folder}"/>
+    <get src="http://apache.petsads.us/commons/io/binaries/commons-io-2.4-bin.zip" dest="${temp.folder}/commons-io-2.4.zip"/>
+    <unzip src="${temp.folder}/commons-io-2.4.zip" dest="${temp.folder}"/>
+    <copy file="${temp.folder}/commons-io-2.4/commons-io-2.4.jar" tofile="${plugin.destination}/lib/commons-io-2.4.jar" />
+    <delete dir="${temp.folder}"/>
+  </target>
   
-  <target name="getJars" depends="fetchJericho" />
+  
+  <target name="getJars" depends="fetchJericho,fetchCommonsIo" />
   
   <target name="init" depends="properties">
     <condition property="pluginTemp" value="${buildTempFolder}/plugins">

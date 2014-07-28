@@ -12,6 +12,7 @@ package com.ibm.wala.cast.ipa.modref;
 
 import java.util.Collection;
 
+import com.ibm.wala.cast.ipa.callgraph.AstHeapModel;
 import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
 import com.ibm.wala.cast.ir.ssa.AstEchoInstruction;
 import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
@@ -31,12 +32,14 @@ import com.ibm.wala.ipa.modref.ModRef;
 
 public class AstModRef extends ModRef {
 
-  protected static class AstRefVisitor 
-      extends RefVisitor 
-      implements AstInstructionVisitor
-  {
+  @Override
+  public ExtendedHeapModel makeHeapModel(PointerAnalysis pa) {
+    return (AstHeapModel)pa.getHeapModel();
+  }
+
+  protected static class AstRefVisitor extends RefVisitor<AstHeapModel> implements AstInstructionVisitor {
       
-    protected AstRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<InstanceKey> pa, ExtendedHeapModel h) {
+    protected AstRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<InstanceKey> pa, AstHeapModel h) {
       super(n, result, pa, h);
     }
 
@@ -88,15 +91,15 @@ public class AstModRef extends ModRef {
 
   @Override
   protected RefVisitor makeRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<InstanceKey> pa, ExtendedHeapModel h) {
-    return new AstRefVisitor(n, result, pa, h);
+    return new AstRefVisitor(n, result, pa, (AstHeapModel)h);
   }
 
   protected static class AstModVisitor 
-      extends ModVisitor 
+      extends ModVisitor <AstHeapModel>
       implements AstInstructionVisitor
   {
       
-    protected AstModVisitor(CGNode n, Collection<PointerKey> result, ExtendedHeapModel h, PointerAnalysis<InstanceKey> pa) {
+    protected AstModVisitor(CGNode n, Collection<PointerKey> result, AstHeapModel h, PointerAnalysis<InstanceKey> pa) {
       super(n, result, h, pa, true);
     }
 
@@ -148,7 +151,7 @@ public class AstModRef extends ModRef {
 
   @Override
   protected ModVisitor makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<InstanceKey> pa, ExtendedHeapModel h, boolean ignoreAllocHeapDefs) {
-    return new AstModVisitor(n, result, h, pa);
+    return new AstModVisitor(n, result, (AstHeapModel)h, pa);
   }
 
 }

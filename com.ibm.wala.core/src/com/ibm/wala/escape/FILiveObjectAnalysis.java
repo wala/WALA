@@ -36,7 +36,7 @@ import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 
 /**
- * A simple liveness analysis based on flow-insensitive pointer analysis
+ * A simple liveness analysis based on flow-insensitive pointer analysis.
  */
 public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
 

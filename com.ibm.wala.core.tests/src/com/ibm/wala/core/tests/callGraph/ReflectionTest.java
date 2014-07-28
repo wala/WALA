@@ -38,6 +38,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
@@ -94,7 +95,7 @@ public class ReflectionTest extends WalaTestCase {
     Warnings.clear();
     CallGraphTest.doCallGraphs(options, new AnalysisCache(), cha, scope);
     for (Iterator<Warning> it = Warnings.iterator(); it.hasNext();) {
-      Warning w = (Warning) it.next();
+      Warning w = it.next();
       if (w.toString().indexOf("com/ibm/jvm") > 0) {
         continue;
       }
@@ -281,7 +282,7 @@ public class ReflectionTest extends WalaTestCase {
       if (context instanceof ReceiverInstanceContext && node.getMethod().getReference().equals(newInstanceMr)) {
         ReceiverInstanceContext r = (ReceiverInstanceContext) context;
         ConstantKey<IMethod> c = (ConstantKey<IMethod>) r.getReceiver();
-        IMethod ctor = (IMethod) c.getValue();
+        IMethod ctor = c.getValue();
         if (ctor.getSignature().equals(fpInitSig)) {
           filePermConstrNewInstanceNode = node;
           break;
@@ -637,5 +638,63 @@ public class ReflectionTest extends WalaTestCase {
     MethodReference mr = MethodReference.findOrCreate(tr, "u", "(Ljava/lang/Integer;)V");
     Set<CGNode> nodes = cg.getNodes(mr);
     Assert.assertFalse(nodes.isEmpty());
+  }
+  
+  /**
+   * Test that when analyzing GetMethodContext, the call graph must contain exactly one call to each of the following methods:
+   * <ul>
+   *  <li>GetMethodContext$B#foo()</li>
+   *  <li>GetMethodContext$C#bar()</li>
+   * </ul>
+   * and must not contain
+   * <ul>
+   *  <li>GetMethodContext$A#bar()</li>
+   *  <li>GetMethodContext$A#baz()</li>
+   *  <li>GetMethodContext$A#foo()</li>
+   *  <li>GetMethodContext$B#bar()</li>
+   *  <li>GetMethodContext$B#baz()</li>
+   *  <li>GetMethodContext$C#baz()</li>
+   *  <li>GetMethodContext$C#foo()</li>
+   * </ul>
+   */
+  @Test
+  public void testGetMethodContext() throws WalaException, IllegalArgumentException, CancelException, IOException {
+    TypeReference ta = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/GetMethodContext$A");
+    TypeReference tb = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/GetMethodContext$B");
+    TypeReference tc = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/GetMethodContext$C");
+    Selector sfoo = Selector.make("foo()V"),
+             sbar = Selector.make("bar()V"),
+             sbaz = Selector.make("baz()V");
+    MethodReference mafoo = MethodReference.findOrCreate(ta,sfoo),
+                    mbfoo = MethodReference.findOrCreate(tb,sfoo),
+                    mcfoo = MethodReference.findOrCreate(tc,sfoo),
+                    mabar = MethodReference.findOrCreate(ta,sbar),
+                    mbbar = MethodReference.findOrCreate(tb,sbar),
+                    mcbar = MethodReference.findOrCreate(tc,sbar),
+                    mabaz = MethodReference.findOrCreate(ta,sbaz),
+                    mbbaz = MethodReference.findOrCreate(tb,sbaz),
+                    mcbaz = MethodReference.findOrCreate(tc,sbaz);
+    AnalysisScope scope = findOrCreateAnalysisScope();
+    IClassHierarchy cha = findOrCreateCHA(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.REFLECTGETMETHODCONTEXT_MAIN);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
+    Set<CGNode> cgn;
+    cgn = cg.getNodes(mabar); Assert.assertTrue(cgn.isEmpty());
+    cgn = cg.getNodes(mabaz); Assert.assertTrue(cgn.isEmpty());
+    cgn = cg.getNodes(mafoo); Assert.assertTrue(cgn.isEmpty());
+    
+    cgn = cg.getNodes(mbbar); Assert.assertTrue(cgn.isEmpty());
+    cgn = cg.getNodes(mbbaz); Assert.assertTrue(cgn.isEmpty());
+    
+    cgn = cg.getNodes(mcbaz); Assert.assertTrue(cgn.isEmpty());
+    cgn = cg.getNodes(mcfoo); Assert.assertTrue(cgn.isEmpty());
+    
+    
+    cgn = cg.getNodes(mbfoo); Assert.assertTrue(1 == cgn.size());
+
+    cgn = cg.getNodes(mcbar); Assert.assertTrue(1 == cgn.size());
+    
   }
 }

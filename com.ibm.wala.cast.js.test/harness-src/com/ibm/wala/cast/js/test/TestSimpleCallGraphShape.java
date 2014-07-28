@@ -81,6 +81,15 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, assertionsForObjects);
   }
 
+  private static final Object[][] cfgAssertionsForInherit = new Object[][] {
+    new Object[]{"ctor:tests/inherit.js/objectMasquerading/Rectangle",
+        new int[][]{{1,7},{2},{3,7},{4,7},{5,6},{7},{7}}
+    },
+    new Object[]{"ctor:tests/inherit.js/sharedClassObject/Rectangle",
+        new int[][]{{1,7},{2},{3,7},{4,7},{5,6},{7},{7}}
+    }
+  };
+  
   private static final Object[][] assertionsForInherit = new Object[][] {
       new Object[] { ROOT, new String[] { "tests/inherit.js" } },
       new Object[] {
@@ -88,18 +97,26 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
           new String[] { "tests/inherit.js/objectMasquerading", "tests/inherit.js/objectMasquerading/Rectangle/area",
               "tests/inherit.js/Polygon/shape", "tests/inherit.js/sharedClassObject",
               "tests/inherit.js/sharedClassObject/Rectangle/area" } },
-  /*
-   * new Object[]{"tests/inherit.js/objectMasquerading", new
-   * String[]{"ctor:tests/inherit.js/objectMasquerading/Rectangle"}}, new
-   * Object[]{"tests/inherit.js/sharedClassObject", new
-   * String[]{"ctor:tests/inherit.js/sharedClassObject/Rectangle"}},
-   */
+      new Object[]{
+          "tests/inherit.js/objectMasquerading", 
+          new String[]{"ctor:tests/inherit.js/objectMasquerading/Rectangle"}}, 
+      new Object[]{
+          "ctor:tests/inherit.js/objectMasquerading/Rectangle" ,
+          new String[]{"tests/inherit.js/objectMasquerading/Rectangle"}}, 
+      new Object[]{"tests/inherit.js/objectMasquerading/Rectangle",
+          new String[]{"tests/inherit.js/Polygon"}}, 
+      new Object[]{
+          "tests/inherit.js/sharedClassObject", 
+          new String[]{"ctor:tests/inherit.js/sharedClassObject/Rectangle"}},
+      new Object[]{"ctor:tests/inherit.js/sharedClassObject/Rectangle",
+          new String[]{"tests/inherit.js/sharedClassObject/Rectangle"}}
   };
 
   @Test
   public void testInherit() throws IOException, IllegalArgumentException, CancelException, WalaException {
     CallGraph CG = JSCallGraphBuilderUtil.makeScriptCG("tests", "inherit.js");
     verifyGraphAssertions(CG, assertionsForInherit);
+    verifyCFGAssertions(CG, cfgAssertionsForInherit);
   }
 
   private static final Object[][] assertionsForNewfn = new Object[][] {
@@ -640,6 +657,20 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
       verifyGraphAssertions(CG, assertionsForDeadCode);
     }
     
+    private static final Object[][] assertionsForShadow = new Object[][] {
+      new Object[] { ROOT, new String[] { "tests/shadow_test.js" } },
+      new Object[] { "tests/shadow_test.js", new String[] { "tests/shadow_test.js/test" } },
+      new Object[] { "tests/shadow_test.js/test", new String[] { "tests/shadow_test.js/bad" } },
+      new Object[] { "tests/shadow_test.js/test", new String[] { "tests/shadow_test.js/global_bad" } }
+    };
+    
+    @Test
+    public void testShadow() throws IOException, WalaException, IllegalArgumentException, CancelException {
+      JSCFABuilder builder = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "shadow_test.js");
+      CallGraph cg = builder.makeCallGraph(builder.getOptions());
+      verifyGraphAssertions(cg, assertionsForShadow);
+    }
+
     private static final Object[][] assertionsForExtend = new Object[][] {
       new Object[] { ROOT, new String[] { "tests/extend.js" } },
       new Object[] { "tests/extend.js", new String[] { "suffix:bar", "!suffix:foo" } }
@@ -679,12 +710,24 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
       CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     }
 
-    @Test
+  @Test
   public void testTutorialExample() throws IllegalArgumentException, IOException, CancelException, WalaException {
     PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "tutorial-example.js");
     CallGraph CG = B.makeCallGraph(B.getOptions());
     CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     // verifyGraphAssertions(CG, assertionsForDateProperty);
+  }
+
+  Object[][] renamingAssertions =  { 
+      { "tests/rename-example.js/f", new Name[]{ new Name(9, 7, "x"), new Name(9, 7, "y") } },
+      { "tests/rename-example.js/ff", new Name[]{ new Name(11, 10, "x"), new Name(11, 10, "y"), new Name(11, 10, "z") } }
+  };
+  
+  @Test
+  public void testRenaming() throws IOException, WalaException, IllegalArgumentException, CancelException {
+    PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "rename-example.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    verifyNameAssertions(CG, renamingAssertions);
   }
 
 }

@@ -420,9 +420,9 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         @Override
-        public SSAConditionalBranchInstruction ConditionalBranchInstruction(int iindex, 
-            com.ibm.wala.shrikeBT.IConditionalBranchInstruction.IOperator operator, TypeReference type, int val1, int val2) {
-          return new SSAConditionalBranchInstruction(iindex, operator, type, val1, val2);
+        public SSAConditionalBranchInstruction ConditionalBranchInstruction(int iindex,
+            com.ibm.wala.shrikeBT.IConditionalBranchInstruction.IOperator operator, TypeReference type, int val1, int val2, int target) {
+          return new SSAConditionalBranchInstruction(iindex, operator, type, val1, val2, target);
         }
 
         @Override
@@ -462,8 +462,8 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         @Override
-        public SSAGotoInstruction GotoInstruction(int iindex) {
-          return new SSAGotoInstruction(iindex);
+        public SSAGotoInstruction GotoInstruction(int iindex, int target) {
+          return new SSAGotoInstruction(iindex, target);
         }
 
         @Override

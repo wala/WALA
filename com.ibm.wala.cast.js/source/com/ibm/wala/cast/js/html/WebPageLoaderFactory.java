@@ -57,7 +57,7 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
           @Override
           protected int doGlobalRead(CAstNode n, WalkContext context, String name, TypeReference type) {
             int result = context.currentScope().allocateTempValue();
-            if (isNestedWithinScriptBody(context) && ! "$$undefined".equals(name)  && ! "window".equals(name)) {
+            if (isNestedWithinScriptBody(context) && ! "$$undefined".equals(name)  && !"window".equals(name) && !name.startsWith("$$destructure")) {
               
               // check if field is defined on 'window'
               int windowVal = isScriptBody(context)? super.doLocalRead(context, "this", JavaScriptTypes.Root): super.doGlobalRead(n, context, "window", type);
@@ -69,13 +69,15 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
                       translateConditionOpcode(CAstOperator.OP_NE), 
                       null, 
                       isDefined, 
-                      context.currentScope().getConstantValue(new Integer(0))));
+                      context.currentScope().getConstantValue(new Integer(0)),
+                      -1));
               PreBasicBlock srcB = context.cfg().getCurrentBlock();       
               
               // field lookup of value
               context.cfg().newBlock(true);
               context.cfg().addInstruction(((JSInstructionFactory) insts).GetInstruction(context.cfg().getCurrentInstruction(), result, windowVal, name));
-              context.cfg().addInstruction(insts.GotoInstruction(context.cfg().getCurrentInstruction()));
+              context.cfg().newBlock(true);
+              context.cfg().addInstruction(insts.GotoInstruction(context.cfg().getCurrentInstruction(), -1));
               PreBasicBlock trueB = context.cfg().getCurrentBlock();
 
               // read global
@@ -99,7 +101,7 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
 
           @Override
           protected void doLocalWrite(WalkContext context, String nm, TypeReference type, int rval) {
-            if (isScriptBody(context)) {
+            if (isNestedWithinScriptBody(context) && ! "$$undefined".equals(nm)  && !"window".equals(nm) && !nm.startsWith("$$destructure")) {
               int windowVal = super.doLocalRead(context, "this", type);
               context.currentScope().getConstantValue(nm);
               context.cfg().addInstruction(((JSInstructionFactory) insts).PutInstruction(context.cfg().getCurrentInstruction(), windowVal, rval, nm));

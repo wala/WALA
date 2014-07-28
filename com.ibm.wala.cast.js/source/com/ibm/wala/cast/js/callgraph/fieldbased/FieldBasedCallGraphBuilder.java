@@ -24,6 +24,9 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptConstructTargetSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptFunctionDotCallTargetSelector;
+import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions;
+import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions.JavaScriptConstructor;
+import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -65,6 +68,7 @@ public abstract class FieldBasedCallGraphBuilder {
 	// standard call graph machinery
 	protected final AnalysisOptions options;
 	protected final AnalysisCache cache;
+	protected final JavaScriptConstructorFunctions constructors;
 	protected final MethodTargetSelector targetSelector;
 	
 	private static final boolean LOG_TIMINGS = true;
@@ -73,11 +77,12 @@ public abstract class FieldBasedCallGraphBuilder {
 		this.cha = cha;
 		this.options = options;
 		this.cache = cache;
-		this.targetSelector = setupMethodTargetSelector(cha, options);
+		this.constructors = new JavaScriptConstructorFunctions(cha);
+		this.targetSelector = setupMethodTargetSelector(cha, constructors, options);
 	}
 
-  private MethodTargetSelector setupMethodTargetSelector(IClassHierarchy cha, AnalysisOptions options) {
-    MethodTargetSelector result = new JavaScriptConstructTargetSelector(cha, options.getMethodTargetSelector());
+  private MethodTargetSelector setupMethodTargetSelector(IClassHierarchy cha, JavaScriptConstructorFunctions constructors2, AnalysisOptions options) {
+    MethodTargetSelector result = new JavaScriptConstructTargetSelector(constructors2, options.getMethodTargetSelector());
     if (options instanceof JSAnalysisOptions && ((JSAnalysisOptions)options).handleCallApply()) {
       // TODO handle Function.prototype.apply
       result = new JavaScriptFunctionDotCallTargetSelector(result);
@@ -85,15 +90,16 @@ public abstract class FieldBasedCallGraphBuilder {
     return result;
   }
 	
-  protected FlowGraph flowGraphFactory() {
-    FlowGraphBuilder builder = new FlowGraphBuilder(cha, cache);
+  protected FlowGraph flowGraphFactory(JavaScriptConstructorFunctions selector) {
+    FlowGraphBuilder builder = new FlowGraphBuilder(cha, cache, selector);
     return builder.buildFlowGraph();
   }
 
 	/**
 	 * Build a flow graph for the program to be analysed.
+	 * @param selector TODO
 	 */
-	public abstract FlowGraph buildFlowGraph(IProgressMonitor monitor) throws CancelException;
+	public abstract FlowGraph buildFlowGraph(IProgressMonitor monitor, JavaScriptConstructorFunctions selector) throws CancelException;
 	
 	/**
 	 * Main entry point: builds a flow graph, then extracts a call graph and returns it.
@@ -104,7 +110,7 @@ public abstract class FieldBasedCallGraphBuilder {
 		if(LOG_TIMINGS) fgBegin = System.currentTimeMillis();
 
 		MonitorUtil.beginTask(monitor, "flow graph", 1);
-		FlowGraph flowGraph = buildFlowGraph(monitor);
+		FlowGraph flowGraph = buildFlowGraph(monitor, constructors);
 		MonitorUtil.done(monitor);
 		
 		if(LOG_TIMINGS) {
@@ -157,14 +163,32 @@ public abstract class FieldBasedCallGraphBuilder {
         CGNode caller = cg.findOrCreateNode(kaller.getMethod(AstMethodReference.fnSelector), Everywhere.EVERYWHERE);		    
 		    CallSiteReference site = callVertex.getSite();
 		    IMethod target = targetSelector.getCalleeTarget(caller, site, targetVertex.getConcreteType());
-		    if (caller.toString().contains("string_ctor"))
-		      System.err.println(caller + " " + site + " " +  target);
 		    boolean isFunctionPrototypeCall = target != null
 		        && target.getName().toString().startsWith(JavaScriptFunctionDotCallTargetSelector.SYNTHETIC_CALL_METHOD_PREFIX);
+
 		    if (isFunctionPrototypeCall) {
 		      handleFunctionPrototypeCallInvocation(flowgraph, monitor, cg, callVertex, caller, site, target);
 		    } else {
-		      addEdgeToJSCallGraph(cg, site, target, caller);
+	          addEdgeToJSCallGraph(cg, site, target, caller);
+		     
+	          if (target instanceof JavaScriptConstructor) {
+	            IMethod fun = ((JavaScriptConstructor)target).constructedType().getMethod(AstMethodReference.fnSelector);        
+	            CGNode ctorCaller = cg.findOrCreateNode(target, Everywhere.EVERYWHERE);
+	            
+	            CallSiteReference ref = null;
+	            Iterator<CallSiteReference> sites = ctorCaller.iterateCallSites();
+	            while(sites.hasNext()) {
+	              CallSiteReference r = sites.next();
+	              if (r.getDeclaredTarget().getSelector().equals(AstMethodReference.fnSelector)) {
+	                ref = r;
+	                break;
+	              }
+	            }
+	            
+	            if (ref != null) {
+	              addEdgeToJSCallGraph(cg, ref, fun, ctorCaller);	              
+	            }
+          } 
 		    }
 		  }
 
@@ -183,6 +207,7 @@ public abstract class FieldBasedCallGraphBuilder {
     // need to create nodes for reflective targets of call, and then add them
     // as callees of the synthetic method
     OrdinalSet<FuncVertex> reflectiveTargets = getReflectiveTargets(flowgraph, callVertex, monitor);
+    System.err.println("adding callees " + reflectiveTargets + " for " + caller);
     // there should only be one call site in the synthetic method
     CallSiteReference reflectiveCallSite = functionPrototypeCallNode.getIR().iterateCallSites().next();
     for (FuncVertex f : reflectiveTargets) {
@@ -230,6 +255,13 @@ public abstract class FieldBasedCallGraphBuilder {
 	  return flowGraph.getReachingSet(functionParam, monitor);
   }
 
+  private OrdinalSet<FuncVertex> getConstructorTargets(FlowGraph flowGraph, CallVertex callVertex, IProgressMonitor monitor) throws CancelException {
+    SSAAbstractInvokeInstruction invoke = callVertex.getInstruction();
+    assert invoke.getDeclaredTarget().getName().equals(JavaScriptMethods.ctorAtom);
+    VarVertex objectParam = flowGraph.getVertexFactory().makeVarVertex(callVertex.getCaller(), invoke.getUse(0));
+    return flowGraph.getReachingSet(objectParam, monitor);
+  }
+	
   /**
 	 * Extract call edges from the flow graph into high-level representation.
 	 */
@@ -239,11 +271,6 @@ public abstract class FieldBasedCallGraphBuilder {
 		
 		// find all pairs <call, func> such that call is reachable from func in the flow graph
 		for(final CallVertex callVertex : factory.getCallVertices()) {
-		  if (callVertex.getCaller().getFullName().contains("string_ctor")) {
-		    System.err.println(callVertex.getCaller().getFullName());
-		    System.err.println(callVertex.getInstruction());
-		    System.err.println(flowgraph.getReachingSet(callVertex, monitor));
-		  }
 			for(FuncVertex funcVertex : flowgraph.getReachingSet(callVertex, monitor)) {
 			  result.add(Pair.make(callVertex, funcVertex));
 			}

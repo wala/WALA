@@ -208,7 +208,7 @@ public abstract class Launcher {
   /**
    * A thread that runs in a loop, performing the drain() action until a process terminates
    */
-  abstract class Drainer extends Thread {
+  protected abstract class Drainer extends Thread {
 
     // how many ms to sleep before waking up to check the streams?
     private static final int SLEEP_MS = 5;

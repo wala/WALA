@@ -480,7 +480,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         int val1 = workingState.pop();
 
         TypeReference t = ShrikeUtil.makeTypeReference(loader, instruction.getType());
-        emitInstruction(insts.ConditionalBranchInstruction(getCurrentInstructionIndex(), instruction.getOperator(), t, val1, val2));
+        emitInstruction(insts.ConditionalBranchInstruction(getCurrentInstructionIndex(), instruction.getOperator(), t, val1, val2, instruction.getTarget()));
       }
 
       /**
@@ -489,6 +489,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       @Override
       public void visitConstant(com.ibm.wala.shrikeBT.ConstantInstruction instruction) {
         Language l = cfg.getMethod().getDeclaringClass().getClassLoader().getLanguage();
+        
         TypeReference type = l.getConstantType(instruction.getValue());
         int symbol = 0;
         if (l.isNullType(type)) {
@@ -559,7 +560,7 @@ public class SSABuilder extends AbstractIntStackMachine {
        */
       @Override
       public void visitGoto(com.ibm.wala.shrikeBT.GotoInstruction instruction) {
-        emitInstruction(insts.GotoInstruction(getCurrentInstructionIndex()));
+        emitInstruction(insts.GotoInstruction(getCurrentInstructionIndex(), instruction.getLabel()));
       }
 
       /**
@@ -621,8 +622,8 @@ public class SSABuilder extends AbstractIntStackMachine {
         }
       }
 
-      /*
-       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitLocalStore(com.ibm.wala.shrikeBT.StoreInstruction)
+      /**
+       * @see com.ibm.wala.shrikeBT.IInstruction.Visitor#visitLocalStore(IStoreInstruction)
        */
       @Override
       public void visitLocalStore(IStoreInstruction instruction) {

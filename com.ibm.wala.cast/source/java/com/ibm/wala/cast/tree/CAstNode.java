@@ -163,6 +163,7 @@ public interface CAstNode {
   
   // explicit lexical scopes
   public static final int LOCAL_SCOPE = 200;
+  public static final int SPECIAL_PARENT_SCOPE = 201;
 
   // literal expression kinds
   public static final int CONSTANT = 300;

@@ -44,12 +44,24 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
       ProgressMaster monitor = ProgressMaster.make(new NullProgressMonitor(), 30000, true);
       try {
         cg = util.buildCG(url, builderType, monitor);
+        System.err.println(cg);
         verifyGraphAssertions(cg, assertions);
       } catch(AssertionFailedError afe) {
         throw new AssertionFailedError(builderType + ": " + afe.getMessage());
       } 
     }
     return cg;
+  }
+
+  /**
+   * for long-running tests that tend to time out on Travis
+   */
+  protected JSCallGraph runTestExceptOnTravis(URL url, Object[][] assertions, BuilderType... builderTypes) throws IOException, WalaException, Error, CancelException {
+    if (System.getenv("TRAVIS") == null) {
+      return runTest(url, assertions, builderTypes);
+    } else {
+      return null;
+    }
   }
 
   @SuppressWarnings("unused")

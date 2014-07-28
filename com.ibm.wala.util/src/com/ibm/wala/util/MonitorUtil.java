@@ -73,7 +73,7 @@ public class MonitorUtil {
   public static void throwExceptionIfCanceled(IProgressMonitor progressMonitor) throws CancelException {
     if (progressMonitor != null) {
       if (progressMonitor.isCanceled()) {
-        throw CancelException.make("operation cancelled");
+        throw CancelException.make(progressMonitor.getCancelMessage());
       }
     }
   }

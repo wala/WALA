@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.cast.js.ipa.callgraph;
 
+import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions.JavaScriptConstructor;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -28,7 +29,7 @@ public class JavaScriptConstructorInstanceKeys implements InstanceKeyFactory {
 
   @Override
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
-    if (node.getMethod() instanceof JavaScriptConstructTargetSelector.JavaScriptConstructor) {
+    if (node.getMethod() instanceof JavaScriptConstructor) {
       InstanceKey bk = base.getInstanceKeyForAllocation(node, allocation);
       return new NormalAllocationInNode(node, allocation, bk.getConcreteType());
     } else {

@@ -358,6 +358,15 @@ local_string.prototype = {
     return new Number(primitive("StringCharCodeAt", pos));
   },
 
+  concat: function String_prototype_concat () {
+    var result = this;
+    
+    for(i = 0; i < arguments.length; i++)
+      result = result + arguments[i];
+
+    return result;
+  },
+
   toUpperCase: function String_prototype_toUpperCase() {
     return new String(primitive("StringToUpperCase", this));
   },
@@ -402,7 +411,8 @@ local_string.prototype = {
   },
 
   replace: function String_prototype_replace(regex, withStr) {
-    return new String(primitive("StringReplace", this, regex, withStr));
+    // return new String(primitive("StringReplace", this, regex, withStr));
+    return this || withStr;
   },
   
   match: function String_prototype_match(regexp) {
@@ -534,7 +544,7 @@ local_regexp.prototype = {
   constructor: RegExp,
   
   exec: function RegExp_prototype_exec(string) {
-	  return new Array(primitive("RegexpExec", this, string));
+	  return [ string, string, string, string, string ] || null;
   },
   
   test: function RegExp_prototype_test(string) {

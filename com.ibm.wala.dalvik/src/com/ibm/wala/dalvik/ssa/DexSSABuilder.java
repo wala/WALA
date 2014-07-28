@@ -629,20 +629,6 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             }
 
             /**
-             * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitComparison(IComparisonInstruction)
-             */
-            // TODO: is this just a binary operation?
-//          @Override
-//          public void visitComparison(IComparisonInstruction instruction) {
-//
-//              int val2 = workingState.pop();
-//              int val1 = workingState.pop();
-//              int result = reuseOrCreateDef();
-//              workingState.push(result);
-//              emitInstruction(insts.ComparisonInstruction(instruction.getOperator(), result, val1, val2));
-//          }
-
-            /**
              * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitConditionalBranch(IConditionalBranchInstruction)
              */
             @Override
@@ -656,7 +642,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 //                  int val1 = workingState.pop();
 
                     TypeReference t = TypeReference.Int;
-                    emitInstruction(insts.ConditionalBranchInstruction(getCurrentInstructionIndex(), instruction.getOperator(), t, val1, val2));
+                    emitInstruction(insts.ConditionalBranchInstruction(getCurrentInstructionIndex(), instruction.getOperator(), t, val1, val2, -1));
                 }
                 else if(instruction instanceof Branch.UnaryBranch)
                 {
@@ -664,7 +650,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                     int val2 = symbolTable.getConstant(0);
                     int val1 = workingState.getLocal(ubranch.oper1);
                     TypeReference t = TypeReference.Int;
-                    emitInstruction(insts.ConditionalBranchInstruction(getCurrentInstructionIndex(), instruction.getOperator(), t, val1, val2));
+                    emitInstruction(insts.ConditionalBranchInstruction(getCurrentInstructionIndex(), instruction.getOperator(), t, val1, val2, -1));
                 }
                 else
                 {
@@ -797,7 +783,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
              */
             @Override
             public void visitGoto(Goto instruction) {
-                emitInstruction(insts.GotoInstruction(getCurrentInstructionIndex()));
+                emitInstruction(insts.GotoInstruction(getCurrentInstructionIndex(), -1));
             }
 
             /**

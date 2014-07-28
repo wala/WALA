@@ -309,7 +309,38 @@ public abstract class TestSimplePageCallGraphShape extends TestJSCallGraphShape 
     CAstCallGraphUtil.dumpCG(builder.getPointerAnalysis(), CG);
     verifyGraphAssertions(CG, assertionsForWindowOnload);
   }
-  
+
+  public static final Object[][] assertionsForSkeleton = new Object[][] {
+    new Object[] { ROOT, new String[] { "skeleton.html" } },
+    new Object[] { "skeleton.html", new String[] { "skeleton.html/__WINDOW_MAIN__" } },
+    new Object[] { "skeleton.html/__WINDOW_MAIN__", new String[] { "skeleton.html/__WINDOW_MAIN__/dollar" } },
+    new Object[] { "skeleton.html/__WINDOW_MAIN__/dollar", new String[] { "skeleton.html/__WINDOW_MAIN__/bad_guy" } },
+    new Object[] { "skeleton.html/__WINDOW_MAIN__/bad_guy", new String[] { "skeleton.html/__WINDOW_MAIN__/dollar" } },
+  };
+
+  @Test public void testSkeleton() throws IOException, IllegalArgumentException, CancelException, WalaException {
+    URL url = getClass().getClassLoader().getResource("pages/skeleton.html");
+    CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
+    verifyGraphAssertions(CG, assertionsForSkeleton);
+  }
+
+  public static final Object[][] assertionsForSkeleton2 = new Object[][] {
+    new Object[] { ROOT, new String[] { "skeleton2.html" } },
+    new Object[] { "skeleton2.html", new String[] { "skeleton2.html/__WINDOW_MAIN__" } },
+    new Object[] { "skeleton2.html/__WINDOW_MAIN__", new String[] { "skeleton2.html/__WINDOW_MAIN__/dollar" } },
+    new Object[] { "skeleton2.html/__WINDOW_MAIN__/dollar", new String[] { "ctor:skeleton2.html/__WINDOW_MAIN__/dollar_init" } },
+    new Object[] { "ctor:skeleton2.html/__WINDOW_MAIN__/dollar_init", new String[] { "skeleton2.html/__WINDOW_MAIN__/dollar_init" } },
+    new Object[] { "skeleton2.html/__WINDOW_MAIN__/dollar_init", new String[] { "skeleton2.html/__WINDOW_MAIN__/bad_guy" } },
+    new Object[] { "skeleton2.html/__WINDOW_MAIN__/bad_guy", new String[] { "skeleton2.html/__WINDOW_MAIN__/dollar" } },
+  };
+
+  @Test public void testSkeleton2() throws IOException, IllegalArgumentException, CancelException, WalaException {
+    URL url = getClass().getClassLoader().getResource("pages/skeleton2.html");
+    CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
+    System.err.println(CG);
+    verifyGraphAssertions(CG, assertionsForSkeleton2);
+  }
+
   /*
   @Test public void testJQuery() throws IOException, IllegalArgumentException, CancelException, WalaException {
     URL url = getClass().getClassLoader().getResource("pages/jquery.html");

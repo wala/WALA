@@ -770,7 +770,7 @@ public class ClassHierarchy implements IClassHierarchy {
       }
       IClass aa = a;
       while (aa != null) {
-        if (superB.contains(aa)) {
+        if (b.equals(aa) || superB.contains(aa)) {
           return aa;
         }
         aa = aa.getSuperclass();

@@ -256,11 +256,10 @@ public class PDFSlice {
   /**
    * @return a NodeDecorator that decorates statements in a slice for a dot-ted representation
    */
-  public static NodeDecorator makeNodeDecorator() {
-    return new NodeDecorator() {
+  public static NodeDecorator<Statement> makeNodeDecorator() {
+    return new NodeDecorator<Statement>() {
       @Override
-      public String getLabel(Object o) throws WalaException {
-        Statement s = (Statement) o;
+      public String getLabel(Statement s) throws WalaException {
         switch (s.getKind()) {
         case HEAP_PARAM_CALLEE:
         case HEAP_PARAM_CALLER:

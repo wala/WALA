@@ -207,7 +207,7 @@ public class PolyglotIdentityMapper implements IdentityMapper<Type, CodeInstance
   }
 
   public String anonLocalTypeToTypeID(ClassType ctype) {
-    CodeInstance procInstance= (CodeInstance) fLocalTypeMap.get(ctype);
+    CodeInstance procInstance= fLocalTypeMap.get(ctype);
 
     String outerTypeID= typeToTypeID(ctype.outer());
     String shortName= (ctype.isAnonymous()) ? PolyglotJava2CAstTranslator.anonTypeName(ctype) : ctype.fullName().name().toString();

@@ -11,7 +11,6 @@
 package com.ibm.wala.ipa.summaries;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Reader;
 import java.util.Collection;
 import java.util.HashMap;

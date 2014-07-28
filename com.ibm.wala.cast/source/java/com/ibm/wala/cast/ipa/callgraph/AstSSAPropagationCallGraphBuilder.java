@@ -44,20 +44,24 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.AbstractFieldPointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysisImpl;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PointsToMap;
 import com.ibm.wala.ipa.callgraph.propagation.PointsToSetVariable;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.propagation.PropagationSystem;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultSSAInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.modref.ArrayLengthKey;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAPutInstruction;
@@ -107,6 +111,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
   //
   // /////////////////////////////////////////////////////////////////////////
 
+  
   protected AstSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       PointerKeyFactory pointerKeyFactory) {
     super(cha, options, cache, pointerKeyFactory);
@@ -132,12 +137,50 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
   //
   // /////////////////////////////////////////////////////////////////////////
 
+  @Override
+  protected PropagationSystem makeSystem(AnalysisOptions options) {
+    return new PropagationSystem(callGraph, pointerKeyFactory, instanceKeyFactory) {
+      @Override
+      public PointerAnalysis makePointerAnalysis(PropagationCallGraphBuilder builder) {
+        return new AstPointerAnalysisImpl(builder, cg, pointsToMap, instanceKeys, pointerKeyFactory, instanceKeyFactory);
+      }
+    };
+  }
+
   public static class AstPointerAnalysisImpl extends PointerAnalysisImpl {
 
     public AstPointerAnalysisImpl(PropagationCallGraphBuilder builder, CallGraph cg, PointsToMap pointsToMap,
         MutableMapping<InstanceKey> instanceKeys, PointerKeyFactory pointerKeys, InstanceKeyFactory iKeyFactory) {
       super(builder, cg, pointsToMap, instanceKeys, pointerKeys, iKeyFactory);
     }
+
+    @Override
+    protected HeapModel makeHeapModel() {
+      class Model extends HModel implements AstHeapModel {
+        @Override
+        public PointerKey getPointerKeyForArrayLength(InstanceKey I) {
+          return new ArrayLengthKey(I);
+        }
+
+        @Override
+        public Iterator<PointerKey> getPointerKeysForReflectedFieldRead(InstanceKey I, InstanceKey F) {
+          return ((AstPointerKeyFactory)pointerKeys).getPointerKeysForReflectedFieldRead(I, F);
+        }
+
+        @Override
+        public Iterator<PointerKey> getPointerKeysForReflectedFieldWrite(InstanceKey I, InstanceKey F) {
+          return ((AstPointerKeyFactory)pointerKeys).getPointerKeysForReflectedFieldWrite(I, F);
+        }
+
+        @Override
+        public PointerKey getPointerKeyForObjectCatalog(InstanceKey I) {
+          return ((AstPointerKeyFactory)pointerKeys).getPointerKeyForObjectCatalog(I);
+        }
+      }
+      
+      return new Model();
+    }
+
 
     @Override
     protected ImplicitPointsToSetVisitor makeImplicitPointsToVisitor(LocalPointerKey lpk) {

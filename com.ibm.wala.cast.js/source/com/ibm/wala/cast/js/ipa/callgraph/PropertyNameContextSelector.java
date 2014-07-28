@@ -219,6 +219,9 @@ public class PropertyNameContextSelector implements ContextSelector {
         // use a MarkerForInContext to clone based on the InstanceKey used in the caller context
         // TODO the cast below isn't safe; fix
         InstanceKey callerIk = ((PropNameContext)caller.getContext()).getInstanceKey();
+        if (caller.toString().contains("_mixin_for_each_fn")) {
+          System.err.println(callerIk + "@" + site);
+        }
         return new MarkerForInContext(baseContext, callerIk);
       } else {
         return baseContext;

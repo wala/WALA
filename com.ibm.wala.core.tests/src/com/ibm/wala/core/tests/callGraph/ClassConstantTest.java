@@ -59,7 +59,7 @@ public class ClassConstantTest extends WalaTestCase {
     MethodReference mainMethodRef = MethodReference.findOrCreate(mainClassRef, "main", "([Ljava/lang/String;)V");
     Set<CGNode> mainMethodNodes = cg.getNodes(mainMethodRef);
     Assert.assertFalse(mainMethodNodes.isEmpty());
-    CGNode mainMethodNode = (CGNode) mainMethodNodes.iterator().next();
+    CGNode mainMethodNode = mainMethodNodes.iterator().next();
     // Trace.println("main IR:");
     // Trace.println(mainMethodNode.getIR());
 

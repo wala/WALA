@@ -14,18 +14,12 @@ package com.ibm.wala.ssa;
  * Unconditional branch instruction for SSA form.
  */
 public class SSAGotoInstruction extends SSAInstruction {
-/** BEGIN Custom change: Add GoTo Instruction */    
-  int targetIndex = -1;
-/** END Custom change: Add GoTo Instruction */  
-
-  public SSAGotoInstruction(int index) {
-    super(index);
-  }
+  private final int target;
 
 /** BEGIN Custom change: Add GoTo Instruction */  
-  public SSAGotoInstruction(int index, int targetIndex) {
-    super(index);
-    this.targetIndex = targetIndex;
+  public SSAGotoInstruction(int iindex, int target) {
+    super(iindex);
+    this.target = target;
   }
 
   /**
@@ -33,18 +27,18 @@ public class SSAGotoInstruction extends SSAInstruction {
    *    the array-index in InducedCFG.getStatements()
    */
   public int getTarget() {
-	return this.targetIndex;
+    return this.target;
   }
 /** END Custom change: Add GoTo Instruction */
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return insts.GotoInstruction(iindex);
+    return insts.GotoInstruction(iindex, target);
   }
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return "goto (from iindex= " + this.iindex + " to iindex = " + this.targetIndex  + ")";
+    return "goto (from iindex= " + this.iindex + " to iindex = " + this.target  + ")";
   }
 
   /**
@@ -62,7 +56,7 @@ public class SSAGotoInstruction extends SSAInstruction {
 
   @Override
   public int hashCode() {
-    return 1409 + 17 * targetIndex;
+    return 1409 + 17 * target;
   }
 
   /*

@@ -23,7 +23,7 @@ public class MutableSharedBitVectorIntSetFactory implements MutableIntSetFactory
    */
   @Override
   public MutableSharedBitVectorIntSet make(int[] set) {
-    SparseIntSet s = (SparseIntSet) sparseFactory.make(set);
+    SparseIntSet s = sparseFactory.make(set);
     return new MutableSharedBitVectorIntSet(s);
   }
 
@@ -32,7 +32,7 @@ public class MutableSharedBitVectorIntSetFactory implements MutableIntSetFactory
    */
   @Override
   public MutableSharedBitVectorIntSet parse(String string) throws NumberFormatException {
-    SparseIntSet s = (SparseIntSet) sparseFactory.parse(string);
+    SparseIntSet s = sparseFactory.parse(string);
     return new MutableSharedBitVectorIntSet(s);
   }
 

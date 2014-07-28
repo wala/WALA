@@ -168,8 +168,8 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
 
     @Override
     public SSAConditionalBranchInstruction ConditionalBranchInstruction(int iindex, IConditionalBranchInstruction.IOperator operator,
-        TypeReference type, int val1, int val2) {
-      return new SSAConditionalBranchInstruction(iindex, operator, type, val1, val2);
+        TypeReference type, int val1, int val2, int target) {
+      return new SSAConditionalBranchInstruction(iindex, operator, type, val1, val2, target);
     }
 
     @Override
@@ -210,10 +210,6 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     }
 
     @Override
-    public SSAGotoInstruction GotoInstruction(int iindex) {
-      return new SSAGotoInstruction(iindex);
-    }
-
 /** BEGIN Custom change: Add GoTo Instruction */    
     public SSAGotoInstruction GotoInstruction(int iindex, int target) {
       return new SSAGotoInstruction(iindex, target);

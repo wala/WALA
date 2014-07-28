@@ -23,7 +23,7 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * 0-1-CFA Call graph builder, optimized to not disambiguate instances of "uninteresting" types
+ * 0-1-CFA Call graph builder, optimized to not disambiguate instances of "uninteresting" types.
  */
 public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
 

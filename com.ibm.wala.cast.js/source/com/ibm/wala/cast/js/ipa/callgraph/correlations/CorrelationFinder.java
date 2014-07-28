@@ -97,22 +97,24 @@ public class CorrelationFinder {
       if(inst instanceof AbstractReflectivePut)
         puts.addFirst((AbstractReflectivePut)inst);
 
-    instrs: for(SSAInstruction inst : Iterator2Iterable.make(ir.iterateNormalInstructions()))
+    SSAInstruction insts[] = ir.getInstructions();
+    instrs: for(int ii = 0; ii < insts.length; ii++) {
+      SSAInstruction inst = insts[ii];
       if(inst instanceof AbstractReflectiveGet) {
         AbstractReflectiveGet get = (AbstractReflectiveGet)inst;
         int index = get.getMemberRef();
-        
+
         if(ir.getSymbolTable().isConstant(index))
           continue;
-        
+
         if(ir.getSymbolTable().isParameter(index))
           continue;
-        
+
         // try to determine what "index" is called at the source level
-        String indexName = getSourceLevelName(astMethod, index);
+        String indexName = getSourceLevelName(ir, ii, index);
         if(indexName == null)
           continue instrs;          
- 
+
         // check that "index" is not accessed in an inner function
         LexicalInformation lexicalInfo = astMethod.lexicalInfo();
         if (lexicalInfo.getExposedNames() != null) {
@@ -121,11 +123,11 @@ public class CorrelationFinder {
               continue instrs;             
           }
         }
-        
+
         // if "index" is a numeric variable, it is not worth extracting
         if(IGNORE_NUMERIC_INDICES && mustBeNumeric(ir, du, index))
           continue instrs;
-         
+
         // set of SSA variables into which the value read by 'get' may flow
         MutableIntSet reached = new BitVectorIntSet();
         reached.add(get.getDef());
@@ -137,6 +139,7 @@ public class CorrelationFinder {
           Integer i = worklist.pop();
           done.add(i);
           for(SSAInstruction inst2 : Iterator2Iterable.make(du.getUses(i))) {
+            int i2 = instrIndices.getMappedIndex(inst2);
             if(inst2 instanceof SSAPhiInstruction) {
               int def = inst2.getDef();
               if(reached.add(def) && !done.contains(def))
@@ -149,7 +152,7 @@ public class CorrelationFinder {
               if(TRACK_ESCAPES) {
                 for(int j=0;j<inst2.getNumberOfUses();++j) {
                   if(inst2.getUse(j) == index) {
-                    summary.addCorrelation(new EscapeCorrelation(get, (SSAAbstractInvokeInstruction)inst2, indexName, getSourceLevelNames(astMethod, reached)));
+                    summary.addCorrelation(new EscapeCorrelation(get, (SSAAbstractInvokeInstruction)inst2, indexName, getSourceLevelNames(ir, i2, reached)));
                     break;
                   }
                 }
@@ -160,22 +163,23 @@ public class CorrelationFinder {
         // now find property writes with the same index whose RHS is in 'reached'
         for(AbstractReflectivePut put : puts)
           if(put.getMemberRef() == index && reached.contains(put.getValue()))
-            summary.addCorrelation(new ReadWriteCorrelation(get, put, indexName, getSourceLevelNames(astMethod, reached)));
+            summary.addCorrelation(new ReadWriteCorrelation(get, put, indexName, getSourceLevelNames(ir, ii, reached)));
       }
-
+    }
+     
     return summary;
   }
 
   // tries to determine which source level variable an SSA variable corresponds to
   // if it does not correspond to any variable, or to more than one, null is returned
-  private static String getSourceLevelName(AstMethod astMethod, int v) {
+  private static String getSourceLevelName(IR ir, int index, int vn) {
     String indexName = null;
-    String[][] sourceNamesForValues = astMethod.debugInfo().getSourceNamesForValues();
+    String[] sourceNamesForValues = ir.getLocalNames(index, vn);
     
-    if(v >= sourceNamesForValues.length)
+    if(sourceNamesForValues == null)
       return null;
     
-    for(String candidateName : sourceNamesForValues[v]) {
+    for(String candidateName : sourceNamesForValues) {
       if(indexName != null) {
         indexName = null;
         break;
@@ -186,10 +190,10 @@ public class CorrelationFinder {
     return indexName;
   }
   
-  private static Set<String> getSourceLevelNames(AstMethod astMethod, IntSet vs) {
+  private static Set<String> getSourceLevelNames(IR ir, int index, IntSet vs) {
     Set<String> res = new HashSet<String>();
     for(IntIterator iter=vs.intIterator();iter.hasNext();) {
-      String name = getSourceLevelName(astMethod, iter.next());
+      String name = getSourceLevelName(ir, index, iter.next());
       if(name != null)
         res.add(name);
     }

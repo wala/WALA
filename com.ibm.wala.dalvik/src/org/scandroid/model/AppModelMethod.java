@@ -141,7 +141,7 @@ public class AppModelMethod {
 	private void createLoopAndSwitch() {
 		int callbackSize = callBacks.size();
 		//start of while loop
-		int loopLabel = methodSummary.getStatements().length;
+		int loopLabel = methodSummary.getNumberOfStatements();
 		int switchValue = nextLocal++;
 		//default label, for now same as case1
 		int defLabel = loopLabel+1;
@@ -153,7 +153,7 @@ public class AppModelMethod {
         }
         
         methodSummary.addStatement(
-        		insts.SwitchInstruction(-1, switchValue, defLabel, casesAndLabels));
+        		insts.SwitchInstruction(methodSummary.getNumberOfStatements(), switchValue, defLabel, casesAndLabels));
         
         for (int i = 0; i < callbackSize; i++) {
         	MethodParams mp = callBacks.get(i);
@@ -171,10 +171,10 @@ public class AppModelMethod {
         	else
         		dispatch = IInvokeInstruction.Dispatch.VIRTUAL;
         	addInvocation(mp.getParams(), 
-        			CallSiteReference.make(methodSummary.getStatements().length, 
+        			CallSiteReference.make(methodSummary.getNumberOfStatements(), 
         					mp.getIMethod().getReference(), 
         					dispatch));        	
-        	methodSummary.addStatement(insts.GotoInstruction(loopLabel));
+        	methodSummary.addStatement(insts.GotoInstruction(methodSummary.getNumberOfStatements(), loopLabel));
         }		
 	}
 	
@@ -320,15 +320,15 @@ public class AppModelMethod {
     
     private SSANewInstruction processAllocation (TypeReference tr, Integer i, boolean isInner) {
         // create the allocation statement and add it to the method summary
-        NewSiteReference ref = NewSiteReference.make(methodSummary.getStatements().length, tr);        
+        NewSiteReference ref = NewSiteReference.make(methodSummary.getNumberOfStatements(), tr);        
         SSANewInstruction a = null;
         
         if (tr.isArrayType()) {
         	int[] sizes = new int[((ArrayClass)cha.lookupClass(tr)).getDimensionality()];
         	Arrays.fill(sizes, getValueNumberForIntConstant(1));
-        	a = insts.NewInstruction(-1, i, ref, sizes);
+        	a = insts.NewInstruction(methodSummary.getNumberOfStatements(), i, ref, sizes);
         } else {
-        	a = insts.NewInstruction(-1, i, ref);
+        	a = insts.NewInstruction(methodSummary.getNumberOfStatements(), i, ref);
         }
         
         methodSummary.addStatement(a);
@@ -343,20 +343,20 @@ public class AppModelMethod {
         	TypeReference e = klass.getReference().getArrayElementType();
         	while (e != null && !e.isPrimitiveType()) {
         		// allocate an instance for the array contents
-        		NewSiteReference n = NewSiteReference.make(methodSummary.getStatements().length, e);
+        		NewSiteReference n = NewSiteReference.make(methodSummary.getNumberOfStatements(), e);
         		int alloc = nextLocal++;
         		SSANewInstruction ni = null;
         		if (e.isArrayType()) {
         			int[] sizes = new int[((ArrayClass)cha.lookupClass(tr)).getDimensionality()];
         			Arrays.fill(sizes, getValueNumberForIntConstant(1));
-        			ni = insts.NewInstruction(-1, alloc, n, sizes);
+        			ni = insts.NewInstruction(methodSummary.getNumberOfStatements(), alloc, n, sizes);
         		} else {
-        			ni = insts.NewInstruction(-1, alloc, n);
+        			ni = insts.NewInstruction(methodSummary.getNumberOfStatements(), alloc, n);
         		}
         		methodSummary.addStatement(ni);
 
         		// emit an astore
-        		SSAArrayStoreInstruction store = insts.ArrayStoreInstruction(-1, arrayRef, getValueNumberForIntConstant(0), alloc, e);
+        		SSAArrayStoreInstruction store = insts.ArrayStoreInstruction(methodSummary.getNumberOfStatements(), arrayRef, getValueNumberForIntConstant(0), alloc, e);
         		methodSummary.addStatement(store);
 
         		e = e.isArrayType() ? e.getArrayElementType() : null;
@@ -414,7 +414,7 @@ public class AppModelMethod {
 				}
 				
 			}
-        	addInvocation(params, CallSiteReference.make(methodSummary.getStatements().length, ctor.getReference(),
+        	addInvocation(params, CallSiteReference.make(methodSummary.getNumberOfStatements(), ctor.getReference(),
         			IInvokeInstruction.Dispatch.SPECIAL));
         }
 
@@ -425,12 +425,12 @@ public class AppModelMethod {
     	if (site == null) {
     		throw new IllegalArgumentException("site is null");
     	}
-    	CallSiteReference newSite = CallSiteReference.make(methodSummary.getStatements().length, site.getDeclaredTarget(), site.getInvocationCode());
+    	CallSiteReference newSite = CallSiteReference.make(methodSummary.getNumberOfStatements(), site.getDeclaredTarget(), site.getInvocationCode());
     	SSAInvokeInstruction s = null;
     	if (newSite.getDeclaredTarget().getReturnType().equals(TypeReference.Void)) {
-    		s = insts.InvokeInstruction(-1, params, nextLocal++, newSite);
+    		s = insts.InvokeInstruction(methodSummary.getNumberOfStatements(), params, nextLocal++, newSite);
     	} else {
-    		s = insts.InvokeInstruction(-1, nextLocal++, params, nextLocal++, newSite);
+    		s = insts.InvokeInstruction(methodSummary.getNumberOfStatements(), nextLocal++, params, nextLocal++, newSite);
     	}
     	methodSummary.addStatement(s);
     	//        	cache.invalidate(this, Everywhere.EVERYWHERE);

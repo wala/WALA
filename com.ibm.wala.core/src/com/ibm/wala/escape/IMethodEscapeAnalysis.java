@@ -14,7 +14,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.WalaException;
 
 /**
- * Basic interface from which to execute and get the results of escape analysis
+ * Basic interface from which to execute and get the results of escape analysis.
  */
 public interface IMethodEscapeAnalysis {
 

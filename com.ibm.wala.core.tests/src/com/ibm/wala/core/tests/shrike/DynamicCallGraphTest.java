@@ -58,11 +58,15 @@ public class DynamicCallGraphTest extends WalaTestCase {
   
   private boolean instrumentedJarBuilt = false;
   
+  private static String instrumentedJarLocation = System.getProperty("java.io.tmpdir") + File.separator + "test.jar";
+
+  private static String cgLocation = System.getProperty("java.io.tmpdir") + File.separator + "cg.txt";
+
   private void instrument() throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException {
     if (! instrumentedJarBuilt) {
       System.err.println("core data jar to instrument: " + testJarLocation);
-      DynamicCallGraph.main(new String[]{testJarLocation, "-o", "/tmp/test.jar"});
-      Assert.assertTrue("expected to create /tmp/test.jar", new File("/tmp/test.jar").exists());   
+      DynamicCallGraph.main(new String[]{testJarLocation, "-o", instrumentedJarLocation});
+      Assert.assertTrue("expected to create /tmp/test.jar", new File(instrumentedJarLocation).exists());   
       instrumentedJarBuilt = true;
     }
   }
@@ -70,14 +74,14 @@ public class DynamicCallGraphTest extends WalaTestCase {
   private void run(String exclusionsFile) throws IOException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
     String shrikeBin = getClasspathEntry("com.ibm.wala.shrike");
     String utilBin = getClasspathEntry("com.ibm.wala.util");
-    URLClassLoader jcl = new URLClassLoader(new URL[]{ new URL("file:///tmp/test.jar"), new URL("file://" + shrikeBin), new URL("file://" + utilBin) }, DynamicCallGraphTest.class.getClassLoader().getParent());
+    URLClassLoader jcl = new URLClassLoader(new URL[]{ new URL("file://" + instrumentedJarLocation), new URL("file://" + shrikeBin), new URL("file://" + utilBin) }, DynamicCallGraphTest.class.getClassLoader().getParent());
  
     Class<?> testClass = jcl.loadClass("dynamicCG.MainClass");
     Assert.assertNotNull(testClass);
     Method testMain = testClass.getDeclaredMethod("main", String[].class);
     Assert.assertNotNull(testMain);
 
-    System.setProperty("dynamicCGFile", "/tmp/cg.txt");
+    System.setProperty("dynamicCGFile", cgLocation);
     if (exclusionsFile != null) {
       File tmpFile = TemporaryFile.urlToFile("exclusions.txt", getClass().getClassLoader().getResource(exclusionsFile));
       System.setProperty("dynamicCGFilter", tmpFile.getCanonicalPath());
