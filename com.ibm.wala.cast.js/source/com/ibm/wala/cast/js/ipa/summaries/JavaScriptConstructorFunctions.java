@@ -290,7 +290,7 @@ public class JavaScriptConstructorFunctions {
     S.getNextProgramCounter();
     
     CallSiteReference cs = new JSCallSiteReference(S.getNextProgramCounter());
-    S.addStatement(insts.Invoke(4, 5, new int[] { 2 }, 6, cs));
+    S.addStatement(insts.Invoke(S.getNumberOfStatements(), 4, 5, new int[] { 2 }, 6, cs));
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 5, false));
     S.getNextProgramCounter();
@@ -330,7 +330,7 @@ public class JavaScriptConstructorFunctions {
     S.getNextProgramCounter();
     
     CallSiteReference cs = new JSCallSiteReference(S.getNextProgramCounter());
-    S.addStatement(insts.Invoke(4, 5, new int[] { 2 }, 6, cs));
+    S.addStatement(insts.Invoke(S.getNumberOfStatements(), 4, 5, new int[] { 2 }, 6, cs));
 
     S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), 5, false));
     S.getNextProgramCounter();
@@ -480,7 +480,7 @@ public class JavaScriptConstructorFunctions {
     args[0] = nargs + 5;
     for (int i = 0; i < nargs; i++)
       args[i + 1] = i + 2;
-    S.addStatement(insts.Invoke(1, nargs + 7, args, nargs + 8, cs));
+    S.addStatement(insts.Invoke(S.getNumberOfStatements(), 1, nargs + 7, args, nargs + 8, cs));
     int pc = S.getNextProgramCounter();
 
     S.addConstant(nargs + 9, null);

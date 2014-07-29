@@ -110,9 +110,11 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
     // function being invoked is in v2
     int resultVal = curValNum++;
     int excVal = curValNum++;
-    S.addStatement(insts.Invoke(S.getNextProgramCounter(), 2, resultVal, paramsToPassToInvoked, excVal, cs));
+    S.addStatement(insts.Invoke(S.getNumberOfStatements(), 2, resultVal, paramsToPassToInvoked, excVal, cs));
+    S.getNextProgramCounter();
 
-    S.addStatement(insts.ReturnInstruction(S.getNextProgramCounter(), resultVal, false));
+    S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), resultVal, false));
+    S.getNextProgramCounter();
 
     JavaScriptSummarizedFunction t = new JavaScriptSummarizedFunction(ref, S, declaringClass);
     return t.makeIR(node.getContext(), null);
@@ -123,10 +125,12 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
     // read an arbitrary property name via EachElementGet
     int curValNum = nargs + 2;
     int eachElementGetResult = curValNum++;
-    S.addStatement(insts.EachElementGetInstruction(S.getNextProgramCounter(), eachElementGetResult, 4));
+    S.addStatement(insts.EachElementGetInstruction(S.getNumberOfStatements(), eachElementGetResult, 4));
+    S.getNextProgramCounter();
     // read value from the arbitrary property name
     int propertyReadResult = curValNum++;
-    S.addStatement(insts.PropertyRead(S.getNextProgramCounter(), propertyReadResult, 4, eachElementGetResult));
+    S.addStatement(insts.PropertyRead(S.getNumberOfStatements(), propertyReadResult, 4, eachElementGetResult));
+    S.getNextProgramCounter();
     for (int i = 1; i < paramsToPassToInvoked.length; i++) {
       paramsToPassToInvoked[i] = propertyReadResult;
     }
@@ -146,7 +150,8 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
       S.addConstant(constVN, new ConstantValue(i-1));
       int propertyReadResult = curValNum++;
       // 4 is position of arguments array
-      S.addStatement(insts.PropertyRead(S.getNextProgramCounter(), propertyReadResult, 4, constVN));
+      S.addStatement(insts.PropertyRead(S.getNumberOfStatements(), propertyReadResult, 4, constVN));
+      S.getNextProgramCounter();
       paramsToPassToInvoked[i] = propertyReadResult;
     }
     return curValNum;
@@ -168,9 +173,11 @@ public class JavaScriptFunctionApplyContextInterpreter extends AstContextInsensi
     int[] params = new int[1];
     params[0] = 3;
     // function being invoked is in v2
-    S.addStatement(insts.Invoke(S.getNextProgramCounter(), 2, resultVal, params, resultVal + 1, cs));
+    S.addStatement(insts.Invoke(S.getNumberOfStatements(), 2, resultVal, params, resultVal + 1, cs));
+    S.getNextProgramCounter();
 
-    S.addStatement(insts.ReturnInstruction(S.getNextProgramCounter(), resultVal, false));
+    S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), resultVal, false));
+    S.getNextProgramCounter();
 
     JavaScriptSummarizedFunction t = new JavaScriptSummarizedFunction(ref, S, declaringClass);
     return t.makeIR(node.getContext(), null);

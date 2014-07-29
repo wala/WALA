@@ -72,7 +72,7 @@ public class JSCallGraph extends AstCallGraph {
     public SSAAbstractInvokeInstruction addDirectCall(int function, int[] params, CallSiteReference site) {
       CallSiteReference newSite = new JSCallSiteReference(statements.size());
 
-      JavaScriptInvoke s = new JavaScriptInvoke(function, nextLocal++, params, nextLocal++, newSite);
+      JavaScriptInvoke s = new JavaScriptInvoke(statements.size(), function, nextLocal++, params, nextLocal++, newSite);
       statements.add(s);
 
       return s;
