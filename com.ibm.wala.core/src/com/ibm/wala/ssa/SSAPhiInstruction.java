@@ -40,8 +40,8 @@ public class SSAPhiInstruction extends SSAInstruction {
 
   private int[] params;
 
-  public SSAPhiInstruction(int index, int result, int[] params) throws IllegalArgumentException {
-    super(index);
+  public SSAPhiInstruction(int iindex, int result, int[] params) throws IllegalArgumentException {
+    super(iindex);
     if (params == null) {
       throw new IllegalArgumentException("params is null");
     }

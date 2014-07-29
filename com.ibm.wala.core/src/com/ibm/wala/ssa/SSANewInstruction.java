@@ -33,8 +33,8 @@ public abstract class SSANewInstruction extends SSAInstruction {
   /**
    * Create a new instruction to allocate a scalar.
    */
-  protected SSANewInstruction(int index, int result, NewSiteReference site) throws IllegalArgumentException {
-    super(index);
+  protected SSANewInstruction(int iindex, int result, NewSiteReference site) throws IllegalArgumentException {
+    super(iindex);
     if (site == null) {
       throw new IllegalArgumentException("site cannot be null");
     }
@@ -49,8 +49,8 @@ public abstract class SSANewInstruction extends SSAInstruction {
    * @throws IllegalArgumentException if site is null
    * @throws IllegalArgumentException if params is null
    */
-  protected SSANewInstruction(int index, int result, NewSiteReference site, int[] params) {
-    super(index);
+  protected SSANewInstruction(int iindex, int result, NewSiteReference site, int[] params) {
+    super(iindex);
     if (params == null) {
       throw new IllegalArgumentException("params is null");
     }

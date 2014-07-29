@@ -51,8 +51,8 @@ public class SSAAddressOfInstruction extends SSAInstruction {
   /**
    * Use this constructor when taking the address of a local variable.
    */
-  public SSAAddressOfInstruction(int index, int lval, int local, TypeReference pointeeType) {
-    super(index);
+  public SSAAddressOfInstruction(int iindex, int lval, int local, TypeReference pointeeType) {
+    super(iindex);
     if (local <= 0) {
       throw new IllegalArgumentException("Invalid local address load of " + local);
     }
@@ -66,8 +66,8 @@ public class SSAAddressOfInstruction extends SSAInstruction {
   /**
    * Use this constructor when taking the address of an array element.
    */
-  public SSAAddressOfInstruction(int index, int lval, int basePointer, int indexVal, TypeReference pointeeType) {
-    super(index);
+  public SSAAddressOfInstruction(int iindex, int lval, int basePointer, int indexVal, TypeReference pointeeType) {
+    super(iindex);
     this.lval = lval;
     this.addressVal = basePointer;
     this.indexVal = indexVal;
@@ -78,8 +78,8 @@ public class SSAAddressOfInstruction extends SSAInstruction {
   /**
    * Use this constructor when taking the address of a field in an object.
    */
-  public SSAAddressOfInstruction(int index, int lval, int basePointer, FieldReference field, TypeReference pointeeType) {
-    super(index);
+  public SSAAddressOfInstruction(int iindex, int lval, int basePointer, FieldReference field, TypeReference pointeeType) {
+    super(iindex);
     this.lval = lval;
     this.addressVal = basePointer;
     this.indexVal = -1;

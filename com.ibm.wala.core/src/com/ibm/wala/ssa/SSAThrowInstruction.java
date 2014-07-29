@@ -15,8 +15,8 @@ package com.ibm.wala.ssa;
  */
 public abstract class SSAThrowInstruction extends SSAAbstractThrowInstruction {
 
-  protected SSAThrowInstruction(int index, int exception) {
-    super(index, exception);
+  protected SSAThrowInstruction(int iindex, int exception) {
+    super(iindex, exception);
   }
 
   /* 

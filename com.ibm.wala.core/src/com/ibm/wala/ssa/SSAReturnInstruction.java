@@ -23,14 +23,14 @@ public class SSAReturnInstruction extends SSAInstruction {
 
   private final boolean isPrimitive;
 
-  public SSAReturnInstruction(int index, int result, boolean isPrimitive) {
-    super(index);
+  public SSAReturnInstruction(int iindex, int result, boolean isPrimitive) {
+    super(iindex);
     this.result = result;
     this.isPrimitive = isPrimitive;
   }
 
-  public SSAReturnInstruction(int index) {
-    super(index);
+  public SSAReturnInstruction(int iindex) {
+    super(iindex);
     this.result = -1;
     this.isPrimitive = false;
   }

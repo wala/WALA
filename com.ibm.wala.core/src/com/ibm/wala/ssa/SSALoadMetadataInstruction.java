@@ -30,8 +30,8 @@ public abstract class SSALoadMetadataInstruction extends SSAInstruction {
    */
   private final TypeReference entityType;
 
-  protected SSALoadMetadataInstruction(int index, int lval, TypeReference entityType, Object token) {
-    super(index);
+  protected SSALoadMetadataInstruction(int iindex, int lval, TypeReference entityType, Object token) {
+    super(iindex);
     this.lval = lval;
     this.token = token;
     this.entityType = entityType;

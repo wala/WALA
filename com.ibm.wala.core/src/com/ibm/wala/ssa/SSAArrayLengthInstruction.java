@@ -19,8 +19,8 @@ public abstract class SSAArrayLengthInstruction extends SSAInstruction {
 
   private final int arrayref;
 
-  protected SSAArrayLengthInstruction(int index, int result, int arrayref) {
-    super(index);
+  protected SSAArrayLengthInstruction(int iindex, int result, int arrayref) {
+    super(iindex);
     this.result = result;
     this.arrayref = arrayref;
   }

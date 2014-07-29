@@ -26,8 +26,8 @@ public class SSAComparisonInstruction extends SSAInstruction {
 
   /**
    */
-  public SSAComparisonInstruction(int index, IComparisonInstruction.Operator operator, int result, int val1, int val2) {
-    super(index);
+  public SSAComparisonInstruction(int iindex, IComparisonInstruction.Operator operator, int result, int val1, int val2) {
+    super(iindex);
     this.operator = operator;
     this.result = result;
     this.val1 = val1;

@@ -19,8 +19,8 @@ public abstract class SSAAbstractUnaryInstruction extends SSAInstruction {
 
   protected final int val;
 
-  protected SSAAbstractUnaryInstruction(int index, int result, int val) {
-    super(index);
+  protected SSAAbstractUnaryInstruction(int iindex, int result, int val) {
+    super(iindex);
     this.result = result;
     this.val = val;
   }

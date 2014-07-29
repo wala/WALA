@@ -22,8 +22,8 @@ public class SSAInstanceofInstruction extends SSAInstruction {
 
   private final TypeReference checkedType;
 
-  public SSAInstanceofInstruction(int index, int result, int ref, TypeReference checkedType) {
-    super(index);
+  public SSAInstanceofInstruction(int iindex, int result, int ref, TypeReference checkedType) {
+    super(iindex);
     this.result = result;
     this.ref = ref;
     this.checkedType = checkedType;

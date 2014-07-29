@@ -24,8 +24,8 @@ public abstract class SSAConversionInstruction extends SSAInstruction {
 
   private final TypeReference toType;
 
-  protected SSAConversionInstruction(int index, int result, int val, TypeReference fromType, TypeReference toType) {
-    super(index);
+  protected SSAConversionInstruction(int iindex, int result, int val, TypeReference fromType, TypeReference toType) {
+    super(iindex);
     this.result = result;
     this.val = val;
     this.fromType = fromType;

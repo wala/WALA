@@ -16,7 +16,6 @@ package com.ibm.wala.ssa;
 public class SSAGotoInstruction extends SSAInstruction {
   private final int target;
 
-/** BEGIN Custom change: Add GoTo Instruction */  
   public SSAGotoInstruction(int iindex, int target) {
     super(iindex);
     this.target = target;
@@ -29,7 +28,6 @@ public class SSAGotoInstruction extends SSAInstruction {
   public int getTarget() {
     return this.target;
   }
-/** END Custom change: Add GoTo Instruction */
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {

@@ -26,8 +26,8 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
    */
   private final int[] params;
 
-  protected SSAInvokeInstruction(int index, int result, int[] params, int exception, CallSiteReference site) {
-    super(index, exception, site);
+  protected SSAInvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site) {
+    super(iindex, exception, site);
     this.result = result;
     this.params = params;
     assertParamsKosher(result, params, site);
@@ -36,8 +36,8 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
   /**
    * Constructor InvokeInstruction. This case for void return values
    */
-  protected SSAInvokeInstruction(int index, int[] params, int exception, CallSiteReference site) {
-    this(index, -1, params, exception, site);
+  protected SSAInvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site) {
+    this(iindex, -1, params, exception, site);
   }
 
   @Override

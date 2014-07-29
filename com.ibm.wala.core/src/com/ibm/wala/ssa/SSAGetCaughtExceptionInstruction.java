@@ -22,8 +22,8 @@ public class SSAGetCaughtExceptionInstruction extends SSAInstruction {
 
   private final int bbNumber;
 
-  public SSAGetCaughtExceptionInstruction(int index, int bbNumber, int exceptionValueNumber) {
-    super(index);
+  public SSAGetCaughtExceptionInstruction(int iindex, int bbNumber, int exceptionValueNumber) {
+    super(iindex);
     this.exceptionValueNumber = exceptionValueNumber;
     this.bbNumber = bbNumber;
   }

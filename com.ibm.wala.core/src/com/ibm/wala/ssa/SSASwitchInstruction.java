@@ -26,8 +26,8 @@ public class SSASwitchInstruction extends SSAInstruction {
   /**
    * The labels in casesAndLabels represent <em>instruction indices</em> in the IR that each switch case branches to.
    */
-  public SSASwitchInstruction(int index, int val, int defaultLabel, int[] casesAndLabels) {
-    super(index);
+  public SSASwitchInstruction(int iindex, int val, int defaultLabel, int[] casesAndLabels) {
+    super(iindex);
     this.val = val;
     this.defaultLabel = defaultLabel;
     this.casesAndLabels = casesAndLabels;

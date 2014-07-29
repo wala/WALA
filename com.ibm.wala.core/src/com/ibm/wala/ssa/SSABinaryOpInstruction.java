@@ -28,8 +28,8 @@ public abstract class SSABinaryOpInstruction extends SSAInstruction {
    */
   private final boolean mayBeInteger;
 
-  protected SSABinaryOpInstruction(int index, IBinaryOpInstruction.IOperator operator, int result, int val1, int val2, boolean mayBeInteger) {
-    super(index);
+  protected SSABinaryOpInstruction(int iindex, IBinaryOpInstruction.IOperator operator, int result, int val1, int val2, boolean mayBeInteger) {
+    super(iindex);
     this.result = result;
     this.val1 = val1;
     this.val2 = val2;

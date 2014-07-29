@@ -19,13 +19,13 @@ import com.ibm.wala.types.FieldReference;
 public abstract class SSAGetInstruction extends SSAFieldAccessInstruction {
   private final int result;
 
-  protected SSAGetInstruction(int index, int result, int ref, FieldReference field) {
-    super(index, field, ref);
+  protected SSAGetInstruction(int iindex, int result, int ref, FieldReference field) {
+    super(iindex, field, ref);
     this.result = result;
   }
 
-  protected SSAGetInstruction(int index, int result, FieldReference field) {
-    super(index, field, -1);
+  protected SSAGetInstruction(int iindex, int result, FieldReference field) {
+    super(iindex, field, -1);
     this.result = result;
   }
 

@@ -19,13 +19,13 @@ public abstract class SSAPutInstruction extends SSAFieldAccessInstruction {
 
   private final int val;
 
-  protected SSAPutInstruction(int index, int ref, int val, FieldReference field) {
-    super(index, field, ref);
+  protected SSAPutInstruction(int iindex, int ref, int val, FieldReference field) {
+    super(iindex, field, ref);
     this.val = val;
   }
 
-  protected SSAPutInstruction(int index, int val, FieldReference field) {
-    super(index, field, -1);
+  protected SSAPutInstruction(int iindex, int val, FieldReference field) {
+    super(iindex, field, -1);
     this.val = val;
   }
 

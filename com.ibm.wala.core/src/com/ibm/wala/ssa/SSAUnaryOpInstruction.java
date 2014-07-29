@@ -21,8 +21,8 @@ public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
 
   private final IUnaryOpInstruction.IOperator operator;
 
-  public SSAUnaryOpInstruction(int index, IUnaryOpInstruction.IOperator operator, int result, int val) {
-    super(index, result, val);
+  public SSAUnaryOpInstruction(int iindex, IUnaryOpInstruction.IOperator operator, int result, int val) {
+    super(iindex, result, val);
     this.operator = operator;
   }
 
