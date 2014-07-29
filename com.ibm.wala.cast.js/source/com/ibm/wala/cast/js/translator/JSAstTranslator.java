@@ -109,7 +109,6 @@ public class JSAstTranslator extends AstTranslator {
   private void addDefinedCheck(CAstNode n, WalkContext context, int readVn) {
     context.cfg().addPreNode(n);
     context.cfg().addInstruction(((JSInstructionFactory)insts).CheckReference(context.cfg().getCurrentInstruction(), readVn));
-    
     CAstNode target = context.getControlFlow().getTarget(n, JavaScriptTypes.ReferenceError);
     if (target != null) {
       context.cfg().addPreEdge(n, target, true);
