@@ -36,9 +36,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
@@ -53,8 +50,8 @@ import com.ibm.wala.util.strings.Atom;
  *  @since   2013-09-19
  */
 public class SSAValueManager {
-    private static final Logger logger = LoggerFactory.getLogger(SSAValueManager.class);
    
+    private final static boolean DEBUG = false;
     private final boolean AUTOMAKE_NAMES = true;
 
     private enum ValueStatus {
@@ -149,7 +146,7 @@ public class SSAValueManager {
                         nextLocal = param.value.getNumber() + 1;
                     }
 
-                    logger.debug("reSetting SSA {} to allocated", value);
+                    debug("reSetting SSA {} to allocated", value);
                     param.status = ValueStatus.ALLOCATED;
                     param.setInScope = currentScope;
                     param.setBy = setBy;
@@ -167,7 +164,7 @@ public class SSAValueManager {
             } // */
             throw new IllegalStateException("The parameter " + value + " using Key " + value.key + " has already been allocated");
         } else {
-            logger.info("New variable in management: {}", value);
+            info("New variable in management: {}", value);
             final Managed<SSAValue> param = new Managed(value, value.key);
             param.status = ValueStatus.ALLOCATED;
             param.setInScope = currentScope;
@@ -222,21 +219,21 @@ public class SSAValueManager {
                     param.setInScope = currentScope;
                     param.setBy = setBy;
 
-                    logger.info("Setting SSA {} to phi! now {}", value, param.status);
+                    info("Setting SSA {} to phi! now {}", value, param.status);
                     didPhi = true;
                 } else if (param.setInScope == currentScope) {
                     if (param.status == ValueStatus.INVALIDATED) {
-                        logger.info("Closing SSA Value {} in scope {}", param.value, param.setInScope);
+                        info("Closing SSA Value {} in scope {}", param.value, param.setInScope);
                         param.status = ValueStatus.CLOSED;
                     } else if (param.status == ValueStatus.FREE_INVALIDATED) {       // TODO: FREE CLOSED
-                        logger.info("Closing free SSA Value {} in scope {}", param.value, param.setInScope);
+                        info("Closing free SSA Value {} in scope {}", param.value, param.setInScope);
                         param.status = ValueStatus.FREE_CLOSED;
                     }
                 } else if (param.setInScope < currentScope) {
                     //param.status = ValueStatus.INVALIDATED;
                 } else {
                     // TODO: NO! I JUST WANTED TO ADD THEM! *grrr*
-                    //logger.error("MISSING PHI for " 
+                    //error("MISSING PHI for " 
                     //throw new IllegalStateException("You forgot Phis in subordinate blocks");
                 }
             }
@@ -282,7 +279,7 @@ public class SSAValueManager {
             seenTypes.put(key, aParam);
         }
 
-        logger.debug("Returning as Free SSA: {}", param);
+        debug("Returning as Free SSA: {}", param);
         return var;
     }
  
@@ -327,7 +324,7 @@ public class SSAValueManager {
             seenTypes.put(key, aParam);
         }
 
-        logger.debug("Returning as Unallocated SSA: {}", param);
+        debug("Returning as Unallocated SSA: {}", param);
         return var;
     }
 
@@ -369,10 +366,10 @@ public class SSAValueManager {
                     (param.status == ValueStatus.ALLOCATED)) {
                     //assert (param.value.getType().equals(type)) : "Unequal types";
                     if (param.setInScope > currentScope) {
-                        logger.debug("SSA Value {} is out of scope {}", param, currentScope);
+                        debug("SSA Value {} is out of scope {}", param, currentScope);
                         continue;
                     } else if (param.setInScope == currentScope) {
-                        logger.debug("Returning SSA Value {} is {}", param.value, param.status);
+                        debug("Returning SSA Value {} is {}", param.value, param.status);
                         return param.value;
                     } else {
                         if ((candidate == null) || (param.setInScope > candidate.setInScope)) {
@@ -380,7 +377,7 @@ public class SSAValueManager {
                         }
                     }
                 } else {
-                    logger.debug("SSA Value {} is {}", param, param.status);
+                    debug("SSA Value {} is {}", param, param.status);
                 }
             }
         } else {
@@ -388,7 +385,7 @@ public class SSAValueManager {
         }
 
         if (candidate != null ) {
-            logger.debug("Returning inherited (from {}) SSA Value {}", candidate.setInScope, candidate);
+            debug("Returning inherited (from {}) SSA Value {}", candidate.setInScope, candidate);
             return candidate.value;
         } else {
             throw new IllegalStateException("No suitable candidate has been found for Key " + key);
@@ -581,7 +578,7 @@ public class SSAValueManager {
                     } else {
                         param.status = ValueStatus.INVALIDATED;
                     }
-                    logger.info("Invalidated SSA {} for key {}", param, key);
+                    info("Invalidated SSA {} for key {}", param, key);
                 }
             }
         }
@@ -715,6 +712,13 @@ public class SSAValueManager {
 
         return names;
     }
+
+    private static void debug(String s, Object ... args) {
+      if (DEBUG) { System.err.printf(s, args); }
+    }
+    
+    private static void info(String s, Object ... args) {    
+      if (DEBUG) { System.err.printf(s, args); }
+    }
+    
 }
-
-

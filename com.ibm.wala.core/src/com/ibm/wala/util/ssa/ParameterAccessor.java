@@ -31,34 +31,23 @@
  */
 package com.ibm.wala.util.ssa;
 
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.types.TypeName;
-import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.types.Selector;
-import com.ibm.wala.util.PrimitiveAssignability;
-import com.ibm.wala.util.ssa.ClassLookupException;
-import com.ibm.wala.util.ssa.IInstantiator;
-import com.ibm.wala.util.ssa.SSAValue;
-import com.ibm.wala.util.ssa.SSAValue.NamedKey;
-import com.ibm.wala.util.ssa.SSAValue.VariableKey;
-import com.ibm.wala.util.ssa.SSAValue.WeaklyNamedKey;
-
-import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.classLoader.IClassLoader;
-
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Set;
-import java.util.HashSet;
 
-import com.ibm.wala.util.debug.Assertions;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.Selector;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.PrimitiveAssignability;
+import com.ibm.wala.util.ssa.SSAValue.WeaklyNamedKey;
 
 /**
  *  Access parameters without confusion on their numbers.
@@ -80,9 +69,10 @@ import org.slf4j.LoggerFactory;
  *  @author Tobias Blaschke <code@tobiasblaschke.de>
  *  @since  2013-10-19
  */
-public class ParameterAccessor { // extends Param-Manager
-    private static final Logger logger = LoggerFactory.getLogger(ParameterAccessor.class);
+public class ParameterAccessor {
 
+  private final static boolean DEBUG = false;
+  
     /**
      *  The Constructor used to create ParameterAccessor influences the parameter-offset.
      *
@@ -310,7 +300,7 @@ public class ParameterAccessor { // extends Param-Manager
         final boolean hasImplicitThis;
         Set<IMethod> targets = cha.getPossibleTargets(mRef);
         if (targets.size() < 1) {
-            logger.warn("Unable to look up the method {} starting extensive search...", mRef);
+            warn("Unable to look up the method {} starting extensive search...", mRef);
 
             targets = new HashSet<IMethod>();
             final TypeReference mClass = mRef.getDeclaringClass();
@@ -330,11 +320,11 @@ public class ParameterAccessor { // extends Param-Manager
             final IClass lookedUp;
             lookedUp = cha.lookupClass(mClass);
             if (lookedUp != null) {
-                logger.debug("Found using cha.lookupClass()");
+                debug("Found using cha.lookupClass()");
                 testClasses.add(lookedUp);
             }
 
-            logger.info("Searching the classes {} for the method", testClasses);
+            info("Searching the classes {} for the method", testClasses);
 
             for (IClass testClass : testClasses) {
                 final IMethod cand = testClass.getMethod(mSel);
@@ -345,16 +335,16 @@ public class ParameterAccessor { // extends Param-Manager
             }
 
             if (targets.size() < 1) {
-                logger.warn("Still no candidates for the method - continuing with super-classes (TODO)");
+                warn("Still no candidates for the method - continuing with super-classes (TODO)");
 
                 // TODO
                
                 { // DEBUG
                     for (IClass testClass : testClasses) {
-                        logger.info("Known Methods in " + testClass);
+                        info("Known Methods in " + testClass);
                         for (IMethod contained : testClass.getAllMethods()) {
                             System.out.println(contained);
-                            logger.info("\t" + contained);
+                            info("\t" + contained);
                         }
                     }
                 } // */
@@ -377,11 +367,11 @@ public class ParameterAccessor { // extends Param-Manager
         }
 
         if (hasImplicitThis) {
-            logger.info("The method {} has an implicit this pointer", mRef);
+            info("The method {} has an implicit this pointer", mRef);
             this.implicitThis = 1;
             this.descriptorOffset = -1;  
         } else {
-            logger.info("The method {} has no implicit this pointer", mRef);
+            info("The method {} has no implicit this pointer", mRef);
             this.implicitThis = -1;
             this.descriptorOffset = 0;
         }
@@ -407,11 +397,11 @@ public class ParameterAccessor { // extends Param-Manager
         this.numberOfParameters = mRef.getNumberOfParameters();
 
         if (hasImplicitThis) {
-            logger.info("The method {} has an implicit this pointer", mRef);
+            info("The method {} has an implicit this pointer", mRef);
             this.implicitThis = 1;
             this.descriptorOffset = -1;  
         } else {
-            logger.info("The method {} has no implicit this pointer", mRef);
+            info("The method {} has no implicit this pointer", mRef);
             this.implicitThis = -1;
             this.descriptorOffset = 0;
         }
@@ -543,7 +533,7 @@ public class ParameterAccessor { // extends Param-Manager
                     {
                         final int firstInSelector = firstInSelector();
                         for (int i = ((hasImplicitThis())?1:0); i < this.method.getNumberOfParameters(); ++i) {   
-                            logger.debug("all() adding: Parameter({}, {}, {}, {}, {})", (i + 1), this.method.getParameterType(i),
+                            debug("all() adding: Parameter({}, {}, {}, {}, {})", (i + 1), this.method.getParameterType(i),
                                     this.base,  this.method, this.descriptorOffset);
                             all.add(new Parameter(i + 1, null, this.method.getParameterType(i), ParamerterDisposition.PARAM, 
                                     this.base, this.method.getReference(), this.descriptorOffset));
@@ -719,18 +709,18 @@ public class ParameterAccessor { // extends Param-Manager
         switch (this.base) {
             case IMETHOD:
                 if (this.hasImplicitThis()) {   // XXX TODO BUG!
-                    logger.debug("This IMethod {} has an implicit this pointer at {}, so firstInSelector is accessible using SSA-Value {}", this.method, this.implicitThis, (this.implicitThis  + 1));
+                    debug("This IMethod {} has an implicit this pointer at {}, so firstInSelector is accessible using SSA-Value {}", this.method, this.implicitThis, (this.implicitThis  + 1));
                     return this.implicitThis + 1;
                 } else {
-                    logger.debug("This IMethod {} has no implicit this pointer, so firstInSelector is accessible using SSA-Value 1" , this.method);
+                    debug("This IMethod {} has no implicit this pointer, so firstInSelector is accessible using SSA-Value 1" , this.method);
                     return 1;
                 }
             case METHOD_REFERENCE:
                 if (this.hasImplicitThis()) {
-                    logger.debug("This IMethod {} has an implicit this pointer at {}, so firstInSelector is accessible using SSA-Value {}", this.mRef, this.implicitThis, (this.implicitThis  + 1));
+                    debug("This IMethod {} has an implicit this pointer at {}, so firstInSelector is accessible using SSA-Value {}", this.mRef, this.implicitThis, (this.implicitThis  + 1));
                     return this.implicitThis + 1;
                 } else {
-                    logger.debug("This mRef {} has no implicit this pointer, so firstInSelector is accessible using SSA-Value 1", this.mRef);
+                    debug("This mRef {} has no implicit this pointer, so firstInSelector is accessible using SSA-Value 1", this.mRef);
                     return 1;
                 }
             default:
@@ -857,7 +847,7 @@ public class ParameterAccessor { // extends Param-Manager
         if (searchType == null) {
             throw new IllegalStateException("Could not find " + tName + " in any loader!");
         } else {
-            logger.debug("Retrieved {} as {}", tName, searchType);
+            debug("Retrieved {} as {}", tName, searchType);
         }
 
         for (final Parameter cand : all) {
@@ -871,7 +861,7 @@ public class ParameterAccessor { // extends Param-Manager
                 for (final IClassLoader loader: cha.getLoaders()) {
                     final IClass c = loader.lookupClass(cand.getType().getName());
                     if (c != null) {
-                        logger.info("Using alternative for from: {}", cand);
+                        info("Using alternative for from: {}", cand);
                         if (cha.isSubclassOf(c, searchType)) {
                             allExctends.add(cand);
                         }    
@@ -879,7 +869,7 @@ public class ParameterAccessor { // extends Param-Manager
                 }
 
                 // TODO: That's true for base-type too
-                logger.warn("Unable to look up IClass of {}", cand);
+                warn("Unable to look up IClass of {}", cand);
             }
         }
 
@@ -912,7 +902,7 @@ public class ParameterAccessor { // extends Param-Manager
         if (searchType == null) {
             throw new IllegalStateException("Could not find the IClass of " + tRef);
         } else {
-            logger.debug("Reteived {} as {}", tRef, searchType);
+            debug("Reteived {} as {}", tRef, searchType);
         }
 
         for (final Parameter cand : all) {
@@ -924,7 +914,7 @@ public class ParameterAccessor { // extends Param-Manager
                 }
             } else {
                 // TODO: That's true for base-type too
-                logger.warn("Unable to look up IClass of {}", cand);
+                warn("Unable to look up IClass of {}", cand);
             }
         }
 
@@ -971,7 +961,7 @@ public class ParameterAccessor { // extends Param-Manager
         if (searchType == null) {
             throw new IllegalStateException("Could not find " + tName + " in any loader!");
         } else {
-            logger.debug("Reteived {} as {}", tName, searchType);
+            debug("Reteived {} as {}", tName, searchType);
         }
 
         for (final Parameter cand : all) {
@@ -985,7 +975,7 @@ public class ParameterAccessor { // extends Param-Manager
                 for (final IClassLoader loader: cha.getLoaders()) {
                     final IClass c = loader.lookupClass(cand.getType().getName());
                     if (c != null) {
-                        logger.info("Using alternative for from: {}", cand);
+                        info("Using alternative for from: {}", cand);
                         if (cha.isSubclassOf(c, searchType)) {
                             return cand;
                         }    
@@ -993,7 +983,7 @@ public class ParameterAccessor { // extends Param-Manager
                 }
 
                 // TODO: That's true for primitive-type too
-                logger.warn("Unable to look up IClass of {}", cand);
+                warn("Unable to look up IClass of {}", cand);
             }
         }
 
@@ -1026,7 +1016,7 @@ public class ParameterAccessor { // extends Param-Manager
         if (searchType == null) {
             throw new IllegalStateException("Could not find the IClass of " + tRef);
         } else {
-            logger.debug("Reteived {} as {}", tRef, searchType);
+            debug("Reteived {} as {}", tRef, searchType);
         }
 
         for (final Parameter cand : all) {
@@ -1038,7 +1028,7 @@ public class ParameterAccessor { // extends Param-Manager
                 }
             } else {
                 // TODO: That's true for base-type too
-                logger.warn("Unable to look up IClass of {}", cand);
+                warn("Unable to look up IClass of {}", cand);
             }
         }
 
@@ -1070,7 +1060,7 @@ public class ParameterAccessor { // extends Param-Manager
         }
 
         if ((args.get(1) instanceof Parameter) && (((Parameter)args.get(1)).getDisposition() == ParamerterDisposition.THIS)) {
-            logger.warn("The first argument is an implicit this: {} this may be ok however.", args.get(1));
+            warn("The first argument is an implicit this: {} this may be ok however.", args.get(1));
         }
  
         // ****
@@ -1115,7 +1105,7 @@ public class ParameterAccessor { // extends Param-Manager
         }
 
         if ((args.get(1) instanceof Parameter) && (((Parameter)args.get(1)).getDisposition() == ParamerterDisposition.THIS)) {
-            logger.warn("The first argument is an implicit this: {} this may be ok however.", args.get(1));
+            warn("The first argument is an implicit this: {} this may be ok however.", args.get(1));
         }
 
         // ****
@@ -1167,7 +1157,7 @@ public class ParameterAccessor { // extends Param-Manager
         int[] params =  new int[args.size() + 1];
         if ((params.length > 1) && (args.get(1) instanceof Parameter) && (((Parameter)args.get(1)).getDisposition() == 
                 ParamerterDisposition.THIS)) {
-            logger.warn("The first argument is an implicit this: {} this may be ok however.", args.get(1));
+            warn("The first argument is an implicit this: {} this may be ok however.", args.get(1));
         }
  
         // ****
@@ -1218,7 +1208,7 @@ public class ParameterAccessor { // extends Param-Manager
         int[] params =  new int[args.size() + 1];
         if ((params.length > 1) && (args.get(1) instanceof Parameter) && (((Parameter)args.get(1)).getDisposition() == 
                 ParamerterDisposition.THIS)) {
-            logger.warn("The first argument is an implicit this: {} this may be ok however.",  args.get(1));
+            warn("The first argument is an implicit this: {} this may be ok however.",  args.get(1));
         }
 
         // ****
@@ -1289,21 +1279,21 @@ public class ParameterAccessor { // extends Param-Manager
 
         // ****
         // Implementation starts here
-        logger.debug("Collecting parameters for callee {}", ((callee.mRef!=null)?callee.mRef:callee.method));
-        logger.debug("\tThe calling function is {}", ((this.mRef!=null)?this.mRef:this.method));
+        debug("Collecting parameters for callee {}", ((callee.mRef!=null)?callee.mRef:callee.method));
+        debug("\tThe calling function is {}", ((this.mRef!=null)?this.mRef:this.method));
   forEachParameter: 
         for (final Parameter param : calleeParams) {
-            logger.debug("\tSearching candidate for {}", param);
+            debug("\tSearching candidate for {}", param);
             final TypeReference paramType = param.getType();
 
             { // Exact match in overrides
                 for (final SSAValue cand : overrides) {
                     if (cand.getType().getName().equals(paramType.getName())) { // XXX: What about the loader?
                         assigned.add(cand);
-                        logger.debug("\t\tAsigning: {} from the overrides (eq)", cand);
+                        debug("\t\tAsigning: {} from the overrides (eq)", cand);
                         continue forEachParameter;
                     } else {
-                        logger.debug("\t\tSkipping: {} of the overrides (eq)", cand);
+                        debug("\t\tSkipping: {} of the overrides (eq)", cand);
                     }
                 }
             }
@@ -1312,10 +1302,10 @@ public class ParameterAccessor { // extends Param-Manager
                 for (final Parameter cand : thisParams) {
                     if (cand.getType().getName().equals(paramType.getName())) {
                         assigned.add(cand);
-                        logger.debug("\t\tAsigning: {} from callers params (eq)", cand);
+                        debug("\t\tAsigning: {} from callers params (eq)", cand);
                         continue forEachParameter;
                     } else {
-                        logger.debug("\t\tSkipping: {} of the callers params (eq)", cand);
+                        debug("\t\tSkipping: {} of the callers params (eq)", cand);
                     }
                 }
             }
@@ -1324,13 +1314,13 @@ public class ParameterAccessor { // extends Param-Manager
                 for (final SSAValue cand : defaults) {
                     if (cand.getType().getName().equals(paramType.getName())) {
                         assigned.add(cand);
-                        logger.debug("\t\tAsigning: {} from the defaults (eq)", cand);
+                        debug("\t\tAsigning: {} from the defaults (eq)", cand);
                         continue forEachParameter;
                     }
                 }
             }
             
-            logger.debug("\tThe parameter is still not found - try again using an assignability check...");
+            debug("\tThe parameter is still not found - try again using an assignability check...");
 
             // If we got here we need cha
             if (cha != null) {
@@ -1339,7 +1329,7 @@ public class ParameterAccessor { // extends Param-Manager
                         for (final SSAValue cand : overrides) {
                             if (isAssignable(cand, param, cha)) {
                                 assigned.add(cand);
-                                logger.debug("\t\tAsigning: {} from the overrides (ass)", cand);
+                                debug("\t\tAsigning: {} from the overrides (ass)", cand);
                                 continue forEachParameter;
                             }
                         }
@@ -1352,7 +1342,7 @@ public class ParameterAccessor { // extends Param-Manager
                         try {
                             if (isAssignable(cand, param, cha)) {
                                 assigned.add(cand);
-                                logger.debug("\t\tAsigning: {} from the callrs params (ass)", cand);
+                                debug("\t\tAsigning: {} from the callrs params (ass)", cand);
                                 continue forEachParameter;
                             }
                         } catch (ClassLookupException e) {
@@ -1364,14 +1354,14 @@ public class ParameterAccessor { // extends Param-Manager
                     for (final SSAValue cand : defaults) {
                         if (isAssignable(cand, param, cha)) {
                             assigned.add(cand);
-                            logger.debug("\t\tAsigning: {} from the defaults (ass)", cand);
+                            debug("\t\tAsigning: {} from the defaults (ass)", cand);
                             continue forEachParameter;
                         }
                     }
                 }
        
                 if (instantiator != null) {
-                    logger.info("Creating new instance of: {} in call to {}", param, callee);
+                    info("Creating new instance of: {} in call to {}", param, callee);
                     /*{ // DEBUG
                         System.out.println("Creating new instance of: " + param);
                         System.out.println("in connectThrough");
@@ -1382,7 +1372,7 @@ public class ParameterAccessor { // extends Param-Manager
                     } // */
                     final int inst = instantiator.createInstance(param.getType(), instantiatorArgs);
                     if (inst < 0) {
-                        logger.warn("No type was assignable and the instantiator returned an invalidone! Using null for {}", param);
+                        warn("No type was assignable and the instantiator returned an invalidone! Using null for {}", param);
                         assigned.add(null);
                         continue forEachParameter;
                     } else {
@@ -1401,14 +1391,14 @@ public class ParameterAccessor { // extends Param-Manager
                         continue forEachParameter;
                     }
                 } else {
-                    logger.warn("No IInstantiator given and no known parameter assignable - using null");
+                    warn("No IInstantiator given and no known parameter assignable - using null");
                     assigned.add(null);
                     continue forEachParameter;
                 }
             } else {
                 // TODO: CreateInstance Call-Back
                 
-                logger.warn("No type was equal. We can't ask isAssignable since we have no cha!");
+                warn("No type was equal. We can't ask isAssignable since we have no cha!");
                 assigned.add(null);
                 continue forEachParameter;
             } // of (cha != null)
@@ -1461,11 +1451,11 @@ public class ParameterAccessor { // extends Param-Manager
         IClass toClass = cha.lookupClass(to);
 
         if (fromClass == null) {
-            logger.debug("Unable to look up the type of from=" + from + " in the ClassHierarchy - tying other loaders...");
+            debug("Unable to look up the type of from=" + from + " in the ClassHierarchy - tying other loaders...");
             for (final IClassLoader loader: cha.getLoaders()) {
                 final IClass cand = loader.lookupClass(from.getName());
                 if (cand != null) {
-                    logger.debug("Using alternative for from: {}", cand);
+                    debug("Using alternative for from: {}", cand);
                     fromClass = cand;
                     break;
                 }
@@ -1479,18 +1469,18 @@ public class ParameterAccessor { // extends Param-Manager
         }
 
         if (toClass == null) {
-            logger.debug("Unable to look up the type of to=" + to + " in the ClassHierarchy - tying other loaders...");
+            debug("Unable to look up the type of to=" + to + " in the ClassHierarchy - tying other loaders...");
             for (final IClassLoader loader: cha.getLoaders()) {
                 final IClass cand = loader.lookupClass(to.getName());
                 if (cand != null) {
-                    logger.debug("Using alternative for to: {}", cand);
+                    debug("Using alternative for to: {}", cand);
                     toClass = cand;
                     break;
                 }
             }
 
             if (toClass == null) {
-                logger.error("Unable to look up the type of to={} in the ClassHierarchy", to);
+                error("Unable to look up the type of to={} in the ClassHierarchy", to);
                 return false;
                 //throw new ClassLookupException("Unable to look up the type of to=" + to + 
                 //        " in the ClassHierarchy");
@@ -1500,7 +1490,7 @@ public class ParameterAccessor { // extends Param-Manager
         // cha.isAssignableFrom (IClass c1, IClass c2)
         //  Does an expression c1 x := c2 y typecheck? 
          
-        logger.trace("isAssignableFrom({}, {}) = {}", toClass, fromClass, cha.isAssignableFrom(toClass, fromClass));
+        trace("isAssignableFrom({}, {}) = {}", toClass, fromClass, cha.isAssignableFrom(toClass, fromClass));
         return cha.isAssignableFrom(toClass, fromClass);
     }
 
@@ -1523,11 +1513,11 @@ public class ParameterAccessor { // extends Param-Manager
         IClass superClass = cha.lookupClass(superC);
 
         if (subClass == null) {
-            logger.debug("Unable to look up the type of from=" + sub + " in the ClassHierarchy - tying other loaders...");
+            debug("Unable to look up the type of from=" + sub + " in the ClassHierarchy - tying other loaders...");
             for (final IClassLoader loader: cha.getLoaders()) {
                 final IClass cand = loader.lookupClass(sub.getName());
                 if (cand != null) {
-                    logger.debug("Using alternative for from: {}", cand);
+                    debug("Using alternative for from: {}", cand);
                     subClass = cand;
                     break;
                 }
@@ -1540,18 +1530,18 @@ public class ParameterAccessor { // extends Param-Manager
         }
 
         if (superClass == null) {
-            logger.debug("Unable to look up the type of to=" + superC + " in the ClassHierarchy - tying other loaders...");
+            debug("Unable to look up the type of to=" + superC + " in the ClassHierarchy - tying other loaders...");
             for (final IClassLoader loader: cha.getLoaders()) {
                 final IClass cand = loader.lookupClass(superC.getName());
                 if (cand != null) {
-                    logger.debug("Using alternative for to: {}", cand);
+                    debug("Using alternative for to: {}", cand);
                     superClass = cand;
                     break;
                 }
             }
 
             if (superClass == null) {
-                logger.error("Unable to look up the type of to={} in the ClassHierarchy", superC);
+                error("Unable to look up the type of to={} in the ClassHierarchy", superC);
                 throw new ClassLookupException("Unable to look up the type of to=" + superC + 
                         " in the ClassHierarchy");
             }
@@ -1675,5 +1665,25 @@ public class ParameterAccessor { // extends Param-Manager
 
     public String toString() {
         return "<ParamAccessor forMethod=" + this.forMethod() + " />";
+    }
+    
+    private static void debug(String s, Object ... args) {
+      if (DEBUG) { System.err.printf(s, args); }
+    }
+    
+    private static void info(String s, Object ... args) {    
+      if (DEBUG) { System.err.printf(s, args); }
+    }
+    
+    private static void warn(String s, Object ... args) {    
+      if (DEBUG) { System.err.printf(s, args); }
+    }
+    
+    private static void trace(String s, Object ... args) {    
+      if (DEBUG) { System.err.printf(s, args); }
+    }
+    
+    private static void error(String s, Object ... args) {    
+      if (DEBUG) { System.err.printf(s, args); }
     }
 }

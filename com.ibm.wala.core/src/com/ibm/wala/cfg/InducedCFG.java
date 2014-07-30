@@ -42,8 +42,6 @@ import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 /**
  * A {@link ControlFlowGraph} computed from a set of {@link SSAInstruction} instructions.
  * 
@@ -51,8 +49,8 @@ import org.slf4j.LoggerFactory;
  * unsuited for flow-sensitive analysis.  Someday this should be nuked.
  */
 public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBlock> {
-  private static final Logger logger = LoggerFactory.getLogger(InducedCFG.class);
-  private static final boolean DEBUG = logger.isDebugEnabled() || false;
+
+  private static final boolean DEBUG = false;
 
   /**
    * A partial map from Instruction -> BasicBlock
@@ -198,7 +196,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
         }
 
         if (DEBUG) {
-          logger.debug(("Add basic block " + b.getNumber() + " (starting from " + b.getFirstInstructionIndex() +
+          System.err.println(("Add basic block " + b.getNumber() + " (starting from " + b.getFirstInstructionIndex() +
                       ") with instruction " + instructions[i] + " at aIndex " + i));
         }
       }
@@ -247,11 +245,11 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     @Override
     public void visitGoto(SSAGotoInstruction instruction) {
 /** BEGIN Custom change */        
-        logger.debug("Breaking Basic block after instruction " + instruction + " index " + index);
+        System.err.println("Breaking Basic block after instruction " + instruction + " index " + index);
         breakBasicBlock(index);             // Breaks __after__ the GoTo-Instruction
         final int jumpTarget = getIndexFromIIndex(instruction.getTarget());
         assert(instructions[jumpTarget] != null) : "GoTo cant go to null";
-        logger.debug("Breaking Basic block before instruction " + instructions[jumpTarget] + " index " + jumpTarget + " -1");
+        System.err.println("Breaking Basic block before instruction " + instructions[jumpTarget] + " index " + jumpTarget + " -1");
         breakBasicBlock(jumpTarget - 1);    // Breaks __before__ the target
 /** END Custom change */        
     }
@@ -466,8 +464,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
     private void computeOutgoingEdges() {
 
       if (DEBUG) {
-        //System.err.println(("Block " + this + ": computeOutgoingEdges()"));
-        logger.trace("Block " + this + ": computeOutgoingEdges()");
+        System.err.println("Block " + this + ": computeOutgoingEdges()");
       }
 
       SSAInstruction last = getInstructions()[getLastInstructionIndex()];
@@ -475,37 +472,38 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
 
 /** BEGIN Custom change: Add GoTo Instruction */      
       if (last instanceof SSAGotoInstruction) {
-      	  int tgt = ((SSAGotoInstruction)last).getTarget();
+        int tgt = ((SSAGotoInstruction)last).getTarget();
 
-          if (tgt != -1) {
-              int tgtNd = getIndexFromIIndex(tgt);  // index in instructions-array
-              BasicBlock target = null;
+        if (tgt != -1) {
+          int tgtNd = getIndexFromIIndex(tgt);  // index in instructions-array
+          BasicBlock target = null;
 
-              for (Iterator it = InducedCFG.this.iterator(); it.hasNext();) {
-                  final BasicBlock candid = (BasicBlock) it.next();
-                  if (candid.getFirstInstructionIndex() == tgtNd) {
-                      target = candid;
-                      break;
-                  }
-              }
+          for (Iterator it = InducedCFG.this.iterator(); it.hasNext();) {
+            final BasicBlock candid = (BasicBlock) it.next();
+            if (candid.getFirstInstructionIndex() == tgtNd) {
+              target = candid;
+              break;
+            }
+          }
 
-              if (target == null) {
-                logger.error("Error retreiving the Node with IIndex " + tgt + " (in array at " + tgtNd + ")");
-                logger.error("The associated Instruction " + instructions[tgtNd] + " does not start a basic block");
-                assert(false); // It will fail anyway
-              }
+          if (target == null) {
+            System.err.println("Error retreiving the Node with IIndex " + tgt + " (in array at " + tgtNd + ")");
+            System.err.println("The associated Instruction " + instructions[tgtNd] + " does not start a basic block");
+            assert(false); // It will fail anyway
+          }
 
-              logger.info("GOTO: Add additional CF " + last.iindex + " to " + tgt + " is node " + target);
-	      	  addNormalEdgeTo(target);
-		  }
-	  }
+          if (DEBUG) {
+            System.err.println("GOTO: Add additional CF " + last.iindex + " to " + tgt + " is node " + target);
+          }
+          addNormalEdgeTo(target);
+        }
+      }
 /** END Custom change: Add GoTo Instruction */
 
       int normalSuccNodeNumber = getGraphNodeId() + 1;
       if (last.isFallThrough()) {
         if (DEBUG) {
-          //System.err.println(("Add fallthru to " + getNode(getGraphNodeId() + 1)));
-          logger.trace(("Add fallthru to " + getNode(getGraphNodeId() + 1)));
+          System.err.println(("Add fallthru to " + getNode(getGraphNodeId() + 1)));
         }
         addNormalEdgeTo(getNode(normalSuccNodeNumber));
       }
@@ -675,29 +673,31 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
    */
   public int getIndexFromIIndex(int iindex) {
     if (iindex <= 0) {
-        throw new IllegalArgumentException("The iindex may not be negative (is " + iindex + ". Method: " + getMethod() + ", Contenxt: " + this.context);
+      throw new IllegalArgumentException("The iindex may not be negative (is " + iindex + ". Method: " + getMethod() + ", Contenxt: " + this.context);
     }
 
     final SSAInstruction[] instructions = getInstructions();
     if (instructions == null) {
-        throw new IllegalStateException("This CFG contains no Instructions? " + getMethod() + ", Contenxt: " + this.context);
+      throw new IllegalStateException("This CFG contains no Instructions? " + getMethod() + ", Contenxt: " + this.context);
     }
     for (int i=0; i < instructions.length; ++i) {
-        if (instructions[i] == null) {
-            // There are holes in the instructions array ?!
-            // Perhaps from Phi-functions?
-            logger.trace("The " + i +"th instrction is null! Mathod: " + getMethod());
-            if (i > 0) {
-                logger.trace("  Instuction before is: " + instructions[i - 1]);
-            }
-            if (i < instructions.length - 1) {
-                logger.trace("  Instuction after is: " + instructions[i + 1]);
-            }
-            continue;
+      if (instructions[i] == null) {
+        // There are holes in the instructions array ?!
+        // Perhaps from Phi-functions?
+        if (DEBUG) {
+          System.err.println("The " + i +"th instrction is null! Mathod: " + getMethod());
+          if (i > 0) {
+            System.err.println("  Instuction before is: " + instructions[i - 1]);
+          }
+          if (i < instructions.length - 1) {
+            System.err.println("  Instuction after is: " + instructions[i + 1]);
+          }
         }
-        if (instructions[i].iindex == iindex) {
-            return i;
-        }
+        continue;
+      }
+      if (instructions[i].iindex == iindex) {
+        return i;
+      }
     }
 
     throw new IllegalStateException("The searched iindex (" + iindex + ") does not exist! In " + 

@@ -45,9 +45,6 @@ import java.util.Map;
 import java.util.HashMap;
 import com.ibm.wala.util.strings.Atom;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  *  Instructions can be added in a non-ascending manner.
  *
@@ -74,8 +71,8 @@ import org.slf4j.LoggerFactory;
  *  @since      2013-09-08
  */
 public class VolatileMethodSummary {
-    private static final Logger logger = LoggerFactory.getLogger(VolatileMethodSummary.class);
 
+    private static final boolean DEBUG = false;
     private boolean allowReservedPC = false;
     private MethodSummary summary;
     private List<SSAInstruction> instructions = new ArrayList<SSAInstruction>();
@@ -260,7 +257,7 @@ public class VolatileMethodSummary {
 
         boolean didOverwrite = isUsed(statement.iindex);
         while (this.instructions.size() - 1 < statement.iindex) this.instructions.add(null);
-        logger.debug("Setting {} to {}", statement.iindex, statement);
+        if (DEBUG) { System.err.printf("Setting {} to {}", statement.iindex, statement); }
         this.instructions.set(statement.iindex, statement);
         return didOverwrite;
     }
@@ -286,10 +283,10 @@ public class VolatileMethodSummary {
             final SSAInstruction inst = this.instructions.get(i);
 
             if ((inst == null) || (inst == RESERVED)) {
-                logger.warn("No instruction at iindex {}", i);
+              if (DEBUG) { System.err.printf("No instruction at iindex {}", i); }
             } else {
-                logger.debug("Adding @{}: ", inst);
-                this.summary.addStatement(inst);
+              if (DEBUG) { System.err.printf("Adding @{}: ", inst); }
+              this.summary.addStatement(inst);
             }
         }
         

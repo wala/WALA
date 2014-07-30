@@ -66,5 +66,4 @@ Export-Package: .,
  com.ibm.wala.viz.viewer
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Eclipse-BuddyPolicy: registered
-Bundle-ClassPath: lib/slf4j-api-1.7.2.jar,
- .
+Bundle-ClassPath: .

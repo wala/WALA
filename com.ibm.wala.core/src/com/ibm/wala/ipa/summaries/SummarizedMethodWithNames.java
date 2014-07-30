@@ -52,9 +52,6 @@ import com.ibm.wala.types.TypeReference;
 import java.util.Map;
 import com.ibm.wala.util.strings.Atom;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  *  A SummarizedMethod (for synthetic functions) with variable names.
  *
@@ -66,8 +63,9 @@ import org.slf4j.LoggerFactory;
  *  @since      2013-11-25
  */
 public class SummarizedMethodWithNames extends SummarizedMethod {
-    private static final Logger logger = LoggerFactory.getLogger(SummarizedMethodWithNames.class);
 
+    private static final boolean DEBUG = false;
+  
     private final MethodSummary summary;
     private final Map<Integer, Atom> localNames;
 
@@ -78,7 +76,7 @@ public class SummarizedMethodWithNames extends SummarizedMethod {
         this.summary = summary;
         this.localNames = localNames;
 
-        logger.debug("From old MSUM");
+        if (DEBUG) { System.err.println("From old MSUM"); }
     }
     
     public SummarizedMethodWithNames(MethodReference ref, VolatileMethodSummary summary, IClass declaringClass) 
@@ -86,15 +84,9 @@ public class SummarizedMethodWithNames extends SummarizedMethod {
         super(ref, summary.getMethodSummary(), declaringClass);
         this.summary = summary.getMethodSummary();
         this.localNames = ((VolatileMethodSummary)summary).getLocalNames();
-        if (this.localNames.isEmpty()) {
-            logger.warn("Local names are empty for " + ref);
+        if (DEBUG && this.localNames.isEmpty()) {
+          System.err.println("Local names are empty for " + ref);
         }
-
-        /*{ // DEBUG
-            for (final Integer key : this.localNames.keySet()) {
-                logger.debug("Local " + key + " is " + this.localNames.get(key));
-            }
-        } // */
     }
 
     public static class SyntheticIRWithNames extends SyntheticIR {
@@ -112,7 +104,7 @@ public class SummarizedMethodWithNames extends SummarizedMethod {
              */
             @Override
             public String[] getLocalNames(int index, int vn) {
-                logger.debug("IR.getLocalNames({}, {})", index, vn);
+                if (DEBUG) { System.err.printf("IR.getLocalNames({}, {})", index, vn); }
                 if (this.localNames.containsKey(vn)) {
                     return new String[] { this.localNames.get(vn).toString() };
                 } else {
@@ -142,10 +134,10 @@ public class SummarizedMethodWithNames extends SummarizedMethod {
     public String getLocalVariableName(int bcIndex, int localNumber) {
         if (this.localNames.containsKey(localNumber)) {
             String name = this.localNames.get(localNumber).toString();
-            logger.debug("getLocalVariableName(bc={}, no={}) = {}", bcIndex, localNumber, name);
+            if (DEBUG) { System.err.printf("getLocalVariableName(bc={}, no={}) = {}", bcIndex, localNumber, name); }
             return name;
         } else {
-            logger.debug("No name for {}", localNumber);
+            if (DEBUG) { System.err.printf("No name for {}", localNumber); }
             return super.getLocalVariableName(bcIndex, localNumber);
         }
     }

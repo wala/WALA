@@ -35,9 +35,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -70,8 +67,8 @@ import com.ibm.wala.types.TypeReference;
  *  @since  2013-10-20
  */
 public class TypeSafeInstructionFactory {
-    private static final Logger logger = LoggerFactory.getLogger(TypeSafeInstructionFactory.class);
     
+    private final static boolean DEBUG = false;
     protected final JavaInstructionFactory insts;
     protected final IClassHierarchy cha;
 
@@ -100,7 +97,7 @@ public class TypeSafeInstructionFactory {
      */
     public SSAInvokeInstruction InvokeInstruction(final int iindex, final SSAValue result, List<? extends SSAValue> params, 
             final SSAValue exception, final CallSiteReference site) {
-        logger.info("Now: InvokeInstruction to {} using {}", site, params);
+        info("Now: InvokeInstruction to {} using {}", site, params);
         if (iindex < 0) {
             throw new IllegalArgumentException("The iIndex may not be negative");
         }
@@ -212,7 +209,7 @@ public class TypeSafeInstructionFactory {
      */
     public SSAInvokeInstruction InvokeInstruction(final int iindex, List<? extends SSAValue> params, 
             final SSAValue exception, final CallSiteReference site) {
-        logger.info("Now: InvokeInstruction to {} using {}", site, params);
+        info("Now: InvokeInstruction to {} using {}", site, params);
         if (iindex < 0) {
             throw new IllegalArgumentException("The iIndex may not be negative");
         }
@@ -308,7 +305,7 @@ public class TypeSafeInstructionFactory {
      *  @throws IllegalArgumentException if result has no validIn set
      */
     public SSAReturnInstruction ReturnInstruction(final int iindex, final SSAValue result) {
-        logger.info("Now: ReturnInstruction using {}", result);
+        info("Now: ReturnInstruction using {}", result);
         
         if (iindex < 0) {
             throw new IllegalArgumentException("iIndex may not be negative");
@@ -336,7 +333,7 @@ public class TypeSafeInstructionFactory {
      */
     public SSAGetInstruction GetInstruction(final int iindex, final SSAValue targetValue, final SSAValue containingInstance, 
             FieldReference field) {
-        logger.info("Now: Get {} from {} into {}", field, containingInstance, targetValue);
+        info("Now: Get {} from {} into {}", field, containingInstance, targetValue);
         
         if (iindex < 0) {
             throw new IllegalArgumentException("iIndex may not be negative");
@@ -384,7 +381,7 @@ public class TypeSafeInstructionFactory {
      *  @param  field       The description of the field
      */
     public SSAGetInstruction GetInstruction(final int iindex, final SSAValue targetValue, FieldReference field) {
-        logger.info("Now: Get {} into {}", field, targetValue);
+        info("Now: Get {} into {}", field, targetValue);
         
         if (iindex < 0) {
             throw new IllegalArgumentException("iIndex may not be negative");
@@ -419,7 +416,7 @@ public class TypeSafeInstructionFactory {
      */
     public SSAPutInstruction PutInstruction(final int iindex, final SSAValue targetInstance, final SSAValue newValue,
             FieldReference field) {
-        logger.info("Now: Put {} to {}", newValue, field);
+        info("Now: Put {} to {}", newValue, field);
         
         if (iindex < 0) {
             throw new IllegalArgumentException("iIndex may not be negative");
@@ -465,7 +462,7 @@ public class TypeSafeInstructionFactory {
      *  @param  field       The description of the target
      */
     public SSAPutInstruction PutInstruction(final int iindex, final SSAValue newValue, FieldReference field) {
-        logger.info("Now: Put {} to {}", newValue, field);
+        info("Now: Put {} to {}", newValue, field);
         
         if (iindex < 0) {
             throw new IllegalArgumentException("iIndex may not be negative");
@@ -487,7 +484,7 @@ public class TypeSafeInstructionFactory {
 
 
     public SSANewInstruction NewInstruction(int iindex, SSAValue result, NewSiteReference site) {
-        logger.info("Now: New {}", result);
+        info("Now: New {}", result);
 
         if (iindex < 0) {
             throw new IllegalArgumentException("iIndex may not be negative");
@@ -508,7 +505,7 @@ public class TypeSafeInstructionFactory {
 
     public SSANewInstruction NewInstruction(int iindex, SSAValue result, NewSiteReference site, 
             Collection<? extends SSAValue> params) {
-        logger.info("Now: New {}", result);
+        info("Now: New {}", result);
 
         if (iindex < 0) {
             throw new IllegalArgumentException("iIndex may not be negative");
@@ -556,7 +553,7 @@ public class TypeSafeInstructionFactory {
      *  @param  params at least one SSAValue to read from
      */
     public SSAPhiInstruction PhiInstruction(int iindex, SSAValue result, Collection<? extends SSAValue> params) {
-        logger.info("Now: Phi into {} from {}", result, params);
+        info("Now: Phi into {} from {}", result, params);
         
         if (iindex < 0) {
             throw new IllegalArgumentException("iIndex may not be negative");
@@ -714,4 +711,9 @@ public class TypeSafeInstructionFactory {
 
         return insts.ArrayStoreInstruction(iindex, array.getNumber(), index, value.getNumber(), innerType); 
     }
+    
+    private static void info(String s, Object ... args) {    
+      if (DEBUG) { System.err.printf(s, args); }
+    }
+
 }
