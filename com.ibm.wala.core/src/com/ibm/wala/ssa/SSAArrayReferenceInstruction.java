@@ -19,14 +19,14 @@ public abstract class SSAArrayReferenceInstruction extends SSAInstruction {
 
   private final int arrayref;
 
-  private final int idx;
+  private final int index;
 
   private final TypeReference elementType;
 
   SSAArrayReferenceInstruction(int iindex, int arrayref, int index, TypeReference elementType) {
     super(iindex);
     this.arrayref = arrayref;
-    this.idx = index;
+    this.index = index;
     this.elementType = elementType;
     if (elementType == null) {
       throw new IllegalArgumentException("null elementType");
@@ -47,7 +47,7 @@ public abstract class SSAArrayReferenceInstruction extends SSAInstruction {
   @Override
   public int getUse(int j) {
     assert j <= 1;
-    return (j == 0) ? arrayref : idx;
+    return (j == 0) ? arrayref : index;
   }
 
   /**
@@ -61,7 +61,7 @@ public abstract class SSAArrayReferenceInstruction extends SSAInstruction {
    * Return the value number of the index of the array reference.
    */
   public int getIndex() {
-    return idx;
+    return index;
   }
 
   public TypeReference getElementType() {

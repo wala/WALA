@@ -26,6 +26,7 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.EmptyIntSet;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
@@ -118,6 +119,9 @@ public class ContainerContextSelector implements ContextSelector {
       if (isWellKnownStaticFactory(callee.getReference())) {
         return new CallerSiteContext(caller, site);
       } else {
+        if (receiver == null) {
+          Assertions.UNREACHABLE("null receiver for " + site);
+        }
         return new ReceiverInstanceContext(receiver);
       }
     } else {
