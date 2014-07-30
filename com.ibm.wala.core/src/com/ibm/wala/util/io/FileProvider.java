@@ -172,7 +172,6 @@ public class FileProvider {
       return new NestedJarFileModule(parent, entry);
     } else if (url.getProtocol().equals("rsrc")) {
       return new ResourceJarFileModule(url);
-/** BEGIN Custom change: try to load from input stream as fallback */
     } else if (url.getProtocol().equals("file")) {
       String filePath = filePathFromURL(url);
       return new JarFileModule(new JarFile(filePath, false));
@@ -180,7 +179,6 @@ public class FileProvider {
       final URLConnection in = url.openConnection();
       final JarInputStream jarIn = new JarInputStream(in.getInputStream());
       return new JarStreamModule(jarIn);
-/** END Custom change: try to load from input stream as fallback */
     }
   }
 

@@ -128,7 +128,7 @@ public class ModRef {
     });
   }
 
-  public ExtendedHeapModel makeHeapModel(PointerAnalysis pa) {
+  public ExtendedHeapModel makeHeapModel(PointerAnalysis<InstanceKey> pa) {
     return new DelegatingExtendedHeapModel(pa.getHeapModel());
   }
   /**

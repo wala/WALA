@@ -103,7 +103,6 @@ public class OrdinalSet<T> implements Iterable<T> {
     return new OrdinalSet<T>(isect, A.mapping);
   }
 
-/** BEGIN Custom change: equals for OrdinalSets */
   /**
    * @return true if the contents of two sets are equal
    */
@@ -121,7 +120,6 @@ public class OrdinalSet<T> implements Iterable<T> {
     return false;
   }
   
-/** END Custom change: equals for OrdinalSets */
   /**
    * Creates the union of two ordinal sets.
    * 

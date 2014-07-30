@@ -94,7 +94,7 @@ public class JavaScriptModRef extends AstModRef {
 
   protected static class JavaScriptModVisitor extends AstModVisitor implements JSInstructionVisitor {
 
-    protected JavaScriptModVisitor(CGNode n, Collection<PointerKey> result, ExtendedHeapModel h, PointerAnalysis pa) {
+    protected JavaScriptModVisitor(CGNode n, Collection<PointerKey> result, ExtendedHeapModel h, PointerAnalysis<InstanceKey> pa) {
       super(n, result, (AstHeapModel)h, pa);
     }
 

@@ -26,17 +26,16 @@ public abstract class IntSetVariable<T extends IntSetVariable> extends AbstractV
 
   @Override
   public void copyState(T other) {
-    final IntSetVariable<?> isv = (IntSetVariable<?>) other;
     if (V == null) {
-      if (isv.V == null) {
+      if (other.V == null) {
         return;
       } else {
-        V = IntSetUtil.getDefaultIntSetFactory().makeCopy(isv.V);
+        V = IntSetUtil.getDefaultIntSetFactory().makeCopy(other.V);
         return;
       }
     } else {
-      if (isv.V != null) {
-        V.copySet(isv.V);
+      if (other.V != null) {
+        V.copySet(other.V);
       }
     }
   }
@@ -62,14 +61,12 @@ public abstract class IntSetVariable<T extends IntSetVariable> extends AbstractV
    * @return true iff the contents of this variable changes.
    */
   public boolean addAll(T other) {
-    final IntSetVariable<?> isv = (IntSetVariable<?>) other;
-    
     if (V == null) {
       copyState(other);
       return (V != null);
     } else {
-      if (isv.V != null) {
-        boolean result = addAll(isv.V);
+      if (other.V != null) {
+        boolean result = addAll(other.V);
         return result;
       } else {
         return false;
@@ -78,15 +75,13 @@ public abstract class IntSetVariable<T extends IntSetVariable> extends AbstractV
   }
 
   public boolean sameValue(IntSetVariable other) {
-    final IntSetVariable<?> isv = (IntSetVariable<?>) other;
-    
     if (V == null) {
-      return (isv.V == null);
+      return (other.V == null);
     } else {
-      if (isv.V == null) {
+      if (other.V == null) {
         return false;
       } else {
-        return V.sameValue(isv.V);
+        return V.sameValue(other.V);
       }
     }
   }
@@ -159,10 +154,8 @@ public abstract class IntSetVariable<T extends IntSetVariable> extends AbstractV
       }
       return (V != null);
     } else {
-      final IntSetVariable<?> isv = (IntSetVariable<?>) other;
-      
-      if (isv.V != null) {
-        boolean result = addAllInIntersection(isv.V, filter);
+      if (other.V != null) {
+        boolean result = addAllInIntersection(other.V, filter);
         return result;
       } else {
         return false;

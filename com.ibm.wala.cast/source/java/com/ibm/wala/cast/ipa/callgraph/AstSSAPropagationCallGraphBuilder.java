@@ -141,7 +141,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
   protected PropagationSystem makeSystem(AnalysisOptions options) {
     return new PropagationSystem(callGraph, pointerKeyFactory, instanceKeyFactory) {
       @Override
-      public PointerAnalysis makePointerAnalysis(PropagationCallGraphBuilder builder) {
+      public PointerAnalysis<InstanceKey> makePointerAnalysis(PropagationCallGraphBuilder builder) {
         return new AstPointerAnalysisImpl(builder, cg, pointsToMap, instanceKeys, pointerKeyFactory, instanceKeyFactory);
       }
     };
@@ -613,7 +613,6 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
        * {@link AstConstraintVisitor#handleRootLexicalReference(String, String, CGNode)}
        * .
        */
-      @SuppressWarnings("unused")
       private void doLexicalPointerKeys(boolean funargsOnly) {
         for (int i = 0; i < accesses.length; i++) {
           final String name = accesses[i].variableName;

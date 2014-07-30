@@ -1307,6 +1307,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
               SSAConditionalBranchInstruction branch = (SSAConditionalBranchInstruction) inst;
               inst = insts.ConditionalBranchInstruction(x, branch.getOperator(), branch.getType(), branch.getUse(0), branch.getUse(1), target);
             }
+            
             instructions[x++] = inst;
           }
         }
