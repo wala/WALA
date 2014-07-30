@@ -85,7 +85,6 @@ public class FileProvider {
   /**
    * @throws FileNotFoundException
    */
-  @SuppressWarnings("unused")
   public File getFileFromClassLoader(String fileName, ClassLoader loader) throws FileNotFoundException {
     if (loader == null) {
       throw new IllegalArgumentException("null loader");
@@ -143,7 +142,6 @@ public class FileProvider {
    *         if not found: wrapped as a JarFileModule or a NestedJarFileModule
    * @throws IOException
    */
-  @SuppressWarnings("unused")
   public Module getJarFileFromClassLoader(String fileName, ClassLoader loader) throws IOException {
     if (fileName == null) {
       throw new IllegalArgumentException("null fileName");

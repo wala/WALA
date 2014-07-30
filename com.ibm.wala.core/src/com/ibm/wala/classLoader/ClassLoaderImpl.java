@@ -51,7 +51,6 @@ import com.ibm.wala.util.warnings.Warnings;
 /**
  * A class loader that reads class definitions from a set of Modules.
  */
-@SuppressWarnings("unused")
 public class ClassLoaderImpl implements IClassLoader {
   private static final int DEBUG_LEVEL = 0;
 
@@ -310,6 +309,7 @@ public class ClassLoaderImpl implements IClassLoader {
     }
   }
 
+  @SuppressWarnings("unused")
   private Map<String, Object> getAllClassAndSourceFileContents(byte[] jarFileContents, String fileName,
       Map<String, Map<String, Long>> entrySizes) {
     if (jarFileContents == null) {
@@ -538,6 +538,7 @@ public class ClassLoaderImpl implements IClassLoader {
     }
   }
 
+  @SuppressWarnings("unused")
   private Map<String, Map<String, Long>> getEntrySizes(Module module, String name) {
     Map<String, Map<String, Long>> result = HashMapFactory.make();
     Map<String, Long> curFileResult = HashMapFactory.make();

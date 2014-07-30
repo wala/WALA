@@ -32,7 +32,6 @@ public class ChaPanel extends JSplitPane {
 
   private final IClassHierarchy cha;
 
-  @SuppressWarnings("unchecked")
   public ChaPanel(IClassHierarchy cha) {
     this.cha = cha;
   

@@ -48,7 +48,6 @@ public class IrViewer extends JPanel{
   }
   Set<SelectedPcListner> selectedPcListners = new HashSet<SelectedPcListner>();
   
-  @SuppressWarnings("unchecked")
   public IrViewer() {
     super(new BorderLayout());
     irLines = new JList(irLineList);
@@ -73,7 +72,6 @@ public class IrViewer extends JPanel{
     });
   }
   
-  @SuppressWarnings("unchecked")
   public void setIR(IR ir) {
     this.lineToPosition = HashMapFactory.make();
     this.pcToLine = HashMapFactory.make();

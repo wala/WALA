@@ -142,17 +142,11 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
      */
     protected final SymbolTable symbolTable;
 
-    /**
-     * Def-use information
-     */
-    //protected final DefUse du;
-
     public AllValsStatementVisitor(CGNode node) {
       this.node = node;
       this.ir = node.getIR();
       this.symbolTable = ir.getSymbolTable();
       assert symbolTable != null;
-      //this.du = node.getDU();
     }
 
     /*

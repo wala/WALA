@@ -38,7 +38,6 @@ import com.ibm.wala.util.intset.MutableIntSet;
 /**
  * Interprocedural control-flow graph, constructed lazily.
  */
-@SuppressWarnings({"deprecation", "unused"})
 public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> implements NumberedGraph<BasicBlockInContext<T>> {
 
   private static final int DEBUG_LEVEL = 0;

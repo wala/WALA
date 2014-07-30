@@ -10,10 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.io;
 
-import java.io.IOException;
 import java.net.URI;
-import java.io.InputStream;
-import java.net.URLConnection;
 
 /**
  * Some simple utilities used to manipulate Strings

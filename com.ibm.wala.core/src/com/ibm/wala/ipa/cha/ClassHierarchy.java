@@ -692,7 +692,6 @@ public class ClassHierarchy implements IClassHierarchy {
       this.klass = klass;
     }
 
-    @SuppressWarnings("unused")
     boolean isInterface() {
       return klass.isInterface();
     }

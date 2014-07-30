@@ -100,7 +100,6 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
     }
   }
 
-  @SuppressWarnings("unused")
   private void populate(CGNode n) {
     // we analyze bytecodes to avoid the cost of IR construction, except
     // for synthetic methods, where we must use the synthetic IR
@@ -239,7 +238,6 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
       this.node = node;
     }
 
-    @SuppressWarnings("unused")
     protected int getInstructionIndex() {
       return instructionIndex;
     }

@@ -52,7 +52,6 @@ import com.ibm.wala.util.intset.IntSet;
 /**
  * A dataflow graph implementation specialized for propagation-based pointer analysis
  */
-@SuppressWarnings("deprecation")
 public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> {
 
   private final static boolean DEBUG = false;

@@ -74,7 +74,6 @@ public class FileUtil {
    * We may have to reconsider using nio for this, or apply one of the horrible
    * workarounds listed in the bug report above.
    */
-  @SuppressWarnings("resource")
   public static void copy(String srcFileName, String destFileName) throws IOException {
     if (srcFileName == null) {
       throw new IllegalArgumentException("srcFileName is null");

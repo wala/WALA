@@ -31,7 +31,6 @@ import com.ibm.wala.util.graph.traverse.DFS;
  * Intraprocedural SSA-based live range analysis. This is horribly inefficient.
  * 
  */
-@SuppressWarnings("deprecation")
 public class LocalLiveRangeAnalysis {
 
   /**

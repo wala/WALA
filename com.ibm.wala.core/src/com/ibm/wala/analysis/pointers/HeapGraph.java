@@ -30,12 +30,11 @@ import com.ibm.wala.util.intset.IntSet;
  * 
  * Nodes in the Graph are {@link PointerKey}s and {@link InstanceKey}s.
  * 
- * There is an edge from a PointerKey P to an InstanceKey I iff the PointerAnalysis<InstanceKey> indicates that P may point to I.
+ * There is an edge from a PointerKey P to an InstanceKey I iff the PointerAnalysis indicates that P may point to I.
  * 
  * There is an edge from an InstanceKey I to a PointerKey P iff - P represents a field of an object instance modeled by I, or - P
  * represents the array contents of array instance I.
  */
-@SuppressWarnings("deprecation")
 public abstract class HeapGraph implements NumberedGraph<Object> {
 
   private final PointerAnalysis<InstanceKey> pa;

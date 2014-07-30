@@ -66,7 +66,6 @@ import com.ibm.wala.util.intset.SparseIntSet;
 /**
  * Computation of reaching definitions for heap locations, relying on pointer analysis
  */
-@SuppressWarnings("deprecation")
 public class HeapReachingDefs {
 
   private static final boolean DEBUG = false;

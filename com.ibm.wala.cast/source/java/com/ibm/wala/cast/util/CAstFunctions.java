@@ -19,7 +19,6 @@ import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.graph.traverse.DFSDiscoverTimeIterator;
 
-@SuppressWarnings("deprecation")
 public class CAstFunctions {
 
   public static CAstNode findIf(CAstNode tree, Filter<CAstNode> f) {

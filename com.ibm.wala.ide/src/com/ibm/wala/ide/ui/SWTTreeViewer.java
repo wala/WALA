@@ -37,7 +37,7 @@ import com.ibm.wala.viz.NodeDecorator;
 /**
  * A class to view a WALA {@link Graph} with an SWT {@link TreeViewer}
  */
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings("unchecked")
 public class SWTTreeViewer extends AbstractJFaceRunner {
 
   protected Graph graphInput;

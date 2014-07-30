@@ -877,7 +877,6 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       // }));
     }
 
-    @SuppressWarnings("unused")
     protected boolean addAllToP2Set(Map<PointerKeyAndState, MutableIntSet> p2setMap, PointerKeyAndState pkAndState, IntSet vals,
         IFlowLabel label) {
       final PointerKey pk = pkAndState.getPointerKey();

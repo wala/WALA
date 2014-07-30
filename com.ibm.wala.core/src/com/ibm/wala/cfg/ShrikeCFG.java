@@ -149,7 +149,6 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
     boolean[] r = new boolean[getInstructions().length];
     boolean[] catchers = new boolean[getInstructions().length];
     // we initially start with both the entry and exit block.
-    @SuppressWarnings("unused")
     int blockCount = 2;
 
     // Compute r so r[i] == true iff instruction i begins a basic block.

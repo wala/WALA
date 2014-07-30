@@ -28,7 +28,6 @@ import com.ibm.wala.util.functions.Function;
  * An instance key which represents a unique set for ALL allocation sites of a
  * given type in a CGNode
  */
-@SuppressWarnings("deprecation")
 public class SmushedAllocationSiteInNode extends AbstractTypeInNode {
   public SmushedAllocationSiteInNode(CGNode node, IClass type) {
     super(node, type);

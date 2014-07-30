@@ -116,7 +116,6 @@ public class BasicRTABuilder extends AbstractRTABuilder {
      */
     final private MutableIntSet previousReceivers = IntSetUtil.getDefaultIntSetFactory().make();
 
-    @SuppressWarnings("unused")
     @Override
     public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
       IntSetVariable receivers = rhs;
