@@ -31,25 +31,18 @@
  */
 package com.ibm.wala.ipa.summaries;
 
-import com.ibm.wala.ipa.summaries.SummarizedMethod;
-import com.ibm.wala.ipa.summaries.MethodSummary;
-import com.ibm.wala.ipa.summaries.SyntheticIR;
-import com.ibm.wala.cfg.AbstractCFG;
+import java.util.Map;
 
+import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.SyntheticMethod;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
-import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ssa.IR.SSA2LocalMap;
-import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.ConstantValue;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.types.TypeReference;
-
-import java.util.Map;
 import com.ibm.wala.util.strings.Atom;
 
 /**

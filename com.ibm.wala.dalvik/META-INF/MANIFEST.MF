@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Dalvik
+Bundle-Name: WALA Dalvik Bytecode Frontend
 Bundle-SymbolicName: com.ibm.wala.dalvik
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: dalvik.jar,

@@ -46,7 +46,7 @@ import com.ibm.wala.util.strings.Atom;
 /**
  *  Manage SSA-Variables in synthetic methods.
  *
- *  @author  Tobias Blaschke <code@toiasblaschke.de>
+ *  @author  Tobias Blaschke <code@tobiasblaschke.de>
  *  @since   2013-09-19
  */
 public class SSAValueManager {

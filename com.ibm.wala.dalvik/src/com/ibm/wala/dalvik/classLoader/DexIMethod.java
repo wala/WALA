@@ -3301,7 +3301,6 @@ public class DexIMethod implements IBytecodeMethod {
 	@Override
 	public Collection<CallSiteReference> getCallSites()
 			throws InvalidClassFileException {
-/** BEGIN Custom change: Variable Names in synth. methods */
         Collection<CallSiteReference> empty = Collections.emptySet();
         if (isNative()) {
             return empty;
@@ -3334,7 +3333,6 @@ public class DexIMethod implements IBytecodeMethod {
             }
         }
         return Collections.unmodifiableCollection(csites);
-/** END Custom change: Variable Names in synth. methods */        
 	}
 
 	@Override
