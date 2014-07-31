@@ -65,7 +65,7 @@
 					<constant name="yes" type="int" value="1" />
 					<constant name="no" type="int" value="0" />
 					<constant name="the-answer" type="int" value="42"/>
-					<aastore ref="arg1" index="no" value="the-answer"/>
+					<aastore ref="arg1" index="no" value="the-answer" type="B"/>
 					<return value="yes" />
 					<return value="no" />
 					<new def="x" class="Ljava/io/IOException" />
@@ -100,7 +100,15 @@
 				<method name="write" descriptor="(I)V"></method>
 				<method name="writeBytes" descriptor="([BIIZ)V">
 					<constant name="the-answer" type="byte" value="42"/>
-					<aaload def="foo" ref="arg1" index="the-answer" />
+					<aaload def="foo" ref="arg1" index="the-answer" type="B"/>
+					<putfield class="Ljava/io/FileOutputStream" field="realWorld"
+						fieldType="I" value="foo" ref="arg0" />
+					<new def="x" class="Ljava/io/IOException" />
+					<throw value="x" />
+				</method>
+				<method name="writeBytes" descriptor="([BII)V">
+					<constant name="the-answer" type="byte" value="42"/>
+					<aaload def="foo" ref="arg1" index="the-answer" type="B"/>
 					<putfield class="Ljava/io/FileOutputStream" field="realWorld"
 						fieldType="I" value="foo" ref="arg0" />
 					<new def="x" class="Ljava/io/IOException" />
