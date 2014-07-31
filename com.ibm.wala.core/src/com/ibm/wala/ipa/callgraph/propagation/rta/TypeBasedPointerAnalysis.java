@@ -166,13 +166,11 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
       FilteredPointerKey.TypeFilter filter = i.getTypeFilter();
       assert filter instanceof FilteredPointerKey.SingleClassFilter;
       return ((FilteredPointerKey.SingleClassFilter) filter).getConcreteType();
-/** BEGIN Custom change: search matching return value keys */      
     } else if (key instanceof ExceptionReturnValueKey) {
       return getCallGraph().getClassHierarchy().lookupClass(TypeReference.JavaLangException);
     } else if (key instanceof ReturnValueKey) {
       ReturnValueKey r = (ReturnValueKey) key;
       return getCallGraph().getClassHierarchy().lookupClass(r.getNode().getMethod().getReturnType());
-/** END Custom change: search matching return value keys */
     } else {
       Assertions.UNREACHABLE("inferType " + key.getClass());
       return null;

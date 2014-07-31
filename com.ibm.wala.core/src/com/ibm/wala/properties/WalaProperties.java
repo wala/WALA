@@ -121,7 +121,6 @@ public final class WalaProperties {
     }
     final InputStream propertyStream = loader.getResourceAsStream(fileName);
     if (propertyStream == null) {
-/** BEGIN Custom change: create default properties if no file exists */
       // create default properties
       Properties defprop = new Properties();
       defprop.setProperty(OUTPUT_DIR, "./out");
@@ -133,7 +132,6 @@ public final class WalaProperties {
       defprop.setProperty(J2SE_DIR, j2selib);
       
       return defprop;
-/** END Custom change: create default properties if no file exists */
     }
     Properties result = new Properties();
     result.load(propertyStream);
@@ -145,7 +143,6 @@ public final class WalaProperties {
     return result;
   }
 
-/** BEGIN Custom change: create default properties if no file exists */
   public static String guessJavaLib() throws IOException {
     final Properties p = System.getProperties();
     final String home = System.getProperty("java.home");
@@ -175,7 +172,6 @@ public final class WalaProperties {
     }
   }
   
-/** END Custom change: create default properties if no file exists */
   /**
    * @deprecated because when running under eclipse, there may be no such directory.
    * Need to handle that case.

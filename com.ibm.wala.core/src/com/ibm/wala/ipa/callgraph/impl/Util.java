@@ -106,12 +106,9 @@ public class Util {
     InputStream s = cl.getResourceAsStream(xmlFile);
     XMLMethodSummaryReader summary = new XMLMethodSummaryReader(s, scope);
 
-/** BEGIN Custom change: load xml from file system as a fallback */
     addBypassLogic(options, scope, cl, summary, cha);
-/** END Custom change: load xml from file system as a fallback */
   }
 
-/** BEGIN Custom change: load xml from file system as a fallback */
   public static void addBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, XMLMethodSummaryReader summary,
       IClassHierarchy cha) throws IllegalArgumentException {
     if (scope == null) {
@@ -136,7 +133,6 @@ public class Util {
     options.setSelector(cs);
   }
   
-/** END Custom change: load xml from file system as a fallback */
   /**
    * @param scope
    * @param cha
@@ -538,12 +534,9 @@ public class Util {
   }
 
   public static void addDefaultBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, IClassHierarchy cha) {
-/** BEGIN Custom change: load xml from file system as a fallback */
     if (nativeSpec == null) return;
     if (cl.getResourceAsStream(nativeSpec) != null) {
-/** END Custom change: load xml from file system as fallback */
       addBypassLogic(options, scope, cl, nativeSpec, cha);
-/** BEGIN Custom change: load xml from file system as a fallback */
     } else {
       // try to load from filesystem
       try {
@@ -555,7 +548,6 @@ public class Util {
         e.printStackTrace();
       }
     }
-/** END Custom change: load xml from file system as fallback */
   }
 
 }

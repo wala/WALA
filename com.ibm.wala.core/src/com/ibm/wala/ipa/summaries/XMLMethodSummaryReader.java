@@ -117,9 +117,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
   private final static int E_CONSTANT = 14;
 
-  /** BEGIN Custom change: Support also array-load instructions */
   private final static int E_AALOAD = 15;
-  /** END Custom change: Support also array-load instructions */
 
   private final static Map<String, Integer> elementMap = HashMapFactory.make(14);
   static {
@@ -138,9 +136,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     elementMap.put("getfield", new Integer(E_GETFIELD));
     elementMap.put("throw", new Integer(E_ATHROW));
     elementMap.put("constant", new Integer(E_CONSTANT));
-    /** BEGIN Custom change: Support also array-load instructions */
     elementMap.put("aaload", new Integer(E_AALOAD));
-    /** END Custom change: Support also array-load instructions */
   }
 
   //
@@ -336,11 +332,9 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       case E_AASTORE:
         processAastore(atts);
         break;
-      /** BEGIN Custom change: Support also array-load instructions */
       case E_AALOAD:
         processAaload(atts);
         break;
-      /** END Custom change: Support also array-load instructions */
       case E_RETURN:
         processReturn(atts);
         break;
@@ -400,9 +394,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       case E_POISON:
       case E_PUTSTATIC:
       case E_PUTFIELD:
-        /** BEGIN Custom change: Support also array-load instructions */
       case E_AALOAD:
-        /** END Custom change: Support also array-load instructions */
       case E_AASTORE:
       case E_ATHROW:
       case E_SUMMARY_SPEC:
@@ -729,7 +721,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
           TypeReference.JavaLangObject);
       governingMethod.addStatement(S);
     }
-    /** BEGIN Custom change: Support also array-load instructions */
+
     /**
      * Process an element indicating an Aaload
      * 
@@ -754,7 +746,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         Assertions.UNREACHABLE("Must specify index for aaload " + governingMethod);
       }
       
-   // get the value def'fed
+      // get the value def'fed
       String defVar = atts.getValue(A_DEF);
       if (symbolTable.keySet().contains(defVar)) {
         Assertions.UNREACHABLE("Cannot def variable twice: " + defVar + " in " + governingMethod);
@@ -768,7 +760,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
           TypeReference.JavaLangObject);
       governingMethod.addStatement(S);
     }
-    /** END Custom change: Support also array-load instructions */
+
     /**
      * Process an element indicating a return statement.
      * 

@@ -718,9 +718,8 @@ public class StringStuff {
     return dotForm.toString();
   }
 
-/** BEGIN Custom change: quite handy */  
   /**
-   * Rerturn th right potion of the string up to '.' or '/' stripping ';'
+   * Return the right position of the string up to '.' or '/' stripping ';'
    */
   public static String toBasename(String typeName) {
       int start = 0;
@@ -738,5 +737,4 @@ public class StringStuff {
 
       return typeName.substring(start, stop);
   }
-/** END Custom change: quite handy */    
 }

@@ -338,7 +338,6 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     return lv;
   }
 
-/** BEGIN Custom change: advanced synthetic instructions */
   public void addSetInstance(final FieldReference ref, final int baseObject, final int value) {
     statements.add(insts.PutInstruction(statements.size(), baseObject, value, ref));
   }
@@ -356,7 +355,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     statements.add(insts.ArrayLoadInstruction(statements.size(), result, baseObject, indexValue, elementType));
     return result;
   }
-/** END Custom change: advanced synthetic instructions */
+
   public RTAContextInterpreter getInterpreter() {
     return new RTAContextInterpreter() {
 

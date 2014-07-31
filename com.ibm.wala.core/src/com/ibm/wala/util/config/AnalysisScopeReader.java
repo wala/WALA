@@ -100,7 +100,6 @@ public class AnalysisScopeReader {
     return scope;
   }
 
-/** BEGIN Custom change: Fixes in AndroidAnalysisScope */  
   protected static AnalysisScope read(AnalysisScope scope, final URI scopeFileURI, final File exclusionsFile, ClassLoader javaLoader,
       FileProvider fp) throws IOException {
     BufferedReader r = null;
@@ -136,7 +135,6 @@ public class AnalysisScopeReader {
 
     return scope;
   }
-/** END Custom change: Fixes in AndroidAnalysisScope */
 
   public static void processScopeDefLine(AnalysisScope scope, ClassLoader javaLoader, String line) throws IOException {
     if (line == null) {

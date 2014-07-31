@@ -408,7 +408,6 @@ public final class TypeReference implements Serializable {
     return findOrCreate(cl, TypeName.string2TypeName(typeName));
   }
 
-/** BEGIN Custom change: search types */
   public static synchronized TypeReference find(ClassLoaderReference cl, String typeName) {
     return find(cl, TypeName.string2TypeName(typeName));
   }
@@ -419,7 +418,6 @@ public final class TypeReference implements Serializable {
    * @param cl the classloader (defining/initiating depending on usage)
    */
   public static synchronized TypeReference find(ClassLoaderReference cl, TypeName typeName) {
-
     if (cl == null) {
       throw new IllegalArgumentException("null cl");
     }
@@ -442,7 +440,7 @@ public final class TypeReference implements Serializable {
 
     return val;
   }
-/** END Custom change: search types */
+
   public static TypeReference findOrCreateArrayOf(TypeReference t) {
     if (t == null) {
       throw new IllegalArgumentException("t is null");
