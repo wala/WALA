@@ -13,8 +13,6 @@ package com.ibm.wala.cast.js.loader;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -71,10 +69,8 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.LanguageImpl;
-import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SourceModule;
-import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction.IOperator;
 import com.ibm.wala.shrikeBT.IComparisonInstruction.Operator;
@@ -646,15 +642,11 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     }
 
     @Override
-    public TypeReference getMetadataType() {
-      return null;
-    }
-
-    @Override
     public TypeReference getStringType() {
       return JavaScriptTypes.String;
     }
 
+    @SuppressWarnings("static-access")
     @Override
     public PrimitiveType getPrimitive(TypeReference reference) {
       return JSPrimitiveType.getPrimitive(reference);

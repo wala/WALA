@@ -12,11 +12,14 @@ package com.ibm.wala.ipa.callgraph.propagation;
 
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -126,15 +129,30 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
   }
 
   @Override
-  public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
-    IClass klass = cha.lookupClass(type);
-    if (klass == null) {
-      return new ConcreteTypeKey(cha.lookupClass(TypeReference.JavaLangClass));
+  public InstanceKey getInstanceKeyForMetadataObject(Object obj, TypeReference objType) {
+    IClass cls = cha.lookupClass(objType);
+    assert cls != null : objType;
+    if (obj instanceof TypeReference) {
+      IClass klass = cha.lookupClass((TypeReference)obj);
+      if (klass == null) {
+        return new ConcreteTypeKey(cls);
+      } else {
+        // return the IClass itself, wrapped as a constant!
+        return new ConstantKey<IClass>(klass, cls);
+      }
+    } else if (obj instanceof MethodReference) {
+      IMethod m = cha.resolveMethod((MethodReference)obj);
+      if (m == null) {
+        return new ConcreteTypeKey(cls);
+      } else {
+        return new ConstantKey<IMethod>(m, cls);
+      }
+    } else if (obj instanceof Descriptor) {
+      return new ConstantKey<Descriptor>((Descriptor)obj, cls);
     } else {
-      // return the IClass itself, wrapped as a constant!
-      return new ConstantKey<IClass>(klass, cha.lookupClass(TypeReference.JavaLangClass));
+      // other cases
+      throw new Error();
     }
-
   }
 
   /**

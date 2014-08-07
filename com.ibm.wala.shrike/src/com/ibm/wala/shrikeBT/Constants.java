@@ -406,7 +406,7 @@ public interface Constants {
 
   public static final short OP_invokeinterface = 185;
 
-  public static final short OP_xxxunusedxxx = 186;
+  public static final short OP_invokedynamic = 186;
 
   public static final short OP_new = 187;
 
@@ -489,6 +489,8 @@ public interface Constants {
   public static final byte CONSTANT_MethodHandle = 15;
   
   public static final byte CONSTANT_MethodType = 16;
+
+  public static final byte CONSTANT_InvokeDynamic = 18;
 
   public static final byte T_BOOLEAN = 4;
 

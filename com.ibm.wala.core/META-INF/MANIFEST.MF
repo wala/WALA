@@ -12,6 +12,7 @@ Bundle-ActivationPolicy: lazy
 Export-Package: .,
  com.ibm.wala.analysis.pointers,
  com.ibm.wala.analysis.reflection,
+ com.ibm.wala.analysis.reflection.java7,
  com.ibm.wala.analysis.stackMachine,
  com.ibm.wala.analysis.typeInference,
  com.ibm.wala.cfg,

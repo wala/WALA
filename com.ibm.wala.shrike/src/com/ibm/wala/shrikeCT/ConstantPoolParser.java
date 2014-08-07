@@ -10,23 +10,102 @@
  *******************************************************************************/
 package com.ibm.wala.shrikeCT;
 
+import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
+import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
+
 /**
  * A ConstantPoolParser provides read-only access to the constant pool of a class file.
  */
 public final class ConstantPoolParser implements ClassConstants {
+  public static class ReferenceToken {
+    private final String className;
+    private final String elementName;
+    private final String descriptor;
+    
+    public ReferenceToken(String className, String elementName, String descriptor) {
+      super();
+      this.className = className;
+      this.elementName = elementName;
+      this.descriptor = descriptor;
+    }
+  
+    public String getClassName() {
+      return className;
+    }
+
+    public String getElementName() {
+      return elementName;
+    }
+
+    public String getDescriptor() {
+      return descriptor;
+    }
+
+    @Override
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((className == null) ? 0 : className.hashCode());
+      result = prime * result + ((descriptor == null) ? 0 : descriptor.hashCode());
+      result = prime * result + ((elementName == null) ? 0 : elementName.hashCode());
+      return result;
+    }
+  
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      ReferenceToken other = (ReferenceToken) obj;
+      if (className == null) {
+        if (other.className != null)
+          return false;
+      } else if (!className.equals(other.className))
+        return false;
+      if (descriptor == null) {
+        if (other.descriptor != null)
+          return false;
+      } else if (!descriptor.equals(other.descriptor))
+        return false;
+      if (elementName == null) {
+        if (other.elementName != null)
+          return false;
+      } else if (!elementName.equals(other.elementName))
+        return false;
+      return true;
+    }
+  }
+
   final private byte[] bytes;
 
   private int[] cpOffsets;
 
   private String[] cpItems;
 
+  private BootstrapMethodsReader invokeDynamicBootstraps;
+  
   // TODO: use JVM spec limit here?
   private final static int MAX_CP_ITEMS = Integer.MAX_VALUE / 4;
 
+  private BootstrapMethodsReader getBootstrapReader() throws InvalidClassFileException {
+    if (invokeDynamicBootstraps == null) { 
+      ClassReader thisClass = new ClassReader(bytes);
+      AttrIterator attrs = new AttrIterator();
+      thisClass.initClassAttributeIterator(attrs);
+      invokeDynamicBootstraps = new BootstrapMethodsReader(attrs);
+    }
+    
+    return invokeDynamicBootstraps;
+  }
+  
   /**
    * @param bytes the raw class file data
    * @param offset the start of the constant pool data
    * @param itemCount the number of items in the pool
+   * @param classReader 
    */
   public ConstantPoolParser(byte[] bytes, int offset, int itemCount) throws InvalidClassFileException {
     this.bytes = bytes;
@@ -398,6 +477,56 @@ public final class ConstantPoolParser implements ClassConstants {
     return getDouble(offset + 1);
   }
 
+  /**
+   * @return the BootstrapMethodTable index of the bootstrap method for this invokedynamic
+   */
+  public BootstrapMethod getCPDynBootstrap(int i) throws InvalidClassFileException, IllegalArgumentException {
+    if (i < 1 || i >= cpItems.length) {
+      throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
+    }
+    int offset = cpOffsets[i];
+    if (offset == 0 || getByte(offset) != CONSTANT_InvokeDynamic) {
+      throw new IllegalArgumentException("Constant pool item #" + i + " is not an InvokeDynamic");
+    }
+    try {
+      int index = getUShort(offset + 1);
+      return getBootstrapReader().getEntry(index);
+      
+    } catch (IllegalArgumentException ex) {
+      throw new InvalidClassFileException(offset, "Invalid Ref class at constant pool item #" + i + ": " + ex.getMessage());
+    }
+  }
+
+  public String getCPDynName(int i) throws InvalidClassFileException, IllegalArgumentException {
+    if (i < 1 || i >= cpItems.length) {
+      throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
+    }
+    int offset = cpOffsets[i];
+    if (offset == 0 || getByte(offset) != CONSTANT_InvokeDynamic) {
+      throw new IllegalArgumentException("Constant pool item #" + i + " is not an InvokeDynamic");
+    }
+    try {
+      return getCPNATName(getUShort(offset + 3));
+    } catch (IllegalArgumentException ex) {
+      throw new InvalidClassFileException(offset, "Invalid Ref class at constant pool item #" + i + ": " + ex.getMessage());
+    }
+  }
+
+  public String getCPDynType(int i) throws InvalidClassFileException, IllegalArgumentException {
+    if (i < 1 || i >= cpItems.length) {
+      throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
+    }
+    int offset = cpOffsets[i];
+    if (offset == 0 || getByte(offset) != CONSTANT_InvokeDynamic) {
+      throw new IllegalArgumentException("Constant pool item #" + i + " is not an InvokeDynamic");
+    }
+    try {
+      return getCPNATType(getUShort(offset + 3));
+    } catch (IllegalArgumentException ex) {
+      throw new InvalidClassFileException(offset, "Invalid Ref class at constant pool item #" + i + ": " + ex.getMessage());
+    }
+  }
+
   private InvalidClassFileException invalidUtf8(int item, int offset) {
     return new InvalidClassFileException(offset, "Constant pool item #" + item + " starting at " + cpOffsets[item]
         + ", is an invalid Java Utf8 string (byte is " + getByte(offset) + ")");
@@ -493,6 +622,9 @@ public final class ConstantPoolParser implements ClassConstants {
         break;
       case CONSTANT_MethodType:
         itemLen = 2;
+        break;
+      case CONSTANT_InvokeDynamic:
+        itemLen = 4;
         break;
       default:
         throw new InvalidClassFileException(offset, "unknown constant pool entry type" + tag);

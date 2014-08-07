@@ -35,6 +35,7 @@ import com.ibm.wala.shrikeBT.IShiftInstruction;
 import com.ibm.wala.shrikeBT.IStoreInstruction;
 import com.ibm.wala.shrikeBT.ITypeTestInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
+import com.ibm.wala.shrikeBT.InvokeDynamicInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.MonitorInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
@@ -235,7 +236,7 @@ public final class Verifier extends Analyzer {
       String classType = instruction.getClassType();
       String signature = instruction.getMethodSignature();
 
-      String thisClass = instruction.getInvocationCode() == IInvokeInstruction.Dispatch.STATIC ? null : classType;
+      String thisClass = instruction.getInvocationCode() == IInvokeInstruction.Dispatch.STATIC ? null : classType;            
       String[] params = Util.getParamsTypes(thisClass, signature);
 
       for (int i = 0; i < params.length; i++) {

@@ -482,8 +482,8 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     }
 
     @Override
-    public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
-      return iKeyFactory.getInstanceKeyForClassObject(type);
+    public InstanceKey getInstanceKeyForMetadataObject(Object obj, TypeReference objType) {
+      return iKeyFactory.getInstanceKeyForMetadataObject(obj, objType);
     }
 
     /*

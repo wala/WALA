@@ -45,8 +45,9 @@ public interface InstanceKeyFactory {
   public abstract InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type);
 
   /**
-   * @return the instance key that represents the class object of type _type_.
+   * @param objType TODO
+   * @return the instance key that represents the metadata object obj
    */
-  public abstract InstanceKey getInstanceKeyForClassObject(TypeReference type);
+  public abstract InstanceKey getInstanceKeyForMetadataObject(Object obj, TypeReference objType);
 
 }

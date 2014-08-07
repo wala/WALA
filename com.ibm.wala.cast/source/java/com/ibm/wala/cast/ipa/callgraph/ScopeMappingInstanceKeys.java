@@ -180,8 +180,8 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
   }
 
   @Override
-  public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
-    return basic.getInstanceKeyForClassObject(type);
+  public InstanceKey getInstanceKeyForMetadataObject(Object obj, TypeReference objType) {
+    return basic.getInstanceKeyForMetadataObject(obj, objType);
   }
 
   public ScopeMappingInstanceKeys(PropagationCallGraphBuilder builder, InstanceKeyFactory basic) {

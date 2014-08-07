@@ -529,7 +529,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
     @Override
     public void visitLoadMetadata(SSALoadMetadataInstruction instruction) {
-      IClass jlClassKlass = cha.lookupClass(language.getMetadataType());
+      IClass jlClassKlass = cha.lookupClass(instruction.getType());
       assert jlClassKlass != null;
       result = new DeclaredTypeOperator(new ConeType(jlClassKlass));
     }

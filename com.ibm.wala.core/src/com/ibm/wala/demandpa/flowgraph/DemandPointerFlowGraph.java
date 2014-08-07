@@ -486,7 +486,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     public void visitLoadMetadata(SSALoadMetadataInstruction instruction) {
       PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
       assert instruction.getType() == TypeReference.JavaLangClass;
-      InstanceKey iKey = heapModel.getInstanceKeyForClassObject((TypeReference) instruction.getToken());
+      InstanceKey iKey = heapModel.getInstanceKeyForMetadataObject(instruction.getToken(), (TypeReference) instruction.getToken());
 
       g.addNode(iKey);
       g.addNode(def);

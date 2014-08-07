@@ -423,15 +423,18 @@ public class Util {
    */
   public static SSAPropagationCallGraphBuilder makeZeroOneContainerCFABuilder(AnalysisOptions options, AnalysisCache cache,
       IClassHierarchy cha, AnalysisScope scope) {
+    return makeZeroOneContainerCFABuilder(options, cache, cha, scope, null, null);
+  }
+   
+  public static SSAPropagationCallGraphBuilder makeZeroOneContainerCFABuilder(AnalysisOptions options, AnalysisCache cache,
+      IClassHierarchy cha, AnalysisScope scope, ContextSelector appSelector, SSAContextInterpreter appInterpreter) {
 
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
-    ContextSelector appSelector = null;
-    SSAContextInterpreter appInterpreter = null;
-
+ 
     return new ZeroXContainerCFABuilder(cha, options, cache, appSelector, appInterpreter, ZeroXInstanceKeys.ALLOCATIONS | ZeroXInstanceKeys.SMUSH_MANY | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS
         | ZeroXInstanceKeys.SMUSH_STRINGS | ZeroXInstanceKeys.SMUSH_THROWABLES);
   }

@@ -12,6 +12,7 @@ package com.ibm.wala.shrikeBT.shrikeCT;
 
 import com.ibm.wala.shrikeBT.ConstantPoolReader;
 import com.ibm.wala.shrikeBT.Decoder;
+import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.CodeReader;
 import com.ibm.wala.shrikeCT.ConstantPoolParser;
@@ -195,6 +196,33 @@ final public class CTDecoder extends Decoder {
     public String getConstantPoolHandleType(int index) {
       try {
         return cp.getCPHandleType(index);
+      } catch (InvalidClassFileException e) {
+        throw convertToError(e);
+      }
+    }
+
+    @Override
+    public BootstrapMethod getConstantPoolDynamicBootstrap(int index) {
+      try {
+        return cp.getCPDynBootstrap(index);
+      } catch (InvalidClassFileException e) {
+        throw convertToError(e);
+      }
+    }
+
+    @Override
+    public String getConstantPoolDynamicName(int index) {
+      try {
+        return cp.getCPDynName(index);
+      } catch (InvalidClassFileException e) {
+        throw convertToError(e);
+      }
+    }
+
+    @Override
+    public String getConstantPoolDynamicType(int index) {
+      try {
+        return cp.getCPDynType(index);
       } catch (InvalidClassFileException e) {
         throw convertToError(e);
       }

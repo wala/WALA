@@ -639,6 +639,12 @@ public abstract class Decoder implements Constants {
         index += 4;
         break;
       }
+      case OP_invokedynamic: {
+        int m = decodeUShort(index);
+        i = InvokeDynamicInstruction.make(constantPool, m, opcode);
+        index += 4;
+        break;
+      }
       case OP_new:
         i = NewInstruction.make(constantPool.getConstantPoolClassType(decodeUShort(index)), 0);
         index += 2;

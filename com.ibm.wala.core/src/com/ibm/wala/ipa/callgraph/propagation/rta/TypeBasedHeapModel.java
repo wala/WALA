@@ -218,7 +218,7 @@ public class TypeBasedHeapModel implements HeapModel {
   }
 
   @Override
-  public InstanceKey getInstanceKeyForClassObject(TypeReference type) throws UnimplementedError {
+  public InstanceKey getInstanceKeyForMetadataObject(Object obj, TypeReference objType) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

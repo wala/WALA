@@ -58,8 +58,8 @@ class ThisFilteringHeapModel implements HeapModel {
   }
 
   @Override
-  public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
-    return delegate.getInstanceKeyForClassObject(type);
+  public InstanceKey getInstanceKeyForMetadataObject(Object obj, TypeReference objType) {
+    return delegate.getInstanceKeyForMetadataObject(obj, objType);
   }
 
   @Override

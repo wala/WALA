@@ -759,8 +759,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     return instanceKeyFactory.getInstanceKeyForConstant(type, S);
   }
 
-  public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
-    return instanceKeyFactory.getInstanceKeyForClassObject(type);
+  public InstanceKey getInstanceKeyForMetadataObject(Object obj, TypeReference objType) {
+    return instanceKeyFactory.getInstanceKeyForMetadataObject(obj, objType);
   }
 
   public boolean haveAlreadyVisited(CGNode node) {

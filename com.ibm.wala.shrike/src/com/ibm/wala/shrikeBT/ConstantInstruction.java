@@ -10,11 +10,65 @@
  *******************************************************************************/
 package com.ibm.wala.shrikeBT;
 
+import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
+import com.ibm.wala.shrikeCT.ConstantPoolParser;
+
 /**
  * A ConstantInstruction pushes some constant value onto the stack.
  */
 public abstract class ConstantInstruction extends Instruction {
 
+  public static class InvokeDynamicToken {
+    private final BootstrapMethod bootstrapMethod;
+    private final String name;
+    private final String type;
+    
+    public InvokeDynamicToken(BootstrapMethod bootstrapMethod, String name, String type) {
+      this.bootstrapMethod = bootstrapMethod;
+      this.name = name;
+      this.type = type;
+    }
+
+    @Override
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((bootstrapMethod == null) ? 0 : bootstrapMethod.hashCode());
+      result = prime * result + ((name == null) ? 0 : name.hashCode());
+      result = prime * result + ((type == null) ? 0 : type.hashCode());
+      return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      InvokeDynamicToken other = (InvokeDynamicToken) obj;
+      if (bootstrapMethod == null) {
+        if (other.bootstrapMethod != null)
+          return false;
+      } else if (!bootstrapMethod.equals(other.bootstrapMethod))
+        return false;
+      if (name == null) {
+        if (other.name != null)
+          return false;
+      } else if (!name.equals(other.name))
+        return false;
+      if (type == null) {
+        if (other.type != null)
+          return false;
+      } else if (!type.equals(other.type))
+        return false;
+      return true;
+    }
+    
+    
+  }
+  
   public static class ClassToken {
     private final String typeName;
 
@@ -53,56 +107,6 @@ public abstract class ConstantInstruction extends Instruction {
 
   }
 
-  public static class ReferenceToken {
-    private final String className;
-    private final String elementName;
-    private final String descriptor;
-    
-    public ReferenceToken(String className, String elementName, String descriptor) {
-      super();
-      this.className = className;
-      this.elementName = elementName;
-      this.descriptor = descriptor;
-    }
-
-    @Override
-    public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((className == null) ? 0 : className.hashCode());
-      result = prime * result + ((descriptor == null) ? 0 : descriptor.hashCode());
-      result = prime * result + ((elementName == null) ? 0 : elementName.hashCode());
-      return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      if (this == obj)
-        return true;
-      if (obj == null)
-        return false;
-      if (getClass() != obj.getClass())
-        return false;
-      ReferenceToken other = (ReferenceToken) obj;
-      if (className == null) {
-        if (other.className != null)
-          return false;
-      } else if (!className.equals(other.className))
-        return false;
-      if (descriptor == null) {
-        if (other.descriptor != null)
-          return false;
-      } else if (!descriptor.equals(other.descriptor))
-        return false;
-      if (elementName == null) {
-        if (other.elementName != null)
-          return false;
-      } else if (!elementName.equals(other.elementName))
-        return false;
-      return true;
-    }
-  }
-  
   public ConstantInstruction(short opcode) {
     super(opcode);
   }
@@ -631,7 +635,7 @@ public abstract class ConstantInstruction extends Instruction {
         String className = cp.getConstantPoolHandleClassType(getCPIndex());
         String eltName = cp.getConstantPoolHandleName(getCPIndex());
         String eltDesc = cp.getConstantPoolHandleType(getCPIndex());
-        value = new ReferenceToken(className, eltName, eltDesc);
+        value = new ConstantPoolParser.ReferenceToken(className, eltName, eltDesc);
       }
       return value;
     }
@@ -646,7 +650,61 @@ public abstract class ConstantInstruction extends Instruction {
       return index;
     }
   }
-  
+
+  static class ConstInvokeDynamic extends ConstantInstruction {
+    protected Object value;
+    
+    public ConstInvokeDynamic(short opcode, Object value) {
+      super(opcode);
+      this.value = value;
+    }
+
+    @Override
+    public Object getValue() {
+      return value;
+    }
+
+    @Override
+    public String getType() {
+      return null;
+    }
+    
+  }
+
+  static class LazyInvokeDynamic extends ConstMethodHandle {
+    final private ConstantPoolReader cp;
+
+    final private int index;
+
+    LazyInvokeDynamic(short opcode, ConstantPoolReader cp, int index) {
+      super(opcode, null);
+      this.cp = cp;
+      this.index = index;
+    }
+    
+    @Override
+    public Object getValue() {
+      if (value == null) {
+        BootstrapMethod bootstrap = cp.getConstantPoolDynamicBootstrap(index); 
+        String name = cp.getConstantPoolDynamicName(index);
+        String type = cp.getConstantPoolDynamicType(index);
+        value = new InvokeDynamicToken(bootstrap, name, type);
+      }
+      
+      return value;
+    }
+
+    @Override
+    public ConstantPoolReader getLazyConstantPool() {
+      return cp;
+    }
+
+    @Override
+    public int getCPIndex() {
+      return index;
+    }
+  }
+
   /**
    * @return the constant value pushed: an Integer, a Long, a Float, a Double, a String, or null
    */
@@ -729,6 +787,8 @@ public abstract class ConstantInstruction extends Instruction {
       return new LazyMethodHandle(OP_ldc_w, cp, index);
     case CONSTANT_MethodType:
       return new LazyMethodType(OP_ldc_w, cp, index);
+    case CONSTANT_InvokeDynamic:
+      return new LazyInvokeDynamic(OP_ldc_w, cp, index);
     default:
       return null;
     }

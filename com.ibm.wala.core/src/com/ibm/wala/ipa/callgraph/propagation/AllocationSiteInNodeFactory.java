@@ -121,8 +121,8 @@ public class AllocationSiteInNodeFactory implements InstanceKeyFactory {
   }
 
   @Override
-  public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
-    return classBased.getInstanceKeyForClassObject(type);
+  public InstanceKey getInstanceKeyForMetadataObject(Object obj, TypeReference objType) {
+    return classBased.getInstanceKeyForMetadataObject(obj, objType);
   }
 
 }

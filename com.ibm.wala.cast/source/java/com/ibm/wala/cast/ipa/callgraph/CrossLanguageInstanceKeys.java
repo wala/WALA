@@ -79,8 +79,8 @@ public class CrossLanguageInstanceKeys implements InstanceKeyFactory {
   }
 
   @Override
-  public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
-    return getSelector(type).getInstanceKeyForClassObject(type);
+  public InstanceKey getInstanceKeyForMetadataObject(Object obj, TypeReference objType) {
+    return getSelector(objType).getInstanceKeyForMetadataObject(obj, objType);
   }
 
 }

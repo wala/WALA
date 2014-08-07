@@ -612,8 +612,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       return getBuilder().getInstanceKeyForPEI(node, instr, type);
     }
 
-    public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
-      return getBuilder().getInstanceKeyForClassObject(type);
+    public InstanceKey getInstanceKeyForClassObject(Object obj, TypeReference type) {
+      return getBuilder().getInstanceKeyForMetadataObject(obj, type);
     }
 
     public CGNode getTargetForCall(CGNode caller, CallSiteReference site, IClass recv, InstanceKey iKey[]) {
@@ -1385,13 +1385,15 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     @Override
     public void visitLoadMetadata(SSALoadMetadataInstruction instruction) {
       PointerKey def = getPointerKeyForLocal(instruction.getDef());
-      assert instruction.getType() == TypeReference.JavaLangClass;
-      InstanceKey iKey = getInstanceKeyForClassObject((TypeReference) instruction.getToken());
-      IClass klass = getClassHierarchy().lookupClass((TypeReference) instruction.getToken());
-      if (klass != null) {
-        processClassInitializer(klass);
+      InstanceKey iKey = getInstanceKeyForClassObject(instruction.getToken(), instruction.getType());
+      
+      if (instruction.getToken() instanceof TypeReference) {
+        IClass klass = getClassHierarchy().lookupClass((TypeReference) instruction.getToken());
+        if (klass != null) {
+          processClassInitializer(klass);
+        }
       }
-
+      
       if (!contentsAreInvariant(symbolTable, du, instruction.getDef())) {
         system.newConstraint(def, iKey);
       } else {
@@ -1789,7 +1791,19 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
     @Override
     public int hashCode() {
-      return node.hashCode() + 90289 * call.hashCode();
+      int h = 1;
+      if (constParams != null) {
+        for(InstanceKey[] cs : constParams) {
+          if (cs != null) {
+            for(InstanceKey c : cs) {
+              if (c != null) {
+                h = h ^ c.hashCode();
+              }
+            }
+          }
+        }
+      }
+      return h * node.hashCode() + 90289 * call.hashCode();
     }
 
     @Override

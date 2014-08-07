@@ -14,15 +14,6 @@
 	<property name="compilerArg" value=""/>
 	<property name="javacSource" value="1.5"/>
 	<property name="javacTarget" value="1.5"/>
-	<!-- This property has been updated to correspond to the paths used by the latest Java update
-	on Mac OS X 10.6 (Java version 1.6.0_22).  If you are not using this version of Mac OS X or Java,
-	try changing the value of the property to "${java.home}/../../../Classes" -->
-    <condition property="dir_bootclasspath" value="${java.home}/../Classes">
-      <and>
-            <os family="mac"/>
-            <equals arg1="${ant.java.version}" arg2="1.6" />
-      </and>
-    </condition>
     <property name="dir_bootclasspath" value="${java.home}/lib"/>
     <path id="path_bootclasspath">
             <fileset dir="${dir_bootclasspath}">
@@ -60,6 +51,32 @@
         <available file="${plugin.destination}/bcel-5.2.jar" property="bcel.present"/>
      </target>
 
+     <target name="OCamlPresent" depends="init">
+        <available file="${plugin.destination}/ocaml/ocamljava-2.0-alpha1/lib/ocamljava.jar" property="ocaml.present"/>
+     </target>
+
+     <target name="fetchOCaml" depends="OCamlPresent" unless="ocaml.present">
+       <delete dir="${temp.folder}"/>
+       <mkdir dir="${temp.folder}"/>
+       <get src="http://www.ocamljava.org/downloads/download-2.0-alpha1-bin.php" dest="${temp.folder}/ocamljava-2.0-alpha1-bin.tar.gz"/>
+       <gunzip src="${temp.folder}//ocamljava-2.0-alpha1-bin.tar.gz" dest="${temp.folder}/ocamljava-2.0-alpha1-bin.tar"/>
+       <untar src="${temp.folder}/ocamljava-2.0-alpha1-bin.tar" dest="${plugin.destination}/ocaml">
+       </untar>
+       <delete dir="${temp.folder}"/>
+     </target>
+
+     <target name="HelloHashPresent" depends="init">
+        <available file="${plugin.destination}/hello_hash.jar" property="hello.hsh.present"/>
+     </target>
+
+     <target name="buildOCamlHelloHash" unless="hello.hash.present" depends="HelloHashPresent,fetchOCaml">
+       <java jar="${plugin.destination}/ocaml/ocamljava-2.0-alpha1/lib/ocamljava.jar" fork="true">
+         <arg file="${basedir}/ocaml/hello_hash.ml"/>
+         <arg value="-o"/>
+         <arg file="${plugin.destination}/hello_hash.jar"/>
+       </java>
+     </target>
+
    <target name="fetchBcel" depends="bcelPresent" unless="bcel.present">
      <delete dir="${temp.folder}"/>
      <mkdir dir="${temp.folder}"/>
@@ -70,7 +87,7 @@
      <delete dir="${temp.folder}"/>
    </target>
 
-	<target name="copyJars" depends="fetchJLex,fetchJavaCup,fetchBcel">
+	<target name="copyJars" depends="fetchJLex,fetchJavaCup,fetchBcel,buildOCamlHelloHash">
 	  <copy todir="${plugin.destination}/bin">
 	  	<fileset dir="${plugin.destination}" includes="*.jar" />
 	  </copy>

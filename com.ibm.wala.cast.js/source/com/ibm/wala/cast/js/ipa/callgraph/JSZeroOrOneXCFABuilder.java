@@ -56,7 +56,7 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     // _necessary_ for correctness (we rely on it when handling lexical scoping)
     contextSelector = new JavaScriptConstructorContextSelector(contextSelector);
     
-    contextSelector = new OneLevelForLexicalAccessFunctions(contextSelector);
+    //contextSelector = new OneLevelForLexicalAccessFunctions(contextSelector);
     
     if (USE_OBJECT_SENSITIVITY) {
       contextSelector = new ObjectSensitivityContextSelector(contextSelector);

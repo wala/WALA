@@ -131,11 +131,6 @@ public interface Language {
 
   TypeReference getStringType();
 
-  /**
-   * get the metadata type for the language, e.g., java.lang.Class for Java
-   */
-  TypeReference getMetadataType();
-
   TypeReference getPointerType(TypeReference pointee);
 
   /**

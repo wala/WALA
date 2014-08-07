@@ -1,4 +1,4 @@
-package com.ibm.wala.cast.js.ipa.callgraph;
+package com.ibm.wala.ipa.callgraph.propagation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,8 +6,6 @@ import java.util.Map;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
-import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 
 /**
  * A selective Cartesian product context that enforces object sensitivity on some set

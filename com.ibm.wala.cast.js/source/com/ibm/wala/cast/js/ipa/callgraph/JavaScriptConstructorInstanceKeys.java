@@ -38,8 +38,8 @@ public class JavaScriptConstructorInstanceKeys implements InstanceKeyFactory {
   }
 
   @Override
-  public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
-    return base.getInstanceKeyForClassObject(type);
+  public InstanceKey getInstanceKeyForMetadataObject(Object obj, TypeReference objType) {
+    return base.getInstanceKeyForMetadataObject(obj, objType);
   }
 
   @Override

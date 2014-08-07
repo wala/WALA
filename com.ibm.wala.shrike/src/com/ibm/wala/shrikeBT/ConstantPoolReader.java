@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.shrikeBT;
 
+import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
+
 /**
  * This class provides read-only access to a constant pool. It gets subclassed for each class reader/editor toolkit you want to work
  * with.
@@ -120,5 +122,11 @@ public abstract class ConstantPoolReader {
    * @param index the constant pool item to examine
    */
   public abstract String getConstantPoolHandleType(int index);
+
+  public abstract BootstrapMethod getConstantPoolDynamicBootstrap(int index);
+  
+  public abstract String getConstantPoolDynamicName(int index);
+
+  public abstract String getConstantPoolDynamicType(int index);
 
 }

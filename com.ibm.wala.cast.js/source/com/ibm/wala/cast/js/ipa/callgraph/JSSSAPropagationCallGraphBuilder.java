@@ -175,6 +175,18 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   //
   // ///////////////////////////////////////////////////////////////////////////
 
+  private final static FieldReference prototypeRef;
+  static {
+    FieldReference x = null;
+    try {
+      byte[] utf8 = "__proto__".getBytes("UTF-8");
+      x = FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreate(utf8, 0, utf8.length), JavaScriptTypes.Root);
+    } catch (UnsupportedEncodingException e) {
+      assert false;
+    }
+    prototypeRef = x;
+  }
+
   private final GlobalObjectKey globalObject = new GlobalObjectKey(cha.lookupClass(JavaScriptTypes.Object));
 
   public PointerKey getPointerKeyForGlobalVar(String varName) {
@@ -280,7 +292,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   //
   // ///////////////////////////////////////////////////////////////////////////
 
-  public static class JSPointerAnalysisImpl extends AstPointerAnalysisImpl {
+  public static class JSPointerAnalysisImpl extends AstSSAPropagationCallGraphBuilder.AstPointerAnalysisImpl {
 
     JSPointerAnalysisImpl(PropagationCallGraphBuilder builder, CallGraph cg, PointsToMap pointsToMap,
         MutableMapping<InstanceKey> instanceKeys, PointerKeyFactory pointerKeys, InstanceKeyFactory iKeyFactory) {
@@ -913,19 +925,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       }
       
     };
-    
-    private final FieldReference prototypeRef;
-    {
-      FieldReference x = null;
-      try {
-        byte[] utf8 = "__proto__".getBytes("UTF-8");
-        x = FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreate(utf8, 0, utf8.length), JavaScriptTypes.Root);
-      } catch (UnsupportedEncodingException e) {
-        assert false;
-      }
-      prototypeRef = x;
-    }
-    
+        
     @Override
     public void visitSetPrototype(SetPrototype instruction) {
       visitPutInternal(instruction.getUse(1), instruction.getUse(0), false, prototypeRef);

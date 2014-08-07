@@ -54,8 +54,8 @@ public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
   }
 
   @Override
-  public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
-    return h.getInstanceKeyForClassObject(type);
+  public InstanceKey getInstanceKeyForMetadataObject(Object obj, TypeReference objType) {
+    return h.getInstanceKeyForMetadataObject(obj, objType);
   }
 
   @Override
