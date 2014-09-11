@@ -63,7 +63,7 @@ public class TunedRefinementTest extends AbstractPtrTest {
   // we know this one fails...
   // @Test public void testOnTheFlyCS() throws ClassHierarchyException {
   // String mainClass = TestInfo.TEST_ONTHEFLY_CS;
-  // final IDemandPointerAnalysis dmp =
+  // final IDemandPointerAnalysis<InstanceKey> dmp =
   // makeDemandPointerAnalysis(TestInfo.SCOPE_FILE, mainClass);
   // CGNode testMethod =
   // AbstractPtrTest.findInstanceMethod(dmp.getBaseCallGraph(),

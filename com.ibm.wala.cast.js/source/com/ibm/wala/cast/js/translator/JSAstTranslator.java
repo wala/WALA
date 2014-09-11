@@ -108,8 +108,7 @@ public class JSAstTranslator extends AstTranslator {
    */
   private void addDefinedCheck(CAstNode n, WalkContext context, int readVn) {
     context.cfg().addPreNode(n);
-    context.cfg().addInstruction(((JSInstructionFactory) insts).CheckReference(readVn));
-
+    context.cfg().addInstruction(((JSInstructionFactory)insts).CheckReference(context.cfg().getCurrentInstruction(), readVn));
     CAstNode target = context.getControlFlow().getTarget(n, JavaScriptTypes.ReferenceError);
     if (target != null) {
       context.cfg().addPreEdge(n, target, true);
@@ -185,7 +184,7 @@ public class JSAstTranslator extends AstTranslator {
 
   @Override
   protected void doThrow(WalkContext context, int exception) {
-    context.cfg().addInstruction(insts.ThrowInstruction(exception));
+    context.cfg().addInstruction(insts.ThrowInstruction(context.cfg().getCurrentInstruction(), exception));
   }
 
   @Override
@@ -196,7 +195,7 @@ public class JSAstTranslator extends AstTranslator {
               : AstMethodReference.fnReference(JavaScriptTypes.CodeBody);
 
     context.cfg().addInstruction(
-        ((JSInstructionFactory) insts).Invoke(receiver, result, arguments, exception, 
+        ((JSInstructionFactory) insts).Invoke(context.cfg().getCurrentInstruction(), receiver, result, arguments, exception, 
             new JSCallSiteReference(ref, context.cfg().getCurrentInstruction())));
 
     context.cfg().addPreNode(call, context.getUnwindState());
@@ -216,8 +215,8 @@ public class JSAstTranslator extends AstTranslator {
     assert arguments == null;
     TypeReference typeRef = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName("L" + type));
 
-    context.cfg().addInstruction(
-        insts.NewInstruction(result, NewSiteReference.make(context.cfg().getCurrentInstruction(), typeRef)));
+    context.cfg().addInstruction(insts.NewInstruction(context.cfg().getCurrentInstruction(), result, 
+        NewSiteReference.make(context.cfg().getCurrentInstruction(), typeRef)));
   }
 
   @Override
@@ -226,8 +225,8 @@ public class JSAstTranslator extends AstTranslator {
     // "Function" is the name we use to model the constructor of function values
     int tmp = super.doGlobalRead(n, context, "Function", JavaScriptTypes.Function);
     context.cfg().addInstruction(
-        ((JSInstructionFactory) insts).Invoke(tmp, result, new int[] { nm }, exception, new JSCallSiteReference(
-            JavaScriptMethods.ctorReference, context.cfg().getCurrentInstruction())));
+      ((JSInstructionFactory)insts).Invoke(context.cfg().getCurrentInstruction(), tmp, result, new int[]{ nm }, exception,
+        new JSCallSiteReference(JavaScriptMethods.ctorReference, context.cfg().getCurrentInstruction())));
   }
 
   @Override
@@ -245,17 +244,18 @@ public class JSAstTranslator extends AstTranslator {
     this.visit(elt, context, this);
     int x = context.currentScope().allocateTempValue();
 
-    context.cfg().addInstruction(((JSInstructionFactory) insts).AssignInstruction(x, receiver));
+    context.cfg().addInstruction(((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), x, receiver));
 
-    context.cfg().addInstruction(((JSInstructionFactory) insts).PrototypeLookup(x, x));
+    context.cfg().addInstruction(((JSInstructionFactory) insts).PrototypeLookup(context.cfg().getCurrentInstruction(), x, x));
     
     if (elt.getKind() == CAstNode.CONSTANT && elt.getValue() instanceof String) {
       String field = (String) elt.getValue();
       // symtab needs to have this value
       context.currentScope().getConstantValue(field);
-      context.cfg().addInstruction(((JSInstructionFactory) insts).GetInstruction(result, x, field));
+      context.cfg().addInstruction(
+        ((JSInstructionFactory)insts).GetInstruction(context.cfg().getCurrentInstruction(), result, x, field));
     } else {
-      context.cfg().addInstruction(((JSInstructionFactory) insts).PropertyRead(result, x, context.getValue(elt)));
+      context.cfg().addInstruction(((JSInstructionFactory) insts).PropertyRead(context.cfg().getCurrentInstruction(), result, x, context.getValue(elt)));
     }
 
     // generate code to handle read of property from null or undefined
@@ -275,14 +275,14 @@ public class JSAstTranslator extends AstTranslator {
     if (elt.getKind() == CAstNode.CONSTANT && elt.getValue() instanceof String) {
       String field = (String) elt.getValue();
       if (isPrologueScript(context) && "__proto__".equals(field)) {
-        context.cfg().addInstruction(((JSInstructionFactory) insts).SetPrototype(receiver, rval));
+        context.cfg().addInstruction(((JSInstructionFactory) insts).SetPrototype(context.cfg().getCurrentInstruction(), receiver, rval));
         return;
       }
     }
     /*
       } else {
         context.currentScope().getConstantValue(field);
-        SSAPutInstruction put = ((JSInstructionFactory) insts).PutInstruction(receiver, rval, field);
+        SSAPutInstruction put = ((JSInstructionFactory) insts).PutInstruction(context.cfg().getCurrentInstruction(), receiver, rval, field);
         try {
           assert field.equals(put.getDeclaredField().getName().toUnicodeString());
         } catch (UTFDataFormatException e) {
@@ -292,7 +292,7 @@ public class JSAstTranslator extends AstTranslator {
       }
     } else {
     */     
-      context.cfg().addInstruction(((JSInstructionFactory) insts).PropertyWrite(receiver, context.getValue(elt), rval));
+      context.cfg().addInstruction(((JSInstructionFactory) insts).PropertyWrite(context.cfg().getCurrentInstruction(), receiver, context.getValue(elt), rval));
       context.cfg().addPreNode(parent, context.getUnwindState());
 
       // generate code to handle read of property from null or undefined
@@ -310,45 +310,46 @@ public class JSAstTranslator extends AstTranslator {
     // set the class property of the new object
     int rval = context.currentScope().getConstantValue(typeName);
     context.currentScope().getConstantValue("class");
-    context.cfg().addInstruction(((JSInstructionFactory) insts).PutInstruction(resultVal, rval, "class"));
-  }
+    context.cfg().addInstruction(
+        ((JSInstructionFactory)insts).PutInstruction(context.cfg().getCurrentInstruction(), resultVal, rval, "class"));
+  } 
 
   @Override
   protected void doPrimitive(int resultVal, WalkContext context, CAstNode primitiveCall) {
     try {
       String name = (String) primitiveCall.getChild(0).getValue();
       if (name.equals("GlobalNaN")) {
-        context.cfg().addInstruction(
-            ((JSInstructionFactory) insts).AssignInstruction(resultVal,
-                context.currentScope().getConstantValue(new Float(Float.NaN))));
+	context.cfg().addInstruction(
+	    ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
+	    resultVal, context.currentScope().getConstantValue(new Float(Float.NaN))));
       } else if (name.equals("GlobalInfinity")) {
         context.cfg().addInstruction(
-            ((JSInstructionFactory) insts).AssignInstruction(resultVal,
-                context.currentScope().getConstantValue(new Float(Float.POSITIVE_INFINITY))));
+            ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
+            resultVal, context.currentScope().getConstantValue(new Float(Float.POSITIVE_INFINITY))));
       } else if (name.equals("MathE")) {
         context.cfg().addInstruction(
-            ((JSInstructionFactory) insts)
-                .AssignInstruction(resultVal, context.currentScope().getConstantValue(new Double(Math.E))));
+            ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
+            resultVal, context.currentScope().getConstantValue(new Double(Math.E))));
       } else if (name.equals("MathPI")) {
         context.cfg().addInstruction(
-            ((JSInstructionFactory) insts).AssignInstruction(resultVal, context.currentScope()
-                .getConstantValue(new Double(Math.PI))));
+            ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
+            resultVal, context.currentScope().getConstantValue(new Double(Math.PI))));
       } else if (name.equals("MathSQRT1_2")) {
         context.cfg().addInstruction(
-            ((JSInstructionFactory) insts).AssignInstruction(resultVal,
-                context.currentScope().getConstantValue(new Double(Math.sqrt(.5)))));
+            ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
+            resultVal, context.currentScope().getConstantValue(new Double(Math.sqrt(.5)))));
       } else if (name.equals("MathSQRT2")) {
         context.cfg().addInstruction(
-            ((JSInstructionFactory) insts).AssignInstruction(resultVal,
-                context.currentScope().getConstantValue(new Double(Math.sqrt(2)))));
+            ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
+            resultVal, context.currentScope().getConstantValue(new Double(Math.sqrt(2)))));
       } else if (name.equals("MathLN2")) {
         context.cfg().addInstruction(
-            ((JSInstructionFactory) insts).AssignInstruction(resultVal,
-                context.currentScope().getConstantValue(new Double(Math.log(2)))));
+            ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
+            resultVal, context.currentScope().getConstantValue(new Double(Math.log(2)))));
       } else if (name.equals("MathLN10")) {
         context.cfg().addInstruction(
-            ((JSInstructionFactory) insts).AssignInstruction(resultVal,
-                context.currentScope().getConstantValue(new Double(Math.log(10)))));
+            ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
+            resultVal, context.currentScope().getConstantValue(new Double(Math.log(10)))));
       } else if (name.equals("NewObject")) {
         doNewObject(context, null, resultVal, "Object", null);
 
@@ -371,8 +372,9 @@ public class JSAstTranslator extends AstTranslator {
         doNewObject(context, null, resultVal, "Undefined", null);
 
       } else {
-        context.cfg().addInstruction(
-            ((JSInstructionFactory) insts).AssignInstruction(resultVal, context.currentScope().getConstantValue(null)));
+	context.cfg().addInstruction(
+	    ((JSInstructionFactory)insts).AssignInstruction(context.cfg().getCurrentInstruction(), 
+            resultVal, context.currentScope().getConstantValue( null )));
       }
     } catch (ClassCastException e) {
       throw new RuntimeException("Cannot translate primitive " + primitiveCall.getChild(0).getValue());
@@ -387,11 +389,11 @@ public class JSAstTranslator extends AstTranslator {
       FieldReference fieldRef = FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreateUnicodeAtom(field),
           JavaScriptTypes.Root);
 
-      context.cfg().addInstruction(((JSInstructionFactory) insts).IsDefinedInstruction(result, ref, fieldRef));
+      context.cfg().addInstruction(((JSInstructionFactory) insts).IsDefinedInstruction(context.cfg().getCurrentInstruction(), result, ref, fieldRef));
 
     } else {
 
-      context.cfg().addInstruction(((JSInstructionFactory) insts).IsDefinedInstruction(result, ref, context.getValue(f)));
+      context.cfg().addInstruction(((JSInstructionFactory) insts).IsDefinedInstruction(context.cfg().getCurrentInstruction(), result, ref, context.getValue(f)));
     }
   }
 
@@ -414,7 +416,7 @@ public class JSAstTranslator extends AstTranslator {
     visit(n.getChild(1), context, visitor);
     int type = context.getValue(n.getChild(1));
 
-    context.cfg().addInstruction(new JavaScriptInstanceOf(result, value, type));
+    context.cfg().addInstruction(new JavaScriptInstanceOf(context.cfg().getCurrentInstruction(), result, value, type));
   }
 
   @Override
@@ -425,7 +427,7 @@ public class JSAstTranslator extends AstTranslator {
     doNewObject(context, null, tempVal, "Array", null);
     CAstSymbol args = new CAstSymbolImpl("arguments", Any);
     context.currentScope().declare(args, tempVal);
-    //context.cfg().addInstruction(((JSInstructionFactory) insts).PutInstruction(1, tempVal, "arguments"));
+    //context.cfg().addInstruction(((JSInstructionFactory)insts).PutInstruction(context.cfg().getCurrentInstruction(), 1, tempVal, "arguments"));
   }
 
   @Override
@@ -437,7 +439,7 @@ public class JSAstTranslator extends AstTranslator {
       this.visit(n.getChild(0), context, this);
       int ref = context.getValue(n.getChild(0));
 
-      context.cfg().addInstruction(((JSInstructionFactory) insts).TypeOfInstruction(result, ref));
+      context.cfg().addInstruction(((JSInstructionFactory)insts).TypeOfInstruction(context.cfg().getCurrentInstruction(), result, ref));
 
       context.setValue(n, result);
       return true;
@@ -449,7 +451,8 @@ public class JSAstTranslator extends AstTranslator {
       this.visit(n.getChild(0), context, this);
       int ref = context.getValue(n.getChild(0));
 
-      context.cfg().addInstruction(((JSInstructionFactory) insts).WithRegion(ref, n.getKind() == JavaScriptCAstNode.ENTER_WITH));
+      context.cfg().addInstruction(((JSInstructionFactory)insts).WithRegion(context.cfg().getCurrentInstruction(), ref, 
+          n.getKind() == JavaScriptCAstNode.ENTER_WITH));
 
       return true;
     }

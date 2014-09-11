@@ -255,7 +255,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
         int nullValue = getNumberOfParameters() + 1;
         SSAInstruction[] result = new SSAInstruction[1];
         SSAInstructionFactory insts = l.instructionFactory();
-        result[0] = insts.ReturnInstruction(nullValue, getReturnType().isPrimitiveType());
+        result[0] = insts.ReturnInstruction(0, nullValue, getReturnType().isPrimitiveType());
         return result;
       }
     }

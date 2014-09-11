@@ -18,8 +18,8 @@ public abstract class MultiReturnValueInvokeInstruction
 {
   protected final int results[];
 
-  protected MultiReturnValueInvokeInstruction(int results[], int exception, CallSiteReference site) {
-    super(exception, site);
+  protected MultiReturnValueInvokeInstruction(int iindex, int results[], int exception, CallSiteReference site) {
+    super(iindex, exception, site);
     this.results = results;
   }
 

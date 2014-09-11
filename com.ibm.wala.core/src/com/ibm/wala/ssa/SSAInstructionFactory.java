@@ -25,78 +25,78 @@ import com.ibm.wala.types.TypeReference;
  */
 public interface SSAInstructionFactory {
 
-  SSAAddressOfInstruction AddressOfInstruction(int lval, int local, TypeReference pointeeType);
+  SSAAddressOfInstruction AddressOfInstruction(int iindex, int lval, int local, TypeReference pointeeType);
 
-  SSAAddressOfInstruction AddressOfInstruction(int lval, int local, int indexVal, TypeReference pointeeType);
+  SSAAddressOfInstruction AddressOfInstruction(int iindex, int lval, int local, int indexVal, TypeReference pointeeType);
 
-  SSAAddressOfInstruction AddressOfInstruction(int lval, int local, FieldReference field, TypeReference pointeeType);
+  SSAAddressOfInstruction AddressOfInstruction(int iindex, int lval, int local, FieldReference field, TypeReference pointeeType);
   
-  SSAArrayLengthInstruction ArrayLengthInstruction(int result, int arrayref);
+  SSAArrayLengthInstruction ArrayLengthInstruction(int iindex, int result, int arrayref);
 
-  SSAArrayLoadInstruction ArrayLoadInstruction(int result, int arrayref, int index, TypeReference declaredType);
+  SSAArrayLoadInstruction ArrayLoadInstruction(int iindex, int result, int arrayref, int index, TypeReference declaredType);
 
-  SSAArrayStoreInstruction ArrayStoreInstruction(int arrayref, int index, int value, TypeReference declaredType);
+  SSAArrayStoreInstruction ArrayStoreInstruction(int iindex, int arrayref, int index, int value, TypeReference declaredType);
 
-  SSABinaryOpInstruction BinaryOpInstruction(IBinaryOpInstruction.IOperator operator, boolean overflow, boolean unsigned,
+  SSABinaryOpInstruction BinaryOpInstruction(int iindex, IBinaryOpInstruction.IOperator operator, boolean overflow, boolean unsigned,
       int result, int val1, int val2, boolean mayBeInteger);
 
-  SSACheckCastInstruction CheckCastInstruction(int result, int val, int[] typeValues, boolean isPEI);
+  SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, int[] typeValues, boolean isPEI);
 
-  SSACheckCastInstruction CheckCastInstruction(int result, int val, int typeValue, boolean isPEI);
+  SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, int typeValue, boolean isPEI);
 
-  SSACheckCastInstruction CheckCastInstruction(int result, int val, TypeReference[] types, boolean isPEI);
+  SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, TypeReference[] types, boolean isPEI);
 
-  SSACheckCastInstruction CheckCastInstruction(int result, int val, TypeReference type, boolean isPEI);
+  SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, TypeReference type, boolean isPEI);
 
-  SSAComparisonInstruction ComparisonInstruction(IComparisonInstruction.Operator operator, int result, int val1, int val2);
+  SSAComparisonInstruction ComparisonInstruction(int iindex, IComparisonInstruction.Operator operator, int result, int val1, int val2);
 
-  SSAConditionalBranchInstruction ConditionalBranchInstruction(IConditionalBranchInstruction.IOperator operator,
+  SSAConditionalBranchInstruction ConditionalBranchInstruction(int iindex, IConditionalBranchInstruction.IOperator operator,
       TypeReference type, int val1, int val2, int target);
 
-  SSAConversionInstruction ConversionInstruction(int result, int val, TypeReference fromType, TypeReference toType, boolean overflow);
+  SSAConversionInstruction ConversionInstruction(int iindex, int result, int val, TypeReference fromType, TypeReference toType, boolean overflow);
 
-  SSAGetCaughtExceptionInstruction GetCaughtExceptionInstruction(int bbNumber, int exceptionValueNumber);
+  SSAGetCaughtExceptionInstruction GetCaughtExceptionInstruction(int iindex, int bbNumber, int exceptionValueNumber);
 
-  SSAGetInstruction GetInstruction(int result, FieldReference field);
+  SSAGetInstruction GetInstruction(int iindex, int result, FieldReference field);
 
-  SSAGetInstruction GetInstruction(int result, int ref, FieldReference field);
+  SSAGetInstruction GetInstruction(int iindex, int result, int ref, FieldReference field);
 
-  SSAGotoInstruction GotoInstruction(int target);
+  SSAGotoInstruction GotoInstruction(int iindex, int target);
 
-  SSAInstanceofInstruction InstanceofInstruction(int result, int ref, TypeReference checkedType);
+  SSAInstanceofInstruction InstanceofInstruction(int iindex, int result, int ref, TypeReference checkedType);
 
-  SSAInvokeInstruction InvokeInstruction(int result, int[] params, int exception, CallSiteReference site);
+  SSAInvokeInstruction InvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site);
 
-  SSAInvokeInstruction InvokeInstruction(int[] params, int exception, CallSiteReference site);
+  SSAInvokeInstruction InvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site);
 
-  SSALoadIndirectInstruction LoadIndirectInstruction(int lval, TypeReference t, int addressVal);
+  SSALoadIndirectInstruction LoadIndirectInstruction(int iindex, int lval, TypeReference t, int addressVal);
   
-  SSALoadMetadataInstruction LoadMetadataInstruction(int lval, TypeReference entityType, Object token);
+  SSALoadMetadataInstruction LoadMetadataInstruction(int iindex, int lval, TypeReference entityType, Object token);
 
-  SSAMonitorInstruction MonitorInstruction(int ref, boolean isEnter);
+  SSAMonitorInstruction MonitorInstruction(int iindex, int ref, boolean isEnter);
 
-  SSANewInstruction NewInstruction(int result, NewSiteReference site);
+  SSANewInstruction NewInstruction(int iindex, int result, NewSiteReference site);
 
-  SSANewInstruction NewInstruction(int result, NewSiteReference site, int[] params);
+  SSANewInstruction NewInstruction(int iindex, int result, NewSiteReference site, int[] params);
 
-  SSAPhiInstruction PhiInstruction(int result, int[] params);
+  SSAPhiInstruction PhiInstruction(int iindex, int result, int[] params);
 
-  SSAPiInstruction PiInstruction(int result, int val, int piBlock, int successorBlock, SSAInstruction cause);
+  SSAPiInstruction PiInstruction(int iindex, int result, int val, int piBlock, int successorBlock, SSAInstruction cause);
 
-  SSAPutInstruction PutInstruction(int ref, int value, FieldReference field);
+  SSAPutInstruction PutInstruction(int iindex, int ref, int value, FieldReference field);
 
-  SSAPutInstruction PutInstruction(int value, FieldReference field);
+  SSAPutInstruction PutInstruction(int iindex, int value, FieldReference field);
 
-  SSAReturnInstruction ReturnInstruction();
+  SSAReturnInstruction ReturnInstruction(int iindex);
 
-  SSAReturnInstruction ReturnInstruction(int result, boolean isPrimitive);
+  SSAReturnInstruction ReturnInstruction(int iindex, int result, boolean isPrimitive);
 
-  SSAStoreIndirectInstruction StoreIndirectInstruction(int addressVal, int rval, TypeReference pointeeType);
+  SSAStoreIndirectInstruction StoreIndirectInstruction(int iindex, int addressVal, int rval, TypeReference pointeeType);
   
-  SSASwitchInstruction SwitchInstruction(int val, int defaultLabel, int[] casesAndLabels);
+  SSASwitchInstruction SwitchInstruction(int iindex, int val, int defaultLabel, int[] casesAndLabels);
 
-  SSAThrowInstruction ThrowInstruction(int exception);
+  SSAThrowInstruction ThrowInstruction(int iindex, int exception);
 
-  SSAUnaryOpInstruction UnaryOpInstruction(IUnaryOpInstruction.IOperator operator, int result, int val);
+  SSAUnaryOpInstruction UnaryOpInstruction(int iindex, IUnaryOpInstruction.IOperator operator, int result, int val);
 
 }

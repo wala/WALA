@@ -87,6 +87,10 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
 
   private static final boolean DEBUG = false;
 
+/** BEGIN Custom change: caching */
+  private final Map<String, IR> cache = HashMapFactory.make();
+  
+/** END Custom change: caching */
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getIR(com.ibm.wala.ipa.callgraph.CGNode)
    */
@@ -99,8 +103,26 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     if (DEBUG) {
       System.err.println("generating IR for " + node);
     }
-    IMethod method = node.getMethod();
-    JavaTypeContext context = (JavaTypeContext) node.getContext();
+/** BEGIN Custom change: caching */
+    
+    final JavaTypeContext context = (JavaTypeContext) node.getContext();
+    final IMethod method = node.getMethod();
+    final String hashKey = method.toString() + "@" + context.toString();
+    
+    IR result = cache.get(hashKey);
+    
+    if (result == null) {
+      result = makeIR(method, context);
+      if (result == null) {
+        Assertions.UNREACHABLE("Unexpected method " + node);
+      }
+      cache.put(hashKey, result);
+    }
+    
+    return result;
+  }
+
+  private IR makeIR(IMethod method, JavaTypeContext context) {
     Map<Integer, ConstantValue> constants = HashMapFactory.make();
     if (method.getReference().equals(GET_CONSTRUCTOR)) {
       SSAInstruction instrs[] = makeGetCtorStatements(context, constants);
@@ -142,10 +164,11 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
       return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(),
           constants);
     }
-    Assertions.UNREACHABLE("Unexpected method " + node);
+    Assertions.UNREACHABLE("Unexpected method " + method);
     return null;
   }
-
+/** END Custom change: caching */
+  
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getNumberOfStatements(com.ibm.wala.ipa.callgraph.CGNode)
    */
@@ -263,7 +286,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
       NewSiteReference site = new NewSiteReference(retValue, arrType);
       int sizeVn = nextLocal++;
       constants.put(sizeVn, new ConstantValue(returnValues.size()));
-      SSANewInstruction allocArr = insts.NewInstruction(retValue, site, new int[] { sizeVn });
+      SSANewInstruction allocArr = insts.NewInstruction(statements.size(), retValue, site, new int[] { sizeVn });
       statements.add(allocArr);
 
       int i = 0;
@@ -274,10 +297,10 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
         int indexVn = nextLocal++;
         constants.put(indexVn, new ConstantValue(index));
         SSAArrayStoreInstruction store = insts
-            .ArrayStoreInstruction(retValue, indexVn, c, TypeReference.JavaLangReflectConstructor);
+            .ArrayStoreInstruction(statements.size(), retValue, indexVn, c, TypeReference.JavaLangReflectConstructor);
         statements.add(store);
       }
-      SSAReturnInstruction R = insts.ReturnInstruction(retValue, false);
+      SSAReturnInstruction R = insts.ReturnInstruction(statements.size(), retValue, false);
       statements.add(R);
     } else {
       // SJF: This is incorrect. TODO: fix and enable.
@@ -308,7 +331,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
       for (IMethod m : returnValues) {
         int c = nextLocal++;
         constants.put(c, new ConstantValue(m));
-        SSAReturnInstruction R = insts.ReturnInstruction(c, false);
+        SSAReturnInstruction R = insts.ReturnInstruction(statements.size(), c, false);
         statements.add(R);
       }
     } else {

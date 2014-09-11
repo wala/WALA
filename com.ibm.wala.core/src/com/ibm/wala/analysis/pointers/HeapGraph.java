@@ -37,9 +37,9 @@ import com.ibm.wala.util.intset.IntSet;
  */
 public abstract class HeapGraph implements NumberedGraph<Object> {
 
-  private final PointerAnalysis pa;
+  private final PointerAnalysis<InstanceKey> pa;
 
-  protected HeapGraph(PointerAnalysis pa) {
+  protected HeapGraph(PointerAnalysis<InstanceKey> pa) {
     if (pa == null) {
       throw new IllegalArgumentException("null pa ");
     }
@@ -73,7 +73,7 @@ public abstract class HeapGraph implements NumberedGraph<Object> {
     return pa.getHeapModel();
   }
 
-  public PointerAnalysis getPointerAnalysis() {
+  public PointerAnalysis<InstanceKey> getPointerAnalysis() {
     return pa;
   }
 

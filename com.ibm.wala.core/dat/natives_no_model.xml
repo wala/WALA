@@ -1,0 +1,882 @@
+<?xml version="1.0" ?>
+<!-- native methods in the IBM Windows DK 1.3.1 -->
+<summary-spec>
+	<classloader name="Primordial">
+
+		<package name="com/ibm/wala/model">
+			<class name="SyntheticFactory">
+				<method name="getObject"
+					descriptor="()Ljava/lang/Object;" factory="true" static="true">
+					<new def="x" class="Lcom/ibm/wala/Malleable" />
+					<return value="x" />
+				</method>
+			</class>
+		</package>
+
+		<package name="com/ibm/jvm">
+			<class name="ExtendedSystem">
+				<method name="isResettableJVM" descriptor="()Z"
+					static="true">
+				</method>
+				<method name="setJVMUnresettableConditionally"
+					descriptor="(ILjava/lang/String;)V" static="true">
+				</method>
+				<method name="resizeArray"
+					descriptor="(ILjava/lang/Object;II)Ljava/lang/Object;"
+					factory="true" static="true">
+					<new def="x" class="Lcom/ibm/wala/Malleable" />
+					<return value="x" />
+				</method>
+			</class>
+
+		</package>
+
+		<package name="java/io">
+			<class name="FileDescriptor">
+				<method name="sync" descriptor="()V"></method>
+			</class>
+			<class name="FileInputStream">
+				<method name="available" descriptor="()I">
+					<constant name="yes" type="int" value="1" />
+					<constant name="no" type="int" value="0" />
+					<return value="yes" />
+					<return value="no" />
+					<new def="x" class="Ljava/io/IOException" />
+					<throw value="x" />
+				</method>
+				<method name="close" descriptor="()V">
+					<new def="x" class="Ljava/io/IOException" />
+					<throw value="x" />
+				</method>
+				<method name="open"
+					descriptor="(Ljava/lang/String;)V">
+					<new def="x" class="Ljava/io/IOException" />
+					<throw value="x" />
+				</method>
+				<method name="read" descriptor="()I">
+					<constant name="yes" type="int" value="1" />
+					<constant name="no" type="int" value="0" />
+					<return value="yes" />
+					<return value="no" />
+					<new def="x" class="Ljava/io/IOException" />
+					<throw value="x" />
+				</method>
+				<method name="readBytes" descriptor="([BII)I">
+					<constant name="yes" type="int" value="1" />
+					<constant name="no" type="int" value="0" />
+					<constant name="the-answer" type="int" value="42"/>
+					<aastore ref="arg1" index="no" value="the-answer" type="B"/>
+					<return value="yes" />
+					<return value="no" />
+					<new def="x" class="Ljava/io/IOException" />
+					<throw value="x" />
+				</method>
+				<method name="readBytes"
+					descriptor="([BIILjava/io/FileDescriptor;)I">
+					<constant name="yes" type="int" value="1" />
+					<constant name="no" type="int" value="0" />
+					<return value="yes" />
+					<return value="no" />
+					<new def="x" class="Ljava/io/IOException" />
+					<throw value="x" />
+				</method>
+				<method name="skip" descriptor="(J)J">
+					<constant name="yes" type="int" value="1" />
+					<constant name="no" type="int" value="0" />
+					<return value="yes" />
+					<return value="no" />
+					<new def="x" class="Ljava/io/IOException" />
+					<throw value="x" />
+				</method>
+			</class>
+			<class name="FileOutputStream">
+				<method name="close" descriptor="()V"></method>
+				<method name="open"
+					descriptor="(Ljava/lang/String;)V">
+				</method>
+				<method name="openAppend"
+					descriptor="(Ljava/lang/String;)V">
+				</method>
+				<method name="write" descriptor="(I)V"></method>
+				<method name="writeBytes" descriptor="([BIIZ)V">
+					<constant name="the-answer" type="byte" value="42"/>
+					<aaload def="foo" ref="arg1" index="the-answer" type="B"/>
+					<putfield class="Ljava/io/FileOutputStream" field="realWorld"
+						fieldType="I" value="foo" ref="arg0" />
+					<new def="x" class="Ljava/io/IOException" />
+					<throw value="x" />
+				</method>
+				<method name="writeBytes" descriptor="([BII)V">
+					<constant name="the-answer" type="byte" value="42"/>
+					<aaload def="foo" ref="arg1" index="the-answer" type="B"/>
+					<putfield class="Ljava/io/FileOutputStream" field="realWorld"
+						fieldType="I" value="foo" ref="arg0" />
+					<new def="x" class="Ljava/io/IOException" />
+					<throw value="x" />
+				</method>
+			</class>
+			<class name="ObjectOutputStream">
+				<method name="doublesToBytes" descriptor="([DI[BII)V"
+					static="true" />
+				<method name="floatsToBytes" descriptor="([FI[BII)V"
+					static="true" />
+			</class>
+			<class name="ObjectStreamClass">
+				<method name="hasStaticInitializer"
+					descriptor="(Ljava/lang/Class;)Z" static="true">
+				</method>
+			</class>
+			<class name="RandomAccessFile">
+				<method name="close" descriptor="()V"></method>
+				<method name="getFilePointer" descriptor="()J"></method>
+				<method name="length" descriptor="()J"></method>
+				<method name="open"
+					descriptor="(Ljava/lang/String;Z)V">
+				</method>
+				<method name="open"
+					descriptor="(Ljava/lang/String;I)V">
+				</method>
+				<method name="read" descriptor="()I"></method>
+				<method name="readBytes"
+					descriptor="([BIILjava/io/FileDescriptor;)I">
+				</method>
+				<method name="seek" descriptor="(J)V"></method>
+				<method name="write" descriptor="(I)V"></method>
+				<method name="writeBytes"
+					descriptor="([BIILjava/io/FileDescriptor;)V">
+				</method>
+				<method name="writeBytes" descriptor="([BII)V"></method>
+			</class>
+		</package>
+
+		<package name="java/lang">
+			<class name="Class">
+				<method name="forName"
+					descriptor="(Ljava/lang/String;)Ljava/lang/Class;"
+					static="true">
+					<new def="x" class="Ljava/lang/Class" />
+					<return value="x" />
+					<new def="y"
+						class="Ljava/lang/ClassNotFoundException" />
+					<throw value="y" />
+					<new def="z" class="Ljava/lang/ClassFormatError" />
+					<throw value="z" />
+				</method>
+				<method name="forName0"
+					descriptor="(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;"
+					static="true">
+					<new def="x" class="Ljava/lang/Class" />
+					<return value="x" />
+					<new def="y"
+						class="Ljava/lang/ClassNotFoundException" />
+					<throw value="y" />
+					<new def="z" class="Ljava/lang/ClassFormatError" />
+					<throw value="z" />
+				</method>
+				<method name="forName1"
+					descriptor="(Ljava/lang/String;)Ljava/lang/Class;" static="true">
+					<new def="x" class="Ljava/lang/Class" />
+					<return value="x" />
+					<new def="y"
+						class="Ljava/lang/ClassNotFoundException" />
+					<throw value="y" />
+					<new def="z" class="Ljava/lang/ClassFormatError" />
+					<throw value="z" />
+				</method>
+				<method name="getClassLoader0"
+					descriptor="()Ljava/lang/ClassLoader;">
+					<new def="x" class="Ljava/lang/ClassLoader" />
+					<return value="x" />
+				</method>
+				<method name="getComponentType"
+					descriptor="()Ljava/lang/Class;">
+					<new def="x" class="Ljava/lang/Class" />
+					<return value="x" />
+				</method>
+				<method name="getConstructor0"
+					descriptor="([Ljava/lang/Class;I)Ljava/lang/reflect/Constructor;">
+					<new def="x" class="Ljava/lang/reflect/Constructor" />
+					<return value="x" />
+				</method>
+				<method name="getField0"
+					descriptor="(Ljava/lang/String;I)Ljava/lang/reflect/Field;">
+					<new def="x" class="Ljava/lang/reflect/Field" />
+					<return value="x" />
+				</method>
+				<method name="getInterfaces"
+					descriptor="()[Ljava/lang/Class;">
+					<constant name="size" type="int" value="1" />
+					<new def="x" class="[Ljava/lang/Class" size="size" />
+					<new def="y" class="Ljava/lang/Class" />
+					<aastore ref="x" value="y" index="0" />
+					<return value="x" />
+				</method>
+				<method name="getMethod0"
+					descriptor="(Ljava/lang/String;[Ljava/lang/Class;I)Ljava/lang/reflect/Method;">
+					<new def="x" class="Ljava/lang/reflect/Method" />
+					<return value="x" />
+				</method>
+				<method name="getMethods0"
+					descriptor="(I)[Ljava/lang/reflect/Method;">
+					<constant name="size" type="int" value="1" />
+					<new def="x" class="[Ljava/lang/reflect/Method"
+						size="size" />
+					<new def="y" class="Ljava/lang/reflect/Method" />
+					<aastore ref="x" value="y" index="0" />
+					<return value="x" />
+				</method>
+				<method name="getModifiers" descriptor="()I"></method>
+				<method name="getName"
+					descriptor="()Ljava/lang/String;">
+					<new def="x" class="Ljava/lang/String" />
+					<return value="x" />
+				</method>
+				<method name="getPrimitiveClass"
+					descriptor="(Ljava/lang/String;)Ljava/lang/Class;" static="true">
+					<new def="x" class="Ljava/lang/Class" />
+					<return value="x" />
+				</method>
+				<method name="getSigners"
+					descriptor="()[Ljava/lang/Object;">
+					<constant name="size" type="int" value="1" />
+					<new def="x" class="[Ljava/lang/Object" size="size" />
+					<new def="y" class="Ljava/lang/Class" />
+					<aastore ref="x" value="y" index="0" />
+					<return value="x" />
+				</method>
+				<method name="getSuperclass"
+					descriptor="()Ljava/lang/Class;">
+					<new def="x" class="Ljava/lang/Class" />
+					<return value="x" />
+				</method>
+				<method name="getFields"
+					descriptor="()[Ljava/lang/reflect/Field;">
+					<constant name="size" type="int" value="1" />
+					<new def="x" class="[Ljava/lang/reflect/Field" size="size"/>
+					<new def="y" class="Ljava/lang/reflect/Field" />
+					<aastore ref="x" value="y" index="0" />
+					<return value="x" />
+				</method>
+				<method name="getConstructors"
+					descriptor="()[Ljava/lang/reflect/Constructor;">
+					<constant name="size" type="int" value="1" />
+					<new def="x"
+						class="[Ljava/lang/reflect/Constructor" size="size"/>
+					<new def="y" class="Ljava/lang/reflect/Constructor" />
+					<aastore ref="x" value="y" index="0" />
+					<return value="x" />
+				</method>
+				<method name="isAssignableFrom"
+					descriptor="(Ljava/lang/Class;)Z">
+				</method>
+				<method name="isArray" descriptor="()Z"></method>
+				<method name="isInstance"
+					descriptor="(Ljava/lang/Object;)Z">
+				</method>
+				<method name="isInterface" descriptor="()Z"></method>
+				<method name="isPrimitive" descriptor="()Z"></method>
+				<method name="newInstance"
+					descriptor="()Ljava/lang/Object;" factory="true">
+					<new def="x" class="Lcom/ibm/wala/Malleable" />
+					<return value="x" />
+				</method>
+			</class>
+			<class name="ClassLoader" allocatable="true">
+				<method name="findBootstrapClass"
+					descriptor="(Ljava/lang/String;)Ljava/lang/Class;">
+					<new def="x" class="Ljava/lang/Class" />
+					<return value="x" />
+				</method>
+				<method name="findLoadedClass"
+					descriptor="(Ljava/lang/String;)Ljava/lang/Class;">
+					<call type="static" name="forName"
+						class="Ljava/lang/Class" descriptor="(Ljava/lang/String;)Ljava/lang/Class;" 
+						arg0="arg0" def="x" />
+					<return value="x" />
+				</method>
+				<method name="getCallerClassLoader"
+					descriptor="()Ljava/lang/ClassLoader;" static="true">
+					<new def="x" class="Ljava/lang/ClassLoader" />
+					<return value="x" />
+				</method>
+			</class>
+			<class name="Double">
+				<method name="doubleToLongBits" descriptor="(D)J"
+					static="true">
+				</method>
+				<method name="longBitsToDouble" descriptor="(J)D"
+					static="true">
+				</method>
+			</class>
+			<class name="Float">
+				<method name="floatToIntBits" descriptor="(F)I"
+					static="true">
+				</method>
+				<method name="intBitsToFloat" descriptor="(I)F"
+					static="true">
+				</method>
+			</class>
+			<class name="Object">
+				<method name="clone"
+					descriptor="()Ljava/lang/Object;">
+					<return value="null" />
+					<!-- Note that propagation-style builders should intercept calls to clone, and this model is OK for RTA -->
+				</method>
+				<method name="getClass"
+					descriptor="()Ljava/lang/Class;">
+					<new def="x" class="Ljava/lang/Class" />
+					<return value="x" />
+				</method>
+				<method name="hashCode" descriptor="()I"></method>
+				<method name="notify" descriptor="()V"></method>
+				<method name="notifyAll" descriptor="()V"></method>
+				<method name="wait" descriptor="(J)V"></method>
+			</class>
+			<class name="Runtime">
+				<method name="freeMemory" descriptor="()J"></method>
+				<method name="gc" descriptor="()V"></method>
+				<method name="totalMemory" descriptor="()J"></method>
+			</class>
+			<class name="SecurityManager">
+				<method name="getClassContext"
+					descriptor="()[Ljava/lang/Class;">
+					<constant name="size" type="int" value="1" />
+					<new def="x" class="[Ljava/lang/Class" size="size"/>
+					<new def="y" class="Ljava/lang/Class" />
+					<aastore ref="x" value="y" index="0" />
+					<return value="x" />
+				</method>
+			</class>
+			<class name="StrictMath">
+				<method name="ceil" descriptor="(D)D" static="true"></method>
+				<method name="exp" descriptor="(D)D" static="true"></method>
+				<method name="floor" descriptor="(D)D" static="true"></method>
+				<method name="pow" descriptor="(DD)D" static="true"></method>
+			</class>
+			<class name="String">
+				<method name="intern"
+					descriptor="()Ljava/lang/String;">
+					<new def="x" class="Ljava/lang/String" />
+					<return value="x" />
+					<poison
+						reason="questionable model of java/lang/String/intern()"
+						level="mild" />
+				</method>
+			</class>
+			<class name="System">
+				<method name="&lt;clinit&gt;" static="true"
+					descriptor="()V">
+					<new def="secure"
+						class="Ljava/lang/SecurityManager" />
+					<putstatic class="Ljava/lang/System"
+						field="security" fieldType="Ljava/lang/SecurityManager"
+						value="secure" />
+					<call type="static" name="initializeSystemClass"
+						class="Ljava/lang/System" descriptor="()V" />
+				</method>
+
+				<method name="initializeSystemClass" descriptor="()V"
+					static="true">
+					<new def="x" class="Ljava/util/Properties" />
+					<call type="special" name="&lt;init&gt;"
+						class="Ljava/util/Properties" descriptor="()V" arg0="x" />
+					<new def="key" class="Ljava/lang/String" />
+					<new def="value" class="Ljava/lang/String" />
+					<call type="virtual" name="put"
+						class="Ljava/util/Hashtable"
+						descriptor="(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+						arg0="x" arg1="key" arg2="value" def="ignore" />
+
+					<new def="in" class="Ljava/io/FileInputStream" />
+					<call type="special" name="&lt;init&gt;"
+						class="Ljava/io/FileInputStream" descriptor="()V" arg0="in" />
+
+					<new def="o" class="Ljava/io/FileOutputStream" />
+					<call type="special" name="&lt;init&gt;"
+						class="Ljava/io/FileOutputStream" descriptor="()V" arg0="o" />
+					<new def="e" class="Ljava/io/FileOutputStream" />
+					<call type="special" name="&lt;init&gt;"
+						class="Ljava/io/FileOutputStream" descriptor="()V" arg0="e" />
+
+					<new def="out" class="Ljava/io/PrintStream" />
+					<call type="special" name="&lt;init&gt;"
+						class="Ljava/io/PrintStream"
+						descriptor="(Ljava/io/OutputStream;)V" arg0="out" arg1="o" />
+					<new def="err" class="Ljava/io/PrintStream" />
+					<call type="special" name="&lt;init&gt;"
+						class="Ljava/io/PrintStream"
+						descriptor="(Ljava/io/OutputStream;)V" arg0="err" arg1="e" />
+
+					<putstatic class="Ljava/lang/System" field="in"
+						fieldType="Ljava/io/InputStream" value="in" />
+					<putstatic class="Ljava/lang/System" field="out"
+						fieldType="Ljava/io/PrintStream" value="out" />
+					<putstatic class="Ljava/lang/System" field="err"
+						fieldType="Ljava/io/PrintStream" value="err" />
+				</method>
+<!-- 				<method name="arraycopy"
+					descriptor="(Ljava/lang/Object;ILjava/lang/Object;II)V"
+					static="true">
+					<call type="static" name="arraycopy"
+						class="Lcom/ibm/wala/model/java/lang/System"
+						descriptor="(Ljava/lang/Object;Ljava/lang/Object;)V" arg0="arg0"
+						arg1="arg2" />
+					<return />
+				</method> -->
+				<method name="currentTimeMillis" descriptor="()J"
+					static="true">
+				</method>
+				<method name="getCallerClass"
+					descriptor="()Ljava/lang/Class;" static="true">
+					<new def="x" class="Ljava/lang/Class" />
+					<return value="x" />
+				</method>
+				<method name="identityHashCode"
+					descriptor="(Ljava/lang/Object;)I" static="true">
+				</method>
+				<method name="initProperties"
+					descriptor="(Ljava/util/Properties;)Ljava/util/Properties;"
+					static="true">
+					<new def="dummy1" class="Ljava/lang/Object" />
+					<new def="dummy2" class="Ljava/lang/Object" />
+					<call type="virtual" name="put"
+						class="Ljava/util/Properties"
+						descriptor="(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+						arg0="arg0" arg1="dummy1" arg2="dummy2" def="ignore" />
+					<new def="x" class="Ljava/util/Properties" />
+					<return value="x" />
+				</method>
+				<method name="getProperty"
+				    descriptor="(Ljava/lang/String;)Ljava/lang/String;"
+				    static="true">
+				    <new def="x" class="Ljava/lang/String" />
+				    <return value="x" />
+				</method>
+				<method name="getProperty"
+				    descriptor="(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
+				    static="true">
+				    <return value="arg1" />
+				    <new def="x" class="Ljava/lang/String" />
+				    <return value="x" />
+				</method>
+				<method name="mapLibraryName"
+					descriptor="(Ljava/lang/String;)Ljava/lang/String;"
+					static="true">
+					<return value="arg0" />
+				</method>
+				<method name="setErr0"
+					descriptor="(Ljava/io/PrintStream;)V" static="true">
+				</method>
+				<method name="setIn0"
+					descriptor="(Ljava/io/InputStream;)V" static="true">
+				</method>
+				<method name="setOut0"
+					descriptor="(Ljava/io/PrintStream;)V" static="true">
+				</method>
+			</class>
+			<class name="Thread">
+				<method name="currentThread"
+					descriptor="()Ljava/lang/Thread;" static="true">
+					<new def="x" class="Ljava/lang/Thread" />
+					<return value="x" />
+				</method>
+				<method name="interrupt0" descriptor="()V"></method>
+				<method name="&lt;init&gt;" descriptor="()V">
+					<putfield class="Ljava/lang/Thread" field="runnable"
+						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg0" />
+					<putfield class="Ljava/lang/Thread" field="target"
+						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg0" />
+				</method>
+				<method name="&lt;init&gt;"
+					descriptor="(Ljava/lang/Runnable;)V">
+					<putfield class="Ljava/lang/Thread" field="runnable"
+						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg1" />
+					<putfield class="Ljava/lang/Thread" field="target"
+						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg1" />
+				</method>
+				<method name="isAlive" descriptor="()Z"></method>
+				<method name="resume0" descriptor="()V" />
+				<method name="sleep" descriptor="(J)V" static="true">
+					<new def="x"
+						class="Ljava/lang/InterruptedException" />
+					<throw value="x" />
+				</method>
+				<method name="start" descriptor="()V">
+					<putfield class="Ljava/lang/Thread" field="runnable"
+						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg0" />
+					<getfield class="Ljava/lang/Thread" field="runnable"
+						fieldType="Ljava/lang/Runnable" def="x" ref="arg0" />
+					<call type="interface" name="run"
+						class="Ljava/lang/Runnable" descriptor="()V" arg0="x" />
+					<putfield class="Ljava/lang/Thread" field="target"
+						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg0" />
+					<getfield class="Ljava/lang/Thread" field="target"
+						fieldType="Ljava/lang/Runnable" def="y" ref="arg0" />
+					<call type="interface" name="run"
+						class="Ljava/lang/Runnable" descriptor="()V" arg0="y" />
+				</method>
+				<method name="stop0" descriptor="()V" />
+				<method name="yield" descriptor="()V" static="true" />
+			</class>
+			<class name="Throwable">
+				<method name="fillInStackTrace"
+					descriptor="()Ljava/lang/Throwable;">
+					<return value="arg0" />
+				</method>
+				<method name="getStackTraceElement"
+					descriptor="(I)Ljava/lang/StackTraceElement;">
+					<new def="x" class="Ljava/lang/StackTraceElement" />
+					<return value="x" />
+				</method>
+				<method name="printStackTrace0"
+					descriptor="(Ljava/lang/Object;)V" />
+				<method name="getStackTraceDepth" descriptor="()I" />
+
+			</class>
+		</package>
+		<package name="java/lang/reflect">
+			<class name="Array">
+<!-- 				<method name="get" descriptor="(Ljava/lang/Object;I)Ljava/lang/Object;" static="true">
+					<call type="static" name="get"
+						class="Lcom/ibm/wala/model/java/lang/reflect/Array"
+						descriptor="(Ljava/lang/Object;I)Ljava/lang/Object;" arg0="arg0"
+						arg1="arg1" def="x"/>
+					<return value="x" />
+				</method> -->
+				<method name="getByte"
+					descriptor="(Ljava/lang/Object;I)B" static="true">
+				</method>
+				<method name="getLength"
+					descriptor="(Ljava/lang/Object;)I" static="true">
+				</method>
+				<method name="multiNewArray"
+					descriptor="(Ljava/lang/Class;[I)Ljava/lang/Object;" static="true"
+					factory="true">
+					<new def="x" class="Lcom/ibm/wala/Malleable" />
+					<return value="x" />
+				</method>
+				<!-- THIS KIND OF TREATMENT OF ARRAYS IS BOGUS and TOO IMPRECISE.  TODO: FIX THIS.
+				<method name="newArray"
+					descriptor="(Ljava/lang/Class;I)Ljava/lang/Object;" static="true"
+					factory="true">
+					<new def="x" class="Lcom/ibm/wala/Malleable" />
+					<return value="x" />
+				</method>
+				<method name="newInstance"
+					descriptor="(Ljava/lang/Class;I)Ljava/lang/Object;" static="true"
+					factory="true">
+					<new def="x" class="Lcom/ibm/wala/Malleable" />
+					<return value="x" />
+				</method>
+				-->
+				<method name="set"
+					descriptor="(Ljava/lang/Object;ILjava/lang/Object;)V"
+					static="true">
+				</method>
+				<method name="setByte"
+					descriptor="(Ljava/lang/Object;IB)V" static="true">
+				</method>
+			</class>
+			<class name="Constructor">
+			    <method name="newInstance"
+					descriptor="([Ljava/lang/Object;)Ljava/lang/Object;" factory="true">
+					<new def="x" class="Lcom/ibm/wala/Malleable" />
+					<return value="x" />
+				</method>
+		    </class>
+			<class name="Field">
+				<method name="get"
+					descriptor="(Ljava/lang/Object;)Ljava/lang/Object;"
+					factory="true">
+					<new def="x" class="Lcom/ibm/wala/Malleable" />
+					<return value="x" />
+					<poison
+						reason="bogus model of java/lang/reflect/Field/get"
+						level="severe" />
+				</method>
+				<method name="getBoolean"
+					descriptor="(Ljava/lang/Object;)Z">
+				</method>
+				<method name="getByte"
+					descriptor="(Ljava/lang/Object;)B">
+				</method>
+				<method name="getChar"
+					descriptor="(Ljava/lang/Object;)C">
+				</method>
+				<method name="getDouble"
+					descriptor="(Ljava/lang/Object;)D">
+				</method>
+				<method name="getFloat"
+					descriptor="(Ljava/lang/Object;)F">
+				</method>
+				<method name="getInt"
+					descriptor="(Ljava/lang/Object;)I">
+				</method>
+				<method name="getLong"
+					descriptor="(Ljava/lang/Object;)J">
+				</method>
+				<method name="getShort"
+					descriptor="(Ljava/lang/Object;)S">
+				</method>
+				<method name="set"
+					descriptor="(Ljava/lang/Object;Ljava/lang/Object;)V">
+				</method>
+				<method name="setBoolean"
+					descriptor="(Ljava/lang/Object;Z)V">
+				</method>
+				<method name="setByte"
+					descriptor="(Ljava/lang/Object;B)V">
+				</method>
+				<method name="setChar"
+					descriptor="(Ljava/lang/Object;C)V">
+				</method>
+				<method name="setDouble"
+					descriptor="(Ljava/lang/Object;D)V">
+				</method>
+				<method name="setFloat"
+					descriptor="(Ljava/lang/Object;F)V">
+				</method>
+				<method name="setInt"
+					descriptor="(Ljava/lang/Object;I)V">
+				</method>
+				<method name="setLong"
+					descriptor="(Ljava/lang/Object;J)V">
+				</method>
+				<method name="setShort"
+					descriptor="(Ljava/lang/Object;S)V">
+				</method>
+			</class>
+		</package>
+
+		<package name="java/net">
+			<class name="PlainDatagramSocketImpl">
+				<method name="bind"
+					descriptor="(ILjava/net/InetAddress;)V">
+				</method>
+			</class>
+			<class name="PlainSocketImpl">
+				<method name="initProto" descriptor="()V" static="true" />
+				<method name="socketAvailable" descriptor="()I" />
+				<method name="socketBind"
+					descriptor="(Ljava/net/InetAddress;I)V" />
+				<method name="socketClose0" descriptor="(Z)V" />
+				<method name="socketConnect"
+					descriptor="(Ljava/net/InetAddress;II)V" />
+				<method name="socketCreate" descriptor="(Z)V" />
+				<method name="socketGetOption"
+					descriptor="(ILjava/lang/Object;)I" />
+				<method name="socketListen" descriptor="(I)V" />
+				<method name="socketSetOption"
+					descriptor="(IZLjava/lang/Object;)V" />
+			</class>
+			<class name="SocketInputStream">
+				<method name="init" descriptor="()V" static="true" />
+				<method name="socketRead0"
+					descriptor="(Ljava/io/FileDescriptor;[BIII)I">
+					<constant name="yes" type="int" value="1" />
+					<constant name="no" type="int" value="0" />
+					<constant name="the-answer" type="byte" value="42"/>
+					<aastore ref="arg2" index="no" value="the-answer"/>
+					<return value="yes" />
+					<return value="no" />
+					<new def="x" class="Ljava/io/IOException" />
+					<throw value="x" />
+				</method>
+			</class>
+			<class name="SocketOutputStream">
+				<method name="init" descriptor="()V" static="true" />
+				<method name="socketWrite0"
+					descriptor="(Ljava/io/FileDescriptor;[BII)V" />
+			</class>
+		</package>
+
+		<package name="java/security">
+			<class name="AccessControlContext">
+				<method name="getInheritedAccessControlContext"
+					descriptor="()Ljava/security/AccessControlContext;">
+					<new def="x" class="Ljava/lang/Object" />
+					<return value="x" />
+					<poison
+						reason="questionable model of java/security/AccessControlContext/getInheritedAccessControlContext"
+						level="moderate" />
+				</method>
+			</class>
+			<class name="AccessController">
+				<method name="doPrivileged"
+					descriptor="(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+					static="true">
+					<call type="interface" name="run"
+						class="Ljava/security/PrivilegedAction"
+						descriptor="()Ljava/lang/Object;" def="x" arg0="arg0" />
+					<return value="x" />
+					<new def="y"
+						class="Ljava/security/PrivilegedActionException" />
+					<throw value="y" />
+					<poison
+						reason="incorrect model of java/security/AccessController/doPrivileged"
+						level="severe" />
+				</method>
+				<method name="doPrivileged"
+					descriptor="(Ljava/security/PrivilegedExceptionAction;)Ljava/lang/Object;"
+					static="true">
+					<call type="interface" name="run"
+						class="Ljava/security/PrivilegedExceptionAction"
+						descriptor="()Ljava/lang/Object;" def="x" arg0="arg0" />
+					<return value="x" />
+					<new def="y"
+						class="Ljava/security/PrivilegedActionException" />
+					<throw value="y" />
+					<poison
+						reason="incorrect model of java/security/AccessController/doPrivileged"
+						level="severe" />
+				</method>
+				<method name="doPrivileged"
+					descriptor="(Ljava/security/PrivilegedAction;Ljava/security/AccessControlContext;)Ljava/lang/Object;"
+					static="true">
+					<call type="interface" name="run"
+						class="Ljava/security/PrivilegedAction"
+						descriptor="()Ljava/lang/Object;" def="x" arg0="arg0" />
+					<return value="x" />
+					<new def="y"
+						class="Ljava/security/PrivilegedActionException" />
+					<throw value="y" />
+					<poison
+						reason="incorrect model of java/security/AccessController/doPrivileged"
+						level="severe" />
+				</method>
+				<method name="doPrivileged"
+					descriptor="(Ljava/security/PrivilegedExceptionAction;Ljava/security/AccessControlContext;)Ljava/lang/Object;"
+					static="true">
+					<call type="interface" name="run"
+						class="Ljava/security/PrivilegedExceptionAction"
+						descriptor="()Ljava/lang/Object;" def="x" arg0="arg0" />
+					<return value="x" />
+					<new def="y"
+						class="Ljava/security/PrivilegedActionException" />
+					<throw value="y" />
+					<poison
+						reason="incorrect model of java/security/AccessController/doPrivileged"
+						level="severe" />
+				</method>
+				<method name="getStackAccessControlContext"
+					descriptor="()Ljava/security/AccessControlContext;"
+					static="true">
+					<new def="x"
+						class="Ljava/security/AccessControlContext" />
+					<return value="x" />
+					<poison
+						reason="questionable model of java/security/AccessController/getStackAccessControlContext"
+						level="moderate" />
+				</method>
+			</class>
+		</package>
+
+		<package name="java/util">
+			<class name="TimeZone">
+				<method name="getSystemTimeZoneID"
+					descriptor="(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
+					static="true">
+					<new def="x" class="Ljava/lang/String" />
+					<return value="x" />
+				</method>
+			</class>
+		</package>
+
+		<package name="java/util/logging">
+			<class name="FileHandler">
+				<method name="isSetUID" descriptor="()Z" static="true" />
+			</class>
+		</package>
+
+		<package name="java/util/prefs">
+			<class name="FileSystemPreferences">
+				<method name="chmod" descriptor="(Ljava/lang/String;I)I"
+					static="true" />
+				<method name="lockFile0"
+					descriptor="(Ljava/lang/String;IZ)[I" static="true">
+					<constant name="size" type="int" value="1" />
+					<new def="x" class="[I" size="size"/>
+					<return value="x" />
+				</method>
+				<method name="unlockFile0" descriptor="(I)I"
+					static="true" />
+			</class>
+		</package>
+
+		<package name="sun/misc">
+			<class name="AtomicLongCSImpl">
+				<method name="attemptUpdate" descriptor="(JJ)Z" />
+			</class>
+			<class name="AtomicLong">
+				<method name="VMSupportsCS8" descriptor="()Z"
+					static="true" />
+			</class>
+			<class name="Signal">
+				<method name="handle0" descriptor="(IJ)J" static="true" />
+				<method name="findSignal"
+					descriptor="(Ljava/lang/String;)I" static="true" />
+			</class>
+			<class name="Unsafe" allocatable="true">
+				<method name="getUnsafe" descriptor="()Lsun/misc/Unsafe"
+					static="true">
+					<new def="x" class="Lsun/misc/Unsafe" />
+					<return value="x" />
+				</method>
+				<method name="allocateMemory" descriptor="(J)J" />
+				<method name="copyMemory" descriptor="(JJJ)V" />
+				<method name="freeMemory" descriptor="(J)V" />
+				<method name="objectFieldOffset"
+					descriptor="(Ljava/lang/reflect/Field;)J" />
+				<method name="getBoolean" descriptor="(J)Z" />
+				<method name="getByte" descriptor="(J)B" />
+				<method name="getChar" descriptor="(J)C" />
+				<method name="getDouble" descriptor="(J)D" />
+				<method name="getFloat" descriptor="(J)F" />
+				<method name="getInt" descriptor="(J)I" />
+				<method name="getLong" descriptor="(J)J" />
+				<method name="getShort" descriptor="(J)S" />
+				<method name="getBoolean"
+					descriptor="(Ljava/lang/Object;J)Z" />
+				<method name="getByte"
+					descriptor="(Ljava/lang/Object;J)B" />
+				<method name="getChar"
+					descriptor="(Ljava/lang/Object;J)C" />
+				<method name="getDouble"
+					descriptor="(Ljava/lang/Object;J)D" />
+				<method name="getFloat"
+					descriptor="(Ljava/lang/Object;J)F" />
+				<method name="getInt"
+					descriptor="(Ljava/lang/Object;J)I" />
+				<method name="getLong"
+					descriptor="(Ljava/lang/Object;J)J" />
+				<method name="getShort"
+					descriptor="(Ljava/lang/Object;J)S" />
+				<method name="putBoolean" descriptor="(JZ)V" />
+				<method name="putByte" descriptor="(JB)V" />
+				<method name="putChar" descriptor="(JC)V" />
+				<method name="putDouble" descriptor="(JD)V" />
+				<method name="putFloat" descriptor="(JF)V" />
+				<method name="putInt" descriptor="(JI)V" />
+				<method name="putLong" descriptor="(JJ)V" />
+				<method name="putShort" descriptor="(JS)V" />
+				<method name="registerNatives" descriptor="()V"
+					static="true" />
+			</class>
+		</package>
+
+		<package name="sun/nio/ch">
+			<class name="IOUtil">
+				<method name="initIDs" descriptor="()V" static="true" />
+			</class>
+			<class name="FileDispatcher">
+				<method name="init" descriptor="()V" static="true" />
+			</class>
+			<class name="FileChannelImpl">
+				<method name="lock0"
+					descriptor="(Ljava/io/FileDescriptor;ZJJZ)I" />
+				<method name="initIDs" descriptor="()J" static="true" />
+			</class>
+		</package>
+
+	</classloader>
+</summary-spec>

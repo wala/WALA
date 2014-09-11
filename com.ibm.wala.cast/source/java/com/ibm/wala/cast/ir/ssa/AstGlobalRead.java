@@ -26,13 +26,13 @@ import com.ibm.wala.types.TypeReference;
  */
 public class AstGlobalRead extends SSAGetInstruction {
 
-  public AstGlobalRead(int lhs, FieldReference global) {
-    super(lhs, global);
+  public AstGlobalRead(int iindex, int lhs, FieldReference global) {
+    super(iindex, lhs, global);
   }
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return ((AstInstructionFactory)insts).GlobalRead((defs==null)? getDef(): defs[0], getDeclaredField());
+    return ((AstInstructionFactory)insts).GlobalRead(iindex, (defs==null)? getDef(): defs[0], getDeclaredField());
   }
 
   @Override

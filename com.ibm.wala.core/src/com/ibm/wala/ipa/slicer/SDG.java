@@ -18,6 +18,7 @@ import java.util.Map;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -77,7 +78,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
   /**
    * governing pointer analysis
    */
-  private final PointerAnalysis pa;
+  private final PointerAnalysis<InstanceKey> pa;
 
   /**
    * keeps track of PDG for each call graph node
@@ -121,16 +122,16 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
    */
   private boolean eagerComputed = false;
 
-  public SDG(final CallGraph cg, PointerAnalysis pa, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
+  public SDG(final CallGraph cg, PointerAnalysis<InstanceKey> pa, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
     this(cg, pa, ModRef.make(), dOptions, cOptions, null);
   }
 
-  public SDG(final CallGraph cg, PointerAnalysis pa, ModRef modRef, DataDependenceOptions dOptions,
+  public SDG(final CallGraph cg, PointerAnalysis<InstanceKey> pa, ModRef modRef, DataDependenceOptions dOptions,
       ControlDependenceOptions cOptions) {
     this(cg, pa, modRef, dOptions, cOptions, null);
   }
 
-  public SDG(CallGraph cg, PointerAnalysis pa, ModRef modRef, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
+  public SDG(CallGraph cg, PointerAnalysis<InstanceKey> pa, ModRef modRef, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
       HeapExclusions heapExclude) throws IllegalArgumentException {
     super();
     if (dOptions == null) {
@@ -819,7 +820,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
     return cg.getClassHierarchy();
   }
 
-  public PointerAnalysis getPointerAnalysis() {
+  public PointerAnalysis<InstanceKey> getPointerAnalysis() {
     return pa;
   }
 

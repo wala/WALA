@@ -204,7 +204,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
     // extract data for analysis
     //
     CallGraph cg = getCallGraph();
-    PointerAnalysis pa = getPointerAnalysis();
+    PointerAnalysis<InstanceKey> pa = getPointerAnalysis();
 
     //
     // collect all places where objects can escape their creating thread:
@@ -256,8 +256,8 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
     //
     for (Iterator<PointerKey> rts = escapeAnalysisRoots.iterator(); rts.hasNext();) {
       PointerKey root = rts.next();
-      OrdinalSet<? extends InstanceKey> objects = pa.getPointsToSet(root);
-      for (Iterator<? extends InstanceKey> objs = objects.iterator(); objs.hasNext();) {
+      OrdinalSet<InstanceKey> objects = pa.getPointsToSet(root);
+      for (Iterator<InstanceKey> objs = objects.iterator(); objs.hasNext();) {
         InstanceKey obj = objs.next();
         escapingInstanceKeys.add(obj);
       }
@@ -276,8 +276,8 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
           if (type.isArrayClass()) {
             if (((ArrayClass) type).getElementClass() != null) {
               PointerKey fk = heapModel.getPointerKeyForArrayContents(key);
-              OrdinalSet<? extends InstanceKey> fobjects = pa.getPointsToSet(fk);
-              for (Iterator<? extends InstanceKey> fobjs = fobjects.iterator(); fobjs.hasNext();) {
+              OrdinalSet<InstanceKey> fobjects = pa.getPointsToSet(fk);
+              for (Iterator<InstanceKey> fobjs = fobjects.iterator(); fobjs.hasNext();) {
                 InstanceKey fobj = fobjs.next();
                 if (!escapingInstanceKeys.contains(fobj)) {
                   newKeys.add(fobj);
@@ -290,8 +290,8 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
               IField f = fs.next();
               if (f.getFieldTypeReference().isReferenceType()) {
                 PointerKey fk = heapModel.getPointerKeyForInstanceField(key, f);
-                OrdinalSet<? extends InstanceKey> fobjects = pa.getPointsToSet(fk);
-                for (Iterator<? extends InstanceKey> fobjs = fobjects.iterator(); fobjs.hasNext();) {
+                OrdinalSet<InstanceKey> fobjects = pa.getPointsToSet(fk);
+                for (Iterator<InstanceKey> fobjs = fobjects.iterator(); fobjs.hasNext();) {
                   InstanceKey fobj = fobjs.next();
                   if (!escapingInstanceKeys.contains(fobj)) {
                     newKeys.add(fobj);

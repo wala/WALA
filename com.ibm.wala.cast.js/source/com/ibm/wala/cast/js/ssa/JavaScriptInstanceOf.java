@@ -25,7 +25,8 @@ public class JavaScriptInstanceOf extends SSAInstruction {
   private final int typeVal;
   private final int result;
   
-  public JavaScriptInstanceOf(int result, int objVal, int typeVal) {
+  public JavaScriptInstanceOf(int iindex, int result, int objVal, int typeVal) {
+    super(iindex);
     this.objVal = objVal;
     this.typeVal = typeVal;
     this.result = result;
@@ -34,7 +35,7 @@ public class JavaScriptInstanceOf extends SSAInstruction {
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     return 
-      ((JSInstructionFactory)insts).InstanceOf(
+      ((JSInstructionFactory)insts).InstanceOf(iindex,
           defs==null? result: defs[0],
           uses==null? objVal: uses[0],
           uses==null? typeVal: uses[1]);

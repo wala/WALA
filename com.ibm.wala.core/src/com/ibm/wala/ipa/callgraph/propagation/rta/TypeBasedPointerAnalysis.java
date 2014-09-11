@@ -26,7 +26,9 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceFieldKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKeyWithFilter;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.ExceptionReturnValueKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -164,6 +166,11 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
       FilteredPointerKey.TypeFilter filter = i.getTypeFilter();
       assert filter instanceof FilteredPointerKey.SingleClassFilter;
       return ((FilteredPointerKey.SingleClassFilter) filter).getConcreteType();
+    } else if (key instanceof ExceptionReturnValueKey) {
+      return getCallGraph().getClassHierarchy().lookupClass(TypeReference.JavaLangException);
+    } else if (key instanceof ReturnValueKey) {
+      ReturnValueKey r = (ReturnValueKey) key;
+      return getCallGraph().getClassHierarchy().lookupClass(r.getNode().getMethod().getReturnType());
     } else {
       Assertions.UNREACHABLE("inferType " + key.getClass());
       return null;

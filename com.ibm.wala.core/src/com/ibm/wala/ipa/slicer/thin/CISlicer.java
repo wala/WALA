@@ -17,6 +17,7 @@ import java.util.Set;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.modref.DelegatingExtendedHeapModel;
@@ -51,11 +52,11 @@ public class CISlicer {
    */
   private final Graph<Statement> depGraph;
 
-  public CISlicer(CallGraph cg, PointerAnalysis pa, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
+  public CISlicer(CallGraph cg, PointerAnalysis<InstanceKey> pa, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
     this(cg, pa, ModRef.make(), dOptions, cOptions);
   }
 
-  public CISlicer(CallGraph cg, PointerAnalysis pa, ModRef modRef, DataDependenceOptions dOptions, ControlDependenceOptions cOptions)
+  public CISlicer(CallGraph cg, PointerAnalysis<InstanceKey> pa, ModRef modRef, DataDependenceOptions dOptions, ControlDependenceOptions cOptions)
       throws IllegalArgumentException {
     if (dOptions == null) {
       throw new IllegalArgumentException("dOptions == null");
@@ -73,7 +74,7 @@ public class CISlicer {
 
   }
 
-  public CISlicer(final SDG sdg, final PointerAnalysis pa, final ModRef modRef) {
+  public CISlicer(final SDG sdg, final PointerAnalysis<InstanceKey> pa, final ModRef modRef) {
     Map<Statement, Set<PointerKey>> mod = scanForMod(sdg, pa, modRef);
     Map<Statement, Set<PointerKey>> ref = scanForRef(sdg, pa, modRef);
 
@@ -93,14 +94,14 @@ public class CISlicer {
   /**
    * Compute the set of pointer keys each statement mods
    */
-  public static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis pa) {
+  public static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis<InstanceKey> pa) {
     return scanForMod(sdg, pa, false, ModRef.make());
   }
 
   /**
    * Compute the set of pointer keys each statement refs
    */
-  public static Map<Statement, Set<PointerKey>> scanForRef(SDG sdg, PointerAnalysis pa) {
+  public static Map<Statement, Set<PointerKey>> scanForRef(SDG sdg, PointerAnalysis<InstanceKey> pa) {
     if (sdg == null) {
       throw new IllegalArgumentException("null sdg");
     }
@@ -110,7 +111,7 @@ public class CISlicer {
   /**
    * Compute the set of pointer keys each statement mods
    */
-  public static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis pa, ModRef modRef) {
+  public static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis<InstanceKey> pa, ModRef modRef) {
     return scanForMod(sdg, pa, false, modRef);
   }
 
@@ -118,7 +119,7 @@ public class CISlicer {
    * Compute the set of pointer keys each statement mods. Be careful to avoid eager PDG construction here! That means .. don't
    * iterate over SDG statements!
    */
-  public static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis pa, boolean ignoreAllocHeapDefs, ModRef modRef) {
+  public static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis<InstanceKey> pa, boolean ignoreAllocHeapDefs, ModRef modRef) {
     if (pa == null) {
       throw new IllegalArgumentException("null pa");
     }
@@ -146,7 +147,7 @@ public class CISlicer {
    * Compute the set of PointerKeys each statement refs.Be careful to avoid eager PDG construction here! That means .. don't iterate
    * over SDG statements!
    */
-  public static Map<Statement, Set<PointerKey>> scanForRef(SDG sdg, PointerAnalysis pa, ModRef modRef) {
+  public static Map<Statement, Set<PointerKey>> scanForRef(SDG sdg, PointerAnalysis<InstanceKey> pa, ModRef modRef) {
     if (pa == null) {
       throw new IllegalArgumentException("null pa");
     }

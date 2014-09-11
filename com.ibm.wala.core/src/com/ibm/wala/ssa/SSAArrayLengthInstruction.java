@@ -19,8 +19,8 @@ public abstract class SSAArrayLengthInstruction extends SSAInstruction {
 
   private final int arrayref;
 
-  protected SSAArrayLengthInstruction(int result, int arrayref) {
-    super();
+  protected SSAArrayLengthInstruction(int iindex, int result, int arrayref) {
+    super(iindex);
     this.result = result;
     this.arrayref = arrayref;
   }
@@ -33,7 +33,7 @@ public abstract class SSAArrayLengthInstruction extends SSAInstruction {
     if (uses != null && uses.length != 1) {
       throw new IllegalArgumentException();
     }
-    return insts.ArrayLengthInstruction(defs == null ? result : defs[0], uses == null ? arrayref : uses[0]);
+    return insts.ArrayLengthInstruction(iindex, defs == null ? result : defs[0], uses == null ? arrayref : uses[0]);
   }
 
   @Override

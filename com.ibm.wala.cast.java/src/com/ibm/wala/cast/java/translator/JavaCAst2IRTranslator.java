@@ -98,13 +98,13 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 
   @Override
   protected void doThrow(WalkContext context, int exception) {
-    context.cfg().addInstruction(insts.ThrowInstruction(exception));
+    context.cfg().addInstruction(insts.ThrowInstruction(context.cfg().getCurrentInstruction(), exception));
   }
 
   @Override
   public void doArrayRead(WalkContext context, int result, int arrayValue, CAstNode arrayRefNode, int[] dimValues) {
     TypeReference arrayTypeRef = (TypeReference) arrayRefNode.getChild(1).getValue();
-    context.cfg().addInstruction(insts.ArrayLoadInstruction(result, arrayValue, dimValues[0], arrayTypeRef));
+    context.cfg().addInstruction(insts.ArrayLoadInstruction(context.cfg().getCurrentInstruction(), result, arrayValue, dimValues[0], arrayTypeRef));
     processExceptions(arrayRefNode, context);
   }
 
@@ -113,7 +113,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     TypeReference arrayTypeRef = arrayRefNode.getKind() == CAstNode.ARRAY_LITERAL ? ((TypeReference) arrayRefNode.getChild(0)
         .getChild(0).getValue()).getArrayElementType() : (TypeReference) arrayRefNode.getChild(1).getValue();
 
-    context.cfg().addInstruction(insts.ArrayStoreInstruction(arrayValue, dimValues[0], rval, arrayTypeRef));
+    context.cfg().addInstruction(insts.ArrayStoreInstruction(context.cfg().getCurrentInstruction(), arrayValue, dimValues[0], rval, arrayTypeRef));
 
     processExceptions(arrayRefNode, context);
   }
@@ -125,9 +125,9 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 
     if (receiver == -1) { // a static field: AstTranslator.getValue() produces
                           // -1 for null, we hope
-      context.cfg().addInstruction(insts.GetInstruction(result, fieldRef));
+      context.cfg().addInstruction(insts.GetInstruction(context.cfg().getCurrentInstruction(), result, fieldRef));
     } else {
-      context.cfg().addInstruction(insts.GetInstruction(result, receiver, fieldRef));
+      context.cfg().addInstruction(insts.GetInstruction(context.cfg().getCurrentInstruction(), result, receiver, fieldRef));
       processExceptions(parent, context);
     }
   }
@@ -138,9 +138,9 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 
     if (receiver == -1) { // a static field: AstTranslator.getValue() produces
                           // -1 for null, we hope
-      context.cfg().addInstruction(insts.PutInstruction(rval, fieldRef));
+      context.cfg().addInstruction(insts.PutInstruction(context.cfg().getCurrentInstruction(), rval, fieldRef));
     } else {
-      context.cfg().addInstruction(insts.PutInstruction(receiver, rval, fieldRef));
+      context.cfg().addInstruction(insts.PutInstruction(context.cfg().getCurrentInstruction(), receiver, rval, fieldRef));
       processExceptions(parent, context);
     }
   }
@@ -158,10 +158,10 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     NewSiteReference site = NewSiteReference.make(context.cfg().getCurrentInstruction(), typeRef);
 
     if (newNode.getKind() == CAstNode.NEW_ENCLOSING) {
-      context.cfg().addInstruction(new AstJavaNewEnclosingInstruction(result, site, arguments[0]));
+      context.cfg().addInstruction(new AstJavaNewEnclosingInstruction(context.cfg().getCurrentInstruction(), result, site, arguments[0]));
     } else {
       context.cfg().addInstruction(
-          (arguments == null) ? insts.NewInstruction(result, site) : insts.NewInstruction(result, site, arguments));
+          (arguments == null) ? insts.NewInstruction(context.cfg().getCurrentInstruction(), result, site) : insts.NewInstruction(context.cfg().getCurrentInstruction(), result, site, arguments));
     }
     processExceptions(newNode, context);
   }
@@ -197,9 +197,9 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     CallSiteReference realSiteRef = CallSiteReference.make(pc, dummySiteRef.getDeclaredTarget(), dummySiteRef.getInvocationCode());
 
     if (realSiteRef.getDeclaredTarget().getReturnType().equals(TypeReference.Void))
-      context.cfg().addInstruction(new AstJavaInvokeInstruction(realArgs, exception, realSiteRef));
+      context.cfg().addInstruction(new AstJavaInvokeInstruction(context.cfg().getCurrentInstruction(), realArgs, exception, realSiteRef));
     else
-      context.cfg().addInstruction(new AstJavaInvokeInstruction(result, realArgs, exception, realSiteRef));
+      context.cfg().addInstruction(new AstJavaInvokeInstruction(context.cfg().getCurrentInstruction(), result, realArgs, exception, realSiteRef));
     processExceptions(call, context);
   }
 
@@ -330,7 +330,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     } else {
       int result = c.currentScope().allocateTempValue();
       c.setValue(n, result);
-      c.cfg().addInstruction(new EnclosingObjectReference(result, (TypeReference) n.getChild(0).getValue()));
+      c.cfg().addInstruction(new EnclosingObjectReference(c.cfg().getCurrentInstruction(), result, (TypeReference) n.getChild(0).getValue()));
     }
   }
 
@@ -351,23 +351,24 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     TypeReference fromRef = makeType(fromType);
 
     if (toRef.isPrimitiveType()) {
-    context.cfg().addInstruction(
-      insts.ConversionInstruction(
+      context.cfg().addInstruction(
+        insts.ConversionInstruction(
+          context.cfg().getCurrentInstruction(),
           result, 
           context.getValue(n.getChild(1)), 
           fromRef,
           toRef,
           false));
-   
     } else {
       context.cfg().addInstruction(
         insts.CheckCastInstruction(
+          context.cfg().getCurrentInstruction(),
           result, 
           context.getValue(n.getChild(1)), 
           toRef,
           true));
 
-processExceptions(n, context);
+      processExceptions(n, context);
     }
   }
 
@@ -386,6 +387,7 @@ processExceptions(n, context);
     TypeReference ref = makeType( type );
     context.cfg().addInstruction(
       insts.InstanceofInstruction(
+        context.cfg().getCurrentInstruction(),
         result, 
         context.getValue(n.getChild(1)), 
         ref));
@@ -395,13 +397,13 @@ processExceptions(n, context);
   protected boolean doVisit(CAstNode n, WalkContext wc, CAstVisitor<WalkContext> visitor) {
     if (n.getKind() == CAstNode.MONITOR_ENTER) {
       visitor.visit(n.getChild(0), wc, visitor);
-      wc.cfg().addInstruction(insts.MonitorInstruction(wc.getValue(n.getChild(0)), true));
+      wc.cfg().addInstruction(insts.MonitorInstruction(wc.cfg().getCurrentInstruction(), wc.getValue(n.getChild(0)), true));
       processExceptions(n, wc);
 
       return true;
     } else if (n.getKind() == CAstNode.MONITOR_EXIT) {
       visitor.visit(n.getChild(0), wc, visitor);
-      wc.cfg().addInstruction(insts.MonitorInstruction(wc.getValue(n.getChild(0)), false));
+      wc.cfg().addInstruction(insts.MonitorInstruction(wc.cfg().getCurrentInstruction(), wc.getValue(n.getChild(0)), false));
       processExceptions(n, wc);
       return true;
     } else {

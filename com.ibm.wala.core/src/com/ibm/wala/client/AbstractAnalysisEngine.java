@@ -28,6 +28,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -113,7 +114,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   /**
    * Results of pointer analysis
    */
-  protected PointerAnalysis pointerAnalysis;
+  protected PointerAnalysis<InstanceKey> pointerAnalysis;
 
   /**
    * Graph view of flow of pointers between heap abstractions
@@ -255,7 +256,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     return scope;
   }
 
-  public PointerAnalysis getPointerAnalysis() {
+  public PointerAnalysis<InstanceKey> getPointerAnalysis() {
     return pointerAnalysis;
   }
 

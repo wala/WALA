@@ -210,7 +210,7 @@ public class SSAConversion extends AbstractSSAConversion {
     private void undo(int rhs) {
       int lhs = symtab.newSymbol();
 
-      instructions[instructionIndex] = new AssignInstruction(lhs, rhs);
+      instructions[instructionIndex] = new AssignInstruction(instructionIndex, lhs, rhs);
 
       if (DEBUG_UNDO)
         System.err.println(("recreating assignment at " + instructionIndex + " as " + lhs + " = " + rhs));
@@ -391,7 +391,7 @@ public class SSAConversion extends AbstractSSAConversion {
     for (int i = 0; i < params.length; i++)
       params[i] = value;
 
-    SSAPhiInstruction phi = new SSAPhiInstruction(value, params);
+    SSAPhiInstruction phi = new SSAPhiInstruction(SSAInstruction.NO_INDEX, value, params);
 
     if (DEBUG)
       System.err.println(("Placing " + phi + " at " + Y));

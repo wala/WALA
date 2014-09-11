@@ -65,7 +65,7 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
               context.currentScope().getConstantValue(name);
               doIsFieldDefined(context, isDefined, windowVal, Ast.makeConstant(name));
               context.cfg().addInstruction(
-                  insts.ConditionalBranchInstruction(
+                  insts.ConditionalBranchInstruction(context.cfg().getCurrentInstruction(),
                       translateConditionOpcode(CAstOperator.OP_NE), 
                       null, 
                       isDefined, 
@@ -75,16 +75,16 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
               
               // field lookup of value
               context.cfg().newBlock(true);
-              context.cfg().addInstruction(((JSInstructionFactory) insts).GetInstruction(result, windowVal, name));
+              context.cfg().addInstruction(((JSInstructionFactory) insts).GetInstruction(context.cfg().getCurrentInstruction(), result, windowVal, name));
               context.cfg().newBlock(true);
-              context.cfg().addInstruction(insts.GotoInstruction(-1));
+              context.cfg().addInstruction(insts.GotoInstruction(context.cfg().getCurrentInstruction(), -1));
               PreBasicBlock trueB = context.cfg().getCurrentBlock();
 
               // read global
               context.cfg().newBlock(false);
               PreBasicBlock falseB = context.cfg().getCurrentBlock();
               int sr = super.doGlobalRead(n, context, name, type);
-              context.cfg().addInstruction(((JSInstructionFactory) insts).AssignInstruction(result, sr));
+              context.cfg().addInstruction(((JSInstructionFactory) insts).AssignInstruction(context.cfg().getCurrentInstruction(), result, sr));
 
               // end
               context.cfg().newBlock(true);
@@ -104,7 +104,7 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
             if (isNestedWithinScriptBody(context) && ! "$$undefined".equals(nm)  && !"window".equals(nm) && !nm.startsWith("$$destructure")) {
               int windowVal = super.doLocalRead(context, "this", type);
               context.currentScope().getConstantValue(nm);
-              context.cfg().addInstruction(((JSInstructionFactory) insts).PutInstruction(windowVal, rval, nm));
+              context.cfg().addInstruction(((JSInstructionFactory) insts).PutInstruction(context.cfg().getCurrentInstruction(), windowVal, rval, nm));
             } 
             
             super.doLocalWrite(context, nm, type, rval);
@@ -118,7 +118,7 @@ public class WebPageLoaderFactory extends JavaScriptLoaderFactory {
               int fnValue = context.currentScope().lookup(fn.getName()).valueNumber();
               assert fnValue > 0;
               int windowVal = super.doLocalRead(context, "this", JavaScriptTypes.Function);
-              context.cfg().addInstruction(((JSInstructionFactory) insts).PutInstruction(windowVal, fnValue, fn.getName()));
+              context.cfg().addInstruction(((JSInstructionFactory) insts).PutInstruction(context.cfg().getCurrentInstruction(), windowVal, fnValue, fn.getName()));
             }
           }
         };

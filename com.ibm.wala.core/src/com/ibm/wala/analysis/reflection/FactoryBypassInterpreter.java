@@ -490,7 +490,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
         int[] params = new int[1];
         params[0] = alloc;
         int exc = getExceptionsForType(T);
-        SSAInvokeInstruction s = insts.InvokeInstruction(params, exc, site);
+        SSAInvokeInstruction s = insts.InvokeInstruction(allInstructions.size(), params, exc, site);
         calls.add(s);
         allInstructions.add(s);
       }
@@ -527,7 +527,7 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
     private void addStatementsForSetOfTypes(Iterator<IClass> it) {
       if (!it.hasNext()) { // Uh. No types. Hope the caller reported a warning.
-        SSAReturnInstruction r = insts.ReturnInstruction(nextLocal, false);
+        SSAReturnInstruction r = insts.ReturnInstruction(allInstructions.size(), nextLocal, false);
         allInstructions.add(r);
       }
 
@@ -545,20 +545,20 @@ public class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
           int[] sizes = new int[((ArrayClass)klass).getDimensionality()];
           initValueNumberForConstantOne();
           Arrays.fill(sizes, valueNumberForConstantOne);
-          a = insts.NewInstruction(i, ref, sizes);
+          a = insts.NewInstruction(allInstructions.size(), i, ref, sizes);
 
         } else {
-          a = insts.NewInstruction(i, ref);
+          a = insts.NewInstruction(allInstructions.size(), i, ref);
         }
         allocations.add(a);
         allInstructions.add(a);
-        SSAReturnInstruction r = insts.ReturnInstruction(i, false);
+        SSAReturnInstruction r = insts.ReturnInstruction(allInstructions.size(), i, false);
         allInstructions.add(r);
         MethodReference init = MethodReference.findOrCreate(T, MethodReference.initAtom, MethodReference.defaultInitDesc);
         CallSiteReference site = CallSiteReference.make(getCallSiteForType(T), init, IInvokeInstruction.Dispatch.SPECIAL);
         int[] params = new int[1];
         params[0] = i;
-        SSAInvokeInstruction s = insts.InvokeInstruction(params, getExceptionsForType(T), site);
+        SSAInvokeInstruction s = insts.InvokeInstruction(allInstructions.size(), params, getExceptionsForType(T), site);
         calls.add(s);
         allInstructions.add(s);
       }

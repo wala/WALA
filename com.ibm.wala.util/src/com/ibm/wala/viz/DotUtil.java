@@ -89,7 +89,9 @@ public class DotUtil {
       throw new IllegalArgumentException("g is null");
     }
     File f = DotUtil.writeDotFile(g, labels, title, dotFile);
-    spawnDot(dotExe, outputFile, f);
+    if (dotExe != null) {
+      spawnDot(dotExe, outputFile, f);
+    }
   }
 
   public static void spawnDot(String dotExe, String outputFile, File dotFile) throws WalaException {

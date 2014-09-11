@@ -30,7 +30,8 @@ public class EnclosingObjectReference extends SSAInstruction {
 
   private final int lval;
 
-  public EnclosingObjectReference(int lval, TypeReference type) {
+  public EnclosingObjectReference(int iindex, int lval, TypeReference type) {
+    super(iindex);
     this.lval = lval;
     this.type = type;
   }
@@ -63,7 +64,7 @@ public class EnclosingObjectReference extends SSAInstruction {
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return ((AstJavaInstructionFactory) insts).EnclosingObjectReference(defs == null ? lval : defs[0], type);
+    return ((AstJavaInstructionFactory) insts).EnclosingObjectReference(iindex, defs == null ? lval : defs[0], type);
   }
 
   @Override

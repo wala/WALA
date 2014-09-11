@@ -26,8 +26,8 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
    */
   private final int[] params;
 
-  protected SSAInvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
-    super(exception, site);
+  protected SSAInvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site) {
+    super(iindex, exception, site);
     this.result = result;
     this.params = params;
     assertParamsKosher(result, params, site);
@@ -36,15 +36,15 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
   /**
    * Constructor InvokeInstruction. This case for void return values
    */
-  protected SSAInvokeInstruction(int[] params, int exception, CallSiteReference site) {
-    this(-1, params, exception, site);
+  protected SSAInvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site) {
+    this(iindex, -1, params, exception, site);
   }
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     // result == -1 for void-returning methods, which are the only calls
     // that have a single value def.
-    return insts.InvokeInstruction(defs == null || result == -1 ? result : defs[0], uses == null ? params : uses,
+    return insts.InvokeInstruction(iindex, defs == null || result == -1 ? result : defs[0], uses == null ? params : uses,
         defs == null ? exception : defs[result == -1 ? 0 : 1], site);
   }
 
@@ -114,7 +114,8 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
 
   @Override
   public int getReturnValue(int i) {
-    assert i == 0 && result != -1;
+    assert i == 0 : "i != 0";
+    assert (result != -1) : "SSA-Result is -1";
     return result;
   }
 
@@ -126,8 +127,11 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
     if (params == null) {
       assert false : "Invalid getUse: " + j + " , null params " + this;
     }
-    if (params.length <= j) {
-      assert params.length > j : "Invalid getUse: " + this + ", index " + j + ", params.length " + params.length;
+    if (j >= params.length) {
+        throw new ArrayIndexOutOfBoundsException("Invalid getUse: " + this + ", index " + j + ", params.length " + params.length);
+    }
+    if (j < 0) {
+        throw new ArrayIndexOutOfBoundsException("j may not be negative! In getUse "  + this + ", index " + j + ", params.length " + params.length);
     }
     return params[j];
   }

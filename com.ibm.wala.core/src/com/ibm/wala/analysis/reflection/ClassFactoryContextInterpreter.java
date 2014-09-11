@@ -12,6 +12,7 @@ package com.ibm.wala.analysis.reflection;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.InducedCFG;
@@ -34,6 +35,7 @@ import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 
 /**
@@ -44,6 +46,10 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
 
   private static final boolean DEBUG = false;
 
+/** BEGIN Custom change: caching */
+  private final Map<String, IR> cache = HashMapFactory.make();
+  
+/** END Custom change: caching */
   @Override
   public IR getIR(CGNode node) {
     if (node == null) {
@@ -53,7 +59,20 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
     if (DEBUG) {
       System.err.println("generating IR for " + node);
     }
-    IR result = makeIR(node.getMethod(), (JavaTypeContext) node.getContext());
+/** BEGIN Custom change: caching */
+    
+    final JavaTypeContext context = (JavaTypeContext) node.getContext();
+    final IMethod method = node.getMethod();
+    final String hashKey = method.toString() + "@" + context.toString();
+    
+    IR result = cache.get(hashKey);
+    
+    if (result == null) {
+      result = makeIR(method, context);
+      cache.put(hashKey, result);
+    }
+    
+/** END Custom change: caching */
     return result;
   }
 
@@ -110,12 +129,12 @@ public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
     int retValue = 2;
     TypeReference tr = context.getType().getTypeReference();
     if (tr != null) {
-      SSALoadMetadataInstruction l = insts.LoadMetadataInstruction(retValue, TypeReference.JavaLangClass, tr);
+      SSALoadMetadataInstruction l = insts.LoadMetadataInstruction(statements.size(), retValue, TypeReference.JavaLangClass, tr);
       statements.add(l);
-      SSAReturnInstruction R = insts.ReturnInstruction(retValue, false);
+      SSAReturnInstruction R = insts.ReturnInstruction(statements.size(), retValue, false);
       statements.add(R);
     } else {
-      SSAThrowInstruction t = insts.ThrowInstruction(retValue);
+      SSAThrowInstruction t = insts.ThrowInstruction(statements.size(), retValue);
       statements.add(t);
     }
     SSAInstruction[] result = new SSAInstruction[statements.size()];

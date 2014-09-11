@@ -162,10 +162,10 @@ public class JavaScriptFunctionDotCallTargetSelector implements MethodTargetSele
       params[i] = i + 3;
     }
     // function being invoked is in v2
-    S.addStatement(insts.Invoke(2, resultVal, params, resultVal + 1, cs));
+    S.addStatement(insts.Invoke(S.getNumberOfStatements(), 2, resultVal, params, resultVal + 1, cs));
     S.getNextProgramCounter();
 
-    S.addStatement(insts.ReturnInstruction(resultVal, false));
+    S.addStatement(insts.ReturnInstruction(S.getNumberOfStatements(), resultVal, false));
     S.getNextProgramCounter();
 
     JavaScriptSummarizedFunction t = new JavaScriptSummarizedFunction(ref, S, receiver);

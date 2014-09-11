@@ -49,28 +49,32 @@ public class AstIsDefinedInstruction extends SSAInstruction {
   /**
    * This constructor should only be used from {@link SSAInstruction#copyForSSA(SSAInstructionFactory, int[], int[])}
    */
-  public AstIsDefinedInstruction(int lval, int rval, int fieldVal, FieldReference fieldRef) {
+  public AstIsDefinedInstruction(int iindex, int lval, int rval, int fieldVal, FieldReference fieldRef) {
+    super(iindex);
     this.lval = lval;
     this.rval = rval;
     this.fieldVal = fieldVal;
     this.fieldRef = fieldRef;
   }
 
-  public AstIsDefinedInstruction(int lval, int rval, FieldReference fieldRef) {
+  public AstIsDefinedInstruction(int iindex, int lval, int rval, FieldReference fieldRef) {
+    super(iindex);
     this.lval = lval;
     this.rval = rval;
     this.fieldVal = -1;
     this.fieldRef = fieldRef;
   }
 
-  public AstIsDefinedInstruction(int lval, int rval, int fieldVal) {
+  public AstIsDefinedInstruction(int iindex, int lval, int rval, int fieldVal) {
+    super(iindex);
     this.lval = lval;
     this.rval = rval;
     this.fieldVal = fieldVal;
     this.fieldRef = null;
   }
 
-  public AstIsDefinedInstruction(int lval, int rval) {
+  public AstIsDefinedInstruction(int iindex, int lval, int rval) {
+    super(iindex);
     this.lval = lval;
     this.rval = rval;
     this.fieldVal = -1;
@@ -81,7 +85,7 @@ public class AstIsDefinedInstruction extends SSAInstruction {
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     assert fieldVal == -1 || fieldRef == null;
 
-    return ((AstInstructionFactory) insts).IsDefinedInstruction((defs == null) ? lval : defs[0], (uses == null) ? rval : uses[0],
+    return ((AstInstructionFactory) insts).IsDefinedInstruction(iindex, (defs == null) ? lval : defs[0], (uses == null) ? rval : uses[0],
         (uses == null || fieldVal == -1) ? fieldVal : uses[1], fieldRef);
   }
 

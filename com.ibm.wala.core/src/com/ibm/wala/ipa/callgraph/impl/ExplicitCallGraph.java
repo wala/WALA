@@ -509,7 +509,7 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter> imp
 
   public IntSet getPossibleTargetNumbers(CGNode node, CallSiteReference site) {
     if (!containsNode(node)) {
-      throw new IllegalArgumentException("node not in callgraph " + node);
+      throw new IllegalArgumentException("node not in callgraph " + node + " Site: " + site);
     }
     assert (node instanceof ExplicitNode);
     ExplicitNode n = (ExplicitNode) node;

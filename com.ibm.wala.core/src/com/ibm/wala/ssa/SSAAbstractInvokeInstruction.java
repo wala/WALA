@@ -37,7 +37,8 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction {
    * @param exception The value number which represents the exception object which the call may throw.
    * @param site The call site, containing the program counter location and the method being called.
    */
-  protected SSAAbstractInvokeInstruction(int exception, CallSiteReference site) {
+  protected SSAAbstractInvokeInstruction(int iindex, int exception, CallSiteReference site) {
+    super(iindex);
     this.exception = exception;
     this.site = site;
   }

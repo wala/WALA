@@ -79,7 +79,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   /**
    * Meta-data regarding how pointers are modeled
    */
-  protected final PointerKeyFactory pointerKeyFactory;
+  protected PointerKeyFactory pointerKeyFactory;
 
   /**
    * The object that represents the java.lang.Object class
@@ -253,7 +253,15 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
         entrypointCallSites.add(call.getCallSite());
       }
     }
-
+    
+/** BEGIN Custom change: throw exception on empty entry points. This is a severe issue that should not go undetected! */
+    if (entrypointCallSites.isEmpty()) {
+      throw new IllegalStateException("Could not create a entrypoint callsites."
+          + " This happens when some parameters of the method can not be generated automatically "
+          + "(e.g. when they refer to an interface or an abstract class).");
+    }
+    
+/** END Custom change: throw exception on empty entry points. This is a severe issue that should not go undetected! */
     customInit();
 
     solver = makeSolver();
@@ -675,7 +683,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @see com.ibm.detox.ipa.callgraph.CallGraphBuilder#getPointerAnalysis()
    */
   @Override
-  public PointerAnalysis getPointerAnalysis() {
+  public PointerAnalysis<InstanceKey> getPointerAnalysis() {
     return system.extractPointerAnalysis(this);
   }
 
@@ -687,6 +695,12 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     return pointerKeyFactory;
   }
 
+/** BEGIN Custom change: setter for pointerkey factory */
+  public void setPointerKeyFactory(PointerKeyFactory pkFact) {
+    pointerKeyFactory = pkFact;
+  }
+
+/** END Custom change: setter for pointerkey factory */
   public RTAContextInterpreter getContextInterpreter() {
     return contextInterpreter;
   }

@@ -30,7 +30,8 @@ public abstract class SSALoadMetadataInstruction extends SSAInstruction {
    */
   private final TypeReference entityType;
 
-  protected SSALoadMetadataInstruction(int lval, TypeReference entityType, Object token) {
+  protected SSALoadMetadataInstruction(int iindex, int lval, TypeReference entityType, Object token) {
+    super(iindex);
     this.lval = lval;
     this.token = token;
     this.entityType = entityType;
@@ -44,7 +45,7 @@ public abstract class SSALoadMetadataInstruction extends SSAInstruction {
     if (defs != null && defs.length == 0) {
       throw new IllegalArgumentException("(defs != null) and (defs.length == 0)");
     }
-    return insts.LoadMetadataInstruction(defs == null ? lval : defs[0], entityType, token);
+    return insts.LoadMetadataInstruction(iindex, defs == null ? lval : defs[0], entityType, token);
   }
 
   @Override

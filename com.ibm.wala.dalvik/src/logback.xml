@@ -1,0 +1,21 @@
+<configuration>
+  <appender name="STDOUT"
+    class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>
+        %d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+     </pattern>
+    </encoder>
+  </appender>
+  
+  <appender name="DEVNULL"
+    class="ch.qos.logback.core.helpers.NOPAppender" />
+
+  <logger name="com.ibm.wala" level="ALL"/>
+  <logger name="org.scandroid.util.CGAnalysisContext" level="ALL"/>
+  <logger name="org.scandroid.flow.functions.TaintTransferFunctions" level="ALL"/>
+
+  <root level="ALL">
+    <appender-ref ref="DEVNULL" /> <!-- change to ref="STDOUT" for lots of output -->
+  </root> 
+</configuration>

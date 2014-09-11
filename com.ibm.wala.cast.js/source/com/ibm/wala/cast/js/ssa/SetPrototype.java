@@ -18,7 +18,8 @@ public class SetPrototype extends SSAInstruction {
   private final int object;
   private final int prototype;
   
-  public SetPrototype(int object, int prototype) {
+  public SetPrototype(int iindex, int object, int prototype) {
+    super(iindex);
     this.object = object;
     this.prototype = prototype;
   }
@@ -36,7 +37,7 @@ public class SetPrototype extends SSAInstruction {
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return ((JSInstructionFactory)insts).SetPrototype((uses != null ? uses[0] : object), (uses != null ? uses[1] : prototype));
+    return ((JSInstructionFactory)insts).SetPrototype(iindex, (uses != null ? uses[0] : object), (uses != null ? uses[1] : prototype));
   }
 
   @Override

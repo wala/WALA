@@ -192,6 +192,8 @@ public class FileUtil {
    * @throws IOException
    */
   public static void writeFile(File f, String content) throws IOException {
-    new FileWriter(f).append(content).close();
+    final FileWriter fw = new FileWriter(f);
+    fw.append(content);
+    fw.close();
   }
 }

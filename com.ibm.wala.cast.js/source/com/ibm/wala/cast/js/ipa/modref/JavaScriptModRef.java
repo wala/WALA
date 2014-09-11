@@ -25,7 +25,7 @@ public class JavaScriptModRef extends AstModRef {
 
   protected static class JavaScriptRefVisitor extends AstRefVisitor implements JSInstructionVisitor {
 
-    protected JavaScriptRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis pa, ExtendedHeapModel h) {
+    protected JavaScriptRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<InstanceKey> pa, ExtendedHeapModel h) {
       super(n, result, pa, (AstHeapModel)h);
     }
 
@@ -88,13 +88,13 @@ public class JavaScriptModRef extends AstModRef {
   }
 
   @Override
-  protected RefVisitor makeRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis pa, ExtendedHeapModel h) {
+  protected RefVisitor makeRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<InstanceKey> pa, ExtendedHeapModel h) {
     return new JavaScriptRefVisitor(n, result, pa, h);
   }
 
   protected static class JavaScriptModVisitor extends AstModVisitor implements JSInstructionVisitor {
 
-    protected JavaScriptModVisitor(CGNode n, Collection<PointerKey> result, ExtendedHeapModel h, PointerAnalysis pa) {
+    protected JavaScriptModVisitor(CGNode n, Collection<PointerKey> result, ExtendedHeapModel h, PointerAnalysis<InstanceKey> pa) {
       super(n, result, (AstHeapModel)h, pa);
     }
 
@@ -157,7 +157,7 @@ public class JavaScriptModRef extends AstModRef {
   }
 
   @Override
-  protected ModVisitor makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis pa, ExtendedHeapModel h, boolean ignoreAllocHeapDefs) {
+  protected ModVisitor makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis<InstanceKey> pa, ExtendedHeapModel h, boolean ignoreAllocHeapDefs) {
     return new JavaScriptModVisitor(n, result, h, pa);
   }
 }

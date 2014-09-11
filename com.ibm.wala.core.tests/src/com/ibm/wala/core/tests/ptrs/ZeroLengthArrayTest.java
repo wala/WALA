@@ -52,7 +52,7 @@ public class ZeroLengthArrayTest {
 
     CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
-    PointerAnalysis pa = builder.getPointerAnalysis();
+    PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
 //    System.err.println(pa);
 
     HeapModel heapModel = pa.getHeapModel();
@@ -60,10 +60,10 @@ public class ZeroLengthArrayTest {
         cha.resolveMethod(MethodReference.findOrCreate(
             TypeReference.findOrCreate(ClassLoaderReference.Application, TestConstants.ZERO_LENGTH_ARRAY_MAIN),
             Selector.make("main([Ljava/lang/String;)V"))), Everywhere.EVERYWHERE);
-    OrdinalSet<? extends InstanceKey> pointsToSet = pa.getPointsToSet(heapModel.getPointerKeyForLocal(mainNode, 4));
+    OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(heapModel.getPointerKeyForLocal(mainNode, 4));
     Assert.assertEquals(1, pointsToSet.size());
     InstanceKey arrayKey = pointsToSet.iterator().next();
-    OrdinalSet<? extends InstanceKey> arrayContents = pa.getPointsToSet(heapModel.getPointerKeyForArrayContents(arrayKey));
+    OrdinalSet<InstanceKey> arrayContents = pa.getPointsToSet(heapModel.getPointerKeyForArrayContents(arrayKey));
     System.err.println(arrayContents);
     Assert.assertEquals(0, arrayContents.size());
     

@@ -70,7 +70,7 @@ public class BasicHeapGraph extends HeapGraph {
    * @param P governing pointer analysis
    * @throws NullPointerException if P is null
    */
-  public BasicHeapGraph(final PointerAnalysis P, final CallGraph callGraph) throws NullPointerException {
+  public BasicHeapGraph(final PointerAnalysis<InstanceKey> P, final CallGraph callGraph) throws NullPointerException {
     super(P);
     this.callGraph = callGraph;
 
@@ -256,10 +256,10 @@ public class BasicHeapGraph extends HeapGraph {
   private int[] computeSuccNodeNumbers(Object N, NumberedNodeManager<Object> nodeManager) {
     if (N instanceof PointerKey) {
       PointerKey P = (PointerKey) N;
-      OrdinalSet<? extends InstanceKey> S = getPointerAnalysis().getPointsToSet(P);
+      OrdinalSet<InstanceKey> S = getPointerAnalysis().getPointsToSet(P);
       int[] result = new int[S.size()];
       int i = 0;
-      for (Iterator<? extends InstanceKey> it = S.iterator(); it.hasNext();) {
+      for (Iterator<InstanceKey> it = S.iterator(); it.hasNext();) {
         result[i] = nodeManager.getNumber(it.next());
         i++;
       }

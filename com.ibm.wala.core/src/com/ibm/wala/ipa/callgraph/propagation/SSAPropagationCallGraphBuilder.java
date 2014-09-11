@@ -938,6 +938,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         Warnings.add(FieldResolutionFailure.create(field));
         return;
       }
+      assert f.getFieldTypeReference().getName().equals(field.getFieldType().getName()) :
+        "name clash of two fields with the same name but different type: " + f.getReference() + " <=> " + field;
       assert isStatic || !symbolTable.isStringConstant(ref) : "put to string constant shouldn't be allowed?";
       if (isStatic) {
         processPutStatic(rval, field, f);
@@ -1110,7 +1112,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       IClass klass = iKey.getConcreteType();
 
       if (DEBUG) {
-        System.err.println("visitNew: " + instruction + " " + iKey + " " + system.findOrCreateIndexForInstanceKey(iKey));
+        System.err.println("visitNew: " + instruction + " i:" + iKey + " " + system.findOrCreateIndexForInstanceKey(iKey));
       }
 
       if (klass == null) {

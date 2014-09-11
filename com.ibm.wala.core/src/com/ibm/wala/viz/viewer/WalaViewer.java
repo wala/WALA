@@ -18,6 +18,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 
 /**
@@ -31,7 +32,7 @@ public class WalaViewer extends JFrame {
   protected static final String DefaultMutableTreeNode = null;
 
 
-  public WalaViewer(CallGraph cg, PointerAnalysis pa) {
+  public WalaViewer(CallGraph cg, PointerAnalysis<InstanceKey> pa) {
     setNativeLookAndFeel();
     
     JTabbedPane tabbedPane = new JTabbedPane();
@@ -51,7 +52,7 @@ public class WalaViewer extends JFrame {
     setVisible(true);
   }
 
-  protected PaPanel createPaPanel(CallGraph cg, PointerAnalysis pa) {
+  protected PaPanel createPaPanel(CallGraph cg, PointerAnalysis<InstanceKey> pa) {
     return new PaPanel(cg, pa);
   }
   

@@ -65,12 +65,12 @@ public class MultiDimArrayTest extends WalaTestCase {
 
     CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCache(),cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
-    PointerAnalysis pa = builder.getPointerAnalysis();
+    PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
     System.err.println(pa);
     
     CGNode node = findDoNothingNode(cg);
     PointerKey pk = pa.getHeapModel().getPointerKeyForLocal(node, 1);
-    OrdinalSet<? extends InstanceKey> ptsTo = pa.getPointsToSet(pk);
+    OrdinalSet<InstanceKey> ptsTo = pa.getPointsToSet(pk);
     Assert.assertEquals(1, ptsTo.size());
   }
   

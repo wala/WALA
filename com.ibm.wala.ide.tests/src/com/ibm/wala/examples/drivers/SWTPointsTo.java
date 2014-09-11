@@ -24,6 +24,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.util.CancelException;
@@ -92,7 +93,7 @@ public class SWTPointsTo {
     // //
     com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCache(),cha, scope, null, null);
     CallGraph cg = builder.makeCallGraph(options,null);
-    PointerAnalysis pointerAnalysis = builder.getPointerAnalysis();
+    PointerAnalysis<InstanceKey> pointerAnalysis = builder.getPointerAnalysis();
     
     System.err.println(pointerAnalysis);
     

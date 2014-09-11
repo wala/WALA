@@ -18,8 +18,8 @@ import com.ibm.wala.types.TypeReference;
 public abstract class SSAArrayLoadInstruction extends SSAArrayReferenceInstruction {
   private final int result;
 
-  protected SSAArrayLoadInstruction(int result, int arrayref, int index, TypeReference elementType) {
-    super(arrayref, index, elementType);
+  protected SSAArrayLoadInstruction(int iindex, int result, int arrayref, int index, TypeReference elementType) {
+    super(iindex, arrayref, index, elementType);
     this.result = result;
   }
 
@@ -31,7 +31,7 @@ public abstract class SSAArrayLoadInstruction extends SSAArrayReferenceInstructi
     if (uses != null && uses.length < 2) {
       throw new IllegalArgumentException("uses.length < 2");
     }
-    return insts.ArrayLoadInstruction(defs == null ? result : defs[0], uses == null ? getArrayRef() : uses[0],
+    return insts.ArrayLoadInstruction(iindex, defs == null ? result : defs[0], uses == null ? getArrayRef() : uses[0],
         uses == null ? getIndex() : uses[1], getElementType());
   }
 

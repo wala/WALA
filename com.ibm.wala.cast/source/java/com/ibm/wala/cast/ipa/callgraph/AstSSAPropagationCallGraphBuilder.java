@@ -141,7 +141,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
   protected PropagationSystem makeSystem(AnalysisOptions options) {
     return new PropagationSystem(callGraph, pointerKeyFactory, instanceKeyFactory) {
       @Override
-      public PointerAnalysis makePointerAnalysis(PropagationCallGraphBuilder builder) {
+      public PointerAnalysis<InstanceKey> makePointerAnalysis(PropagationCallGraphBuilder builder) {
         return new AstPointerAnalysisImpl(builder, cg, pointsToMap, instanceKeys, pointerKeyFactory, instanceKeyFactory);
       }
     };

@@ -254,10 +254,10 @@ public class CallGraphTest extends WalaTestCase {
     AnalysisCache cache = new AnalysisCache();
     CallGraphBuilder builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
     CallGraph cg = builder.makeCallGraph(options, null);
-    PointerAnalysis pa = builder.getPointerAnalysis();
+    PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
     CGNode mainMethod = AbstractPtrTest.findMainMethod(cg);
     PointerKey keyToQuery = AbstractPtrTest.getParam(mainMethod, "testThisVar", pa.getHeapModel());
-    OrdinalSet<? extends InstanceKey> pointsToSet = pa.getPointsToSet(keyToQuery);
+    OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(keyToQuery);
     Assert.assertEquals(1, pointsToSet.size());
     
   }

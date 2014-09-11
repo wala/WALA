@@ -242,7 +242,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       int exceptionValue;
       if (s == null) {
         exceptionValue = symbolTable.newSymbol();
-        s = insts.GetCaughtExceptionInstruction(bbNumber, exceptionValue);
+        s = insts.GetCaughtExceptionInstruction(SSAInstruction.NO_INDEX, bbNumber, exceptionValue);
         newBB.setCatchInstruction(s);
       } else {
         exceptionValue = s.getException();
@@ -393,7 +393,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         int length = reuseOrCreateDef();
 
         workingState.push(length);
-        emitInstruction(insts.ArrayLengthInstruction(length, arrayRef));
+        emitInstruction(insts.ArrayLengthInstruction(getCurrentInstructionIndex(), length, arrayRef));
       }
 
       /**
@@ -407,9 +407,9 @@ public class SSABuilder extends AbstractIntStackMachine {
         workingState.push(result);
         TypeReference t = ShrikeUtil.makeTypeReference(loader, instruction.getType());
         if (instruction.isAddressOf()) {
-          emitInstruction(insts.AddressOfInstruction(result, arrayRef, index, t));
+          emitInstruction(insts.AddressOfInstruction(getCurrentInstructionIndex(), result, arrayRef, index, t));
         } else {
-           emitInstruction(insts.ArrayLoadInstruction(result, arrayRef, index, t));
+           emitInstruction(insts.ArrayLoadInstruction(getCurrentInstructionIndex(), result, arrayRef, index, t));
         }
       }
 
@@ -423,7 +423,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         int index = workingState.pop();
         int arrayRef = workingState.pop();
         TypeReference t = ShrikeUtil.makeTypeReference(loader, instruction.getType());
-        emitInstruction(insts.ArrayStoreInstruction(arrayRef, index, value, t));
+        emitInstruction(insts.ArrayStoreInstruction(getCurrentInstructionIndex(), arrayRef, index, value, t));
       }
 
       /**
@@ -436,7 +436,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         int result = reuseOrCreateDef();
         workingState.push(result);
         boolean isFloat = instruction.getType().equals(TYPE_double) || instruction.getType().equals(TYPE_float);
-        emitInstruction(insts.BinaryOpInstruction(instruction.getOperator(), instruction.throwsExceptionOnOverflow(), instruction
+        emitInstruction(insts.BinaryOpInstruction(getCurrentInstructionIndex(), instruction.getOperator(), instruction.throwsExceptionOnOverflow(), instruction
             .isUnsigned(), result, val1, val2, !isFloat));
       }
 
@@ -454,7 +454,7 @@ public class SSABuilder extends AbstractIntStackMachine {
           for(int i = 0; i < typeNames.length; i++) {
             t[i] = ShrikeUtil.makeTypeReference(loader, typeNames[i]);
           }
-          emitInstruction(insts.CheckCastInstruction(result, val, t, instruction.isPEI()));
+          emitInstruction(insts.CheckCastInstruction(getCurrentInstructionIndex(), result, val, t, instruction.isPEI()));
         }
       }
 
@@ -468,7 +468,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         int val1 = workingState.pop();
         int result = reuseOrCreateDef();
         workingState.push(result);
-        emitInstruction(insts.ComparisonInstruction(instruction.getOperator(), result, val1, val2));
+        emitInstruction(insts.ComparisonInstruction(getCurrentInstructionIndex(), instruction.getOperator(), result, val1, val2));
       }
 
       /**
@@ -480,7 +480,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         int val1 = workingState.pop();
 
         TypeReference t = ShrikeUtil.makeTypeReference(loader, instruction.getType());
-        emitInstruction(insts.ConditionalBranchInstruction(instruction.getOperator(), t, val1, val2, instruction.getTarget()));
+        emitInstruction(insts.ConditionalBranchInstruction(getCurrentInstructionIndex(), instruction.getOperator(), t, val1, val2, instruction.getTarget()));
       }
 
       /**
@@ -512,7 +512,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         } else if (l.isMetadataType(type)) {
           Object rval = l.getMetadataToken(instruction.getValue());
           symbol = reuseOrCreateDef();
-          emitInstruction(insts.LoadMetadataInstruction(symbol, type, rval));
+          emitInstruction(insts.LoadMetadataInstruction(getCurrentInstructionIndex(), symbol, type, rval));
         } else {
           Assertions.UNREACHABLE("unexpected " + type);
         }
@@ -532,7 +532,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         TypeReference fromType = ShrikeUtil.makeTypeReference(loader, instruction.getFromType());
         TypeReference toType = ShrikeUtil.makeTypeReference(loader, instruction.getToType());
 
-        emitInstruction(insts.ConversionInstruction(result, val, fromType, toType, instruction.throwsExceptionOnOverflow()));
+        emitInstruction(insts.ConversionInstruction(getCurrentInstructionIndex(), result, val, fromType, toType, instruction.throwsExceptionOnOverflow()));
       }
 
       /**
@@ -545,12 +545,12 @@ public class SSABuilder extends AbstractIntStackMachine {
             instruction.getFieldType());
         if (instruction.isAddressOf()) {
           int ref = instruction.isStatic()? -1: workingState.pop();
-          emitInstruction(insts.AddressOfInstruction(result, ref, f, f.getFieldType()));
+          emitInstruction(insts.AddressOfInstruction(getCurrentInstructionIndex(), result, ref, f, f.getFieldType()));
         } else if (instruction.isStatic()) {
-          emitInstruction(insts.GetInstruction(result, f));
+          emitInstruction(insts.GetInstruction(getCurrentInstructionIndex(), result, f));
         } else {
           int ref = workingState.pop();
-          emitInstruction(insts.GetInstruction(result, ref, f));
+          emitInstruction(insts.GetInstruction(getCurrentInstructionIndex(), result, ref, f));
         }
         workingState.push(result);
       }
@@ -560,7 +560,7 @@ public class SSABuilder extends AbstractIntStackMachine {
        */
       @Override
       public void visitGoto(com.ibm.wala.shrikeBT.GotoInstruction instruction) {
-        emitInstruction(insts.GotoInstruction(instruction.getLabel()));
+        emitInstruction(insts.GotoInstruction(getCurrentInstructionIndex(), instruction.getLabel()));
       }
 
       /**
@@ -573,7 +573,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         int result = reuseOrCreateDef();
         workingState.push(result);
         TypeReference t = ShrikeUtil.makeTypeReference(loader, instruction.getType());
-        emitInstruction(insts.InstanceofInstruction(result, ref, t));
+        emitInstruction(insts.InstanceofInstruction(getCurrentInstructionIndex(), result, ref, t));
       }
 
       /**
@@ -596,9 +596,9 @@ public class SSABuilder extends AbstractIntStackMachine {
         if (instruction.getPushedWordSize() > 0) {
           int result = reuseOrCreateDef();
           workingState.push(result);
-          emitInstruction(insts.InvokeInstruction(result, params, exc, site));
+          emitInstruction(insts.InvokeInstruction(getCurrentInstructionIndex(), result, params, exc, site));
         } else {
-          emitInstruction(insts.InvokeInstruction(params, exc, site));
+          emitInstruction(insts.InvokeInstruction(getCurrentInstructionIndex(), params, exc, site));
         }
         doIndirectWrites(bytecodeIndirections.indirectlyWrittenLocals(getCurrentInstructionIndex()), -1);
       }
@@ -615,7 +615,7 @@ public class SSABuilder extends AbstractIntStackMachine {
           }
           
           TypeReference type = ShrikeUtil.makeTypeReference(loader, instruction.getType());
-          emitInstruction(insts.AddressOfInstruction(result, t, type));
+          emitInstruction(insts.AddressOfInstruction(getCurrentInstructionIndex(), result, t, type));
           workingState.push(result);
         } else {
           super.visitLocalLoad(instruction);
@@ -640,7 +640,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       public void visitMonitor(com.ibm.wala.shrikeBT.MonitorInstruction instruction) {
 
         int ref = workingState.pop();
-        emitInstruction(insts.MonitorInstruction(ref, instruction.isEnter()));
+        emitInstruction(insts.MonitorInstruction(getCurrentInstructionIndex(), ref, instruction.isEnter()));
       }
 
       /**
@@ -656,9 +656,9 @@ public class SSABuilder extends AbstractIntStackMachine {
           for (int i = 0; i < instruction.getArrayBoundsCount(); i++) {
             sizes[instruction.getArrayBoundsCount() - 1 - i] = workingState.pop();
           }
-          emitInstruction(insts.NewInstruction(result, ref, sizes));
+          emitInstruction(insts.NewInstruction(getCurrentInstructionIndex(), result, ref, sizes));
         } else {
-          emitInstruction(insts.NewInstruction(result, ref));
+          emitInstruction(insts.NewInstruction(getCurrentInstructionIndex(), result, ref));
           popN(instruction);
         }
         workingState.push(result);
@@ -673,12 +673,12 @@ public class SSABuilder extends AbstractIntStackMachine {
         if (instruction.isStatic()) {
           FieldReference f = FieldReference.findOrCreate(loader, instruction.getClassType(), instruction.getFieldName(),
               instruction.getFieldType());
-          emitInstruction(insts.PutInstruction(value, f));
+          emitInstruction(insts.PutInstruction(getCurrentInstructionIndex(), value, f));
         } else {
           int ref = workingState.pop();
           FieldReference f = FieldReference.findOrCreate(loader, instruction.getClassType(), instruction.getFieldName(),
               instruction.getFieldType());
-          emitInstruction(insts.PutInstruction(ref, value, f));
+          emitInstruction(insts.PutInstruction(getCurrentInstructionIndex(), ref, value, f));
         }
       }
 
@@ -690,9 +690,9 @@ public class SSABuilder extends AbstractIntStackMachine {
         if (instruction.getPoppedCount() == 1) {
           int result = workingState.pop();
           TypeReference t = ShrikeUtil.makeTypeReference(loader, instruction.getType());
-          emitInstruction(insts.ReturnInstruction(result, t.isPrimitiveType()));
+          emitInstruction(insts.ReturnInstruction(getCurrentInstructionIndex(), result, t.isPrimitiveType()));
         } else {
-          emitInstruction(insts.ReturnInstruction());
+          emitInstruction(insts.ReturnInstruction(getCurrentInstructionIndex()));
         }
       }
 
@@ -705,7 +705,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         int val1 = workingState.pop();
         int result = reuseOrCreateDef();
         workingState.push(result);
-        emitInstruction(insts.BinaryOpInstruction(instruction.getOperator(), false, instruction.isUnsigned(), result, val1, val2,
+        emitInstruction(insts.BinaryOpInstruction(getCurrentInstructionIndex(), instruction.getOperator(), false, instruction.isUnsigned(), result, val1, val2,
             true));
       }
 
@@ -715,7 +715,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       @Override
       public void visitSwitch(com.ibm.wala.shrikeBT.SwitchInstruction instruction) {
         int val = workingState.pop();
-        emitInstruction(insts.SwitchInstruction(val, instruction.getDefaultLabel(), instruction.getCasesAndLabels()));
+        emitInstruction(insts.SwitchInstruction(getCurrentInstructionIndex(), val, instruction.getDefaultLabel(), instruction.getCasesAndLabels()));
       }
 
       private Dominators<ISSABasicBlock> dom = null;
@@ -757,12 +757,12 @@ public class SSABuilder extends AbstractIntStackMachine {
       public void visitThrow(com.ibm.wala.shrikeBT.ThrowInstruction instruction) {
         if (instruction.isRethrow()) {
           workingState.clearStack();
-          emitInstruction(insts.ThrowInstruction(findRethrowException()));
+          emitInstruction(insts.ThrowInstruction(getCurrentInstructionIndex(), findRethrowException()));
         } else {
           int exception = workingState.pop();
           workingState.clearStack();
           workingState.push(exception);
-          emitInstruction(insts.ThrowInstruction(exception));
+          emitInstruction(insts.ThrowInstruction(getCurrentInstructionIndex(), exception));
         }
       }
 
@@ -774,7 +774,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         int val = workingState.pop();
         int result = reuseOrCreateDef();
         workingState.push(result);
-        emitInstruction(insts.UnaryOpInstruction(instruction.getOperator(), result, val));
+        emitInstruction(insts.UnaryOpInstruction(getCurrentInstructionIndex(), instruction.getOperator(), result, val));
       }
 
       private void doIndirectReads(int[] locals) {
@@ -789,7 +789,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         int result = reuseOrCreateDef();
         doIndirectReads(bytecodeIndirections.indirectlyReadLocals(getCurrentInstructionIndex()));
         TypeReference t = ShrikeUtil.makeTypeReference(loader, instruction.getPushedType(null));
-        emitInstruction(insts.LoadIndirectInstruction(result, t, addressVal));
+        emitInstruction(insts.LoadIndirectInstruction(getCurrentInstructionIndex(), result, t, addressVal));
         workingState.push(result);
       }
 
@@ -810,7 +810,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         int addressVal = workingState.pop();
         doIndirectWrites(bytecodeIndirections.indirectlyWrittenLocals(getCurrentInstructionIndex()), val);     
         TypeReference t = ShrikeUtil.makeTypeReference(loader, instruction.getType());
-        emitInstruction(insts.StoreIndirectInstruction(addressVal, val, t));
+        emitInstruction(insts.StoreIndirectInstruction(getCurrentInstructionIndex(), addressVal, val, t));
       }
 
     }
@@ -828,7 +828,7 @@ public class SSABuilder extends AbstractIntStackMachine {
 
       SSAPiInstruction pi = bb.getPiForRefAndPath(ref, path);
       if (pi == null) {
-        pi = insts.PiInstruction(symbolTable.newSymbol(), ref, bb.getNumber(), outNum, piCause);
+        pi = insts.PiInstruction(SSAInstruction.NO_INDEX, symbolTable.newSymbol(), ref, bb.getNumber(), outNum, piCause);
         bb.addPiForRefAndPath(ref, path, pi);
       }
 

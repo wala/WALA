@@ -26,8 +26,8 @@ public class SSALoadIndirectInstruction extends SSAAbstractUnaryInstruction {
    * @param lval the value number which is def'fed by this instruction.
    * @param addressVal the value number holding the pointer p deferenced (*p)
    */
-  public SSALoadIndirectInstruction(int lval, TypeReference t, int addressVal) {
-    super(lval, addressVal);
+  public SSALoadIndirectInstruction(int iindex, int lval, TypeReference t, int addressVal) {
+    super(iindex, lval, addressVal);
     this.loadedType = t;
   }
 

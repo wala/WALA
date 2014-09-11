@@ -30,7 +30,8 @@ public class SSAStoreIndirectInstruction extends SSAInstruction {
    * @param addressVal the value number holding the pointer p deferenced (*p)
    * @param rval the value number which is stored into the pointer location
    */
-  public SSAStoreIndirectInstruction(int addressVal, int rval, TypeReference pointeeType) {
+  public SSAStoreIndirectInstruction(int iindex, int addressVal, int rval, TypeReference pointeeType) {
+    super(iindex);
     this.addressVal = addressVal;
     this.rval = rval;
     this.pointeeType = pointeeType;
