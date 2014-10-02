@@ -493,7 +493,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock>{
                 //      case OP_invokevirtual:
                 //      case OP_invokespecial:
                 //      case OP_invokeinterface:
-                return JavaLanguage.getNullPointerException();
+                 return JavaLanguage.getNullPointerException();
             case DIV_INT:
             case DIV_INT_2ADDR:
             case DIV_INT_LIT16:

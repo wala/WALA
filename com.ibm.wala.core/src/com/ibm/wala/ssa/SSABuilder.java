@@ -277,11 +277,6 @@ public class SSABuilder extends AbstractIntStackMachine {
     //
     // (note that this bizarre state really happened, in java_cup)
     //
-    // SJF: I don't understand how this is supposed to work. It
-    // causes a bug right now in normal cases, so I'm commenting it out
-    // for now. If there's a problem, let's add a regression test
-    // to catch it.
-    //
     entryState.push(symbolTable.newSymbol());
   }
 
@@ -904,7 +899,7 @@ public class SSABuilder extends AbstractIntStackMachine {
    * Build the IR
    */
   public void build() {
-    solve();
+     solve();
     if (localMap != null) {
       localMap.finishLocalMap(this);
     }

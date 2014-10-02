@@ -17,7 +17,7 @@ Require-Bundle: com.ibm.wala.core,
  org.eclipse.jdt.core,
  org.eclipse.ui.ide;bundle-version="3.8.2"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: com.ibm.wala.ide.classloader,
  com.ibm.wala.ide.client,
  com.ibm.wala.ide.plugin,

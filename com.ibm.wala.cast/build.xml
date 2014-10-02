@@ -4,7 +4,7 @@
     CAPA Domo build file
   =======================================================================
 -->
-<project name="com.ibm.wala.cast" default="build-everything" basedir=".">
+<project name="com.ibm.wala.cast" default="getJars" basedir=".">
 	<!-- Software version details -->
 	<property name="name" value="walacast" />
 	<property name="module_name" value="com.ibm.wala.cast" />
@@ -36,6 +36,36 @@
 	<property name="mainlib" value="../mainlib" />
 	<property name="sharedlib" value="../sharedlib" />
 
-	<import file="${sharedlib}/scripts/common-targets.xml"/>
+  <target name="properties" if="eclipse.running">
+    <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+  </target>
+
+  <target name="init" depends="properties">
+    <condition property="pluginTemp" value="${buildTempFolder}/plugins">
+      <isset property="buildTempFolder"/>
+    </condition>
+    <property name="pluginTemp" value="${basedir}"/>
+    <condition property="build.result.folder" value="${pluginTemp}/com.ibm.wala.core.testdata">
+      <isset property="buildTempFolder"/>
+    </condition>
+    <property name="build.result.folder" value="${basedir}"/>
+    <property name="temp.folder" value="${basedir}/temp.folder"/>
+    <property name="plugin.destination" value="${basedir}"/>
+  </target>
+
+  <target name="CommonsIoPresent" depends="init">
+    <available file="${plugin.destination}/lib/commons-io-2.4.jar" property="commons.io.present"/>
+  </target>
+
+  <target name="fetchCommonsIo" depends="CommonsIoPresent" unless="commons.io.present">
+    <delete dir="${temp.folder}"/>
+    <mkdir dir="${temp.folder}"/>
+    <get src="http://apache.petsads.us/commons/io/binaries/commons-io-2.4-bin.zip" dest="${temp.folder}/commons-io-2.4.zip"/>
+    <unzip src="${temp.folder}/commons-io-2.4.zip" dest="${temp.folder}"/>
+    <copy file="${temp.folder}/commons-io-2.4/commons-io-2.4.jar" tofile="${plugin.destination}/lib/commons-io-2.4.jar" />
+    <delete dir="${temp.folder}"/>
+  </target>
+
+  <target name="getJars" depends="fetchCommonsIo" />
 
 </project>

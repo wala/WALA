@@ -321,6 +321,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 //      System.out.println("Max Registers: " + (int)(method.getMaxLocals() - 2));
 //      System.out.println("Parameters: " + method.getNumberOfParameters());
 
+        entryState.allocateLocals();
         for (int i = 0; i < method.getNumberOfParameters(); i++) {
             local++;
             TypeReference t = method.getParameterType(i);
@@ -1370,7 +1371,13 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
      */
     public void build() {
         try {
-            solve();
+        	   if (method.getName().toString().contains("newCNfaPair")) {
+        		      System.err.println(method);
+        		    }
+          	   if (method.getName().toString().contains("expandEscape")) {
+     		      System.err.println(method);
+     		    }
+           solve();
             if (localMap != null) {
                 localMap.finishLocalMap(this);
             }

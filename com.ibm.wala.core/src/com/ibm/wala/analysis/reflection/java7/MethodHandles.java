@@ -271,19 +271,19 @@ public class MethodHandles {
             int params[] = new int[nargs];
             for(int i = 0; i < nargs; i++) {
               code.addConstant(i+nargs+3, new ConstantValue(i));
-              code.addStatement(insts.ArrayLoadInstruction(i+3, 1, i+nargs+3, TypeReference.JavaLangObject));
+              code.addStatement(insts.ArrayLoadInstruction(code.getNextProgramCounter(), i+3, 1, i+nargs+3, TypeReference.JavaLangObject));
               params[i] = i+3;
             }           
             CallSiteReference site = CallSiteReference.make(nargs+1, ref, isStatic? Dispatch.STATIC: Dispatch.SPECIAL);
-            code.addStatement(insts.InvokeInstruction(2*nargs+3, params, 2*nargs+4, site));
-            code.addStatement(insts.ReturnInstruction(2*nargs+3, false));
+            code.addStatement(insts.InvokeInstruction(code.getNextProgramCounter(), 2*nargs+3, params, 2*nargs+4, site));
+            code.addStatement(insts.ReturnInstruction(code.getNextProgramCounter(), 2*nargs+3, false));
           } else {
             int nargs = node.getMethod().getNumberOfParameters();
           }
         } else {
           assert isType(node);
-          code.addStatement(insts.LoadMetadataInstruction(2, TypeReference.JavaLangInvokeMethodType, ref.getDescriptor()));
-          code.addStatement(insts.ReturnInstruction(2, false));
+          code.addStatement(insts.LoadMetadataInstruction(code.getNextProgramCounter(), 2, TypeReference.JavaLangInvokeMethodType, ref.getDescriptor()));
+          code.addStatement(insts.ReturnInstruction(code.getNextProgramCounter(), 2, false));
         }
         irs.put(node, new SoftReference<IR>(m.makeIR(node.getContext(), SSAOptions.defaultOptions())));
       }

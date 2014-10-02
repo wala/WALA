@@ -289,7 +289,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
 
         @Override
         public boolean isUnaryNoOp() {
-            return false;
+            return true;
         }
 
         @Override
@@ -325,6 +325,8 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
         public String toString() {
             return "MEETER";
         }
+        
+        
     }
 
     /**
@@ -641,11 +643,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
             stackHeight = -1;
         }
 
-        boolean isTOP() {
-            return stackHeight == -1;
-        }
-
-//      public void push(int i) {
+ //      public void push(int i) {
 //          if (stack == null)
 //              allocateStack();
 //          stack[stackHeight++] = i;
@@ -674,7 +672,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
 //          stackHeight = 0;
 //      }
 
-        private void allocateLocals() {
+        public void allocateLocals() {
             locals = allocateNewLocalsArray();
         }
 

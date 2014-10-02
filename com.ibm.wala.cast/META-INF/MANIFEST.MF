@@ -9,6 +9,8 @@ Require-Bundle: com.ibm.wala.core,
  com.ibm.wala.shrike,
  org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .,
+ lib/commons-io-2.4.jar
 Export-Package: com.ibm.wala.cast.analysis.typeInference,
  com.ibm.wala.cast.ipa.callgraph,
  com.ibm.wala.cast.ipa.cha,
@@ -26,6 +28,8 @@ Export-Package: com.ibm.wala.cast.analysis.typeInference,
  com.ibm.wala.cast.tree.rewrite,
  com.ibm.wala.cast.tree.visit,
  com.ibm.wala.cast.types,
- com.ibm.wala.cast.util
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+ com.ibm.wala.cast.util,
+ org.apache.commons.io,
+ org.apache.commons.io.input
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 

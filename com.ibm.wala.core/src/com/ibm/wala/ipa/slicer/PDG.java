@@ -534,8 +534,10 @@ public class PDG implements NumberedGraph<Statement> {
             continue;
           }
           if (pei instanceof SSAAbstractInvokeInstruction) {
-            Statement st = new ExceptionalReturnCaller(node, index);
-            delegate.addEdge(st, s);
+            if (! dOptions.isIgnoreExceptions()) {
+              Statement st = new ExceptionalReturnCaller(node, index);
+              delegate.addEdge(st, s);
+            }
           } else {
             delegate.addEdge(new NormalStatement(node, index), s);
           }
@@ -560,8 +562,10 @@ public class PDG implements NumberedGraph<Statement> {
               if (d instanceof SSAAbstractInvokeInstruction) {
                 SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) d;
                 if (vn == call.getException()) {
-                  Statement st = new ExceptionalReturnCaller(node, instructionIndices.get(d));
-                  delegate.addEdge(st, pac);
+                  if (! dOptions.isIgnoreExceptions()) {
+                    Statement st = new ExceptionalReturnCaller(node, instructionIndices.get(d));
+                    delegate.addEdge(st, pac);
+                  }
                 } else {
                   Statement st = new NormalReturnCaller(node, instructionIndices.get(d));
                   delegate.addEdge(st, pac);

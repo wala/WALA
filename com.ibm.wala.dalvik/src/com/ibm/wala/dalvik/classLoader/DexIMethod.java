@@ -1,4 +1,13 @@
 /*
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html.
+ * 
+ * This file is a derivative of code released under the terms listed below.  
+ *
+ */
+/*
  *
  * Copyright (c) 2009-2012,
  *
@@ -672,16 +681,18 @@ public class DexIMethod implements IBytecodeMethod {
 		}
 
 
-		//      for (int i = 0; i < instructions().size(); i++) {
-		//          handlers[i] = (ExceptionHandler[])temp_array.get(i).toArray(new ExceptionHandler[temp_array.get(i).size()]);
-		//
-		//          System.out.println("i: " + i);
-		//          for (int j = 0; j < handlers[i].length; j++) {
-		//              System.out.println("\t j: " + j);
-		//              System.out.println("\t\t Handler: " +  handlers[i][j].getHandler());
-		//              System.out.println("\t\t Catch Class: " + handlers[i][j].getCatchClass());
-		//          }
-		//      }
+		for (int i = 0; i < instructions().size(); i++) {
+			handlers[i] = (ExceptionHandler[])temp_array.get(i).toArray(new ExceptionHandler[temp_array.get(i).size()]);
+		
+			/*
+			System.out.println("i: " + i);
+			for (int j = 0; j < handlers[i].length; j++) {
+				System.out.println("\t j: " + j);
+				System.out.println("\t\t Handler: " +  handlers[i][j].getHandler());
+				System.out.println("\t\t Catch Class: " + handlers[i][j].getCatchClass());
+			}
+			*/
+		}
 
 		return handlers;
 	}
@@ -3306,17 +3317,15 @@ public class DexIMethod implements IBytecodeMethod {
             return empty;
         }
 
-        assert(false) : "Please review getCallSites-Implementation before use!";        // TODO
+        // assert(false) : "Please review getCallSites-Implementation before use!";        // TODO
 
         ArrayList<CallSiteReference> csites = new ArrayList<CallSiteReference>();
         // XXX The call Sites in this method or to this method?!!!
         for (Instruction inst: instructions()) {
             if (inst instanceof Invoke) {
                 // Locate the Target
-                MethodReference target;
-                ClassLoaderReference loader = ClassLoaderReference.Primordial;
-                target = MethodReference.findOrCreate(
-                    loader,    // XXX: Is this the correct class loader?
+            	MethodReference target = MethodReference.findOrCreate(
+                    getDeclaringClass().getClassLoader().getReference(),    // XXX: Is this the correct class loader?
                     ((Invoke)inst).clazzName,
                     ((Invoke)inst).methodName,
                     ((Invoke)inst).descriptor );

@@ -1,3 +1,12 @@
+/*
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html.
+ * 
+ * This file is a derivative of code released under the terms listed below.  
+ *
+ */
 /**
  *
  * Copyright (c) 2009-2012,
@@ -38,7 +47,6 @@
 
 package com.ibm.wala.dalvik.dex.util.config;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -53,6 +61,7 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.io.FileProvider;
 
 /**
  * Create AnalysisScope from java & dalvik file.
@@ -69,19 +78,33 @@ public class DexAnalysisScopeReader extends AnalysisScopeReader {
 	private static final String BASIC_FILE = "./primordial.txt"; // Path inside jar
 /** END Custom change: Fixes in AndroidAnalysisScope */
 
-	public static AnalysisScope makeAndroidBinaryAnalysisScope(String classPath, String exclusions) throws IOException {
+	public static AnalysisScope makeAndroidBinaryAnalysisScope(String classPath, String exclusionsFile) throws IOException {
 		if (classPath == null) {
 			throw new IllegalArgumentException("classPath null");
 		}
 /** BEGIN Custom change: Fixes in AndroidAnalysisScope */		
 		AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
 		//AnalysisScope scope = AnalysisScopeReader.makePrimordialScope(null);
-		scope.setExclusions(new FileOfClasses(new ByteArrayInputStream(exclusions.getBytes())));
+		scope.setExclusions(new FileOfClasses(new FileInputStream((new FileProvider()).getFile(exclusionsFile))));
 		ClassLoaderReference loader = scope.getLoader(AnalysisScope.APPLICATION);
 /** END Custom change: Fixes in AndroidAnalysisScope */        
 		addClassPathToScope(classPath, scope, loader);
 		return scope;
 	}
+
+	public static AnalysisScope makeTestAndroidBinaryAnalysisScope(String classPath, String exclusionsFile) throws IOException {
+		if (classPath == null) {
+			throw new IllegalArgumentException("classPath null");
+		}
+/** BEGIN Custom change: Fixes in AndroidAnalysisScope */		
+		// AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
+		AnalysisScope scope = AnalysisScopeReader.makePrimordialScope((new FileProvider()).getFile(exclusionsFile));
+		ClassLoaderReference loader = scope.getLoader(AnalysisScope.APPLICATION);
+/** END Custom change: Fixes in AndroidAnalysisScope */        
+		addClassPathToScope(classPath, scope, loader);
+		return scope;
+	}
+
 	/**
 	 * @param classPath
 	 *            class path to analyze, delimited by File.pathSeparator
@@ -119,7 +142,7 @@ public class DexAnalysisScopeReader extends AnalysisScopeReader {
 	}
 
 	public static AnalysisScope makeAndroidBinaryAnalysisScope(URI classPath,
-			File exclusionsFile) throws IOException {
+			String exclusionsFile) throws IOException {
 		if (classPath == null) {
 			throw new IllegalArgumentException("classPath null");
 		}

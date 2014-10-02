@@ -12,10 +12,14 @@ package com.ibm.wala.cast.ipa.callgraph;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Iterator;
+
+import org.apache.commons.io.ByteOrderMark;
+import org.apache.commons.io.input.BOMInputStream;
 
 import com.ibm.wala.cast.loader.SingleClassLoaderFactory;
 import com.ibm.wala.classLoader.IMethod;
@@ -55,7 +59,23 @@ public class CAstCallGraphUtil {
 
     assert hackedName.endsWith(scriptName) : scriptName + " does not match file " + script.getFile();
 
-    return new SourceFileModule(scriptFile, scriptName, null);
+    return new SourceFileModule(scriptFile, scriptName, null) {
+      @Override
+      public InputStream getInputStream() {
+        BOMInputStream bs = new BOMInputStream(super.getInputStream(), false, 
+            ByteOrderMark.UTF_8, 
+            ByteOrderMark.UTF_16LE, ByteOrderMark.UTF_16BE,
+            ByteOrderMark.UTF_32LE, ByteOrderMark.UTF_32BE);
+        try {
+          if (bs.hasBOM()) {
+            System.err.println("removing BOM " + bs.getBOM());
+          }
+          return bs;
+        } catch (IOException e) {
+          return super.getInputStream();
+        }
+      }
+    };
   }
 
   public static AnalysisScope makeScope(String[] files, SingleClassLoaderFactory loaders, Language language) throws IOException {

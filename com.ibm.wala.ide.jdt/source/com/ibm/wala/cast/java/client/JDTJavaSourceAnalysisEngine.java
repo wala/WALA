@@ -40,6 +40,7 @@ package com.ibm.wala.cast.java.client;
 import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
 
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
@@ -93,6 +94,7 @@ public class JDTJavaSourceAnalysisEngine extends EclipseProjectSourceAnalysisEng
   @Override
   protected EclipseProjectPath<?, IJavaProject> createProjectPath(
 		  IJavaProject project) throws IOException, CoreException {
+    project.open(new NullProgressMonitor());
 	  return JavaEclipseProjectPath.make(project, AnalysisScopeType.SOURCE_FOR_PROJ_AND_LINKED_PROJS);	
   }
 

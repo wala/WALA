@@ -13,16 +13,22 @@ Bundle-Localization: plugin
 Export-Package: com.ibm.wala.core.tests.basic,
  com.ibm.wala.core.tests.callGraph,
  com.ibm.wala.core.tests.cha,
+ com.ibm.wala.core.tests.collections,
  com.ibm.wala.core.tests.demandpa,
  com.ibm.wala.core.tests.ir,
  com.ibm.wala.core.tests.plugin,
+ com.ibm.wala.core.tests.ptrs,
+ com.ibm.wala.core.tests.shrike,
  com.ibm.wala.core.tests.slicer,
+ com.ibm.wala.core.tests.typeInference,
  com.ibm.wala.core.tests.util,
  com.ibm.wala.demandpa.driver,
+ com.ibm.wala.examples.analysis,
  com.ibm.wala.examples.analysis.dataflow,
  com.ibm.wala.examples.drivers,
- com.ibm.wala.examples.properties
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+ com.ibm.wala.examples.properties,
+ com.ibm.wala.util.io
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: com.ibm.wala.core.tests.plugin.CoreTestsPlugin
 Eclipse-RegisterBuddy: com.ibm.wala.core, com.ibm.wala.core.testdata

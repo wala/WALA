@@ -1,3 +1,12 @@
+/*
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html.
+ * 
+ * This file is a derivative of code released under the terms listed below.  
+ *
+ */
 package com.ibm.wala.dalvik.util;
 
 import java.io.File;
@@ -16,63 +25,35 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.io.FileSuffixes;
 
 public class AndroidAnalysisScope {
-	
-	public final static String STD_EXCLUSION_REG_EXP =
-			"java\\/awt\\/.*\n"
-			+ "javax\\/swing\\/.*\n"
-			+ "java\\/nio\\/.*\n"
-			+ "java\\/net\\/.*\n"
-			+ "sun\\/awt\\/.*\n"
-			+ "sun\\/swing\\/.*\n"
-			+ "com\\/sun\\/.*\n"
-			+ "sun\\/.*\n"
-			+ "apple\\/awt\\/.*\n"
-			+ "com\\/apple\\/.*\n"
-			+ "org\\/omg\\/.*\n"
-			+ "javax\\/.*\n";
-	
-	
-	public static AnalysisScope setUpAndroidAnalysisScope(String androidLib, String classpath) throws IOException {
-		AnalysisScope scope = DexAnalysisScopeReader.makeAndroidBinaryAnalysisScope(classpath, STD_EXCLUSION_REG_EXP);
-		setUpAnalysisScope(scope, new File(androidLib).toURI());
-		return scope;
-	}
-	
-	public static AnalysisScope setUpAndroidAnalysisScope(String androidLib, String classpath, String exclusions) throws IOException {
-		AnalysisScope scope = DexAnalysisScopeReader.makeAndroidBinaryAnalysisScope(classpath, exclusions);
-		setUpAnalysisScope(scope, new File(androidLib).toURI());
-		return scope;
-	}
+			
 
 /** BEGIN Custom change: Fixes in AndroidAnalysisScope */    
-    public static AnalysisScope setUpAndroidAnalysisScope(String androidLib, String classpath, File exclusions) throws IOException {
-		AnalysisScope scope = DexAnalysisScopeReader.makeAndroidBinaryAnalysisScope(classpath, exclusions);
-        setUpAnalysisScope(scope, new File(androidLib).toURI());
+    public static AnalysisScope setUpAndroidAnalysisScope(String androidLib, String classpath, String exclusions) throws IOException {
+		AnalysisScope scope;
+		if (androidLib == null) {
+			scope = DexAnalysisScopeReader.makeTestAndroidBinaryAnalysisScope(classpath, exclusions);
+		} else {
+			scope = DexAnalysisScopeReader.makeAndroidBinaryAnalysisScope(classpath, exclusions);
+		}
+        setUpAnalysisScope(scope, androidLib==null? null: new File(androidLib).toURI());
 		return scope;
 	}
 /** END Custom change: Fixes in AndroidAnalysisScope */    
 
-	public static AnalysisScope setUpAndroidAnalysisScope(URI androidLib, URI classpath, File exclusions) throws IOException {
+	public static AnalysisScope setUpAndroidAnalysisScope(URI androidLib, URI classpath, String exclusions) throws IOException {
 		AnalysisScope scope = DexAnalysisScopeReader.makeAndroidBinaryAnalysisScope(classpath, exclusions);
         setUpAnalysisScope(scope, androidLib);
 		return scope;
 	}
 	
 	private static void setUpAnalysisScope(AnalysisScope scope, URI androidLib) throws IOException {
-/** BEGIN Custom change: Fixes in AndroidAnalysisScope */        
-        if (androidLib == null) {
-            throw new IllegalArgumentException("The argument androidLib may not be null.");
-        }
-/** END Custom change: Fixes in AndroidAnalysisScope */
 
 		scope.setLoaderImpl(ClassLoaderReference.Application,
 				"com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
 
-		scope.setLoaderImpl(ClassLoaderReference.Primordial,
-				"com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
-
-/** BEGIN Custom change: Fixes in AndroidAnalysisScope */
-        if (FileSuffixes.isDexFile(androidLib)) {
+        if (androidLib != null) {
+        	if (FileSuffixes.isDexFile(androidLib)) {
+        
 /** END Custom change: Fixes in AndroidAnalysisScope */            
 			Module dexMod = new DexFileModule(new File(androidLib));
 			
@@ -82,22 +63,31 @@ public class AndroidAnalysisScope {
 //				logger.error("dex module: {}", moduleEntry.getName());
 //			}
 
+			scope.setLoaderImpl(ClassLoaderReference.Primordial,
+					"com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
+
 			scope.addToScope(ClassLoaderReference.Primordial, dexMod);
 		} else {
 /** BEGIN Custom change: Fixes in AndroidAnalysisScope */            
             if (FileSuffixes.isRessourceFromJar(androidLib)) {
+            	scope.setLoaderImpl(ClassLoaderReference.Primordial,
+        				"com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
+
                 //final FileProvider fileProvider = new FileProvider();
                 final InputStream is = androidLib.toURL().openStream();
                 assert (is != null);
                 final Module libMod = new JarStreamModule(new JarInputStream(is));
                 scope.addToScope(ClassLoaderReference.Primordial, libMod);
                 //throw new UnsupportedOperationException("Cannot extract lib from jar");
+
             } else {
+            	// assume it is really a JVML jar file, not Android at all
     			scope.addToScope(ClassLoaderReference.Primordial, new JarFile(new File(
 	    			androidLib)));
             }
 /** END Custom change: Fixes in AndroidAnalysisScope */            
 		}
+	}
 	}
     
 }
