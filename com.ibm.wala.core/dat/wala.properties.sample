@@ -29,6 +29,14 @@ java_runtime_dir = Your location
 #####
 #output_dir = Your location
 
+################### Mandatory settings for Android (Dalvik) ####################
+
+# location of runtime jar
+#android_rt_jar = .../android-sdk-macosx/platforms/android-20/android.jar
+
+# location of jar-to-dex tool
+#android_dx_tool = .../android-sdk-macosx/build-tools/20.0.0/dx
+
 ############################ Optional settings ################################
 
 ##### 
@@ -53,3 +61,8 @@ java_runtime_dir = Your location
 # Info: Can be absolute or relative.
 #####
 #WALA_report = Your file name
+
+#
+# the location of DroidBench for Android tests
+#
+#droidbench.root = Your location

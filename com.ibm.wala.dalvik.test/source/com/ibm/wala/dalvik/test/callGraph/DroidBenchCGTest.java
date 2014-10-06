@@ -33,6 +33,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
@@ -73,7 +74,7 @@ public class DroidBenchCGTest extends DalvikCallGraphTestBase {
 		uncalledFunctions.put("Reflection_Reflection1.apk",  x);
 	}
 	
-	private static final String droidBenchRoot = System.getProperty("droidbench.root");
+	private static final String droidBenchRoot = walaProperties.getProperty("droidbench.root");
 
 	private void assertUserCodeReachable(CallGraph cg) throws InvalidClassFileException {
 		for(Iterator<IClass> clss = cg.getClassHierarchy().getLoader(ClassLoaderReference.Application).iterateAllClasses();
