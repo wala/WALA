@@ -20,10 +20,15 @@ import com.ibm.wala.types.TypeReference;
  */
 public abstract class SSAInstruction {
 
+  public static final int NO_INDEX = -1;
+  
+  public final int iindex;
+  
   /**
    * prevent instantiation by the outside
    */
-  protected SSAInstruction() {
+  protected SSAInstruction(int iindex) {
+    this.iindex = iindex;
   }
 
   /**

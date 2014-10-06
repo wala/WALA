@@ -23,14 +23,14 @@ public class SSAReturnInstruction extends SSAInstruction {
 
   private final boolean isPrimitive;
 
-  public SSAReturnInstruction(int result, boolean isPrimitive) {
-    super();
+  public SSAReturnInstruction(int iindex, int result, boolean isPrimitive) {
+    super(iindex);
     this.result = result;
     this.isPrimitive = isPrimitive;
   }
 
-  public SSAReturnInstruction() {
-    super();
+  public SSAReturnInstruction(int iindex) {
+    super(iindex);
     this.result = -1;
     this.isPrimitive = false;
   }
@@ -38,12 +38,12 @@ public class SSAReturnInstruction extends SSAInstruction {
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (result == -1)
-      return insts.ReturnInstruction();
+      return insts.ReturnInstruction(iindex);
     else {
       if (uses != null && uses.length != 1) {
         throw new IllegalArgumentException("invalid uses.  must have exactly one use.");
       }
-      return insts.ReturnInstruction(uses == null ? result : uses[0], isPrimitive);
+      return insts.ReturnInstruction(iindex, uses == null ? result : uses[0], isPrimitive);
     }
   }
 

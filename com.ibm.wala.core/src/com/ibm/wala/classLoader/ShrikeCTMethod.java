@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -26,6 +27,8 @@ import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.shrikeCT.LineNumberTableReader;
 import com.ibm.wala.shrikeCT.LocalVariableTableReader;
 import com.ibm.wala.shrikeCT.SignatureReader;
+import com.ibm.wala.shrikeCT.SourcePositionTableReader;
+import com.ibm.wala.shrikeCT.SourcePositionTableReader.Position;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
@@ -143,12 +146,122 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
       return reader.getClasses();
     }
   }
+/** BEGIN Custom change: precise positions */
+  
+  private static final class SPos implements SourcePosition {
 
+    final int firstLine;
+    final int lastLine;
+    final int firstCol;
+    final int lastCol;
+    
+    private SPos(int firstLine, int lastLine, int firstCol, int lastCol) {
+      this.firstLine = firstLine;
+      this.lastLine = lastLine;
+      this.firstCol = firstCol;
+      this.lastCol = lastCol;
+    }
+
+
+    @Override
+    public int getFirstCol() {
+      return firstCol;
+    }
+
+    @Override
+    public int getFirstLine() {
+      return firstLine;
+    }
+
+    @Override
+    public int getFirstOffset() {
+      return 0;
+    }
+
+    @Override
+    public int getLastCol() {
+      return lastCol;
+    }
+
+    @Override
+    public int getLastLine() {
+      return lastLine;
+    }
+
+    @Override
+    public int getLastOffset() {
+      return 0;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+      if (o instanceof SourcePosition) {
+        SourcePosition p = (SourcePosition) o;
+        if (firstLine != p.getFirstLine()) {
+          return firstLine - p.getFirstLine();
+        } else if (firstCol != p.getFirstCol()) {
+          return firstCol - p.getFirstCol();
+        } else if (lastLine != p.getLastLine()) {
+          return lastLine - p.getLastLine();
+        } else if (lastCol != p.getLastCol()) {
+          return lastCol - p.getLastCol();
+        } else {
+          return 0;
+        }
+      } else {
+        return -1;
+      }
+    }
+    
+    @Override
+    public String toString() {
+      return "(" + firstLine + "," + firstCol + "-" + lastLine + "," + lastCol + ")";
+    }
+    
+  }
+/** END Custom change: precise positions */
+  
   @Override
   protected void processDebugInfo(BytecodeInfo bcInfo) throws InvalidClassFileException {
     CodeReader cr = getCodeReader();
     bcInfo.lineNumberMap = LineNumberTableReader.makeBytecodeToSourceMap(cr);
     bcInfo.localVariableMap = LocalVariableTableReader.makeVarMap(cr);
+/** BEGIN Custom change: precise bytecode positions */
+    
+    Position param = null;
+    try {
+        param = SourcePositionTableReader.findParameterPosition(shrikeMethodIndex, cr);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    
+    bcInfo.paramPositionMap = new SPos[getNumberOfParameters()];
+    if (param != null) {
+      SPos paramPos = new SPos(param.firstLine, param.lastLine, param.firstCol, param.lastCol);
+      for (int i = 0; i < getNumberOfParameters(); i++) {
+        bcInfo.paramPositionMap[i] = paramPos;
+      }
+    }
+
+    Position pos[] = null;
+    try {
+      pos = SourcePositionTableReader.makeBytecodeToPositionMap(cr);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    
+    if (pos == null && bcInfo.lineNumberMap != null) {
+      pos = SourcePositionTableReader.makeLineNumberToPositionMap(bcInfo.lineNumberMap);
+    }
+    
+    if (pos != null) {
+      bcInfo.positionMap = new SPos[pos.length];
+      for (int i = 0; i < pos.length; i++) {
+        Position p = pos[i];
+        bcInfo.positionMap[i] = new SPos(p.firstLine, p.lastLine, p.firstCol, p.lastCol);
+      }
+    }
+/** END Custom change: : precise bytecode positions */
   }
 
   @Override
@@ -161,8 +274,8 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     }
 
     if (localNumber > getMaxLocals()) {
-      throw new IllegalArgumentException("illegal local number: " + localNumber + ", method " + getName() + " uses at most "
-          + getMaxLocals());
+      throw new IllegalArgumentException("illegal local number: " + localNumber + ", method " + getDeclaringClass().getName() + 
+              "." + getName() + " uses at most " + getMaxLocals());
     }
 
     if (map == null) {

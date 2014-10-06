@@ -29,8 +29,8 @@ public abstract class SSAMonitorInstruction extends SSAInstruction {
    * @param ref The value number of the object being locked or unlocked
    * @param isEnter Does this instruction represent a monitorenter?
    */
-  protected SSAMonitorInstruction(int ref, boolean isEnter) {
-    super();
+  protected SSAMonitorInstruction(int iindex, int ref, boolean isEnter) {
+    super(iindex);
     this.ref = ref;
     this.isEnter = isEnter;
   }
@@ -38,7 +38,7 @@ public abstract class SSAMonitorInstruction extends SSAInstruction {
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     assert uses == null || uses.length == 1;
-    return insts.MonitorInstruction(uses == null ? ref : uses[0], isEnter);
+    return insts.MonitorInstruction(iindex, uses == null ? ref : uses[0], isEnter);
   }
 
   @Override

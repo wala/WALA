@@ -77,7 +77,7 @@ public abstract class CrossLanguageSSAPropagationCallGraphBuilder extends AstSSA
   protected PropagationSystem makeSystem(AnalysisOptions options) {
     return new PropagationSystem(callGraph, pointerKeyFactory, instanceKeyFactory) {
       @Override
-      public PointerAnalysis makePointerAnalysis(PropagationCallGraphBuilder builder) {
+      public PointerAnalysis<InstanceKey> makePointerAnalysis(PropagationCallGraphBuilder builder) {
         assert builder == CrossLanguageSSAPropagationCallGraphBuilder.this;
         return new CrossLanguagePointerAnalysisImpl(CrossLanguageSSAPropagationCallGraphBuilder.this, cg, pointsToMap,
             instanceKeys, pointerKeyFactory, instanceKeyFactory);

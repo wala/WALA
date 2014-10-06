@@ -449,7 +449,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock> 
       }
     }
 
-    SSAPiInstruction getPiForRefAndPath(int n, Object path) {
+    public SSAPiInstruction getPiForRefAndPath(int n, Object path) {
       return piInstructions.get(new RefPathKey(n, this, path));
     }
 
@@ -461,7 +461,7 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock> 
      * @param path can be the successor block in the pi instruction
      * @param pi
      */
-    void addPiForRefAndPath(int n, Object path, SSAPiInstruction pi) {
+    public void addPiForRefAndPath(int n, Object path, SSAPiInstruction pi) {
       piInstructions.put(new RefPathKey(n, this, path), pi);
       blockPiInstructions.add(pi);
     }

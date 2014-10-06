@@ -87,6 +87,9 @@ import com.ibm.wala.util.strings.Atom;
  */
 public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
   public Map<CAstEntity, IClass> fTypeMap = HashMapFactory.make();
+/** BEGIN Custom change: Common superclass is optional */
+  private final boolean existsCommonSuperclass;   // extension to deal with X10 that has no common superclass
+/** END Custom change: Common superclass is optional */
 
   /**
    * WALA representation of a Java class residing in a source file
@@ -135,7 +138,10 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
       // The following test allows the root class to reside in source; without
       // it, the assertion requires all classes represented by a JavaClass to
       // have a superclass.
-      if (!getName().equals(JavaSourceLoaderImpl.this.getLanguage().getRootType().getName()) && !excludedSupertype) {
+/** BEGIN Custom change: Common superclass is optional */
+      // Is no longer true in new X10 - no common object super class
+      if (existsCommonSuperclass && !getName().equals(JavaSourceLoaderImpl.this.getLanguage().getRootType().getName()) && !excludedSupertype) {
+/** END Custom change: Common superclass is optional */
         Assertions.UNREACHABLE("Cannot find super class for " + this + " in " + superTypeNames);
       }
       
@@ -477,9 +483,18 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     return result;
   }
 
-  public JavaSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha) throws IOException {
+/** BEGIN Custom change: Common superclass is optional */
+  public JavaSourceLoaderImpl(boolean existsCommonSuperClass, ClassLoaderReference loaderRef, IClassLoader parent,
+      SetOfClasses exclusions, IClassHierarchy cha) throws IOException {
     super(loaderRef, cha.getScope().getArrayClassLoader(), parent, cha.getScope().getExclusions(), cha);
+    this.existsCommonSuperclass = existsCommonSuperClass;
   }
+  
+  public JavaSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha) throws IOException {
+    // standard case: we have a common super class
+    this(true, loaderRef, parent, exclusions, cha);
+  }
+/** END Custom change: Common superclass is optional */
 
   public IClassHierarchy getClassHierarchy() {
     return cha;
@@ -491,11 +506,19 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
   }
 
   protected abstract SourceModuleTranslator getTranslator();
+/** BEGIN Custom change: Optional deletion of fTypeMap */
+  public static volatile boolean deleteTypeMapAfterInit = true;
+/** END Custom change: Optional deletion of fTypeMap */
+  
 
   @Override
   public void init(List<Module> modules) throws IOException {
     super.init(modules);
-    fTypeMap = null;
+/** BEGIN Custom change: Optional deletion of fTypeMap */
+    if (deleteTypeMapAfterInit) {
+      fTypeMap = null;
+    }
+/** END Custom change: Optional deletion of fTypeMap */
   }
 
   public void defineFunction(CAstEntity n, IClass owner, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
@@ -541,107 +564,107 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
   public static class InstructionFactory extends JavaInstructionFactory implements AstJavaInstructionFactory {
 
     @Override
-    public com.ibm.wala.cast.java.ssa.EnclosingObjectReference EnclosingObjectReference(int lval, TypeReference type) {
-      return new EnclosingObjectReference(lval, type);
+    public com.ibm.wala.cast.java.ssa.EnclosingObjectReference EnclosingObjectReference(int iindex, int lval, TypeReference type) {
+      return new EnclosingObjectReference(iindex, lval, type);
     }
 
     @Override
-    public AstJavaNewEnclosingInstruction JavaNewEnclosingInstruction(int result, NewSiteReference site, int enclosing) {
-      return new AstJavaNewEnclosingInstruction(result, site, enclosing);
+    public AstJavaNewEnclosingInstruction JavaNewEnclosingInstruction(int iindex, int result, NewSiteReference site, int enclosing) {
+      return new AstJavaNewEnclosingInstruction(iindex, result, site, enclosing);
     }
 
     @Override
-    public AstJavaInvokeInstruction JavaInvokeInstruction(int result[], int[] params, int exception, CallSiteReference site) {
-      return result == null ? new AstJavaInvokeInstruction(params, exception, site) : new AstJavaInvokeInstruction(result[0],
+    public AstJavaInvokeInstruction JavaInvokeInstruction(int iindex, int result[], int[] params, int exception, CallSiteReference site) {
+      return result == null ? new AstJavaInvokeInstruction(iindex, params, exception, site) : new AstJavaInvokeInstruction(iindex, result[0],
           params, exception, site);
     }
 
     @Override
-    public AstAssertInstruction AssertInstruction(int value, boolean fromSpecification) {
-      return new AstAssertInstruction(value, fromSpecification);
+    public AstAssertInstruction AssertInstruction(int iindex, int value, boolean fromSpecification) {
+      return new AstAssertInstruction(iindex, value, fromSpecification);
     }
 
     @Override
-    public com.ibm.wala.cast.ir.ssa.AssignInstruction AssignInstruction(int result, int val) {
-       return new AssignInstruction(result, val);
+    public com.ibm.wala.cast.ir.ssa.AssignInstruction AssignInstruction(int iindex, int result, int val) {
+       return new AssignInstruction(iindex, result, val);
     }
 
     @Override
-    public com.ibm.wala.cast.ir.ssa.EachElementGetInstruction EachElementGetInstruction(int value, int objectRef) {
+    public com.ibm.wala.cast.ir.ssa.EachElementGetInstruction EachElementGetInstruction(int iindex, int value, int objectRef) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction EachElementHasNextInstruction(int value, int objectRef) {
+    public com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction EachElementHasNextInstruction(int iindex, int value, int objectRef) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public AstEchoInstruction EchoInstruction(int[] rvals) {
+    public AstEchoInstruction EchoInstruction(int iindex, int[] rvals) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public AstGlobalRead GlobalRead(int lhs, FieldReference global) {
+    public AstGlobalRead GlobalRead(int iindex, int lhs, FieldReference global) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public AstGlobalWrite GlobalWrite(FieldReference global, int rhs) {
+    public AstGlobalWrite GlobalWrite(int iindex, FieldReference global, int rhs) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval, int fieldVal, FieldReference fieldRef) {
+    public AstIsDefinedInstruction IsDefinedInstruction(int iindex, int lval, int rval, int fieldVal, FieldReference fieldRef) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval, FieldReference fieldRef) {
+    public AstIsDefinedInstruction IsDefinedInstruction(int iindex, int lval, int rval, FieldReference fieldRef) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval, int fieldVal) {
+    public AstIsDefinedInstruction IsDefinedInstruction(int iindex, int lval, int rval, int fieldVal) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval) {
+    public AstIsDefinedInstruction IsDefinedInstruction(int iindex, int lval, int rval) {
       throw new UnsupportedOperationException();
     }
 
     @Override
-    public AstLexicalRead LexicalRead(Access[] accesses) {
-      return new AstLexicalRead(accesses);
+    public AstLexicalRead LexicalRead(int iindex, Access[] accesses) {
+      return new AstLexicalRead(iindex, accesses);
     }
 
     @Override
-    public AstLexicalRead LexicalRead(Access access) {
-       return new AstLexicalRead(access);
+    public AstLexicalRead LexicalRead(int iindex, Access access) {
+       return new AstLexicalRead(iindex, access);
     }
 
     @Override
-    public AstLexicalRead LexicalRead(int lhs, String definer, String globalName, TypeReference type) {
-      return new AstLexicalRead(lhs, definer, globalName, type);
+    public AstLexicalRead LexicalRead(int iindex, int lhs, String definer, String globalName, TypeReference type) {
+      return new AstLexicalRead(iindex, lhs, definer, globalName, type);
     }
 
     @Override
-    public AstLexicalWrite LexicalWrite(Access[] accesses) {
-      return new AstLexicalWrite(accesses);
+    public AstLexicalWrite LexicalWrite(int iindex, Access[] accesses) {
+      return new AstLexicalWrite(iindex, accesses);
     }
 
     @Override
-    public AstLexicalWrite LexicalWrite(Access access) {
-      return new AstLexicalWrite(access);
+    public AstLexicalWrite LexicalWrite(int iindex, Access access) {
+      return new AstLexicalWrite(iindex, access);
     }
 
     @Override
-    public AstLexicalWrite LexicalWrite(String definer, String globalName, TypeReference type, int rhs) {
-       return new AstLexicalWrite(definer, globalName, type, rhs);
+    public AstLexicalWrite LexicalWrite(int iindex, String definer, String globalName, TypeReference type, int rhs) {
+       return new AstLexicalWrite(iindex, definer, globalName, type, rhs);
     }
 
-    public SSAThrowInstruction NonExceptingThrowInstruction(int exception) {
+    public SSAThrowInstruction NonExceptingThrowInstruction(int iindex, int exception) {
       throw new UnsupportedOperationException();
    }    
   }

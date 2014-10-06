@@ -332,6 +332,22 @@ public class SyntheticMethod implements IMethod {
   public Descriptor getDescriptor() {
     return method.getSelector().getDescriptor();
   }
+/** BEGIN Custom change: : precise bytecode positions */
+  
+  /*
+   * @see com.ibm.wala.classLoader.IMethod#getSourcePosition(int)
+   */
+  public SourcePosition getSourcePosition(int bcIndex) throws InvalidClassFileException {
+    return null;
+  }
+
+  /*
+   * @see com.ibm.wala.classLoader.IMethod#getParameterSourcePosition(int)
+   */
+  public SourcePosition getParameterSourcePosition(int paramNum) throws InvalidClassFileException {
+    return null;
+  }
+/** END Custom change: precise bytecode positions */
 
   /*
    * @see com.ibm.wala.classLoader.IMethod#getLineNumber(int)

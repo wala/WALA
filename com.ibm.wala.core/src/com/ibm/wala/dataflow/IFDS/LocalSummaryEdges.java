@@ -79,9 +79,9 @@ public class LocalSummaryEdges {
       summaries.set(n, R);
     }
     R.add(d1, d2);
-    if (TabulationSolver.DEBUG_LEVEL > 1) {
-      // System.err.println("recording summary edge, now n=" + n + " summarized by " + R);
-    }
+//    if (TabulationSolver.DEBUG_LEVEL > 1) {
+//      // System.err.println("recording summary edge, now n=" + n + " summarized by " + R);
+//    }
   }
 
   /**

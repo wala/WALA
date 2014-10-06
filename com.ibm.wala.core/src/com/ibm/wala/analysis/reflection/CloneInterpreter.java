@@ -160,12 +160,12 @@ public class CloneInterpreter implements SSAContextInterpreter {
     SSANewInstruction N = null;
     if (klass.isArrayClass()) {
       int length = nextLocal++;
-      statements.add(insts.ArrayLengthInstruction(length, 1));
+      statements.add(insts.ArrayLengthInstruction(statements.size(), length, 1));
       int[] sizes = new int[((ArrayClass)klass).getDimensionality()];
       Arrays.fill(sizes, length);
-      N = insts.NewInstruction(retValue, ref, sizes);
+      N = insts.NewInstruction(statements.size(), retValue, ref, sizes);
     } else {
-      N = insts.NewInstruction(retValue, ref);
+      N = insts.NewInstruction(statements.size(), retValue, ref);
     }
     statements.add(N);
 
@@ -176,7 +176,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
       int[] params = new int[2];
       params[0] = 1;
       params[1] = retValue;
-      SSAInvokeInstruction S = insts.InvokeInstruction(params, exceptionValue, ARRAYCOPY_SITE);
+      SSAInvokeInstruction S = insts.InvokeInstruction(statements.size(), params, exceptionValue, ARRAYCOPY_SITE);
       statements.add(S);
     } else {
       // copy the fields over, one by one.
@@ -186,9 +186,9 @@ public class CloneInterpreter implements SSAContextInterpreter {
         for (Iterator<IField> it = klass.getDeclaredInstanceFields().iterator(); it.hasNext();) {
           IField f = it.next();
           int tempValue = nextLocal++;
-          SSAGetInstruction G = insts.GetInstruction(tempValue, 1, f.getReference());
+          SSAGetInstruction G = insts.GetInstruction(statements.size(), tempValue, 1, f.getReference());
           statements.add(G);
-          SSAPutInstruction P = insts.PutInstruction(retValue, tempValue, f.getReference());
+          SSAPutInstruction P = insts.PutInstruction(statements.size(), retValue, tempValue, f.getReference());
           statements.add(P);
         }
         k = k.getSuperclass();
@@ -196,7 +196,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
 
     }
 
-    SSAReturnInstruction R = insts.ReturnInstruction(retValue, false);
+    SSAReturnInstruction R = insts.ReturnInstruction(statements.size(), retValue, false);
     statements.add(R);
 
     SSAInstruction[] result = new SSAInstruction[statements.size()];

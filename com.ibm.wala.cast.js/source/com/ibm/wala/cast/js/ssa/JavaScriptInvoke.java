@@ -28,18 +28,18 @@ public class JavaScriptInvoke extends MultiReturnValueInvokeInstruction {
 
   private int function;
 
-  public JavaScriptInvoke(int function, int results[], int[] params, int exception, CallSiteReference site) {
-    super(results, exception, site);
+  public JavaScriptInvoke(int iindex, int function, int results[], int[] params, int exception, CallSiteReference site) {
+    super(iindex, results, exception, site);
     this.function = function;
     this.params = params;
   }
 
-  public JavaScriptInvoke(int function, int result, int[] params, int exception, CallSiteReference site) {
-    this(function, new int[] { result }, params, exception, site);
+  public JavaScriptInvoke(int iindex, int function, int result, int[] params, int exception, CallSiteReference site) {
+    this(iindex, function, new int[] { result }, params, exception, site);
   }
 
-  public JavaScriptInvoke(int function, int[] params, int exception, CallSiteReference site) {
-    this(function, null, params, exception, site);
+  public JavaScriptInvoke(int iindex, int function, int[] params, int exception, CallSiteReference site) {
+    this(iindex, function, null, params, exception, site);
   }
 
   @Override
@@ -74,7 +74,7 @@ public class JavaScriptInvoke extends MultiReturnValueInvokeInstruction {
 
     }
 
-    return ((JSInstructionFactory)insts).Invoke(fn, newLvals, newParams, newExp, site);
+    return ((JSInstructionFactory)insts).Invoke(iindex, fn, newLvals, newParams, newExp, site);
   }
 
   

@@ -147,7 +147,12 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
     }
     if (eb.isEntryBlock() || eb.instructionIndex == eb.original.getLastInstructionIndex()) {
       List<IExplodedBasicBlock> result = new ArrayList<IExplodedBasicBlock>();
-      for (ISSABasicBlock s : ir.getControlFlowGraph().getExceptionalSuccessors(eb.original)) {
+      ISSABasicBlock orig = eb.original;
+      if (eb.isEntryBlock() && orig == null) {
+        orig = ir.getControlFlowGraph().entry();
+      }
+      
+      for (ISSABasicBlock s : ir.getControlFlowGraph().getExceptionalSuccessors(orig)) {
         if (s.equals(ir.getControlFlowGraph().exit())) {
           result.add(exit());
         } else {
@@ -374,7 +379,13 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction
 
   @Override
   public boolean hasEdge(IExplodedBasicBlock src, IExplodedBasicBlock dst) throws UnimplementedError {
-    Assertions.UNREACHABLE();
+    for (Iterator<IExplodedBasicBlock> it = getSuccNodes(src); it.hasNext();) {
+      IExplodedBasicBlock succ = it.next();
+      if (succ == dst) {
+        return true;
+      }
+    }
+    
     return false;
   }
 

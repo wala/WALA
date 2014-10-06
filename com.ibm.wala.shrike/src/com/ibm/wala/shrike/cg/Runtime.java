@@ -1,3 +1,14 @@
+/******************************************************************************
+ * Copyright (c) 2002 - 2014 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *****************************************************************************/
+
 package com.ibm.wala.shrike.cg;
 
 import java.io.FileInputStream;
@@ -17,6 +28,7 @@ public class Runtime {
   
   private PrintWriter output;
   private SetOfClasses filter;
+  private boolean handleUninstrumentedCode = false;
   
   private ThreadLocal<Stack<String>> callStacks = new ThreadLocal<Stack<String>>() {
 
@@ -41,6 +53,8 @@ public class Runtime {
     } catch (IOException e) {
       output = new PrintWriter(System.err);
     }
+    
+    handleUninstrumentedCode = Boolean.parseBoolean(System.getProperty("dynamicCGHandleMissing", "false"));
     
     java.lang.Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
@@ -67,9 +81,25 @@ public class Runtime {
   public static void execution(String klass, String method, Object receiver) {
     if (runtime.filter == null || ! runtime.filter.contains(klass)) {
       if (runtime.output != null) {
-        String line = runtime.callStacks.get().peek() + "\t" + klass + "\t" + method + "\n";
-        synchronized (runtime) {
-          runtime.output.printf(line);
+        String caller = runtime.callStacks.get().peek();
+        
+        checkValid: {
+          if (runtime.handleUninstrumentedCode) {
+            StackTraceElement[] stack = (new Throwable()).getStackTrace();
+            if (stack.length > 2) {
+              // frames: me(0), callee(1), caller(2)
+              StackTraceElement callerFrame = stack[2];
+              if (! caller.contains(callerFrame.getMethodName()) ||
+                  ! caller.contains(callerFrame.getClassName().replace('.', '/'))) {
+                break checkValid;
+              }
+            }
+          }
+        
+          String line = caller + "\t" + klass + "\t" + method + "\n";
+          synchronized (runtime) {
+            runtime.output.printf(line);
+          }
         }
       }
     }

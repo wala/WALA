@@ -36,6 +36,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.shrikeBT.BytecodeConstants;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.ConstantValue;
+import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -116,6 +117,8 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
   private final static int E_CONSTANT = 14;
 
+  private final static int E_AALOAD = 15;
+
   private final static Map<String, Integer> elementMap = HashMapFactory.make(14);
   static {
     elementMap.put("classloader", new Integer(E_CLASSLOADER));
@@ -133,6 +136,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     elementMap.put("getfield", new Integer(E_GETFIELD));
     elementMap.put("throw", new Integer(E_ATHROW));
     elementMap.put("constant", new Integer(E_CONSTANT));
+    elementMap.put("aaload", new Integer(E_AALOAD));
   }
 
   //
@@ -328,6 +332,9 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       case E_AASTORE:
         processAastore(atts);
         break;
+      case E_AALOAD:
+        processAaload(atts);
+        break;
       case E_RETURN:
         processReturn(atts);
         break;
@@ -387,6 +394,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       case E_POISON:
       case E_PUTSTATIC:
       case E_PUTFIELD:
+      case E_AALOAD:
       case E_AASTORE:
       case E_ATHROW:
       case E_SUMMARY_SPEC:
@@ -477,10 +485,10 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         int defNum = nextLocal;
         symbolTable.put(defVar, new Integer(nextLocal++));
 
-        governingMethod.addStatement(insts.InvokeInstruction(defNum, params, exceptionValue, site));
+        governingMethod.addStatement(insts.InvokeInstruction(governingMethod.getNumberOfStatements(), defNum, params, exceptionValue, site));
       } else {
         // ignore return value, if any
-        governingMethod.addStatement(insts.InvokeInstruction(params, exceptionValue, site));
+        governingMethod.addStatement(insts.InvokeInstruction(governingMethod.getNumberOfStatements(), params, exceptionValue, site));
       }
     }
 
@@ -524,9 +532,9 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
             type.getDerivedMask()==ArrayMask || 
             // array of primitives
             type.getDerivedMask()==((ArrayMask<<ElementBits)|PrimitiveMask));  
-        a = insts.NewInstruction(defNum, ref, new int[] { sNumber.intValue() });
+        a = insts.NewInstruction(governingMethod.getNumberOfStatements(), defNum, ref, new int[] { sNumber.intValue() });
       } else {
-        a = insts.NewInstruction(defNum, ref);
+        a = insts.NewInstruction(governingMethod.getNumberOfStatements(), defNum, ref);
       }
       governingMethod.addStatement(a);
     }
@@ -550,7 +558,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         Assertions.UNREACHABLE("Cannot lookup value: " + V);
       }
 
-      SSAThrowInstruction T = insts.ThrowInstruction(valueNumber.intValue());
+      SSAThrowInstruction T = insts.ThrowInstruction(governingMethod.getNumberOfStatements(), valueNumber.intValue());
       governingMethod.addStatement(T);
     }
 
@@ -596,7 +604,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         Assertions.UNREACHABLE("Cannot lookup ref: " + R);
       }
 
-      SSAGetInstruction G = insts.GetInstruction(defNum, refNumber.intValue(), field);
+      SSAGetInstruction G = insts.GetInstruction(governingMethod.getNumberOfStatements(), defNum, refNumber.intValue(), field);
       governingMethod.addStatement(G);
     }
 
@@ -641,7 +649,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         Assertions.UNREACHABLE("Cannot lookup ref: " + R);
       }
 
-      SSAPutInstruction P = insts.PutInstruction(refNumber.intValue(), valueNumber.intValue(), field);
+      SSAPutInstruction P = insts.PutInstruction(governingMethod.getNumberOfStatements(), refNumber.intValue(), valueNumber.intValue(), field);
       governingMethod.addStatement(P);
     }
 
@@ -675,7 +683,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       if (valueNumber == null) {
         Assertions.UNREACHABLE("Cannot lookup value: " + V);
       }
-      SSAPutInstruction P = insts.PutInstruction(valueNumber.intValue(), field);
+      SSAPutInstruction P = insts.PutInstruction(governingMethod.getNumberOfStatements(), valueNumber.intValue(), field);
       governingMethod.addStatement(P);
     }
 
@@ -705,12 +713,67 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       if (V == null) {
         Assertions.UNREACHABLE("Must specify value for aastore " + governingMethod);
       }
+      /** BEGIN Custom change: expect type information in array-store instructions */
+      String strType = atts.getValue(A_TYPE);
+      TypeReference type;
+      if (strType == null) {
+        type = TypeReference.JavaLangObject;
+      } else {
+        type = TypeReference.findOrCreate(governingLoader, strType);
+      }
+      /** END Custom change: get type information in array-store instructions */
       Integer valueNumber = symbolTable.get(V);
       if (valueNumber == null) {
         Assertions.UNREACHABLE("Cannot lookup value: " + V);
       }
-      SSAArrayStoreInstruction S = insts.ArrayStoreInstruction(refNumber.intValue(), 0, valueNumber.intValue(),
-          TypeReference.JavaLangObject);
+      /** BEGIN Custom change: expect type information in array-store instructions */
+      SSAArrayStoreInstruction S = insts.ArrayStoreInstruction(governingMethod.getNumberOfStatements(), refNumber.intValue(), 0, valueNumber.intValue(), type);
+      /** END Custom change: get type information in array-store instructions */
+      governingMethod.addStatement(S);
+    }
+
+    /**
+     * Process an element indicating an Aaload
+     * 
+     * @param atts
+     */
+    private void processAaload(Attributes atts) {
+      //<aaload def="foo" ref="arg1" index="the-answer" />
+      Language lang = scope.getLanguage(governingLoader.getLanguage());
+      SSAInstructionFactory insts = lang.instructionFactory();
+
+      String R = atts.getValue(A_REF);
+      if (R == null) {
+        Assertions.UNREACHABLE("Must specify ref for aaload " + governingMethod);
+      }
+      Integer refNumber = symbolTable.get(R);
+      if (refNumber == null) {
+        Assertions.UNREACHABLE("Cannot lookup value: " + R);
+      }
+      // N.B: we currently ignore the index
+      String I = atts.getValue(A_INDEX);
+      if (I == null) {
+        Assertions.UNREACHABLE("Must specify index for aaload " + governingMethod);
+      }
+      String strType = atts.getValue(A_TYPE);
+      TypeReference type;
+      if (strType == null) {
+        type = TypeReference.JavaLangObject;
+      } else {
+        type = TypeReference.findOrCreate(governingLoader, strType);
+      }
+   // get the value def'fed
+      String defVar = atts.getValue(A_DEF);
+      if (symbolTable.keySet().contains(defVar)) {
+        Assertions.UNREACHABLE("Cannot def variable twice: " + defVar + " in " + governingMethod);
+      }
+      if (defVar == null) {
+        Assertions.UNREACHABLE("Must specify def for getfield " + governingMethod);
+      }
+      int defNum = nextLocal;
+      symbolTable.put(defVar, new Integer(nextLocal++));
+      SSAArrayLoadInstruction S = insts.ArrayLoadInstruction(governingMethod.getNumberOfStatements(), defNum, refNumber.intValue(), 0,
+          type);
       governingMethod.addStatement(S);
     }
 
@@ -726,7 +789,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
       if (governingMethod.getReturnType() != null) {
         String retV = atts.getValue(A_VALUE);
         if (retV == null) {
-          SSAReturnInstruction R = insts.ReturnInstruction();
+          SSAReturnInstruction R = insts.ReturnInstruction(governingMethod.getNumberOfStatements());
           governingMethod.addStatement(R);
         } else {
           Integer valueNumber = symbolTable.get(retV);
@@ -742,7 +805,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
             }
           }
           boolean isPrimitive = governingMethod.getReturnType().isPrimitiveType();
-          SSAReturnInstruction R = insts.ReturnInstruction(valueNumber.intValue(), isPrimitive);
+          SSAReturnInstruction R = insts.ReturnInstruction(governingMethod.getNumberOfStatements(), valueNumber.intValue(), isPrimitive);
           governingMethod.addStatement(R);
         }
       }

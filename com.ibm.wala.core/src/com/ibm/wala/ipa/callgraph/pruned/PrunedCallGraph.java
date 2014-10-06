@@ -1,0 +1,305 @@
+/******************************************************************************
+ * Copyright (c) 2002 - 2014 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *****************************************************************************/
+
+package com.ibm.wala.ipa.callgraph.pruned;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Set;
+
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.util.intset.BitVectorIntSet;
+import com.ibm.wala.util.intset.IntSet;
+
+public class PrunedCallGraph implements CallGraph {
+	
+	private CallGraph cg;
+	private Set<CGNode> keep;
+	
+	public PrunedCallGraph(CallGraph cg, Set<CGNode> keep) {
+		this.cg = cg;
+		this.keep = keep;
+	}
+
+	public void removeNodeAndEdges(CGNode n) throws UnsupportedOperationException {
+		cg.removeNodeAndEdges(n);
+		keep.remove(n);
+	}
+
+	public Iterator<CGNode> iterator() {
+		Iterator<CGNode> tmp = cg.iterator();
+		Collection<CGNode> col = new LinkedList<CGNode>();
+		while (tmp.hasNext()) {
+			CGNode n = tmp.next();
+			if (keep.contains(n)) {
+				col.add(n);
+			}
+		}
+		
+		return col.iterator();
+	}
+
+	public int getNumberOfNodes() {
+		return keep.size();
+	}
+
+	public void addNode(CGNode n) {
+		cg.addNode(n);
+		keep.add(n);
+	}
+
+	public void removeNode(CGNode n) throws UnsupportedOperationException {
+		cg.removeNode(n);
+		keep.remove(n);
+	}
+
+	public boolean containsNode(CGNode n) {
+		return cg.containsNode(n) && keep.contains(n);
+	}
+
+	public Iterator<CGNode> getPredNodes(CGNode n) {
+		Iterator<CGNode> tmp = cg.getPredNodes(n);
+		Collection<CGNode> col = new LinkedList<CGNode>();
+		while (tmp.hasNext()) {
+			CGNode no = tmp.next();
+			if (keep.contains(no)) {
+				col.add(no);
+			}
+		}
+		
+		return col.iterator();
+	}
+
+	public int getPredNodeCount(CGNode n) {
+		Iterator<CGNode> tmp = cg.getPredNodes(n);
+		int cnt = 0;
+		while (tmp.hasNext()) {
+			CGNode no = tmp.next();
+			if (keep.contains(no)) {
+				cnt++;
+			}
+		}
+		return cnt;
+	}
+
+
+	public Iterator<CGNode> getSuccNodes(CGNode n) {
+		Iterator<CGNode> tmp = cg.getSuccNodes(n);
+		Collection<CGNode> col = new LinkedList<CGNode>();
+		while (tmp.hasNext()) {
+			CGNode no = tmp.next();
+			if (keep.contains(no)) {
+				col.add(no);
+			}
+		}
+		
+		return col.iterator();
+	}
+
+
+	public int getSuccNodeCount(CGNode n) {
+		Iterator<CGNode> tmp = cg.getSuccNodes(n);
+		int cnt = 0;
+		while (tmp.hasNext()) {
+			CGNode no = tmp.next();
+			if (keep.contains(no)) {
+				cnt++;
+			}
+		}
+		return cnt;
+	}
+
+
+	public void addEdge(CGNode src, CGNode dst) {
+		if (keep.contains(src) && keep.contains(dst)){
+			cg.addEdge(src, dst);
+		}
+	}
+
+
+	public void removeEdge(CGNode src, CGNode dst) throws UnsupportedOperationException {
+		cg.removeEdge(src, dst);
+	}
+
+
+	public void removeAllIncidentEdges(CGNode node) throws UnsupportedOperationException {
+		cg.removeAllIncidentEdges(node);
+	}
+
+
+	public void removeIncomingEdges(CGNode node) throws UnsupportedOperationException {
+		cg.removeIncomingEdges(node);
+	}
+
+
+	public void removeOutgoingEdges(CGNode node) throws UnsupportedOperationException {
+		cg.removeOutgoingEdges(node);
+	}
+
+
+	public boolean hasEdge(CGNode src, CGNode dst) {
+		return cg.hasEdge(src, dst) && keep.contains(src) &&  keep.contains(dst);
+	}
+
+
+	public int getNumber(CGNode N) {
+		if (keep.contains(N)) {
+			return cg.getNumber(N);
+		} else {
+			return -1;
+		}
+		
+	}
+
+
+	public CGNode getNode(int number) {
+		if(keep.contains(cg.getNode(number))) {
+			return cg.getNode(number);
+		} else {
+			return null;
+		}
+	}
+
+
+	public int getMaxNumber() {
+		return cg.getMaxNumber();
+	}
+
+
+	public Iterator<CGNode> iterateNodes(IntSet s) {
+		Iterator<CGNode> tmp = cg.iterateNodes(s);
+		Collection<CGNode> col = new LinkedList<CGNode>();
+		while (tmp.hasNext()) {
+			CGNode n = tmp.next();
+			if (keep.contains(n)) {
+				col.add(n);
+			}
+		}
+		
+		return col.iterator();
+	}
+
+
+	public IntSet getSuccNodeNumbers(CGNode node) {
+		if (!keep.contains(node)){
+			return null;
+		}
+		IntSet tmp = cg.getSuccNodeNumbers(node);
+		BitVectorIntSet kp = new BitVectorIntSet();
+		for (CGNode n : keep) {
+			kp.add(getNumber(n));
+		}
+		return tmp.intersection(kp);
+	}
+
+
+	public IntSet getPredNodeNumbers(CGNode node) {
+		if (!keep.contains(node)){
+			return null;
+		}
+		if (!keep.contains(node)){
+			return null;
+		}
+		IntSet tmp = cg.getPredNodeNumbers(node);
+		BitVectorIntSet kp = new BitVectorIntSet();
+		for (CGNode n : keep) {
+			kp.add(getNumber(n));
+		}
+		return tmp.intersection(kp);
+	}
+
+
+	public CGNode getFakeRootNode() {
+		if (keep.contains(cg.getFakeRootNode())) {
+			return cg.getFakeRootNode();
+		} else {
+			return null;
+		}
+	}
+
+
+	public Collection<CGNode> getEntrypointNodes() {
+		Collection<CGNode> tmp = cg.getEntrypointNodes();
+		Set<CGNode> ret = new HashSet<CGNode>();
+		for (CGNode n : tmp) {
+			if (keep.contains(n)) {
+				ret.add(n);
+			}
+		}
+		return ret;
+	}
+
+
+	public CGNode getNode(IMethod method, Context C) {
+		if(keep.contains(cg.getNode(method, C))) {
+			return cg.getNode(method, C);
+		} else {
+			return null;
+		}
+	}
+
+
+	public Set<CGNode> getNodes(MethodReference m) {
+		Set<CGNode> tmp = cg.getNodes(m);
+		Set<CGNode> ret = new HashSet<CGNode>();
+		for (CGNode n : tmp) {
+			if (keep.contains(n)) {
+				ret.add(n);
+			}
+		}
+		return ret;
+	}
+
+
+	public IClassHierarchy getClassHierarchy() {
+		return cg.getClassHierarchy();
+	}
+
+
+	public Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site) {
+		if (!keep.contains(node)){
+			return null;
+		}
+		Set<CGNode> tmp = cg.getPossibleTargets(node, site);
+		Set<CGNode> ret = new HashSet<CGNode>();
+		for (CGNode n : tmp) {
+			if (keep.contains(n)) {
+				ret.add(n);
+			}
+		}
+		return ret;
+	}
+
+
+	public int getNumberOfTargets(CGNode node, CallSiteReference site) {
+		if (!keep.contains(node)){
+			return -1;
+		}
+		return getPossibleTargets(node, site).size();
+	}
+
+
+	public Iterator<CallSiteReference> getPossibleSites(CGNode src,	CGNode target) {
+		if (!(keep.contains(src) && keep.contains(target))){
+			return null;
+		}
+		return cg.getPossibleSites(src, target);
+	}
+
+}

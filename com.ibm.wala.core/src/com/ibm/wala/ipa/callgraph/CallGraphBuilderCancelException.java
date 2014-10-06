@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph;
 
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.util.CancelException;
 
@@ -21,15 +22,15 @@ public class CallGraphBuilderCancelException extends CancelException {
 
   private final CallGraph cg;
 
-  private final PointerAnalysis pointerAnalysis;
+  private final PointerAnalysis<InstanceKey> pointerAnalysis;
 
   public static CallGraphBuilderCancelException createCallGraphBuilderCancelException(Exception cause, CallGraph cg,
-      PointerAnalysis pointerAnalysis) {
+      PointerAnalysis<InstanceKey> pointerAnalysis) {
     return new CallGraphBuilderCancelException(cause, cg, pointerAnalysis);
   }
 
   public static CallGraphBuilderCancelException createCallGraphBuilderCancelException(String msg, CallGraph cg,
-      PointerAnalysis pointerAnalysis) {
+      PointerAnalysis<InstanceKey> pointerAnalysis) {
     return new CallGraphBuilderCancelException(msg, cg, pointerAnalysis);
   }
 
@@ -43,17 +44,17 @@ public class CallGraphBuilderCancelException extends CancelException {
   /**
    * @return the {@link PointerAnalysis} in whatever state it was left when computation was canceled
    */
-  public PointerAnalysis getPartialPointerAnalysis() {
+  public PointerAnalysis<InstanceKey> getPartialPointerAnalysis() {
     return pointerAnalysis;
   }
 
-  private CallGraphBuilderCancelException(String msg, CallGraph cg, PointerAnalysis pointerAnalysis) {
+  private CallGraphBuilderCancelException(String msg, CallGraph cg, PointerAnalysis<InstanceKey> pointerAnalysis) {
     super(msg);
     this.cg = cg;
     this.pointerAnalysis = pointerAnalysis;
   }
 
-  private CallGraphBuilderCancelException(Exception cause, CallGraph cg, PointerAnalysis pointerAnalysis) {
+  private CallGraphBuilderCancelException(Exception cause, CallGraph cg, PointerAnalysis<InstanceKey> pointerAnalysis) {
     super(cause);
     this.cg = cg;
     this.pointerAnalysis = pointerAnalysis;

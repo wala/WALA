@@ -22,7 +22,7 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
 /**
  * Abstract superclass for {@link PointerAnalysis} implementations.
  */
-public abstract class AbstractPointerAnalysis implements PointerAnalysis {
+public abstract class AbstractPointerAnalysis implements PointerAnalysis<InstanceKey> {
 
   /**
    * graph representation of pointer-analysis results

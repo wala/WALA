@@ -19,8 +19,8 @@ public abstract class ReflectiveMemberAccess extends SSAInstruction {
 
   protected final int memberRef;
 
-  protected ReflectiveMemberAccess(int objectRef, int memberRef) {
-    super();
+  protected ReflectiveMemberAccess(int iindex, int objectRef, int memberRef) {
+    super(iindex);
     this.objectRef = objectRef;
     this.memberRef = memberRef;
   }

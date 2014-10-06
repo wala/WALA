@@ -40,6 +40,8 @@ import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.ssa.IR;
@@ -344,8 +346,8 @@ public abstract class IRTests {
 
   protected abstract AbstractAnalysisEngine getAnalysisEngine(String[] mainClassDescriptors, Collection<String> sources, List<String> libs);
 
-  public Pair runTest(Collection<String> sources, List<String> libs, String[] mainClassDescriptors, List<? extends IRAssertion> ca,
-      boolean assertReachable) {
+  public Pair<CallGraph, PointerAnalysis<InstanceKey>> runTest(Collection<String> sources, List<String> libs,
+        String[] mainClassDescriptors, List<? extends IRAssertion> ca, boolean assertReachable) {
       AbstractAnalysisEngine engine = getAnalysisEngine(mainClassDescriptors, sources, libs);
 
       CallGraph callGraph;

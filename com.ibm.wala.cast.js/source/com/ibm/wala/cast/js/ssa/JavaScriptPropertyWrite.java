@@ -20,13 +20,13 @@ import com.ibm.wala.types.TypeReference;
 
 public class JavaScriptPropertyWrite extends AbstractReflectivePut {
 
-  public JavaScriptPropertyWrite(int objectRef, int memberRef, int value) {
-    super(objectRef, memberRef, value);
+  public JavaScriptPropertyWrite(int iindex, int objectRef, int memberRef, int value) {
+    super(iindex, objectRef, memberRef, value);
   }
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return ((JSInstructionFactory)insts).PropertyWrite(uses == null ? getObjectRef() : uses[0], uses == null ? getMemberRef() : uses[1],
+    return ((JSInstructionFactory)insts).PropertyWrite(iindex, uses == null ? getObjectRef() : uses[0], uses == null ? getMemberRef() : uses[1],
         uses == null ? getValue() : uses[2]);
   }
 

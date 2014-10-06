@@ -1,3 +1,14 @@
+/******************************************************************************
+ * Copyright (c) 2002 - 2014 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *****************************************************************************/
+
 package com.ibm.wala.core.tests.shrike;
 
 import java.io.BufferedReader;
@@ -28,6 +39,7 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.io.TemporaryFile;
 
 public abstract class DynamicCallGraphTestBase extends WalaTestCase {
@@ -77,7 +89,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
     }
   }
   
-  protected void run(String mainClass, String exclusionsFile) throws IOException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+  protected void run(String mainClass, String exclusionsFile, String... args) throws IOException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
     String shrikeBin = getClasspathEntry("com.ibm.wala.shrike");
     String utilBin = getClasspathEntry("com.ibm.wala.util");
     URLClassLoader jcl = new URLClassLoader(new URL[]{ new URL("file://" + instrumentedJarLocation), new URL("file://" + shrikeBin), new URL("file://" + utilBin) }, DynamicCallGraphTestBase.class.getClassLoader().getParent());
@@ -88,14 +100,15 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
     Assert.assertNotNull(testMain);
 
     System.setProperty("dynamicCGFile", cgLocation);
+    System.setProperty("dynamicCGHandleMissing", "true");
     if (exclusionsFile != null) {
       File tmpFile = TemporaryFile.urlToFile("exclusions.txt", getClass().getClassLoader().getResource(exclusionsFile));
       System.setProperty("dynamicCGFilter", tmpFile.getCanonicalPath());
     }
     try {
-      testMain.invoke(null, (Object)new String[0]);    
+      testMain.invoke(null, args==null? new Object[0]: new Object[]{args});      
     } catch (Throwable e) {
-      // exceptions here are from program being instrumented
+      // exceptions here are from the instrumented program
       // this is fine, since we are collecting its call graph
       // and exceptions are possible behavior.
 
@@ -132,14 +145,21 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
   
   protected void checkEdges(CallGraph staticCG, Predicate<MethodReference> filter) throws IOException {
     check(staticCG, new EdgesTest() {
+      private final Set<Pair<CGNode,CGNode>> edges = HashSetFactory.make();
       @Override
       public void edgesTest(CallGraph staticCG, CGNode caller, MethodReference calleeRef) {
-        Set<CGNode> nodes = staticCG.getNodes(calleeRef);
-        Assert.assertEquals(1, nodes.size());
-        CGNode callee = nodes.iterator().next();
+        if (! calleeRef.getName().equals(MethodReference.clinitName)) {
+          Set<CGNode> nodes = staticCG.getNodes(calleeRef);
+          Assert.assertEquals(1, nodes.size());
+          CGNode callee = nodes.iterator().next();
         
-        Assert.assertTrue("no edge for " + caller + " --> " + callee, staticCG.getPossibleSites(caller, callee).hasNext());
-        System.err.println("found expected edge" + caller + " --> " + callee);
+          Assert.assertTrue("no edge for " + caller + " --> " + callee, staticCG.getPossibleSites(caller, callee).hasNext());
+          Pair<CGNode,CGNode> x = Pair.make(caller, callee);
+          if (! edges.contains(x)) {
+            edges.add(x);
+            System.err.println("found expected edge" + caller + " --> " + callee);
+          }
+        }
       }
     }, filter);
   }

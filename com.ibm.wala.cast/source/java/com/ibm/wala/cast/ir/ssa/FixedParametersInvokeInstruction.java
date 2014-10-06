@@ -34,13 +34,13 @@ public abstract class FixedParametersInvokeInstruction
    */
   private final int[] params;
 
-  public FixedParametersInvokeInstruction(int results[], int[] params, int exception, CallSiteReference site) {
-    super(results, exception, site);
+  public FixedParametersInvokeInstruction(int iindex, int results[], int[] params, int exception, CallSiteReference site) {
+    super(iindex, results, exception, site);
     this.params = params;
   }
 
-  public FixedParametersInvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
-    this(new int[]{result}, params, exception, site);
+  public FixedParametersInvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site) {
+    this(iindex, new int[]{result}, params, exception, site);
   }
 
   /**
@@ -49,8 +49,8 @@ public abstract class FixedParametersInvokeInstruction
    * @param exception
    * @param site
    */
-  public FixedParametersInvokeInstruction(int[] params, int exception, CallSiteReference site) {
-    this(null, params, exception, site);
+  public FixedParametersInvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site) {
+    this(iindex, null, params, exception, site);
   }
 
   protected abstract SSAInstruction copyInstruction(SSAInstructionFactory insts, int result[], int[] params, int exception);

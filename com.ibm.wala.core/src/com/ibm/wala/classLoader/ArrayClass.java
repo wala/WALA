@@ -78,6 +78,13 @@ public class ArrayClass implements IClass, Constants {
     return getReference().getName();
   }
 
+  /**
+   * Does this class represent an array of primitives?
+   */
+  public boolean isOfPrimitives() {
+    return this.type.getInnermostElementType().isPrimitiveType();
+  }
+
   /*
    * @see com.ibm.wala.classLoader.IClass#isInterface()
    */

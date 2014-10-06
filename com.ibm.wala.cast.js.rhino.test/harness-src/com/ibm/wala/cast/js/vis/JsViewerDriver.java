@@ -31,6 +31,7 @@ import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.CancelException;
@@ -57,7 +58,7 @@ public class JsViewerDriver extends JSCallGraphBuilderUtil {
 		builder.setBaseURL(url);
 
 		CallGraph cg = builder.makeCallGraph(builder.getOptions());
-		PointerAnalysis pa = builder.getPointerAnalysis();
+		PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
 
 		new JsViewer(cg, pa);
 	}

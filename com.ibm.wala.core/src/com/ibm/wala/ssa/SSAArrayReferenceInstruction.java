@@ -23,7 +23,8 @@ public abstract class SSAArrayReferenceInstruction extends SSAInstruction {
 
   private final TypeReference elementType;
 
-  SSAArrayReferenceInstruction(int arrayref, int index, TypeReference elementType) {
+  SSAArrayReferenceInstruction(int iindex, int arrayref, int index, TypeReference elementType) {
+    super(iindex);
     this.arrayref = arrayref;
     this.index = index;
     this.elementType = elementType;

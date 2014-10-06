@@ -67,6 +67,7 @@ public class Mangler {
         seed = Integer.parseInt(args[0]);
       } catch (NumberFormatException ex) {
         System.err.println("Invalid number: " + args[0]);
+        w.close();
         return;
       }
 

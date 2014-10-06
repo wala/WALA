@@ -26,13 +26,14 @@ import com.ibm.wala.types.TypeReference;
 public class JavaScriptCheckReference extends SSAInstruction {
   private final int ref;
   
-  public JavaScriptCheckReference(int ref) {
+  public JavaScriptCheckReference(int iindex, int ref) {
+    super(iindex);
     this.ref = ref;
   }
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-     return ((JSInstructionFactory)insts).CheckReference(uses==null? ref: uses[0]);
+     return ((JSInstructionFactory)insts).CheckReference(iindex, uses==null? ref: uses[0]);
   }
 
   @Override

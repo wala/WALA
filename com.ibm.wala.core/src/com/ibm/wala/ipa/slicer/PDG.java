@@ -22,9 +22,9 @@ import com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.cdg.ControlDependenceGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cfg.ExceptionPrunedCFG;
@@ -64,7 +64,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.dominators.Dominators;
-import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
+import com.ibm.wala.util.graph.labeled.SlowSparseNumberedLabeledGraph;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
@@ -75,7 +75,12 @@ import com.ibm.wala.util.intset.OrdinalSet;
  */
 public class PDG implements NumberedGraph<Statement> {
 
-  private final SlowSparseNumberedGraph<Statement> delegate = SlowSparseNumberedGraph.make();
+/** BEGIN Custom change: control deps */                
+  public enum Dependency {CONTROL_DEP, DATA_AND_CONTROL_DEP};
+  
+  private final SlowSparseNumberedLabeledGraph<Statement, Dependency> delegate =
+    new SlowSparseNumberedLabeledGraph<Statement, Dependency>(Dependency.DATA_AND_CONTROL_DEP);
+/** END Custom change: control deps */                
 
   private final static boolean VERBOSE = false;
 
@@ -99,7 +104,7 @@ public class PDG implements NumberedGraph<Statement> {
 
   private final Collection<PointerKey> locationsHandled = HashSetFactory.make();
 
-  private final PointerAnalysis pa;
+  private final PointerAnalysis<InstanceKey> pa;
 
   private final ExtendedHeapModel heapModel;
 
@@ -125,7 +130,7 @@ public class PDG implements NumberedGraph<Statement> {
    * @param ref the set of heap locations which may be read (transitively) by this node. These are logically parameters in the SDG.
    * @throws IllegalArgumentException if node is null
    */
-  public PDG(final CGNode node, PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
+  public PDG(final CGNode node, PointerAnalysis<InstanceKey> pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
       Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
       HeapExclusions exclusions, CallGraph cg, ModRef modRef) {
     this(node, pa, mod, ref, dOptions, cOptions, exclusions, cg, modRef, false);
@@ -137,7 +142,7 @@ public class PDG implements NumberedGraph<Statement> {
    * @param ref the set of heap locations which may be read (transitively) by this node. These are logically parameters in the SDG.
    * @throws IllegalArgumentException if node is null
    */
-  public PDG(final CGNode node, PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
+  public PDG(final CGNode node, PointerAnalysis<InstanceKey> pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
       Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
       HeapExclusions exclusions, CallGraph cg, ModRef modRef, boolean ignoreAllocHeapDefs) {
 
@@ -289,6 +294,9 @@ public class PDG implements NumberedGraph<Statement> {
               Statement dest = ssaInstruction2Statement(st, ir, instructionIndices);
               assert src != null;
               delegate.addEdge(src, dest);
+/** BEGIN Custom change: control deps */                
+              delegate.addEdge(src, dest, Dependency.CONTROL_DEP);
+/** END Custom change: control deps */                
             }
           }
         }
@@ -305,6 +313,9 @@ public class PDG implements NumberedGraph<Statement> {
       for (SSAInstruction st : exitDom) {
         Statement dest = ssaInstruction2Statement(st, ir, instructionIndices);
         delegate.addEdge(methodEntry, dest);
+/** BEGIN Custom change: control deps */                
+        delegate.addEdge(methodEntry, dest, Dependency.CONTROL_DEP);
+/** END Custom change: control deps */                
       }
     }
     // add CD from method entry to all callee parameter assignments
@@ -344,13 +355,24 @@ public class PDG implements NumberedGraph<Statement> {
               assert pss != null;
               Statement pst = ssaInstruction2Statement(pss, ir, instructionIndices);
               delegate.addEdge(pst, phiSt);
+/** BEGIN Custom change: control deps */                
+              delegate.addEdge(pst, phiSt, Dependency.CONTROL_DEP);
+/** END Custom change: control deps */                
             } else {
               for (Iterator<? extends ISSABasicBlock> cdps = cdg.getPredNodes(pb); cdps.hasNext();) {
                 ISSABasicBlock cpb = cdps.next();
+/** BEGIN Custom change: control deps */                
+                if (cpb.getLastInstructionIndex() < 0) {
+                  continue;
+                }
+/** END Custom change: control deps */                
                 SSAInstruction cps = ir.getInstructions()[cpb.getLastInstructionIndex()];
                 assert cps != null : "unexpected null final instruction for CDG predecessor " + cpb + " in node " + node;
                 Statement cpst = ssaInstruction2Statement(cps, ir, instructionIndices);
                 delegate.addEdge(cpst, phiSt);
+/** BEGIN Custom change: control deps */                
+                delegate.addEdge(cpst, phiSt, Dependency.CONTROL_DEP);
+/** END Custom change: control deps */                
               }
             }
             phiUseIndex++;
@@ -512,8 +534,10 @@ public class PDG implements NumberedGraph<Statement> {
             continue;
           }
           if (pei instanceof SSAAbstractInvokeInstruction) {
-            Statement st = new ExceptionalReturnCaller(node, index);
-            delegate.addEdge(st, s);
+            if (! dOptions.isIgnoreExceptions()) {
+              Statement st = new ExceptionalReturnCaller(node, index);
+              delegate.addEdge(st, s);
+            }
           } else {
             delegate.addEdge(new NormalStatement(node, index), s);
           }
@@ -538,8 +562,10 @@ public class PDG implements NumberedGraph<Statement> {
               if (d instanceof SSAAbstractInvokeInstruction) {
                 SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) d;
                 if (vn == call.getException()) {
-                  Statement st = new ExceptionalReturnCaller(node, instructionIndices.get(d));
-                  delegate.addEdge(st, pac);
+                  if (! dOptions.isIgnoreExceptions()) {
+                    Statement st = new ExceptionalReturnCaller(node, instructionIndices.get(d));
+                    delegate.addEdge(st, pac);
+                  }
                 } else {
                   Statement st = new NormalReturnCaller(node, instructionIndices.get(d));
                   delegate.addEdge(st, pac);
@@ -1234,4 +1260,9 @@ public class PDG implements NumberedGraph<Statement> {
     Assertions.UNREACHABLE();
     return null;
   }
+/** BEGIN Custom change: control deps */
+  public boolean isControlDependend(Statement from, Statement to) {
+    return delegate.hasEdge(from, to, Dependency.CONTROL_DEP);
+  }
+/** END Custom change: control deps */
 }

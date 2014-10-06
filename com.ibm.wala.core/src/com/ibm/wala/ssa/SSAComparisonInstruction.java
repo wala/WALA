@@ -26,8 +26,8 @@ public class SSAComparisonInstruction extends SSAInstruction {
 
   /**
    */
-  public SSAComparisonInstruction(IComparisonInstruction.Operator operator, int result, int val1, int val2) {
-    super();
+  public SSAComparisonInstruction(int iindex, IComparisonInstruction.Operator operator, int result, int val1, int val2) {
+    super(iindex);
     this.operator = operator;
     this.result = result;
     this.val1 = val1;
@@ -39,7 +39,7 @@ public class SSAComparisonInstruction extends SSAInstruction {
     if (uses != null && uses.length != 2) {
       throw new IllegalArgumentException("expected 2 uses or null, but got " + uses.length);
     }
-    return insts.ComparisonInstruction(operator, defs == null || defs.length == 0 ? result : defs[0],
+    return insts.ComparisonInstruction(iindex, operator, defs == null || defs.length == 0 ? result : defs[0],
         uses == null ? val1 : uses[0], uses == null ? val2 : uses[1]);
   }
 

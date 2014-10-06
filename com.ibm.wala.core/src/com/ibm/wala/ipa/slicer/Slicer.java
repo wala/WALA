@@ -24,6 +24,7 @@ import com.ibm.wala.dataflow.IFDS.TabulationDomain;
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
 import com.ibm.wala.dataflow.IFDS.UnorderedDomain;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.modref.ModRef;
 import com.ibm.wala.util.CancelException;
@@ -129,7 +130,7 @@ public class Slicer {
    * @return the backward slice of s.
    * @throws CancelException
    */
-  public static Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis pa,
+  public static Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis<InstanceKey> pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
     return computeSlice(new SDG(cg, pa, ModRef.make(), dOptions, cOptions), Collections.singleton(s), true);
   }
@@ -139,7 +140,7 @@ public class Slicer {
    * @return the forward slice of s.
    * @throws CancelException
    */
-  public static Collection<Statement> computeForwardSlice(Statement s, CallGraph cg, PointerAnalysis pa,
+  public static Collection<Statement> computeForwardSlice(Statement s, CallGraph cg, PointerAnalysis<InstanceKey> pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
     return computeSlice(new SDG(cg, pa, ModRef.make(), dOptions, cOptions), Collections.singleton(s), false);
   }
@@ -225,7 +226,7 @@ public class Slicer {
    * @return the backward slice of s.
    * @throws CancelException
    */
-  public static Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis pointerAnalysis)
+  public static Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis<InstanceKey> pointerAnalysis)
       throws IllegalArgumentException, CancelException {
     return computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
   }

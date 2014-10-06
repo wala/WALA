@@ -37,12 +37,12 @@ public class JsPaPanel extends PaPanel {
 	private MutableMapping<List<ObjectPropertyCatalogKey>> instanceKeyIdToObjectPropertyCatalogKey = MutableMapping.<List<ObjectPropertyCatalogKey>> make();
 	private List<AstGlobalPointerKey> globalsPointerKeys = new ArrayList<AstGlobalPointerKey>();
 
-	public JsPaPanel(CallGraph cg, PointerAnalysis pa) {
+	public JsPaPanel(CallGraph cg, PointerAnalysis<InstanceKey> pa) {
 		super(cg, pa);
 		initDataStructures(pa);
 	}
 
-	private void initDataStructures(PointerAnalysis pa) {
+	private void initDataStructures(PointerAnalysis<InstanceKey> pa) {
 		HeapGraph heapGraph = pa.getHeapGraph();
 		OrdinalSetMapping<InstanceKey> instanceKeyMapping = pa.getInstanceKeyMapping();
 		for (Object n : heapGraph){

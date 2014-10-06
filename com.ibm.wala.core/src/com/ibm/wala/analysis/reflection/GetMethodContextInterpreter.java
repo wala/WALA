@@ -195,7 +195,7 @@ public class GetMethodContextInterpreter implements SSAContextInterpreter {
       for (IMethod m : returnValues) {
         int c = nextLocal++;
         constants.put(c, new ConstantValue(m));
-        SSAReturnInstruction R = insts.ReturnInstruction(c, false);
+        SSAReturnInstruction R = insts.ReturnInstruction(statements.size(), c, false);
         statements.add(R);
       }
     } else {

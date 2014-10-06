@@ -26,6 +26,7 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.PessimisticCallGraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FilteredFlowGraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FlowGraph;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FlowGraphBuilder;
+import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.FuncVertex;
 import com.ibm.wala.cast.js.client.impl.ZeroCFABuilderFactory;
 import com.ibm.wala.cast.js.html.IncludedPosition;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
@@ -117,11 +118,11 @@ public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysi
 	    return new ZeroCFABuilderFactory().make((JSAnalysisOptions)options, cache, cha, scope, false);
   }
 
-  public Pair<JSCallGraph, PointerAnalysis> getFieldBasedCallGraph() throws CancelException {
+  public Pair<JSCallGraph, PointerAnalysis<FuncVertex>> getFieldBasedCallGraph() throws CancelException {
     return getFieldBasedCallGraph(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()));
   }
 
-  public Pair<JSCallGraph, PointerAnalysis> getFieldBasedCallGraph(String scriptName) throws CancelException {
+  public Pair<JSCallGraph, PointerAnalysis<FuncVertex>> getFieldBasedCallGraph(String scriptName) throws CancelException {
     Set<Entrypoint> eps= HashSetFactory.make();
     eps.add(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make(scriptName));
     eps.add(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make("Lprologue.js"));
@@ -140,7 +141,7 @@ public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysi
     return fileName.substring(fileName.lastIndexOf('/') + 1);    
   }
   
-  protected Pair<JSCallGraph, PointerAnalysis> getFieldBasedCallGraph(Iterable<Entrypoint> roots) throws CancelException {
+  protected Pair<JSCallGraph, PointerAnalysis<FuncVertex>> getFieldBasedCallGraph(Iterable<Entrypoint> roots) throws CancelException {
     final Set<String> scripts = HashSetFactory.make();
     for(Entrypoint e : roots) {
       String scriptName = getScriptName(((AstMethod)e.getMethod()));

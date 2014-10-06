@@ -19,22 +19,22 @@ import com.ibm.wala.types.FieldReference;
 public abstract class SSAGetInstruction extends SSAFieldAccessInstruction {
   private final int result;
 
-  protected SSAGetInstruction(int result, int ref, FieldReference field) {
-    super(field, ref);
+  protected SSAGetInstruction(int iindex, int result, int ref, FieldReference field) {
+    super(iindex, field, ref);
     this.result = result;
   }
 
-  protected SSAGetInstruction(int result, FieldReference field) {
-    super(field, -1);
+  protected SSAGetInstruction(int iindex, int result, FieldReference field) {
+    super(iindex, field, -1);
     this.result = result;
   }
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
     if (isStatic())
-      return insts.GetInstruction(defs == null || defs.length == 0 ? result : defs[0], getDeclaredField());
+      return insts.GetInstruction(iindex, defs == null || defs.length == 0 ? result : defs[0], getDeclaredField());
     else
-      return insts.GetInstruction(defs == null || defs.length == 0 ? result : defs[0], uses == null ? getRef() : uses[0],
+      return insts.GetInstruction(iindex, defs == null || defs.length == 0 ? result : defs[0], uses == null ? getRef() : uses[0],
           getDeclaredField());
   }
 

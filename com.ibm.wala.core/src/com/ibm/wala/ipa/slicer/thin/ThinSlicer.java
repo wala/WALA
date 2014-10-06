@@ -11,6 +11,7 @@
 package com.ibm.wala.ipa.slicer.thin;
 
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.modref.ModRef;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
@@ -29,11 +30,11 @@ import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
  */
 public class ThinSlicer extends CISlicer {
 
-  public ThinSlicer(CallGraph cg, PointerAnalysis pa) {
+  public ThinSlicer(CallGraph cg, PointerAnalysis<InstanceKey> pa) {
     this(cg, pa, ModRef.make());
   }
 
-  public ThinSlicer(CallGraph cg, PointerAnalysis pa, ModRef modRef) {
+  public ThinSlicer(CallGraph cg, PointerAnalysis<InstanceKey> pa, ModRef modRef) {
     super(cg, pa, modRef, DataDependenceOptions.NO_HEAP, ControlDependenceOptions.NONE);
   }
 }

@@ -17,38 +17,38 @@ import com.ibm.wala.types.TypeReference;
 
 public interface AstInstructionFactory extends SSAInstructionFactory {
 
-  AssignInstruction AssignInstruction(int result, int val);
+  AssignInstruction AssignInstruction(int iindex, int result, int val);
   
-  AstAssertInstruction AssertInstruction(int value, boolean fromSpecification);
+  AstAssertInstruction AssertInstruction(int iindex, int value, boolean fromSpecification);
   
-  AstEchoInstruction EchoInstruction(int[] rvals);
+  AstEchoInstruction EchoInstruction(int iindex, int[] rvals);
   
-  AstGlobalRead GlobalRead(int lhs, FieldReference global);
+  AstGlobalRead GlobalRead(int iindex, int lhs, FieldReference global);
   
-  AstGlobalWrite GlobalWrite(FieldReference global, int rhs);
+  AstGlobalWrite GlobalWrite(int iindex, FieldReference global, int rhs);
   
-  AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval, int fieldVal, FieldReference fieldRef);
+  AstIsDefinedInstruction IsDefinedInstruction(int iindex, int lval, int rval, int fieldVal, FieldReference fieldRef);
   
-  AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval, FieldReference fieldRef);
+  AstIsDefinedInstruction IsDefinedInstruction(int iindex, int lval, int rval, FieldReference fieldRef);
   
-  AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval, int fieldVal);
+  AstIsDefinedInstruction IsDefinedInstruction(int iindex, int lval, int rval, int fieldVal);
   
-  AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval);
+  AstIsDefinedInstruction IsDefinedInstruction(int iindex, int lval, int rval);
   
-  AstLexicalRead LexicalRead(Access[] accesses);
+  AstLexicalRead LexicalRead(int iindex, Access[] accesses);
   
-  AstLexicalRead LexicalRead(Access access);
+  AstLexicalRead LexicalRead(int iindex, Access access);
   
-  AstLexicalRead LexicalRead(int lhs, String definer, String globalName, TypeReference type);
+  AstLexicalRead LexicalRead(int iindex, int lhs, String definer, String globalName, TypeReference type);
   
-  AstLexicalWrite LexicalWrite(Access[] accesses);
+  AstLexicalWrite LexicalWrite(int iindex, Access[] accesses);
   
-  AstLexicalWrite LexicalWrite(Access access);
+  AstLexicalWrite LexicalWrite(int iindex, Access access);
   
-  AstLexicalWrite LexicalWrite(String definer, String globalName, TypeReference type, int rhs);
+  AstLexicalWrite LexicalWrite(int iindex, String definer, String globalName, TypeReference type, int rhs);
   
-  EachElementGetInstruction EachElementGetInstruction(int lValue, int objectRef);
+  EachElementGetInstruction EachElementGetInstruction(int iindex, int lValue, int objectRef);
   
-  EachElementHasNextInstruction EachElementHasNextInstruction(int lValue, int objectRef);
+  EachElementHasNextInstruction EachElementHasNextInstruction(int iindex, int lValue, int objectRef);
   
 }

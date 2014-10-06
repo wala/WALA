@@ -15,22 +15,28 @@ package com.ibm.wala.ssa;
  */
 public class SSAGotoInstruction extends SSAInstruction {
   private final int target;
-  public SSAGotoInstruction(int target) {
+
+  public SSAGotoInstruction(int iindex, int target) {
+    super(iindex);
     this.target = target;
   }
 
+  /**
+   *    getTarget returns the IIndex for the Goto-target. Not to be confused with
+   *    the array-index in InducedCFG.getStatements()
+   */
   public int getTarget() {
-    return target;
+    return this.target;
   }
 
   @Override
   public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-    return insts.GotoInstruction(target);
+    return insts.GotoInstruction(iindex, target);
   }
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return "goto";
+    return "goto (from iindex= " + this.iindex + " to iindex = " + this.target  + ")";
   }
 
   /**
@@ -48,7 +54,7 @@ public class SSAGotoInstruction extends SSAInstruction {
 
   @Override
   public int hashCode() {
-    return 1409; // XXX weak!
+    return 1409 + 17 * target;
   }
 
   /*

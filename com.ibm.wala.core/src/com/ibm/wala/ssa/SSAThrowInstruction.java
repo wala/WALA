@@ -15,8 +15,8 @@ package com.ibm.wala.ssa;
  */
 public abstract class SSAThrowInstruction extends SSAAbstractThrowInstruction {
 
-  protected SSAThrowInstruction(int exception) {
-    super(exception);
+  protected SSAThrowInstruction(int iindex, int exception) {
+    super(iindex, exception);
   }
 
   /* 
@@ -27,7 +27,7 @@ public abstract class SSAThrowInstruction extends SSAAbstractThrowInstruction {
     if (uses != null && uses.length != 1) {
       throw new IllegalArgumentException("if non-null, uses.length must be 1");
     }
-    return insts.ThrowInstruction(uses == null ? getException() : uses[0]);
+    return insts.ThrowInstruction(iindex, uses == null ? getException() : uses[0]);
   }
 
   /**

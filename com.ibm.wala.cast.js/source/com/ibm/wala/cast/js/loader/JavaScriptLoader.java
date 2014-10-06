@@ -210,51 +210,51 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
       return new JSInstructionFactory() {
 
         @Override
-        public JavaScriptCheckReference CheckReference(int ref) {
-          return new JavaScriptCheckReference(ref);
+        public JavaScriptCheckReference CheckReference(int iindex, int ref) {
+          return new JavaScriptCheckReference(iindex, ref);
         }
 
         @Override
-        public SSAGetInstruction GetInstruction(int result, int ref, String field) {
-          return GetInstruction(result, ref,
+        public SSAGetInstruction GetInstruction(int iindex, int result, int ref, String field) {
+          return GetInstruction(iindex, result, ref,
               FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreateUnicodeAtom(field), JavaScriptTypes.Root));
         }
 
         @Override
-        public JavaScriptInstanceOf InstanceOf(int result, int objVal, int typeVal) {
-          return new JavaScriptInstanceOf(result, objVal, typeVal);
+        public JavaScriptInstanceOf InstanceOf(int iindex, int result, int objVal, int typeVal) {
+          return new JavaScriptInstanceOf(iindex, result, objVal, typeVal);
         }
 
         @Override
-        public JavaScriptInvoke Invoke(int function, int[] results, int[] params, int exception, CallSiteReference site) {
-          return new JavaScriptInvoke(function, results, params, exception, site);
+        public JavaScriptInvoke Invoke(int iindex, int function, int[] results, int[] params, int exception, CallSiteReference site) {
+          return new JavaScriptInvoke(iindex, function, results, params, exception, site);
         }
 
         @Override
-        public JavaScriptInvoke Invoke(int function, int result, int[] params, int exception, CallSiteReference site) {
-          return new JavaScriptInvoke(function, result, params, exception, site);
+        public JavaScriptInvoke Invoke(int iindex, int function, int result, int[] params, int exception, CallSiteReference site) {
+          return new JavaScriptInvoke(iindex, function, result, params, exception, site);
         }
 
         @Override
-        public JavaScriptInvoke Invoke(int function, int[] params, int exception, CallSiteReference site) {
-          return new JavaScriptInvoke(function, params, exception, site);
+        public JavaScriptInvoke Invoke(int iindex, int function, int[] params, int exception, CallSiteReference site) {
+          return new JavaScriptInvoke(iindex, function, params, exception, site);
         }
 
         @Override
-        public JavaScriptPropertyRead PropertyRead(int result, int objectRef, int memberRef) {
-          return new JavaScriptPropertyRead(result, objectRef, memberRef);
+        public JavaScriptPropertyRead PropertyRead(int iindex, int result, int objectRef, int memberRef) {
+          return new JavaScriptPropertyRead(iindex, result, objectRef, memberRef);
         }
 
         @Override
-        public JavaScriptPropertyWrite PropertyWrite(int objectRef, int memberRef, int value) {
-          return new JavaScriptPropertyWrite(objectRef, memberRef, value);
+        public JavaScriptPropertyWrite PropertyWrite(int iindex, int objectRef, int memberRef, int value) {
+          return new JavaScriptPropertyWrite(iindex, objectRef, memberRef, value);
         }
 
         @Override
-        public SSAPutInstruction PutInstruction(int ref, int value, String field) {
+        public SSAPutInstruction PutInstruction(int iindex, int ref, int value, String field) {
           try {
             byte[] utf8 = field.getBytes("UTF-8");
-            return PutInstruction(ref, value,
+            return PutInstruction(iindex, ref, value, 
                 FieldReference.findOrCreate(JavaScriptTypes.Root, Atom.findOrCreate(utf8, 0, utf8.length), JavaScriptTypes.Root));
           } catch (UnsupportedEncodingException e) {
             Assertions.UNREACHABLE();
@@ -263,119 +263,119 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         @Override
-        public JavaScriptTypeOfInstruction TypeOfInstruction(int lval, int object) {
-          return new JavaScriptTypeOfInstruction(lval, object);
+        public JavaScriptTypeOfInstruction TypeOfInstruction(int iindex, int lval, int object) {
+          return new JavaScriptTypeOfInstruction(iindex, lval, object);
         }
 
         @Override
-        public JavaScriptWithRegion WithRegion(int expr, boolean isEnter) {
-          return new JavaScriptWithRegion(expr, isEnter);
+        public JavaScriptWithRegion WithRegion(int iindex, int expr, boolean isEnter) {
+          return new JavaScriptWithRegion(iindex, expr, isEnter);
         }
 
         @Override
-        public AstAssertInstruction AssertInstruction(int value, boolean fromSpecification) {
-          return new AstAssertInstruction(value, fromSpecification);
+        public AstAssertInstruction AssertInstruction(int iindex, int value, boolean fromSpecification) {
+          return new AstAssertInstruction(iindex, value, fromSpecification);
         }
 
         @Override
-        public com.ibm.wala.cast.ir.ssa.AssignInstruction AssignInstruction(int result, int val) {
-          return new AssignInstruction(result, val);
+        public com.ibm.wala.cast.ir.ssa.AssignInstruction AssignInstruction(int iindex, int result, int val) {
+          return new AssignInstruction(iindex, result, val);
         }
 
         @Override
-        public com.ibm.wala.cast.ir.ssa.EachElementGetInstruction EachElementGetInstruction(int value, int objectRef) {
-          return new EachElementGetInstruction(value, objectRef);
+        public com.ibm.wala.cast.ir.ssa.EachElementGetInstruction EachElementGetInstruction(int iindex, int value, int objectRef) {
+          return new EachElementGetInstruction(iindex, value, objectRef);
         }
 
         @Override
-        public com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction EachElementHasNextInstruction(int value, int objectRef) {
-          return new EachElementHasNextInstruction(value, objectRef);
+        public com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction EachElementHasNextInstruction(int iindex, int value, int objectRef) {
+          return new EachElementHasNextInstruction(iindex, value, objectRef);
         }
 
         @Override
-        public AstEchoInstruction EchoInstruction(int[] rvals) {
-          return new AstEchoInstruction(rvals);
+        public AstEchoInstruction EchoInstruction(int iindex, int[] rvals) {
+          return new AstEchoInstruction(iindex, rvals);
         }
 
         @Override
-        public AstGlobalRead GlobalRead(int lhs, FieldReference global) {
-          return new AstGlobalRead(lhs, global);
+        public AstGlobalRead GlobalRead(int iindex, int lhs, FieldReference global) {
+          return new AstGlobalRead(iindex, lhs, global);
         }
 
         @Override
-        public AstGlobalWrite GlobalWrite(FieldReference global, int rhs) {
-          return new AstGlobalWrite(global, rhs);
+        public AstGlobalWrite GlobalWrite(int iindex, FieldReference global, int rhs) {
+          return new AstGlobalWrite(iindex, global, rhs);
         }
 
         @Override
-        public AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval, int fieldVal, FieldReference fieldRef) {
-          return new AstIsDefinedInstruction(lval, rval, fieldVal, fieldRef);
+        public AstIsDefinedInstruction IsDefinedInstruction(int iindex, int lval, int rval, int fieldVal, FieldReference fieldRef) {
+          return new AstIsDefinedInstruction(iindex, lval, rval, fieldVal, fieldRef);
         }
 
         @Override
-        public AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval, FieldReference fieldRef) {
-          return new AstIsDefinedInstruction(lval, rval, fieldRef);
+        public AstIsDefinedInstruction IsDefinedInstruction(int iindex, int lval, int rval, FieldReference fieldRef) {
+          return new AstIsDefinedInstruction(iindex, lval, rval, fieldRef);
         }
 
         @Override
-        public AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval, int fieldVal) {
-          return new AstIsDefinedInstruction(lval, rval, fieldVal);
+        public AstIsDefinedInstruction IsDefinedInstruction(int iindex, int lval, int rval, int fieldVal) {
+          return new AstIsDefinedInstruction(iindex, lval, rval, fieldVal);
         }
 
         @Override
-        public AstIsDefinedInstruction IsDefinedInstruction(int lval, int rval) {
-          return new AstIsDefinedInstruction(lval, rval);
+        public AstIsDefinedInstruction IsDefinedInstruction(int iindex, int lval, int rval) {
+          return new AstIsDefinedInstruction(iindex, lval, rval);
         }
 
         @Override
-        public AstLexicalRead LexicalRead(Access[] accesses) {
-          return new AstLexicalRead(accesses);
+        public AstLexicalRead LexicalRead(int iindex, Access[] accesses) {
+          return new AstLexicalRead(iindex, accesses);
         }
 
         @Override
-        public AstLexicalRead LexicalRead(Access access) {
-          return new AstLexicalRead(access);
+        public AstLexicalRead LexicalRead(int iindex, Access access) {
+          return new AstLexicalRead(iindex, access);
         }
 
         @Override
-        public AstLexicalRead LexicalRead(int lhs, String definer, String globalName, TypeReference type) {
-          return new AstLexicalRead(lhs, definer, globalName, type);
+        public AstLexicalRead LexicalRead(int iindex, int lhs, String definer, String globalName, TypeReference type) {
+          return new AstLexicalRead(iindex, lhs, definer, globalName, type);
         }
 
         @Override
-        public AstLexicalWrite LexicalWrite(Access[] accesses) {
-          return new AstLexicalWrite(accesses);
+        public AstLexicalWrite LexicalWrite(int iindex, Access[] accesses) {
+          return new AstLexicalWrite(iindex, accesses);
         }
 
         @Override
-        public AstLexicalWrite LexicalWrite(Access access) {
-          return new AstLexicalWrite(access);
+        public AstLexicalWrite LexicalWrite(int iindex, Access access) {
+          return new AstLexicalWrite(iindex, access);
         }
 
         @Override
-        public AstLexicalWrite LexicalWrite(String definer, String globalName, TypeReference type, int rhs) {
-          return new AstLexicalWrite(definer, globalName, type, rhs);
+        public AstLexicalWrite LexicalWrite(int iindex, String definer, String globalName, TypeReference type, int rhs) {
+          return new AstLexicalWrite(iindex, definer, globalName, type, rhs);
         }
 
         @Override
-        public SSAArrayLengthInstruction ArrayLengthInstruction(int result, int arrayref) {
+        public SSAArrayLengthInstruction ArrayLengthInstruction(int iindex, int result, int arrayref) {
           throw new UnsupportedOperationException();
         }
 
         @Override
-        public SSAArrayLoadInstruction ArrayLoadInstruction(int result, int arrayref, int index, TypeReference declaredType) {
+        public SSAArrayLoadInstruction ArrayLoadInstruction(int iindex, int result, int arrayref, int index, TypeReference declaredType) {
           throw new UnsupportedOperationException();
         }
 
         @Override
-        public SSAArrayStoreInstruction ArrayStoreInstruction(int arrayref, int index, int value, TypeReference declaredType) {
+        public SSAArrayStoreInstruction ArrayStoreInstruction(int iindex, int arrayref, int index, int value, TypeReference declaredType) {
           throw new UnsupportedOperationException();
         }
 
         @Override
-        public SSABinaryOpInstruction BinaryOpInstruction(IOperator operator, boolean overflow, boolean unsigned, int result,
+        public SSABinaryOpInstruction BinaryOpInstruction(int iindex, IOperator operator, boolean overflow, boolean unsigned, int result,
             int val1, int val2, boolean mayBeInteger) {
-          return new SSABinaryOpInstruction(operator, result, val1, val2, mayBeInteger) {
+          return new SSABinaryOpInstruction(iindex, operator, result, val1, val2, mayBeInteger) {
             @Override
             public boolean isPEI() {
               return false;
@@ -383,74 +383,74 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
 
             @Override
             public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) {
-              return insts.BinaryOpInstruction(getOperator(), false, false, defs == null || defs.length == 0 ? getDef(0) : defs[0],
+              return insts.BinaryOpInstruction(iindex, getOperator(), false, false, defs == null || defs.length == 0 ? getDef(0) : defs[0],
                   uses == null ? getUse(0) : uses[0], uses == null ? getUse(1) : uses[1], mayBeIntegerOp());
             }
           };
         }
 
         @Override
-        public SSACheckCastInstruction CheckCastInstruction(int result, int val, TypeReference[] types, boolean isPEI) {
+        public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, TypeReference[] types, boolean isPEI) {
           throw new UnsupportedOperationException();
         }
 
         @Override
-        public SSACheckCastInstruction CheckCastInstruction(int result, int val, int[] typeValues, boolean isPEI) {
+        public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, int[] typeValues, boolean isPEI) {
           throw new UnsupportedOperationException();
         }
 
         @Override
-        public SSACheckCastInstruction CheckCastInstruction(int result, int val, int typeValue, boolean isPEI) {
+        public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, int typeValue, boolean isPEI) {
           assert isPEI;
-          return CheckCastInstruction(result, val, new int[]{ typeValue }, true);
+          return CheckCastInstruction(iindex, result, val, new int[]{ typeValue }, true);
         }
 
         @Override
-        public SSACheckCastInstruction CheckCastInstruction(int result, int val, TypeReference type, boolean isPEI) {
+        public SSACheckCastInstruction CheckCastInstruction(int iindex, int result, int val, TypeReference type, boolean isPEI) {
           assert isPEI;
-          return CheckCastInstruction(result, val, new TypeReference[]{ type }, true);
+          return CheckCastInstruction(iindex, result, val, new TypeReference[]{ type }, true);
         }
 
         @Override
-        public SSAComparisonInstruction ComparisonInstruction(Operator operator, int result, int val1, int val2) {
-          return new SSAComparisonInstruction(operator, result, val1, val2);
+        public SSAComparisonInstruction ComparisonInstruction(int iindex, Operator operator, int result, int val1, int val2) {
+          return new SSAComparisonInstruction(iindex, operator, result, val1, val2);
         }
 
         @Override
-        public SSAConditionalBranchInstruction ConditionalBranchInstruction(
+        public SSAConditionalBranchInstruction ConditionalBranchInstruction(int iindex,
             com.ibm.wala.shrikeBT.IConditionalBranchInstruction.IOperator operator, TypeReference type, int val1, int val2, int target) {
-          return new SSAConditionalBranchInstruction(operator, type, val1, val2, target);
+          return new SSAConditionalBranchInstruction(iindex, operator, type, val1, val2, target);
         }
 
         @Override
-        public SSAConversionInstruction ConversionInstruction(int result, int val, TypeReference fromType, TypeReference toType,
+        public SSAConversionInstruction ConversionInstruction(int iindex, int result, int val, TypeReference fromType, TypeReference toType,
             boolean overflow) {
           assert !overflow;
-          return new SSAConversionInstruction(result, val, fromType, toType) {
+          return new SSAConversionInstruction(iindex, result, val, fromType, toType) {
             @Override
             public SSAInstruction copyForSSA(SSAInstructionFactory insts, int[] defs, int[] uses) throws IllegalArgumentException {
               if (uses != null && uses.length == 0) {
                 throw new IllegalArgumentException("(uses != null) and (uses.length == 0)");
               }
-              return insts.ConversionInstruction(defs == null || defs.length == 0 ? getDef(0) : defs[0], uses == null ? getUse(0)
+              return insts.ConversionInstruction(iindex, defs == null || defs.length == 0 ? getDef(0) : defs[0], uses == null ? getUse(0)
                   : uses[0], getFromType(), getToType(), false);
             }
           };
         }
 
         @Override
-        public SSAGetCaughtExceptionInstruction GetCaughtExceptionInstruction(int bbNumber, int exceptionValueNumber) {
-          return new SSAGetCaughtExceptionInstruction(bbNumber, exceptionValueNumber);
+        public SSAGetCaughtExceptionInstruction GetCaughtExceptionInstruction(int iindex, int bbNumber, int exceptionValueNumber) {
+          return new SSAGetCaughtExceptionInstruction(iindex, bbNumber, exceptionValueNumber);
         }
 
         @Override
-        public SSAGetInstruction GetInstruction(int result, FieldReference field) {
+        public SSAGetInstruction GetInstruction(int iindex, int result, FieldReference field) {
           throw new UnsupportedOperationException();
         }
 
         @Override
-        public SSAGetInstruction GetInstruction(int result, int ref, FieldReference field) {
-          return new SSAGetInstruction(result, ref, field) {
+        public SSAGetInstruction GetInstruction(int iindex, int result, int ref, FieldReference field) {
+          return new SSAGetInstruction(iindex, result, ref, field) {
             @Override
             public boolean isPEI() {
               return false;
@@ -459,38 +459,38 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         @Override
-        public SSAGotoInstruction GotoInstruction(int target) {
-          return new SSAGotoInstruction(target);
+        public SSAGotoInstruction GotoInstruction(int iindex, int target) {
+          return new SSAGotoInstruction(iindex, target);
         }
 
         @Override
-        public SSAInstanceofInstruction InstanceofInstruction(int result, int ref, TypeReference checkedType) {
+        public SSAInstanceofInstruction InstanceofInstruction(int iindex, int result, int ref, TypeReference checkedType) {
           throw new UnsupportedOperationException();
         }
 
         @Override
-        public SSAInvokeInstruction InvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
+        public SSAInvokeInstruction InvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site) {
           throw new UnsupportedOperationException();
         }
 
         @Override
-        public SSAInvokeInstruction InvokeInstruction(int[] params, int exception, CallSiteReference site) {
+        public SSAInvokeInstruction InvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site) {
           throw new UnsupportedOperationException();
         }
 
         @Override
-        public SSALoadMetadataInstruction LoadMetadataInstruction(int lval, TypeReference entityType, Object token) {
+        public SSALoadMetadataInstruction LoadMetadataInstruction(int iindex, int lval, TypeReference entityType, Object token) {
           throw new UnsupportedOperationException();
         }
 
         @Override
-        public SSAMonitorInstruction MonitorInstruction(int ref, boolean isEnter) {
+        public SSAMonitorInstruction MonitorInstruction(int iindex, int ref, boolean isEnter) {
           throw new UnsupportedOperationException();
         }
 
         @Override
-        public SSANewInstruction NewInstruction(int result, NewSiteReference site) {
-          return new SSANewInstruction(result, site) {
+        public SSANewInstruction NewInstruction(int iindex, int result, NewSiteReference site) {
+          return new SSANewInstruction(iindex, result, site) {
             @Override
             public boolean isPEI() {
               return true;
@@ -504,23 +504,23 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         @Override
-        public SSANewInstruction NewInstruction(int result, NewSiteReference site, int[] params) {
+        public SSANewInstruction NewInstruction(int iindex, int result, NewSiteReference site, int[] params) {
           throw new UnsupportedOperationException();
         }
 
         @Override
-        public SSAPhiInstruction PhiInstruction(int result, int[] params) {
-          return new SSAPhiInstruction(result, params);
+        public SSAPhiInstruction PhiInstruction(int iindex, int result, int[] params) {
+          return new SSAPhiInstruction(iindex, result, params);
         }
 
         @Override
-        public SSAPiInstruction PiInstruction(int result, int val, int piBlock, int successorBlock, SSAInstruction cause) {
-          return new SSAPiInstruction(result, val, piBlock, successorBlock, cause);
+        public SSAPiInstruction PiInstruction(int iindex, int result, int val, int piBlock, int successorBlock, SSAInstruction cause) {
+          return new SSAPiInstruction(iindex, result, val, piBlock, successorBlock, cause);
         }
 
         @Override
-        public SSAPutInstruction PutInstruction(int ref, int value, FieldReference field) {
-          return new SSAPutInstruction(ref, value, field) {
+        public SSAPutInstruction PutInstruction(int iindex, int ref, int value, FieldReference field) {
+          return new SSAPutInstruction(iindex, ref, value, field) {
             @Override
             public boolean isPEI() {
               return false;
@@ -529,28 +529,28 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         @Override
-        public SSAPutInstruction PutInstruction(int value, FieldReference field) {
+        public SSAPutInstruction PutInstruction(int iindex, int value, FieldReference field) {
           throw new UnsupportedOperationException();
         }
 
         @Override
-        public SSAReturnInstruction ReturnInstruction() {
-          return new SSAReturnInstruction();
+        public SSAReturnInstruction ReturnInstruction(int iindex) {
+          return new SSAReturnInstruction(iindex);
         }
 
         @Override
-        public SSAReturnInstruction ReturnInstruction(int result, boolean isPrimitive) {
-          return new SSAReturnInstruction(result, isPrimitive);
+        public SSAReturnInstruction ReturnInstruction(int iindex, int result, boolean isPrimitive) {
+          return new SSAReturnInstruction(iindex, result, isPrimitive);
         }
 
         @Override
-        public SSASwitchInstruction SwitchInstruction(int val, int defaultLabel, int[] casesAndLabels) {
-          return new SSASwitchInstruction(val, defaultLabel, casesAndLabels);
+        public SSASwitchInstruction SwitchInstruction(int iindex, int val, int defaultLabel, int[] casesAndLabels) {
+          return new SSASwitchInstruction(iindex, val, defaultLabel, casesAndLabels);
         }
 
         @Override
-        public SSAThrowInstruction ThrowInstruction(int exception) {
-          return new SSAThrowInstruction(exception) {
+        public SSAThrowInstruction ThrowInstruction(int iindex, int exception) {
+          return new SSAThrowInstruction(iindex, exception) {
             @Override
             public boolean isPEI() {
               return true;
@@ -564,44 +564,44 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         @Override
-        public SSAUnaryOpInstruction UnaryOpInstruction(com.ibm.wala.shrikeBT.IUnaryOpInstruction.IOperator operator, int result,
+        public SSAUnaryOpInstruction UnaryOpInstruction(int iindex, com.ibm.wala.shrikeBT.IUnaryOpInstruction.IOperator operator, int result,
             int val) {
-          return new SSAUnaryOpInstruction(operator, result, val);
+          return new SSAUnaryOpInstruction(iindex, operator, result, val);
         }
 
         @Override
-        public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, TypeReference pointeeType) {
+        public SSAAddressOfInstruction AddressOfInstruction(int iindex, int lval, int local, TypeReference pointeeType) {
           throw new UnsupportedOperationException();
         }
 
         @Override
-        public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, int indexVal, TypeReference pointeeType) {
+        public SSAAddressOfInstruction AddressOfInstruction(int iindex, int lval, int local, int indexVal, TypeReference pointeeType) {
           throw new UnsupportedOperationException();
         }
 
         @Override
-        public SSAAddressOfInstruction AddressOfInstruction(int lval, int local, FieldReference field, TypeReference pointeeType) {
+        public SSAAddressOfInstruction AddressOfInstruction(int iindex, int lval, int local, FieldReference field, TypeReference pointeeType) {
           throw new UnsupportedOperationException();
         }
 
         @Override
-        public SSALoadIndirectInstruction LoadIndirectInstruction(int lval, TypeReference t, int addressVal) {
+        public SSALoadIndirectInstruction LoadIndirectInstruction(int iindex, int lval, TypeReference t, int addressVal) {
           throw new UnsupportedOperationException();
         }
 
         @Override
-        public SSAStoreIndirectInstruction StoreIndirectInstruction(int addressVal, int rval, TypeReference t) {
+        public SSAStoreIndirectInstruction StoreIndirectInstruction(int iindex, int addressVal, int rval, TypeReference t) {
           throw new UnsupportedOperationException();
         }
 
         @Override
-        public PrototypeLookup PrototypeLookup(int lval, int object) {
-          return new PrototypeLookup(lval, object);
+        public PrototypeLookup PrototypeLookup(int iindex, int lval, int object) {
+          return new PrototypeLookup(iindex, lval, object);
         }
 
         @Override
-        public SetPrototype SetPrototype(int object, int prototype) {
-          return new SetPrototype(object, prototype);
+        public SetPrototype SetPrototype(int iindex, int object, int prototype) {
+          return new SetPrototype(iindex, object, prototype);
         }
 
         @Override
@@ -655,7 +655,7 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
     @SuppressWarnings("static-access")
     @Override
     public PrimitiveType getPrimitive(TypeReference reference) {
-      return JSPrimitiveType.getPrimitive(reference);
+      return PrimitiveType.getPrimitive(reference);
     }
 
     @Override

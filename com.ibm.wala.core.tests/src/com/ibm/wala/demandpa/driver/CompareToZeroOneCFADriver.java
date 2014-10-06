@@ -1,3 +1,14 @@
+/******************************************************************************
+ * Copyright (c) 2002 - 2014 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *****************************************************************************/
+
 /**
  * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
  * University of California (Regents). Provided that this notice and
@@ -141,7 +152,7 @@ public class CompareToZeroOneCFADriver {
   private static void doTests(AnalysisScope scope, final ClassHierarchy cha, AnalysisOptions options) throws IllegalArgumentException, CancelException {
     final SSAPropagationCallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
     final CallGraph oldCG = builder.makeCallGraph(options,null);
-    final PointerAnalysis pa = builder.getPointerAnalysis();
+    final PointerAnalysis<InstanceKey> pa = builder.getPointerAnalysis();
 
     // now, run our analysis
     // build an RTA call graph
@@ -174,7 +185,7 @@ public class CompareToZeroOneCFADriver {
             LocalPointerKey pk = (LocalPointerKey) heapModel.getPointerKeyForLocal(node, i);
             LocalPointerKey oldPk = (LocalPointerKey) CallGraphMapUtil.mapPointerKey(pk, cg, oldCG, heapModel);
             Collection<InstanceKey> p2set = dmp.getPointsTo(pk);
-            OrdinalSet<? extends InstanceKey> otherP2Set = pa.getPointsToSet(oldPk);
+            OrdinalSet<InstanceKey> otherP2Set = pa.getPointsToSet(oldPk);
             System.err.println(("OLD POINTS-TO " + otherP2Set));
             for (InstanceKey key : otherP2Set) {
               if (knownBug(key)) {
