@@ -20,7 +20,7 @@
             <phase>test</phase>
             <configuration>
               <testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
-              <argLine>-XX:-UseSplitVerifier -Xmx800M -Dcom.ibm.wala.junit.profile=short -Dcom.ibm.wala.junit.analyzingJar=true -ea</argLine>
+              <argLine>-Xmx800M -Dcom.ibm.wala.junit.profile=short -Dcom.ibm.wala.junit.analyzingJar=true -ea</argLine>
               <redirectTestOutputToFile>true</redirectTestOutputToFile>
             </configuration>
             <goals>
