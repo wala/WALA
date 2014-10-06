@@ -10,7 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.shrikeBT.shrikeCT;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 import com.ibm.wala.shrikeBT.Compiler;
 import com.ibm.wala.shrikeBT.ConstantPoolReader;
@@ -21,6 +23,8 @@ import com.ibm.wala.shrikeBT.Instruction;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.ReturnInstruction;
 import com.ibm.wala.shrikeBT.Util;
+import com.ibm.wala.shrikeBT.analysis.Analyzer.FailureException;
+import com.ibm.wala.shrikeBT.analysis.ClassHierarchyProvider;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.ClassWriter;
@@ -31,6 +35,9 @@ import com.ibm.wala.shrikeCT.LineNumberTableReader;
 import com.ibm.wala.shrikeCT.LineNumberTableWriter;
 import com.ibm.wala.shrikeCT.LocalVariableTableReader;
 import com.ibm.wala.shrikeCT.LocalVariableTableWriter;
+import com.ibm.wala.shrikeCT.StackMapConstants.StackMapFrame;
+import com.ibm.wala.shrikeCT.StackMapTableReader;
+import com.ibm.wala.shrikeCT.StackMapTableWriter;
 
 /**
  * This class provides a convenient way to instrument every method in a class. It assumes you are using ShrikeCT to read and write
@@ -54,11 +61,13 @@ final public class ClassInstrumenter {
 
   private final String inputName;
   
+  private final ClassHierarchyProvider cha;
+  
   /**
    * Create a class instrumenter from raw bytes.
    */
-  public ClassInstrumenter(String inputName, byte[] bytes) throws InvalidClassFileException {
-    this(inputName, new ClassReader(bytes));
+  public ClassInstrumenter(String inputName, byte[] bytes, ClassHierarchyProvider cha) throws InvalidClassFileException {
+    this(inputName, new ClassReader(bytes), cha);
   }
 
   /**
@@ -82,11 +91,12 @@ final public class ClassInstrumenter {
    * 
    * @throws IllegalArgumentException if cr is null
    */
-  public ClassInstrumenter(String inputName, ClassReader cr) throws InvalidClassFileException {
+  public ClassInstrumenter(String inputName, ClassReader cr, ClassHierarchyProvider cha) throws InvalidClassFileException {
     if (cr == null) {
       throw new IllegalArgumentException("cr is null");
     }
     this.cr = cr;
+    this.cha = cha;
     methods = new MethodData[cr.getMethodCount()];
     oldCode = new CodeReader[methods.length];
     cpr = CTDecoder.makeConstantPoolReader(cr);
@@ -249,7 +259,10 @@ final public class ClassInstrumenter {
    * We fix up any debug information to be consistent with the changes to the code.
    */
   public ClassWriter emitClass() throws InvalidClassFileException {
-    ClassWriter w = new ClassWriter();
+    return emitClass(new ClassWriter());
+  }
+
+  public ClassWriter emitClass(ClassWriter w) throws InvalidClassFileException {
     emitClassInto(w);
     return w;
   }
@@ -296,12 +309,12 @@ final public class ClassInstrumenter {
           int flags = cr.getMethodAccessFlags(i);
           // we're not installing a native method here
           flags &= ~ClassConstants.ACC_NATIVE;
-          w.addMethod(flags, cr.getMethodNameIndex(i), cr.getMethodTypeIndex(i), makeMethodAttributes(i, w, oc, comp.getOutput()));
+          w.addMethod(flags, cr.getMethodNameIndex(i), cr.getMethodTypeIndex(i), makeMethodAttributes(i, w, oc, comp.getOutput(), md));
           Compiler.Output[] aux = comp.getAuxiliaryMethods();
           if (aux != null) {
             for (int j = 0; j < aux.length; j++) {
               Compiler.Output a = aux[j];
-              w.addMethod(a.getAccessFlags(), a.getMethodName(), a.getMethodSignature(), makeMethodAttributes(i, w, oc, a));
+              w.addMethod(a.getAccessFlags(), a.getMethodName(), a.getMethodSignature(), makeMethodAttributes(i, w, oc, a, md));
             }
           }
         }
@@ -389,13 +402,14 @@ final public class ClassInstrumenter {
     }
   }
 
-  private ClassWriter.Element[] makeMethodAttributes(int m, ClassWriter w, CodeReader oldCode, Compiler.Output output)
+  private ClassWriter.Element[] makeMethodAttributes(int m, ClassWriter w, CodeReader oldCode, Compiler.Output output, MethodData md)
       throws InvalidClassFileException {
     CodeWriter code = makeNewCode(w, output);
 
     int codeAttrCount = 0;
     LineNumberTableWriter lines = null;
     LocalVariableTableWriter locals = null;
+    StackMapTableWriter stacks = null;
     if (oldCode != null) {
       lines = makeNewLines(w, oldCode, output);
       if (lines != null) {
@@ -405,15 +419,32 @@ final public class ClassInstrumenter {
       if (locals != null) {
         codeAttrCount++;
       }
+      if (oldCode.getClassReader().getMajorVersion() > 50) {
+        try { /*
+          List<StackMapFrame> sm = StackMapTableReader.readStackMap(oldCode);
+          if (sm != null) {
+            stacks = new StackMapTableWriter(w, sm, output.getNewBytecodesToOldBytecodes());            
+            codeAttrCount++;
+          } else { */
+            stacks = new StackMapTableWriter(w, md, output, cha);
+            codeAttrCount++;
+          // }
+        } catch (IOException | FailureException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
     }
     ClassWriter.Element[] codeAttributes = new ClassWriter.Element[codeAttrCount];
     int codeAttrIndex = 0;
     if (lines != null) {
-      codeAttributes[0] = lines;
-      codeAttrIndex++;
+      codeAttributes[codeAttrIndex++] = lines;
     }
     if (locals != null) {
-      codeAttributes[codeAttrIndex] = locals;
+      codeAttributes[codeAttrIndex++] = locals;
+    }
+    if (stacks != null) {
+      codeAttributes[codeAttrIndex++] = stacks;      
     }
     code.setAttributes(codeAttributes);
 

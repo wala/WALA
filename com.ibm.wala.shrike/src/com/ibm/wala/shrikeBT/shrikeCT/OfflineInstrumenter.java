@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import com.ibm.wala.shrikeBT.Util;
+import com.ibm.wala.shrikeBT.analysis.ClassHierarchyProvider;
 import com.ibm.wala.shrikeBT.tools.OfflineInstrumenterBase;
 import com.ibm.wala.shrikeCT.ClassWriter;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
@@ -28,6 +29,7 @@ final public class OfflineInstrumenter extends OfflineInstrumenterBase {
    * Create an empty collection of classes to instrument.
    */
   public OfflineInstrumenter() {
+
   }
 
   @Override
@@ -35,7 +37,7 @@ final public class OfflineInstrumenter extends OfflineInstrumenterBase {
     byte[] bytes = new byte[s.available()];
     Util.readFully(s, bytes);
     try {
-      return new ClassInstrumenter(inputName, bytes);
+      return new ClassInstrumenter(inputName, bytes, cha);
     } catch (InvalidClassFileException e) {
       throw new IOException("Class is invalid: " + e.getMessage());
     }

@@ -35,7 +35,6 @@ import com.ibm.wala.shrikeBT.IShiftInstruction;
 import com.ibm.wala.shrikeBT.IStoreInstruction;
 import com.ibm.wala.shrikeBT.ITypeTestInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
-import com.ibm.wala.shrikeBT.InvokeDynamicInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.MonitorInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
@@ -288,8 +287,8 @@ public final class Verifier extends Analyzer {
   /**
    * Initialize a verifier.
    */
-  public Verifier(boolean isStatic, String classType, String signature, IInstruction[] instructions, ExceptionHandler[][] handlers) {
-    super(isStatic, classType, signature, instructions, handlers);
+  public Verifier(boolean isConstructor, boolean isStatic, String classType, String signature, IInstruction[] instructions, ExceptionHandler[][] handlers, int[] instToBC) {
+    super(isConstructor, isStatic, classType, signature, instructions, handlers, instToBC);
   }
 
   /**
@@ -299,6 +298,10 @@ public final class Verifier extends Analyzer {
    */
   public Verifier(MethodData info) throws NullPointerException {
     super(info);
+  }
+
+  public Verifier(MethodData info, int[] instToBC) throws NullPointerException {
+    super(info, instToBC);
   }
 
   /**

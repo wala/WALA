@@ -39,6 +39,9 @@ public class CTUtils {
       superInterfaces[i] = CTDecoder.convertClassToType(cr.getInterfaceName(i));
     }
     String superName = cr.getSuperName();
+    if ("java/io/File".equals(cr.getName()) || "java/lang/Throwable".equals(cr.getName())) {
+      System.err.println(superName);
+    }
     store.setClassInfo(CTDecoder.convertClassToType(cr.getName()), (cr.getAccessFlags() & Constants.ACC_INTERFACE) != 0, (cr
         .getAccessFlags() & Constants.ACC_FINAL) != 0, superName != null ? CTDecoder.convertClassToType(superName) : null,
         superInterfaces);

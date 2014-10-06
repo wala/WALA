@@ -1,7 +1,11 @@
 package com.ibm.wala.shrikeCT;
 
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodHandles.Lookup;
+import java.lang.invoke.MethodType;
+import java.lang.reflect.Method;
+
 import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
-import com.ibm.wala.shrikeCT.ConstantPoolParser.ReferenceToken;
 
 public class BootstrapMethodsReader extends AttributeReader {
 
@@ -10,7 +14,7 @@ public class BootstrapMethodsReader extends AttributeReader {
     String methodClass();
     String methodName();
     String methodType();
-    Object callArgument(int i);
+    Object callArgument(ClassLoader cl, int i);
     int callArgumentKind(int i);
   }
   
@@ -70,7 +74,7 @@ public class BootstrapMethodsReader extends AttributeReader {
         }
         
         @Override
-        public Object callArgument(int i) {
+        public Object callArgument(ClassLoader cl, int i) {
           try {
             int index = cr.getUShort(argsBase + (2*i));
             int t = callArgumentKind(i);
@@ -91,17 +95,30 @@ public class BootstrapMethodsReader extends AttributeReader {
               return cp.getCPLong(index);
             case ClassConstants.CONSTANT_MethodHandle:
               String className = cp.getCPHandleClass(index);
+              Class<?> cls = Class.forName(className, false, cl);
               String eltName = cp.getCPHandleName(index);
               String eltDesc = cp.getCPHandleType(index);
-              return new ReferenceToken(className, eltName, eltDesc);
+              MethodType type = MethodType.fromMethodDescriptorString(eltDesc, cl);
+              Method m = cls.getDeclaredMethod(eltName, type.parameterList().toArray(new Class[type.parameterCount()]));
+              Lookup lk = MethodHandles.lookup().in(cls);
+              m.setAccessible(true);
+              return lk.unreflect(m);
             case ClassConstants.CONSTANT_MethodType:
-              return cp.getCPMethodType(index);
+              return MethodType.fromMethodDescriptorString(cp.getCPMethodType(index), this.getClass().getClassLoader());
             default:
               assert false : "invalid type " + t;
             }            
           } catch (IllegalArgumentException e) {
             assert false : e;
           } catch (InvalidClassFileException e) {
+            assert false : e;
+          } catch (ClassNotFoundException e) {
+            assert false : e;
+          } catch (NoSuchMethodException e) {
+            assert false : e;
+          } catch (SecurityException e) {
+            assert false : e;
+          } catch (IllegalAccessException e) {
             assert false : e;
           }
           return null;

@@ -17,6 +17,7 @@ import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
 import com.ibm.wala.shrikeBT.IComparisonInstruction;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
+import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 
@@ -98,5 +99,7 @@ public interface SSAInstructionFactory {
   SSAThrowInstruction ThrowInstruction(int exception);
 
   SSAUnaryOpInstruction UnaryOpInstruction(IUnaryOpInstruction.IOperator operator, int result, int val);
+
+  SSAInstruction InvokeInstruction(int i, int[] js, int j, CallSiteReference site, BootstrapMethod bootstrap);
 
 }

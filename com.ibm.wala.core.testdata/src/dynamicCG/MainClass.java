@@ -2,7 +2,7 @@ package dynamicCG;
 
 public class MainClass {
   private final Object x;
-  
+    
   private MainClass(Object x) {
     this.x = x;
   }

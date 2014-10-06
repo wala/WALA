@@ -95,7 +95,13 @@ public final class ConstantPoolParser implements ClassConstants {
       ClassReader thisClass = new ClassReader(bytes);
       AttrIterator attrs = new AttrIterator();
       thisClass.initClassAttributeIterator(attrs);
-      invokeDynamicBootstraps = new BootstrapMethodsReader(attrs);
+      for (; attrs.isValid(); attrs.advance()) {
+        if (attrs.getName().equals("BootstrapMethods")) {
+          invokeDynamicBootstraps = new BootstrapMethodsReader(attrs);
+          break;
+        }
+      }
+      assert invokeDynamicBootstraps != null;
     }
     
     return invokeDynamicBootstraps;

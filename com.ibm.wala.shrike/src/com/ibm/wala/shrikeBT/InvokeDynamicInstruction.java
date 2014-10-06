@@ -2,7 +2,9 @@ package com.ibm.wala.shrikeBT;
 
 import java.lang.invoke.CallSite;
 import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -18,6 +20,10 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
     this.bootstrap = bootstrap;
     this.methodName = methodName;
     this.methodType = methodType;
+  }
+
+  ConstantPoolReader getLazyConstantPool() {
+    return null;
   }
 
   @Override
@@ -127,21 +133,34 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
       }
       return methodType;
     }
+    
+    @Override
+    ConstantPoolReader getLazyConstantPool() {
+      return cp;
+    }
   }
 
-  public CallSite bootstrap(Class cl) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+  public CallSite bootstrap(Class cl) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
     ClassLoader bootstrapCL = cl.getClassLoader();
 
     Class<?> bootstrapClass = Class.forName(getBootstrap().methodClass().replace('/', '.'), false, bootstrapCL);
     MethodType bt = MethodType.fromMethodDescriptorString(bootstrap.methodType(), bootstrapCL);
     Method bootstrap = bootstrapClass.getMethod(this.bootstrap.methodName(), bt.parameterList().toArray(new Class[ bt.parameterCount() ]));
     Object[] args = new Object[ bt.parameterCount() ];
-    args[0] = MethodHandles.lookup().in(cl);
+    
+    Lookup myLookup = MethodHandles.lookup().in(cl);
+    Field impl_lookup = Lookup.class.getDeclaredField("IMPL_LOOKUP"); // get the required field via reflections
+    impl_lookup.setAccessible(true); // set it accessible
+    Lookup lutrusted = (Lookup) impl_lookup.get(myLookup); // get the value of IMPL_LOOKUP from the Lookup instance and save it in a new Lookup object
+    args[0] = lutrusted;
+    
     args[1] = getMethodName();
     args[2] = MethodType.fromMethodDescriptorString(getMethodSignature(), cl.getClassLoader());
     for(int i = 3; i < bt.parameterCount(); i++) {
-      args[i] = getBootstrap().callArgument(i-3);
+      args[i] = getBootstrap().callArgument(bootstrapCL,i-3);
     }
+    
+    //bootstrap.setAccessible(true);
     
     return (CallSite) bootstrap.invoke(null, args);
   }

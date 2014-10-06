@@ -30,6 +30,7 @@ import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.Instruction;
+import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.shrikeCT.ConstantPoolParser.ReferenceToken;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.SSAAddressOfInstruction;
@@ -47,6 +48,7 @@ import com.ibm.wala.ssa.SSAGotoInstruction;
 import com.ibm.wala.ssa.SSAInstanceofInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
+import com.ibm.wala.ssa.SSAInvokeDynamicInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSALoadIndirectInstruction;
 import com.ibm.wala.ssa.SSALoadMetadataInstruction;
@@ -227,6 +229,19 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     @Override
     public SSAInvokeInstruction InvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
       return new SSAInvokeInstruction(result, params, exception, site) {
+        @Override
+        public Collection<TypeReference> getExceptionTypes() {
+          if (!isStatic()) {
+            return getNullPointerException();
+          } else {
+            return Collections.emptySet();
+          }
+        }
+      };
+    }
+
+    public SSAInvokeDynamicInstruction InvokeInstruction(int result, int[] params, int exception, CallSiteReference site, BootstrapMethod bootstrap) {
+      return new SSAInvokeDynamicInstruction(result, params, exception, site, bootstrap) {
         @Override
         public Collection<TypeReference> getExceptionTypes() {
           if (!isStatic()) {

@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import com.ibm.wala.shrikeBT.IInvokeInstruction.Dispatch;
+import com.ibm.wala.util.collections.Pair;
 
 /**
  * This class contains miscellaneous useful functions.
@@ -611,5 +612,51 @@ public final class Util {
         offset += r;
       } while (true);
     }
+  }
+  
+  public static Pair<boolean[], boolean[]> computeBasicBlocks(IInstruction[] instructions, ExceptionHandler[][] handlers) {
+
+    // Compute r so r[i] == true iff instruction i begins a basic block.
+    boolean[] r = new boolean[instructions.length];
+    boolean[] catchers = new boolean[instructions.length];
+    
+    r[0] = true;
+    for (int i = 0; i < instructions.length; i++) {
+      int[] targets = instructions[i].getBranchTargets();
+
+      // if there are any targets, then break the basic block here.
+      // also break the basic block after a return
+      if (targets.length > 0 || !instructions[i].isFallThrough()) {
+        if (i + 1 < instructions.length && !r[i + 1]) {
+          r[i + 1] = true;
+        }
+      }
+
+      for (int j = 0; j < targets.length; j++) {
+        if (!r[targets[j]]) {
+          r[targets[j]] = true;
+        }
+      }
+      if (instructions[i].isPEI()) {
+        ExceptionHandler[] hs = handlers[i];
+        // break the basic block here.
+        if (i + 1 < instructions.length && !r[i + 1]) {
+          r[i + 1] = true;
+        }
+        if (hs != null && hs.length > 0) {
+          for (int j = 0; j < hs.length; j++) {
+            // exceptionHandlers.add(hs[j]);
+            if (!r[hs[j].getHandler()]) {
+              // we have not discovered the catch block yet.
+              // form a new basic block
+              r[hs[j].getHandler()] = true;
+            }
+            catchers[hs[j].getHandler()] = true;
+          }
+        }
+      }
+    }
+
+    return Pair.make(r, catchers);
   }
 }

@@ -146,13 +146,10 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
       Assertions.UNREACHABLE();
       handlers = null;
     }
-    boolean[] r = new boolean[getInstructions().length];
-    boolean[] catchers = new boolean[getInstructions().length];
-    // we initially start with both the entry and exit block.
-    int blockCount = 2;
 
     // Compute r so r[i] == true iff instruction i begins a basic block.
-    // While doing so count the number of blocks.
+    boolean[] r = new boolean[getInstructions().length];
+    boolean[] catchers = new boolean[getInstructions().length];
     r[0] = true;
     IInstruction[] instructions = getInstructions();
     for (int i = 0; i < instructions.length; i++) {
@@ -163,14 +160,12 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
       if (targets.length > 0 || !instructions[i].isFallThrough()) {
         if (i + 1 < instructions.length && !r[i + 1]) {
           r[i + 1] = true;
-          blockCount++;
         }
       }
 
       for (int j = 0; j < targets.length; j++) {
         if (!r[targets[j]]) {
           r[targets[j]] = true;
-          blockCount++;
         }
       }
       if (instructions[i].isPEI()) {
@@ -178,7 +173,6 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
         // break the basic block here.
         if (i + 1 < instructions.length && !r[i + 1]) {
           r[i + 1] = true;
-          blockCount++;
         }
         if (hs != null && hs.length > 0) {
           for (int j = 0; j < hs.length; j++) {
@@ -187,7 +181,6 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
               // we have not discovered the catch block yet.
               // form a new basic block
               r[hs[j].getHandler()] = true;
-              blockCount++;
             }
             catchers[hs[j].getHandler()] = true;
           }

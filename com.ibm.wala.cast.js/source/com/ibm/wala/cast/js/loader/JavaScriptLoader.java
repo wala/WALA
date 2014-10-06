@@ -74,6 +74,7 @@ import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction.IOperator;
 import com.ibm.wala.shrikeBT.IComparisonInstruction.Operator;
+import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.SSAAddressOfInstruction;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
@@ -601,6 +602,11 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         @Override
         public SetPrototype SetPrototype(int object, int prototype) {
           return new SetPrototype(object, prototype);
+        }
+
+        @Override
+        public SSAInstruction InvokeInstruction(int i, int[] js, int j, CallSiteReference site, BootstrapMethod bootstrap) {
+          throw new UnsupportedOperationException();
         }
 
       };

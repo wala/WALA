@@ -18,13 +18,13 @@ import com.ibm.wala.types.TypeReference;
  */
 public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
 
-  private final int result;
+  protected final int result;
 
   /**
    * The value numbers of the arguments passed to the call. For non-static methods, params[0] == this. If params == null, this
    * should be a static method with no parameters.
    */
-  private final int[] params;
+  protected final int[] params;
 
   protected SSAInvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
     super(exception, site);

@@ -18,6 +18,7 @@ import org.junit.Assert;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.shrike.cg.DynamicCallGraph;
 import com.ibm.wala.shrikeBT.analysis.Analyzer.FailureException;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
@@ -60,7 +61,17 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
         assert new File(instrumentedJarLocation).delete();
       }
       
-      DynamicCallGraph.main(new String[]{testJarLocation, "-o", instrumentedJarLocation});
+      String rtJar = null;
+      for(String jar : WalaProperties.getJ2SEJarFiles()) {
+        if (jar.endsWith("rt.jar") || jar.endsWith("classes.jar")) {
+          rtJar = jar;
+        }
+      }
+      
+      DynamicCallGraph.main(
+          rtJar == null?
+            new String[]{testJarLocation, "-o", instrumentedJarLocation}:
+            new String[]{testJarLocation, "-o", instrumentedJarLocation, "--rt-jar", rtJar});
       Assert.assertTrue("expected to create /tmp/test.jar", new File(instrumentedJarLocation).exists());   
       instrumentedJarBuilt = true;
     }
@@ -82,11 +93,19 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
       System.setProperty("dynamicCGFilter", tmpFile.getCanonicalPath());
     }
     try {
-      testMain.invoke(null, (Object)new String[0]);      
+      testMain.invoke(null, (Object)new String[0]);    
     } catch (Throwable e) {
       // exceptions here are from program being instrumented
       // this is fine, since we are collecting its call graph
       // and exceptions are possible behavior.
+
+      // well, most errors are fine.  On the other hand, low-level 
+      // class loading errors likely indicate a bug in instrumentation,
+      // which is often tested with this test.
+      while (e.getCause() != null) {
+        Assert.assertFalse(String.valueOf(e.getCause()), e.getCause() instanceof LinkageError);
+        e = e.getCause();
+      }
     }
     
     // the VM is not exiting, so stop tracing explicitly

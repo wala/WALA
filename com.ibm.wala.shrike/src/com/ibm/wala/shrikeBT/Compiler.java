@@ -30,6 +30,8 @@ import com.ibm.wala.shrikeBT.analysis.Verifier;
  */
 public abstract class Compiler implements Constants {
   // input
+  final private boolean isConstructor;
+  
   final private boolean isStatic;
 
   final private String classType;
@@ -90,7 +92,7 @@ public abstract class Compiler implements Constants {
    * @throws IllegalArgumentException if instructions is null
    * @throws IllegalArgumentException if instructionsToBytecodes is null
    */
-  public Compiler(boolean isStatic, String classType, String signature, IInstruction[] instructions, ExceptionHandler[][] handlers,
+  public Compiler(boolean isConstructor, boolean isStatic, String classType, String signature, IInstruction[] instructions, ExceptionHandler[][] handlers,
       int[] instructionsToBytecodes) {
     if (instructionsToBytecodes == null) {
       throw new IllegalArgumentException("instructionsToBytecodes is null");
@@ -108,6 +110,7 @@ public abstract class Compiler implements Constants {
       throw new IllegalArgumentException("Instructions/handlers length mismatch");
     }
 
+    this.isConstructor = isConstructor;
     this.isStatic = isStatic;
     this.classType = classType;
     this.signature = signature;
@@ -120,7 +123,7 @@ public abstract class Compiler implements Constants {
    * Extract the data for the method to be compiled from the MethodData container.
    */
   protected Compiler(MethodData info) {
-    this(info.getIsStatic(), info.getClassType(), info.getSignature(), info.getInstructions(), info.getHandlers(), info
+    this(info.getName().equals("<init>"), info.getIsStatic(), info.getClassType(), info.getSignature(), info.getInstructions(), info.getHandlers(), info
         .getInstructionsToBytecodes());
   }
 
@@ -935,6 +938,22 @@ public abstract class Compiler implements Constants {
           curOffset += 2;
           break;
         }
+        case OP_invokedynamic: {
+          InvokeDynamicInstruction inv = (InvokeDynamicInstruction) instr;
+          String sig = inv.getMethodSignature();
+          int cpIndex;
+
+          if (presetConstants != null && presetConstants == inv.getLazyConstantPool()) {
+            cpIndex = ((InvokeDynamicInstruction.Lazy) inv).getCPIndex();
+          } else {
+            cpIndex = allocateConstantPoolInterfaceMethod(inv.getClassType(), inv.getMethodName(), sig);
+          }
+          writeShort(curOffset, cpIndex);
+          code[curOffset + 2] = 0;
+          code[curOffset + 3] = 0;
+          curOffset += 4;
+          break;
+        }
         case OP_invokeinterface: {
           InvokeInstruction inv = (InvokeInstruction) instr;
           String sig = inv.getMethodSignature();
@@ -951,7 +970,7 @@ public abstract class Compiler implements Constants {
           curOffset += 4;
           break;
         }
-        case OP_new:
+       case OP_new:
           writeShort(curOffset, allocateConstantPoolClassType(((NewInstruction) instr).getType()));
           curOffset += 2;
           break;
@@ -1365,7 +1384,7 @@ public abstract class Compiler implements Constants {
     int[] rawHandlers = buildRawHandlers(start, start + len);
     int[] bytecodeMap = buildBytecodeMap(start, start + len);
 
-    auxMethods.add(new Output(name, sig, newCode, rawHandlers, bytecodeMap, maxLocals, maxStack, true));
+    auxMethods.add(new Output(name, sig, newCode, rawHandlers, bytecodeMap, maxLocals, maxStack, true, null));
 
     maxStack = savedMaxStack;
 
@@ -1662,7 +1681,7 @@ public abstract class Compiler implements Constants {
   }
 
   private void makeTypes() {
-    Verifier v = new Verifier(isStatic, classType, signature, instructions, handlers);
+    Verifier v = new Verifier(isConstructor, isStatic, classType, signature, instructions, handlers, instructionsToBytecodes);
     if (hierarchy != null) {
       v.setClassHierarchy(hierarchy);
     }
@@ -1700,7 +1719,7 @@ public abstract class Compiler implements Constants {
       }
     }
     mainMethod = new Output(null, null, code, buildRawHandlers(0, instructions.length), buildBytecodeMap(0, instructions.length),
-        maxLocals, maxStack, isStatic);
+        maxLocals, maxStack, isStatic, instructionsToOffsets);
 
     instructionsToOffsets = null;
     branchTargets = null;
@@ -1750,8 +1769,10 @@ public abstract class Compiler implements Constants {
 
     final private int maxStack;
 
+    final private int[] instructionsToOffsets;
+    
     Output(String name, String signature, byte[] code, int[] rawHandlers, int[] newBytecodesToOldBytecodes, int maxLocals,
-        int maxStack, boolean isStatic) {
+        int maxStack, boolean isStatic, int[] instructionsToOffsets) {
       this.code = code;
       this.name = name;
       this.signature = signature;
@@ -1760,6 +1781,7 @@ public abstract class Compiler implements Constants {
       this.isStatic = isStatic;
       this.maxLocals = maxLocals;
       this.maxStack = maxStack;
+      this.instructionsToOffsets = instructionsToOffsets;
     }
 
     /**
@@ -1769,6 +1791,10 @@ public abstract class Compiler implements Constants {
       return code;
     }
 
+    public int[] getInstructionOffsets() {
+      return instructionsToOffsets;
+    }
+    
     /**
      * @return the name of the method; either "null", if this code takes the place of the original method, or some string
      *         representing the name of a helper method

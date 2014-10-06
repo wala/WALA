@@ -11,15 +11,16 @@
 package com.ibm.wala.shrike.cg;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Map;
 
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.Disassembler;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.LoadInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.MethodEditor;
@@ -28,12 +29,16 @@ import com.ibm.wala.shrikeBT.ReturnInstruction;
 import com.ibm.wala.shrikeBT.ThrowInstruction;
 import com.ibm.wala.shrikeBT.Util;
 import com.ibm.wala.shrikeBT.analysis.Analyzer.FailureException;
+import com.ibm.wala.shrikeBT.analysis.ClassHierarchyStore;
 import com.ibm.wala.shrikeBT.analysis.Verifier;
+import com.ibm.wala.shrikeBT.shrikeCT.CTUtils;
 import com.ibm.wala.shrikeBT.shrikeCT.ClassInstrumenter;
 import com.ibm.wala.shrikeBT.shrikeCT.OfflineInstrumenter;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.ClassWriter;
+import com.ibm.wala.shrikeCT.ConstantPoolParser;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.config.SetOfClasses;
 
@@ -61,11 +66,13 @@ public class DynamicCallGraph {
 	
 	private static SetOfClasses filter;
 	
+	private static ClassHierarchyStore cha = new ClassHierarchyStore();
+	
 	public static void main(String[] args) throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException {
-	  instrumenter = new OfflineInstrumenter();
-
+	  ClassInstrumenter ci;
 	  Writer w = new BufferedWriter(new FileWriter("report", false));
 
+	  instrumenter = new OfflineInstrumenter();
 	  args = instrumenter.parseStandardArgs(args);
 			
 	  for(int i = 0; i < args.length - 1; i++) {
@@ -73,15 +80,30 @@ public class DynamicCallGraph {
 	      runtime = Class.forName(args[i+1]);
 	    } else if ("--exclusions".equals(args[i])) {
 	      filter = new FileOfClasses(new FileInputStream(args[i+1]));
+	    } else if ("--rt-jar".equals(args[i])) {
+	      System.err.println("using " + args[i+1] + " as stdlib");
+	      OfflineInstrumenter libReader = new OfflineInstrumenter();
+	      libReader.addInputJar(new File(args[i+1]));
+	      while ((ci = libReader.nextClass()) != null) {
+	        CTUtils.addClassToHierarchy(cha, ci.getReader());
+	      }
 	    }
 	  }
 	  
 	  instrumenter.setPassUnmodifiedClasses(true);
+
 	  instrumenter.beginTraversal();
-	  ClassInstrumenter ci;
+	  while ((ci = instrumenter.nextClass()) != null) {
+	    CTUtils.addClassToHierarchy(cha, ci.getReader());
+	  }
+
+	  instrumenter.setClassHierarchyProvider(cha);
+	  
+	  instrumenter.beginTraversal();
 	  while ((ci = instrumenter.nextClass()) != null) {
 	    doClass(ci, w);
 	  }
+	  
 	  instrumenter.close();
 	}
 
@@ -93,7 +115,8 @@ public class DynamicCallGraph {
 		w.write("Class: " + className + "\n");
 		w.flush();
 
-		ClassReader r = ci.getReader();
+		final ClassReader r = ci.getReader();
+		
 		for (int m = 0; m < ci.getReader().getMethodCount(); m++) {
 			final MethodData d = ci.visitMethod(m);
 
@@ -114,6 +137,7 @@ public class DynamicCallGraph {
 
 				if (verify) {
 					Verifier v = new Verifier(d);
+					v.setClassHierarchy(cha);
 					v.verify();
 				}
 
@@ -124,6 +148,7 @@ public class DynamicCallGraph {
 				final String theMethod = r.getMethodName(m).concat(r.getMethodType(m));
 				final boolean isConstructor = theMethod.contains("<init>");
 				final boolean nonStatic = !java.lang.reflect.Modifier.isStatic(r.getMethodAccessFlags(m));
+	
 				me.insertAtStart(new MethodEditor.Patch() {
 				  @Override
           public void emitTo(MethodEditor.Output w) {
@@ -173,8 +198,7 @@ public class DynamicCallGraph {
 						});
 					}
 				});
-
-				
+			
 				// this updates the data d
 				me.applyPatches();
 
@@ -186,13 +210,67 @@ public class DynamicCallGraph {
 
 				if (verify) {
 					Verifier v = new Verifier(d);
+          v.setClassHierarchy(cha);
 					v.verify();
 				}
 			}
 		}
 
 		if (ci.isChanged()) {
-			ClassWriter cw = ci.emitClass();
+		  ClassWriter cw = new ClassWriter() {
+		    private final Map<Object, Integer> entries = HashMapFactory.make();
+		    
+		    {
+		      ConstantPoolParser p = r.getCP();
+		      for(int i = 1; i < p.getItemCount(); i++) {
+		        switch (p.getItemType(i)) {
+		        case CONSTANT_Integer:
+		          entries.put(new Integer(p.getCPInt(i)), i);
+		          break;
+		        case CONSTANT_Long:
+              entries.put(new Long(p.getCPLong(i)), i);
+              break;
+		        case CONSTANT_Float:
+              entries.put(new Float(p.getCPFloat(i)), i);
+              break;
+		        case CONSTANT_Double:
+              entries.put(new Double(p.getCPDouble(i)), i);
+              break;
+		        case CONSTANT_Utf8:
+		          entries.put(p.getCPUtf8(i), i);
+		          break;
+		        case CONSTANT_String:
+              entries.put(new CWString(p.getCPString(i)), i);
+              break;
+		        case CONSTANT_Class:
+              entries.put(new CWClass(p.getCPClass(i)), i);
+              break;
+		        case CONSTANT_MethodHandle:
+		        case CONSTANT_MethodType:
+		        case CONSTANT_InvokeDynamic:
+		        }
+		      }
+		    }
+		    
+		    private int findExistingEntry(Object o) {
+		      if (entries.containsKey(o)) {
+		        return entries.get(o);
+		      } else {
+		        return -1;
+		      }
+		    }
+		    
+        @Override
+        protected int addCPEntry(Object o, int size) {
+          int entry = findExistingEntry(o);
+          if (entry != -1) {
+            return entry;
+          } else {
+            return super.addCPEntry(o, size);
+          }
+        }
+		  };
+			ci.emitClass(cw);
 			instrumenter.outputModifiedClass(ci, cw);
 		}
 	}

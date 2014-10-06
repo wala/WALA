@@ -40,10 +40,9 @@ public abstract class SSAPutInstruction extends SSAFieldAccessInstruction {
   @Override
   public String toString(SymbolTable symbolTable) {
     if (isStatic()) {
-      return "putstatic " + getValueString(symbolTable, val) + " " + getDeclaredField();
+      return "putstatic " + getDeclaredField() + " = " + getValueString(symbolTable, val);
     } else {
-      return "putfield " + getValueString(symbolTable, getRef()) + " = " + getValueString(symbolTable, val) + " "
-          + getDeclaredField();
+      return "putfield " + getValueString(symbolTable, getRef()) + "." + getDeclaredField() + " = " + getValueString(symbolTable, val);
     }
   }
 

@@ -3,6 +3,7 @@ package com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test;
 import java.io.IOException;
 import java.net.URL;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;

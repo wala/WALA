@@ -16,7 +16,7 @@ import java.util.HashMap;
 /**
  * This class formats and writes class data into JVM format.
  */
-public final class ClassWriter implements ClassConstants {
+public class ClassWriter implements ClassConstants {
   // input
   private int majorVersion = 46;
 
@@ -82,10 +82,10 @@ public final class ClassWriter implements ClassConstants {
     abstract byte getType();
   }
 
-  static class CWString extends CWItem {
+  public static class CWString extends CWItem {
     final private String s;
 
-    CWString(String s) {
+    public CWString(String s) {
       this.s = s;
     }
 
@@ -105,10 +105,10 @@ public final class ClassWriter implements ClassConstants {
     }
   }
 
-  static class CWClass extends CWItem {
+  public static class CWClass extends CWItem {
     final private String c;
 
-    CWClass(String c) {
+    public CWClass(String c) {
       this.c = c;
     }
 
@@ -265,7 +265,7 @@ public final class ClassWriter implements ClassConstants {
     forceAddCPEntries = force;
   }
 
-  private int addCPEntry(Object o, int size) {
+  protected int addCPEntry(Object o, int size) {
     if (cachedCPEntries == null) {
       throw new IllegalArgumentException("Cannot add a new constant pool entry during makeBytes() processing!");
     }
