@@ -984,7 +984,7 @@ public class DexIMethod implements IBytecodeMethod {
 				break;
 			case MOVE_EXCEPTION:
 				instructions.add(new UnaryOperation(instLoc,
-						UnaryOperation.OpID.MOVE, ((Instruction11x)inst).getRegisterA(),
+						UnaryOperation.OpID.MOVE_EXCEPTION, ((Instruction11x)inst).getRegisterA(),
 						getExceptionReg(), inst.opcode, this));
 				break;
 			case RETURN_VOID:

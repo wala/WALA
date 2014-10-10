@@ -289,7 +289,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
 
         @Override
         public boolean isUnaryNoOp() {
-            return true;
+            return false;
         }
 
         @Override
@@ -299,9 +299,14 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
 //          Exception e = new Exception("evaluating a MeetOperator");
 //          e.printStackTrace();
 //          return NOT_CHANGED;
+            
+        	if (cfg.getDexMethod().getReference().toString().equals("< Application, Lcom/google/android/gms/tagmanager/v$a, onOpen(Landroid/database/sqlite/SQLiteDatabase;)V >")) {
+        		System.err.println("got here");
+        	}
+
             if (!bb.isCatchBlock()) {
                 return meet(lhs, rhs, bb, meeter) ? CHANGED : NOT_CHANGED;
-            } else {
+            } else {            	
                 return meetForCatchBlock(lhs, rhs, bb, meeter) ? CHANGED : NOT_CHANGED;
             }
         }
@@ -418,6 +423,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
         // not already allocated.
         if (L.locals == null) {
             L.allocateLocals();
+            changed = true;
         }
 
         DexIMethod dMethod = (DexIMethod)L.getBasicBlock().getMethod();
@@ -428,10 +434,8 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
 
         int meet = meeter.meetStackAtCatchBlock(bb);
         if (L.locals[dMethod.getExceptionReg()] == TOP) {
-            if (meet != TOP) {
-                changed = true;
-                L.locals[dMethod.getExceptionReg()] = meet;
-            }
+        	changed = true;
+        	L.locals[dMethod.getExceptionReg()] = meet;
         } else if (meet != L.locals[dMethod.getExceptionReg()]) {
             changed = true;
             L.locals[dMethod.getExceptionReg()] = meet;
@@ -543,6 +547,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
         int nLocals = computeMeetNLocals(rhs);
         if (nLocals > -1 && L.locals == null) {
             L.allocateLocals();
+            changed = true;
         }
 
         // evaluate the element-wise meet over the locals.

@@ -14,8 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -28,6 +27,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -36,6 +36,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.intset.OrdinalSet;
 
 public class JVMLDalvikComparison extends DalvikCallGraphTestBase {
 
@@ -83,17 +84,32 @@ public class JVMLDalvikComparison extends DalvikCallGraphTestBase {
 		Set<MethodReference> androidMethods = applicationMethods(android.fst);
 		Set<MethodReference> javaMethods = applicationMethods(java.fst);
 		
-		Set<MethodReference> androidExtra = HashSetFactory.make(androidMethods);
-		androidExtra.removeAll(javaMethods);
-		System.err.println(androidExtra);
-		
-		Set<MethodReference> javaExtra = HashSetFactory.make(javaMethods);
-		javaExtra.removeAll(androidMethods);
-		System.err.println(javaExtra);
-		
-		System.err.println(edgeDiff(android.fst, java.fst));
-		
-		System.err.println(edgeDiff(java.fst, android.fst));
+		if (!androidMethods.containsAll(javaMethods)) {
+			Set<MethodReference> androidExtra = HashSetFactory.make(androidMethods);
+			androidExtra.removeAll(javaMethods);	
+			Set<MethodReference> javaExtra = HashSetFactory.make(javaMethods);
+			javaExtra.removeAll(androidMethods);		
+			
+			System.err.println(edgeDiff(java.fst, android.fst));
+			System.err.println(javaExtra);
+
+			System.err.println(android.fst);
+			
+			for(CGNode n : android.fst) {
+				System.err.println("### " + n);
+				if (n.getIR() != null) {
+					System.err.println(n.getIR());
+				
+					for(int i = 1; i < n.getIR().getSymbolTable().getMaxValueNumber(); i++) {
+						LocalPointerKey x = new LocalPointerKey(n, i);
+						OrdinalSet<InstanceKey> s = android.snd.getPointsToSet(x);
+						if (s != null && !s.isEmpty()) {
+							System.err.println(i + ": " + s);
+						}
+					}
+				}
+			}
+		}
 		
 		Assert.assertTrue(androidMethods.containsAll(javaMethods));		
 	}

@@ -71,6 +71,7 @@ import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.PhiValue;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSACFG;
+import com.ibm.wala.ssa.SSACFG.ExceptionHandlerBasicBlock;
 import com.ibm.wala.ssa.SSAConditionalBranchInstruction;
 import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -271,8 +272,11 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             SSACFG.ExceptionHandlerBasicBlock newBB = (SSACFG.ExceptionHandlerBasicBlock) cfg.getNode(bbNumber);
             SSAGetCaughtExceptionInstruction s = newBB.getCatchInstruction();
             int exceptionValue;
+        	if (cfg.getMethod().getReference().toString().equals("< Application, Lcom/google/android/gms/tagmanager/v$a, onOpen(Landroid/database/sqlite/SQLiteDatabase;)V >")) {
+        		System.err.println("got here");
+        	}
             if (s == null) {
-                exceptionValue = symbolTable.newSymbol();
+            	exceptionValue = symbolTable.newSymbol();
                 s = insts.GetCaughtExceptionInstruction(bb.getLastInstructionIndex(), bbNumber, exceptionValue);
                 newBB.setCatchInstruction(s);
             } else {
@@ -387,7 +391,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             this.symbolTable = symbolTable;
             this.loader = dexCFG.getMethod().getDeclaringClass().getClassLoader().getReference();
 //            this.localMap = localMap;
-            init(this.new NodeVisitor(), this.new EdgeVisitor());
+            init(this.new NodeVisitor(cfg), this.new EdgeVisitor());
         }
 
         @Override
@@ -449,7 +453,13 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
          * Update the machine state to account for an instruction
          */
         class NodeVisitor extends BasicRegisterMachineVisitor {
-            // TODO: make sure all visit functions are overridden
+        	private final SSACFG cfg;
+        	
+			public NodeVisitor(SSACFG cfg) {
+				this.cfg = cfg;
+			}
+
+			// TODO: make sure all visit functions are overridden
 
             /**
              * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayLength(ArrayLengthInstruction)
@@ -1229,6 +1239,11 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                     }
                     emitInstruction(insts.ConversionInstruction(getCurrentInstructionIndex(), result, val, fromType, toType, overflows));
                 }
+                else if (instruction.op == UnaryOperation.OpID.MOVE_EXCEPTION) {
+                	int source = ((DexIMethod)dexCFG.getMethod()).getExceptionReg();
+                	workingState.setLocal(instruction.destination, source);
+                }
+                
                 else
                 {
                     emitInstruction(insts.UnaryOpInstruction(getCurrentInstructionIndex(), instruction.getOperator(), result, val));
@@ -1243,7 +1258,6 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                         else
                             workingState.setLocal(instruction.destination+1, workingState.getLocal(instruction.source+1));
                     }
-
                 }
             }
 
