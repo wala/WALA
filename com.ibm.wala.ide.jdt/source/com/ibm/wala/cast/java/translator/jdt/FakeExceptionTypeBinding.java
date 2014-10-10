@@ -440,4 +440,16 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
     return 0;
   }
 
+  @Override
+  public IMethodBinding getFunctionalInterfaceMethod() {
+    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
+    return null;
+  }
+
+  @Override
+  public IAnnotationBinding[] getTypeAnnotations() {
+    Assertions.UNREACHABLE("FakeExceptionTypeBinding ");
+    return null;
+  }
+
 }

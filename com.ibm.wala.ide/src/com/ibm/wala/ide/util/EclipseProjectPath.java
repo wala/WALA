@@ -29,11 +29,13 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.internal.core.ClasspathEntry;
 import org.eclipse.osgi.service.resolver.BundleDescription;
+import org.eclipse.osgi.service.resolver.ImportPackageSpecification;
 import org.eclipse.pde.core.plugin.IPluginModelBase;
 import org.eclipse.pde.internal.core.ClasspathUtilCore;
 import org.eclipse.pde.internal.core.PDECore;
-import org.eclipse.pde.internal.core.PDEStateHelper;
 
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.classLoader.JarFileModule;
@@ -239,13 +241,13 @@ public abstract class EclipseProjectPath<E, P> {
     bundlesProcessed.add(bd.getName());
 
     // handle the classpath entries for bd
-    ArrayList l = new ArrayList();
+    ArrayList<IClasspathEntry> l = new ArrayList<IClasspathEntry>();
     ClasspathUtilCore.addLibraries(findModel(bd), l);
     resolveClasspathEntries(project, l, loader, includeSource, false);
 
     // recurse to handle dependencies. put these in the Extension loader
-    for (BundleDescription b : PDEStateHelper.getImportedBundles(bd)) {
-      resolveBundleDescriptionClassPath(project, b, Loader.EXTENSION, includeSource);
+    for (ImportPackageSpecification b : bd.getImportPackages()) {
+      resolveBundleDescriptionClassPath(project, b.getBundle(), Loader.EXTENSION, includeSource);
     }
     for (BundleDescription b : bd.getResolvedRequires()) {
       resolveBundleDescriptionClassPath(project, b, Loader.EXTENSION, includeSource);
