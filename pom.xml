@@ -48,7 +48,12 @@
 		<module>com.ibm.wala.ide.jsdt.tests</module>
 		<module>com.ibm.wala.ide.jdt</module>
 		<module>com.ibm.wala.ide.jdt.test</module>
+
+		<module>com.ibm.wala.dalvik</module>
+
 		<module>com.ibm.wala-repository</module>
+
+
 	</modules>
 	<build>
 		<plugins>
