@@ -57,7 +57,7 @@ public class Mangler {
 
   public static void main(String[] args) throws Exception {
     for (int i = 0; i < 1; i++) {
-      instrumenter = new OfflineInstrumenter();
+      instrumenter = new OfflineInstrumenter(true);
 
       Writer w = new BufferedWriter(new FileWriter("report", false));
 

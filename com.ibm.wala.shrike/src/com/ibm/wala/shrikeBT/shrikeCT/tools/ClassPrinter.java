@@ -72,7 +72,7 @@ public class ClassPrinter {
   }
 
   public static void main(String[] args) throws Exception {
-    OfflineInstrumenter oi = new OfflineInstrumenter();
+    OfflineInstrumenter oi = new OfflineInstrumenter(true);
     args = oi.parseStandardArgs(args);
 
     PrintWriter w = new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.out)));

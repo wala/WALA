@@ -1681,7 +1681,7 @@ public abstract class Compiler implements Constants {
   }
 
   private void makeTypes() {
-    Verifier v = new Verifier(isConstructor, isStatic, classType, signature, instructions, handlers, instructionsToBytecodes);
+    Verifier v = new Verifier(isConstructor, isStatic, classType, signature, instructions, handlers, instructionsToBytecodes, null);
     if (hierarchy != null) {
       v.setClassHierarchy(hierarchy);
     }

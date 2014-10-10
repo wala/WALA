@@ -13,6 +13,7 @@ package com.ibm.wala.shrikeBT.analysis;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
 
@@ -71,12 +72,14 @@ public class Analyzer {
   protected int[][] backEdges;
 
   protected int[] instToBC;
+
+  protected String[][] varTypes;
   
   protected final static String[] noStrings = new String[0];
 
   protected final static int[] noEdges = new int[0];
 
-  public Analyzer(boolean isConstructor, boolean isStatic, String classType, String signature, IInstruction[] instructions, ExceptionHandler[][] handlers, int[] instToBC) {
+  public Analyzer(boolean isConstructor, boolean isStatic, String classType, String signature, IInstruction[] instructions, ExceptionHandler[][] handlers, int[] instToBC, String[][] vars) {
     if (instructions == null) {
       throw new IllegalArgumentException("null instructions");
     }
@@ -95,6 +98,7 @@ public class Analyzer {
     this.instructions = instructions;
     this.handlers = handlers;
     this.instToBC = instToBC;
+    this.varTypes = vars;
   }
 
   /**
@@ -203,6 +207,15 @@ public class Analyzer {
       return t1;
     }
     
+    if (String.valueOf(t1).equals("L;") || String.valueOf(t2).equals("L;")) {
+      System.err.println("++ " + t1 + " -- " + t2 + " ++");
+      if (String.valueOf(t1).equals("L;")) {
+        return t2;
+      } else {
+        return t1;
+      }
+    }
+    
     if (t1 == thisType || t2 == thisType || t1 == topType || t2 == topType) {
       return topType;
     }
@@ -213,7 +226,7 @@ public class Analyzer {
     
     String x = ClassHierarchy.findCommonSupertype(hierarchy, patchType(t1), patchType(t2));
 
-    if ("L?;".equals(x) && ("J".equals(t1) || "J".equals(t2))) {
+    if ("L?;".equals(x)) {
       System.err.println(t1 + " -- " + t2);
     }
     
@@ -694,6 +707,28 @@ public class Analyzer {
             instr.visit(localsUpdate); // visit localStore before popping
             System.arraycopy(curStack, popped, curStack, 0, curStackSize - popped);
             curStackSize -= popped;
+            
+            if (varTypes != null) {
+            if (instr instanceof IStoreInstruction) {
+              int local = ((IStoreInstruction)instr).getVarIndex();
+              if (Constants.TYPE_null.equals(curLocals[local])) {
+                for(int idx : new int[]{i, i+1}) {
+                  int bc = instToBC[idx];
+                  if (bc == 667 && local == 16) {
+                    System.err.println("got here");
+                  }
+                  if (bc != -1 && varTypes != null && varTypes.length > bc && varTypes[bc] != null) {
+                    if (varTypes[bc].length > local && varTypes[bc][local] != null) {
+                      String declaredType = varTypes[bc][local];
+                      curLocals[local] = declaredType;
+                      
+                      System.err.println("setting local " + local + " to " + declaredType + " at " + instToBC[i] + " in " + classType + " " + signature);
+                    }
+                  }
+                }
+              }
+            }
+            }
           }
         }
 
@@ -710,8 +745,13 @@ public class Analyzer {
           }
         }
         
+        //System.err.println(i + " -- " + Arrays.toString(curLocals) + " -- " + Arrays.toString(curStack));
+        
         int[] targets = instr.getBranchTargets();
         for (int j = 0; j < targets.length; j++) {
+          if (targets[j] == 29 && classType.contains("MetaClassImpl;") && signature.contains("(Ljava/lang/String;Lorg/codehaus/groovy/reflection/CachedClass;)")) {
+              System.err.println("got here");
+          }
           if (mergeTypes(targets[j], curStack, curStackSize, curLocals, curLocalsSize[0], path)) {
             computeTypes(targets[j], visitor, makeTypesAt, path);
           }
@@ -830,11 +870,11 @@ public class Analyzer {
   }
 
   protected Analyzer(MethodData info) {
-    this(info.getName().equals("<init>"), info.getIsStatic(), info.getClassType(), info.getSignature(), info.getInstructions(), info.getHandlers(), info.getInstructionsToBytecodes());
+    this(info.getName().equals("<init>"), info.getIsStatic(), info.getClassType(), info.getSignature(), info.getInstructions(), info.getHandlers(), info.getInstructionsToBytecodes(), null);
   }
 
-  protected Analyzer(MethodData info, int[] instToBC) {
-    this(info.getName().equals("<init>"), info.getIsStatic(), info.getClassType(), info.getSignature(), info.getInstructions(), info.getHandlers(), instToBC);
+  protected Analyzer(MethodData info, int[] instToBC, String[][] vars) {
+    this(info.getName().equals("<init>"), info.getIsStatic(), info.getClassType(), info.getSignature(), info.getInstructions(), info.getHandlers(), instToBC, vars);
   }
 
   public static Analyzer createAnalyzer(MethodData info) {

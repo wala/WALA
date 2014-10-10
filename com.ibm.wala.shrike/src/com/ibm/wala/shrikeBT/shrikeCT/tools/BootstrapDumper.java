@@ -42,7 +42,7 @@ public class BootstrapDumper {
   }
 
   public static void main(String[] args) throws Exception {
-    OfflineInstrumenter oi = new OfflineInstrumenter();
+    OfflineInstrumenter oi = new OfflineInstrumenter(true);
     String[] classpathEntries = oi.parseStandardArgs(args);
     
     PrintWriter w = new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.out)));

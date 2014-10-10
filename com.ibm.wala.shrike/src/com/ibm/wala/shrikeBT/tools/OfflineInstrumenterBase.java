@@ -27,6 +27,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 
 import com.ibm.wala.shrikeBT.analysis.ClassHierarchyProvider;
 

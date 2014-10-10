@@ -41,7 +41,7 @@ public class InterfaceAnalyzer {
   final static HashMap<String, TypeStats> typeStats = new HashMap<String, TypeStats>();
 
   public static void main(String[] args) throws Exception {
-    OfflineInstrumenter instrumenter = new OfflineInstrumenter();
+    OfflineInstrumenter instrumenter = new OfflineInstrumenter(true);
 
     Writer w = new BufferedWriter(new OutputStreamWriter(System.out));
 

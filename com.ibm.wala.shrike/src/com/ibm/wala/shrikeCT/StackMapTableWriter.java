@@ -1,9 +1,6 @@
 package com.ibm.wala.shrikeCT;
 
-import static com.ibm.wala.shrikeBT.Constants.TYPE_double;
-import static com.ibm.wala.shrikeBT.Constants.TYPE_float;
-import static com.ibm.wala.shrikeBT.Constants.TYPE_int;
-import static com.ibm.wala.shrikeBT.Constants.TYPE_long;
+import static com.ibm.wala.shrikeBT.Constants.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -54,8 +51,8 @@ public class StackMapTableWriter extends Element {
 
   }
   
-  public StackMapTableWriter(ClassWriter writer, MethodData method, Output output, ClassHierarchyProvider cha) throws FailureException, IOException {
-    this(writer, stackMapTable(writer, method, output, cha));
+  public StackMapTableWriter(ClassWriter writer, MethodData method, Output output, ClassHierarchyProvider cha, String[][] vars) throws FailureException, IOException {
+    this(writer, stackMapTable(writer, method, output, cha, vars));
   }
   
   private static List<StackMapFrame> remapStackFrames(List<StackMapFrame> sm, int[] newBytecodesToOldBytecodes) {
@@ -97,6 +94,8 @@ public class StackMapTableWriter extends Element {
   static StackMapType item(String type) {
     if (type == null) {
       return Item.ITEM_Top;
+    } else if (type.equals(TYPE_null)) {
+      return Item.ITEM_Null;
     } else if (type.equals(Analyzer.topType)) {
       return Item.ITEM_Top;
     } else if (type.equals(Analyzer.thisType)) {
@@ -138,7 +137,7 @@ public class StackMapTableWriter extends Element {
 
   static StackMapType[] trim(StackMapType[] types) {
     int i = types.length-1;
-    while (i >= 0 && (types[i] == null || types[i] == Item.ITEM_Null)) {
+    while (i >= 0 && (types[i] == null || types[i] == Item.ITEM_Null || types[i] == Item.ITEM_Top)) {
       i--;
     }
     
@@ -153,12 +152,24 @@ public class StackMapTableWriter extends Element {
     }
   }
   
+  private static String hackUnknown(String type) {
+    if (type == null) {
+      return type;
+    } else if (type.startsWith("[")) {
+      return "[" + hackUnknown(type.substring(1));
+    } else if ("L?;".equals(type)) {
+      return "Ljava/lang/Object;";
+    } else {
+      return type;
+    }
+  }
+  
   static StackMapType[] types(String[] types, boolean locals) {
     StackMapType[] stackTypes = new StackMapType[ types.length ];
     
     int x = 0;
     for(int j = 0; j < types.length; j++) {
-      StackMapType stackType = item("L?;".equals(types[j])? "Ljava/lang/Object;": types[j]);
+      StackMapType stackType = item(hackUnknown(types[j]));
       stackTypes[x++] = stackType;
       if (locals && stackType.size() == 2) {
         j++;
@@ -178,13 +189,13 @@ public class StackMapTableWriter extends Element {
     return false;
   }
   
-  public static List<StackMapFrame> stackMapTable(ClassWriter writer, MethodData method, Output output, ClassHierarchyProvider cha) throws FailureException, IOException {
+  public static List<StackMapFrame> stackMapTable(ClassWriter writer, MethodData method, Output output, ClassHierarchyProvider cha, String[][] vars) throws FailureException, IOException {
     List<StackMapFrame> frames = new ArrayList<StackMapFrame>();
     
     int[] instructionToBytecode = output.getInstructionOffsets();
     IInstruction[] insts = method.getInstructions();
     
-    Verifier typeChecker = new Verifier(method, instructionToBytecode);
+    Verifier typeChecker = new Verifier(method, instructionToBytecode, vars);
     if (cha != null) {
       typeChecker.setClassHierarchy(cha);
     }

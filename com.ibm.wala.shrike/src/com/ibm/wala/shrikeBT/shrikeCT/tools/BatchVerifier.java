@@ -48,7 +48,7 @@ public class BatchVerifier {
   private static int errors = 0;
 
   public static void main(String[] args) throws Exception {
-    OfflineInstrumenter oi = new OfflineInstrumenter();
+    OfflineInstrumenter oi = new OfflineInstrumenter(true);
     args = oi.parseStandardArgs(args);
 
     for (int i = 0; i < args.length; i++) {

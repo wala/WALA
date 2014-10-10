@@ -287,8 +287,8 @@ public final class Verifier extends Analyzer {
   /**
    * Initialize a verifier.
    */
-  public Verifier(boolean isConstructor, boolean isStatic, String classType, String signature, IInstruction[] instructions, ExceptionHandler[][] handlers, int[] instToBC) {
-    super(isConstructor, isStatic, classType, signature, instructions, handlers, instToBC);
+  public Verifier(boolean isConstructor, boolean isStatic, String classType, String signature, IInstruction[] instructions, ExceptionHandler[][] handlers, int[] instToBC, String[][] vars) {
+    super(isConstructor, isStatic, classType, signature, instructions, handlers, instToBC, vars);
   }
 
   /**
@@ -300,8 +300,8 @@ public final class Verifier extends Analyzer {
     super(info);
   }
 
-  public Verifier(MethodData info, int[] instToBC) throws NullPointerException {
-    super(info, instToBC);
+  public Verifier(MethodData info, int[] instToBC, String[][] vars) throws NullPointerException {
+    super(info, instToBC, vars);
   }
 
   /**

@@ -277,6 +277,11 @@ public final class ClassHierarchy {
   }
 
   private static String findCommonSupertypeHierarchy(ClassHierarchyProvider hierarchy, String t1, String t2) {
+
+    if (hierarchy != null && t1.contains("Reader") && t2.contains("Reader")) {
+      System.err.println("got here");
+    }
+    
     if (isSubtypeOf(hierarchy, t1, t2) == YES) {
       return t2;
     } else if (isSubtypeOf(hierarchy, t2, t1) == YES) {

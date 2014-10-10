@@ -60,6 +60,8 @@ public class DynamicCallGraph {
 	private final static boolean disasm = true;
 	private final static boolean verify = true;
 
+	private static boolean patchExits = true;
+	
 	private static OfflineInstrumenter instrumenter;
 
 	private static Class<?> runtime = Runtime.class;
@@ -72,24 +74,26 @@ public class DynamicCallGraph {
 	  ClassInstrumenter ci;
 	  Writer w = new BufferedWriter(new FileWriter("report", false));
 
-	  instrumenter = new OfflineInstrumenter();
-	  args = instrumenter.parseStandardArgs(args);
-			
-	  for(int i = 0; i < args.length - 1; i++) {
-	    if ("--runtime".equals(args[i])) {
-	      runtime = Class.forName(args[i+1]);
-	    } else if ("--exclusions".equals(args[i])) {
-	      filter = new FileOfClasses(new FileInputStream(args[i+1]));
-	    } else if ("--rt-jar".equals(args[i])) {
-	      System.err.println("using " + args[i+1] + " as stdlib");
-	      OfflineInstrumenter libReader = new OfflineInstrumenter();
-	      libReader.addInputJar(new File(args[i+1]));
-	      while ((ci = libReader.nextClass()) != null) {
-	        CTUtils.addClassToHierarchy(cha, ci.getReader());
+	   for(int i = 0; i < args.length - 1; i++) {
+	      if ("--runtime".equals(args[i])) {
+	        runtime = Class.forName(args[i+1]);
+	      } else if ("--exclusions".equals(args[i])) {
+	        filter = new FileOfClasses(new FileInputStream(args[i+1]));
+	      } else if ("--dont-patch-exits".equals(args[i])) {
+	        patchExits = false;
+	      } else if ("--rt-jar".equals(args[i])) {
+	        System.err.println("using " + args[i+1] + " as stdlib");
+	        OfflineInstrumenter libReader = new OfflineInstrumenter(true);
+	        libReader.addInputJar(new File(args[i+1]));
+	        while ((ci = libReader.nextClass()) != null) {
+	          CTUtils.addClassToHierarchy(cha, ci.getReader());
+	        }
 	      }
 	    }
-	  }
-	  
+
+	  instrumenter = new OfflineInstrumenter(!patchExits);
+	  args = instrumenter.parseStandardArgs(args);
+				  
 	  instrumenter.setPassUnmodifiedClasses(true);
 
 	  instrumenter.beginTraversal();
@@ -137,7 +141,7 @@ public class DynamicCallGraph {
 
 				if (verify) {
 					Verifier v = new Verifier(d);
-					v.setClassHierarchy(cha);
+					// v.setClassHierarchy(cha);
 					v.verify();
 				}
 
@@ -163,42 +167,44 @@ public class DynamicCallGraph {
 				  }
 				});
 
-				me.addMethodExceptionHandler(null, new MethodEditor.Patch() { 
-          @Override
-          public void emitTo(Output w) {
-            w.emit(ConstantInstruction.makeString(theClass));
-            w.emit(ConstantInstruction.makeString(theMethod));
-            //if (nonStatic)
-            //  w.emit(LoadInstruction.make(Constants.TYPE_Object, 0)); //load this
-            //else
-              w.emit(Util.makeGet(runtime, "NULL_TAG"));
-              // w.emit(ConstantInstruction.make(Constants.TYPE_null, null));
-            w.emit(ConstantInstruction.make(1)); // true
-            w.emit(Util.makeInvoke(runtime, "termination", new Class[] {String.class, String.class, Object.class, boolean.class}));
-            w.emit(ThrowInstruction.make(false));
-          }
-        });
-				
-				me.visitInstructions(new MethodEditor.Visitor() {
-					@Override
-					public void visitReturn(ReturnInstruction instruction) {
-						insertBefore(new MethodEditor.Patch() {
-							@Override
-              public void emitTo(MethodEditor.Output w) {
-								w.emit(ConstantInstruction.makeString(theClass));
-                w.emit(ConstantInstruction.makeString(theMethod));
-								if (nonStatic)
-									w.emit(LoadInstruction.make(Constants.TYPE_Object, 0)); //load this
-								else
-								  w.emit(Util.makeGet(runtime, "NULL_TAG"));
-									// w.emit(ConstantInstruction.make(Constants.TYPE, null));
-								w.emit(ConstantInstruction.make(0)); // false
-								w.emit(Util.makeInvoke(runtime, "termination", new Class[] {String.class, String.class, Object.class, boolean.class}));
-							}
-						});
-					}
-				});
-			
+				if (patchExits) {
+				  me.addMethodExceptionHandler(null, new MethodEditor.Patch() { 
+				    @Override
+				    public void emitTo(Output w) {
+				      w.emit(ConstantInstruction.makeString(theClass));
+				      w.emit(ConstantInstruction.makeString(theMethod));
+				      //if (nonStatic)
+				      //  w.emit(LoadInstruction.make(Constants.TYPE_Object, 0)); //load this
+				      //else
+				      w.emit(Util.makeGet(runtime, "NULL_TAG"));
+				      // w.emit(ConstantInstruction.make(Constants.TYPE_null, null));
+				      w.emit(ConstantInstruction.make(1)); // true
+				      w.emit(Util.makeInvoke(runtime, "termination", new Class[] {String.class, String.class, Object.class, boolean.class}));
+				      w.emit(ThrowInstruction.make(false));
+				    }
+				  });
+
+				  me.visitInstructions(new MethodEditor.Visitor() {
+				    @Override
+				    public void visitReturn(ReturnInstruction instruction) {
+				      insertBefore(new MethodEditor.Patch() {
+				        @Override
+				        public void emitTo(MethodEditor.Output w) {
+				          w.emit(ConstantInstruction.makeString(theClass));
+				          w.emit(ConstantInstruction.makeString(theMethod));
+				          if (nonStatic)
+				            w.emit(LoadInstruction.make(Constants.TYPE_Object, 0)); //load this
+				          else
+				            w.emit(Util.makeGet(runtime, "NULL_TAG"));
+				          // w.emit(ConstantInstruction.make(Constants.TYPE, null));
+				          w.emit(ConstantInstruction.make(0)); // false
+				          w.emit(Util.makeInvoke(runtime, "termination", new Class[] {String.class, String.class, Object.class, boolean.class}));
+				        }
+				      });
+				    }
+				  });
+				}
+
 				// this updates the data d
 				me.applyPatches();
 
@@ -210,7 +216,7 @@ public class DynamicCallGraph {
 
 				if (verify) {
 					Verifier v = new Verifier(d);
-          v.setClassHierarchy(cha);
+          // v.setClassHierarchy(cha);
 					v.verify();
 				}
 			}

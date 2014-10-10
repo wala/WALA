@@ -93,7 +93,7 @@ public class CopyWriter {
 
     final ArrayList<ZipEntry> entries = new ArrayList<ZipEntry>();
 
-    instrumenter = new OfflineInstrumenter();
+    instrumenter = new OfflineInstrumenter(true);
     instrumenter.setManifestBuilder(new OfflineInstrumenter.ManifestBuilder() {
       @Override
       public void addEntry(ZipEntry ze) {

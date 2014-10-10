@@ -63,11 +63,13 @@ final public class ClassInstrumenter {
   
   private final ClassHierarchyProvider cha;
   
+  private final boolean reuseStackMaps;
+  
   /**
    * Create a class instrumenter from raw bytes.
    */
-  public ClassInstrumenter(String inputName, byte[] bytes, ClassHierarchyProvider cha) throws InvalidClassFileException {
-    this(inputName, new ClassReader(bytes), cha);
+  public ClassInstrumenter(String inputName, byte[] bytes, ClassHierarchyProvider cha, boolean reuseStackMaps) throws InvalidClassFileException {
+    this(inputName, new ClassReader(bytes), cha, reuseStackMaps);
   }
 
   /**
@@ -91,12 +93,13 @@ final public class ClassInstrumenter {
    * 
    * @throws IllegalArgumentException if cr is null
    */
-  public ClassInstrumenter(String inputName, ClassReader cr, ClassHierarchyProvider cha) throws InvalidClassFileException {
+  public ClassInstrumenter(String inputName, ClassReader cr, ClassHierarchyProvider cha, boolean reuseStackMaps) throws InvalidClassFileException {
     if (cr == null) {
       throw new IllegalArgumentException("cr is null");
     }
     this.cr = cr;
     this.cha = cha;
+    this.reuseStackMaps = reuseStackMaps;
     methods = new MethodData[cr.getMethodCount()];
     oldCode = new CodeReader[methods.length];
     cpr = CTDecoder.makeConstantPoolReader(cr);
@@ -426,7 +429,23 @@ final public class ClassInstrumenter {
             stacks = new StackMapTableWriter(w, sm, output.getNewBytecodesToOldBytecodes());            
             codeAttrCount++;
           } else { */
-            stacks = new StackMapTableWriter(w, md, output, cha);
+          String[][] varTypes = null;
+          int[] newToOld = output.getNewBytecodesToOldBytecodes();
+          int[][] vars = LocalVariableTableReader.makeVarMap(oldCode);
+          if (vars != null) {
+            varTypes = new String[newToOld.length][];
+            for(int i = 0; i < newToOld.length; i++) {
+              int idx = newToOld[i];
+              if (idx != -1 && vars[idx] != null) {
+                varTypes[i] = new String[vars[idx].length / 2];
+                for(int j = 1; j < vars[idx].length; j += 2) {
+                  int type = vars[idx][j];
+                  varTypes[i][j/2] = type==0? null: oldCode.getClassReader().getCP().getCPUtf8(type);
+                }
+              }
+            }
+          }
+          stacks = new StackMapTableWriter(w, md, output, cha, varTypes);
             codeAttrCount++;
           // }
         } catch (IOException | FailureException e) {

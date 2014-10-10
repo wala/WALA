@@ -97,19 +97,9 @@ public final class LocalVariableTableReader extends AttributeReader {
                 + " in LocalVariableTable");
           }
 
-          int rangeStart = startPC;
-          while (rangeStart < startPC + length) {
-            int rangeLength = 1;
-            while (rangeStart + rangeLength < startPC + length && r[rangeStart + rangeLength] == r[rangeStart]) {
-              rangeLength++;
-            }
-
-            int[] newVector = makeVarVector(r[rangeStart], varIndex, nameIndex, typeIndex);
-            for (int k = rangeStart; k < rangeStart + rangeLength; k++) {
-              r[k] = newVector;
-            }
-
-            rangeStart += rangeLength;
+          for (int k = startPC; k < startPC + length; k++) {
+            int[] newVector = makeVarVector(r[k], varIndex, nameIndex, typeIndex);
+            r[k] = newVector;
           }
         }
       }

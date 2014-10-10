@@ -61,7 +61,6 @@ public class Bench {
 
   public static void main(String[] args) throws Exception {
     for (int i = 0; i < 1; i++) {
-      instrumenter = new OfflineInstrumenter();
 
       Writer w = new BufferedWriter(new FileWriter("report", false));
 
@@ -74,6 +73,7 @@ public class Bench {
           doException = true;
         }
       }
+      instrumenter = new OfflineInstrumenter(!doException);
       instrumenter.setPassUnmodifiedClasses(true);
       instrumenter.beginTraversal();
       ClassInstrumenter ci;
