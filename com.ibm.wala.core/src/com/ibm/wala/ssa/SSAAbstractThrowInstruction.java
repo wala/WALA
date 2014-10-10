@@ -19,7 +19,7 @@ public abstract class SSAAbstractThrowInstruction extends SSAInstruction {
 
   public SSAAbstractThrowInstruction(int iindex, int exception) {
     super(iindex);
-    //assert exception > 0;
+    assert exception > 0;
     this.exception = exception;
   }
 
