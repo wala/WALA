@@ -8,6 +8,7 @@ import com.ibm.wala.shrikeCT.StackMapConstants.Item;
 import com.ibm.wala.shrikeCT.StackMapConstants.ObjectType;
 import com.ibm.wala.shrikeCT.StackMapConstants.StackMapFrame;
 import com.ibm.wala.shrikeCT.StackMapConstants.StackMapType;
+import com.ibm.wala.shrikeCT.StackMapConstants.UninitializedType;
 
 public class StackMapTableReader extends AttributeReader {
   private List<StackMapFrame> frames;
@@ -18,7 +19,9 @@ public class StackMapTableReader extends AttributeReader {
   
   private StackMapType item(int offset) throws InvalidClassFileException {
     Item item = StackMapConstants.items[cr.getByte(offset)];
-    if (item.isObject()) {
+    if (Item.ITEM_Uninitalized == item) {
+      return new UninitializedType("#" + cr.getUShort(offset+1) + "#unknown");      
+    } else if (Item.ITEM_Object == item) {
       return new ObjectType(cr.getCP().getCPClass(cr.getUShort(offset+1)));
     } else {
       return item;
@@ -32,7 +35,7 @@ public class StackMapTableReader extends AttributeReader {
     int ptr = attr + 8;
     for(int i = 0; i < entries; i++) {
       int frameType = (0x000000ff & cr.getByte(ptr++));
-      if (frameType < 63) {
+      if (frameType < 64) {
         int offset = frameType;
         frames.add(new StackMapFrame(frameType, offset, new StackMapType[0], new StackMapType[0]));
       } else if (frameType < 128) {
@@ -73,7 +76,7 @@ public class StackMapTableReader extends AttributeReader {
         StackMapType[] stack = new StackMapType[ numStack ];
         for(int j = 0; j < numStack; j++) {
           stack[j] = item(ptr);
-          ptr += (stack[j] instanceof ObjectType)? 3: 1;
+          ptr += (stack[j].isObject())? 3: 1;
         }
         
         frames.add(new StackMapFrame(frameType, offset, locals, stack));                

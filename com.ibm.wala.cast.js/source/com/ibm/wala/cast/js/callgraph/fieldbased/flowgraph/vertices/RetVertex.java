@@ -10,6 +10,8 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
 
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+
 
 /**
  * A return vertex represents all return values of a given function.
@@ -17,7 +19,7 @@ package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
  * @author mschaefer
  *
  */
-public class RetVertex extends Vertex {
+public class RetVertex extends Vertex implements PointerKey {
 	private final FuncVertex func;
 
 	RetVertex(FuncVertex func) {

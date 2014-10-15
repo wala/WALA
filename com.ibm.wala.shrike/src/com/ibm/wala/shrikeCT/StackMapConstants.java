@@ -14,6 +14,8 @@ public class StackMapConstants {
       void write(OutputStream s, ClassWriter writer) throws IOException;
       
       int size();
+      
+      boolean isObject();
   }
     
   public enum Item implements StackMapType {
@@ -53,6 +55,7 @@ public class StackMapConstants {
       this.code = (byte)code;
     }
 
+    @Override
     public boolean isObject() {
       return false;
     }
@@ -90,6 +93,11 @@ public class StackMapConstants {
     }
     
     @Override
+    public boolean isObject() {
+      return true;
+    }
+    
+    @Override
     public String toString() {
       return "uninit:" + type;
     }
@@ -111,6 +119,11 @@ public class StackMapConstants {
       return Item.ITEM_Object.size();
     }
     
+    @Override
+    public boolean isObject() {
+      return true;
+    }
+
     @Override
     public String toString() {
       return "obj:" + type;

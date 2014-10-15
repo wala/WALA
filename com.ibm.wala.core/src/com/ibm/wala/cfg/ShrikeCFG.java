@@ -41,7 +41,7 @@ import com.ibm.wala.util.warnings.Warnings;
 /**
  * A graph of basic blocks.
  */
-public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
+public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> implements BytecodeCFG  {
 
   private static final boolean DEBUG = false;
 
@@ -513,6 +513,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
     return s.toString();
   }
 
+  @Override
   public Set<ExceptionHandler> getExceptionHandlers() {
     return exceptionHandlers;
   }

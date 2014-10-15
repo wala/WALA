@@ -1236,12 +1236,22 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         public void action(AbstractFieldPointerKey fieldKey) {
           if (!representsNullType(fieldKey.getInstanceKey())) {
             system.newConstraint(lhs, assignOperator, fieldKey);
+            AbstractFieldPointerKey unknown = getBuilder().fieldKeyForUnknownWrites(fieldKey);
+            if (unknown != null) {
+              system.newConstraint(lhs, assignOperator, unknown);            
+            }
           }
         }
       });
     }
   }
 
+  /**
+   * If the given fieldKey represents a concrete field, return the corresponding field key that
+   * represents all writes to unknown fields that could potentially alias fieldKey
+   */
+  protected abstract AbstractFieldPointerKey fieldKeyForUnknownWrites(AbstractFieldPointerKey fieldKey);
+  
   /**
    * 
    * Is definingMethod the same as the method represented by opNode?  We need this since the names for 

@@ -13,8 +13,8 @@ package com.ibm.wala.cast.js.test;
 import java.io.IOException;
 import java.util.List;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstCallGraphUtil;
@@ -215,11 +215,23 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
       new Object[] { "tests/try.js/tryFinally",
           new String[] { "tests/try.js/targetOne", "tests/try.js/targetTwo", "tests/try.js/two" } },
       new Object[] { "tests/try.js/tryCatchFinally",
-          new String[] { "tests/try.js/targetOne", "tests/try.js/targetTwo", "tests/try.js/three", "tests/try.js/two" } } };
+          new String[] { "tests/try.js/targetOne", "tests/try.js/targetTwo", "tests/try.js/three", "tests/try.js/two" } },
+      new Object[] { "tests/try.js/tryCatchTwice",
+          new String[] { "tests/try.js/targetOne", "tests/try.js/targetTwo", "tests/try.js/three", "tests/try.js/two" } },
+      new Object[] { "tests/try.js/testRet",
+          new String[] { "tests/try.js/three", "tests/try.js/two" } }
+  };
 
   @Test
   public void testTry() throws IOException, IllegalArgumentException, CancelException, WalaException {
-    CallGraph CG = JSCallGraphBuilderUtil.makeScriptCG("tests", "try.js");
+    PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "try.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    /*
+    boolean x = CAstCallGraphUtil.AVOID_DUMP;
+    CAstCallGraphUtil.AVOID_DUMP = false;
+    CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.AVOID_DUMP = x;
+    */
     verifyGraphAssertions(CG, assertionsForTry);
   }
 
@@ -716,6 +728,42 @@ public abstract class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     CallGraph CG = B.makeCallGraph(B.getOptions());
     CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
     // verifyGraphAssertions(CG, assertionsForDateProperty);
+  }
+
+  private static final Object[][] assertionsForLoops = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/loops.js" } },
+    new Object[] { "tests/loops.js", new String[] { "tests/loops.js/three",  "tests/loops.js/four"} }
+  };
+
+  @Ignore("need to fix this.  bug from Sukyoung's group")
+  @Test
+  public void testLoops() throws IllegalArgumentException, IOException, CancelException, WalaException {
+    PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "loops.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    boolean x = CAstCallGraphUtil.AVOID_DUMP;
+    CAstCallGraphUtil.AVOID_DUMP = false;
+    CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.AVOID_DUMP = x;
+    verifyGraphAssertions(CG, assertionsForLoops);
+  }
+
+  private static final Object[][] assertionsForPrimitiveStrings = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/primitive_strings.js" } },
+    new Object[] { "tests/primitive_strings.js", new String[] { "tests/primitive_strings.js/f1", "tests/primitive_strings.js/f1"} },
+    new Object[] { "tests/primitive_strings.js/f2", new String[] { "prologue.js/String_prototype_concat" } },
+    new Object[] { "tests/primitive_strings.js/f1", new String[] { "prologue.js/String_prototype_concat" } },
+  };
+
+  @Ignore("need to fix this.  bug from Sukyoung's group")
+  @Test
+  public void testPrimitiveStrings() throws IllegalArgumentException, IOException, CancelException, WalaException {
+    PropagationCallGraphBuilder B = JSCallGraphBuilderUtil.makeScriptCGBuilder("tests", "primitive_strings.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    boolean x = CAstCallGraphUtil.AVOID_DUMP;
+    CAstCallGraphUtil.AVOID_DUMP = false;
+    CAstCallGraphUtil.dumpCG(B.getPointerAnalysis(), CG);
+    CAstCallGraphUtil.AVOID_DUMP = x;
+    verifyGraphAssertions(CG, assertionsForPrimitiveStrings);
   }
 
   Object[][] renamingAssertions =  { 

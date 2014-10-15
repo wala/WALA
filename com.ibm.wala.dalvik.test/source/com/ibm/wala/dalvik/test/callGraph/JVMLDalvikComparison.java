@@ -29,7 +29,9 @@ import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.ExceptionReturnValueKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.MethodReference;
@@ -84,15 +86,15 @@ public class JVMLDalvikComparison extends DalvikCallGraphTestBase {
 		Set<MethodReference> androidMethods = applicationMethods(android.fst);
 		Set<MethodReference> javaMethods = applicationMethods(java.fst);
 		
-		if (!androidMethods.containsAll(javaMethods)) {
-			Set<MethodReference> androidExtra = HashSetFactory.make(androidMethods);
-			androidExtra.removeAll(javaMethods);	
-			Set<MethodReference> javaExtra = HashSetFactory.make(javaMethods);
-			javaExtra.removeAll(androidMethods);		
-			
-			System.err.println(edgeDiff(java.fst, android.fst));
-			System.err.println(javaExtra);
+		Set<Pair<CGNode, CGNode>> javaExtraEdges = edgeDiff(java.fst, android.fst);
 
+		if (!javaExtraEdges.isEmpty()) {
+			Set<MethodReference> javaExtraNodes = HashSetFactory.make(javaMethods);
+			javaExtraNodes.removeAll(androidMethods);		
+
+			System.err.println(javaExtraEdges);
+			System.err.println(javaExtraNodes);
+			
 			System.err.println(android.fst);
 			
 			for(CGNode n : android.fst) {
@@ -100,6 +102,8 @@ public class JVMLDalvikComparison extends DalvikCallGraphTestBase {
 				if (n.getIR() != null) {
 					System.err.println(n.getIR());
 				
+					System.err.println("return: " + android.snd.getPointsToSet(new ReturnValueKey(n)));
+					System.err.println("exceptions: " + android.snd.getPointsToSet(new ExceptionReturnValueKey(n)));					
 					for(int i = 1; i < n.getIR().getSymbolTable().getMaxValueNumber(); i++) {
 						LocalPointerKey x = new LocalPointerKey(n, i);
 						OrdinalSet<InstanceKey> s = android.snd.getPointsToSet(x);
@@ -111,7 +115,7 @@ public class JVMLDalvikComparison extends DalvikCallGraphTestBase {
 			}
 		}
 		
-		Assert.assertTrue(androidMethods.containsAll(javaMethods));		
+		Assert.assertTrue(javaExtraEdges.isEmpty());		
 	}
 	
 	@Test

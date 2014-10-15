@@ -30,7 +30,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.internal.core.ClasspathEntry;
 import org.eclipse.osgi.service.resolver.BundleDescription;
 import org.eclipse.osgi.service.resolver.ImportPackageSpecification;
 import org.eclipse.pde.core.plugin.IPluginModelBase;
@@ -286,6 +285,7 @@ public abstract class EclipseProjectPath<E, P> {
     return true;
   }
 
+  @SuppressWarnings("unchecked")
   protected void resolveClasspathEntries(P project, List l, ILoader loader, boolean includeSource, boolean entriesFromTopLevelProject) {
     for (int i = 0; i < l.size(); i++) {
       resolveClasspathEntry(project, resolve((E)l.get(i)), loader, includeSource, entriesFromTopLevelProject);

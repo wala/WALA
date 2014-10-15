@@ -423,12 +423,9 @@ final public class ClassInstrumenter {
         codeAttrCount++;
       }
       if (oldCode.getClassReader().getMajorVersion() > 50) {
-        try { /*
+        try { 
           List<StackMapFrame> sm = StackMapTableReader.readStackMap(oldCode);
-          if (sm != null) {
-            stacks = new StackMapTableWriter(w, sm, output.getNewBytecodesToOldBytecodes());            
-            codeAttrCount++;
-          } else { */
+
           String[][] varTypes = null;
           int[] newToOld = output.getNewBytecodesToOldBytecodes();
           int[][] vars = LocalVariableTableReader.makeVarMap(oldCode);
@@ -445,9 +442,9 @@ final public class ClassInstrumenter {
               }
             }
           }
-          stacks = new StackMapTableWriter(w, md, output, cha, varTypes);
-            codeAttrCount++;
-          // }
+          
+          stacks = new StackMapTableWriter(w, md, output, cha, varTypes, sm);
+          codeAttrCount++;
         } catch (IOException | FailureException e) {
           // TODO Auto-generated catch block
           e.printStackTrace();

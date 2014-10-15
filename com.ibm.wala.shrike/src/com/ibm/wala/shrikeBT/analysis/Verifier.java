@@ -35,6 +35,7 @@ import com.ibm.wala.shrikeBT.IShiftInstruction;
 import com.ibm.wala.shrikeBT.IStoreInstruction;
 import com.ibm.wala.shrikeBT.ITypeTestInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
+import com.ibm.wala.shrikeBT.InvokeDynamicInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.MonitorInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
@@ -231,6 +232,10 @@ public final class Verifier extends Analyzer {
 
     @Override
     public void visitInvoke(IInvokeInstruction instruction) {
+      if (instruction instanceof InvokeDynamicInstruction) {
+        return;
+      }
+      
       // make sure constant pool entries are dereferenced
       String classType = instruction.getClassType();
       String signature = instruction.getMethodSignature();

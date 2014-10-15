@@ -20,13 +20,22 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.UnknownVerte
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VarVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.Vertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VertexFactory;
+import com.ibm.wala.cast.types.AstMethodReference;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.TypeFilter;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.Predicate;
@@ -162,7 +171,17 @@ public class FlowGraph implements Iterable<Vertex> {
       }
 
       @Override
-      public OrdinalSetMapping<InstanceKey> getInstanceKeyMapping() {
+      public Collection<FuncVertex> getInstanceKeys() {
+        return factory.getFuncVertices();
+      }
+
+      @Override
+      public boolean isFiltered(PointerKey pk) {
+         return false;
+      }
+
+      @Override
+      public OrdinalSetMapping<FuncVertex> getInstanceKeyMapping() {
         // TODO Auto-generated method stub
         return null;
       }
@@ -174,20 +193,113 @@ public class FlowGraph implements Iterable<Vertex> {
       }
 
       @Override
-      public Collection<InstanceKey> getInstanceKeys() {
-        // TODO Auto-generated method stub
-        return null;
-      }
-
-      @Override
-      public boolean isFiltered(PointerKey pk) {
-         return false;
-      }
-
-      @Override
       public HeapModel getHeapModel() {
-        assert false;
-        return null;
+        return new HeapModel() {
+
+          private FuncVertex getVertex(CGNode n) {
+            IMethod m = n.getMethod();
+            if (m.getSelector().equals(AstMethodReference.fnSelector)) {
+              IClass fun = m.getDeclaringClass();
+              return factory.makeFuncVertex(fun);
+            } else {
+              return null;
+            }       
+          }
+          
+          @Override
+          public PointerKey getPointerKeyForLocal(CGNode node, int valueNumber) {
+            FuncVertex function = getVertex(node);
+            if (function != null) {
+              return factory.makeVarVertex(function, valueNumber);
+            } else {
+              assert false;
+              return null;
+            }
+          }
+
+          @Override
+          public PointerKey getPointerKeyForReturnValue(CGNode node) {
+            FuncVertex function = getVertex(node);
+            if (function != null) {
+              return factory.makeRetVertex(function);
+            } else {
+              assert false;
+              return null;
+            }
+          }
+
+          @Override
+          public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField field) {
+            String f = field.getName().toString();
+            return factory.makePropVertex(f);
+          }
+
+          @Override
+          public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
+            // TODO Auto-generated method stub
+            return null;
+          }
+
+          @Override
+          public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
+            // TODO Auto-generated method stub
+            return null;
+          }
+
+          @Override
+          public <T> InstanceKey getInstanceKeyForConstant(TypeReference type, T S) {
+            // TODO Auto-generated method stub
+            return null;
+          }
+
+          @Override
+          public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type) {
+            // TODO Auto-generated method stub
+            return null;
+          }
+
+          @Override
+          public InstanceKey getInstanceKeyForMetadataObject(Object obj, TypeReference objType) {
+            // TODO Auto-generated method stub
+            return null;
+          }
+
+          @Override
+          public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, TypeFilter filter) {
+            // TODO Auto-generated method stub
+            return null;
+          }
+
+          @Override
+          public PointerKey getPointerKeyForExceptionalReturnValue(CGNode node) {
+            // TODO Auto-generated method stub
+            return null;
+          }
+
+          @Override
+          public PointerKey getPointerKeyForStaticField(IField f) {
+            // TODO Auto-generated method stub
+            return null;
+          }
+
+          @Override
+          public PointerKey getPointerKeyForArrayContents(InstanceKey I) {
+            // TODO Auto-generated method stub
+            return null;
+          }
+
+          @Override
+          public Iterator<PointerKey> iteratePointerKeys() {
+            // TODO Auto-generated method stub
+            return null;
+          }
+
+          @Override
+          public IClassHierarchy getClassHierarchy() {
+            // TODO Auto-generated method stub
+            return null;
+          }        
+        };
       }
 
       @Override

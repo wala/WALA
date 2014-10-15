@@ -2,10 +2,28 @@
 <?pde version="3.8"?><target name="WALA Eclipse Luna Target Platform" sequenceNumber="130">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.platform.ide" version="0.0.0"/>
-<unit id="org.eclipse.jdt.feature.group" version="0.0.0"/>
-<unit id="org.eclipse.pde.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.e4.rcp.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.ecf.core.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.ecf.core.ssl.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.ecf.filetransfer.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.ecf.filetransfer.httpclient4.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.ecf.filetransfer.httpclient4.ssl.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.ecf.filetransfer.ssl.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.common.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.emf.ecore.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.emf.sdk.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.equinox.p2.core.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.equinox.p2.extras.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.equinox.p2.rcp.feature.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.equinox.p2.user.ui.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.help.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.jdt.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.jdt.source.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.pde.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.platform.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.rcp.feature.group" version="0.0.0"/>
+<unit id="org.eclipse.sdk.ide" version="0.0.0"/>
+<unit id="org.eclipse.wst.jsdt.feature.feature.group" version="0.0.0"/>
 <unit id="org.eclipse.wst.web_ui.feature.feature.group" version="0.0.0"/>
 <repository location="http://download.eclipse.org/releases/luna"/>
 </location>

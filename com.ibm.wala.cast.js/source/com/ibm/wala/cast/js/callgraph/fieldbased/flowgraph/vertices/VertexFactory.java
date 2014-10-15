@@ -10,6 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
 
+import java.util.Collection;
 import java.util.Map;
 
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
@@ -55,7 +56,7 @@ public class VertexFactory {
 		return value;
 	}
 	
-	public Iterable<FuncVertex> getFuncVertices() {
+	public Collection<FuncVertex> getFuncVertices() {
 	  return funcVertexCache.values();
 	}
 

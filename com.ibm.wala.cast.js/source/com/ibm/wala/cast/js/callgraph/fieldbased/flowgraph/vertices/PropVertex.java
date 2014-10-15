@@ -10,13 +10,15 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
 
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+
 /**
  * A property vertex represents all properties with a given name.
  * 
  * @author mschaefer
  *
  */
-public class PropVertex extends Vertex {
+public class PropVertex extends Vertex implements PointerKey {
 	private final String propName;
 
 	PropVertex(String propName) {

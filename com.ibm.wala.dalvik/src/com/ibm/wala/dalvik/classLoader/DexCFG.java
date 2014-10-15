@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.cfg.AbstractCFG;
+import com.ibm.wala.cfg.BytecodeCFG;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.BytecodeLanguage;
 import com.ibm.wala.classLoader.IClass;
@@ -43,14 +44,13 @@ import com.ibm.wala.util.collections.ArrayIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
+import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.shrike.ShrikeUtil;
 import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
-public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock>{
+public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implements BytecodeCFG {
 	private static final Logger logger = LoggerFactory.getLogger(DexCFG.class);
-
-    //public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
 
     private static final boolean DEBUG = false;
 
@@ -664,9 +664,14 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock>{
     @Override
     public String toString() {
         StringBuffer s = new StringBuffer("");
+        BitVector catches = this.getCatchBlocks();
         for (Iterator<BasicBlock> it = iterator(); it.hasNext();) {
             BasicBlock bb = it.next();
-            s.append("BB").append(getNumber(bb)).append("\n");
+            s.append("BB").append(getNumber(bb));
+            if (catches.contains(bb.getNumber())) {
+            	s.append("<Handler>");
+            }
+            s.append("\n");
             for (int j = bb.getFirstInstructionIndex(); j <= bb.getLastInstructionIndex(); j++) {
                 s.append("  ").append(j).append("  ").append(getInstructions()[j]).append("\n");
             }

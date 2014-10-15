@@ -99,11 +99,6 @@ public class JavaEclipseProjectPath extends EclipseProjectPath<IClasspathEntry, 
 	  }
 	  case IClasspathEntry.CPE_CONTAINER: {
 		  try {
-
-		    for(IClasspathEntry x : JavaCore.getClasspathContainer(JavaRuntime.getDefaultJREContainerEntry().getPath(), project).getClasspathEntries()) {
-		      System.err.println("xxx " + x);
-		    }
-
 		    IClasspathContainer cont = JavaCore.getClasspathContainer(entry.getPath(), project);
 		    IClasspathEntry[] entries = cont.getClasspathEntries();
 		    resolveClasspathEntries(project, Arrays.asList(entries), cont.getKind() == IClasspathContainer.K_APPLICATION ? loader : Loader.PRIMORDIAL,

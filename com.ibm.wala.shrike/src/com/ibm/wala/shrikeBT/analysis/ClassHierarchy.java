@@ -137,7 +137,7 @@ public final class ClassHierarchy {
     if (t2.equals(Constants.TYPE_Object)) {
       return YES;
     } else {
-      int v = checkSupertypesContain(hierarchy, t1, t2);
+       int v = checkSupertypesContain(hierarchy, t1, t2);
       if (v == MAYBE) {
         v = checkSubtypesContain(hierarchy, t2, t1, new HashSet<String>());
       }
@@ -276,12 +276,7 @@ public final class ClassHierarchy {
     return r;
   }
 
-  private static String findCommonSupertypeHierarchy(ClassHierarchyProvider hierarchy, String t1, String t2) {
-
-    if (hierarchy != null && t1.contains("Reader") && t2.contains("Reader")) {
-      System.err.println("got here");
-    }
-    
+  private static String findCommonSupertypeHierarchy(ClassHierarchyProvider hierarchy, String t1, String t2) {    
     if (isSubtypeOf(hierarchy, t1, t2) == YES) {
       return t2;
     } else if (isSubtypeOf(hierarchy, t2, t1) == YES) {

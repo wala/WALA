@@ -295,14 +295,20 @@ public class ClosureExtractor extends CAstRewriterExt {
       epos.addGotoTarget(root.getChildCount() > 0 ? (String)root.getChild(0).getValue(): null, target);
       int label = labeller.addNode(target);
       // return { type: 'goto', target: <label> }
-      CAstNode returnLit = Ast.makeNode(OBJECT_LITERAL,
-          addExnFlow(Ast.makeNode(CALL,
-              addExnFlow(makeVarRef("Object"), JavaScriptTypes.ReferenceError, getCurrentEntity(), context),
-              Ast.makeConstant("ctor")), null, getCurrentEntity(), context),
-              Ast.makeConstant("type"),
-              Ast.makeConstant("goto"),
-              Ast.makeConstant("target"),
-              Ast.makeConstant(((double)label)+""));
+      CAstNode returnLit = 
+          addNode(
+              Ast.makeNode(OBJECT_LITERAL,
+              addExnFlow(
+                  Ast.makeNode(CALL,
+                      addExnFlow(makeVarRef("Object"), JavaScriptTypes.ReferenceError, getCurrentEntity(), context),
+                      Ast.makeConstant("ctor")), 
+                  null, getCurrentEntity(), context),
+          Ast.makeConstant("type"),
+          Ast.makeConstant("goto"),
+          Ast.makeConstant("target"),
+          Ast.makeConstant(((double)label)+"")),
+          getCurrentEntity().getControlFlow());
+
       addNode(returnLit, getCurrentEntity().getControlFlow());
       CAstNode newNode = Ast.makeNode(RETURN, returnLit);
       // remove outgoing cfg edges of the old node
@@ -333,6 +339,7 @@ public class ClosureExtractor extends CAstRewriterExt {
       CAstNode retval = copyNodes(root.getChild(0), cfg, new ChildPos(root, 0, context), nodeMap);
       CAstNode newNode = 
           Ast.makeNode(RETURN,
+            addNode(
               Ast.makeNode(OBJECT_LITERAL,
                   addExnFlow(Ast.makeNode(CALL,
                       addExnFlow(makeVarRef("Object"), JavaScriptTypes.ReferenceError, getCurrentEntity(), context),
@@ -340,19 +347,23 @@ public class ClosureExtractor extends CAstRewriterExt {
                       Ast.makeConstant("type"),
                       Ast.makeConstant("return"),
                       Ast.makeConstant("value"),
-                      retval));
+                      retval),
+              getCurrentEntity().getControlFlow()));
       nodeMap.put(Pair.make(root, context.key()), newNode);
       return newNode;
     } else {
       // return { type: 'return' }
       CAstNode newNode = 
           Ast.makeNode(RETURN,
+            addNode(
               Ast.makeNode(OBJECT_LITERAL,
                   addExnFlow(Ast.makeNode(CALL,
                       addExnFlow(makeVarRef("Object"), JavaScriptTypes.ReferenceError, getCurrentEntity(), context),
                       Ast.makeConstant("ctor")), null, getCurrentEntity(), context),
                       Ast.makeConstant("type"),
-                      Ast.makeConstant("return")));
+                      Ast.makeConstant("return")),
+                  getCurrentEntity().getControlFlow()));
+               
       nodeMap.put(Pair.make(root, context.key()), newNode);
       return newNode;
     }

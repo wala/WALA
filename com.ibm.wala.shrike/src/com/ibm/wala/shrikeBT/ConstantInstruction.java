@@ -517,6 +517,7 @@ public abstract class ConstantInstruction extends Instruction {
       // load of a class constant may trigger a ClassNotFoundException
       return true;
     }
+   
   }
 
   final static class LazyClass extends ConstClass {

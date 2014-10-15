@@ -56,6 +56,29 @@ function tryCatchFinally( x, targetOne, targetTwo ) {
   }
 }
 
+function tryCatchTwice( x, targetOne, targetTwo ) {
+  
+  try {
+    if (x.one < 7)
+      targetOne( x );
+    else
+      targetTwo( x );
+  } catch (e) {
+    e.two();
+  }
+
+  try {
+    if (x.one < 7)
+      targetOne( x );
+    else
+      targetTwo( x );
+  } catch (e) {
+    e.three();
+  }
+
+  return e;
+}
+
 o = {
  one: -12,
 
@@ -72,5 +95,11 @@ tryCatch(o, targetOne, targetTwo);
 tryFinally(o, targetOne, targetTwo);
 tryFinallyLoop(o, targetTwo);
 tryCatchFinally(o, targetOne, targetTwo);
+(function testRet() {
+  var e = tryCatchTwice(o, targetOne, targetTwo);
+  e.two();
+  e.three();
+})();
+
 
 

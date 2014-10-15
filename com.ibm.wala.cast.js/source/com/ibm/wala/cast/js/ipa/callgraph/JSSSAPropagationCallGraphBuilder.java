@@ -16,6 +16,7 @@ import java.util.Set;
 
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.cast.ipa.callgraph.AstSSAPropagationCallGraphBuilder;
+import com.ibm.wala.cast.ipa.callgraph.ReflectedFieldPointerKey;
 import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
 import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
 import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
@@ -167,6 +168,13 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     }
     return "prototype".equals(fieldName) || "constructor".equals(fieldName) || "arguments".equals(fieldName)
         || "class".equals(fieldName) || "$value".equals(fieldName) || "__proto__".equals(fieldName);
+  }
+
+  @Override
+  protected AbstractFieldPointerKey fieldKeyForUnknownWrites(AbstractFieldPointerKey fieldKey) {
+    // TODO: fix this.  null is wrong.
+    return null;
+    // return ReflectedFieldPointerKey.mapped(new ConcreteTypeKey(cha.lookupClass(JavaScriptTypes.String)), fieldKey.getInstanceKey());
   }
 
   // ///////////////////////////////////////////////////////////////////////////

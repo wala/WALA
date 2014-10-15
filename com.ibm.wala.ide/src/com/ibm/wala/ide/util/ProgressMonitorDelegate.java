@@ -52,10 +52,12 @@ public class ProgressMonitorDelegate implements IProgressMonitor {
   }
 
 /** BEGIN Custom change: subtasks and canceling */
+  @Override
   public void subTask(String subTask) {
     delegate.subTask(subTask);
   }
 
+  @Override
   public void cancel() {
     delegate.setCanceled(true);
   }

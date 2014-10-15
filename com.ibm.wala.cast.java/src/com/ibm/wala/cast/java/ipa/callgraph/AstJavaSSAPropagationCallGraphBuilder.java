@@ -56,6 +56,12 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
     return false;
   }
 
+  @Override
+  protected AbstractFieldPointerKey fieldKeyForUnknownWrites(AbstractFieldPointerKey fieldKey) {
+    assert false;
+    return null;
+  }
+
   // ///////////////////////////////////////////////////////////////////////////
   //
   // enclosing object pointer flow support

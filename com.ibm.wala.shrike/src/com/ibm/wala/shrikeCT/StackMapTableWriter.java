@@ -52,9 +52,13 @@ public class StackMapTableWriter extends Element {
   }
   
   public StackMapTableWriter(ClassWriter writer, MethodData method, Output output, ClassHierarchyProvider cha, String[][] vars) throws FailureException, IOException {
-    this(writer, stackMapTable(writer, method, output, cha, vars));
+    this(writer, stackMapTable(writer, method, output, cha, vars, null));
   }
-  
+
+  public StackMapTableWriter(ClassWriter writer, MethodData method, Output output, ClassHierarchyProvider cha, String[][] vars, List<StackMapFrame> reuseFrames) throws FailureException, IOException {
+    this(writer, stackMapTable(writer, method, output, cha, vars, reuseFrames));
+  }
+
   private static List<StackMapFrame> remapStackFrames(List<StackMapFrame> sm, int[] newBytecodesToOldBytecodes) {
     // mapping to new bytecode
     Map<Integer,Integer> oldToNew = HashMapFactory.make();
@@ -189,7 +193,9 @@ public class StackMapTableWriter extends Element {
     return false;
   }
   
-  public static List<StackMapFrame> stackMapTable(ClassWriter writer, MethodData method, Output output, ClassHierarchyProvider cha, String[][] vars) throws FailureException, IOException {
+  public static List<StackMapFrame> stackMapTable(ClassWriter writer, MethodData method, Output output, ClassHierarchyProvider cha, String[][] vars, List<StackMapFrame> reuseFrames) throws FailureException, IOException {
+    int idx = 0;
+    
     List<StackMapFrame> frames = new ArrayList<StackMapFrame>();
     
     int[] instructionToBytecode = output.getInstructionOffsets();
@@ -199,7 +205,7 @@ public class StackMapTableWriter extends Element {
     if (cha != null) {
       typeChecker.setClassHierarchy(cha);
     }
-    typeChecker.verifyCollectAll();
+    typeChecker.computeTypes();
     BitSet bbs = typeChecker.getBasicBlockStarts();
     
     int offset = 0;
@@ -210,9 +216,6 @@ public class StackMapTableWriter extends Element {
         if (isUselessGoto(insts[i], i)) {
           continue;
         }
-
-        // full frame
-        byte frameType = (byte)255;
         
         // offset delta
         int position = instructionToBytecode[i];
@@ -220,6 +223,18 @@ public class StackMapTableWriter extends Element {
         int frameOffset =  offset==0? position: position - offset - 1;
         offset = position;
         
+        if (reuseFrames != null) {
+          if (reuseFrames.get(idx).getOffset() == frameOffset) {
+            frames.add(reuseFrames.get(idx++));
+            continue;
+          } else {
+            reuseFrames = null;
+          } 
+        } 
+        
+        // full frame
+        byte frameType = (byte)255;
+
         // locals
         String[] localTypes = typeChecker.getLocalTypes()[i];
         StackMapType[] localWriteTypes;

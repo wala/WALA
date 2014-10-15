@@ -19,10 +19,10 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.cfg.AbstractCFG;
+import com.ibm.wala.cfg.BytecodeCFG;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.cfg.InducedCFG;
-import com.ibm.wala.cfg.ShrikeCFG;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
@@ -107,8 +107,8 @@ public class SSACFG implements ControlFlowGraph<SSAInstruction, ISSABasicBlock> 
       addPhisFromInducedCFG((InducedCFG) cfg);
       addPisFromInducedCFG((InducedCFG) cfg);
     }
-    if (cfg instanceof ShrikeCFG) {
-      recordExceptionTypes(((ShrikeCFG) cfg).getExceptionHandlers(), method.getDeclaringClass().getClassLoader());
+    if (cfg instanceof BytecodeCFG) {
+      recordExceptionTypes(((BytecodeCFG) cfg).getExceptionHandlers(), method.getDeclaringClass().getClassLoader());
     }
     this.instructions = instructions;
 

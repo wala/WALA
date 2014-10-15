@@ -40,7 +40,7 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.Pair;
 
 public abstract class AbstractJSProjectScopeTest {
-
+  
   protected final ZippedProjectData project;
 
   public AbstractJSProjectScopeTest(ZippedProjectData project) {
@@ -68,7 +68,7 @@ public abstract class AbstractJSProjectScopeTest {
     return JavaScriptEclipseProjectPath.make(p, Collections.<Pair<String,Plugin>>emptySet());
   }
 
-  @Ignore
+  @Ignore("works for me on luna, but ignored for now to avoid breaking juno")
   @Test
   public void testParsing() throws IOException, CoreException {
     Set<ModuleEntry> mes = JsdtUtil.getJavaScriptCodeFromProject(project.projectName);
@@ -77,9 +77,7 @@ public abstract class AbstractJSProjectScopeTest {
     System.err.println(info.calls.size());
     System.err.println("call graph:\n" + info.cg);
     Assert.assertTrue("cannot find any function calls", info.calls.size()>0);
-    
-    // JSDT call graph builder seems to have changed, and I no longer get any nodes
-    // Assert.assertTrue("cannot find any cg nodes", info.cg.getNumberOfNodes()>0);
+    Assert.assertTrue("cannot find any cg nodes", info.cg.getNumberOfNodes()>0);
   }
 
   @Test

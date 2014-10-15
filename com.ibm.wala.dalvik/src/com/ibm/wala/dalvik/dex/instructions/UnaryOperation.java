@@ -54,6 +54,7 @@ import com.ibm.wala.cast.ir.ssa.AstConstants;
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction.IOperator;
+import com.ibm.wala.util.debug.Assertions;
 
 public class UnaryOperation extends Instruction {
 
@@ -116,10 +117,6 @@ public class UnaryOperation extends Instruction {
     public IOperator getOperator() {
         switch(op)
         {
-        // moves
-        case MOVE:
-        case MOVE_WIDE:
-            return null;
         // SSA unary ops
         case NOT:
             return AstConstants.UnaryOp.BITNOT;
@@ -135,24 +132,8 @@ public class UnaryOperation extends Instruction {
             return IUnaryOpInstruction.Operator.NEG;
         case NEGDOUBLE:
             return IUnaryOpInstruction.Operator.NEG;
-        // SSA conversions
-        case DOUBLETOLONG:
-        case DOUBLETOFLOAT:
-        case INTTOBYTE:
-        case INTTOCHAR:
-        case INTTOSHORT:
-        case DOUBLETOINT:
-        case FLOATTODOUBLE:
-        case FLOATTOLONG:
-        case FLOATTOINT:
-        case LONGTODOUBLE:
-        case LONGTOFLOAT:
-        case LONGTOINT:
-        case INTTODOUBLE:
-        case INTTOFLOAT:
-        case INTTOLONG:
-            return null;
         default:
+        	Assertions.UNREACHABLE();
             return null;
         }
     }

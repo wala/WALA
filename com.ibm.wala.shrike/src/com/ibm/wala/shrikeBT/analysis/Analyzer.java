@@ -226,6 +226,10 @@ public class Analyzer {
     
     String x = ClassHierarchy.findCommonSupertype(hierarchy, patchType(t1), patchType(t2));
 
+    if (String.valueOf(t1).contains("groovy/lang/GroovyObject") || String.valueOf(t2).contains("groovy/lang/GroovyObject")) {
+      System.err.println(t1 + " -- " + t2 + " --> " + x); 
+     }
+
     if ("L?;".equals(x)) {
       System.err.println(t1 + " -- " + t2);
     }

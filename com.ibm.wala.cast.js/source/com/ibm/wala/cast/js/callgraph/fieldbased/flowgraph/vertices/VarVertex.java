@@ -10,6 +10,8 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
 
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+
 
 /**
  * A variable vertex represents an SSA variable inside a given function.
@@ -17,7 +19,7 @@ package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
  * @author mschaefer
  *
  */
-public final class VarVertex extends Vertex {
+public final class VarVertex extends Vertex implements PointerKey {
 	private final FuncVertex func;
 	private final int valueNumber;
 	

@@ -1326,7 +1326,16 @@ public class RhinoToAstTranslator {
 		CAstNode tryCatch;
 		
 		if (catches != null && catches.size() > 0) {
-			CAstNode var = Ast.makeConstant(catches.get(0).getVarName().getString());
+			String catchVarName = catches.get(0).getVarName().getString();
+      CAstNode var = Ast.makeConstant(catchVarName);
+
+	    arg.addNameDecl(
+	        noteSourcePosition(
+	            arg,
+	            Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(catchVarName, JSAstTranslator.Any)),
+	                readName(arg, null, "$$undefined")),
+	            node));
+
 			CAstNode code = Ast.makeNode(CAstNode.THROW, var);
 			for(int i = catches.size()-1; i >= 0; i--) {
 				CatchClause clause = catches.get(i);
@@ -1340,7 +1349,9 @@ public class RhinoToAstTranslator {
 			arg.cfg().map(catchBlock, catchBlock);
 			
 			TryCatchContext tryContext = new TryCatchContext(arg, catchBlock);
-			tryCatch = Ast.makeNode(CAstNode.TRY, visit(node.getTryBlock(), tryContext), catchBlock);
+			tryCatch = Ast.makeNode(CAstNode.TRY, 
+			    visit(node.getTryBlock(), tryContext), 
+			    /*Ast.makeNode(CAstNode.LOCAL_SCOPE,*/ catchBlock/*)*/);
 		} else {
 			tryCatch = visit(node.getTryBlock(), arg);
 		}

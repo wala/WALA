@@ -91,7 +91,7 @@ public class DynamicCallGraph {
 	      }
 	    }
 
-	  instrumenter = new OfflineInstrumenter(!patchExits);
+	  instrumenter = new OfflineInstrumenter(true);
 	  args = instrumenter.parseStandardArgs(args);
 				  
 	  instrumenter.setPassUnmodifiedClasses(true);

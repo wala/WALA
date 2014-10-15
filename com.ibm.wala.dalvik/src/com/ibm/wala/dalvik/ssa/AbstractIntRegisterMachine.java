@@ -340,24 +340,6 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
     protected interface Meeter {
 
         /**
-         * Return the integer that represents the meet of a particular stack slot at the entry to a basic block.
-         *
-         * @param slot The stack slot to meet
-         * @param rhs The values to meet
-         * @param bb The basic block at whose entry this meet occurs
-         * @return The value result of the meet
-         */
-//      int meetStack(int slot, int[] rhs, IBasicBlock<Instruction> bb);
-
-        /**
-         * Return the integer that represents stack slot 0 after a meet at the entry to a catch block.
-         *
-         * @param bb The basic block at whose entry this meet occurs
-         * @return The value of stack slot 0 after the meet
-         */
-        int meetStackAtCatchBlock(BasicBlock bb);
-
-        /**
          * Return the integer that represents the meet of a particular local at the entry to a basic block.
          *
          * @param n The number of the local
@@ -394,52 +376,10 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
      */
     private boolean meetForCatchBlock(IVariable lhs, IVariable[] rhs, BasicBlock bb, Meeter meeter) {
 
-        //TODO: do we need to check the meet of the catch block?  possibly compare the value of meet with the symboltable values of the exception registers?
-        boolean changed = meetRegistersAtCatchBlock(lhs, bb, meeter);
-
-        changed |= meetLocals(lhs, rhs, bb, meeter);
+        boolean changed = meetLocals(lhs, rhs, bb, meeter);
 
 //      int meet = meeter.meetStackAtCatchBlock(bb);
 //      boolean changed = meetLocals(lhs, rhs, bb, meeter);
-        return changed;
-    }
-
-    /**
-     * Evaluate a meet of the registers of machine states at the entry of a catch block.
-     *
-     * TODO: add some efficiency shortcuts. TODO: clean up and refactor.
-     *
-     * @param bb the basic block at whose entry the meet occurs
-     * @return true if the lhs value changes. false otherwise.
-     */
-    private boolean meetRegistersAtCatchBlock(IVariable lhs, BasicBlock bb, Meeter meeter) {
-        boolean changed = false;
-        MachineState L = (MachineState) lhs;
-
-        // evaluate the meet of the stack of height 1, which holds the exception
-        // object.
-
-        // allocate lhs registers if it's
-        // not already allocated.
-        if (L.locals == null) {
-            L.allocateLocals();
-            changed = true;
-        }
-
-        DexIMethod dMethod = (DexIMethod)L.getBasicBlock().getMethod();
-        //System.out.println("dMethod local size: " + dMethod.getExceptionReg() + " - local size: " + L.locals.length);
-        assert(L.locals.length == dMethod.getExceptionReg()+1);
-        for (int i = 0; i < L.locals.length; i++)
-        logger.debug("local: " + L.locals[i]);
-
-        int meet = meeter.meetStackAtCatchBlock(bb);
-        if (L.locals[dMethod.getExceptionReg()] == TOP) {
-        	changed = true;
-        	L.locals[dMethod.getExceptionReg()] = meet;
-        } else if (meet != L.locals[dMethod.getExceptionReg()]) {
-            changed = true;
-            L.locals[dMethod.getExceptionReg()] = meet;
-        }
         return changed;
     }
 

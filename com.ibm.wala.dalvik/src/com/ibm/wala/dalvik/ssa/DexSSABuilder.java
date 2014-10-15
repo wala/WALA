@@ -142,7 +142,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             boolean buildLocalMap, SSAPiNodePolicy piNodePolicy) {
         super(scfg);
         localMap = buildLocalMap ? new SSA2LocalMap(scfg, instructions.length, cfg.getNumberOfNodes(), method.getMaxLocals()) : null;
-        init(new SymbolTableMeeter(symbolTable, cfg, instructions, scfg), new SymbolicPropagator(scfg, instructions, symbolTable,
+        init(new SymbolTableMeeter(cfg, instructions, scfg), new SymbolicPropagator(scfg, instructions,
                 localMap, cfg, piNodePolicy));
         this.method = method;
         this.symbolTable = symbolTable;
@@ -156,16 +156,11 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
         final SSACFG cfg;
 
-//        final SSAInstruction[] instructions;
-
-        final SymbolTable symbolTable;
-
         final DexCFG dexCFG;
 
-        SymbolTableMeeter(SymbolTable symbolTable, SSACFG cfg, SSAInstruction[] instructions, DexCFG dexCFG) {
+        SymbolTableMeeter(SSACFG cfg, SSAInstruction[] instructions, DexCFG dexCFG) {
             this.cfg = cfg;
 //            this.instructions = instructions;
-            this.symbolTable = symbolTable;
             this.dexCFG = dexCFG;
         }
 
@@ -263,28 +258,6 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             }
             return true;
         }
-
-        /**
-         * @see com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine.Meeter#meetStackAtCatchBlock(BasicBlock)
-         */
-        public int meetStackAtCatchBlock(BasicBlock bb) {
-            int bbNumber = dexCFG.getNumber(bb);
-            SSACFG.ExceptionHandlerBasicBlock newBB = (SSACFG.ExceptionHandlerBasicBlock) cfg.getNode(bbNumber);
-            SSAGetCaughtExceptionInstruction s = newBB.getCatchInstruction();
-            int exceptionValue;
-        	if (cfg.getMethod().getReference().toString().equals("< Application, Lcom/google/android/gms/tagmanager/v$a, onOpen(Landroid/database/sqlite/SQLiteDatabase;)V >")) {
-        		System.err.println("got here");
-        	}
-            if (s == null) {
-            	exceptionValue = symbolTable.newSymbol();
-                s = insts.GetCaughtExceptionInstruction(bb.getLastInstructionIndex(), bbNumber, exceptionValue);
-                newBB.setCatchInstruction(s);
-            } else {
-                exceptionValue = s.getException();
-            }
-            return exceptionValue;
-
-        }
     }
 
     @Override
@@ -363,8 +336,6 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
         final SSAInstruction[] instructions;
 
-        final SymbolTable symbolTable;
-
         final DexCFG dexCFG;
 
         final SSACFG cfg;
@@ -380,7 +351,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
         final SSAPiNodePolicy piNodePolicy;
 
-        public SymbolicPropagator(DexCFG dexCFG, SSAInstruction[] instructions, SymbolTable symbolTable, SSA2LocalMap localMap,
+        public SymbolicPropagator(DexCFG dexCFG, SSAInstruction[] instructions, SSA2LocalMap localMap,
                 SSACFG cfg, SSAPiNodePolicy piNodePolicy) {
             super(dexCFG);
             this.piNodePolicy = null;// piNodePolicy;
@@ -388,7 +359,6 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             this.creators = new SSAInstruction[0];
             this.dexCFG = dexCFG;
             this.instructions = instructions;
-            this.symbolTable = symbolTable;
             this.loader = dexCFG.getMethod().getDeclaringClass().getClassLoader().getReference();
 //            this.localMap = localMap;
             init(this.new NodeVisitor(cfg), this.new EdgeVisitor());
@@ -469,7 +439,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                 int arrayRef = workingState.getLocal(instruction.source);
                 int dest = instruction.destination;
                 int length = reuseOrCreateDef();
-                workingState.setLocal(dest, length);
+                setLocal(dest, length);
 
                 emitInstruction(insts.ArrayLengthInstruction(getCurrentInstructionIndex(), length, arrayRef));
             }
@@ -485,7 +455,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 //              int index = workingState.pop();
 //              int arrayRef = workingState.pop();
                 int result = reuseOrCreateDef();
-                workingState.setLocal(dest, result);
+                setLocal(dest, result);
 //              workingState.push(result);
                 TypeReference t = instruction.getType();
 //              if (instruction.isAddressOf()) {
@@ -580,7 +550,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 //              int val2 = workingState.pop();
 //              int val1 = workingState.pop();
                 int result = reuseOrCreateDef();
-                workingState.setLocal(dest, result);
+                setLocal(dest, result);
 //              workingState.push(result);
 //              boolean isFloat = instruction.getType().equals(TYPE_double) || instruction.getType().equals(TYPE_float);
                 emitInstruction(insts.BinaryOpInstruction(getCurrentInstructionIndex(), instruction.getOperator(), false, instruction.isUnsigned(), result, val1, val2, !instruction.isFloat()));
@@ -611,7 +581,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 //              int val2 = workingState.pop();
 //              int val1 = workingState.pop();
                 int result = reuseOrCreateDef();
-                workingState.setLocal(dest, result);
+                setLocal(dest, result);
 //              workingState.push(result);
 //              boolean isFloat = instruction.getType().equals(TYPE_double) || instruction.getType().equals(TYPE_float);
                 try {
@@ -624,6 +594,11 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                     throw e;
                 }
             }
+
+			protected void setLocal(int dest, int result) {
+				assert result <= symbolTable.getMaxValueNumber();
+				workingState.setLocal(dest, result);
+			}
 
             /**
              * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitCheckCast(CheckCastInstruction)
@@ -705,7 +680,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                 {
                     Assertions.UNREACHABLE("unexpected constant instruction " + instruction);
                 }
-                workingState.setLocal(dest, symbol);
+                setLocal(dest, symbol);
 //              Language l = cfg.getMethod().getDeclaringClass().getClassLoader().getLanguage();
 //              TypeReference type = l.getConstantType(instruction.getValue());
 //              int symbol = 0;
@@ -785,7 +760,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 //                  int ref = workingState.pop();
 //                  emitInstruction(insts.GetInstruction(result, ref, f));
 //              }
-                workingState.setLocal(dest, result);
+                setLocal(dest, result);
 //              workingState.push(result);
             }
 
@@ -806,7 +781,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                 int dest = instruction.destination;
 //              int ref = workingState.pop();
                 int result = reuseOrCreateDef();
-                workingState.setLocal(dest, result);
+                setLocal(dest, result);
 //              workingState.push(result);
 //              TypeReference t = ShrikeUtil.makeTypeReference(loader, instruction.getType());
                 emitInstruction(insts.InstanceofInstruction(getCurrentInstructionIndex(), result, ref, instruction.type));
@@ -851,7 +826,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                 IInvokeInstruction.IDispatch code = instruction.getInvocationCode();
                 CallSiteReference site = CallSiteReference.make(getCurrentProgramCounter(), m, code);
                 int exc = reuseOrCreateException();
-                workingState.setLocal(dexCFG.getDexMethod().getExceptionReg(), exc);
+                setLocal(dexCFG.getDexMethod().getExceptionReg(), exc);
 
 
                 int n = instruction.args.length;
@@ -903,7 +878,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 //                  int dest = dexCFG.getDexMethod().regBank.getReturnReg().regID;
                     int dest = dexCFG.getDexMethod().getReturnReg();
 
-                    workingState.setLocal(dest, result);
+                    setLocal(dest, result);
                     SSAInstruction inst = insts.InvokeInstruction(getCurrentInstructionIndex(), result, params, exc, site);
                     //System.out.println("Emitting(2) InvokeInstruction: "+inst);
                     emitInstruction(inst);
@@ -980,7 +955,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                     emitInstruction(insts.NewInstruction(getCurrentInstructionIndex(), result, instruction.newSiteRef));
 //                  popN(instruction);
 //              }
-                workingState.setLocal(dest, result);
+                setLocal(dest, result);
 //              workingState.push(result);
             }
 
@@ -995,7 +970,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                     sizes[i] = workingState.getLocal(instruction.sizes[i]);
                 }
                 emitInstruction(insts.NewInstruction(getCurrentInstructionIndex(), result, instruction.newSiteRef, sizes));
-                workingState.setLocal(dest, result);
+                setLocal(dest, result);
             }
 
             @Override
@@ -1009,7 +984,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                     sizes[i] = symbolTable.getConstant(instruction.sizes[i]);
                 }
                 emitInstruction(insts.NewInstruction(getCurrentInstructionIndex(), result, instruction.newSiteRef, sizes));
-                workingState.setLocal(dest, result);
+                setLocal(dest, result);
 
                 for (int i = 0; i < instruction.args.length; i++)
                 {
@@ -1143,6 +1118,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             @Override
             public void visitThrow(Throw instruction) {
                 int throwable = workingState.getLocal(instruction.throwable);
+                assert symbolTable.getMaxValueNumber() >= throwable;
                 emitInstruction(insts.ThrowInstruction(getCurrentInstructionIndex(), throwable));
 //              if (instruction.isRethrow()) {
 //                  workingState.clearStack();
@@ -1160,12 +1136,33 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
              */
             @Override
             public void visitUnaryOperation(UnaryOperation instruction) {
+            	
+            	if (instruction.op == UnaryOperation.OpID.MOVE_EXCEPTION) {
+            		
+            		int idx = getCurrentInstructionIndex();
+            		int bbidx = dexCFG.getBlockForInstruction(idx).getNumber();
+            		ExceptionHandlerBasicBlock newBB = (ExceptionHandlerBasicBlock) cfg.getBasicBlock(bbidx);
+
+            		SSAGetCaughtExceptionInstruction s = newBB.getCatchInstruction();
+                    int exceptionValue;
+                     if (s == null) {
+                    	exceptionValue = symbolTable.newSymbol();
+                        s = insts.GetCaughtExceptionInstruction(newBB.getLastInstructionIndex(), bbidx, exceptionValue);
+                        newBB.setCatchInstruction(s);
+                    } else {
+                        exceptionValue = s.getException();
+                    }
+
+                 	setLocal(instruction.destination, exceptionValue);
+                	return;
+                }
+            	
                 //System.out.println("Instruction: " + getCurrentInstructionIndex());
                 int val = workingState.getLocal(instruction.source);
 //              int val = workingState.pop();
                 int dest = instruction.destination;
                 int result = reuseOrCreateDef();
-                workingState.setLocal(dest, result);
+                setLocal(dest, result);
 //              workingState.push(result);
                 if(instruction.isConversion())
                 {
@@ -1238,25 +1235,20 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                         throw new IllegalArgumentException("unknown conversion type "+instruction.op+" in unary instruction: "+instruction);
                     }
                     emitInstruction(insts.ConversionInstruction(getCurrentInstructionIndex(), result, val, fromType, toType, overflows));
-                }
-                else if (instruction.op == UnaryOperation.OpID.MOVE_EXCEPTION) {
-                	int source = ((DexIMethod)dexCFG.getMethod()).getExceptionReg();
-                	workingState.setLocal(instruction.destination, source);
-                }
-                
+                }        
                 else
                 {
-                    emitInstruction(insts.UnaryOpInstruction(getCurrentInstructionIndex(), instruction.getOperator(), result, val));
+                    // emitInstruction(insts.UnaryOpInstruction(getCurrentInstructionIndex(), instruction.getOperator(), result, val));
 
                     if (instruction.op == UnaryOperation.OpID.MOVE) {
-                        workingState.setLocal(instruction.destination, workingState.getLocal(instruction.source));
+                        setLocal(instruction.destination, workingState.getLocal(instruction.source));
                     }
                     else if (instruction.op == UnaryOperation.OpID.MOVE_WIDE) {
-                        workingState.setLocal(instruction.destination, workingState.getLocal(instruction.source));
+                        setLocal(instruction.destination, workingState.getLocal(instruction.source));
                         if (instruction.source == dexCFG.getDexMethod().getReturnReg())
-                            workingState.setLocal(instruction.destination+1, workingState.getLocal(instruction.source));
+                            setLocal(instruction.destination+1, workingState.getLocal(instruction.source));
                         else
-                            workingState.setLocal(instruction.destination+1, workingState.getLocal(instruction.source+1));
+                            setLocal(instruction.destination+1, workingState.getLocal(instruction.source+1));
                     }
                 }
             }
