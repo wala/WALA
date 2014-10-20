@@ -58,7 +58,7 @@
      <target name="fetchOCaml" depends="OCamlPresent" unless="ocaml.present">
        <delete dir="${temp.folder}"/>
        <mkdir dir="${temp.folder}"/>
-       <get src="http://www.ocamljava.org/downloads/download-2.0-alpha1-bin.php" dest="${temp.folder}/ocamljava-2.0-alpha1-bin.tar.gz"/>
+       <get src="http://www.ocamljava.org/downloads/download.php?version=2.0-alpha1-bin" dest="${temp.folder}/ocamljava-2.0-alpha1-bin.tar.gz"/>
        <gunzip src="${temp.folder}//ocamljava-2.0-alpha1-bin.tar.gz" dest="${temp.folder}/ocamljava-2.0-alpha1-bin.tar"/>
        <untar src="${temp.folder}/ocamljava-2.0-alpha1-bin.tar" dest="${plugin.destination}/ocaml">
        </untar>
