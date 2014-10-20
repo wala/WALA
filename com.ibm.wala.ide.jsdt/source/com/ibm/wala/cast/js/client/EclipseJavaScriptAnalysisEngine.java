@@ -27,12 +27,12 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FilteredFlowGraphBuil
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FlowGraph;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FlowGraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.FuncVertex;
+import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.ObjectVertex;
 import com.ibm.wala.cast.js.client.impl.ZeroCFABuilderFactory;
 import com.ibm.wala.cast.js.html.IncludedPosition;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
-import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
@@ -48,7 +48,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -118,11 +117,11 @@ public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysi
 	    return new ZeroCFABuilderFactory().make((JSAnalysisOptions)options, cache, cha, scope, false);
   }
 
-  public Pair<JSCallGraph, PointerAnalysis<FuncVertex>> getFieldBasedCallGraph() throws CancelException {
+  public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> getFieldBasedCallGraph() throws CancelException {
     return getFieldBasedCallGraph(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()));
   }
 
-  public Pair<JSCallGraph, PointerAnalysis<FuncVertex>> getFieldBasedCallGraph(String scriptName) throws CancelException {
+  public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> getFieldBasedCallGraph(String scriptName) throws CancelException {
     Set<Entrypoint> eps= HashSetFactory.make();
     eps.add(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make(scriptName));
     eps.add(JSCallGraphUtil.makeScriptRoots(getClassHierarchy()).make("Lprologue.js"));
@@ -141,7 +140,7 @@ public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysi
     return fileName.substring(fileName.lastIndexOf('/') + 1);    
   }
   
-  protected Pair<JSCallGraph, PointerAnalysis<FuncVertex>> getFieldBasedCallGraph(Iterable<Entrypoint> roots) throws CancelException {
+  protected Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> getFieldBasedCallGraph(Iterable<Entrypoint> roots) throws CancelException {
     final Set<String> scripts = HashSetFactory.make();
     for(Entrypoint e : roots) {
       String scriptName = getScriptName(((AstMethod)e.getMethod()));
@@ -168,8 +167,8 @@ public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysi
         builderType.equals(BuilderType.PESSIMISTIC)? 
             new PessimisticCallGraphBuilder(getClassHierarchy(), options, makeDefaultCache()) {
               @Override
-              protected FlowGraph flowGraphFactory(JavaScriptConstructorFunctions selector) {
-                FlowGraphBuilder b = new FilteredFlowGraphBuilder(cha, cache, selector, filter);
+              protected FlowGraph flowGraphFactory() {
+                FlowGraphBuilder b = new FilteredFlowGraphBuilder(cha, cache, true, filter);
                 return b.buildFlowGraph();
               }
               @Override
@@ -179,8 +178,8 @@ public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysi
             }      
             : new OptimisticCallgraphBuilder(getClassHierarchy(), options, makeDefaultCache()) {
               @Override
-              protected FlowGraph flowGraphFactory(JavaScriptConstructorFunctions selector) {
-                FlowGraphBuilder b = new FilteredFlowGraphBuilder(cha, cache, selector, filter);
+              protected FlowGraph flowGraphFactory() {
+                FlowGraphBuilder b = new FilteredFlowGraphBuilder(cha, cache, true, filter);
                 return b.buildFlowGraph();
               }  
             };

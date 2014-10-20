@@ -111,7 +111,6 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.util.Predicate;
@@ -1375,7 +1374,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
           }
         }
-        SSAInvokeInstruction callInstr = g.getInstrReturningTo(localPk);
+        SSAAbstractInvokeInstruction callInstr = g.getInstrReturningTo(localPk);
         if (callInstr != null) {
           CGNode caller = localPk.getNode();
           boolean isExceptional = localPk.getValueNumber() == callInstr.getException();
@@ -1669,8 +1668,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         LocalPointerKey localPk = (LocalPointerKey) curPk;
         CGNode caller = localPk.getNode();
         // from actual parameter to callee
-        for (Iterator<SSAInvokeInstruction> iter = g.getInstrsPassingParam(localPk); iter.hasNext();) {
-          SSAInvokeInstruction callInstr = iter.next();
+        for (Iterator<SSAAbstractInvokeInstruction> iter = g.getInstrsPassingParam(localPk); iter.hasNext();) {
+          SSAAbstractInvokeInstruction callInstr = iter.next();
           for (int i = 0; i < callInstr.getNumberOfUses(); i++) {
             if (localPk.getValueNumber() != callInstr.getUse(i))
               continue;
@@ -2162,7 +2161,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
             }
           }
-          SSAInvokeInstruction callInstr = g.getInstrReturningTo(localPk);
+          SSAAbstractInvokeInstruction callInstr = g.getInstrReturningTo(localPk);
           if (callInstr != null) {
             CGNode caller = localPk.getNode();
             boolean isExceptional = localPk.getValueNumber() == callInstr.getException();

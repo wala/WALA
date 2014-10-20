@@ -154,12 +154,12 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
    */
   public Iterator<PointerKeyAndCallSite> getParamPreds(LocalPointerKey pk) {
     // TODO
-    Set<SSAInvokeInstruction> instrs = callParams.get(pk);
+    Set<SSAAbstractInvokeInstruction> instrs = callParams.get(pk);
     if (instrs == null) {
       return EmptyIterator.instance();
     }
     ArrayList<PointerKeyAndCallSite> paramPreds = new ArrayList<PointerKeyAndCallSite>();
-    for (SSAInvokeInstruction callInstr : instrs) {
+    for (SSAAbstractInvokeInstruction callInstr : instrs) {
       for (int i = 0; i < callInstr.getNumberOfUses(); i++) {
         if (pk.getValueNumber() != callInstr.getUse(i))
           continue;
@@ -185,7 +185,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
    * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getReturnSuccs(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
    */
   public Iterator<PointerKeyAndCallSite> getReturnSuccs(LocalPointerKey pk) {
-    SSAInvokeInstruction callInstr = callDefs.get(pk);
+    SSAAbstractInvokeInstruction callInstr = callDefs.get(pk);
     if (callInstr == null)
       return EmptyIterator.instance();
     ArrayList<PointerKeyAndCallSite> returnSuccs = new ArrayList<PointerKeyAndCallSite>();

@@ -18,6 +18,7 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FlowGraph;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.FlowGraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.CallVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.FuncVertex;
+import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.ObjectVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VarVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VertexFactory;
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
@@ -70,15 +71,17 @@ public abstract class FieldBasedCallGraphBuilder {
 	protected final AnalysisCache cache;
 	protected final JavaScriptConstructorFunctions constructors;
 	protected final MethodTargetSelector targetSelector;
+	protected final boolean supportFullPointerAnalysis;
 	
 	private static final boolean LOG_TIMINGS = true;
 	
-	public FieldBasedCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+	public FieldBasedCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, boolean supportFullPointerAnalysis) {
 		this.cha = cha;
 		this.options = options;
 		this.cache = cache;
 		this.constructors = new JavaScriptConstructorFunctions(cha);
 		this.targetSelector = setupMethodTargetSelector(cha, constructors, options);
+		this.supportFullPointerAnalysis = supportFullPointerAnalysis;
 	}
 
   private MethodTargetSelector setupMethodTargetSelector(IClassHierarchy cha, JavaScriptConstructorFunctions constructors2, AnalysisOptions options) {
@@ -90,27 +93,26 @@ public abstract class FieldBasedCallGraphBuilder {
     return result;
   }
 	
-  protected FlowGraph flowGraphFactory(JavaScriptConstructorFunctions selector) {
-    FlowGraphBuilder builder = new FlowGraphBuilder(cha, cache, selector);
+  protected FlowGraph flowGraphFactory() {
+    FlowGraphBuilder builder = new FlowGraphBuilder(cha, cache, supportFullPointerAnalysis);
     return builder.buildFlowGraph();
   }
 
 	/**
 	 * Build a flow graph for the program to be analysed.
-	 * @param selector TODO
 	 */
-	public abstract FlowGraph buildFlowGraph(IProgressMonitor monitor, JavaScriptConstructorFunctions selector) throws CancelException;
+	public abstract FlowGraph buildFlowGraph(IProgressMonitor monitor) throws CancelException;
 	
 	/**
 	 * Main entry point: builds a flow graph, then extracts a call graph and returns it.
 	 */
-	public Pair<JSCallGraph,PointerAnalysis<FuncVertex>> buildCallGraph(Iterable<Entrypoint> eps, IProgressMonitor monitor) throws CancelException {
+	public Pair<JSCallGraph,PointerAnalysis<ObjectVertex>> buildCallGraph(Iterable<Entrypoint> eps, IProgressMonitor monitor) throws CancelException {
 		long fgBegin, fgEnd, cgBegin, cgEnd;
 	
 		if(LOG_TIMINGS) fgBegin = System.currentTimeMillis();
 
 		MonitorUtil.beginTask(monitor, "flow graph", 1);
-		FlowGraph flowGraph = buildFlowGraph(monitor, constructors);
+		FlowGraph flowGraph = buildFlowGraph(monitor);
 		MonitorUtil.done(monitor);
 		
 		if(LOG_TIMINGS) {

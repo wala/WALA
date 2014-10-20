@@ -75,7 +75,6 @@ import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SymbolTable;
@@ -116,13 +115,13 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
    * Map: LocalPointerKey -> SSAInvokeInstruction. If we have (x, foo()), that means that x was def'fed by the return value from the
    * call to foo()
    */
-  protected final Map<PointerKey, SSAInvokeInstruction> callDefs = HashMapFactory.make();
+  protected final Map<PointerKey, SSAAbstractInvokeInstruction> callDefs = HashMapFactory.make();
 
   /**
    * Map: {@link LocalPointerKey} -> Set<{@link SSAInvokeInstruction}>. If we have (x, foo()), that means x was passed as a
    * parameter to the call to foo(). The parameter position is not represented and must be recovered.
    */
-  protected final Map<PointerKey, Set<SSAInvokeInstruction>> callParams = HashMapFactory.make();
+  protected final Map<PointerKey, Set<SSAAbstractInvokeInstruction>> callParams = HashMapFactory.make();
 
   /**
    * Map: LocalPointerKey -> CGNode. If we have (x, foo), then x is a parameter of method foo. For now, we have to re-discover the
@@ -196,8 +195,8 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
           // from the callee
           PointerKey use = heapModel.getPointerKeyForLocal(node, invokeInstr.getUse(i));
           addNode(use);
-          Set<SSAInvokeInstruction> s = MapUtil.findOrCreateSet(callParams, use);
-          s.add((SSAInvokeInstruction) invokeInstr);
+          Set<SSAAbstractInvokeInstruction> s = MapUtil.findOrCreateSet(callParams, use);
+          s.add(invokeInstr);
         }
 
         // for any def'd values, keep track of the fact that they are def'd
@@ -205,11 +204,11 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
         if (invokeInstr.hasDef()) {
           PointerKey def = heapModel.getPointerKeyForLocal(node, invokeInstr.getDef());
           addNode(def);
-          callDefs.put(def, (SSAInvokeInstruction) invokeInstr);
+          callDefs.put(def, invokeInstr);
         }
         PointerKey exc = heapModel.getPointerKeyForLocal(node, invokeInstr.getException());
         addNode(exc);
-        callDefs.put(exc, (SSAInvokeInstruction) invokeInstr);
+        callDefs.put(exc, invokeInstr);
 
       }
     }
@@ -221,8 +220,8 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   }
 
   @Override
-  public Iterator<SSAInvokeInstruction> getInstrsPassingParam(LocalPointerKey pk) {
-    Set<SSAInvokeInstruction> instrs = callParams.get(pk);
+  public Iterator<SSAAbstractInvokeInstruction> getInstrsPassingParam(LocalPointerKey pk) {
+    Set<SSAAbstractInvokeInstruction> instrs = callParams.get(pk);
     if (instrs == null) {
       return EmptyIterator.instance();
     } else {
@@ -231,7 +230,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   }
 
   @Override
-  public SSAInvokeInstruction getInstrReturningTo(LocalPointerKey pk) {
+  public SSAAbstractInvokeInstruction getInstrReturningTo(LocalPointerKey pk) {
     return callDefs.get(pk);
   }
 

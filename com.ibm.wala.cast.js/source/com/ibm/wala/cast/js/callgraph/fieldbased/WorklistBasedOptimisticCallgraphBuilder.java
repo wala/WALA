@@ -57,14 +57,14 @@ public class WorklistBasedOptimisticCallgraphBuilder extends FieldBasedCallGraph
 	
 	private FlowGraphBuilder builder;
 	
-	public WorklistBasedOptimisticCallgraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
-		super(cha, options, cache);
+	public WorklistBasedOptimisticCallgraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, boolean supportFullPointerAnalysis) {
+		super(cha, options, cache, supportFullPointerAnalysis);
 		handleCallApply = options instanceof JSAnalysisOptions && ((JSAnalysisOptions)options).handleCallApply();
 	}
 
 	@Override
-	public FlowGraph buildFlowGraph(IProgressMonitor monitor, JavaScriptConstructorFunctions selector) throws CancelException {
-	  builder = new FlowGraphBuilder(cha, cache, selector);
+	public FlowGraph buildFlowGraph(IProgressMonitor monitor) throws CancelException {
+	  builder = new FlowGraphBuilder(cha, cache, false);
 	  return builder.buildFlowGraph();
 	}
 

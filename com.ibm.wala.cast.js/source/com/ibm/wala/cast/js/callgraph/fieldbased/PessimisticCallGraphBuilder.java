@@ -42,13 +42,13 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
  *
  */
 public class PessimisticCallGraphBuilder extends FieldBasedCallGraphBuilder {
-	public PessimisticCallGraphBuilder(IClassHierarchy cha,	AnalysisOptions options, AnalysisCache cache) {
-		super(cha, options, cache);
+	public PessimisticCallGraphBuilder(IClassHierarchy cha,	AnalysisOptions options, AnalysisCache cache, boolean supportFullPointerAnalysis) {
+		super(cha, options, cache, supportFullPointerAnalysis);
 	}
 
 	@Override
-	public FlowGraph buildFlowGraph(IProgressMonitor monitor, JavaScriptConstructorFunctions selector) {
-	  FlowGraph flowgraph = flowGraphFactory(selector);
+	public FlowGraph buildFlowGraph(IProgressMonitor monitor) {
+	  FlowGraph flowgraph = flowGraphFactory();
 	  resolveLocalCalls(flowgraph);
 		return flowgraph;
 	}

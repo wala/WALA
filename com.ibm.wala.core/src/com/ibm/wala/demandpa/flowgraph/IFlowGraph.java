@@ -21,7 +21,7 @@ import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
-import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.util.graph.labeled.LabeledGraph;
 
 public interface IFlowGraph extends LabeledGraph<Object, IFlowLabel> {
@@ -55,14 +55,14 @@ public interface IFlowGraph extends LabeledGraph<Object, IFlowLabel> {
    * @param pk
    * @return the {@link SSAInvokeInstruction}s passing some pointer as a parameter
    */
-  public abstract Iterator<SSAInvokeInstruction> getInstrsPassingParam(LocalPointerKey pk);
+  public abstract Iterator<SSAAbstractInvokeInstruction> getInstrsPassingParam(LocalPointerKey pk);
 
   /**
    * get the {@link SSAInvokeInstruction} whose return value is assigned to a pointer key.
    * 
    * @return the instruction, or <code>null</code> if no return value is assigned to pk
    */
-  public abstract SSAInvokeInstruction getInstrReturningTo(LocalPointerKey pk);
+  public abstract SSAAbstractInvokeInstruction getInstrReturningTo(LocalPointerKey pk);
 
   /**
    * @param sfk the static field

@@ -16,6 +16,8 @@ import java.util.Map;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
 
@@ -35,7 +37,8 @@ public class VertexFactory {
   private final Map<FuncVertex, ArgVertex> argVertexCache = HashMapFactory.make();
 	private final Map<Pair<FuncVertex, Integer>, VarVertex> varVertexCache = HashMapFactory.make();
 	private final Map<Pair<String, String>, LexicalVarVertex> lexicalAccessVertexCache = HashMapFactory.make();
-
+	private final Map<Pair<IMethod,Integer>, CreationSiteVertex> creationSites = HashMapFactory.make();
+	
 	public CallVertex makeCallVertex(FuncVertex func, JavaScriptInvoke invk) {
 		CallSiteReference site = invk.getCallSite();
 		Pair<FuncVertex, CallSiteReference> key = Pair.make(func, site);
@@ -49,13 +52,26 @@ public class VertexFactory {
 		return callVertexCache.values();
 	}
 
+	public CreationSiteVertex makeCreationSiteVertex(IMethod method, int instruction) {
+	  Pair<IMethod, Integer> key = Pair.make(method, instruction);
+    CreationSiteVertex value = creationSites.get(key);
+	  if (value == null) {
+	    creationSites.put(key, value = new CreationSiteVertex(method, instruction));
+	  }
+	  return value;
+	}
+	
+	public Collection<CreationSiteVertex> creationSites() {
+	  return creationSites.values();
+	}
+	
 	public FuncVertex makeFuncVertex(IClass klass) {
 		FuncVertex value = funcVertexCache.get(klass);
 		if(value == null)
 			funcVertexCache.put(klass, value = new FuncVertex(klass));
 		return value;
 	}
-	
+
 	public Collection<FuncVertex> getFuncVertices() {
 	  return funcVertexCache.values();
 	}

@@ -46,14 +46,14 @@ public class OptimisticCallgraphBuilder extends FieldBasedCallGraphBuilder {
 	
 	private final boolean handleCallApply;
 	
-	public OptimisticCallgraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
-		super(cha, options, cache);
+	public OptimisticCallgraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, boolean supportFullPointerAnalysis) {
+		super(cha, options, cache, supportFullPointerAnalysis);
 		handleCallApply = options instanceof JSAnalysisOptions && ((JSAnalysisOptions)options).handleCallApply();
 	}
 
 	@Override
-	public FlowGraph buildFlowGraph(IProgressMonitor monitor, JavaScriptConstructorFunctions selector) throws CancelException {
-	   FlowGraph flowgraph = flowGraphFactory(selector);
+	public FlowGraph buildFlowGraph(IProgressMonitor monitor) throws CancelException {
+	   FlowGraph flowgraph = flowGraphFactory();
 		
 		// keep track of which call edges we already know about
 		Set<Pair<CallVertex, FuncVertex>> knownEdges = HashSetFactory.make();
@@ -106,7 +106,7 @@ public class OptimisticCallgraphBuilder extends FieldBasedCallGraphBuilder {
     for(int i=0;i<invk.getNumberOfParameters();++i) {
       // only flow receiver into 'this' if invk is, in fact, a method call
       flowgraph.addEdge(factory.makeVarVertex(caller, invk.getUse(i)), factory.makeArgVertex(callee));
-      if(i != 1 || !invk.getDeclaredTarget().getSelector().equals(AstMethodReference.fnSelector))
+      //if(i != 1 || !invk.getDeclaredTarget().getSelector().equals(AstMethodReference.fnSelector))
         flowgraph.addEdge(factory.makeVarVertex(caller, invk.getUse(i)), factory.makeParamVertex(callee, i+offset));
     }
 

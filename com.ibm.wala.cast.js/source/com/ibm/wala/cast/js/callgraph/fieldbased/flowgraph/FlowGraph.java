@@ -12,12 +12,13 @@ package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.AbstractVertexVisitor;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.FuncVertex;
+import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.ObjectVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.UnknownVertex;
-import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VarVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.Vertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VertexFactory;
 import com.ibm.wala.cast.types.AstMethodReference;
@@ -31,7 +32,6 @@ import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.TypeFilter;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -40,6 +40,7 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphReachability;
 import com.ibm.wala.util.graph.GraphSlicer;
@@ -59,7 +60,7 @@ public class FlowGraph implements Iterable<Vertex> {
 	// the actual flow graph representation
 	private final NumberedGraph<Vertex> graph;
 	
-	// a factory that allows us to build canonical vertices
+ 	// a factory that allows us to build canonical vertices
 	private final VertexFactory factory;
 	
 	// the transitive closure of the inverse of this.graph, 
@@ -76,6 +77,10 @@ public class FlowGraph implements Iterable<Vertex> {
 		if(optimistic_closure != null)
 			return;
 		
+		optimistic_closure = computeClosure(graph, monitor, FuncVertex.class);
+	}
+	
+	private <T> GraphReachability<Vertex, T> computeClosure(NumberedGraph<Vertex> graph, IProgressMonitor monitor, final Class<?> type) throws CancelException {
 		// prune flowgraph by taking out 'unknown' vertex
 		Graph<Vertex> pruned_flowgraph = GraphSlicer.prune(graph, new Predicate<Vertex>() {
 			@Override
@@ -95,18 +100,20 @@ public class FlowGraph implements Iterable<Vertex> {
 		});
 		
 		// compute transitive closure
-		optimistic_closure = 
-		    new GraphReachability<Vertex,FuncVertex>(
+		GraphReachability<Vertex, T> optimistic_closure = 
+		    new GraphReachability<Vertex,T>(
 		      new InvertedGraph<Vertex>(pruned_flowgraph),
 		      new Filter<Vertex>() {
 		        @Override
 		        public boolean accepts(Vertex o) {
-		          return o instanceof FuncVertex;
+		          return type.isInstance(o);
 		        } 
 		      }
 		    );
 		
 		optimistic_closure.solve(monitor);
+		
+		return optimistic_closure;
 	}
 	
 	public VertexFactory getVertexFactory() {
@@ -124,8 +131,8 @@ public class FlowGraph implements Iterable<Vertex> {
 			graph.addNode(to);
 		
 		if(!graph.hasEdge(from, to)) {
-		    optimistic_closure = null;
-		    graph.addEdge(from, to);
+		  optimistic_closure = null;   
+		  graph.addEdge(from, to);
 		}
 	}
 
@@ -150,29 +157,25 @@ public class FlowGraph implements Iterable<Vertex> {
     return graph.iterator();
   }
   
-  public PointerAnalysis<FuncVertex> getPointerAnalysis(final IProgressMonitor monitor) {
-    return new PointerAnalysis<FuncVertex>() {
-
+  public PointerAnalysis<ObjectVertex> getPointerAnalysis(final IProgressMonitor monitor) throws CancelException {
+    return new PointerAnalysis<ObjectVertex>() {
+      private final GraphReachability<Vertex,ObjectVertex> pointerAnalysis = computeClosure(graph, monitor, ObjectVertex.class);
+          
       @Override
-      public OrdinalSet<FuncVertex> getPointsToSet(PointerKey key) {
-        if (key instanceof LocalPointerKey) {
-          CGNode node = ((LocalPointerKey)key).getNode();
-          FuncVertex fn = factory.makeFuncVertex(node.getMethod().getDeclaringClass());
-          int vn = ((LocalPointerKey)key).getValueNumber();
-          VarVertex v = factory.makeVarVertex(fn, vn);
-          try {
-            return getReachingSet(v, monitor);
-          } catch (CancelException e) {
-            return null;
-          }
+      public OrdinalSet<ObjectVertex> getPointsToSet(PointerKey key) {
+        if (graph.containsNode((Vertex)key)) {
+          return pointerAnalysis.getReachableSet(key);
         } else {
-          return null;
+          return OrdinalSet.empty();
         }
       }
 
       @Override
-      public Collection<FuncVertex> getInstanceKeys() {
-        return factory.getFuncVertices();
+      public Collection<ObjectVertex> getInstanceKeys() {
+        Set<ObjectVertex> result = HashSetFactory.make();
+        result.addAll(factory.creationSites());
+        result.addAll(factory.getFuncVertices());
+        return result;
       }
 
       @Override
@@ -181,7 +184,7 @@ public class FlowGraph implements Iterable<Vertex> {
       }
 
       @Override
-      public OrdinalSetMapping<FuncVertex> getInstanceKeyMapping() {
+      public OrdinalSetMapping<ObjectVertex> getInstanceKeyMapping() {
         // TODO Auto-generated method stub
         return null;
       }
@@ -296,7 +299,7 @@ public class FlowGraph implements Iterable<Vertex> {
 
           @Override
           public IClassHierarchy getClassHierarchy() {
-            // TODO Auto-generated method stub
+            assert false;
             return null;
           }        
         };

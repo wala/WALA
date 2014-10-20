@@ -18,11 +18,11 @@ import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
 import com.ibm.wala.cast.js.callgraph.fieldbased.JSMethodInstructionVisitor;
+import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.CreationSiteVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.FuncVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VarVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.Vertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VertexFactory;
-import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
@@ -41,6 +41,7 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
@@ -57,12 +58,12 @@ import com.ibm.wala.util.intset.IntSet;
 public class FlowGraphBuilder {
 	private final IClassHierarchy cha;
 	private final AnalysisCache cache;
-	private final JavaScriptConstructorFunctions selector;
+	private final boolean supportFullPointerAnalysis;
 	
-	public FlowGraphBuilder(IClassHierarchy cha, AnalysisCache cache, JavaScriptConstructorFunctions selector) {
+	public FlowGraphBuilder(IClassHierarchy cha, AnalysisCache cache, boolean supportPointerAnalysis) {
 		this.cha = cha;
 		this.cache = cache;
-		this.selector = selector;
+		this.supportFullPointerAnalysis = supportPointerAnalysis;
 	}
 	
 	/**
@@ -189,7 +190,7 @@ public class FlowGraphBuilder {
 			this.ir = ir;
 			this.flowgraph = flowgraph;
 			this.factory = flowgraph.getVertexFactory();
-			this.func = this.factory.makeFuncVertex(ir.getMethod().getDeclaringClass());
+			this.func = factory.makeFuncVertex(ir.getMethod().getDeclaringClass());
 			if(method instanceof AstMethod) {
 				this.lexicalInfo = ((AstMethod)method).lexicalInfo();
 				this.exposedVars = lexicalInfo.getAllExposedUses();
@@ -344,32 +345,49 @@ public class FlowGraphBuilder {
 							  factory.makeVarVertex(func, invk.getException()));
 			
 			// check whether this invoke corresponds to a function expression/declaration
-			if(isFunctionConstructorInvoke(invk)) {
-				// second parameter is function name
-				String fn_name = symtab.getStringValue(invk.getUse(1));
-				
-				// find the function being defined here
-				IClass klass = cha.lookupClass(TypeReference.findOrCreate(JavaScriptTypes.jsLoader, fn_name));
-				if (klass == null) {
-				  System.err.println("cannot find " + fn_name + " at " +  ((AstMethod)ir.getMethod()).getSourcePosition(ir.getCallInstructionIndices(invk.getCallSite()).intIterator().next()));
-				  return;
-				}
-				IMethod fn = klass.getMethod(AstMethodReference.fnSelector);
-				FuncVertex fnVertex = factory.makeFuncVertex(klass);
-				
-				// function flows into its own v1 variable 
-				flowgraph.addEdge(fnVertex, factory.makeVarVertex(fnVertex, 1));
-				
-				// flow parameters into local variables
-				for(int i=0;i<fn.getNumberOfParameters();++i)
-					flowgraph.addEdge(factory.makeParamVertex(fnVertex, i), factory.makeVarVertex(fnVertex, i+1));
-				
-				// flow function into result variable
-				flowgraph.addEdge(fnVertex, factory.makeVarVertex(func, invk.getDef()));
-				
-				// flow callee variable into callee vertex
-				flowgraph.addEdge(factory.makeVarVertex(func, invk.getFunction()),
-								          factory.makeCallVertex(func, invk));
+      // flow callee variable into callee vertex
+			if(invk.getDeclaredTarget().equals(JavaScriptMethods.ctorReference)) {
+
+			  flowgraph.addEdge(factory.makeVarVertex(func, invk.getFunction()),
+			      factory.makeCallVertex(func, invk));
+			  
+			  if(isFunctionConstructorInvoke(invk)) {
+			    // second parameter is function name
+			    String fn_name = symtab.getStringValue(invk.getUse(1));
+
+			    // find the function being defined here
+			    IClass klass = cha.lookupClass(TypeReference.findOrCreate(JavaScriptTypes.jsLoader, fn_name));
+			    if (klass == null) {
+			      System.err.println("cannot find " + fn_name + " at " +  ((AstMethod)ir.getMethod()).getSourcePosition(ir.getCallInstructionIndices(invk.getCallSite()).intIterator().next()));
+			      return;
+			    }
+			    
+			    IMethod fn = klass.getMethod(AstMethodReference.fnSelector);
+			    FuncVertex fnVertex = factory.makeFuncVertex(klass);
+			      
+			    // function flows into its own v1 variable 
+			    flowgraph.addEdge(fnVertex, factory.makeVarVertex(fnVertex, 1));
+
+			    // flow parameters into local variables
+			    for(int i=1;i<fn.getNumberOfParameters();++i)
+			      flowgraph.addEdge(factory.makeParamVertex(fnVertex, i), factory.makeVarVertex(fnVertex, i+1));
+
+			    // flow function into result variable
+			    flowgraph.addEdge(fnVertex, factory.makeVarVertex(func, invk.getDef()));
+
+			  } else if (supportFullPointerAnalysis) {
+			    
+			    CreationSiteVertex cs = factory.makeCreationSiteVertex(method, invk.iindex);
+			    
+			    // flow creation site into result of new call
+	        flowgraph.addEdge(cs, factory.makeVarVertex(func, invk.getDef())); 
+	        
+	        // also passed as 'this' to constructor
+	        if (invk.getNumberOfParameters() > 1) {
+	          flowgraph.addEdge(cs, factory.makeVarVertex(func, invk.getUse(0)));
+	        }
+			  }
+
 			} else {
 				// check whether it is a method call
 				if(invk.getDeclaredTarget().equals(JavaScriptMethods.dispatchReference)) {
@@ -386,5 +404,17 @@ public class FlowGraphBuilder {
 			}
 			handleLexicalDef(invk.getDef());
 		}
+
+    @Override
+    public void visitNew(SSANewInstruction invk) {
+      if (supportFullPointerAnalysis) {
+        // special case for supporting full pointer analysis
+        // some core objects in the prologue (and the arguments array objects) get created with 'new'
+        CreationSiteVertex cs = factory.makeCreationSiteVertex(method, invk.iindex);
+      
+        // flow creation site into result of new call
+        flowgraph.addEdge(cs, factory.makeVarVertex(func, invk.getDef()));  
+      } 
+    }
 	}
 }

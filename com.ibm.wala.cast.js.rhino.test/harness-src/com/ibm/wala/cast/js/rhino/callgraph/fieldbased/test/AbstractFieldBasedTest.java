@@ -11,8 +11,9 @@ import org.junit.Before;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
-import com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test.CGUtil.BuilderType;
+import com.ibm.wala.cast.js.test.FieldBasedCGUtil;
 import com.ibm.wala.cast.js.test.TestJSCallGraphShape;
+import com.ibm.wala.cast.js.test.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.cast.js.util.CallGraph2JSON;
 import com.ibm.wala.util.CancelException;
@@ -22,7 +23,7 @@ import com.ibm.wala.util.WalaException;
 
 public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
 
-  protected CGUtil util;
+  protected FieldBasedCGUtil util;
 
   public AbstractFieldBasedTest() {
     super();
@@ -31,7 +32,7 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
   @Override
   @Before
   public void setUp() throws Exception {
-  	util = new CGUtil(new CAstRhinoTranslatorFactory());
+  	util = new FieldBasedCGUtil(new CAstRhinoTranslatorFactory());
   }
 
   protected JSCallGraph runTest(String script, Object[][] assertions, BuilderType... builderTypes) throws IOException, WalaException, Error, CancelException {
@@ -43,7 +44,7 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
     for(BuilderType builderType : builderTypes) {
       ProgressMaster monitor = ProgressMaster.make(new NullProgressMonitor(), 30000, true);
       try {
-        cg = util.buildCG(url, builderType, monitor);
+        cg = util.buildCG(url, builderType, monitor, false).fst;
         System.err.println(cg);
         verifyGraphAssertions(cg, assertions);
       } catch(AssertionFailedError afe) {

@@ -8,9 +8,8 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *****************************************************************************/
-package com.ibm.wala.cast.js.rhino.callgraph.fieldbased.test;
+package com.ibm.wala.cast.js.test;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
@@ -19,32 +18,30 @@ import java.util.Set;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
-import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
 import com.ibm.wala.cast.js.callgraph.fieldbased.FieldBasedCallGraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.OptimisticCallgraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.PessimisticCallGraphBuilder;
 import com.ibm.wala.cast.js.callgraph.fieldbased.WorklistBasedOptimisticCallgraphBuilder;
-import com.ibm.wala.cast.js.html.JSSourceExtractor;
+import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.ObjectVertex;
 import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
-import com.ibm.wala.cast.js.test.JSCallGraphBuilderUtil;
-import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
-import com.ibm.wala.cast.js.util.CallGraph2JSON;
 import com.ibm.wala.cast.js.util.Util;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.WalaException;
+import com.ibm.wala.util.collections.Pair;
 
 /**
  * Utility class for building call graphs.
@@ -52,20 +49,20 @@ import com.ibm.wala.util.WalaException;
  * @author mschaefer
  *
  */
-public class CGUtil {
+public class FieldBasedCGUtil {
 	public static enum BuilderType { PESSIMISTIC, OPTIMISTIC, OPTIMISTIC_WORKLIST };
 
 	private final JavaScriptTranslatorFactory translatorFactory;
 
-	public CGUtil(JavaScriptTranslatorFactory translatorFactory) {
+	public FieldBasedCGUtil(JavaScriptTranslatorFactory translatorFactory) {
 		this.translatorFactory = translatorFactory;
 	}
 
-  public JSCallGraph buildCG(URL url, BuilderType builderType) throws IOException, WalaException, CancelException  {
-    return buildCG(url, builderType, new NullProgressMonitor());
+  public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildCG(URL url, BuilderType builderType, boolean supportFullPointerAnalysis) throws IOException, WalaException, CancelException  {
+    return buildCG(url, builderType, new NullProgressMonitor(), supportFullPointerAnalysis);
   }
   
-	public JSCallGraph buildCG(URL url, BuilderType builderType, IProgressMonitor monitor) throws IOException, WalaException, CancelException  {
+	public Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> buildCG(URL url, BuilderType builderType, IProgressMonitor monitor, boolean supportFullPointerAnalysis) throws IOException, WalaException, CancelException  {
     JavaScriptLoaderFactory loaders = makeLoaderFactory(url);
     SourceModule[] scripts;
     if (url.getFile().endsWith(".js")) {
@@ -86,34 +83,21 @@ public class CGUtil {
 		AnalysisCache cache = new AnalysisCache(AstIRFactory.makeDefaultFactory());
 		switch(builderType) {
 		case PESSIMISTIC:
-			builder = new PessimisticCallGraphBuilder(cha, JSCallGraphUtil.makeOptions(scope, cha, roots), cache);
+			builder = new PessimisticCallGraphBuilder(cha, JSCallGraphUtil.makeOptions(scope, cha, roots), cache, supportFullPointerAnalysis);
 			break;
 		case OPTIMISTIC:
-			builder = new OptimisticCallgraphBuilder(cha, JSCallGraphUtil.makeOptions(scope, cha, roots), cache);
+			builder = new OptimisticCallgraphBuilder(cha, JSCallGraphUtil.makeOptions(scope, cha, roots), cache, supportFullPointerAnalysis);
 			break;
 		case OPTIMISTIC_WORKLIST:
-		  builder = new WorklistBasedOptimisticCallgraphBuilder(cha, JSCallGraphUtil.makeOptions(scope, cha, roots), cache);
+		  builder = new WorklistBasedOptimisticCallgraphBuilder(cha, JSCallGraphUtil.makeOptions(scope, cha, roots), cache, supportFullPointerAnalysis);
 		  break;
 		}
 		
-		return builder.buildCallGraph(roots, monitor).fst;
+		return builder.buildCallGraph(roots, monitor);
 	}
 
 	private JavaScriptLoaderFactory makeLoaderFactory(URL url) {
 		return url.getFile().endsWith(".js") ? new JavaScriptLoaderFactory(translatorFactory) : new WebPageLoaderFactory(translatorFactory);
-	}
-
-	public static void main(String[] args) throws IOException, WalaException, Error, CancelException {
-	  JSSourceExtractor.DELETE_UPON_EXIT = true;
-		URL url = new File(args[0]).toURI().toURL();
-		System.err.println("Analysing " + url);
-		Map<String, Set<String>> edges = CallGraph2JSON.extractEdges(new CGUtil(new CAstRhinoTranslatorFactory()).buildCG(url, BuilderType.OPTIMISTIC_WORKLIST));
-		
-		for(Map.Entry<String, Set<String>> e : edges.entrySet()) {
-			String site = e.getKey();
-			for(String callee : e.getValue())
-				System.out.println(site + " -> " + callee);
-		}
 	}
 	
 	@SuppressWarnings("unused")

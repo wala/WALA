@@ -36,7 +36,7 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
 /**
  * A dataflow system that computes, for each graph node, the set of "interesting" nodes that are reachable
  */
-public class GraphReachability<T, S extends T> {
+public class GraphReachability<T, S> {
 
   /**
    * Governing graph

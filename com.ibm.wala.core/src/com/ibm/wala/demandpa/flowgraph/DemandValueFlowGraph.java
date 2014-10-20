@@ -56,6 +56,7 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
@@ -297,7 +298,7 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
         // from the callee
         PointerKey use = heapModel.getPointerKeyForLocal(node, instruction.getUse(i));
         addNode(use);
-        Set<SSAInvokeInstruction> s = MapUtil.findOrCreateSet(callParams, use);
+        Set<SSAAbstractInvokeInstruction> s = MapUtil.findOrCreateSet(callParams, use);
         s.add(instruction);
       }
 

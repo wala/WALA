@@ -11,13 +11,20 @@
 package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices;
 
 import java.util.Iterator;
+import java.util.Set;
 
+import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions.JavaScriptConstructor;
+import com.ibm.wala.cast.js.types.JavaScriptMethods;
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.collections.Pair;
+import com.sun.xml.internal.fastinfoset.stax.events.EmptyIterator;
 
 /**
  * A function vertex represents a function object (or, more precisely, all function objects
@@ -25,19 +32,14 @@ import com.ibm.wala.util.collections.Pair;
  * 
  * @author mschaefer
  */
-public class FuncVertex extends Vertex implements InstanceKey {
+public class FuncVertex extends Vertex implements ObjectVertex {
 	// the IClass representing this function in the class hierarchy
-	private final IClass klass;
+	protected final IClass klass;
 
 	FuncVertex(IClass method) {
 		this.klass = method;
 	}
-	
-	@Override
-  public IClass getConcreteType() {
-		return klass;
-	}
-	
+		
 	public String getFullName() {
 		return klass.getName().toString();
 	}
@@ -55,7 +57,35 @@ public class FuncVertex extends Vertex implements InstanceKey {
 
   @Override
   public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
-    assert false;
-    return null;
+    MethodReference ctorRef = JavaScriptMethods.makeCtorReference(JavaScriptTypes.Function);
+    Set<CGNode> f = CG.getNodes(ctorRef);
+    CGNode ctor = null;
+    for(CGNode n : f) {
+      JavaScriptConstructor c = (JavaScriptConstructor) n.getMethod();
+      if (c.constructedType().equals(klass)) {
+        ctor = n;
+        break;
+      }
+    }
+    
+    // built in objects
+    if (ctor == null) {
+      return EmptyIterator.getInstance();
+    }
+    
+    Iterator<CGNode> callers = CG.getPredNodes(ctor);
+    CGNode caller = callers.next();
+    assert !callers.hasNext();
+    
+    Iterator<CallSiteReference> sites = CG.getPossibleSites(caller, ctor);
+    CallSiteReference site = sites.next();
+    assert !sites.hasNext();
+    
+    return NonNullSingletonIterator.make(Pair.make(caller, NewSiteReference.make(site.getProgramCounter(), klass.getReference())));
+  }
+
+  @Override
+  public IClass getConcreteType() {
+    return klass;
   }
 }

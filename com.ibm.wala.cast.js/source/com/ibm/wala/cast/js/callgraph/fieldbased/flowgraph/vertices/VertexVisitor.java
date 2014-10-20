@@ -16,6 +16,7 @@ public interface VertexVisitor<T> {
 	public abstract T visitPropVertex(PropVertex propVertex);
 	public abstract T visitUnknownVertex(UnknownVertex unknownVertex);
 	public abstract T visitFuncVertex(FuncVertex funcVertex);
+  public abstract T visitCreationSiteVertex(CreationSiteVertex csVertex);
 	public abstract T visitParamVertex(ParamVertex paramVertex);
 	public abstract T visitRetVertex(RetVertex retVertex);
 	public abstract T visitCalleeVertex(CallVertex calleeVertex);
