@@ -165,7 +165,7 @@ public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysi
 
     FieldBasedCallGraphBuilder builder = 
         builderType.equals(BuilderType.PESSIMISTIC)? 
-            new PessimisticCallGraphBuilder(getClassHierarchy(), options, makeDefaultCache()) {
+            new PessimisticCallGraphBuilder(getClassHierarchy(), options, makeDefaultCache(), false) {
               @Override
               protected FlowGraph flowGraphFactory() {
                 FlowGraphBuilder b = new FilteredFlowGraphBuilder(cha, cache, true, filter);
@@ -176,7 +176,7 @@ public class EclipseJavaScriptAnalysisEngine extends EclipseProjectSourceAnalysi
                  return super.filterFunction(function) && filter.apply(function);
               }     
             }      
-            : new OptimisticCallgraphBuilder(getClassHierarchy(), options, makeDefaultCache()) {
+            : new OptimisticCallgraphBuilder(getClassHierarchy(), options, makeDefaultCache(), true) {
               @Override
               protected FlowGraph flowGraphFactory() {
                 FlowGraphBuilder b = new FilteredFlowGraphBuilder(cha, cache, true, filter);
