@@ -185,7 +185,7 @@ DOMDocument = function DOMDocument() {
 
 	};
 	
-	this.writeln = function Document_prototype_write (stuff) {
+	this.writeln = function Document_prototype_writeln (stuff) {
 
 	};
 };
