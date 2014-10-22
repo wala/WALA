@@ -130,7 +130,7 @@ public abstract class FieldBasedCallGraphBuilder {
 			System.out.println("call graph extraction took " + (cgEnd-cgBegin)/1000.0 + " seconds");
 		}
 		
-		return Pair.make(cg,flowGraph.getPointerAnalysis(monitor));
+		return Pair.make(cg,flowGraph.getPointerAnalysis(cg, monitor));
 	}
 
 	/**

@@ -79,7 +79,7 @@ public class FuncVertex extends Vertex implements ObjectVertex {
     
     Iterator<CallSiteReference> sites = CG.getPossibleSites(caller, ctor);
     CallSiteReference site = sites.next();
-    assert !sites.hasNext();
+    assert !sites.hasNext() : caller + " --> " + ctor + " @ " + site + " and " + sites.next() + "\n" + caller.getIR();
     
     return NonNullSingletonIterator.make(Pair.make(caller, NewSiteReference.make(site.getProgramCounter(), klass.getReference())));
   }

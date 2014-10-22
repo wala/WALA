@@ -24,12 +24,16 @@ public class CreationSiteVertex extends Vertex implements ObjectVertex {
     this.node = node;
     this.instructionIndex = instructionIndex;
   }
-
+  
   @Override
   public IClass getConcreteType() {
     return node.getClassHierarchy().lookupClass(JavaScriptTypes.Object);
   }
 
+  public IMethod getMethod() {
+    return node;
+  }
+  
   @Override
   public Iterator<Pair<CGNode, NewSiteReference>> getCreationSites(CallGraph CG) {
     CGNode cgn = CG.getNode(node, Everywhere.EVERYWHERE);

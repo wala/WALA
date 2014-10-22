@@ -16,6 +16,7 @@ import java.util.Set;
 
 import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.AbstractVertexVisitor;
+import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.CreationSiteVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.FuncVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.ObjectVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.UnknownVertex;
@@ -28,6 +29,8 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.TypeFilter;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
@@ -157,7 +160,7 @@ public class FlowGraph implements Iterable<Vertex> {
     return graph.iterator();
   }
   
-  public PointerAnalysis<ObjectVertex> getPointerAnalysis(final IProgressMonitor monitor) throws CancelException {
+  public PointerAnalysis<ObjectVertex> getPointerAnalysis(final CallGraph cg, final IProgressMonitor monitor) throws CancelException {
     return new PointerAnalysis<ObjectVertex>() {
       private final GraphReachability<Vertex,ObjectVertex> pointerAnalysis = computeClosure(graph, monitor, ObjectVertex.class);
           
@@ -173,7 +176,11 @@ public class FlowGraph implements Iterable<Vertex> {
       @Override
       public Collection<ObjectVertex> getInstanceKeys() {
         Set<ObjectVertex> result = HashSetFactory.make();
-        result.addAll(factory.creationSites());
+        for(CreationSiteVertex cs : factory.creationSites()) {
+          if (cg.getNode(cs.getMethod(), Everywhere.EVERYWHERE) != null) {
+            result.add(cs);
+          }
+        }
         result.addAll(factory.getFuncVertices());
         return result;
       }

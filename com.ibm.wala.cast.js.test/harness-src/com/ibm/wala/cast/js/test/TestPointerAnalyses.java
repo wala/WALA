@@ -187,6 +187,10 @@ public abstract class TestPointerAnalyses {
         Assert.assertTrue(fbPtrs + " should intersect  " + propPtrs + " for " + i + " of " + fbNodes.iterator().next().getIR(), test.test(Pair.make(fbPtrs, propPtrs)));
       }
     }
+    
+    for(InstanceKey k : fbPA.getInstanceKeys()) {
+      k.getCreationSites(fbCG);
+    }
   }
   
   private void testUserCodeEquivalent(URL page) throws IOException, WalaException, CancelException {
