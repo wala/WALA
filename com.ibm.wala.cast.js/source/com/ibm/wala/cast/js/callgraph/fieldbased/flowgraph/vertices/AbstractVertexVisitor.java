@@ -70,4 +70,9 @@ public class AbstractVertexVisitor<T> implements VertexVisitor<T> {
 		return visitVertex(lexicalAccessVertex);
 	}
 
+	 @Override
+	  public T visitGlobalVertex(GlobalVertex globalVertex) {
+	    return visitVertex(globalVertex);
+	  }
+
 }

@@ -128,4 +128,10 @@ public class VertexFactory {
 			lexicalAccessVertexCache.put(key, value = new LexicalVarVertex(definer, name));
 		return value;
 	}
+	
+	private GlobalVertex global = new GlobalVertex();
+	
+	public GlobalVertex global() {
+	  return global;
+	}
 }

@@ -23,6 +23,8 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.FuncVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VarVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.Vertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VertexFactory;
+import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
+import com.ibm.wala.cast.js.ipa.callgraph.JSSSAPropagationCallGraphBuilder;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
@@ -250,9 +252,7 @@ public class FlowGraphBuilder {
 		public void visitJavaScriptPropertyWrite(JavaScriptPropertyWrite pw) {
 			int p = pw.getMemberRef();
 			if(symtab.isConstant(p)) {
-				String pn = symtab.getValue(p)+"";
-				if(pn.charAt(0) == '#')
-				  pn = pn.substring(1);
+				String pn = JSCallGraphUtil.simulateToStringForPropertyNames(symtab.getConstantValue(p));
 				
 				Vertex v = factory.makeVarVertex(func, pw.getValue()),
 				       w = factory.makePropVertex(pn);
@@ -283,18 +283,21 @@ public class FlowGraphBuilder {
 		
 		@Override
 		public void visitAstGlobalRead(AstGlobalRead instruction) {
-			visitGet(instruction);
+		  if (supportFullPointerAnalysis && instruction.getGlobalName().endsWith(JSSSAPropagationCallGraphBuilder.GLOBAL_OBJ_VAR_NAME)) {
+		    Vertex lval = factory.makeVarVertex(func, instruction.getDef());
+		    flowgraph.addEdge(factory.global(), lval);
+		  } else {
+		    visitGet(instruction);
+		  }
 		}
 		
 		@Override
 		public void visitJavaScriptPropertyRead(JavaScriptPropertyRead pr) {
 			int p = pr.getMemberRef();
 			if(symtab.isConstant(p)) {
-				String pn = symtab.getValue(p)+"";
-				if(pn.charAt(0) == '#')
-				  pn = pn.substring(1);
+				String pn = JSCallGraphUtil.simulateToStringForPropertyNames(symtab.getConstantValue(p));
 				Vertex v = factory.makePropVertex(pn),
-					   w = factory.makeVarVertex(func, pr.getDef());
+				       w = factory.makeVarVertex(func, pr.getDef());
 				flowgraph.addEdge(v, w);
 			}
 			
@@ -392,10 +395,11 @@ public class FlowGraphBuilder {
 				// check whether it is a method call
 				if(invk.getDeclaredTarget().equals(JavaScriptMethods.dispatchReference)) {
 					// we only handle method calls with constant names
-					if(symtab.isStringConstant(invk.getFunction()))
+		      if(symtab.isConstant(invk.getFunction())) {
+		        String pn = JSCallGraphUtil.simulateToStringForPropertyNames(symtab.getConstantValue(invk.getFunction()));
 						// flow callee property into callee vertex
-						flowgraph.addEdge(factory.makePropVertex(symtab.getStringValue(invk.getFunction())),
-										  factory.makeCallVertex(func, invk));
+						flowgraph.addEdge(factory.makePropVertex(pn), factory.makeCallVertex(func, invk));
+		      }
 				} else {
 					// this case is simpler: just flow callee variable into callee vertex
 					flowgraph.addEdge(factory.makeVarVertex(func, invk.getFunction()),

@@ -18,8 +18,10 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.GlobalVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.ObjectVertex;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
+import com.ibm.wala.cast.js.ipa.callgraph.GlobalObjectKey;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
@@ -29,7 +31,6 @@ import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -38,6 +39,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -126,6 +128,24 @@ public abstract class TestPointerAnalyses {
     return result;
   }
   
+  private boolean isGlobal(Set<CGNode> functions, int local, PointerAnalysis<? extends InstanceKey> pa) {
+    for(CGNode n : functions) {
+      PointerKey l = pa.getHeapModel().getPointerKeyForLocal(n, local);
+      if (l != null) {
+        OrdinalSet<? extends InstanceKey> pointers = pa.getPointsToSet(l);
+        if (pointers != null) {
+          for(InstanceKey k : pointers) {
+            if (k instanceof GlobalObjectKey || k instanceof GlobalVertex) {
+              return true;
+            }
+          }
+        }
+      }
+    }
+    
+    return false;
+  }
+  
   private void testPage(URL page, Predicate<MethodReference> filter, Predicate<Pair<Set<Pair<CGNode, NewSiteReference>>, Set<Pair<CGNode, NewSiteReference>>>> test) throws IOException, WalaException, CancelException {
     boolean save = JSSourceExtractor.USE_TEMP_NAME;
     try {
@@ -133,14 +153,31 @@ public abstract class TestPointerAnalyses {
 
       FieldBasedCGUtil fb = new FieldBasedCGUtil(factory);
       Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> fbResult = fb.buildCG(page, BuilderType.OPTIMISTIC, true);
-      CallGraph fbCG = fbResult.fst;
-      PointerAnalysis<ObjectVertex> fbPA = fbResult.snd;
-
+ 
       JSCFABuilder propagationBuilder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(page);
       CallGraph propCG = propagationBuilder.makeCallGraph(propagationBuilder.getOptions());
       PointerAnalysis<InstanceKey> propPA = propagationBuilder.getPointerAnalysis();
 
-      test(filter, test, fbCG, fbPA, propCG, propPA); 
+      test(filter, test, fbResult.fst, fbResult.snd, propCG, propPA); 
+      
+    } finally {
+      JSSourceExtractor.USE_TEMP_NAME = save;
+    }
+  }
+
+  private void testTestScript(String dir, String name, Predicate<MethodReference> filter, Predicate<Pair<Set<Pair<CGNode, NewSiteReference>>, Set<Pair<CGNode, NewSiteReference>>>> test) throws IOException, WalaException, CancelException {
+    boolean save = JSSourceExtractor.USE_TEMP_NAME;
+    try {
+      JSSourceExtractor.USE_TEMP_NAME = false;
+
+      FieldBasedCGUtil fb = new FieldBasedCGUtil(factory);
+      Pair<JSCallGraph, PointerAnalysis<ObjectVertex>> fbResult = fb.buildTestCG(dir, name, BuilderType.OPTIMISTIC, new NullProgressMonitor(), true);
+ 
+      JSCFABuilder propagationBuilder = JSCallGraphBuilderUtil.makeScriptCGBuilder(dir, name);
+      CallGraph propCG = propagationBuilder.makeCallGraph(propagationBuilder.getOptions());
+      PointerAnalysis<InstanceKey> propPA = propagationBuilder.getPointerAnalysis();
+
+      test(filter, test, fbResult.fst, fbResult.snd, propCG, propPA); 
       
     } finally {
       JSSourceExtractor.USE_TEMP_NAME = save;
@@ -166,6 +203,8 @@ public abstract class TestPointerAnalyses {
       Set<CGNode> fbNodes = fbCG.getNodes(function);
       Set<CGNode> propNodes = propCG.getNodes(function);
 
+      System.err.println(fbNodes.iterator().next().getIR());
+      
       int maxVn = -1;
       for(CallGraph cg : new CallGraph[]{fbCG, propCG}) {
         for(CGNode n : cg) {
@@ -180,6 +219,8 @@ public abstract class TestPointerAnalyses {
         Set<Pair<CGNode, NewSiteReference>> fbPtrs = ptrs(fbNodes, i, fbCG, fbPA);
         Set<Pair<CGNode, NewSiteReference>> propPtrs = map(propCG, ptrs(propNodes, i, propCG, propPA));
 
+        Assert.assertTrue("analysis should agree on global object for " + i + " of " + fbNodes.iterator().next().getIR(), isGlobal(fbNodes, i, fbPA) == isGlobal(propNodes, i, propPA));
+        
         if (!fbPtrs.isEmpty() || !propPtrs.isEmpty()) {
           System.err.println("checking local " + i + " of " + function + ": " + fbPtrs + " vs " + propPtrs);
         }
@@ -193,7 +234,7 @@ public abstract class TestPointerAnalyses {
     }
   }
   
-  private void testUserCodeEquivalent(URL page) throws IOException, WalaException, CancelException {
+  private void testPageUserCodeEquivalent(URL page) throws IOException, WalaException, CancelException {
     final String name = page.getFile().substring(page.getFile().lastIndexOf('/')+1, page.getFile().lastIndexOf('.'));
     testPage(page, nameFilter(name), new CheckPointers());
   }
@@ -211,7 +252,11 @@ public abstract class TestPointerAnalyses {
   
   @Test
   public void testWindowOnload() throws IOException, WalaException, CancelException {
-    testUserCodeEquivalent(getClass().getClassLoader().getResource("pages/windowonload.html"));
+    testPageUserCodeEquivalent(getClass().getClassLoader().getResource("pages/windowonload.html"));
   }
 
+  @Test
+  public void testObjects() throws IOException, WalaException, CancelException {
+    testTestScript("tests", "objects.js", nameFilter("tests/objects.js"), new CheckPointers());
+  }
 }

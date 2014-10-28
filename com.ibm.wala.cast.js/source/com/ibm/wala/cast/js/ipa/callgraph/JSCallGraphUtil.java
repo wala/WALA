@@ -218,4 +218,26 @@ public class JSCallGraphUtil extends com.ibm.wala.cast.ipa.callgraph.CAstCallGra
       return Collections.emptySet();
     }
   }
+  
+  public static String simulateToStringForPropertyNames(Object v) {
+    // TODO this is very incomplete  --MS
+    if (v instanceof String) {
+      return (String)v;
+    } else if (v instanceof Double) {
+      String result = v.toString();
+      if (((double) Math.round((Double)v)) == ((Double)v).doubleValue()) {
+        result = Long.toString(Math.round((Double)v));
+      }
+      return result;
+    } else if (v instanceof Boolean) {
+      if (((Boolean)v).booleanValue()) {
+        return "true";
+      } else {
+        return "false";
+      }
+    } else {
+      return null;
+    }
+  }
+
 }

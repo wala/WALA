@@ -89,7 +89,7 @@ public abstract class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
       @Override
       protected PointerKey getInstanceFieldPointerKeyForConstant(InstanceKey I, ConstantKey F) {
         Object v = F.getValue();
-        String strVal = simulateToStringForPropertyNames(v);
+        String strVal = JSCallGraphUtil.simulateToStringForPropertyNames(v);
         // if we know the string representation of the constant, use it...
         if (strVal != null) {
           IField f = I.getConcreteType().getField(Atom.findOrCreateUnicodeAtom(strVal));
@@ -108,30 +108,7 @@ public abstract class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
       @Override
       protected IClass getFieldNameType(InstanceKey F) {
         return F.getConcreteType().getClassHierarchy().lookupClass(JavaScriptTypes.String);
-      }
-
-      private String simulateToStringForPropertyNames(Object v) {
-        // TODO this is very incomplete  --MS
-        if (v instanceof String) {
-          return (String)v;
-        } else if (v instanceof Double) {
-          String result = v.toString();
-          if (((double) Math.round((Double)v)) == ((Double)v).doubleValue()) {
-            result = Long.toString(Math.round((Double)v));
-          }
-          return result;
-        } else if (v instanceof Boolean) {
-          if (((Boolean)v).booleanValue()) {
-            return "true";
-          } else {
-            return "false";
-          }
-        } else {
-          return null;
-        }
-      }
-      
-      
+      }      
     });
   }
 

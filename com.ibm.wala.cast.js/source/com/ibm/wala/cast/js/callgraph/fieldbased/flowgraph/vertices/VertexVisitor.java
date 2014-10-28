@@ -22,4 +22,5 @@ public interface VertexVisitor<T> {
 	public abstract T visitCalleeVertex(CallVertex calleeVertex);
 	public abstract T visitLexicalAccessVertex(LexicalVarVertex lexicalAccessVertex);
   public abstract T visitArgVertex(ArgVertex argVertex);
+  public abstract T visitGlobalVertex(GlobalVertex globalVertex);
 }

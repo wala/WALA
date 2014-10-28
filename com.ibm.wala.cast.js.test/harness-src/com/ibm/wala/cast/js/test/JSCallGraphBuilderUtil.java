@@ -93,7 +93,7 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
     CAstRewriterFactory preprocessor = builderType.extractCorrelatedPairs ? new CorrelatedPairExtractorFactory(translatorFactory, script) : null;
     JavaScriptLoaderFactory loaders = JSCallGraphUtil.makeLoaders(preprocessor);
 
-    AnalysisScope scope = makeScriptScope(script, dir, name, loaders);
+    AnalysisScope scope = makeScriptScope(dir, name, loaders);
 
     return makeCG(loaders, scope, builderType, AstIRFactory.makeDefaultFactory());
   }
@@ -111,10 +111,6 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
     return f.toURI().toURL();
   }
   
-  static AnalysisScope makeScriptScope(String dir, String name, JavaScriptLoaderFactory loaders) throws IOException {
-    return makeScriptScope(getURLforFile(dir, name), dir, name, loaders);
-  }
-
   public static SourceModule getPrologueFile(final String name) {
     return new SourceURLModule(JSCallGraphBuilderUtil.class.getClassLoader().getResource(name)) {
       @Override
@@ -124,13 +120,17 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
     };
   }
   
-  public static AnalysisScope makeScriptScope(URL script, String dir, String name, JavaScriptLoaderFactory loaders) throws IOException {
-    return makeScope(
-        new SourceModule[] { 
-            (script.openConnection() instanceof JarURLConnection)? new SourceURLModule(script): makeSourceModule(script, dir, name), 
-            getPrologueFile("prologue.js")
-        }, loaders, JavaScriptLoader.JS);
-    
+  public static AnalysisScope makeScriptScope(String dir, String name, JavaScriptLoaderFactory loaders) throws IOException {
+    return makeScope(makeSourceModules(dir, name), loaders, JavaScriptLoader.JS);    
+  }
+
+  public static SourceModule[] makeSourceModules(String dir, String name) throws IOException {
+    URL script = getURLforFile(dir, name);
+    SourceModule[] modules = new SourceModule[] { 
+        (script.openConnection() instanceof JarURLConnection)? new SourceURLModule(script): makeSourceModule(script, dir, name), 
+        getPrologueFile("prologue.js")
+    };
+    return modules;
   }
 
   public static JSCFABuilder makeScriptCGBuilder(String dir, String name) throws IOException, WalaException {
