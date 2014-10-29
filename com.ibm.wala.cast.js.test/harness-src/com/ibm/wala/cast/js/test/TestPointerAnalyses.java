@@ -259,4 +259,9 @@ public abstract class TestPointerAnalyses {
   public void testObjects() throws IOException, WalaException, CancelException {
     testTestScript("tests", "objects.js", nameFilter("tests/objects.js"), new CheckPointers());
   }
+
+  @Test
+  public void testInherit() throws IOException, WalaException, CancelException {
+    testTestScript("tests", "inherit.js", nameFilter("tests/inherit.js"), new CheckPointers());
+  }
 }
