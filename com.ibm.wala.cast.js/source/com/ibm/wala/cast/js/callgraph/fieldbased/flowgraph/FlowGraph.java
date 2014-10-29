@@ -182,6 +182,7 @@ public class FlowGraph implements Iterable<Vertex> {
           }
         }
         result.addAll(factory.getFuncVertices());
+        result.add(factory.global());
         return result;
       }
 
