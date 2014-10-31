@@ -37,7 +37,7 @@ public interface PointerAnalysis<T extends InstanceKey> {
   /**
    * @return a graph view of the pointer analysis solution
    */
-  HeapGraph getHeapGraph();
+  HeapGraph<T> getHeapGraph();
   
   /**
    * @return the bijection between InstanceKey <=> Integer that defines the

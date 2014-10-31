@@ -48,7 +48,7 @@ import com.ibm.wala.util.intset.SparseIntSet;
 /**
  * Basic implementation of {@link HeapGraph}
  */
-public class BasicHeapGraph extends HeapGraph {
+public class BasicHeapGraph extends HeapGraphImpl {
 
   private final static boolean VERBOSE = false;
 

@@ -18,6 +18,7 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.GlobalVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.ObjectVertex;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
@@ -26,10 +27,14 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions.JavaScriptConstructor;
+import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
 import com.ibm.wala.cast.js.test.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.loader.AstDynamicField;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -37,6 +42,8 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.NullProgressMonitor;
@@ -45,6 +52,7 @@ import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.OrdinalSet;
+import com.ibm.wala.util.strings.Atom;
 
 public abstract class TestPointerAnalyses {
 
@@ -187,6 +195,8 @@ public abstract class TestPointerAnalyses {
   protected void test(Predicate<MethodReference> filter,
       Predicate<Pair<Set<Pair<CGNode, NewSiteReference>>, Set<Pair<CGNode, NewSiteReference>>>> test, CallGraph fbCG,
       PointerAnalysis<ObjectVertex> fbPA, CallGraph propCG, PointerAnalysis<InstanceKey> propPA) {
+    HeapGraph<ObjectVertex> hg = fbPA.getHeapGraph();
+    
     Set<MethodReference> functionsToCompare = HashSetFactory.make();
     for(CGNode n : fbCG) {
       MethodReference ref = n.getMethod().getReference();
@@ -202,8 +212,10 @@ public abstract class TestPointerAnalyses {
 
       Set<CGNode> fbNodes = fbCG.getNodes(function);
       Set<CGNode> propNodes = propCG.getNodes(function);
-
-      System.err.println(fbNodes.iterator().next().getIR());
+      
+      CGNode node = fbNodes.iterator().next();
+      IR ir = node.getIR();
+      System.err.println(ir);
       
       int maxVn = -1;
       for(CallGraph cg : new CallGraph[]{fbCG, propCG}) {
@@ -219,13 +231,40 @@ public abstract class TestPointerAnalyses {
         Set<Pair<CGNode, NewSiteReference>> fbPtrs = ptrs(fbNodes, i, fbCG, fbPA);
         Set<Pair<CGNode, NewSiteReference>> propPtrs = map(propCG, ptrs(propNodes, i, propCG, propPA));
 
-        Assert.assertTrue("analysis should agree on global object for " + i + " of " + fbNodes.iterator().next().getIR(), isGlobal(fbNodes, i, fbPA) == isGlobal(propNodes, i, propPA));
+        Assert.assertTrue("analysis should agree on global object for " + i + " of " + ir, isGlobal(fbNodes, i, fbPA) == isGlobal(propNodes, i, propPA));
         
         if (!fbPtrs.isEmpty() || !propPtrs.isEmpty()) {
           System.err.println("checking local " + i + " of " + function + ": " + fbPtrs + " vs " + propPtrs);
         }
         
-        Assert.assertTrue(fbPtrs + " should intersect  " + propPtrs + " for " + i + " of " + fbNodes.iterator().next().getIR(), test.test(Pair.make(fbPtrs, propPtrs)));
+        Assert.assertTrue(fbPtrs + " should intersect  " + propPtrs + " for " + i + " of " + ir, test.test(Pair.make(fbPtrs, propPtrs)));
+      }
+
+      SymbolTable symtab = ir.getSymbolTable();
+      for(SSAInstruction inst : ir.getInstructions()) {
+        if (inst instanceof JavaScriptPropertyWrite) {
+          int property = ((JavaScriptPropertyWrite) inst).getMemberRef();
+          if (symtab.isConstant(property)) {
+            String p = JSCallGraphUtil.simulateToStringForPropertyNames(symtab.getConstantValue(property));
+            PointerKey propKey = fbPA.getHeapModel().getPointerKeyForInstanceField(null, new AstDynamicField(false, null, Atom.findOrCreateUnicodeAtom(p), JavaScriptTypes.Root));
+            
+            int obj = ((JavaScriptPropertyWrite) inst).getObjectRef();
+            PointerKey objKey = fbPA.getHeapModel().getPointerKeyForLocal(node, obj);
+            OrdinalSet<ObjectVertex> objPtrs = fbPA.getPointsToSet(objKey);
+            for(ObjectVertex o : objPtrs) {
+              Assert.assertTrue("object " + objKey + " should have field " + propKey, hg.hasEdge(o, propKey));
+            }
+            
+            int val = ((JavaScriptPropertyWrite) inst).getValue();
+            PointerKey valKey = fbPA.getHeapModel().getPointerKeyForLocal(node, val);
+            OrdinalSet<ObjectVertex> valPtrs = fbPA.getPointsToSet(valKey);
+            for(ObjectVertex o : valPtrs) {
+              Assert.assertTrue("field " + propKey + " should point to object " + objKey , hg.hasEdge(propKey, o));
+            }
+            
+            System.err.println("heap graph models instruction " + inst);
+          }          
+        }
       }
     }
     

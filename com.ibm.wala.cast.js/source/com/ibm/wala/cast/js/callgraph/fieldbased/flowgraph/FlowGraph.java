@@ -19,15 +19,19 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.AbstractVert
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.CreationSiteVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.FuncVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.ObjectVertex;
+import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.PropVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.UnknownVertex;
+import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VarVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.Vertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VertexFactory;
+import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
@@ -38,6 +42,8 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.DefUse;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
@@ -50,6 +56,7 @@ import com.ibm.wala.util.graph.GraphSlicer;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.impl.InvertedGraph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
+import com.ibm.wala.util.graph.traverse.DFS;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 
@@ -160,7 +167,7 @@ public class FlowGraph implements Iterable<Vertex> {
     return graph.iterator();
   }
   
-  public PointerAnalysis<ObjectVertex> getPointerAnalysis(final CallGraph cg, final IProgressMonitor monitor) throws CancelException {
+  public PointerAnalysis<ObjectVertex> getPointerAnalysis(final CallGraph cg, final AnalysisCache cache, final IProgressMonitor monitor) throws CancelException {
     return new PointerAnalysis<ObjectVertex>() {
       private final GraphReachability<Vertex,ObjectVertex> pointerAnalysis = computeClosure(graph, monitor, ObjectVertex.class);
           
@@ -193,7 +200,7 @@ public class FlowGraph implements Iterable<Vertex> {
 
       @Override
       public OrdinalSetMapping<ObjectVertex> getInstanceKeyMapping() {
-        // TODO Auto-generated method stub
+        assert false;
         return null;
       }
 
@@ -313,10 +320,78 @@ public class FlowGraph implements Iterable<Vertex> {
         };
       }
 
+      private HeapGraph<ObjectVertex> heapGraph;
+      
       @Override
-      public HeapGraph getHeapGraph() {
-        assert false;
-        return null;
+      public HeapGraph<ObjectVertex> getHeapGraph() {
+        if (heapGraph == null) {
+
+          final PointerAnalysis<ObjectVertex> pa = this;
+          class FieldBasedHeapGraph extends SlowSparseNumberedGraph<Object> implements HeapGraph<ObjectVertex> {
+
+            private <X> X ensureNode(X n) {
+              if (!containsNode(n)) {
+                addNode(n);
+              }
+
+              return n;
+            }
+
+            {
+              for(PropVertex property : factory.getPropVertices()) {
+
+                // edges from objects to properties assigned to them
+                for(Iterator<Vertex> ps = graph.getPredNodes(property); ps.hasNext(); ) {
+                  Vertex p = ps.next();
+                  if (p instanceof VarVertex) {
+                    int rval = ((VarVertex) p).getValueNumber();
+                    FuncVertex func = ((VarVertex) p).getFunction();
+                    DefUse du = cache.getDefUse(cache.getIR(func.getConcreteType().getMethod(AstMethodReference.fnSelector)));
+                    for(Iterator<SSAInstruction> insts = du.getUses(rval); insts.hasNext(); ) {
+                      SSAInstruction inst = insts.next();
+                      if (inst instanceof JavaScriptPropertyWrite) {
+                        int obj = ((JavaScriptPropertyWrite) inst).getObjectRef();
+                        VarVertex object = factory.makeVarVertex(func, obj);
+                        for(ObjectVertex o : getPointsToSet(object)) {
+                          addEdge(ensureNode(o), ensureNode(property));
+                        }
+                      }
+                    }
+                  }
+                }
+
+                // edges from properties to objects to which they may point
+                for(ObjectVertex o : getPointsToSet(property)) {
+                  addEdge(ensureNode(property), ensureNode(o));
+                }
+              }
+            }
+
+            @Override
+            public Collection<Object> getReachableInstances(Set<Object> roots) {
+              return DFS.getReachableNodes(this, roots, new Filter<Object>() {
+                @Override
+                public boolean accepts(Object o) {
+                  return o instanceof ObjectVertex;
+                } 
+              });
+            }
+
+            @Override
+            public HeapModel getHeapModel() {
+              return pa.getHeapModel();
+            }
+
+            @Override
+            public PointerAnalysis<ObjectVertex> getPointerAnalysis() {
+              return pa;
+            }
+          }
+
+          heapGraph = new FieldBasedHeapGraph();
+        }
+
+        return heapGraph;
       }
 
       @Override

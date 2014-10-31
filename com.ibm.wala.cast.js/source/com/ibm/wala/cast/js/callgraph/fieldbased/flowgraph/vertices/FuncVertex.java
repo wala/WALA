@@ -22,9 +22,9 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.collections.Pair;
-import com.sun.xml.internal.fastinfoset.stax.events.EmptyIterator;
 
 /**
  * A function vertex represents a function object (or, more precisely, all function objects
@@ -70,7 +70,7 @@ public class FuncVertex extends Vertex implements ObjectVertex {
     
     // built in objects
     if (ctor == null) {
-      return EmptyIterator.getInstance();
+      return EmptyIterator.instance();
     }
     
     Iterator<CGNode> callers = CG.getPredNodes(ctor);
