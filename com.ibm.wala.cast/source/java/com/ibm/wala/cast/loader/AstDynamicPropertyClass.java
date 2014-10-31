@@ -10,22 +10,16 @@
  *****************************************************************************/
 package com.ibm.wala.cast.loader;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
-import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.strings.Atom;
 
 public abstract class AstDynamicPropertyClass extends AstClass {
@@ -45,72 +39,7 @@ public abstract class AstDynamicPropertyClass extends AstClass {
       return getSuperclass().getField(name);
     } else {
       final boolean isStatic = isStaticField(name);
-      declaredFields.put(name, new IField() {
-        @Override
-        public String toString() {
-          return "<field " + name + ">";
-        }
-
-        @Override
-        public IClass getDeclaringClass() {
-          return AstDynamicPropertyClass.this;
-        }
-
-        @Override
-        public Atom getName() {
-          return name;
-        }
-
-        @Override
-        public TypeReference getFieldTypeReference() {
-          return defaultDescriptor;
-        }
-
-        @Override
-        public FieldReference getReference() {
-          return FieldReference.findOrCreate(AstDynamicPropertyClass.this.getReference(), name, defaultDescriptor);
-        }
-
-        @Override
-        public boolean isFinal() {
-          return false;
-        }
-
-        @Override
-        public boolean isPrivate() {
-          return false;
-        }
-
-        @Override
-        public boolean isProtected() {
-          return false;
-        }
-
-        @Override
-        public boolean isPublic() {
-          return false;
-        }
-
-        @Override
-        public boolean isVolatile() {
-          return false;
-        }
-
-        @Override
-        public boolean isStatic() {
-          return isStatic;
-        }
-
-        @Override
-        public IClassHierarchy getClassHierarchy() {
-          return AstDynamicPropertyClass.this.getClassHierarchy();
-        }
-        
-        @Override
-        public Collection<Annotation> getAnnotations() {
-          return Collections.emptySet();
-        }
-      });
+      declaredFields.put(name, new AstDynamicField(isStatic, this, name, defaultDescriptor));
 
       return declaredFields.get(name);
     }
