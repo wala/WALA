@@ -19,6 +19,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.ibm.wala.analysis.pointers.HeapGraph;
+import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.GlobalVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.ObjectVertex;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
@@ -34,7 +35,6 @@ import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.loader.AstDynamicField;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -264,7 +264,13 @@ public abstract class TestPointerAnalyses {
             
             System.err.println("heap graph models instruction " + inst);
           }          
-        }
+        } else if (inst instanceof AstGlobalWrite) {
+          String propName = ((AstGlobalWrite) inst).getGlobalName();
+          propName = propName.substring("global ".length());
+          PointerKey propKey = fbPA.getHeapModel().getPointerKeyForInstanceField(null, new AstDynamicField(false, null, Atom.findOrCreateUnicodeAtom(propName), JavaScriptTypes.Root));
+          Assert.assertTrue("global " + propName + " should exist", hg.hasEdge(GlobalVertex.instance(), propKey));
+
+          System.err.println("heap graph models instruction " + inst);}
       }
     }
     

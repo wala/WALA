@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.ibm.wala.analysis.pointers.HeapGraph;
+import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.AbstractVertexVisitor;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.CreationSiteVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.FuncVertex;
@@ -355,6 +356,8 @@ public class FlowGraph implements Iterable<Vertex> {
                         for(ObjectVertex o : getPointsToSet(object)) {
                           addEdge(ensureNode(o), ensureNode(property));
                         }
+                      } else if (inst instanceof AstGlobalWrite) {
+                        addEdge(ensureNode(factory.global()), ensureNode(property));
                       }
                     }
                   }

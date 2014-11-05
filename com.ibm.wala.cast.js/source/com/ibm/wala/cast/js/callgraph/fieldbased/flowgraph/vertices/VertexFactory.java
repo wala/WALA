@@ -128,7 +128,7 @@ public class VertexFactory {
 		return value;
 	}
 	
-	private GlobalVertex global = new GlobalVertex();
+	private GlobalVertex global = GlobalVertex.instance();
 	
 	public GlobalVertex global() {
 	  return global;

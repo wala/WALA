@@ -11,6 +11,16 @@ import com.ibm.wala.util.collections.Pair;
 
 public class GlobalVertex extends Vertex implements ObjectVertex {
 
+  private GlobalVertex() {
+    
+  }
+  
+  public static final GlobalVertex global = new GlobalVertex();
+  
+  public static GlobalVertex instance() {
+    return global;
+  }
+  
   @Override
   public IClass getConcreteType() {
     return null;
