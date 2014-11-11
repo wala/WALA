@@ -10,29 +10,30 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
+import com.ibm.wala.util.Predicate;
+
 /**
  * A filter "A or B"
  */
-public class OrFilter<T> implements Filter<T> {
+public class OrFilter<T> extends Predicate<T> {
 
-  public static <T> OrFilter<T> createOrFilter(Filter<T> a, Filter<T> b) {
+  public static <T> OrFilter<T> createOrFilter(Predicate<T> a, Predicate<T> b) {
     if (a == null || b == null) {
       throw new IllegalArgumentException("cannot compose null filter");
     }
     return new OrFilter<T>(a, b);
   }
 
-  private final Filter<T> a;
-  private final Filter<T> b;
+  private final Predicate<T> a;
+  private final Predicate<T> b;
   
-  private OrFilter(Filter<T> a, Filter<T> b) {
+  private OrFilter(Predicate<T> a, Predicate<T> b) {
     this.a = a;
     this.b = b;
   }
   
-  @Override
-  public boolean accepts(T o) {
-    return a.accepts(o) || b.accepts(o);
+  @Override public boolean test(T o) {
+    return a.test(o) || b.test(o);
   }
 
 }

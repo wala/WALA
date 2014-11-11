@@ -24,7 +24,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.CollectionFilter;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphSlicer;
@@ -106,9 +106,8 @@ public class SWTTypeHierarchy {
    * Restrict g to nodes from the Application loader
    */
   static Graph<IClass> pruneForAppLoader(Graph<IClass> g) throws WalaException {
-    Filter<IClass> f = new Filter<IClass>() {
-      @Override
-      public boolean accepts(IClass c) {
+    Predicate<IClass> f = new Predicate<IClass>() {
+      @Override public boolean test(IClass c) {
         return (c.getClassLoader().getReference().equals(ClassLoaderReference.Application));
       }
     };
@@ -116,9 +115,9 @@ public class SWTTypeHierarchy {
   }
 
   /**
-   * Remove from a graph g any nodes that are not accepted by a {@link Filter}
+   * Remove from a graph g any nodes that are not accepted by a {@link Predicate}
    */
-  public static <T> Graph<T> pruneGraph(Graph<T> g, Filter<T> f) throws WalaException {
+  public static <T> Graph<T> pruneGraph(Graph<T> g, Predicate<T> f) throws WalaException {
     Collection<T> slice = GraphSlicer.slice(g, f);
     return GraphSlicer.prune(g, new CollectionFilter<T>(slice));
   }

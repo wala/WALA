@@ -12,7 +12,7 @@ package com.ibm.wala.dataflow.IFDS;
 
 import java.util.Iterator;
 
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
@@ -76,13 +76,13 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /**
    * a filter that accepts only exit nodes from the original graph.
    */
-  private class ExitFilter implements Filter {
+  private class ExitFilter extends Predicate {
     /*
      * @see com.ibm.wala.util.Filter#accepts(java.lang.Object)
      */
     @Override
     @SuppressWarnings("unchecked")
-    public boolean accepts(Object o) {
+    public boolean test(Object o) {
       return delegate.isExit((T) o);
     }
   }
@@ -110,17 +110,15 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   @Override
   public Iterator<T> getNormalSuccessors(final T ret) {
     Iterator<? extends Object> allPreds = delegate.getPredNodes(ret);
-    Filter sameProc = new Filter<T>() {
-      @Override
-      public boolean accepts(T o) {
+    Predicate sameProc = new Predicate<T>() {
+      @Override public boolean test(T o) {
         // throw out the exit node, which can be a predecessor due to tail recursion.
         return getProcOf(ret).equals(getProcOf(o)) && !delegate.isExit(o);
       }
     };
     Iterator<Object> sameProcPreds = new FilterIterator<Object>(allPreds, sameProc);
-    Filter notCall = new Filter<T>() {
-      @Override
-      public boolean accepts(T o) {
+    Predicate notCall = new Predicate<T>() {
+      @Override public boolean test(T o) {
         return !delegate.isCall(o);
       }
     };

@@ -18,19 +18,19 @@ import com.ibm.wala.util.Predicate;
 @Deprecated
 public class FilterPredicate<T> extends Predicate<T> {
   
-  public static <T> FilterPredicate<T> toPredicate(Filter<T> f) {
+  public static <T> FilterPredicate<T> toPredicate(Predicate<T> f) {
     return new FilterPredicate<T>(f);
   }
   
-  private final Filter<T> f;
+  private final Predicate<T> f;
   
-  private FilterPredicate(Filter<T> f) {
+  private FilterPredicate(Predicate<T> f) {
     this.f = f;
   }
 
   @Override
   public boolean test(T t) {
-    return f.accepts(t);
+    return f.test(t);
   }
  
 }
