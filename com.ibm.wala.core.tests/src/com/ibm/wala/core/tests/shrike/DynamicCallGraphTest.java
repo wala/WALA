@@ -44,7 +44,7 @@ public class DynamicCallGraphTest extends DynamicCallGraphTestBase {
   }
 
   @Test
-  public void testGraph() throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, ClassHierarchyException, CancelException  {
+  public void testGraph() throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, ClassHierarchyException, CancelException, InterruptedException  {
     instrument(testJarLocation);
     run(testMain, null);
     CallGraph staticCG = staticCG(null);
@@ -52,7 +52,7 @@ public class DynamicCallGraphTest extends DynamicCallGraphTestBase {
   }
 
   @Test
-  public void testExclusions() throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, ClassHierarchyException, CancelException  {
+  public void testExclusions() throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, ClassHierarchyException, CancelException, InterruptedException  {
     instrument(testJarLocation);
     run(testMain, "ShrikeTestExclusions.txt");
     CallGraph staticCG = staticCG("ShrikeTestExclusions.txt");

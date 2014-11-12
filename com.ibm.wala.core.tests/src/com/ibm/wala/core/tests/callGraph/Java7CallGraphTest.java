@@ -14,6 +14,7 @@ package com.ibm.wala.core.tests.callGraph;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.jar.JarFile;
 
 import org.junit.Test;
 
@@ -31,16 +32,25 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.shrikeBT.analysis.Analyzer.FailureException;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.io.TemporaryFile;
 
 public class Java7CallGraphTest extends DynamicCallGraphTestBase {
-  
-  @Test public void testOcamlHelloHash() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-   
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("ocaml_hello_hash.txt", CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+
+  @Test public void testOcamlHelloHash() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InterruptedException {
+    testOCamlJar("hello_hash.jar");
+  }
+
+  private void testOCamlJar(String jarFile, String... args) throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InterruptedException {   
+    File F = TemporaryFile.urlToFile(jarFile.replace('.',  '_') + ".jar", getClass().getClassLoader().getResource(jarFile));
+    F.deleteOnExit();
+
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("base.txt", CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    scope.addToScope(ClassLoaderReference.Application, new JarFile(F));
+    
     ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, "Lpack/ocamljavaMain");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
@@ -53,10 +63,8 @@ public class Java7CallGraphTest extends DynamicCallGraphTestBase {
     
     CallGraph cg = builder.makeCallGraph(options, null); 
     
-    File F = TemporaryFile.urlToFile("hello_hash_test_jar.jar", getClass().getClassLoader().getResource("hello_hash.jar"));
-    F.deleteOnExit();
     instrument(F.getAbsolutePath());
-    run("pack.ocamljavaMain", null);
+    run("pack.ocamljavaMain", null, args);
     
     checkNodes(cg, new Predicate<MethodReference>() {
       @Override

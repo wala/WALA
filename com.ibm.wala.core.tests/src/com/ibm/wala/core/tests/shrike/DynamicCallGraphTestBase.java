@@ -24,6 +24,9 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.zip.GZIPInputStream;
 
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.Java;
+import org.apache.tools.ant.types.Path;
 import org.junit.Assert;
 
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -89,46 +92,38 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
     }
   }
   
-  protected void run(String mainClass, String exclusionsFile, String... args) throws IOException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-    String shrikeBin = getClasspathEntry("com.ibm.wala.shrike");
-    String utilBin = getClasspathEntry("com.ibm.wala.util");
-    URLClassLoader jcl = new URLClassLoader(new URL[]{ new URL("file://" + instrumentedJarLocation), new URL("file://" + shrikeBin), new URL("file://" + utilBin) }, DynamicCallGraphTestBase.class.getClassLoader().getParent());
- 
-    Class<?> testClass = jcl.loadClass(mainClass);
-    Assert.assertNotNull(testClass);
-    Method testMain = testClass.getDeclaredMethod("main", String[].class);
-    Assert.assertNotNull(testMain);
+  protected void run(String mainClass, String exclusionsFile, String... args) throws IOException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, InterruptedException {
+    Project p = new Project();
+    p.setBaseDir(new File(System.getProperty("java.io.tmpdir")));
+    p.init();
+    p.fireBuildStarted();
 
-    System.setProperty("dynamicCGFile", cgLocation);
-    System.setProperty("dynamicCGHandleMissing", "true");
+    Java childJvm = new Java();
+    childJvm.setTaskName("test_" + mainClass.replace('.', '_'));
+    childJvm.setClasspath(new Path(p, getClasspathEntry("com.ibm.wala.shrike") + ":" +  getClasspathEntry("com.ibm.wala.util") + ":" +  instrumentedJarLocation));
+    childJvm.setClassname(mainClass);
+
+    String jvmArgs = "-DdynamicCGFile=" + cgLocation + " -DdynamicCGHandleMissing=true";
     if (exclusionsFile != null) {
       File tmpFile = TemporaryFile.urlToFile("exclusions.txt", getClass().getClassLoader().getResource(exclusionsFile));
-      System.setProperty("dynamicCGFilter", tmpFile.getCanonicalPath());
+      jvmArgs += " -DdynamicCGFilter=" + tmpFile.getCanonicalPath();
     }
-    try {
-      testMain.invoke(null, args==null? new Object[0]: new Object[]{args});      
-    } catch (Throwable e) {
-      // exceptions here are from the instrumented program
-      // this is fine, since we are collecting its call graph
-      // and exceptions are possible behavior.
-
-      // well, most errors are fine.  On the other hand, low-level 
-      // class loading errors likely indicate a bug in instrumentation,
-      // which is often tested with this test.
-      while (e.getCause() != null) {
-        Assert.assertFalse(String.valueOf(e.getCause()), e.getCause() instanceof LinkageError);
-        e = e.getCause();
-      }
-    }
+    childJvm.setJvmargs(jvmArgs);
     
-    // the VM is not exiting, so stop tracing explicitly
-    Class<?> runtimeClass = jcl.loadClass("com.ibm.wala.shrike.cg.Runtime");
-    Assert.assertNotNull(runtimeClass);
-    Method endTrace = runtimeClass.getDeclaredMethod("endTrace");
-    Assert.assertNotNull(endTrace);
-    endTrace.invoke(null);
-
-    Assert.assertTrue("expected to create call graph", new File(System.getProperty("dynamicCGFile")).exists());
+    StringBuffer argsStr = new StringBuffer();
+    for(String a : args) {
+      argsStr.append(a).append(" ");
+    }
+    childJvm.setArgs(argsStr.toString());
+    
+    childJvm.setFailonerror(true);
+    childJvm.setFork(true);
+    
+    childJvm.init();
+    Process x = Runtime.getRuntime().exec(childJvm.getCommandLine().toString());
+    x.waitFor();
+    
+    Assert.assertTrue("expected to create call graph", new File(cgLocation).exists());
   }
    
   interface EdgesTest {
@@ -144,8 +139,8 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
   }
   
   protected void checkEdges(CallGraph staticCG, Predicate<MethodReference> filter) throws IOException {
+    final Set<Pair<CGNode,CGNode>> edges = HashSetFactory.make();
     check(staticCG, new EdgesTest() {
-      private final Set<Pair<CGNode,CGNode>> edges = HashSetFactory.make();
       @Override
       public void edgesTest(CallGraph staticCG, CGNode caller, MethodReference calleeRef) {
         if (! calleeRef.getName().equals(MethodReference.clinitName)) {
@@ -186,7 +181,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
   }
  
   protected void check(CallGraph staticCG, EdgesTest test, Predicate<MethodReference> filter) throws IOException {
-    BufferedReader dynamicEdgesFile = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(System.getProperty("dynamicCGFile")))));
+    BufferedReader dynamicEdgesFile = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(cgLocation))));
     String line;
     int lines = 0;
     loop: while ((line = dynamicEdgesFile.readLine()) != null) {
