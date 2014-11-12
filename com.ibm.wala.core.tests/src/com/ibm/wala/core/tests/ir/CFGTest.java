@@ -129,6 +129,22 @@ public class CFGTest extends WalaTestCase {
   }
 
   @Test
+  public void testIRCacheIdempotence() {
+    MethodReference mr = StringStuff.makeMethodReference("hello.Hello.main([Ljava/lang/String;)V");
+
+    IMethod m = cha.resolveMethod(mr);
+    AnalysisCache cache = new AnalysisCache();
+    IR irBefore = cache.getIR(m);
+    cache.getSSACache().wipe();
+    IR irAfter = cache.getIR(m);
+    for (int i = 0; i < irBefore.getInstructions().length; i++) {
+      System.out.println(irBefore.getInstructions()[i]);
+      System.out.println(irAfter.getInstructions()[i]);
+      Assert.assertEquals(irAfter.getInstructions()[i], irBefore.getInstructions()[i]);
+    }
+  }
+
+  @Test
   public void testSync1() {
     MethodReference mr = StringStuff.makeMethodReference("cfg.MonitorTest.sync1()V");
 
