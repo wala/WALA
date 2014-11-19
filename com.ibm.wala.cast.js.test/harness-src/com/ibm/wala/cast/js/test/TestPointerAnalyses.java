@@ -12,6 +12,7 @@ package com.ibm.wala.cast.js.test;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -22,12 +23,16 @@ import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.GlobalVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.ObjectVertex;
+import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.PrototypeFieldVertex;
+import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.PrototypeFieldVertex.PrototypeField;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.ipa.callgraph.GlobalObjectKey;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
+import com.ibm.wala.cast.js.ipa.callgraph.TransitivePrototypeKey;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions.JavaScriptConstructor;
+import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
 import com.ibm.wala.cast.js.test.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
@@ -50,9 +55,12 @@ import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.strings.Atom;
+import com.sun.xml.internal.fastinfoset.stax.events.EmptyIterator;
 
 public abstract class TestPointerAnalyses {
 
@@ -196,6 +204,7 @@ public abstract class TestPointerAnalyses {
       Predicate<Pair<Set<Pair<CGNode, NewSiteReference>>, Set<Pair<CGNode, NewSiteReference>>>> test, CallGraph fbCG,
       PointerAnalysis<ObjectVertex> fbPA, CallGraph propCG, PointerAnalysis<InstanceKey> propPA) {
     HeapGraph<ObjectVertex> hg = fbPA.getHeapGraph();
+    HeapGraph<InstanceKey> propHg = propPA.getHeapGraph();
     
     Set<MethodReference> functionsToCompare = HashSetFactory.make();
     for(CGNode n : fbCG) {
@@ -246,22 +255,22 @@ public abstract class TestPointerAnalyses {
           int property = ((JavaScriptPropertyWrite) inst).getMemberRef();
           if (symtab.isConstant(property)) {
             String p = JSCallGraphUtil.simulateToStringForPropertyNames(symtab.getConstantValue(property));
-            PointerKey propKey = fbPA.getHeapModel().getPointerKeyForInstanceField(null, new AstDynamicField(false, null, Atom.findOrCreateUnicodeAtom(p), JavaScriptTypes.Root));
             
             int obj = ((JavaScriptPropertyWrite) inst).getObjectRef();
             PointerKey objKey = fbPA.getHeapModel().getPointerKeyForLocal(node, obj);
             OrdinalSet<ObjectVertex> objPtrs = fbPA.getPointsToSet(objKey);
             for(ObjectVertex o : objPtrs) {
-              Assert.assertTrue("object " + objKey + " should have field " + propKey, hg.hasEdge(o, propKey));
+              PointerKey propKey = fbPA.getHeapModel().getPointerKeyForInstanceField(o, new AstDynamicField(false, o.getConcreteType(), Atom.findOrCreateUnicodeAtom(p), JavaScriptTypes.Root));
+              Assert.assertTrue("object " + o + " should have field " + propKey, hg.hasEdge(o, propKey));
+
+              int val = ((JavaScriptPropertyWrite) inst).getValue();
+              PointerKey valKey = fbPA.getHeapModel().getPointerKeyForLocal(node, val);
+              OrdinalSet<ObjectVertex> valPtrs = fbPA.getPointsToSet(valKey);
+              for(ObjectVertex v : valPtrs) {
+                Assert.assertTrue("field " + propKey + " should point to object " + valKey + "(" + v + ")", hg.hasEdge(propKey, v));
+              }
             }
-            
-            int val = ((JavaScriptPropertyWrite) inst).getValue();
-            PointerKey valKey = fbPA.getHeapModel().getPointerKeyForLocal(node, val);
-            OrdinalSet<ObjectVertex> valPtrs = fbPA.getPointsToSet(valKey);
-            for(ObjectVertex o : valPtrs) {
-              Assert.assertTrue("field " + propKey + " should point to object " + objKey , hg.hasEdge(propKey, o));
-            }
-            
+                     
             System.err.println("heap graph models instruction " + inst);
           }          
         } else if (inst instanceof AstGlobalWrite) {
@@ -270,15 +279,78 @@ public abstract class TestPointerAnalyses {
           PointerKey propKey = fbPA.getHeapModel().getPointerKeyForInstanceField(null, new AstDynamicField(false, null, Atom.findOrCreateUnicodeAtom(propName), JavaScriptTypes.Root));
           Assert.assertTrue("global " + propName + " should exist", hg.hasEdge(GlobalVertex.instance(), propKey));
 
-          System.err.println("heap graph models instruction " + inst);}
-      }
+          System.err.println("heap graph models instruction " + inst);
+        } else if (inst instanceof JavaScriptInvoke) {
+          int vn = ((JavaScriptInvoke) inst).getReceiver();
+          
+          Set<Pair<CGNode, NewSiteReference>> fbPrototypes = getFbPrototypes(fbPA, hg, fbCG, node, vn);
+          Set<Pair<CGNode, NewSiteReference>> propPrototypes = getPropPrototypes(propPA, propCG, node, vn);
+          Assert.assertTrue("should have prototype overlap for " + fbPrototypes + " and " + propPrototypes + " at " + inst,
+              (fbPrototypes.isEmpty() && propPrototypes.isEmpty()) || !Collections.disjoint(fbPrototypes, propPrototypes));
+        }
+      } 
     }
     
     for(InstanceKey k : fbPA.getInstanceKeys()) {
       k.getCreationSites(fbCG);
     }
   }
-  
+
+  private static <T extends InstanceKey> Set<Pair<CGNode, NewSiteReference>> getPrototypeSites(PointerAnalysis<T> fbPA, 
+      CallGraph CG,
+      Function<T,Iterator<T>> proto,
+      CGNode node, 
+      int vn) {
+    Set<Pair<CGNode, NewSiteReference>> fbProtos = HashSetFactory.make();
+    PointerKey fbKey = fbPA.getHeapModel().getPointerKeyForLocal(node, vn);
+    OrdinalSet<T> fbPointsTo = fbPA.getPointsToSet(fbKey);
+    for(T o : fbPointsTo) {
+      for(Iterator<T> ps = proto.apply(o); ps.hasNext(); ) {
+        for(Iterator<Pair<CGNode, NewSiteReference>> css = ps.next().getCreationSites(CG); css.hasNext(); ) {
+          fbProtos.add(css.next());
+        }
+      }
+    }
+    return fbProtos;
+  }
+
+  private static Set<Pair<CGNode, NewSiteReference>> getFbPrototypes(PointerAnalysis<ObjectVertex> fbPA, 
+      final HeapGraph<ObjectVertex> hg,
+      CallGraph CG,
+      CGNode node, 
+      int vn) {
+    return getPrototypeSites(fbPA, CG, new Function<ObjectVertex,Iterator<ObjectVertex>>() {
+      @Override
+      public Iterator<ObjectVertex> apply(ObjectVertex o) {
+        PrototypeFieldVertex proto = new PrototypeFieldVertex(PrototypeField.__proto__, o);
+        if (hg.containsNode(proto)) {
+        return 
+            new MapIterator<Object,ObjectVertex>(hg.getSuccNodes(proto),
+                new Function<Object,ObjectVertex>() {
+                  @Override
+                  public ObjectVertex apply(Object object) {
+                    return (ObjectVertex)object;
+                  } 
+            });
+        } else {
+          return EmptyIterator.instance;
+        }
+      } 
+    }, node, vn);
+  }
+
+  private static Set<Pair<CGNode, NewSiteReference>> getPropPrototypes(final PointerAnalysis<InstanceKey> fbPA, 
+      CallGraph CG, 
+      CGNode node, 
+      int vn) {
+    return getPrototypeSites(fbPA, CG, new Function<InstanceKey,Iterator<InstanceKey>>() {
+      @Override
+      public Iterator<InstanceKey> apply(InstanceKey o) {
+        return fbPA.getPointsToSet(new TransitivePrototypeKey(o)).iterator();
+      } 
+    }, node, vn);
+  }
+
   private void testPageUserCodeEquivalent(URL page) throws IOException, WalaException, CancelException {
     final String name = page.getFile().substring(page.getFile().lastIndexOf('/')+1, page.getFile().lastIndexOf('.'));
     testPage(page, nameFilter(name), new CheckPointers());
