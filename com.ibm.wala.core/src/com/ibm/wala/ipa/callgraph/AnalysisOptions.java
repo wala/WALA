@@ -64,10 +64,15 @@ public class AnalysisOptions {
    * options for handling reflection during call graph construction
    */
   public static enum ReflectionOptions {
-    FULL("full", Integer.MAX_VALUE, false, false), NO_FLOW_TO_CASTS("no_flow_to_casts", 0, false, false), NO_METHOD_INVOKE(
-        "no_method_invoke", Integer.MAX_VALUE, true, false), NO_FLOW_TO_CASTS_NO_METHOD_INVOKE("no_flow_to_casts_no_method_invoke",
-        0, true, false), ONE_FLOW_TO_CASTS_NO_METHOD_INVOKE("one_flow_to_casts_no_method_invoke", 1, true, false), NO_STRING_CONSTANTS(
-        "no_string_constants", Integer.MAX_VALUE, false, true), NONE("none", 0, true, true);
+    FULL("full", Integer.MAX_VALUE, false, false, false), 
+    APPLICATION_GET_METHOD("application_get_method", Integer.MAX_VALUE, false, false, true), 
+    NO_FLOW_TO_CASTS("no_flow_to_casts", 0, false, false, false), 
+    NO_METHOD_INVOKE("no_method_invoke", Integer.MAX_VALUE, true, false, false), 
+    NO_FLOW_TO_CASTS_NO_METHOD_INVOKE("no_flow_to_casts_no_method_invoke", 0, true, false, false), 
+    ONE_FLOW_TO_CASTS_NO_METHOD_INVOKE("one_flow_to_casts_no_method_invoke", 1, true, false, false), 
+    ONE_FLOW_TO_CASTS_APPLICATION_GET_METHOD("one_flow_to_casts_application_get_method", 1, false, false, true), 
+    NO_STRING_CONSTANTS("no_string_constants", Integer.MAX_VALUE, false, true, false), 
+    NONE("none", 0, true, true, true);
 
     private final String name;
 
@@ -82,15 +87,21 @@ public class AnalysisOptions {
     private final boolean ignoreMethodInvoke;
 
     /**
+     * should get method calls be modeled only for application classes?
+     */
+    private final boolean applicationClassesOnly;
+    
+    /**
      * should calls to reflective methods with String constant arguments be ignored?
      */
     private final boolean ignoreStringConstants;
 
-    private ReflectionOptions(String name, int numFlowToCastIterations, boolean ignoreMethodInvoke, boolean ignoreInterpretCalls) {
+    private ReflectionOptions(String name, int numFlowToCastIterations, boolean ignoreMethodInvoke, boolean ignoreInterpretCalls, boolean applicationClassesOnly) {
       this.name = name;
       this.numFlowToCastIterations = numFlowToCastIterations;
       this.ignoreMethodInvoke = ignoreMethodInvoke;
       this.ignoreStringConstants = ignoreInterpretCalls;
+      this.applicationClassesOnly = applicationClassesOnly;
     }
 
     public String getName() {
@@ -107,6 +118,10 @@ public class AnalysisOptions {
 
     public boolean isIgnoreStringConstants() {
       return ignoreStringConstants;
+    }
+
+    public boolean isApplicationClassesOnly() {
+      return applicationClassesOnly;
     }
 
   }

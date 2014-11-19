@@ -103,7 +103,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
     childJvm.setClasspath(new Path(p, getClasspathEntry("com.ibm.wala.shrike") + ":" +  getClasspathEntry("com.ibm.wala.util") + ":" +  instrumentedJarLocation));
     childJvm.setClassname(mainClass);
 
-    String jvmArgs = "-DdynamicCGFile=" + cgLocation + " -DdynamicCGHandleMissing=true";
+    String jvmArgs = "-Xmx500M -DdynamicCGFile=" + cgLocation + " -DdynamicCGHandleMissing=true";
     if (exclusionsFile != null) {
       File tmpFile = TemporaryFile.urlToFile("exclusions.txt", getClass().getClassLoader().getResource(exclusionsFile));
       jvmArgs += " -DdynamicCGFilter=" + tmpFile.getCanonicalPath();

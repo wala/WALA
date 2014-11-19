@@ -52,7 +52,7 @@ import com.ibm.wala.util.warnings.Warnings;
  * A class loader that reads class definitions from a set of Modules.
  */
 public class ClassLoaderImpl implements IClassLoader {
-  private static final int DEBUG_LEVEL = 0;
+  public static final int DEBUG_LEVEL = 0;
 
   private static final boolean OPTIMIZE_JAR_FILE_IO = true;
 
