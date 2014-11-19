@@ -13,7 +13,6 @@ package com.ibm.wala.dalvik.test.callGraph;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Set;
 
 import org.junit.Test;
 
@@ -26,6 +25,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.shrikeBT.analysis.Analyzer.FailureException;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.Predicate;
@@ -39,28 +39,39 @@ public class DynamicDalvikComparison extends DalvikCallGraphTestBase {
 		String javaJarPath = getJavaJar(javaScope);
 		File androidDex = convertJarToDex(new File(javaJarPath));
 		Pair<CallGraph,PointerAnalysis<InstanceKey>> android = makeDalvikCallGraph(useAndroidLib, mainClass, androidDex.getAbsolutePath());
-		final Set<MethodReference> androidMethods = applicationMethods(android.fst);
 
 		dynamicCG(new File(javaJarPath), mainClass, args);
 		
 	    checkEdges(android.fst, new Predicate<MethodReference>() {
 	        @Override
 	        public boolean test(MethodReference t) {
-	        	return androidMethods.contains(t);
+	        	return t.getDeclaringClass().getClassLoader().equals(ClassLoaderReference.Application);
 	        }
 	      });
 	}
 	
 	@Test
-	public void testJLex() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InvalidClassFileException, FailureException {
+	public void testJLexJavaLib() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InvalidClassFileException, FailureException {
 		File inputFile = TemporaryFile.urlToFile("sample.lex", getClass().getClassLoader().getResource("sample.lex"));
 		test(false, TestConstants.JLEX_MAIN, TestConstants.JLEX, inputFile.getAbsolutePath());
 	}
 
 	@Test
-	public void testJavaCup() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InvalidClassFileException, FailureException {
+	public void testJLexDexLib() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InvalidClassFileException, FailureException {
+		File inputFile = TemporaryFile.urlToFile("sample.lex", getClass().getClassLoader().getResource("sample.lex"));
+		test(true, TestConstants.JLEX_MAIN, TestConstants.JLEX, inputFile.getAbsolutePath());
+	}
+
+	@Test
+	public void testJavaCupJavaLib() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InvalidClassFileException, FailureException {
 		File inputFile = TemporaryFile.urlToFile("troff2html.cup", getClass().getClassLoader().getResource("troff2html.cup"));
 		test(false, TestConstants.JAVA_CUP_MAIN, TestConstants.JAVA_CUP, inputFile.getAbsolutePath());
+	}
+
+	@Test
+	public void testJavaCupDexLib() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InvalidClassFileException, FailureException {
+		File inputFile = TemporaryFile.urlToFile("troff2html.cup", getClass().getClassLoader().getResource("troff2html.cup"));
+		test(true, TestConstants.JAVA_CUP_MAIN, TestConstants.JAVA_CUP, inputFile.getAbsolutePath());
 	}
 
 }

@@ -12,6 +12,7 @@ package com.ibm.wala.dalvik.test.callGraph;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.junit.Assert;
@@ -34,9 +35,13 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ExceptionReturnValueKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.OrdinalSet;
 
@@ -86,13 +91,25 @@ public class JVMLDalvikComparison extends DalvikCallGraphTestBase {
 		Set<MethodReference> androidMethods = applicationMethods(android.fst);
 		Set<MethodReference> javaMethods = applicationMethods(java.fst);
 		
-		Set<Pair<CGNode, CGNode>> javaExtraEdges = edgeDiff(java.fst, android.fst);
-
-		if (!javaExtraEdges.isEmpty()) {
+		Iterator<Pair<CGNode, CGNode>> javaExtraEdges = edgeDiff(java.fst, android.fst).iterator();
+		if (useAndroidLib) {
+			javaExtraEdges = new FilterIterator<Pair<CGNode, CGNode>>(javaExtraEdges, new Filter<Pair<CGNode, CGNode>>() {
+				private boolean userCode(CGNode n) {
+					return n.getMethod().getDeclaringClass().getClassLoader().getReference().equals(ClassLoaderReference.Application);
+				}
+				@Override
+				public boolean accepts(Pair<CGNode, CGNode> o)  {
+					return userCode(o.fst) && userCode(o.snd);
+				} 
+			});
+		}
+		boolean fail = false;
+		if (javaExtraEdges.hasNext()) {
+			fail = true;
 			Set<MethodReference> javaExtraNodes = HashSetFactory.make(javaMethods);
 			javaExtraNodes.removeAll(androidMethods);		
 
-			System.err.println(javaExtraEdges);
+			System.err.println(Iterator2Collection.toSet(javaExtraEdges));
 			System.err.println(javaExtraNodes);
 			
 			System.err.println(android.fst);
@@ -115,7 +132,7 @@ public class JVMLDalvikComparison extends DalvikCallGraphTestBase {
 			}
 		}
 		
-		Assert.assertTrue(javaExtraEdges.isEmpty());		
+		Assert.assertTrue(!fail);		
 	}
 	
 	@Test

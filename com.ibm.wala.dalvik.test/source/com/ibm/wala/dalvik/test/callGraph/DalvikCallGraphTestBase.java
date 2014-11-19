@@ -16,8 +16,11 @@ import static com.ibm.wala.properties.WalaProperties.ANDROID_RT_JAR;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -37,6 +40,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
@@ -51,6 +55,8 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
+import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -112,7 +118,7 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 		return f;
 	}
 	
-	public void dynamicCG(File javaJarPath, String mainClass, String... args) throws FileNotFoundException, IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+	public void dynamicCG(File javaJarPath, String mainClass, String... args) throws FileNotFoundException, IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, InterruptedException {
 		File F = TemporaryFile.streamToFile(new File("test_jar.jar"), new FileInputStream(javaJarPath));
 		F.deleteOnExit();
 		instrument(F.getAbsolutePath());
@@ -120,11 +126,15 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 	}
 
 	public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeAPKCallGraph(String apkFileName) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
+		return makeAPKCallGraph(apkFileName, new NullProgressMonitor());
+	}
+	
+	public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeAPKCallGraph(String apkFileName, IProgressMonitor monitor) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
 		AnalysisScope scope = 
 			AndroidAnalysisScope.setUpAndroidAnalysisScope(
-				walaProperties.getProperty(ANDROID_RT_JAR),
-				apkFileName,
-				CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+				new File(apkFileName).toURI(),
+				"AndroidRegressionExclusions.txt",
+				androidLibs());
 
 		final IClassHierarchy cha = ClassHierarchy.make(scope);
 
@@ -140,23 +150,39 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 		assert ! es.isEmpty();
 		
 		AnalysisOptions options = new AnalysisOptions(scope, es);
-
+		options.setReflectionOptions(ReflectionOptions.ONE_FLOW_TO_CASTS_APPLICATION_GET_METHOD);
+		
 		SSAPropagationCallGraphBuilder cgb = Util.makeZeroCFABuilder(options, cache, cha, scope);
   
-		CallGraph callGraph = cgb.makeCallGraph(options);
+		CallGraph callGraph = cgb.makeCallGraph(options, monitor);
 		
 		PointerAnalysis<InstanceKey> ptrAnalysis = cgb.getPointerAnalysis();
 		
 		return Pair.make(callGraph, ptrAnalysis);
 	}
 	
+	public static URI[] androidLibs() {
+		List<URI> libs = new ArrayList<URI>();
+		for(File lib : new File(walaProperties.getProperty(ANDROID_RT_JAR)).listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.endsWith("dex");
+			} 
+		})) {
+			libs.add(lib.toURI());
+		}
+		return libs.toArray(new URI[ libs.size() ]);
+	}
+	
 	public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeDalvikCallGraph(boolean useAndroidLib, String mainClassName, String dexFileName) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
 		AnalysisScope scope = 
+			useAndroidLib?
 			AndroidAnalysisScope.setUpAndroidAnalysisScope(
-				useAndroidLib?
-					walaProperties.getProperty(ANDROID_RT_JAR):
-					null, 
-				dexFileName,
+				new File(dexFileName).toURI(), 
+				CallGraphTestUtil.REGRESSION_EXCLUSIONS,
+				androidLibs()):
+			AndroidAnalysisScope.setUpAndroidAnalysisScope(
+				new File(dexFileName).toURI(), 
 				CallGraphTestUtil.REGRESSION_EXCLUSIONS);
 		
 		final IClassHierarchy cha = ClassHierarchy.make(scope);
