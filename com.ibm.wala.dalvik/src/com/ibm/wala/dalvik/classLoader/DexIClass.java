@@ -120,10 +120,10 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
 
         //computeSuperName()
         // Set Super Name;
-        String descriptor = classDef.getSuperclass().getTypeDescriptor();
-        if (descriptor.endsWith(";"))
+        String descriptor = classDef.getSuperclass() != null? classDef.getSuperclass().getTypeDescriptor(): null;
+        if (descriptor != null && descriptor.endsWith(";"))
             descriptor = descriptor.substring(0,descriptor.length()-1); //remove last ';'
-        superName = ImmutableByteArray.make(descriptor);
+        superName = descriptor != null? ImmutableByteArray.make(descriptor): null;
 
         //computeInterfaceNames()
         // Set interfaceNames
@@ -268,8 +268,10 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
     	ArrayList<IMethod> methodsAL = new ArrayList<IMethod>();
     	
     	logger.debug("class: " + classDef.getClassType().getTypeDescriptor());
-    	logger.debug("superclass: " + classDef.getSuperclass().getTypeDescriptor());
- 	
+    	if (classDef.getSuperclass() != null){
+    		logger.debug("superclass: " + classDef.getSuperclass().getTypeDescriptor());
+    	}
+    	
         if (methods == null && classDef.getClassData() == null)
             methods = new IMethod[0];
 

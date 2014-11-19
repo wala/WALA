@@ -47,6 +47,8 @@
 
 package com.ibm.wala.dalvik.classLoader;
 
+import static com.ibm.wala.classLoader.ClassLoaderImpl.DEBUG_LEVEL;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -55,7 +57,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.classLoader.ClassLoaderImpl;
@@ -78,10 +79,11 @@ import com.ibm.wala.util.warnings.Warnings;
  *
  */
 public class WDexClassLoaderImpl extends ClassLoaderImpl {
-	private static final Logger logger = LoggerFactory.getLogger(WDexClassLoaderImpl.class);
-	
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(WDexClassLoaderImpl.class);
+
     private IClassLoader lParent;
 
+    private final SetOfClasses exclusions;
     
     //Commented out until IBM fixes ClassLoaderFactoryImpl "protected IClassLoader makeNewClassLoader"
     
@@ -98,7 +100,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
             SetOfClasses exclusions, IClassHierarchy cha) {
         super(loader, cha.getScope().getArrayClassLoader(), parent, exclusions, cha);
         lParent = parent;
-//        lExclusions = exclusions;
+        this.exclusions = exclusions;
         //DEBUG_LEVEL = 0;
     }
     
@@ -165,7 +167,8 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
     		// Dalvik class
     		if (entry instanceof DexModuleEntry) {
     			DexModuleEntry dexEntry = ((DexModuleEntry) entry);
-    			TypeName tName = TypeName.string2TypeName(dexEntry.getClassName());
+    			String className = dexEntry.getClassName();
+				TypeName tName = TypeName.string2TypeName(className);
 
     			//if (DEBUG_LEVEL > 0) {
     			//  System.err.println("Consider dex class: " + tName);
@@ -175,10 +178,10 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
     			//System.out.println(tName.getClassName());
     			if (loadedClasses.get(tName) != null) {
     				Warnings.add(MultipleDexImplementationsWarning
-    						.create(dexEntry.getClassName()));
+    						.create(className));
     			} else if (lParent != null && lParent.lookupClass(tName) != null) {
     				Warnings.add(MultipleDexImplementationsWarning
-    						.create(dexEntry.getClassName()));
+    						.create(className));
     			}
     			//if the class is empty, ie an interface
     			//                  else if (dexEntry.getClassDefItem().getClassData() == null) {
@@ -189,10 +192,19 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
     			else {
     				IClass iClass = new DexIClass(this, cha, dexEntry);
     				if (iClass.getReference().getName().equals(tName)) {
-    					logger.debug("Load class: " + dexEntry.getClassName());
+    					
+    					// className is a descriptor, so strip the 'L'
+    					if (exclusions != null && exclusions.contains(className.substring(1))) {
+    						if (DEBUG_LEVEL > 0) {
+    							System.err.println("Excluding " + className);
+    						}
+    						continue;
+    					}
+ 
+    					logger.debug("Load class: " + className);
     					loadedClasses.put(tName, iClass);
     				} else {
-    					Warnings.add(InvalidDexFile.create(dexEntry.getClassName()));
+    					Warnings.add(InvalidDexFile.create(className));
     				}
     			}
     		}
