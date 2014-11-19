@@ -12,6 +12,7 @@ package com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.analysis.pointers.HeapGraph;
@@ -21,11 +22,15 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.CreationSite
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.FuncVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.ObjectVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.PropVertex;
+import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.PrototypeFieldVertex;
+import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.PrototypeFieldVertex.PrototypeField;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.UnknownVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VarVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.Vertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VertexFactory;
+import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
+import com.ibm.wala.cast.js.ssa.SetPrototype;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -44,17 +49,21 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.DefUse;
+import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphReachability;
 import com.ibm.wala.util.graph.GraphSlicer;
 import com.ibm.wala.util.graph.NumberedGraph;
+import com.ibm.wala.util.graph.impl.ExtensionGraph;
 import com.ibm.wala.util.graph.impl.InvertedGraph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.graph.traverse.DFS;
@@ -68,6 +77,7 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
  * @author mschaefer
  */
 public class FlowGraph implements Iterable<Vertex> {
+  
 	// the actual flow graph representation
 	private final NumberedGraph<Vertex> graph;
 	
@@ -170,11 +180,77 @@ public class FlowGraph implements Iterable<Vertex> {
   
   public PointerAnalysis<ObjectVertex> getPointerAnalysis(final CallGraph cg, final AnalysisCache cache, final IProgressMonitor monitor) throws CancelException {
     return new PointerAnalysis<ObjectVertex>() {
-      private final GraphReachability<Vertex,ObjectVertex> pointerAnalysis = computeClosure(graph, monitor, ObjectVertex.class);
-          
+      
+      private final Map<Pair<PrototypeField,ObjectVertex>,PrototypeFieldVertex> proto = HashMapFactory.make();
+      
+      private GraphReachability<Vertex,ObjectVertex> pointerAnalysis = computeClosure(graph, monitor, ObjectVertex.class);
+
+      private final ExtensionGraph<Vertex> dataflow = new ExtensionGraph<Vertex>(graph);
+
+      protected IR getIR(final AnalysisCache cache, FuncVertex func) {
+        return cache.getIR(func.getConcreteType().getMethod(AstMethodReference.fnSelector));
+      }
+
+      private PointerKey propertyKey(String property, ObjectVertex o) {
+        if ("__proto__".equals(property) || "prototype".equals(property)) {
+          return get(PrototypeField.valueOf(property), o);
+        } else {
+          return factory.makePropVertex(property);
+        }
+      }
+            
+      {
+        PropVertex proto = factory.makePropVertex("prototype");
+        if (graph.containsNode(proto)) {
+          for(Iterator<Vertex> ps = graph.getPredNodes(proto); ps.hasNext(); ) {
+            Vertex p = ps.next();
+            if (p instanceof VarVertex) {
+              int rval = ((VarVertex) p).getValueNumber();
+              FuncVertex func = ((VarVertex) p).getFunction();
+              DefUse du = cache.getDefUse(getIR(cache, func));
+              for(Iterator<SSAInstruction> insts = du.getUses(rval); insts.hasNext(); ) {
+                SSAInstruction inst = insts.next();
+                if (inst instanceof JavaScriptPropertyWrite) {
+                  int obj = ((JavaScriptPropertyWrite) inst).getObjectRef();
+                  VarVertex object = factory.makeVarVertex(func, obj);
+                  for(ObjectVertex o : getPointsToSet(object)) {
+                    PrototypeFieldVertex prototype = get(PrototypeField.prototype, o);
+                    if (! dataflow.containsNode(prototype)) {
+                      dataflow.addNode(prototype);
+                    }
+                    System.err.println("adding " + p + " --> " + prototype);
+                    dataflow.addEdge(p, prototype);
+                  }
+                }
+              }
+            }
+          }
+        }
+        
+        pointerAnalysis = computeClosure(dataflow, monitor, ObjectVertex.class);
+      }
+      
+      private PrototypeFieldVertex get(PrototypeField f, ObjectVertex o) {
+        Pair<PrototypeField,ObjectVertex> key = Pair.make(f, o);
+        if (! proto.containsKey(key)) {
+          proto.put(key, new PrototypeFieldVertex(f, o));
+        }
+        return proto.get(key);
+      }
+
+      private FuncVertex getVertex(CGNode n) {
+        IMethod m = n.getMethod();
+        if (m.getSelector().equals(AstMethodReference.fnSelector)) {
+          IClass fun = m.getDeclaringClass();
+          return factory.makeFuncVertex(fun);
+        } else {
+          return null;
+        }       
+      }
+
       @Override
       public OrdinalSet<ObjectVertex> getPointsToSet(PointerKey key) {
-        if (graph.containsNode((Vertex)key)) {
+        if (dataflow.containsNode((Vertex)key)) {
           return pointerAnalysis.getReachableSet(key);
         } else {
           return OrdinalSet.empty();
@@ -214,16 +290,6 @@ public class FlowGraph implements Iterable<Vertex> {
       @Override
       public HeapModel getHeapModel() {
         return new HeapModel() {
-
-          private FuncVertex getVertex(CGNode n) {
-            IMethod m = n.getMethod();
-            if (m.getSelector().equals(AstMethodReference.fnSelector)) {
-              IClass fun = m.getDeclaringClass();
-              return factory.makeFuncVertex(fun);
-            } else {
-              return null;
-            }       
-          }
           
           @Override
           public PointerKey getPointerKeyForLocal(CGNode node, int valueNumber) {
@@ -250,7 +316,11 @@ public class FlowGraph implements Iterable<Vertex> {
           @Override
           public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField field) {
             String f = field.getName().toString();
-            return factory.makePropVertex(f);
+            if ("__proto__".equals(f) || "prototype".equals(f)) {
+              return get(PrototypeField.valueOf(f), (ObjectVertex)I);
+            } else {
+              return factory.makePropVertex(f);
+            }
           }
 
           @Override
@@ -342,31 +412,71 @@ public class FlowGraph implements Iterable<Vertex> {
               for(PropVertex property : factory.getPropVertices()) {
 
                 // edges from objects to properties assigned to them
-                for(Iterator<Vertex> ps = graph.getPredNodes(property); ps.hasNext(); ) {
+                for(Iterator<Vertex> ps = dataflow.getPredNodes(property); ps.hasNext(); ) {
                   Vertex p = ps.next();
                   if (p instanceof VarVertex) {
                     int rval = ((VarVertex) p).getValueNumber();
                     FuncVertex func = ((VarVertex) p).getFunction();
-                    DefUse du = cache.getDefUse(cache.getIR(func.getConcreteType().getMethod(AstMethodReference.fnSelector)));
+                    DefUse du = cache.getDefUse(getIR(cache, func));
                     for(Iterator<SSAInstruction> insts = du.getUses(rval); insts.hasNext(); ) {
                       SSAInstruction inst = insts.next();
                       if (inst instanceof JavaScriptPropertyWrite) {
                         int obj = ((JavaScriptPropertyWrite) inst).getObjectRef();
                         VarVertex object = factory.makeVarVertex(func, obj);
                         for(ObjectVertex o : getPointsToSet(object)) {
-                          addEdge(ensureNode(o), ensureNode(property));
+                          addEdge(ensureNode(o), ensureNode(propertyKey(property.getPropName(), o)));
+                          for(ObjectVertex v : getPointsToSet(property)) {
+                            addEdge(ensureNode(propertyKey(property.getPropName(), o)), ensureNode(v));
+                          }
                         }
                       } else if (inst instanceof AstGlobalWrite) {
                         addEdge(ensureNode(factory.global()), ensureNode(property));
+                        for(ObjectVertex v : getPointsToSet(property)) {
+                          addEdge(ensureNode(property), ensureNode(v));                        
+                        }
+                      } else if (inst instanceof SetPrototype) {
+                        int obj = inst.getUse(0);
+                        for(ObjectVertex o : getPointsToSet(factory.makeVarVertex(func, obj))) {
+                          for(ObjectVertex v : getPointsToSet(property)) {
+                            addEdge(ensureNode(o), ensureNode(get(PrototypeField.prototype, o)));
+                            addEdge(ensureNode(get(PrototypeField.prototype, o)), ensureNode(v));
+                          }
+                        }
+                      } else {
+                        System.err.println("ignoring " + inst);
                       }
                     }
                   }
                 }
+              } 
+                                   
+              // prototype dataflow for function creations
+              for(FuncVertex f : factory.getFuncVertices()) {
+                ensureNode(get(PrototypeField.__proto__, f));
+                addEdge(
+                  ensureNode(factory.makePropVertex("Function$proto$__WALA__")),
+                  ensureNode(get(PrototypeField.prototype, f))
+                );
+              }
 
-                // edges from properties to objects to which they may point
-                for(ObjectVertex o : getPointsToSet(property)) {
-                  addEdge(ensureNode(property), ensureNode(o));
+              // prototype dataflow for object creations
+              for(CreationSiteVertex cs : factory.creationSites()) {
+                if (cg.getNode(cs.getMethod(), Everywhere.EVERYWHERE) != null) {
+                for(Iterator<Pair<CGNode, NewSiteReference>> sites = cs.getCreationSites(cg); sites.hasNext(); ) {
+                  Pair<CGNode, NewSiteReference> site = sites.next();
+                  IR ir = site.fst.getIR();
+                  SSAInstruction creation = ir.getInstructions()[ site.snd.getProgramCounter() ];
+                  if (creation instanceof JavaScriptInvoke) {
+                    for(ObjectVertex f : getPointsToSet(factory.makeVarVertex(getVertex(site.fst), creation.getUse(0)))) {
+                      for(ObjectVertex o : getPointsToSet(factory.makeVarVertex(getVertex(site.fst), creation.getDef(0)))) {
+                        addEdge(
+                            ensureNode(get(PrototypeField.prototype, f)),                    
+                            ensureNode(get(PrototypeField.__proto__, o)));                      
+                      }
+                    }
+                  }
                 }
+              }
               }
             }
 

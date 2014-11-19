@@ -29,6 +29,7 @@ import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
 import com.ibm.wala.cast.js.ssa.PrototypeLookup;
+import com.ibm.wala.cast.js.ssa.SetPrototype;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.js.util.Util;
@@ -229,23 +230,32 @@ public class FlowGraphBuilder {
 							          factory.makeVarVertex(func, proto.getDef()));
 			handleLexicalDef(proto.getDef());
 		}
-		
-		@Override
-		public void visitPut(SSAPutInstruction put) {
-			String propName = put.getDeclaredField().getName().toString();
-			
-			// hack to account for global variables
-			if(propName.startsWith("global "))
-				propName = propName.substring("global ".length());
-			
-			Vertex v = factory.makeVarVertex(func, put.getVal()),
-			       w = factory.makePropVertex(propName);
-			flowgraph.addEdge(v, w);
+	
+		private void visitPut(int val, String propName) {
+      Vertex v = factory.makeVarVertex(func, val),
+          w = factory.makePropVertex(propName);
+      flowgraph.addEdge(v, w);		  
 		}
 		
 		@Override
+		public void visitPut(SSAPutInstruction put) {
+			visitPut(put.getVal(), put.getDeclaredField().getName().toString());
+		}
+		
+		@Override
+    public void visitSetPrototype(SetPrototype instruction) {
+		  visitPut(instruction.getUse(1), "prototype");
+		}
+
+    @Override
 		public void visitAstGlobalWrite(AstGlobalWrite instruction) {
-			visitPut(instruction);
+      String propName = instruction.getDeclaredField().getName().toString();
+
+      // hack to account for global variables
+      assert propName.startsWith("global ");
+      propName = propName.substring("global ".length());
+
+      visitPut(instruction.getVal(), propName);
 		}
 		
 		@Override

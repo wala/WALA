@@ -23,4 +23,5 @@ public interface VertexVisitor<T> {
 	public abstract T visitLexicalAccessVertex(LexicalVarVertex lexicalAccessVertex);
   public abstract T visitArgVertex(ArgVertex argVertex);
   public abstract T visitGlobalVertex(GlobalVertex globalVertex);
+  public abstract T visitPrototypeVertex(PrototypeFieldVertex protoVertex);
 }
