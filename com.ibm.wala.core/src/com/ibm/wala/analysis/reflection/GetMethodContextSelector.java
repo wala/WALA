@@ -25,6 +25,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -44,6 +45,15 @@ public class GetMethodContextSelector implements ContextSelector {
    * If <tt>true</tt>, debug information is emitted.
    */
   protected static final boolean DEBUG = false;
+
+  /**
+   * whether to only follow get method calls on application classes, ignoring system ones
+   */
+  private final boolean applicationClassesOnly;
+  
+  public GetMethodContextSelector(boolean applicationClassesOnly) {
+    this.applicationClassesOnly = applicationClassesOnly;
+  }
 
   /**
    *  If
@@ -82,7 +92,13 @@ public class GetMethodContextSelector implements ContextSelector {
         if (DEBUG) {
           System.out.println(ck);
         }
-        return new GetMethodContext(new PointType(getTypeConstant(receiver[0])),ck);
+        
+        IClass type = getTypeConstant(receiver[0]);
+        if (!applicationClassesOnly || 
+            !(type.getClassLoader().getReference().equals(ClassLoaderReference.Primordial) ||
+              type.getClassLoader().getReference().equals(ClassLoaderReference.Extension))) {
+          return new GetMethodContext(new PointType(type),ck);
+        }
       }
       if (DEBUG) {
         System.out.println(", with constant := no");

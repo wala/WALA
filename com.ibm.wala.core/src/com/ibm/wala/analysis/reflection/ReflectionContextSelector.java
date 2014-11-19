@@ -56,7 +56,7 @@ public class ReflectionContextSelector {
     }
     // if NEITHER string constants NOR method invocations are ignored
     if (!options.getReflectionOptions().isIgnoreStringConstants() && !options.getReflectionOptions().isIgnoreMethodInvoke()) {
-      result = new DelegatingContextSelector(new GetMethodContextSelector(),result);
+      result = new DelegatingContextSelector(new GetMethodContextSelector(options.getReflectionOptions().isApplicationClassesOnly()),result);
     }
     return result;
   }
