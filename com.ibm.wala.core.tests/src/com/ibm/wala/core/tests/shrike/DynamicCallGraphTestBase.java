@@ -17,9 +17,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.zip.GZIPInputStream;
@@ -103,7 +100,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
     childJvm.setClasspath(new Path(p, getClasspathEntry("com.ibm.wala.shrike") + ":" +  getClasspathEntry("com.ibm.wala.util") + ":" +  instrumentedJarLocation));
     childJvm.setClassname(mainClass);
 
-    String jvmArgs = "-Xmx500M -DdynamicCGFile=" + cgLocation + " -DdynamicCGHandleMissing=true";
+    String jvmArgs = "-noverify -Xmx500M -DdynamicCGFile=" + cgLocation + " -DdynamicCGHandleMissing=true";
     if (exclusionsFile != null) {
       File tmpFile = TemporaryFile.urlToFile("exclusions.txt", getClass().getClassLoader().getResource(exclusionsFile));
       jvmArgs += " -DdynamicCGFilter=" + tmpFile.getCanonicalPath();
