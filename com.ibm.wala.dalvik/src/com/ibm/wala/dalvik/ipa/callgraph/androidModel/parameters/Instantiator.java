@@ -135,9 +135,9 @@ public class Instantiator implements IInstantiator {
         }
 
         { // Special type?
-            final SpecializedInstantiator sInst = new SpecializedInstantiator(body, instructionFactory, pm,
-                    cha, scope, analysisScope, this);
-            if (sInst.understands(T)) {
+            if (SpecializedInstantiator.understands(T)) {
+                final SpecializedInstantiator sInst = new SpecializedInstantiator(body, instructionFactory, pm,
+                        cha, scope, analysisScope, this);
                 return sInst.createInstance(T, asManaged, key, seen);
             }
         }
