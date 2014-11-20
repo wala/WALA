@@ -180,7 +180,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer("Nodes:\n");
-    for (int i = 0; i < maxNumber; i++) {
+    for (int i = 0; i <= maxNumber; i++) {
       result.append(i).append(" ");
       if (nodes[i] != null) {
         result.append(nodes[i].toString());
