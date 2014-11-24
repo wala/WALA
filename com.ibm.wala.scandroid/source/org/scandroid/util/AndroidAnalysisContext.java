@@ -137,7 +137,7 @@ public class AndroidAnalysisContext {
 			       ClassHierarchyException, URISyntaxException {
 		logger.debug(DefaultSCanDroidOptions.dumpString(options));
 		this.options = options;
-		scope = AndroidAnalysisScope.setUpAndroidAnalysisScope(options.getAndroidLibrary(), options.getClasspath(), exclusions);
+		scope = AndroidAnalysisScope.setUpAndroidAnalysisScope(options.getClasspath(), exclusions, options.getAndroidLibrary());
 		
 		cha = ClassHierarchy.make(scope);
 
