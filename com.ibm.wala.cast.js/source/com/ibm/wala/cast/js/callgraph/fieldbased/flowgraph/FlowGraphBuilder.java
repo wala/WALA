@@ -390,7 +390,7 @@ public class FlowGraphBuilder {
 
 			  } else if (supportFullPointerAnalysis) {
 			    
-			    CreationSiteVertex cs = factory.makeCreationSiteVertex(method, invk.iindex);
+			    CreationSiteVertex cs = factory.makeCreationSiteVertex(method, invk.iindex, JavaScriptTypes.Object);
 			    
 			    // flow creation site into result of new call
 	        flowgraph.addEdge(cs, factory.makeVarVertex(func, invk.getDef())); 
@@ -424,7 +424,7 @@ public class FlowGraphBuilder {
       if (supportFullPointerAnalysis) {
         // special case for supporting full pointer analysis
         // some core objects in the prologue (and the arguments array objects) get created with 'new'
-        CreationSiteVertex cs = factory.makeCreationSiteVertex(method, invk.iindex);
+        CreationSiteVertex cs = factory.makeCreationSiteVertex(method, invk.iindex, invk.getConcreteType());
       
         // flow creation site into result of new call
         flowgraph.addEdge(cs, factory.makeVarVertex(func, invk.getDef()));  

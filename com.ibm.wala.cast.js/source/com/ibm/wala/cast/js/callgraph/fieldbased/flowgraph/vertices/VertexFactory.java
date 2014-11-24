@@ -17,6 +17,7 @@ import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
 
@@ -51,11 +52,11 @@ public class VertexFactory {
 		return callVertexCache.values();
 	}
 
-	public CreationSiteVertex makeCreationSiteVertex(IMethod method, int instruction) {
+	public CreationSiteVertex makeCreationSiteVertex(IMethod method, int instruction, TypeReference createdType) {
 	  Pair<IMethod, Integer> key = Pair.make(method, instruction);
     CreationSiteVertex value = creationSites.get(key);
 	  if (value == null) {
-	    creationSites.put(key, value = new CreationSiteVertex(method, instruction));
+	    creationSites.put(key, value = new CreationSiteVertex(method, instruction, createdType));
 	  }
 	  return value;
 	}

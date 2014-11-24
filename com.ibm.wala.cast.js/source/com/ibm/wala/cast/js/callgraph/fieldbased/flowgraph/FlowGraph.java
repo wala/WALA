@@ -31,6 +31,7 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VertexFactor
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
 import com.ibm.wala.cast.js.ssa.SetPrototype;
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -51,6 +52,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
@@ -408,6 +410,26 @@ public class FlowGraph implements Iterable<Vertex> {
               return n;
             }
 
+            private PropVertex getCoreProto(TypeReference coreType) {
+              if (coreType.equals(JavaScriptTypes.Object)) {
+                return factory.makePropVertex("Object$proto$__WALA__");
+              } else if (coreType.equals(JavaScriptTypes.Function)) {
+                return factory.makePropVertex("Function$proto$__WALA__");
+              } else if (coreType.equals(JavaScriptTypes.Number) || coreType.equals(JavaScriptTypes.NumberObject)) {
+                return factory.makePropVertex("Number$proto$__WALA__");
+              } else if (coreType.equals(JavaScriptTypes.Array)) {
+                return factory.makePropVertex("Array$proto$__WALA__");
+              } else if (coreType.equals(JavaScriptTypes.String) || coreType.equals(JavaScriptTypes.StringObject)) {
+                return factory.makePropVertex("String$proto$__WALA__");
+              } else if (coreType.equals(JavaScriptTypes.Date)) {
+                return factory.makePropVertex("Date$proto$__WALA__");
+              } else if (coreType.equals(JavaScriptTypes.RegExp) || coreType.equals(JavaScriptTypes.RegExpObject)) {
+                return factory.makePropVertex("RegExp$proto$__WALA__");
+              } else {
+                return null;
+              }
+            }
+            
             {
               for(PropVertex property : factory.getPropVertices()) {
 
@@ -454,7 +476,7 @@ public class FlowGraph implements Iterable<Vertex> {
               for(FuncVertex f : factory.getFuncVertices()) {
                 ensureNode(get(PrototypeField.__proto__, f));
                 addEdge(
-                  ensureNode(factory.makePropVertex("Function$proto$__WALA__")),
+                  ensureNode(getCoreProto(JavaScriptTypes.Function)),
                   ensureNode(get(PrototypeField.prototype, f))
                 );
               }
@@ -472,6 +494,17 @@ public class FlowGraph implements Iterable<Vertex> {
                         addEdge(
                             ensureNode(get(PrototypeField.prototype, f)),                    
                             ensureNode(get(PrototypeField.__proto__, o)));                      
+                      }
+                    }
+                  } else if (creation instanceof SSANewInstruction) {
+                    PointerKey proto = getCoreProto(((SSANewInstruction) creation).getConcreteType());
+                    if (proto != null) {
+                      for(ObjectVertex f : getPointsToSet(proto)) {
+                        for(ObjectVertex o : getPointsToSet(factory.makeVarVertex(getVertex(site.fst), creation.getDef(0)))) {
+                          addEdge(
+                            ensureNode(get(PrototypeField.__proto__, o)),
+                            ensureNode(f));
+                        }
                       }
                     }
                   }

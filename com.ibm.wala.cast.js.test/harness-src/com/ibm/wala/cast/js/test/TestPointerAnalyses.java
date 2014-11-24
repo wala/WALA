@@ -54,18 +54,17 @@ import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.WalaException;
+import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.strings.Atom;
-import com.sun.xml.internal.fastinfoset.stax.events.EmptyIterator;
 
 public abstract class TestPointerAnalyses {
 
-  private final class CheckPointers extends
-      Predicate<Pair<Set<Pair<CGNode, NewSiteReference>>, Set<Pair<CGNode, NewSiteReference>>>> {
+  private final class CheckPointers extends Predicate<Pair<Set<Pair<CGNode, NewSiteReference>>, Set<Pair<CGNode, NewSiteReference>>>> {
     private Set<Pair<String,Integer>> map(Set<Pair<CGNode, NewSiteReference>> sites) {
       Set<Pair<String,Integer>> result = HashSetFactory.make();
       for(Pair<CGNode,NewSiteReference> s : sites) {
@@ -204,7 +203,6 @@ public abstract class TestPointerAnalyses {
       Predicate<Pair<Set<Pair<CGNode, NewSiteReference>>, Set<Pair<CGNode, NewSiteReference>>>> test, CallGraph fbCG,
       PointerAnalysis<ObjectVertex> fbPA, CallGraph propCG, PointerAnalysis<InstanceKey> propPA) {
     HeapGraph<ObjectVertex> hg = fbPA.getHeapGraph();
-    HeapGraph<InstanceKey> propHg = propPA.getHeapGraph();
     
     Set<MethodReference> functionsToCompare = HashSetFactory.make();
     for(CGNode n : fbCG) {
@@ -293,6 +291,13 @@ public abstract class TestPointerAnalyses {
     
     for(InstanceKey k : fbPA.getInstanceKeys()) {
       k.getCreationSites(fbCG);
+      if (! hg.containsNode(fbPA.getHeapModel().getPointerKeyForInstanceField(k, new AstDynamicField(false, k.getConcreteType(), Atom.findOrCreateUnicodeAtom("__proto__"), JavaScriptTypes.Root)))) {
+        System.err.println("object " + k + "(" + k.getConcreteType() + ")");
+        for(Iterator<Pair<CGNode, NewSiteReference>> css = k.getCreationSites(fbCG); css.hasNext(); ) {
+          System.err.println(css.next());
+        }
+
+      }
     }
   }
 
@@ -333,7 +338,7 @@ public abstract class TestPointerAnalyses {
                   } 
             });
         } else {
-          return EmptyIterator.instance;
+          return EmptyIterator.instance();
         }
       } 
     }, node, vn);
