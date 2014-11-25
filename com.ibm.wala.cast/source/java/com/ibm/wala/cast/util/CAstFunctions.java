@@ -14,15 +14,15 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.ibm.wala.cast.tree.CAstNode;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.graph.traverse.DFSDiscoverTimeIterator;
 
 public class CAstFunctions {
 
-  public static CAstNode findIf(CAstNode tree, Filter<CAstNode> f) {
-    if (f.accepts(tree)) {
+  public static CAstNode findIf(CAstNode tree, Predicate<CAstNode> f) {
+    if (f.test(tree)) {
       return tree;
     } else {
       for (int i = 0; i < tree.getChildCount(); i++) {
@@ -79,7 +79,7 @@ public class CAstFunctions {
     };
   }
 
-  public static Iterator<CAstNode> findAll(CAstNode tree, Filter<?> f) {
+  public static Iterator<CAstNode> findAll(CAstNode tree, Predicate<?> f) {
     return new FilterIterator<CAstNode>(iterateNodes(tree), f);
   }
 

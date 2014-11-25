@@ -18,7 +18,7 @@ import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.impl.NumberedNodeIterator;
@@ -52,9 +52,8 @@ public abstract class HeapGraphImpl<T extends InstanceKey> implements HeapGraph<
   }
 
   public Collection<Object> getReachableInstances(Set<Object> roots) {
-    Filter f = new Filter() {
-      @Override
-      public boolean accepts(Object o) {
+    Predicate f = new Predicate() {
+      @Override public boolean test(Object o) {
         return (o instanceof InstanceKey);
       }
     };

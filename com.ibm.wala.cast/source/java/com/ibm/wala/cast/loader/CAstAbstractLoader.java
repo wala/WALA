@@ -27,7 +27,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -82,9 +82,8 @@ public abstract class CAstAbstractLoader implements IClassLoader {
   }
 
   private Iterator<ModuleEntry> getMessages(final byte severity) {
-    return new MapIterator<Map.Entry<ModuleEntry,Set<Warning>>, ModuleEntry>(new FilterIterator<Map.Entry<ModuleEntry,Set<Warning>>>(errors.entrySet().iterator(), new Filter<Map.Entry<ModuleEntry,Set<Warning>>>()  {
-      @Override
-      public boolean accepts(Entry<ModuleEntry, Set<Warning>> o) {
+    return new MapIterator<Map.Entry<ModuleEntry,Set<Warning>>, ModuleEntry>(new FilterIterator<Map.Entry<ModuleEntry,Set<Warning>>>(errors.entrySet().iterator(), new Predicate<Map.Entry<ModuleEntry,Set<Warning>>>()  {
+      @Override public boolean test(Entry<ModuleEntry, Set<Warning>> o) {
          for(Warning w : o.getValue()) {
            if (w.getLevel() == severity) {
              return true;

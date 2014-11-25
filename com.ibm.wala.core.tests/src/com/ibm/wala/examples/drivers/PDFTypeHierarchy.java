@@ -25,7 +25,7 @@ import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.WalaException;
 import com.ibm.wala.util.collections.CollectionFilter;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
@@ -93,7 +93,7 @@ public class PDFTypeHierarchy {
     }
   }
 
-  public static <T> Graph<T> pruneGraph(Graph<T> g, Filter<T> f) throws WalaException {
+  public static <T> Graph<T> pruneGraph(Graph<T> g, Predicate<T> f) throws WalaException {
     Collection<T> slice = GraphSlicer.slice(g, f);
     return GraphSlicer.prune(g, new CollectionFilter<T>(slice));
   }
@@ -102,9 +102,8 @@ public class PDFTypeHierarchy {
    * Restrict g to nodes from the Application loader
    */
   public static Graph<IClass> pruneForAppLoader(Graph<IClass> g) throws WalaException {
-    Filter<IClass> f = new Filter<IClass>() {
-      @Override
-      public boolean accepts(IClass c) {
+    Predicate<IClass> f = new Predicate<IClass>() {
+      @Override public boolean test(IClass c) {
         return (c.getClassLoader().getReference().equals(ClassLoaderReference.Application));
       }
     };

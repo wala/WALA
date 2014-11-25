@@ -13,6 +13,8 @@ package com.ibm.wala.util.collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import com.ibm.wala.util.Predicate;
+
 /**
  * A <code>FilterIterator</code> filters an <code>Iterator</code> to generate a new one.
  */
@@ -20,7 +22,7 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
   final Iterator<?> i;
 
   @SuppressWarnings("rawtypes")
-  final Filter f;
+  final Predicate f;
 
   private T next = null;
 
@@ -31,7 +33,7 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
    * @param f a filter which defines which elements belong to the generated iterator
    */
   @SuppressWarnings("rawtypes")
-  public FilterIterator(Iterator<?> i, Filter f) {
+  public FilterIterator(Iterator<?> i, Predicate f) {
     if (i == null) {
       throw new IllegalArgumentException("null i");
     }
@@ -50,7 +52,7 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
   private void advance() {
     while (i.hasNext()) {
       Object o = i.next();
-      if (f.accepts(o)) {
+      if (f.test(o)) {
         next = (T) o;
         return;
       }

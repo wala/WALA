@@ -27,7 +27,7 @@ import com.ibm.wala.fixpoint.UnaryOperator;
 import com.ibm.wala.fixpoint.UnaryStatement;
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.SmallMap;
@@ -276,9 +276,8 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   @Override
   @SuppressWarnings("unchecked")
   public Iterator<AbstractStatement> getStatements() {
-    Iterator<AbstractStatement> it = new FilterIterator(delegateGraph.iterator(), new Filter() {
-      @Override
-      public boolean accepts(Object x) {
+    Iterator<AbstractStatement> it = new FilterIterator(delegateGraph.iterator(), new Predicate() {
+      @Override public boolean test(Object x) {
         return x instanceof AbstractStatement;
       }
     });
@@ -769,9 +768,8 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   @Override
   @SuppressWarnings("unchecked")
   public Iterator<PointsToSetVariable> getVariables() {
-    Iterator<PointsToSetVariable> it = new FilterIterator(delegateGraph.iterator(), new Filter() {
-      @Override
-      public boolean accepts(Object x) {
+    Iterator<PointsToSetVariable> it = new FilterIterator(delegateGraph.iterator(), new Predicate() {
+      @Override public boolean test(Object x) {
         return x instanceof IVariable;
       }
     });

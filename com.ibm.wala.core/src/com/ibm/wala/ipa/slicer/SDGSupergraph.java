@@ -17,7 +17,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.util.collections.EmptyIterator;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
@@ -97,9 +97,8 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   public Iterator<? extends Statement> getCalledNodes(Statement call) {
     switch (call.getKind()) {
     case NORMAL:
-      Filter f = new Filter() {
-        @Override
-        public boolean accepts(Object o) {
+      Predicate f = new Predicate() {
+        @Override public boolean test(Object o) {
           Statement s = (Statement) o;
           return isEntry(s);
         }
