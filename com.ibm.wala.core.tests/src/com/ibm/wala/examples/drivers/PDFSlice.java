@@ -45,7 +45,7 @@ import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
@@ -244,9 +244,8 @@ public class PDFSlice {
    * return a view of the sdg restricted to the statements in the slice
    */
   public static Graph<Statement> pruneSDG(SDG sdg, final Collection<Statement> slice) {
-    Filter<Statement> f = new Filter<Statement>() {
-      @Override
-      public boolean accepts(Statement o) {
+    Predicate<Statement> f = new Predicate<Statement>() {
+      @Override public boolean test(Statement o) {
         return slice.contains(o);
       }
     };

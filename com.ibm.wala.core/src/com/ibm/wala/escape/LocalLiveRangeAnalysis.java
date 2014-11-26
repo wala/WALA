@@ -21,7 +21,7 @@ import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
@@ -57,9 +57,8 @@ public class LocalLiveRangeAnalysis {
     final Collection<BasicBlock> uses = findBlocks(ir, du.getUses(v));
 
     // a filter which accepts everything but the block which defs v
-    Filter notDef = new Filter() {
-      @Override
-      public boolean accepts(Object o) {
+    Predicate notDef = new Predicate() {
+      @Override public boolean test(Object o) {
         return (defBlock == null || !defBlock.equals(o));
       }
     };

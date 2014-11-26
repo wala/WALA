@@ -12,12 +12,12 @@
 package com.ibm.wala.util.collections;
 
 import java.util.Collection;
-
+import com.ibm.wala.util.Predicate;
 
 /**
  * A filter defined by set membership
  */
-public class CollectionFilter<T> implements Filter<T> {
+public class CollectionFilter<T> extends Predicate<T> {
 
   private final Collection<? extends T> S;
 
@@ -31,8 +31,7 @@ public class CollectionFilter<T> implements Filter<T> {
   /*
    * @see com.ibm.wala.util.Filter#accepts(java.lang.Object)
    */
-  @Override
-  public boolean accepts(T o) {
+  @Override public boolean test(T o) {
     return S.contains(o);
   }
 

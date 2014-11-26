@@ -19,7 +19,7 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.HashMapFactory;
 
 /**
@@ -40,7 +40,7 @@ public class ExplodedInterproceduralCFG extends AbstractInterproceduralCFG<IExpl
     super(cg);
   }
   
-  public ExplodedInterproceduralCFG(CallGraph cg, Filter<CGNode> filter) {
+  public ExplodedInterproceduralCFG(CallGraph cg, Predicate<CGNode> filter) {
     super(cg, filter);
   }
 

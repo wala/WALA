@@ -38,7 +38,7 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.util.collections.EmptyIterator;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
@@ -117,9 +117,8 @@ public class ICFGSupergraph implements ISupergraph<BasicBlockInContext<IExploded
 
   @Override
   public Iterator<? extends BasicBlockInContext<IExplodedBasicBlock>> getCalledNodes(BasicBlockInContext<IExplodedBasicBlock> call) {
-    final Filter<BasicBlockInContext<IExplodedBasicBlock>> isEntryFilter = new Filter<BasicBlockInContext<IExplodedBasicBlock>>() {
-      @Override
-      public boolean accepts(BasicBlockInContext<IExplodedBasicBlock> o) {
+    final Predicate<BasicBlockInContext<IExplodedBasicBlock>> isEntryFilter = new Predicate<BasicBlockInContext<IExplodedBasicBlock>>() {
+      @Override public boolean test(BasicBlockInContext<IExplodedBasicBlock> o) {
         return o.isEntryBlock();
       }
     };

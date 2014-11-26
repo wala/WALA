@@ -45,7 +45,7 @@ import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.CancelRuntimeException;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
@@ -645,9 +645,8 @@ public class HeapReachingDefs {
           return null;
         } else {
           // only static fields are actually killed
-          Filter staticFilter = new Filter() {
-            @Override
-            public boolean accepts(Object o) {
+          Predicate staticFilter = new Predicate() {
+            @Override public boolean test(Object o) {
               return o instanceof StaticFieldKey;
             }
           };
@@ -656,10 +655,9 @@ public class HeapReachingDefs {
           if (kill.isEmpty()) {
             return null;
           } else {
-            Filter f = new Filter() {
+            Predicate f = new Predicate() {
               // accept any statement which writes a killed location.
-              @Override
-              public boolean accepts(Object o) {
+              @Override public boolean test(Object o) {
                 Statement s = (Statement) o;
                 Collection m = getMod(s, node, heapModel, pa, exclusions);
                 for (PointerKey k : kill) {

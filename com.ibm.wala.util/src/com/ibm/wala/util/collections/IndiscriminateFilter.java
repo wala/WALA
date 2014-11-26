@@ -10,12 +10,12 @@
  *******************************************************************************/
 
 package com.ibm.wala.util.collections;
-
+import com.ibm.wala.util.Predicate;
 
 /**
  * A filter that accepts everything.
  */
-public class IndiscriminateFilter<T> implements Filter<T> {
+public class IndiscriminateFilter<T> extends Predicate<T> {
 
   public static <T> IndiscriminateFilter<T> singleton() {
     return new IndiscriminateFilter<T>();
@@ -24,8 +24,7 @@ public class IndiscriminateFilter<T> implements Filter<T> {
   /*
    * @see com.ibm.wala.util.Filter#accepts(java.lang.Object)
    */
-  @Override
-  public boolean accepts(Object o) {
+  @Override public boolean test(Object o) {
     return true;
   }
 

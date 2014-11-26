@@ -38,7 +38,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
@@ -93,12 +93,12 @@ public class JVMLDalvikComparison extends DalvikCallGraphTestBase {
 		
 		Iterator<Pair<CGNode, CGNode>> javaExtraEdges = edgeDiff(java.fst, android.fst).iterator();
 		if (useAndroidLib) {
-			javaExtraEdges = new FilterIterator<Pair<CGNode, CGNode>>(javaExtraEdges, new Filter<Pair<CGNode, CGNode>>() {
+			javaExtraEdges = new FilterIterator<Pair<CGNode, CGNode>>(javaExtraEdges, new Predicate<Pair<CGNode, CGNode>>() {
 				private boolean userCode(CGNode n) {
 					return n.getMethod().getDeclaringClass().getClassLoader().getReference().equals(ClassLoaderReference.Application);
 				}
 				@Override
-				public boolean accepts(Pair<CGNode, CGNode> o)  {
+				public boolean test(Pair<CGNode, CGNode> o)  {
 					return userCode(o.fst) && userCode(o.snd);
 				} 
 			});

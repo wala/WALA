@@ -21,7 +21,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.graph.Graph;
@@ -53,9 +53,8 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
    * @param nodes set of nodes that will be included in the new, partial call graph
    */
   public static PartialCallGraph make(final CallGraph cg, final Collection<CGNode> partialRoots, final Collection<CGNode> nodes) {
-    Graph<CGNode> partialGraph = GraphSlicer.prune(cg, new Filter<CGNode>() {
-      @Override
-      public boolean accepts(CGNode o) {
+    Graph<CGNode> partialGraph = GraphSlicer.prune(cg, new Predicate<CGNode>() {
+      @Override public boolean test(CGNode o) {
         return nodes.contains(o);
       }
     });
@@ -70,9 +69,8 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
    */
   public static PartialCallGraph make(CallGraph cg, Collection<CGNode> partialRoots) {
     final Set<CGNode> nodes = DFS.getReachableNodes(cg, partialRoots);
-    Graph<CGNode> partialGraph = GraphSlicer.prune(cg, new Filter<CGNode>() {
-      @Override
-      public boolean accepts(CGNode o) {
+    Graph<CGNode> partialGraph = GraphSlicer.prune(cg, new Predicate<CGNode>() {
+      @Override public boolean test(CGNode o) {
         return nodes.contains(o);
       }
     });
@@ -119,9 +117,8 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
 
   @Override
   public Iterator<CGNode> iterateNodes(IntSet nodes) {
-    return new FilterIterator<CGNode>(cg.iterateNodes(nodes), new Filter() {
-      @Override
-      public boolean accepts(Object o) {
+    return new FilterIterator<CGNode>(cg.iterateNodes(nodes), new Predicate() {
+      @Override public boolean test(Object o) {
         return containsNode((CGNode) o);
       }
     });

@@ -33,7 +33,7 @@ import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.EmptyIterator;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.IntMapIterator;
@@ -187,9 +187,8 @@ public class ExplicitCallGraph extends BasicCallGraph<SSAContextInterpreter> imp
      */
     protected Iterator<CallSiteReference> getPossibleSites(final CGNode to) {
       final int n = getCallGraph().getNumber(to);
-      return new FilterIterator<CallSiteReference>(iterateCallSites(), new Filter() {
-        @Override
-        public boolean accepts(Object o) {
+      return new FilterIterator<CallSiteReference>(iterateCallSites(), new Predicate() {
+        @Override public boolean test(Object o) {
           IntSet s = getPossibleTargetNumbers((CallSiteReference) o);
           return s == null ? false : s.contains(n);
         }

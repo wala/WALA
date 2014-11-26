@@ -22,7 +22,7 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.ComposedIterator;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.Pair;
@@ -111,9 +111,8 @@ public final class ConcreteTypeKey implements InstanceKey {
         return new MapIterator<NewSiteReference, Pair<CGNode, NewSiteReference>>(
             new FilterIterator<NewSiteReference>(
                 outer.iterateNewSites(),
-                new Filter<NewSiteReference>() {
-                  @Override
-                  public boolean accepts(NewSiteReference o) {
+                new Predicate<NewSiteReference>() {
+                  @Override public boolean test(NewSiteReference o) {
                     return o.getDeclaredType().equals(type.getReference());
                   }
                 }
