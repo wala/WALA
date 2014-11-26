@@ -21,7 +21,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.IndiscriminateFilter;
 import com.ibm.wala.util.collections.MapIterator;
@@ -65,7 +65,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /**
    * Filter that determines relevant call graph nodes
    */
-  private final Filter<CGNode> relevant;
+  private final Predicate<CGNode> relevant;
 
   /**
    * a cache: for each node (Basic Block), does that block end in a call?
@@ -133,7 +133,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * @param CG the call graph
    * @param relevant a filter which accepts those call graph nodes which should be included in the I-CFG. Other nodes are ignored.
    */
-  public AbstractInterproceduralCFG(CallGraph CG, Filter<CGNode> relevant) {
+  public AbstractInterproceduralCFG(CallGraph CG, Predicate<CGNode> relevant) {
 
     this.cg = CG;
     this.relevant = relevant;
@@ -146,7 +146,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * @param n
    */
   private void addIntraproceduralNodesAndEdgesForCGNodeIfNeeded(CGNode n) {
-    if (!cgNodesVisited.contains(cg.getNumber(n)) && relevant.accepts(n)) {
+    if (!cgNodesVisited.contains(cg.getNumber(n)) && relevant.test(n)) {
       if (DEBUG_LEVEL > 0) {
         System.err.println("Adding nodes and edges for cg node: " + n);
       }
@@ -290,7 +290,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
       if (DEBUG_LEVEL > 1) {
         System.err.println("got caller " + caller);
       }
-      if (relevant.accepts(caller)) {
+      if (relevant.test(caller)) {
         addEntryAndExitEdgesToCaller(n, entryBlock, exitBlock, caller);
       }
     }
@@ -493,7 +493,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
       boolean irrelevantTargets = false;
       for (Iterator ts = cg.getPossibleTargets(n, site).iterator(); ts.hasNext();) {
         CGNode tn = (CGNode) ts.next();
-        if (!relevant.accepts(tn)) {
+        if (!relevant.test(tn)) {
           if (DEBUG_LEVEL > 1) {
             System.err.println("Irrelevant target: " + tn);
           }
@@ -834,9 +834,8 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
 
     // a successor node is a return site if it is in the same
     // procedure, and is not the entry() node.
-    Filter isReturn = new Filter() {
-      @Override
-      public boolean accepts(Object o) {
+    Predicate isReturn = new Predicate() {
+      @Override public boolean test(Object o) {
         BasicBlockInContext other = (BasicBlockInContext) o;
         return !other.isEntryBlock() && node.equals(other.getNode());
       }
@@ -856,9 +855,8 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     Iterator<? extends T> it = cfg.getPredNodes(returnBlock.getDelegate());
     final CGNode node = returnBlock.getNode();
 
-    Filter<? extends T> dispatchFilter = new Filter<T>() {
-      @Override
-      public boolean accepts(T callBlock) {
+    Predicate<? extends T> dispatchFilter = new Predicate<T>() {
+      @Override public boolean test(T callBlock) {
         BasicBlockInContext<T> bb = new BasicBlockInContext<T>(node, callBlock);
         if (!hasCall(bb, cfg)) {
           return false;
@@ -883,9 +881,8 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     return new FilterIterator<BasicBlockInContext<T>>(m, isCall);
   }
 
-  private final Filter<BasicBlockInContext<T>> isCall = new Filter<BasicBlockInContext<T>>() {
-    @Override
-    public boolean accepts(BasicBlockInContext<T> o) {
+  private final Predicate<BasicBlockInContext<T>> isCall = new Predicate<BasicBlockInContext<T>>() {
+    @Override public boolean test(BasicBlockInContext<T> o) {
       return hasCall(o);
     }
   };

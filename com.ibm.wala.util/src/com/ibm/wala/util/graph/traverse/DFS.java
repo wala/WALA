@@ -19,7 +19,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -41,7 +41,7 @@ public class DFS {
    * @throws IllegalArgumentException if C is null
    */
   @SuppressWarnings("serial")
-  public static <T> Collection<T> getReachableNodes(final Graph<T> G, Collection<? extends T> C, @SuppressWarnings("rawtypes") final Filter filter) {
+  public static <T> Collection<T> getReachableNodes(final Graph<T> G, Collection<? extends T> C, @SuppressWarnings("rawtypes") final Predicate filter) {
     if (C == null) {
       throw new IllegalArgumentException("C is null");
     }

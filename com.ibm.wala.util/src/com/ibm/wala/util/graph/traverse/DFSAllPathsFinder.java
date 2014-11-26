@@ -13,14 +13,14 @@ package com.ibm.wala.util.graph.traverse;
 import java.util.Iterator;
 import java.util.List;
 
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.Graph;
 
 /**
  * Extends {@link DFSPathFinder} to discover all paths from a set of root nodes
- * to nodes passing some {@link Filter}.
+ * to nodes passing some {@link Predicate}.
  * 
  * Note that this code performs work that is potentially exponential in the size
  * of the underlying graph, using exponential space. It most likely won't work
@@ -28,20 +28,19 @@ import com.ibm.wala.util.graph.Graph;
  */
 public class DFSAllPathsFinder<T> extends DFSPathFinder<T> {
 
-  public DFSAllPathsFinder(Graph<T> G, Iterator<T> nodes, Filter<T> f) {
+  public DFSAllPathsFinder(Graph<T> G, Iterator<T> nodes, Predicate<T> f) {
     super(G, nodes, f);
   }
 
-  public DFSAllPathsFinder(Graph<T> G, T N, Filter<T> f) throws IllegalArgumentException {
+  public DFSAllPathsFinder(Graph<T> G, T N, Predicate<T> f) throws IllegalArgumentException {
     super(G, N, f);
   }
 
   @Override
   protected Iterator<? extends T> getConnected(T n) {
     final List<T> cp = currentPath();
-    return new FilterIterator<T>(G.getSuccNodes(n), new Filter<T>() {
-      @Override
-      public boolean accepts(T o) {
+    return new FilterIterator<T>(G.getSuccNodes(n), new Predicate<T>() {
+      @Override public boolean test(T o) {
         return ! cp.contains(o);
       }
     });

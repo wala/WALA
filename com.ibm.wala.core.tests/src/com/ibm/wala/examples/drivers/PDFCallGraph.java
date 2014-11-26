@@ -32,7 +32,7 @@ import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
@@ -194,16 +194,15 @@ public class PDFCallGraph {
    * <li> {@link LocalPointerKey}
    * </ul>
    */
-  private static class ApplicationLoaderFilter implements Filter<CGNode> {
+  private static class ApplicationLoaderFilter extends Predicate<CGNode> {
 
-    @Override
-    public boolean accepts(CGNode o) {
+    @Override public boolean test(CGNode o) {
       if (o instanceof CGNode) {
         CGNode n = (CGNode) o;
         return n.getMethod().getDeclaringClass().getClassLoader().getReference().equals(ClassLoaderReference.Application);
       } else if (o instanceof LocalPointerKey) {
         LocalPointerKey l = (LocalPointerKey) o;
-        return accepts(l.getNode());
+        return test(l.getNode());
       } else {
         return false;
       }

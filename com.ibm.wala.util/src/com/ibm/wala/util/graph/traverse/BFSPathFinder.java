@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
@@ -44,7 +44,7 @@ public class BFSPathFinder<T> {
   /**
    * The Filter which defines the target set of nodes to find
    */
-  final private Filter<T> filter;
+  final private Predicate<T> filter;
 
   /**
    * an enumeration of all nodes to search from
@@ -56,7 +56,7 @@ public class BFSPathFinder<T> {
    * 
    * @param G the graph whose nodes to enumerate
    */
-  public BFSPathFinder(Graph<T> G, T N, Filter<T> f) {
+  public BFSPathFinder(Graph<T> G, T N, Predicate<T> f) {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
@@ -83,9 +83,8 @@ public class BFSPathFinder<T> {
     if (!G.containsNode(src)) {
       throw new IllegalArgumentException("src is not in graph " + src);
     }
-    this.filter = new Filter<T>() {
-      @Override
-      public boolean accepts(T o) {
+    this.filter = new Predicate<T>() {
+      @Override public boolean test(T o) {
         return target.equals(o);
       }
     };
@@ -108,9 +107,8 @@ public class BFSPathFinder<T> {
     this.G = G;
     this.roots = new NonNullSingletonIterator<T>(src);
 
-    this.filter = new Filter<T>() {
-      @Override
-      public boolean accepts(T o) {
+    this.filter = new Predicate<T>() {
+      @Override public boolean test(T o) {
         return ts.contains(o);
       }
     };
@@ -130,9 +128,8 @@ public class BFSPathFinder<T> {
     }
     this.G = G;
     this.roots = sources;
-    this.filter = new Filter<T>() {
-      @Override
-      public boolean accepts(T o) {
+    this.filter = new Predicate<T>() {
+      @Override public boolean test(T o) {
         return target.equals(o);
       }
     };
@@ -144,7 +141,7 @@ public class BFSPathFinder<T> {
    * 
    * @param nodes the set of nodes from which to start searching
    */
-  public BFSPathFinder(Graph<T> G, Iterator<T> nodes, Filter<T> f) {
+  public BFSPathFinder(Graph<T> G, Iterator<T> nodes, Predicate<T> f) {
     this.G = G;
     this.roots = nodes;
     this.filter = f;
@@ -174,7 +171,7 @@ public class BFSPathFinder<T> {
       if (DEBUG) {
         System.err.println(("visit " + N));
       }
-      if (filter.accepts(N)) {
+      if (filter.test(N)) {
         return makePath(N, history);
       }
       Iterator<? extends T> children = getConnected(N);

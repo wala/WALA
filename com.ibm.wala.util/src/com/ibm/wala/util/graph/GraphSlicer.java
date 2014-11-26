@@ -20,7 +20,7 @@ import java.util.Set;
 
 import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.WalaException;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.FilterPredicate;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -60,16 +60,6 @@ public class GraphSlicer {
     Set<T> result = DFS.getReachableNodes(GraphInverter.invert(g), roots);
 
     return result;
-  }
-  
-  @Deprecated
-  public static <T> Set<T> slice(Graph<T> g, Filter<T> f){
-    return slice(g, FilterPredicate.toPredicate(f));
-  }
-  
-  @Deprecated
-  public static <T> Graph<T> prune(final Graph<T> g, final Filter<T> f) {
-    return prune(g, FilterPredicate.toPredicate(f));
   }
 
   /**
@@ -181,7 +171,7 @@ public class GraphSlicer {
     return output;
   }
   
-  public static <E> AbstractGraph<E> project(final Graph<E> G, final Filter<E> fmember) {
+  public static <E> AbstractGraph<E> project(final Graph<E> G, final Predicate<E> fmember) {
     final NodeManager<E> nodeManager = new NodeManager<E>() {
       private int count = -1;
 
@@ -192,7 +182,7 @@ public class GraphSlicer {
 
       @Override
       public boolean containsNode(E N) {
-        return G.containsNode(N) && fmember.accepts(N);
+        return G.containsNode(N) && fmember.test(N);
       }
 
       @Override

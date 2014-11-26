@@ -34,7 +34,7 @@ import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
@@ -161,9 +161,8 @@ public class PDFSDG {
   }
 
   private static Graph<Statement> pruneSDG(final SDG sdg) {
-    Filter<Statement> f = new Filter<Statement>() {
-      @Override
-      public boolean accepts(Statement s) {
+    Predicate<Statement> f = new Predicate<Statement>() {
+      @Override public boolean test(Statement s) {
         if (s.getNode().equals(sdg.getCallGraph().getFakeRootNode())) {
           return false;
         } else if (s instanceof MethodExitStatement || s instanceof MethodEntryStatement) {

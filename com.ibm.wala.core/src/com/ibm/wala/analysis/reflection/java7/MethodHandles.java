@@ -43,7 +43,7 @@ import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.MapIterator;
@@ -208,7 +208,7 @@ public class MethodHandles {
       return getIR(node).iterateNewSites();
     }
 
-    public Iterator<FieldReference> iterateFields(CGNode node, Filter<SSAInstruction> filter) {
+    public Iterator<FieldReference> iterateFields(CGNode node, Predicate<SSAInstruction> filter) {
       return 
           new MapIterator<SSAInstruction,FieldReference>(
               new FilterIterator<SSAInstruction>(getIR(node).iterateNormalInstructions(), filter), 
@@ -222,9 +222,8 @@ public class MethodHandles {
     
     @Override
     public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
-      return iterateFields(node, new Filter<SSAInstruction>() {
-        @Override
-        public boolean accepts(SSAInstruction o) {
+      return iterateFields(node, new Predicate<SSAInstruction>() {
+        @Override public boolean test(SSAInstruction o) {
           return o instanceof SSAGetInstruction;
         }
       });
@@ -232,9 +231,8 @@ public class MethodHandles {
     
     @Override
     public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
-      return iterateFields(node, new Filter<SSAInstruction>() {
-        @Override
-        public boolean accepts(SSAInstruction o) {
+      return iterateFields(node, new Predicate<SSAInstruction>() {
+        @Override public boolean test(SSAInstruction o) {
           return o instanceof SSAPutInstruction;
         }
       });

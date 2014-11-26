@@ -24,7 +24,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.analysis.IExplodedBasicBlock;
 import com.ibm.wala.util.WalaException;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphSlicer;
@@ -176,9 +176,8 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
 
     try {
       final P proc = getProcedureForSelection();
-      Filter<T> filter = new Filter<T>() {
-        @Override
-        public boolean accepts(T o) {
+      Predicate<T> filter = new Predicate<T>() {
+        @Override public boolean test(T o) {
           return supergraph.getProcOf(o).equals(proc);
         }
       };

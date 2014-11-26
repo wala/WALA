@@ -10,16 +10,17 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
+import com.ibm.wala.util.Predicate;
 
 /**
  * intersection of two filters
  */
-public class Filtersection<T> implements Filter<T> {
-  
-  final private Filter<T> a;
-  final private Filter<T> b;
-  
-  public Filtersection(Filter<T> a, Filter<T> b) {
+public class Filtersection<T> extends Predicate<T> {
+
+  final private Predicate<T> a;
+  final private Predicate<T> b;
+
+  public Filtersection(Predicate<T> a, Predicate<T> b) {
     this.a = a;
     this.b = b;
     if (a == null) {
@@ -31,8 +32,8 @@ public class Filtersection<T> implements Filter<T> {
   }
 
   @Override
-  public boolean accepts(T o) {
-    return a.accepts(o) && b.accepts(o);
+  public boolean test(T o) {
+    return a.test(o) && b.test(o);
   }
 
 }
