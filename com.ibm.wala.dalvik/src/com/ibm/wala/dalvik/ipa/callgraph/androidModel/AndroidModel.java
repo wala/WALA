@@ -736,10 +736,11 @@ public class AndroidModel /* makes SummarizedMethod */
 
                     // SHORTCUT:
                     redirect.addStatement(invokation);
-
-                    final int returnPC = redirect.getNextProgramCounter();
-                    final SSAInstruction returnInstruction = instructionFactory.ReturnInstruction(returnPC, svc);
-                    redirect.addStatement(returnInstruction);
+                    if (instructionFactory.isAssignableFrom(svc.getType(), svc.getValidIn().getReturnType())) {
+                    	final int returnPC = redirect.getNextProgramCounter();
+                    	final SSAInstruction returnInstruction = instructionFactory.ReturnInstruction(returnPC, svc);
+                    	redirect.addStatement(returnInstruction);
+                    }
 
                     final IClass declaringClass = this.cha.lookupClass(asMethod.getDeclaringClass());   
                     if (declaringClass == null) {
