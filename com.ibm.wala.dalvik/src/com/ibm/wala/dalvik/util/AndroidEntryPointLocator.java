@@ -389,9 +389,12 @@ nextMethod:
 
     private boolean isExcluded(final IClass cls) {
     	final SetOfClasses set = cls.getClassHierarchy().getScope().getExclusions();
-    	final String clsName = cls.getReference().getName().toString().substring(1);
-    	
-        return set.contains(clsName);
+    	if (set == null) {
+    		return false; // exclusions null ==> no exclusions ==> no class is excluded
+    	} else {
+    		final String clsName = cls.getReference().getName().toString().substring(1);
+    		return set.contains(clsName);
+    	}
     }
 
     /**
