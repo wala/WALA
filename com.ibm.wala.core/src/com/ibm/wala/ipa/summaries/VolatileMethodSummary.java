@@ -295,6 +295,7 @@ public class VolatileMethodSummary {
 
             if ((inst == null) || (inst == RESERVED)) {
               if (DEBUG) { System.err.printf("No instruction at iindex {}", i); }
+              this.summary.addStatement(null);
             } else {
               if (DEBUG) { System.err.printf("Adding @{}: ", inst); }
               this.summary.addStatement(inst);
