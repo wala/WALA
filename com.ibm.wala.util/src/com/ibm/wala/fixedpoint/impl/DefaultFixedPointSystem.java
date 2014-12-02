@@ -19,7 +19,7 @@ import com.ibm.wala.fixpoint.IFixedPointSystem;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.fixpoint.UnaryStatement;
 import com.ibm.wala.util.collections.EmptyIterator;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
@@ -95,9 +95,8 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
   @Override
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public Iterator<AbstractStatement> getStatements() {
-    return new FilterIterator(graph.iterator(), new Filter() {
-      @Override
-      public boolean accepts(Object x) {
+    return new FilterIterator(graph.iterator(), new Predicate() {
+      @Override public boolean test(Object x) {
         return x instanceof AbstractStatement;
       }
     });
@@ -258,9 +257,8 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
 
   @Override
   public Iterator<T> getVariables() {
-    return new FilterIterator<T>(graph.iterator(), new Filter<T>() {
-      @Override
-      public boolean accepts(T x) {
+    return new FilterIterator<T>(graph.iterator(), new Predicate<T>() {
+      @Override public boolean test(T x) {
         return x instanceof IVariable;
       }
     });

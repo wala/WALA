@@ -35,7 +35,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAMonitorInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.traverse.DFS;
 
@@ -58,7 +58,7 @@ public class AstJavaSlicer extends Slicer {
     return new AstJavaSlicer().slice(sdg, ss, backward);
   }
 
-  public static Set<Statement> gatherStatements(CallGraph CG, Collection<CGNode> partialRoots, Filter<SSAInstruction> filter) {
+  public static Set<Statement> gatherStatements(CallGraph CG, Collection<CGNode> partialRoots, Predicate<SSAInstruction> filter) {
     Set<Statement> result = new HashSet<Statement>();
     for (Iterator<CGNode> ns = DFS.getReachableNodes(CG, partialRoots).iterator(); ns.hasNext();) {
       CGNode n = ns.next();
@@ -66,7 +66,7 @@ public class AstJavaSlicer extends Slicer {
       if (nir != null) {
 	SSAInstruction insts[] = nir.getInstructions();
 	for (int i = 0; i < insts.length; i++) {
-          if (filter.accepts(insts[i])) {
+          if (filter.test(insts[i])) {
             result.add(new NormalStatement(n, i));
 	  }
 	}
@@ -77,36 +77,32 @@ public class AstJavaSlicer extends Slicer {
   }
 
   public static Set<Statement> gatherAssertions(CallGraph CG, Collection<CGNode> partialRoots) {
-    return gatherStatements(CG, partialRoots, new Filter<SSAInstruction>() {
-      @Override
-      public boolean accepts(SSAInstruction o) {
+    return gatherStatements(CG, partialRoots, new Predicate<SSAInstruction>() {
+      @Override public boolean test(SSAInstruction o) {
         return o instanceof AstAssertInstruction;
       }
     });
   }
 
   public static Set<Statement> gatherMonitors(CallGraph CG, Collection<CGNode> partialRoots) {
-    return gatherStatements(CG, partialRoots, new Filter<SSAInstruction>() {
-      @Override
-      public boolean accepts(SSAInstruction o) {
+    return gatherStatements(CG, partialRoots, new Predicate<SSAInstruction>() {
+      @Override public boolean test(SSAInstruction o) {
         return o instanceof SSAMonitorInstruction;
       }
     });
   }
 
   public static Set<Statement> gatherWrites(CallGraph CG, Collection<CGNode> partialRoots) {
-    return gatherStatements(CG, partialRoots, new Filter<SSAInstruction>() {
-      @Override
-      public boolean accepts(SSAInstruction o) {
+    return gatherStatements(CG, partialRoots, new Predicate<SSAInstruction>() {
+      @Override public boolean test(SSAInstruction o) {
         return (o instanceof SSAPutInstruction) || (o instanceof SSAArrayStoreInstruction);
       }
     });
   }
 
   public static Set<Statement> gatherReads(CallGraph CG, Collection<CGNode> partialRoots) {
-    return gatherStatements(CG, partialRoots, new Filter<SSAInstruction>() {
-      @Override
-      public boolean accepts(SSAInstruction o) {
+    return gatherStatements(CG, partialRoots, new Predicate<SSAInstruction>() {
+      @Override public boolean test(SSAInstruction o) {
         return (o instanceof SSAGetInstruction) || (o instanceof SSAArrayLoadInstruction);
       }
     });

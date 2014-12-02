@@ -34,7 +34,7 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.ComposedIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -144,9 +144,8 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
       new MapIterator<IMethod,CGNode>(
           new FilterIterator<IMethod>(
               getPossibleTargets(site),
-              new Filter<IMethod>() {
-                @Override
-                public boolean accepts(IMethod o) {
+              new Predicate<IMethod>() {
+                @Override public boolean test(IMethod o) {
                   return !o.isAbstract();
                 }
               }
@@ -173,9 +172,8 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   public Iterator<CallSiteReference> getPossibleSites(final CGNode src, final CGNode target) {
     return 
       new FilterIterator<CallSiteReference>(getInterpreter(src).iterateCallSites(src),
-        new Filter<CallSiteReference>() {
-          @Override
-          public boolean accepts(CallSiteReference o) {
+        new Predicate<CallSiteReference>() {
+          @Override public boolean test(CallSiteReference o) {
             return getPossibleTargets(src, o).contains(target);
           }
         });
@@ -296,10 +294,9 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
             return getPossibleTargets(n, outer).iterator();
           }
         },
-        new Filter<CGNode>() {
+        new Predicate<CGNode>() {
           private final MutableIntSet nodes = IntSetUtil.make();
-          @Override
-          public boolean accepts(CGNode o) {
+          @Override public boolean test(CGNode o) {
             if (nodes.contains(o.getGraphNodeId())) {
               return false;
             } else {

@@ -18,7 +18,7 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.Pair;
@@ -96,9 +96,8 @@ public class AllocationSite implements InstanceKey {
     return new MapIterator<CGNode, Pair<CGNode, NewSiteReference>>(
         new FilterIterator<CGNode>(
           CG.getNodes(method.getReference()).iterator(),
-          new Filter<CGNode>() {
-            @Override
-            public boolean accepts(CGNode o) {
+          new Predicate<CGNode>() {
+            @Override public boolean test(CGNode o) {
               return o.getMethod().equals(method);
             }
           }
