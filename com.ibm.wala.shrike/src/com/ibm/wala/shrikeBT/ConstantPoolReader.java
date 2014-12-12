@@ -123,6 +123,8 @@ public abstract class ConstantPoolReader {
    */
   public abstract String getConstantPoolHandleType(int index);
 
+  public abstract byte getConstantPoolHandleKind(int index);
+
   public abstract BootstrapMethod getConstantPoolDynamicBootstrap(int index);
   
   public abstract String getConstantPoolDynamicName(int index);

@@ -15,9 +15,11 @@ import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Iterator;
 
+import com.ibm.wala.shrikeBT.ConstantInstruction.ClassToken;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction.Operator;
 import com.ibm.wala.shrikeBT.analysis.ClassHierarchyProvider;
 import com.ibm.wala.shrikeBT.analysis.Verifier;
+import com.ibm.wala.shrikeCT.ConstantPoolParser.ReferenceToken;
 
 /**
  * This class generates Java bytecode from ShrikeBT Instructions.
@@ -159,6 +161,10 @@ public abstract class Compiler implements Constants {
   protected abstract int allocateConstantPoolString(String v);
 
   protected abstract int allocateConstantPoolClassType(String c);
+
+  protected abstract int allocateConstantPoolMethodType(String c);
+
+  protected abstract int allocateConstantPoolMethodHandle(ReferenceToken c);
 
   protected abstract int allocateConstantPoolField(String c, String name, String type);
 
@@ -710,6 +716,12 @@ public abstract class Compiler implements Constants {
               cpIndex = allocateConstantPoolInteger(((ConstantInstruction.ConstInt) instr).getIntValue());
             } else if (t.equals(TYPE_String)) {
               cpIndex = allocateConstantPoolString((String) ((ConstantInstruction.ConstString) instr).getValue());
+            } else if (t.equals(TYPE_Class)) {
+              cpIndex = allocateConstantPoolClassType(((ClassToken) ((ConstantInstruction.ConstClass) instr).getValue()).getTypeName());
+            } else if (t.equals(TYPE_MethodType)) {
+              cpIndex = allocateConstantPoolMethodType(((String) ((ConstantInstruction.ConstMethodType) instr).getValue()));
+            } else if (t.equals(TYPE_MethodHandle)) {
+              cpIndex = allocateConstantPoolMethodHandle(((ReferenceToken) ((ConstantInstruction.ConstMethodHandle) instr).getValue()));
             } else {
               cpIndex = allocateConstantPoolFloat(((ConstantInstruction.ConstFloat) instr).getFloatValue());
             }

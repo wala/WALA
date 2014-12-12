@@ -617,7 +617,7 @@ public final class ClassReader implements ClassConstants {
   }
 
   /**
-   * @return the method descriptor of method m in JVM format (e.g., V(ILjava/lang/Object;) )
+   * @return the method descriptor of method m in JVM format (e.g., (ILjava/lang/Object;)V )
    */
   public String getMethodType(int m) throws InvalidClassFileException {
     verifyMethodIndex(m);

@@ -443,7 +443,7 @@ final public class ClassInstrumenter {
             }
           }
           
-          stacks = new StackMapTableWriter(w, md, output, cha, varTypes /*, sm*/);
+          stacks = new StackMapTableWriter(w, md, output, cha, varTypes , sm);
           codeAttrCount++;
         } catch (IOException | FailureException e) {
           // TODO Auto-generated catch block

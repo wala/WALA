@@ -24,6 +24,8 @@ import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.VertexFactor
 import com.ibm.wala.cast.js.ipa.callgraph.JSAnalysisOptions;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptConstructTargetSelector;
+import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptFunctionApplyContextInterpreter;
+import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptFunctionApplyTargetSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptFunctionDotCallTargetSelector;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions;
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptConstructorFunctions.JavaScriptConstructor;
@@ -87,8 +89,7 @@ public abstract class FieldBasedCallGraphBuilder {
   private MethodTargetSelector setupMethodTargetSelector(IClassHierarchy cha, JavaScriptConstructorFunctions constructors2, AnalysisOptions options) {
     MethodTargetSelector result = new JavaScriptConstructTargetSelector(constructors2, options.getMethodTargetSelector());
     if (options instanceof JSAnalysisOptions && ((JSAnalysisOptions)options).handleCallApply()) {
-      // TODO handle Function.prototype.apply
-      result = new JavaScriptFunctionDotCallTargetSelector(result);
+      result = new JavaScriptFunctionApplyTargetSelector(new JavaScriptFunctionDotCallTargetSelector(result));
     }
     return result;
   }
@@ -141,7 +142,13 @@ public abstract class FieldBasedCallGraphBuilder {
 	  // set up call graph
 		final JSCallGraph cg = new JSCallGraph(cha, options, cache);
 		cg.init();
-		cg.setInterpreter(new DelegatingSSAContextInterpreter(new AstContextInsensitiveSSAContextInterpreter(options, cache), new DefaultSSAInterpreter(options, cache)));
+		
+		// setup context interpreters
+		DelegatingSSAContextInterpreter interpreter = new DelegatingSSAContextInterpreter(new AstContextInsensitiveSSAContextInterpreter(options, cache), new DefaultSSAInterpreter(options, cache));
+    if (options instanceof JSAnalysisOptions && ((JSAnalysisOptions)options).handleCallApply()) {
+      interpreter = new DelegatingSSAContextInterpreter(new JavaScriptFunctionApplyContextInterpreter(options, cache), interpreter);
+    }
+    cg.setInterpreter(interpreter);
 	    		
 		// set up call edges from fake root to all script nodes
 		AbstractRootMethod fakeRootMethod = (AbstractRootMethod)cg.getFakeRootNode().getMethod();
@@ -167,9 +174,11 @@ public abstract class FieldBasedCallGraphBuilder {
 		    IMethod target = targetSelector.getCalleeTarget(caller, site, targetVertex.getConcreteType());
 		    boolean isFunctionPrototypeCall = target != null
 		        && target.getName().toString().startsWith(JavaScriptFunctionDotCallTargetSelector.SYNTHETIC_CALL_METHOD_PREFIX);
+        boolean isFunctionPrototypeApply = target != null
+            && target.getName().toString().startsWith(JavaScriptFunctionApplyTargetSelector.SYNTHETIC_APPLY_METHOD_PREFIX);
 
-		    if (isFunctionPrototypeCall) {
-		      handleFunctionPrototypeCallInvocation(flowgraph, monitor, cg, callVertex, caller, site, target);
+		    if (isFunctionPrototypeCall || isFunctionPrototypeApply) {
+		      handleFunctionCallOrApplyInvocation(flowgraph, monitor, cg, callVertex, caller, site, target);
 		    } else {
 	          addEdgeToJSCallGraph(cg, site, target, caller);
 		     
@@ -197,7 +206,7 @@ public abstract class FieldBasedCallGraphBuilder {
 		return cg;
 	}
 
-  private boolean handleFunctionPrototypeCallInvocation(FlowGraph flowgraph, IProgressMonitor monitor, final JSCallGraph cg,
+  private boolean handleFunctionCallOrApplyInvocation(FlowGraph flowgraph, IProgressMonitor monitor, final JSCallGraph cg,
       CallVertex callVertex, CGNode caller, CallSiteReference site,
       IMethod target) throws CancelException {
     // use to get 1-level of call string for Function.prototype.call, to

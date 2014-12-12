@@ -202,6 +202,15 @@ final public class CTDecoder extends Decoder {
     }
 
     @Override
+    public byte getConstantPoolHandleKind(int index) {
+      try {
+        return cp.getCPHandleKind(index);
+      } catch (InvalidClassFileException e) {
+        throw convertToError(e);
+      }
+    }
+
+    @Override
     public BootstrapMethod getConstantPoolDynamicBootstrap(int index) {
       try {
         return cp.getCPDynBootstrap(index);

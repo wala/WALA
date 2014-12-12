@@ -43,7 +43,7 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
   }
 
   @Override
-  public IDispatch getInvocationCode() {
+  public Dispatch getInvocationCode() {
     int invokeType = getBootstrap().invokeType();
     switch (invokeType) {
     case 5: return Dispatch.VIRTUAL;

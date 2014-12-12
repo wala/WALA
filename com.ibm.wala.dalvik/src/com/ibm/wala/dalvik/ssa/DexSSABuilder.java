@@ -609,6 +609,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 //              int val = workingState.pop();
                 // dex does not use this result, but we need it for the SSA CheckCastInstruction
                 int result = reuseOrCreateDef();
+                workingState.setLocal(instruction.object, result);
 //              workingState.push(result);
 //              TypeReference t = instruction.getType();
                 emitInstruction(insts.CheckCastInstruction(getCurrentInstructionIndex(), result, val, instruction.type, instruction.isPEI()));
@@ -1160,9 +1161,6 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                 //System.out.println("Instruction: " + getCurrentInstructionIndex());
                 int val = workingState.getLocal(instruction.source);
 //              int val = workingState.pop();
-                int dest = instruction.destination;
-                int result = reuseOrCreateDef();
-                setLocal(dest, result);
 //              workingState.push(result);
                 if(instruction.isConversion())
                 {
@@ -1234,13 +1232,14 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                     default:
                         throw new IllegalArgumentException("unknown conversion type "+instruction.op+" in unary instruction: "+instruction);
                     }
+                    int dest = instruction.destination;
+                    int result = reuseOrCreateDef();
+                    setLocal(dest, result);
                     emitInstruction(insts.ConversionInstruction(getCurrentInstructionIndex(), result, val, fromType, toType, overflows));
                 }        
                 else
                 {
-                    // emitInstruction(insts.UnaryOpInstruction(getCurrentInstructionIndex(), instruction.getOperator(), result, val));
-
-                    if (instruction.op == UnaryOperation.OpID.MOVE) {
+                	if (instruction.op == UnaryOperation.OpID.MOVE) {
                         setLocal(instruction.destination, workingState.getLocal(instruction.source));
                     }
                     else if (instruction.op == UnaryOperation.OpID.MOVE_WIDE) {
@@ -1249,6 +1248,11 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                             setLocal(instruction.destination+1, workingState.getLocal(instruction.source));
                         else
                             setLocal(instruction.destination+1, workingState.getLocal(instruction.source+1));
+                    } else {
+                        int dest = instruction.destination;
+                        int result = reuseOrCreateDef();
+                        setLocal(dest, result);
+                    	emitInstruction(insts.UnaryOpInstruction(getCurrentInstructionIndex(), instruction.getOperator(), result, val));
                     }
                 }
             }
@@ -1377,12 +1381,6 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
      */
     public void build() {
         try {
-        	   if (method.getName().toString().contains("newCNfaPair")) {
-        		      System.err.println(method);
-        		    }
-          	   if (method.getName().toString().contains("expandEscape")) {
-     		      System.err.println(method);
-     		    }
            solve();
             if (localMap != null) {
                 localMap.finishLocalMap(this);

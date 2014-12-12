@@ -565,7 +565,7 @@ public abstract class ConstantInstruction extends Instruction {
 
     @Override
     public String getType() {
-      return TYPE_String;
+      return TYPE_MethodType;
     }
   }
   
@@ -636,7 +636,8 @@ public abstract class ConstantInstruction extends Instruction {
         String className = cp.getConstantPoolHandleClassType(getCPIndex());
         String eltName = cp.getConstantPoolHandleName(getCPIndex());
         String eltDesc = cp.getConstantPoolHandleType(getCPIndex());
-        value = new ConstantPoolParser.ReferenceToken(className, eltName, eltDesc);
+        byte kind = cp.getConstantPoolHandleKind(getCPIndex());
+        value = new ConstantPoolParser.ReferenceToken(kind, className, eltName, eltDesc);
       }
       return value;
     }
@@ -770,7 +771,7 @@ public abstract class ConstantInstruction extends Instruction {
     return ConstClass.makeInternal(s);
   }
 
-  static ConstantInstruction make(ConstantPoolReader cp, int index) {
+  public static ConstantInstruction make(ConstantPoolReader cp, int index) {
     switch (cp.getConstantPoolItemType(index)) {
     case CONSTANT_Integer:
       return new LazyInt(OP_ldc_w, cp, index);

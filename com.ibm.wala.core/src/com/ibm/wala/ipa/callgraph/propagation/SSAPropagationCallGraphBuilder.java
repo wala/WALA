@@ -1085,7 +1085,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             @Override
             public void act(int x) {
               if (!contentsAreInvariant(symbolTable, du, instruction.getUse(x))) {
-                pks.add(getBuilder().getPointerKeyForLocal(node, instruction.getUse(x)));
+                pks.add(getBuilder().getPointerKeyForLocal(node, instruction.getUse(x)));                   
               }
             }
           });
@@ -1532,7 +1532,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         if (constParams != null && constParams[i] != null) {
           InstanceKey[] ik = constParams[i];
           for (int j = 0; j < ik.length; j++) {
-            system.newConstraint(formal, ik[j]);
+              system.newConstraint(formal, ik[j]);
           }
         } else {
           if (instruction.getUse(i) < 0) {
@@ -2081,21 +2081,25 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
     FilteredPointerKey.TypeFilter filter = (FilteredPointerKey.TypeFilter) target.getContext().get(ContextKey.PARAMETERS[index]);
     if (filter != null && !filter.isRootFilter()) {
-        return pointerKeyFactory.getFilteredPointerKeyForLocal(target, vn, filter);
+        return getFilteredPointerKeyForLocal(target, vn, filter);
     
-    } else if (index == 0 && !target.getMethod().isStatic()) {
+    } else { 
       // the context does not select a particular concrete type for the
       // receiver, so use the type of the method
-      IClass C = getReceiverClass(target.getMethod());
-      if (C.getClassHierarchy().getRootClass().equals(C)) {
-        return pointerKeyFactory.getPointerKeyForLocal(target, vn);        
+      IClass C;
+      if (index == 0 && !target.getMethod().isStatic()) {
+        C = getReceiverClass(target.getMethod());
       } else {
-        return pointerKeyFactory.getFilteredPointerKeyForLocal(target, vn, new FilteredPointerKey.SingleClassFilter(C));
+        C = cha.lookupClass(target.getMethod().getParameterType(index));
       }
       
-    } else {
-      return pointerKeyFactory.getPointerKeyForLocal(target, vn);
-    }
+      if (C == null || C.getClassHierarchy().getRootClass().equals(C)) {
+        return getPointerKeyForLocal(target, vn);        
+      } else {
+        return getFilteredPointerKeyForLocal(target, vn, new FilteredPointerKey.SingleClassFilter(C));
+      }
+      
+    } 
   }
 
   /**

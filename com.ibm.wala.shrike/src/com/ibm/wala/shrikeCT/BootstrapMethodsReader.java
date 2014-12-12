@@ -25,7 +25,9 @@ public class BootstrapMethodsReader extends AttributeReader {
     String methodClass();
     String methodName();
     String methodType();
+    int callArgumentCount();
     Object callArgument(ClassLoader cl, int i);
+    int callArgumentIndex(int i);
     int callArgumentKind(int i);
   }
   
@@ -77,17 +79,28 @@ public class BootstrapMethodsReader extends AttributeReader {
           return methodType;
         }
 
+        
+        @Override
+        public int callArgumentCount() {
+          return argumentCount;
+        }
+
         @Override
         public int callArgumentKind(int i) {
+          return cp.getItemType(callArgumentIndex(i));
+        }
+
+        @Override
+        public int callArgumentIndex(int i) {
           assert 0 <= i && i < argumentCount;
           int index = argsBase + (2*i);
-          return cp.getItemType(cr.getUShort(index));
+          return cr.getUShort(index);
         }
-        
+
         @Override
         public Object callArgument(ClassLoader cl, int i) {
           try {
-            int index = cr.getUShort(argsBase + (2*i));
+            int index = callArgumentIndex(i);
             int t = callArgumentKind(i);
             switch (t) {
             case ClassConstants.CONSTANT_Utf8:
