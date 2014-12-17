@@ -329,7 +329,11 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
    */
   @Override
   public Collection<IField> getDeclaredInstanceFields() {
-    return Collections.unmodifiableList(Arrays.asList(instanceFields));
+    if (instanceFields == null) {
+      return Collections.emptySet();
+    } else {
+      return Collections.unmodifiableList(Arrays.asList(instanceFields));
+    }
   }
 
   /*
@@ -454,21 +458,13 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
         }
       }
     }
-
-    // didn't find it yet. special logic for interfaces
-    if (isInterface() || isAbstract()) {
-      final Iterator<IClass> it = getAllImplementedInterfaces().iterator();
-      // try each superinterface
-      while (it.hasNext()) {
-        IClass k = it.next();
-        result = k.getMethod(selector);
-        if (result != null) {
-          return result;
-        }
-      }
+    
+    // no method found
+    if (inheritCache == null) {
+      inheritCache = new BimodalMap<Selector, IMethod>(5);
     }
+    inheritCache.put(selector, null);
     return null;
-
   }
 
   protected void populateFieldArrayFromList(List<FieldImpl> L, IField[] A) {

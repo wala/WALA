@@ -163,7 +163,7 @@ public class DynamicCallGraph {
 				    else
               w.emit(Util.makeGet(runtime, "NULL_TAG"));
 				      // w.emit(ConstantInstruction.make(Constants.TYPE_null, null));
-				    w.emit(Util.makeInvoke(runtime, "execution", new Class[] {String.class, String.class, Object.class}));
+				    w.emit(Util.makeInvoke(runtime, "execution", new Class[] {Class.class, String.class, Object.class}));
 				  }
 				});
 
@@ -246,10 +246,10 @@ public class DynamicCallGraph {
 		          entries.put(p.getCPUtf8(i), i);
 		          break;
 		        case CONSTANT_String:
-              entries.put(new CWString(p.getCPString(i)), i);
+              entries.put(new CWStringItem(p.getCPString(i), CONSTANT_String), i);
               break;
 		        case CONSTANT_Class:
-              entries.put(new CWClass(p.getCPClass(i)), i);
+              entries.put(new CWStringItem(p.getCPClass(i), CONSTANT_Class), i);
               break;
 		        case CONSTANT_MethodHandle:
 		        case CONSTANT_MethodType:

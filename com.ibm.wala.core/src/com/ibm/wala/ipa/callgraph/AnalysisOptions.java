@@ -67,6 +67,7 @@ public class AnalysisOptions {
     FULL("full", Integer.MAX_VALUE, false, false, false), 
     APPLICATION_GET_METHOD("application_get_method", Integer.MAX_VALUE, false, false, true), 
     NO_FLOW_TO_CASTS("no_flow_to_casts", 0, false, false, false), 
+    NO_FLOW_TO_CASTS_APPLICATION_GET_METHOD("no_flow_to_casts_application_get_method", 0, false, false, true), 
     NO_METHOD_INVOKE("no_method_invoke", Integer.MAX_VALUE, true, false, false), 
     NO_FLOW_TO_CASTS_NO_METHOD_INVOKE("no_flow_to_casts_no_method_invoke", 0, true, false, false), 
     ONE_FLOW_TO_CASTS_NO_METHOD_INVOKE("one_flow_to_casts_no_method_invoke", 1, true, false, false), 

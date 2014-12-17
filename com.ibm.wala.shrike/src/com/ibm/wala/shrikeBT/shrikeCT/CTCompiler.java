@@ -15,6 +15,7 @@ import java.util.Random;
 import com.ibm.wala.shrikeBT.Compiler;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeCT.ClassWriter;
+import com.ibm.wala.shrikeCT.ConstantPoolParser.ReferenceToken;
 
 /**
  * This class lets you compile ShrikeBT intermediate code into real Java bytecodes using ShrikeCT.
@@ -60,6 +61,16 @@ final public class CTCompiler extends Compiler {
   @Override
   protected int allocateConstantPoolClassType(String c) {
     return cw.addCPClass(convertTypeToClass(c));
+  }
+
+  @Override
+  protected int allocateConstantPoolMethodType(String c) {
+    return cw.addCPMethodType(c);
+  }
+
+  @Override
+  protected int allocateConstantPoolMethodHandle(ReferenceToken c) {
+    return cw.addCPMethodHandle(c);
   }
 
   /**

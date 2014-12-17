@@ -83,8 +83,11 @@ public class OptimisticCallgraphBuilder extends FieldBasedCallGraphBuilder {
 					// special handling of invocations of Function.prototype.call
 					// TODO: since we've just added some edges to the flow graph, its transitive closure will be
 					//       recomputed here, which is slow and unnecessary
-					if(handleCallApply && edge.snd.getFullName().equals("Lprologue.js/Function_prototype_call"))
+					if(handleCallApply && 
+					    (edge.snd.getFullName().equals("Lprologue.js/Function_prototype_call") ||
+					     edge.snd.getFullName().equals("Lprologue.js/Function_prototype_apply"))) {
 						addReflectiveCallEdge(flowgraph, edge.fst, monitor);
+					}
 				}
 			}
 		}

@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -28,6 +29,7 @@ import java.util.Set;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.shrike.DynamicCallGraphTestBase;
 import com.ibm.wala.dalvik.classLoader.DexIRFactory;
@@ -36,21 +38,25 @@ import com.ibm.wala.dalvik.util.AndroidEntryPointLocator;
 import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.LocatorFlags;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultSSAInterpreter;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.shrikeBT.analysis.Analyzer.FailureException;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
@@ -59,7 +65,9 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.WalaException;
+import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.io.TemporaryFile;
@@ -128,8 +136,37 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 	public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeAPKCallGraph(String apkFileName) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
 		return makeAPKCallGraph(apkFileName, new NullProgressMonitor());
 	}
-	
+
 	public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeAPKCallGraph(String apkFileName, IProgressMonitor monitor) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
+		return makeAPKCallGraph(apkFileName, monitor, ReflectionOptions.ONE_FLOW_TO_CASTS_APPLICATION_GET_METHOD);
+	}
+	
+	private static SSAContextInterpreter makeDefaultInterpreter(AnalysisOptions options, AnalysisCache cache) {
+		return new DefaultSSAInterpreter(options, cache) {
+			@Override
+			public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
+				return 
+					new MapIterator<SSAInstruction,NewSiteReference>(
+						new FilterIterator<SSAInstruction>(
+								node.getIR().iterateAllInstructions(), 
+								new Predicate<SSAInstruction>() {
+									@Override
+									public boolean test(SSAInstruction t) {
+										return t instanceof SSANewInstruction;
+									} 
+								}), 
+						new Function<SSAInstruction,NewSiteReference>() {
+							@Override
+							public NewSiteReference apply(SSAInstruction object) {
+								return ((SSANewInstruction)object).getNewSite();
+							} 
+						}
+					);
+			}
+		};
+	}
+	
+	public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeAPKCallGraph(String apkFileName, IProgressMonitor monitor, ReflectionOptions policy) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
 		AnalysisScope scope = 
 			AndroidAnalysisScope.setUpAndroidAnalysisScope(
 				new File(apkFileName).toURI(),
@@ -150,8 +187,9 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 		assert ! es.isEmpty();
 		
 		AnalysisOptions options = new AnalysisOptions(scope, es);
-		options.setReflectionOptions(ReflectionOptions.ONE_FLOW_TO_CASTS_APPLICATION_GET_METHOD);
+		options.setReflectionOptions(policy);
 		
+		// SSAPropagationCallGraphBuilder cgb = Util.makeZeroCFABuilder(options, cache, cha, scope, null, makeDefaultInterpreter(options, cache));
 		SSAPropagationCallGraphBuilder cgb = Util.makeZeroCFABuilder(options, cache, cha, scope);
   
 		CallGraph callGraph = cgb.makeCallGraph(options, monitor);

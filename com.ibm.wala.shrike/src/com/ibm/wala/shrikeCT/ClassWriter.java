@@ -13,6 +13,8 @@ package com.ibm.wala.shrikeCT;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.ibm.wala.shrikeCT.ConstantPoolParser.ReferenceToken;
+
 /**
  * This class formats and writes class data into JVM format.
  */
@@ -82,16 +84,18 @@ public class ClassWriter implements ClassConstants {
     abstract byte getType();
   }
 
-  public static class CWString extends CWItem {
+  public static class CWStringItem extends CWItem {
     final private String s;
+    final private byte type;
 
-    public CWString(String s) {
+    public CWStringItem(String s, byte type) {
       this.s = s;
+      this.type = type;
     }
 
     @Override
     public boolean equals(Object o) {
-      return o instanceof CWString && ((CWString) o).s.equals(s);
+      return o != null && o.getClass().equals(getClass()) && ((CWStringItem) o).s.equals(s);
     }
 
     @Override
@@ -101,39 +105,16 @@ public class ClassWriter implements ClassConstants {
 
     @Override
     byte getType() {
-      return CONSTANT_String;
-    }
-  }
-
-  public static class CWClass extends CWItem {
-    final private String c;
-
-    public CWClass(String c) {
-      this.c = c;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      return o instanceof CWClass && ((CWClass) o).c.equals(c);
-    }
-
-    @Override
-    public int hashCode() {
-      return c.hashCode() + 1431;
-    }
-
-    @Override
-    byte getType() {
-      return CONSTANT_Class;
+      return type;
     }
   }
 
   static class CWRef extends CWItem {
-    final private String c;
+    final protected String c;
 
-    final private String n;
+    final protected String n;
 
-    final private String t;
+    final protected String t;
 
     final private byte type;
 
@@ -146,7 +127,7 @@ public class ClassWriter implements ClassConstants {
 
     @Override
     public boolean equals(Object o) {
-      if (o instanceof CWRef) {
+      if (o.getClass().equals(getClass())) {
         CWRef r = (CWRef) o;
         return r.type == type && r.c.equals(c) && r.n.equals(n) && r.t.equals(t);
       } else {
@@ -165,6 +146,29 @@ public class ClassWriter implements ClassConstants {
     }
   }
 
+  static class CWHandle extends CWRef {
+    private final byte kind;
+
+    CWHandle(byte type, byte kind, String c, String n, String t) {
+      super(type, c, n, t);
+      this.kind = kind;
+    }
+    
+    @Override
+    public int hashCode() {
+      return super.hashCode() * kind;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+      return super.equals(o) && ((CWHandle)o).kind == kind;
+    }
+
+    public byte getKind() {
+      return kind;
+    }
+  }
+  
   static class CWNAT extends CWItem {
     final private String n;
 
@@ -224,11 +228,15 @@ public class ClassWriter implements ClassConstants {
         byte t = cp.getItemType(i);
         switch (t) {
         case CONSTANT_String:
-          cachedCPEntries.put(new CWString(cp.getCPString(i)), new Integer(i));
+          cachedCPEntries.put(new CWStringItem(cp.getCPString(i), CONSTANT_String), new Integer(i));
           break;
         case CONSTANT_Class:
-          cachedCPEntries.put(new CWClass(cp.getCPClass(i)), new Integer(i));
+          cachedCPEntries.put(new CWStringItem(cp.getCPClass(i), CONSTANT_Class), new Integer(i));
           break;
+        case CONSTANT_MethodType:
+          cachedCPEntries.put(new CWStringItem(cp.getCPMethodType(i), CONSTANT_MethodType), new Integer(i));
+          break;
+        case CONSTANT_MethodHandle:
         case CONSTANT_FieldRef:
         case CONSTANT_InterfaceMethodRef:
         case CONSTANT_MethodRef:
@@ -331,13 +339,27 @@ public class ClassWriter implements ClassConstants {
     return addCPEntry(new Double(d), 2);
   }
 
+  private int addCPString(String s, byte type) {
+    if (s == null) {
+      throw new IllegalArgumentException("null s: " + s);
+    }
+    return addCPEntry(new CWStringItem(s, type), 1);
+  }
+
+  public int addCPMethodHandle(ReferenceToken c) {
+    if (c == null) {
+      throw new IllegalArgumentException("null c: " + c);
+    }
+    return addCPEntry(new CWHandle(CONSTANT_MethodHandle, c.getKind(), c.getClassName(), c.getElementName(), c.getDescriptor()), 1);
+  }
+
   /**
    * Add a String to the constant pool if necessary.
    * 
    * @return the index of a constant pool item with the right value
    */
   public int addCPString(String s) {
-    return addCPEntry(new CWString(s), 1);
+    return addCPString(s, CONSTANT_String);
   }
 
   /**
@@ -347,10 +369,17 @@ public class ClassWriter implements ClassConstants {
    * @return the index of a constant pool item with the right value
    */
   public int addCPClass(String s) {
-    if (s == null) {
-      throw new IllegalArgumentException("null s: " + s);
-    }
-    return addCPEntry(new CWClass(s), 1);
+    return addCPString(s, CONSTANT_Class);
+  }
+
+  /**
+   * Add a Class to the constant pool if necessary.
+   * 
+   * @param s the class name, in JVM format (e.g., java/lang/Object)
+   * @return the index of a constant pool item with the right value
+   */
+  public int addCPMethodType(String s) {
+    return addCPString(s, CONSTANT_MethodType);
   }
 
   /**
@@ -717,12 +746,10 @@ public class ClassWriter implements ClassConstants {
         int offset;
         switch (t) {
         case CONSTANT_Class:
-          offset = reserveBuf(3);
-          setUShort(buf, offset + 1, addCPUtf8(((CWClass) item).c));
-          break;
         case CONSTANT_String:
+        case CONSTANT_MethodType:
           offset = reserveBuf(3);
-          setUShort(buf, offset + 1, addCPUtf8(((CWString) item).s));
+          setUShort(buf, offset + 1, addCPUtf8(((CWStringItem) item).s));
           break;
         case CONSTANT_NameAndType: {
           offset = reserveBuf(5);
@@ -730,6 +757,39 @@ public class ClassWriter implements ClassConstants {
           setUShort(buf, offset + 1, addCPUtf8(nat.n));
           setUShort(buf, offset + 3, addCPUtf8(nat.t));
           break;
+        }
+        case CONSTANT_MethodHandle: {
+          offset = reserveBuf(4);
+          CWHandle handle = (CWHandle) item;
+          setUByte(buf, offset + 1, handle.getKind());
+          switch (handle.getKind()) {
+          case REF_getStatic:
+          case REF_getField:
+          case REF_putField:
+          case REF_putStatic: {
+            int x = addCPFieldRef(handle.c, handle.n, handle.t);
+            setUShort(buf, offset + 2, x);
+            break;
+          }
+          case REF_invokeVirtual:
+          case REF_newInvokeSpecial: {
+            int x = addCPMethodRef(handle.c, handle.n, handle.t);
+            setUShort(buf, offset + 2, x);
+            break;
+          }
+          case REF_invokeSpecial:
+          case REF_invokeStatic: {
+            int x = addCPMethodRef(handle.c, handle.n, handle.t);
+            setUShort(buf, offset + 2, x);
+            break;
+          }
+          case REF_invokeInterface: {
+            int x = addCPInterfaceMethodRef(handle.c, handle.n, handle.t);
+            setUShort(buf, offset + 2, x);
+            break;
+          }
+          }
+         break; 
         }
         case CONSTANT_MethodRef:
         case CONSTANT_FieldRef:

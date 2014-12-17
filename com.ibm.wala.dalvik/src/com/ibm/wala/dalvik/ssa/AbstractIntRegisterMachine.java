@@ -300,11 +300,7 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
 //          e.printStackTrace();
 //          return NOT_CHANGED;
             
-        	if (cfg.getDexMethod().getReference().toString().equals("< Application, Lcom/google/android/gms/tagmanager/v$a, onOpen(Landroid/database/sqlite/SQLiteDatabase;)V >")) {
-        		System.err.println("got here");
-        	}
-
-            if (!bb.isCatchBlock()) {
+             if (!bb.isCatchBlock()) {
                 return meet(lhs, rhs, bb, meeter) ? CHANGED : NOT_CHANGED;
             } else {            	
                 return meetForCatchBlock(lhs, rhs, bb, meeter) ? CHANGED : NOT_CHANGED;

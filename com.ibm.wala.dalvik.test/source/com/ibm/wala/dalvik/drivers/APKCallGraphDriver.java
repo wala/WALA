@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dalvik.test.callGraph.DalvikCallGraphTestBase;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -46,6 +47,7 @@ public class APKCallGraphDriver {
 
 	protected static void doApk(File apk) throws IOException,
 			ClassHierarchyException, CancelException {
+		System.gc();
 		System.err.println("Analyzing " + apk + "...");
 		try {
 			long time = System.currentTimeMillis();
@@ -95,7 +97,7 @@ public class APKCallGraphDriver {
 						return "timeout";
 					}	
 				};
-				CG = DalvikCallGraphTestBase.makeAPKCallGraph(apk.getAbsolutePath(), pm).fst;
+				CG = DalvikCallGraphTestBase.makeAPKCallGraph(apk.getAbsolutePath(), pm, ReflectionOptions.NONE).fst;
 			}
 			System.err.println("Analyzed " + apk + " in " + (System.currentTimeMillis() - time));
 			

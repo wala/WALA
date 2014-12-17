@@ -71,8 +71,8 @@ escape = function escape(str){
 /************************************************************************/
 /* Object properties, see spec 15.2					*/
 /************************************************************************/
-    
-Object.prototype = {
+
+Object$proto$__WALA__ =  {
 
   prototype: null,
 
@@ -103,13 +103,13 @@ Object.prototype = {
   }
 };
 
-
+Object.prototype = Object$proto$__WALA__;
 
 /************************************************************************/
 /* Function properties, see spec 15.3					*/
 /************************************************************************/
 
-local_function.prototype = {
+Function$proto$__WALA__ = {
 
   constructor: Function,
 
@@ -134,6 +134,8 @@ local_function.prototype = {
   }
 };
 
+local_function.prototype = Function$proto$__WALA__;
+
 local_function.__proto__ = Function.prototype;
 
 /************************************************************************/
@@ -142,7 +144,7 @@ local_function.__proto__ = Function.prototype;
 
 local_array.__proto__ = Function.prototype;
 
-local_array.prototype = {
+Array$proto$__WALA__ = {
 
   __proto__: Object.prototype,
 
@@ -327,6 +329,7 @@ Array.isArray = function Array_isArray(a) {
 	return true || false;
 };
 
+local_array.prototype = Array$proto$__WALA__;
 
 /************************************************************************/
 /* String properties, see spec 15.4					*/
@@ -334,7 +337,7 @@ Array.isArray = function Array_isArray(a) {
 
 local_string.__proto__ = Function.prototype;
 
-local_string.prototype = {
+String$proto$__WALA__ = {
 
   __proto__: Object.prototype,
 
@@ -436,6 +439,7 @@ local_string.prototype = {
 
 };
 
+local_string.prototype = String$proto$__WALA__;
 
 /************************************************************************/
 /* Number properties, see spec 15.7					*/
@@ -443,7 +447,7 @@ local_string.prototype = {
 
 local_number.__proto__ = Function.prototype;
 
-local_number.prototype = {
+Number$proto$__WALA__ = {
 
   __proto__: Object.prototype,
 
@@ -457,6 +461,7 @@ local_number.prototype = {
 
 };
 
+local_number.prototype = Number$proto$__WALA__;
 
 /************************************************************************/
 /* Math properties, see spec 15.8					*/
@@ -537,7 +542,7 @@ Math = {
 
 local_regexp.__proto__ = Function.prototype;
 
-local_regexp.prototype = {
+RegExp$proto$__WALA__ = {
 
   __proto__: Object.prototype,
 
@@ -553,6 +558,7 @@ local_regexp.prototype = {
 
 };
 
+local_regexp.prototype = RegExp$proto$__WALA__;
 
 /************************************************************************/
 /* Date properties, see spec 15.9					*/
@@ -560,7 +566,7 @@ local_regexp.prototype = {
 
 Date = function Date() {};
 
-Date.prototype = {
+Data$proto$__WALA__ = {
 
   __proto__: Object.prototype,
 
@@ -635,6 +641,13 @@ Date.prototype = {
 Date.now = function Date_now() {
 	return new Date().valueOf();
 };
+
+Date.prototype = Data$proto$__WALA__;
+
+
+/************************************************************************/
+/* internal stuff
+/************************************************************************/
 
 function Error(str) {
 	this.message = new String();

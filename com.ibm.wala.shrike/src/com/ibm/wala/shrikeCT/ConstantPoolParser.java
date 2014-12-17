@@ -18,17 +18,22 @@ import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
  */
 public final class ConstantPoolParser implements ClassConstants {
   public static class ReferenceToken {
+    private final byte kind;
     private final String className;
     private final String elementName;
     private final String descriptor;
     
-    public ReferenceToken(String className, String elementName, String descriptor) {
-      super();
+    public ReferenceToken(byte kind, String className, String elementName, String descriptor) {
+      this.kind = kind;
       this.className = className;
       this.elementName = elementName;
       this.descriptor = descriptor;
     }
   
+    public byte getKind() {
+      return kind;
+    }
+
     public String getClassName() {
       return className;
     }
@@ -60,6 +65,9 @@ public final class ConstantPoolParser implements ClassConstants {
       if (getClass() != obj.getClass())
         return false;
       ReferenceToken other = (ReferenceToken) obj;
+      if (kind != other.kind) {
+        return false;
+      }
       if (className == null) {
         if (other.className != null)
           return false;
@@ -410,7 +418,7 @@ public final class ConstantPoolParser implements ClassConstants {
   }
 
   /**
-   * @return the type of the MethodHandle at constant pool item i, in JVM format (e.g., I, Z, or Ljava/lang/Object;)
+   * @return the type of the MethodHandle at constant pool item i
    */
   public byte getCPHandleKind(int i) throws InvalidClassFileException, IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {

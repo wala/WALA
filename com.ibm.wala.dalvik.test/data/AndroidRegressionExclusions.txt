@@ -1,4 +1,3 @@
 java\/awt\/.*
 javax\/swing\/.*
-java\/io\/ObjectStreamClass*
 org\/apache\/xerces\/.*
