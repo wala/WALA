@@ -201,7 +201,7 @@ public interface TranslatorToCAst {
             breakNode);
         
       } else {
-        CAstNode header = Ast.makeNode(CAstNode.EMPTY);
+        CAstNode header = Ast.makeNode(CAstNode.LABEL_STMT, Ast.makeConstant("_do_label"), Ast.makeNode(CAstNode.EMPTY));
         CAstNode loopGoto = Ast.makeNode(CAstNode.IFGOTO, loopTest);
 
         wc.cfg().map(header, header);
