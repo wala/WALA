@@ -83,7 +83,7 @@ import com.ibm.wala.util.strings.Atom;
  */
 public class VolatileMethodSummary {
 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     private boolean allowReservedPC = false;
     private MethodSummary summary;
     private List<SSAInstruction> instructions = new ArrayList<SSAInstruction>();
@@ -435,10 +435,11 @@ public class VolatileMethodSummary {
      * @return A non-reserved writable ProgramCounter
      */
     public int getNextProgramCounter() {
+      while (isUsed(this.currentProgramCounter) || isReserved(this.currentProgramCounter)) {
         this.currentProgramCounter++;
-        while (this.instructions.size() < this.currentProgramCounter) this.instructions.add(null);
-        int pc = this.currentProgramCounter;
-        return pc;
+      }
+      while (this.instructions.size() < this.currentProgramCounter) this.instructions.add(null);
+      return this.currentProgramCounter;
     }
 
     /**
