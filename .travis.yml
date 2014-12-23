@@ -9,3 +9,4 @@ cache:
   directories:
     - $HOME/.m2
     - $HOME/build/wala/WALA/com.ibm.wala.cast.java.polyglot/lib
+    - $HOME/build/wala/WALA/com.ibm.wala.core.testdata/ocaml
