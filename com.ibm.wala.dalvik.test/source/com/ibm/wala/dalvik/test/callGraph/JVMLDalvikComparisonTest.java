@@ -45,7 +45,7 @@ import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.OrdinalSet;
 
-public class JVMLDalvikComparison extends DalvikCallGraphTestBase {
+public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
 
 	private static Pair<CallGraph,PointerAnalysis<InstanceKey>> makeJavaBuilder(String scopeFile, String mainClass) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
 		AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(scopeFile, CallGraphTestUtil.REGRESSION_EXCLUSIONS);

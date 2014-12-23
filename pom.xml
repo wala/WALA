@@ -50,6 +50,7 @@
 		<module>com.ibm.wala.ide.jdt.test</module>
 
 		<module>com.ibm.wala.dalvik</module>
+		<module>com.ibm.wala.dalvik.test</module>
 		<module>com.ibm.wala.scandroid</module>
 
 		<module>com.ibm.wala-repository</module>
