@@ -311,7 +311,7 @@ public class Intent implements ContextItem, Comparable<Intent> {
             // Unknown so not selected as external
             return false;
         }
-        return (! intent.action.toString().startsWith(pack));
+        return (! (intent.action.toString().startsWith("L" + pack) || intent.action.toString().startsWith(pack)));
     }
 
     /**
