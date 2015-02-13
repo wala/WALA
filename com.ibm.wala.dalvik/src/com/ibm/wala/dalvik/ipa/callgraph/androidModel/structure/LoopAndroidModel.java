@@ -101,7 +101,7 @@ public class LoopAndroidModel extends SingleStartAndroidModel {
         
         
         this.outerLoopPC = PC;
-        PC = makeBrakingNOP(this.outerLoopPC);
+        PC = body.getNextProgramCounter();
         paramManager.scopeDown(true);
 
         // Top-Half of Phi-Handling
