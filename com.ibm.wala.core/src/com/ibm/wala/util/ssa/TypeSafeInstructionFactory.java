@@ -50,9 +50,11 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.JavaLanguage.JavaInstructionFactory;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
+import com.ibm.wala.ssa.SSAConditionalBranchInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAGotoInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
@@ -653,6 +655,9 @@ public class TypeSafeInstructionFactory {
         return insts.GotoInstruction(iindex, target);
     }
 
+    public SSAConditionalBranchInstruction ConditionalBranchInstruction(final int iindex, final IConditionalBranchInstruction.IOperator operator, final TypeReference type, final int val1, final int val2, final int target) {
+      return insts.ConditionalBranchInstruction(iindex, operator, type, val1, val2, target);
+    }
     /**
      *  result = array[index].
      *
