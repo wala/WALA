@@ -148,7 +148,9 @@ public class SingleStartAndroidModel extends AbstractAndroidModel {
         // Close the Loop
         logger.info("Closing Loop");
         logger.info("PC {}: Goto {}", PC, outerLoopPC);
-        body.addStatement(insts.GotoInstruction(PC, outerLoopPC));
+        if (PC != outerLoopPC) {
+            body.addStatement(insts.GotoInstruction(PC, outerLoopPC));
+        }
         paramManager.scopeUp();
         
         // Add Phi-Statements at the beginning of this block...
