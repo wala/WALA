@@ -84,7 +84,7 @@ import com.ibm.wala.util.strings.Atom;
  */
 public class VolatileMethodSummary {
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private boolean allowReservedPC = false;
     private MethodSummary summary;
     private List<SSAInstruction> instructions = new ArrayList<SSAInstruction>();
