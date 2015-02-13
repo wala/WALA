@@ -60,11 +60,12 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
     return operator;
   }
 
+  /** BEGIN custom change: include jump target in string representation */
   @Override
   public String toString(SymbolTable symbolTable) {
-    return "conditional branch(" + operator + ") " + getValueString(symbolTable, val1) + "," + getValueString(symbolTable, val2);
+    return "conditional branch(" + operator + ", to iindex=" + target + ") " + getValueString(symbolTable, val1) + "," + getValueString(symbolTable, val2);
   }
-
+  /** END custom change: include jump target in string representation */
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    * @throws IllegalArgumentException if v is null
