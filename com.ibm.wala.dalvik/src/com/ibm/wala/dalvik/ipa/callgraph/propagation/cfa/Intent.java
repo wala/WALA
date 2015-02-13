@@ -260,7 +260,7 @@ public class Intent implements ContextItem, Comparable<Intent> {
 
     private static boolean isSystemService(Intent intent) {  
         assert (intent.action != null);
-        return ((intent.action.getVal(0) != 'L') && (intent.action.rIndex((byte) '/') < 0) && (intent.action.rIndex((byte) '.') < 0));
+        return (intent != null && intent.action != null && (intent.action.getVal(0) != 'L') && (intent.action.rIndex((byte) '/') < 0) && (intent.action.rIndex((byte) '.') < 0));
     }
 
     /**
