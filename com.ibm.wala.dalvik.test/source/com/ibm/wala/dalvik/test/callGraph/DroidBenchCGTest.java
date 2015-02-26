@@ -75,17 +75,6 @@ public class DroidBenchCGTest extends DalvikCallGraphTestBase {
 		uncalledFunctions.put("Reflection_Reflection1.apk",  x);
 	}
 	
-	public static String droidBenchRoot;
-	
-	{
-	  String f = walaProperties.getProperty("droidbench.root");
-	  if (f == null || !new File(f).exists()) {
-	    f = System.getenv("DROID_BENCH_ROOT");
-	    System.err.println("Using " + f + " as droid bench root");
-	  }
-	  droidBenchRoot = f;
-	}
-
 	private void assertUserCodeReachable(CallGraph cg) throws InvalidClassFileException {
 		for(Iterator<IClass> clss = cg.getClassHierarchy().getLoader(ClassLoaderReference.Application).iterateAllClasses();
 			clss.hasNext(); ) 
@@ -123,22 +112,35 @@ public class DroidBenchCGTest extends DalvikCallGraphTestBase {
 		System.err.println("...success testing " + apkFile);
 	}
 
+	 public static String droidBenchRoot;
+	  
+	 {
+	   String f = walaProperties.getProperty("droidbench.root");
+	   if (f == null || !new File(f).exists()) {
+	     f = System.getProperty("user.dir") + "/DroidBench";
+	     System.err.println("Using " + f + " as droid bench root");
+	   }
+	   droidBenchRoot = f;
+	 }
+
 	@Parameters
 	public static Collection<Object[]> generateData() {
-		List<Object[]> files = new LinkedList<Object[]>();
-		File dir = new File(droidBenchRoot + "/apk/");
-		for(String apkFile : dir.list(new FilenameFilter() {
-			@Override
-			public boolean accept(File dir, String name) {
-				return name.endsWith("apk");
-			} 
-		})) {
-			Set<MethodReference> uncalled = uncalledFunctions.get(apkFile);
-			if (uncalled == null) {
-				uncalled = Collections.emptySet();
-			}
-			files.add(new Object[]{ dir.getAbsolutePath() +  "/" + apkFile, uncalled });
-		}
-		return files;
+	  List<Object[]> files = new LinkedList<Object[]>();
+	  File dir = new File(droidBenchRoot + "/apk/");
+	  if (dir.exists() && dir.isDirectory() && dir.canRead()) {
+	    for(String apkFile : dir.list(new FilenameFilter() {
+	      @Override
+	      public boolean accept(File dir, String name) {
+	        return name.endsWith("apk");
+	      } 
+	    })) {
+	      Set<MethodReference> uncalled = uncalledFunctions.get(apkFile);
+	      if (uncalled == null) {
+	        uncalled = Collections.emptySet();
+	      }
+	      files.add(new Object[]{ dir.getAbsolutePath() +  "/" + apkFile, uncalled });
+	    }
+	  }
+	  return files;
 	}
 }
