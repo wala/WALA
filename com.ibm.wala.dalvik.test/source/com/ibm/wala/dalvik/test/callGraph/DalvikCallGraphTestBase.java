@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.dalvik.test.callGraph;
 
-import static com.ibm.wala.properties.WalaProperties.ANDROID_DEX_TOOL;
 import static com.ibm.wala.properties.WalaProperties.ANDROID_RT_JAR;
 
 import java.io.File;
