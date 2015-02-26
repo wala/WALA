@@ -75,7 +75,15 @@ public class DroidBenchCGTest extends DalvikCallGraphTestBase {
 		uncalledFunctions.put("Reflection_Reflection1.apk",  x);
 	}
 	
-	public static final String droidBenchRoot = walaProperties.getProperty("droidbench.root");
+	public static String droidBenchRoot;
+	
+	{
+	  String f = walaProperties.getProperty("droidbench.root");
+	  if (f == null || !new File(f).exists()) {
+	    f = System.getenv("DROID_BENCH_ROOT");
+	  }
+	  droidBenchRoot = f;
+	}
 
 	private void assertUserCodeReachable(CallGraph cg) throws InvalidClassFileException {
 		for(Iterator<IClass> clss = cg.getClassHierarchy().getLoader(ClassLoaderReference.Application).iterateAllClasses();
