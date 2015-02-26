@@ -37,6 +37,7 @@
  */
 package com.ibm.wala.cast.java.translator.jdt;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -150,6 +151,7 @@ import com.ibm.wala.cast.tree.impl.CAstNodeTypeMapRecorder;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.impl.CAstSourcePositionRecorder;
 import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
+import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ide.util.JdtPosition;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
@@ -181,6 +183,8 @@ import com.ibm.wala.util.debug.Assertions;
 
 @SuppressWarnings("unchecked")
 public class JDTJava2CAstTranslator {
+  protected boolean dump = false;
+  
   protected final CAst fFactory = new CAstImpl();
 
   // ///////////////////////////////////////////
@@ -221,6 +225,10 @@ public class JDTJava2CAstTranslator {
   //
 
   public JDTJava2CAstTranslator(JavaSourceLoaderImpl sourceLoader, CompilationUnit astRoot, IFile sourceFile, String fullPath, boolean replicateForDoLoops) {
+    this(sourceLoader, astRoot, sourceFile, fullPath, replicateForDoLoops, false);
+  }
+
+  public JDTJava2CAstTranslator(JavaSourceLoaderImpl sourceLoader, CompilationUnit astRoot, IFile sourceFile, String fullPath, boolean replicateForDoLoops, boolean dump) {
     fDivByZeroExcType = FakeExceptionTypeBinding.arithmetic;
     fNullPointerExcType = FakeExceptionTypeBinding.nullPointer;
     fClassCastExcType = FakeExceptionTypeBinding.classCast;
@@ -236,6 +244,8 @@ public class JDTJava2CAstTranslator {
     ast = cu.getAST();
 
     this.doLoopTranslator = new DoLoopTranslator(replicateForDoLoops, fFactory);
+
+    this.dump = dump;
     
     // FIXME: we might need one AST (-> "Object" class) for all files.
     fIdentityMapper = new JDTIdentityMapper(fSourceLoader.getReference(), ast);
@@ -255,6 +265,12 @@ public class JDTJava2CAstTranslator {
       declEntities.add(visit(decl, new RootContext()));
     }
 
+    if (dump) {
+      for(CAstEntity d : declEntities) {
+        CAstPrinter.printTo(d, new PrintWriter(System.err));
+      }
+    }
+    
     return new CompilationUnitEntity(cu.getPackage(), declEntities);
   }
 

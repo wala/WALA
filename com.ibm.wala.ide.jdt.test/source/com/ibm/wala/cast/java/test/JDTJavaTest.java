@@ -41,6 +41,7 @@ public abstract class JDTJavaTest extends IRTests {
   public JDTJavaTest(ZippedProjectData project) {
     super(project.projectName);
     this.project = project;
+    this.dump = Boolean.parseBoolean(System.getProperty("wala.cast.dump", "false"));
    }
 
   @Override
@@ -52,6 +53,10 @@ public abstract class JDTJavaTest extends IRTests {
     AbstractAnalysisEngine engine;
     try {
       engine = new JDTJavaSourceAnalysisEngine(project.projectName) {
+        {
+          setDump(Boolean.parseBoolean(System.getProperty("wala.cast.dump", "false")));
+        }
+        
         @Override
         protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
           return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE, cha, mainClassDescriptors);

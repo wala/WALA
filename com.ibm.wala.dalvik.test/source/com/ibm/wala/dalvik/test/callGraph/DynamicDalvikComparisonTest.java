@@ -32,12 +32,12 @@ import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.io.TemporaryFile;
 
-public class DynamicDalvikComparison extends DalvikCallGraphTestBase {
+public class DynamicDalvikComparisonTest extends DalvikCallGraphTestBase {
 
 	private void test(boolean useAndroidLib, String mainClass, String javaScopeFile, String... args) throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InvalidClassFileException, FailureException {
 		AnalysisScope javaScope = CallGraphTestUtil.makeJ2SEAnalysisScope(javaScopeFile, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
 		String javaJarPath = getJavaJar(javaScope);
-		File androidDex = convertJarToDex(new File(javaJarPath));
+		File androidDex = convertJarToDex(javaJarPath);
 		Pair<CallGraph,PointerAnalysis<InstanceKey>> android = makeDalvikCallGraph(useAndroidLib, mainClass, androidDex.getAbsolutePath());
 
 		dynamicCG(new File(javaJarPath), mainClass, args);

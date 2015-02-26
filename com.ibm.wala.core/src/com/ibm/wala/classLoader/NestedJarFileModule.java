@@ -33,7 +33,7 @@ public class NestedJarFileModule extends AbstractNestedJarFileModule {
   }
 
   @Override
-  protected InputStream getNestedContents() {
+  public InputStream getNestedContents() {
     return new ByteArrayInputStream(parent.getContents(entry));
   }
 

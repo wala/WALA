@@ -71,6 +71,7 @@ import org.jf.dexlib.FieldIdItem;
 import org.jf.dexlib.MethodIdItem;
 import org.jf.dexlib.StringIdItem;
 import org.jf.dexlib.TypeIdItem;
+import org.jf.dexlib.Code.InstructionWithReference;
 import org.jf.dexlib.Code.Opcode;
 import org.jf.dexlib.Code.TwoRegisterInstruction;
 import org.jf.dexlib.Code.Format.ArrayDataPseudoInstruction;
@@ -1431,10 +1432,10 @@ public class DexIMethod implements IBytecodeMethod {
 			case IPUT_BYTE:
 			case IPUT_CHAR:
 			case IPUT_SHORT: {
-				logger.debug(inst.opcode.toString() + " class: "+((FieldIdItem)((Instruction22c)inst).getReferencedItem()).getContainingClass().getTypeDescriptor() + ", field name: " + ((FieldIdItem)((Instruction22c)inst).getReferencedItem()).getFieldName().getStringValue() + ", field type: " + ((FieldIdItem)((Instruction22c)inst).getReferencedItem()).getFieldType().getTypeDescriptor());
-				String cname = ((FieldIdItem)((Instruction22c)inst).getReferencedItem()).getContainingClass().getTypeDescriptor();
-				String fname = ((FieldIdItem)((Instruction22c)inst).getReferencedItem()).getFieldName().getStringValue();
-				String ftname = ((FieldIdItem)((Instruction22c)inst).getReferencedItem()).getFieldType().getTypeDescriptor();
+				logger.debug(inst.opcode.toString() + " class: "+((FieldIdItem)((InstructionWithReference)inst).getReferencedItem()).getContainingClass().getTypeDescriptor() + ", field name: " + ((FieldIdItem)((InstructionWithReference)inst).getReferencedItem()).getFieldName().getStringValue() + ", field type: " + ((FieldIdItem)((InstructionWithReference)inst).getReferencedItem()).getFieldType().getTypeDescriptor());
+				String cname = ((FieldIdItem)((InstructionWithReference)inst).getReferencedItem()).getContainingClass().getTypeDescriptor();
+				String fname = ((FieldIdItem)((InstructionWithReference)inst).getReferencedItem()).getFieldName().getStringValue();
+				String ftname = ((FieldIdItem)((InstructionWithReference)inst).getReferencedItem()).getFieldType().getTypeDescriptor();
 
 				if (cname.endsWith(";"))
 					cname = cname.substring(0,cname.length()-1);
@@ -1444,7 +1445,7 @@ public class DexIMethod implements IBytecodeMethod {
 					ftname = ftname.substring(0,ftname.length()-1);
 
 				instructions.add(new PutField.PutInstanceField(
-						instLoc, ((Instruction22c)inst).getRegisterA(), ((Instruction22c)inst).getRegisterB(),
+						instLoc, ((TwoRegisterInstruction)inst).getRegisterA(), ((TwoRegisterInstruction)inst).getRegisterB(),
 						cname, fname, ftname, inst.opcode, this));
 				break;
 			}

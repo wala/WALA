@@ -51,8 +51,15 @@
      <available file="${plugin.destination}/data/troff2html.cup" property="sample.cup.present"/>
    </target>
 
-   <target name="getJars" depends="fetchSampleLex,fetchSampleCup" />
+   <target name="fetchDx" depends="dxPresent" unless="dx.present">
+     <get src="http://central.maven.org/maven2/com/google/android/tools/dx/1.7/dx-1.7.jar" dest="${plugin.destination}/lib/dx-1.7.jar" />
+   </target>
 
+   <target name="dxPresent" depends="init">
+     <available file="${plugin.destination}/lib/dx-1.7.jar" property="dx.present"/>
+   </target>
+
+   <target name="getJars" depends="fetchSampleLex,fetchSampleCup,fetchDx" />
 
 	<target name="init" depends="properties">
 		<condition property="pluginTemp" value="${buildTempFolder}/plugins">

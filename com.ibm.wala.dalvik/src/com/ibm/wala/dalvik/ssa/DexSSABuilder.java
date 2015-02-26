@@ -987,6 +987,9 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                 emitInstruction(insts.NewInstruction(getCurrentInstructionIndex(), result, instruction.newSiteRef, sizes));
                 setLocal(dest, result);
 
+                /*
+                 * we need to emit these instructions somehow, but for now this clobbers the emitInstruction mechanism
+                 * 
                 for (int i = 0; i < instruction.args.length; i++)
                 {
                     int value = workingState.getLocal(instruction.args[i]);
@@ -995,7 +998,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                     TypeReference t = instruction.myType;
                     emitInstruction(insts.ArrayStoreInstruction(getCurrentInstructionIndex(), arrayRef, index, value, t));
                 }
-
+                */
             }
 
 

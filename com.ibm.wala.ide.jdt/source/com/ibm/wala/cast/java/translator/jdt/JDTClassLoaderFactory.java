@@ -49,7 +49,8 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.config.SetOfClasses;
 
 public class JDTClassLoaderFactory extends ClassLoaderFactoryImpl {
-
+  private boolean dump;
+  
   // /**
   // * A map from ClassLoaderReference to IRTranslatorExtension, so that source files
   // * in different languages are processed by the right kind of IRTranslatorExtension.
@@ -57,7 +58,12 @@ public class JDTClassLoaderFactory extends ClassLoaderFactoryImpl {
   // that's nice, but there's only one kind of IRTransatorExtension.
 
   public JDTClassLoaderFactory(SetOfClasses exclusions) {
+    this(exclusions, false);
+  }
+
+  public JDTClassLoaderFactory(SetOfClasses exclusions, boolean dump) {
     super(exclusions);
+    this.dump = dump;
   }
 
   @Override
@@ -74,6 +80,6 @@ public class JDTClassLoaderFactory extends ClassLoaderFactoryImpl {
 
   protected JDTSourceLoaderImpl makeSourceLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, IClassLoader parent)
       throws IOException {
-    return new JDTSourceLoaderImpl(classLoaderReference, parent, getExclusions(), cha);
+    return new JDTSourceLoaderImpl(classLoaderReference, parent, getExclusions(), cha, dump);
   }
 }

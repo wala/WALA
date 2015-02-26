@@ -61,7 +61,8 @@ public class JDTJavaIRTests extends JavaIRTests {
   private JDTJavaIRTests(ZippedProjectData project) {
     super(project.projectName);
     this.project = project;
-   }
+    this.dump = Boolean.parseBoolean(System.getProperty("wala.cast.dump", "false"));
+  }
 
   @Override
   protected AbstractAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors, Collection<String> sources, List<String> libs) {

@@ -3767,8 +3767,9 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     }
 
     context.cfg().addPreNode(n, context.getUnwindState());
-    context.cfg().newBlock(true);
     context.cfg().addPreEdge(n, context.getControlFlow().getTarget(n, Boolean.TRUE), false);
+
+    context.cfg().newBlock(true);
   }
 
   @Override

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   =======================================================================
-    CAPA Domo build file
+    WALA CAst build file
   =======================================================================
 -->
 <project name="com.ibm.wala.cast" default="getJars" basedir=".">
@@ -18,7 +18,6 @@
 	<property name="javacFailOnError" value="true" />
 	<property name="javacDebugInfo" value="on" />
 	<property name="javacVerbose" value="false" />
-
 
 	<!-- Set global properties for this build -->
 	<property name="src" value="source/java" />

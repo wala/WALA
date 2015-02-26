@@ -74,11 +74,17 @@ import com.ibm.wala.util.debug.Assertions;
  */
 // remove me comment: Jdt little-case = not OK, upper case = OK
 public class JDTSourceModuleTranslator implements SourceModuleTranslator {
+  protected boolean dump;
   protected JDTSourceLoaderImpl sourceLoader;
 
   public JDTSourceModuleTranslator(AnalysisScope scope, JDTSourceLoaderImpl sourceLoader) {
+    this(scope, sourceLoader, false);
+  }
+
+  public JDTSourceModuleTranslator(AnalysisScope scope, JDTSourceLoaderImpl sourceLoader, boolean dump) {
     computeClassPath(scope);
     this.sourceLoader = sourceLoader;
+    this.dump = dump;
   }
 
   private void computeClassPath(AnalysisScope scope) {
@@ -173,7 +179,7 @@ public class JDTSourceModuleTranslator implements SourceModuleTranslator {
   }
 
   protected JDTJava2CAstTranslator makeCAstTranslator(CompilationUnit cu, IFile sourceFile, String fullPath) {
-    return new JDTJava2CAstTranslator(sourceLoader, cu, sourceFile, fullPath, false);
+    return new JDTJava2CAstTranslator(sourceLoader, cu, sourceFile, fullPath, false, dump);
   }
 
 }

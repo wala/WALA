@@ -59,6 +59,8 @@ import com.ibm.wala.util.strings.Atom;
 
 public abstract class IRTests {
 
+  protected boolean dump = false;
+  
   protected IRTests(String projectName) {
     this.projectName = projectName;
   }
@@ -356,8 +358,10 @@ public abstract class IRTests {
         //System.err.println(callGraph.toString());
 
         // If we've gotten this far, IR has been produced.
-        //dumpIR(callGraph, sources, assertReachable);
-
+        if (dump) {
+          dumpIR(callGraph, sources, assertReachable);
+        }
+        
         // Now check any assertions as to source mapping
         for (IRAssertion IRAssertion : ca) {
           IRAssertion.check(callGraph);

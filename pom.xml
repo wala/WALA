@@ -18,7 +18,6 @@
 	<modules>
 		<module>targets</module>
 
-
 		<module>com.ibm.wala-feature</module>
 		<module>com.ibm.wala.core</module>
 		<module>com.ibm.wala.shrike</module>
@@ -26,6 +25,10 @@
 
                 <module>com.ibm.wala.core.testdata</module>
                 <module>com.ibm.wala.core.tests</module>
+
+		<module>com.ibm.wala.dalvik</module>
+		<module>com.ibm.wala.dalvik.test</module>
+		<module>com.ibm.wala.scandroid</module>
 
 		<module>com.ibm.wala.cast</module>
                 <module>com.ibm.wala.cast.test</module>
@@ -48,9 +51,6 @@
 		<module>com.ibm.wala.ide.jsdt</module>
 		<module>com.ibm.wala.ide.jsdt.tests</module>
 		<module>com.ibm.wala.ide.jdt.test</module>
-
-		<module>com.ibm.wala.dalvik</module>
-		<module>com.ibm.wala.scandroid</module>
 
 		<module>com.ibm.wala-repository</module>
 

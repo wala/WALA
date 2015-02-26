@@ -100,7 +100,9 @@ public class TestFieldBasedCG extends AbstractFieldBasedTest {
   }
 
   private static final Object[][] assertionsForReflectiveCall = new Object[][] {
-		new Object[] { "suffix:h", new String[] { "suffix:Function_prototype_call" } },
+		new Object[] { "suffix:h", new String[] { "suffix:Function_prototype_call", "suffix:Function_prototype_apply" } },
+    new Object[] { "suffix:Function_prototype_call", new String[] { "suffix:f" } },
+    new Object[] { "suffix:Function_prototype_apply", new String[] { "suffix:x" } },
 		new Object[] { "suffix:f", new String[] { "suffix:k" } }
 	};
 	

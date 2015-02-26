@@ -28,14 +28,12 @@ import com.ibm.wala.util.io.FileProvider;
 
 public class AndroidAnalysisScope {
 
-	private static final ClassLoader WALA_CLASSLOADER = AnalysisScopeReader.class.getClassLoader();
+	private static final String BASIC_FILE = "primordial.txt";
 
-	private static final String BASIC_FILE = "./primordial.txt";
-
-	public static AnalysisScope setUpAndroidAnalysisScope(URI classpath, String exclusions, URI... androidLib) throws IOException {
+	public static AnalysisScope setUpAndroidAnalysisScope(URI classpath, String exclusions, ClassLoader loader, URI... androidLib) throws IOException {
 		AnalysisScope scope;
 		if (androidLib == null || androidLib.length == 0) {
-			scope = AnalysisScopeReader.readJavaScope(BASIC_FILE, new File(exclusions), WALA_CLASSLOADER);
+			scope = AnalysisScopeReader.readJavaScope(BASIC_FILE, new File(exclusions), loader);
 		} else {
 			scope = AnalysisScope.createJavaAnalysisScope();
 

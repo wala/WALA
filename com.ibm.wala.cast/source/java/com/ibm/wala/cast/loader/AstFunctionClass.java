@@ -216,4 +216,8 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
   public boolean isReferenceType() {
     return true;
   }
+  
+  public IMethod getCodeBody() {
+    return functionBody;
+  }
 }

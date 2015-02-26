@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project com.ibm.wala.dalvik.test">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="/tmp/cgs.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="com.ibm.wala.dalvik.drivers.APKCallGraphDriver"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.core.runtime_3.10.0.v20140318-2214.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/javax.annotation_1.2.0.v201401042248.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/javax.inject_1.0.0.v20091030.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.osgi_3.10.0.v20140606-1445.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.osgi.compatibility.state_1.0.0.v20140403-1907.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.core.jobs_3.6.0.v20140424-0053.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.core.runtime.compatibility.registry_3.5.300.v20140128-0851/runtime_registry_compatibility.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.equinox.registry_3.5.400.v20140428-1507.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.equinox.preferences_3.5.200.v20140224-1527.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.core.contenttype_3.4.200.v20140207-1251.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.equinox.app_1.3.200.v20130910-1609.jar"/>
+            <fileset dir="/Users/dolby/git/WALA/com.ibm.wala.core.testdata/bin"/>
+            <fileset dir="/Users/dolby/git/WALA/com.ibm.wala.util/bin"/>
+            <fileset dir="/Users/dolby/git/WALA/com.ibm.wala.shrike/bin"/>
+            <fileset dir="/Users/dolby/git/WALA/com.ibm.wala.core/bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.junit_4.11.0.v201303080030/junit.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.hamcrest.core_1.3.0.v201303031735.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-antlr.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-apache-bcel.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-apache-bsf.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-apache-log4j.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-apache-oro.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-apache-regexp.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-apache-resolver.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-apache-xalan2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-commons-logging.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-commons-net.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-jai.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-javamail.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-jdepend.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-jmf.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-jsch.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-junit.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-junit4.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-launcher.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-netrexx.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-swing.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant-testutil.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.apache.ant_1.9.2.v201404171502/lib/ant.jar"/>
+            <fileset dir="/Users/dolby/git/WALA/com.ibm.wala.core.tests/bin"/>
+            <fileset dir="/Users/dolby/git/WALA/com.ibm.wala.dalvik/bin"/>
+            <fileset dir="/Users/dolby/git/WALA/com.ibm.wala.cast/bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/git/WALA/com.ibm.wala.cast/lib/commons-io-2.4.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.pde.core_3.10.1.v20140902-1534.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.jface_3.10.0.v20140604-0740.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.swt_3.103.0.v20140605-2008.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.swt.cocoa.macosx.x86_64_3.103.0.v20140605-2012.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.core.commands_3.6.100.v20140528-1422.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.ui_3.106.0.v20140519-0906.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.ui.workbench_3.106.0.v20140530-0732.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.e4.ui.workbench3_0.12.0.v20140227-2118.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.core.resources_3.9.0.v20140514-1307.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.jdt.core_3.10.0.v20140902-0626.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.jdt.compiler.apt_1.1.0.v20140509-1235.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.jdt.compiler.tool_1.0.300.v20140311-1758.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.ui.ide_3.10.0.v20140521-1937.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/eclipse-luna/plugins/org.eclipse.ui.views_3.7.0.v20140408-0703.jar"/>
+            <fileset dir="/Users/dolby/git/WALA/com.ibm.wala.ide/bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/git/WALA/com.ibm.wala.dalvik/lib/commons-cli-1.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/git/WALA/com.ibm.wala.dalvik/lib/commons-io-2.4.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/git/WALA/com.ibm.wala.dalvik/lib/logback-classic-1.0.9.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/git/WALA/com.ibm.wala.dalvik/lib/logback-core-1.0.9.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/git/WALA/com.ibm.wala.dalvik/lib/slf4j-api-1.7.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/git/WALA/com.ibm.wala.dalvik/lib/guava-13.0.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="/Users/dolby/git/WALA/com.ibm.wala.dalvik/lib/dexlib-1.3.4-dev.jar"/>
+            <fileset dir="/Users/dolby/git/WALA/com.ibm.wala.dalvik.test/bin"/>
+        </jar>
+    </target>
+</project>

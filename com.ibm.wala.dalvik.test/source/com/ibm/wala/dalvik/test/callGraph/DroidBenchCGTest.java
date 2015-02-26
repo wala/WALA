@@ -13,6 +13,7 @@ package com.ibm.wala.dalvik.test.callGraph;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -29,6 +30,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
@@ -73,7 +75,7 @@ public class DroidBenchCGTest extends DalvikCallGraphTestBase {
 		uncalledFunctions.put("Reflection_Reflection1.apk",  x);
 	}
 	
-	private static final String droidBenchRoot = walaProperties.getProperty("droidbench.root");
+	public static final String droidBenchRoot = walaProperties.getProperty("droidbench.root");
 
 	private void assertUserCodeReachable(CallGraph cg) throws InvalidClassFileException {
 		for(Iterator<IClass> clss = cg.getClassHierarchy().getLoader(ClassLoaderReference.Application).iterateAllClasses();
@@ -104,9 +106,9 @@ public class DroidBenchCGTest extends DalvikCallGraphTestBase {
 	}
 	
 	@Test
-	public void test() throws IOException, ClassHierarchyException, CancelException, InvalidClassFileException {
+	public void test() throws IOException, ClassHierarchyException, CancelException, InvalidClassFileException, IllegalArgumentException, URISyntaxException {
 		System.err.println("testing " + apkFile + "...");
-		Pair<CallGraph,PointerAnalysis<InstanceKey>> x = makeAPKCallGraph(apkFile);
+		Pair<CallGraph,PointerAnalysis<InstanceKey>> x = makeAPKCallGraph(apkFile, ReflectionOptions.ONE_FLOW_TO_CASTS_APPLICATION_GET_METHOD);
 		System.err.println(x.fst);
 		assertUserCodeReachable(x.fst);
 		System.err.println("...success testing " + apkFile);

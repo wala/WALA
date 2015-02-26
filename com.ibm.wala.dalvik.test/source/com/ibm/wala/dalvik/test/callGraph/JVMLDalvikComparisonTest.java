@@ -45,7 +45,7 @@ import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.intset.OrdinalSet;
 
-public class JVMLDalvikComparison extends DalvikCallGraphTestBase {
+public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
 
 	private static Pair<CallGraph,PointerAnalysis<InstanceKey>> makeJavaBuilder(String scopeFile, String mainClass) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
 		AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(scopeFile, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
@@ -85,7 +85,7 @@ public class JVMLDalvikComparison extends DalvikCallGraphTestBase {
 
 		AnalysisScope javaScope = java.fst.getClassHierarchy().getScope();
 		String javaJarPath = getJavaJar(javaScope);
-		File androidDex = convertJarToDex(new File(javaJarPath));
+		File androidDex = convertJarToDex(javaJarPath);
 		Pair<CallGraph,PointerAnalysis<InstanceKey>> android = makeDalvikCallGraph(useAndroidLib, mainClass, androidDex.getAbsolutePath());
 	
 		Set<MethodReference> androidMethods = applicationMethods(android.fst);

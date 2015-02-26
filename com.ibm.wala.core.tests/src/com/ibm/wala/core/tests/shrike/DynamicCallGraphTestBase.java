@@ -128,7 +128,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
   }
  
   private MethodReference callee(String calleeClass, String calleeMethod) {
-    return MethodReference.findOrCreate(TypeReference.findOrCreate(ClassLoaderReference.Application, "L" + calleeClass), Selector.make(calleeMethod));
+      return MethodReference.findOrCreate(TypeReference.findOrCreate(ClassLoaderReference.Application, "L" + calleeClass), Selector.make(calleeMethod));
   }
 
   protected void checkEdges(CallGraph staticCG) throws IOException {

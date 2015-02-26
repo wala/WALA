@@ -291,12 +291,21 @@ public abstract class TestPointerAnalyses {
     
     for(InstanceKey k : fbPA.getInstanceKeys()) {
       k.getCreationSites(fbCG);
-      if (! hg.containsNode(fbPA.getHeapModel().getPointerKeyForInstanceField(k, new AstDynamicField(false, k.getConcreteType(), Atom.findOrCreateUnicodeAtom("__proto__"), JavaScriptTypes.Root)))) {
-        System.err.println("object " + k + "(" + k.getConcreteType() + ")");
-        for(Iterator<Pair<CGNode, NewSiteReference>> css = k.getCreationSites(fbCG); css.hasNext(); ) {
-          System.err.println(css.next());
+      for(String f :  new String[]{ "__proto__", "prototype" }) {
+        boolean dump = false;
+        PointerKey pointerKeyForInstanceField = fbPA.getHeapModel().getPointerKeyForInstanceField(k, new AstDynamicField(false, k.getConcreteType(), Atom.findOrCreateUnicodeAtom(f), JavaScriptTypes.Root));
+        if (! hg.containsNode(pointerKeyForInstanceField)) {
+          dump = true;
+          System.err.println("no " + f + " for " + k + "(" + k.getConcreteType() + ")");
+        } else if (! hg.getSuccNodes(pointerKeyForInstanceField).hasNext()){
+          dump = true;
+          System.err.println("empty " + f + " for " + k + "(" + k.getConcreteType() + ")");          
         }
-
+        if (dump) {
+          for(Iterator<Pair<CGNode, NewSiteReference>> css = k.getCreationSites(fbCG); css.hasNext(); ) {
+            System.err.println(css.next());
+          }
+        }
       }
     }
   }

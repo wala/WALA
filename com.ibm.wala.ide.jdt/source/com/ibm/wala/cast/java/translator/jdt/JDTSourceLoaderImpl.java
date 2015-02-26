@@ -47,14 +47,19 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.config.SetOfClasses;
 
 public class JDTSourceLoaderImpl extends JavaSourceLoaderImpl {
+  private final boolean dump;
 
-  public JDTSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha)
-      throws IOException {
+  public JDTSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha) throws IOException {
+    this(loaderRef, parent, exclusions, cha, false);
+  }
+  
+  public JDTSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha, boolean dump) throws IOException {
     super(loaderRef, parent, exclusions, cha);
+    this.dump = dump;
   }
 
   @Override
   protected SourceModuleTranslator getTranslator() {
-    return new JDTSourceModuleTranslator(cha.getScope(), this);
+    return new JDTSourceModuleTranslator(cha.getScope(), this, dump);
   }
-    }
+}
