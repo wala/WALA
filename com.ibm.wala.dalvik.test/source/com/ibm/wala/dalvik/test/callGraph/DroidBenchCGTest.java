@@ -81,6 +81,7 @@ public class DroidBenchCGTest extends DalvikCallGraphTestBase {
 	  String f = walaProperties.getProperty("droidbench.root");
 	  if (f == null || !new File(f).exists()) {
 	    f = System.getenv("DROID_BENCH_ROOT");
+	    System.err.println("Using " + f + " as droid bench root");
 	  }
 	  droidBenchRoot = f;
 	}
