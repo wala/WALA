@@ -31,6 +31,7 @@
   </target>
 
   <target name="fetchCommonsIo" depends="CommonsIoPresent" unless="commons.io.present">
+    <mkdir dir="${plugin.destination}/lib"/>    
     <get src="http://central.maven.org/maven2/commons-io/commons-io/2.4/commons-io-2.4.jar" dest="${plugin.destination}/lib/commons-io-2.4.jar" />
   </target>
   
@@ -39,6 +40,7 @@
   </target>
 
   <target name="fetchCommonsCli" depends="CommonsCliPresent" unless="commons.cli.present">
+    <mkdir dir="${plugin.destination}/lib"/>    
     <get src="http://central.maven.org/maven2/commons-cli/commons-cli/1.2/commons-cli-1.2.jar" dest="${plugin.destination}/lib/commons-cli-1.2.jar" />
   </target>
   
@@ -47,6 +49,7 @@
   </target>
 
   <target name="fetchDexlib" depends="DexlibPresent" unless="dexlib.present">
+    <mkdir dir="${plugin.destination}/lib"/>    
     <get src="https://github.com/jgf/wala-mirror/raw/master/com.ibm.wala.dalvik/lib/dexlib-1.3.4-dev.jar" dest="${plugin.destination}/lib/dexlib-1.3.4-dev.jar"/>
   </target>
 
@@ -55,6 +58,7 @@
   </target>
 
   <target name="fetchGuava" depends="GuavaPresent" unless="guava.present">
+    <mkdir dir="${plugin.destination}/lib"/>    
     <get src="http://search.maven.org/remotecontent?filepath=com/google/guava/guava/13.0.1/guava-13.0.1.jar" dest="${plugin.destination}/lib/guava-13.0.1.jar"/>
   </target>
 
@@ -63,6 +67,7 @@
   </target>
 
   <target name="fetchLogback" depends="LogbackPresent" unless="logback.present">
+    <mkdir dir="${plugin.destination}/lib"/>    
     <get src="http://central.maven.org/maven2/ch/qos/logback/logback-core/1.0.9/logback-core-1.0.9.jar" dest="${plugin.destination}/lib/logback-core-1.0.9.jar"/>
     <get src="http://central.maven.org/maven2/ch/qos/logback/logback-classic/1.0.9/logback-classic-1.0.9.jar" dest="${plugin.destination}/lib/logback-classic-1.0.9.jar"/>
   </target>
@@ -74,6 +79,7 @@
   <target name="fetchSlf4j" depends="Slf4jPresent" unless="slf4j.present">
     <delete dir="${temp.folder}"/>
     <mkdir dir="${temp.folder}"/>
+    <mkdir dir="${plugin.destination}/lib"/>    
     <get src="http://www.slf4j.org/dist/slf4j-1.7.2.tar.gz" dest="${temp.folder}/slf4j-1.7.2.tar.gz"/>
     <untar compression="gzip" src="${temp.folder}/slf4j-1.7.2.tar.gz" dest="${temp.folder}"/>
     <copy file="${temp.folder}/slf4j-1.7.2/slf4j-api-1.7.2.jar" tofile="${plugin.destination}/lib/slf4j-api-1.7.2.jar" />
