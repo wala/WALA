@@ -11,6 +11,7 @@ package com.ibm.wala.util.io;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -23,7 +24,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.regex.Pattern;
 
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.functions.VoidFunction;
 
 /**
  * Simple utilities for accessing files.
@@ -195,5 +198,20 @@ public class FileUtil {
     final FileWriter fw = new FileWriter(f);
     fw.append(content);
     fw.close();
+  }
+
+  public static void recurseFiles(VoidFunction<File> action, final Predicate<File> filter, File top) {
+  	if (top.isDirectory()) {
+  		for(File f : top.listFiles(new FileFilter() {
+  			@Override
+  			public boolean accept(File file) {
+  				return filter.test(file) || file.isDirectory();
+  			}	
+  		})) {
+  			recurseFiles(action, filter, f);
+  		}
+  	} else {
+  		action.apply(top);
+  	}
   }
 }
