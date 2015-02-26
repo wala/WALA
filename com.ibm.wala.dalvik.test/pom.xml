@@ -78,5 +78,10 @@
       <version>4.7</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.google.android.tools</groupId>
+      <artifactId>dx</artifactId>
+      <version>1.7</version>
+    </dependency>
   </dependencies> 
 </project>
