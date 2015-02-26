@@ -31,12 +31,7 @@
   </target>
 
   <target name="fetchCommonsIo" depends="CommonsIoPresent" unless="commons.io.present">
-    <delete dir="${temp.folder}"/>
-    <mkdir dir="${temp.folder}"/>
-    <get src="http://apache.petsads.us/commons/io/binaries/commons-io-2.4-bin.zip" dest="${temp.folder}/commons-io-2.4.zip"/>
-    <unzip src="${temp.folder}/commons-io-2.4.zip" dest="${temp.folder}"/>
-    <copy file="${temp.folder}/commons-io-2.4/commons-io-2.4.jar" tofile="${plugin.destination}/lib/commons-io-2.4.jar" />
-    <delete dir="${temp.folder}"/>
+    <get src="http://central.maven.org/maven2/commons-io/commons-io/2.4/commons-io-2.4.jar" dest="${plugin.destination}/lib/commons-io-2.4.jar" />
   </target>
   
   <target name="CommonsCliPresent" depends="init">
@@ -44,12 +39,7 @@
   </target>
 
   <target name="fetchCommonsCli" depends="CommonsCliPresent" unless="commons.cli.present">
-    <delete dir="${temp.folder}"/>
-    <mkdir dir="${temp.folder}"/>
-    <get src="http://apache.petsads.us/commons/cli/binaries/commons-cli-1.2-bin.zip" dest="${temp.folder}/commons-cli-1.2.zip"/>
-    <unzip src="${temp.folder}/commons-cli-1.2.zip" dest="${temp.folder}"/>
-    <copy file="${temp.folder}/commons-cli-1.2/commons-cli-1.2.jar" tofile="${plugin.destination}/lib/commons-cli-1.2.jar" />
-    <delete dir="${temp.folder}"/>
+    <get src="http://central.maven.org/maven2/commons-cli/commons-cli/1.2/commons-cli-1.2.jar" dest="${plugin.destination}/lib/commons-cli-1.2.jar" />
   </target>
   
   <target name="DexlibPresent" depends="init">
