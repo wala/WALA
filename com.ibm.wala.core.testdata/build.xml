@@ -34,7 +34,7 @@
      <delete dir="${temp.folder}"/>
      <mkdir dir="${temp.folder}/JLex"/>
      <get src="http://www.cs.princeton.edu/~appel/modern/java/JLex/current/Main.java" dest="${temp.folder}/JLex/Main.java"/>
-     <javac includeAntRuntime="no" srcdir="${temp.folder}" destdir="${temp.folder}"/>
+     <javac target="1.4" source="1.4" includeAntRuntime="no" srcdir="${temp.folder}" destdir="${temp.folder}"/>
      <jar destfile="${plugin.destination}/JLex.jar" basedir="${temp.folder}" />
      <delete dir="${temp.folder}"/>
    </target>
