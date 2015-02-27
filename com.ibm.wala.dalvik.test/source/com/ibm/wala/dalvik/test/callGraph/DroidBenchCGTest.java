@@ -109,7 +109,7 @@ public class DroidBenchCGTest extends DalvikCallGraphTestBase {
 	public void test() throws IOException, ClassHierarchyException, CancelException, InvalidClassFileException, IllegalArgumentException, URISyntaxException {
 		System.err.println("testing " + apkFile + "...");
 		Pair<CallGraph,PointerAnalysis<InstanceKey>> x = makeAPKCallGraph(apkFile, ReflectionOptions.ONE_FLOW_TO_CASTS_APPLICATION_GET_METHOD);
-		System.err.println(x.fst);
+		// System.err.println(x.fst);
 		assertUserCodeReachable(x.fst);
 		System.err.println("...success testing " + apkFile);
 	}

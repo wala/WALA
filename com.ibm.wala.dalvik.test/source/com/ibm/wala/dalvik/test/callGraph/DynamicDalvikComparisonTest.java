@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.dalvik.test.callGraph;
 
-import static com.ibm.wala.properties.WalaProperties.ANDROID_RT_JAR;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -60,10 +58,8 @@ public class DynamicDalvikComparisonTest extends DalvikCallGraphTestBase {
 
 	@Test
 	public void testJLexDexLib() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InvalidClassFileException, FailureException {
-		if (walaProperties.getProperty(ANDROID_RT_JAR) != null) {
-		  File inputFile = TemporaryFile.urlToFile("sample.lex", getClass().getClassLoader().getResource("sample.lex"));
-		  test(true, TestConstants.JLEX_MAIN, TestConstants.JLEX, inputFile.getAbsolutePath());
-		}
+	  File inputFile = TemporaryFile.urlToFile("sample.lex", getClass().getClassLoader().getResource("sample.lex"));
+	  test(true, TestConstants.JLEX_MAIN, TestConstants.JLEX, inputFile.getAbsolutePath());
 	}
 
 	@Test
@@ -74,10 +70,8 @@ public class DynamicDalvikComparisonTest extends DalvikCallGraphTestBase {
 
 	@Test
 	public void testJavaCupDexLib() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InvalidClassFileException, FailureException {
-    if (walaProperties.getProperty(ANDROID_RT_JAR) != null) {
-      File inputFile = TemporaryFile.urlToFile("troff2html.cup", getClass().getClassLoader().getResource("troff2html.cup"));
-      test(true, TestConstants.JAVA_CUP_MAIN, TestConstants.JAVA_CUP, inputFile.getAbsolutePath());
-    }
+	  File inputFile = TemporaryFile.urlToFile("troff2html.cup", getClass().getClassLoader().getResource("troff2html.cup"));
+	  test(true, TestConstants.JAVA_CUP_MAIN, TestConstants.JAVA_CUP, inputFile.getAbsolutePath());
 	}
 
 }

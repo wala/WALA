@@ -51,6 +51,14 @@
      <available file="${plugin.destination}/data/troff2html.cup" property="sample.cup.present"/>
    </target>
 
+      <target name="fetchAndroidJar" depends="androidJarPresent" unless="android.jar.present">
+     <get src="http://central.maven.org/maven2/com/google/android/android/4.1.1.4/android-4.1.1.4.jar" dest="${plugin.destination}/data/android.jar" />
+   </target>
+
+   <target name="androidJarPresent" depends="init">
+     <available file="${plugin.destination}/data/android.jar" property="android.jar.present"/>
+   </target>
+
    <target name="fetchDx" depends="dxPresent" unless="dx.present">
      <get src="http://central.maven.org/maven2/com/google/android/tools/dx/1.7/dx-1.7.jar" dest="${plugin.destination}/lib/dx-1.7.jar" />
    </target>
@@ -59,7 +67,7 @@
      <available file="${plugin.destination}/lib/dx-1.7.jar" property="dx.present"/>
    </target>
 
-   <target name="getJars" depends="fetchSampleLex,fetchSampleCup,fetchDx" />
+   <target name="getJars" depends="fetchSampleLex,fetchSampleCup,fetchDx,fetchAndroidJar" />
 
 	<target name="init" depends="properties">
 		<condition property="pluginTemp" value="${buildTempFolder}/plugins">
