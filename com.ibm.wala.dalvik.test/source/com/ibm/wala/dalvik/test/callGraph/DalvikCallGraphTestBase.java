@@ -76,14 +76,14 @@ import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.io.TemporaryFile;
 
 public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
-	public static Properties walaProperties;
+
+  public static Properties walaProperties;
 	
 	static {
 		try {
 			walaProperties = WalaProperties.loadProperties();
 		} catch (WalaException e) {
 			walaProperties = null;
-			assert false : e;
 		}
 	}
 	

@@ -11,7 +11,6 @@
 package com.ibm.wala.dalvik.test.callGraph;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
