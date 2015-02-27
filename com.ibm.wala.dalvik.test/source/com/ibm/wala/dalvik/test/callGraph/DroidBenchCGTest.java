@@ -40,9 +40,12 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.functions.VoidFunction;
+import com.ibm.wala.util.io.FileUtil;
 
 @RunWith(Parameterized.class)
 public class DroidBenchCGTest extends DalvikCallGraphTestBase {
@@ -118,28 +121,27 @@ public class DroidBenchCGTest extends DalvikCallGraphTestBase {
 	  if (f == null || !new File(f).exists()) {
 	    f = System.getProperty("user.dir") + "/../../DroidBench";
 	  }
-	  
+
 	  System.err.println("Use " + f + " as droid bench root");
 	  assert new File(f).exists() : "Use " + f + " as droid bench root";
 	  assert new File(f + "/apk/").exists() : "Use " + f + " as droid bench root";
 	  String droidBenchRoot = f;
 
-	  List<Object[]> files = new LinkedList<Object[]>();
-	  File dir = new File(droidBenchRoot + "/apk/");
-	  if (dir.exists() && dir.isDirectory() && dir.canRead()) {
-	    for(String apkFile : dir.list(new FilenameFilter() {
-	      @Override
-	      public boolean accept(File dir, String name) {
-	        return name.endsWith("apk");
-	      } 
-	    })) {
-	      Set<MethodReference> uncalled = uncalledFunctions.get(apkFile);
+	  final List<Object[]> files = new LinkedList<Object[]>();
+	  FileUtil.recurseFiles(new VoidFunction<File>() {
+	    @Override
+	    public void apply(File f) {
+	      Set<MethodReference> uncalled = uncalledFunctions.get(f.getName());
 	      if (uncalled == null) {
 	        uncalled = Collections.emptySet();
 	      }
-	      files.add(new Object[]{ dir.getAbsolutePath() +  "/" + apkFile, uncalled });
+	      files.add(new Object[]{ f.getAbsolutePath(), uncalled }); 
 	    }
-	  }
+	  }, new Predicate<File>() {
+	    @Override
+	    public boolean test(File t) {
+	      return t.getName().endsWith("apk");
+	    } }, new File(droidBenchRoot + "/apk/"));
 	  return files;
 	}
 }
