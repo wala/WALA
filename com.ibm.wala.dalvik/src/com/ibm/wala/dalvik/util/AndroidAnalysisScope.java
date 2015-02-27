@@ -17,6 +17,7 @@ import java.net.URI;
 import java.util.jar.JarFile;
 
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
+import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.dalvik.classLoader.DexFileModule;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
@@ -45,7 +46,11 @@ public class AndroidAnalysisScope {
 					"com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
 
 			for(URI al : androidLib) {
-				scope.addToScope(ClassLoaderReference.Primordial, new DexFileModule(new File(al)));
+				try {
+					scope.addToScope(ClassLoaderReference.Primordial, new DexFileModule(new File(al)));
+				} catch (Exception e) {
+					scope.addToScope(ClassLoaderReference.Primordial, new JarFileModule(new JarFile(new File(al))));					
+				}
 			}
 
 		}
