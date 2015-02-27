@@ -111,22 +111,19 @@ public class DroidBenchCGTest extends DalvikCallGraphTestBase {
 		assertUserCodeReachable(x.fst);
 		System.err.println("...success testing " + apkFile);
 	}
-
-	 public static final String droidBenchRoot;
 	  
-	 static {
-	   String f = walaProperties.getProperty("droidbench.root");
-	   if (f == null || !new File(f).exists()) {
-	     f = System.getProperty("user.dir") + "/../../DroidBench";
-	   }
-	   System.err.println("Use " + f + " as droid bench root");
-     assert new File(f).exists() : "Use " + f + " as droid bench root";
-     assert new File(f + "/apk/").exists() : "Use " + f + " as droid bench root";
-	   droidBenchRoot = f;
-	 }
-
 	@Parameters
 	public static Collection<Object[]> generateData() {
+	  String f = walaProperties.getProperty("droidbench.root");
+	  if (f == null || !new File(f).exists()) {
+	    f = System.getProperty("user.dir") + "/../../DroidBench";
+	  }
+	  
+	  System.err.println("Use " + f + " as droid bench root");
+	  assert new File(f).exists() : "Use " + f + " as droid bench root";
+	  assert new File(f + "/apk/").exists() : "Use " + f + " as droid bench root";
+	  String droidBenchRoot = f;
+
 	  List<Object[]> files = new LinkedList<Object[]>();
 	  File dir = new File(droidBenchRoot + "/apk/");
 	  if (dir.exists() && dir.isDirectory() && dir.canRead()) {
