@@ -189,6 +189,7 @@ nextMethod:
                     }
                 } else {
                     // Restrict the set
+                    bases.add(AndroidTypes.Handler);
                     bases.add(AndroidTypes.Application);
                     bases.add(AndroidTypes.Activity);
                     /** @todo TODO: add Fragments in getEntryPoints */
