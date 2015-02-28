@@ -2,8 +2,9 @@ language: java
 before_install:
  - "export DISPLAY=:99.0"
  - "sh -e /etc/init.d/xvfb start"
+ - pushd /tmp
  - "git clone https://github.com/secure-software-engineering/DroidBench.git"
- - "export DROID_BENCH_ROOT=`pwd`/DroidBench"
+ - popd
 install: mvn clean verify -DskipTests=true -B -q
 script: mvn clean verify -B -q
 sudo: false
