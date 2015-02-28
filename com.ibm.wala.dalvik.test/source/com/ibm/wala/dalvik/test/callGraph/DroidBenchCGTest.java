@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -47,7 +46,7 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.functions.VoidFunction;
 import com.ibm.wala.util.io.FileUtil;
 
-@Ignore
+//@Ignore
 @RunWith(Parameterized.class)
 public class DroidBenchCGTest extends DalvikCallGraphTestBase {
 
@@ -59,24 +58,28 @@ public class DroidBenchCGTest extends DalvikCallGraphTestBase {
 		Set<MethodReference> x = HashSetFactory.make();
 		x.add(ref("Lde/ecspride/data/User", "setPwd", "(Lde/ecspride/data/Password;)V"));
 		x.add(ref("Lde/ecspride/data/Password", "setPassword", "(Ljava/lang/String;)V"));
-		uncalledFunctions.put("AndroidSpecific_PrivateDataLeak1.apk",  x);
+		uncalledFunctions.put("PrivateDataLeak1.apk",  x);
 
 		x = HashSetFactory.make();
 		x.add(ref("Lde/ecspride/Datacontainer", "getSecret", "()Ljava/lang/String;"));
 		x.add(ref("Lde/ecspride/Datacontainer", "getDescription", "()Ljava/lang/String;"));
-		uncalledFunctions.put("FieldAndObjectSensitivity_FieldSensitivity1.apk",  x);
+		uncalledFunctions.put("FieldSensitivity1.apk",  x);
 
 		x = HashSetFactory.make();
 		x.add(ref("Lde/ecspride/Datacontainer", "getSecret", "()Ljava/lang/String;"));
-		uncalledFunctions.put("FieldAndObjectSensitivity_FieldSensitivity2.apk",  x);
+		uncalledFunctions.put("FieldSensitivity2.apk",  x);
 
 		x = HashSetFactory.make();
 		x.add(ref("Lde/ecspride/Datacontainer", "getDescription", "()Ljava/lang/String;"));
-		uncalledFunctions.put("FieldAndObjectSensitivity_FieldSensitivity3.apk",  x);
+		uncalledFunctions.put("FieldSensitivity3.apk",  x);
 
 		x = HashSetFactory.make();
 		x.add(ref("Lde/ecspride/ConcreteClass", "foo", "()Ljava/lang/String;"));
-		uncalledFunctions.put("Reflection_Reflection1.apk",  x);
+		uncalledFunctions.put("Reflection1.apk",  x);
+
+		x = HashSetFactory.make();
+		x.add(ref("Ledu/mit/dynamic_dispatch/A", "f", "()Ljava/lang/String;"));
+		uncalledFunctions.put("VirtualDispatch2.apk",  x);
 	}
 	
 	private void assertUserCodeReachable(CallGraph cg) throws InvalidClassFileException {
@@ -87,7 +90,7 @@ public class DroidBenchCGTest extends DalvikCallGraphTestBase {
 			if (cls.isInterface()) {
 				continue;
 			}
-			if (cls.getName().toString().contains("ecspride")) {
+			if (! cls.getName().toString().startsWith("Landroid") && ! cls.getName().toString().equals("Lde/ecspride/R$styleable")) {
 				for(IMethod m : cls.getDeclaredMethods()) {
 					if (!m.isInit() && !m.isAbstract() && !uncalled.contains(m.getReference())) {
 						Assert.assertFalse(m + "(" + m.getSourcePosition(0) + ") cannot be called in " + apkFile, cg.getNodes(m.getReference()).isEmpty());
@@ -111,12 +114,18 @@ public class DroidBenchCGTest extends DalvikCallGraphTestBase {
 	public void test() throws IOException, ClassHierarchyException, CancelException, InvalidClassFileException, IllegalArgumentException, URISyntaxException {
 		System.err.println("testing " + apkFile + "...");
 		Pair<CallGraph,PointerAnalysis<InstanceKey>> x = makeAPKCallGraph(apkFile, ReflectionOptions.ONE_FLOW_TO_CASTS_APPLICATION_GET_METHOD);
-		// System.err.println(x.fst);
+		System.err.println(x.fst);
 		assertUserCodeReachable(x.fst);
 		System.err.println("...success testing " + apkFile);
 	}
 	  
-	@Parameters
+	private static final Set<String> skipTests = HashSetFactory.make();
+	static {
+	  // serialization issues
+	  skipTests.add("ServiceCommunication1.apk");
+    skipTests.add("Parcel1.apk");
+	}
+	@Parameters(name="DroidBench: {0}")
 	public static Collection<Object[]> generateData() {
 	  String f = walaProperties.getProperty("droidbench.root");
 	  if (f == null || !new File(f).exists()) {
@@ -141,7 +150,7 @@ public class DroidBenchCGTest extends DalvikCallGraphTestBase {
 	  }, new Predicate<File>() {
 	    @Override
 	    public boolean test(File t) {
-	      return t.getName().endsWith("apk");
+	      return t.getName().endsWith("apk") && ! skipTests.contains(t.getName().toString());
 	    } }, new File(droidBenchRoot + "/apk/"));
 	  return files;
 	}
