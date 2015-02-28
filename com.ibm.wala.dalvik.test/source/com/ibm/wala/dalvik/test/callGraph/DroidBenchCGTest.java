@@ -47,9 +47,8 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.functions.VoidFunction;
 import com.ibm.wala.util.io.FileUtil;
 
-@Ignore
 @RunWith(Parameterized.class)
-public class DroidBenchCGTest extends DalvikCallGraphTestBase {
+abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 
 	private static MethodReference ref(String type, String name, String sig) {
 		return MethodReference.findOrCreate(TypeReference.findOrCreate(ClassLoaderReference.Application, type), name, sig);
@@ -126,8 +125,8 @@ public class DroidBenchCGTest extends DalvikCallGraphTestBase {
 	  skipTests.add("ServiceCommunication1.apk");
     skipTests.add("Parcel1.apk");
 	}
-	@Parameters //(name="DroidBench: {0}")
-	public static Collection<Object[]> generateData() {
+
+	private static Collection<Object[]> generateData(final String filter) {
 	  String f = walaProperties.getProperty("droidbench.root");
 	  if (f == null || !new File(f).exists()) {
 	    f = System.getProperty("user.dir") + "/../../DroidBench";
@@ -154,8 +153,32 @@ public class DroidBenchCGTest extends DalvikCallGraphTestBase {
 	  }, new Predicate<File>() {
 	    @Override
 	    public boolean test(File t) {
-	      return t.getName().endsWith("apk") && ! skipTests.contains(t.getName().toString());
+	      return t.getAbsolutePath().contains(filter) && t.getName().endsWith("apk") && ! skipTests.contains(t.getName().toString());
 	    } }, new File(droidBenchRoot + "/apk/"));
 	  return files;
 	}
+	
+	public static class AliasingTest extends DroidBenchCGTest {
+
+    public AliasingTest(String apkFile, Set<MethodReference> uncalled) {
+      super(apkFile, uncalled);
+    }
+
+    @Parameters //(name="DroidBench: {0}")
+    public static Collection<Object[]> generateData() {
+      return DroidBenchCGTest.generateData("Aliasing");
+    }
+	}
+
+  public static class AndroidSpecificTest extends DroidBenchCGTest {
+
+    public AndroidSpecificTest(String apkFile, Set<MethodReference> uncalled) {
+      super(apkFile, uncalled);
+    }
+
+    @Parameters //(name="DroidBench: {0}")
+    public static Collection<Object[]> generateData() {
+      return DroidBenchCGTest.generateData("AndroidSpecific");
+    }
+  }
 }
