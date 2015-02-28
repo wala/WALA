@@ -132,6 +132,10 @@ public class DroidBenchCGTest extends DalvikCallGraphTestBase {
 	    f = System.getProperty("user.dir") + "/../../DroidBench";
 	  }
 
+	  if (! new File(f + "/apk/").exists()) {
+      f = System.getProperty("user.dir") + "/../../../DroidBench";	    
+	  }
+	  
 	  System.err.println("Use " + f + " as droid bench root");
 	  assert new File(f).exists() : "Use " + f + " as droid bench root";
 	  assert new File(f + "/apk/").exists() : "Use " + f + " as droid bench root";
