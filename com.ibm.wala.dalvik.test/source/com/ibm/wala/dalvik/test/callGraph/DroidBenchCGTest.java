@@ -125,7 +125,7 @@ public class DroidBenchCGTest extends DalvikCallGraphTestBase {
 	  skipTests.add("ServiceCommunication1.apk");
     skipTests.add("Parcel1.apk");
 	}
-	@Parameters(name="DroidBench: {0}")
+	@Parameters //(name="DroidBench: {0}")
 	public static Collection<Object[]> generateData() {
 	  String f = walaProperties.getProperty("droidbench.root");
 	  if (f == null || !new File(f).exists()) {
