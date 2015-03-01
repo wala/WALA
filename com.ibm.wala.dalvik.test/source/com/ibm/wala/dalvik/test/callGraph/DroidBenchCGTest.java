@@ -103,7 +103,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 	
 	private final Set<MethodReference> uncalled;
 	
-	public DroidBenchCGTest(String apkFile, Set<MethodReference> uncalled) {
+	protected DroidBenchCGTest(String apkFile, Set<MethodReference> uncalled) {
 		this.apkFile = apkFile;
 		this.uncalled = uncalled;
 	}
@@ -124,7 +124,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     skipTests.add("Parcel1.apk");
 	}
 
-	private static Collection<Object[]> generateData(final String filter) {
+	protected static Collection<Object[]> generateData(final String filter) {
 	  String f = walaProperties.getProperty("droidbench.root");
 	  if (f == null || !new File(f).exists()) {
 	    f = System.getProperty("user.dir") + "/../../DroidBench";
@@ -300,16 +300,5 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     }
   }
 
-	@RunWith(Parameterized.class)
-  public static class ThreadingTest extends DroidBenchCGTest {
-    public ThreadingTest(String apkFile, Set<MethodReference> uncalled) {
-      super(apkFile, uncalled);
-    }
-
-    @Parameters //(name="DroidBench: {0}")
-    public static Collection<Object[]> generateData() {
-      return DroidBenchCGTest.generateData("Threading");
-    }
-  }
 
 }
