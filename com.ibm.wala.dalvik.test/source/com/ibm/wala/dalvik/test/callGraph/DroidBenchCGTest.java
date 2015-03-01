@@ -46,7 +46,6 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.functions.VoidFunction;
 import com.ibm.wala.util.io.FileUtil;
 
-@RunWith(Parameterized.class)
 abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 
 	private static MethodReference ref(String type, String name, String sig) {
@@ -157,6 +156,7 @@ abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 	  return files;
 	}
 	
+	@RunWith(Parameterized.class)
 	public static class AliasingTest extends DroidBenchCGTest {
     public AliasingTest(String apkFile, Set<MethodReference> uncalled) {
       super(apkFile, uncalled);
@@ -168,6 +168,7 @@ abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     }
 	}
 
+	@RunWith(Parameterized.class)
   public static class AndroidSpecificTest extends DroidBenchCGTest {
     public AndroidSpecificTest(String apkFile, Set<MethodReference> uncalled) {
       super(apkFile, uncalled);
@@ -179,6 +180,7 @@ abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     }
   }
   
+	@RunWith(Parameterized.class)
   public static class ArraysAndListsTest extends DroidBenchCGTest {
     public ArraysAndListsTest(String apkFile, Set<MethodReference> uncalled) {
       super(apkFile, uncalled);
@@ -190,6 +192,7 @@ abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     }
   }
 
+	@RunWith(Parameterized.class)
   public static class CallbacksTest extends DroidBenchCGTest {
     public CallbacksTest(String apkFile, Set<MethodReference> uncalled) {
       super(apkFile, uncalled);
@@ -201,6 +204,7 @@ abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     }
   }
 
+	@RunWith(Parameterized.class)
   public static class EmulatorDetectionTest extends DroidBenchCGTest {
     public EmulatorDetectionTest(String apkFile, Set<MethodReference> uncalled) {
       super(apkFile, uncalled);
@@ -212,6 +216,7 @@ abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     }
   }
 
+	@RunWith(Parameterized.class)
   public static class FieldAndObjectSensitivityTest extends DroidBenchCGTest {
     public FieldAndObjectSensitivityTest(String apkFile, Set<MethodReference> uncalled) {
       super(apkFile, uncalled);
@@ -223,6 +228,7 @@ abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     }
   }
 
+	@RunWith(Parameterized.class)
   public static class GeneralJavaTest extends DroidBenchCGTest {
     public GeneralJavaTest(String apkFile, Set<MethodReference> uncalled) {
       super(apkFile, uncalled);
@@ -234,6 +240,7 @@ abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     }
   }
 
+	@RunWith(Parameterized.class)
   public static class ImplicitFlowsTest extends DroidBenchCGTest {
     public ImplicitFlowsTest(String apkFile, Set<MethodReference> uncalled) {
       super(apkFile, uncalled);
@@ -245,6 +252,7 @@ abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     }
   }
 
+	@RunWith(Parameterized.class)
   public static class InterAppCommunicationTest extends DroidBenchCGTest {
     public InterAppCommunicationTest(String apkFile, Set<MethodReference> uncalled) {
       super(apkFile, uncalled);
@@ -256,6 +264,7 @@ abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     }
   }
 
+	@RunWith(Parameterized.class)
   public static class InterComponentCommunicationTest extends DroidBenchCGTest {
     public InterComponentCommunicationTest(String apkFile, Set<MethodReference> uncalled) {
       super(apkFile, uncalled);
@@ -267,6 +276,7 @@ abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     }
   }
 
+	@RunWith(Parameterized.class)
   public static class LifecycleTest extends DroidBenchCGTest {
     public LifecycleTest(String apkFile, Set<MethodReference> uncalled) {
       super(apkFile, uncalled);
@@ -278,6 +288,7 @@ abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     }
   }
 
+	@RunWith(Parameterized.class)
   public static class ReflectionTest extends DroidBenchCGTest {
     public ReflectionTest(String apkFile, Set<MethodReference> uncalled) {
       super(apkFile, uncalled);
@@ -289,6 +300,7 @@ abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     }
   }
 
+	@RunWith(Parameterized.class)
   public static class ThreadingTest extends DroidBenchCGTest {
     public ThreadingTest(String apkFile, Set<MethodReference> uncalled) {
       super(apkFile, uncalled);
