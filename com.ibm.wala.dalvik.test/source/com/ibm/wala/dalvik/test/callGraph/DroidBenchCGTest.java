@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -159,7 +158,6 @@ abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 	}
 	
 	public static class AliasingTest extends DroidBenchCGTest {
-
     public AliasingTest(String apkFile, Set<MethodReference> uncalled) {
       super(apkFile, uncalled);
     }
@@ -171,7 +169,6 @@ abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 	}
 
   public static class AndroidSpecificTest extends DroidBenchCGTest {
-
     public AndroidSpecificTest(String apkFile, Set<MethodReference> uncalled) {
       super(apkFile, uncalled);
     }
@@ -181,4 +178,126 @@ abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
       return DroidBenchCGTest.generateData("AndroidSpecific");
     }
   }
+  
+  public static class ArraysAndListsTest extends DroidBenchCGTest {
+    public ArraysAndListsTest(String apkFile, Set<MethodReference> uncalled) {
+      super(apkFile, uncalled);
+    }
+
+    @Parameters //(name="DroidBench: {0}")
+    public static Collection<Object[]> generateData() {
+      return DroidBenchCGTest.generateData("ArraysAndLists");
+    }
+  }
+
+  public static class CallbacksTest extends DroidBenchCGTest {
+    public CallbacksTest(String apkFile, Set<MethodReference> uncalled) {
+      super(apkFile, uncalled);
+    }
+
+    @Parameters //(name="DroidBench: {0}")
+    public static Collection<Object[]> generateData() {
+      return DroidBenchCGTest.generateData("Callbacks");
+    }
+  }
+
+  public static class EmulatorDetectionTest extends DroidBenchCGTest {
+    public EmulatorDetectionTest(String apkFile, Set<MethodReference> uncalled) {
+      super(apkFile, uncalled);
+    }
+
+    @Parameters //(name="DroidBench: {0}")
+    public static Collection<Object[]> generateData() {
+      return DroidBenchCGTest.generateData("EmulatorDetection");
+    }
+  }
+
+  public static class FieldAndObjectSensitivityTest extends DroidBenchCGTest {
+    public FieldAndObjectSensitivityTest(String apkFile, Set<MethodReference> uncalled) {
+      super(apkFile, uncalled);
+    }
+
+    @Parameters //(name="DroidBench: {0}")
+    public static Collection<Object[]> generateData() {
+      return DroidBenchCGTest.generateData("FieldAndObjectSensitivity");
+    }
+  }
+
+  public static class GeneralJavaTest extends DroidBenchCGTest {
+    public GeneralJavaTest(String apkFile, Set<MethodReference> uncalled) {
+      super(apkFile, uncalled);
+    }
+
+    @Parameters //(name="DroidBench: {0}")
+    public static Collection<Object[]> generateData() {
+      return DroidBenchCGTest.generateData("GeneralJava");
+    }
+  }
+
+  public static class ImplicitFlowsTest extends DroidBenchCGTest {
+    public ImplicitFlowsTest(String apkFile, Set<MethodReference> uncalled) {
+      super(apkFile, uncalled);
+    }
+
+    @Parameters //(name="DroidBench: {0}")
+    public static Collection<Object[]> generateData() {
+      return DroidBenchCGTest.generateData("ImplicitFlows");
+    }
+  }
+
+  public static class InterAppCommunicationTest extends DroidBenchCGTest {
+    public InterAppCommunicationTest(String apkFile, Set<MethodReference> uncalled) {
+      super(apkFile, uncalled);
+    }
+
+    @Parameters //(name="DroidBench: {0}")
+    public static Collection<Object[]> generateData() {
+      return DroidBenchCGTest.generateData("InterAppCommunication");
+    }
+  }
+
+  public static class InterComponentCommunicationTest extends DroidBenchCGTest {
+    public InterComponentCommunicationTest(String apkFile, Set<MethodReference> uncalled) {
+      super(apkFile, uncalled);
+    }
+
+    @Parameters //(name="DroidBench: {0}")
+    public static Collection<Object[]> generateData() {
+      return DroidBenchCGTest.generateData("InterComponentCommunication");
+    }
+  }
+
+  public static class LifecycleTest extends DroidBenchCGTest {
+    public LifecycleTest(String apkFile, Set<MethodReference> uncalled) {
+      super(apkFile, uncalled);
+    }
+
+    @Parameters //(name="DroidBench: {0}")
+    public static Collection<Object[]> generateData() {
+      return DroidBenchCGTest.generateData("Lifecycle");
+    }
+  }
+
+  public static class ReflectionTest extends DroidBenchCGTest {
+    public ReflectionTest(String apkFile, Set<MethodReference> uncalled) {
+      super(apkFile, uncalled);
+    }
+
+    @Parameters //(name="DroidBench: {0}")
+    public static Collection<Object[]> generateData() {
+      return DroidBenchCGTest.generateData("Reflection");
+    }
+  }
+
+  public static class ThreadingTest extends DroidBenchCGTest {
+    public ThreadingTest(String apkFile, Set<MethodReference> uncalled) {
+      super(apkFile, uncalled);
+    }
+
+    @Parameters //(name="DroidBench: {0}")
+    public static Collection<Object[]> generateData() {
+      return DroidBenchCGTest.generateData("Threading");
+    }
+  }
+
 }
