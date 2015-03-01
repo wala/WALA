@@ -12,12 +12,13 @@ import com.ibm.wala.types.MethodReference;
 
 @RunWith(Parameterized.class)
 public class ReflectionTest extends DroidBenchCGTest {
-    public ReflectionTest(String apkFile, Set<MethodReference> uncalled) {
-	super(apkFile, uncalled);
-    }
+  public ReflectionTest(String apkFile, Set<MethodReference> uncalled) {
+    super(apkFile, uncalled);
+  }
 
-    @Parameters //(name="DroidBench: {0}")
-    public static Collection<Object[]> generateData() {
-	return DroidBenchCGTest.generateData("Reflection");
-    }
+  @Parameters
+  // (name="DroidBench: {0}")
+  public static Collection<Object[]> generateData() {
+    return DroidBenchCGTest.generateData("Reflection");
+  }
 }

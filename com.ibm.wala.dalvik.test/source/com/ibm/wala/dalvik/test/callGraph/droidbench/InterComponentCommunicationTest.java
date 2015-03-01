@@ -10,15 +10,15 @@ import org.junit.runners.Parameterized.Parameters;
 import com.ibm.wala.dalvik.test.callGraph.DroidBenchCGTest;
 import com.ibm.wala.types.MethodReference;
 
-	@RunWith(Parameterized.class)
-  public class InterComponentCommunicationTest extends DroidBenchCGTest {
-    public InterComponentCommunicationTest(String apkFile, Set<MethodReference> uncalled) {
-      super(apkFile, uncalled);
-    }
-
-    @Parameters //(name="DroidBench: {0}")
-    public static Collection<Object[]> generateData() {
-      return DroidBenchCGTest.generateData("InterComponentCommunication");
-    }
+@RunWith(Parameterized.class)
+public class InterComponentCommunicationTest extends DroidBenchCGTest {
+  public InterComponentCommunicationTest(String apkFile, Set<MethodReference> uncalled) {
+    super(apkFile, uncalled);
   }
 
+  @Parameters
+  // (name="DroidBench: {0}")
+  public static Collection<Object[]> generateData() {
+    return DroidBenchCGTest.generateData("InterComponentCommunication");
+  }
+}

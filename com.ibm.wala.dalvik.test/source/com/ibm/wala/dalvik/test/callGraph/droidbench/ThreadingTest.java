@@ -12,12 +12,13 @@ import com.ibm.wala.types.MethodReference;
 
 @RunWith(Parameterized.class)
 public class ThreadingTest extends DroidBenchCGTest {
-    public ThreadingTest(String apkFile, Set<MethodReference> uncalled) {
-      super(apkFile, uncalled);
-    }
+  public ThreadingTest(String apkFile, Set<MethodReference> uncalled) {
+    super(apkFile, uncalled);
+  }
 
-    @Parameters //(name="DroidBench: {0}")
-    public static Collection<Object[]> generateData() {
-      return DroidBenchCGTest.generateData("Threading");
-    }
+  @Parameters
+  // (name="DroidBench: {0}")
+  public static Collection<Object[]> generateData() {
+    return DroidBenchCGTest.generateData("Threading");
+  }
 }
