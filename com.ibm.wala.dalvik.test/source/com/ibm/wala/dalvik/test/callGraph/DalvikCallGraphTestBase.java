@@ -156,7 +156,8 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 		return makeAPKCallGraph(apkFileName, monitor, ReflectionOptions.NONE);
 	}
 	
-	private static SSAContextInterpreter makeDefaultInterpreter(AnalysisOptions options, AnalysisCache cache) {
+	@SuppressWarnings("unused")
+  private static SSAContextInterpreter makeDefaultInterpreter(AnalysisOptions options, AnalysisCache cache) {
 		return new DefaultSSAInterpreter(options, cache) {
 			@Override
 			public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
