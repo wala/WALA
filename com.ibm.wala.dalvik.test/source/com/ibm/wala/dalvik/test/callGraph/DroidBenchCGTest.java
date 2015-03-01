@@ -46,7 +46,7 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.functions.VoidFunction;
 import com.ibm.wala.util.io.FileUtil;
 
-abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
+public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 
 	private static MethodReference ref(String type, String name, String sig) {
 		return MethodReference.findOrCreate(TypeReference.findOrCreate(ClassLoaderReference.Application, type), name, sig);
