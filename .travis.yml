@@ -8,8 +8,7 @@ before_install:
  - "pushd /tmp"
  - "git clone https://github.com/secure-software-engineering/DroidBench.git"
  - "popd"
- - "find / -name dx.jar"
- - "echo $HOME"
+ - "find /usr/local -name dx.jar"
 install: mvn clean verify -DskipTests=true -B -q
 script: mvn clean verify -B -q
 sudo: false
