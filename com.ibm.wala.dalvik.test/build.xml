@@ -59,15 +59,7 @@
      <available file="${plugin.destination}/data/android.jar" property="android.jar.present"/>
    </target>
 
-   <target name="fetchDx" depends="dxPresent" unless="dx.present">
-     <get src="http://central.maven.org/maven2/com/google/android/tools/dx/1.7/dx-1.7.jar" dest="${plugin.destination}/lib/dx-1.7.jar" />
-   </target>
-
-   <target name="dxPresent" depends="init">
-     <available file="${plugin.destination}/lib/dx-1.7.jar" property="dx.present"/>
-   </target>
-
-   <target name="getJars" depends="fetchSampleLex,fetchSampleCup,fetchDx,fetchAndroidJar" />
+   <target name="getJars" depends="fetchSampleLex,fetchSampleCup,fetchAndroidJar" />
 
 	<target name="init" depends="properties">
 		<condition property="pluginTemp" value="${buildTempFolder}/plugins">

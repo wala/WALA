@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="source"/>
 	<classpathentry kind="src" path="data"/>
-	<classpathentry kind="lib" path="lib/dx-1.7.jar"/>
+	<classpathentry kind="lib" path="lib/dx.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
