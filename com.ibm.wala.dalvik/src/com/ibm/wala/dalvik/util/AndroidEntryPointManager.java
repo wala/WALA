@@ -247,7 +247,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
         return prev;
     }
 
-    private Class abstractAndroidModel = LoopAndroidModel.class;
+    private Class<? extends AbstractAndroidModel> abstractAndroidModel = LoopAndroidModel.class;
     /**
      *  What special handling to insert into the model.
      *
@@ -266,7 +266,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
             return new LoopAndroidModel(body, insts, paramManager, entryPoints);
         } else {
             try {
-                final Constructor<AbstractAndroidModel> ctor = this.abstractAndroidModel.getDeclaredConstructor(
+                final Constructor<? extends AbstractAndroidModel> ctor = this.abstractAndroidModel.getDeclaredConstructor(
                     VolatileMethodSummary.class, TypeSafeInstructionFactory.class, SSAValueManager.class,
                     Iterable.class);
                 if (ctor == null) {
@@ -295,7 +295,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      *
      *  @return null or the class set using setModelBehavior
      */
-    public Class getModelBehavior() {
+    public Class<?> getModelBehavior() {
         return this.abstractAndroidModel;
     }
 
@@ -304,7 +304,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      *
      *  @throws IllgealArgumentException if the abstractAndroidModel does not subclass AbstractAndroidModel
      */
-    public void setModelBehavior(Class abstractAndroidModel) {
+    public void setModelBehavior(Class<? extends AbstractAndroidModel> abstractAndroidModel) {
         if (abstractAndroidModel == null) {
             throw new IllegalArgumentException("abstractAndroidModel may not be null. Use SequentialAndroidModel " +
                     "if no special handling shall be inserted.");
