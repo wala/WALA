@@ -119,6 +119,7 @@
 		<antcall target="gather.bin.parts">
 			<param name="destination.temp.folder" value="${temp.folder}/"/>
 		</antcall>
+		<zip destfile="${plugin.destination}/bin/com.ibm.wala.core.testdata_1.0.0a.jar" basedir="${temp.folder}/com.ibm.wala.core.testdata_1.0.0" filesonly="false" whenempty="skip" update="false" excludes="**/CodeDeleted.class"/>
 		<zip destfile="${plugin.destination}/bin/com.ibm.wala.core.testdata_1.0.0.jar" basedir="${temp.folder}/com.ibm.wala.core.testdata_1.0.0" filesonly="false" whenempty="skip" update="false"/>
 		<zip destfile="${plugin.destination}/com.ibm.wala.core.testdata_1.0.0.jar" basedir="${temp.folder}/com.ibm.wala.core.testdata_1.0.0" filesonly="false" whenempty="skip" update="false"/>
 		<delete dir="${temp.folder}"/>
@@ -130,7 +131,7 @@
 		<path id="@dot.classpath">
 		</path>
 		<!-- compile the source code -->
-		<javac destdir="${temp.folder}/@dot.bin" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bundleBootClasspath}" source="${bundleJavacSource}" target="${bundleJavacTarget}"		>
+		<javac destdir="${temp.folder}/@dot.bin" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bundleBootClasspath}" source="${bundleJavacSource}" target="${bundleJavacTarget}">
 			<compilerarg line="${compilerArg}" compiler="${build.compiler}"/>
 			<classpath refid="@dot.classpath" />
 			<src path="src/"			/>
