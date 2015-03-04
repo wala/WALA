@@ -47,8 +47,6 @@
 
 package com.ibm.wala.dalvik.classLoader;
 
-import static org.jf.dexlib.ItemType.TYPE_CLASS_DEF_ITEM;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -90,9 +88,7 @@ public class DexFileModule implements Module {
         // create ModuleEntries from ClassDefItem
         entries = new HashSet<ModuleEntry>();
 
-        @SuppressWarnings("unchecked")
-		Section<ClassDefItem> cldeff = dexfile.getSectionForType(TYPE_CLASS_DEF_ITEM);
-
+        Section<ClassDefItem> cldeff = dexfile.ClassDefsSection;
         for (ClassDefItem cdefitems : cldeff.getItems()) {
             logger.debug("DexFileModule adding class: " + cdefitems.getConciseIdentity());
             entries.add(new DexModuleEntry(cdefitems));

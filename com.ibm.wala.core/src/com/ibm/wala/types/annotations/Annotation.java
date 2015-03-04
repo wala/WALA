@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.ibm.wala.shrikeCT.AnnotationsReader;
 import com.ibm.wala.shrikeCT.AnnotationsReader.AnnotationAttribute;
@@ -121,7 +122,7 @@ public class Annotation {
       sb.append(" ]");
     }
     if (!namedArguments.isEmpty()) {
-      sb.append(" " + namedArguments);
+      sb.append(" " + new TreeMap<String, ElementValue>(namedArguments));
     }
     return sb.toString();
   }

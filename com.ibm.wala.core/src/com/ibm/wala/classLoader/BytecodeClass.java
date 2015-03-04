@@ -590,4 +590,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
       }
     }
   }  
+  
+  public abstract Collection<Annotation> getAnnotations(boolean runtimeVisible) throws InvalidClassFileException;
+
 }

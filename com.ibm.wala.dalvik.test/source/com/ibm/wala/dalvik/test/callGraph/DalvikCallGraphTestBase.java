@@ -10,32 +10,20 @@
  *******************************************************************************/
 package com.ibm.wala.dalvik.test.callGraph;
 
-import static com.ibm.wala.properties.WalaProperties.ANDROID_RT_JAR;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.JarFileModule;
-import com.ibm.wala.classLoader.Module;
-import com.ibm.wala.classLoader.NestedJarFileModule;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
-import com.ibm.wala.core.tests.shrike.DynamicCallGraphTestBase;
 import com.ibm.wala.dalvik.classLoader.DexIRFactory;
+import com.ibm.wala.dalvik.test.DalvikTestBase;
 import com.ibm.wala.dalvik.util.AndroidAnalysisScope;
 import com.ibm.wala.dalvik.util.AndroidEntryPointLocator;
 import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.LocatorFlags;
@@ -75,17 +63,7 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.io.TemporaryFile;
 
-public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
-
-  public static Properties walaProperties;
-	
-	static {
-		try {
-			walaProperties = WalaProperties.loadProperties();
-		} catch (WalaException e) {
-			walaProperties = null;
-		}
-	}
+public class DalvikCallGraphTestBase extends DalvikTestBase {
 	
 	protected static <T> Set<T> processCG(CallGraph cg, Predicate<CGNode> filter, Function<CGNode,T> map) {
 		Set<T> result = HashSetFactory.make();
@@ -114,29 +92,6 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 	}
 	
 
-	protected static String getJavaJar(AnalysisScope javaScope) throws IOException {
-		Module javaJar = javaScope.getModules(javaScope.getApplicationLoader()).iterator().next();
-		if (javaJar instanceof JarFileModule) {
-			String javaJarPath = ((JarFileModule)javaJar).getAbsolutePath();
-			return javaJarPath;
-		} else {
-			assert javaJar instanceof NestedJarFileModule : javaJar;
-			File F = File.createTempFile("android", ".jar");
-			//F.deleteOnExit();
-			System.err.println(F.getAbsolutePath());
-			TemporaryFile.streamToFile(F, ((NestedJarFileModule)javaJar).getNestedContents());
-			return F.getAbsolutePath();
-		}
-	}
-
-	public static File convertJarToDex(String jarFile) throws IOException, InterruptedException {
-		File f = File.createTempFile("convert", ".dex");
-		//f.deleteOnExit();
-		System.err.println(f);
-		com.android.dx.command.Main.main(new String[]{"--dex", "--output=" + f.getAbsolutePath(), jarFile});
-		return f;
-	}
-	
 	public void dynamicCG(File javaJarPath, String mainClass, String... args) throws FileNotFoundException, IOException, ClassNotFoundException, InvalidClassFileException, FailureException, SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, InterruptedException {
 		File F = TemporaryFile.streamToFile(new File("test_jar.jar"), new FileInputStream(javaJarPath));
 		F.deleteOnExit();
@@ -216,60 +171,8 @@ public class DalvikCallGraphTestBase extends DynamicCallGraphTestBase {
 		return Pair.make(callGraph, ptrAnalysis);
 	}
 	
-	public static URI[] androidLibs() {
-	  if ("Dalvik".equals(System.getProperty("java.vm.name"))) {
-	    try {
-	      return new URI[]{
-	          new URL("file:///system/framework/core.jar").toURI(),
-	          new URL("file:///system/framework/framework.jar").toURI(),
-	          new URL("file:///system/framework/framework2.jar").toURI(),
-	          new URL("file:///system/framework/framework3.jar").toURI()
-	      };
-	    } catch (MalformedURLException e) {
-	      assert false : e;
-	    return null;
-	    } catch (URISyntaxException e) {
-	      assert false : e;
-	    return null;
-	    }
-	  } else {
-      List<URI> libs = new ArrayList<URI>();
-	    try {
-	      for(File lib : new File(walaProperties.getProperty(ANDROID_RT_JAR)).listFiles(new FilenameFilter() {
-	        @Override
-	        public boolean accept(File dir, String name) {
-	          return name.endsWith("dex") || name.endsWith("jar");
-	        } 
-	      })) {
-	        libs.add(lib.toURI());
-	      }
-	    } catch (Exception e) {
-	      for(String l : WalaProperties.getJ2SEJarFiles()) {
-	        libs.add(new File(l).toURI());
-	      }
-	      try {
-          File jarFile = TemporaryFile.urlToFile("android.jar", DalvikCallGraphTestBase.class.getClassLoader().getResource("android.jar"));
-          libs.add(jarFile.toURI());
-        } catch (IOException e1) {
-          assert false : e1;
-        } 
-	    } 
-	    return libs.toArray(new URI[ libs.size() ]);
-	  }
-	}
-	
 	public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeDalvikCallGraph(boolean useAndroidLib, String mainClassName, String dexFileName) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
-		AnalysisScope scope = 
-			useAndroidLib?
-			AndroidAnalysisScope.setUpAndroidAnalysisScope(
-				new File(dexFileName).toURI(), 
-				CallGraphTestUtil.REGRESSION_EXCLUSIONS,
-				CallGraphTestUtil.class.getClassLoader(),
-				androidLibs()):
-			AndroidAnalysisScope.setUpAndroidAnalysisScope(
-				new File(dexFileName).toURI(), 
-				CallGraphTestUtil.REGRESSION_EXCLUSIONS,
-				CallGraphTestUtil.class.getClassLoader());
+		AnalysisScope scope = makeDalvikScope(useAndroidLib, dexFileName);
 		
 		final IClassHierarchy cha = ClassHierarchy.make(scope);
 

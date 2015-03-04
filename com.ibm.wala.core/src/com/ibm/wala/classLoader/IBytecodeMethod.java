@@ -16,6 +16,7 @@ import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.IndirectionData;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.types.annotations.Annotation;
 
 /**
  * A method which originated in bytecode, decoded by Shrike
@@ -47,4 +48,8 @@ public interface IBytecodeMethod extends IMethod {
    */
   IndirectionData getIndirectionData();
   
+  Collection<Annotation>[] getParameterAnnotations();
+
+  Collection<Annotation> getAnnotations(boolean runtimeVisible) throws InvalidClassFileException;
+
 }

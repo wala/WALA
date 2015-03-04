@@ -61,6 +61,9 @@ import static org.jf.dexlib.Util.AccessFlags.VOLATILE;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.jf.dexlib.AnnotationItem;
 import org.jf.dexlib.AnnotationSetItem;
@@ -191,9 +194,6 @@ public class DexIMethod implements IBytecodeMethod {
 	public DexIMethod(EncodedMethod encodedMethod, DexIClass klass) {
 		eMethod = encodedMethod;
 		myClass = klass;
-		//XXX TEST
-		//myClass.iterateMethodAnnotations(this);
-
 	}
 
 	public static int getTotalInsts() {
@@ -3357,7 +3357,24 @@ public class DexIMethod implements IBytecodeMethod {
 
 	@Override
 	public Collection<Annotation> getAnnotations() {
-		throw new UnsupportedOperationException();
+		return DexUtil.getAnnotations(myClass.getAnnotations(eMethod.method, null), myClass.getClassLoader().getReference());
 	}
 
+	@Override
+	public Collection<Annotation> getAnnotations(boolean runtimeInvisible) {
+		return DexUtil.getAnnotations(myClass.getAnnotations(eMethod.method, DexIClass.getTypes(runtimeInvisible)), myClass.getClassLoader().getReference());
+	}
+
+	@Override
+	public Collection<Annotation>[] getParameterAnnotations() {
+		Map<Integer, List<AnnotationItem>> raw = myClass.getParameterAnnotations(eMethod.method);
+		@SuppressWarnings("unchecked")
+		Collection<Annotation>[] result = new Collection[ getReference().getNumberOfParameters() ];
+		for(Map.Entry<Integer, List<AnnotationItem>> x : raw.entrySet()) {
+			result[x.getKey()] = DexUtil.getAnnotations(x.getValue(), myClass.getClassLoader().getReference());
+		}
+		return result;
+	}
+
+	
 }

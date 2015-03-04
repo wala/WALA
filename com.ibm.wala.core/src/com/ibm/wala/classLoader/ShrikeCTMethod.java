@@ -446,6 +446,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IBytecodeMet
     return getAnnotations(false);
   }
 
+  @Override
   public Collection<Annotation> getAnnotations(boolean runtimeInvisible) throws InvalidClassFileException {
     AnnotationsReader r = getAnnotationsReader(runtimeInvisible ? AnnotationType.RuntimeInvisibleAnnotations
         : AnnotationType.RuntimeVisibleAnnotations);

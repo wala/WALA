@@ -183,5 +183,5 @@ public interface IClass extends IClassHierarchyDweller {
    * get annotations, if any
    */
   Collection<Annotation> getAnnotations();
-  
+
 }

@@ -54,12 +54,21 @@ import static org.jf.dexlib.Util.AccessFlags.PUBLIC;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.jf.dexlib.AnnotationDirectoryItem;
+import org.jf.dexlib.AnnotationItem;
+import org.jf.dexlib.AnnotationSetItem;
+import org.jf.dexlib.AnnotationVisibility;
 import org.jf.dexlib.ClassDataItem;
 import org.jf.dexlib.ClassDataItem.EncodedField;
 import org.jf.dexlib.ClassDataItem.EncodedMethod;
 import org.jf.dexlib.ClassDefItem;
+import org.jf.dexlib.FieldIdItem;
+import org.jf.dexlib.MethodIdItem;
 import org.jf.dexlib.TypeIdItem;
 import org.jf.dexlib.TypeListItem;
 import org.slf4j.Logger;
@@ -71,9 +80,12 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.shrikeCT.AnnotationsReader.AnnotationType;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 
 public class DexIClass extends BytecodeClass<IClassLoader> {
@@ -258,6 +270,79 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
         return hashCode;
       }
 
+      Collection<Annotation> getAnnotations(Set<AnnotationVisibility> types) {
+    	  Set<Annotation> result = HashSetFactory.make();
+    	  AnnotationDirectoryItem d = dexModuleEntry.getClassDefItem().getAnnotations();
+    	  if (d.getClassAnnotations() != null) {
+    		  for(AnnotationItem a : d.getClassAnnotations().getAnnotations()) {
+    			  if (types == null || types.contains(a.getVisibility())) {
+    				  result.add(DexUtil.getAnnotation(a, getClassLoader().getReference()));
+    			  }
+    		  }
+    	  }
+    	  return result;
+      }
+      
+      public Collection<Annotation> getAnnotations() {
+    	  return getAnnotations((Set<AnnotationVisibility>)null);
+      }
+
+      public Collection<Annotation> getAnnotations(boolean runtimeInvisible) throws InvalidClassFileException {
+  		return getAnnotations(getTypes(runtimeInvisible));
+      }
+
+	static Set<AnnotationVisibility> getTypes(boolean runtimeInvisible) {
+		Set<AnnotationVisibility> types = HashSetFactory.make();
+  		types.add(AnnotationVisibility.SYSTEM);
+  		if (runtimeInvisible) {
+  			types.add(AnnotationVisibility.BUILD);
+  		} else {
+  			types.add(AnnotationVisibility.RUNTIME);
+  		}
+		return types;
+	}
+
+      List<AnnotationItem> getAnnotations(MethodIdItem m, Set<AnnotationVisibility> types) {
+    	  List<AnnotationItem> result = new ArrayList<AnnotationItem>();
+    	  AnnotationDirectoryItem d = dexModuleEntry.getClassDefItem().getAnnotations();
+    	  if (d != null) {
+    		  for(AnnotationItem a : d.getMethodAnnotations(m).getAnnotations()) {
+        		  if (types == null || types.contains(a.getVisibility())) {
+        			  result.add(a);
+        		  }
+    		  }
+    	  }
+    	  return result;
+      }
+
+      List<AnnotationItem> getAnnotations(FieldIdItem m) {
+    	  List<AnnotationItem> result = new ArrayList<AnnotationItem>();
+    	  AnnotationDirectoryItem d = dexModuleEntry.getClassDefItem().getAnnotations();
+    	  if (d != null) {
+    		  for(AnnotationItem a : d.getFieldAnnotations(m).getAnnotations()) {
+    			  result.add(a);
+    		  }
+    	  }
+    	  return result;
+      }
+
+      Map<Integer,List<AnnotationItem>> getParameterAnnotations(MethodIdItem m) {
+    	  Map<Integer,List<AnnotationItem>> result = HashMapFactory.make();
+    	  AnnotationDirectoryItem d = dexModuleEntry.getClassDefItem().getAnnotations();
+    	  if (d != null) {
+    		  int i = 0;
+    		  for(AnnotationSetItem as : d.getParameterAnnotations(m).getAnnotationSets()) {
+    			  for(AnnotationItem a : as.getAnnotations()) {
+    				  if (! result.containsKey(i)) {
+    					  result.put(i, new ArrayList<AnnotationItem>());
+    				  }
+    				  result.get(i).add(a);
+    			  }
+    			  i++;
+    		  }
+    	  }
+    	  return result;
+      }
 
     /*
      * (non-Javadoc)
@@ -338,11 +423,6 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
 //      return construcorId!=-1?methods[construcorId]:null;
         return clinitId!=-1?methods[clinitId]:null;
     }
-
-	@Override
-	public Collection<Annotation> getAnnotations() {
-		throw new UnsupportedOperationException();
-	}
 
 	@Override
 	public Module getContainer() {
