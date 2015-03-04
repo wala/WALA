@@ -120,6 +120,7 @@
 			<param name="destination.temp.folder" value="${temp.folder}/"/>
 		</antcall>
 		<zip destfile="${plugin.destination}/bin/com.ibm.wala.core.testdata_1.0.0a.jar" basedir="${temp.folder}/com.ibm.wala.core.testdata_1.0.0" filesonly="false" whenempty="skip" update="false" excludes="**/CodeDeleted.class"/>
+		<zip destfile="${plugin.destination}/com.ibm.wala.core.testdata_1.0.0a.jar" basedir="${temp.folder}/com.ibm.wala.core.testdata_1.0.0" filesonly="false" whenempty="skip" update="false" excludes="**/CodeDeleted.class"/>
 		<zip destfile="${plugin.destination}/bin/com.ibm.wala.core.testdata_1.0.0.jar" basedir="${temp.folder}/com.ibm.wala.core.testdata_1.0.0" filesonly="false" whenempty="skip" update="false"/>
 		<zip destfile="${plugin.destination}/com.ibm.wala.core.testdata_1.0.0.jar" basedir="${temp.folder}/com.ibm.wala.core.testdata_1.0.0" filesonly="false" whenempty="skip" update="false"/>
 		<delete dir="${temp.folder}"/>
