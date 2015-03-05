@@ -9,13 +9,12 @@ import java.io.IOException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
-import com.ibm.wala.core.tests.callGraph.CallGraphTest;
 import com.ibm.wala.core.tests.ir.AnnotationTest;
 import com.ibm.wala.core.tests.ir.JVMLAnnotationTest;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
-import com.ibm.wala.util.io.TemporaryFile;
+import com.ibm.wala.util.io.FileProvider;
 
 public class DalvikAnnotationsTest extends AnnotationTest {
 
@@ -25,9 +24,7 @@ public class DalvikAnnotationsTest extends AnnotationTest {
   
   @BeforeClass
   public static void before() throws IOException, ClassHierarchyException {
-    File F = File.createTempFile("waladata", ".jar");
-    F.deleteOnExit();
-    TemporaryFile.streamToFile(F, CallGraphTest.class.getClassLoader().getResourceAsStream("com.ibm.wala.core.testdata_1.0.0a.jar"));
+    File F = (new FileProvider()).getFile("com.ibm.wala.core.testdata_1.0.0a.jar");
     File androidDex = convertJarToDex(F.getAbsolutePath());
     AnalysisScope dalvikScope = makeDalvikScope(true, androidDex.getAbsolutePath());
     cha = ClassHierarchy.make(dalvikScope);    
