@@ -15,6 +15,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.io.FileProvider;
+import com.ibm.wala.util.io.TemporaryFile;
 
 public class DalvikAnnotationsTest extends AnnotationTest {
 
@@ -24,7 +25,9 @@ public class DalvikAnnotationsTest extends AnnotationTest {
   
   @BeforeClass
   public static void before() throws IOException, ClassHierarchyException {
-    File F = (new FileProvider()).getFile("com.ibm.wala.core.testdata_1.0.0a.jar");
+    File F = File.createTempFile("walatest", ".jar");
+    F.deleteOnExit();
+    TemporaryFile.urlToFile(F, (new FileProvider()).getResource("com.ibm.wala.core.testdata_1.0.0a.jar"));
     File androidDex = convertJarToDex(F.getAbsolutePath());
     AnalysisScope dalvikScope = makeDalvikScope(true, androidDex.getAbsolutePath());
     cha = ClassHierarchy.make(dalvikScope);    
