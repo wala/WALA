@@ -322,6 +322,45 @@ Array$proto$__WALA__ = {
   
   item: function Array_prototype_item(index) {
 	  return this[index];
+  },
+
+  every: function Array_prototype_every(arg1, arg2) {
+	  var n0 = this.length;
+	  var n1;
+	  var n2 = true;
+	  for (var i0 = 0; i0 < n0; i0 += 1) {
+		  n1 = this[i0];
+		  n2 = arg1.call(arg2, n1, i0, this);
+		  if (!n2) {
+			  break;
+		  }
+	  }
+	  return n2;
+  },
+
+  some: function Array_prototype_some(arg1, arg2) {
+	  var n0 = this.length;
+	  var n1;
+	  var n2 = false;
+	  for (var i0 = 0; i0 < n0; i0 += 1) {
+		  n1 = this[i0];
+		  n2 = arg1.call(arg2, n1, i0, this);
+		  if (n2) {
+			  break;
+		  }
+	  }
+	  return n2;
+  },
+
+  reduce: function Array_prototype_reduce(arg1, arg2) {
+	  var n0 = this.length;
+	  var n1;
+	  var n2 = arg2;
+	  for (var i0 = 0; i0 < n0; i0 += 1) {
+		  n1 = this[i0];
+		  n2 = arg1.call(undefined, n2, n1, i0, this);
+	  }
+	  return n2;
   }
 };
 
