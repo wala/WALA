@@ -336,41 +336,48 @@ Array$proto$__WALA__ = {
 
   every: function Array_prototype_every(arg1, arg2) {
 	  var n0 = this.length;
-	  var n1;
-	  var n2 = true;
-	  for (var i0 = 0; i0 < n0; i0 += 1) {
-		  n1 = this[i0];
-		  n2 = arg1.call(arg2, n1, i0, this);
-		  if (!n2) {
-			  break;
-		  }
+	  var n3 = true;
+	  for (var i = 0; i < n0; i += 1) {
+	    var n1 = i in this;
+	    if (n1) {
+	      var n2 = this[i];
+	      n3 = arg1.call(arg2, n2, i, this);
+	      if (!n3) {
+	        break;
+	      }
+	    }
 	  }
-	  return n2;
+	  return n3;
   },
 
   some: function Array_prototype_some(arg1, arg2) {
 	  var n0 = this.length;
-	  var n1;
-	  var n2 = false;
-	  for (var i0 = 0; i0 < n0; i0 += 1) {
-		  n1 = this[i0];
-		  n2 = arg1.call(arg2, n1, i0, this);
-		  if (n2) {
-			  break;
-		  }
+	  var n3 = false;
+	  for (var i = 0; i < n0; i += 1) {
+	    var n1 = i in this;
+	    if (n1) {
+	      var n2 = this[i];
+	      n3 = arg1.call(arg2, n2, i, this);
+	      if (n3) {
+	        break;
+	      }
+	    }
 	  }
-	  return n2;
+	  return n3;
   },
 
   reduce: function Array_prototype_reduce(arg1, arg2) {
+	  var result = arg2;
 	  var n0 = this.length;
-	  var n1;
-	  var n2 = arg2;
-	  for (var i0 = 0; i0 < n0; i0 += 1) {
-		  n1 = this[i0];
-		  n2 = arg1.call(undefined, n2, n1, i0, this);
+	  for (var i = 0; i < n0; i += 1) {
+	    var n1 = i in this;
+	    if (n1) {
+	      var n2 = this[i];
+	      var n3 = arg1.call(undefined, result, n2, i, this);
+	      result = n3;
+	    }
 	  }
-	  return n2;
+	  return result;
   }
 };
 
