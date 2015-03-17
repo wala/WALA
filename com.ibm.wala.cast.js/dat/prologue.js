@@ -202,7 +202,7 @@ Array$proto$__WALA__ = {
 		  return n1;
 	  } else {
 		  // needed for non-arrays
-		  arg0.length = 0;
+		  this.length = 0;
 	  }
   },
 
