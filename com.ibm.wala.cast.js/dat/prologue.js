@@ -193,7 +193,17 @@ Array$proto$__WALA__ = {
   },
 
   pop: function Array_prototype_pop () {
-    return this[ --this.length ];
+	  var n0 = this.length;
+	  if (n0) {
+		  var n1 = this[n0-1];
+		  this.length = n0-1;
+		  // needed for non-arrays
+		  delete this[n0-1];
+		  return n1;
+	  } else {
+		  // needed for non-arrays
+		  this.length = 0;
+	  }
   },
 
   push: function Array_prototype_push () {
@@ -322,7 +332,84 @@ Array$proto$__WALA__ = {
   
   item: function Array_prototype_item(index) {
 	  return this[index];
+  },
+
+  every: function Array_prototype_every(arg1, arg2) {
+	  var n0 = this.length;
+	  var n3 = true;
+	  for (var i = 0; i < n0; i += 1) {
+	    var n1 = i in this;
+	    if (n1) {
+	      var n2 = this[i];
+	      n3 = arg1.call(arg2, n2, i, this);
+	      if (!n3) {
+	        break;
+	      }
+	    }
+	  }
+	  return n3;
+  },
+
+  some: function Array_prototype_some(arg1, arg2) {
+	  var n0 = this.length;
+	  var n3 = false;
+	  for (var i = 0; i < n0; i += 1) {
+	    var n1 = i in this;
+	    if (n1) {
+	      var n2 = this[i];
+	      n3 = arg1.call(arg2, n2, i, this);
+	      if (n3) {
+	        break;
+	      }
+	    }
+	  }
+	  return n3;
+  },
+
+  reduce: function Array_prototype_reduce(arg1, arg2) {
+	  var result = arg2;
+	  var n0 = this.length;
+	  for (var i = 0; i < n0; i += 1) {
+	    var n1 = i in this;
+	    if (n1) {
+	      var n2 = this[i];
+	      var n3 = arg1.call(undefined, result, n2, i, this);
+	      result = n3;
+	    }
+	  }
+	  return result;
+  },
+
+  reduceRight: function Array_prototype_reduceRight(arg1, arg2) {
+	  var result = arg2;
+	  var n0 = this.length;
+	  for (var i = 0; i < n0; i += 1) {
+	    var n1 = ((n0-i)-1) in this;
+	    if (n1) {
+	      var n2 = this[(n0-i)-1];
+	      var n3 = arg1.call(undefined, result, n2, (n0-i)-1, this);
+	      result = n3;
+	    }
+	  }
+	  return result;
+  },
+
+  filter: function Array_prototype_filter(arg1, arg2) {
+	  var result = [];
+	  var n0 = this.length;
+	  for (var i = 0; i < n0; i += 1) {
+	    var n1 = i in this;
+	    if (n1) {
+	      var n2 = this[i];
+	      var n3 = arg1.call(arg2, n2, i, this);
+	      if (n3) {
+	        result[result.length] = n2;
+	      }
+	    }
+	  }
+	  return result;
   }
+
 };
 
 Array.isArray = function Array_isArray(a) {
