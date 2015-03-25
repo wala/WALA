@@ -42,7 +42,7 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
   protected JSCallGraph runTest(URL url, Object[][] assertions, BuilderType... builderTypes) throws IOException, WalaException, Error, CancelException {
     JSCallGraph cg = null;
     for(BuilderType builderType : builderTypes) {
-      ProgressMaster monitor = ProgressMaster.make(new NullProgressMonitor(), 30000, true);
+      ProgressMaster monitor = ProgressMaster.make(new NullProgressMonitor(), 45000, true);
       try {
         cg = util.buildCG(url, builderType, monitor, false).fst;
         System.err.println(cg);

@@ -22,6 +22,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.pde.core;bundle-version="3.8.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
+Import-Package: org.eclipse.wst.jsdt.internal.corext.callhierarchy
 Export-Package: com.ibm.wala.cast.js.client,
  com.ibm.wala.ide.jsdt,
  com.ibm.wala.ide.util

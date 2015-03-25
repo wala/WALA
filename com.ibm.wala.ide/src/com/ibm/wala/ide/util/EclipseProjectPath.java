@@ -201,6 +201,7 @@ public abstract class EclipseProjectPath<E, P> {
     if (!model.isInSync() || model.isDisposed()) {
       model.load();
     }
+
     BundleDescription bd = model.getBundleDescription();
 
     if (bd == null) {

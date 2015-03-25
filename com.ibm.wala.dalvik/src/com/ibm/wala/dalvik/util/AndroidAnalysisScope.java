@@ -47,8 +47,9 @@ public class AndroidAnalysisScope {
 
 			for(URI al : androidLib) {
 				try {
-					scope.addToScope(ClassLoaderReference.Primordial, new DexFileModule(new File(al)));
+					scope.addToScope(ClassLoaderReference.Primordial, DexFileModule.make(new File(al)));
 				} catch (Exception e) {
+					e.printStackTrace();
 					scope.addToScope(ClassLoaderReference.Primordial, new JarFileModule(new JarFile(new File(al))));					
 				}
 			}
@@ -58,7 +59,7 @@ public class AndroidAnalysisScope {
 		scope.setLoaderImpl(ClassLoaderReference.Application,
 				"com.ibm.wala.dalvik.classLoader.WDexClassLoaderImpl");
 
-		scope.addToScope(ClassLoaderReference.Application, new DexFileModule(new File(classpath)));
+		scope.addToScope(ClassLoaderReference.Application, DexFileModule.make(new File(classpath)));
 		
 		return scope;
 	}
@@ -79,12 +80,11 @@ public class AndroidAnalysisScope {
 			String[] paths = classPath.split(File.pathSeparator);
 
 			for (int i = 0; i < paths.length; i++) {
-				if (paths[i].endsWith(".jar")) { // handle jar file
-					scope.addToScope(loader, new JarFile(paths[i]));
-				} else if (paths[i].endsWith(".apk")
+				if (paths[i].endsWith(".jar")
+						|| paths[i].endsWith(".apk")
 						|| paths[i].endsWith(".dex")) { // Handle android file.
 					File f = new File(paths[i]);
-					scope.addToScope(loader, new DexFileModule(f));
+					scope.addToScope(loader, DexFileModule.make(f));
 				} else {
 					File f = new File(paths[i]);
 					if (f.isDirectory()) { // handle directory FIXME not working

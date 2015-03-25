@@ -54,6 +54,7 @@ import com.ibm.wala.ide.util.HeadlessUtil.EclipseCompiler;
 import com.ibm.wala.ide.util.HeadlessUtil.Parser;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
@@ -76,7 +77,7 @@ public class JsdtUtil {
   public static Set<ModuleEntry> getJavaScriptCodeFromProject(String project) throws IOException, CoreException {
     IJavaScriptProject p = JavaScriptHeadlessUtil.getJavaScriptProjectFromWorkspace(project);
     JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
-    AnalysisScope s = JavaScriptEclipseProjectPath.make(p, Collections.EMPTY_SET).toAnalysisScope(new CAstAnalysisScope(JSCallGraphUtil.makeLoaders(), Collections.singleton(JavaScriptLoader.JS)));
+    AnalysisScope s = JavaScriptEclipseProjectPath.make(p, Collections.<Pair<String,Plugin>>emptySet()).toAnalysisScope(new CAstAnalysisScope(JSCallGraphUtil.makeLoaders(), Collections.singleton(JavaScriptLoader.JS)));
 
     List<Module> modules = s.getModules(JavaScriptTypes.jsLoader);
     Set<ModuleEntry> mes = HashSetFactory.make();

@@ -224,6 +224,7 @@ public final class BitVectorIntSet implements MutableIntSet {
 
       @Override
       public boolean hasNext() {
+        assert populationCount == bitVector.populationCount();
         return count < populationCount;
       }
 

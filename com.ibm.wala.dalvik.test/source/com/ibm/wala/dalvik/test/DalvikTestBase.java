@@ -3,12 +3,10 @@ package com.ibm.wala.dalvik.test;
 import static com.ibm.wala.properties.WalaProperties.ANDROID_RT_JAR;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -61,33 +59,37 @@ public abstract class DalvikTestBase extends DynamicCallGraphTestBase {
   }
 
   public static URI[] androidLibs() {
+    System.err.println(System.getProperty("java.vm.name"));
     if ("Dalvik".equals(System.getProperty("java.vm.name"))) {
-      try {
-        return new URI[]{
-            new URL("file:///system/framework/core.jar").toURI(),
-            new URL("file:///system/framework/framework.jar").toURI(),
-            new URL("file:///system/framework/framework2.jar").toURI(),
-            new URL("file:///system/framework/framework3.jar").toURI()
-        };
-      } catch (MalformedURLException e) {
-        assert false : e;
-      return null;
-      } catch (URISyntaxException e) {
-        assert false : e;
-      return null;
-      }
+        List<URI> libs = new ArrayList<URI>();
+        for(File f : new File("/system/framework/").listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+              String name = pathname.getName();
+              return 
+                  (name.startsWith("core") || name.startsWith("framework")) && 
+                  (name.endsWith("jar") || name.endsWith("apk"));
+            } 
+          })) 
+        {
+          System.out.println("adding " + f);
+          libs.add(f.toURI());
+        }
+        return libs.toArray(new URI[ libs.size() ]);
     } else {
       List<URI> libs = new ArrayList<URI>();
       try {
         for(File lib : new File(walaProperties.getProperty(ANDROID_RT_JAR)).listFiles(new FilenameFilter() {
           @Override
           public boolean accept(File dir, String name) {
-            return name.endsWith("dex") || name.endsWith("jar");
+            return name.endsWith("dex") || name.endsWith("jar") || name.endsWith("apk");
           } 
         })) {
+          System.out.println("adding " + lib);
           libs.add(lib.toURI());
         }
       } catch (Exception e) {
+        System.out.println("unexpected " + e);
         for(String l : WalaProperties.getJ2SEJarFiles()) {
           libs.add(new File(l).toURI());
         }

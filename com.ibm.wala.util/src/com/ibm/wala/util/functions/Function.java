@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.functions;
 
+
 /**
  */
 public interface Function<X,Y> {

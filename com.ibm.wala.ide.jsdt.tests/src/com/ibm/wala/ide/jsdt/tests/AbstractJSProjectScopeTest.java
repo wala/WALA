@@ -68,7 +68,7 @@ public abstract class AbstractJSProjectScopeTest {
     return JavaScriptEclipseProjectPath.make(p, Collections.<Pair<String,Plugin>>emptySet());
   }
 
-  @Ignore("works for me on luna, but ignored for now to avoid breaking juno")
+  @Ignore("works for me on Eclipse Luna, but I cannot make it work with maven")
   @Test
   public void testParsing() throws IOException, CoreException {
     Set<ModuleEntry> mes = JsdtUtil.getJavaScriptCodeFromProject(project.projectName);

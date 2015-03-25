@@ -153,7 +153,7 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
     		ModuleEntry entry = (ModuleEntry) it.next();
     		if (entry instanceof DexModuleEntry) {    		
     			result.add(entry);
-    		}
+    		} 
     	}
     	return result;
     }

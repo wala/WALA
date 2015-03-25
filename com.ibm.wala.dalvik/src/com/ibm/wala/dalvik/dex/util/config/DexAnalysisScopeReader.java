@@ -89,10 +89,8 @@ public class DexAnalysisScopeReader extends AnalysisScopeReader {
         
 		ClassLoaderReference loader = scope.getLoader(AnalysisScope.APPLICATION);
 		final String path = classPath.getPath();
-		if (path.endsWith(".jar")) {
-			scope.addToScope(loader, new JarFile(new File(classPath)));
-		} else if (path.endsWith(".apk") || path.endsWith(".dex")) {
-			scope.addToScope(loader, new DexFileModule(new File(classPath)));
+		if (path.endsWith(".jar") || path.endsWith(".apk") || path.endsWith(".dex")) {
+			scope.addToScope(loader, DexFileModule.make(new File(classPath)));
 		} else {
 			throw new IOException(
 					"could not determine type of classpath from file extension: "

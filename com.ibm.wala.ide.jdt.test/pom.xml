@@ -9,9 +9,9 @@
     <version>1.3.4-SNAPSHOT</version>
   </parent>
 
+  
   <artifactId>com.ibm.wala.ide.jdt.test</artifactId>
   <packaging>eclipse-test-plugin</packaging>
-
   <profiles>
    <profile>
     <id>macosx</id>

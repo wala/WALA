@@ -23,7 +23,6 @@ import java.util.Set;
 
 import com.ibm.wala.cast.ir.ssa.AssignInstruction;
 import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
-import com.ibm.wala.cast.ir.ssa.AstConstants;
 import com.ibm.wala.cast.ir.ssa.AstEchoInstruction;
 import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
 import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
@@ -31,6 +30,8 @@ import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
+import com.ibm.wala.cast.ir.ssa.CAstBinaryOp;
+import com.ibm.wala.cast.ir.ssa.CAstUnaryOp;
 import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
 import com.ibm.wala.cast.ir.ssa.SSAConversion;
@@ -3018,13 +3019,13 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
 
   protected IUnaryOpInstruction.IOperator translateUnaryOpcode(CAstNode op) {
     if (op == CAstOperator.OP_BITNOT)
-      return AstConstants.UnaryOp.BITNOT;
+      return CAstUnaryOp.BITNOT;
     else if (op == CAstOperator.OP_NOT)
       return IUnaryOpInstruction.Operator.NEG;
     else if (op == CAstOperator.OP_SUB)
-      return AstConstants.UnaryOp.MINUS;
+      return CAstUnaryOp.MINUS;
     else if (op == CAstOperator.OP_ADD)
-      return AstConstants.UnaryOp.PLUS;
+      return CAstUnaryOp.PLUS;
     else
       Assertions.UNREACHABLE("cannot translate " + CAstPrinter.print(op));
     return null;
@@ -3055,23 +3056,23 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     else if (op == CAstOperator.OP_BIT_XOR)
       return BinaryOpInstruction.Operator.XOR;
     else if (op == CAstOperator.OP_CONCAT)
-      return AstConstants.BinaryOp.CONCAT;
+      return CAstBinaryOp.CONCAT;
     else if (op == CAstOperator.OP_EQ)
-      return AstConstants.BinaryOp.EQ;
+      return CAstBinaryOp.EQ;
     else if (op == CAstOperator.OP_STRICT_EQ)
-      return AstConstants.BinaryOp.STRICT_EQ;
+      return CAstBinaryOp.STRICT_EQ;
     else if (op == CAstOperator.OP_GE)
-      return AstConstants.BinaryOp.GE;
+      return CAstBinaryOp.GE;
     else if (op == CAstOperator.OP_GT)
-      return AstConstants.BinaryOp.GT;
+      return CAstBinaryOp.GT;
     else if (op == CAstOperator.OP_LE)
-      return AstConstants.BinaryOp.LE;
+      return CAstBinaryOp.LE;
     else if (op == CAstOperator.OP_LT)
-      return AstConstants.BinaryOp.LT;
+      return CAstBinaryOp.LT;
     else if (op == CAstOperator.OP_NE)
-      return AstConstants.BinaryOp.NE;
+      return CAstBinaryOp.NE;
     else if (op == CAstOperator.OP_STRICT_NE)
-      return AstConstants.BinaryOp.STRICT_NE;
+      return CAstBinaryOp.STRICT_NE;
     else {
       Assertions.UNREACHABLE("cannot translate " + CAstPrinter.print(op));
       return null;

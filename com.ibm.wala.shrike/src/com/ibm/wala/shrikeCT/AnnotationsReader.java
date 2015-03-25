@@ -97,7 +97,7 @@ public class AnnotationsReader extends AttributeReader {
 
     @Override
     public String toString() {
-      return val.toString();
+      return String.valueOf(val);
     }
 
   }

@@ -946,6 +946,17 @@ public final class ActivityEP {
                 }
             ));
 
+    public static final AndroidPossibleEntryPoint onSharedPreferenceChanged = new AndroidPossibleEntryPoint(AndroidComponent.ACTIVITY,
+            "onSharedPreferenceChanged",
+            ExecutionOrder.between( // TODO: Find a nice position
+                new AndroidEntryPoint.IExecutionOrder[] {
+                    onStop
+                },
+                new AndroidEntryPoint.IExecutionOrder[] {
+                    onRestart
+                }
+            ));
+
     /**
      * This method is called before pausing 
      */
@@ -1123,6 +1134,7 @@ public final class ActivityEP {
         possibleEntryPoints.add(onUserLeaveHint);
         possibleEntryPoints.add(onWindowAttributesChanged);
         possibleEntryPoints.add(onWindowFocusChanged);
+        possibleEntryPoints.add(onSharedPreferenceChanged);
 
 	}
 }

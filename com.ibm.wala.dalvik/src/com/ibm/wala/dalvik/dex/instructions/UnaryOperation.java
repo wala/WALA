@@ -50,7 +50,7 @@ package com.ibm.wala.dalvik.dex.instructions;
 
 import org.jf.dexlib.Code.Opcode;
 
-import com.ibm.wala.cast.ir.ssa.AstConstants;
+import com.ibm.wala.cast.ir.ssa.CAstUnaryOp;
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction.IOperator;
@@ -119,15 +119,15 @@ public class UnaryOperation extends Instruction {
         {
         // SSA unary ops
         case NOT:
-            return AstConstants.UnaryOp.BITNOT;
+            return CAstUnaryOp.BITNOT;
         case NEGINT:
             return IUnaryOpInstruction.Operator.NEG;
         case NOTINT:
-            return AstConstants.UnaryOp.BITNOT;
+            return CAstUnaryOp.BITNOT;
         case NEGLONG:
             return IUnaryOpInstruction.Operator.NEG;
         case NOTLONG:
-            return AstConstants.UnaryOp.BITNOT;
+            return CAstUnaryOp.BITNOT;
         case NEGFLOAT:
             return IUnaryOpInstruction.Operator.NEG;
         case NEGDOUBLE:

@@ -77,8 +77,9 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 		uncalledFunctions.put("VirtualDispatch2.apk",  x);
 	}
 	
-	private void assertUserCodeReachable(CallGraph cg) throws InvalidClassFileException {
-		for(Iterator<IClass> clss = cg.getClassHierarchy().getLoader(ClassLoaderReference.Application).iterateAllClasses();
+	public static Set<IMethod> assertUserCodeReachable(CallGraph cg, Set<MethodReference> uncalled) throws InvalidClassFileException {
+		Set<IMethod> result = HashSetFactory.make();
+	  for(Iterator<IClass> clss = cg.getClassHierarchy().getLoader(ClassLoaderReference.Application).iterateAllClasses();
 			clss.hasNext(); ) 
 		{
 			IClass cls = clss.next();
@@ -88,12 +89,16 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 			if (! cls.getName().toString().startsWith("Landroid") && ! cls.getName().toString().equals("Lde/ecspride/R$styleable")) {
 				for(IMethod m : cls.getDeclaredMethods()) {
 					if (!m.isInit() && !m.isAbstract() && !uncalled.contains(m.getReference())) {
-						Assert.assertFalse(m + "(" + m.getSourcePosition(0) + ") cannot be called in " + apkFile, cg.getNodes(m.getReference()).isEmpty());
-						System.err.println("found " + m);
+					  if (! cg.getNodes(m.getReference()).isEmpty()) {
+					    System.err.println("found " + m);
+					  } else {
+					    result.add(m);
+					  }
 					}
 				}
 			}
 		}
+    return result;
 	}
 
 	private final String apkFile;
@@ -110,11 +115,12 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 		System.err.println("testing " + apkFile + "...");
 		Pair<CallGraph,PointerAnalysis<InstanceKey>> x = makeAPKCallGraph(apkFile, ReflectionOptions.ONE_FLOW_TO_CASTS_APPLICATION_GET_METHOD);
 		//System.err.println(x.fst);
-		assertUserCodeReachable(x.fst);
+		Set<IMethod> bad = assertUserCodeReachable(x.fst, uncalled);
+    Assert.assertTrue(bad + " should be empty", bad.isEmpty());
 		System.err.println("...success testing " + apkFile);
 	}
 	  
-	private static final Set<String> skipTests = HashSetFactory.make();
+  private static final Set<String> skipTests = HashSetFactory.make();
 	static {
 	  // serialization issues
 	  skipTests.add("ServiceCommunication1.apk");

@@ -13,18 +13,8 @@ package com.ibm.wala.cast.ir.ssa;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 
-public interface AstConstants  {
 
-  public enum BinaryOp implements IBinaryOpInstruction.IOperator {
-    CONCAT, EQ, NE, LT, GE, GT, LE, STRICT_EQ, STRICT_NE;
-
-    @Override
-    public String toString() {
-      return super.toString().toLowerCase();
-    }
-  }
-
-  public enum UnaryOp implements IUnaryOpInstruction.IOperator {
+  public enum CAstUnaryOp implements IUnaryOpInstruction.IOperator {
     MINUS, BITNOT, PLUS;
 
     @Override
@@ -32,4 +22,3 @@ public interface AstConstants  {
       return super.toString().toLowerCase();
     }
   }
-}

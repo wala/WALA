@@ -9,3 +9,5 @@ org\/openide\/.*
 com\/ibm\/crypto\/.*
 com\/ibm\/security\/.*
 org\/apache\/xerces\/.*
+dalvik\/.*
+java\/io\/ObjectStreamClass*

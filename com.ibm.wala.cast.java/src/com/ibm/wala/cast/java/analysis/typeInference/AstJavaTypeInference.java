@@ -17,7 +17,7 @@ import com.ibm.wala.analysis.typeInference.PrimitiveType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeVariable;
 import com.ibm.wala.cast.analysis.typeInference.AstTypeInference;
-import com.ibm.wala.cast.ir.ssa.AstConstants;
+import com.ibm.wala.cast.ir.ssa.CAstBinaryOp;
 import com.ibm.wala.cast.java.ssa.AstJavaInstructionVisitor;
 import com.ibm.wala.cast.java.ssa.AstJavaInvokeInstruction;
 import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
@@ -40,8 +40,8 @@ public class AstJavaTypeInference extends AstTypeInference {
     public void visitBinaryOp(SSABinaryOpInstruction instruction) {
       if (doPrimitives) {
         IBinaryOpInstruction.IOperator op = instruction.getOperator();
-        if (op == AstConstants.BinaryOp.EQ || op == AstConstants.BinaryOp.NE || op == AstConstants.BinaryOp.LT
-            || op == AstConstants.BinaryOp.GE || op == AstConstants.BinaryOp.GT || op == AstConstants.BinaryOp.LE) {
+        if (op == CAstBinaryOp.EQ || op == CAstBinaryOp.NE || op == CAstBinaryOp.LT
+            || op == CAstBinaryOp.GE || op == CAstBinaryOp.GT || op == CAstBinaryOp.LE) {
           result = new DeclaredTypeOperator(language.getPrimitive(language.getConstantType(Boolean.TRUE)));
         } else {
           result = new PrimAndStringOp();
