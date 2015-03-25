@@ -13,8 +13,7 @@ package com.ibm.wala.cast.js.test;
 import java.net.URL;
 import java.util.Set;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
