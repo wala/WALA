@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -578,7 +579,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       throw new IllegalArgumentException("null arg0");
     }
     if (DEBUG) {
-      System.err.println("add constraint D: " + op + " " + arg0);
+      System.err.println("add constraint D: " + op + " " + Arrays.toString(arg0));
     }
     PointsToSetVariable[] vs = new PointsToSetVariable[ arg0.length ];
     for(int i = 0; i < arg0.length; i++) {
