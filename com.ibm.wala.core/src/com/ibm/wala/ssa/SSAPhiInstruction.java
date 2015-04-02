@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 import com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine;
@@ -140,7 +141,7 @@ public class SSAPhiInstruction extends SSAInstruction {
    */
   public void setValues(int[] i) {
     if (i == null || i.length < 1) {
-      throw new IllegalArgumentException("illegal i: " + i);
+      throw new IllegalArgumentException("illegal i: " + Arrays.toString(i));
     }
     this.params = i;
   }
