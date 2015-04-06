@@ -24,4 +24,4 @@ public class ThreadingTest extends DroidBenchCGTest {
   public static Collection<Object[]> generateData() throws IOException {
     return DroidBenchCGTest.generateData(null, androidJavaLib(), "Threading");
   }
-}
+} // 
