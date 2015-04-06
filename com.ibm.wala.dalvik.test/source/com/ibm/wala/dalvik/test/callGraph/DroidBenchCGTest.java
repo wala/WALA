@@ -77,7 +77,17 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 		x = HashSetFactory.make();
 		x.add(ref("Ledu/mit/dynamic_dispatch/A", "f", "()Ljava/lang/String;"));
 		uncalledFunctions.put("VirtualDispatch2.apk",  x);
-	}
+
+		 x = HashSetFactory.make();
+		 x.add(ref("Ledu/mit/dynamic_dispatch/A", "f", "()Ljava/lang/String;"));
+		 uncalledFunctions.put("VirtualDispatch2.apk",  x);
+		 
+		 // TODO: remove once we understand the XML better
+		 x = HashSetFactory.make();
+		 x.add(ref("Lde/ecspride/Button2", "clickOnButton3", "(Landroid/view/View;)V"));
+		 uncalledFunctions.put("Button2.apk",  x);
+
+}
 	
 	public static Set<IMethod> assertUserCodeReachable(CallGraph cg, Set<MethodReference> uncalled) throws InvalidClassFileException {
 		Set<IMethod> result = HashSetFactory.make();
