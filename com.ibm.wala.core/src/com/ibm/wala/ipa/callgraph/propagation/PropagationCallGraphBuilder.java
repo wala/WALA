@@ -89,7 +89,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   /**
    * Governing class hierarchy
    */
-  final protected IClassHierarchy cha;
+  public final IClassHierarchy cha;
 
   /**
    * Special rules for bypassing Java calls
@@ -120,6 +120,10 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * The system of constraints used to build this graph
    */
   protected PropagationSystem system;
+
+  public PropagationSystem getSystem() {
+    return system;
+  }
 
   /**
    * Algorithm used to solve the system of constraints

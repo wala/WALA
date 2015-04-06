@@ -74,6 +74,7 @@ import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableMapping;
+import com.ibm.wala.util.strings.Atom;
 
 public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCallGraphBuilder {
 
@@ -112,6 +113,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
   // /////////////////////////////////////////////////////////////////////////
 
   
+  public abstract GlobalObjectKey getGlobalObject(Atom language);
+
   protected AstSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       PointerKeyFactory pointerKeyFactory) {
     super(cha, options, cache, pointerKeyFactory);
@@ -326,7 +329,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
   //
   // /////////////////////////////////////////////////////////////////////////
 
-  protected ConstraintVisitor makeVisitor(ExplicitCallGraph.ExplicitNode node) {
+  @Override
+  public ConstraintVisitor makeVisitor(CGNode node) {
     return new AstConstraintVisitor(this, node);
   }
 
@@ -1258,6 +1262,5 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
    * methods in some languages don't map in the straightforward way to the CGNode 
    */
   protected abstract boolean sameMethod(final CGNode opNode, final String definingMethod);
-
 
 }

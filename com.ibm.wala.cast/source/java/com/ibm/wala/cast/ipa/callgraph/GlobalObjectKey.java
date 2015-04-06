@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.cast.js.ipa.callgraph;
+package com.ibm.wala.cast.ipa.callgraph;
 
 import java.util.Iterator;
 
@@ -40,7 +40,7 @@ public class GlobalObjectKey implements InstanceKey {
 
   @Override
   public String toString() {
-    return "JS Global Object";
+    return "Global Object";
   }
 
   @Override

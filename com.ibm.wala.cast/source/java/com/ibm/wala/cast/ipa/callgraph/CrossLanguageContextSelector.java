@@ -22,12 +22,12 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * A ContextSelector implementation adapted to work for analysi across
+ * A ContextSelector implementation adapted to work for analysis across
  * multiple languages.  This context selector delegates to one of several
  * child selectors based on the language of the code body for which a 
  * context is being selected.  
  *
- *  This provides a convenient way to integrate multiple, lanuage-specific
+ *  This provides a convenient way to integrate multiple, language-specific
  * specialized context policies---such as the ones used for clone() in
  * Java and runtime primitives in JavaScript.
  *

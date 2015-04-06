@@ -30,9 +30,9 @@ import com.ibm.wala.util.strings.Atom;
  */
 public class CrossLanguageInstanceKeys implements InstanceKeyFactory {
 
-  private final Map languageSelectors;
+  private final Map<Atom,InstanceKeyFactory> languageSelectors;
 
-  public CrossLanguageInstanceKeys(Map languageSelectors) {
+  public CrossLanguageInstanceKeys(Map<Atom,InstanceKeyFactory> languageSelectors) {
     this.languageSelectors = languageSelectors;
   }
 
@@ -49,11 +49,11 @@ public class CrossLanguageInstanceKeys implements InstanceKeyFactory {
 //  }
 
   private InstanceKeyFactory getSelector(NewSiteReference site) {
-    return (InstanceKeyFactory)languageSelectors.get(getLanguage(site));
+    return languageSelectors.get(getLanguage(site));
   }
 
   private InstanceKeyFactory getSelector(TypeReference type) {
-    return (InstanceKeyFactory)languageSelectors.get(getLanguage(type));
+    return languageSelectors.get(getLanguage(type));
   }
 
 

@@ -10,8 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.util;
 
-import org.junit.After;
-import org.junit.Assert;
+import org.junit.After;import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.JUnitCore;
 

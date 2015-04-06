@@ -1946,7 +1946,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   protected static class InterestingVisitor extends SSAInstruction.Visitor {
     protected final int vn;
 
-    protected InterestingVisitor(int vn) {
+    public InterestingVisitor(int vn) {
       this.vn = vn;
     }
 
@@ -2071,7 +2071,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @param target
    * @return an IClass which represents
    */
-  protected PointerKey getTargetPointerKey(CGNode target, int index) {
+  public PointerKey getTargetPointerKey(CGNode target, int index) {
     int vn;
     if (target.getIR() != null) {
       vn = target.getIR().getSymbolTable().getParameter(index);
@@ -2154,7 +2154,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @param valueNumber
    * @return the complete set of instances that the local with vn=valueNumber may point to.
    */
-  protected InstanceKey[] getInvariantContents(SymbolTable symbolTable, DefUse du, CGNode node, int valueNumber, HeapModel hm) {
+  public InstanceKey[] getInvariantContents(SymbolTable symbolTable, DefUse du, CGNode node, int valueNumber, HeapModel hm) {
     return getInvariantContents(symbolTable, du, node, valueNumber, hm, false);
   }
 

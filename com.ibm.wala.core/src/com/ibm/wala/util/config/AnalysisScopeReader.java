@@ -54,7 +54,7 @@ public class AnalysisScopeReader {
   }
 
 
-  protected static AnalysisScope read(AnalysisScope scope, String scopeFileName, File exclusionsFile, ClassLoader javaLoader,
+  public static AnalysisScope read(AnalysisScope scope, String scopeFileName, File exclusionsFile, ClassLoader javaLoader,
       FileProvider fp) throws IOException {
     BufferedReader r = null;
     try {

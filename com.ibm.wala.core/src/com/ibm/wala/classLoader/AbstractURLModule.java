@@ -27,6 +27,7 @@ public abstract class AbstractURLModule implements Module, ModuleEntry {
   private final URL url;
 
   public AbstractURLModule(URL url) {
+    assert url != null; 
     this.url = url;
   }
 
@@ -83,6 +84,11 @@ public abstract class AbstractURLModule implements Module, ModuleEntry {
   public Module getContainer() {
     // URLs are freestanding, without containers
     return null;
+  }
+  
+  @Override
+  public String toString() {
+    return "module:" + url.toString();
   }
   
 }

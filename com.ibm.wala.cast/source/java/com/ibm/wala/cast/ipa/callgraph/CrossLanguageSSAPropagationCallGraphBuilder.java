@@ -34,11 +34,11 @@ import com.ibm.wala.util.strings.Atom;
 
 public abstract class CrossLanguageSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraphBuilder {
 
-  private final TargetLanguageSelector<ConstraintVisitor, ExplicitCallGraph.ExplicitNode> visitors;
+  private final TargetLanguageSelector<ConstraintVisitor, CGNode> visitors;
 
   private final TargetLanguageSelector<InterestingVisitor, Integer> interesting;
 
-  protected abstract TargetLanguageSelector<ConstraintVisitor, ExplicitCallGraph.ExplicitNode> makeMainVisitorSelector();
+  protected abstract TargetLanguageSelector<ConstraintVisitor, CGNode> makeMainVisitorSelector();
 
   protected abstract TargetLanguageSelector<InterestingVisitor, Integer> makeInterestingVisitorSelector();
 
@@ -69,7 +69,7 @@ public abstract class CrossLanguageSSAPropagationCallGraphBuilder extends AstSSA
   }
 
   @Override
-  protected ConstraintVisitor makeVisitor(ExplicitCallGraph.ExplicitNode node) {
+  public ConstraintVisitor makeVisitor(CGNode node) {
     return visitors.get(getLanguage(node), node);
   }
 

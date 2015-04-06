@@ -15,6 +15,7 @@ import java.util.Map;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.types.MethodReference;
@@ -36,9 +37,9 @@ public class CrossLanguageMethodTargetSelector
     implements MethodTargetSelector 
 {
 
-  private final Map languageSelectors;
+  private final Map<Atom,MethodTargetSelector> languageSelectors;
 
-  public CrossLanguageMethodTargetSelector(Map languageSelectors) {
+  public CrossLanguageMethodTargetSelector(Map<Atom, MethodTargetSelector> languageSelectors) {
     this.languageSelectors = languageSelectors;
   }
 
@@ -54,7 +55,7 @@ public class CrossLanguageMethodTargetSelector
   }
 
   private MethodTargetSelector getSelector(CallSiteReference site) {
-    return (MethodTargetSelector)languageSelectors.get(getLanguage(site));
+    return languageSelectors.get(getLanguage(site));
   }
 
   @Override

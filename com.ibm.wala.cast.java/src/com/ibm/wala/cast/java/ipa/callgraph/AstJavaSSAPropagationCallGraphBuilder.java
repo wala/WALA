@@ -12,6 +12,7 @@ package com.ibm.wala.cast.java.ipa.callgraph;
 
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.cast.ipa.callgraph.AstSSAPropagationCallGraphBuilder;
+import com.ibm.wala.cast.ipa.callgraph.GlobalObjectKey;
 import com.ibm.wala.cast.java.analysis.typeInference.AstJavaTypeInference;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl.JavaClass;
 import com.ibm.wala.cast.java.ssa.AstJavaInstructionVisitor;
@@ -37,6 +38,7 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSetAction;
+import com.ibm.wala.util.strings.Atom;
 
 public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraphBuilder {
 
@@ -298,7 +300,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
   }
 
   @Override
-  protected ConstraintVisitor makeVisitor(CGNode node) {
+  public ConstraintVisitor makeVisitor(CGNode node) {
     return new AstJavaConstraintVisitor(this, node);
   }
 
@@ -308,5 +310,11 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
     String selector = reference.getSelector().toString();
     String containingClass = reference.getDeclaringClass().getName().toString();
     return definingMethod.equals(containingClass + "/" + selector);
+  }
+
+  @Override
+  public GlobalObjectKey getGlobalObject(Atom language) {
+    Assertions.UNREACHABLE();
+    return null;
   }
 }

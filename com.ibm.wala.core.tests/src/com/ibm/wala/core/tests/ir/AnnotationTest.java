@@ -39,8 +39,12 @@ import com.ibm.wala.util.strings.Atom;
 
 public abstract class AnnotationTest extends WalaTestCase {
 
-  protected static IClassHierarchy cha;
+  private final IClassHierarchy cha;
   
+  protected AnnotationTest(IClassHierarchy cha) {
+    this.cha = cha;
+  }
+
   @Test
   public void testClassAnnotations1() throws Exception {
     TypeReference typeUnderTest = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lannotations/AnnotatedClass1");

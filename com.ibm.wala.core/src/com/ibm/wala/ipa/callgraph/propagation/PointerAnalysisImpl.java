@@ -155,7 +155,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     }
   }
 
-  protected static class ImplicitPointsToSetVisitor extends SSAInstruction.Visitor {
+  public static class ImplicitPointsToSetVisitor extends SSAInstruction.Visitor {
     protected final PointerAnalysisImpl analysis;
 
     protected final CGNode node;
