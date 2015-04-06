@@ -60,6 +60,32 @@
     <module>com.ibm.wala-repository</module>
     
   </modules>
+
+  <profiles>
+   <profile>
+    <id>macosx</id>
+    <activation>
+     <os>
+      <family>unix</family>
+     </os>
+    </activation>
+    <build>
+      <plugins>
+	<plugin>
+	  <groupId>org.eclipse.tycho</groupId>
+	  <artifactId>target-platform-configuration</artifactId>
+	  <version>${tycho-version}</version>
+	  <configuration>
+	    <dependency-resolution>
+              <optionalDependencies>optional</optionalDependencies>
+	    </dependency-resolution>
+	  </configuration>
+	</plugin>
+      </plugins>
+    </build>
+   </profile>
+  </profiles>
+
   <build>
     <plugins>
       <plugin>
@@ -73,9 +99,6 @@
 	<artifactId>target-platform-configuration</artifactId>
 	<version>${tycho-version}</version>
 	<configuration>
-	  <dependency-resolution>
-            <optionalDependencies>ignore</optionalDependencies>
-	  </dependency-resolution>
 	  <target>
 	    <artifact>
 	      <groupId>com.ibm.wala.target</groupId>
