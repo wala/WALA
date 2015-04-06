@@ -12,7 +12,7 @@ import com.ibm.wala.shrikeBT.analysis.Analyzer.FailureException;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.util.CancelException;
 
-public class DynamicDalvikComparisonTestJavaLibs extends DynamicDalvikComparisonTest {
+public class DynamicDalvikComparisonJavaLibsTest extends DynamicDalvikComparisonTest {
 
   @Test
   public void testJLex() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InvalidClassFileException, FailureException {

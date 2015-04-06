@@ -13,7 +13,7 @@ import com.ibm.wala.shrikeBT.analysis.Analyzer.FailureException;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.util.CancelException;
 
-public class DynamicDalvikComparisonTestAndroidLibs extends DynamicDalvikComparisonTest {
+public class DynamicDalvikComparisonAndroidLibsTest extends DynamicDalvikComparisonTest {
 
   protected URI[] providedAndroidLibs() {
     return androidLibs();
