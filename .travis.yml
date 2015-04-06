@@ -8,7 +8,7 @@ before_install:
  - "mkdir -p $HOME/build/wala/WALA/com.ibm.wala.dalvik.test/lib"
  - "find /usr/local -name dx.jar -exec cp '{}' $HOME/build/wala/WALA/com.ibm.wala.dalvik.test/lib/dx.jar ';'"
 install: mvn clean verify -DskipTests=true -B -q
-script: mvn clean verify -B -q
+script: mvn clean verify -B -q -e
 sudo: false
 cache:
   directories:
