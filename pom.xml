@@ -76,7 +76,7 @@
 	   <target>
 	   <artifact>
 	   <groupId>com.ibm.wala.target</groupId>
-	   <artifactId>e42</artifactId>
+	   <artifactId>e44</artifactId>
 	   <version>${project-version}</version>
 	   </artifact>
 	   </target>
@@ -134,17 +134,17 @@
 	<version>${tycho-version}</version>
 	<configuration>
 
-	  <!-- dependencies>
+	  <dependencies>
 	    <dependency>
 	      <type>eclipse-plugin</type>
 	      <artifactId>org.eclipse.osgi.compatibility.state</artifactId>
 	      <version>0.0.0</version>
 	    </dependency>         
-	  </dependencies -->
+	  </dependencies>
 
 	  <useuiharness>false</useuiharness>
 	  <useuithread>false</useuithread>
-	  <providerHint>junit47</providerHint>
+	  <providerHint>junit411</providerHint>
 	  <argLine>${tycho.test.jvmArgs}</argLine>
           <includes>
 	    <include>**/Test*.java</include>
