@@ -69,19 +69,22 @@
 	<extensions>true</extensions>
       </plugin>
       <plugin>
-	   <groupId>org.eclipse.tycho</groupId>
-	   <artifactId>target-platform-configuration</artifactId>
-	   <version>${tycho-version}</version>
-	   <configuration>
-	   <target>
-	   <artifact>
-	   <groupId>com.ibm.wala.target</groupId>
-	   <artifactId>e44</artifactId>
-	   <version>${project-version}</version>
-	   </artifact>
-	   </target>
-	   </configuration>
-	   </plugin>
+	<groupId>org.eclipse.tycho</groupId>
+	<artifactId>target-platform-configuration</artifactId>
+	<version>${tycho-version}</version>
+	<configuration>
+	  <dependency-resolution>
+            <optionalDependencies>ignore</optionalDependencies>
+	  </dependency-resolution>
+	  <target>
+	    <artifact>
+	      <groupId>com.ibm.wala.target</groupId>
+	      <artifactId>e44</artifactId>
+	      <version>${project-version}</version>
+	    </artifact>
+	  </target>
+	</configuration>
+      </plugin>
       <plugin>
 	<groupId>org.eclipse.tycho</groupId>
 	<artifactId>tycho-compiler-plugin</artifactId>
