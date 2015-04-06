@@ -27,7 +27,7 @@
    </profile>
   </profiles>
 
-    <dependencies>
+  <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

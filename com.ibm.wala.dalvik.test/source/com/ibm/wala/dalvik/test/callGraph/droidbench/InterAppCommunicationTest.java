@@ -19,7 +19,7 @@ public class InterAppCommunicationTest extends DroidBenchCGTest {
     super(androidLibs, androidJavaJar, apkFile, uncalled);
   }
 
-  @Parameters // (name="DroidBench: {2}")
+  @Parameters(name="DroidBench: {2}")
   public static Collection<Object[]> generateData() throws IOException {
     return DroidBenchCGTest.generateData(null, androidJavaLib(), "InterAppCommunication");
   }

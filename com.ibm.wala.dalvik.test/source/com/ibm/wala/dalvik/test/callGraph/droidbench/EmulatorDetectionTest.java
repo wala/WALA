@@ -17,10 +17,9 @@ import com.ibm.wala.types.MethodReference;
 public class EmulatorDetectionTest extends DroidBenchCGTest {
   public EmulatorDetectionTest(URI[] androidLibs, File androidJavaJar, String apkFile, Set<MethodReference> uncalled) {
     super(androidLibs, androidJavaJar, apkFile, uncalled);
-    // TODO Auto-generated constructor stub
   }
 
-  @Parameters // (name="DroidBench: {2}")
+  @Parameters(name="DroidBench: {2}")
   public static Collection<Object[]> generateData() throws IOException {
     return DroidBenchCGTest.generateData(null, androidJavaLib(), "EmulatorDetection");
   }
