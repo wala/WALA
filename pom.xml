@@ -77,7 +77,7 @@
 	  <version>${tycho-version}</version>
 	  <configuration>
 	    <dependency-resolution>
-              <optionalDependencies>optional</optionalDependencies>
+              <optionalDependencies>ignore</optionalDependencies>
 	    </dependency-resolution>
 	  </configuration>
 	</plugin>
