@@ -76,7 +76,7 @@
 	   <target>
 	   <artifact>
 	   <groupId>com.ibm.wala.target</groupId>
-	   <artifactId>e44</artifactId>
+	   <artifactId>e42</artifactId>
 	   <version>${project-version}</version>
 	   </artifact>
 	   </target>
