@@ -20,13 +20,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.ibm.wala.analysis.pointers.HeapGraph;
+import com.ibm.wala.cast.ipa.callgraph.GlobalObjectKey;
 import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.GlobalVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.ObjectVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.PrototypeFieldVertex;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.PrototypeFieldVertex.PrototypeField;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
-import com.ibm.wala.cast.js.ipa.callgraph.GlobalObjectKey;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;

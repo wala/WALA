@@ -114,9 +114,11 @@ public class FieldBasedCGUtil {
 		return builder.buildCallGraph(roots, monitor);
 	}
 
+	/*
 	private JavaScriptLoaderFactory makeLoaderFactory(URL url) {
 		return url.getFile().endsWith(".js") ? new JavaScriptLoaderFactory(translatorFactory) : new WebPageLoaderFactory(translatorFactory);
 	}
+	*/
 	
 	@SuppressWarnings("unused")
   private static void compareCGs(Map<String, Set<String>> cg1, Map<String, Set<String>> cg2) {

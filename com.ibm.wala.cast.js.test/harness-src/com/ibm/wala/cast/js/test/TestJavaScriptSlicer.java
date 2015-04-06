@@ -14,8 +14,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;

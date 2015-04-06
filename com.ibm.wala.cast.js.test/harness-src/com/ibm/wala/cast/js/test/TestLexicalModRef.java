@@ -13,8 +13,7 @@ package com.ibm.wala.cast.js.test;
 import java.io.IOException;
 import java.util.Map;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.ibm.wala.cast.ipa.lexical.LexicalModRef;
