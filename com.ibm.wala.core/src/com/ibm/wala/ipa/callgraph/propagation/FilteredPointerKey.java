@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import java.util.Arrays;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.ContextItem;
@@ -90,7 +92,7 @@ public interface FilteredPointerKey extends PointerKey {
 
     @Override
     public String toString() {
-      return "SingleClassFilter: " + concreteType;
+      return "MultipleClassesFilter: " + Arrays.toString(concreteType);
     }
 
     public IClass[] getConcreteTypes() {
