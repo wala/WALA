@@ -12,6 +12,7 @@ package com.ibm.wala.dalvik.test.callGraph;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,6 +37,7 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -101,11 +103,17 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     return result;
 	}
 
+	private final URI[] androidLibs;
+	
+	private final File androidJavaJar;
+	
 	private final String apkFile;
 	
 	private final Set<MethodReference> uncalled;
 	
-	protected DroidBenchCGTest(String apkFile, Set<MethodReference> uncalled) {
+	protected DroidBenchCGTest(URI[] androidLibs, File androidJavaJar, String apkFile, Set<MethodReference> uncalled) {
+	  this.androidLibs = androidLibs;
+	  this.androidJavaJar = androidJavaJar;
 		this.apkFile = apkFile;
 		this.uncalled = uncalled;
 	}
@@ -113,7 +121,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 	@Test
 	public void test() throws IOException, ClassHierarchyException, CancelException, InvalidClassFileException, IllegalArgumentException, URISyntaxException {
 		System.err.println("testing " + apkFile + "...");
-		Pair<CallGraph,PointerAnalysis<InstanceKey>> x = makeAPKCallGraph(apkFile, ReflectionOptions.ONE_FLOW_TO_CASTS_APPLICATION_GET_METHOD);
+		Pair<CallGraph,PointerAnalysis<InstanceKey>> x = makeAPKCallGraph(androidLibs, androidJavaJar, apkFile, new NullProgressMonitor(), ReflectionOptions.ONE_FLOW_TO_CASTS_APPLICATION_GET_METHOD);
 		//System.err.println(x.fst);
 		Set<IMethod> bad = assertUserCodeReachable(x.fst, uncalled);
     Assert.assertTrue(bad + " should be empty", bad.isEmpty());
@@ -127,7 +135,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     skipTests.add("Parcel1.apk");
 	}
 
-	public static Collection<Object[]> generateData(final String filter) {
+	public static Collection<Object[]> generateData(final URI[] androidLibs, final File androidJavaJar, final String filter) {
 	  String f = walaProperties.getProperty("droidbench.root");
 	  if (f == null || !new File(f).exists()) {
 	      f = "/tmp/DroidBench";       
@@ -146,7 +154,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 	      if (uncalled == null) {
 	        uncalled = Collections.emptySet();
 	      }
-	      files.add(new Object[]{ f.getAbsolutePath(), uncalled }); 
+	      files.add(new Object[]{ androidLibs, androidJavaJar, f.getAbsolutePath(), uncalled }); 
 	    }
 	  }, new Predicate<File>() {
 	    @Override

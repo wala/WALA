@@ -1,5 +1,8 @@
 package com.ibm.wala.dalvik.test.callGraph.droidbench;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Set;
 
@@ -12,13 +15,13 @@ import com.ibm.wala.types.MethodReference;
 
 @RunWith(Parameterized.class)
 public class ImplicitFlowsTest extends DroidBenchCGTest {
-  public ImplicitFlowsTest(String apkFile, Set<MethodReference> uncalled) {
-    super(apkFile, uncalled);
+
+  public ImplicitFlowsTest(URI[] androidLibs, File androidJavaJar, String apkFile, Set<MethodReference> uncalled) {
+    super(androidLibs, androidJavaJar, apkFile, uncalled);
   }
 
-  @Parameters
-  // (name="DroidBench: {0}")
-  public static Collection<Object[]> generateData() {
-    return DroidBenchCGTest.generateData("ImplicitFlows");
+  @Parameters(name="DroidBench: {2}")
+  public static Collection<Object[]> generateData() throws IOException {
+    return DroidBenchCGTest.generateData(null, androidJavaLib(), "ImplicitFlows");
   }
 }

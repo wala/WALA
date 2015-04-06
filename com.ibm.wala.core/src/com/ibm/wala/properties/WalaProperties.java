@@ -37,7 +37,9 @@ public final class WalaProperties {
 
   public final static String ECLIPSE_PLUGINS_DIR = "eclipse_plugins_dir"; //$NON-NLS-1$
 
-  public final static String ANDROID_RT_JAR = "android_rt_jar";
+  public final static String ANDROID_RT_DEX_DIR = "android_rt_dir";
+
+  public final static String ANDROID_RT_JAVA_JAR = "android_rt_jar";
 
   public final static String ANDROID_DEX_TOOL = "android_dx_tool";
 

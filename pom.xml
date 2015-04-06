@@ -152,6 +152,9 @@
 	    <include>**/*TestCase.java</include>
 	    <include>**/*Tests.java</include>
 	  </includes>
+	  <excludes>
+	    <exclude>**/*AndroidLibs*.java</exclude>
+	  </excludes>
 	</configuration>
       </plugin>
       <!-- The tycho-source-feature-plugin needs to be place before the tycho-p2-plugin, as both plugins' goals bind to the same phase -->

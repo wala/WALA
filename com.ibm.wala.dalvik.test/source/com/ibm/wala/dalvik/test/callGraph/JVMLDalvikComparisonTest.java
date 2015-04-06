@@ -35,11 +35,8 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ExceptionReturnValueKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
-import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
-import com.ibm.wala.util.Predicate;
-import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.Pair;
@@ -80,29 +77,18 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
 		return result;
 	}
 	
-	private static void test(boolean useAndroidLib, String mainClass, String javaScopeFile) throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException {
+	private static void test(String mainClass, String javaScopeFile) throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException {
 		Pair<CallGraph, PointerAnalysis<InstanceKey>> java = makeJavaBuilder(javaScopeFile, mainClass);
 
 		AnalysisScope javaScope = java.fst.getClassHierarchy().getScope();
 		String javaJarPath = getJavaJar(javaScope);
 		File androidDex = convertJarToDex(javaJarPath);
-		Pair<CallGraph,PointerAnalysis<InstanceKey>> android = makeDalvikCallGraph(useAndroidLib, mainClass, androidDex.getAbsolutePath());
+		Pair<CallGraph,PointerAnalysis<InstanceKey>> android = makeDalvikCallGraph(null, null, mainClass, androidDex.getAbsolutePath());
 	
 		Set<MethodReference> androidMethods = applicationMethods(android.fst);
 		Set<MethodReference> javaMethods = applicationMethods(java.fst);
 		
 		Iterator<Pair<CGNode, CGNode>> javaExtraEdges = edgeDiff(java.fst, android.fst).iterator();
-		if (useAndroidLib) {
-			javaExtraEdges = new FilterIterator<Pair<CGNode, CGNode>>(javaExtraEdges, new Predicate<Pair<CGNode, CGNode>>() {
-				private boolean userCode(CGNode n) {
-					return n.getMethod().getDeclaringClass().getClassLoader().getReference().equals(ClassLoaderReference.Application);
-				}
-				@Override
-				public boolean test(Pair<CGNode, CGNode> o)  {
-					return userCode(o.fst) && userCode(o.snd);
-				} 
-			});
-		}
 		boolean fail = false;
 		if (javaExtraEdges.hasNext()) {
 			fail = true;
@@ -137,16 +123,16 @@ public class JVMLDalvikComparisonTest extends DalvikCallGraphTestBase {
 	
 	@Test
 	public void testJLex() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException {
-		test(false, TestConstants.JLEX_MAIN, TestConstants.JLEX);
+		test(TestConstants.JLEX_MAIN, TestConstants.JLEX);
 	}
 
 	@Test
 	public void testJavaCup() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException {
-		test(false, TestConstants.JAVA_CUP_MAIN, TestConstants.JAVA_CUP);
+		test(TestConstants.JAVA_CUP_MAIN, TestConstants.JAVA_CUP);
 	}
 
 	@Test
 	public void testBCEL() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException {
-		test(false, TestConstants.BCEL_VERIFIER_MAIN, TestConstants.BCEL);
+		test(TestConstants.BCEL_VERIFIER_MAIN, TestConstants.BCEL);
 	}
 }

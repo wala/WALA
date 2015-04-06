@@ -22,10 +22,8 @@ import java.util.Set;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.dalvik.classLoader.DexIRFactory;
 import com.ibm.wala.dalvik.test.DalvikTestBase;
-import com.ibm.wala.dalvik.util.AndroidAnalysisScope;
 import com.ibm.wala.dalvik.util.AndroidEntryPointLocator;
 import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.LocatorFlags;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -53,7 +51,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
-import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -98,29 +95,6 @@ public class DalvikCallGraphTestBase extends DalvikTestBase {
 		run(mainClass.substring(1).replace('/', '.'), "LibraryExclusions.txt", args);
 	}
 
-  public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeAPKCallGraph(String apkFile) throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException {
-    return makeAPKCallGraph(apkFile, androidLibs());
-  }
-
-	public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeAPKCallGraph(String apkFileName, URI[] androidLibs) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
-		return makeAPKCallGraph(apkFileName, new NullProgressMonitor(), androidLibs);
-	}
-
-	 public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeAPKCallGraph(String apkFileName, ReflectionOptions options) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
-	    return makeAPKCallGraph(apkFileName, new NullProgressMonitor(), options, androidLibs());
-	  }
-
-	public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeAPKCallGraph(String apkFileName, ReflectionOptions options, URI[] androidLibs) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
-		return makeAPKCallGraph(apkFileName, new NullProgressMonitor(), options, androidLibs);
-	}
-
-	public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeAPKCallGraph(String apkFileName, IProgressMonitor monitor, URI[] androidLibs) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
-		return makeAPKCallGraph(apkFileName, monitor, ReflectionOptions.NONE, androidLibs);
-	}
-	
-  public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeAPKCallGraph(String absolutePath, IProgressMonitor pm, ReflectionOptions none) throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException {
-    return makeAPKCallGraph(absolutePath, pm, none, androidLibs());
-  }
 
 	@SuppressWarnings("unused")
   private static SSAContextInterpreter makeDefaultInterpreter(AnalysisOptions options, AnalysisCache cache) {
@@ -148,13 +122,8 @@ public class DalvikCallGraphTestBase extends DalvikTestBase {
 		};
 	}
 	
-	public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeAPKCallGraph(String apkFileName, IProgressMonitor monitor, ReflectionOptions policy, URI[] androidLibs) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
-		AnalysisScope scope = 
-			AndroidAnalysisScope.setUpAndroidAnalysisScope(
-				new File(apkFileName).toURI(),
-				"AndroidRegressionExclusions.txt",
-				CallGraphTestUtil.class.getClassLoader(),
-				androidLibs);
+	public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeAPKCallGraph(URI[] androidLibs, File androidAPIJar, String apkFileName, IProgressMonitor monitor, ReflectionOptions policy) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
+		AnalysisScope scope = makeDalvikScope(androidLibs, androidAPIJar, apkFileName);
 
 		final IClassHierarchy cha = ClassHierarchy.make(scope);
 
@@ -182,8 +151,8 @@ public class DalvikCallGraphTestBase extends DalvikTestBase {
 		return Pair.make(callGraph, ptrAnalysis);
 	}
 	
-	public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeDalvikCallGraph(boolean useAndroidLib, String mainClassName, String dexFileName) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
-		AnalysisScope scope = makeDalvikScope(useAndroidLib, dexFileName);
+	public static Pair<CallGraph, PointerAnalysis<InstanceKey>> makeDalvikCallGraph(URI[] androidLibs, File androidAPIJar, String mainClassName, String dexFileName) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
+		AnalysisScope scope = makeDalvikScope(androidLibs, androidAPIJar, dexFileName);
 		
 		final IClassHierarchy cha = ClassHierarchy.make(scope);
 

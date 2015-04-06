@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Set;
 
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.dalvik.test.DalvikTestBase;
 import com.ibm.wala.dalvik.test.callGraph.DalvikCallGraphTestBase;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -27,82 +28,78 @@ public class APKCallGraphDriver {
 	  }
 	  FileUtil.recurseFiles(new VoidFunction<File>() {
 
-		  @Override
-		  public void apply(File apk) {
-			  System.gc();
-			  System.err.println("Analyzing " + apk + "...");
-			  try {
-				  long time = System.currentTimeMillis();
-				  CallGraph CG;
-				  if (timeout == -1) {
-					  CG = DalvikCallGraphTestBase.makeAPKCallGraph(apk.getAbsolutePath()).fst;
-				  } else {
-					  final long startTime = System.currentTimeMillis();
-					  IProgressMonitor pm = new IProgressMonitor() {
-						  private boolean cancelled = false;
+	    @Override
+	    public void apply(File apk) {
+	      System.gc();
+	      System.err.println("Analyzing " + apk + "...");
+	      try {
+	        long time = System.currentTimeMillis();
+	        CallGraph CG;
+	        final long startTime = System.currentTimeMillis();
+	        IProgressMonitor pm = new IProgressMonitor() {
+	          private boolean cancelled = false;
 
-						  @Override
-						  public void beginTask(String task, int totalWork) {
-							  // TODO Auto-generated method stub	
-						  }
+	          @Override
+	          public void beginTask(String task, int totalWork) {
+	            // TODO Auto-generated method stub	
+	          }
 
-						  @Override
-						  public void subTask(String subTask) {
-							  // TODO Auto-generated method stub
-						  }
+	          @Override
+	          public void subTask(String subTask) {
+	            // TODO Auto-generated method stub
+	          }
 
-						  @Override
-						  public void cancel() {
-							  cancelled = true;
-						  }
+	          @Override
+	          public void cancel() {
+	            cancelled = true;
+	          }
 
-						  @Override
-						  public boolean isCanceled() {
-							  if (System.currentTimeMillis() - startTime > timeout) {
-								  cancelled = true;
-							  }
-							  return cancelled;
-						  }
+	          @Override
+	          public boolean isCanceled() {
+	            if (System.currentTimeMillis() - startTime > timeout) {
+	              cancelled = true;
+	            }
+	            return cancelled;
+	          }
 
-						  @Override
-						  public void done() {
-							  // TODO Auto-generated method stub					
-						  }
+	          @Override
+	          public void done() {
+	            // TODO Auto-generated method stub					
+	          }
 
-						  @Override
-						  public void worked(int units) {
-							  // TODO Auto-generated method stub
-						  }
+	          @Override
+	          public void worked(int units) {
+	            // TODO Auto-generated method stub
+	          }
 
-						  @Override
-						  public String getCancelMessage() {
-							  return "timeout";
-						  }	
-					  };
-					  CG = DalvikCallGraphTestBase.makeAPKCallGraph(apk.getAbsolutePath(), pm, ReflectionOptions.NONE).fst;
-				  }
-				  System.err.println("Analyzed " + apk + " in " + (System.currentTimeMillis() - time));
+	          @Override
+	          public String getCancelMessage() {
+	            return "timeout";
+	          }	
+	        };
+	        CG = DalvikCallGraphTestBase.makeAPKCallGraph(DalvikTestBase.androidLibs(), null, apk.getAbsolutePath(), pm, ReflectionOptions.NONE).fst;
+	        System.err.println("Analyzed " + apk + " in " + (System.currentTimeMillis() - time));
 
-				  Set<IMethod> code = HashSetFactory.make();
-				  for(CGNode n : CG) {
-					  code.add(n.getMethod());
-				  }
-				  System.err.println("reachable methods for " + apk);
-				  for(IMethod m : code) {
-					  System.err.println("" + m.getDeclaringClass().getName() + " " + m.getName() + m.getDescriptor());
-				  }
-				  System.err.println("end of methods");
+	        Set<IMethod> code = HashSetFactory.make();
+	        for(CGNode n : CG) {
+	          code.add(n.getMethod());
+	        }
+	        System.err.println("reachable methods for " + apk);
+	        for(IMethod m : code) {
+	          System.err.println("" + m.getDeclaringClass().getName() + " " + m.getName() + m.getDescriptor());
+	        }
+	        System.err.println("end of methods");
 
-			  } catch (Throwable e) {
-				  e.printStackTrace(System.err);
-			  }
-		  }	
+	      } catch (Throwable e) {
+	        e.printStackTrace(System.err);
+	      }
+	    }	
 	  }, 
 	  new Predicate<File>() {
-		@Override
-		public boolean test(File file) {
-			return file.getName().endsWith("apk");
-		}  
+	    @Override
+	    public boolean test(File file) {
+	      return file.getName().endsWith("apk");
+	    }  
 	  },
 	  apk);
   }

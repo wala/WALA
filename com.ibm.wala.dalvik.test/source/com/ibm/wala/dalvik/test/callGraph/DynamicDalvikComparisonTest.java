@@ -13,11 +13,9 @@ package com.ibm.wala.dalvik.test.callGraph;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-
-import org.junit.Test;
+import java.net.URI;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
-import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -32,46 +30,28 @@ import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.io.TemporaryFile;
 
-public class DynamicDalvikComparisonTest extends DalvikCallGraphTestBase {
+public abstract class DynamicDalvikComparisonTest extends DalvikCallGraphTestBase {
 
-	private void test(boolean useAndroidLib, String mainClass, String javaScopeFile, String... args) throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InvalidClassFileException, FailureException {
+	protected void test(URI[] androidLibs, String mainClass, String javaScopeFile, String... args) throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InvalidClassFileException, FailureException {
 		AnalysisScope javaScope = CallGraphTestUtil.makeJ2SEAnalysisScope(javaScopeFile, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
 		String javaJarPath = getJavaJar(javaScope);
 		File androidDex = convertJarToDex(javaJarPath);
-		Pair<CallGraph,PointerAnalysis<InstanceKey>> android = makeDalvikCallGraph(useAndroidLib, mainClass, androidDex.getAbsolutePath());
+		Pair<CallGraph,PointerAnalysis<InstanceKey>> android = makeDalvikCallGraph(androidLibs, null, mainClass, androidDex.getAbsolutePath());
 
 		dynamicCG(new File(javaJarPath), mainClass, args);
 		
-	    checkEdges(android.fst, new Predicate<MethodReference>() {
-	        @Override
-	        public boolean test(MethodReference t) {
-	        	return t.getDeclaringClass().getClassLoader().equals(ClassLoaderReference.Application);
-	        }
-	      });
+		checkEdges(android.fst, new Predicate<MethodReference>() {
+		  @Override
+		  public boolean test(MethodReference t) {
+		    return t.getDeclaringClass().getClassLoader().equals(ClassLoaderReference.Application);
+		  }
+		});
 	}
 	
-	@Test
-	public void testJLexJavaLib() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InvalidClassFileException, FailureException {
-		File inputFile = TemporaryFile.urlToFile("sample.lex", getClass().getClassLoader().getResource("sample.lex"));
-		test(false, TestConstants.JLEX_MAIN, TestConstants.JLEX, inputFile.getAbsolutePath());
-	}
-
-	@Test
-	public void testJLexDexLib() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InvalidClassFileException, FailureException {
-	  File inputFile = TemporaryFile.urlToFile("sample.lex", getClass().getClassLoader().getResource("sample.lex"));
-	  test(true, TestConstants.JLEX_MAIN, TestConstants.JLEX, inputFile.getAbsolutePath());
-	}
-
-	@Test
-	public void testJavaCupJavaLib() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InvalidClassFileException, FailureException {
-		File inputFile = TemporaryFile.urlToFile("troff2html.cup", getClass().getClassLoader().getResource("troff2html.cup"));
-		test(false, TestConstants.JAVA_CUP_MAIN, TestConstants.JAVA_CUP, inputFile.getAbsolutePath());
-	}
-
-	@Test
-	public void testJavaCupDexLib() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InvalidClassFileException, FailureException {
-	  File inputFile = TemporaryFile.urlToFile("troff2html.cup", getClass().getClassLoader().getResource("troff2html.cup"));
-	  test(true, TestConstants.JAVA_CUP_MAIN, TestConstants.JAVA_CUP, inputFile.getAbsolutePath());
-	}
+  protected File testFile(String file) throws IOException {
+    File inputFile = TemporaryFile.urlToFile(file, getClass().getClassLoader().getResource(file));
+    inputFile.deleteOnExit();
+    return inputFile;
+  }
 
 }
