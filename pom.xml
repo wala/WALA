@@ -144,7 +144,7 @@
 
 	  <useuiharness>false</useuiharness>
 	  <useuithread>false</useuithread>
-	  <providerHint>junit47</providerHint>
+	  <providerHint>junit411</providerHint>
 	  <argLine>${tycho.test.jvmArgs}</argLine>
           <includes>
 	    <include>**/Test*.java</include>
