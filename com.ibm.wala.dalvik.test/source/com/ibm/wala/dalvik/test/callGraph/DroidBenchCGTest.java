@@ -111,7 +111,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 	
 	private final File androidJavaJar;
 	
-	private final String apkFile;
+	public final String apkFile;
 	
 	private final Set<MethodReference> uncalled;
 	
@@ -122,16 +122,20 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 		this.uncalled = uncalled;
 	}
 	
-	@Test
-	public void test() throws IOException, ClassHierarchyException, CancelException, InvalidClassFileException, IllegalArgumentException, URISyntaxException {
+  @Test
+	public void runTest() throws IOException, ClassHierarchyException, CancelException, InvalidClassFileException, IllegalArgumentException, URISyntaxException {
 		System.err.println("testing " + apkFile + "...");
 		Pair<CallGraph,PointerAnalysis<InstanceKey>> x = makeAPKCallGraph(androidLibs, androidJavaJar, apkFile, new NullProgressMonitor(), ReflectionOptions.ONE_FLOW_TO_CASTS_APPLICATION_GET_METHOD);
 		//System.err.println(x.fst);
 		Set<IMethod> bad = assertUserCodeReachable(x.fst, uncalled);
-    Assert.assertTrue(bad + " should be empty", bad.isEmpty());
+    assertion(bad + " should be empty", bad.isEmpty());
 		System.err.println("...success testing " + apkFile);
 	}
-	  
+	 
+  protected void assertion(String string, boolean empty) {
+    Assert.assertTrue(string, empty);
+  }
+  
   private static final Set<String> skipTests = HashSetFactory.make();
 	static {
 	  // serialization issues
