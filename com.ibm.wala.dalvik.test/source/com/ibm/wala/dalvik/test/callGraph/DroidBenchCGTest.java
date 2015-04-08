@@ -111,7 +111,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 	
 	private final File androidJavaJar;
 	
-	public final String apkFile;
+	private final String apkFile;
 	
 	private final Set<MethodReference> uncalled;
 	
@@ -122,6 +122,10 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 		this.uncalled = uncalled;
 	}
 	
+  public String apkFile() {
+    return apkFile;
+  }
+
   @Test
 	public void runTest() throws IOException, ClassHierarchyException, CancelException, InvalidClassFileException, IllegalArgumentException, URISyntaxException {
 		System.err.println("testing " + apkFile + "...");
@@ -174,4 +178,4 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 	    } }, new File(droidBenchRoot + "/apk/"));
 	  return files;
 	}
-	}
+}
