@@ -221,7 +221,7 @@ public class AnalysisScopeReader {
       StringTokenizer paths = new StringTokenizer(classPath, File.pathSeparator);
       while (paths.hasMoreTokens()) {
         String path = paths.nextToken();
-        if (path.endsWith(".jar")) {
+        if (path.endsWith(".jar") || path.endsWith(".war")) {
           JarFile jar = new JarFile(path);
           scope.addToScope(loader, jar);
           try {
