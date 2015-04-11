@@ -45,12 +45,19 @@
   </target>
   
   <target name="DexlibPresent" depends="init">
-    <available file="${plugin.destination}/lib/dexlib-1.3.4-dev.jar" property="dexlib.present"/>
+    <available file="${plugin.destination}/lib/dexlib-1.3.4.jar" property="dexlib.present"/>
   </target>
 
   <target name="fetchDexlib" depends="DexlibPresent" unless="dexlib.present">
-    <mkdir dir="${plugin.destination}/lib"/>    
-    <get src="https://github.com/jgf/wala-mirror/raw/master/com.ibm.wala.dalvik/lib/dexlib-1.3.4-dev.jar" dest="${plugin.destination}/lib/dexlib-1.3.4-dev.jar"/>
+    <mkdir dir="${plugin.destination}/lib"/>
+
+    <delete dir="${temp.folder}"/>
+    <mkdir dir="${temp.folder}"/>
+    <get src="https://apktool2.googlecode.com/archive/c1659e62c414c96882c49afa72032b504c921b5a.zip" dest="${temp.folder}/dexlib.zip"/>
+    <unzip src="${temp.folder}/dexlib.zip" dest="${temp.folder}"/>
+    <copy file="${temp.folder}/apktool2-c1659e62c414/m2-releases/brut/apktool/smali/dexlib/1.3.4-ibot7/dexlib-1.3.4-ibot7.jar" tofile="${plugin.destination}/lib/dexlib-1.3.4.jar"/>
+    <delete dir="${temp.folder}"/>
+
   </target>
 
   <target name="GuavaPresent" depends="init">

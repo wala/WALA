@@ -47,8 +47,6 @@
 
 package com.ibm.wala.dalvik.classLoader;
 
-import static com.ibm.wala.classLoader.ClassLoaderImpl.DEBUG_LEVEL;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
