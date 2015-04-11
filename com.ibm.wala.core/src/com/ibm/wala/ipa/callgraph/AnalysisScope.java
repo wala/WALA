@@ -34,6 +34,7 @@ import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.classLoader.WarFileModule;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
@@ -218,7 +219,11 @@ public class AnalysisScope {
     if (DEBUG_LEVEL > 0) {
       System.err.println(("AnalysisScope: add JarFileModule " + file.getName()));
     }
-    s.add(new JarFileModule(file));
+    if (file.getName().endsWith(".war")) {
+      s.add(new WarFileModule(file));
+    } else {
+      s.add(new JarFileModule(file));
+    }
   }
 
   /**

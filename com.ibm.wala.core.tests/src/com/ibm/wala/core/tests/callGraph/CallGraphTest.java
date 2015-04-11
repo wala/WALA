@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.callGraph;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -49,10 +50,12 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Iterable;
+import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
+import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warnings;
@@ -149,6 +152,20 @@ public class CallGraphTest extends WalaTestCase {
     for (CGNode n : cg) {
       Assert.assertTrue(!n.toString().contains("doNothing"));
     }
+  }
+
+  @Test public void testClassHierarchyFromWarFile() throws ClassHierarchyException, IOException {
+    File exclusions = (new FileProvider()).getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(TestConstants.WAR_FILE, exclusions);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+
+    boolean foundClass = false;
+    for (IClass klass : cha) {
+      if (klass.getName().toString().contains("Guestbook")) {
+        foundClass = true;
+      }
+    }
+    Assert.assertTrue(foundClass);
   }
 
   @Test public void testSystemProperties() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {

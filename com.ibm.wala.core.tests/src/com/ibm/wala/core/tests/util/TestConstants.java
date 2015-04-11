@@ -28,6 +28,8 @@ public interface TestConstants {
 
   public final static String BCEL_VERIFIER_MAIN = "Lorg/apache/bcel/verifier/Verifier";
 
+  public final static String WAR_FILE = "guestbook.war";
+
   public final static String JLEX = "JLex.txt";
 
   public final static String JLEX_MAIN = "LJLex/Main";
