@@ -46,7 +46,7 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
    * equals() ... the NumberedGraph does not support this. TODO: use a custom
    * NumberedNodeManager to save space
    */
-  final private Set<GeneralStatement<?>> equations = HashSetFactory.make();
+  final private Set<IFixedPointStatement<?>> equations = HashSetFactory.make();
 
   /**
    * We maintain a hash set of variables in order to check for equality with
@@ -155,6 +155,7 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
     IVariable<?> lhs = s.getLHS();
     IVariable<?> rhs = s.getRightHandSide();
 
+    equations.add(s);
     graph.addNode(s);
     if (lhs != null) {
       variables.add(lhs);
@@ -176,6 +177,7 @@ public class DefaultFixedPointSystem<T extends IVariable<?>> implements IFixedPo
     }
     IVariable<?> lhs = s.getLHS();
 
+    equations.add(s);
     graph.addNode(s);
     if (lhs != null) {
       variables.add(lhs);
