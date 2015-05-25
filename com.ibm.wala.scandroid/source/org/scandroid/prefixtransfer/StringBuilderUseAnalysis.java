@@ -54,9 +54,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
@@ -74,8 +71,6 @@ import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 
 public class StringBuilderUseAnalysis {
-
-	private static final Logger logger = LoggerFactory.getLogger(StringBuilderUseAnalysis.class);
 
 	public final Map<ISSABasicBlock, ISSABasicBlock> blockOrdering;
 	
@@ -130,7 +125,7 @@ public class StringBuilderUseAnalysis {
 						if (nominatedNode == null) {
 							nominatedNode = lpk.getNode();
 						} else if (nominatedNode != lpk.getNode()) {
-							logger.warn("got conflicting nodes: "+nominatedNode+" <> "+lpk.getNode());
+							
 							return null;
 						}
 					}
@@ -139,7 +134,7 @@ public class StringBuilderUseAnalysis {
 				// if this pointer key points to our instance key then we have to give up -- we can only analyze local pointer keys
 				final OrdinalSet<InstanceKey> pts = pa.getPointsToSet(pk);
 				if (pts.contains(ik)) {
-					logger.warn("Found non LocalPointerKey refering to our ik: " + pk);
+					
 					return null;
 				}
 			}
@@ -224,10 +219,6 @@ public class StringBuilderUseAnalysis {
 
 	public InstanceKeySite getNode(final CallSiteReference csr, final InstanceKey k) {
 		final ISSABasicBlock bbs[] = node.getIR().getBasicBlocksForCall(csr);
-		if (bbs.length != 1) {
-			logger.warn("Got wrong number of basic blocks for call site: " + node.getMethod().getSignature()
-				+ " blocks:" + bbs.length);
-		}
 		
 		final OrdinalSetMapping<InstanceKey> mapping = pa.getInstanceKeyMapping();
 		final HashSet<ISSABasicBlock> blocksSeen = new HashSet<ISSABasicBlock>();
@@ -238,9 +229,9 @@ public class StringBuilderUseAnalysis {
 		while (bNext != null) {
 			// detect loops
 			if (blocksSeen.contains(bNext)) {
-				logger.warn("Loop detected in string builder use analysis for " + sbik + "!");
-				logger.warn("bPrev: " + bPrev);
-				logger.warn("bNext: " + bNext);
+				
+				
+				
 
 				return null;
 			}
@@ -274,7 +265,7 @@ public class StringBuilderUseAnalysis {
 			bNext = blockOrdering.get(bNext);
 		}
 		
-		logger.warn("Ran out of parents before getting to <init> on SB: "+ csr + " with builder " + sbik);
+		
 		
 		return null;
 	}

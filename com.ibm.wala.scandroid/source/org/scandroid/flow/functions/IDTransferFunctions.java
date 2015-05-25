@@ -48,8 +48,6 @@ package org.scandroid.flow.functions;
 
 
 import org.scandroid.domain.IFDSTaintDomain;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.dataflow.IFDS.IFlowFunction;
 import com.ibm.wala.dataflow.IFDS.IFlowFunctionMap;
@@ -69,8 +67,6 @@ import com.ibm.wala.util.intset.SparseIntSet;
 public class IDTransferFunctions <E extends ISSABasicBlock> implements
         IFlowFunctionMap<BasicBlockInContext<E>> {
 	@SuppressWarnings("unused")
-	private static final Logger logger = 
-			LoggerFactory.getLogger(IDTransferFunctions.class);
 	
 	public static final IntSet EMPTY_SET = new SparseIntSet();
 	public static final IntSet ZERO_SET = SparseIntSet.singleton(0);

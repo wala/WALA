@@ -62,8 +62,6 @@ import java.util.Set;
 import org.scandroid.domain.CodeElement;
 import org.scandroid.domain.FieldElement;
 import org.scandroid.domain.InstanceKeyElement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Queues;
 import com.ibm.wala.classLoader.IClass;
@@ -113,7 +111,6 @@ import com.ibm.wala.util.warnings.Warnings;
  *         a particular classpath
  */
 public class CGAnalysisContext<E extends ISSABasicBlock> {
-	private static final Logger logger = LoggerFactory.getLogger(CGAnalysisContext.class);
 
 	public final AndroidAnalysisContext analysisContext;
 
@@ -143,7 +140,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 		entrypoints = specifier.specify(analysisContext);
 		AnalysisOptions analysisOptions = new AnalysisOptions(scope, entrypoints);
 		for (Entrypoint e : entrypoints) {
-			logger.debug("Entrypoint: " + e);
+			
 		}
 		analysisOptions.setReflectionOptions(options.getReflectionOptions());
 
@@ -162,14 +159,14 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 			// CallGraphBuilder construction warnings
 			for (Iterator<Warning> wi = Warnings.iterator(); wi.hasNext();) {
 				Warning w = wi.next();
-				logger.warn(w.getMsg());
+				
 			}
 		}
 		Warnings.clear();
 
-		logger.info("*************************");
-		logger.info("* Building Call Graph   *");
-		logger.info("*************************");
+		
+		
+		
 
 		boolean graphBuilt = true;
 		try {
@@ -192,7 +189,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 		// makeCallGraph warnings
 		for (Iterator<Warning> wi = Warnings.iterator(); wi.hasNext();) {
 			Warning w = wi.next();
-			logger.warn(w.getMsg());
+			
 		}
 		Warnings.clear();
 
@@ -281,26 +278,20 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 			for (Iterator<CGNode> nodeI = cg.iterator(); nodeI.hasNext();) {
 				CGNode node = nodeI.next();
 
-				logger.debug("CGNode: " + node);
-				for (Iterator<CGNode> succI = cg.getSuccNodes(node); succI.hasNext();) {
-
-					logger.debug("\tSuccCGNode: " + succI.next().getMethod().getSignature());
-				}
+				
 			}
 		}
 		for (Iterator<CGNode> nodeI = cg.iterator(); nodeI.hasNext();) {
 			CGNode node = nodeI.next();
 			if (node.getMethod().isSynthetic()) {
-				logger.trace("Synthetic Method: {}", node.getMethod().getSignature());
-				logger.trace("{}", node.getIR().getControlFlowGraph().toString());
 				SSACFG ssaCFG = node.getIR().getControlFlowGraph();
 				int totalBlocks = ssaCFG.getNumberOfNodes();
 				for (int i = 0; i < totalBlocks; i++) {
-					logger.trace("BLOCK #{}", i);
+					
 					BasicBlock bb = ssaCFG.getBasicBlock(i);
 
 					for (SSAInstruction ssaI : bb.getAllInstructions()) {
-						logger.trace("\tInstruction: {}", ssaI);
+						
 					}
 				}
 			}
@@ -319,7 +310,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 
 		while (!iks.isEmpty()) {
 			InstanceKey ik = iks.pop();
-			logger.debug("getting code elements for {}", ik);
+			
 			elts.add(new InstanceKeyElement(ik));
 			final IClass clazz = ik.getConcreteType();
 			final TypeReference typeRef = clazz.getReference();
@@ -332,7 +323,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 				OrdinalSet<InstanceKey> pointsToSet =
 					pa.getPointsToSet(pa.getHeapModel().getPointerKeyForArrayContents(ik));
 				if (pointsToSet.isEmpty()) {
-					logger.debug("pointsToSet empty for array contents, creating InstanceKey manually");
+					
 					final IClass contentsClass = pa.getClassHierarchy().lookupClass(typeRef.getArrayElementType());
 					if (contentsClass.isInterface()) {
 						for (IClass implementor : analysisContext.concreteClassesForInterface(contentsClass)) {
@@ -363,7 +354,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 				continue;
 			}
 			for (IField field : clazz.getAllInstanceFields()) {
-				logger.debug("adding elements for field {}", field);
+				
 				final TypeReference fieldTypeRef = field.getFieldTypeReference();
 				elts.add(new FieldElement(ik, field.getReference()));
 				final IClass fieldClass = analysisContext.getClassHierarchy().lookupClass(fieldTypeRef);
@@ -373,7 +364,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 					PointerKey pk = pa.getHeapModel().getPointerKeyForInstanceField(ik, field);
 					final OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(pk);
 					if (pointsToSet.isEmpty()) {
-						logger.debug("pointsToSet empty for array field, creating InstanceKey manually");
+						
 						InstanceKey fieldIK = new ConcreteTypeKey(pa.getClassHierarchy().lookupClass(fieldTypeRef));
 						final InstanceKeyElement elt = new InstanceKeyElement(fieldIK);
 						if (!elts.contains(elt)) {
@@ -393,7 +384,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 					PointerKey pk = pa.getHeapModel().getPointerKeyForInstanceField(ik, field);
 					final OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(pk);
 					if (pointsToSet.isEmpty() && !analysisContext.getClassHierarchy().isInterface(fieldTypeRef)) {
-						logger.debug("pointsToSet empty for reference field, creating InstanceKey manually");
+						
 						InstanceKey fieldIK = new ConcreteTypeKey(fieldClass);
 						final InstanceKeyElement elt = new InstanceKeyElement(fieldIK);
 						if (!elts.contains(elt)) {
@@ -410,7 +401,7 @@ public class CGAnalysisContext<E extends ISSABasicBlock> {
 						}
 					}
 				} else {
-					logger.warn("unknown field type {}", field);
+					
 				}
 			}
 		}

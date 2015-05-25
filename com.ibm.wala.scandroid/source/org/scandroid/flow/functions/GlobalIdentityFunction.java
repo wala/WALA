@@ -51,8 +51,6 @@ package org.scandroid.flow.functions;
 import org.scandroid.domain.DomainElement;
 import org.scandroid.domain.IFDSTaintDomain;
 import org.scandroid.domain.LocalElement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.dataflow.IFDS.IUnaryFlowFunction;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -68,7 +66,6 @@ import com.ibm.wala.util.intset.SparseIntSet;
  */
 public class GlobalIdentityFunction <E extends ISSABasicBlock>
     implements IUnaryFlowFunction {
-	private static final Logger logger = LoggerFactory.getLogger(GlobalIdentityFunction.class);
 	
 	private final IFDSTaintDomain<E> domain;
 
@@ -88,7 +85,7 @@ public class GlobalIdentityFunction <E extends ISSABasicBlock>
 		DomainElement de = domain.getMappedObject(d1);
 		if( de.codeElement instanceof LocalElement ) {
 			// if the query domain element is a local, then it is /not/ passed through.
-			logger.trace("taking {} to emptyset", de);
+			
 			return TaintTransferFunctions.EMPTY_SET;
 		} else {
 			return SparseIntSet.singleton(d1);

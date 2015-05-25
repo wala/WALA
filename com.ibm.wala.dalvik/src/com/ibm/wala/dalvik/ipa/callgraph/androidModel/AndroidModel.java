@@ -41,15 +41,12 @@
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -128,8 +125,6 @@ import com.ibm.wala.util.strings.Atom;
  */
 public class AndroidModel /* makes SummarizedMethod */ 
         implements IClassHierarchyDweller {
-    private static Logger logger = LoggerFactory.getLogger(AndroidModel.class);
-    
     private final Atom name = Atom.findOrCreateAsciiAtom("AndroidModel");
     public MethodReference mRef;
 
@@ -225,7 +220,7 @@ public class AndroidModel /* makes SummarizedMethod */
        
         if (this.klass == null) {
             // add to cha
-            logger.info("Adding model-class to cha");
+            
             this.klass = AndroidModelClass.getInstance(cha);
             cha.addClass(this.klass);
         }
@@ -242,7 +237,7 @@ public class AndroidModel /* makes SummarizedMethod */
         final Selector selector = this.mRef.getSelector();
         final AndroidModelClass mClass = AndroidModelClass.getInstance(cha);
         if (mClass.containsMethod(selector)) {
-            logger.info("Returning existing {}", selector);
+            
             assert (mClass.getMethod(selector) instanceof SummarizedMethod);
             this.model = (SummarizedMethod) mClass.getMethod(selector);
             return;
@@ -367,7 +362,7 @@ public class AndroidModel /* makes SummarizedMethod */
                     application = tmpApp;
                 } else {
                     // Generate a real one?
-                    logger.warn("I didn't get an application. Generating a new object.");
+                    
                     application = paramManager.getUnmanaged(AndroidTypes.Application, "app");
                     this.body.addConstant(application.getNumber(), new ConstantValue(null));
                     application.setAssigned();
@@ -386,7 +381,7 @@ public class AndroidModel /* makes SummarizedMethod */
                 nullBinder.setAssigned();
             }
 
-            logger.info("Adding Boot-Code to the Android model");
+            
             {
                 final AndroidBoot boot = new AndroidBoot(null); 
                 boot.addBootCode(tsif, null, paramManager, this.body);
@@ -397,14 +392,14 @@ public class AndroidModel /* makes SummarizedMethod */
             // TODO: Assign context to the other components
         }
         
-        logger.info("Populating the AndroidModel with {} entryPoints", this.maxProgress);
+        
 
         for (final AndroidEntryPoint ep : entrypoints) {
             this.monitor.subTask(ep.getMethod().getReference().getSignature() );
             
             if (! selectEntryPoint(ep)) {
                 assert(false): "The ep should not reach here!";
-                logger.warn("SKIP: " + ep);
+                
                 currentProgress++;
                 continue;
             }
@@ -413,7 +408,7 @@ public class AndroidModel /* makes SummarizedMethod */
             //  Is special handling to be inserted?
             //
             if (this.labelSpecial.hadSectionSwitch(ep.order)) {
-                logger.info("Adding special handling before: {}.", ep);
+                
                 this.labelSpecial.enter(ep.getSection(), body.getNextProgramCounter());
             }
 
@@ -430,8 +425,7 @@ public class AndroidModel /* makes SummarizedMethod */
 
                     for (int i = 0; i < ep.getNumberOfParameters(); ++i) {
                         if (ep.getParameterTypes(i).length != 1) {
-                            logger.debug("Got multiple types: {}",  Arrays.toString(ep.getParameterTypes(i)));
-                            mutliTypePositions.add(i);
+                             mutliTypePositions.add(i);
                             params.add(null); // will get set later
                         } else {
                             for (final TypeReference type : ep.getParameterTypes(i)) {
@@ -508,8 +502,6 @@ public class AndroidModel /* makes SummarizedMethod */
             //  Insert the call optionally handling its return value
             //
             for (final List<SSAValue> params : paramses) {
-                logger.debug("Adding Call to {}.{}", ep.getMethod().getDeclaringClass().getName(),
-                        ep.getMethod().getName());
 
                 final int callPC = body.getNextProgramCounter();
                 final CallSiteReference site = ep.makeSite(callPC);
@@ -527,7 +519,7 @@ public class AndroidModel /* makes SummarizedMethod */
                     if (this.paramManager.isSeen(returnKey)) {
                         // if it's seen it most likely is a REUSE-Type. However probably it makes sense for 
                         // other types too so we don't test on isReuse.
-                        logger.debug("Mixing in return type of this EP");
+                        
 
                         final SSAValue oldValue = this.paramManager.getCurrent(returnKey);
                         this.paramManager.invalidate(returnKey);
@@ -560,7 +552,7 @@ public class AndroidModel /* makes SummarizedMethod */
             MonitorUtil.throwExceptionIfCanceled(this.monitor); 
         }
 
-        logger.debug("All EntryPoints have been added - now closing the model");
+        
         //  Close all sections by "jumping over" the remaining labels
         labelSpecial.finish(body.getNextProgramCounter());
 
@@ -721,12 +713,11 @@ public class AndroidModel /* makes SummarizedMethod */
         if (intent != null) {
             tool.setIntent(intent, allActivities);
         } else if (! info.isSystemService()) {  // it's normal for SystemServices
-            logger.warn("Got no Intent in call to: {} as {}", this.name, asMethod);
+            
         }
 
         // Call the model
         {
-            logger.debug("Calling model: {}", this.model.getReference().getName());
             final List<SSAValue> redirectParams = acc.connectThrough(modelAcc, new HashSet<SSAValue>(allActivities), defaults,
                     getClassHierarchy(), /* IInstantiator this.createInstance(type, redirect, pm)  */ instantiator, false, null, null);
             final int callPC = redirect.getNextProgramCounter();
@@ -782,8 +773,6 @@ public class AndroidModel /* makes SummarizedMethod */
             tool.fetchResults(resultCodes, resultData, allActivities); 
 
             if (resultCodes.size() == 0) {
-                logger.error("Can't read back results from the started Activity => Can't call onActivityResult - " +
-                        "The Activity has to be marked as REUSE in the IInstructionBehavior.");
                 throw new IllegalStateException("The call " + asMethod + " from " + caller + " failed, as the model " + this.model + 
                         " did not take an activity to read the result from");
             }
@@ -794,7 +783,7 @@ public class AndroidModel /* makes SummarizedMethod */
             { // Send back the results
                 // TODO: Assert caller is an Activity
                 final SSAValue outRequestCode = acc.firstOf(TypeReference.Int);   // TODO: Check is's the right parameter
-                logger.debug("Calling onActivityResult");
+                
                 final int callPC = redirect.getNextProgramCounter();
                 // void onActivityResult (int requestCode, int resultCode, Intent data)
                 final Selector mSel = Selector.make("onActivityResult(IILandroid/content/Intent;)V");
@@ -810,7 +799,7 @@ public class AndroidModel /* makes SummarizedMethod */
                 final SSAInstruction invokation = instructionFactory.InvokeInstruction(callPC, params, exception, site);
                 redirect.addStatement(invokation);
                 
-                logger.info("Calling this.onActivityResult");
+                
             } // */
         }
 

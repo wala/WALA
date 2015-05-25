@@ -5,8 +5,9 @@ import static com.ibm.wala.dalvik.test.DalvikTestBase.convertJarToDex;
 import java.io.File;
 import java.io.IOException;
 
+import org.junit.Assert;
+
 import com.ibm.wala.core.tests.ir.AnnotationTest;
-import com.ibm.wala.core.tests.ir.JVMLAnnotationTest;
 import com.ibm.wala.dalvik.test.DalvikTestBase;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -18,7 +19,7 @@ import com.ibm.wala.util.io.TemporaryFile;
 public class DalvikAnnotationsTest extends AnnotationTest {
 
   public static void main(String[] args) {
-    justThisTest(JVMLAnnotationTest.class);
+    justThisTest(DalvikAnnotationsTest.class);
   }
   
   private static IClassHierarchy makeCHA() throws IOException, ClassHierarchyException {
@@ -33,4 +34,20 @@ public class DalvikAnnotationsTest extends AnnotationTest {
   public DalvikAnnotationsTest() throws ClassHierarchyException, IOException {
     super(makeCHA());
   }
+  
+  @Override
+  protected void assertEquals(Object a, Object b) {
+    Assert.assertEquals(a, b);
+  }
+
+  @Override
+  protected void assertNotNull(String msg, Object obj) {
+    Assert.assertNotNull(msg, obj);
+  }
+
+  @Override
+  protected void assertTrue(String x, boolean b) {
+    Assert.assertTrue(x, b);
+  }
+
 }

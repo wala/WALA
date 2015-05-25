@@ -55,8 +55,6 @@ import java.util.Stack;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -95,8 +93,6 @@ public class AndroidManifestXMLReader {
      *  If you only want Information about objects created use the logger in AndroidSettingFactory as this 
      *  parser generates all objects using it.
      */
-    private static final Logger logger = LoggerFactory.getLogger(AndroidSettingFactory.class);
-
     public AndroidManifestXMLReader(File xmlFile) throws IOException {
         if (xmlFile == null) {
             throw new IllegalArgumentException("xmlFile may not be null");
@@ -421,7 +417,6 @@ public class AndroidManifestXMLReader {
                 }
 
                 attributesHistory.get(relevant).push(attr);
-                logger.debug("Pushing '{}' for {} in {}", attr, relevant, self);
                 // if there is no such value in saxAttrs it returns null 
             }
         }
@@ -433,7 +428,6 @@ public class AndroidManifestXMLReader {
         public void popAttributes() {
              for (Attr relevant : self.getRelevantAttributes()) {
                  try {
-                    logger.debug("Popping {} of value {} in {}", relevant, attributesHistory.get(relevant).peek(), self);
                     attributesHistory.get(relevant).pop();
                  }  catch (java.util.EmptyStackException e) {
                     System.err.println(self + " failed to pop " + relevant);
@@ -467,7 +461,6 @@ public class AndroidManifestXMLReader {
                     }
                     subTag.getHandler().popAttributes(); // hmmm....
 
-                    logger.debug("New Stack: {}", parserStack);
                     //parserStack.pop();
                 } else {
                     throw new IllegalStateException(subTag + " is not allowed as sub-tag of " + self + " in Context:\n\t" + parserStack);
@@ -579,12 +572,10 @@ public class AndroidManifestXMLReader {
             if ((attributesHistory.get(Attr.PACKAGE) != null ) && (!(attributesHistory.get(Attr.PACKAGE).isEmpty()))) {
                 pack = (String) attributesHistory.get(Attr.PACKAGE).peek();
             } else {
-                logger.warn("Empty Package {}", attributesHistory.get(Attr.PACKAGE).peek());
                 pack = null;
             }
 
             if (name != null) {
-                logger.info("New Intent ({}, {})", name, url);
                 final Intent intent = AndroidSettingFactory.intent(name, url);
                 attributesHistory.get(self).push(intent);
             } else {
@@ -632,16 +623,13 @@ public class AndroidManifestXMLReader {
             if ((attributesHistory.get(Attr.PACKAGE) != null ) && (!(attributesHistory.get(Attr.PACKAGE).isEmpty()))) {
                 pack = (String) attributesHistory.get(Attr.PACKAGE).peek();
             } else {
-                logger.warn("Empty Package {}", attributesHistory.get(Attr.PACKAGE).peek());
                 pack = null;
             }
             final String name = (String) attributesHistory.get(Attr.NAME).peek(); // TODO: Verify type!
             final Intent intent = AndroidSettingFactory.intent(pack, name, null);
 
-            logger.info("\tRegister: {}", intent);
             AndroidEntryPointManager.MANAGER.registerIntent(intent);
             for (Intent ovr: overrideTargets) {
-                logger.info("\tOverride: {} --> {}", ovr, intent);
                 AndroidEntryPointManager.MANAGER.setOverride(ovr, intent);
             }
         }
@@ -661,9 +649,7 @@ public class AndroidManifestXMLReader {
             if ((tag == Tag.UNIMPORTANT) || (unimportantDepth > 0)) {
                 unimportantDepth++;
             } else {
-                logger.debug("Handling {} made from {}", tag, qName);
-                
-                final ParserItem handler = tag.getHandler();
+                 final ParserItem handler = tag.getHandler();
                 if (handler != null) {
                     handler.enter(attrs);
                 }

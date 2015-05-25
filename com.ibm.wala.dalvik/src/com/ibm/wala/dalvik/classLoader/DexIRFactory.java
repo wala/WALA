@@ -12,9 +12,6 @@
 
 package com.ibm.wala.dalvik.classLoader;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dalvik.ssa.DexSSABuilder;
@@ -30,8 +27,6 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.analysis.DeadAssignmentElimination;
 
 public class DexIRFactory extends DefaultIRFactory {
-	private static final Logger logger = LoggerFactory.getLogger(DexIRFactory.class);
-
     public final static boolean buildLocalMap = false;
 
     @SuppressWarnings("rawtypes")
@@ -132,7 +127,6 @@ public class DexIRFactory extends DefaultIRFactory {
             @SuppressWarnings("unchecked")
             @Override
             protected ShrikeIndirectionData getIndirectionData() {
-                logger.warn("Implement ShrikeIndirectionData ?");
                 return indirectionData;
             }
         };

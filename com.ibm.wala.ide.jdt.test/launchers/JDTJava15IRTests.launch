@@ -14,7 +14,7 @@
 <booleanAttribute key="clearws" value="true"/>
 <booleanAttribute key="clearwslog" value="false"/>
 <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/pde-junit"/>
-<booleanAttribute key="default" value="false"/>
+<booleanAttribute key="default" value="true"/>
 <stringAttribute key="deselected_workspace_plugins" value="NewAtomicSetsBuilder,com.ibm.appscan.jstaint,com.ibm.appscan.jstaint.analysis.ap,com.ibm.appscan.jstaint.exceptions,com.ibm.appscan.jstaint.harness,com.ibm.appscan.jstaint.hybridapps,com.ibm.appscan.jstaint.rules,com.ibm.appscan.jstaint.util,com.ibm.appscan.jstaint.util.logging,com.ibm.wala.andromeda.js.tests,com.ibm.wala.andromeda.rules,com.ibm.wala.andromeda.util,com.ibm.wala.cast.java.polyglot,com.ibm.wala.cast.java.polyglot.test,com.ibm.wala.cast.java.test.data,com.ibm.wala.cast.js,com.ibm.wala.cast.js.html.nu_validator,com.ibm.wala.cast.js.jsir,com.ibm.wala.cast.js.rhino,com.ibm.wala.cast.js.rhino.test,com.ibm.wala.cast.js.test,com.ibm.wala.cast.js.test.data,com.ibm.wala.core.testdata.java8,com.ibm.wala.dalvik,com.ibm.wala.dalvik.test,com.ibm.wala.dotnet,com.ibm.wala.dotnet.ikvm,com.ibm.wala.dotnet.test,com.ibm.wala.eventRacer,com.ibm.wala.ide.jsdt,com.ibm.wala.ide.jsdt.tests,com.ibm.wala.jstaint.rules,com.ibm.wala.jstaint.util,com.ibm.wala.memsat,com.ibm.wala.memsat.jdt.test,com.ibm.wala.memsat.test,com.ibm.wala.memsat.testdata,com.ibm.wala.memsat.tests.internal,com.ibm.wala.scandroid,com.ibm.wala.worklight,com.ibm.wala.worklight.rules"/>
 <stringAttribute key="featureDefaultLocation" value="workspace"/>
 <stringAttribute key="featurePluginResolution" value="workspace"/>
@@ -38,7 +38,7 @@
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dcom.ibm.wala.tracefile=/tmp/jdt15tests.txt -Xmx1024M -XX:MaxPermSize=256M -ea"/>
 <stringAttribute key="pde.version" value="3.3"/>
-<stringAttribute key="product" value="org.eclipse.sdk.ide"/>
+<stringAttribute key="product" value="org.eclipse.platform.ide"/>
 <booleanAttribute key="run_in_ui_thread" value="false"/>
 <setAttribute key="selected_features">
 <setEntry value="com.ibm.wala-feature:default"/>

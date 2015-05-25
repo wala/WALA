@@ -44,9 +44,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
@@ -64,7 +62,6 @@ import com.ibm.wala.util.strings.Atom;
  *  @since  2013-10-25
  */
 public class DefaultInstantiationBehavior extends IInstantiationBehavior implements Serializable {
-    private static Logger logger = LoggerFactory.getLogger(DefaultInstantiationBehavior.class);
 
     /* package-private */ static final class BehviourValue implements Serializable {
 		public final InstanceBehavior behaviour;
@@ -271,7 +268,7 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior impleme
                     testClass = testClass.getSuperclass();
                 }
             } else {
-                logger.warn("I got no ClassHierarchy. Can't test super classes");
+                
             }
         } // */
 
@@ -375,10 +372,7 @@ public class DefaultInstantiationBehavior extends IInstantiationBehavior impleme
     private void readObject(java.io.ObjectInputStream stream) 
         throws IOException, ClassNotFoundException {
 
-        DefaultInstantiationBehavior.logger.warn("DefaultInstantiationBehavior is not intended to be deserialized into. (for no apparent reason)");
-        DefaultInstantiationBehavior.logger.warn("Deserializing it anyways...");
-
-        this.behaviours.clear();
+        DefaultInstantiationBehavior.this.behaviours.clear();
         this.behaviours.putAll((Map<BehaviorKey, BehviourValue>) stream.readObject());
     }
 

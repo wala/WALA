@@ -44,9 +44,6 @@ import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.StringStuff;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  *  Generate a Settings-Object from a String-Representation.
  *
@@ -57,8 +54,6 @@ import org.slf4j.LoggerFactory;
  *  @since  2013-10-14
  */
 public class AndroidSettingFactory {
-    private static final Logger logger = LoggerFactory.getLogger(AndroidSettingFactory.class);
-
     /**
      *  Add an Intent that is _shure_ to be handled internally _only_.
      *
@@ -166,10 +161,8 @@ public class AndroidSettingFactory {
             type = Intent.IntentType.INTERNAL_TARGET;   // TODO Ehhh...
         } else if (name.startsWith("android.intent.action")) {
             type = Intent.IntentType.STANDARD_ACTION;
-        } else if ((pack == null) || (pack.isEmpty())) {
-            logger.warn("Could not determine if {} is internal due to the package not being set", name);
-        }
-
+        } 
+        
         // convert name to the L-Slash format..
         if ((name.startsWith("L") || name.contains("."))) {
             name = StringStuff.deployment2CanonicalTypeString(name);
@@ -201,7 +194,6 @@ public class AndroidSettingFactory {
             }
         }
 
-        logger.info("Built specification for {}", ret);
         return ret;
     }
 

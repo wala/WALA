@@ -57,8 +57,6 @@ import org.scandroid.domain.IFDSTaintDomain;
 import org.scandroid.domain.LocalElement;
 import org.scandroid.flow.types.FlowType;
 import org.scandroid.util.CGAnalysisContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -70,7 +68,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.intset.OrdinalSet;
 
 public class LocalSinkPoint implements ISinkPoint {
-	private static final Logger logger = LoggerFactory.getLogger(LocalSinkPoint.class);
 	
 	private final BasicBlockInContext<IExplodedBasicBlock> block;
 	private final int ssaVal;
@@ -97,21 +94,15 @@ public class LocalSinkPoint implements ISinkPoint {
 		PointerKey pk = ctx.pa.getHeapModel().getPointerKeyForLocal(node,
 				ssaVal);
 		OrdinalSet<InstanceKey> iks = ctx.pa.getPointsToSet(pk);
-		if (null == iks) {
-			logger.warn("no instance keys found for SinkPoint {}", this);
-		}
 
 		for (InstanceKey ik : iks) {
 			elts.addAll(ctx.codeElementsForInstanceKey(ik));
 		}
-		logger.debug("checking for sources from code elements {}", elts);
 
 		for (CodeElement elt : elts) {
-			logger.debug("possible elements for {}: {}", elt, domain.getPossibleElements(elt));
 			for (DomainElement de : domain.getPossibleElements(elt)) {
 				if (flowResult.getResult(block).contains(
 						domain.getMappedIndex(de))) {
-					logger.debug("adding taint source {}", de.taintSource);
 					sources.add(de.taintSource);
 				}
 			}

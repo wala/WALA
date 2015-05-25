@@ -70,8 +70,6 @@ import org.jf.dexlib.FieldIdItem;
 import org.jf.dexlib.MethodIdItem;
 import org.jf.dexlib.TypeIdItem;
 import org.jf.dexlib.TypeListItem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.classLoader.BytecodeClass;
 import com.ibm.wala.classLoader.IClassLoader;
@@ -87,9 +85,8 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 
 public class DexIClass extends BytecodeClass<IClassLoader> {
-	private static final Logger logger = LoggerFactory.getLogger(DexIClass.class);
 
-    /**
+/**
      * Item which contains the class definitions.
      * (compute by DexFile, from the dexLib)
      */
@@ -349,12 +346,7 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
     @Override
     protected IMethod[] computeDeclaredMethods() throws InvalidClassFileException {
     	ArrayList<IMethod> methodsAL = new ArrayList<IMethod>();
-    	
-    	logger.debug("class: " + classDef.getClassType().getTypeDescriptor());
-    	if (classDef.getSuperclass() != null){
-    		logger.debug("superclass: " + classDef.getSuperclass().getTypeDescriptor());
-    	}
-    	
+    	    	
         if (methods == null && classDef.getClassData() == null)
             methods = new IMethod[0];
 
@@ -369,8 +361,6 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
             // Create Direct methods (static, private, constructor)
             for (int i = 0; i < directMethods.size(); i++) {
                 EncodedMethod dMethod = directMethods.get(i);
-                logger.debug("direct method info: " + dMethod.method.getMethodString());
-                logger.debug("direct method name: " + dMethod.method.getMethodName().getStringValue());
                 //methods[i] = new DexIMethod(dMethod,this);
                 methodsAL.add(new DexIMethod(dMethod,this));
 
@@ -382,16 +372,11 @@ public class DexIClass extends BytecodeClass<IClassLoader> {
                 //if (methods[i].isClinit())
                 if (methodsAL.get(i).isClinit()) {
                     clinitId = i;
-                    logger.debug("Clinit id: " + i);
                 }
             }
 
             // Create virtual methods (other methods)
             for (int i = 0; i < virtualMethods.size(); i++) {
-                logger.debug("virtual method info: " + virtualMethods.get(i).method.getMethodString());
-                logger.debug("virtual method name: " + virtualMethods.get(i).method.getMethodName().getStringValue());
-                logger.debug("virtual method prototype name: " + virtualMethods.get(i).method.getPrototype().getPrototypeString());
-                logger.debug("virtual method return type: " + virtualMethods.get(i).method.getPrototype().getReturnType().getTypeDescriptor());
                 //methods[dSize+i] = new DexIMethod(virtualMethods[i],this);
                 methodsAL.add(new DexIMethod(virtualMethods.get(i),this));
                 //is this enough to determine if the class is an activity?

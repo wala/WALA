@@ -42,19 +42,12 @@ package com.ibm.wala.dalvik.ipa.callgraph.impl;
 
 import java.util.Comparator;
 
-import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.AndroidPossibleEntryPoint;
-import com.ibm.wala.dalvik.util.AndroidComponent;
-import com.ibm.wala.dalvik.util.AndroidTypes;
-
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.dalvik.util.AndroidComponent;
+import com.ibm.wala.dalvik.util.AndroidEntryPointLocator.AndroidPossibleEntryPoint;
+import com.ibm.wala.dalvik.util.AndroidTypes;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.types.ClassLoaderReference;
-
-import com.ibm.wala.util.strings.StringStuff;
 import com.ibm.wala.util.strings.Atom;
 /**
  *  An AdnroidEntryPoint is basically the same as a DexEntryPoint. The Difference is, that further

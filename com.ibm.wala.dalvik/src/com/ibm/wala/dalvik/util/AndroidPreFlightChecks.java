@@ -44,9 +44,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior;
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -67,8 +64,6 @@ import com.ibm.wala.types.TypeReference;
  *  @since  2013-11-01
  */
 public class AndroidPreFlightChecks {
-    private final Logger logger = LoggerFactory.getLogger(AndroidPreFlightChecks.class);
-
     private final AndroidEntryPointManager manager;
 //    private final AnalysisOptions options;
     private final IClassHierarchy cha;
@@ -158,33 +153,28 @@ public class AndroidPreFlightChecks {
         boolean pass = true;
 
         if (this.cha.lookupClass(AndroidTypes.Fragment) == null) {
-            logger.warn("Stubs to old to contain Fragments or class not found");
             pass = false;
         }
 
         if (this.cha.lookupClass(AndroidTypes.UserHandle) == null) {
-            logger.warn("Stubs to old to contain UserHandles or class not found");
             pass = false;
         }
 
         if (this.cha.resolveMethod(
                         this.cha.lookupClass(AndroidTypes.Activity),
                         Selector.make("getLoaderManager()Landroid/app/LoaderManager;")) == null) {
-            logger.warn("Stubs to old to contain function Activity.getLoaderManager()");
             pass = false;
         }
 
         if (this.cha.resolveMethod(
                         this.cha.lookupClass(AndroidTypes.Activity),
                         Selector.make("getSystemService(Ljava/lang/String;)Ljava/lang/Object;")) == null) {
-            logger.warn("Stubs do not contain function Activity.getSystemService");
-            pass = false;
+             pass = false;
         }
 
         if (this.cha.resolveMethod(
                         this.cha.lookupClass(AndroidTypes.Context),
                         Selector.make("getSystemService(Ljava/lang/String;)Ljava/lang/Object;")) == null) {
-            logger.warn("Stubs do not contain function Context.getSystemService");
             pass = false;
         }
 
@@ -215,8 +205,7 @@ public class AndroidPreFlightChecks {
                 if (test.toString().startsWith("Landroid/")) {
                     continue;
                 }
-                logger.warn("No Intent-Specification was found for {}", test);
-                pass = false;
+                 pass = false;
             }
         }
 
@@ -244,14 +233,7 @@ public class AndroidPreFlightChecks {
             IInstantiationBehavior.InstanceBehavior behave = behaviour.getBehavior(test,
                     /* asParameterTo=  */ null, /* inCall= */ null, /* withName= */ null);
             if (behave != IInstantiationBehavior.InstanceBehavior.REUSE) {
-                if (pass) {
-                    logger.info("Android Components should be marked REUSE in order to");
-                    logger.info("be able to read back their results.");
-                    logger.info("Additionally the MiniModel expects them to be REUSE and");
-                    logger.info("may fail to be constructed if not.");
-                }
-                logger.warn("The Type {} belongs to a {} and should be marked as REUSE", test, ep.getComponent());
-                pass = false;
+                 pass = false;
             }
         }
 
@@ -270,14 +252,6 @@ public class AndroidPreFlightChecks {
             if (params == null) continue;
             for (final TypeName type : params) {
                 if (type.equals(TypeReference.JavaLangObject.getName())) {  // Why if JavaLangObjectName private? .. narf
-                    if (pass) {
-                        logger.info("When an Entry-Point takes a parameter of type Object all Objects");
-                        logger.info("have to be considdered candidates. This will not exactly increase");
-                        logger.info("the accuracy of the result.");
-                        logger.info("You should take a look into this Entry-Points and check if you can");
-                        logger.info("zap these completely.");
-                    }
-                    logger.warn("The entypoint {} has a parameter of type Object", ep);
                     pass = false;
                 }
             }

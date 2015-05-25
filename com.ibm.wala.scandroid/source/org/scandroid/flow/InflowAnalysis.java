@@ -60,12 +60,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.scandroid.domain.CodeElement;
 import org.scandroid.flow.types.FlowType;
-import org.scandroid.flow.types.IKFlow;
 import org.scandroid.spec.CallArgSourceSpec;
 import org.scandroid.spec.CallRetSourceSpec;
 import org.scandroid.spec.EntryArgSourceSpec;
@@ -73,8 +71,6 @@ import org.scandroid.spec.ISpecs;
 import org.scandroid.spec.SourceSpec;
 import org.scandroid.spec.StaticFieldSourceSpec;
 import org.scandroid.util.CGAnalysisContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
@@ -91,7 +87,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 
 @SuppressWarnings("rawtypes")
 public class InflowAnalysis <E extends ISSABasicBlock> {
-	private static final Logger logger = LoggerFactory.getLogger(InflowAnalysis.class);
 
     @SuppressWarnings("unchecked")
 	public static <E extends ISSABasicBlock>
@@ -167,10 +162,8 @@ public class InflowAnalysis <E extends ISSABasicBlock> {
     		 bb = graph.getEntriesForProcedure(n)[0];
     	}
     	
-    	if ( null == bb ) {
-    		logger.error("Could not find entry basic block.");
-    	}
-    	
+    	assert bb != null : "Could not find entry basic block.";
+    	    	
     	ss.addDomainElements(ctx, taintMap, bb.getMethod(), bb, null, null, graph, pa, cg);
     }
     
@@ -238,14 +231,9 @@ public class InflowAnalysis <E extends ISSABasicBlock> {
           Map<InstanceKey, String> prefixes,
           ISpecs s) {
 
-        logger.debug("***************************");
-        logger.debug("* Running inflow analysis *");
-        logger.debug("***************************");
-
         Map<BasicBlockInContext<E>, Map<FlowType<E>,Set<CodeElement>>> taintMap = HashMapFactory.make();
 
         SourceSpec[] ss = s.getSourceSpecs();
-        logger.debug(ss.length + " Source Specs. ");
         
         ArrayList<SourceSpec> ssAL = new ArrayList<SourceSpec>();
         for (int i = 0; i < ss.length; i++) {
@@ -260,26 +248,6 @@ public class InflowAnalysis <E extends ISSABasicBlock> {
         } 
         if (!ssAL.isEmpty())
         	processFunctionCalls(ctx, taintMap, ssAL, graph, pa, cha, cg);
-
-        logger.info("************");
-        logger.info("* Results: *");
-        logger.info("************");
-        for(Entry<BasicBlockInContext<E>, Map<FlowType<E>,Set<CodeElement>>> e:taintMap.entrySet())
-        {
-            for(Entry<FlowType<E>,Set<CodeElement>> e2:e.getValue().entrySet())
-            {
-                for(CodeElement o:e2.getValue())
-                {
-                    if (e2.getKey() instanceof IKFlow) {
-                    	InstanceKey e2IK = ((IKFlow<?>)e2.getKey()).getIK();
-                    	if (prefixes.containsKey(e2IK))
-                    			logger.debug("Uri Prefix: " + prefixes.get(e2IK));                    	
-                    }
-                    logger.debug("\tBasicBlockInContext: "+e.getKey()+"\n\tFlowType: "+e2.getKey()+"\n\tCodeElement: "+o+"\n");
-
-                }
-            }
-        }
 
         return taintMap;
     }

@@ -58,10 +58,6 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
-import org.slf4j.LoggerFactory;
-
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
 
 import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 
@@ -161,10 +157,6 @@ public class CLISCanDroidOptions implements ISCanDroidOptions {
 		// handle verbosity
 		// parse this arg as a Logback level, then set the root logger level
 		// appropriately
-		Level level = Level.toLevel(getOption(VERBOSE), Level.INFO);
-		Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-		root.setLevel(level);
-
 
 		if (!hasOption(ANDROID_LIB)) {
 			System.err.println("Please specify an android library");

@@ -40,35 +40,20 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
 
-import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.callgraph.ContextItem;
-import com.ibm.wala.ipa.callgraph.ContextKey;
-import com.ibm.wala.types.TypeName;
-import com.ibm.wala.types.ClassLoaderReference;
-
-import com.ibm.wala.dalvik.util.AndroidComponent;
-import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
-
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.dalvik.util.AndroidTypes;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Set;
 
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent.IntentType;
-
+import com.ibm.wala.dalvik.util.AndroidComponent;
+import com.ibm.wala.dalvik.util.AndroidTypes;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.Selector;
-
-import java.util.Collections;
-import java.util.Map;
-import java.util.HashMap;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
-import java.util.Set;
-import java.util.EnumSet;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Contains Information on functions that start Android-Components based on an Intent.

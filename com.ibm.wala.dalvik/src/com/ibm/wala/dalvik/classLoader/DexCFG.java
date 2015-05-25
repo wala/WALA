@@ -18,9 +18,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.BytecodeCFG;
 import com.ibm.wala.cfg.IBasicBlock;
@@ -50,8 +47,6 @@ import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
 public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implements BytecodeCFG {
-	private static final Logger logger = LoggerFactory.getLogger(DexCFG.class);
-
     private static final boolean DEBUG = false;
 
     private int[] instruction2Block;
@@ -60,9 +55,6 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
     private final Context context;
 
     private static int totalEdges = 0;
-    private int tempTE;
-
-
 
     /**
      * Cache this here for efficiency
@@ -82,16 +74,10 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
         this.dexMethod = method;
         this.context = context;
         this.hashBase = method.hashCode() * 9967;
-        tempTE = 0;
         makeBasicBlocks();
         init();
         computeI2BMapping();
         computeEdges();
-
-        logger.debug("Method: " + method.getSignature() + " edges: " +tempTE);
-        if (DEBUG) {
-            logger.debug(this.toString());
-        }
     }
 
     public DexIMethod getDexMethod() {
@@ -252,7 +238,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
 
         private void computeOutgoingEdges() {
             if (DEBUG) {
-                logger.debug("Block " + this + ": computeOutgoingEdges()");
+                System.err.println("Block " + this + ": computeOutgoingEdges()");
             }
 
             Instruction last = getInstructions()[getLastInstructionIndex()];
@@ -325,16 +311,16 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
 
                     for (int j = 0; j < hs.length; j++) {
                         if (DEBUG) {
-                            logger.debug(" handler " + hs[j]);
+                            System.err.println(" handler " + hs[j]);
                         }
                         BasicBlock b = getBlockForInstruction(hs[j].getHandler());
                         if (DEBUG) {
-                            logger.debug(" target " + b);
+                            System.err.println(" target " + b);
                         }
                         if (goToAllHandlers) {
                             // add an edge to the catch block.
                             if (DEBUG) {
-                                logger.debug(" gotoAllHandlers " + b);
+                                System.err.println(" gotoAllHandlers " + b);
                             }
                             addExceptionalEdgeTo(b);
                         } else {
@@ -343,7 +329,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
                                 ClassLoaderReference loader = DexCFG.this.getMethod().getDeclaringClass().getReference().getClassLoader();
                                 caughtException = ShrikeUtil.makeTypeReference(loader, hs[j].getCatchClass());
                                 if (DEBUG) {
-                                    logger.debug(" caughtException " + caughtException);
+                                    System.err.println(" caughtException " + caughtException);
                                 }
                                 IClass caughtClass = cha.lookupClass(caughtException);
                                 if (caughtClass == null) {
@@ -355,7 +341,7 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
                                 }
                             } else {
                                 if (DEBUG) {
-                                    logger.debug(" catchClass() == null");
+                                    System.err.println(" catchClass() == null");
                                 }
                                 // hs[j].getCatchClass() == null.
                                 // this means that the handler catches all exceptions.
@@ -584,13 +570,11 @@ public class DexCFG extends AbstractCFG<Instruction, DexCFG.BasicBlock> implemen
 
         private void addNormalEdgeTo(BasicBlock b) {
             totalEdges++;
-            tempTE++;
             addNormalEdge(this, b);
         }
 
         private void addExceptionalEdgeTo(BasicBlock b) {
             totalEdges++;
-            tempTE++;
             addExceptionalEdge(this, b);
         }
 

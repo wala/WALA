@@ -49,7 +49,6 @@
 package org.scandroid.flow.functions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -64,8 +63,6 @@ import org.scandroid.domain.LocalElement;
 import org.scandroid.domain.ReturnElement;
 import org.scandroid.domain.StaticFieldElement;
 import org.scandroid.flow.types.StaticFieldFlow;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -105,8 +102,6 @@ import com.ibm.wala.util.intset.SparseIntSet;
 
 public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 		IFlowFunctionMap<BasicBlockInContext<E>> {
-	private static final Logger logger = LoggerFactory
-			.getLogger(TaintTransferFunctions.class);
 
 	// Java, you need type aliases.
 	private static class BlockPair<E extends ISSABasicBlock> extends
@@ -170,17 +165,17 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 		try {
 			return callFlowFunctions.get(new BlockPair<E>(src, dest));
 		} catch (ExecutionException e) {
-			logger.error("Exception accessing callFlowFunctions {}", e);
+			
 			throw new RuntimeException(e);
 		}
 	}
 
 	private IUnaryFlowFunction makeCallFlowFunction(BasicBlockInContext<E> src,
 			BasicBlockInContext<E> dest, BasicBlockInContext<E> ret) {
-		logger.trace("getCallFlowFunction");
+		
 		SSAInstruction srcInst = src.getLastInstruction();
 		if (null == srcInst) {
-			logger.warn("null source for a call");
+			
 			return IDENTITY_FN;
 		}
 
@@ -193,7 +188,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 			for (int i = 0; i < numParams; i++) {
 				actualParams.add(i, new LocalElement(srcInst.getUse(i)));
 			}
-			logger.trace("actual param list length: {}", actualParams);
+			
 			// return new TracingFlowFunction<E>(domain, union(new
 			// GlobalIdentityFunction<E>(domain),
 			// new CallFlowFunction<E>(domain, actualParams)));
@@ -207,11 +202,6 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 	@Override
 	public IUnaryFlowFunction getCallNoneToReturnFlowFunction(
 			BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
-		if (logger.isTraceEnabled()) {
-			logger.trace("getNoneToReturnFunction");
-			logger.trace("callee signature: {}", ((SSAInvokeInstruction) src
-					.getLastInstruction()).getDeclaredTarget().getSignature());
-		}
 		// return callNoneToReturn;
 		/*
 		 * TODO: is this right?
@@ -229,11 +219,6 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 	@Override
 	public IUnaryFlowFunction getCallToReturnFlowFunction(
 			BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
-		if (logger.isTraceEnabled()) {
-			logger.trace("getCallToReturnFunction\n\t{}\n\t-> {}", src
-					.getMethod().getSignature(), dest.getMethod()
-					.getSignature());
-		}
 		// return new TracingFlowFunction<E>(domain, new
 		// CallToReturnFunction<E>(domain));
 		return callToReturn;
@@ -245,7 +230,7 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 		try {
 			return normalFlowFunctions.get(new BlockPair<E>(src, dest));
 		} catch (ExecutionException e) {
-			logger.error("Exception accessing normalFlowFunctions {}", e);
+			
 			throw new RuntimeException(e);
 		}
 	}
@@ -254,29 +239,23 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 			BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
 		List<UseDefPair> pairs = new ArrayList<UseDefPair>();
 
-		if (logger.isTraceEnabled()) {
-			logger.trace("getNormalFlowFunction {}", dest.getMethod()
-					.getSignature());
-		}
-
 		// we first try to process the destination instruction
 		SSAInstruction inst = dest.getLastInstruction();
 		CGNode node = dest.getNode();
 
 		if (null == inst) {
-			logger.trace("Using identity fn. for normal flow (dest instruction null)");
 			return IDENTITY_FN;
 		}
 
-		logger.trace("\tinstruction: {}", inst);
+		
 
 		Iterable<CodeElement> inCodeElts = getInCodeElts(node, inst);
 		Iterable<CodeElement> outCodeElts = getOutCodeElts(node, inst);
 		if (!inCodeElts.iterator().hasNext()) {
-			logger.trace("no input elements for {}", inst);
+			
 		}
 		if (!outCodeElts.iterator().hasNext()) {
-			logger.trace("no output elements for {}", inst);
+			
 		}
 
 		// for now, take the Cartesian product of the inputs and outputs:
@@ -348,19 +327,11 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 	@Override
 	public IFlowFunction getReturnFlowFunction(BasicBlockInContext<E> call,
 			BasicBlockInContext<E> src, BasicBlockInContext<E> dest) {
-		if (logger.isTraceEnabled()) {
-			logger.trace("getReturnFlowFunction\n\t{}\n\t-> {}\n\t-> {}", call
-					.getNode().getMethod().getSignature(), src.getNode()
-					.getMethod().getSignature(), dest.getNode().getMethod()
-					.getSignature());
-			logger.trace("\t{} -> {} -> {}", call.getLastInstruction(),
-					src.getLastInstruction(), dest.getLastInstruction());
-		}
 		final SSAInstruction inst = call.getLastInstruction();
 		if (null == inst || !(inst instanceof SSAInvokeInstruction)) {
 			// if we don't have an invoke, just punt and hope the necessary
 			// information is already in global elements
-			logger.warn("call block null or not an invoke instruction");
+			
 			return globalId;
 		}
 
@@ -394,10 +365,6 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 
 		if (inst instanceof SSAReturnInstruction) {
 			// only one possible element for returns
-			if (logger.isTraceEnabled()) {
-				logger.trace("making a return element for {}", node.getMethod()
-						.getSignature());
-			}
 			elts.add(new ReturnElement());
 			return elts;
 		}
@@ -405,10 +372,6 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 		if (inst instanceof SSAPutInstruction) {
 			final Set<CodeElement> fieldAccessCodeElts = getFieldAccessCodeElts(
 					node, (SSAPutInstruction) inst);
-			if (logger.isTraceEnabled()) {
-				logger.trace("put outelts: {}",
-						Arrays.toString(fieldAccessCodeElts.toArray()));
-			}
 			elts.addAll(fieldAccessCodeElts);
 		}
 
@@ -450,8 +413,8 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 			try {
 				elts.addAll(CodeElement.valueElements(pa, node, valNo));
 			} catch (IllegalArgumentException e) {
-				logger.error("Exception working on node: " + node);
-				logger.error("Node is in method: " + node.getMethod());
+				
+				
 				throw e;
 			}
 		}
@@ -493,18 +456,11 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 
 		final OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(pk);
 		if (pointsToSet.isEmpty()) {
-			logger.debug(
-					"pointsToSet empty for ref of {}, creating InstanceKey manually",
-					inst);
 			InstanceKey ik = new ConcreteTypeKey(field.getDeclaringClass());
 			elts.add(new FieldElement(ik, fieldRef));
 			elts.add(new InstanceKeyElement(ik));
 		} else {
 			for (InstanceKey ik : pointsToSet) {
-				if (logger.isTraceEnabled()) {
-					logger.trace("adding elements for field {} on {}",
-							field.getName(), ik.getConcreteType().getName());
-				}
 				elts.add(new FieldElement(ik, fieldRef));
 				elts.add(new InstanceKeyElement(ik));
 			}
@@ -529,9 +485,6 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 				inst.getArrayRef());
 		final OrdinalSet<InstanceKey> pointsToSet = pa.getPointsToSet(pk);
 		if (pointsToSet.isEmpty()) {
-			logger.debug(
-					"pointsToSet empty for ref of {}, creating InstanceKey manually",
-					inst);
 			TypeReference arrayType = TypeReference.findOrCreateArrayOf(inst
 					.getElementType());
 			InstanceKey ik = new ConcreteTypeKey(pa.getClassHierarchy()
@@ -539,10 +492,6 @@ public class TaintTransferFunctions<E extends ISSABasicBlock> implements
 			elts.add(new InstanceKeyElement(ik));
 		} else {
 			for (InstanceKey ik : pointsToSet) {
-				if (logger.isTraceEnabled()) {
-					logger.trace("adding element for array store in {}", ik
-							.getConcreteType().getName());
-				}
 				elts.add(new InstanceKeyElement(ik));
 			}
 		}

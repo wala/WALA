@@ -30,7 +30,7 @@ import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.properties.WalaProperties;
-import com.ibm.wala.shrike.cg.DynamicCallGraph;
+import com.ibm.wala.shrike.cg.OfflineDynamicCallGraph;
 import com.ibm.wala.shrikeBT.analysis.Analyzer.FailureException;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -80,7 +80,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
         }
       }
       
-      DynamicCallGraph.main(
+      OfflineDynamicCallGraph.main(
           rtJar == null?
             new String[]{testJarLocation, "-o", instrumentedJarLocation}:
             new String[]{testJarLocation, "-o", instrumentedJarLocation, "--rt-jar", rtJar});

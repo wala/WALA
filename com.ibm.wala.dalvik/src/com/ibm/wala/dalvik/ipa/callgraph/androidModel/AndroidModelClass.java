@@ -47,9 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.FieldImpl;
@@ -90,8 +88,6 @@ import com.ibm.wala.util.strings.Atom;
  *  @todo   Move this class into an other loader? Currently: Primordial
  */
 public final /* singleton */ class AndroidModelClass extends SyntheticClass {
-    private static Logger logger = LoggerFactory.getLogger(AndroidModelClass.class);
-
     public static final TypeReference ANDROID_MODEL_CLASS = TypeReference.findOrCreate(
             ClassLoaderReference.Primordial, TypeName.string2TypeName("Lcom/ibm/wala/AndroidModelClass"));
     private static IClassHierarchy cha;
@@ -108,9 +104,7 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
                 AndroidModelClass.cha = cha;
             }
         } else {
-            if (cha == null) {
-                logger.warn("Giving null as cha is discouraged in getInstance()");
-            } else if (! cha.equals(AndroidModelClass.cha)) {
+        	if (! cha.equals(AndroidModelClass.cha)) {
                 throw new IllegalArgumentException("Cha differs!");
             }
         }
@@ -199,7 +193,7 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
             return methods.get(selector);
         }
         if (selector.equals(MethodReference.initSelector)) {
-            logger.warn("AndroidModelClass is not intended to be initialized");
+            
             return null;
         }
         throw new IllegalArgumentException("Could not resolve " + selector);

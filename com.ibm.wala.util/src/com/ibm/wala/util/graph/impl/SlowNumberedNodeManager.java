@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.graph.impl;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 import com.ibm.wala.util.graph.NumberedNodeManager;
@@ -19,7 +20,7 @@ import com.ibm.wala.util.intset.MutableMapping;
 /**
  * An object which manages node numbers via a mapping.
  */
-public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T> {
+public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T>, Serializable {
 
   /**
    * A bijection between integer <-> node

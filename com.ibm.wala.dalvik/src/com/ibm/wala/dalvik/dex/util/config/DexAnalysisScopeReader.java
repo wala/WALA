@@ -48,20 +48,13 @@
 package com.ibm.wala.dalvik.dex.util.config;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.util.jar.JarFile;
 
-import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.dalvik.classLoader.DexFileModule;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
-import com.ibm.wala.util.config.FileOfClasses;
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.io.FileProvider;
 
 /**
  * Create AnalysisScope from java & dalvik file.

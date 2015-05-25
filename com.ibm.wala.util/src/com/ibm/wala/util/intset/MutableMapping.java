@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,7 +21,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 /**
  * A bit set mapping based on an object array. This is not terribly efficient, but is useful for prototyping.
  */
-public class MutableMapping<T> implements OrdinalSetMapping<T> {
+public class MutableMapping<T> implements OrdinalSetMapping<T>, Serializable {
 
   private static final int INITIAL_CAPACITY = 20;
   

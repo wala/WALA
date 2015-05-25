@@ -49,9 +49,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.DefaultInstantiationBehavior;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior;
@@ -79,8 +76,6 @@ import com.ibm.wala.util.strings.StringStuff;
  *  @author Tobias Blaschke <code@tobiasblaschke.de>
  */
 public final /* singleton */ class AndroidEntryPointManager implements Serializable {
-    private static final Logger logger = LoggerFactory.getLogger(AndroidEntryPointManager.class);
-
     public static final AndroidEntryPointManager MANAGER = new AndroidEntryPointManager();
     public static List<AndroidEntryPoint> ENTRIES = new ArrayList<AndroidEntryPoint>();
     /**
@@ -341,7 +336,6 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
             pack = StringStuff.deployment2CanonicalTypeString(pack);
         }
         if (this.pack == null) {
-            logger.info("Setting the package to {}", pack);
             this.pack = pack;
         } else if (!(this.pack.equals(pack))) {
             throw new IllegalArgumentException("The already set package " + this.pack + " and " + pack +
@@ -365,7 +359,6 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      */
     public String getPackage() {
         if (this.pack == null) {
-            logger.warn("Returning null as package");
             return null;
         } else {
             return this.pack;
@@ -386,7 +379,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
             return this.pack;
         } else {
             if (ENTRIES.isEmpty()) {
-                logger.error("guessPackage() called when no entrypoints had been set");
+                assert false : "guessPackage() called when no entrypoints had been set";
                 return null;
             }
             final String first = ENTRIES.get(0).getMethod().getReference().getDeclaringClass().getName().getPackage().toString();
@@ -453,7 +446,6 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
             throw new IllegalArgumentException("The given Intent is null");
         }
 
-        logger.info("Register Intent {}", intent);
         // Looks a bit weired but works as Intents are only matched based on their action and uri
         overrideIntents.put(intent, intent);
     }
@@ -567,7 +559,6 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
             throw new IllegalArgumentException("The Intent given as 'to' is null");
         }
 
-        logger.info("Override Intent {} to {}", from, to);
         overrideIntents.put(from, to);
     }
 
@@ -590,28 +581,20 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
             while (!(ret.equals(intent))) {
                 // Follow the chain of overrides
                 if (!overrideIntents.containsKey(intent)) {
-                    logger.info("Resolved {} to {}", intent, ret);
                     return ret;
                 } else {
-                    logger.debug("Resolving {} hop over {}", intent, ret);
                     final Intent old = ret;
                     ret = overrideIntents.get(ret);
 
                     if (ret == old) { // Yes, ==
                         // This is an evil hack(tm). I should fix the Intent-Table!
-                        logger.warn("Malformend Intent-Table, staying with " + ret + " for " + intent);
                         return ret;
                     }
                 }
             }
             ret = overrideIntents.get(ret); // Once again to get Info set in register
-            logger.info("Resolved {} to {}", intent, ret);
             return ret;
         } else {
-            logger.info("No information on {} hash: {}", intent, intent.hashCode());
-            for (Intent known : overrideIntents.keySet()) {
-                logger.debug("Known Intents: {} hash: {}", known, known.hashCode());
-            }
             return intent;
         }
     }

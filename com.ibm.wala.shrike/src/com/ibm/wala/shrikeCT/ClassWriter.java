@@ -95,12 +95,14 @@ public class ClassWriter implements ClassConstants {
 
     @Override
     public boolean equals(Object o) {
-      return o != null && o.getClass().equals(getClass()) && ((CWStringItem) o).s.equals(s);
+      return o != null && o.getClass().equals(getClass()) && 
+          ((CWStringItem) o).type == type &&
+          ((CWStringItem) o).s.equals(s);
     }
 
     @Override
     public int hashCode() {
-      return s.hashCode() + 3901;
+      return s.hashCode() + (3901 * type) ;
     }
 
     @Override

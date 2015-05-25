@@ -45,9 +45,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -90,8 +88,6 @@ import com.ibm.wala.util.strings.Atom;
  *  @since  2013-10-18
  */
 public class UnknownTargetModel  extends AndroidModel {
-    private static Logger logger = LoggerFactory.getLogger(UnknownTargetModel.class);
-
     public final Atom name;
     private boolean doMini = true;
     private MiniModel miniModel = null;
@@ -127,8 +123,6 @@ public class UnknownTargetModel  extends AndroidModel {
 
         //this.allInternal = new MiniModel(cha, options, cache, target);
         //this.external = new ExternalModel(cha, options, cache, target);
-
-        logger.debug("Will be known as {}/{}", AndroidModelClass.ANDROID_MODEL_CLASS.getName(), this.name); 
     }
 
     //@Override
@@ -180,7 +174,7 @@ public class UnknownTargetModel  extends AndroidModel {
                 if (othersA != null) {
                     others = new HashSet<TypeName>(Arrays.asList(othersA));
                 } else {
-                    logger.error("{} has no paramteres!", miniModel);
+                    
                     others = new HashSet<TypeName>();
                 }
                 doMini = others.size() > 0;
@@ -196,7 +190,7 @@ public class UnknownTargetModel  extends AndroidModel {
             // not happen.
             final AndroidModelClass mClass = AndroidModelClass.getInstance(this.cha);
             if (mClass.containsMethod(selector)) {
-                logger.error("There is already an Android-Model with name {}!", selector);
+                
                 this.built = true;
                 this.model = (SummarizedMethod) mClass.getMethod(selector);
                 return;
@@ -323,7 +317,7 @@ public class UnknownTargetModel  extends AndroidModel {
             final IMethod externalMethod = this.external.getMethod();
 
             {
-                logger.debug("Calling {} using parameters {}", externalMethod, args);
+                
                 final int callPC = this.body.getNextProgramCounter();
                 final CallSiteReference site = CallSiteReference.make(callPC, externalMethod.getReference(),
                         IInvokeInstruction.Dispatch.STATIC);

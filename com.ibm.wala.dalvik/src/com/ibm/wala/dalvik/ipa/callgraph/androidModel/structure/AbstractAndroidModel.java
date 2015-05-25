@@ -43,9 +43,6 @@ package com.ibm.wala.dalvik.ipa.callgraph.androidModel.structure;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.ExecutionOrder;
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.IExecutionOrder;
@@ -76,8 +73,6 @@ import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
  *  @since      2013-09-07
  */
 public abstract class AbstractAndroidModel  {
-    private static final Logger logger = LoggerFactory.getLogger(AbstractAndroidModel.class);
-    
     private ExecutionOrder currentSection = null;
     protected VolatileMethodSummary body = null;
     protected TypeSafeInstructionFactory insts = null;
@@ -103,7 +98,7 @@ public abstract class AbstractAndroidModel  {
      */
     @Deprecated
     protected int makeBrakingNOP(int PC) {
-        logger.info("Adding Jump-Target at " + PC);
+        
         body.addStatement(insts.GotoInstruction(PC, PC));
         PC++;
         return PC;
@@ -355,7 +350,7 @@ public abstract class AbstractAndroidModel  {
 
         if ((this.currentSection != null) && (this.currentSection.compareTo(section) >= 0)) {
             if (this.currentSection.compareTo(section) == 0) {
-                logger.error("You entered {} twice! Ignoring second atempt.", section);
+                
             } else {
                 throw new IllegalArgumentException("Sections must be in ascending order! When trying to " +
                     "enter " + this.currentSection.toString() + " from " + section.toString());
@@ -374,28 +369,28 @@ public abstract class AbstractAndroidModel  {
         }
         if ((this.currentSection == null) &&
                 (section.compareTo(AndroidEntryPoint.ExecutionOrder.AT_FIRST) >= 0)) {
-            logger.info("ENTER: AT_FIRST");
+            
             PC = enterAT_FIRST(PC);
             this.currentSection = AndroidEntryPoint.ExecutionOrder.AT_FIRST;
         }
 
         if ((this.currentSection.compareTo(AndroidEntryPoint.ExecutionOrder.AT_FIRST) <= 0) &&
                 (section.compareTo(AndroidEntryPoint.ExecutionOrder.BEFORE_LOOP) >= 0)) {
-            logger.info("ENTER: BEFORE_LOOP");
+            
             PC = enterBEFORE_LOOP(PC);
             this.currentSection = AndroidEntryPoint.ExecutionOrder.BEFORE_LOOP;
         }
 
         if ((this.currentSection.compareTo(AndroidEntryPoint.ExecutionOrder.BEFORE_LOOP) <= 0) &&
                 (section.compareTo(AndroidEntryPoint.ExecutionOrder.START_OF_LOOP) >= 0)) {
-            logger.info("ENTER: START_OF_LOOP");
+            
             PC = enterSTART_OF_LOOP(PC);
             this.currentSection = AndroidEntryPoint.ExecutionOrder.START_OF_LOOP;
         }
 
         if ((this.currentSection.compareTo(AndroidEntryPoint.ExecutionOrder.START_OF_LOOP) <= 0) &&
                 (section.compareTo(AndroidEntryPoint.ExecutionOrder.MIDDLE_OF_LOOP) >= 0)) {
-            logger.info("ENTER: MIDDLE_OF_LOOP");
+            
             PC = enterMIDDLE_OF_LOOP(PC);
             this.currentSection = AndroidEntryPoint.ExecutionOrder.MIDDLE_OF_LOOP;
         }
@@ -403,27 +398,27 @@ public abstract class AbstractAndroidModel  {
         if ((this.currentSection.compareTo(AndroidEntryPoint.ExecutionOrder.MIDDLE_OF_LOOP) <= 0) &&
                 (section.compareTo(AndroidEntryPoint.ExecutionOrder.MULTIPLE_TIMES_IN_LOOP) >= 0)) {
             PC = enterMULTIPLE_TIMES_IN_LOOP(PC);
-            logger.info("ENTER: MULTIPLE_TIMES_IN_LOOP");
+            
             this.currentSection = AndroidEntryPoint.ExecutionOrder.MULTIPLE_TIMES_IN_LOOP;
         }
 
         if ((this.currentSection.compareTo(AndroidEntryPoint.ExecutionOrder.MULTIPLE_TIMES_IN_LOOP) <= 0) &&
                 (section.compareTo(AndroidEntryPoint.ExecutionOrder.END_OF_LOOP) >= 0)) {
-            logger.info("ENTER: END_OF_LOOP");
+            
             PC = enterEND_OF_LOOP(PC);
             this.currentSection = AndroidEntryPoint.ExecutionOrder.END_OF_LOOP;
         }
 
         if ((this.currentSection.compareTo(AndroidEntryPoint.ExecutionOrder.END_OF_LOOP) <= 0) &&
                 (section.compareTo(AndroidEntryPoint.ExecutionOrder.AFTER_LOOP) >= 0)) {
-            logger.info("ENTER: AFTER_LOOP");
+            
             PC = enterAFTER_LOOP(PC);
             this.currentSection = AndroidEntryPoint.ExecutionOrder.AFTER_LOOP;
         }
 
         if ((this.currentSection.compareTo(AndroidEntryPoint.ExecutionOrder.AFTER_LOOP) <= 0) &&
             (section.compareTo(AndroidEntryPoint.ExecutionOrder.AT_LAST) >= 0)) {
-            logger.info("ENTER: AT_LAST");
+            
             PC = enterAT_LAST(PC);
             this.currentSection = AndroidEntryPoint.ExecutionOrder.AT_LAST;
         }

@@ -55,8 +55,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.slf4j.LoggerFactory;
-
 import com.ibm.wala.classLoader.ClassLoaderImpl;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
@@ -77,8 +75,6 @@ import com.ibm.wala.util.warnings.Warnings;
  *
  */
 public class WDexClassLoaderImpl extends ClassLoaderImpl {
-	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(WDexClassLoaderImpl.class);
-
     private IClassLoader lParent;
 
     private final SetOfClasses exclusions;
@@ -110,7 +106,6 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
         
         for (Iterator<Module> it = modules.iterator(); it.hasNext();) {
             Module archive = it.next();
-            logger.debug("add archive: : "+archive);
             Set<ModuleEntry> classFiles = getDexFiles(archive);
             
             removeClassFiles(classFiles, classModuleEntries);
@@ -199,7 +194,6 @@ public class WDexClassLoaderImpl extends ClassLoaderImpl {
     						continue;
     					}
  
-    					logger.debug("Load class: " + className);
     					loadedClasses.put(tName, iClass);
     				} else {
     					Warnings.add(InvalidDexFile.create(className));

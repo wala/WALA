@@ -44,9 +44,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -97,8 +95,6 @@ public class Overrides {
     }
 
     protected static class StartComponentMethodTargetSelector implements MethodTargetSelector {
-        private static Logger logger = LoggerFactory.getLogger(StartComponentMethodTargetSelector.class);
-
         protected MethodTargetSelector parent;
         protected MethodTargetSelector child;
         protected final HashMap<MethodReference, SummarizedMethod> syntheticMethods;
@@ -109,7 +105,7 @@ public class Overrides {
          */
         public StartComponentMethodTargetSelector(HashMap<MethodReference, SummarizedMethod> syntheticMethods, MethodTargetSelector child) {
             //for (MethodReference mRef : syntheticMethods.keySet()) {
-            //    logger.debug("Override: " + mRef);
+            //    
             //}
 
             this.syntheticMethods = syntheticMethods;
@@ -167,14 +163,14 @@ public class Overrides {
                 if (caller != null) {   // XXX: Debug remove
                     Context ctx = caller.getContext();
 
-                    logger.info("Overriding {}", mRef);
-                    logger.debug("Come from: {}", ctx.get(ContextKey.CALLER));
-                    logger.debug("Param 1: {}", ctx.get(new ContextKey.ParameterKey(1)));
-                    logger.debug("Receiver Class: {}", receiver);
+                    
+                    
+                    
+                    
                 }
 
                 if (receiver == null) {
-                    logger.warn("Null receiver");
+                    
                     //return null;
                     //throw new IllegalArgumentException("site is null");
                 }

@@ -54,17 +54,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.scandroid.synthmethod.DefaultSCanDroidOptions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
@@ -100,11 +95,6 @@ import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
 public class AndroidAnalysisContext {
-	private static final Logger logger = LoggerFactory
-			.getLogger(AndroidAnalysisContext.class);
-	static {
-//		((ch.qos.logback.classic.Logger) logger).setLevel(Level.TRACE);
-	}
 	private static final String methodSpec = "MethodSummaries.xml";
 	private static final String pathToSpec = "data";
 
@@ -135,7 +125,7 @@ public class AndroidAnalysisContext {
 	public AndroidAnalysisContext(ISCanDroidOptions options, String exclusions)
 			throws IOException, IllegalArgumentException, CancelException,
 			       ClassHierarchyException, URISyntaxException {
-		logger.debug(DefaultSCanDroidOptions.dumpString(options));
+		
 		this.options = options;
 		scope = AndroidAnalysisScope.setUpAndroidAnalysisScope(options.getClasspath(), exclusions, getClass().getClassLoader(), options.getAndroidLibrary());
 		
@@ -145,7 +135,7 @@ public class AndroidAnalysisContext {
 			// log ClassHierarchy warnings
 			for (Iterator<Warning> wi = Warnings.iterator(); wi.hasNext();) {
 				Warning w = wi.next();
-				logger.warn(w.getMsg());
+				
 			}
 		}
 		Warnings.clear();
@@ -274,14 +264,10 @@ public class AndroidAnalysisContext {
 				XMLMethodSummaryReader newSummaryXML = loadMethodSummaries(
 						scope, xmlIStream);
 				summaryClasses.addAll(newSummaryXML.getAllocatableClasses());
-				for (MethodSummary summary : newSummaryXML.getSummaries().values()) {
-					logger.trace("SSA instructions for summary of {}:\n{}", summary.getMethod().getSignature().toString(), Arrays.toString(summary.getStatements()));					
-				}
 				summaries.putAll(newSummaryXML.getSummaries());
 			}
-			logger.debug("loaded " + summaries.size() + " new summaries");
 			// for (MethodReference mr : summaries.keySet()) {
-			// logger.debug("summary loaded for: "+mr.getSignature());
+			// 
 			// }
 
 			s = new FileProvider().getInputStreamFromClassLoader(pathToSpec
@@ -290,9 +276,6 @@ public class AndroidAnalysisContext {
 
 			XMLMethodSummaryReader nativeSummaries = loadMethodSummaries(scope,
 					s);
-
-			logger.debug("loaded " + nativeSummaries.getSummaries().size()
-					+ " native summaries");
 
 			summaries.putAll(nativeSummaries.getSummaries());
 			summaryClasses.addAll(nativeSummaries.getAllocatableClasses());

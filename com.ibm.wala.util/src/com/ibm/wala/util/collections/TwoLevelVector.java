@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -19,7 +20,7 @@ import com.ibm.wala.util.math.Logs;
 /**
  * An {@link IVector} implementation which delegates to pages of int vectors.
  */
-public class TwoLevelVector<T> implements IVector<T> {
+public class TwoLevelVector<T> implements IVector<T>, Serializable {
 
   private static final int PAGE_SIZE = 4096;
 

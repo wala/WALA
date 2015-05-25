@@ -11,9 +11,7 @@
 package com.ibm.wala.dalvik.test.callGraph;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -31,12 +29,10 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -127,10 +123,10 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
   }
 
   @Test
-	public void runTest() throws IOException, ClassHierarchyException, CancelException, InvalidClassFileException, IllegalArgumentException, URISyntaxException {
+	public void runTest() throws Exception {
 		System.err.println("testing " + apkFile + "...");
 		Pair<CallGraph,PointerAnalysis<InstanceKey>> x = makeAPKCallGraph(androidLibs, androidJavaJar, apkFile, new NullProgressMonitor(), ReflectionOptions.ONE_FLOW_TO_CASTS_APPLICATION_GET_METHOD);
-		//System.err.println(x.fst);
+		// System.err.println(x.fst);
 		Set<IMethod> bad = assertUserCodeReachable(x.fst, uncalled);
     assertion(bad + " should be empty", bad.isEmpty());
 		System.err.println("...success testing " + apkFile);
@@ -174,7 +170,7 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
 	  }, new Predicate<File>() {
 	    @Override
 	    public boolean test(File t) {
-	      return t.getAbsolutePath().contains(filter) && t.getName().endsWith("apk") && ! skipTests.contains(t.getName().toString());
+	      return (filter == null || t.getAbsolutePath().contains(filter)) && t.getName().endsWith("apk") && ! skipTests.contains(t.getName().toString());
 	    } }, new File(droidBenchRoot + "/apk/"));
 	  return files;
 	}

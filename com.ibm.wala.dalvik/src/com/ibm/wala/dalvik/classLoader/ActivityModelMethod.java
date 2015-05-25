@@ -55,8 +55,6 @@ import org.jf.dexlib.ClassDefItem;
 import org.jf.dexlib.DexFile;
 import org.jf.dexlib.Section;
 import org.jf.dexlib.Code.Opcode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.dalvik.dex.instructions.Invoke;
 import com.ibm.wala.util.io.FileProvider;
@@ -66,8 +64,6 @@ import com.ibm.wala.util.io.FileProvider;
  */
 @Deprecated
 public class ActivityModelMethod extends DexIMethod {
-	private static final Logger logger = LoggerFactory
-			.getLogger(ActivityModelMethod.class);
 	private static EncodedMethod ActivityModelM;
 
 	public ActivityModelMethod(EncodedMethod encodedMethod, DexIClass klass) {
@@ -244,9 +240,6 @@ public class ActivityModelMethod extends DexIMethod {
 		}
 		instructions.add(new Invoke.InvokeVirtual(instLoc, cname, mname, pname,
 				args, opcode, this));
-		logger.debug("\tActivityModelMethod " + opcode.toString() + " class: "
-				+ cname + ", method name: " + mname + ", prototype string: "
-				+ pname);
 
 	}
 }

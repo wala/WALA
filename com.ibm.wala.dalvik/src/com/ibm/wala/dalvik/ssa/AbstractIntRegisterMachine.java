@@ -12,14 +12,11 @@
 package com.ibm.wala.dalvik.ssa;
 
 import java.util.Iterator;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import com.ibm.wala.dalvik.classLoader.DexCFG;
 import com.ibm.wala.dalvik.classLoader.DexCFG.BasicBlock;
 import com.ibm.wala.dalvik.classLoader.DexConstants;
-import com.ibm.wala.dalvik.classLoader.DexIMethod;
 import com.ibm.wala.dalvik.dex.instructions.ArrayGet;
 import com.ibm.wala.dalvik.dex.instructions.ArrayLength;
 import com.ibm.wala.dalvik.dex.instructions.ArrayPut;
@@ -75,8 +72,6 @@ import com.ibm.wala.util.debug.UnimplementedError;
  */
 @SuppressWarnings("rawtypes")
 public abstract class AbstractIntRegisterMachine implements FixedPointConstants {
-	private static final Logger logger = LoggerFactory.getLogger(AbstractIntRegisterMachine.class);
-
     private static final boolean DEBUG = false;
 
     public static final int TOP = -1;
@@ -853,14 +848,14 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
             currentSuccessorBlock = null;
             Instruction[] instructions = getInstructions();
             if (DEBUG) {
-                logger.debug(("Entry to BB" + cfg.getNumber(basicBlock) + " " + workingState));
+                System.err.println("Entry to BB" + cfg.getNumber(basicBlock) + " " + workingState);
             }
             for (int i = basicBlock.getFirstInstructionIndex(); i <= basicBlock.getLastInstructionIndex(); i++) {
                 currentInstructionIndex = i;
                 instructions[i].visit(visitor);
 
                 if (DEBUG) {
-                    logger.debug(("After " + instructions[i] + " " + workingState));
+                    
                 }
             }
             return workingState;
@@ -872,13 +867,13 @@ public abstract class AbstractIntRegisterMachine implements FixedPointConstants 
             currentSuccessorBlock = to;
             Instruction[] instructions = getInstructions();
             if (DEBUG) {
-                logger.debug(("Entry to BB" + cfg.getNumber(from) + " " + workingState));
+                System.err.println("Entry to BB" + cfg.getNumber(from) + " " + workingState);
             }
             for (int i = from.getFirstInstructionIndex(); i <= from.getLastInstructionIndex(); i++) {
                 currentInstructionIndex = i;
                 instructions[i].visit(edgeVisitor);
                 if (DEBUG) {
-                    logger.debug(("After " + instructions[i] + " " + workingState));
+                    
                 }
             }
             return workingState;

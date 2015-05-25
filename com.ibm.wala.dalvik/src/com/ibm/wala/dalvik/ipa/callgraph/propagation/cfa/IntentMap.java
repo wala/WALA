@@ -40,18 +40,15 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
 
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Logger;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.StringStuff;
-
-import java.util.Map;
-import java.util.HashMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *  Stores references to the WALA-Intent objects.
@@ -61,8 +58,6 @@ import org.slf4j.LoggerFactory;
  *  @author Tobias Blaschke <code@tobiasblaschke.de>
  */
 /*package*/ class IntentMap {
-    private static final Logger logger = LoggerFactory.getLogger(IntentContextSelector.class);
-
     private final Map<InstanceKey, Intent> seen = new HashMap<InstanceKey, Intent>();
     private final Map<Intent, Intent> immutables = new HashMap<Intent, Intent>();
 
@@ -75,7 +70,7 @@ import org.slf4j.LoggerFactory;
             final Intent immutable = intent.clone();
             immutable.setImmutable();
             immutables.put(intent, immutable);
-            logger.debug("Now {} immutables", immutables.size());
+            
             return immutable;
         }
     }
@@ -185,7 +180,7 @@ import org.slf4j.LoggerFactory;
             }
             return intent;
         } else {
-            logger.error("setAction: No Intent found for key " + key);
+            
             final Intent intent = create(key, action);
             return intent;
         }
@@ -203,7 +198,7 @@ import org.slf4j.LoggerFactory;
 
     public Intent setAction(final InstanceKey key, final InstanceKey actionKey, boolean isExplicit) {
         if (actionKey == null) {
-            logger.trace("Intent: given action is null, keeping it untouched.");
+            
             return find(key);
         }
         final String action;
@@ -218,7 +213,7 @@ import org.slf4j.LoggerFactory;
                     throw new IllegalArgumentException("Wrong action type: " + actionO.getClass());
                 }
             } else {
-                logger.error("Can't extract the action from Key {} Type {} - unbinding", actionKey, actionKey.getClass());
+                
                 unbind(key);
                 return null;
             }

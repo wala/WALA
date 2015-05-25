@@ -43,9 +43,7 @@ package com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -81,7 +79,6 @@ import com.ibm.wala.util.strings.Atom;
  *  @since  2013-10-22
  */
 public class AndroidStartComponentTool {
-    private static Logger logger = LoggerFactory.getLogger(AndroidStartComponentTool.class);
     
     private final IClassHierarchy cha;
 //    private final MethodReference asMethod;
@@ -133,7 +130,7 @@ public class AndroidStartComponentTool {
         //}
 
 
-        logger.debug("Starting Component {} from {} ", info, callerNd);
+        
         this.cha = cha;
 //        this.asMethod = asMethod;
         this.flags = flags;
@@ -245,7 +242,7 @@ public class AndroidStartComponentTool {
      */
     public SSAValue fetchCallerContext() {
         /*if (flags.contains(StarterFlags.CONTEXT_FREE)) {
-            logger.warn("Asking for context when Context-Free");
+            
             return null;    // XXX: Return a synthetic null?
         }*/
         if (caller == null) {
@@ -257,14 +254,14 @@ public class AndroidStartComponentTool {
         final IClass iApp = cha.lookupClass(AndroidTypes.Application);
         final IClass iService = cha.lookupClass(AndroidTypes.Service);
 
-        logger.debug("Fetching caller context...");
+        
         final SSAValue androidContext;
         if (caller.getName().equals(AndroidTypes.ContextWrapperName)) {
             this.callerContext = AndroidTypes.AndroidContextType.USELESS;
             return null;
             /*{ // Fetch ContextWrapperName.mBase => androidContext
                 androidContext = pm.getUnmanaged(AndroidTypes.Context, "callerContext");
-                logger.debug("Fetching ContextWrapperName.mBase");
+                
 
                 final FieldReference mBaseRef = FieldReference.findOrCreate(AndroidTypes.ContextWrapper, Atom.findOrCreateAsciiAtom("mBase"),
                         AndroidTypes.Context);
@@ -281,14 +278,14 @@ public class AndroidStartComponentTool {
             { // self is already the right context
                 androidContext = self;
                 this.callerContext = AndroidTypes.AndroidContextType.CONTEXT_IMPL;
-                logger.info("Caller has android-context type: ContextImpl");
+                
                 return androidContext;
             }
         } else if (cha.isAssignableFrom(iActivity, iCaller)) {
             // We don't need it for now - TODO grab anyway
             androidContext = null;
             this.callerContext = AndroidTypes.AndroidContextType.ACTIVITY;
-            logger.info("Caller has android-context type: Activity");
+            
             return androidContext;
         } else if (caller.equals(AndroidModelClass.ANDROID_MODEL_CLASS)) {
             // TODO: Return something useful
@@ -298,17 +295,17 @@ public class AndroidStartComponentTool {
             // XXX ???
             androidContext = self;
             this.callerContext = AndroidTypes.AndroidContextType.CONTEXT_BRIDGE;
-            logger.info("Caller has android-context type: BridgeContext");
+            
             return androidContext;
         } else if (cha.isAssignableFrom(iApp, iCaller)) {
             androidContext = self;
             this.callerContext = AndroidTypes.AndroidContextType.APPLICATION;
-            logger.info("Caller has android-context type: Application");
+            
             return androidContext;
         } else if (cha.isAssignableFrom(iService, iCaller)) {
             androidContext = self;
             this.callerContext = AndroidTypes.AndroidContextType.SERVICE;
-            logger.info("Caller has android-context type: Service");
+            
             return androidContext;
         } else {
             throw new UnsupportedOperationException("Can not handle the callers android-context of " + caller);
@@ -325,7 +322,7 @@ public class AndroidStartComponentTool {
      *  @throws UnsupportedOperationException when fetching is not supported with the current settings
      */
     public SSAValue fetchIBinder(SSAValue androidContext) {
-        logger.debug("Fetching context to use for call...");
+        
         final SSAValue iBinder = pm.getUnmanaged(AndroidTypes.IBinder, "foreignIBinder");
 
         if (flags.contains(StarterFlags.CONTEXT_FREE)) {
@@ -365,7 +362,7 @@ public class AndroidStartComponentTool {
                 redirect.addStatement(invokation);
             }
        
-            logger.info("The context to use for the call is from an IBinder");
+            
             return iBinder;
         //} else if (caller.getName().equals(AndroidTypes.ActivityName)) {
         } else if (this.callerContext == AndroidTypes.AndroidContextType.ACTIVITY) {
@@ -400,14 +397,13 @@ public class AndroidStartComponentTool {
                 redirect.addStatement(invokation);
             } // */
         
-            logger.info("The context (IBinder) to use for the call is the one from the calling activity");
             return iBinder;
         } else if (this.callerContext == AndroidTypes.AndroidContextType.CONTEXT_IMPL) {
             // For bindService its mActivityToken - TODO: For the rest? 
             // startActivity uses mMainThread.getApplicationThread()
 
             { // read mActivityToken -> iBinder
-                logger.debug("Fetching ContextImpl.mActivityToken to iBinder");
+                
 
                 final FieldReference mActivityTokenRef = FieldReference.findOrCreate(AndroidTypes.ContextImpl,
                         Atom.findOrCreateAsciiAtom("mActivityToken"), AndroidTypes.IBinder);
@@ -416,11 +412,10 @@ public class AndroidStartComponentTool {
                 redirect.addStatement(getInst);
             }
         
-            logger.info("The context (IBinder) to use for the call is the one from the caller");
             return iBinder;
         } else if (this.callerContext == AndroidTypes.AndroidContextType.CONTEXT_BRIDGE) {
             // TODO: Return something useful
-            logger.error("Not Implemented: Fetch an IBinder from a BridgeContext.");
+            
             return null;
         } else if (caller.equals(AndroidModelClass.ANDROID_MODEL_CLASS)) {
             // TODO: Return something useful
@@ -438,10 +433,10 @@ public class AndroidStartComponentTool {
             // TODO: Some day we may throe here...
             return;
         }
-        logger.info("Assigning the iBinder");
+        
         // TODO: Use Phi?
         for (SSAValue activity : allActivities) {
-            logger.debug("\tto: {}", activity);
+            
             //final int callPC = redirect.getNextProgramCounter();
 
             final FieldReference mTokenRef = FieldReference.findOrCreate(AndroidTypes.Activity, Atom.findOrCreateAsciiAtom("mToken"),
@@ -459,10 +454,10 @@ public class AndroidStartComponentTool {
         if (intent == null) {
             throw new IllegalArgumentException("Null-Intent");
         }
-        logger.info("Assigning the intent");
+        
         // TODO: Use Phi?
         for (SSAValue activity : allActivities) {
-            logger.debug("\tto: {}", activity);
+            
 
             final int callPC = redirect.getNextProgramCounter();
             final Selector mSel = Selector.make("setIntent(Landroid/content/Intent;)V");
@@ -490,7 +485,7 @@ public class AndroidStartComponentTool {
             final SSAValue tmpResultCode = pm.getUnmanaged(TypeReference.Int, "mResultCode");
             { // Fetch mResultCode
                 //redirect.setLocalName(tmpResultCode, "gotResultCode");
-                logger.debug("Fetching ResultCode");
+                
 
                 final FieldReference mResultCodeRef = FieldReference.findOrCreate(AndroidTypes.Activity, Atom.findOrCreateAsciiAtom("mResultCode"),
                         TypeReference.Int);
@@ -502,7 +497,7 @@ public class AndroidStartComponentTool {
             final SSAValue tmpResultData = pm.getUnmanaged(AndroidTypes.Intent, "mResultData");
             { // Fetch mResultData
                 //redirect.setLocalName(tmpResultData, "gotResultData");
-                logger.debug("Fetching Result data");
+                
 
                 final FieldReference mResultDataRef = FieldReference.findOrCreate(AndroidTypes.Activity, Atom.findOrCreateAsciiAtom("mResultData"),
                         AndroidTypes.Intent);
@@ -522,8 +517,6 @@ public class AndroidStartComponentTool {
      *  Add Phi (if necessary) - not if only one from.
      */
     public SSAValue addPhi(List<? extends SSAValue> from) {
-        logger.debug("Add Phi({})", from);
-
         if (from.size() == 1) {
             return from.get(0);
         } else {

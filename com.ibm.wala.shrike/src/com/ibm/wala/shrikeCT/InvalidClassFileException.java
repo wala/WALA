@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.shrikeCT;
 
+
 /**
  * This exception is thrown when we detect that the incoming class file data was not a valid class file.
  */

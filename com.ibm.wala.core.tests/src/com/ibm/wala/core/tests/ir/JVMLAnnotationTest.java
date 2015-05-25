@@ -2,6 +2,8 @@ package com.ibm.wala.core.tests.ir;
 
 import java.io.IOException;
 
+import org.junit.Assert;
+
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -25,5 +27,20 @@ public class JVMLAnnotationTest extends AnnotationTest {
   
   public JVMLAnnotationTest() throws ClassHierarchyException, IOException {
     super(makeCHA());
+  }
+
+  @Override
+  protected void assertEquals(Object a, Object b) {
+    Assert.assertEquals(a, b);
+  }
+
+  @Override
+  protected void assertNotNull(String msg, Object obj) {
+    Assert.assertNotNull(msg, obj);
+  }
+
+  @Override
+  protected void assertTrue(String x, boolean b) {
+    Assert.assertTrue(x, b);
   }
 }

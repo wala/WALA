@@ -59,8 +59,6 @@ import org.scandroid.flow.InflowAnalysis;
 import org.scandroid.flow.types.FlowType;
 import org.scandroid.flow.types.StaticFieldFlow;
 import org.scandroid.util.CGAnalysisContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -85,7 +83,6 @@ import com.ibm.wala.util.intset.OrdinalSet;
  *
  */
 public class StaticFieldSourceSpec extends SourceSpec {
-	private static final Logger logger = LoggerFactory.getLogger(EntryArgSourceSpec.class);
 
 	private final IField field;
 
@@ -128,7 +125,7 @@ public class StaticFieldSourceSpec extends SourceSpec {
 		if (pointsToSet.isEmpty()) {
 			IClassHierarchy cha = im.getClassHierarchy();
 			if (null == cha.lookupClass(typeRef)) {
-				logger.warn("could not resolve class for {}", field);
+				
 				return;
 			}
 			if (cha.isInterface(typeRef)) {
@@ -140,7 +137,7 @@ public class StaticFieldSourceSpec extends SourceSpec {
 			
 			IClass clazz = cha.lookupClass(typeRef);
 			if (null == clazz) {
-				logger.error("couldn't find entry arg class {}", typeRef);
+				
 			} else {
 				InstanceKey ik = new ConcreteTypeKey(clazz);
 				valueElements.add(new InstanceKeyElement(ik));

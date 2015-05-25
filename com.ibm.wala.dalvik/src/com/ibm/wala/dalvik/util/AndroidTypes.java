@@ -40,9 +40,9 @@
  */
 package com.ibm.wala.dalvik.util;
 
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
 
 /**
  *  Constants for types used by the AndroidModel

@@ -44,9 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.ExecutionOrder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
@@ -76,8 +74,6 @@ import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
  *  @author     Tobias Blaschke <code@tobiasblaschke.de>
  */
 public class LoopAndroidModel extends SingleStartAndroidModel {
-    private static final Logger logger = LoggerFactory.getLogger(LoopAndroidModel.class);
-    
     //protected VolatileMethodSummary body;
     //protected JavaInstructionFactory insts;
     //protected DexFakeRootMethod.ReuseParameters paramTypes;
@@ -102,7 +98,7 @@ public class LoopAndroidModel extends SingleStartAndroidModel {
      * {@inheritDoc}
      */
     protected int enterSTART_OF_LOOP (int PC) {
-        logger.info("PC {} is the jump target of START_OF_LOOP", PC);
+        
         
         this.outerLoopPC = PC;
         PC = makeBrakingNOP(this.outerLoopPC);
@@ -141,7 +137,7 @@ public class LoopAndroidModel extends SingleStartAndroidModel {
         // Insert the Phis at the beginning of the Block
         int phiPC = outerLoopPC + 1;
         boolean oldAllowReserved = body.allowReserved(true);
-        logger.info("Setting block-inner Phis");
+        
         for (TypeReference phiType : outerStartingPhis.keySet()) {
             final SSAValue oldPhi = outerStartingPhis.get(phiType);
             final List<SSAValue> forPhi = new ArrayList<SSAValue>(2);
@@ -156,19 +152,19 @@ public class LoopAndroidModel extends SingleStartAndroidModel {
         body.allowReserved(oldAllowReserved);
        
         // Close the Loop
-        logger.info("Closing Loop");
-        logger.info("PC {}: Goto {}", PC, outerLoopPC);
+        
+        
         body.addStatement(insts.GotoInstruction(PC, outerLoopPC));
         paramManager.scopeUp();
         
         // Add Phi-Statements at the beginning of this block...
-        logger.info("Setting outer-block Phis");
+        
         for (TypeReference phiType : outerStartingPhis.keySet()) {
             final VariableKey  phiKey = outerStartingPhis.get(phiType).key;
             PC = body.getNextProgramCounter();
 
             List<SSAValue> all = paramManager.getAllForPhi(phiKey);
-            logger.debug("Into phi {} for {}", all, phiType.getName());
+            
             // Narf ... unpacking...
 
             paramManager.invalidate(phiKey);
@@ -188,7 +184,7 @@ public class LoopAndroidModel extends SingleStartAndroidModel {
      *  {@inheritDoc}
      */
     protected int leaveAT_LAST (int PC) {
-        logger.info("Leaving Model with PC = {}", PC);
+        
         return PC;
     }
 

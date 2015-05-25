@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
+import java.io.Serializable;
 import java.util.Vector;
 
 import com.ibm.wala.util.math.Logs;
@@ -17,7 +18,7 @@ import com.ibm.wala.util.math.Logs;
 /**
  * an int vector implementation which delegates to pages of int vectors.
  */
-public class TwoLevelIntVector implements IntVector {
+public class TwoLevelIntVector implements IntVector, Serializable {
 
   private static final int PAGE_SIZE = 4096;
 

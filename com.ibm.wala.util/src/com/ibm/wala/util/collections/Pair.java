@@ -10,12 +10,13 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import com.ibm.wala.util.debug.Assertions;
 
-public class Pair<T,U> {
+public class Pair<T,U> implements Serializable {
 
   public final T fst;
   public final U snd;

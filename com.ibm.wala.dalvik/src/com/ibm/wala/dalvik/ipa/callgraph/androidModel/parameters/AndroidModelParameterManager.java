@@ -44,9 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.MethodReference;
@@ -75,8 +73,7 @@ import com.ibm.wala.util.ssa.SSAValue;
  *      might be not neccessary.
  */
 public class AndroidModelParameterManager {
-    private static final Logger logger = LoggerFactory.getLogger(AndroidModelParameterManager.class);
-
+ 
     private enum ValueStatus {
         UNUSED,             /** Value has never been mentioned before */
         UNALLOCATED,        /** Awaiting to be set using setAllocation */ 
@@ -186,7 +183,7 @@ public class AndroidModelParameterManager {
                         nextLocal = ssaValue + 1;
                     }
 
-                    logger.debug("reSetting SSA {} to allocated {}", ssaValue, type.getName());
+                    
                     param.status = ValueStatus.ALLOCATED;
                     param.ssa = ssaValue;
                     param.setInScope = currentScope;
@@ -211,7 +208,7 @@ public class AndroidModelParameterManager {
             List<ManagedParameter> aParam = new ArrayList<ManagedParameter>();
             aParam.add(param);
 
-            logger.debug("Setting SSA{} to allocated {} ", ssaValue, type.getName());
+            
             seenTypes.put(type, aParam);
             return;
         }
@@ -270,14 +267,13 @@ public class AndroidModelParameterManager {
                     param.setInScope = currentScope;
 //                    param.setBy = setBy;
 
-                    logger.info("Setting SSA {} to phi {} now {}", ssaValue, type.getName(), param.status);
                     didPhi = true;
                 } else if (param.setInScope == currentScope) {
                     if (param.status == ValueStatus.INVALIDATED) {
-                        logger.info("Closing SSA Value {} in scope {} for {}", param.ssa, param.setInScope, param.type.getName());
+                        
                         param.status = ValueStatus.CLOSED;
                     } else if (param.status == ValueStatus.FREE_INVALIDATED) {       // TODO: FREE CLOSED
-                        logger.info("Closing free SSA Value {} in scope {} for {}", param.ssa, param.setInScope, param.type.getName());
+                        
                         param.status = ValueStatus.FREE_CLOSED;
                     }
                 } else if (param.setInScope < currentScope) {
@@ -300,7 +296,7 @@ public class AndroidModelParameterManager {
                 nextLocal = ssaValue + 1;
             }
 
-            logger.debug("Setting SSA {} to phi {}", ssaValue, type.getName());
+            
             List<ManagedParameter> aParam = new ArrayList<ManagedParameter>();
             aParam.add(param);
 
@@ -341,7 +337,7 @@ public class AndroidModelParameterManager {
             seenTypes.put(type, aParam);
         }
 
-        logger.debug("Returning as Free SSA: {} for {}.", param.ssa, type.getName());
+        
         return param.ssa;
     }
 
@@ -383,7 +379,7 @@ public class AndroidModelParameterManager {
             seenTypes.put(type, aParam);
         }
 
-        logger.debug("Returning as Unallocated SSA: {} for {}.", param.ssa, type.getName());
+        
         return param.ssa;
     }
 
@@ -422,10 +418,10 @@ public class AndroidModelParameterManager {
                     (param.status == ValueStatus.ALLOCATED)) {
                     assert (param.type.equals(type)) : "Inequal types";
                     if (param.setInScope > currentScope) {
-                        logger.debug("SSA Value {} of {} is out of scope {}", param.ssa, param.type, currentScope);
+                        
                         continue;
                     } else if (param.setInScope == currentScope) {
-                        logger.debug("Returning SSA Value {} of {} is {}", param.ssa, param.type, param.status);
+                        
                         return param.ssa;
                     } else {
                         if (param.setInScope > candidateScope) {
@@ -434,7 +430,7 @@ public class AndroidModelParameterManager {
                         }
                     }
                 } else {
-                    logger.debug("SSA Value {} of {} is {} ", param.ssa, param.type, param.status);
+                    
                 }
             }
         } else {
@@ -442,7 +438,7 @@ public class AndroidModelParameterManager {
         }
 
         if (candidateSSA < 0 ) {
-            logger.debug("Returning inherited (from {} SSA Value {} for {}", candidateScope, candidateSSA, type.getName());
+            
             return candidateSSA;
         } else {
             throw new IllegalStateException("No suitable candidate has been found for " + type.getName());
@@ -615,7 +611,7 @@ public class AndroidModelParameterManager {
                     } else {
                         param.status = ValueStatus.INVALIDATED;
                     }
-                    logger.info("Invalidated SSA {} for type {}", param.ssa, type.getName());
+                    
                 }
             }
         }

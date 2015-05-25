@@ -45,9 +45,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -64,7 +61,6 @@ import com.ibm.wala.util.strings.Atom;
  *  @since  2013-10-25
  */
 public class LoadedInstantiationBehavior extends IInstantiationBehavior implements Serializable {
-    private static Logger logger = LoggerFactory.getLogger(LoadedInstantiationBehavior.class);
 
     private static final class BehviourValue implements Serializable {
         public final InstanceBehavior behaviour;
@@ -201,7 +197,7 @@ public class LoadedInstantiationBehavior extends IInstantiationBehavior implemen
                     testClass = testClass.getSuperclass();
                 }
             } else {
-                logger.warn("I got no classhierarchy. Can't test super classes");
+                
             }
         }
 

@@ -43,9 +43,7 @@ package com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -85,7 +83,6 @@ import com.ibm.wala.util.strings.Atom;
  *  @since  2013-10-15
  */
 public class ExternalModel extends AndroidModel {
-    private static Logger logger = LoggerFactory.getLogger(ExternalModel.class);
 
     public final Atom name;
     private SummarizedMethod activityModel;
@@ -112,7 +109,6 @@ public class ExternalModel extends AndroidModel {
         this.name = Atom.findOrCreateAsciiAtom("startExternal" + target.toString());
 //        this.target = target;
 
-        logger.debug("Will be known as {}/{}", AndroidModelClass.ANDROID_MODEL_CLASS.getName(), this.name); 
     }
 
     //@Override
@@ -155,7 +151,7 @@ public class ExternalModel extends AndroidModel {
          this.body = new VolatileMethodSummary(new MethodSummary(this.mRef));
          this.body.setStatic(true);
 
-         logger.debug("The Selector of the method will be {}", selector);
+         
          populate(null);
 
          this.klass = AndroidModelClass.getInstance(this.cha);
@@ -216,7 +212,7 @@ public class ExternalModel extends AndroidModel {
         SSAValue outIntent;
 
         { // Read out Intent extras
-            logger.debug("Read Intent extras"); 
+             
 
             final int callPC = this.body.getNextProgramCounter();
             // Bundle Intent.getExtras()
@@ -233,7 +229,7 @@ public class ExternalModel extends AndroidModel {
         }
 
         /*{ // Read from the bundle returned by the Intent extras           // TODO Defunct
-            logger.debug("Read Intent extras bundle"); 
+             
             // TODO: If I clone it - does it access all?
             
             final int callPC = this.body.getNextProgramCounter();
@@ -252,7 +248,7 @@ public class ExternalModel extends AndroidModel {
         }
 
         { // Read from the bundle given as argument
-            logger.debug("Read optional argument bundle"); 
+             
             // TODO: If I clone it - does it access all?
             final int callPC = this.body.getNextProgramCounter();
             // Bundle Intent.getExtras()
@@ -269,7 +265,7 @@ public class ExternalModel extends AndroidModel {
         }*/
 
         { // Call Intent.putExtra(String name, int value) do add some new info
-            logger.debug("Calling putExtra");
+            
             final SSAValue outName = new SSAValue(nextLocal++, TypeReference.JavaLangString, this.mRef, "outName");
             this.body.addConstant(outName.getNumber(), new ConstantValue("my.extra.object"));
             final SSAValue outValue = new SSAValue(nextLocal++, TypeReference.Int, this.mRef, "outValue");   // Assign value?
@@ -291,7 +287,7 @@ public class ExternalModel extends AndroidModel {
         }
 
         { // Add return statement on intent
-            logger.debug("Adding return");
+            
 
             final int returnPC = this.body.getNextProgramCounter();
             final SSAInstruction returnInstruction = instructionFactory.ReturnInstruction(returnPC, outIntent);

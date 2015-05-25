@@ -59,9 +59,6 @@ import java.util.Set;
 import org.scandroid.spec.AndroidSpecs;
 import org.scandroid.spec.MethodNamePattern;
 import org.scandroid.util.LoaderUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -89,7 +86,6 @@ import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.strings.Atom;
 
 public class AppModelMethod {
-	private final static Logger logger = LoggerFactory.getLogger(AppModelMethod.class);
 	
 	int nextLocal;
     /**
@@ -223,7 +219,6 @@ public class AppModelMethod {
     				callBacks.add(new MethodParams(im));
     				TypeReference tr = im.getDeclaringClass().getReference(); 
     				if (!typeToID.containsKey(tr)) {
-						logger.debug("AppModel Mapping type "+tr.getName()+" to id " + nextLocal);
 						typeToID.put(tr, nextLocal++);
     					//class is an innerclass
     					if (tr.getName().getClassName().toString().contains("$")) {
@@ -247,7 +242,6 @@ public class AppModelMethod {
     		TypeReference innerTR = TypeReference.findOrCreate(ClassLoaderReference.Application, packageName+outerClassName);
     		trLL.push(innerTR);    		
     		if (!typeToID.containsKey(innerTR)) {
-				logger.debug("AppModel Mapping type "+innerTR.getName()+" to id " + nextLocal);
     			typeToID.put(innerTR, nextLocal++);
     			aClassToTR.put(innerTR, tr);
     		}

@@ -49,13 +49,10 @@
 package com.ibm.wala.dalvik.dex.instructions;
 
 import org.jf.dexlib.Code.Opcode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
 
 public class Switch extends Instruction {
-	private static final Logger logger = LoggerFactory.getLogger(Switch.class);
 
     public final int regA;
     public final int tableAddressOffset;
@@ -82,12 +79,6 @@ public class Switch extends Instruction {
             casesAndLabels[i] = method.getInstructionIndex(pc+casesAndLabels[i]);
 
         defaultLabel = method.getInstructionIndex(pc + pad.getDefaultOffset());
-        logger.debug("SwitchInstruction");
-        for (int i = 0; i < casesAndLabels.length; i+=2) {
-        	logger.debug("\tcase: " + casesAndLabels[i] + 
-        			" label: "+casesAndLabels[i+1]);
-        }
-        logger.debug("\tdefaultLabel: " + defaultLabel);
     }
 
     public int[] getOffsets()

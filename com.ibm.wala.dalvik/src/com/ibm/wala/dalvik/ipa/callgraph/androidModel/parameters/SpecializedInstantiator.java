@@ -44,9 +44,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModelClass;
@@ -78,7 +76,6 @@ import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
  *  @author Tobias Blaschke <code@tobiasblaschke.de>
  */
 public class SpecializedInstantiator extends FlatInstantiator {
-    private static final Logger logger = LoggerFactory.getLogger(SpecializedInstantiator.class);
 
     final IInstantiator parent;
 
@@ -108,7 +105,7 @@ public class SpecializedInstantiator extends FlatInstantiator {
 
     /* package private */ SSAValue createInstance(final TypeReference T, final boolean asManaged, VariableKey key, Set<? extends SSAValue> seen, int currentDepth) {
         if (seen == null) {
-            logger.debug("Empty seen");
+            
             seen = new HashSet<SSAValue>();
         }
        
@@ -232,7 +229,6 @@ public class SpecializedInstantiator extends FlatInstantiator {
             instance.setAssigned();
         }
 
-        logger.info("Created Android-Context from " + appComponents.size() + " components");
         return instance;
     }
 

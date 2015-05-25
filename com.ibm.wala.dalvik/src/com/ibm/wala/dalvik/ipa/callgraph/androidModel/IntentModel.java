@@ -40,8 +40,7 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
 import com.ibm.wala.dalvik.util.AndroidComponent;
@@ -58,8 +57,7 @@ import com.ibm.wala.util.strings.Atom;
  *  @since  2014-02-12
  */
 public class IntentModel extends AndroidModel {
-    private static Logger logger = LoggerFactory.getLogger(IntentModel.class);
-
+ 
     public final Atom name;
     public final Atom target;
 //    private SummarizedMethod activityModel;
@@ -78,9 +76,6 @@ public class IntentModel extends AndroidModel {
 
         this.target = target;
         this.name = Atom.concat(Atom.findOrCreateAsciiAtom("intent"), target.right(target.rIndex((byte)'/') - 1));
-
-        logger.info("Model for {}", target);
-        logger.debug("Will be known as {}/{}.", AndroidModelClass.ANDROID_MODEL_CLASS.getName(), this.name); 
     }
 
     private void register(SummarizedMethod model) {

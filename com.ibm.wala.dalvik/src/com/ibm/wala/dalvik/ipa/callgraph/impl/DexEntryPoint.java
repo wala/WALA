@@ -46,18 +46,16 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchyDweller;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.ipa.cha.IClassHierarchyDweller;
 
 public class DexEntryPoint extends DefaultEntrypoint implements IClassHierarchyDweller {
-	private static final Logger logger = LoggerFactory.getLogger(DexEntryPoint.class);
 /** BEGIN Custom change */    
     private IClassHierarchy cha;
 /** END Custom change */
@@ -88,8 +86,6 @@ public class DexEntryPoint extends DefaultEntrypoint implements IClassHierarchyD
 	@Override
 	protected TypeReference[] makeParameterTypes(IMethod method, int i) {
 		TypeReference[] trA = new TypeReference[] {method.getParameterType(i)};
-		for (TypeReference tr:trA)
-			logger.trace("trA: " + tr);
 		return trA;
 	}
 

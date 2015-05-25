@@ -57,8 +57,6 @@ import org.scandroid.domain.CodeElement;
 import org.scandroid.domain.DomainElement;
 import org.scandroid.domain.IFDSTaintDomain;
 import org.scandroid.domain.LocalElement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.dataflow.IFDS.IUnaryFlowFunction;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -74,8 +72,6 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
  */
 public class CallFlowFunction<E extends ISSABasicBlock> implements
 		IUnaryFlowFunction {
-	private static final Logger logger = LoggerFactory
-			.getLogger(CallFlowFunction.class);
 
 	/**
 	 * A map from the code elements of actual parameters, to the set of code
@@ -95,7 +91,7 @@ public class CallFlowFunction<E extends ISSABasicBlock> implements
 			// add a mapping for each parameter
 			final CodeElement actual = actualParams.get(i);
 			if (!(actual instanceof LocalElement)) {
-				logger.warn("non-local code element in actual params list");
+				
 			}
 			final CodeElement formal = new LocalElement(i + 1); // +1 for SSA
 			Set<CodeElement> existingFormals = paramArgsMap.get(actual);

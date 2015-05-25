@@ -13,10 +13,9 @@ package com.ibm.wala.dalvik.ssa;
 
 import java.nio.ByteBuffer;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 import org.jf.dexlib.Code.Format.ArrayDataPseudoInstruction.ArrayElement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -100,8 +99,6 @@ import com.ibm.wala.util.intset.IntPair;
  * abstraction and moving to a register-transfer language in SSA form.
  */
 public class DexSSABuilder extends AbstractIntRegisterMachine {
-	private static final Logger logger = LoggerFactory.getLogger(DexSSABuilder.class);
-
     public static DexSSABuilder make(DexIMethod method, SSACFG cfg, DexCFG scfg, SSAInstruction[] instructions,
             SymbolTable symbolTable, boolean buildLocalMap, SSAPiNodePolicy piNodePolicy) throws IllegalArgumentException {
         if (scfg == null) {
@@ -370,7 +367,6 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
         }
 
         private void emitInstruction(SSAInstruction s) {
-            logger.debug("Setting instruction "+getCurrentInstructionIndex()+" to "+s);
             instructions[getCurrentInstructionIndex()] = s;
             for (int i = 0; i < s.getNumberOfDefs(); i++) {
                 if (creators.length < (s.getDef(i) + 1)) {
@@ -527,7 +523,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                         value = symbolTable.getConstant((byte_buffer.get() == 1)?true:false);
                     else
                     {
-                        logger.error("Unhandled Primitive Type in visitArrayFill");
+                        
                         value = 0;
                     }
                     emitInstruction(insts.ArrayStoreInstruction(getCurrentInstructionIndex(), arrayRef, index, value, t));
@@ -794,15 +790,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
             @Override
             public void visitInvoke(Invoke instruction) {
                 // TODO: can other methods do indirect reads from a dex method?
-                logger.debug("Visiting invoke for "+instruction);
-                if (workingState.getLocals() != null) {
-                    logger.debug("workingState: ");
-                    for(int i = 0; i < workingState.getLocals().length; i++)
-                    {
-                        logger.debug("  "+i+":"+workingState.getLocal(i)+",");
-                    }
-                }
-//              doIndirectReads(bytecodeIndirections.indirectlyReadLocals(getCurrentInstructionIndex()));
+                //              doIndirectReads(bytecodeIndirections.indirectlyReadLocals(getCurrentInstructionIndex()));
 //              int n = instruction.getPoppedCount();
 //              int n = instruction.args.length;
 //              int[] params = new int[n];
@@ -813,7 +801,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 
                 Language lang = dexCFG.getMethod().getDeclaringClass().getClassLoader().getLanguage();
                 // TODO: check that the signature needed by findOrCreate can use the descriptor
-                logger.debug("****" + instruction.clazzName + "****" + instruction.methodName + "****" + instruction.descriptor);
+                
                 MethodReference m = MethodReference.findOrCreate(lang, loader, instruction.clazzName, instruction.methodName, instruction.descriptor);
 
 
@@ -823,7 +811,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
 //              ((Instruction21c)inst).getRegisterA()));
 
 
-                logger.debug("Created method reference "+m+" from "+instruction.clazzName+" descriptor "+m.getReturnType());
+                
                 IInvokeInstruction.IDispatch code = instruction.getInvocationCode();
                 CallSiteReference site = CallSiteReference.make(getCurrentProgramCounter(), m, code);
                 int exc = reuseOrCreateException();
@@ -841,7 +829,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                 if (n == m.getNumberOfParameters()) {
                     for (int i = 0; i < n; i++) {
                         params[i] = workingState.getLocal(instruction.args[arg_i]);
-                        logger.trace("visitInvoke param["+i+"] = "+params[i]);
+                        
                         if (m.getParameterType(i) == TypeReference.Double || m.getParameterType(i) == TypeReference.Long)
                             arg_i++;
                         arg_i++;
@@ -850,11 +838,10 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                 //there is a "this" parameter in this invoke call
                 else if (n == m.getNumberOfParameters()+1) {
                     params[0] = workingState.getLocal(instruction.args[0]);
-                    logger.trace("visitInvoke param[0] = "+params[0]);
+                    
                     arg_i = 1;
                     for (int i = 0; i < (n-1); i++) {
                         params[i+1] = workingState.getLocal(instruction.args[arg_i]);
-                        logger.trace("visitInvoke param["+(i+1)+"] = "+params[i+1]);
                         if (m.getParameterType(i) == TypeReference.Double || m.getParameterType(i) == TypeReference.Long)
                             arg_i++;
                         arg_i++;

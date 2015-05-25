@@ -40,61 +40,41 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
 
-import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters;
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StartInfo;
+import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.logging.Logger;
+
+import com.ibm.wala.cfg.ControlFlowGraph;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.CodeScanner;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModel;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.MicroModel;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.ExternalModel;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.SystemServiceModel;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs.UnknownTargetModel;
-
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.types.TypeName;
 import com.ibm.wala.dalvik.util.AndroidComponent;
-import com.ibm.wala.dalvik.util.AndroidTypes;
-import com.ibm.wala.types.Descriptor;
-import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.classLoader.CallSiteReference;
-
-import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.ContextKey;
-import com.ibm.wala.types.ClassLoaderReference;
-
-import com.ibm.wala.classLoader.CodeScanner;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.summaries.SummarizedMethod;
-
-import com.ibm.wala.util.collections.EmptyIterator;
-import com.ibm.wala.util.strings.Atom;
-
 import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
-
-import com.ibm.wala.ssa.ISSABasicBlock;
-import com.ibm.wala.cfg.ControlFlowGraph;
-import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.DefUse;
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.types.FieldReference;
-
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.propagation.AbstractTypeInNode;
-
-import java.util.Iterator;
-import com.ibm.wala.util.collections.EmptyIterator;
-import java.util.Set;
-import java.util.EnumSet;
-
+import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.summaries.SummarizedMethod;
+import com.ibm.wala.ssa.DefUse;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.helpers.NOPLogger;
 
 /**
  *  An {@link SSAContextInterpreter} that redirects functions that start Android-Components.
@@ -115,8 +95,6 @@ import org.slf4j.helpers.NOPLogger;
  *  @since  2013-10-14
  */
 public class IntentContextInterpreter implements SSAContextInterpreter {
-    private static final Logger logger = LoggerFactory.getLogger(IntentContextInterpreter.class);
- 
     private final IntentStarters intentStarters;
     private final IClassHierarchy cha;
     private final AnalysisOptions options;
@@ -138,7 +116,7 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
         if (intent.getComponent() != null) {
             return intent.getComponent();
         } else if (intent.getType() == Intent.IntentType.SYSTEM_SERVICE) {
-            logger.error("Called fetchTargetComponent on a SystemService");
+            
             return null;
         } else {
             final Set<AndroidComponent> possibleTargets = intentStarters.getInfo(method.getReference()).getComponentsPossible(); 
@@ -149,9 +127,6 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
                 // TODO: Go interactive and ask user?
                 final Iterator<AndroidComponent> it = possibleTargets.iterator();
                 final AndroidComponent targetComponent = it.next();
-                logger.error("Unable to determine the exact type of component of the function {} calls." +
-                        "Possible targets are {} we'll assume {} for now in " + 
-                        "order to not break fatally here.", method, possibleTargets, targetComponent);
                 return targetComponent;
             }
         }
@@ -184,7 +159,6 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
             throw new IllegalArgumentException("node is null");
         }
         assert understands(node);   // Should already have been checked before
-        logger.debug("IntentContextInterpreter - Retreiving IR of " + node.getMethod().getSignature());
         {
             // TODO: CACHE!
             final Context ctx = node.getContext();
@@ -208,7 +182,7 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
                             info = intentStarters.getInfo(method.getReference());
                             
                             model = new MicroModel(this.cha, this.options, this.cache, intent.getAction());
-                            logger.info("{} resolved to {} - internal", inIntent, intent);
+                            
                             break;
                         case SYSTEM_SERVICE:
                             info = new IntentStarters.StartInfo(
@@ -218,26 +192,26 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
                                     new int[] {1} );
 
                             model = new SystemServiceModel(this.cha, this.options, this.cache, intent.getAction());
-                            logger.info("{} resolved to {} - SystemService", inIntent, intent);
+                            
                             break;
                         case EXTERNAL_TARGET:
                             info = intentStarters.getInfo(method.getReference());
 
                             model = new ExternalModel(this.cha, this.options, this.cache, fetchTargetComponent(intent,method));
-                            logger.info("{} resolved to {} - External {}", inIntent, intent, fetchTargetComponent(intent,method));
+                            
                             break;
                         case STANDARD_ACTION:
-                            logger.warn("Still handling STANDARD_ACTION as UNKONOWN_TARGET: {}", intent.getAction());        // TODO!
+                                    // TODO!
                             // In Order to correctly evaluate a standard-action we would also have to look
                             // at the URI of the Intent.
                         case UNKNOWN_TARGET:
                             info = intentStarters.getInfo(method.getReference());
 
                             model = new UnknownTargetModel(this.cha, this.options, this.cache, fetchTargetComponent(intent, method));
-                            logger.info("{} resolved to {} - {}", inIntent, intent, fetchTargetComponent(intent,method));
+                            
                             break;
                         case IGNORE:
-                            logger.info("{} ignored", inIntent);
+                            
                             return null;
                         default:
                             throw new java.lang.UnsupportedOperationException("The Intent-Type " + intent.getType() + " is not known to IntentContextInterpreter");
@@ -255,8 +229,6 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
             } else {
                 // This should _not_ happen: IntentContextSelector should always create an IntentContext.
                 //
-                logger.error("No target: IntentContextSelector didn't add an IntentContext for the call to: {}, Context: {}", 
-                        node.getMethod(), node.getContext() );
                 final IMethod method = node.getMethod();
                 final IntentStarters.StartInfo info = intentStarters.getInfo(method.getReference());
                 assert (info != null) : "IntentInfo is null! Every Starter should have an StartInfo... - Method " + method.getReference();
@@ -304,7 +276,6 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
         }
         assert understands(node);   // Should already have been checked before
         {
-            logger.debug("My new site for {} in {}", node.getMethod(), node.getContext());
             final IR ir = getIR(node); // Speeeed
             return ir.iterateNewSites();
         }
@@ -317,7 +288,7 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
         }
         assert understands(node);   // Should already have been checked before
         {
-            logger.debug("My call sites");
+            
             final IR ir = getIR(node); // Speeeed
             return ir.iterateCallSites();
         }
@@ -346,7 +317,7 @@ public class IntentContextInterpreter implements SSAContextInterpreter {
 
     @Override
     public boolean recordFactoryType(CGNode node, IClass klass) {
-        //this.logger.error("FATAL: recordFactoryType does not understand Node " + node.toString());
+        //this.
         return false;
     }
 

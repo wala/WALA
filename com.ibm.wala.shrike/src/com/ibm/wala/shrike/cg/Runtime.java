@@ -65,9 +65,11 @@ public class Runtime {
   }
 
   public static void endTrace() {
-    if (runtime.output != null) {
-      runtime.output.close();
-      runtime.output = null;
+    synchronized (runtime) {
+      if (runtime.output != null) {
+        runtime.output.close();
+        runtime.output = null;
+      }
     }
   }
   
@@ -88,8 +90,8 @@ public class Runtime {
     return className;
   }
   
-  public static void execution(Class klass, String method, Object receiver) {
-    if (runtime.filter == null || ! runtime.filter.contains(bashToDescriptor(klass.getName()))) {
+  public static void execution(String klass, String method, Object receiver) {
+    if (runtime.filter == null || ! runtime.filter.contains(bashToDescriptor(klass))) {
       if (runtime.output != null) {
         String caller = runtime.callStacks.get().peek();
         
@@ -106,16 +108,18 @@ public class Runtime {
             }
           }
         
-          String line = String.valueOf(caller) + "\t" + bashToDescriptor(String.valueOf(klass)) + "\t" + String.valueOf(method) + "\n";
+          String line = String.valueOf(caller) + "\t" + bashToDescriptor(klass) + "\t" + String.valueOf(method) + "\n";
           synchronized (runtime) {
-            runtime.output.printf(line);
-            runtime.output.flush();
+            if (runtime.output != null) {
+              runtime.output.printf(line);
+              runtime.output.flush();
+            }
           }
         }
       }
     }
 
-    runtime.callStacks.get().push(bashToDescriptor(klass.getName()) + "\t" + method);
+    runtime.callStacks.get().push(bashToDescriptor(klass) + "\t" + method);
   }
   
   public static void termination(String klass, String method, Object receiver, boolean exception) {

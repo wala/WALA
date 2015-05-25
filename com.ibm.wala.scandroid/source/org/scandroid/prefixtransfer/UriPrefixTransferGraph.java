@@ -62,8 +62,6 @@ import org.scandroid.prefixtransfer.StringBuilderUseAnalysis.StringBuilderToStri
 import org.scandroid.prefixtransfer.modeledAllocations.ConstantString;
 import org.scandroid.prefixtransfer.modeledAllocations.UriAppendString;
 import org.scandroid.prefixtransfer.modeledAllocations.UriParseString;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.analysis.reflection.InstanceKeyWithNode;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -88,8 +86,6 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
 
 public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
 	
-	private static final Logger logger = LoggerFactory.getLogger(UriPrefixTransferGraph.class);
-
     public final Map<InstanceKey, InstanceKeySite> nodeMap = new HashMap<InstanceKey, InstanceKeySite>();
     public final Map<InstanceKey, StringBuilderUseAnalysis> sbuaMap =
     	new HashMap<InstanceKey, StringBuilderUseAnalysis>();
@@ -167,15 +163,12 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
                     try {
                         sbua = new StringBuilderUseAnalysis(ik, pa);
                     } catch(Exception e) {
-                        logger.warn("SBUA failed", e);
+                        
                         return;
                     }
 
                     sbuaMap.put(ik, sbua); // map ik to sbua in some global map
                 }
-            } else {
-                logger.warn("Skipping StringBuilder InstanceKey: " + ik);
-                logger.warn("\tClass loader reference: " + ik.getConcreteType().getClassLoader().getReference());
             }
         }
     }
@@ -206,17 +199,14 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
                             iks.add(mapping.getMappedObject(i));
                         }
                         
-                        logger.debug("adding to UnresolvedDependencies => node: " + node + " => iks: " + iks);
+                        
                         unresolvedDependencies.put(node, iks);
                         // TODO: if this string is created inside the toString function of a string builder,
                         // find the StringBuilderUseAnalysis for that string builder and call getNode(k) to
                         // get the node for this instance key
                         // - this may have to be done in another phase
                     }
-                } else {
-                    logger.warn("Receiver instancekey is null in UriPrefixTransferGraph, Method: "
-                    	+ ((NormalAllocationInNode) receiver).getNode().getMethod().getSignature());
-                }
+                } 
             }
         }
     }
@@ -245,19 +235,12 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
 
 					final OrdinalSet<InstanceKey> returnSet =
 							pa.getPointsToSet(new LocalPointerKey(caller, invoke.getReturnValue(0)));
-					logger.debug("Sizeof returnset: " + returnSet.size() + "--" + lpk);
 					
 					for (final Iterator<InstanceKey> rIK = returnSet.iterator(); rIK.hasNext(); ) {
 						final InstanceKey returnIK = rIK.next();
 						final UriAppendString node = new UriAppendString(mapping.getMappedIndex(returnIK),
 							mapping.getMappedIndex(uriKey), mapping.getMappedIndex(stringKey));
-						
-						logger.debug("\t Uri.withAppendedPath(): "+ invoke + ", returnIK: " + returnIK
-							+ ", uriKey: " + uriKey + ", stringKey: " + stringKey);
-						logger.debug("\t returnIK_Index: " + mapping.getMappedIndex(returnIK)
-							+ ", uriKey_Index: " + mapping.getMappedIndex(uriKey) + ", stringKey_Index: "
-							+ mapping.getMappedIndex(stringKey));
-						
+												
 						if (!nodeMap.containsKey(returnIK)) {
 							addNode(node);
 							nodeMap.put(returnIK, node);
@@ -281,7 +264,6 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
         
         if (hasSignature(allocNode, "android.net.Uri.withAppendedPath(Landroid/net/Uri;Ljava/lang/String;)Landroid/net/Uri;")) {
             //Doesn't seem to be entering this else with the current android jar -- reimplemented above using LocalPointerKey
-            logger.debug("android.net.Uri.withAppendedPath(Landroid/net/Uri;Ljava/lang/String;)Landroid/net/Uri call: " + caller);
             final CallSiteReference csr = (CallSiteReference) context.get(ContextKey.CALLSITE);
             final SSAInvokeInstruction invoke =
             		(SSAInvokeInstruction) caller.getIR().getBasicBlocksForCall(csr)[0].getLastInstruction();
@@ -300,7 +282,6 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
                     			mapping.getMappedIndex(uriKey),
                     			mapping.getMappedIndex(stringKey));
                     
-                    logger.debug("\t Uri.withAppendedPath(): "+ invoke + "..." + uriKey + "..." + stringKey);
                     addNode(node);
                     nodeMap.put(ik, node);
                     final HashSet<InstanceKey> iks = new HashSet<InstanceKey>();
@@ -323,8 +304,8 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
             final CallSiteReference csr = (CallSiteReference) context.get(ContextKey.CALLSITE);
             final SSAInvokeInstruction invoke =
             		(SSAInvokeInstruction) caller.getIR().getBasicBlocksForCall(csr)[0].getLastInstruction();
-            logger.debug("invoke inst: " + invoke + " getuse: " + invoke.getUse(0));
-            logger.debug("in node: " + caller);
+            
+            
             final OrdinalSet<InstanceKey> points =
             	pa.getPointsToSet(new LocalPointerKey(caller, invoke.getUse(0)));
 
@@ -334,7 +315,6 @@ public class UriPrefixTransferGraph implements Graph<InstanceKeySite> {
                 	mapping.getMappedIndex(ik),
                 	mapping.getMappedIndex(stringKey));
                 
-                logger.debug("\t Uri.parse(): "+ invoke + "..." + stringKey);
                 addNode(node);
                 nodeMap.put(ik, node);
                 final HashSet<InstanceKey> iks = new HashSet<InstanceKey>();

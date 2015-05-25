@@ -49,102 +49,77 @@
 package com.ibm.wala.dalvik.dex.instructions;
 
 import org.jf.dexlib.Code.Opcode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.dalvik.classLoader.DexIMethod;
 
 public abstract class Instruction {
 
     public static class Visitor {
-    	private static final Logger logger = LoggerFactory.getLogger(Instruction.Visitor.class);
-
+ 
         public void visitArrayLength(ArrayLength instruction) {
-            logger.error("visitArrayLength not overridden");
-        }
+         }
 
         public void visitArrayGet(ArrayGet instruction) {
-            logger.error("visitArrayGet not overridden");
         }
 
         public void visitArrayPut(ArrayPut instruction) {
-            logger.error("visitArrayPut not overridden");
-        }
+         }
 
         public void visitArrayFill(ArrayFill instruction) {
-            logger.error("visitArrayFill not overridden");
         }
 
         public void visitBinaryOperation(BinaryOperation instruction) {
-            logger.error("visitBinaryOperation not overridden");
         }
 
         public void visitBinaryLiteral(BinaryLiteralOperation binaryLiteralOperation) {
-            logger.error("visitBinaryLiteral not overridden");
         }
 
         public void visitBranch(Branch instruction) {
-            logger.error("visitBranch not overridden");
         }
 
         public void visitCheckCast(CheckCast checkCast) {
-            logger.error("visitCheckCast not overridden");
         }
 
         public void visitConstant(Constant instruction) {
-            logger.error("visitConstant not overridden");
         }
 
         public void visitGetField(GetField instruction) {
-            logger.error("visitGetField not overridden");
         }
 
         public void visitGoto(Goto inst) {
-            logger.error("visitGoto not overridden");
         }
 
         public void visitInstanceof(InstanceOf instruction) {
-            logger.error("visitInstanceof not overridden");
         }
 
         public void visitInvoke(Invoke instruction) {
-            logger.error("visitInvoke not overridden");
         }
 
         public void visitMonitor(Monitor instruction) {
-            logger.error("visitMonitor not overridden");
         }
 
         public void visitNew(New instruction) {
-            logger.error("visitNew not overridden");
         }
 
         public void visitNewArray(NewArray newArray) {
-            logger.error("visitNewArray not overridden");
         }
 
         public void visitNewArrayFilled(NewArrayFilled newArrayFilled) {
-            logger.error("visitNewArrayFilled not overridden");
         }
 
         public void visitPutField(PutField instruction) {
-            logger.error("visitPutField not overridden");
         }
 
         public void visitReturn(Return return1) {
-            logger.error("visitReturn not overridden");
         }
 
         public void visitSwitch(Switch instruction) {
-            logger.error("visitSwitch not overridden");
         }
 
         public void visitThrow(Throw instruction) {
-            logger.error("visitThrow not overridden");
         }
 
         public void visitUnaryOperation(UnaryOperation instruction) {
-            logger.error("visitUnaryOperation not overridden");
         }
 
 

@@ -57,8 +57,6 @@ import java.util.jar.JarFile;
 import org.jf.dexlib.ClassDefItem;
 import org.jf.dexlib.DexFile;
 import org.jf.dexlib.Section;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
@@ -70,8 +68,6 @@ import com.ibm.wala.util.io.TemporaryFile;
  * @author barjo
  */
 public class DexFileModule implements Module {
-	private static final Logger logger = LoggerFactory.getLogger(DexFileModule.class);
-
     private final DexFile dexfile;
     private final Collection<ModuleEntry> entries;
 
@@ -115,7 +111,6 @@ public class DexFileModule implements Module {
 
         Section<ClassDefItem> cldeff = dexfile.ClassDefsSection;
         for (ClassDefItem cdefitems : cldeff.getItems()) {
-            logger.debug("DexFileModule adding class: " + cdefitems.getConciseIdentity());
             entries.add(new DexModuleEntry(cdefitems));
         }
     }

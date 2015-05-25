@@ -40,8 +40,7 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.androidModel;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint;
 import com.ibm.wala.dalvik.util.AndroidComponent;
@@ -73,8 +72,7 @@ import com.ibm.wala.util.strings.Atom;
  *  @since  2013-10-29
  */
 public class MiniModel extends AndroidModel {
-    private static Logger logger = LoggerFactory.getLogger(MiniModel.class);
-
+ 
     private final Atom name;
     private final AndroidComponent forCompo;
     /**
@@ -84,14 +82,14 @@ public class MiniModel extends AndroidModel {
      */
     protected boolean selectEntryPoint(AndroidEntryPoint ep) {
         if (ep.belongsTo(forCompo)) {
-            logger.debug("MiniModel calls: {}", ep); 
+             
             return true;
         }
         return false;
     }
     public Descriptor getDescriptor() throws CancelException {
         final Descriptor descr = super.getDescriptor();
-        logger.info("MiniModel: {}", descr); 
+         
         return descr;
     }
 

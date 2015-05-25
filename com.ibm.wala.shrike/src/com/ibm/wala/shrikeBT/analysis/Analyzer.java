@@ -208,7 +208,6 @@ public class Analyzer {
     }
     
     if (String.valueOf(t1).equals("L;") || String.valueOf(t2).equals("L;")) {
-      System.err.println("++ " + t1 + " -- " + t2 + " ++");
       if (String.valueOf(t1).equals("L;")) {
         return t2;
       } else {
@@ -226,14 +225,6 @@ public class Analyzer {
     
     String x = ClassHierarchy.findCommonSupertype(hierarchy, patchType(t1), patchType(t2));
 
-    if (String.valueOf(t1).contains("groovy/lang/GroovyObject") || String.valueOf(t2).contains("groovy/lang/GroovyObject")) {
-      System.err.println(t1 + " -- " + t2 + " --> " + x); 
-     }
-
-    if ("L?;".equals(x)) {
-      System.err.println(t1 + " -- " + t2);
-    }
-    
     return x;
   }
 
@@ -584,12 +575,6 @@ public class Analyzer {
         String t = findCommonSupertype(ls[lj], curLocals[cj]);
         if (t != ls[lj]) {
           ls[lj] = t;
-          if (longType(curLocals[lj]) != longType(ls[cj])) {
-            System.err.println("merging " + curLocals[cj] + " and " + ls[lj] + " to " + t);
-            if (ls.length > lj+1) {
-              System.err.println("next " + curLocals[cj+1] + " and " + ls[lj+1]);
-            }
-          }
           changed = true;
         }
       }
@@ -725,8 +710,6 @@ public class Analyzer {
                     if (varTypes[bc].length > local && varTypes[bc][local] != null) {
                       String declaredType = varTypes[bc][local];
                       curLocals[local] = declaredType;
-                      
-                      System.err.println("setting local " + local + " to " + declaredType + " at " + instToBC[i] + " in " + classType + " " + signature);
                     }
                   }
                 }
@@ -748,8 +731,6 @@ public class Analyzer {
             computeTypes(target, visitor, makeTypesAt, path);            
           }
         }
-        
-        //System.err.println(i + " -- " + Arrays.toString(curLocals) + " -- " + Arrays.toString(curStack));
         
         int[] targets = instr.getBranchTargets();
         for (int j = 0; j < targets.length; j++) {

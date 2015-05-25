@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -25,7 +26,7 @@ import com.ibm.wala.util.intset.TunedMutableSparseIntSet;
  * This should only be used for small sets ... insertion and deletion are linear
  * in size of set.
  */
-public class SparseVector<T> implements IVector<T> {
+public class SparseVector<T> implements IVector<T>, Serializable {
 
   private final static int DEF_INITIAL_SIZE = 5;
 

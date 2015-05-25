@@ -56,8 +56,6 @@ import org.scandroid.flow.InflowAnalysis;
 import org.scandroid.flow.types.FlowType;
 import org.scandroid.flow.types.ParameterFlow;
 import org.scandroid.util.CGAnalysisContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -84,7 +82,6 @@ import com.ibm.wala.util.intset.OrdinalSet;
  * 
  */
 public class EntryArgSourceSpec extends SourceSpec {
-	private static final Logger logger = LoggerFactory.getLogger(EntryArgSourceSpec.class);
 	
 	public EntryArgSourceSpec(MethodNamePattern name, int[] args) {
         namePattern = name;
@@ -110,10 +107,10 @@ public class EntryArgSourceSpec extends SourceSpec {
 					TypeReference typeRef = node.getMethod().getParameterType(i);
 					IClass clazz = node.getMethod().getClassHierarchy().lookupClass(typeRef);
 					if (null == clazz) {
-						logger.error("couldn't find entry arg class {}", typeRef);
+						
 					} else if (clazz.isInterface()) {						
 						for (IClass impl : pa.getClassHierarchy().getImplementors(typeRef)) {
-							logger.debug("creating instance key {} for interface {}", impl, clazz);
+							
 							InstanceKey ik = new ConcreteTypeKey(impl);
 							valueElements.addAll(ctx.codeElementsForInstanceKey(ik));
 						}
@@ -127,7 +124,7 @@ public class EntryArgSourceSpec extends SourceSpec {
 					valueElements.addAll(ctx.codeElementsForInstanceKey(ik));
 				}
 				InflowAnalysis.addDomainElements(taintMap, block, flow, valueElements);
-				logger.debug("added elements for entry {}: {}", this, valueElements);
+				
 		    }
 		}
 	}

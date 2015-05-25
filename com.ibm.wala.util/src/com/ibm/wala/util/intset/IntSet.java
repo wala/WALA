@@ -10,10 +10,12 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
+import java.io.Serializable;
+
 /**
  * Set of integers; not necessary mutable TODO: extract a smaller interface?
  */
-public interface IntSet {
+public interface IntSet extends Serializable {
 
   /**
    * @return true iff this set contains integer i

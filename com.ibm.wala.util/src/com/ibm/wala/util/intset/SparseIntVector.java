@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
+import java.io.Serializable;
+
 
 /**
  * an int vector implementation designed for low occupancy. Note that get() from
@@ -18,7 +20,7 @@ package com.ibm.wala.util.intset;
  * This should only be used for small sets ... insertion and deletion are linear
  * in size of set.
  */
-public class SparseIntVector implements IntVector {
+public class SparseIntVector implements IntVector, Serializable {
 
   private final static int INITIAL_SIZE = 5;
   private final double EXPANSION = 1.5;

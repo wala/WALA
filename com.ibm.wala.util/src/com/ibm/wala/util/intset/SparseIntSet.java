@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
@@ -21,7 +22,7 @@ import com.ibm.wala.util.debug.UnimplementedError;
 /**
  * A sparse ordered, duplicate-free, fully-encapsulated set of integers; not necessary mutable
  */
-public class SparseIntSet implements IntSet {
+public class SparseIntSet implements IntSet, Serializable {
 
   private final static int SINGLETON_CACHE_SIZE = 5000;
 

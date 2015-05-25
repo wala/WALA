@@ -63,8 +63,6 @@ import org.scandroid.domain.IFDSTaintDomain;
 import org.scandroid.flow.functions.TaintTransferFunctions;
 import org.scandroid.flow.types.FlowType;
 import org.scandroid.util.CGAnalysisContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.dataflow.IFDS.IFlowFunctionMap;
 import com.ibm.wala.dataflow.IFDS.IMergeFunction;
@@ -86,9 +84,8 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 
 
 public class FlowAnalysis {
-	private static final Logger logger = LoggerFactory.getLogger(FlowAnalysis.class);
 
-    public static <E extends ISSABasicBlock>
+	public static <E extends ISSABasicBlock>
     TabulationResult<BasicBlockInContext<E>, CGNode, DomainElement> 
     analyze(final CGAnalysisContext<E> analysisContext,
           Map<BasicBlockInContext<E>,
@@ -143,10 +140,6 @@ public class FlowAnalysis {
               IProgressMonitor progressMonitor, 
               final IFlowFunctionMap<BasicBlockInContext<E>> flowFunctionMap
             ) {
-
-        logger.info("*************************");
-        logger.info("* Running flow analysis *");
-        logger.info("*************************");
 
         final IFDSTaintDomain<E> domain = d;
 
@@ -219,7 +212,7 @@ public class FlowAnalysis {
         	TabulationResult<BasicBlockInContext<E>,CGNode, DomainElement> flowResult = solver.solve();
 //        	if (options.ifdsExplorer()) {
 //        		for (int i = 1; i < domain.getSize(); i++) {        			
-//                    logger.debug("DomainElement #"+i+" = " + domain.getMappedObject(i));        			
+//                            			
 //        		}
 //        		GraphUtil.exploreIFDS(flowResult);
 //        	}

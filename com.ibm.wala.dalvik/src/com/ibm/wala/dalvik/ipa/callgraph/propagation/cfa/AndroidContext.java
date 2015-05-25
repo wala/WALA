@@ -40,12 +40,7 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
 
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerContext;
-
 import com.ibm.wala.dalvik.util.AndroidTypes;
-
-import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;

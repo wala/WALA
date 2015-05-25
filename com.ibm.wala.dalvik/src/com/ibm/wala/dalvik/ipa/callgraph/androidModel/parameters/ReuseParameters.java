@@ -42,9 +42,7 @@ package com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModel;
@@ -82,9 +80,7 @@ import com.ibm.wala.util.strings.Atom;
  *  @since  2013-11-02
  */
 public class ReuseParameters {
-    private Logger logger = LoggerFactory.getLogger(ReuseParameters.class);
-
-    public static class ReuseParameter extends Parameter {
+     public static class ReuseParameter extends Parameter {
         protected ReuseParameter(final int number, final String name, final TypeReference type, final MethodReference mRef, 
                 final int descriptorOffset) {
             super(number, name, type, ParamerterDisposition.PARAM, BasedOn.IMETHOD, mRef, descriptorOffset);
@@ -138,7 +134,7 @@ public class ReuseParameters {
                         if (isReuse(paramType, ALL_TARGETS)) {
                             if (! reuseParameters.contains(paramType)) {    // XXX: Why not use a Set?
                                 reuseParameters.add(paramType);
-                                logger.info("REUSE: {}", paramType.toString());
+                                
                             }
                         }
                     }
@@ -200,7 +196,7 @@ public class ReuseParameters {
                 withName = inCallTo.getLocalVariableName (bcIndex, localNumber);
             } catch (UnsupportedOperationException e) {
                 // DexIMethod doesn't implement this :(
-                logger.warn("{}", e);
+                
                 withName = null;
             }
             asParameterTo = inCallTo.getDeclaringClass().getName();
@@ -220,7 +216,6 @@ public class ReuseParameters {
 
         final InstanceBehavior beh = this.instanceBehavior.getBehavior(param, asParameterTo, inCall, withName);
 
-        logger.debug("getBehavior({}, {}, {}, {}) = {}", param, asParameterTo, inCall, withName, beh);
         return (beh == InstanceBehavior.REUSE);
     }
 
@@ -262,7 +257,7 @@ public class ReuseParameters {
                 final ReuseParameter rp = new ReuseParameter(paramSSA, tName, tRef, mRef, descriptorOffset );
                 pm.setAllocation(rp);
                 //pm.setAllocation(tRef, paramSSA); // TODO: Old-school call
-                logger.info("Register: {}", rp);
+                
 
                 paramSSA++;
             }

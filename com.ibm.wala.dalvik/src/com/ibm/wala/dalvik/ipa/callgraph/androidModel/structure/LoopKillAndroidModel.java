@@ -44,9 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.ExecutionOrder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
@@ -72,8 +70,6 @@ import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
  *  @author     Tobias Blaschke <code@tobiasblaschke.de>
  */
 public class LoopKillAndroidModel extends LoopAndroidModel {
-    private static final Logger logger = LoggerFactory.getLogger(LoopKillAndroidModel.class);
-    
     //protected VolatileMethodSummary body;
     //protected JavaInstructionFactory insts;
     //protected DexFakeRootMethod.ReuseParameters paramTypes;
@@ -96,7 +92,7 @@ public class LoopKillAndroidModel extends LoopAndroidModel {
      * {@inheritDoc}
      */
     protected int enterAT_FIRST(int PC) {
-        logger.info("PC {} is the jump target of START_OF_LOOP", PC);
+        
         
         this.outerLoopPC = PC;
         PC = makeBrakingNOP(this.outerLoopPC);
@@ -135,7 +131,7 @@ public class LoopKillAndroidModel extends LoopAndroidModel {
         // Insert the Phis at the beginning of the Block
         int phiPC = outerLoopPC + 1;
         boolean oldAllowReserved = body.allowReserved(true);
-        logger.info("Setting block-inner Phis");
+        
         for (TypeReference phiType : outerStartingPhis.keySet()) {
             final SSAValue oldPhi = outerStartingPhis.get(phiType);
             final List<SSAValue> forPhi = new ArrayList<SSAValue>(2);
@@ -150,19 +146,19 @@ public class LoopKillAndroidModel extends LoopAndroidModel {
         body.allowReserved(oldAllowReserved);
        
         // Close the Loop
-        logger.info("Closing Loop");
-        logger.info("PC {}: Goto {}", PC, outerLoopPC);
+        
+        
         body.addStatement(insts.GotoInstruction(PC, outerLoopPC));
         paramManager.scopeUp();
         
         // Add Phi-Statements at the beginning of this block...
-        logger.info("Setting outer-block Phis");
+        
         for (TypeReference phiType : outerStartingPhis.keySet()) {
             final VariableKey  phiKey = outerStartingPhis.get(phiType).key;
             PC = body.getNextProgramCounter();
 
             List<SSAValue> all = paramManager.getAllForPhi(phiKey);
-            logger.debug("Into phi {} for {}", all, phiType.getName());
+            
             // Narf ... unpacking...
 
             paramManager.invalidate(phiKey);

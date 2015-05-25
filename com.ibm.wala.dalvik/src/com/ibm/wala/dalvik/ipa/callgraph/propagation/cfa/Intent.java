@@ -40,24 +40,14 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
 
-import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.callgraph.ContextItem;
-import com.ibm.wala.ipa.callgraph.ContextKey;
-import com.ibm.wala.types.TypeName;
+import java.util.logging.Logger;
 
 import com.ibm.wala.dalvik.util.AndroidComponent;
 import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
-
+import com.ibm.wala.ipa.callgraph.ContextItem;
+import com.ibm.wala.ipa.callgraph.ContextKey;
+import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.strings.Atom;
-
-
-import java.util.Map;
-import java.util.Set;
-import java.util.EnumSet;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Determines the target of an Android-Intent.
@@ -84,8 +74,6 @@ import org.slf4j.LoggerFactory;
  * @since   2013-10-12
  */
 public class Intent implements ContextItem, Comparable<Intent> {
-    private static final Logger logger = LoggerFactory.getLogger(Intent.class);
-
     /**
      *  Key into the Context that represents the Intent.
      */
@@ -133,7 +121,6 @@ public class Intent implements ContextItem, Comparable<Intent> {
         this(action, null);
     }
     public Intent(Atom action, Atom uri) {
-        logger.info("Intent({})", action);
         this.action = action;
         this.uri = uri;
         this.type = null;   // Delay computation upon it's need
@@ -153,7 +140,7 @@ public class Intent implements ContextItem, Comparable<Intent> {
                 explicit = Explicit.EXPLICIT;
                 break;
             case EXPLICIT:
-                logger.warn("setExplicit was called multiple times on {}", this);
+                
                 unbind();
         }
     }
@@ -192,13 +179,12 @@ public class Intent implements ContextItem, Comparable<Intent> {
             assert (! immutable) : "Intent was marked immutable - can't change it.";
             this.action = action;
             this.explicit = Explicit.EXPLICIT;
-            logger.info("Intent({})", action);
         } else if (isExplicit() && (! this.action.equals(action))) {
             // We already have the explicit target. Ignore the change.
-            logger.warn("Explicit Intent {} becomes ubound! Secod action {} requested", this, action);
+            
             unbind();
         } else if (! isExplicit() ) {
-            logger.warn("Making implicit Intent {} explictit! Target: {}", this, action);
+            
             assert (! immutable) : "Intent was marked immutable - can't change it.";
             this.action = action;
             this.explicit = Explicit.EXPLICIT;
@@ -225,7 +211,6 @@ public class Intent implements ContextItem, Comparable<Intent> {
         if (this.action == null) {
             assert (! immutable) : "Intent was marked immutable - can't change it.";
             this.action = action;
-            logger.info("Intent({})", action);
         } else if (isExplicit()) {
             // We already have the explicit target. Ignore the change.
         } else if (! action.equals(this.action)) {
@@ -320,7 +305,7 @@ public class Intent implements ContextItem, Comparable<Intent> {
         }
 
         String pack = AndroidEntryPointManager.MANAGER.guessPackage();
-        logger.debug("Is external? {} startsWith {}", intent.action, pack);
+        
        
         if (pack == null) {
             // Unknown so not selected as external

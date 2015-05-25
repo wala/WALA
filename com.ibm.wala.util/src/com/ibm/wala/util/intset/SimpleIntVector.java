@@ -10,12 +10,13 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  * simple implementation of IntVector
  */
-public class SimpleIntVector implements IntVector {
+public class SimpleIntVector implements IntVector, Serializable {
   
   private final static int MAX_SIZE = Integer.MAX_VALUE / 4;
 

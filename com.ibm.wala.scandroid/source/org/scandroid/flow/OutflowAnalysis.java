@@ -73,8 +73,6 @@ import org.scandroid.spec.ISpecs;
 import org.scandroid.spec.SinkSpec;
 import org.scandroid.spec.StaticFieldSinkSpec;
 import org.scandroid.util.CGAnalysisContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dataflow.IFDS.ICFGSupergraph;
@@ -106,8 +104,6 @@ import com.ibm.wala.util.intset.IntSet;
  * 
  */
 public class OutflowAnalysis {
-	private static final Logger logger = LoggerFactory
-			.getLogger(OutflowAnalysis.class);
 
 	private final CGAnalysisContext<IExplodedBasicBlock> ctx;
 	private final CallGraph cg;
@@ -136,7 +132,7 @@ public class OutflowAnalysis {
 			graph.put(source, dests);
 		}
 		dests.add(dest);
-		logger.debug("added edge from {} to {}", source, dest);
+		
 	}
 
 	@SuppressWarnings({ "unused", "unchecked" })
@@ -173,7 +169,7 @@ public class OutflowAnalysis {
 						if (!targetList.get(i).contains(target)) {
 							continue;
 						}
-						logger.debug("Found target: " + target);
+						
 						int[] argNums = sinkSpecs.get(i).getArgNums();
 
 						if (null == argNums) {
@@ -191,8 +187,6 @@ public class OutflowAnalysis {
 
 						IntSet resultSet = flowResult.getResult(block);
 						for (int j = 0; j < argNums.length; j++) {
-							logger.debug("Looping over arg[" + j + "] of "
-									+ argNums.length);
 
 							// The set of flow types we're looking for:
 							Set<FlowType<IExplodedBasicBlock>> taintTypeSet = HashSetFactory.make();
@@ -205,8 +199,6 @@ public class OutflowAnalysis {
 								for (DomainElement de : elements) {
 									if (resultSet.contains(domain
 											.getMappedIndex(de))) {
-										logger.debug("added to taintTypeSpecs: "
-												+ de.taintSource);
 										taintTypeSet.add(de.taintSource);
 									}
 								}
@@ -220,8 +212,6 @@ public class OutflowAnalysis {
 												ik))) {
 									if (resultSet.contains(domain
 											.getMappedIndex(de))) {
-										logger.debug("added to taintTypeSpecs: "
-												+ de.taintSource);
 										taintTypeSet.add(de.taintSource);
 									}
 								}
@@ -230,8 +220,6 @@ public class OutflowAnalysis {
 							for (FlowType<IExplodedBasicBlock> dest : sinkSpecs
 									.get(i).getFlowType(block)) {
 								for (FlowType<IExplodedBasicBlock> source : taintTypeSet) {
-									logger.debug("added edge: " + source
-											+ " \n \tto \n\t" + dest);
 									// flow taint into uriIK
 									addEdge(flowGraph, source, dest);
 								}
@@ -256,18 +244,15 @@ public class OutflowAnalysis {
 
 			CGNode node = cg.getNode(im, Everywhere.EVERYWHERE);
 			if (node == null) {
-				logger.warn("null CGNode for {}", im.getSignature());
+				
 				continue;
 			}
 
 			BasicBlockInContext<IExplodedBasicBlock>[] entriesForProcedure = graph
 					.getEntriesForProcedure(node);
 			if (entriesForProcedure == null || 0 == entriesForProcedure.length) {
-				logger.warn("procedure without entries {}", im.getSignature());
+				
 				continue;
-			}
-			if (1 != entriesForProcedure.length) {
-				logger.error("More than one procedure entry.  (Are you sure you're using an ICFGSupergraph?)");
 			}
 			BasicBlockInContext<IExplodedBasicBlock> entryBlock = entriesForProcedure[0];
 
@@ -286,7 +271,7 @@ public class OutflowAnalysis {
 			// IntIterator itr = flowResult.getResult(block).intIterator();
 			// while (itr.hasNext()) {
 			// int i = itr.next();
-			// logger.debug("domain element at exit: "+domain.getMappedObject(i));
+			// 
 			//
 			//
 			// }
@@ -323,7 +308,7 @@ public class OutflowAnalysis {
 							.getPossibleElements(new InstanceKeyElement(ik))) {
 						if (flowResult.getResult(entryBlock).contains(
 								domain.getMappedIndex(de))) {
-							logger.trace("found outflow in second EntryArgSink loop");
+							
 							addEdge(flowGraph, de.taintSource,
 									new ParameterFlow<IExplodedBasicBlock>(
 											entryBlock, newArgNums[i], false));
@@ -347,29 +332,25 @@ public class OutflowAnalysis {
 			CGNode node = cg.getNode(im, Everywhere.EVERYWHERE);
 
 			if (node == null) {
-				logger.warn("could not find CGNode for SinkSpec {}", ss);
+				
 				continue;
 			}
 
 			BasicBlockInContext<IExplodedBasicBlock>[] exitsForProcedure = graph
 					.getExitsForProcedure(node);
 			if (exitsForProcedure == null || 0 == exitsForProcedure.length) {
-				logger.warn("could not find exit blocks for SinkSpec {}", ss);
+				
 				continue;
 			}
 
 			final Set<DomainElement> possibleElements = domain
 					.getPossibleElements(new ReturnElement());
-			logger.debug("{} possible elements found for ReturnElement",
-					possibleElements.size());
 			for (DomainElement de : possibleElements) {
-				logger.debug("processing domain element {}", de);
+				
 				for (BasicBlockInContext<IExplodedBasicBlock> block : exitsForProcedure) {
-					logger.debug("{} instructions in block",
-							block.getLastInstructionIndex());
 					if (flowResult.getResult(block).contains(
 							domain.getMappedIndex(de))) {
-						logger.debug("original block has edge");
+						
 						addEdge(flowGraph, de.taintSource,
 								new ReturnFlow<IExplodedBasicBlock>(block,
 										false));
@@ -379,7 +360,7 @@ public class OutflowAnalysis {
 					// while (it.hasNext()) {
 					// BasicBlockInContext<E> realBlock = it.next();
 					// if (realBlock.isExitBlock()) {
-					// logger.warn("found edge to exit");
+					// 
 					// // addEdge(flowGraph,de.taintSource, new
 					// ReturnFlow<E>(realBlock, false));
 					// }
@@ -440,14 +421,14 @@ public class OutflowAnalysis {
 			TabulationResult<BasicBlockInContext<IExplodedBasicBlock>, CGNode, DomainElement> flowResult,
 			IFDSTaintDomain<IExplodedBasicBlock> domain, ISpecs s) {
 
-		logger.debug("****************************");
-		logger.debug("* Running outflow analysis *");
-		logger.debug("****************************");
+		
+		
+		
 
 		Map<FlowType<IExplodedBasicBlock>, Set<FlowType<IExplodedBasicBlock>>> taintFlow = HashMapFactory.make();
 
 		SinkSpec[] ss = s.getSinkSpecs();
-		logger.debug(ss.length + " sink Specs. ");
+		
 
 		for (int i = 0; i < ss.length; i++) {
 			if (ss[i] instanceof EntryArgSinkSpec)
@@ -463,11 +444,11 @@ public class OutflowAnalysis {
 						"SinkSpec not yet Implemented");
 		}
 
-		logger.info("************");
-		logger.info("* Results: *");
-		logger.info("************");
+		
+		
+		
 
-		logger.debug("{}", taintFlow.toString());
+		
 
 		/* TODO: re-enable this soon! */
 		/*
@@ -475,13 +456,13 @@ public class OutflowAnalysis {
 		 * WalaGraphToJGraphT walaJgraphT = new WalaGraphToJGraphT(flowResult,
 		 * domain, e.getKey(), graph, cg); logger.debug("Source: " +
 		 * e.getKey()); for(FlowType target:e.getValue()) {
-		 * logger.debug("\t=> Sink: " + target); //logger.debug("SourceNode: "+
+		 *  //logger.debug("SourceNode: "+
 		 * e.getKey().getRelevantNode() +
 		 * "\nSinkNode: "+target.getRelevantNode());
 		 * walaJgraphT.calcPath(e.getKey().getRelevantNode(),
 		 * target.getRelevantNode()); Iterator<DefaultEdge> edgeI =
 		 * walaJgraphT.getPath().getEdgeList().iterator(); if (edgeI.hasNext())
-		 * logger.debug("\t::Method Trace::"); int counter = 1; while
+		 *  int counter = 1; while
 		 * (edgeI.hasNext()) { DefaultEdge edge = edgeI.next();
 		 * logger.debug("\t\t#"+counter+": " +
 		 * walaJgraphT.getJGraphT().getEdgeSource
@@ -502,7 +483,7 @@ public class OutflowAnalysis {
 			SinkSpec ss) {
 		Set<ISinkPoint> sinkPoints = calculateSinkPoints(ss);
 		if (!(ss instanceof StaticFieldSinkSpec)) {
-			logger.debug("for {}, sinkPoints={}", ss, sinkPoints);
+			
 		}
 		for (ISinkPoint sinkPoint : sinkPoints) {
 			for (FlowType<IExplodedBasicBlock> source : sinkPoint.findSources(
@@ -534,7 +515,7 @@ public class OutflowAnalysis {
 		Collection<IMethod> methods = sinkSpec.getNamePattern()
 				.getPossibleTargets(cha);
 		if (null == methods) {
-			logger.warn("no methods found for sink spec {}", sinkSpec);
+			
 		}
 
 		for (IMethod method : methods) {
@@ -562,7 +543,7 @@ public class OutflowAnalysis {
 		Collection<IMethod> methods = sinkSpec.getNamePattern()
 				.getPossibleTargets(cha);
 		if (null == methods) {
-			logger.warn("no methods found for sink spec {}", sinkSpec);
+			
 		}
 
 		Set<CGNode> callees = HashSetFactory.make();
@@ -571,8 +552,8 @@ public class OutflowAnalysis {
 			callees.addAll(cg.getNodes(method.getReference()));
 			calleeRefs.add(method.getReference());
 		}
-		logger.debug("callee nodes {}", callees);
-		logger.debug("callee refs {}", calleeRefs);
+		
+		
 
 		// for each possible callee
 		for (CGNode callee : callees) {
@@ -602,7 +583,7 @@ public class OutflowAnalysis {
 								}
 							}
 							if (invokeIndex == -1) {
-								logger.error("couldn't find invoke instruction in caller node");
+								
 							}
 							final IExplodedBasicBlock block = graph.getICFG()
 									.getCFG(caller)
@@ -634,7 +615,7 @@ public class OutflowAnalysis {
 		Collection<IMethod> methods = sinkSpec.getNamePattern()
 				.getPossibleTargets(cha);
 		if (null == methods) {
-			logger.warn("no methods found for sink spec {}", sinkSpec);
+			
 		}
 
 		// for all possible returning methods

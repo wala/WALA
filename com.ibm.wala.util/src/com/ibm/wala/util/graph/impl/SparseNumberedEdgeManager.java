@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.graph.impl;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -25,7 +26,7 @@ import com.ibm.wala.util.intset.IntSetAction;
 /**
  * An object which tracks edges for nodes that have numbers.
  */
-public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T> {
+public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T>, Serializable {
 
   private final NumberedNodeManager<T> nodeManager;
 

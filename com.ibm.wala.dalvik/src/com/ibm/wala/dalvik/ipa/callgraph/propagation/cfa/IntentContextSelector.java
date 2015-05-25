@@ -40,53 +40,26 @@
  */
 package com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa;
 
-import com.ibm.wala.ipa.callgraph.ContextSelector;
-
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.Intent;
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentMap;
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentContext;
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.AndroidContext;
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentContextInterpreter;
+import java.util.Map;
+import java.util.logging.Logger;
 
 import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.types.Selector;
+import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StartInfo;
+import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
+import com.ibm.wala.dalvik.util.AndroidTypes;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.ipa.callgraph.propagation.NormalAllocationInNode;
-import com.ibm.wala.ipa.callgraph.propagation.AbstractTypeInNode;
-import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
-
-import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.dalvik.util.AndroidTypes;
+import com.ibm.wala.types.Selector;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.intset.EmptyIntSet;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.intset.BimodalMutableIntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
-import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.util.collections.HashMapFactory;
-
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters;
-import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StartInfo;
-
-import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
-
-import com.ibm.wala.util.strings.StringStuff;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.HashMap;
-import com.ibm.wala.util.collections.Pair;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *  Adds Intents to the Context of functions that start Android-Components.
@@ -102,9 +75,7 @@ import org.slf4j.LoggerFactory;
  *  @since  2013-10-14
  */
 public class IntentContextSelector implements ContextSelector {
-    private static final Logger logger = LoggerFactory.getLogger(IntentContextSelector.class);
-
-    private final IntentMap intents = new IntentMap();
+     private final IntentMap intents = new IntentMap();
     private final ContextSelector parent;
     private final IntentStarters intentStarters;
     private final Map<InstanceKey, AndroidContext> seenContext;
@@ -149,7 +120,7 @@ public class IntentContextSelector implements ContextSelector {
                 if (seenContext.containsKey(self)) {
                     ctx = new AndroidContext(ctx, seenContext.get(self).getContextType());
                 } else {
-                    logger.warn("No Android-Context seen for {}", caller);
+                    
                 }
             } // */
 
@@ -162,8 +133,8 @@ public class IntentContextSelector implements ContextSelector {
                         continue;
                     } else if (param.getConcreteType().getName().equals(AndroidTypes.IntentName)) { 
                         if (! intents.contains(param) ) {
-                            logger.error("Unable to resolve Intent called from {}", caller.getMethod());
-                            logger.error("Search Key: {} hash: {}", param, param.hashCode());
+                            
+                            
                             break;
                         } else {
                             intent = intents.find(param);
@@ -180,7 +151,7 @@ public class IntentContextSelector implements ContextSelector {
                 return new IntentContext(ctx, iintent);
                 //return new IntentContext(iintent);
             } else {
-                logger.warn("Encountered unresolvable Intent");
+                
                 intent = new Intent("Unresolvable");
                 intent.setImmutable();
                 AndroidEntryPointManager.MANAGER.addCallSeen(site, intent); 
@@ -205,9 +176,9 @@ public class IntentContextSelector implements ContextSelector {
                 } else {
                     intent = null;
                     if (param == null) {
-                        logger.warn("Got param as 'null'. Obviously can't handle this. Caller was: {}", caller.getMethod());
+                        
                     } else {
-                        logger.warn("Got param as {}. Can't handle this :(", param.getClass());
+                        
                     }
                 }
             }
@@ -215,7 +186,7 @@ public class IntentContextSelector implements ContextSelector {
             // Add the context
             if (intent != null) {
                 AndroidEntryPointManager.MANAGER.addCallSeen(site, intent); 
-                logger.info("SystemService {} in {} by {}", intent, site, caller);
+                
                 final Intent iintent = intents.findOrCreateImmutable(intent);
                 return new IntentContext(ctx, iintent);
                 //return new IntentContext(iintent);
@@ -233,62 +204,55 @@ public class IntentContextSelector implements ContextSelector {
             { // fetch actionKey, uriKey
                 switch (callee.getNumberOfParameters()) { 
                     case 1:
-                        logger.debug("Handling Intent()");
                         actionKey = null;
                         uriKey = null;
                         break;
                     case 2:    
                         if (calleeSel.equals(Selector.make("<init>(Ljava/lang/String;)V"))) {
-                            logger.debug("Handling Intent(String action)");
                             actionKey = actualParameters[1];  
                         } else if (calleeSel.equals(Selector.make("<init>(Landroid/content/Intent;)V"))) {
-                            logger.debug("Handling Intent(Intent other)");
 
                             final InstanceKey inIntent = actualParameters[1];
 
                             if (intents.contains(inIntent)) {
                                 intents.put(self, intents.find(inIntent));
                             } else {
-                                logger.warn("In Intent-Copy constructor: Unable to find the original");
+                                
                             }
                             actionKey = null;
                         } else {
-                            logger.error("No handling implemented for: {}", callee);
+                            
                             actionKey = null;
                         }
                         uriKey = null;
                         break;
                     case 3:
                         if (calleeSel.equals(Selector.make("<init>(Ljava/lang/String;Landroid/net/Uri;)V"))) {
-                            logger.debug("Handling Intent(String action, Uri uri)");
                             // TODO: Use Information of the URI...
                             actionKey = actualParameters[1];  
                             uriKey = actualParameters[2];
                         } else if (calleeSel.equals(Selector.make("<init>(Landroid/content/Context;Ljava/lang/Class;)V"))) {
-                            logger.debug("Handling Intent(Context, Class)");
                             actionKey = actualParameters[2];
                             uriKey = null;
                             isExplicit = true;
                         } else {
-                            logger.error("No handling implemented for: {}",  callee);
+                            
                             actionKey = null;
                             uriKey = null;
                         }
                         break;
                     case 5:
                         if (calleeSel.equals(Selector.make("<init>(Ljava/lang/String;Landroid/net/Uri;Landroid/content/Context;Ljava/lang/Class;)V"))) {
-                            logger.debug("Handling Intent(String action, Uri uri, Context, Class)");
                             actionKey = actualParameters[4];
                             uriKey = actualParameters[2];
                             isExplicit = true;
                         } else {
-                            logger.error("No handling implemented for: {}", callee);
+                            
                             actionKey = null;
                             uriKey = null;
                         }
                         break;
                     default:
-                        logger.error("Can't extract Info from Intent-Constructor: {} (not implemented)", site);
                         actionKey = null;
                         uriKey = null;
                 }
@@ -297,9 +261,9 @@ public class IntentContextSelector implements ContextSelector {
             final Intent intent = intents.findOrCreate(self);   // Creates Wala-internal Intent
 
             if (actionKey == null) {
-                logger.trace("Got action as 'null'. Obviously can't handle this. Caller was {}", caller.getMethod());
+                
                 if (isExplicit) {
-                    logger.warn("An Intent with undeteminable target would be explicit - unbinding. Caller was {}", caller.getMethod());
+                    
                     intent.unbind();
                 }
             } else {
@@ -310,7 +274,7 @@ public class IntentContextSelector implements ContextSelector {
             //    intents.setExplicit(self);
             //}
 
-            logger.debug("Setting the target of Intent {} in {} by {}", intent, site, caller);
+            
             // TODO: Evaluate uriKey
         } else if (callee.getSelector().equals(Selector.make("setAction(Ljava/lang/String;)Landroid/content/Intent;")) && 
                 callee.getDeclaringClass().getName().equals(AndroidTypes.IntentName)) {
@@ -319,18 +283,18 @@ public class IntentContextSelector implements ContextSelector {
             final Intent intent = intents.find(self);
 
             if (AndroidEntryPointManager.MANAGER.isAllowIntentRerouting()) {
-                logger.warn("Re-Setting the target of Intent {} in {} by {}", intent, site, caller);
+                
                 intents.setAction(self, actionKey, false); // May unbind internally
             } else {
                 intents.unbind(self);
             }
-            logger.info("Encountered Intent.setAction - Intent is now: {}", intent);
+            
         } else if (callee.getSelector().equals(Selector.make("setComponent(Landroid/content/ComponentName;)Landroid/content/Intent;"))) {
             // TODO: We can't extract from ComponentName yet.
             final InstanceKey self = actualParameters[0];
             final Intent intent = intents.find(self);
 
-            logger.warn("Re-Setting the target of Intent {} in {} by {}", intent, site, caller);
+            
             
             intent.setExplicit();
             intents.unbind(self);
@@ -342,19 +306,19 @@ public class IntentContextSelector implements ContextSelector {
             final Intent intent = intents.find(self);
 
             if (AndroidEntryPointManager.MANAGER.isAllowIntentRerouting()) {
-                logger.warn("Re-Setting the target of Intent {} in {} by {}", intent, site, caller);
+                
                 intents.setAction(self, actionKey, true);
             } else {
                 intents.unbind(self);
             }
-            logger.info("Encountered Intent.setClass - Intent is now: {}", intent);
+            
         } else if (callee.getSelector().equals(Selector.make("fillIn(Landroid/content/Intent;I)I"))) {
             // See 'setAction' before...                                                        TODO
-            logger.warn("Intent.fillIn not implemented - Caller: {}", caller);
+            
             final InstanceKey self = actualParameters[0];
             intents.unbind(self);
         } else if (callee.isInit() && callee.getDeclaringClass().getName().equals(AndroidTypes.IntentSenderName)) {
-            logger.error("Unable to evaluate IntentSender: Not implemented!");   // TODO
+               // TODO
         } /*else if (site.isSpecial() && callee.getDeclaringClass().getName().equals(
                     AndroidTypes.ContextWrapperName)) {
             final InstanceKey baseKey = actualParameters[1];  
@@ -365,9 +329,9 @@ public class IntentContextSelector implements ContextSelector {
                 seenContext.put(wrapperKey, seenContext.get(baseKey));
             } else {
                 if (baseKey == null) {
-                    logger.trace("Got baseKey as 'null'. Obviously can't handle this. Caller was: {}", caller.getMethod());
+                    
                 } else {
-                    logger.warn("ContextWrapper: No AndroidContext was seen for baseKey");
+                    
                 }
             }
         } else if ((site.isSpecial() && callee.getDeclaringClass().getName().equals(
@@ -384,9 +348,9 @@ public class IntentContextSelector implements ContextSelector {
                 seenContext.put(wrapperKey, seenContext.get(baseKey));
             } else {
                 if (baseKey == null) {
-                    logger.trace("Got baseKey as 'null'. Obviously can't handle this. Caller was: {}", caller.getMethod());
+                    
                 } else {
-                    logger.warn("ContextWrapper: No AndroidContext was seen for baseKey");
+                    
                 }
             }
         } */
@@ -420,7 +384,7 @@ public class IntentContextSelector implements ContextSelector {
                 }
             }
             
-            logger.debug("Get relevant for {} is {}", site, ret);
+            
         } else if (site.isSpecial() && target.getDeclaringClass().getName().equals(
                     AndroidTypes.IntentName)) {                
 
@@ -441,38 +405,33 @@ public class IntentContextSelector implements ContextSelector {
                 case 1:
                     return IntSetUtil.make(new int[] { 0, 1 });
                 case 2:
-                    logger.debug("Got Intent Constructor of: {}", site.getDeclaredTarget().getSelector());
                     return IntSetUtil.make(new int[] { 0, 1, 2 });
                 case 3:
-                    logger.debug("Got Intent Constructor of: {}", site.getDeclaredTarget().getSelector());
                     return IntSetUtil.make(new int[] { 0, 1, 2, 3 });
                 case 4:
-                    logger.debug("Got Intent Constructor of: {}", site.getDeclaredTarget().getSelector());
                     return IntSetUtil.make(new int[] { 0, 1, 2, 3, 4 });
                 default:
-                    logger.debug("Got Intent Constructor of: {}", site.getDeclaredTarget().getSelector());
                     return IntSetUtil.make(new int[] { 0, 1, 2, 3, 4, 5 });
             }
         } else if (site.isSpecial() && target.getDeclaringClass().getName().equals(
                     AndroidTypes.IntentSenderName)) {
             // public IntentSender(IIntentSender target)
             // public IntentSender(IBinder target)
-            logger.warn("Encountered an IntentSender-Object");
+            
             return IntSetUtil.make(new int[] { 0, 1 });
         } /*else if (site.isSpecial() && target.getDeclaringClass().getName().equals(
                     AndroidTypes.ContextWrapperName)) {
-            logger.debug("Fetched ContextWrapper ctor");
+            
             return IntSetUtil.make(new int[] { 0, 1 });
         } else if ((site.isSpecial() && target.getDeclaringClass().getName().equals(
                         AndroidTypes.ContextImplName))) {
-            logger.debug("Fetched Context ctor");
+            
             return IntSetUtil.make(new int[] { 0 });
         } else if (target.getDeclaringClass().getName().equals(AndroidTypes.ContextWrapperName) &&
                 target.getSelector().equals(Selector.make("attachBaseContext(Landroid/content/Context;)V"))) {
             logger.debug("Encountered ContextWrapper.attachBaseContext()");
             return IntSetUtil.make(new int[] { 0, 1 });
         }*/ else if (target.getSelector().equals(Selector.make("getSystemService(Ljava/lang/String;)Ljava/lang/Object;"))) {
-            logger.debug("Encountered Context.getSystemService()");
             return IntSetUtil.make(new int[] { 0, 1 });
         } else if (target.getSelector().equals(Selector.make("setAction(Ljava/lang/String;)Landroid/content/Intent;"))) {
             return IntSetUtil.make(new int[] { 0, 1 });

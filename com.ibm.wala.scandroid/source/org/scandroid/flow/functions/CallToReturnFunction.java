@@ -53,8 +53,6 @@ import org.scandroid.domain.DomainElement;
 import org.scandroid.domain.IFDSTaintDomain;
 import org.scandroid.domain.LocalElement;
 import org.scandroid.domain.ReturnElement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.dataflow.IFDS.IUnaryFlowFunction;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -64,7 +62,6 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
 
 public class CallToReturnFunction <E extends ISSABasicBlock> 
     implements IUnaryFlowFunction {
-	private static final Logger logger = LoggerFactory.getLogger(CallToReturnFunction.class);
 
 	private IFDSTaintDomain<E> domain;
 
@@ -86,7 +83,7 @@ public class CallToReturnFunction <E extends ISSABasicBlock>
         	if (de.codeElement instanceof LocalElement || de.codeElement instanceof ReturnElement) {
         		set.add(d);
         	} else {
-        		logger.trace("throwing away {}", de);
+        		
         	}
         }
 		return set;

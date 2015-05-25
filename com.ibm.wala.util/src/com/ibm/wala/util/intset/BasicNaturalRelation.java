@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 import com.ibm.wala.util.collections.IVector;
@@ -23,7 +24,7 @@ import com.ibm.wala.util.debug.Assertions;
  * This implementation uses n IntVectors, to hold the first n y's associated with each x, and then 1 extra vector of SparseIntSet to
  * hold the remaining ys.
  */
-public final class BasicNaturalRelation implements IBinaryNaturalRelation {
+public final class BasicNaturalRelation implements IBinaryNaturalRelation, Serializable {
 
   private final static boolean VERBOSE = false;
 

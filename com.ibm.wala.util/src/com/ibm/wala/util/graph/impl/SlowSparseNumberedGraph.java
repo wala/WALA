@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.graph.impl;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
@@ -21,7 +22,7 @@ import com.ibm.wala.util.intset.BasicNaturalRelation;
 /**
  * A graph of numbered nodes, expected to have a fairly sparse edge structure.
  */
-public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> {
+public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> implements Serializable {
 
   private final SlowNumberedNodeManager<T> nodeManager = new SlowNumberedNodeManager<T>();
 
