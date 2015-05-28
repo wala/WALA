@@ -6,7 +6,7 @@ before_install:
  - "git clone https://github.com/secure-software-engineering/DroidBench.git"
  - "popd"
  - "mkdir -p $HOME/build/wala/WALA/com.ibm.wala.dalvik.test/lib"
- - "find /usr/local -name dx.jar -exec cp '{}' $HOME/build/wala/WALA/com.ibm.wala.dalvik.test/lib/dx.jar ';'"
+ - "find /usr/local -name dx.jar -exec cp '{}' $TRAVIS_BUILD_DIR/com.ibm.wala.dalvik.test/lib/dx.jar ';'"
 install: mvn clean verify -DskipTests=true -B -q
 script: mvn clean verify -B -q
 sudo: false
