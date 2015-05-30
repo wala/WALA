@@ -5,13 +5,14 @@ before_install:
  - "pushd /tmp"
  - "git clone https://github.com/secure-software-engineering/DroidBench.git"
  - "popd"
- - "mkdir -p $HOME/build/wala/WALA/com.ibm.wala.dalvik.test/lib"
- - "find /usr/local -name dx.jar -exec cp '{}' $HOME/build/wala/WALA/com.ibm.wala.dalvik.test/lib/dx.jar ';'"
+ - "mkdir -p $TRAVIS_BUILD_DIR/com.ibm.wala.dalvik.test/lib"
+ - "find /usr/local -name dx.jar -exec cp '{}' $TRAVIS_BUILD_DIR/com.ibm.wala.dalvik.test/lib/dx.jar ';'"
 install: mvn clean verify -DskipTests=true -B -q
 script: mvn clean verify -B -q
 sudo: false
 cache:
   directories:
     - $HOME/.m2
-    - $HOME/build/wala/WALA/com.ibm.wala.cast.java.polyglot/lib
-    - $HOME/build/wala/WALA/com.ibm.wala.core.testdata/ocaml/ocamljava-2.0-alpha1/lib
+    - $TRAVIS_BUILD_DIR/com.ibm.wala.cast.java.polyglot/lib
+    - $TRAVIS_BUILD_DIR/com.ibm.wala.core.testdata/ocaml/ocamljava-2.0-alpha1/lib
+    
