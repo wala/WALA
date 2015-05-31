@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: WALA JavaScript Test Plug-in
 Bundle-SymbolicName: com.ibm.wala.cast.js.test;singleton:=true
-Bundle-Version: 1.3.7
+Bundle-Version: 1.3.8.qualifier
 Bundle-ClassPath: test.jar
 Bundle-Vendor: IBM
 Require-Bundle: com.ibm.wala.cast.js,
