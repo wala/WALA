@@ -217,12 +217,14 @@ public class AnalysisScopeReader {
     if (classPath == null) {
       throw new IllegalArgumentException("null classPath");
     }
+    FileProvider provider = new FileProvider();
     try {
       StringTokenizer paths = new StringTokenizer(classPath, File.pathSeparator);
       while (paths.hasMoreTokens()) {
         String path = paths.nextToken();
-        if (path.endsWith(".jar")) {
-          JarFile jar = new JarFile(path);
+        File f = provider.getFile(path);
+        if (path.endsWith(".jar") || path.endsWith(".war")) {
+          JarFile jar = new JarFile(f);
           scope.addToScope(loader, jar);
           try {
             if (jar.getManifest() != null) {
@@ -236,13 +238,10 @@ public class AnalysisScopeReader {
           } catch (RuntimeException e) {
             System.err.println("warning: trouble processing class path of " + path);
           }
+        } else if (f.isDirectory()) {
+          scope.addToScope(loader, new BinaryDirectoryTreeModule(f));
         } else {
-          File f = new File(path);
-          if (f.isDirectory()) {
-            scope.addToScope(loader, new BinaryDirectoryTreeModule(f));
-          } else {
-            scope.addClassFileToScope(loader, f);
-          }
+          scope.addClassFileToScope(loader, f);
         }
       }
     } catch (IOException e) {
