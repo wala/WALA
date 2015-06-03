@@ -142,7 +142,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
       public void edgesTest(CallGraph staticCG, CGNode caller, MethodReference calleeRef) {
         if (! calleeRef.getName().equals(MethodReference.clinitName)) {
           Set<CGNode> nodes = staticCG.getNodes(calleeRef);
-          Assert.assertEquals(1, nodes.size());
+          Assert.assertEquals("expected one node for " + calleeRef, 1, nodes.size());
           CGNode callee = nodes.iterator().next();
         
           Assert.assertTrue("no edge for " + caller + " --> " + callee, staticCG.getPossibleSites(caller, callee).hasNext());

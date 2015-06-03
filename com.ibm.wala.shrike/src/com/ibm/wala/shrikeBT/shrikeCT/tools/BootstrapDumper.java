@@ -11,6 +11,7 @@
 package com.ibm.wala.shrikeBT.shrikeCT.tools;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -50,9 +51,11 @@ public class BootstrapDumper {
     URL[] urls = new URL[ classpathEntries.length-1 ];
     for(int i = 1; i < classpathEntries.length; i++) {
       System.err.println(classpathEntries[i]);
-     urls[i-1] = new URL(classpathEntries[i]); 
+      File f = new File(classpathEntries[i]);
+      assert f.exists();
+      urls[i-1] = f.toURI().toURL(); 
     }
-    URLClassLoader image = new URLClassLoader(urls, BootstrapDumper.class.getClassLoader().getParent());
+    URLClassLoader image = URLClassLoader.newInstance(urls, BootstrapDumper.class.getClassLoader().getParent());
     
     System.err.println(image);
     
@@ -122,7 +125,7 @@ public class BootstrapDumper {
     
     for (int i = 0; i < methodCount; i++) {
       cr.initMethodAttributeIterator(i, attrs);
-      dumpAttributes(Class.forName(cr.getName(), false, image), cr, i, attrs);
+      dumpAttributes(Class.forName(cr.getName().replace('/', '.'), false, image), cr, i, attrs);
     }
   }
 }

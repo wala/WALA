@@ -119,7 +119,7 @@ public class BootstrapMethodsReader extends AttributeReader {
               return cp.getCPLong(index);
             case ClassConstants.CONSTANT_MethodHandle:
               String className = cp.getCPHandleClass(index);
-              Class<?> cls = Class.forName(className, false, cl);
+              Class<?> cls = Class.forName(className.replace('/', '.'), false, cl);
               String eltName = cp.getCPHandleName(index);
               String eltDesc = cp.getCPHandleType(index);
               MethodType type = MethodType.fromMethodDescriptorString(eltDesc, cl);
@@ -128,7 +128,7 @@ public class BootstrapMethodsReader extends AttributeReader {
               m.setAccessible(true);
               return lk.unreflect(m);
             case ClassConstants.CONSTANT_MethodType:
-              return MethodType.fromMethodDescriptorString(cp.getCPMethodType(index), this.getClass().getClassLoader());
+              return MethodType.fromMethodDescriptorString(cp.getCPMethodType(index), cl);
             default:
               assert false : "invalid type " + t;
             }            

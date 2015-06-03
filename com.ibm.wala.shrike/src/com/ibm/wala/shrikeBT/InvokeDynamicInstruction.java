@@ -152,10 +152,11 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
   }
 
   public CallSite bootstrap(Class cl) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchFieldException {
-    ClassLoader bootstrapCL = cl.getClassLoader();
+    ClassLoader classLoader = cl.getClassLoader();
+    ClassLoader bootstrapCL = classLoader;
 
     Class<?> bootstrapClass = Class.forName(getBootstrap().methodClass().replace('/', '.'), false, bootstrapCL);
-    MethodType bt = MethodType.fromMethodDescriptorString(bootstrap.methodType(), bootstrapCL);
+    MethodType bt = makeMethodType( bootstrapCL, bootstrap.methodType());
     Method bootstrap = bootstrapClass.getMethod(this.bootstrap.methodName(), bt.parameterList().toArray(new Class[ bt.parameterCount() ]));
     Object[] args = new Object[ bt.parameterCount() ];
     
@@ -164,16 +165,29 @@ public class InvokeDynamicInstruction extends Instruction implements IInvokeInst
     impl_lookup.setAccessible(true); // set it accessible
     Lookup lutrusted = (Lookup) impl_lookup.get(myLookup); // get the value of IMPL_LOOKUP from the Lookup instance and save it in a new Lookup object
     args[0] = lutrusted;
-    
     args[1] = getMethodName();
-    args[2] = MethodType.fromMethodDescriptorString(getMethodSignature(), cl.getClassLoader());
+    args[2] = makeMethodType(classLoader, getMethodSignature()); 
     for(int i = 3; i < bt.parameterCount(); i++) {
       args[i] = getBootstrap().callArgument(bootstrapCL,i-3);
     }
     
-    //bootstrap.setAccessible(true);
+    bootstrap.setAccessible(true);
+    
+    System.err.println(cl + " : " + bootstrap);
     
     return (CallSite) bootstrap.invoke(null, args);
+  }
+
+  public static MethodType makeMethodType(ClassLoader classLoader, String descriptor) throws ClassNotFoundException {
+    String returnType = Util.makeClass(Util.getReturnType(descriptor));
+    Class returnClass = Class.forName(returnType, false, classLoader);
+    String[] paramTypes = Util.getParamsTypes(null, descriptor);
+    Class[] paramClasses = new Class[ paramTypes.length ];
+    for(int i = 0; i < paramTypes.length; i++) {
+      paramClasses[i] = Class.forName(Util.makeClass(paramTypes[i]), false, classLoader);
+    }
+    MethodType mt = MethodType.methodType(returnClass, paramClasses);
+    return mt;
   }
   
   static InvokeDynamicInstruction make(ConstantPoolReader cp, int index, int mode) {
