@@ -13,8 +13,7 @@ package com.ibm.wala.core.tests.callGraph;
 import java.io.IOException;
 import java.util.Set;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.ibm.wala.core.tests.util.TestConstants;

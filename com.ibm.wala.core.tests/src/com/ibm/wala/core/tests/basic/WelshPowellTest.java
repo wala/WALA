@@ -13,8 +13,7 @@ package com.ibm.wala.core.tests.basic;
 import java.util.Iterator;
 import java.util.Map;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.ibm.wala.util.collections.HashMapFactory;

@@ -12,8 +12,7 @@ package com.ibm.wala.core.tests.cha;
 
 import java.io.IOException;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.ibm.wala.classLoader.IClass;

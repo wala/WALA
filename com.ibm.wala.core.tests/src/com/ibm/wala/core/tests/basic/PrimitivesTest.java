@@ -891,7 +891,6 @@ public class PrimitivesTest extends WalaTestCase {
     testSingleBitVector(new OffsetBitVector(100, 10));
   }
 
-  @SuppressWarnings("unchecked")
   private void testSingleBitVector(BitVectorBase bv) {
     // does the following not automatically scale the bitvector to
     // a reasonable size?

@@ -117,49 +117,57 @@
 		<mkdir dir="${temp.folder}"/>
 		<antcall target="build.jars"/>
 		<antcall target="gather.bin.parts">
-			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		  <param name="destination.temp.folder" value="${temp.folder}/jdk"/>
 		</antcall>
-		<zip destfile="${plugin.destination}/bin/com.ibm.wala.core.testdata_1.0.0a.jar" basedir="${temp.folder}/com.ibm.wala.core.testdata_1.0.0" filesonly="false" whenempty="skip" update="false" excludes="**/CodeDeleted.class"/>
-		<zip destfile="${plugin.destination}/com.ibm.wala.core.testdata_1.0.0a.jar" basedir="${temp.folder}/com.ibm.wala.core.testdata_1.0.0" filesonly="false" whenempty="skip" update="false" excludes="**/CodeDeleted.class"/>
-		<zip destfile="${plugin.destination}/bin/com.ibm.wala.core.testdata_1.0.0.jar" basedir="${temp.folder}/com.ibm.wala.core.testdata_1.0.0" filesonly="false" whenempty="skip" update="false"/>
-		<zip destfile="${plugin.destination}/com.ibm.wala.core.testdata_1.0.0.jar" basedir="${temp.folder}/com.ibm.wala.core.testdata_1.0.0" filesonly="false" whenempty="skip" update="false"/>
+		<antcall target="gather.bin.parts">
+		  <param name="destination.temp.folder" value="${temp.folder}/dalvik/"/>
+		</antcall>
+		<zip destfile="${plugin.destination}/bin/com.ibm.wala.core.testdata_1.0.0a.jar" basedir="${temp.folder}/dalvik/com.ibm.wala.core.testdata_1.0.0" filesonly="false" whenempty="skip" update="false" excludes="**/CodeDeleted.class"/>
+		<zip destfile="${plugin.destination}/com.ibm.wala.core.testdata_1.0.0a.jar" basedir="${temp.folder}/dalvik/com.ibm.wala.core.testdata_1.0.0" filesonly="false" whenempty="skip" update="false" excludes="**/CodeDeleted.class"/>
+		<zip destfile="${plugin.destination}/bin/com.ibm.wala.core.testdata_1.0.0.jar" basedir="${temp.folder}/jdk/com.ibm.wala.core.testdata_1.0.0" filesonly="false" whenempty="skip" update="false"/>
+		<zip destfile="${plugin.destination}/com.ibm.wala.core.testdata_1.0.0.jar" basedir="${temp.folder}/jdk/com.ibm.wala.core.testdata_1.0.0" filesonly="false" whenempty="skip" update="false"/>
 		<delete dir="${temp.folder}"/>
 	</target>
 
 	<target name="@dot" depends="init"  description="Create jar: com.ibm.wala.core.testdata @dot.">
-		<delete dir="${temp.folder}/@dot.bin"/>
-		<mkdir dir="${temp.folder}/@dot.bin"/>
-		<path id="@dot.classpath">
-		</path>
-		<!-- compile the source code -->
-		<javac destdir="${temp.folder}/@dot.bin" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bundleBootClasspath}" source="${bundleJavacSource}" target="${bundleJavacTarget}">
-			<compilerarg line="${compilerArg}" compiler="${build.compiler}"/>
-			<classpath refid="@dot.classpath" />
-			<src path="src/"			/>
-			<exclude name="**/bak/"/>
-			<compilerarg line="-log '${temp.folder}/@dot.bin${logExtension}'" compiler="org.eclipse.jdt.core.JDTCompilerAdapter"/>
-		</javac>
-		<!-- Copy necessary resources -->
-		<copy todir="${temp.folder}/@dot.bin" failonerror="true" overwrite="false">
-			<fileset dir="src/" excludes="**/*.java, **/package.htm*"			/>
-		</copy>
-		<mkdir dir="${build.result.folder}"/>
-		<copy todir="${build.result.folder}/@dot" failonerror="true" overwrite="false">
-			<fileset dir="${temp.folder}/@dot.bin"			/>
-		</copy>
-		<delete dir="${temp.folder}/@dot.bin"/>
+	  <delete dir="${destdir}"/>
+	  <mkdir dir="${destdir}"/>
+	  <path id="@dot.classpath">
+	  </path>
+	  <!-- compile the source code -->
+	  <javac destdir="${destdir}" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bundleBootClasspath}" source="${jsv}" target="${jtv}" excludes="${excludes}">
+	    <compilerarg line="${compilerArg}" compiler="${build.compiler}"/>
+	    <classpath refid="@dot.classpath" />
+	    <src path="src/"/>
+	    <compilerarg line="-log '${destdir}${logExtension}'" compiler="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+	  </javac>
+	  <!-- Copy necessary resources -->
+	  <copy todir="${destdir}" failonerror="true" overwrite="false">
+	    <fileset dir="src/" excludes="**/*.java, **/package.htm*"/>
+	  </copy>
 	</target>
 
 	<target name="src.zip" depends="init" unless="src.zip">
 		<mkdir dir="${build.result.folder}"/>
 		<zip destfile="${build.result.folder}/src.zip" filesonly="false" whenempty="skip" update="false">
-			<fileset dir="src/" includes="**/*.java"			/>
+			<fileset dir="src/" includes="**/*.java"/>
 		</zip>
 	</target>
 
 	<target name="build.jars" depends="init" description="Build all the jars for the plug-in: com.ibm.wala.core.testdata.">
 		<available property="@dot" file="${build.result.folder}/@dot"/>
-		<antcall target="@dot"/>
+		<antcall target="@dot">
+		  <param name="destdir" value="${temp.folder}/jdk/@dot"/>
+		  <param name="jsv" value="${bundleJavacSource}"/>
+		  <param name="jtv" value="${bundleJavacTarget}"/>
+		  <param name="excludes" value="**/bak/"/>
+		</antcall>
+		<antcall target="@dot">
+		  <param name="destdir" value="${temp.folder}/dalvik/@dot"/>
+		  <param name="jsv" value="1.6"/>
+		  <param name="jtv" value="1.6"/>
+		  <param name="excludes" value="**/bak/,**/SortingExample.java"/>
+		</antcall>
 	</target>
 
 	<target name="build.sources" depends="init">
@@ -170,13 +178,13 @@
 	<target name="gather.bin.parts" depends="init" if="destination.temp.folder">
 		<mkdir dir="${destination.temp.folder}/com.ibm.wala.core.testdata_1.0.0"/>
 		<copy todir="${destination.temp.folder}/com.ibm.wala.core.testdata_1.0.0" failonerror="true" overwrite="false">
-			<fileset dir="${build.result.folder}/@dot" includes="**"			/>
+		  <fileset dir="${destination.temp.folder}/@dot" includes="**"/>
 		</copy>
 		<copy todir="${destination.temp.folder}/com.ibm.wala.core.testdata_1.0.0" failonerror="true" overwrite="false">
-			<fileset dir="${basedir}" includes="META-INF/"			/>
+		  <fileset dir="${basedir}" includes="META-INF/"/>
 		</copy>
 		<copy todir="${destination.temp.folder}/com.ibm.wala.core.testdata_1.0.0" failonerror="true" overwrite="false">
-			<fileset dir="${basedir}/classes" includes="**"			/>
+		  <fileset dir="${basedir}/classes" includes="**"/>
 		</copy>
 	</target>
 
@@ -211,14 +219,22 @@
 		<mkdir dir="${temp.folder}"/>
 		<antcall target="build.jars"/>
 		<antcall target="build.sources"/>
+		
 		<antcall target="gather.bin.parts">
-			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		  <param name="destination.temp.folder" value="${temp.folder}/jdk"/>
 		</antcall>
 		<antcall target="gather.sources">
-			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		  <param name="destination.temp.folder" value="${temp.folder}/jdk"/>
+		</antcall>
+		
+		<antcall target="gather.bin.parts">
+		  <param name="destination.temp.folder" value="${temp.folder}/dalvik"/>
+		</antcall>
+		<antcall target="gather.sources">
+		  <param name="destination.temp.folder" value="${temp.folder}/dalvik"/>
 		</antcall>
 		<delete>
-			<fileset dir="${temp.folder}" includes="**/*.bin${logExtension}"			/>
+		  <fileset dir="${temp.folder}" includes="**/*.bin${logExtension}"/>
 		</delete>
 		<zip destfile="${plugin.destination}/com.ibm.wala.core.testdata_1.0.0.zip" basedir="${temp.folder}" filesonly="true" whenempty="skip" update="false"/>
 		<delete dir="${temp.folder}"/>
