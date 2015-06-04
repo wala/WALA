@@ -1,3 +1,5 @@
+apple\/.*
+com\/apple\/.*
 java\/awt\/.*
 javax\/swing\/.*
 sun\/awt\/.*
@@ -11,3 +13,6 @@ com\/ibm\/security\/.*
 org\/apache\/xerces\/.*
 dalvik\/.*
 java\/io\/ObjectStreamClass*
+jdk\/.*
+org\/omg\/.*
+org\/w3c\/.*
