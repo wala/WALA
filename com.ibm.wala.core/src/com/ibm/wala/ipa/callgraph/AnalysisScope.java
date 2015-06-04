@@ -411,6 +411,10 @@ public class AnalysisScope {
     }
   }
 
+  public boolean isJava18Libraries() throws IllegalStateException {
+    return getJavaLibraryVersion().startsWith("1.8");
+  }
+
   public boolean isJava17Libraries() throws IllegalStateException {
     return getJavaLibraryVersion().startsWith("1.7");
   }
