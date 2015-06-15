@@ -43,6 +43,7 @@
 package com.ibm.wala.ipa.summaries;
 
 import com.ibm.wala.ipa.summaries.MethodSummary;
+import com.ibm.wala.ssa.SSAGotoInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
@@ -289,12 +290,14 @@ public class VolatileMethodSummary {
                     "to the constructor. This behavior is not supported!");
         }
         this.locked = true;
-
         for (int i = 0; i < this.instructions.size(); ++i) {
             final SSAInstruction inst = this.instructions.get(i);
-
-            if ((inst == null) || (inst == RESERVED)) {
+            if (inst == null) {
               if (DEBUG) { System.err.printf("No instruction at iindex {}", i); }
+              this.summary.addStatement(null);
+            } else if (inst == RESERVED) {
+              // replace reserved slots by 'goto next' statements
+              this.summary.addStatement(new SSAGotoInstruction(i, i+1));
             } else {
               if (DEBUG) { System.err.printf("Adding @{}: ", inst); }
               this.summary.addStatement(inst);
@@ -434,10 +437,11 @@ public class VolatileMethodSummary {
      * @return A non-reserved writable ProgramCounter
      */
     public int getNextProgramCounter() {
+      while (isUsed(this.currentProgramCounter) || isReserved(this.currentProgramCounter)) {
         this.currentProgramCounter++;
-        while (this.instructions.size() < this.currentProgramCounter) this.instructions.add(null);
-        int pc = this.currentProgramCounter;
-        return pc;
+      }
+      while (this.instructions.size() < this.currentProgramCounter) this.instructions.add(null);
+      return this.currentProgramCounter;
     }
 
     /**

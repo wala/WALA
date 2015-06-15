@@ -225,7 +225,7 @@ public class AndroidPreFlightChecks {
     public boolean checkAllComponentsReuse() {
         boolean pass = true;
 
-        final IInstantiationBehavior behaviour = this.manager.getInstantiationBehavior(null); // XXX: This generates false positives without cha!
+        final IInstantiationBehavior behaviour = this.manager.getInstantiationBehavior(cha); // XXX: This generates false positives without cha!
         final List <AndroidEntryPoint> entrypoits = AndroidEntryPointManager.ENTRIES;
 
         for (AndroidEntryPoint ep : entrypoits) {

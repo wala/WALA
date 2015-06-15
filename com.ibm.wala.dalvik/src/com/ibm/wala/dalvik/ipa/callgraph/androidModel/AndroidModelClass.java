@@ -1,13 +1,4 @@
 /*
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
- *
- */
-/*
  *  Copyright (c) 2013,
  *      Tobias Blaschke <code@tobiasblaschke.de>
  *  All rights reserved.
@@ -47,7 +38,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.FieldImpl;
@@ -88,36 +81,30 @@ import com.ibm.wala.util.strings.Atom;
  *  @todo   Move this class into an other loader? Currently: Primordial
  */
 public final /* singleton */ class AndroidModelClass extends SyntheticClass {
+    private static Logger logger = LoggerFactory.getLogger(AndroidModelClass.class);
+
     public static final TypeReference ANDROID_MODEL_CLASS = TypeReference.findOrCreate(
             ClassLoaderReference.Primordial, TypeName.string2TypeName("Lcom/ibm/wala/AndroidModelClass"));
-    private static IClassHierarchy cha;
-
-    private static class AndroidModelClassHolder {
-        private static final AndroidModelClass INSTANCE = new AndroidModelClass(AndroidModelClass.cha);
-    }
+    private IClassHierarchy cha;
 
     public static AndroidModelClass getInstance(IClassHierarchy cha) {
-        if (AndroidModelClass.cha == null) {
-            if (cha == null) {
-                throw new IllegalArgumentException("Cha may not be null if there had not been an Instance AndroidModelClass before!");
-            } else {
-                AndroidModelClass.cha = cha;
-            }
+        IClass android = cha.lookupClass(ANDROID_MODEL_CLASS);
+        AndroidModelClass mClass;
+        if (android == null) {
+        	mClass = new AndroidModelClass(cha);
+        } else if (!(android instanceof AndroidModelClass)) {
+        	throw new IllegalArgumentException(String.format("android model class does not have expected type %s, but %s!", AndroidModelClass.class, android.getClass().toString()));
         } else {
-        	if (! cha.equals(AndroidModelClass.cha)) {
-                throw new IllegalArgumentException("Cha differs!");
-            }
+        	mClass = (AndroidModelClass) android;
         }
-        return AndroidModelClassHolder.INSTANCE;
+        return mClass;
     }
 
     private AndroidModelClass(IClassHierarchy cha) {
         super(ANDROID_MODEL_CLASS, cha);
         this.addMethod(this.clinit());
-
-        if (AndroidModelClassHolder.INSTANCE != null) { // May be caused when using reflection
-            throw new IllegalStateException("AndroidModelClass is a singleton and already instantiated!");
-        }
+        this.cha = cha;
+        this.cha.addClass(this);
     }
 
     /**
@@ -193,7 +180,7 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
             return methods.get(selector);
         }
         if (selector.equals(MethodReference.initSelector)) {
-            
+            logger.warn("AndroidModelClass is not intended to be initialized");
             return null;
         }
         throw new IllegalArgumentException("Could not resolve " + selector);

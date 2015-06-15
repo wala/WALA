@@ -634,10 +634,12 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     if (getFixedPointSystem() instanceof VerboseAction) {
       ((VerboseAction) getFixedPointSystem()).performVerboseAction();
     }
-    AbstractStatement s = workList.takeStatement();
-    System.err.println(printRHSInstances(s));
-    workList.insertStatement(s);
-    System.err.println("CGNodes: " + cg.getNumberOfNodes());
+    if (!workList.isEmpty()) {
+      AbstractStatement s = workList.takeStatement();
+      System.err.println(printRHSInstances(s));
+      workList.insertStatement(s);
+      System.err.println("CGNodes: " + cg.getNumberOfNodes());
+    }
 
   }
 
