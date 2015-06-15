@@ -1,4 +1,13 @@
 /*
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html.
+ *
+ * This file is a derivative of code released under the terms listed below.
+ *
+ */
+/*
  *  Copyright (c) 2013,
  *      Tobias Blaschke <code@tobiasblaschke.de>
  *  All rights reserved.
@@ -83,7 +92,7 @@ import org.slf4j.LoggerFactory;
  *  Adds Intents to the Context of functions that start Android-Components.
  *
  *  This is done by remembering all new-sites where Intent-Objects are built and the parameters to its
- *  Constructor. When a function managed by this Selector (see IntentStarters) is encountered the stored 
+ *  Constructor. When a function managed by this Selector (see IntentStarters) is encountered the stored
  *  information is added to its Context.
  *
  *  @see    com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentContextInterpreter
@@ -115,7 +124,7 @@ public class IntentContextSelector implements ContextSelector {
 
     /**
      *  Given a calling node and a call site, returns the Context in which the callee should be evaluated.
-     *  
+     *
      *  {@inheritDoc}
      *
      *  @throws IllegalArgumentException    if the type of a parameter given as actualParameters does not match an expected one
@@ -136,7 +145,7 @@ public class IntentContextSelector implements ContextSelector {
             /* {
                 final InstanceKey self = actualParameters[0];
                 assert (self != null) : "This-Pointer was not marked as relevant!";
-                
+
                 if (seenContext.containsKey(self)) {
                     ctx = new AndroidContext(ctx, seenContext.get(self).getContextType());
                 } else {
@@ -146,12 +155,12 @@ public class IntentContextSelector implements ContextSelector {
 
 
             Intent intent = null;
-            { // Seach intent 
+            { // Seach intent
                 for (int j = 0; j < actualParameters.length; ++j) {
                     final InstanceKey param = actualParameters[j];
                     if (param == null) {
                         continue;
-                    } else if (param.getConcreteType().getName().equals(AndroidTypes.IntentName)) { 
+                    } else if (param.getConcreteType().getName().equals(AndroidTypes.IntentName)) {
                         if (! intents.contains(param) ) {
                             logger.error("Unable to resolve Intent called from {}", caller.getMethod());
                             logger.error("Search Key: {} hash: {}", param, param.hashCode());
@@ -174,7 +183,7 @@ public class IntentContextSelector implements ContextSelector {
                 logger.warn("Encountered unresolvable Intent");
                 intent = new Intent("Unresolvable");
                 intent.setImmutable();
-                AndroidEntryPointManager.MANAGER.addCallSeen(site, intent); 
+                AndroidEntryPointManager.MANAGER.addCallSeen(site, intent);
                 return new IntentContext(ctx, intent);
                 //return new IntentContext(intent);
             }
@@ -192,7 +201,7 @@ public class IntentContextSelector implements ContextSelector {
                             return Intent.IntentType.SYSTEM_SERVICE;
                         }
                         // TODO override equals and hashCode?
-                    };   
+                    };
                 } else {
                     intent = null;
                     if (param == null) {
@@ -202,10 +211,10 @@ public class IntentContextSelector implements ContextSelector {
                     }
                 }
             }
-            
+
             // Add the context
             if (intent != null) {
-                AndroidEntryPointManager.MANAGER.addCallSeen(site, intent); 
+                AndroidEntryPointManager.MANAGER.addCallSeen(site, intent);
                 logger.info("SystemService {} in {} by {}", intent, site, caller);
                 final Intent iintent = intents.findOrCreateImmutable(intent);
                 return new IntentContext(ctx, iintent);
@@ -222,16 +231,16 @@ public class IntentContextSelector implements ContextSelector {
             final InstanceKey uriKey;
             final InstanceKey actionKey;
             { // fetch actionKey, uriKey
-                switch (callee.getNumberOfParameters()) { 
+                switch (callee.getNumberOfParameters()) {
                     case 1:
                         logger.debug("Handling Intent()");
                         actionKey = null;
                         uriKey = null;
                         break;
-                    case 2:    
+                    case 2:
                         if (calleeSel.equals(Selector.make("<init>(Ljava/lang/String;)V"))) {
                             logger.debug("Handling Intent(String action)");
-                            actionKey = actualParameters[1];  
+                            actionKey = actualParameters[1];
                         } else if (calleeSel.equals(Selector.make("<init>(Landroid/content/Intent;)V"))) {
                             logger.debug("Handling Intent(Intent other)");
 
@@ -253,7 +262,7 @@ public class IntentContextSelector implements ContextSelector {
                         if (calleeSel.equals(Selector.make("<init>(Ljava/lang/String;Landroid/net/Uri;)V"))) {
                             logger.debug("Handling Intent(String action, Uri uri)");
                             // TODO: Use Information of the URI...
-                            actionKey = actualParameters[1];  
+                            actionKey = actualParameters[1];
                             uriKey = actualParameters[2];
                         } else if (calleeSel.equals(Selector.make("<init>(Landroid/content/Context;Ljava/lang/Class;)V"))) {
                             logger.debug("Handling Intent(Context, Class)");
@@ -303,7 +312,7 @@ public class IntentContextSelector implements ContextSelector {
 
             logger.debug("Setting the target of Intent {} in {} by {}", intent, site, caller);
             // TODO: Evaluate uriKey
-        } else if (callee.getSelector().equals(Selector.make("setAction(Ljava/lang/String;)Landroid/content/Intent;")) && 
+        } else if (callee.getSelector().equals(Selector.make("setAction(Ljava/lang/String;)Landroid/content/Intent;")) &&
                 callee.getDeclaringClass().getName().equals(AndroidTypes.IntentName)) {
             final InstanceKey self = actualParameters[0];
             final InstanceKey actionKey = actualParameters[1];
@@ -322,10 +331,10 @@ public class IntentContextSelector implements ContextSelector {
             final Intent intent = intents.find(self);
 
             logger.warn("Re-Setting the target of Intent {} in {} by {}", intent, site, caller);
-            
+
             intent.setExplicit();
             intents.unbind(self);
-        } else if (callee.getSelector().equals(Selector.make("setClass(Landroid/content/Context;Ljava/lang/Class;)Landroid/content/Intent;")) || 
+        } else if (callee.getSelector().equals(Selector.make("setClass(Landroid/content/Context;Ljava/lang/Class;)Landroid/content/Intent;")) ||
                 callee.getSelector().equals(Selector.make("setClassName(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;")) ||
                 callee.getSelector().equals(Selector.make("setClassName(Landroid/content/Context;Ljava/lang/String;)Landroid/content/Intent;"))) {
             final InstanceKey self = actualParameters[0];
@@ -348,8 +357,8 @@ public class IntentContextSelector implements ContextSelector {
             logger.error("Unable to evaluate IntentSender: Not implemented!");   // TODO
         } /*else if (site.isSpecial() && callee.getDeclaringClass().getName().equals(
                     AndroidTypes.ContextWrapperName)) {
-            final InstanceKey baseKey = actualParameters[1];  
-            final InstanceKey wrapperKey = actualParameters[0];  
+            final InstanceKey baseKey = actualParameters[1];
+            final InstanceKey wrapperKey = actualParameters[0];
 
             logger.debug("Handling ContextWrapper(Context base)");
             if (seenContext.containsKey(baseKey)) {
@@ -364,12 +373,12 @@ public class IntentContextSelector implements ContextSelector {
         } else if ((site.isSpecial() && callee.getDeclaringClass().getName().equals(
                         AndroidTypes.ContextImplName))) {
             final InstanceKey self = actualParameters[0];
-            seenContext.put(self, new AndroidContext(ctx, AndroidTypes.AndroidContextType.CONTEXT_IMPL)); 
+            seenContext.put(self, new AndroidContext(ctx, AndroidTypes.AndroidContextType.CONTEXT_IMPL));
         } else if (callee.getDeclaringClass().getName().equals(AndroidTypes.ContextWrapperName) &&
                 callee.getSelector().equals(Selector.make("attachBaseContext(Landroid/content/Context;)V"))) {
-            final InstanceKey baseKey = actualParameters[1];  
-            final InstanceKey wrapperKey = actualParameters[0];  
-       
+            final InstanceKey baseKey = actualParameters[1];
+            final InstanceKey wrapperKey = actualParameters[0];
+
             logger.debug("Handling ContextWrapper.attachBaseContext(base)");
              if (seenContext.containsKey(baseKey)) {
                 seenContext.put(wrapperKey, seenContext.get(baseKey));
@@ -386,8 +395,8 @@ public class IntentContextSelector implements ContextSelector {
     }
 
     /**
-     *  Given a calling node and a call site, return the set of parameters based on which this selector may choose 
-     *  to specialize contexts. 
+     *  Given a calling node and a call site, return the set of parameters based on which this selector may choose
+     *  to specialize contexts.
      *
      *  {@inheritDoc}
      */
@@ -410,10 +419,10 @@ public class IntentContextSelector implements ContextSelector {
                     ret = IntSetUtil.add(ret, relevant[i]);
                 }
             }
-            
+
             logger.debug("Get relevant for {} is {}", site, ret);
         } else if (site.isSpecial() && target.getDeclaringClass().getName().equals(
-                    AndroidTypes.IntentName)) {                
+                    AndroidTypes.IntentName)) {
 
             final MethodReference mRef = site.getDeclaredTarget();
             final int numArgs = mRef.getNumberOfParameters();
@@ -446,7 +455,7 @@ public class IntentContextSelector implements ContextSelector {
             }
         } else if (site.isSpecial() && target.getDeclaringClass().getName().equals(
                     AndroidTypes.IntentSenderName)) {
-            
+
             logger.warn("Encountered an IntentSender-Object: {}", target);
             if (target.getNumberOfParameters() == 0) {
             	// public IntentSender()
@@ -454,7 +463,7 @@ public class IntentContextSelector implements ContextSelector {
             } else {
             	// public IntentSender(IIntentSender target)
                 // public IntentSender(IBinder target)
-            	return IntSetUtil.make(new int[] { 0, 1 }); 
+            	return IntSetUtil.make(new int[] { 0, 1 });
             }
         } /*else if (site.isSpecial() && target.getDeclaringClass().getName().equals(
                     AndroidTypes.ContextWrapperName)) {
