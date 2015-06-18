@@ -44,7 +44,7 @@
    </target>
 	
    <target name="fetchSampleCup" depends="sampleCupPresent" unless="sample.cup.present">
-     <get src="http://casper.cii.saxion.nl:8083/~vanleeuw/pse/spanje/troff2html.cup" dest="${plugin.destination}/data/troff2html.cup" />
+	   <get src="http://web.archive.org/web/20150618125941/http://casper.cii.saxion.nl:8083/~vanleeuw/pse/spanje/troff2html.cup" dest="${plugin.destination}/data/troff2html.cup" />
    </target>
 
    <target name="sampleCupPresent" depends="init">
