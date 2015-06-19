@@ -1,2 +1,3 @@
-/lib/
 /dalvik.jar
+/lib/commons-cli-1.2.jar
+/lib/commons-io-2.4.jar

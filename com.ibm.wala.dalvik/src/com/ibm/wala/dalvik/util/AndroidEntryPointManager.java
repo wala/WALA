@@ -1,13 +1,4 @@
 /*
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
- *
- */
-/*
  *  Copyright (c) 2013,
  *      Tobias Blaschke <code@tobiasblaschke.de>
  *  All rights reserved.
@@ -49,6 +40,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.DefaultInstantiationBehavior;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.parameters.IInstantiationBehavior;
@@ -76,7 +70,9 @@ import com.ibm.wala.util.strings.StringStuff;
  *  @author Tobias Blaschke <code@tobiasblaschke.de>
  */
 public final /* singleton */ class AndroidEntryPointManager implements Serializable {
-    public static final AndroidEntryPointManager MANAGER = new AndroidEntryPointManager();
+    private static final Logger logger = LoggerFactory.getLogger(AndroidEntryPointManager.class);
+
+    public static AndroidEntryPointManager MANAGER = new AndroidEntryPointManager();
     public static List<AndroidEntryPoint> ENTRIES = new ArrayList<AndroidEntryPoint>();
     /**
      * This is TRANSIENT!
@@ -98,7 +94,12 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
         return false;
     }
 
-    private AndroidEntryPointManager() {} 
+    private AndroidEntryPointManager() {}
+
+    public static void reset() {
+        ENTRIES = new ArrayList<AndroidEntryPoint>();
+        MANAGER = new AndroidEntryPointManager();
+    }
 
     public Set<TypeReference> getComponents() {
         if (ENTRIES.isEmpty()) {
@@ -242,7 +243,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
         return prev;
     }
 
-    private Class<? extends AbstractAndroidModel> abstractAndroidModel = LoopAndroidModel.class;
+    private Class abstractAndroidModel = LoopAndroidModel.class;
     /**
      *  What special handling to insert into the model.
      *
@@ -261,7 +262,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
             return new LoopAndroidModel(body, insts, paramManager, entryPoints);
         } else {
             try {
-                final Constructor<? extends AbstractAndroidModel> ctor = this.abstractAndroidModel.getDeclaredConstructor(
+                final Constructor<AbstractAndroidModel> ctor = this.abstractAndroidModel.getDeclaredConstructor(
                     VolatileMethodSummary.class, TypeSafeInstructionFactory.class, SSAValueManager.class,
                     Iterable.class);
                 if (ctor == null) {
@@ -290,7 +291,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      *
      *  @return null or the class set using setModelBehavior
      */
-    public Class<?> getModelBehavior() {
+    public Class getModelBehavior() {
         return this.abstractAndroidModel;
     }
 
@@ -299,7 +300,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      *
      *  @throws IllgealArgumentException if the abstractAndroidModel does not subclass AbstractAndroidModel
      */
-    public void setModelBehavior(Class<? extends AbstractAndroidModel> abstractAndroidModel) {
+    public void setModelBehavior(Class abstractAndroidModel) {
         if (abstractAndroidModel == null) {
             throw new IllegalArgumentException("abstractAndroidModel may not be null. Use SequentialAndroidModel " +
                     "if no special handling shall be inserted.");
@@ -336,6 +337,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
             pack = StringStuff.deployment2CanonicalTypeString(pack);
         }
         if (this.pack == null) {
+            logger.info("Setting the package to {}", pack);
             this.pack = pack;
         } else if (!(this.pack.equals(pack))) {
             throw new IllegalArgumentException("The already set package " + this.pack + " and " + pack +
@@ -359,6 +361,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
      */
     public String getPackage() {
         if (this.pack == null) {
+            logger.warn("Returning null as package");
             return null;
         } else {
             return this.pack;
@@ -379,7 +382,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
             return this.pack;
         } else {
             if (ENTRIES.isEmpty()) {
-                assert false : "guessPackage() called when no entrypoints had been set";
+                logger.error("guessPackage() called when no entrypoints had been set");
                 return null;
             }
             final String first = ENTRIES.get(0).getMethod().getReference().getDeclaringClass().getName().getPackage().toString();
@@ -446,6 +449,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
             throw new IllegalArgumentException("The given Intent is null");
         }
 
+        logger.info("Register Intent {}", intent);
         // Looks a bit weired but works as Intents are only matched based on their action and uri
         overrideIntents.put(intent, intent);
     }
@@ -559,6 +563,7 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
             throw new IllegalArgumentException("The Intent given as 'to' is null");
         }
 
+        logger.info("Override Intent {} to {}", from, to);
         overrideIntents.put(from, to);
     }
 
@@ -581,20 +586,28 @@ public final /* singleton */ class AndroidEntryPointManager implements Serializa
             while (!(ret.equals(intent))) {
                 // Follow the chain of overrides
                 if (!overrideIntents.containsKey(intent)) {
+                    logger.info("Resolved {} to {}", intent, ret);
                     return ret;
                 } else {
+                    logger.debug("Resolving {} hop over {}", intent, ret);
                     final Intent old = ret;
                     ret = overrideIntents.get(ret);
 
                     if (ret == old) { // Yes, ==
                         // This is an evil hack(tm). I should fix the Intent-Table!
+                        logger.warn("Malformend Intent-Table, staying with " + ret + " for " + intent);
                         return ret;
                     }
                 }
             }
             ret = overrideIntents.get(ret); // Once again to get Info set in register
+            logger.info("Resolved {} to {}", intent, ret);
             return ret;
         } else {
+            logger.info("No information on {} hash: {}", intent, intent.hashCode());
+            for (Intent known : overrideIntents.keySet()) {
+                logger.debug("Known Intents: {} hash: {}", known, known.hashCode());
+            }
             return intent;
         }
     }
