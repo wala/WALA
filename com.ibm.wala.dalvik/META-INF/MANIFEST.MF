@@ -29,5 +29,4 @@ Bundle-ClassPath: dalvik.jar,
  lib/logback-classic-1.0.9.jar,
  lib/logback-core-1.0.9.jar,
  lib/slf4j-api-1.7.2.jar,
- lib/guava-13.0.1.jar
 
