@@ -238,7 +238,7 @@ public class PDG implements NumberedGraph<Statement> {
       // were
       // exceptional, simply return because at this point there are no nodes.
       // Otherwise, later this may raise an Exception.
-      if (controlFlowGraph.getNumberOfNodes() == 0) {
+      if (controlFlowGraph.getNumberOfNodes() == 0 || controlFlowGraph.getSuccNodeCount(controlFlowGraph.entry()) == 0) {
         return;
       }
     } else {
