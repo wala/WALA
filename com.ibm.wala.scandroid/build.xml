@@ -93,7 +93,7 @@
     <delete dir="${temp.folder}"/>
   </target>
 
-  <target name="getJars" depends="fetchDexlib,fetchSlf4j,fetchLogback,fetchCommonsIo,fetchCommonsCli" />
+  <target name="getJars" depends="fetchGuava,fetchCommonsCli" />
   
   <target name="init" depends="properties">
     <condition property="pluginTemp" value="${buildTempFolder}/plugins">

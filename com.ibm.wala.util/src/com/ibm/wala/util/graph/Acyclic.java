@@ -11,8 +11,10 @@
 package com.ibm.wala.util.graph;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.Stack;
 
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
@@ -40,6 +42,8 @@ public class Acyclic {
     return !it.hasNext();
   }
 
+  public static final int THRESHOLD_FOR_NONRECURSIVE_DFS = 1000;
+  
   /**
    * Compute a relation R s.t. (i,j) \in R iff (i,j) is a backedge according to a DFS of a numbered graph starting from some root.
    * 
@@ -49,14 +53,23 @@ public class Acyclic {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
-    BasicNaturalRelation result = new BasicNaturalRelation();
+    
+    final BasicNaturalRelation result = new BasicNaturalRelation();
 
-    Set<T> visited = HashSetFactory.make();
-    Set<T> onstack = HashSetFactory.make();
-    dfs(result, root, G, visited, onstack);
+    // for large methods (e.g. obfuscated library code as found in android libraries 'com.google.ads.ad.a([B[B)V')
+    // the recursive dfs can lead to a stack overflow error.
+    // for smaller methods the recursive solution seems to be faster, so we keep it.
+    if (G.getNumberOfNodes() <= THRESHOLD_FOR_NONRECURSIVE_DFS) {
+      final Set<T> visited = HashSetFactory.make();
+      final Set<T> onstack = HashSetFactory.make();
+      dfs(result, root, G, visited, onstack);
+    } else { 
+      dfsNonRecursive(result, root, G);
+    }
+    
     return result;
   }
-
+  
   private static <T> void dfs(BasicNaturalRelation result, T root, NumberedGraph<T> G, Set<T> visited, Set<T> onstack) {
     visited.add(root);
     onstack.add(root);
@@ -72,6 +85,48 @@ public class Acyclic {
       }
     }
     onstack.remove(root);
+  }
+
+  private static <T> void dfsNonRecursive(final BasicNaturalRelation result, final T root, final NumberedGraph<T> G) {
+    final Stack<T> stack = new Stack<T>();
+    final Set<T> stackSet = new HashSet<T>();
+    final Stack<Iterator<? extends T>> stackIt = new Stack<Iterator<? extends T>>();
+    final Set<T> finished = new HashSet<T>();
+    stack.push(root);
+    stackSet.add(root);
+    stackIt.push(G.getSuccNodes(root));
+    
+    while (!stack.isEmpty()) {
+      final T current = stack.pop();
+      stackSet.remove(current);
+      final Iterator<? extends T> currentIt = stackIt.pop();
+      if (finished.contains(current)) { continue; }
+      
+      boolean isFinished = true;
+      while (isFinished && currentIt.hasNext() ) {
+        final T succ = currentIt.next();
+        if (!finished.contains(succ)) {
+          if (succ == current || stackSet.contains(succ)) {
+            // found a backedge
+            final int src = G.getNumber(current);
+            final int dst = G.getNumber(succ);
+            result.add(src, dst);
+          } else {
+            stack.push(current);
+            stackSet.add(current);
+            stackIt.push(currentIt);
+            stack.push(succ);
+            stackSet.add(succ);
+            stackIt.push(G.getSuccNodes(succ));
+            isFinished = false;
+          }
+        }
+      }
+      
+      if (isFinished) {
+        finished.add(current);
+      }
+    }
   }
 
   public static <T> boolean hasIncomingBackEdges(Path p, NumberedGraph<T> G, T root) {

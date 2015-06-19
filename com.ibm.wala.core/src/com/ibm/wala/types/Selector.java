@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.types;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.util.strings.Atom;
 
@@ -24,8 +27,17 @@ public final class Selector {
 
   private final Descriptor descriptor;
   
+  private final String s;
+  
+  private static final Map<String,Selector> CACHE = new HashMap<String,Selector>();
+  
   public static Selector make(String selectorStr) {
-    return make(Language.JAVA, selectorStr);
+    Selector ret = CACHE.get(selectorStr);
+    if (ret == null) {
+      ret = make(Language.JAVA, selectorStr);
+      CACHE.put(selectorStr, ret);
+    }
+    return ret;
   }
 
   public static Selector make(Language l, String selectorStr) {
@@ -44,6 +56,7 @@ public final class Selector {
   public Selector(Atom name, Descriptor descriptor) {
     this.name = name;
     this.descriptor = descriptor;
+    this.s = name.toString() + descriptor.toString();
     if (name == null) {
       throw new IllegalArgumentException("null name");
     }
@@ -70,7 +83,7 @@ public final class Selector {
 
   @Override
   public String toString() {
-    return name.toString() + descriptor.toString();
+    return s;
   }
 
   public Descriptor getDescriptor() {
