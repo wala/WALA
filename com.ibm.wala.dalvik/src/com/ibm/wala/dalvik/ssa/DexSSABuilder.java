@@ -389,7 +389,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
          * If we've already created the current instruction, return the value number def'ed by the current instruction. Else, create a
          * new symbol.
          */
-        /** BEGIN custom change: Bugfix for the case that the instruction does not have a def */
+
         private int reuseOrCreateDef() {
             if (getCurrentInstruction() == null || !getCurrentInstruction().hasDef()) {
                 return symbolTable.newSymbol();
@@ -397,7 +397,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
                 return getCurrentInstruction().getDef();
             }
         }
-        /** END custom change: Bugfix for the case that the instruction does not have a def */
+
         /**
          * If we've already created the current instruction, return the value number representing the exception the instruction may
          * throw. Else, create a new symbol
