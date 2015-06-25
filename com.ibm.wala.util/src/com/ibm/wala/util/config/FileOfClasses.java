@@ -43,6 +43,9 @@ public class FileOfClasses extends SetOfClasses implements Serializable {
     StringBuffer regex = null;
     String line;
     while ((line = is.readLine()) != null) {
+      /** BEGIN Custom Change: allow comment lines in exclusion files */
+      if (line.startsWith("#")) continue;
+      /** END Custom Change: allow comment lines in exclusion files */
       if (regex == null) {
         regex = new StringBuffer("(" + line + ")");
       } else {
