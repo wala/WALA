@@ -14,6 +14,7 @@ import java.lang.ref.SoftReference;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
@@ -32,9 +33,9 @@ import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.ComposedIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
-import com.ibm.wala.util.Predicate;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -116,7 +117,8 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     for(Entrypoint e : entrypoints) {
       root.addTarget(e.makeSite(programCounter++), null);
     }
-    closure(root, true);
+    newNodes.push(root);
+    closure();
     isInitialized = true;
   }
   
@@ -206,24 +208,6 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
   protected CGNode makeFakeWorldClinitNode() throws CancelException {
     return new CHARootNode(new FakeWorldClinitMethod(cha, options, cache), Everywhere.EVERYWHERE);
   }
-
-  private void closure(CGNode n, boolean fromRoot) throws CancelException {
-    for(Iterator<CallSiteReference> sites = n.iterateCallSites(); sites.hasNext(); ) {
-      Iterator<IMethod> methods = getPossibleTargets(sites.next());
-      while (methods.hasNext()) {
-        IMethod target = methods.next();
-        if (!target.isAbstract()) {
-          CGNode callee = getNode(target, Everywhere.EVERYWHERE);
-          if (callee == null) {
-            callee = findOrCreateNode(target, Everywhere.EVERYWHERE);
-            if (fromRoot) {
-              registerEntrypoint(callee);
-            }
-          }
-        }
-      }
-    }
-  }
   
   private int clinitPC = 0;
   
@@ -247,12 +231,35 @@ public class CHACallGraph extends BasicCallGraph<CHAContextInterpreter> {
     return n;
   }
 
+  private Stack<CGNode> newNodes = new Stack<CGNode>();
+  
+  private void closure() throws CancelException {
+    while (! newNodes.isEmpty()) {
+      CGNode n = newNodes.pop();
+      for(Iterator<CallSiteReference> sites = n.iterateCallSites(); sites.hasNext(); ) {
+        Iterator<IMethod> methods = getPossibleTargets(sites.next());
+        while (methods.hasNext()) {
+          IMethod target = methods.next();
+          if (!target.isAbstract()) {
+            CGNode callee = getNode(target, Everywhere.EVERYWHERE);
+            if (callee == null) {
+              callee = findOrCreateNode(target, Everywhere.EVERYWHERE);
+              if (n == getFakeRootNode()) {
+                registerEntrypoint(callee);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   private CGNode makeNewNode(IMethod method, Context C) throws CancelException {
     CGNode n;
     Key k = new Key(method, C);
     n = new CHANode(method, C);
     registerNode(k, n);
-    closure(n, false);
+    newNodes.push(n);
     return n;
   }
 

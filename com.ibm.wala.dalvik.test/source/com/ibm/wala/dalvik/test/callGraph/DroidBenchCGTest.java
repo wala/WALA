@@ -146,17 +146,19 @@ public abstract class DroidBenchCGTest extends DalvikCallGraphTestBase {
     skipTests.add("Button2.apk");    
 	}
 
-	public static Collection<Object[]> generateData(final URI[] androidLibs, final File androidJavaJar, final String filter) {
-	  String f = walaProperties.getProperty("droidbench.root");
-	  if (f == null || !new File(f).exists()) {
-	      f = "/tmp/DroidBench";       
-	  }
-	  
-	  System.err.println("Use " + f + " as droid bench root");
-	  assert new File(f).exists() : "Use " + f + " as droid bench root";
-	  assert new File(f + "/apk/").exists() : "Use " + f + " as droid bench root";
-	  String droidBenchRoot = f;
-
+  public static Collection<Object[]> generateData(final URI[] androidLibs, final File androidJavaJar, final String filter) {
+    String f = walaProperties.getProperty("droidbench.root");
+    if (f == null || !new File(f).exists()) {
+      f = "/tmp/DroidBench";       
+    }
+  
+    System.err.println("Use " + f + " as droid bench root");
+    assert new File(f).exists() : "Use " + f + " as droid bench root";
+    assert new File(f + "/apk/").exists() : "Use " + f + " as droid bench root";
+    return generateData(f, androidLibs, androidJavaJar, filter);
+  }
+  
+	public static Collection<Object[]> generateData(String droidBenchRoot, final URI[] androidLibs, final File androidJavaJar, final String filter) {
 	  final List<Object[]> files = new LinkedList<Object[]>();
 	  FileUtil.recurseFiles(new VoidFunction<File>() {
 	    @Override

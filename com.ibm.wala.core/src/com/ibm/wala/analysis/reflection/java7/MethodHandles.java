@@ -51,7 +51,6 @@ import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 
-@SuppressWarnings("deprecation")
 public class MethodHandles {
 
   private static final IntSet self = IntSetUtil.make(new int[0]);

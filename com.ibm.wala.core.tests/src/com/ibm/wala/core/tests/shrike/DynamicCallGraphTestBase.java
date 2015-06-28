@@ -61,9 +61,9 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
   
   private boolean instrumentedJarBuilt = false;
   
-  private static String instrumentedJarLocation = System.getProperty("java.io.tmpdir") + File.separator + "test.jar";
+  private String instrumentedJarLocation = System.getProperty("java.io.tmpdir") + File.separator + "test.jar";
 
-  private static String cgLocation = System.getProperty("java.io.tmpdir") + File.separator + "cg.txt";
+  private String cgLocation = System.getProperty("java.io.tmpdir") + File.separator + "cg.txt";
 
   protected void instrument(String testJarLocation) throws IOException, ClassNotFoundException, InvalidClassFileException, FailureException {
     if (! instrumentedJarBuilt) {
@@ -116,8 +116,14 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
     childJvm.setFailonerror(true);
     childJvm.setFork(true);
     
+    if (new File(cgLocation).exists()) {
+      new File(cgLocation).delete();
+    }
+    
     childJvm.init();
-    Process x = Runtime.getRuntime().exec(childJvm.getCommandLine().toString());
+    String commandLine = childJvm.getCommandLine().toString();
+    System.err.println(commandLine);
+    Process x = Runtime.getRuntime().exec(commandLine);
     x.waitFor();
     
     Assert.assertTrue("expected to create call graph", new File(cgLocation).exists());
@@ -149,7 +155,7 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
           Pair<CGNode,CGNode> x = Pair.make(caller, callee);
           if (! edges.contains(x)) {
             edges.add(x);
-            System.err.println("found expected edge" + caller + " --> " + callee);
+            System.err.println("found expected edge " + caller + " --> " + callee);
           }
         }
       }
@@ -189,6 +195,8 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
       String callerClass = edge.nextToken();
       if ("root".equals(callerClass)) {
         caller = staticCG.getFakeRootNode();
+      } else if ("callbacks".equals(callerClass)) {
+          continue loop;
       } else {
         String callerMethod = edge.nextToken();
         MethodReference callerRef = MethodReference.findOrCreate(TypeReference.findOrCreate(ClassLoaderReference.Application, "L" + callerClass), Selector.make(callerMethod));
