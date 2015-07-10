@@ -146,7 +146,6 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
     check(staticCG, new EdgesTest() {
       @Override
       public void edgesTest(CallGraph staticCG, CGNode caller, MethodReference calleeRef) {
-        if (! calleeRef.getName().equals(MethodReference.clinitName)) {
           Set<CGNode> nodes = staticCG.getNodes(calleeRef);
           Assert.assertEquals("expected one node for " + calleeRef, 1, nodes.size());
           CGNode callee = nodes.iterator().next();
@@ -157,7 +156,6 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
             edges.add(x);
             System.err.println("found expected edge " + caller + " --> " + callee);
           }
-        }
       }
     }, filter);
   }
@@ -195,6 +193,8 @@ public abstract class DynamicCallGraphTestBase extends WalaTestCase {
       String callerClass = edge.nextToken();
       if ("root".equals(callerClass)) {
         caller = staticCG.getFakeRootNode();
+      } else if ("clinit".equals(callerClass)) {
+          caller = staticCG.getFakeWorldClinitNode();
       } else if ("callbacks".equals(callerClass)) {
           continue loop;
       } else {

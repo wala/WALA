@@ -84,6 +84,11 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
   }
 
   @Override
+  public CGNode getFakeWorldClinitNode() throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public Collection<CGNode> getEntrypointNodes() {
     return partialRoots;
   }

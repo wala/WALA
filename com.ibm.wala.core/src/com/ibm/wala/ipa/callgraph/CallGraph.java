@@ -32,6 +32,8 @@ public interface CallGraph extends NumberedGraph<CGNode> {
    */
   public CGNode getFakeRootNode();
 
+  CGNode getFakeWorldClinitNode();
+  
   /**
    * @return an Iterator of the nodes designated as "root nodes"
    */

@@ -146,7 +146,7 @@ public class Runtime {
             }
           }
         
-          String line = String.valueOf(caller) + "\t" + bashToDescriptor(klass) + "\t" + String.valueOf(method) + "\n";
+          String line = (method.contains("<clinit>")? "clinit": String.valueOf(caller)) + "\t" + bashToDescriptor(klass) + "\t" + String.valueOf(method) + "\n";
           synchronized (runtime) {
             if (runtime.output != null) {
               runtime.output.printf(line);

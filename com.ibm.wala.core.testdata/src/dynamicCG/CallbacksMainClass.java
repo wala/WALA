@@ -7,8 +7,16 @@ public class CallbacksMainClass {
 
   private static CallbacksMainClass instance;
   
+  public static class Junk {
+  
+    static {
+      callSomethingStatic();
+    }
+    
+  }
+  
   static {
-    callSomethingStatic();
+    new Junk();
   }
   
   public static void main(String[] args) {
@@ -17,7 +25,7 @@ public class CallbacksMainClass {
     System.err.println(junk.iterator().next().toString());
   }
 
-  private static void callSomethingStatic() {
+  public static void callSomethingStatic() {
     instance = new CallbacksMainClass();
   }
 
@@ -26,7 +34,7 @@ public class CallbacksMainClass {
     return callSomething();
   }
 
-  private String callSomething() {
+  public String callSomething() {
     return "string";
   }
   

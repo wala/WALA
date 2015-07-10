@@ -111,15 +111,6 @@ public class JSCallGraphBuilderUtil extends com.ibm.wala.cast.js.ipa.callgraph.J
     return f.toURI().toURL();
   }
   
-  public static SourceModule getPrologueFile(final String name) {
-    return new SourceURLModule(JSCallGraphBuilderUtil.class.getClassLoader().getResource(name)) {
-      @Override
-      public String getName() {
-        return name;
-      }      
-    };
-  }
-  
   public static AnalysisScope makeScriptScope(String dir, String name, JavaScriptLoaderFactory loaders, ClassLoader loader) throws IOException {
     return makeScope(makeSourceModules(dir, name, loader), loaders, JavaScriptLoader.JS);    
   }

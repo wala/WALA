@@ -104,6 +104,7 @@ public class APKCallGraphDriver {
 	        for(CGNode n : CG) {
 	          code.add(n.getMethod());
 	        }
+	        /*
 	        for(IClass cls : CG.getClassHierarchy()) {
 	          for(IMethod m : cls.getDeclaredMethods()) {
 	            if (m.isAbstract() && !Collections.disjoint(CG.getClassHierarchy().getPossibleTargets(m.getReference()), code)) {
@@ -111,7 +112,7 @@ public class APKCallGraphDriver {
 	            }
 	          }
 	        }
-          
+          */
 	        System.err.println("reachable methods for " + apk);
           for(IMethod m : code) {
             System.err.println("" + m.getDeclaringClass().getName() + " " + m.getName() + m.getDescriptor());
