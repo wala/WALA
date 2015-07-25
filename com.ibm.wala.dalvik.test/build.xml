@@ -44,11 +44,11 @@
    </target>
 	
    <target name="fetchSampleCup" depends="sampleCupPresent" unless="sample.cup.present">
-     <get src="http://casper.cii.saxion.nl:8083/~vanleeuw/pse/spanje/troff2html.cup" dest="${plugin.destination}/data/troff2html.cup" />
+     <get src="http://www.cc.gatech.edu/gvu/people/faculty/hudson/java_cup/classes.v0.9e/java_cup/parser.cup" dest="${plugin.destination}/data/sample.cup" />
    </target>
 
    <target name="sampleCupPresent" depends="init">
-     <available file="${plugin.destination}/data/troff2html.cup" property="sample.cup.present"/>
+     <available file="${plugin.destination}/data/sample.cup" property="sample.cup.present"/>
    </target>
 
       <target name="fetchAndroidJar" depends="androidJarPresent" unless="android.jar.present">

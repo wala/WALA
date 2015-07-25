@@ -27,7 +27,7 @@ public class DynamicDalvikComparisonTestForAndroidLibs extends DynamicDalvikComp
 
   @Test
   public void testJavaCup() throws ClassHierarchyException, IllegalArgumentException, IOException, CancelException, InterruptedException, ClassNotFoundException, SecurityException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InvalidClassFileException, FailureException {
-    File inputFile = testFile("troff2html.cup");
+    File inputFile = testFile("sample.cup");
     test(providedAndroidLibs(), TestConstants.JAVA_CUP_MAIN, TestConstants.JAVA_CUP, inputFile.getAbsolutePath());
   }
 
