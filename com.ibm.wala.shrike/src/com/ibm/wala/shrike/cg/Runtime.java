@@ -28,19 +28,13 @@ public class Runtime {
   }
   
   private static class DefaultCallbackPolicy implements Policy {
-    // if not found:
-    //  look up the stack for expected caller
-    //  if found:
-    //    (callback case)
-    //    record real target of expected caller (or not)
-    //    policy-based edge for call to current method
-    //  if not found:
-    //    (async system edge)
-    //    policy-based edge for call to current method
    @Override
     public void callback(StackTraceElement[] stack, String klass, String method, Object receiver) {
      // stack frames: Runtime.execution(0), callee(1), caller(2)
-     String root = "<clinit>".equals(stack[1].getMethodName())? "clinit": "callbacks";
+     String root = 
+         "<clinit>".equals(stack[1].getMethodName())? "clinit": 
+           "finalize".equals(stack[1].getMethodName())? "root":
+             "callbacks";
      String line = root + "\t" + bashToDescriptor(klass) + "\t" + String.valueOf(method) + "\n";
      synchronized (runtime) {
        if (runtime.output != null) {

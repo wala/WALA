@@ -35,7 +35,9 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
+import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -1428,20 +1430,27 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         }
 
         // add an invocation from the fake root method to the <clinit>
-        AbstractRootMethod fakeWorldClinitMethod = (AbstractRootMethod) callGraph.getFakeWorldClinitNode().getMethod();
         MethodReference m = klass.getClassInitializer().getReference();
         CallSiteReference site = CallSiteReference.make(1, m, IInvokeInstruction.Dispatch.STATIC);
         IMethod targetMethod = getOptions().getMethodTargetSelector().getCalleeTarget(callGraph.getFakeRootNode(), site, null);
         if (targetMethod != null) {
           CGNode target = getTargetForCall(callGraph.getFakeRootNode(), site, null, null);
           if (target != null && callGraph.getPredNodeCount(target) == 0) {
+            AbstractRootMethod fakeWorldClinitMethod = (AbstractRootMethod) callGraph.getFakeWorldClinitNode().getMethod();
             SSAAbstractInvokeInstruction s = fakeWorldClinitMethod.addInvocation(new int[0], site);
             PointerKey uniqueCatch = getBuilder().getPointerKeyForExceptionalReturnValue(callGraph.getFakeRootNode());
             getBuilder().processResolvedCall(callGraph.getFakeWorldClinitNode(), s, target, null, uniqueCatch);
           }
         }
       }
-
+      
+      IMethod finalizer = klass.getMethod(MethodReference.finalizeSelector);
+      if (finalizer != null && finalizer.getDeclaringClass().equals(klass)) {
+        Entrypoint ef = new DefaultEntrypoint(finalizer, getClassHierarchy());
+        ef.addCall((AbstractRootMethod)callGraph.getFakeRootNode().getMethod());
+        getBuilder().markChanged(callGraph.getFakeRootNode());
+      }
+      
       IClass sc = klass.getSuperclass();
       if (sc != null) {
         processClassInitializer(sc);
