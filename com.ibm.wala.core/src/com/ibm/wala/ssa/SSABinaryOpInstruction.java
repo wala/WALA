@@ -13,13 +13,7 @@ package com.ibm.wala.ssa;
 import com.ibm.wala.shrikeBT.BinaryOpInstruction;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
 
-public abstract class SSABinaryOpInstruction extends SSAInstruction {
-
-  private final int result;
-
-  private final int val1;
-
-  private final int val2;
+public abstract class SSABinaryOpInstruction extends SSAAbstractBinaryInstruction {
 
   private final IBinaryOpInstruction.IOperator operator;
 
@@ -29,10 +23,7 @@ public abstract class SSABinaryOpInstruction extends SSAInstruction {
   private final boolean mayBeInteger;
 
   protected SSABinaryOpInstruction(int iindex, IBinaryOpInstruction.IOperator operator, int result, int val1, int val2, boolean mayBeInteger) {
-    super(iindex);
-    this.result = result;
-    this.val1 = val1;
-    this.val2 = val2;
+    super(iindex, result, val1, val2);
     this.operator = operator;
     this.mayBeInteger = mayBeInteger;
     if (val1 <= 0) {
@@ -62,49 +53,6 @@ public abstract class SSABinaryOpInstruction extends SSAInstruction {
    */
   public IBinaryOpInstruction.IOperator getOperator() {
     return operator;
-  }
-
-  @Override
-  public boolean hasDef() {
-    return true;
-  }
-
-  @Override
-  public int getDef() {
-    return result;
-  }
-
-  @Override
-  public int getDef(int i) {
-    assert i == 0;
-    return result;
-  }
-
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
-   */
-  @Override
-  public int getNumberOfDefs() {
-    return 1;
-  }
-
-  @Override
-  public int getNumberOfUses() {
-    return 2;
-  }
-
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
-   */
-  @Override
-  public int getUse(int j) {
-    assert j <= 1;
-    return (j == 0) ? val1 : val2;
-  }
-
-  @Override
-  public int hashCode() {
-    return 6311 * result ^ 2371 * val1 + val2;
   }
 
   /*

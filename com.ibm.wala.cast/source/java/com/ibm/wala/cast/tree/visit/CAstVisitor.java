@@ -807,6 +807,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       if (visitor.visitEachElementGet(n, context, visitor))
 	break;
       visitor.visit(n.getChild(0), context, visitor);
+      visitor.visit(n.getChild(1), context, visitor);
       visitor.leaveEachElementGet(n, context, visitor);
       break;	
     }
@@ -815,6 +816,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
       if (visitor.visitEachElementHasNext(n, context, visitor))
 	break;
       visitor.visit(n.getChild(0), context, visitor);
+      visitor.visit(n.getChild(1), context, visitor);
       visitor.leaveEachElementHasNext(n, context, visitor);
       break;	
     }

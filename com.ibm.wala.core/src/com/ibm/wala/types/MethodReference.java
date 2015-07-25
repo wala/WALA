@@ -56,6 +56,10 @@ public final class MethodReference extends MemberReference {
 
   public final static Selector clinitSelector = new Selector(clinitName, defaultInitDesc);
 
+  public final static Atom finalizeName = Atom.findOrCreateUnicodeAtom("finalize");
+
+  public final static Selector finalizeSelector = new Selector(finalizeName, defaultInitDesc);
+
   public final static Atom runAtom = Atom.findOrCreateUnicodeAtom("run");
 
   public final static Descriptor runDesc = Descriptor.findOrCreateUTF8(Language.JAVA, "()Ljava/lang/Object;");

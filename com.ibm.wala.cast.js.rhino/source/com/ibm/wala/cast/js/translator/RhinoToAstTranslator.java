@@ -107,7 +107,6 @@ import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
 import com.ibm.wala.cast.tree.visit.CAstVisitor;
-import com.ibm.wala.cast.tree.visit.CAstVisitor.Context;
 import com.ibm.wala.cast.util.CAstPattern;
 import com.ibm.wala.classLoader.SourceModule;
 import com.ibm.wala.util.collections.EmptyIterator;
@@ -828,47 +827,46 @@ public class RhinoToAstTranslator {
 		CAstNode object = visit(node.getIteratedObject(), arg);
     String tempName = "for in loop temp";   
 		CAstNode[] loopHeader = new CAstNode[]{
-		    Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(tempName, JSAstTranslator.Any))),
+		    Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(tempName, JSAstTranslator.Any)), readName(arg, null, "$$undefined")),
         Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)), object)
 		};
 		
 		CAstNode initNode;
+		String name;
 		AstNode var = node.getIterator();
 		assert var instanceof Name || var instanceof VariableDeclaration || var instanceof LetNode : var.getClass()  + " " + var;
 		if (var instanceof Name) {
+		  name = ((Name)var).getString();
       initNode = 
         Ast.makeNode(CAstNode.ASSIGN, 
-          Ast.makeNode(CAstNode.VAR, Ast.makeConstant(((Name)var).getString())),
-          Ast.makeNode(CAstNode.EACH_ELEMENT_GET, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName))));
+          Ast.makeNode(CAstNode.VAR, Ast.makeConstant(name)),
+          Ast.makeNode(CAstNode.EACH_ELEMENT_GET, 
+              Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)),
+              readName(arg, null, name)));
 		  
 		} else {
-		  boolean isLet;
 		  VariableDeclaration decl;
 		  if (var instanceof LetNode) {
-		    isLet = true;
 		    decl = ((LetNode)var).getVariables();
 		  } else {
-		    isLet = false;
 		    decl = (VariableDeclaration)var;
 		  }
 		  assert decl.getVariables().size() == 1;
 		  VariableInitializer init = decl.getVariables().iterator().next();
-		  if (isLet) {
-		    initNode = 
-		      Ast.makeNode(CAstNode.DECL_STMT, 
-		          Ast.makeConstant(new CAstSymbolImpl(init.getTarget().getString(), JSAstTranslator.Any)),
-		          Ast.makeNode(CAstNode.EACH_ELEMENT_GET, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName))));
 
-		  } else {
-		    arg.addNameDecl(
-		        Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(init.getTarget().getString(), JSAstTranslator.Any)),
-		            readName(arg, null, "$$undefined")));
+      name = init.getTarget().getString();
 
-		    initNode = 
-		      Ast.makeNode(CAstNode.ASSIGN, 
-		          Ast.makeNode(CAstNode.VAR, Ast.makeConstant(init.getTarget().getString())),
-		          Ast.makeNode(CAstNode.EACH_ELEMENT_GET, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName))));
-		  }
+	    arg.addNameDecl(
+	        Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(name, JSAstTranslator.Any)),
+	            readName(arg, null, "$$undefined")));
+	    		  
+      initNode = 
+          Ast.makeNode(CAstNode.ASSIGN, 
+              Ast.makeNode(CAstNode.VAR, Ast.makeConstant(name)),
+		          Ast.makeNode(CAstNode.EACH_ELEMENT_GET, 
+		              Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)),
+		              readName(arg, null, name)));
+
 		}
 		
 		// body
@@ -892,8 +890,12 @@ public class RhinoToAstTranslator {
 						loopHeader[1],
 						contLabel,
 						Ast.makeNode(CAstNode.LOOP,
-								Ast.makeNode(CAstNode.EACH_ELEMENT_HAS_NEXT, 
-										Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName))),
+								Ast.makeNode(CAstNode.BINARY_EXPR,
+								    CAstOperator.OP_NE,
+										Ast.makeConstant(null),
+				            Ast.makeNode(CAstNode.EACH_ELEMENT_GET, 
+			                  Ast.makeNode(CAstNode.VAR, Ast.makeConstant(tempName)),
+			                  readName(arg, null, name))),
 								body),
 						breakLabel));
 		arg.cfg().map(node, loop);

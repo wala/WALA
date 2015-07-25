@@ -47,8 +47,8 @@ public interface AstInstructionFactory extends SSAInstructionFactory {
   
   AstLexicalWrite LexicalWrite(int iindex, String definer, String globalName, TypeReference type, int rhs);
   
-  EachElementGetInstruction EachElementGetInstruction(int iindex, int lValue, int objectRef);
+  EachElementGetInstruction EachElementGetInstruction(int iindex, int lValue, int objectRef, int previousProp);
   
-  EachElementHasNextInstruction EachElementHasNextInstruction(int iindex, int lValue, int objectRef);
+  EachElementHasNextInstruction EachElementHasNextInstruction(int iindex, int lValue, int objectRef, int previousProp);
   
 }
