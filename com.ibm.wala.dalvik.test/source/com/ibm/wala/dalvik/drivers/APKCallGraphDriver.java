@@ -2,10 +2,8 @@ package com.ibm.wala.dalvik.drivers;
 
 import java.io.File;
 import java.net.URI;
-import java.util.Collections;
 import java.util.Set;
 
-import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dalvik.test.DalvikTestBase;
 import com.ibm.wala.dalvik.test.callGraph.DalvikCallGraphTestBase;
