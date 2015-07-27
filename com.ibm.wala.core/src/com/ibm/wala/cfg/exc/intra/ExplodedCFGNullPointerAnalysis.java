@@ -85,7 +85,7 @@ public class ExplodedCFGNullPointerAnalysis implements ExceptionPruningAnalysis<
     for (IExplodedBasicBlock bb : cfg) {
       if (bb.getInstruction() == null) continue;
       List<IExplodedBasicBlock> succ = cfg.getExceptionalSuccessors(bb);
-      if (succ != null && !succ.isEmpty()) {
+      if (succ != null && succ.contains(cfg.exit())) {
         hasException = true;
         break;
       }
