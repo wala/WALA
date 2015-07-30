@@ -3,11 +3,9 @@ Bundle-ManifestVersion: 2
 Bundle-Name: WALA CAst core Plug-in
 Bundle-SymbolicName: com.ibm.wala.cast
 Bundle-Version: 1.3.8.qualifier
-Bundle-Activator: com.ibm.wala.cast.plugin.AstPlugin
 Bundle-Vendor: IBM
 Require-Bundle: com.ibm.wala.core,
- com.ibm.wala.shrike,
- org.eclipse.core.runtime
+ com.ibm.wala.shrike
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/commons-io-2.4.jar
@@ -21,7 +19,6 @@ Export-Package: com.ibm.wala.cast.analysis.typeInference,
  com.ibm.wala.cast.ir.ssa.analysis,
  com.ibm.wala.cast.ir.translator,
  com.ibm.wala.cast.loader,
- com.ibm.wala.cast.plugin,
  com.ibm.wala.cast.tree,
  com.ibm.wala.cast.tree.impl,
  com.ibm.wala.cast.tree.pattern,
