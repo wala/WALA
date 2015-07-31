@@ -154,6 +154,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    */
   private final Set<IClass> clinitVisited = HashSetFactory.make();
 
+  private final Set<IClass> finalizeVisited = HashSetFactory.make();
+
   public IProgressMonitor monitor;
 
   protected SSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
@@ -1136,7 +1138,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         System.err.println("visitNew call clinit: " + klass);
       }
       processClassInitializer(klass);
-
+      processFinalizeMethod(klass);
+      
       // add instance keys and pointer keys for array contents
       int dim = 0;
       InstanceKey lastInstance = iKey;
@@ -1406,6 +1409,28 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
     }
 
+    
+    private void processFinalizeMethod(final IClass klass) {
+      if (! getBuilder().finalizeVisited.contains(klass)) {
+        getBuilder().finalizeVisited.add(klass);
+        IMethod finalizer = klass.getMethod(MethodReference.finalizeSelector);
+        if (finalizer != null && ! finalizer.getDeclaringClass().getReference().equals(TypeReference.JavaLangObject)) {
+          Entrypoint ef = new DefaultEntrypoint(finalizer, getClassHierarchy()) {
+            @Override
+            protected TypeReference[] makeParameterTypes(IMethod method, int i) {
+              if (i == 0) {
+                return new TypeReference[]{ klass.getReference() };
+              } else {
+                return super.makeParameterTypes(method, i);
+              }
+            }          
+          };
+          ef.addCall((AbstractRootMethod)callGraph.getFakeRootNode().getMethod());
+          getBuilder().markChanged(callGraph.getFakeRootNode());
+        }
+      }
+    }
+    
     /**
      * TODO: lift most of this logic to PropagationCallGraphBuilder
      * 
@@ -1443,14 +1468,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           }
         }
       }
-      
-      IMethod finalizer = klass.getMethod(MethodReference.finalizeSelector);
-      if (finalizer != null && finalizer.getDeclaringClass().equals(klass)) {
-        Entrypoint ef = new DefaultEntrypoint(finalizer, getClassHierarchy());
-        ef.addCall((AbstractRootMethod)callGraph.getFakeRootNode().getMethod());
-        getBuilder().markChanged(callGraph.getFakeRootNode());
-      }
-      
+            
       IClass sc = klass.getSuperclass();
       if (sc != null) {
         processClassInitializer(sc);
