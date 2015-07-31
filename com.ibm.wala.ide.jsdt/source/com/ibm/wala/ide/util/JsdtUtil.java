@@ -42,7 +42,6 @@ import org.eclipse.wst.jsdt.internal.corext.callhierarchy.CallHierarchy;
 import org.eclipse.wst.jsdt.internal.corext.callhierarchy.MethodWrapper;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
-import com.ibm.wala.cast.js.JavaScriptPlugin;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
@@ -50,6 +49,7 @@ import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.ide.classloader.EclipseSourceFileModule;
+import com.ibm.wala.ide.jsdt.Activator;
 import com.ibm.wala.ide.util.HeadlessUtil.EclipseCompiler;
 import com.ibm.wala.ide.util.HeadlessUtil.Parser;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -61,8 +61,8 @@ import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 
 public class JsdtUtil {
 
-  public static URL getProlgueFile(String file, Plugin plugin) {
-    plugin = plugin!= null? plugin: JavaScriptPlugin.getDefault();
+  public static URL getPrologueFile(String file, Plugin plugin) {
+    plugin = plugin!= null? plugin: Activator.getDefault();
     JavaScriptLoader.addBootstrapFile(file);
     return plugin.getClass().getClassLoader().getResource(file);
   }

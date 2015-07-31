@@ -10,7 +10,6 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
-import com.ibm.wala.cast.js.JavaScriptPlugin;
 import com.ibm.wala.cast.js.callgraph.fieldbased.flowgraph.vertices.ObjectVertex;
 import com.ibm.wala.cast.js.html.WebPageLoaderFactory;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
@@ -18,6 +17,7 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.translator.CAstRhinoTranslatorFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
+import com.ibm.wala.ide.jsdt.Activator;
 import com.ibm.wala.ide.util.EclipseWebProjectPath;
 import com.ibm.wala.ide.util.JavaScriptEclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -35,7 +35,7 @@ public class EclipseWebAnalysisEngine extends EclipseJavaScriptAnalysisEngine {
   public EclipseWebAnalysisEngine(IJavaScriptProject project, Collection<Pair<String, Plugin>> models, BuilderType builderType) throws IOException, CoreException {
     super(project, builderType);
     // core DOM model
-    this.models.add(Pair.make("preamble.js", (Plugin)JavaScriptPlugin.getDefault()));
+    this.models.add(Pair.make("preamble.js", (Plugin)Activator.getDefault()));
     this.models.addAll(models);
   }
 

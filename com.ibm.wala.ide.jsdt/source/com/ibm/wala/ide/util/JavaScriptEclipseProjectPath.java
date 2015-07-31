@@ -24,10 +24,10 @@ import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 
-import com.ibm.wala.cast.js.JavaScriptPlugin;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceURLModule;
+import com.ibm.wala.ide.jsdt.Activator;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
@@ -55,7 +55,7 @@ public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePat
 			CoreException {
 		super(AnalysisScopeType.SOURCE_FOR_PROJ_AND_LINKED_PROJS);
 		this.models.addAll(models);
-		this.models.add(Pair.make("prologue.js", (Plugin)JavaScriptPlugin.getDefault()));
+		this.models.add(Pair.make("prologue.js", (Plugin)Activator.getDefault()));
 	}
 
 	public static JavaScriptEclipseProjectPath make(IJavaScriptProject p, Set<Pair<String, Plugin>> models) throws IOException, CoreException {
@@ -71,7 +71,7 @@ public class JavaScriptEclipseProjectPath extends EclipseProjectPath<IIncludePat
   
     Collection<Module> s = modules.get(JSLoader.JAVASCRIPT);
     for(Pair<String,Plugin> model : models) {
-      URL modelFile = JsdtUtil.getProlgueFile(model.fst, model.snd);
+      URL modelFile = JsdtUtil.getPrologueFile(model.fst, model.snd);
       assert modelFile != null : "cannot find file for " + model;
       s.add(new SourceURLModule(modelFile) {
         @Override
