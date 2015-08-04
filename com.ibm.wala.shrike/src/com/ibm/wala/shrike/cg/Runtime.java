@@ -73,7 +73,7 @@ public class Runtime {
     }
 
     try {
-      output = new PrintWriter(new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(fileName))));
+      output = new PrintWriter(new OutputStreamWriter(new GZIPOutputStream(new FileOutputStream(fileName)), "UTF-8"));
     } catch (IOException e) {
       output = new PrintWriter(System.err);
     }
