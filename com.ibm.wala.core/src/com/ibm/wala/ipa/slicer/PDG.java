@@ -28,6 +28,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cfg.ExceptionPrunedCFG;
+import com.ibm.wala.ipa.cfg.PrunedCFG;
 import com.ibm.wala.ipa.modref.DelegatingExtendedHeapModel;
 import com.ibm.wala.ipa.modref.ExtendedHeapModel;
 import com.ibm.wala.ipa.modref.ModRef;
@@ -62,6 +63,7 @@ import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.config.SetOfClasses;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
+import com.ibm.wala.util.graph.GraphUtil;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.dominators.Dominators;
 import com.ibm.wala.util.graph.labeled.SlowSparseNumberedLabeledGraph;
@@ -233,14 +235,18 @@ public class PDG implements NumberedGraph<Statement> {
     }
     ControlFlowGraph<SSAInstruction, ISSABasicBlock> controlFlowGraph = ir.getControlFlowGraph();
     if (cOptions.equals(ControlDependenceOptions.NO_EXCEPTIONAL_EDGES)) {
-      controlFlowGraph = ExceptionPrunedCFG.make(controlFlowGraph);
-      // In case the CFG has no nodes left because the only control dependencies
-      // were
-      // exceptional, simply return because at this point there are no nodes.
+      PrunedCFG<SSAInstruction, ISSABasicBlock> prunedCFG = ExceptionPrunedCFG.make(controlFlowGraph);
+      // In case the CFG has only the entry and exit nodes left 
+      // and no edges because the only control dependencies
+      // were exceptional, simply return because at this point there are no nodes.
       // Otherwise, later this may raise an Exception.
-      if (controlFlowGraph.getNumberOfNodes() == 0) {
+      if (prunedCFG.getNumberOfNodes() == 2 
+          && prunedCFG.containsNode(controlFlowGraph.entry()) 
+          && prunedCFG.containsNode(controlFlowGraph.exit())
+          && GraphUtil.countEdges(prunedCFG) == 0) {
         return;
       }
+      controlFlowGraph = prunedCFG;
     } else {
       Assertions.productionAssertion(cOptions.equals(ControlDependenceOptions.FULL));
     }

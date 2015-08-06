@@ -692,6 +692,28 @@ public class SlicerTest {
     GraphIntegrity.check(sdg);
   }
 
+  @Test
+  public void testJustThrow() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, UnsoundGraphException {
+    AnalysisScope scope = findOrCreateAnalysisScope();
+
+    IClassHierarchy cha = findOrCreateCHA(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.SLICE_JUSTTHROW);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraph cg = builder.makeCallGraph(options, null);
+
+    CGNode main = findMainMethod(cg);
+
+    Statement s = findCallToDoNothing(main);
+    System.err.println("Statement: " + s);
+
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
+        ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
+    dumpSlice(slice);
+  }
+
   public static int countAllocations(Collection<Statement> slice) {
     int count = 0;
     for (Statement s : slice) {
