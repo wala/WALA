@@ -459,6 +459,21 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
       }
     }
     
+    // check interfaces for Java 8 default implementation
+    // Java seems to require a single default implementation, so take that on faith here
+    for(IClass iface : getAllImplementedInterfaces()) {
+      for(IMethod m : iface.getDeclaredMethods()) {
+        if (!m.isAbstract() && m.getSelector().equals(selector)) {          
+          if (inheritCache == null) {
+            inheritCache = new BimodalMap<Selector, IMethod>(5);
+          }
+          inheritCache.put(selector, m);
+
+          return m;
+        }
+      }
+    }
+    
     // no method found
     if (inheritCache == null) {
       inheritCache = new BimodalMap<Selector, IMethod>(5);
