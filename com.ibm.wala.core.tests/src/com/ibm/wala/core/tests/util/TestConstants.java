@@ -139,4 +139,6 @@ public interface TestConstants {
 
   public final static String SLICE_TESTINETADDR = "Lslice/TestInetAddr";
 
+  public final static String SLICE_JUSTTHROW = "Lslice/JustThrow";
+
 }

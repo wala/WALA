@@ -289,10 +289,8 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
     Set<T> reachable = DFS.getReachableNodes(temp, Collections.singleton(cfg.entry()));
     Set<T> back = DFS.getReachableNodes(GraphInverter.invert(temp), Collections.singleton(cfg.exit()));
     reachable.retainAll(back);
-/** BEGIN Custom change: entry and exit in every cfg */
     reachable.add(cfg.entry());
     reachable.add(cfg.exit());
-/** END Custom change: entry and exit in every cfg */
         
     this.nodes = new FilteredNodes<T>(cfg, reachable);
     this.edges = new FilteredCFGEdges<I, T>(cfg, nodes, filter);
