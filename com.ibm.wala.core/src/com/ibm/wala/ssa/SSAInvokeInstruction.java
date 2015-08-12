@@ -45,7 +45,7 @@ public abstract class SSAInvokeInstruction extends SSAAbstractInvokeInstruction 
     // result == -1 for void-returning methods, which are the only calls
     // that have a single value def.
     return insts.InvokeInstruction(iindex, defs == null || result == -1 ? result : defs[0], uses == null ? params : uses,
-        defs == null ? exception : defs[result == -1 ? 0 : 1], site);
+        defs == null ? exception : defs[result == -1 ? 0 : 1], site, null);
   }
 
   public static void assertParamsKosher(int result, int[] params, CallSiteReference site) throws IllegalArgumentException {

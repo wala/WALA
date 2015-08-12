@@ -431,9 +431,9 @@ public class AppModelMethod {
     	CallSiteReference newSite = CallSiteReference.make(methodSummary.getNumberOfStatements(), site.getDeclaredTarget(), site.getInvocationCode());
     	SSAInvokeInstruction s = null;
     	if (newSite.getDeclaredTarget().getReturnType().equals(TypeReference.Void)) {
-    		s = insts.InvokeInstruction(methodSummary.getNumberOfStatements(), params, nextLocal++, newSite);
+    		s = insts.InvokeInstruction(methodSummary.getNumberOfStatements(), params, nextLocal++, newSite, null);
     	} else {
-    		s = insts.InvokeInstruction(methodSummary.getNumberOfStatements(), nextLocal++, params, nextLocal++, newSite);
+    		s = insts.InvokeInstruction(methodSummary.getNumberOfStatements(), nextLocal++, params, nextLocal++, newSite, null);
     	}
     	methodSummary.addStatement(s);
     	//        	cache.invalidate(this, Everywhere.EVERYWHERE);

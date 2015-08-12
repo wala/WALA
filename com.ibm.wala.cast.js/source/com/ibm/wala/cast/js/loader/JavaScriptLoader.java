@@ -470,12 +470,12 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         }
 
         @Override
-        public SSAInvokeInstruction InvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site) {
+        public SSAInvokeInstruction InvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site, BootstrapMethod bootstrap) {
           throw new UnsupportedOperationException();
         }
 
         @Override
-        public SSAInvokeInstruction InvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site) {
+        public SSAInvokeInstruction InvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site, BootstrapMethod bootstrap) {
           throw new UnsupportedOperationException();
         }
 
@@ -603,11 +603,6 @@ public class JavaScriptLoader extends CAstAbstractModuleLoader {
         @Override
         public SetPrototype SetPrototype(int iindex, int object, int prototype) {
           return new SetPrototype(iindex, object, prototype);
-        }
-
-        @Override
-        public SSAInstruction InvokeInstruction(int i, int[] js, int j, CallSiteReference site, BootstrapMethod bootstrap) {
-          throw new UnsupportedOperationException();
         }
 
       };

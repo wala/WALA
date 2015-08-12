@@ -228,44 +228,57 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
     }
 
     @Override
-    public SSAInvokeInstruction InvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site) {
-      return new SSAInvokeInstruction(iindex, result, params, exception, site) {
-        @Override
-        public Collection<TypeReference> getExceptionTypes() {
-          if (!isStatic()) {
-            return getNullPointerException();
-          } else {
-            return Collections.emptySet();
+    public SSAInvokeInstruction InvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site, BootstrapMethod bootstrap) {
+      if (bootstrap != null) {
+        return new SSAInvokeDynamicInstruction(iindex, result, params, exception, site, bootstrap) {
+          @Override
+          public Collection<TypeReference> getExceptionTypes() {
+            if (!isStatic()) {
+              return getNullPointerException();
+            } else {
+              return Collections.emptySet();
+            }
           }
-        }
-      };
-    }
-
-    public SSAInvokeDynamicInstruction InvokeInstruction(int result, int[] params, int exception, CallSiteReference site, BootstrapMethod bootstrap) {
-      return new SSAInvokeDynamicInstruction(result, params, exception, site, bootstrap) {
-        @Override
-        public Collection<TypeReference> getExceptionTypes() {
-          if (!isStatic()) {
-            return getNullPointerException();
-          } else {
-            return Collections.emptySet();
+        };
+      } else {
+        return new SSAInvokeInstruction(iindex, result, params, exception, site) {
+          @Override
+          public Collection<TypeReference> getExceptionTypes() {
+            if (!isStatic()) {
+              return getNullPointerException();
+            } else {
+              return Collections.emptySet();
+            }
           }
-        }
-      };
+        };
+      }
     }
 
     @Override
-    public SSAInvokeInstruction InvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site) {
-      return new SSAInvokeInstruction(iindex, params, exception, site) {
-        @Override
-        public Collection<TypeReference> getExceptionTypes() {
-          if (!isStatic()) {
-            return getNullPointerException();
-          } else {
-            return Collections.emptySet();
+    public SSAInvokeInstruction InvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site, BootstrapMethod bootstrap) {
+      if (bootstrap != null) {
+        return new SSAInvokeDynamicInstruction(iindex, params, exception, site, bootstrap) {
+          @Override
+          public Collection<TypeReference> getExceptionTypes() {
+            if (!isStatic()) {
+              return getNullPointerException();
+            } else {
+              return Collections.emptySet();
+            }
           }
-        }
-      };
+        };
+      } else {
+        return new SSAInvokeInstruction(iindex, params, exception, site) {
+          @Override
+          public Collection<TypeReference> getExceptionTypes() {
+            if (!isStatic()) {
+              return getNullPointerException();
+            } else {
+              return Collections.emptySet();
+            }
+          }
+        };
+      }
     }
 
     @Override

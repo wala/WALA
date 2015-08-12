@@ -66,9 +66,9 @@ public interface SSAInstructionFactory {
 
   SSAInstanceofInstruction InstanceofInstruction(int iindex, int result, int ref, TypeReference checkedType);
 
-  SSAInvokeInstruction InvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site);
+  SSAInvokeInstruction InvokeInstruction(int iindex, int result, int[] params, int exception, CallSiteReference site, BootstrapMethod bootstrap);
 
-  SSAInvokeInstruction InvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site);
+  SSAInvokeInstruction InvokeInstruction(int iindex, int[] params, int exception, CallSiteReference site, BootstrapMethod bootstrap);
 
   SSALoadIndirectInstruction LoadIndirectInstruction(int iindex, int lval, TypeReference t, int addressVal);
   
@@ -99,7 +99,5 @@ public interface SSAInstructionFactory {
   SSAThrowInstruction ThrowInstruction(int iindex, int exception);
 
   SSAUnaryOpInstruction UnaryOpInstruction(int iindex, IUnaryOpInstruction.IOperator operator, int result, int val);
-
-  SSAInstruction InvokeInstruction(int i, int[] js, int j, CallSiteReference site, BootstrapMethod bootstrap);
 
 }

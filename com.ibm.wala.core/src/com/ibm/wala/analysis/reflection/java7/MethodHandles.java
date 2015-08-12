@@ -272,7 +272,7 @@ public class MethodHandles {
               params[i] = i+3;
             }           
             CallSiteReference site = CallSiteReference.make(nargs+1, ref, isStatic? Dispatch.STATIC: Dispatch.SPECIAL);
-            code.addStatement(insts.InvokeInstruction(code.getNextProgramCounter(), 2*nargs+3, params, 2*nargs+4, site));
+            code.addStatement(insts.InvokeInstruction(code.getNextProgramCounter(), 2*nargs+3, params, 2*nargs+4, site, null));
             code.addStatement(insts.ReturnInstruction(code.getNextProgramCounter(), 2*nargs+3, false));
           } else {
             int nargs = node.getMethod().getNumberOfParameters();

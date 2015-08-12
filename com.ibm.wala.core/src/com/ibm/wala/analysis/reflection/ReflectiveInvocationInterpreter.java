@@ -201,17 +201,17 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     // emit the dispatch and return instructions
     if (method.getReference().equals(CTOR_NEW_INSTANCE)) {
       m.addInstruction(null, insts.InvokeInstruction(m.allInstructions.size(), args, exceptions, CallSiteReference.make(pc++, target.getReference(),
-          IInvokeInstruction.Dispatch.SPECIAL)), false);
+          IInvokeInstruction.Dispatch.SPECIAL), null), false);
       m.addInstruction(null, insts.ReturnInstruction(m.allInstructions.size(), args[0], false), false);
     } else {
       Dispatch d = target.isStatic() ? Dispatch.STATIC : Dispatch.VIRTUAL;
       if (target.getReturnType().equals(TypeReference.Void)) {
-        m.addInstruction(null, insts.InvokeInstruction(m.allInstructions.size(), args, exceptions, CallSiteReference.make(pc++, target.getReference(), d)),
+        m.addInstruction(null, insts.InvokeInstruction(m.allInstructions.size(), args, exceptions, CallSiteReference.make(pc++, target.getReference(), d), null),
             false);
       } else {
         result = nextLocal++;
         m.addInstruction(null, insts.InvokeInstruction(m.allInstructions.size(), result, args, exceptions, CallSiteReference.make(pc++,
-            target.getReference(), d)), false);
+            target.getReference(), d), null), false);
         m.addInstruction(null, insts.ReturnInstruction(m.allInstructions.size(), result, false), false);
       }
     }

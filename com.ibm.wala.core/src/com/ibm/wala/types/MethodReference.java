@@ -72,6 +72,12 @@ public final class MethodReference extends MemberReference {
 
   public final static Selector equalsSelector = new Selector(equalsAtom, equalsDesc);
 
+  public final static MethodReference lambdaMetafactory = 
+      findOrCreate(
+          TypeReference.LambdaMetaFactory, 
+          Atom.findOrCreateUnicodeAtom("metafactory"), 
+          Descriptor.findOrCreateUTF8("(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;"));
+  
   /**
    * types of parameters to this method.
    */

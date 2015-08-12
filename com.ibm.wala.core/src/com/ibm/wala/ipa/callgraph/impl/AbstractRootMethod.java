@@ -137,9 +137,9 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     CallSiteReference newSite = CallSiteReference.make(statements.size(), site.getDeclaredTarget(), site.getInvocationCode());
     SSAInvokeInstruction s = null;
     if (newSite.getDeclaredTarget().getReturnType().equals(TypeReference.Void)) {
-      s = insts.InvokeInstruction(statements.size(), params, nextLocal++, newSite);
+      s = insts.InvokeInstruction(statements.size(), params, nextLocal++, newSite, null);
     } else {
-      s = insts.InvokeInstruction(statements.size(), nextLocal++, params, nextLocal++, newSite);
+      s = insts.InvokeInstruction(statements.size(), nextLocal++, params, nextLocal++, newSite, null);
     }
     statements.add(s);
     cache.invalidate(this, Everywhere.EVERYWHERE);

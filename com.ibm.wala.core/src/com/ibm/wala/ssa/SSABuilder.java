@@ -41,11 +41,13 @@ import com.ibm.wala.shrikeBT.IStoreInstruction;
 import com.ibm.wala.shrikeBT.ITypeTestInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.IndirectionData;
+import com.ibm.wala.shrikeBT.InvokeDynamicInstruction;
 import com.ibm.wala.shrikeBT.MonitorInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
 import com.ibm.wala.shrikeBT.ReturnInstruction;
 import com.ibm.wala.shrikeBT.SwitchInstruction;
 import com.ibm.wala.shrikeBT.ThrowInstruction;
+import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.ShrikeIndirectionData.ShrikeLocalName;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -588,12 +590,18 @@ public class SSABuilder extends AbstractIntStackMachine {
         IInvokeInstruction.IDispatch code = instruction.getInvocationCode();
         CallSiteReference site = CallSiteReference.make(getCurrentProgramCounter(), m, code);
         int exc = reuseOrCreateException();
+        
+        BootstrapMethod bootstrap = null;
+        if (instruction instanceof InvokeDynamicInstruction) {
+          bootstrap = ((InvokeDynamicInstruction)instruction).getBootstrap();
+        }
+        
         if (instruction.getPushedWordSize() > 0) {
           int result = reuseOrCreateDef();
           workingState.push(result);
-          emitInstruction(insts.InvokeInstruction(getCurrentInstructionIndex(), result, params, exc, site));
+          emitInstruction(insts.InvokeInstruction(getCurrentInstructionIndex(), result, params, exc, site, bootstrap));
         } else {
-          emitInstruction(insts.InvokeInstruction(getCurrentInstructionIndex(), params, exc, site));
+          emitInstruction(insts.InvokeInstruction(getCurrentInstructionIndex(), params, exc, site, bootstrap));
         }
         doIndirectWrites(bytecodeIndirections.indirectlyWrittenLocals(getCurrentInstructionIndex()), -1);
       }
