@@ -345,7 +345,7 @@ public class AndroidModel /* makes SummarizedMethod */
 
         final TypeSafeInstructionFactory tsif = new TypeSafeInstructionFactory(this.cha);
         final Instantiator instantiator = new Instantiator (this.body, tsif, this.paramManager, this.cha, this.mRef, this.scope);
-
+        boolean enteredASection = false;
         //
         //  Add preparing code to the model
         //
@@ -410,6 +410,7 @@ public class AndroidModel /* makes SummarizedMethod */
             if (this.labelSpecial.hadSectionSwitch(ep.order)) {
                 
                 this.labelSpecial.enter(ep.getSection(), body.getNextProgramCounter());
+                enteredASection = true;
             }
 
             //
@@ -554,8 +555,9 @@ public class AndroidModel /* makes SummarizedMethod */
 
         
         //  Close all sections by "jumping over" the remaining labels
-        labelSpecial.finish(body.getNextProgramCounter());
-
+        if (enteredASection) {
+            labelSpecial.finish(body.getNextProgramCounter());
+        }
         this.monitor.done();
     }
 
@@ -736,10 +738,11 @@ public class AndroidModel /* makes SummarizedMethod */
 
                     // SHORTCUT:
                     redirect.addStatement(invokation);
-
-                    final int returnPC = redirect.getNextProgramCounter();
-                    final SSAInstruction returnInstruction = instructionFactory.ReturnInstruction(returnPC, svc);
-                    redirect.addStatement(returnInstruction);
+                    if (instructionFactory.isAssignableFrom(svc.getType(), svc.getValidIn().getReturnType())) {
+                    	final int returnPC = redirect.getNextProgramCounter();
+                    	final SSAInstruction returnInstruction = instructionFactory.ReturnInstruction(returnPC, svc);
+                    	redirect.addStatement(returnInstruction);
+                    }
 
                     final IClass declaringClass = this.cha.lookupClass(asMethod.getDeclaringClass());   
                     if (declaringClass == null) {

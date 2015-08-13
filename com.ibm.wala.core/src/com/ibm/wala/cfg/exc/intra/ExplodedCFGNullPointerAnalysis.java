@@ -37,12 +37,14 @@ public class ExplodedCFGNullPointerAnalysis implements ExceptionPruningAnalysis<
   private final IR ir;
   private final ParameterState initialState;
   private final MethodState mState;
+  private final boolean optHasExceptions;
 
-  public ExplodedCFGNullPointerAnalysis(TypeReference[] ignoredExceptions, IR ir, ParameterState paramState, MethodState mState) {
+  public ExplodedCFGNullPointerAnalysis(TypeReference[] ignoredExceptions, IR ir, ParameterState paramState, MethodState mState, boolean optHasExceptions) {
     this.ignoredExceptions = (ignoredExceptions != null ? ignoredExceptions.clone() : null);
     this.ir = ir;
     this.initialState = (paramState == null ? ParameterState.createDefault(ir.getMethod()) : paramState);
     this.mState = (mState == null ? MethodState.DEFAULT : mState);
+    this.optHasExceptions = optHasExceptions;
   }
 
   /*
@@ -85,7 +87,7 @@ public class ExplodedCFGNullPointerAnalysis implements ExceptionPruningAnalysis<
     for (IExplodedBasicBlock bb : cfg) {
       if (bb.getInstruction() == null) continue;
       List<IExplodedBasicBlock> succ = cfg.getExceptionalSuccessors(bb);
-      if (succ != null && !succ.isEmpty()) {
+      if (succ != null && !succ.isEmpty() && (!optHasExceptions || succ.contains(cfg.exit()))) {
         hasException = true;
         break;
       }

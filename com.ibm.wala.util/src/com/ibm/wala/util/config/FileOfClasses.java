@@ -43,6 +43,9 @@ public class FileOfClasses extends SetOfClasses implements Serializable {
     StringBuffer regex = null;
     String line;
     while ((line = is.readLine()) != null) {
+
+      if (line.startsWith("#")) continue;
+
       if (regex == null) {
         regex = new StringBuffer("(" + line + ")");
       } else {

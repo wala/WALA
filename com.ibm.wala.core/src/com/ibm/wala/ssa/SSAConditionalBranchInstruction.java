@@ -60,9 +60,10 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
     return operator;
   }
 
+
   @Override
   public String toString(SymbolTable symbolTable) {
-    return "conditional branch(" + operator + ") " + getValueString(symbolTable, val1) + "," + getValueString(symbolTable, val2);
+    return "conditional branch(" + operator + ", to iindex=" + target + ") " + getValueString(symbolTable, val1) + "," + getValueString(symbolTable, val2);
   }
 
   /**

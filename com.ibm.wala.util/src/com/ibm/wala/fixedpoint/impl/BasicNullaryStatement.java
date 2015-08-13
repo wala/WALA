@@ -23,7 +23,7 @@ public class BasicNullaryStatement<T extends IVariable> extends NullaryStatement
    */
   private final NullaryOperator<T> operator;
 
-  BasicNullaryStatement(T lhs, NullaryOperator<T> operator) {
+  public BasicNullaryStatement(T lhs, NullaryOperator<T> operator) {
     super(lhs);
     this.operator = operator;
   }
@@ -34,5 +34,21 @@ public class BasicNullaryStatement<T extends IVariable> extends NullaryStatement
   @Override
   public NullaryOperator<T> getOperator() {
     return operator;
+  }
+
+  /**
+   * Return a string representation of this object
+   * @return a string representation of this object
+   */
+  @Override
+  public String toString() {
+    String result;
+    if (lhs == null) {
+      result = "null lhs";
+    } else {
+      result = lhs.toString();
+    }
+    result = getOperator() + " " + result;
+    return result;
   }
 }

@@ -1,13 +1,4 @@
 /*
- * This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html.
- * 
- * This file is a derivative of code released under the terms listed below.  
- *
- */
-/*
  *  Copyright (c) 2013,
  *      Tobias Blaschke <code@tobiasblaschke.de>
  *  All rights reserved.
@@ -44,14 +35,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.dalvik.ipa.callgraph.impl.AndroidEntryPoint.ExecutionOrder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.summaries.VolatileMethodSummary;
+import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
+import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.ssa.SSAValue;
+import com.ibm.wala.util.ssa.SSAValue.NamedKey;
 import com.ibm.wala.util.ssa.SSAValue.TypeKey;
 import com.ibm.wala.util.ssa.SSAValue.VariableKey;
 import com.ibm.wala.util.ssa.SSAValueManager;
@@ -70,6 +66,8 @@ import com.ibm.wala.util.ssa.TypeSafeInstructionFactory;
  *  @author     Tobias Blaschke <code@tobiasblaschke.de>
  */
 public class LoopKillAndroidModel extends LoopAndroidModel {
+    private static final Logger logger = LoggerFactory.getLogger(LoopKillAndroidModel.class);
+    
     //protected VolatileMethodSummary body;
     //protected JavaInstructionFactory insts;
     //protected DexFakeRootMethod.ReuseParameters paramTypes;
@@ -92,10 +90,10 @@ public class LoopKillAndroidModel extends LoopAndroidModel {
      * {@inheritDoc}
      */
     protected int enterAT_FIRST(int PC) {
-        
+        logger.info("PC {} is the jump target of START_OF_LOOP", PC);
         
         this.outerLoopPC = PC;
-        PC = makeBrakingNOP(this.outerLoopPC);
+        PC = body.getNextProgramCounter();
         paramManager.scopeDown(true);
 
         // Top-Half of Phi-Handling
@@ -131,7 +129,7 @@ public class LoopKillAndroidModel extends LoopAndroidModel {
         // Insert the Phis at the beginning of the Block
         int phiPC = outerLoopPC + 1;
         boolean oldAllowReserved = body.allowReserved(true);
-        
+        logger.info("Setting block-inner Phis");
         for (TypeReference phiType : outerStartingPhis.keySet()) {
             final SSAValue oldPhi = outerStartingPhis.get(phiType);
             final List<SSAValue> forPhi = new ArrayList<SSAValue>(2);
@@ -146,19 +144,23 @@ public class LoopKillAndroidModel extends LoopAndroidModel {
         body.allowReserved(oldAllowReserved);
        
         // Close the Loop
-        
-        
-        body.addStatement(insts.GotoInstruction(PC, outerLoopPC));
+        logger.info("Closing Loop");
+        logger.info("PC {}: Goto {}", PC, outerLoopPC);
+        NamedKey trueKey = new SSAValue.NamedKey(TypeReference.BooleanName, "true");
+        SSAValue trueVal = paramManager.getFree(TypeReference.Boolean, trueKey);
+        paramManager.setPhi(trueVal, null);
+        body.addConstant(trueVal.getNumber(), new ConstantValue(true));
+        body.addStatement(insts.ConditionalBranchInstruction(PC, IConditionalBranchInstruction.Operator.EQ, TypeReference.Boolean, trueVal.getNumber(), trueVal.getNumber(), outerLoopPC));
         paramManager.scopeUp();
         
         // Add Phi-Statements at the beginning of this block...
-        
+        logger.info("Setting outer-block Phis");
         for (TypeReference phiType : outerStartingPhis.keySet()) {
             final VariableKey  phiKey = outerStartingPhis.get(phiType).key;
             PC = body.getNextProgramCounter();
 
             List<SSAValue> all = paramManager.getAllForPhi(phiKey);
-            
+            logger.debug("Into phi {} for {}", all, phiType.getName());
             // Narf ... unpacking...
 
             paramManager.invalidate(phiKey);
