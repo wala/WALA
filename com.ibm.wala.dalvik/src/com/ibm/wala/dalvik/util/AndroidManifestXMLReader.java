@@ -55,6 +55,8 @@ import java.util.Stack;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -93,6 +95,8 @@ public class AndroidManifestXMLReader {
      *  If you only want Information about objects created use the logger in AndroidSettingFactory as this 
      *  parser generates all objects using it.
      */
+    private static final Logger logger = LoggerFactory.getLogger(AndroidSettingFactory.class);
+
     public AndroidManifestXMLReader(File xmlFile) throws IOException {
         if (xmlFile == null) {
             throw new IllegalArgumentException("xmlFile may not be null");
@@ -417,6 +421,7 @@ public class AndroidManifestXMLReader {
                 }
 
                 attributesHistory.get(relevant).push(attr);
+                logger.debug("Pushing '{}' for {} in {}", attr, relevant, self);
                 // if there is no such value in saxAttrs it returns null 
             }
         }
@@ -428,6 +433,7 @@ public class AndroidManifestXMLReader {
         public void popAttributes() {
              for (Attr relevant : self.getRelevantAttributes()) {
                  try {
+                    logger.debug("Popping {} of value {} in {}", relevant, attributesHistory.get(relevant).peek(), self);
                     attributesHistory.get(relevant).pop();
                  }  catch (java.util.EmptyStackException e) {
                     System.err.println(self + " failed to pop " + relevant);
@@ -461,6 +467,7 @@ public class AndroidManifestXMLReader {
                     }
                     subTag.getHandler().popAttributes(); // hmmm....
 
+                    logger.debug("New Stack: {}", parserStack);
                     //parserStack.pop();
                 } else {
                     throw new IllegalStateException(subTag + " is not allowed as sub-tag of " + self + " in Context:\n\t" + parserStack);
@@ -531,20 +538,18 @@ public class AndroidManifestXMLReader {
         @Override
         public void leave() {
             Set<Tag> allowedTags = EnumSet.copyOf(self.getAllowedSubTags());
-            String url = null;
-            String name = null;
-
+            Set<String> urls = new HashSet<String>();
+            Set<String> names = new HashSet<String>();
             while (parserStack.peek() != self) {
                 Tag current = parserStack.pop();
                 if (allowedTags.contains(current)) {
-                    allowedTags.remove(current);    // TODO: Does this always fit?
                     if (current == Tag.ACTION) {
                         Object oName = attributesHistory.get(Attr.NAME).peek();
                         if (oName == null) {
                              throw new IllegalStateException("The currently parsed Action did not leave the required 'name' Attribute" +
                                      " on the Stack! Attributes-Stack for name is: " + attributesHistory.get(Attr.NAME));
                         } else if (oName instanceof String) {
-                            name = (String) oName;
+                            names.add((String) oName);
                         } else {
                             throw new IllegalStateException("Unexpected Attribute type for name: " + oName.getClass().toString());
                         }
@@ -553,7 +558,7 @@ public class AndroidManifestXMLReader {
                         if (oUrl == null) {
                             // TODO
                         } else if (oUrl instanceof String) {
-                            url = (String) oUrl;
+                            urls.add((String) oUrl);
                         } else {
                             throw new IllegalStateException("Unexpected Attribute type for name: " + oUrl.getClass().toString());
                         }
@@ -572,12 +577,19 @@ public class AndroidManifestXMLReader {
             if ((attributesHistory.get(Attr.PACKAGE) != null ) && (!(attributesHistory.get(Attr.PACKAGE).isEmpty()))) {
                 pack = (String) attributesHistory.get(Attr.PACKAGE).peek();
             } else {
+                logger.warn("Empty Package {}", attributesHistory.get(Attr.PACKAGE).peek());
                 pack = null;
             }
 
-            if (name != null) {
-                final Intent intent = AndroidSettingFactory.intent(name, url);
-                attributesHistory.get(self).push(intent);
+            if (!names.isEmpty()) {
+                for (String name : names) {
+                    if (urls.isEmpty()) urls.add(null);
+                    for (String url : urls) {
+                        logger.info("New Intent ({}, {})", name, url);
+                        final Intent intent = AndroidSettingFactory.intent(name, url);
+                        attributesHistory.get(self).push(intent);
+                    }
+            }
             } else {
                 throw new IllegalStateException("Error in parser implementation! The required attribute 'name' which should have been " +
                         "defined in ACTION could not be retrieved. This should have been thrown before as it is a required attribute for " +
@@ -623,13 +635,16 @@ public class AndroidManifestXMLReader {
             if ((attributesHistory.get(Attr.PACKAGE) != null ) && (!(attributesHistory.get(Attr.PACKAGE).isEmpty()))) {
                 pack = (String) attributesHistory.get(Attr.PACKAGE).peek();
             } else {
+                logger.warn("Empty Package {}", attributesHistory.get(Attr.PACKAGE).peek());
                 pack = null;
             }
             final String name = (String) attributesHistory.get(Attr.NAME).peek(); // TODO: Verify type!
             final Intent intent = AndroidSettingFactory.intent(pack, name, null);
 
+            logger.info("\tRegister: {}", intent);
             AndroidEntryPointManager.MANAGER.registerIntent(intent);
             for (Intent ovr: overrideTargets) {
+                logger.info("\tOverride: {} --> {}", ovr, intent);
                 AndroidEntryPointManager.MANAGER.setOverride(ovr, intent);
             }
         }
@@ -649,7 +664,9 @@ public class AndroidManifestXMLReader {
             if ((tag == Tag.UNIMPORTANT) || (unimportantDepth > 0)) {
                 unimportantDepth++;
             } else {
-                 final ParserItem handler = tag.getHandler();
+                logger.debug("Handling {} made from {}", tag, qName);
+                
+                final ParserItem handler = tag.getHandler();
                 if (handler != null) {
                     handler.enter(attrs);
                 }

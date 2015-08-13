@@ -389,8 +389,9 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
          * If we've already created the current instruction, return the value number def'ed by the current instruction. Else, create a
          * new symbol.
          */
+
         private int reuseOrCreateDef() {
-            if (getCurrentInstruction() == null) {
+            if (getCurrentInstruction() == null || !getCurrentInstruction().hasDef()) {
                 return symbolTable.newSymbol();
             } else {
                 return getCurrentInstruction().getDef();
@@ -766,7 +767,7 @@ public class DexSSABuilder extends AbstractIntRegisterMachine {
              */
             @Override
             public void visitGoto(Goto instruction) {
-                emitInstruction(insts.GotoInstruction(getCurrentInstructionIndex(), -1));
+                emitInstruction(insts.GotoInstruction(getCurrentInstructionIndex(), instruction.destination));
             }
 
             /**

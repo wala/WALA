@@ -59,9 +59,10 @@ public interface ExceptionPruningAnalysis<I, T extends IBasicBlock<I>> {
 
   /**
    * Returns true if the corresponding method contains instructions that may
-   * throw an exception. Run compute(IPrograssMonitor) first.
+   * throw an exception which is not caught in the same method.
+   * Run compute(IPrograssMonitor) first.
    * @return true if the corresponding method contains instructions that may
-   * throw an exception.
+   * throw an exception which is not caught in the same method
    */
   boolean hasExceptions();
 
