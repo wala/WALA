@@ -33,7 +33,7 @@
 	<property name="bundleBootClasspath" value="${bootclasspath}"/>
 
      <target name="RhinoPresent" depends="init">
-        <available file="${plugin.destination}/lib/rhino-1.7R3.jar" property="rhino.present"/>
+        <available file="${plugin.destination}/lib/rhino-1.7.6.jar" property="rhino.present"/>
      </target>
 
    <target name="fetchRhino" depends="RhinoPresent" unless="rhino.present">
@@ -41,7 +41,7 @@
      <mkdir dir="${temp.folder}"/>
      <get src="http://ftp.mozilla.org/pub/mozilla.org/js/rhino1_7R3.zip" dest="${temp.folder}/rhino1_7R3.zip" />
      <unzip src="${temp.folder}/rhino1_7R3.zip" dest="${temp.folder}"/>
-     <copy file="${temp.folder}/rhino1_7R3/js.jar" tofile="${plugin.destination}/lib/rhino-1.7R3.jar" />
+     <copy file="${temp.folder}/rhino1_7R3/js.jar" tofile="${plugin.destination}/lib/rhino-1.7.6.jar" />
      <delete dir="${temp.folder}"/>
    </target>
 	

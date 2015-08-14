@@ -42,6 +42,7 @@ import org.mozilla.javascript.ast.ContinueStatement;
 import org.mozilla.javascript.ast.DoLoop;
 import org.mozilla.javascript.ast.ElementGet;
 import org.mozilla.javascript.ast.EmptyExpression;
+import org.mozilla.javascript.ast.EmptyStatement;
 import org.mozilla.javascript.ast.ErrorNode;
 import org.mozilla.javascript.ast.ExpressionStatement;
 import org.mozilla.javascript.ast.ForInLoop;
@@ -807,6 +808,11 @@ public class RhinoToAstTranslator {
 	@Override
 	public CAstNode visitEmptyExpression(EmptyExpression node, WalkContext arg) {
 		return Ast.makeNode(CAstNode.EMPTY);
+	}
+
+	@Override
+	public CAstNode visitEmptyStatement(EmptyStatement node, WalkContext arg) {
+	  return Ast.makeNode(CAstNode.EMPTY);
 	}
 
 	@Override
