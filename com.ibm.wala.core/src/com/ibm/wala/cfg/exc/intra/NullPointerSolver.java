@@ -20,7 +20,7 @@ import com.ibm.wala.ssa.ISSABasicBlock;
  * @author Juergen Graf <graf@kit.edu>
  *
  */
-class NullPointerSolver<B extends ISSABasicBlock> extends DataflowSolver<B, NullPointerState> {
+public class NullPointerSolver<B extends ISSABasicBlock> extends DataflowSolver<B, NullPointerState> {
 
   private final int maxVarNum;
   private final ParameterState parameterState;

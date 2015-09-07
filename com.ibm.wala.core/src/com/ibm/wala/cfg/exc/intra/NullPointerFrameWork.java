@@ -29,12 +29,12 @@ import com.ibm.wala.util.intset.IntPair;
  * @author Juergen Graf <graf@kit.edu>
  *
  */
-class NullPointerFrameWork<T extends ISSABasicBlock> implements IKilldallFramework<T, NullPointerState> {
+public class NullPointerFrameWork<T extends ISSABasicBlock> implements IKilldallFramework<T, NullPointerState> {
 
   private final Graph<T> flow;
   private final NullPointerTransferFunctionProvider<T> transferFunct;
   
-  NullPointerFrameWork(ControlFlowGraph<SSAInstruction, T> cfg, IR ir) {
+  public NullPointerFrameWork(ControlFlowGraph<SSAInstruction, T> cfg, IR ir) {
     final IBinaryNaturalRelation backEdges = Acyclic.computeBackEdges(cfg, cfg.entry());
     boolean hasBackEdge = backEdges.iterator().hasNext();
     if (hasBackEdge) {
