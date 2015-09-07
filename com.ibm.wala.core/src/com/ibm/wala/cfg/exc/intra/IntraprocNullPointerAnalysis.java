@@ -138,7 +138,7 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
         final NullPointerFrameWork<T> problem = new NullPointerFrameWork<T>(cfg, ir);
         final int[] paramValNum = ir.getParameterValueNumbers();
       
-        solver = new NullPointerSolver<T>(problem, maxVarNum, paramValNum, initialState);
+        solver = new NullPointerSolver<T>(problem, maxVarNum, paramValNum, initialState, ir);
         
         solver.solve(progress);
         
@@ -197,44 +197,6 @@ public class IntraprocNullPointerAnalysis<T extends ISSABasicBlock> {
     } else {
       return solver.getIn(block);
     }
-  }
-  
-  private class NullPointerSolver<B extends ISSABasicBlock> extends DataflowSolver<B, NullPointerState> {
-
-    private final int maxVarNum;
-    private final ParameterState parameterState;
-
-    private NullPointerSolver(NullPointerFrameWork<B> problem, int maxVarNum, int[] paramVarNum) {
-      this(problem, maxVarNum, paramVarNum, null);
-    }
-    
-    private NullPointerSolver(NullPointerFrameWork<B> problem, int maxVarNum, int[] paramVarNum, ParameterState initialState) {
-      super(problem);
-      this.maxVarNum = maxVarNum;
-      this.parameterState = initialState;
-    }
-    
-    /* (non-Javadoc)
-     * @see com.ibm.wala.dataflow.graph.DataflowSolver#makeEdgeVariable(java.lang.Object, java.lang.Object)
-     */
-    @Override
-    protected NullPointerState makeEdgeVariable(B src, B dst) {
-      return new NullPointerState(maxVarNum, ir.getSymbolTable(), parameterState);
-    }
-
-    /* (non-Javadoc)
-     * @see com.ibm.wala.dataflow.graph.DataflowSolver#makeNodeVariable(java.lang.Object, boolean)
-     */
-    @Override
-    protected NullPointerState makeNodeVariable(B n, boolean IN) {
-      return new NullPointerState(maxVarNum, ir.getSymbolTable(), parameterState);
-    }
-
-    @Override
-    protected NullPointerState[] makeStmtRHS(int size) {
-      return new NullPointerState[size];
-    }
-    
   }
   
   private class NegativeCFGBuilderVisitor implements IVisitor {
