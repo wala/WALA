@@ -16,7 +16,7 @@ import com.ibm.wala.cast.tree.CAstNode;
 
 /**
  *  Various operators that are built in to many languages, and hence
- * perhaps deserve special notice in capa ast interface.  There is no
+ * perhaps deserve special notice in WALA CAst interface.  There is no
  * strong notion of what should be in here, so feel free to add other
  * common operators.
  *
@@ -25,7 +25,7 @@ import com.ibm.wala.cast.tree.CAstNode;
 public class CAstOperator implements CAstNode {
   private final String op;
   
-  private CAstOperator(String op) { 
+  protected CAstOperator(String op) { 
     this.op = op; 
   }    
 
