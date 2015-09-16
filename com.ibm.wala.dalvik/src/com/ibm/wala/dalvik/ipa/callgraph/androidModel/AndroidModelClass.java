@@ -251,7 +251,7 @@ public final /* singleton */ class AndroidModelClass extends SyntheticClass {
     public void putField(Atom name, TypeReference type) {
         final FieldReference fdRef = FieldReference.findOrCreate(this.getReference(), name, type);
         final int accessFlags = ClassConstants.ACC_STATIC | ClassConstants.ACC_PUBLIC;
-        final IField field = new FieldImpl(this, fdRef, accessFlags, null); 
+        final IField field = new FieldImpl(this, fdRef, accessFlags, null, null); 
 
         this.fields.put(name, field);
     }
