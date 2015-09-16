@@ -13,6 +13,8 @@ import org.junit.runners.Parameterized.Parameters;
 import com.ibm.wala.dalvik.test.callGraph.DroidBenchCGTest;
 import com.ibm.wala.types.MethodReference;
 
+import static com.ibm.wala.dalvik.test.util.Util.androidJavaLib;
+
 @RunWith(Parameterized.class)
 public class InterAppCommunicationTest extends DroidBenchCGTest {
    public InterAppCommunicationTest(URI[] androidLibs, File androidJavaJar, String apkFile, Set<MethodReference> uncalled) {

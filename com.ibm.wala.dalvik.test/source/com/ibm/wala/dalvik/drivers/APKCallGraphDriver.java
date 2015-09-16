@@ -5,8 +5,8 @@ import java.net.URI;
 import java.util.Set;
 
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.dalvik.test.DalvikTestBase;
 import com.ibm.wala.dalvik.test.callGraph.DalvikCallGraphTestBase;
+import com.ibm.wala.dalvik.test.util.Util;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions.ReflectionOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -33,7 +33,7 @@ public class APKCallGraphDriver {
       return libs.toArray(new URI[ libs.size() ]);
     }
     
-    return DalvikTestBase.androidLibs();
+    return Util.androidLibs();
   }
   
   public static void main(String[] args) {
