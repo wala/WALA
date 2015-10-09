@@ -38,6 +38,7 @@ import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.modref.ModRef;
 import com.ibm.wala.ipa.slicer.MethodEntryStatement;
 import com.ibm.wala.ipa.slicer.NormalStatement;
 import com.ibm.wala.ipa.slicer.SDG;
@@ -56,6 +57,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
+import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.util.CancelException;
@@ -712,6 +714,50 @@ public class SlicerTest {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NO_EXCEPTIONAL_EDGES);
     dumpSlice(slice);
+  }
+  
+
+  @Test
+  public void testSimple1() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException, UnsoundGraphException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "/tmp/exclusions.txt");
+
+    IClassHierarchy cha = findOrCreateCHA(scope);  
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        "Lslice/Sorting1");   
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraph cg = builder.makeCallGraph(options, null);
+    
+    SDG sdg = new SDG(cg, builder.getPointerAnalysis(), ModRef.make(), 
+        DataDependenceOptions.NO_BASE_PTRS,ControlDependenceOptions.FULL);
+    CGNode main = findMainMethod(cg);
+    
+    long startTime, runningTime;
+    startTime = System.currentTimeMillis();
+    Collection<Statement> computeForwardSlice = Slicer.computeForwardSlice(sdg, findCallTo(main, "readLine"));
+    runningTime = System.currentTimeMillis() - startTime;
+    System.out.println("Running time " + runningTime);
+    System.out.println("slice size " + computeForwardSlice.size());
+
+  
+    IR ir = main.getIR();
+    SSAInstruction[] insts = ir.getInstructions();
+    Statement stmt = null;
+    for (int i=insts.length-1; i>=0; i--) {
+      SSAInstruction s = insts[i];
+      if (s instanceof SSAReturnInstruction) {
+
+          stmt = new NormalStatement(main, i);
+          break;
+      }
+    }    
+    System.out.println(stmt);
+    startTime = System.currentTimeMillis();
+    Collection<Statement> backwardSlice = Slicer.computeBackwardSlice(sdg, stmt);
+    runningTime = System.currentTimeMillis() - startTime;
+    System.out.println("back Running time " + runningTime);
+    System.out.println("back slice size " + backwardSlice.size());
   }
 
   public static int countAllocations(Collection<Statement> slice) {
