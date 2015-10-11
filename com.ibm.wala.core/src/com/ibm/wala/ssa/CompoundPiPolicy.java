@@ -16,16 +16,13 @@ import java.util.List;
 import com.ibm.wala.util.collections.Pair;
 
 /**
- * A Combination of 2 {@link SSAPiNodePolicy}s. This policy will insert Pi nodes
- * if either of two delegate policies says to.
+ * A Combination of 2 {@link SSAPiNodePolicy}s.  This policy will insert Pi nodes if either of two delegate policies says to.
  */
 public class CompoundPiPolicy implements SSAPiNodePolicy {
-
+  
   /**
-   * @param p1
-   *          first {@link SSAPiNodePolicy} to delegate to
-   * @param p2
-   *          second {@link SSAPiNodePolicy} to delegate to
+   * @param p1 first {@link SSAPiNodePolicy} to delegate to
+   * @param p2 second {@link SSAPiNodePolicy} to delegate to
    */
   public static CompoundPiPolicy createCompoundPiPolicy(SSAPiNodePolicy p1, SSAPiNodePolicy p2) {
     return new CompoundPiPolicy(p1, p2);
@@ -33,12 +30,10 @@ public class CompoundPiPolicy implements SSAPiNodePolicy {
 
   private final SSAPiNodePolicy p1;
   private final SSAPiNodePolicy p2;
-
+  
   /**
-   * @param p1
-   *          first {@link SSAPiNodePolicy} to delegate to
-   * @param p2
-   *          second {@link SSAPiNodePolicy} to delegate to
+   * @param p1 first {@link SSAPiNodePolicy} to delegate to
+   * @param p2 second {@link SSAPiNodePolicy} to delegate to
    */
   private CompoundPiPolicy(SSAPiNodePolicy p1, SSAPiNodePolicy p2) {
     this.p1 = p1;
@@ -51,10 +46,8 @@ public class CompoundPiPolicy implements SSAPiNodePolicy {
     }
   }
 
-  /*
-   * @see com.ibm.wala.ssa.SSAPiNodePolicy#getPi(com.ibm.wala.ssa.
-   * SSAConditionalBranchInstruction, com.ibm.wala.ssa.SSAInstruction,
-   * com.ibm.wala.ssa.SSAInstruction, com.ibm.wala.ssa.SymbolTable)
+  /* 
+   * @see com.ibm.wala.ssa.SSAPiNodePolicy#getPi(com.ibm.wala.ssa.SSAConditionalBranchInstruction, com.ibm.wala.ssa.SSAInstruction, com.ibm.wala.ssa.SSAInstruction, com.ibm.wala.ssa.SymbolTable)
    */
   @Override
   public Pair<Integer, SSAInstruction> getPi(SSAConditionalBranchInstruction cond, SSAInstruction def1, SSAInstruction def2,
@@ -65,10 +58,10 @@ public class CompoundPiPolicy implements SSAPiNodePolicy {
     }
     return p2.getPi(cond, def1, def2, symbolTable);
   }
+  
 
-  /*
-   * @see com.ibm.wala.ssa.SSAPiNodePolicy#getPi(com.ibm.wala.ssa.
-   * SSAAbstractInvokeInstruction, com.ibm.wala.ssa.SymbolTable)
+  /* 
+   * @see com.ibm.wala.ssa.SSAPiNodePolicy#getPi(com.ibm.wala.ssa.SSAAbstractInvokeInstruction, com.ibm.wala.ssa.SymbolTable)
    */
   @Override
   public Pair<Integer, SSAInstruction> getPi(SSAAbstractInvokeInstruction call, SymbolTable symbolTable) {
@@ -78,6 +71,7 @@ public class CompoundPiPolicy implements SSAPiNodePolicy {
     }
     return p2.getPi(call, symbolTable);
   }
+  
 
   @Override
   public int hashCode() {
