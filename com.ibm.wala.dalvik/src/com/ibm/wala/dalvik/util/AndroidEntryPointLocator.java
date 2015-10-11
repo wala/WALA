@@ -473,7 +473,10 @@ nextMethod:
      */
     private void populatePossibleEntryPoints() {
         // Populate the list of possible EntryPoints
-
+    	if (possibleEntryPoints.size() > 0) {
+    		// already populated
+    		return;
+    	}
         ApplicationEP.populate(possibleEntryPoints);
 		ActivityEP.populate(possibleEntryPoints);
 		ServiceEP.populate(possibleEntryPoints);
