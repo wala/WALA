@@ -10,6 +10,8 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.test;
 
+import java.io.IOException;
+
 import org.junit.Test;
 
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
@@ -20,6 +22,7 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.strings.Atom;
 
 public abstract class SyncDuplicatorTest extends IRTests {
@@ -32,7 +35,7 @@ public abstract class SyncDuplicatorTest extends IRTests {
       .findOrCreate(JavaSourceAnalysisScope.SOURCE, TypeName.string2TypeName("LMonitor2")), Atom.findOrCreateUnicodeAtom("test"),
       Descriptor.findOrCreateUTF8(Language.JAVA, "(Ljava/lang/Object;)Z")), IInvokeInstruction.Dispatch.STATIC);
 
-  @Test public void testMonitor2() {
+  @Test public void testMonitor2() throws IllegalArgumentException, CancelException, IOException {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 

@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.cast.js.translator;
+package com.ibm.wala.cast.tree.impl;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,7 +16,6 @@ import java.io.Reader;
 import java.net.URL;
 
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
-import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
 
 public class RangePosition extends AbstractSourcePosition implements Position {
   private final URL url;

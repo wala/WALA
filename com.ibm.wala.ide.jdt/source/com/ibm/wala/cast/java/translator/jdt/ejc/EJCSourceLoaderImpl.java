@@ -35,46 +35,37 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.cast.java.translator.jdt;
+package com.ibm.wala.cast.java.translator.jdt.ejc;
 
 import java.io.IOException;
 
-import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
-import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
-import com.ibm.wala.classLoader.ClassLoaderImpl;
+import com.ibm.wala.cast.java.translator.SourceModuleTranslator;
+import com.ibm.wala.classLoader.ArrayClassLoader;
 import com.ibm.wala.classLoader.IClassLoader;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.config.SetOfClasses;
 
-public class JDTClassLoaderFactory extends ClassLoaderFactoryImpl {
-  protected boolean dump;
-  
-  public JDTClassLoaderFactory(SetOfClasses exclusions) {
-    this(exclusions, false);
+public class EJCSourceLoaderImpl extends JavaSourceLoaderImpl {
+  private final boolean dump;
+
+  public EJCSourceLoaderImpl(ClassLoaderReference loader, ArrayClassLoader arrayClassLoader, IClassLoader parent,
+      SetOfClasses exclusions, IClassHierarchy cha) throws IOException {
+    this(loader, parent, exclusions, cha);
   }
 
-  public JDTClassLoaderFactory(SetOfClasses exclusions, boolean dump) {
-    super(exclusions);
+  public EJCSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha) throws IOException {
+    this(loaderRef, parent, exclusions, cha, false);
+  }
+  
+  public EJCSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha, boolean dump) throws IOException {
+    super(loaderRef, parent, exclusions, cha);
     this.dump = dump;
   }
 
   @Override
-  protected IClassLoader makeNewClassLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, IClassLoader parent,
-      AnalysisScope scope) throws IOException {
-    if (classLoaderReference.equals(JavaSourceAnalysisScope.SOURCE)) {
-      ClassLoaderImpl cl = makeSourceLoader(classLoaderReference, cha, parent);
-      cl.init(scope.getModules(classLoaderReference));
-      return cl;
-    } else {
-      return super.makeNewClassLoader(classLoaderReference, cha, parent, scope);
-    }
-  }
-
-  protected JavaSourceLoaderImpl makeSourceLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, IClassLoader parent)
-      throws IOException {
-    return new JDTSourceLoaderImpl(classLoaderReference, parent, getExclusions(), cha, dump);
+  protected SourceModuleTranslator getTranslator() {
+    return new EJCSourceModuleTranslator(cha.getScope(), this, dump);
   }
 }
