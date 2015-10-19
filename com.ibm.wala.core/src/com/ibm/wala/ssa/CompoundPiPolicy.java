@@ -108,7 +108,7 @@ public class CompoundPiPolicy implements SSAPiNodePolicy {
   public List<Pair<Integer, SSAInstruction>> getPis(SSAConditionalBranchInstruction cond, SSAInstruction def1, SSAInstruction def2,
       SymbolTable symbolTable) {
     LinkedList<Pair<Integer, SSAInstruction>> result = new LinkedList<>();
-    result.add(getPi(cond, def1, def2, symbolTable));
+    result.addAll(getPis(cond, def1, def2, symbolTable));
     return result;
   }
 
