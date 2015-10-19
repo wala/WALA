@@ -10,6 +10,7 @@ Require-Bundle: com.ibm.wala.shrike,
  com.ibm.wala.util;bundle-version="1.0.0";visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Export-Package: .,
+ com.ibm.wala.analysis.arraybounds,
  com.ibm.wala.analysis.pointers,
  com.ibm.wala.analysis.reflection,
  com.ibm.wala.analysis.reflection.java7,
