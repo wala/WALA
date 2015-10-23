@@ -28,6 +28,19 @@ import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 
+/**
+ * The test data should be grouped, according to the behavior of the analysis.
+ * All array accesses of a class are to be detected as "in bound" or all are to
+ * be detected as "not in bound".
+ * 
+ * This test will only check if all found accesses behave accordingly and if the
+ * number of array accesses is as expected.
+ * 
+ * So there is no explicit check for specific lines.
+ * 
+ * @author Stephan Gocht <stephan@gobro.de>
+ *
+ */
 public class ArrayboundsAnalysisTest {
   private static ClassLoader CLASS_LOADER = ArrayboundsAnalysisTest.class.getClassLoader();
 
