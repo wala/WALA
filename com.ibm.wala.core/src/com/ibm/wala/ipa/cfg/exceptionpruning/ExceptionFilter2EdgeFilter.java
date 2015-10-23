@@ -58,11 +58,13 @@ implements EdgeFilter<Block> {
 	public boolean hasNormalEdge(Block src, Block dst) {
 		boolean result = true;
 
-		final SSAInstruction relevantInstruction = src.getLastInstruction();
-		if (relevantInstruction != null
-				&& this.filter.alwaysThrowsException(relevantInstruction)) {
-			result = false;
-		}
+		if (src.getLastInstructionIndex() >= 0) {
+  		final SSAInstruction relevantInstruction = src.getLastInstruction();
+  		if (relevantInstruction != null
+  				&& this.filter.alwaysThrowsException(relevantInstruction)) {
+  			result = false;
+  		}
+		} 
 
 		return result && this.cfg.getNormalSuccessors(src).contains(dst);
 	}
