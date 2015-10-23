@@ -20,9 +20,8 @@ import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
  *
  * @author Stephan Gocht <stephan@gobro.de>
  *
- * @param <T>
  */
-public class IntraproceduralNullPointerAnalysis<T extends ISSABasicBlock> {
+public class IntraproceduralNullPointerAnalysis {
 	static private final IProgressMonitor NO_PROGRESS_MONITOR = null;
 	private final NullPointerSolver<ISSABasicBlock> solver;
 	private final IR ir;

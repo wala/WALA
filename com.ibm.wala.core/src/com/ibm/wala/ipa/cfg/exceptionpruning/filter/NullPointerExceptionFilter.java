@@ -18,13 +18,12 @@ import com.ibm.wala.types.TypeReference;
  *
  * @author Stephan Gocht <stephan@gobro.de>
  *
- * @param <T>
  */
-public class NullPointerExceptionFilter<T extends ISSABasicBlock> implements
+public class NullPointerExceptionFilter implements
 ExceptionFilter<SSAInstruction> {
-	private final IntraproceduralNullPointerAnalysis<T> analysis;
+	private final IntraproceduralNullPointerAnalysis analysis;
 
-	public NullPointerExceptionFilter(IntraproceduralNullPointerAnalysis<T> analysis) {
+	public NullPointerExceptionFilter(IntraproceduralNullPointerAnalysis analysis) {
 		this.analysis = analysis;
 	}
 
