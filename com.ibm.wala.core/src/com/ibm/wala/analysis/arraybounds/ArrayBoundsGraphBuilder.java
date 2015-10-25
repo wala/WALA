@@ -269,17 +269,19 @@ public class ArrayBoundsGraphBuilder {
 				}
 
 				@Override
-				public void visitPhi(SSAPhiInstruction instruction) {
-					assert instruction.getNumberOfUses() == 2;
-					todo.push(instruction.getUse(0));
-					todo.push(instruction.getUse(1));
+				public void visitPhi(SSAPhiInstruction instruction) {				  
+				  int phi = instruction.getDef();
+          ArrayBoundsGraphBuilder.this.lowerBoundGraph.addPhi(phi);
+          ArrayBoundsGraphBuilder.this.upperBoundGraph.addPhi(phi);
 
-					ArrayBoundsGraphBuilder.this.lowerBoundGraph.addPhi(
-							instruction.getDef(), instruction.getUse(0),
-							instruction.getUse(1));
-					ArrayBoundsGraphBuilder.this.upperBoundGraph.addPhi(
-							instruction.getDef(), instruction.getUse(0),
-							instruction.getUse(1));
+          for (int i = 0; i < instruction.getNumberOfUses(); i++) {            
+            int use = instruction.getUse(i);          
+            todo.push(use);
+
+            ArrayBoundsGraphBuilder.this.lowerBoundGraph.addEdge(use, phi);
+            ArrayBoundsGraphBuilder.this.upperBoundGraph.addEdge(use, phi);
+          }
+
 				}
 
 				@Override

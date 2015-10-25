@@ -43,7 +43,7 @@ import com.ibm.wala.analysis.arraybounds.hypergraph.weight.edgeweights.EdgeWeigh
  * <ul>
  * <li>handling of constants (see
  * {@link ArrayBoundsGraph#addConstant(Integer, Integer)})
- * <li>pi nodes (see {@link ArrayBoundsGraph#addPhi(Integer, Integer, Integer)})
+ * <li>pi nodes (see {@link ArrayBoundsGraph#addPhi(Integer)})
  * <li>array length nodes (see {@link ArrayBoundsGraph#arrayLength})
  * </ul>
  *
@@ -172,10 +172,8 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 		return result;
 	}
 
-	public void addPhi(Integer dst, Integer src1, Integer src2) {
+	public void addPhi(Integer dst) {
 		this.phis.add(dst);
-		this.addEdge(src1, dst);
-		this.addEdge(src2, dst);
 	}
 
 	public void addPi(Integer dst, Integer src1, Integer src2) {
