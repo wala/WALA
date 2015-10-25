@@ -1057,7 +1057,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       deadBlocks.remove(dst);
     }
 
-    boolean isDeadBlock(PreBasicBlock block) {
+    public boolean isDeadBlock(PreBasicBlock block) {
       return deadBlocks.contains(block);
     }
 
@@ -3387,7 +3387,7 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
     return new UnwindContext(n, context, visitor);
   }
 
-  private Map<CAstEntity, Set<String>> entity2ExposedNames;
+  protected Map<CAstEntity, Set<String>> entity2ExposedNames;
   protected int processFunctionExpr(CAstNode n, WalkContext context) {
     CAstEntity fn = (CAstEntity) n.getChild(0).getValue();
     declareFunction(fn, context);

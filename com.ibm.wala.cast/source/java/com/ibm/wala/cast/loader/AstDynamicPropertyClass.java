@@ -33,10 +33,11 @@ public abstract class AstDynamicPropertyClass extends AstClass {
 
   @Override
   public IField getField(final Atom name) {
+    IField x;
     if (declaredFields.containsKey(name)) {
       return declaredFields.get(name);
-    } else if (getSuperclass() != null) {
-      return getSuperclass().getField(name);
+    } else if (getSuperclass() != null && (x = getSuperclass().getField(name)) != null) {
+      return x;
     } else {
       final boolean isStatic = isStaticField(name);
       declaredFields.put(name, new AstDynamicField(isStatic, this, name, defaultDescriptor));

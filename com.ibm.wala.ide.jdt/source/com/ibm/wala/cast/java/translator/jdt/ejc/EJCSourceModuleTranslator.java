@@ -158,6 +158,7 @@ public class EJCSourceModuleTranslator implements SourceModuleTranslator {
    * Project -> AST code from org.eclipse.jdt.core.tests.performance
    */
 
+  @SuppressWarnings("unchecked")
   @Override
   public void loadAllSources(Set<ModuleEntry> modules) {
     List<String> sources = new LinkedList<String>();
