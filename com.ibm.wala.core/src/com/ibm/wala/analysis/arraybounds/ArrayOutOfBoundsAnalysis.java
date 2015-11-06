@@ -99,8 +99,10 @@ public class ArrayOutOfBoundsAnalysis {
     ShortestPath.compute(this.lowerBoundGraph, zero, new NormalOrder());
 
     for (final SSAArrayReferenceInstruction instruction : this.boundsCheckUnnecessary.keySet()) {
-      final HyperNode<Integer> node = this.lowerBoundGraph.getNodes().get(instruction.getIndex());
-      if (node.getWeight().getType() == Weight.Type.NUMBER && node.getWeight().getNumber() >= 0) {
+      
+      Weight weight = this.lowerBoundGraph.getVariableWeight(instruction.getIndex());
+      
+      if (weight.getType() == Weight.Type.NUMBER && weight.getNumber() >= 0) {
         this.addUnnecessaryCheck(instruction, UnnecessaryCheck.LOWER);
       }
     }
@@ -118,9 +120,9 @@ public class ArrayOutOfBoundsAnalysis {
 
       for (final SSAArrayReferenceInstruction instruction : this.boundsCheckUnnecessary.keySet()) {
         if (instruction.getArrayRef() == array) {
-          final HyperNode<Integer> node = this.upperBoundGraph.getNodes().get(instruction.getIndex());
-          if (node.getWeight().getType() == Weight.Type.NUMBER && node.getWeight().getNumber() <= -1) {
+          Weight weight = this.upperBoundGraph.getVariableWeight(instruction.getIndex());
 
+          if (weight.getType() == Weight.Type.NUMBER && weight.getNumber() <= -1) {
             this.addUnnecessaryCheck(instruction, UnnecessaryCheck.UPPER);
           }
         }

@@ -138,4 +138,30 @@ public class NotDetectable {
       throw new IllegalArgumentException();
     }
   }
+
+  /**
+   * The analysis can not detect, that forward is false every other iteration.
+   * So there is a positive and a negative loop. The positive loop is bound by
+   * the loop condition, while the negative loop is unbound, so index might be
+   * smaller than zero. This should result in the lower bound check beeing
+   * necessary.
+   * 
+   * @param arr
+   * @return sum of all elements in arr
+   */
+  public int nonMonotounous(int arr[]) {
+    int index = 0;
+    int sum = 0;
+    boolean forward = true;
+    while (index < arr.length) {
+      sum += arr[index];
+      if (forward) {
+        index += 2;
+      } else {
+        index -= 1;
+      }
+      forward = !forward;
+    }
+    return sum;
+  }
 }

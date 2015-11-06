@@ -57,6 +57,15 @@ public class ArrayBoundsGraphBuilder {
 		this.exploreIr();
 		this.addConstructionLength();
 
+    this.lowerBoundGraph.updateNodeEdges();
+    this.upperBoundGraph.updateNodeEdges();   
+		
+		this.lowerBoundGraph.postProcessConstants();
+		this.upperBoundGraph.postProcessConstants();
+		
+    this.lowerBoundGraph.updateNodeEdges();
+    this.upperBoundGraph.updateNodeEdges();   		
+		
 		this.bundleDeadEnds(this.lowerBoundGraph);
 		this.bundleDeadEnds(this.upperBoundGraph);
 

@@ -65,7 +65,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
    * The number of Basic Blocks, which have an exception edge, that should be
    * removed. (#[array access] + #[other])
    */
-  private static final int DETECTABLE_EXPECTED_COUNT = 21 + 1;
+  private static final int DETECTABLE_EXPECTED_COUNT = 34 + 2;
 
   private static final String NOT_DETECTABLE_TESTDATA = "Larraybounds/NotDetectable";
   /**

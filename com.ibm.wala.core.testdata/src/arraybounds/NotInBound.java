@@ -41,4 +41,40 @@ public class NotInBound {
       throw new IllegalArgumentException();
     }
   }
+
+  public int innerLoop(int[] arr) {
+    int sum = 0;
+    int i = 0;
+    while (i < arr.length) {
+      while (i < 6) {
+        i++;
+        sum += arr[i];
+      }
+    }
+    return sum;
+  }
+
+  public int comparedWrong(int[] arr, int index) {
+    if (index > 0 && index > arr.length) {
+      return arr[index];
+    } else {
+      throw new IllegalArgumentException();
+    }
+  }
+
+  public int nonTrackedOperationIsSafe(int[] arr, int index) {
+    if (index > 0 && index > arr.length) {
+      return arr[2*index];
+    } else {
+      throw new IllegalArgumentException();
+    }
+  }
+  
+  public int unboundNegativeLoop(int[] arr, int index) {
+    int sum = 0;
+    for (int i = 5; i < arr.length; i--) {
+      sum += arr[i];
+    }
+    return sum;
+  }
 }

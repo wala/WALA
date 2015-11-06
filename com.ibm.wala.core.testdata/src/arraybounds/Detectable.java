@@ -174,4 +174,53 @@ public class Detectable {
       throw new IllegalArgumentException();
     }
   }
+
+  public String afterLoop(int[] arr) {
+    int len = arr.length - 1;
+    StringBuffer buffer = new StringBuffer();
+    int zero = 0;
+    if (zero < arr.length) {
+      int i = zero;
+      while (i < len) {
+        buffer.append(arr[i]);
+        buffer.append(", ");
+        i++;
+      }
+
+      buffer.append(arr[i]);
+    }
+    return buffer.toString();
+  }
+
+  public static void quickSort(int[] arr, int left, int right) {
+    if (0 <= left && right <= arr.length && left < right - 1) {
+      int pivot = arr[left];
+      int lhs = left + 1;
+      int rhs = right - 1;
+      while (lhs < rhs) {
+        while (arr[lhs] <= pivot && lhs < right - 1) {
+          lhs++;
+        }
+
+        while (arr[rhs] >= pivot && rhs > left) {
+          rhs--;
+        }
+
+        if (lhs < rhs) {
+          int tmp = arr[lhs];
+          arr[lhs] = arr[rhs];
+          arr[rhs] = tmp;
+        }
+      }
+
+      if (arr[lhs] < pivot) {
+        arr[left] = arr[lhs];
+        arr[lhs] = pivot;
+      }
+
+      quickSort(arr, left, lhs);
+      quickSort(arr, lhs, right);
+
+    }
+  }
 }

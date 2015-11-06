@@ -7,10 +7,12 @@ import java.util.Set;
 import com.ibm.wala.analysis.arraybounds.hypergraph.DirectedHyperEdge;
 import com.ibm.wala.analysis.arraybounds.hypergraph.DirectedHyperGraph;
 import com.ibm.wala.analysis.arraybounds.hypergraph.HyperNode;
+import com.ibm.wala.analysis.arraybounds.hypergraph.SoftFinalHyperNode;
 import com.ibm.wala.analysis.arraybounds.hypergraph.weight.Weight;
 import com.ibm.wala.analysis.arraybounds.hypergraph.weight.Weight.Type;
 import com.ibm.wala.analysis.arraybounds.hypergraph.weight.edgeweights.AdditiveEdgeWeight;
 import com.ibm.wala.analysis.arraybounds.hypergraph.weight.edgeweights.EdgeWeight;
+import com.ibm.wala.util.collections.Pair;
 
 /**
  * Some thoughts about implementation details, not mentioned in [1]:
@@ -59,6 +61,9 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 	 * which is never produced by ssa generation
 	 */
 	public final static Integer ZERO = -1;
+	
+	public final static Integer ZERO_HELPER = -3;
+	
 	/**
 	 * We need a ssa variable representing unlimited (values we don't know
 	 * anything about). So we just use an integer, which is never produced by
@@ -79,6 +84,8 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 	private final HashMap<Integer, Integer> arrayLength;
 
 	private final HashSet<Integer> phis;
+	
+	private final HashMap<Integer, Pair<Integer,Integer>> constants;
 
 	/**
 	 * For simplicity we introduce extra variables, for arrayLength, to have a
@@ -87,16 +94,36 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 	 *
 	 * Start with -3 so it is unequal to other constants
 	 */
-	private Integer arrayCounter = -3;
+	private Integer arrayCounter = -4;
 
 	public ArrayBoundsGraph() {
 		this.arrayAccess = new HashMap<>();
 		this.arrayLength = new HashMap<>();
+		this.constants = new HashMap<>();
 		this.phis = new HashSet<>();
 		this.addNode(UNLIMITED);
 		this.phis.add(UNLIMITED);
 		this.createSourceVar(ZERO);
+		
+		this.addNode(ZERO_HELPER);
+		this.addEdge(ZERO, ZERO_HELPER);
+		//this.phis.add(ZERO_HELPER);
 	}
+
+  public void postProcessConstants() {
+    for (Integer constant:constants.keySet()) {
+		  HyperNode<Integer> constantNode = this.getNodes().get(constant);
+		  HyperNode<Integer> helper1 = this.getNodes().get(constants.get(constant).fst);
+		  HyperNode<Integer> helper2 = this.getNodes().get(constants.get(constant).snd);
+		  
+		  for (DirectedHyperEdge<Integer> edge:constantNode.getOutEdges()) {
+		    if (!edge.getDestination().contains(helper2)) {
+		      edge.getSource().remove(constant);
+		      edge.getSource().add(helper1);
+		    }
+		  }
+		}
+  }
 
 	public void addAdditionEdge(Integer src, Integer dst, Integer value) {
 		this.addNode(src);
@@ -151,10 +178,12 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 		final Integer helper1 = this.generateNewVar();
 		final Integer helper2 = this.generateNewVar();
 
-		this.addAdditionEdge(ZERO, helper1, value);
-		this.addEdge(helper1, variable);
+		this.addAdditionEdge(ZERO_HELPER, helper1, value);
+		// this.addEdge(helper1, variable);
 		this.addAdditionEdge(variable, helper2, -value);
-		this.addEdge(helper2, ZERO);
+		this.addEdge(helper2, ZERO_HELPER);
+		
+		this.constants.put(variable, Pair.make(helper1, helper2));
 	}
 
 	public void addEdge(Integer src, Integer dst) {
@@ -194,19 +223,24 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 	 * @param var
 	 */
 	public void createSourceVar(Integer var) {
-		this.addNode(var);
+	  if (this.getNodes().keySet().contains(var)){
+	    throw new AssertionError("Source variables should only be created once.");
+	  }
+	  
+	  SoftFinalHyperNode<Integer> node = new SoftFinalHyperNode<Integer>(var);
+	  this.getNodes().put(var, node);		
 
-		final HyperNode<Integer> arrayNode = this.getNodes().get(var);
-		final HyperNode<Integer> unlimitedNode = this.getNodes().get(UNLIMITED);
+//		final HyperNode<Integer> varNode = this.getNodes().get(var);
+//		final HyperNode<Integer> unlimitedNode = this.getNodes().get(UNLIMITED);
 
-		final DirectedHyperEdge<Integer> edge = new DirectedHyperEdge<>();
-		edge.setWeight(new AdditiveEdgeWeight(Weight.UNLIMITED));
-		edge.getSource().add(arrayNode);
-		edge.getDestination().add(unlimitedNode);
-		this.getEdges().add(edge);
+//		final DirectedHyperEdge<Integer> edge = new DirectedHyperEdge<>();
+//		edge.setWeight(new AdditiveEdgeWeight(Weight.UNLIMITED));
+//		edge.getSource().add(varNode);
+//		edge.getDestination().add(unlimitedNode);
+//		this.getEdges().add(edge);
 
 		this.addEdge(UNLIMITED, var);
-		this.addEdge(var, var);
+		//this.addEdge(var, var);
 	}
 
 	public Integer generateNewVar() {
@@ -263,5 +297,20 @@ public class ArrayBoundsGraph extends DirectedHyperGraph<Integer> {
 
 	public void markAsDeadEnd(Integer variable) {
 		this.addEdge(UNLIMITED, variable);
+	}
+	
+	public Weight getVariableWeight(Integer variable){
+	  if (constants.containsKey(variable)) {
+	    variable = constants.get(variable).fst;
+	  }
+	  
+	  return this.getNodes().get(variable).getWeight();
+	}
+	
+	@Override
+	public void reset() {
+	  super.reset();
+	  this.getNodes().get(UNLIMITED).setWeight(Weight.UNLIMITED);
+	  this.getNodes().get(UNLIMITED).setNewWeight(Weight.UNLIMITED);
 	}
 }

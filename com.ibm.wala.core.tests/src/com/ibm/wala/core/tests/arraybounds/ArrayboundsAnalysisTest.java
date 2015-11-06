@@ -25,6 +25,9 @@ import com.ibm.wala.ssa.AllDueToBranchePiPolicy;
 import com.ibm.wala.ssa.DefaultIRFactory;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
+import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.SSAArrayReferenceInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 
@@ -45,13 +48,13 @@ public class ArrayboundsAnalysisTest {
   private static ClassLoader CLASS_LOADER = ArrayboundsAnalysisTest.class.getClassLoader();
 
   private static final String DETECTABLE_TESTDATA = "Larraybounds/Detectable";
-  private static final int DETECTABLE_NUMBER_OF_ARRAY_ACCESS = 21;
+  private static final int DETECTABLE_NUMBER_OF_ARRAY_ACCESS = 34;
 
   private static final String NOT_DETECTABLE_TESTDATA = "Larraybounds/NotDetectable";
-  private static final int NOT_DETECTABLE_NUMBER_OF_ARRAY_ACCESS = 7;
+  private static final int NOT_DETECTABLE_NUMBER_OF_ARRAY_ACCESS = 8;
 
   private static final String NOT_IN_BOUND_TESTDATA = "Larraybounds/NotInBound";
-  private static final int NOT_IN_BOUND_TESTDATA_NUMBER_OF_ARRAY_ACCESS = 4;
+  private static final int NOT_IN_BOUND_TESTDATA_NUMBER_OF_ARRAY_ACCESS = 8;
 
   private static IRFactory<IMethod> irFactory;
   private static AnalysisOptions options;
@@ -102,12 +105,23 @@ public class ArrayboundsAnalysisTest {
     int numberOfArrayAccesses = 0;
     for (IMethod method : iClass.getAllMethods()) {
       if (method.getDeclaringClass().equals(iClass)) {
+        IR ir = getIr(method);
+        StringBuilder builder = new StringBuilder();
+        for (ISSABasicBlock block : ir.getControlFlowGraph()) {
+          for (SSAInstruction instruction : block) {
+            builder.append(instruction);
+            builder.append("\n");
+          }
+        }
+
         String identifyer = method.getDeclaringClass().getName().toString() + "#" + method.getName().toString();
 
-        ArrayOutOfBoundsAnalysis analysis = new ArrayOutOfBoundsAnalysis(getIr(method));
-        for (UnnecessaryCheck unnecessary : analysis.getBoundsCheckNecessary().values()) {
+        ArrayOutOfBoundsAnalysis analysis = new ArrayOutOfBoundsAnalysis(ir);
+        for (SSAArrayReferenceInstruction key : analysis.getBoundsCheckNecessary().keySet()) {
           numberOfArrayAccesses++;
-          collector.checkThat("Unexpected necessity for bounds check in " + identifyer, unnecessary, matcher);
+          UnnecessaryCheck unnecessary = analysis.getBoundsCheckNecessary().get(key);
+          collector.checkThat("Unexpected necessity for bounds check in " + identifyer + ":" + method.getLineNumber(key.iindex),
+              unnecessary, matcher);
         }
       }
     }
