@@ -48,7 +48,7 @@ Export-Package: com.google.common.annotations,
  org.jf.dexlib.Debug,
  org.jf.dexlib.EncodedValue,
  org.jf.dexlib.Util
-Bundle-ClassPath: dalvik.jar,
+Bundle-ClassPath: .,
  lib/commons-cli-1.2.jar,
  lib/commons-io-2.4.jar,
  lib/commons-lang3-3.1.jar,
