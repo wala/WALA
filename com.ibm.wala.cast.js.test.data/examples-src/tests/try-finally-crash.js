@@ -9,3 +9,20 @@ var x = function() {
 };
 
 x();
+
+var document = { };
+
+x = function( fn ) {
+    var div = document.createElement("div");
+    
+    try {
+	return fn( div );
+    } catch (e) {
+	return false;
+    } finally {
+	// release memory in IE
+	div = null;
+    }
+};
+
+x(document);

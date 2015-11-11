@@ -802,12 +802,13 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
           }
           newBlock(false);
 
-          addEdge(currentBlock, getCurrentBlock());
           if (target != null) {
+            addEdge(currentBlock, getCurrentBlock());
             addEdge(endBlock, target);
 
             // `null' target is idiom for branch/throw to exit
           } else {
+            if (exception) addEdge(currentBlock, getCurrentBlock());
             addDelayedEdge(endBlock, exitMarker, exception);
           }
 
@@ -1105,6 +1106,20 @@ public abstract class AstTranslator extends CAstVisitor<AstTranslator.WalkContex
       currentBlock.instructions().add(n);
 
       currentBlock.setLastIndex(inst);
+    }
+    
+    @Override
+    public String toString() { 
+      StringBuffer sb = new StringBuffer(super.toString());
+      for(PreBasicBlock b : blocks) {
+        if (b.firstIndex > 0) {
+          sb.append("\n" + b);
+          for(int i = 0; i < b.instructions.size(); i++) {
+            sb.append("\n" + b.instructions.get(i));
+          }
+        }
+      }
+      return sb.toString();
     }
   }
 
