@@ -10,7 +10,7 @@ import com.ibm.wala.cast.js.test.FieldBasedCGUtil.BuilderType;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.WalaException;
 
-public class FieldBasedJQueryTests extends AbstractFieldBasedTest {
+public class FieldBasedJQueryTest extends AbstractFieldBasedTest {
 
   @Test
   public void test1_8_2() throws IOException, WalaException, Error, CancelException {
