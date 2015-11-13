@@ -901,6 +901,12 @@ public class DexIMethod implements IBytecodeMethod {
 					throw new RuntimeException("UnresolvedOdexInstruction"
 							+ inst.opcode.toString() + inst.getFormat());
 				default:
+					instructions.add(new Instruction(currentCodeAddress, Opcode.NOP, this) {
+						@Override
+						public void visit(Visitor visitor) {
+							// no op
+						} 
+					});
 					break;
 				}
 				break;
