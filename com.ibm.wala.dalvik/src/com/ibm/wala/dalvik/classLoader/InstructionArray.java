@@ -156,6 +156,9 @@ public class InstructionArray implements Collection<Instruction> {
      * @return The index of the instruction of given byte code index
      */
     public int getIndexFromPc(int pc) {
+    	if (!pc2index.containsKey(pc) && pc2index.containsKey(pc+1)) {
+    		pc++;
+    	}
         return pc2index.get(pc);
     }
 
@@ -185,5 +188,4 @@ public class InstructionArray implements Collection<Instruction> {
         return instructions.get(pc2index.get(pc));
 
     }
-
 }

@@ -426,11 +426,11 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   protected static boolean hasUniqueCatchBlock(SSAAbstractInvokeInstruction call, IR ir) {
     ISSABasicBlock[] bb = ir.getBasicBlocksForCall(call.getCallSite());
     if (bb.length == 1) {
-      Iterator it = ir.getControlFlowGraph().getExceptionalSuccessors(bb[0]).iterator();
+      Iterator<ISSABasicBlock> it = ir.getControlFlowGraph().getExceptionalSuccessors(bb[0]).iterator();
       // check that there's exactly one element in the iterator
-      if (it.hasNext()) {
-        it.next();
-        return (!it.hasNext());
+      if (it.hasNext())  {
+        ISSABasicBlock sb = it.next();
+        return (!it.hasNext() && (sb.isExitBlock() || ((sb instanceof ExceptionHandlerBasicBlock) && ((ExceptionHandlerBasicBlock)sb).getCatchInstruction() != null)));
       }
     }
     return false;
