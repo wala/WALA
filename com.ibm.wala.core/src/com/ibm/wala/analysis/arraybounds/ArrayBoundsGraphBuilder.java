@@ -87,19 +87,21 @@ public class ArrayBoundsGraphBuilder {
 				instruction.visit(new Visitor() {
 					@Override
 					public void visitNew(SSANewInstruction instruction) {
-						assert instruction.getNumberOfUses() == 1;
-						final int constructionLength = instruction.getUse(0);
-						Integer arraysNode = ArrayBoundsGraphBuilder.this.lowerBoundGraph
-								.getArrayLength().get(tmp);
-						ArrayBoundsGraphBuilder.this.lowerBoundGraph.addEdge(
-								arraysNode, constructionLength);
-						arraysNode = ArrayBoundsGraphBuilder.this.upperBoundGraph
-								.getArrayLength().get(tmp);
-						ArrayBoundsGraphBuilder.this.upperBoundGraph.addEdge(
-								arraysNode, constructionLength);
-
-						ArrayBoundsGraphBuilder.this
-						.addPossibleConstant(constructionLength);
+					  //We only support arrays with dimension 1
+						if (instruction.getNumberOfUses() == 1) {
+  						final int constructionLength = instruction.getUse(0);
+  						Integer arraysNode = ArrayBoundsGraphBuilder.this.lowerBoundGraph
+  								.getArrayLength().get(tmp);
+  						ArrayBoundsGraphBuilder.this.lowerBoundGraph.addEdge(
+  								arraysNode, constructionLength);
+  						arraysNode = ArrayBoundsGraphBuilder.this.upperBoundGraph
+  								.getArrayLength().get(tmp);
+  						ArrayBoundsGraphBuilder.this.upperBoundGraph.addEdge(
+  								arraysNode, constructionLength);
+  
+  						ArrayBoundsGraphBuilder.this
+  						.addPossibleConstant(constructionLength);
+						}
 					}
 				});
 			}

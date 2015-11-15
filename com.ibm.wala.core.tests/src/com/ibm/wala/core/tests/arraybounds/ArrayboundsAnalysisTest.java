@@ -51,7 +51,7 @@ public class ArrayboundsAnalysisTest {
   private static final int DETECTABLE_NUMBER_OF_ARRAY_ACCESS = 34;
 
   private static final String NOT_DETECTABLE_TESTDATA = "Larraybounds/NotDetectable";
-  private static final int NOT_DETECTABLE_NUMBER_OF_ARRAY_ACCESS = 8;
+  private static final int NOT_DETECTABLE_NUMBER_OF_ARRAY_ACCESS = 10;
 
   private static final String NOT_IN_BOUND_TESTDATA = "Larraybounds/NotInBound";
   private static final int NOT_IN_BOUND_TESTDATA_NUMBER_OF_ARRAY_ACCESS = 8;

@@ -164,4 +164,12 @@ public class NotDetectable {
     }
     return sum;
   }
+  
+  /**
+   * Multidimensional Arrays are not supported yet.
+   */  
+  public int multiDimensional(){
+    int arr[][] = new int[5][10];
+    return arr[2][3];
+  }
 }
