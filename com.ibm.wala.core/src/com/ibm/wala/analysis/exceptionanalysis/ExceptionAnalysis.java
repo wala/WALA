@@ -17,6 +17,9 @@ import com.ibm.wala.dataflow.graph.BitVectorSolver;
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.graph.Graph;
@@ -27,8 +30,8 @@ public class ExceptionAnalysis {
   private BitVectorSolver<CGNode> solver;
   private ExceptionToBitvectorTransformer transformer;
   
-  public ExceptionAnalysis(CallGraph callgraph){
-    IntraproceduralResult intraResult = new IntraproceduralResult(callgraph);
+  public ExceptionAnalysis(CallGraph callgraph, PointerAnalysis<InstanceKey> pointerAnalysis, ClassHierarchy cha){
+    IntraproceduralResult intraResult = new IntraproceduralResult(callgraph, pointerAnalysis, cha);
     transformer = new ExceptionToBitvectorTransformer(intraResult.getExceptions());    
     ExceptionTransferFunctionProvider transferFunctionProvider = new ExceptionTransferFunctionProvider(intraResult, callgraph, transformer);
     

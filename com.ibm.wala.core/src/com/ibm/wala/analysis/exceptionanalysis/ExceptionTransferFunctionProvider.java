@@ -77,12 +77,21 @@ public class ExceptionTransferFunctionProvider implements ITransferFunctionProvi
 //      return BitVectorIdentity.instance();
 //    } else 
     {
+      CGNode tmp = src;
+      src = dst;
+      dst = tmp;
+      
+      
       Iterator<CallSiteReference> callsites = cg.getPossibleSites(src, dst);
       BitVector filtered = new BitVector(transformer.getValues().getSize());
       
       if (callsites.hasNext()) {
+        System.out.println(src.getMethod().toString() + " -> " + dst.getMethod().toString());
+        
+        CallSiteReference callsite = callsites.next();
+        filtered = transformer.computeBitVector(intraResult.getFilteredExceptions(src, callsite));              
         while (callsites.hasNext()) {
-          CallSiteReference callsite = callsites.next();
+          callsite = callsites.next();
           BitVector bv = transformer.computeBitVector(intraResult.getFilteredExceptions(src, callsite));
           filtered.and(bv);        
         }

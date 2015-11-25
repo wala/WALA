@@ -52,34 +52,35 @@ public class ExceptionToBitvectorTransformer {
     values = new ObjectArrayMapping<TypeReference>(exceptionsArray);
   }
 
-  public BitVector computeBitVector(Set<TypeReference> exceptions) {    
+  public BitVector computeBitVector(Set<TypeReference> exceptions) {
     BitVector result = new BitVector(values.getSize());
     for (TypeReference exception : exceptions) {
-      if (!includingExceptions.containsKey(exception)) {
-        throw new IllegalArgumentException("Got exception I don't know about,"
-            + "make sure only to use exceptions given to the constructor ");
+      // if (!includingExceptions.containsKey(exception)) {
+      // throw new IllegalArgumentException("Got exception I don't know about,"
+      // + "make sure only to use exceptions given to the constructor ");
+      // }
+      if (includingExceptions.containsKey(exception)) {
+        result.or(includingExceptions.get(exception));
       }
-      
-      result.or(includingExceptions.get(exception));
     }
     return result;
   }
-  
-  public Set<TypeReference> computeExceptions(BitVector bitVector) {    
+
+  public Set<TypeReference> computeExceptions(BitVector bitVector) {
     assert bitVector.length() == values.getSize();
     Set<TypeReference> result = new HashSet<>();
     for (int i = 0; i < bitVector.length(); i++) {
-      if (bitVector.get(i)){
+      if (bitVector.get(i)) {
         result.add(values.getMappedObject(i));
       }
     }
     return result;
   }
-  
-  public Set<TypeReference> computeExceptions(BitVectorVariable bitVector) {    
+
+  public Set<TypeReference> computeExceptions(BitVectorVariable bitVector) {
     Set<TypeReference> result = new HashSet<>();
     for (int i = 0; i < values.getSize(); i++) {
-      if (bitVector.get(i)){
+      if (bitVector.get(i)) {
         result.add(values.getMappedObject(i));
       }
     }
