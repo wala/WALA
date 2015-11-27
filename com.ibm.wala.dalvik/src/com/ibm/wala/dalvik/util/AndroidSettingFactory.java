@@ -152,10 +152,9 @@ public class AndroidSettingFactory {
             name = pack + name;
             type = Intent.IntentType.INTERNAL_TARGET;   // TODO Ehhh...
         } else if (!(name.contains("."))) {
-            if ((pack == null) || (pack.isEmpty())) {
-                throw new IllegalArgumentException("The pack is needed to resolve the full name of " + name + ", but it's empty");
+            if ((pack != null) && (!pack.isEmpty())) {
+                name = pack + "." + name;
             }
-            name = pack + "." + name;
             type = Intent.IntentType.INTERNAL_TARGET;   // TODO Ehhh...
         } else if ((pack != null) && (name.startsWith(pack))) {
             type = Intent.IntentType.INTERNAL_TARGET;   // TODO Ehhh...
