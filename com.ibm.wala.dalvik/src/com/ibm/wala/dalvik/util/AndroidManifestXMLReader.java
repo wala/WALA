@@ -645,7 +645,11 @@ public class AndroidManifestXMLReader {
             AndroidEntryPointManager.MANAGER.registerIntent(intent);
             for (Intent ovr: overrideTargets) {
                 logger.info("\tOverride: {} --> {}", ovr, intent);
-                AndroidEntryPointManager.MANAGER.setOverride(ovr, intent);
+                if (ovr.equals(intent)) {
+                    AndroidEntryPointManager.MANAGER.registerIntent(intent);
+                } else {
+                    AndroidEntryPointManager.MANAGER.setOverride(ovr, intent);
+                }
             }
         }
     }
