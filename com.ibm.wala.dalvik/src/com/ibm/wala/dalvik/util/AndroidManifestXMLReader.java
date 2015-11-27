@@ -167,7 +167,7 @@ public class AndroidManifestXMLReader {
                 new ISubTags() { public Set<Tag> getSubTags() {
                     return EnumSet.of(Tag.INTENT); }},
                 EnumSet.of(Attr.ENABLED, Attr.TARGET, Attr.NAME),
-                null),
+                ComponentItem.class),
         SERVICE("service", 
                 new ISubTags() { public Set<Tag> getSubTags() {
                     return EnumSet.of(Tag.INTENT); }},
@@ -645,7 +645,13 @@ public class AndroidManifestXMLReader {
                 logger.warn("Empty Package {}", attributesHistory.get(Attr.PACKAGE).peek());
                 pack = null;
             }
-            final String name = (String) attributesHistory.get(Attr.NAME).peek(); // TODO: Verify type!
+
+            final String name;
+            if (self == Tag.ALIAS) {
+                name =  (String) attributesHistory.get(Attr.TARGET).peek(); // TODO: Verify type!
+            } else {
+                name = (String) attributesHistory.get(Attr.NAME).peek(); // TODO: Verify type!
+            }
             final Intent intent = AndroidSettingFactory.intent(pack, name, null);
 
             logger.info("\tRegister: {}", intent);
