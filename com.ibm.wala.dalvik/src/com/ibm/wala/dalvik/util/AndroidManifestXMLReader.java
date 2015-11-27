@@ -591,9 +591,14 @@ public class AndroidManifestXMLReader {
                     }
             }
             } else {
-                throw new IllegalStateException("Error in parser implementation! The required attribute 'name' which should have been " +
-                        "defined in ACTION could not be retrieved. This should have been thrown before as it is a required attribute for " +
-                        "ACTION");
+            /**
+             *  Previously, an exception was thrown but in fact there is no need to crash here.
+             *  Actions are required, but if there is no action in a particular intent-filter,
+             *  then no intent will pass the intent filter.
+             *  See also http://developer.android.com/guide/topics/manifest/action-element.html
+             *  So we'll just issue a warning and continue happily with our work...
+             */
+            logger.warn("specified intent without action - this means that no intents will pass the filter...");
             }
         }
     }
@@ -611,6 +616,8 @@ public class AndroidManifestXMLReader {
                 Tag current = parserStack.pop();
                 if (allowedTags.contains(current)) {
                     if (current == Tag.INTENT) {
+                    // ignore the case that no intent was produced
+                    if (attributesHistory.get(Tag.INTENT).isEmpty()) continue;
                         Object oIntent = attributesHistory.get(Tag.INTENT).peek();
                         if (oIntent == null) {
                              throw new IllegalStateException("The currently parsed Intent did not push a Valid intent to the " +
