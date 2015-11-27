@@ -616,7 +616,7 @@ public class AndroidManifestXMLReader {
                 Tag current = parserStack.pop();
                 if (allowedTags.contains(current)) {
                     if (current == Tag.INTENT) {
-                    // ignore the case that no intent was produced
+                    // do not expect item at top of stack if no intent was produced
                     if (attributesHistory.get(Tag.INTENT).isEmpty()) continue;
                         Object oIntent = attributesHistory.get(Tag.INTENT).peek();
                         if (oIntent == null) {
