@@ -201,10 +201,16 @@ public class AndroidSettingFactory {
     //
     public static Intent intent(String fullyQualifiedAction, String uri) {
         if (fullyQualifiedAction.startsWith(".")) {
-            throw new IllegalArgumentException("The action " + fullyQualifiedAction + " is not fully qualified! Use " +
+            String pack = AndroidEntryPointManager.MANAGER.getPackage();
+            if (pack != null) {
+                return intent(pack, fullyQualifiedAction, uri);
+            } else {
+            throw new IllegalArgumentException("The action " + fullyQualifiedAction + " is not fully qualified and the application package is unknown! Use " +
                     " intent(String pack, String name, String uri) to build the intent!");
+            }
+        } else {
+            return intent(null, fullyQualifiedAction, uri);
         }
-        return intent(null, fullyQualifiedAction, uri);
     }
 
     public static Intent intent(String fullyQualifiedAction) {
