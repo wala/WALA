@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.analysis.exceptionanalysis;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,12 +22,13 @@ import java.util.Set;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ipa.cfg.exceptionpruning.FilteredException;
+import com.ibm.wala.ipa.cfg.exceptionpruning.interprocedural.InterproceduralExceptionFilter;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -44,11 +46,14 @@ public class IntraproceduralResult {
   private CallGraph callGraph;
   private PointerAnalysis<InstanceKey> pointerAnalysis;
   private ClassHierarchy classHierachy;
+  private InterproceduralExceptionFilter<SSAInstruction> filter;
 
-  public IntraproceduralResult(CallGraph cg, PointerAnalysis<InstanceKey> pointerAnalysis, ClassHierarchy cha) {
+  public IntraproceduralResult(CallGraph cg, PointerAnalysis<InstanceKey> pointerAnalysis, ClassHierarchy cha,
+      InterproceduralExceptionFilter<SSAInstruction> filter) {
     this.callGraph = cg;
     this.pointerAnalysis = pointerAnalysis;
     this.classHierachy = cha;
+    this.filter = filter;
     intraproceduralExceptions = new HashMap<>();
     exceptions = new HashSet<>();
     compute();
@@ -64,14 +69,13 @@ public class IntraproceduralResult {
         for (ISSABasicBlock block : ir.getControlFlowGraph()) {
           SSAInstruction throwingInstruction = getThrowingInstruction(block);
           if (throwingInstruction != null) {
-            Set<TypeReference> caughtExceptions = collectCaughtExceptions(node, block);
             Set<TypeReference> thrownExceptions = collectThrownExceptions(node, throwingInstruction);
+            Set<TypeReference> caughtExceptions = collectCaughtExceptions(node, block);
+            Set<TypeReference> filteredExceptions = collectFilteredExceptions(node, throwingInstruction);
 
-            Set<TypeReference> exceptions = computeThrownMinusCaughtExceptions(thrownExceptions, caughtExceptions);
-            if (node.getMethod().getName().toString().equals("foo") && !exceptions.isEmpty()) {
-              System.out.println(throwingInstruction);
-            }
-            intraproceduralExceptions.get(node).addAll(exceptions);
+            thrownExceptions.removeAll(filteredExceptions);
+            thrownExceptions.removeAll(caughtExceptions);
+            intraproceduralExceptions.get(node).addAll(thrownExceptions);
           }
         }
       }
@@ -82,14 +86,24 @@ public class IntraproceduralResult {
     }
   }
 
-  private Set<TypeReference> computeThrownMinusCaughtExceptions(Set<TypeReference> thrownExceptions,
-      Set<TypeReference> caughtExceptions) {
-    Set<TypeReference> result = new LinkedHashSet<>();
+  private Set<TypeReference> collectFilteredExceptions(CGNode node, SSAInstruction throwingInstruction) {
+    if (filter != null) {
+      Set<TypeReference> filtered = new LinkedHashSet<>();
+      Collection<FilteredException> filters = filter.getFilter(node).filteredExceptions(throwingInstruction);
+      for (FilteredException filter : filters) {
+        if (filter.isSubclassFiltered()) {
+          for (IClass iclass : this.classHierachy.computeSubClasses(filter.getException())) {
+            filtered.add(iclass.getReference());
+          }
+        } else {
+          filtered.add(filter.getException());
+        }
+      }
+      return filtered;
+    } else {
+      return Collections.emptySet();
+    }
 
-    result.addAll(thrownExceptions);
-    result.removeAll(caughtExceptions);
-
-    return result;
   }
 
   /**
@@ -193,7 +207,7 @@ public class IntraproceduralResult {
     return result;
   }
 
-  public Set<TypeReference> getFilteredExceptions(CGNode node, CallSiteReference callsite) {
+  public Set<TypeReference> getCaughtExceptions(CGNode node, CallSiteReference callsite) {
     Set<TypeReference> result = new LinkedHashSet<>();
 
     IntSet iindices = node.getIR().getCallInstructionIndices(callsite);
@@ -206,10 +220,6 @@ public class IntraproceduralResult {
         throw new IllegalArgumentException("The given callsite dose not correspond to an invoke instruction." + instruction);
       }
 
-      // SSAInvokeInstruction invoke = (SSAInvokeInstruction) instruction;
-      // if (instruction == null) {
-      // throw new IllegalStateException();
-      // }
       ISSABasicBlock block = node.getIR().getBasicBlockForInstruction(instruction);
       if (result.isEmpty()) {
         result.addAll(collectCaughtExceptions(node, block));

@@ -19,28 +19,39 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.cfg.exceptionpruning.interprocedural.InterproceduralExceptionFilter;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.InvertedGraph;
 import com.ibm.wala.util.graph.impl.SelfLoopAddedGraph;
 
-public class ExceptionAnalysis {  
+public class ExceptionAnalysis {
   private BitVectorSolver<CGNode> solver;
   private ExceptionToBitvectorTransformer transformer;
-  
-  public ExceptionAnalysis(CallGraph callgraph, PointerAnalysis<InstanceKey> pointerAnalysis, ClassHierarchy cha){
-    IntraproceduralResult intraResult = new IntraproceduralResult(callgraph, pointerAnalysis, cha);
-    transformer = new ExceptionToBitvectorTransformer(intraResult.getExceptions());    
-    ExceptionTransferFunctionProvider transferFunctionProvider = new ExceptionTransferFunctionProvider(intraResult, callgraph, transformer);
-    
+
+  public ExceptionAnalysis(CallGraph callgraph, PointerAnalysis<InstanceKey> pointerAnalysis, ClassHierarchy cha) {
+    this(callgraph, pointerAnalysis, cha, null);
+  }
+
+  public ExceptionAnalysis(CallGraph callgraph, PointerAnalysis<InstanceKey> pointerAnalysis, ClassHierarchy cha,
+      InterproceduralExceptionFilter<SSAInstruction> filter) {
+    IntraproceduralResult intraResult = new IntraproceduralResult(callgraph, pointerAnalysis, cha, filter);
+    transformer = new ExceptionToBitvectorTransformer(intraResult.getExceptions());
+    ExceptionTransferFunctionProvider transferFunctionProvider = new ExceptionTransferFunctionProvider(intraResult, callgraph,
+        transformer);
+
     Graph<CGNode> graph = new SelfLoopAddedGraph<>(new InvertedGraph<CGNode>(callgraph));
-    BitVectorFramework<CGNode, TypeReference> problem = new BitVectorFramework<>(graph, transferFunctionProvider, transformer.getValues());
-        
-    
+    BitVectorFramework<CGNode, TypeReference> problem = new BitVectorFramework<>(graph, transferFunctionProvider,
+        transformer.getValues());
+
     solver = new ExceptionFlowSolver(problem, intraResult, transformer);
     solver.initForFirstSolve();
+  }
+
+  public void solve() {
     try {
       solver.solve(null);
     } catch (CancelException e) {
@@ -48,8 +59,8 @@ public class ExceptionAnalysis {
       e.printStackTrace();
     }
   }
-  
-  public Set<TypeReference> getCGNodeExceptions(CGNode node){
+
+  public Set<TypeReference> getCGNodeExceptions(CGNode node) {
     BitVectorVariable nodeResult = solver.getIn(node);
     if (nodeResult != null) {
       return transformer.computeExceptions(nodeResult);

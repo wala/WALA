@@ -85,14 +85,12 @@ public class ExceptionTransferFunctionProvider implements ITransferFunctionProvi
       Iterator<CallSiteReference> callsites = cg.getPossibleSites(src, dst);
       BitVector filtered = new BitVector(transformer.getValues().getSize());
       
-      if (callsites.hasNext()) {
-        System.out.println(src.getMethod().toString() + " -> " + dst.getMethod().toString());
-        
+      if (callsites.hasNext()) {      
         CallSiteReference callsite = callsites.next();
-        filtered = transformer.computeBitVector(intraResult.getFilteredExceptions(src, callsite));              
+        filtered = transformer.computeBitVector(intraResult.getCaughtExceptions(src, callsite));              
         while (callsites.hasNext()) {
           callsite = callsites.next();
-          BitVector bv = transformer.computeBitVector(intraResult.getFilteredExceptions(src, callsite));
+          BitVector bv = transformer.computeBitVector(intraResult.getCaughtExceptions(src, callsite));
           filtered.and(bv);        
         }
         
