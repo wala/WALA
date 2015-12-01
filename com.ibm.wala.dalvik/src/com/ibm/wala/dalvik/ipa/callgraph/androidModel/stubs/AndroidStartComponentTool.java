@@ -43,13 +43,16 @@ package com.ibm.wala.dalvik.ipa.callgraph.androidModel.stubs;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.dalvik.ipa.callgraph.androidModel.AndroidModelClass;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StartInfo;
 import com.ibm.wala.dalvik.ipa.callgraph.propagation.cfa.IntentStarters.StarterFlags;
+import com.ibm.wala.dalvik.util.AndroidEntryPointManager;
 import com.ibm.wala.dalvik.util.AndroidTypes;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -79,7 +82,9 @@ import com.ibm.wala.util.strings.Atom;
  *  @since  2013-10-22
  */
 public class AndroidStartComponentTool {
-    
+
+	private static final Logger logger = LoggerFactory.getLogger(AndroidStartComponentTool.class);
+
     private final IClassHierarchy cha;
 //    private final MethodReference asMethod;
     private final Set<StarterFlags> flags;
@@ -308,7 +313,8 @@ public class AndroidStartComponentTool {
             
             return androidContext;
         } else {
-            throw new UnsupportedOperationException("Can not handle the callers android-context of " + caller);
+            logger.debug("Can not handle the callers android-context of " + caller);
+            return null;
         }
     }
 
