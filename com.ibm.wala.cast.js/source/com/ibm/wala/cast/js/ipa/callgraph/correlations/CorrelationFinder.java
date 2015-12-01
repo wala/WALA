@@ -30,6 +30,7 @@ import com.ibm.wala.cast.ir.ssa.AbstractReflectiveGet;
 import com.ibm.wala.cast.ir.ssa.AbstractReflectivePut;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
+import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
@@ -266,7 +267,7 @@ public class CorrelationFinder {
     } else {
       JavaScriptLoader.addBootstrapFile(WebUtil.preamble);
       try {
-        scripts = WebUtil.extractScriptFromHTML(url, true).fst;
+        scripts = WebUtil.extractScriptFromHTML(url, DefaultSourceExtractor.factory).fst;
       } catch (Error e) {
         e.printStackTrace();
         assert false : e.warning;

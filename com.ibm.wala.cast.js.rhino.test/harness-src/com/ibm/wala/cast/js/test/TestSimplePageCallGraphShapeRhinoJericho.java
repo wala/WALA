@@ -15,6 +15,7 @@ import java.net.URL;
 
 import org.junit.Test;
 
+import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.IHtmlParser;
 import com.ibm.wala.cast.js.html.jericho.JerichoHtmlParser;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
@@ -28,13 +29,13 @@ public class TestSimplePageCallGraphShapeRhinoJericho extends TestSimplePageCall
 
 	@Test public void testCrawl() throws IOException, IllegalArgumentException, CancelException, WalaException {
 		URL url = getClass().getClassLoader().getResource("pages/crawl.html");
-		CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
+		CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url, DefaultSourceExtractor.factory);
 		verifyGraphAssertions(CG, null);
 	}
 
 	@Test public void testParseError() throws IOException, IllegalArgumentException, CancelException, WalaException {
 		URL url = getClass().getClassLoader().getResource("pages/garbage.html");
-		JSCFABuilder B = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
+		JSCFABuilder B = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url, DefaultSourceExtractor.factory);
 		B.makeCallGraph(B.getOptions());
 	    Util.checkForFrontEndErrors(B.getClassHierarchy());
 	}

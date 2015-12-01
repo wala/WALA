@@ -16,6 +16,7 @@ import java.net.URL;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.IHtmlParser;
 import com.ibm.wala.cast.js.html.IHtmlParserFactory;
 import com.ibm.wala.cast.js.html.JSSourceExtractor;
@@ -36,14 +37,14 @@ public abstract class TestSimplePageCallGraphShapeRhino extends TestSimplePageCa
 
 	@Test public void testPage3() throws IOException, IllegalArgumentException, CancelException, WalaException {
 		URL url = getClass().getClassLoader().getResource("pages/page3.html");
-		CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url);
+		CallGraph CG = JSCallGraphBuilderUtil.makeHTMLCG(url, DefaultSourceExtractor.factory);
 		verifyGraphAssertions(CG, assertionsForPage3);
 	}
 
 	@Test(expected = WalaException.class)
 	public void testJSParseError() throws IOException, IllegalArgumentException, CancelException, WalaException {
 		URL url = getClass().getClassLoader().getResource("pages/garbage2.html");
-		JSCFABuilder B = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url);
+		JSCFABuilder B = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url, DefaultSourceExtractor.factory);
 		B.makeCallGraph(B.getOptions());
 	    Util.checkForFrontEndErrors(B.getClassHierarchy());
 	}

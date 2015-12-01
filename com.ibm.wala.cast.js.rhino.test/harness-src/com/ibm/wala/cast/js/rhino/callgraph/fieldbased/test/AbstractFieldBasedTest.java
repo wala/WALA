@@ -10,6 +10,7 @@ import junit.framework.AssertionFailedError;
 import org.junit.Before;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
+import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCallGraph;
 import com.ibm.wala.cast.js.test.FieldBasedCGUtil;
 import com.ibm.wala.cast.js.test.TestJSCallGraphShape;
@@ -44,7 +45,7 @@ public abstract class AbstractFieldBasedTest extends TestJSCallGraphShape {
     for(BuilderType builderType : builderTypes) {
       ProgressMaster monitor = ProgressMaster.make(new NullProgressMonitor(), 45000, true);
       try {
-        cg = util.buildCG(url, builderType, monitor, false).fst;
+        cg = util.buildCG(url, builderType, monitor, false, DefaultSourceExtractor.factory).fst;
         System.err.println(cg);
         verifyGraphAssertions(cg, assertions);
       } catch(AssertionFailedError afe) {

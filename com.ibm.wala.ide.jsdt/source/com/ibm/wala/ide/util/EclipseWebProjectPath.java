@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 
 import com.ibm.wala.cast.ir.translator.TranslatorToCAst.Error;
+import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
 import com.ibm.wala.cast.js.html.MappedSourceModule;
 import com.ibm.wala.cast.js.html.WebUtil;
 import com.ibm.wala.classLoader.FileModule;
@@ -42,7 +43,7 @@ public class EclipseWebProjectPath extends JavaScriptEclipseProjectPath {
         Set<MappedSourceModule> scripts;
         String urlString = "file://" + htmlPage.getAbsolutePath();
         try {
-          scripts = WebUtil.extractScriptFromHTML(new URL(urlString), true).fst;
+          scripts = WebUtil.extractScriptFromHTML(new URL(urlString), DefaultSourceExtractor.factory ).fst;
           s.addAll(scripts);
         } catch (MalformedURLException e1) {
           assert false : "internal error constructing URL " + urlString;

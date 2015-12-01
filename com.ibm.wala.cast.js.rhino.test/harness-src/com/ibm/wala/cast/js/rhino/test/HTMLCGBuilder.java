@@ -19,6 +19,8 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 
+import com.ibm.wala.cast.js.html.DefaultSourceExtractor;
+import com.ibm.wala.cast.js.html.JSSourceExtractor;
 import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptFunctionDotCallTargetSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.RecursionCheckContextSelector;
@@ -33,6 +35,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.NullProgressMonitor;
 import com.ibm.wala.util.ProgressMaster;
+import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.io.FileUtil;
@@ -73,10 +76,11 @@ public class HTMLCGBuilder {
 	 *          the HTML page to analyse, can either be a path to a local file or a URL
 	 * @param timeout
 	 *          analysis timeout in seconds, -1 means no timeout
+	 * @param fExtractor 
 	 * @throws IOException 
 	 * @throws ClassHierarchyException 
 	 */
-	public static CGBuilderResult buildHTMLCG(String src, int timeout, CGBuilderType builderType) 
+	public static CGBuilderResult buildHTMLCG(String src, int timeout, CGBuilderType builderType, Function<Void, JSSourceExtractor> fExtractor) 
 			throws ClassHierarchyException, IOException {
 		CGBuilderResult res = new CGBuilderResult();
 		URL url = null;
@@ -88,7 +92,7 @@ public class HTMLCGBuilder {
 		com.ibm.wala.cast.js.ipa.callgraph.JSCallGraphUtil.setTranslatorFactory(new CAstRhinoTranslatorFactory());
 		JSCFABuilder builder = null;
 		try {
-			builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url, builderType);
+			builder = JSCallGraphBuilderUtil.makeHTMLCGBuilder(url, builderType, fExtractor);
 			// TODO we need to find a better way to do this ContextSelector delegation;
 			// the code below belongs somewhere else!!!
 			// the bound of 4 is what is needed to pass our current framework tests
@@ -179,7 +183,7 @@ public class HTMLCGBuilder {
 		JavaScriptFunctionDotCallTargetSelector.WARN_ABOUT_IMPRECISE_CALLGRAPH = false;
 		
 		// build call graph
-		CGBuilderResult res = buildHTMLCG(src, timeout, CGBuilderType.ONE_CFA);
+		CGBuilderResult res = buildHTMLCG(src, timeout, CGBuilderType.ONE_CFA, DefaultSourceExtractor.factory);
 		
 		if(res.construction_time == -1)
 			System.out.println("TIMED OUT");
