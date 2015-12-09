@@ -19,19 +19,24 @@ import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 
 public class RangePosition extends AbstractSourcePosition implements Position {
   private final URL url;
-  private final int line;
+  private final int startLine;
+  private final int endLine;
   private final int startOffset;
   private final int endOffset;
   
-  
-  public RangePosition(URL url, int line, int startOffset, int endOffset) {
+  public RangePosition(URL url, int startLine, int endLine, int startOffset, int endOffset) {
     super();
     this.url = url;
-    this.line = line;
+    this.startLine = startLine;
+    this.endLine = endLine;
     this.startOffset = startOffset;
     this.endOffset = endOffset;
   }
 
+  public RangePosition(URL url, int line, int startOffset, int endOffset) {  
+    this(url, line, -1, startOffset, endOffset);
+  }
+  
   @Override
   public int compareTo(Object o) {
     Position other = (Position) o;
@@ -44,12 +49,12 @@ public class RangePosition extends AbstractSourcePosition implements Position {
 
   @Override
   public int getFirstLine() {
-    return line;
+    return startLine;
   }
 
   @Override
   public int getLastLine() {
-    return -1;
+    return endLine;
   }
 
   @Override

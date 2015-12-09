@@ -61,9 +61,9 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
         String v = e.getValue().fst;
         if (v != null && v.startsWith("javascript:")) {
           try {
-            entrypointRegion.println("           " + v.substring(11), e.getValue().snd, new URL(tag.getElementPosition().getURL().toString() + "#" + a), true);
+            writeEntrypoint("           " + v.substring(11), e.getValue().snd, new URL(tag.getElementPosition().getURL().toString() + "#" + a), true);
           } catch (MalformedURLException ex) {
-            entrypointRegion.println(v.substring(11), e.getValue().snd, entrypointUrl, false);
+            writeEntrypoint(v.substring(11), e.getValue().snd, entrypointUrl, false);
           }
         }
       }
@@ -78,7 +78,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
       newLine();
     }
 
-    private void printlnIndented(String line, ITag relatedTag){
+    protected void printlnIndented(String line, ITag relatedTag){
       printlnIndented(line, relatedTag==null? null: relatedTag.getElementPosition());
     }
     
@@ -142,12 +142,18 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
             }
           }
         }
+        
+        inputElementCallback(tag);
       }
 
       assert varName != null && !"".equals(varName);
       printlnIndented(varName + " = this;", tag);
       printlnIndented("document." + varName + " = this;", tag);
       printlnIndented("parent.appendChild(this);", tag);
+    }
+
+    protected void inputElementCallback(ITag tag) {
+      // this space intentionally left blank 
     }
 
     protected void writeAttribute(ITag tag, Position pos, String attr, String value, String varName, String varName2) {
@@ -159,7 +165,7 @@ public class DefaultSourceExtractor extends DomLessSourceExtractor{
       //There should probably be more checking to see what the attributes are since we allow things like: ; to be used as attributes now.
       if(attr.length() >= 2 && attr.substring(0,2).equals("on")) {
         printlnIndented(varName + "." + attr + " = function " + tag.getName().toLowerCase() + "_" + attr + "(event) {" + value + "};", tag);
-        entrypointRegion.println(varName2 + "." + attr + "(null);", tag.getElementPosition(), entrypointUrl, false);
+        writeEntrypoint(varName2 + "." + attr + "(null);", tag.getElementPosition(), entrypointUrl, false);
       } else if (value != null) {
         
         Pair<String, Character> x = quotify(value);
