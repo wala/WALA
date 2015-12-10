@@ -952,7 +952,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
     }
 
-    private void processPutField(int rval, int ref, IField f) {
+    public void processPutField(int rval, int ref, IField f) {
       assert !f.getFieldTypeReference().isPrimitiveType();
       PointerKey refKey = getPointerKeyForLocal(ref);
       PointerKey rvalKey = getPointerKeyForLocal(rval);
@@ -999,7 +999,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
     }
 
-    private void processPutStatic(int rval, FieldReference field, IField f) {
+    protected void processPutStatic(int rval, FieldReference field, IField f) {
       PointerKey fKey = getPointerKeyForStaticField(f);
       PointerKey rvalKey = getPointerKeyForLocal(rval);
 
@@ -1436,7 +1436,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      * 
      * Add a call to the class initializer from the root method.
      */
-    private void processClassInitializer(IClass klass) {
+    protected void processClassInitializer(IClass klass) {
 
       assert klass != null;
 
