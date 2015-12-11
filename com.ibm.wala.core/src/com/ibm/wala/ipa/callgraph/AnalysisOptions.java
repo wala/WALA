@@ -88,7 +88,7 @@ public class AnalysisOptions {
     private final boolean ignoreMethodInvoke;
 
     /**
-     * should get method calls be modeled only for application classes?
+     * should calls to Class.getMethod() be modeled only for application classes?
      */
     private final boolean applicationClassesOnly;
     
