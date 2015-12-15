@@ -53,6 +53,7 @@ public class Runtime {
   private PrintWriter output;
   private SetOfClasses filter;
   private Policy handleCallback;
+  private String currentSite;
   
   private ThreadLocal<Stack<String>> callStacks = new ThreadLocal<Stack<String>>() {
 
@@ -119,6 +120,7 @@ public class Runtime {
   }
   
   public static void execution(String klass, String method, Object receiver) {
+    runtime.currentSite = null;
     if (runtime.filter == null || ! runtime.filter.contains(bashToDescriptor(klass))) {
       if (runtime.output != null) {
         String caller = runtime.callStacks.get().peek();
@@ -159,10 +161,25 @@ public class Runtime {
   }
   
   public static void pop(String klass, String method) {
- 
+    if (runtime.currentSite != null) {
+      synchronized (runtime) {
+        if (runtime.output != null) {
+          runtime.output.printf("return from " + runtime.currentSite + "\n");
+          runtime.output.flush();
+        }
+      }
+
+      runtime.currentSite = null;
+    }
   }
   
   public static void addToCallStack(String klass, String method, Object receiver) {
-
+    runtime.currentSite = klass + "\t" + method + "\t" + receiver;
+    synchronized (runtime) {
+      if (runtime.output != null) {
+        runtime.output.printf("call to " + runtime.currentSite + "\n");
+        runtime.output.flush();
+      }
+    }    
   }
 }

@@ -224,7 +224,7 @@ public class StackMapTableWriter extends Element {
         offset = position;
         
         if (reuseFrames != null) {
-          if (reuseFrames.get(idx).getOffset() == frameOffset) {
+          if (idx < reuseFrames.size() && reuseFrames.get(idx).getOffset() == frameOffset) {
             frames.add(reuseFrames.get(idx++));
             continue;
           } else {
