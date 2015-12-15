@@ -31,7 +31,7 @@ public abstract class CAstVisitor<C extends CAstVisitor.Context> {
   
   public static boolean DEBUG = true;
 
-  private Position currentPosition;
+  protected Position currentPosition;
   
   public Position getCurrentPosition() {
     return currentPosition;
