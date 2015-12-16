@@ -28,6 +28,7 @@ import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
 import com.ibm.wala.shrikeBT.IComparisonInstruction;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IInstruction;
+import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.Instruction;
 import com.ibm.wala.shrikeCT.BootstrapMethodsReader.BootstrapMethod;
@@ -746,5 +747,11 @@ public class JavaLanguage extends LanguageImpl implements BytecodeLanguage, Cons
   @SuppressWarnings("static-access")
   public PrimitiveType getPrimitive(TypeReference reference) {
     return JavaPrimitiveType.getPrimitive(reference);
+  }
+
+  @Override
+  public MethodReference getInvokeMethodReference(ClassLoaderReference loader, IInvokeInstruction instruction) {
+    return MethodReference.findOrCreate(this, loader, instruction.getClassType(), instruction.getMethodName(),
+        instruction.getMethodSignature());
   }
 }
