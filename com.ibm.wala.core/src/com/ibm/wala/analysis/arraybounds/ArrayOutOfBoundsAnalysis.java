@@ -1,6 +1,5 @@
 package com.ibm.wala.analysis.arraybounds;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -12,6 +11,7 @@ import com.ibm.wala.analysis.arraybounds.hypergraph.weight.ReverseOrder;
 import com.ibm.wala.analysis.arraybounds.hypergraph.weight.Weight;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAArrayReferenceInstruction;
+import com.ibm.wala.util.ssa.InstructionByIIndexMap;
 
 /**
  * The array out of bounds analysis uses the inequality graph as described in
@@ -64,7 +64,7 @@ public class ArrayOutOfBoundsAnalysis {
    * @param ir
    */
   public ArrayOutOfBoundsAnalysis(IR ir) {
-    this.boundsCheckUnnecessary = new HashMap<>();
+    this.boundsCheckUnnecessary = new InstructionByIIndexMap<>();
     this.buildInequalityGraphs(ir);
 
     this.computeLowerBound();
