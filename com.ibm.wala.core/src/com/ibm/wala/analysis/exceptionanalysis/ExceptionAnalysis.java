@@ -24,13 +24,13 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.CancelException;
+import com.ibm.wala.util.MonitorUtil.IProgressMonitor;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.InvertedGraph;
-import com.ibm.wala.util.graph.impl.SelfLoopAddedGraph;
 
 public class ExceptionAnalysis {
   private BitVectorSolver<CGNode> solver;
-  private ExceptionToBitvectorTransformer transformer;
+  private Exception2BitvectorTransformer transformer;
 
   public ExceptionAnalysis(CallGraph callgraph, PointerAnalysis<InstanceKey> pointerAnalysis, ClassHierarchy cha) {
     this(callgraph, pointerAnalysis, cha, null);
@@ -38,16 +38,16 @@ public class ExceptionAnalysis {
 
   public ExceptionAnalysis(CallGraph callgraph, PointerAnalysis<InstanceKey> pointerAnalysis, ClassHierarchy cha,
       InterproceduralExceptionFilter<SSAInstruction> filter) {
-    IntraproceduralResult intraResult = new IntraproceduralResult(callgraph, pointerAnalysis, cha, filter);
-    transformer = new ExceptionToBitvectorTransformer(intraResult.getExceptions());
+    CGIntraproceduralExceptionAnalysis intraResult = new CGIntraproceduralExceptionAnalysis(callgraph, pointerAnalysis, cha, filter);
+    transformer = new Exception2BitvectorTransformer(intraResult.getExceptions());
     ExceptionTransferFunctionProvider transferFunctionProvider = new ExceptionTransferFunctionProvider(intraResult, callgraph,
         transformer);
 
-    Graph<CGNode> graph = new SelfLoopAddedGraph<>(new InvertedGraph<CGNode>(callgraph));
+    Graph<CGNode> graph = new InvertedGraph<CGNode>(callgraph);
     BitVectorFramework<CGNode, TypeReference> problem = new BitVectorFramework<>(graph, transferFunctionProvider,
         transformer.getValues());
 
-    solver = new ExceptionFlowSolver(problem, intraResult, transformer);
+    solver = new InitializedBitVectorSolver(problem);
     solver.initForFirstSolve();
   }
 
@@ -55,13 +55,17 @@ public class ExceptionAnalysis {
     try {
       solver.solve(null);
     } catch (CancelException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      throw new RuntimeException("Internal Error: Got Cancel Exception, "
+          + "but didn't use Progressmonitor!", e);
     }
   }
+  
+  public void solve(IProgressMonitor monitor) throws CancelException {
+      solver.solve(monitor);
+  }  
 
   public Set<TypeReference> getCGNodeExceptions(CGNode node) {
-    BitVectorVariable nodeResult = solver.getIn(node);
+    BitVectorVariable nodeResult = solver.getOut(node);
     if (nodeResult != null) {
       return transformer.computeExceptions(nodeResult);
     } else {

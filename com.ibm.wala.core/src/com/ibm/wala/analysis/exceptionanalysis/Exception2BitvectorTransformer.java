@@ -10,40 +10,28 @@
  *******************************************************************************/
 package com.ibm.wala.analysis.exceptionanalysis;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.fixpoint.BitVectorVariable;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.ObjectArrayMapping;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 
-public class ExceptionToBitvectorTransformer {
-
-  private Map<TypeReference, BitVector> includingExceptions;
+public class Exception2BitvectorTransformer {
   private OrdinalSetMapping<TypeReference> values;
 
   public OrdinalSetMapping<TypeReference> getValues() {
     return values;
   }
 
-  public ExceptionToBitvectorTransformer(Set<TypeReference> exceptions) {
-    includingExceptions = new HashMap<TypeReference, BitVector>();
+  public Exception2BitvectorTransformer(Set<TypeReference> exceptions) {    
     createValues(exceptions);
     for (TypeReference exception : exceptions) {
       BitVector bv = new BitVector(values.getSize());
       bv.set(values.getMappedIndex(exception));
-      includingExceptions.put(exception, bv);
     }
-  }
-
-  public ExceptionToBitvectorTransformer(Set<TypeReference> exceptions, ClassHierarchy cha) {
-    // TODO
-    throw new UnsupportedOperationException();
   }
 
   private void createValues(Set<TypeReference> exceptions) {
@@ -55,12 +43,12 @@ public class ExceptionToBitvectorTransformer {
   public BitVector computeBitVector(Set<TypeReference> exceptions) {
     BitVector result = new BitVector(values.getSize());
     for (TypeReference exception : exceptions) {
-      // if (!includingExceptions.containsKey(exception)) {
-      // throw new IllegalArgumentException("Got exception I don't know about,"
-      // + "make sure only to use exceptions given to the constructor ");
-      // }
-      if (includingExceptions.containsKey(exception)) {
-        result.or(includingExceptions.get(exception));
+      int pos = values.getMappedIndex(exception);
+      if (pos != -1) {
+        result.set(pos);
+      } else {
+        throw new IllegalArgumentException("Got exception I don't know about,"
+             + "make sure only to use exceptions given to the constructor ");            
       }
     }
     return result;
