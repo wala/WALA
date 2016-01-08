@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ssa;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import com.ibm.wala.util.collections.Pair;
  * 
  * @author Stephan Gocht <stephan@gobro.de>
  */
-public class AllDueToBranchePiPolicy implements SSAPiNodePolicy {
+public class AllIntegerDueToBranchePiPolicy implements SSAPiNodePolicy {
 
   @Override
   public Pair<Integer, SSAInstruction> getPi(SSAAbstractInvokeInstruction call, SymbolTable symbolTable) {
@@ -45,10 +46,15 @@ public class AllDueToBranchePiPolicy implements SSAPiNodePolicy {
   @Override
   public List<Pair<Integer, SSAInstruction>> getPis(SSAConditionalBranchInstruction cond, SSAInstruction def1, SSAInstruction def2,
       SymbolTable symbolTable) {
-    final LinkedList<Pair<Integer, SSAInstruction>> result = new LinkedList<>();
-    for (int i = 0; i < cond.getNumberOfUses(); i++) {
-      result.add(Pair.make(cond.getUse(i), (SSAInstruction) cond));
+    if (cond.isIntegerComparison()) {
+      final LinkedList<Pair<Integer, SSAInstruction>> result = new LinkedList<>();
+      for (int i = 0; i < cond.getNumberOfUses(); i++) {
+        result.add(Pair.make(cond.getUse(i), (SSAInstruction) cond));
+      }
+      return result;
+    } else {
+      return Collections.emptyList();
     }
-    return result;
+
   }
 }

@@ -27,7 +27,7 @@ import com.ibm.wala.ipa.cfg.exceptionpruning.filter.CombinedExceptionFilter;
 import com.ibm.wala.ipa.cfg.exceptionpruning.filter.NullPointerExceptionFilter;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
-import com.ibm.wala.ssa.AllDueToBranchePiPolicy;
+import com.ibm.wala.ssa.AllIntegerDueToBranchePiPolicy;
 import com.ibm.wala.ssa.DefaultIRFactory;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
@@ -96,7 +96,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
 
     irFactory = new DefaultIRFactory();
     options = new AnalysisOptions();
-    options.getSSAOptions().setPiNodePolicy(new AllDueToBranchePiPolicy());
+    options.getSSAOptions().setPiNodePolicy(new AllIntegerDueToBranchePiPolicy());
   }
 
   private static IR getIr(IMethod method) {

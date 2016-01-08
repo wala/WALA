@@ -21,7 +21,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
-import com.ibm.wala.ssa.AllDueToBranchePiPolicy;
+import com.ibm.wala.ssa.AllIntegerDueToBranchePiPolicy;
 import com.ibm.wala.ssa.DefaultIRFactory;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
@@ -71,7 +71,7 @@ public class ArrayboundsAnalysisTest {
 
     irFactory = new DefaultIRFactory();
     options = new AnalysisOptions();
-    options.getSSAOptions().setPiNodePolicy(new AllDueToBranchePiPolicy());
+    options.getSSAOptions().setPiNodePolicy(new AllIntegerDueToBranchePiPolicy());
   }
 
   public static IR getIr(IMethod method) {
