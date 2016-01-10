@@ -110,7 +110,7 @@ public class PruneArrayOutOfBoundExceptionEdge {
     ArrayOutOfBoundsAnalysis arrayBoundsAnalysis = new ArrayOutOfBoundsAnalysis(ir);
     IntraproceduralNullPointerAnalysis nullPointerAnalysis = new IntraproceduralNullPointerAnalysis(ir);
 
-    CombinedExceptionFilter filter = new CombinedExceptionFilter();
+    CombinedExceptionFilter<SSAInstruction> filter = new CombinedExceptionFilter<SSAInstruction>();
     filter.add(new ArrayOutOfBoundFilter(arrayBoundsAnalysis));
     filter.add(new NullPointerExceptionFilter(nullPointerAnalysis));
 
